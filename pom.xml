@@ -23,6 +23,7 @@
 					</headerDefinitions>
 					<excludes>
 						<exclude>header.xml</exclude>
+						<exclude>.git/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
