@@ -1,17 +1,14 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
 	<parent>
 		<groupId>de.lichtflut</groupId>
 		<artifactId>lf.resource-browser</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	
 	<groupId>de.lichtflut.rb</groupId>
 	<artifactId>lf.resource-browser.core</artifactId>
 	<name>Resource Browser core</name>
-	
 	<build>
 		<resources>
 			<resource>
@@ -41,5 +38,38 @@
 				</excludes>
 			</testResource>
 		</testResources>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javacc-maven-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>javacc</id>
+						<goals>
+							<goal>javacc</goal>
+						</goals>
+						<configuration>
+							<unicodeInput>true</unicodeInput>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javacc-maven-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>jjtree-javacc</id>
+						<goals>
+							<goal>jjtree-javacc</goal>
+						</goals>
+						<configuration>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 </project>

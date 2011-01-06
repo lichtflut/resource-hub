@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>webapp/pom.xml</string>
+	<string>core/pom.xml</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -16,15 +16,15 @@
 			<key>filename</key>
 			<string>core/pom.xml</string>
 			<key>lastUsed</key>
-			<date>2011-01-05T11:43:16Z</date>
+			<date>2011-01-06T19:39:51Z</date>
+			<key>selected</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>webapp/pom.xml</string>
 			<key>lastUsed</key>
-			<date>2011-01-06T09:11:11Z</date>
-			<key>selected</key>
-			<true/>
+			<date>2011-01-06T18:11:09Z</date>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
@@ -36,14 +36,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>24</integer>
+				<integer>4</integer>
 				<key>line</key>
-				<integer>12</integer>
+				<integer>72</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>31</integer>
 		</dict>
 		<key>pom.xml</key>
 		<dict>
@@ -64,14 +64,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>32</integer>
+				<integer>9</integer>
 				<key>line</key>
-				<integer>26</integer>
+				<integer>90</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>2</integer>
+			<integer>-1</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>55</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>9</integer>
+				<key>line</key>
+				<integer>90</integer>
+			</dict>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
