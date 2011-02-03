@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.rbdecl;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Just for evaluation if JavaCC is the best choice for Parsing of Resource Schema declarations.
  * </p>
  *
  * <p>

@@ -4,10 +4,8 @@
 package de.lichtflut.rb.web;
 
 import junit.framework.TestCase;
-import org.apache.wicket.util.tester.WicketTester;
 
-import de.lichtflut.rb.web.HomePage;
-import de.lichtflut.rb.web.WicketApplication;
+import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Simple test using the WicketTester

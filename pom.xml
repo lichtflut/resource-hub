@@ -16,6 +16,7 @@
 			<plugin>
 				<groupId>com.google.code.maven-license-plugin</groupId>
 				<artifactId>maven-license-plugin</artifactId>
+				<version>1.4.0</version>
 				<configuration>
 					<header>license.txt</header>
 					<headerDefinitions>
@@ -45,6 +46,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
@@ -107,6 +109,11 @@
 					<artifactId>javax.persistence</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.arastreju</groupId>
+			<artifactId>arastreju.neo4j</artifactId>
+			<version>0.5.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<pluginRepositories>

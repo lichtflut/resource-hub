@@ -3,10 +3,10 @@
  */
 package de.lichtflut.rb.web;
 
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * Homepage
@@ -30,5 +30,7 @@ public class HomePage extends WebPage {
         add(new Label("message", "If you see this message wicket is properly configured and running"));
 
         add(new BookmarkablePageLink("sampleResource", SampleResourcePage.class));
+        
+        add(new BookmarkablePageLink("peripheryView", PeripheryPage.class));
     }
 }
