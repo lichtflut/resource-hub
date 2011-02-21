@@ -8,8 +8,9 @@ import de.lichtflut.rb.core.schema.Cardinality;
 
 /**
  * <p>
- *  Typical factory to generate some specific instances of {@link Cardinality} via through class members.
- *  Building instances or subclasses from this class is not allowed.  
+ *  Typical factory to generate some specific instances of {@link Cardinality} through class members.
+ *  Building instances or subclasses from this class is not allowed.
+ *  Therefore: This factory is described as final and every constructor is affected to the private modifier
  * </p>
  *
  * <p>
@@ -35,25 +36,69 @@ public final class CardinalityFactory{
 	
 	//---------------------------------------------
 	
-    public static Cardinality getSingleCardinality(boolean optional){
-    	return new UnboundedCardinalityImpl(1, optional ? 0 : 1 );
-    }
-    
-    public static Cardinality getSingleCardinality(){
-    	 return getSingleCardinality(true);
-    }
 	
-    public static Cardinality getUnboundedCardinality(){
-    	return new UnboundedCardinalityImpl();
-    }
+	public static Cardinality hasExcactlyOne(){
+		return hasExactly(1);
+	}
 	
-    public static Cardinality getUnboundedCardinality(int min){
-    	return new UnboundedCardinalityImpl(-1,min);
-    }
+	//---------------------------------------------
+	
+	public static Cardinality hasOptionalOne(){
+		return hasOptionalOneUpTo(1);
+	}
+
+	//---------------------------------------------
+	
+	public static Cardinality hasAtLeastOneToMany(){
+		try{
+		       return getAbsoluteCardinality(-1,1);
+		     }catch(IllegalArgumentException exe){
+	  	       return null;
+			 }
+   }
+	
+	//---------------------------------------------
+	
+	public static Cardinality hasOptionalOneToMany(){
+       return new UnboundedCardinalityImpl();
+	}
+	
+	public static Cardinality hasAtLeastOneUpTo(int max){
+		try{
+		       return getAbsoluteCardinality(Math.abs(max),1);
+		     }catch(IllegalArgumentException exe){
+	  	       return null;
+			 }
+   }
+	
+	//---------------------------------------------
+	
+	public static Cardinality hasOptionalOneUpTo(int max){
+	  try{
+	       return getAbsoluteCardinality(Math.abs(max),0);
+	     }catch(IllegalArgumentException exe){
+  	       return null;
+		 }
+	}
+
+	//---------------------------------------------
+	
+	public static Cardinality hasExactly(int value){
+	   try{
+	     return getAbsoluteCardinality(Math.abs(value),Math.abs(value));
+	   }catch(IllegalArgumentException exe){
+		   return null;
+	   }
+	}
+	
+	//---------------------------------------------
 	
     public static Cardinality getAbsoluteCardinality(int max, int min) throws IllegalArgumentException{
     	return new UnboundedCardinalityImpl(max, min);
     }
+    
+    
+  //---------------------------------------------
     
 	
     //Try to hide the constructor, to make this class not accessable
@@ -66,8 +111,15 @@ public final class CardinalityFactory{
 			//Default constructor, do nothing
 		}
 		
+		/**
+		 * Max should be greater than Min, otherwise, an {@link IllegalArgumentException} will be raised
+		 * @param max, int, unbound could be set up with -1 
+		 * @param min, int, a negative value is interpreted as a positive one 
+		 * @throws IllegalArgumentException
+		 */
 		public UnboundedCardinalityImpl(int max, int min) throws IllegalArgumentException{
-			if(max > min) throw new NumberFormatException(
+			min = Math.abs(min);
+			if((max < min) && (max!=-1)) throw new IllegalArgumentException(
 								"The minimum count of " + min + " must be less than the maximum count of " + max);
 			setMax(max);
 			setMin(min);
