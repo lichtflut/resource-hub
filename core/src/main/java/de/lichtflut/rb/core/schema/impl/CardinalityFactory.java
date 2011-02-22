@@ -24,19 +24,14 @@ public final class CardinalityFactory{
 
 	//Let's instance of this class be a Singleton
 	
-	private static CardinalityFactory instance;
-	
-	static{
-		instance = new CardinalityFactory();
-	}
+	private static CardinalityFactory instance =  new CardinalityFactory();
 	
 	public static CardinalityFactory getInstance(){
 		return instance;
 	}
 	
 	//---------------------------------------------
-	
-	
+		
 	public static Cardinality hasExcactlyOne(){
 		return hasExactly(1);
 	}
@@ -50,11 +45,7 @@ public final class CardinalityFactory{
 	//---------------------------------------------
 	
 	public static Cardinality hasAtLeastOneToMany(){
-		try{
-		       return getAbsoluteCardinality(-1,1);
-		     }catch(IllegalArgumentException exe){
-	  	       return null;
-			 }
+		return getAbsoluteCardinality(-1,1);
    }
 	
 	//---------------------------------------------
@@ -64,31 +55,19 @@ public final class CardinalityFactory{
 	}
 	
 	public static Cardinality hasAtLeastOneUpTo(int max){
-		try{
-		       return getAbsoluteCardinality(Math.abs(max),1);
-		     }catch(IllegalArgumentException exe){
-	  	       return null;
-			 }
+	  return getAbsoluteCardinality(Math.abs(max),1);
    }
 	
 	//---------------------------------------------
 	
 	public static Cardinality hasOptionalOneUpTo(int max){
-	  try{
-	       return getAbsoluteCardinality(Math.abs(max),0);
-	     }catch(IllegalArgumentException exe){
-  	       return null;
-		 }
+	  return getAbsoluteCardinality(Math.abs(max),0);
 	}
 
 	//---------------------------------------------
 	
 	public static Cardinality hasExactly(int value){
-	   try{
 	     return getAbsoluteCardinality(Math.abs(value),Math.abs(value));
-	   }catch(IllegalArgumentException exe){
-		   return null;
-	   }
 	}
 	
 	//---------------------------------------------
