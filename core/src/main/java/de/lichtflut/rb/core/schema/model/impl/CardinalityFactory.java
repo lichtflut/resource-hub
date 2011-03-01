@@ -30,25 +30,25 @@ public final class CardinalityFactory{
 		return instance;
 	}
 	
-	//---------------------------------------------
-		
+	// -----------------------------------------------------
+	
 	public static Cardinality hasExcactlyOne(){
 		return hasExactly(1);
 	}
 	
-	//---------------------------------------------
+	// -----------------------------------------------------
 	
 	public static Cardinality hasOptionalOne(){
 		return hasOptionalOneUpTo(1);
 	}
 
-	//---------------------------------------------
+	// -----------------------------------------------------
 	
 	public static Cardinality hasAtLeastOneToMany(){
 		return getAbsoluteCardinality(-1,1);
    }
 	
-	//---------------------------------------------
+	// -----------------------------------------------------
 	
 	public static Cardinality hasOptionalOneToMany(){
        return new UnboundedCardinalityImpl();
@@ -58,28 +58,28 @@ public final class CardinalityFactory{
 	  return getAbsoluteCardinality(Math.abs(max),1);
    }
 	
-	//---------------------------------------------
+	// -----------------------------------------------------
 	
 	public static Cardinality hasOptionalOneUpTo(int max){
 	  return getAbsoluteCardinality(Math.abs(max),0);
 	}
 
-	//---------------------------------------------
+	// -----------------------------------------------------
 	
 	public static Cardinality hasExactly(int value){
 	     return getAbsoluteCardinality(Math.abs(value),Math.abs(value));
 	}
 	
-	//---------------------------------------------
+	// -----------------------------------------------------
 	
     public static Cardinality getAbsoluteCardinality(int max, int min) throws IllegalArgumentException{
     	return new UnboundedCardinalityImpl(max, min);
     }
     
     
-  //---------------------------------------------
-    
+    // -----------------------------------------------------
 	
+    //Constructor 
     //Try to hide the constructor, to make this class not accessable
     private CardinalityFactory(){}
     
@@ -112,18 +112,25 @@ public final class CardinalityFactory{
 			return getMax()==-1 ? Integer.MAX_VALUE : getMax();
 		}
 
+		// -----------------------------------------------------
+		
 		public int getMinOccurs() {
 			return Math.abs(getMin());
 		}
 
+		// -----------------------------------------------------
+		
 		public boolean isSingle() {
 			return (getMax()==1);
 		}
 
+		// -----------------------------------------------------
+		
 		public boolean isUnbound() {
 			return (getMax()==-1);
 		}
 		
+		// -----------------------------------------------------
 		
 		//Getters and Setters
 		
@@ -131,19 +138,25 @@ public final class CardinalityFactory{
 			return max;
 		}
 
+		// -----------------------------------------------------
+		
 		private void setMax(int max) {
 			this.max = max;
 		}
 
+		// -----------------------------------------------------
+		
 		public int getMin() {
 			return min;
 		}
 
+		// -----------------------------------------------------
+		
 		private void setMin(int min) {
 			this.min = min;
 		}
  
-		//------------------------------------
+		// -----------------------------------------------------
 		
 	}//End of inner class CardinalityImpl
 
