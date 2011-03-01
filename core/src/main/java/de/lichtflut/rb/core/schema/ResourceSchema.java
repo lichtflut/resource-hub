@@ -5,6 +5,8 @@ package de.lichtflut.rb.core.schema;
 
 import java.util.List;
 
+import org.arastreju.sge.model.ResourceID;
+
 /**
  * <p>
  *  Schema for a resource type, e.g. a person, an organization or a project.
@@ -17,6 +19,8 @@ import java.util.List;
  * @author Oliver Tigges
  */
 public interface ResourceSchema {
+	
+	ResourceID getResourceID();
 	
 	List<PropertyDeclaration> getPropertyDeclarations();
 
