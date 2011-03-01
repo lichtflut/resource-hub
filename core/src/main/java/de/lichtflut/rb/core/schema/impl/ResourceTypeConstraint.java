@@ -44,14 +44,14 @@ public class ResourceTypeConstraint implements Constraint {
 	 * @see de.lichtflut.rb.core.schema.Constraint#isLiteralConstraint()
 	 */
 	public boolean isLiteralConstraint() {
-		return true;
+		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.core.schema.Constraint#isResourceConstraint()
 	 */
 	public boolean isResourceTypeConstraint() {
-		return false;
+		return true;
 	}
 	
 	/* (non-Javadoc)
