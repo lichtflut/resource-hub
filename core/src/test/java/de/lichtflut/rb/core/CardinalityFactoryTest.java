@@ -5,8 +5,8 @@ package de.lichtflut.rb.core;
 
 import org.junit.Test;
 
-import de.lichtflut.rb.core.schema.Cardinality;
-import de.lichtflut.rb.core.schema.impl.CardinalityFactory;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
+import de.lichtflut.rb.core.schema.model.Cardinality;
 import junit.framework.TestCase;
 
 

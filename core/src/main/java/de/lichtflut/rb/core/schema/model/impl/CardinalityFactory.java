@@ -2,9 +2,9 @@
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 
-package de.lichtflut.rb.core.schema.impl;
+package de.lichtflut.rb.core.schema.model.impl;
 
-import de.lichtflut.rb.core.schema.Cardinality;
+import de.lichtflut.rb.core.schema.model.Cardinality;
 
 /**
  * <p>
