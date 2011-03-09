@@ -1,63 +1,92 @@
+/*
+ * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ */
 grammar ResourceSchema;
 
-tokens {
-	PLUS 	= '+' ;
-	MINUS	= '-' ;
-	MULT	= '*' ;
-	DIV	= '/' ;
-	PROPERTY_DEC_UPPER = 'PROPERTY';
-	PROPERTY_DEC_LOWER = 'property';
-        RESOURCE_DEC_UPPER = 'RESOURCE';
-	RESOURCE_DEC_LOWER = 'resource';
+options {
+ language = Java;
+ output = AST;
+ ASTLabelType = CommonTree;
+}
+
+@header {
+    package de.lichtflut.rb.core.schema.parser;
+}
+
+@lexer::header {
+    package de.lichtflut.rb.core.schema.parser;
 }
 
 @members {
     public static void main(String[] args) throws Exception {
-        ResourceSchemaLexer lex = new ResourceSchemaLexer(new ANTLRFileStream(args[0]));
-       	CommonTokenStream tokens = new CommonTokenStream(lex);
+       ResourceSchemaLexer lex = new ResourceSchemaLexer(new ANTLRFileStream(args[0]));
+          CommonTokenStream tokens = new CommonTokenStream(lex);
 
-        ResourceSchemaParser parser = new ResourceSchemaParser(tokens);
+       ResourceSchemaParser parser = new ResourceSchemaParser(tokens);
 
-        try {
-            parser.expr();
-        } catch (RecognitionException e)  {
-            e.printStackTrace();
-        }
+       try {
+           //parser.expr();
+       } catch (RecognitionException e)  {
+           e.printStackTrace();
+       }
     }
 }
 
-/*------------------------------------------------------------------
- * PARSER RULES
- *------------------------------------------------------------------*/
-
-start : term*EOF;
-
-term : (resource_definition | property_definition);
-			 
-resource_definition : RESOURCE_PREFIX_DELIM IDENTIFIER  RESOURCE_SUFFIX_DELIM;
-
-property_definition : PROPERTY_PREFIX_DELIM IDENTIFIER RESOURCE_SUFFIX_DELIM;
-	
 
 /*------------------------------------------------------------------
- * LEXER RULES
- *------------------------------------------------------------------*/
+* LEXER RULES
+*------------------------------------------------------------------*/
 
-NUMBER	: (DIGIT)+ ;
+//Define Tokens
+//ToDo: Move tokens and lexer rules to a separate file
+
+PROPERTY_DEC : (PROPERTY_DEC_UPPER | PROPERTY_DEC_LOWER);
+PROPERTY_DEC_UPPER : 'PROPERTY';
+PROPERTY_DEC_LOWER : 'property';
+RESOURCE_DEC_UPPER : 'RESOURCE';
+RESOURCE_DEC_LOWER : 'resource';
+NUMERIC_UPPER : 'NUMERIC';
+NUMERIC_LOWER : 'numeric';
+TEXT_UPPER : 'TEXT';
+TEXT_LOWER : 'text';
+LOGICAL_UPPER : 'LOGICAL';
+LOGICAL_LOWER : 'logical';
+EOL 	:	 '\n';
 
 
-RESOURCE_PREFIX_DELIM : WHITESPACE* ('resource' | 'RESOURCE') WHITESPACE* ':' WHITESPACE* IDENTIFIER;
+CARDINALITY : ('has' | 'hasMin' | 'hasMax');
+DATATYPE : (NUMERIC | TEXT | LOGICAL);
+NUMERIC : (NUMERIC_UPPER | NUMERIC_LOWER);
+TEXT : (TEXT_UPPER | TEXT_LOWER);
+LOGICAL : (LOGICAL_UPPER | LOGICAL_LOWER);
+INT : ('0' .. '9')+;
+IDENT : ('a' .. 'z' | 'A' .. 'Z')('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*;
+STRING : '"'('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^')+'"';
+WS : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+     { $channel = HIDDEN; } ;
 
-PROPERTY_PREFIX_DELIM : WHITESPACE* ('property' | 'PROPERTY') WHITESPACE* ':' WHITESPACE* IDENTIFIER;		
+/*------------------------------------------------------------------
+* PARSER RULES
+*------------------------------------------------------------------*/
 
-IDENTIFIER : URI ALPHANUMERIC;
 
-URI : ALPHANUMERIC+ '://' ALPHANUMERIC+ '/';
+dsl: (property | resource)+;
 
-ALPHANUMERIC : 'a..z' | 'A..Z' | '0..9';		
+property : 'property'^ IDENT '('! propertyDeclaration* ')'!;
 
-RESOURCE_SUFFIX_DELIM :	'd';
+propertyDeclaration :  ( typeDeclaration | regexDeclaration) EOL;
 
-WHITESPACE : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+ 	{ $channel = HIDDEN; } ;
+typeDeclaration :  (WS)* 'type is'  (WS)* DATATYPE  (WS)* ;
 
-fragment DIGIT	: '0'..'9' ;
+regexDeclaration : (WS)* 'regex'  (WS)* '"' IDENT '"' (WS)* ;
+
+resource : 'resource'^ IDENT '('! resourceDeclaration+ ')'!;
+
+resourceDeclaration : cardinality (IDENT referenceDeclaration? | property);
+
+referenceDeclaration : 'references' IDENT;
+
+cardinality : cardinalityDeclaration ('and'! cardinalityDeclaration)*;
+
+cardinalityDeclaration : CARDINALITY INT;
+
+
