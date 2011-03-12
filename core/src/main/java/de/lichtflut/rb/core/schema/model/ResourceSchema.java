@@ -22,6 +22,6 @@ public interface ResourceSchema {
 	
 	ResourceID getResourceID();
 	
-	List<PropertyDeclaration> getPropertyDeclarations();
+	List<PropertyAssertion> getPropertyDeclarations();
 
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
@@ -29,7 +29,7 @@ public class ResourceSchemaImpl implements ResourceSchema{
 	//Instance members
 	private ResourceID resource;
 	//LinkedList is chosen because it's more flexible compared to an index-driven list
-	private final List<PropertyDeclaration> propertyList = new LinkedList<PropertyDeclaration>();
+	private final List<PropertyAssertion> propertyList = new LinkedList<PropertyAssertion>();
 	
 	// -----------------------------------------------------
 	
@@ -52,7 +52,7 @@ public class ResourceSchemaImpl implements ResourceSchema{
 		 */
 	}
 	
-	public List<PropertyDeclaration> getPropertyDeclarations() {
+	public List<PropertyAssertion> getPropertyDeclarations() {
 		return this.propertyList;
 	}
 
@@ -73,7 +73,7 @@ public class ResourceSchemaImpl implements ResourceSchema{
 	public String toString(){
 		StringBuffer sBuffer = new StringBuffer();
 		sBuffer.append(getResourceID().toString() + "\n");
-		for (PropertyDeclaration property : getPropertyDeclarations()) {
+		for (PropertyAssertion property : getPropertyDeclarations()) {
 			sBuffer.append(property.toString() + "\n");
 		}
 		return sBuffer.toString();

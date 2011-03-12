@@ -5,13 +5,26 @@ package de.lichtflut.rb.core.schema.model;
 
 import java.util.Set;
 
-import org.arastreju.sge.model.ResourceID;
-
+import org.arastreju.sge.model.ElementaryDataType;
 
 /**
  * <p>
- *  Declaration of a Property - either resource reference or value - of a resource.
- *  A set of PropertyDeclarations build a {@link ResourceSchema}.
+ *  Definition of the property of a {@link PropertyAssertion}.
+ * </p>
+ * 
+ * <p>
+ *  Properties may either be literal properties (literals such as strings, numbers, dates)
+ *  or resource references:
+ *  
+ *  <ol>
+ *   <li> literal </li>
+ *    	<ol> 
+ *    	 <li> elementary (string, integer, decimal, date,...)
+ *    	 <li> custom (user defined)
+ *      </ol>
+ *   <li> resource reference</li>
+ *  <ol>
+ *  
  * </p>
  *
  * <p>
@@ -23,32 +36,31 @@ import org.arastreju.sge.model.ResourceID;
 public interface PropertyDeclaration {
 
 	/**
-	 * The semantic of this property. Usually the resource identifier representing
-	 * the semantic will be of type rdf:Property. In a concrete RDF statement corresponding
-	 * to this PropertyDeclaration this will be the predicate. 
-	 * @return The resource identifier representing the semantic.
+	 * Get the {@link ElementaryDataType}.
+	 * @return The elementary property.
 	 */
-	ResourceID getSemantic();
+	ElementaryDataType getElementaryDataType();
 	
 	/**
-	 * The datatype of the property.
-	 * @return The datatype.
+	 * Get the name of the property.
+	 * @return The name of the property.
 	 */
-	Datatype getDatatype();
+	String getName();
 	
 	/**
-	 * The cardinality of this property,
-	 * @return The cardinality.
-	 */
-	Cardinality getCardinality();
-	
-	/**
-	 * The constraints for this property declaration.
-	 * There are to levels where constraints can be defined. Either for the datatype
-	 * or only for the property declaration. The set of constraints returned by
-	 * this method contains them all.
+	 * The context independent constraints for this property.
 	 * @return the constraints.
 	 */
 	Set<Constraint> getConstraints();
+	
+	// -----------------------------------------------------
+	
+	boolean isValue();
+	
+	boolean isElementary();
+	
+	boolean isCustom(); 
+	
+	boolean isResourceReference();
 	
 }

@@ -6,7 +6,7 @@
 package de.lichtflut.rb.core.schema.parser;
 
 
-import org.antlr.runtime.ANTLRFileStream;
+import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.BaseRecognizer;
 import org.antlr.runtime.BitSet;
 import org.antlr.runtime.CommonTokenStream;
@@ -83,10 +83,14 @@ public class ResourceSchemaParser extends Parser {
 
 
         public static void main(String[] args) throws Exception {
-           ResourceSchemaLexer lex = new ResourceSchemaLexer(new ANTLRFileStream(args[0]));
+        	
+
+           ResourceSchemaLexer lex = new ResourceSchemaLexer(new ANTLRStringStream(args[0]));
               CommonTokenStream tokens = new CommonTokenStream(lex);
 
-            new ResourceSchemaParser(tokens);
+           TokenStream stream =  new ResourceSchemaParser(tokens).getTokenStream();
+           System.out.println(tokens.toString());
+           System.out.println(stream.toString());
         }
 
 
