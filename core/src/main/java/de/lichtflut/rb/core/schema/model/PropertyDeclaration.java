@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema;
+package de.lichtflut.rb.core.schema.model;
 
 import java.util.Set;
 
@@ -9,11 +9,11 @@ import org.arastreju.sge.model.ElementaryDataType;
 
 /**
  * <p>
- *  Definition of the datatype of a {@link PropertyDeclaration}.
+ *  Definition of the property of a {@link PropertyAssertion}.
  * </p>
  * 
  * <p>
- *  Datatypes may either be literal datatypes (literals such as strings, numbers, dates)
+ *  Properties may either be literal properties (literals such as strings, numbers, dates)
  *  or resource references:
  *  
  *  <ol>
@@ -33,22 +33,22 @@ import org.arastreju.sge.model.ElementaryDataType;
  *
  * @author Oliver Tigges
  */
-public interface Datatype {
+public interface PropertyDeclaration {
 
 	/**
 	 * Get the {@link ElementaryDataType}.
-	 * @return The elementary datatype.
+	 * @return The elementary property.
 	 */
 	ElementaryDataType getElementaryDataType();
 	
 	/**
-	 * Get the name of the datatype.
-	 * @return The name of the datatype.
+	 * Get the name of the property.
+	 * @return The name of the property.
 	 */
 	String getName();
 	
 	/**
-	 * The context independent constraints for this datatype.
+	 * The context independent constraints for this property.
 	 * @return the constraints.
 	 */
 	Set<Constraint> getConstraints();

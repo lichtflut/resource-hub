@@ -2,9 +2,9 @@
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 
-package de.lichtflut.rb.core.schema.impl;
+package de.lichtflut.rb.core.schema.model.impl;
 
-import de.lichtflut.rb.core.schema.Cardinality;
+import de.lichtflut.rb.core.schema.model.Cardinality;
 
 /**
  * <p>
@@ -24,79 +24,62 @@ public final class CardinalityFactory{
 
 	//Let's instance of this class be a Singleton
 	
-	private static CardinalityFactory instance;
-	
-	static{
-		instance = new CardinalityFactory();
-	}
+	private static CardinalityFactory instance =  new CardinalityFactory();
 	
 	public static CardinalityFactory getInstance(){
 		return instance;
 	}
 	
-	//---------------------------------------------
-	
+	// -----------------------------------------------------
 	
 	public static Cardinality hasExcactlyOne(){
 		return hasExactly(1);
 	}
 	
-	//---------------------------------------------
+	// -----------------------------------------------------
 	
 	public static Cardinality hasOptionalOne(){
 		return hasOptionalOneUpTo(1);
 	}
 
-	//---------------------------------------------
+	// -----------------------------------------------------
 	
 	public static Cardinality hasAtLeastOneToMany(){
-		try{
-		       return getAbsoluteCardinality(-1,1);
-		     }catch(IllegalArgumentException exe){
-	  	       return null;
-			 }
+		return getAbsoluteCardinality(-1,1);
    }
 	
-	//---------------------------------------------
+	// -----------------------------------------------------
 	
 	public static Cardinality hasOptionalOneToMany(){
        return new UnboundedCardinalityImpl();
 	}
 	
 	public static Cardinality hasAtLeastOneUpTo(int max){
-		try{
-		       return getAbsoluteCardinality(Math.abs(max),1);
-		     }catch(IllegalArgumentException exe){
-	  	       return null;
-			 }
+	  return getAbsoluteCardinality(Math.abs(max),1);
    }
 	
-	//---------------------------------------------
+	// -----------------------------------------------------
 	
 	public static Cardinality hasOptionalOneUpTo(int max){
-	  try{
-	       return getAbsoluteCardinality(Math.abs(max),0);
-	     }catch(IllegalArgumentException exe){
-  	       return null;
-		 }
+	  return getAbsoluteCardinality(Math.abs(max),0);
 	}
 
-	//---------------------------------------------
+	// -----------------------------------------------------
 	
 	public static Cardinality hasExactly(int value){
 	     return getAbsoluteCardinality(Math.abs(value),Math.abs(value));
 	}
 	
-	//---------------------------------------------
+	// -----------------------------------------------------
 	
     public static Cardinality getAbsoluteCardinality(int max, int min) throws IllegalArgumentException{
     	return new UnboundedCardinalityImpl(max, min);
     }
     
     
-  //---------------------------------------------
-    
+    // -----------------------------------------------------
 	
+    //Constructor 
     //Try to hide the constructor, to make this class not accessable
     private CardinalityFactory(){}
     
@@ -129,18 +112,25 @@ public final class CardinalityFactory{
 			return getMax()==-1 ? Integer.MAX_VALUE : getMax();
 		}
 
+		// -----------------------------------------------------
+		
 		public int getMinOccurs() {
 			return Math.abs(getMin());
 		}
 
+		// -----------------------------------------------------
+		
 		public boolean isSingle() {
 			return (getMax()==1);
 		}
 
+		// -----------------------------------------------------
+		
 		public boolean isUnbound() {
 			return (getMax()==-1);
 		}
 		
+		// -----------------------------------------------------
 		
 		//Getters and Setters
 		
@@ -148,19 +138,25 @@ public final class CardinalityFactory{
 			return max;
 		}
 
+		// -----------------------------------------------------
+		
 		private void setMax(int max) {
 			this.max = max;
 		}
 
+		// -----------------------------------------------------
+		
 		public int getMin() {
 			return min;
 		}
 
+		// -----------------------------------------------------
+		
 		private void setMin(int min) {
 			this.min = min;
 		}
  
-		//------------------------------------
+		// -----------------------------------------------------
 		
 	}//End of inner class CardinalityImpl
 
