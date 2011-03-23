@@ -84,11 +84,7 @@ public final class CardinalityFactory{
 	//---------------------------------------------
 	
 	public static Cardinality hasExactly(int value){
-	   try{
 	     return getAbsoluteCardinality(Math.abs(value),Math.abs(value));
-	   }catch(IllegalArgumentException exe){
-		   return null;
-	   }
 	}
 	
 	//---------------------------------------------

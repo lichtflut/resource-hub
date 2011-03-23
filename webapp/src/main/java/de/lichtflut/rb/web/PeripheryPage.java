@@ -3,13 +3,16 @@
  */
 package de.lichtflut.rb.web;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.io.JsonBinding;
 import org.arastreju.sge.io.OntologyIOException;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
@@ -39,6 +42,37 @@ public class PeripheryPage extends WebPage {
 		super(params);
 		
 		gate = Arastreju.getInstance().rootContext();
+		
+	}
+	
+	// -----------------------------------------------------
+	
+	/* (non-Javadoc)
+	 * @see org.apache.wicket.Component#onInitialize()
+	 */
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+		
+		SemanticGraph g = loadGraph();
+		StringBuilder jsonTree = new StringBuilder("graph = [ ");
+			//new StringBuilder("graph = { id: 0, name: 'root', children: [ ");
+		
+		
+		JsonBinding binding = new JsonBinding();
+		try {
+			ByteArrayOutputStream os = new ByteArrayOutputStream(1000);
+			binding.write(g, os);
+			jsonTree.append(os.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (OntologyIOException e) {
+			e.printStackTrace();
+		}
+		
+		jsonTree.append("];");
+		
+		add(new Label("jsonTree", Model.of(jsonTree.toString())).setEscapeModelStrings(false));
 		
 	}
 	
