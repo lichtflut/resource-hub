@@ -13,7 +13,6 @@ import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
  * <p>
@@ -41,7 +40,7 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 		super();
 		this.propertyDescriptor = propertyDescriptor;
 		this.property = property;
-		cardinality = CardinalityFactory.hasAtLeastOneToMany();
+		cardinality = CardinalityFactory.hasOptionalOneToMany();
 	}
 	
 	public PropertyAssertionImpl(ResourceID propertyDescriptor,
@@ -92,7 +91,7 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 		sBuffer.append("\nproperty: "+ property.toString());
 		sBuffer.append("\ncardinality: "+ cardinality.toString());
 		if(null!=constraints){
-			Iterator i = constraints.iterator();
+			Iterator<Constraint> i = constraints.iterator();
 			while(i.hasNext())
 				sBuffer.append("\ncardinality: "+i.next().toString());
 		}

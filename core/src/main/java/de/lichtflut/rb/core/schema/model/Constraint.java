@@ -14,8 +14,18 @@ import org.arastreju.sge.model.ResourceID;
  *  </ol>
  * </p>
  *  
+ *  <p>
+ *  Type constraint for resource references have to be interpreted as follows:
+ *  <pre> 
+ *  	if constraint type is X and the resource applied id Y
+ *  	the constraint is fulfilled
+ *  	if (X rdf:type Y) is true
+ *   </pre>
+ * </p>
+ *  
+ *  
  * <p>
- *  Cardinality (min occurs, max occurs) are not constraints. 
+ * Please note, that cardinality (min occurs, max occurs) are not constraints. 
  * </p>
  *
  * <p>
