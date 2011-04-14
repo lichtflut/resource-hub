@@ -104,7 +104,14 @@ public final class ConstraintFactory{
 	}
 	
 	/**
-	 * TODO: To comment!
+	 * TODO: PLEASE FIX AND TO COMMMENT! AND This is not the way I like it.
+	 * Don't generate thousands of anonymous classes in a running system instance if you even don't need them.
+	 * And if You do so, realize my origin solution as follows!!!:
+	 * Be a subclass of AbstractConstraint AND(!!!) override just the method you absolutely need to override:
+	 * if literal is not null, override "boolean is LiteralConstraint" with returning true and so on....
+	 * So REMEMBER! THIS IS NOT FINAL, PLEASE CHANGE IT IF YA CAN READ DIZ.
+	 * Also just ask you the following: Is a ConstraintFactory even necessary for all the known use-cases?
+	 * 
 	 * @param literal
 	 * @param resource
 	 * @return
