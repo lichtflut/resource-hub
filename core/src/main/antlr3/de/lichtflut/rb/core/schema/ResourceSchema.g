@@ -19,18 +19,33 @@ options {
 
 @members {
     public static void main(String[] args) throws Exception {
-       ResourceSchemaLexer lex = new ResourceSchemaLexer(new ANTLRFileStream(args[0]));
-          CommonTokenStream tokens = new CommonTokenStream(lex);
-
-       ResourceSchemaParser parser = new ResourceSchemaParser(tokens);
-
-       try {
-           //parser.expr();
-       } catch (RecognitionException e)  {
-           e.printStackTrace();
-       }
     }
 }
+
+
+/*------------------------------------------------------------------
+* PARSER RULES
+*------------------------------------------------------------------*/
+
+dsl: (property | resource)+;
+
+property : PROPERTY_DEC IDENT '('! propertyDeclaration* ')'!;
+
+propertyDeclaration :  ( typeDeclaration | regexDeclaration) EOL;
+
+typeDeclaration :  (WS)* 'type is'  (WS)* DATATYPE  (WS)* ;
+
+regexDeclaration : (WS)* 'regex'  (WS)* '"' IDENT '"' (WS)* ;
+
+resource : RESOURCE_DEC IDENT '('! resourceDeclaration+ ')'!;
+
+resourceDeclaration : cardinality (IDENT referenceDeclaration? | property);
+
+referenceDeclaration : 'references' IDENT;
+
+cardinality : cardinalityDeclaration ('and'! cardinalityDeclaration)*;
+
+cardinalityDeclaration : CARDINALITY INT;
 
 
 /*------------------------------------------------------------------
@@ -43,6 +58,7 @@ options {
 PROPERTY_DEC : (PROPERTY_DEC_UPPER | PROPERTY_DEC_LOWER);
 PROPERTY_DEC_UPPER : 'PROPERTY';
 PROPERTY_DEC_LOWER : 'property';
+RESOURCE_DEC : (RESOURCE_DEC_UPPER | RESOURCE_DEC_LOWER);
 RESOURCE_DEC_UPPER : 'RESOURCE';
 RESOURCE_DEC_LOWER : 'resource';
 NUMERIC_UPPER : 'NUMERIC';
@@ -55,7 +71,7 @@ EOL 	:	 '\n';
 
 
 CARDINALITY : ('has' | 'hasMin' | 'hasMax');
-DATATYPE : (NUMERIC | TEXT | LOGICAL);
+DATATYPE : (NUMERIC | TEXT );
 NUMERIC : (NUMERIC_UPPER | NUMERIC_LOWER);
 TEXT : (TEXT_UPPER | TEXT_LOWER);
 LOGICAL : (LOGICAL_UPPER | LOGICAL_LOWER);
@@ -64,29 +80,6 @@ IDENT : ('a' .. 'z' | 'A' .. 'Z')('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*;
 STRING : '"'('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^')+'"';
 WS : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+     { $channel = HIDDEN; } ;
 
-/*------------------------------------------------------------------
-* PARSER RULES
-*------------------------------------------------------------------*/
 
-
-dsl: (property | resource)+;
-
-property : 'property'^ IDENT '('! propertyDeclaration* ')'!;
-
-propertyDeclaration :  ( typeDeclaration | regexDeclaration) EOL;
-
-typeDeclaration :  (WS)* 'type is'  (WS)* DATATYPE  (WS)* ;
-
-regexDeclaration : (WS)* 'regex'  (WS)* '"' IDENT '"' (WS)* ;
-
-resource : 'resource'^ IDENT '('! resourceDeclaration+ ')'!;
-
-resourceDeclaration : cardinality (IDENT referenceDeclaration? | property);
-
-referenceDeclaration : 'references' IDENT;
-
-cardinality : cardinalityDeclaration ('and'! cardinalityDeclaration)*;
-
-cardinalityDeclaration : CARDINALITY INT;
 
 
