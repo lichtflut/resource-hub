@@ -42,10 +42,24 @@ public interface PropertyDeclaration {
 	ElementaryDataType getElementaryDataType();
 	
 	/**
+	 * Set the {@link ElementaryDataType}.
+	 * @return void
+	 */
+	void setElementaryDataType(ElementaryDataType type);	
+	
+	/**
 	 * Get the name of the property.
 	 * @return The name of the property.
 	 */
 	String getName();
+	
+	/**
+	 * Set the name or identifier of this property.
+	 * @return void
+	 * @param the name or identifier you wish to set,
+	 */
+	void setName(String identifierString);
+	
 	
 	/**
 	 * The context independent constraints for this property.
@@ -53,6 +67,21 @@ public interface PropertyDeclaration {
 	 */
 	Set<Constraint> getConstraints();
 	
+	/**
+	 * The context independent constraints for this property.
+	 * @param the constraints you like to set
+	 * @return void
+	 */
+	void setConstraints(Set<Constraint> constraints);
+	
+	/**
+	 * The context independent constraints for this property.
+	 * @param the constraint you like to add
+	 * @return void
+	 */
+	void addConstraint(Constraint constraint);
+	
+		
 	// -----------------------------------------------------
 	
 	boolean isValue();

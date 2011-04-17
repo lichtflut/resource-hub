@@ -26,6 +26,9 @@ public final class CardinalityFactory{
 	
 	private static CardinalityFactory instance =  new CardinalityFactory();
 	
+	/*
+	 * For future uses
+	 */
 	public static CardinalityFactory getInstance(){
 		return instance;
 	}
@@ -80,7 +83,7 @@ public final class CardinalityFactory{
     // -----------------------------------------------------
 	
     //Constructor 
-    //Try to hide the constructor, to make this class not accessable
+    //Try to hide the constructor, to make this instance not directly accessible
     private CardinalityFactory(){}
     
     
