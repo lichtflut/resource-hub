@@ -33,7 +33,7 @@ import org.arastreju.sge.model.ElementaryDataType;
  *
  * @author Oliver Tigges
  */
-public interface PropertyDeclaration {
+public interface PropertyDeclaration  extends ResourceSchemaType{
 
 	/**
 	 * Get the {@link ElementaryDataType}.

@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.schema.model.impl;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import org.arastreju.sge.model.ElementaryDataType;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -151,11 +152,18 @@ public class PropertyDeclarationImpl implements PropertyDeclaration{
 	}
 
 	/**
-	 * TODO: Fix toString()-Method
 	 * Just override the toString()-Method 
 	 */
 	public String toString(){
-		return null;
+		StringBuffer sBuffer = new StringBuffer();
+		sBuffer.append("Identifier: " + (getName()!=null ? getName() : "") );
+		sBuffer.append("\nDatatype: "+ getElementaryDataType().toString());
+		if(null!=constraints){
+			Iterator<Constraint> i = constraints.iterator();
+			while(i.hasNext())
+				sBuffer.append("\n  - Constraint: "+i.next().toString());
+			}
+		return sBuffer.toString();
 	}
 	
 }

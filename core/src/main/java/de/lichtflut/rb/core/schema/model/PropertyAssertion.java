@@ -20,7 +20,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface PropertyAssertion {
+public interface PropertyAssertion extends ResourceSchemaType {
 
 	/**
 	 * The descriptor of this property. Usually the resource identifier representing
