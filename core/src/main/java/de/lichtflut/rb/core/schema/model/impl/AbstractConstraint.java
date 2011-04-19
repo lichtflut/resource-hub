@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.schema.model.impl;
 

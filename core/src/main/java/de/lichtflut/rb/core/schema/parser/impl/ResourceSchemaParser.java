@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ */
+
 // $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/ResourceSchema.g 2011-04-19 12:34:10
 
    /*

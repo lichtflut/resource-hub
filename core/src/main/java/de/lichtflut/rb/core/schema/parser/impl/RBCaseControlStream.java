@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ */
 package de.lichtflut.rb.core.schema.parser.impl;
 
 import org.antlr.runtime.ANTLRStringStream;
