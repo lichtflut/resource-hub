@@ -7,8 +7,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import org.antlr.runtime.RecognitionException;
+
+import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 /**
  * 
  * [TODO Insert description here.]
@@ -19,9 +22,9 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  */
 public interface ResourceSchemaManagement {
 
-	public ResourceSchema generateSchemaModelThrough(InputStream is) throws IOException;
-	public ResourceSchema generateSchemaModelThrough(File file) throws FileNotFoundException, IOException;
-	public ResourceSchema generateSchemaModelThrough(String s);
+	public Set<ResourceSchemaType> generateSchemaModelThrough(InputStream is) throws  IOException, RecognitionException ;
+	public Set<ResourceSchemaType> generateSchemaModelThrough(File file) throws FileNotFoundException, IOException,RecognitionException ;
+	public Set<ResourceSchemaType> generateSchemaModelThrough(String s) throws RecognitionException ;
 	
 	/**
 	 * TODO: There shall be some more overloaded methods to be more flexible

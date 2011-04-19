@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
@@ -33,6 +34,7 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	private PropertyDeclaration property;
 	private Cardinality cardinality;
 	private Set<Constraint> constraints = null;
+	private String propertyIdentifier = null;
 	
 	//Constructors
 	public PropertyAssertionImpl(ResourceID propertyDescriptor,
@@ -41,6 +43,15 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 		this.propertyDescriptor = propertyDescriptor;
 		this.property = property;
 		cardinality = CardinalityFactory.hasOptionalOneToMany();
+	}
+	
+	public PropertyAssertionImpl(String propertyIdentifier, Cardinality c){
+		this.cardinality = c;
+		this.propertyIdentifier = propertyIdentifier;
+	}
+	
+	public PropertyAssertionImpl(String propertyIdentifier){
+		this.propertyIdentifier = propertyIdentifier;
 	}
 	
 	public PropertyAssertionImpl(ResourceID propertyDescriptor,
@@ -87,8 +98,9 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	@Override
 	public String toString() {
 		StringBuffer sBuffer = new StringBuffer();
-		sBuffer.append("propertyDescriptor: " + propertyDescriptor.toString());
-		sBuffer.append("\nproperty: "+ property.toString());
+		sBuffer.append("propertyIdentifier: " +  this.propertyIdentifier);
+		sBuffer.append("\npropertyDescriptor: " + ((propertyDescriptor!=null) ? propertyDescriptor.toString() : ""));
+		sBuffer.append("\nproperty: " + ((propertyDescriptor!=null) ? property.toString() : ""));
 		sBuffer.append("\ncardinality: "+ cardinality.toString());
 		if(null!=constraints){
 			Iterator<Constraint> i = constraints.iterator();
@@ -96,6 +108,36 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 				sBuffer.append("\ncardinality: "+i.next().toString());
 		}
 		return sBuffer.toString();
+	}
+
+	
+	/**
+	 * TODO: Implement and document
+	 */
+	public boolean isResolved() {
+		if(property == null) return false;
+		return true;
+	}
+
+	/**
+	 * TODO: Implement and document
+	 */
+	public boolean resolveAssertion() {
+		throw new NotYetImplementedException();
+	}
+
+	public void setCardinality(Cardinality c) {
+		this.cardinality = c;
+		
+	}
+
+	public void setPropertyIdentifier(String identifier) {
+		this.propertyIdentifier = identifier;
+		
+	}
+
+	public String getPropertyIdentifier() {
+		return this.propertyIdentifier;
 	}
 
 }

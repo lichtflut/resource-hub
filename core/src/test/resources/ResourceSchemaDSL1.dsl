@@ -1,5 +1,8 @@
 resource Person(
-  hasMax 2 and hasMin 1 email
+  hasMax 2 aNd hasMin 1 email
+  
+  
+  
   hasMin 1 wohnort
   )
   
@@ -8,4 +11,4 @@ resource Person(
   looks like: " aa "
   type is text)
   
-  PROPERTY wohnort    (tYpe: TeXT like: " sa "  )
+  PROPERTY wohnort    (tYPe: TeXT like: " sa "  )

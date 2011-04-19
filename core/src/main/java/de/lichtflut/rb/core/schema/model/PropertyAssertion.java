@@ -43,6 +43,34 @@ public interface PropertyAssertion extends ResourceSchemaType {
 	Cardinality getCardinality();
 	
 	/**
+	 * Set cardinality of this property,
+	 * @param The cardinality.
+	 */
+	void setCardinality(Cardinality c);
+	
+	/**
+	 * TODO: ToComment
+	 */
+	void setPropertyIdentifier(String identifier);
+	
+	/**
+	 * TODO: ToComment
+	 */
+	String getPropertyIdentifier();
+	
+	
+	/**
+	 * TODO: ToComment
+	 */
+	boolean resolveAssertion();
+	
+	/**
+	 * TODO: ToComment
+	 */
+	boolean isResolved();
+	
+	
+	/**
 	 * The constraints for this property assertion.
 	 * There are to levels where constraints can be defined. Either for the property (First lvl)
 	 * or directly for the assertion (Second lvl) . The set of constraints returned by

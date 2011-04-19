@@ -1,32 +1,29 @@
-/*
- * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
- */
-// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/ResourceSchema.g 2011-04-19 12:34:10
+// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/ResourceSchema.g 2011-04-19 16:23:47
 
     package de.lichtflut.rb.core.schema.parser.impl;
+
+
 import org.antlr.runtime.*;
-import java.util.Stack;
-import java.util.List;
-import java.util.ArrayList;
 
 public class ResourceSchemaLexer extends Lexer {
     public static final int PROPERTY_DEC=4;
+    public static final int T__21=21;
     public static final int T__20=20;
     public static final int INT=12;
     public static final int NUMERIC=13;
     public static final int TEXT=14;
+    public static final int DELIM=16;
     public static final int EOF=-1;
     public static final int CARDINALITY=11;
     public static final int REGEX_DEC=9;
     public static final int RESOURCE_DEC=10;
     public static final int T__19=19;
-    public static final int WS=17;
-    public static final int T__18=18;
+    public static final int WS=18;
     public static final int BRACKET_CLOSED=7;
     public static final int IDENT=5;
     public static final int LOGICAL=15;
     public static final int TYPE_DEC=8;
-    public static final int STRING=16;
+    public static final int STRING=17;
     public static final int BRACKET_OPEN=6;
 
     // delegates
@@ -42,36 +39,15 @@ public class ResourceSchemaLexer extends Lexer {
     }
     public String getGrammarFileName() { return "de/lichtflut/rb/core/schema/ResourceSchema.g"; }
 
-    // $ANTLR start "T__18"
-    public final void mT__18() throws RecognitionException {
-        try {
-            int _type = T__18;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:11:7: ( '\"' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:11:9: '\"'
-            {
-            match('\"'); 
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end "T__18"
-
     // $ANTLR start "T__19"
     public final void mT__19() throws RecognitionException {
         try {
             int _type = T__19;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:12:7: ( 'references' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:12:9: 'references'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:11:7: ( '\"' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:11:9: '\"'
             {
-            match("references"); 
-
+            match('\"'); 
 
             }
 
@@ -88,6 +64,27 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = T__20;
             int _channel = DEFAULT_TOKEN_CHANNEL;
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:12:7: ( 'references' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:12:9: 'references'
+            {
+            match("references"); 
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "T__20"
+
+    // $ANTLR start "T__21"
+    public final void mT__21() throws RecognitionException {
+        try {
+            int _type = T__21;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
             // de/lichtflut/rb/core/schema/ResourceSchema.g:13:7: ( 'AND' )
             // de/lichtflut/rb/core/schema/ResourceSchema.g:13:9: 'AND'
             {
@@ -102,22 +99,22 @@ public class ResourceSchemaLexer extends Lexer {
         finally {
         }
     }
-    // $ANTLR end "T__20"
+    // $ANTLR end "T__21"
 
     // $ANTLR start "TYPE_DEC"
     public final void mTYPE_DEC() throws RecognitionException {
         try {
             int _type = TYPE_DEC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:129:10: ( ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:129:12: ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:145:10: ( ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:145:12: ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:129:12: ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:145:12: ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' )
             int alt1=4;
             alt1 = dfa1.predict(input);
             switch (alt1) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:129:13: 'TYPE IS'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:145:13: 'TYPE IS'
                     {
                     match("TYPE IS"); 
 
@@ -125,7 +122,7 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:129:23: 'TYPE:'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:145:23: 'TYPE:'
                     {
                     match("TYPE:"); 
 
@@ -133,7 +130,7 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:129:32: 'TYPE'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:145:32: 'TYPE'
                     {
                     match("TYPE"); 
 
@@ -141,7 +138,7 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 4 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:129:39: 'TYPE IS:'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:145:39: 'TYPE IS:'
                     {
                     match("TYPE IS:"); 
 
@@ -167,58 +164,78 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = REGEX_DEC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:130:11: ( ( 'LIKE:' | 'REGEX:' | 'LOOKS LIKE:' | 'LIKE' | 'REGEX' | 'LOOKS LIKE' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:130:13: ( 'LIKE:' | 'REGEX:' | 'LOOKS LIKE:' | 'LIKE' | 'REGEX' | 'LOOKS LIKE' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:146:11: ( ( 'LIKE' | 'REGEX' | 'LOOKS LIKE' ) ( DELIM )? )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:146:13: ( 'LIKE' | 'REGEX' | 'LOOKS LIKE' ) ( DELIM )?
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:130:13: ( 'LIKE:' | 'REGEX:' | 'LOOKS LIKE:' | 'LIKE' | 'REGEX' | 'LOOKS LIKE' )
-            int alt2=6;
-            alt2 = dfa2.predict(input);
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:146:13: ( 'LIKE' | 'REGEX' | 'LOOKS LIKE' )
+            int alt2=3;
+            int LA2_0 = input.LA(1);
+
+            if ( (LA2_0=='L') ) {
+                int LA2_1 = input.LA(2);
+
+                if ( (LA2_1=='I') ) {
+                    alt2=1;
+                }
+                else if ( (LA2_1=='O') ) {
+                    alt2=3;
+                }
+                else {
+                    NoViableAltException nvae =
+                        new NoViableAltException("", 2, 1, input);
+
+                    throw nvae;
+                }
+            }
+            else if ( (LA2_0=='R') ) {
+                alt2=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("", 2, 0, input);
+
+                throw nvae;
+            }
             switch (alt2) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:130:14: 'LIKE:'
-                    {
-                    match("LIKE:"); 
-
-
-                    }
-                    break;
-                case 2 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:130:24: 'REGEX:'
-                    {
-                    match("REGEX:"); 
-
-
-                    }
-                    break;
-                case 3 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:130:35: 'LOOKS LIKE:'
-                    {
-                    match("LOOKS LIKE:"); 
-
-
-                    }
-                    break;
-                case 4 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:130:51: 'LIKE'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:146:14: 'LIKE'
                     {
                     match("LIKE"); 
 
 
                     }
                     break;
-                case 5 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:130:60: 'REGEX'
+                case 2 :
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:146:23: 'REGEX'
                     {
                     match("REGEX"); 
 
 
                     }
                     break;
-                case 6 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:130:70: 'LOOKS LIKE'
+                case 3 :
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:146:33: 'LOOKS LIKE'
                     {
                     match("LOOKS LIKE"); 
 
+
+                    }
+                    break;
+
+            }
+
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:146:46: ( DELIM )?
+            int alt3=2;
+            int LA3_0 = input.LA(1);
+
+            if ( (LA3_0==':') ) {
+                alt3=1;
+            }
+            switch (alt3) {
+                case 1 :
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:146:46: DELIM
+                    {
+                    mDELIM(); 
 
                     }
                     break;
@@ -236,16 +253,42 @@ public class ResourceSchemaLexer extends Lexer {
     }
     // $ANTLR end "REGEX_DEC"
 
+    // $ANTLR start "DELIM"
+    public final void mDELIM() throws RecognitionException {
+        try {
+            int _type = DELIM;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:147:7: ( ( ':' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:147:9: ( ':' )
+            {
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:147:9: ( ':' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:147:10: ':'
+            {
+            match(':'); 
+
+            }
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "DELIM"
+
     // $ANTLR start "PROPERTY_DEC"
     public final void mPROPERTY_DEC() throws RecognitionException {
         try {
             int _type = PROPERTY_DEC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:131:14: ( ( 'PROPERTY' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:131:16: ( 'PROPERTY' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:148:14: ( ( 'PROPERTY' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:148:16: ( 'PROPERTY' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:131:16: ( 'PROPERTY' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:131:17: 'PROPERTY'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:148:16: ( 'PROPERTY' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:148:17: 'PROPERTY'
             {
             match("PROPERTY"); 
 
@@ -268,11 +311,11 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = RESOURCE_DEC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:132:14: ( ( 'RESOURCE' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:132:16: ( 'RESOURCE' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:149:14: ( ( 'RESOURCE' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:149:16: ( 'RESOURCE' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:132:16: ( 'RESOURCE' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:132:17: 'RESOURCE'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:149:16: ( 'RESOURCE' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:149:17: 'RESOURCE'
             {
             match("RESOURCE"); 
 
@@ -295,11 +338,11 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = NUMERIC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:133:9: ( ( 'NUMERIC' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:133:11: ( 'NUMERIC' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:150:9: ( ( 'NUMERIC' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:150:11: ( 'NUMERIC' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:133:11: ( 'NUMERIC' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:133:12: 'NUMERIC'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:150:11: ( 'NUMERIC' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:150:12: 'NUMERIC'
             {
             match("NUMERIC"); 
 
@@ -322,11 +365,11 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = TEXT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:134:6: ( ( 'TEXT' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:134:8: ( 'TEXT' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:151:6: ( ( 'TEXT' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:151:8: ( 'TEXT' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:134:8: ( 'TEXT' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:134:9: 'TEXT'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:151:8: ( 'TEXT' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:151:9: 'TEXT'
             {
             match("TEXT"); 
 
@@ -349,11 +392,11 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = LOGICAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:135:9: ( ( 'LOGICAL' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:135:11: ( 'LOGICAL' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:152:9: ( ( 'LOGICAL' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:152:11: ( 'LOGICAL' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:135:11: ( 'LOGICAL' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:135:12: 'LOGICAL'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:152:11: ( 'LOGICAL' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:152:12: 'LOGICAL'
             {
             match("LOGICAL"); 
 
@@ -376,8 +419,8 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = BRACKET_OPEN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:136:14: ( '(' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:136:16: '('
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:153:14: ( '(' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:153:16: '('
             {
             match('('); 
 
@@ -396,8 +439,8 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = BRACKET_CLOSED;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:137:16: ( ')' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:137:18: ')'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:154:16: ( ')' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:154:18: ')'
             {
             match(')'); 
 
@@ -416,15 +459,15 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = CARDINALITY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:138:13: ( ( 'HAS' | 'HAS MIN' | 'HAS MAX' | 'HASMIN' | 'HASMAX' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:138:15: ( 'HAS' | 'HAS MIN' | 'HAS MAX' | 'HASMIN' | 'HASMAX' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:155:13: ( ( 'HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX' ) ( DELIM )? )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:155:15: ( 'HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX' ) ( DELIM )?
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:138:15: ( 'HAS' | 'HAS MIN' | 'HAS MAX' | 'HASMIN' | 'HASMAX' )
-            int alt3=5;
-            alt3 = dfa3.predict(input);
-            switch (alt3) {
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:155:15: ( 'HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX' )
+            int alt4=5;
+            alt4 = dfa4.predict(input);
+            switch (alt4) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:138:16: 'HAS'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:16: 'HAS'
                     {
                     match("HAS"); 
 
@@ -432,23 +475,23 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:138:24: 'HAS MIN'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:24: 'HAS_MIN'
                     {
-                    match("HAS MIN"); 
+                    match("HAS_MIN"); 
 
 
                     }
                     break;
                 case 3 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:138:36: 'HAS MAX'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:36: 'HAS_MAX'
                     {
-                    match("HAS MAX"); 
+                    match("HAS_MAX"); 
 
 
                     }
                     break;
                 case 4 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:138:48: 'HASMIN'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:48: 'HASMIN'
                     {
                     match("HASMIN"); 
 
@@ -456,10 +499,28 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 5 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:138:59: 'HASMAX'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:59: 'HASMAX'
                     {
                     match("HASMAX"); 
 
+
+                    }
+                    break;
+
+            }
+
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:155:68: ( DELIM )?
+            int alt5=2;
+            int LA5_0 = input.LA(1);
+
+            if ( (LA5_0==':') ) {
+                alt5=1;
+            }
+            switch (alt5) {
+                case 1 :
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:68: DELIM
+                    {
+                    mDELIM(); 
 
                     }
                     break;
@@ -482,24 +543,24 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:140:5: ( ( '0' .. '9' )+ )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:140:7: ( '0' .. '9' )+
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:157:5: ( ( '0' .. '9' )+ )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:157:7: ( '0' .. '9' )+
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:140:7: ( '0' .. '9' )+
-            int cnt4=0;
-            loop4:
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:157:7: ( '0' .. '9' )+
+            int cnt6=0;
+            loop6:
             do {
-                int alt4=2;
-                int LA4_0 = input.LA(1);
+                int alt6=2;
+                int LA6_0 = input.LA(1);
 
-                if ( ((LA4_0>='0' && LA4_0<='9')) ) {
-                    alt4=1;
+                if ( ((LA6_0>='0' && LA6_0<='9')) ) {
+                    alt6=1;
                 }
 
 
-                switch (alt4) {
+                switch (alt6) {
             	case 1 :
-            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:140:8: '0' .. '9'
+            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:157:8: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -507,12 +568,12 @@ public class ResourceSchemaLexer extends Lexer {
             	    break;
 
             	default :
-            	    if ( cnt4 >= 1 ) break loop4;
+            	    if ( cnt6 >= 1 ) break loop6;
                         EarlyExitException eee =
-                            new EarlyExitException(4, input);
+                            new EarlyExitException(6, input);
                         throw eee;
                 }
-                cnt4++;
+                cnt6++;
             } while (true);
 
 
@@ -531,8 +592,8 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = IDENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:141:7: ( ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )* )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:141:9: ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:158:7: ( ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )* )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:158:9: ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -543,18 +604,18 @@ public class ResourceSchemaLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:141:34: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
-            loop5:
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:158:34: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
+            loop7:
             do {
-                int alt5=2;
-                int LA5_0 = input.LA(1);
+                int alt7=2;
+                int LA7_0 = input.LA(1);
 
-                if ( ((LA5_0>='0' && LA5_0<='9')||(LA5_0>='A' && LA5_0<='Z')||LA5_0=='_'||(LA5_0>='a' && LA5_0<='z')) ) {
-                    alt5=1;
+                if ( ((LA7_0>='0' && LA7_0<='9')||(LA7_0>='A' && LA7_0<='Z')||LA7_0=='_'||(LA7_0>='a' && LA7_0<='z')) ) {
+                    alt7=1;
                 }
 
 
-                switch (alt5) {
+                switch (alt7) {
             	case 1 :
             	    // de/lichtflut/rb/core/schema/ResourceSchema.g:
             	    {
@@ -572,7 +633,7 @@ public class ResourceSchemaLexer extends Lexer {
             	    break;
 
             	default :
-            	    break loop5;
+            	    break loop7;
                 }
             } while (true);
 
@@ -592,23 +653,23 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:142:8: ( '\"' ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^' )+ '\"' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:142:10: '\"' ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^' )+ '\"'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:159:8: ( '\"' ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^' )+ '\"' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:159:10: '\"' ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^' )+ '\"'
             {
             match('\"'); 
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:142:13: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^' )+
-            int cnt6=0;
-            loop6:
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:159:13: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^' )+
+            int cnt8=0;
+            loop8:
             do {
-                int alt6=2;
-                int LA6_0 = input.LA(1);
+                int alt8=2;
+                int LA8_0 = input.LA(1);
 
-                if ( ((LA6_0>='*' && LA6_0<='+')||LA6_0=='-'||(LA6_0>='0' && LA6_0<='9')||(LA6_0>='A' && LA6_0<='Z')||LA6_0=='^'||(LA6_0>='a' && LA6_0<='z')) ) {
-                    alt6=1;
+                if ( ((LA8_0>='*' && LA8_0<='+')||LA8_0=='-'||(LA8_0>='0' && LA8_0<='9')||(LA8_0>='A' && LA8_0<='Z')||LA8_0=='^'||(LA8_0>='a' && LA8_0<='z')) ) {
+                    alt8=1;
                 }
 
 
-                switch (alt6) {
+                switch (alt8) {
             	case 1 :
             	    // de/lichtflut/rb/core/schema/ResourceSchema.g:
             	    {
@@ -626,12 +687,12 @@ public class ResourceSchemaLexer extends Lexer {
             	    break;
 
             	default :
-            	    if ( cnt6 >= 1 ) break loop6;
+            	    if ( cnt8 >= 1 ) break loop8;
                         EarlyExitException eee =
-                            new EarlyExitException(6, input);
+                            new EarlyExitException(8, input);
                         throw eee;
                 }
-                cnt6++;
+                cnt8++;
             } while (true);
 
             match('\"'); 
@@ -651,22 +712,22 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:143:4: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:143:6: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:160:4: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:160:6: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:143:6: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
-            int cnt7=0;
-            loop7:
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:160:6: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+            int cnt9=0;
+            loop9:
             do {
-                int alt7=2;
-                int LA7_0 = input.LA(1);
+                int alt9=2;
+                int LA9_0 = input.LA(1);
 
-                if ( ((LA7_0>='\t' && LA7_0<='\n')||(LA7_0>='\f' && LA7_0<='\r')||LA7_0==' ') ) {
-                    alt7=1;
+                if ( ((LA9_0>='\t' && LA9_0<='\n')||(LA9_0>='\f' && LA9_0<='\r')||LA9_0==' ') ) {
+                    alt9=1;
                 }
 
 
-                switch (alt7) {
+                switch (alt9) {
             	case 1 :
             	    // de/lichtflut/rb/core/schema/ResourceSchema.g:
             	    {
@@ -684,12 +745,12 @@ public class ResourceSchemaLexer extends Lexer {
             	    break;
 
             	default :
-            	    if ( cnt7 >= 1 ) break loop7;
+            	    if ( cnt9 >= 1 ) break loop9;
                         EarlyExitException eee =
-                            new EarlyExitException(7, input);
+                            new EarlyExitException(9, input);
                         throw eee;
                 }
-                cnt7++;
+                cnt9++;
             } while (true);
 
              skip();  _channel = HIDDEN; 
@@ -705,28 +766,28 @@ public class ResourceSchemaLexer extends Lexer {
     // $ANTLR end "WS"
 
     public void mTokens() throws RecognitionException {
-        // de/lichtflut/rb/core/schema/ResourceSchema.g:1:8: ( T__18 | T__19 | T__20 | TYPE_DEC | REGEX_DEC | PROPERTY_DEC | RESOURCE_DEC | NUMERIC | TEXT | LOGICAL | BRACKET_OPEN | BRACKET_CLOSED | CARDINALITY | INT | IDENT | STRING | WS )
-        int alt8=17;
-        alt8 = dfa8.predict(input);
-        switch (alt8) {
+        // de/lichtflut/rb/core/schema/ResourceSchema.g:1:8: ( T__19 | T__20 | T__21 | TYPE_DEC | REGEX_DEC | DELIM | PROPERTY_DEC | RESOURCE_DEC | NUMERIC | TEXT | LOGICAL | BRACKET_OPEN | BRACKET_CLOSED | CARDINALITY | INT | IDENT | STRING | WS )
+        int alt10=18;
+        alt10 = dfa10.predict(input);
+        switch (alt10) {
             case 1 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:10: T__18
-                {
-                mT__18(); 
-
-                }
-                break;
-            case 2 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:16: T__19
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:10: T__19
                 {
                 mT__19(); 
 
                 }
                 break;
-            case 3 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:22: T__20
+            case 2 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:16: T__20
                 {
                 mT__20(); 
+
+                }
+                break;
+            case 3 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:22: T__21
+                {
+                mT__21(); 
 
                 }
                 break;
@@ -745,84 +806,91 @@ public class ResourceSchemaLexer extends Lexer {
                 }
                 break;
             case 6 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:47: PROPERTY_DEC
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:47: DELIM
+                {
+                mDELIM(); 
+
+                }
+                break;
+            case 7 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:53: PROPERTY_DEC
                 {
                 mPROPERTY_DEC(); 
 
                 }
                 break;
-            case 7 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:60: RESOURCE_DEC
+            case 8 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:66: RESOURCE_DEC
                 {
                 mRESOURCE_DEC(); 
 
                 }
                 break;
-            case 8 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:73: NUMERIC
+            case 9 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:79: NUMERIC
                 {
                 mNUMERIC(); 
 
                 }
                 break;
-            case 9 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:81: TEXT
+            case 10 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:87: TEXT
                 {
                 mTEXT(); 
 
                 }
                 break;
-            case 10 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:86: LOGICAL
+            case 11 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:92: LOGICAL
                 {
                 mLOGICAL(); 
 
                 }
                 break;
-            case 11 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:94: BRACKET_OPEN
+            case 12 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:100: BRACKET_OPEN
                 {
                 mBRACKET_OPEN(); 
 
                 }
                 break;
-            case 12 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:107: BRACKET_CLOSED
+            case 13 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:113: BRACKET_CLOSED
                 {
                 mBRACKET_CLOSED(); 
 
                 }
                 break;
-            case 13 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:122: CARDINALITY
+            case 14 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:128: CARDINALITY
                 {
                 mCARDINALITY(); 
 
                 }
                 break;
-            case 14 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:134: INT
+            case 15 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:140: INT
                 {
                 mINT(); 
 
                 }
                 break;
-            case 15 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:138: IDENT
+            case 16 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:144: IDENT
                 {
                 mIDENT(); 
 
                 }
                 break;
-            case 16 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:144: STRING
+            case 17 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:150: STRING
                 {
                 mSTRING(); 
 
                 }
                 break;
-            case 17 :
-                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:151: WS
+            case 18 :
+                // de/lichtflut/rb/core/schema/ResourceSchema.g:1:157: WS
                 {
                 mWS(); 
 
@@ -835,9 +903,8 @@ public class ResourceSchemaLexer extends Lexer {
 
 
     protected DFA1 dfa1 = new DFA1(this);
-    protected DFA2 dfa2 = new DFA2(this);
-    protected DFA3 dfa3 = new DFA3(this);
-    protected DFA8 dfa8 = new DFA8(this);
+    protected DFA4 dfa4 = new DFA4(this);
+    protected DFA10 dfa10 = new DFA10(this);
     static final String DFA1_eotS =
         "\4\uffff\1\7\4\uffff\1\13\2\uffff";
     static final String DFA1_eofS =
@@ -895,103 +962,26 @@ public class ResourceSchemaLexer extends Lexer {
             this.transition = DFA1_transition;
         }
         public String getDescription() {
-            return "129:12: ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' )";
+            return "145:12: ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' )";
         }
     }
-    static final String DFA2_eotS =
-        "\11\uffff\1\15\5\uffff\1\22\6\uffff\1\30\2\uffff";
-    static final String DFA2_eofS =
-        "\31\uffff";
-    static final String DFA2_minS =
-        "\1\114\1\111\1\105\1\113\1\117\1\107\1\105\1\113\1\105\1\72\1\123"+
-        "\1\130\2\uffff\1\40\1\72\1\114\2\uffff\1\111\1\113\1\105\1\72\2"+
-        "\uffff";
-    static final String DFA2_maxS =
-        "\1\122\1\117\1\105\1\113\1\117\1\107\1\105\1\113\1\105\1\72\1\123"+
-        "\1\130\2\uffff\1\40\1\72\1\114\2\uffff\1\111\1\113\1\105\1\72\2"+
-        "\uffff";
-    static final String DFA2_acceptS =
-        "\14\uffff\1\1\1\4\3\uffff\1\2\1\5\4\uffff\1\3\1\6";
-    static final String DFA2_specialS =
-        "\31\uffff}>";
-    static final String[] DFA2_transitionS = {
-            "\1\1\5\uffff\1\2",
-            "\1\3\5\uffff\1\4",
-            "\1\5",
-            "\1\6",
-            "\1\7",
-            "\1\10",
-            "\1\11",
-            "\1\12",
-            "\1\13",
-            "\1\14",
-            "\1\16",
-            "\1\17",
-            "",
-            "",
-            "\1\20",
-            "\1\21",
-            "\1\23",
-            "",
-            "",
-            "\1\24",
-            "\1\25",
-            "\1\26",
-            "\1\27",
-            "",
-            ""
-    };
-
-    static final short[] DFA2_eot = DFA.unpackEncodedString(DFA2_eotS);
-    static final short[] DFA2_eof = DFA.unpackEncodedString(DFA2_eofS);
-    static final char[] DFA2_min = DFA.unpackEncodedStringToUnsignedChars(DFA2_minS);
-    static final char[] DFA2_max = DFA.unpackEncodedStringToUnsignedChars(DFA2_maxS);
-    static final short[] DFA2_accept = DFA.unpackEncodedString(DFA2_acceptS);
-    static final short[] DFA2_special = DFA.unpackEncodedString(DFA2_specialS);
-    static final short[][] DFA2_transition;
-
-    static {
-        int numStates = DFA2_transitionS.length;
-        DFA2_transition = new short[numStates][];
-        for (int i=0; i<numStates; i++) {
-            DFA2_transition[i] = DFA.unpackEncodedString(DFA2_transitionS[i]);
-        }
-    }
-
-    class DFA2 extends DFA {
-
-        public DFA2(BaseRecognizer recognizer) {
-            this.recognizer = recognizer;
-            this.decisionNumber = 2;
-            this.eot = DFA2_eot;
-            this.eof = DFA2_eof;
-            this.min = DFA2_min;
-            this.max = DFA2_max;
-            this.accept = DFA2_accept;
-            this.special = DFA2_special;
-            this.transition = DFA2_transition;
-        }
-        public String getDescription() {
-            return "130:13: ( 'LIKE:' | 'REGEX:' | 'LOOKS LIKE:' | 'LIKE' | 'REGEX' | 'LOOKS LIKE' )";
-        }
-    }
-    static final String DFA3_eotS =
+    static final String DFA4_eotS =
         "\3\uffff\1\6\10\uffff";
-    static final String DFA3_eofS =
+    static final String DFA4_eofS =
         "\14\uffff";
-    static final String DFA3_minS =
-        "\1\110\1\101\1\123\1\40\1\115\1\101\1\uffff\1\101\4\uffff";
-    static final String DFA3_maxS =
-        "\1\110\1\101\1\123\2\115\1\111\1\uffff\1\111\4\uffff";
-    static final String DFA3_acceptS =
+    static final String DFA4_minS =
+        "\1\110\1\101\1\123\2\115\1\101\1\uffff\1\101\4\uffff";
+    static final String DFA4_maxS =
+        "\1\110\1\101\1\123\1\137\1\115\1\111\1\uffff\1\111\4\uffff";
+    static final String DFA4_acceptS =
         "\6\uffff\1\1\1\uffff\1\4\1\5\1\2\1\3";
-    static final String DFA3_specialS =
+    static final String DFA4_specialS =
         "\14\uffff}>";
-    static final String[] DFA3_transitionS = {
+    static final String[] DFA4_transitionS = {
             "\1\1",
             "\1\2",
             "\1\3",
-            "\1\4\54\uffff\1\5",
+            "\1\5\21\uffff\1\4",
             "\1\7",
             "\1\11\7\uffff\1\10",
             "",
@@ -1002,102 +992,104 @@ public class ResourceSchemaLexer extends Lexer {
             ""
     };
 
-    static final short[] DFA3_eot = DFA.unpackEncodedString(DFA3_eotS);
-    static final short[] DFA3_eof = DFA.unpackEncodedString(DFA3_eofS);
-    static final char[] DFA3_min = DFA.unpackEncodedStringToUnsignedChars(DFA3_minS);
-    static final char[] DFA3_max = DFA.unpackEncodedStringToUnsignedChars(DFA3_maxS);
-    static final short[] DFA3_accept = DFA.unpackEncodedString(DFA3_acceptS);
-    static final short[] DFA3_special = DFA.unpackEncodedString(DFA3_specialS);
-    static final short[][] DFA3_transition;
+    static final short[] DFA4_eot = DFA.unpackEncodedString(DFA4_eotS);
+    static final short[] DFA4_eof = DFA.unpackEncodedString(DFA4_eofS);
+    static final char[] DFA4_min = DFA.unpackEncodedStringToUnsignedChars(DFA4_minS);
+    static final char[] DFA4_max = DFA.unpackEncodedStringToUnsignedChars(DFA4_maxS);
+    static final short[] DFA4_accept = DFA.unpackEncodedString(DFA4_acceptS);
+    static final short[] DFA4_special = DFA.unpackEncodedString(DFA4_specialS);
+    static final short[][] DFA4_transition;
 
     static {
-        int numStates = DFA3_transitionS.length;
-        DFA3_transition = new short[numStates][];
+        int numStates = DFA4_transitionS.length;
+        DFA4_transition = new short[numStates][];
         for (int i=0; i<numStates; i++) {
-            DFA3_transition[i] = DFA.unpackEncodedString(DFA3_transitionS[i]);
+            DFA4_transition[i] = DFA.unpackEncodedString(DFA4_transitionS[i]);
         }
     }
 
-    class DFA3 extends DFA {
+    class DFA4 extends DFA {
 
-        public DFA3(BaseRecognizer recognizer) {
+        public DFA4(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 3;
-            this.eot = DFA3_eot;
-            this.eof = DFA3_eof;
-            this.min = DFA3_min;
-            this.max = DFA3_max;
-            this.accept = DFA3_accept;
-            this.special = DFA3_special;
-            this.transition = DFA3_transition;
+            this.decisionNumber = 4;
+            this.eot = DFA4_eot;
+            this.eof = DFA4_eof;
+            this.min = DFA4_min;
+            this.max = DFA4_max;
+            this.accept = DFA4_accept;
+            this.special = DFA4_special;
+            this.transition = DFA4_transition;
         }
         public String getDescription() {
-            return "138:15: ( 'HAS' | 'HAS MIN' | 'HAS MAX' | 'HASMIN' | 'HASMAX' )";
+            return "155:15: ( 'HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX' )";
         }
     }
-    static final String DFA8_eotS =
-        "\1\uffff\1\20\7\15\2\uffff\1\15\5\uffff\13\15\1\50\11\15\1\62\1"+
-        "\15\1\uffff\1\65\1\66\1\67\6\15\1\uffff\2\15\3\uffff\2\15\1\67\12"+
-        "\15\2\62\1\15\1\115\2\15\1\120\1\15\1\uffff\1\122\1\123\1\uffff"+
-        "\1\15\2\uffff\1\125\1\uffff";
-    static final String DFA8_eofS =
-        "\126\uffff";
-    static final String DFA8_minS =
-        "\1\11\1\52\1\145\1\116\1\105\1\111\1\105\1\122\1\125\2\uffff\1\101"+
-        "\5\uffff\1\146\1\104\1\120\1\130\1\113\2\107\1\117\1\115\1\123\1"+
-        "\145\1\60\1\105\1\124\1\105\1\113\1\111\1\105\1\117\1\120\1\105"+
-        "\1\60\1\162\1\uffff\3\60\1\123\1\103\1\130\1\125\1\105\1\122\1\uffff"+
-        "\1\101\1\145\3\uffff\1\40\1\101\1\60\2\122\1\111\1\116\1\130\1\156"+
-        "\1\114\1\103\1\124\1\103\2\60\1\143\1\60\1\105\1\131\1\60\1\145"+
-        "\1\uffff\2\60\1\uffff\1\163\2\uffff\1\60\1\uffff";
-    static final String DFA8_maxS =
-        "\2\172\1\145\1\116\1\131\1\117\1\105\1\122\1\125\2\uffff\1\101\5"+
-        "\uffff\1\146\1\104\1\120\1\130\1\113\1\117\1\123\1\117\1\115\1\123"+
-        "\1\145\1\172\1\105\1\124\1\105\1\113\1\111\1\105\1\117\1\120\1\105"+
-        "\1\172\1\162\1\uffff\3\172\1\123\1\103\1\130\1\125\1\105\1\122\1"+
-        "\uffff\1\111\1\145\3\uffff\1\40\1\101\1\172\2\122\1\111\1\116\1"+
-        "\130\1\156\1\114\1\103\1\124\1\103\2\172\1\143\1\172\1\105\1\131"+
-        "\1\172\1\145\1\uffff\2\172\1\uffff\1\163\2\uffff\1\172\1\uffff";
-    static final String DFA8_acceptS =
-        "\11\uffff\1\13\1\14\1\uffff\1\16\1\17\1\21\1\20\1\1\27\uffff\1\3"+
-        "\11\uffff\1\15\2\uffff\1\4\1\11\1\5\25\uffff\1\12\2\uffff\1\10\1"+
-        "\uffff\1\7\1\6\1\uffff\1\2";
-    static final String DFA8_specialS =
-        "\126\uffff}>";
-    static final String[] DFA8_transitionS = {
-            "\2\16\1\uffff\2\16\22\uffff\1\16\1\uffff\1\1\5\uffff\1\11\1"+
-            "\12\6\uffff\12\14\7\uffff\1\3\6\15\1\13\3\15\1\5\1\15\1\10\1"+
-            "\15\1\7\1\15\1\6\1\15\1\4\6\15\6\uffff\21\15\1\2\10\15",
-            "\2\17\1\uffff\1\17\2\uffff\12\17\7\uffff\32\17\3\uffff\1\17"+
-            "\2\uffff\32\17",
-            "\1\21",
+    static final String DFA10_eotS =
+        "\1\uffff\1\21\5\16\1\uffff\2\16\2\uffff\1\16\5\uffff\13\16\1\51"+
+        "\11\16\1\65\1\16\1\uffff\1\67\1\70\1\71\10\16\1\uffff\1\16\3\uffff"+
+        "\2\16\1\71\15\16\2\65\1\16\1\124\2\16\1\127\2\65\1\16\1\uffff\1"+
+        "\131\1\132\1\uffff\1\16\2\uffff\1\134\1\uffff";
+    static final String DFA10_eofS =
+        "\135\uffff";
+    static final String DFA10_minS =
+        "\1\11\1\52\1\145\1\116\1\105\1\111\1\105\1\uffff\1\122\1\125\2\uffff"+
+        "\1\101\5\uffff\1\146\1\104\1\120\1\130\1\113\2\107\1\117\1\115\1"+
+        "\123\1\145\1\60\1\105\1\124\1\105\1\113\1\111\1\105\1\117\1\120"+
+        "\1\105\1\60\1\162\1\uffff\3\60\1\123\1\103\1\130\1\125\1\105\1\122"+
+        "\1\115\1\101\1\uffff\1\145\3\uffff\1\40\1\101\1\60\2\122\1\111\1"+
+        "\101\1\116\1\130\1\156\1\114\1\103\1\124\1\103\1\116\1\130\2\60"+
+        "\1\143\1\60\1\105\1\131\3\60\1\145\1\uffff\2\60\1\uffff\1\163\2"+
+        "\uffff\1\60\1\uffff";
+    static final String DFA10_maxS =
+        "\2\172\1\145\1\116\1\131\1\117\1\105\1\uffff\1\122\1\125\2\uffff"+
+        "\1\101\5\uffff\1\146\1\104\1\120\1\130\1\113\1\117\1\123\1\117\1"+
+        "\115\1\123\1\145\1\172\1\105\1\124\1\105\1\113\1\111\1\105\1\117"+
+        "\1\120\1\105\1\172\1\162\1\uffff\3\172\1\123\1\103\1\130\1\125\1"+
+        "\105\1\122\1\115\1\111\1\uffff\1\145\3\uffff\1\40\1\101\1\172\2"+
+        "\122\2\111\1\116\1\130\1\156\1\114\1\103\1\124\1\103\1\116\1\130"+
+        "\2\172\1\143\1\172\1\105\1\131\3\172\1\145\1\uffff\2\172\1\uffff"+
+        "\1\163\2\uffff\1\172\1\uffff";
+    static final String DFA10_acceptS =
+        "\7\uffff\1\6\2\uffff\1\14\1\15\1\uffff\1\17\1\20\1\22\1\21\1\1\27"+
+        "\uffff\1\3\13\uffff\1\16\1\uffff\1\4\1\12\1\5\32\uffff\1\13\2\uffff"+
+        "\1\11\1\uffff\1\10\1\7\1\uffff\1\2";
+    static final String DFA10_specialS =
+        "\135\uffff}>";
+    static final String[] DFA10_transitionS = {
+            "\2\17\1\uffff\2\17\22\uffff\1\17\1\uffff\1\1\5\uffff\1\12\1"+
+            "\13\6\uffff\12\15\1\7\6\uffff\1\3\6\16\1\14\3\16\1\5\1\16\1"+
+            "\11\1\16\1\10\1\16\1\6\1\16\1\4\6\16\6\uffff\21\16\1\2\10\16",
+            "\2\20\1\uffff\1\20\2\uffff\12\20\7\uffff\32\20\3\uffff\1\20"+
+            "\2\uffff\32\20",
             "\1\22",
-            "\1\24\23\uffff\1\23",
-            "\1\25\5\uffff\1\26",
-            "\1\27",
+            "\1\23",
+            "\1\25\23\uffff\1\24",
+            "\1\26\5\uffff\1\27",
             "\1\30",
+            "",
             "\1\31",
-            "",
-            "",
             "\1\32",
             "",
             "",
-            "",
-            "",
-            "",
             "\1\33",
+            "",
+            "",
+            "",
+            "",
+            "",
             "\1\34",
             "\1\35",
             "\1\36",
             "\1\37",
-            "\1\41\7\uffff\1\40",
-            "\1\42\13\uffff\1\43",
-            "\1\44",
+            "\1\40",
+            "\1\42\7\uffff\1\41",
+            "\1\43\13\uffff\1\44",
             "\1\45",
             "\1\46",
             "\1\47",
-            "\12\15\7\uffff\32\15\4\uffff\1\15\1\uffff\32\15",
-            "\1\51",
+            "\1\50",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
             "\1\52",
             "\1\53",
             "\1\54",
@@ -1106,87 +1098,94 @@ public class ResourceSchemaLexer extends Lexer {
             "\1\57",
             "\1\60",
             "\1\61",
-            "\12\15\7\uffff\14\15\1\63\15\15\4\uffff\1\15\1\uffff\32\15",
-            "\1\64",
+            "\1\62",
+            "\12\16\7\uffff\14\16\1\64\15\16\4\uffff\1\63\1\uffff\32\16",
+            "\1\66",
             "",
-            "\12\15\7\uffff\32\15\4\uffff\1\15\1\uffff\32\15",
-            "\12\15\7\uffff\32\15\4\uffff\1\15\1\uffff\32\15",
-            "\12\15\7\uffff\32\15\4\uffff\1\15\1\uffff\32\15",
-            "\1\70",
-            "\1\71",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
             "\1\72",
             "\1\73",
             "\1\74",
             "\1\75",
-            "",
-            "\1\77\7\uffff\1\76",
+            "\1\76",
+            "\1\77",
             "\1\100",
+            "\1\102\7\uffff\1\101",
             "",
-            "",
-            "",
-            "\1\67",
-            "\1\101",
-            "\12\15\7\uffff\32\15\4\uffff\1\15\1\uffff\32\15",
-            "\1\102",
             "\1\103",
+            "",
+            "",
+            "",
+            "\1\71",
             "\1\104",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
             "\1\105",
             "\1\106",
             "\1\107",
-            "\1\110",
-            "\1\111",
+            "\1\111\7\uffff\1\110",
             "\1\112",
             "\1\113",
-            "\12\15\7\uffff\32\15\4\uffff\1\15\1\uffff\32\15",
-            "\12\15\7\uffff\32\15\4\uffff\1\15\1\uffff\32\15",
             "\1\114",
-            "\12\15\7\uffff\32\15\4\uffff\1\15\1\uffff\32\15",
+            "\1\115",
             "\1\116",
             "\1\117",
-            "\12\15\7\uffff\32\15\4\uffff\1\15\1\uffff\32\15",
+            "\1\120",
             "\1\121",
+            "\1\122",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
+            "\1\123",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
+            "\1\125",
+            "\1\126",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
+            "\1\130",
             "",
-            "\12\15\7\uffff\32\15\4\uffff\1\15\1\uffff\32\15",
-            "\12\15\7\uffff\32\15\4\uffff\1\15\1\uffff\32\15",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
             "",
-            "\1\124",
+            "\1\133",
             "",
             "",
-            "\12\15\7\uffff\32\15\4\uffff\1\15\1\uffff\32\15",
+            "\12\16\7\uffff\32\16\4\uffff\1\16\1\uffff\32\16",
             ""
     };
 
-    static final short[] DFA8_eot = DFA.unpackEncodedString(DFA8_eotS);
-    static final short[] DFA8_eof = DFA.unpackEncodedString(DFA8_eofS);
-    static final char[] DFA8_min = DFA.unpackEncodedStringToUnsignedChars(DFA8_minS);
-    static final char[] DFA8_max = DFA.unpackEncodedStringToUnsignedChars(DFA8_maxS);
-    static final short[] DFA8_accept = DFA.unpackEncodedString(DFA8_acceptS);
-    static final short[] DFA8_special = DFA.unpackEncodedString(DFA8_specialS);
-    static final short[][] DFA8_transition;
+    static final short[] DFA10_eot = DFA.unpackEncodedString(DFA10_eotS);
+    static final short[] DFA10_eof = DFA.unpackEncodedString(DFA10_eofS);
+    static final char[] DFA10_min = DFA.unpackEncodedStringToUnsignedChars(DFA10_minS);
+    static final char[] DFA10_max = DFA.unpackEncodedStringToUnsignedChars(DFA10_maxS);
+    static final short[] DFA10_accept = DFA.unpackEncodedString(DFA10_acceptS);
+    static final short[] DFA10_special = DFA.unpackEncodedString(DFA10_specialS);
+    static final short[][] DFA10_transition;
 
     static {
-        int numStates = DFA8_transitionS.length;
-        DFA8_transition = new short[numStates][];
+        int numStates = DFA10_transitionS.length;
+        DFA10_transition = new short[numStates][];
         for (int i=0; i<numStates; i++) {
-            DFA8_transition[i] = DFA.unpackEncodedString(DFA8_transitionS[i]);
+            DFA10_transition[i] = DFA.unpackEncodedString(DFA10_transitionS[i]);
         }
     }
 
-    class DFA8 extends DFA {
+    class DFA10 extends DFA {
 
-        public DFA8(BaseRecognizer recognizer) {
+        public DFA10(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 8;
-            this.eot = DFA8_eot;
-            this.eof = DFA8_eof;
-            this.min = DFA8_min;
-            this.max = DFA8_max;
-            this.accept = DFA8_accept;
-            this.special = DFA8_special;
-            this.transition = DFA8_transition;
+            this.decisionNumber = 10;
+            this.eot = DFA10_eot;
+            this.eof = DFA10_eof;
+            this.min = DFA10_min;
+            this.max = DFA10_max;
+            this.accept = DFA10_accept;
+            this.special = DFA10_special;
+            this.transition = DFA10_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( T__18 | T__19 | T__20 | TYPE_DEC | REGEX_DEC | PROPERTY_DEC | RESOURCE_DEC | NUMERIC | TEXT | LOGICAL | BRACKET_OPEN | BRACKET_CLOSED | CARDINALITY | INT | IDENT | STRING | WS );";
+            return "1:1: Tokens : ( T__19 | T__20 | T__21 | TYPE_DEC | REGEX_DEC | DELIM | PROPERTY_DEC | RESOURCE_DEC | NUMERIC | TEXT | LOGICAL | BRACKET_OPEN | BRACKET_CLOSED | CARDINALITY | INT | IDENT | STRING | WS );";
         }
     }
  

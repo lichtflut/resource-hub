@@ -14,11 +14,14 @@ options {
     * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
    */
     package de.lichtflut.rb.core.schema.parser.impl;
+	import de.lichtflut.rb.core.schema.model.Cardinality;
 	import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 	import de.lichtflut.rb.core.schema.model.ResourceSchema;
 	import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 	import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
+	import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 	import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+	import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 	import org.arastreju.sge.model.ElementaryDataType;
 	import java.util.HashSet;
 	import java.util.Set;
@@ -30,6 +33,7 @@ options {
 
 @members {
 	private PropertyDeclaration property = null;
+	private ResourceSchema resource = null;
 }
 
 
@@ -88,12 +92,18 @@ regexDeclaration : 	REGEX_DEC
 /*-------------------------------------------------------------------*/
 
 resource returns [ResourceSchema resource]
+	@after{this.resource = null;}
 	:
-	RESOURCE_DEC IDENT BRACKET_OPEN resourceDeclaration BRACKET_CLOSED;
+	RESOURCE_DEC
+	IDENT {this.resource = new ResourceSchemaImpl($IDENT.getText()); $resource = this.resource;} 
+	BRACKET_OPEN resourceDeclaration BRACKET_CLOSED;
 
 /*-------------------------------------------------------------------*/
 
-resourceDeclaration : (cardinality IDENT)*;
+resourceDeclaration : (cardinality{Cardinality cardinality = $cardinality.cardinality;}
+					  IDENT
+					  {this.resource.addPropertyAssertion(new PropertyAssertionImpl($IDENT.getText(),cardinality));}
+					  )*;
 
 /*-------------------------------------------------------------------*/
 
@@ -101,11 +111,17 @@ referenceDeclaration : 'references' IDENT;
 
 /*-------------------------------------------------------------------*/
 
-cardinality : cardinalityDeclaration  ('AND'!  cardinalityDeclaration)*;
+cardinality returns [Cardinality cardinality]
+					: {RBEvaluator eval = null;}
+					c1=cardinalityDeclaration{eval = $c1.evaluator;}
+					('AND'!  cn=cardinalityDeclaration {eval.evaluate($cn.evaluator.getResult());})*
+					{$cardinality = eval.getResult();}
+					;
 
 /*-------------------------------------------------------------------*/
 
-cardinalityDeclaration : CARDINALITY  INT;
+cardinalityDeclaration returns [RBEvaluator<Cardinality> evaluator]:
+CARDINALITY  INT{$evaluator = new RBCardinalityEvaluator($CARDINALITY,Integer.parseInt($INT.getText()));};
 
 /*-------------------------------------------------------------------*/
 
@@ -139,7 +155,7 @@ BRACKET_CLOSED : ')';
 CARDINALITY : ('HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX')DELIM?;
 
 INT : ('0' .. '9')+;
-IDENT : ('a' .. 'z' | 'A' .. 'Z')('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*;
+IDENT :  ('a' .. 'z' | 'A' .. 'Z')('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*;
 STRING : '"'('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^')+'"';
 WS : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+     { skip();  $channel = HIDDEN; } ;
 

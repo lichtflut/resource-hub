@@ -53,6 +53,12 @@ public final class CardinalityFactory{
 	
 	// -----------------------------------------------------
 	
+	public static Cardinality hasAtLeast(int least){
+		return getAbsoluteCardinality(-1,Math.abs(least));
+   }
+	
+	// -----------------------------------------------------
+	
 	public static Cardinality hasOptionalOneToMany(){
        return new UnboundedCardinalityImpl();
 	}
@@ -160,6 +166,11 @@ public final class CardinalityFactory{
 		}
  
 		// -----------------------------------------------------
+		@Override
+		public String toString(){
+			return ("Min: " + getMinOccurs() +  ", Max: " + ((getMaxOccurs()==Integer.MAX_VALUE) ? "unlimited" : getMaxOccurs()));
+		}
+		
 		
 	}//End of inner class CardinalityImpl
 
