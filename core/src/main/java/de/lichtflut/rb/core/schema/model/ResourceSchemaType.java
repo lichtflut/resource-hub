@@ -3,10 +3,6 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
-import java.util.List;
-
-import org.arastreju.sge.model.ResourceID;
-
 /**
  * <p>
  *  Interface which makes clear which entity belongs to the ResourceSchemaModels (Polymorphism 4tw)

@@ -3,24 +3,23 @@
  */
 package de.lichtflut.rb.core;
 
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Set;
 
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CharStream;
+import junit.framework.TestCase;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenStream;
-import org.antlr.runtime.tree.CommonTree;
-
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.parser.impl.RBCaseControlStream;
 import de.lichtflut.rb.core.schema.parser.impl.ResourceSchemaLexer;
 import de.lichtflut.rb.core.schema.parser.impl.ResourceSchemaParser;
 import de.lichtflut.rb.core.schema.parser.impl.ResourceSchemaParser.dsl_return;
-
-
-import junit.framework.TestCase;
 
 /**
  * <p>
@@ -37,31 +36,24 @@ import junit.framework.TestCase;
 public class ResourceSchemaParserTest extends TestCase
 {
 	
-	public void testParser1(){
-		String txt = //"resource PETER_PAN( " +
-					//					" has 1 and hasMax 3 emails" +
-					//		            " has 1 name" +
-					//		            " \n)" +
-					 "property EMAIL(" +
-					 				" type is TEXT\n" +
-					 				")" +
-		 "property NAME(" +
-			" regex \" PAUL \"\n" +
-			")";
+	public void testParser1() throws IOException{
 		
-		
-		
-		CharStream stream = new ANTLRStringStream(txt);
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL1.dsl")));
+		StringBuffer input = new StringBuffer();
+		String line;
+		while((line = reader.readLine())!=null) input.append(line);
+		RBCaseControlStream stream = new RBCaseControlStream(input.toString());
+		stream.setCaseSensitive(false);
 		ResourceSchemaLexer lexer = new ResourceSchemaLexer(stream);
 		TokenStream tokens = new CommonTokenStream(lexer);
 		ResourceSchemaParser parser = new ResourceSchemaParser(tokens);
 				
 		try {
 		 dsl_return ret_val = parser.dsl();
-		 
 		 Set<ResourceSchemaType> types = ret_val.types;
 		 for (ResourceSchemaType resourceSchemaType : types) {
-			System.out.println(resourceSchemaType.toString());
+			if(resourceSchemaType != null) System.out.println(resourceSchemaType.toString());
 		}
 		 
 		 
