@@ -23,7 +23,7 @@ package de.lichtflut.rb.core.schema.model;
  *
  * @author Oliver Tigges
  */
-public interface Cardinality {
+public interface Cardinality extends ResourceSchemaType{
 	
 	boolean isUnbound();
 	

@@ -18,10 +18,27 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface ResourceSchema {
+public interface ResourceSchema extends ResourceSchemaType{
 	
 	ResourceID getResourceID();
 	
-	List<PropertyAssertion> getPropertyDeclarations();
+	/**
+	 * TODO: ToComment
+	 */
+	List<PropertyAssertion> getPropertyAssertions();
 
+	/**
+	 * TODO: ToComment
+	 */
+	void setPropertyAssertions(final List<PropertyAssertion> assertions);
+	
+	/**
+	 * TODO: ToComment
+	 */
+	void addPropertyAssertion(final PropertyAssertion assertion);
+	
+	/**
+	 * TODO: ToComment
+	 */
+	boolean resolveAssertions();
 }

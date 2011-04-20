@@ -50,9 +50,10 @@ public class ResourceSchemaImpl implements ResourceSchema{
 		/*TODO check if identifier is an valid uri, if not generate a valid one, if this is not possible, throw an exception???
 		 * Or generate it anyway?
 		 */
+		this();
 	}
 	
-	public List<PropertyAssertion> getPropertyDeclarations() {
+	public List<PropertyAssertion> getPropertyAssertions() {
 		return this.propertyList;
 	}
 
@@ -72,11 +73,27 @@ public class ResourceSchemaImpl implements ResourceSchema{
 	@Override
 	public String toString(){
 		StringBuffer sBuffer = new StringBuffer();
-		sBuffer.append(getResourceID().toString() + "\n");
-		for (PropertyAssertion property : getPropertyDeclarations()) {
-			sBuffer.append(property.toString() + "\n");
+		sBuffer.append("ResourceID " + getResourceID().toString() + "\n");
+		for (PropertyAssertion property : getPropertyAssertions()) {
+			sBuffer.append("--p-r-o-p-e-r-t-y--\n" + property.toString() + "\n");
 		}
 		return sBuffer.toString();
+	}
+
+	public void addPropertyAssertion(final PropertyAssertion assertion) {
+		propertyList.add(assertion);
+		
+	}
+
+	public boolean resolveAssertions() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void setPropertyAssertions(final List<PropertyAssertion> assertions) {
+		this.propertyList.clear();
+		this.propertyList.addAll(assertions);
+		
 	}
 	
 	// -----------------------------------------------------

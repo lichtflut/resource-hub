@@ -3,17 +3,15 @@
  */
 package de.lichtflut.rb.core;
 
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.CommonTokenStream;
+import java.io.IOException;
+import java.util.Set;
+
 import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.TokenStream;
-import org.junit.Test;
 
-import de.lichtflut.rb.core.schema.parser.ResourceSchemaLexer;
-import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
 import junit.framework.TestCase;
-
+import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.spi.ResourceSchemaManagement;
+import de.lichtflut.rb.core.spi.impl.ResourceSchemaManagementImpl;
 
 /**
  * <p>
@@ -30,18 +28,13 @@ import junit.framework.TestCase;
 public class ResourceSchemaParserTest extends TestCase
 {
 	
-	public void testParser1(){
-		CharStream stream = new ANTLRStringStream("property hans ()");
-		ResourceSchemaLexer lexer = new ResourceSchemaLexer(stream);
-		TokenStream tokens = new CommonTokenStream(lexer);
-		ResourceSchemaParser parser = new ResourceSchemaParser(tokens);
-		try {
-			parser.property();
-		} catch (RecognitionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testParsingAndConstructingModelFromTestFile1() throws IOException, RecognitionException{
+		ResourceSchemaManagement rManagement = new ResourceSchemaManagementImpl();
+		Set<ResourceSchemaType> types;
+		types = rManagement.generateSchemaModelThrough(getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL1.dsl"));
+		//Iterate over collection and print out the model
+		for (ResourceSchemaType resourceSchemaType : types) {
+			if(resourceSchemaType != null) System.out.println("--------------------------\n" +resourceSchemaType.toString());
+		} 
 	}
-	
-	
 }

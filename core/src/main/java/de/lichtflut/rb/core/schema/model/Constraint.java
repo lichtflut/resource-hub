@@ -34,7 +34,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface Constraint {
+public interface Constraint extends ResourceSchemaType{
 	
 	/**
 	 * Check if this constraint is for literal values.

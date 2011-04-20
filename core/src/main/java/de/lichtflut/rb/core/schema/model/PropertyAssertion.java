@@ -20,7 +20,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface PropertyAssertion {
+public interface PropertyAssertion extends ResourceSchemaType {
 
 	/**
 	 * The descriptor of this property. Usually the resource identifier representing
@@ -41,6 +41,34 @@ public interface PropertyAssertion {
 	 * @return The cardinality.
 	 */
 	Cardinality getCardinality();
+	
+	/**
+	 * Set cardinality of this property,
+	 * @param The cardinality.
+	 */
+	void setCardinality(Cardinality c);
+	
+	/**
+	 * TODO: ToComment
+	 */
+	void setPropertyIdentifier(String identifier);
+	
+	/**
+	 * TODO: ToComment
+	 */
+	String getPropertyIdentifier();
+	
+	
+	/**
+	 * TODO: ToComment
+	 */
+	boolean resolveAssertion();
+	
+	/**
+	 * TODO: ToComment
+	 */
+	boolean isResolved();
+	
 	
 	/**
 	 * The constraints for this property assertion.
