@@ -46,7 +46,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 			while((line = reader.readLine())!=null) bufferedInput.append(line).append("\n");
 		} catch (IOException e) {
 			RSParsingResultImpl result = new RSParsingResultImpl();
-			result.addErrorMessage("The following I/O-Error has been occured: " + e.getLocalizedMessage());
+			result.addErrorMessage("The following I/O-Error has been occured: " + e.getMessage());
 			return result;
 		}
 		return generateSchemaModelThrough(bufferedInput.toString());
@@ -68,7 +68,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 			Set<ResourceSchemaType> resultTypes = parseDSL(s);
 			result.merge(convertToParsingResult(resultTypes));
 		} catch (RecognitionException e) {
-			result.addErrorMessage("The following Parsing-Error(s) has been occured: " + e.getLocalizedMessage());
+			result.addErrorMessage("The following Parsing-Error(s) has been occured: " + e.getMessage());
 		}
 		return result;
 	}
@@ -112,6 +112,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		TokenStream tokens = new CommonTokenStream(lexer);
 		ResourceSchemaParser parser = new ResourceSchemaParser(tokens);
 		dsl_return result = parser.dsl();
+		
 		return result.types;
 	}
 

@@ -51,6 +51,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	}
 
 	public void setErrorMessages(Collection<String> errorMessages) {
+		
 		this.errorMessages = new ArrayList<String>(errorMessages);
 	}
 
@@ -85,7 +86,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	 * TODO: If there are some duplicates while merging, try to filter them out
 	 */
 	public void merge(RSParsingResult result) {
-		this.addErrorMessage(result.getErrorMessages());
+		if(!result.getErrorMessages().equals("")) this.addErrorMessage(result.getErrorMessages());
 		this.getPropertyDeclarations().addAll(result.getPropertyDeclarations());
 		this.getResourceSchemas().addAll(result.getResourceSchemas());
 	}
