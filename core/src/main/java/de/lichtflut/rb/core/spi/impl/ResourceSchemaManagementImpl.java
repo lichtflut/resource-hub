@@ -14,8 +14,14 @@ import java.util.Set;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
+import org.arastreju.sge.model.ResourceID;
+
+import com.sun.java.swing.plaf.nimbus.RadioButtonPainter;
+
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.impl.RBCaseControlStream;
+import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 import de.lichtflut.rb.core.schema.parser.impl.ResourceSchemaLexer;
 import de.lichtflut.rb.core.schema.parser.impl.ResourceSchemaParser;
 import de.lichtflut.rb.core.schema.parser.impl.ResourceSchemaParser.dsl_return;
@@ -34,19 +40,30 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		
 	}
 	
-	public Set<ResourceSchemaType> generateSchemaModelThrough(InputStream is) throws IOException, RecognitionException {
+	public RSParsingResult generateSchemaModelThrough(InputStream is){
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		StringBuilder bufferedInput = new StringBuilder();
 		String line;
-		while((line = reader.readLine())!=null) bufferedInput.append(line).append("\n");
+		try {
+			while((line = reader.readLine())!=null) bufferedInput.append(line).append("\n");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return generateSchemaModelThrough(bufferedInput.toString());
 	}
 
-	public Set<ResourceSchemaType> generateSchemaModelThrough(File file) throws FileNotFoundException, IOException, RecognitionException {
-		return generateSchemaModelThrough(new FileInputStream(file));
+	public RSParsingResult generateSchemaModelThrough(File file){
+		try {
+			return generateSchemaModelThrough(new FileInputStream(file));
+		} catch (FileNotFoundException e) {
+			RSParsingResultImpl result = new RSParsingResultImpl();
+			result.addErrorMessage("File " + file.getAbsolutePath() + " was not found");
+			return result;
+		}
 	}
 
-	public Set<ResourceSchemaType> generateSchemaModelThrough(String s) throws RecognitionException {
+	public RSParsingResult generateSchemaModelThrough(String s) {
 		RBCaseControlStream stream = new RBCaseControlStream(s);
 		//Ignore Case, this is really important
 		stream.setCaseSensitive(false);
@@ -54,8 +71,27 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		TokenStream tokens = new CommonTokenStream(lexer);
 		ResourceSchemaParser parser = new ResourceSchemaParser(tokens);
 		dsl_return result;
-		result = parser.dsl();
-		return result.types;
+		//result = parser.dsl();
+		return null;
+	}
+	
+	public RSParsingResult generateSchemaModelThrough(ResourceID id){
+		return null;
+	}
+
+	public RSParsingResult generateAndResolveSchemaModelThrough(InputStream is) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public RSParsingResult generateAndResolveSchemaModelThrough(File f) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public RSParsingResult generateAndResolveSchemaModelThrough(String s) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

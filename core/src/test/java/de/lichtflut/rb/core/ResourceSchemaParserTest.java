@@ -30,11 +30,14 @@ public class ResourceSchemaParserTest extends TestCase
 	
 	public void testParsingAndConstructingModelFromTestFile1() throws IOException, RecognitionException{
 		ResourceSchemaManagement rManagement = new ResourceSchemaManagementImpl();
-		Set<ResourceSchemaType> types;
-		types = rManagement.generateSchemaModelThrough(getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL1.dsl"));
-		//Iterate over collection and print out the model
+		//Get ResourceSchemaTypes
+		Set<ResourceSchemaType> types = rManagement.generateSchemaModelThrough(
+				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL1.dsl"));
+		//Iterate over collection and print out 'da' model
 		for (ResourceSchemaType resourceSchemaType : types) {
-			if(resourceSchemaType != null) System.out.println("--------------------------\n" +resourceSchemaType.toString());
-		} 
+			if(resourceSchemaType != null){ 
+				System.out.println("--------------------------\n"+	resourceSchemaType.toString());
+			}
+		}//end of for
 	}
 }
