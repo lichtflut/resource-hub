@@ -6,9 +6,12 @@
 		<artifactId>lf.resource-browser</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
+	
 	<groupId>de.lichtflut.rb</groupId>
 	<artifactId>lf.resource-browser.core</artifactId>
-	<name>Resource Browser core</name>
+	<packaging>jar</packaging>
+	<name>RB Core</name>
+	
 	<build>
 		<resources>
 			<resource>

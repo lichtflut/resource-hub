@@ -5,6 +5,8 @@ package de.lichtflut.rb.core.schema.persistence;
 
 import org.arastreju.sge.Arastreju;
 
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+
 /**
  * <p>
  *  [DESCRIPTION]
@@ -21,6 +23,7 @@ public class RBSchemaStoreTest {
 	public void testStore() {
 		 final RBSchemaStore store = new RBSchemaStore(Arastreju.getInstance().rootContext());
 		 
+		 final ResourceSchema schemas = null; // get Resource Schema
 	}
 	
 }
