@@ -4,6 +4,7 @@
 
 package de.lichtflut.rb.core.schema.model.impl;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -74,7 +75,7 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	/**
 	 * @return Returns the property itself
 	 */
-	public PropertyDeclaration getProperty() {
+	public PropertyDeclaration getPropertyDeclaration() {
 		return property;
 	}
 	
@@ -87,9 +88,13 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	
 	/**
 	 * @return Returns a {@link Set} of constraints
+	 * TODO: Please check if this will be a correct merge without any redundant constraints
 	 */
 	public Set<Constraint> getConstraints() {
-		return constraints;
+		Set<Constraint> output = new HashSet<Constraint>();
+		output.addAll(getPropertyDeclaration().getConstraints());
+		output.addAll(this.constraints);
+		return output;
 	}
 	
 	/**

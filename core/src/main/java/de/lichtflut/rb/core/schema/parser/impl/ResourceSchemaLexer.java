@@ -1,9 +1,12 @@
-// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/ResourceSchema.g 2011-04-19 16:23:47
+// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/ResourceSchema.g 2011-04-21 16:18:06
 
     package de.lichtflut.rb.core.schema.parser.impl;
 
 
 import org.antlr.runtime.*;
+import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ResourceSchemaLexer extends Lexer {
     public static final int PROPERTY_DEC=4;
@@ -106,15 +109,15 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = TYPE_DEC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:145:10: ( ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:145:12: ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:154:10: ( ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:154:12: ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:145:12: ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:154:12: ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' )
             int alt1=4;
             alt1 = dfa1.predict(input);
             switch (alt1) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:145:13: 'TYPE IS'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:154:13: 'TYPE IS'
                     {
                     match("TYPE IS"); 
 
@@ -122,7 +125,7 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:145:23: 'TYPE:'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:154:23: 'TYPE:'
                     {
                     match("TYPE:"); 
 
@@ -130,7 +133,7 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:145:32: 'TYPE'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:154:32: 'TYPE'
                     {
                     match("TYPE"); 
 
@@ -138,7 +141,7 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 4 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:145:39: 'TYPE IS:'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:154:39: 'TYPE IS:'
                     {
                     match("TYPE IS:"); 
 
@@ -164,10 +167,10 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = REGEX_DEC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:146:11: ( ( 'LIKE' | 'REGEX' | 'LOOKS LIKE' ) ( DELIM )? )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:146:13: ( 'LIKE' | 'REGEX' | 'LOOKS LIKE' ) ( DELIM )?
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:155:11: ( ( 'LIKE' | 'REGEX' | 'LOOKS LIKE' ) ( DELIM )? )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:155:13: ( 'LIKE' | 'REGEX' | 'LOOKS LIKE' ) ( DELIM )?
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:146:13: ( 'LIKE' | 'REGEX' | 'LOOKS LIKE' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:155:13: ( 'LIKE' | 'REGEX' | 'LOOKS LIKE' )
             int alt2=3;
             int LA2_0 = input.LA(1);
 
@@ -198,7 +201,7 @@ public class ResourceSchemaLexer extends Lexer {
             }
             switch (alt2) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:146:14: 'LIKE'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:14: 'LIKE'
                     {
                     match("LIKE"); 
 
@@ -206,7 +209,7 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:146:23: 'REGEX'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:23: 'REGEX'
                     {
                     match("REGEX"); 
 
@@ -214,7 +217,7 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:146:33: 'LOOKS LIKE'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:33: 'LOOKS LIKE'
                     {
                     match("LOOKS LIKE"); 
 
@@ -224,7 +227,7 @@ public class ResourceSchemaLexer extends Lexer {
 
             }
 
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:146:46: ( DELIM )?
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:155:46: ( DELIM )?
             int alt3=2;
             int LA3_0 = input.LA(1);
 
@@ -233,7 +236,7 @@ public class ResourceSchemaLexer extends Lexer {
             }
             switch (alt3) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:146:46: DELIM
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:46: DELIM
                     {
                     mDELIM(); 
 
@@ -258,11 +261,11 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = DELIM;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:147:7: ( ( ':' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:147:9: ( ':' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:156:7: ( ( ':' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:156:9: ( ':' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:147:9: ( ':' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:147:10: ':'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:156:9: ( ':' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:156:10: ':'
             {
             match(':'); 
 
@@ -284,11 +287,11 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = PROPERTY_DEC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:148:14: ( ( 'PROPERTY' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:148:16: ( 'PROPERTY' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:157:14: ( ( 'PROPERTY' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:157:16: ( 'PROPERTY' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:148:16: ( 'PROPERTY' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:148:17: 'PROPERTY'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:157:16: ( 'PROPERTY' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:157:17: 'PROPERTY'
             {
             match("PROPERTY"); 
 
@@ -311,11 +314,11 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = RESOURCE_DEC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:149:14: ( ( 'RESOURCE' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:149:16: ( 'RESOURCE' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:158:14: ( ( 'RESOURCE' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:158:16: ( 'RESOURCE' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:149:16: ( 'RESOURCE' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:149:17: 'RESOURCE'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:158:16: ( 'RESOURCE' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:158:17: 'RESOURCE'
             {
             match("RESOURCE"); 
 
@@ -338,11 +341,11 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = NUMERIC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:150:9: ( ( 'NUMERIC' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:150:11: ( 'NUMERIC' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:159:9: ( ( 'NUMERIC' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:159:11: ( 'NUMERIC' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:150:11: ( 'NUMERIC' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:150:12: 'NUMERIC'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:159:11: ( 'NUMERIC' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:159:12: 'NUMERIC'
             {
             match("NUMERIC"); 
 
@@ -365,11 +368,11 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = TEXT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:151:6: ( ( 'TEXT' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:151:8: ( 'TEXT' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:160:6: ( ( 'TEXT' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:160:8: ( 'TEXT' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:151:8: ( 'TEXT' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:151:9: 'TEXT'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:160:8: ( 'TEXT' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:160:9: 'TEXT'
             {
             match("TEXT"); 
 
@@ -392,11 +395,11 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = LOGICAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:152:9: ( ( 'LOGICAL' ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:152:11: ( 'LOGICAL' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:161:9: ( ( 'LOGICAL' ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:161:11: ( 'LOGICAL' )
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:152:11: ( 'LOGICAL' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:152:12: 'LOGICAL'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:161:11: ( 'LOGICAL' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:161:12: 'LOGICAL'
             {
             match("LOGICAL"); 
 
@@ -419,8 +422,8 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = BRACKET_OPEN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:153:14: ( '(' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:153:16: '('
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:162:14: ( '(' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:162:16: '('
             {
             match('('); 
 
@@ -439,8 +442,8 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = BRACKET_CLOSED;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:154:16: ( ')' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:154:18: ')'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:163:16: ( ')' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:163:18: ')'
             {
             match(')'); 
 
@@ -459,15 +462,15 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = CARDINALITY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:155:13: ( ( 'HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX' ) ( DELIM )? )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:155:15: ( 'HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX' ) ( DELIM )?
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:164:13: ( ( 'HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX' ) ( DELIM )? )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:164:15: ( 'HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX' ) ( DELIM )?
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:155:15: ( 'HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:164:15: ( 'HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX' )
             int alt4=5;
             alt4 = dfa4.predict(input);
             switch (alt4) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:16: 'HAS'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:164:16: 'HAS'
                     {
                     match("HAS"); 
 
@@ -475,7 +478,7 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:24: 'HAS_MIN'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:164:24: 'HAS_MIN'
                     {
                     match("HAS_MIN"); 
 
@@ -483,7 +486,7 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:36: 'HAS_MAX'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:164:36: 'HAS_MAX'
                     {
                     match("HAS_MAX"); 
 
@@ -491,7 +494,7 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 4 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:48: 'HASMIN'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:164:48: 'HASMIN'
                     {
                     match("HASMIN"); 
 
@@ -499,7 +502,7 @@ public class ResourceSchemaLexer extends Lexer {
                     }
                     break;
                 case 5 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:59: 'HASMAX'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:164:59: 'HASMAX'
                     {
                     match("HASMAX"); 
 
@@ -509,7 +512,7 @@ public class ResourceSchemaLexer extends Lexer {
 
             }
 
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:155:68: ( DELIM )?
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:164:68: ( DELIM )?
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -518,7 +521,7 @@ public class ResourceSchemaLexer extends Lexer {
             }
             switch (alt5) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:155:68: DELIM
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:164:68: DELIM
                     {
                     mDELIM(); 
 
@@ -543,10 +546,10 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:157:5: ( ( '0' .. '9' )+ )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:157:7: ( '0' .. '9' )+
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:166:5: ( ( '0' .. '9' )+ )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:166:7: ( '0' .. '9' )+
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:157:7: ( '0' .. '9' )+
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:166:7: ( '0' .. '9' )+
             int cnt6=0;
             loop6:
             do {
@@ -560,7 +563,7 @@ public class ResourceSchemaLexer extends Lexer {
 
                 switch (alt6) {
             	case 1 :
-            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:157:8: '0' .. '9'
+            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:166:8: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -592,8 +595,8 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = IDENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:158:7: ( ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )* )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:158:9: ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:167:7: ( ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )* )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:167:10: ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -604,7 +607,7 @@ public class ResourceSchemaLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:158:34: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:167:35: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
             loop7:
             do {
                 int alt7=2;
@@ -653,11 +656,11 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:159:8: ( '\"' ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^' )+ '\"' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:159:10: '\"' ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^' )+ '\"'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:168:8: ( '\"' ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^' )+ '\"' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:168:10: '\"' ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^' )+ '\"'
             {
             match('\"'); 
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:159:13: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^' )+
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:168:13: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '-' | '*' | '+' | '^' )+
             int cnt8=0;
             loop8:
             do {
@@ -712,10 +715,10 @@ public class ResourceSchemaLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:160:4: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:160:6: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:169:4: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:169:6: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
             {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:160:6: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:169:6: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
             int cnt9=0;
             loop9:
             do {
@@ -962,7 +965,7 @@ public class ResourceSchemaLexer extends Lexer {
             this.transition = DFA1_transition;
         }
         public String getDescription() {
-            return "145:12: ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' )";
+            return "154:12: ( 'TYPE IS' | 'TYPE:' | 'TYPE' | 'TYPE IS:' )";
         }
     }
     static final String DFA4_eotS =
@@ -1022,7 +1025,7 @@ public class ResourceSchemaLexer extends Lexer {
             this.transition = DFA4_transition;
         }
         public String getDescription() {
-            return "155:15: ( 'HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX' )";
+            return "164:15: ( 'HAS' | 'HAS_MIN' | 'HAS_MAX' | 'HASMIN' | 'HASMAX' )";
         }
     }
     static final String DFA10_eotS =

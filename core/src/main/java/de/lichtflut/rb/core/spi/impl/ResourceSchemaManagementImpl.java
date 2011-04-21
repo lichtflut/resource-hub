@@ -10,21 +10,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
-<<<<<<< HEAD:core/src/main/java/de/lichtflut/rb/core/spi/impl/ResourceSchemaManagementImpl.java
 
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
-=======
+
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
->>>>>>> b0945ca571b2b8fc7053851e9e4af3a57c5d1573:core/src/main/java/de/lichtflut/rb/core/spi/impl/ResourceSchemaManagementImpl.java
+
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
@@ -35,6 +33,7 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.impl.RBCaseControlStream;
+import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 import de.lichtflut.rb.core.schema.parser.impl.ResourceSchemaLexer;
 import de.lichtflut.rb.core.schema.parser.impl.ResourceSchemaParser;
@@ -81,7 +80,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	public RSParsingResult generateSchemaModelThrough(String s) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		try {
-			Set<ResourceSchemaType> resultTypes = parseDSL(s);
+			Set<ResourceSchemaType> resultTypes = parseDSL(s, result);
 			result.merge(convertToParsingResult(resultTypes));
 		} catch (RecognitionException e) {
 			result.addErrorMessage("The following Parsing-Error(s) has been occured: " + e.getMessage());
@@ -148,21 +147,22 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		return result;
 	}
 	
-	private Set<ResourceSchemaType> parseDSL(final String input) throws RecognitionException{
+	private Set<ResourceSchemaType> parseDSL(final String input, RSParsingResultImpl pResult) throws RecognitionException{
 		RBCaseControlStream stream = new RBCaseControlStream(input);
+		RSParsingResultErrorReporter eReporter = new RSParsingResultErrorReporter(pResult);
 		//Ignore Case, this is really important
 		stream.setCaseSensitive(false);
 		ResourceSchemaLexer lexer = new ResourceSchemaLexer(stream);
 		TokenStream tokens = new CommonTokenStream(lexer);
 		ResourceSchemaParser parser = new ResourceSchemaParser(tokens);
+		parser.setErrorReporter(eReporter);
 		dsl_return result = parser.dsl();
-		
 		return result.types;
 	}
 
 	
 	/**
-	 * TODO: This is a mocked-response, please to the implementation asap
+	 * TODO: This is a mocked-response, please implement asap
 	 */
 	public ResourceSchema getResourceSchemaFor(ResourceID id) {
 		ResourceSchemaImpl schema = new ResourceSchemaImpl("http://lichtflut.de#","personschema");

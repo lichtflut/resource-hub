@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/ResourceSchema.g 2011-04-19 16:23:47
+// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/ResourceSchema.g 2011-04-21 16:18:06
 
    /*
     * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
@@ -12,12 +12,19 @@
 	import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 	import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 	import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
+
 	import org.arastreju.sge.model.ElementaryDataType;
 	import java.util.HashSet;
 	import java.util.Set;
 
 
 import org.antlr.runtime.*;
+import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
+
+
 import org.antlr.runtime.tree.*;
 
 public class ResourceSchemaParser extends Parser {
@@ -71,6 +78,15 @@ public class ResourceSchemaParser extends Parser {
 
     	private PropertyDeclaration property = null;
     	private ResourceSchema resource = null;
+    	private RSErrorReporter errorReporter = null;
+        public void setErrorReporter(RSErrorReporter errorReporter) {
+            this.errorReporter = errorReporter;
+        }
+        public void emitErrorMessage(String msg) {
+            errorReporter.reportError(msg);
+        }
+    	
+    	
 
 
     public static class dsl_return extends ParserRuleReturnScope {
@@ -80,7 +96,7 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "dsl"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:44:1: dsl returns [Set<ResourceSchemaType> types] : ( property | resource )+ ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:53:1: dsl returns [Set<ResourceSchemaType> types] : ( property | resource )+ ;
     public final ResourceSchemaParser.dsl_return dsl() throws RecognitionException {
         ResourceSchemaParser.dsl_return retval = new ResourceSchemaParser.dsl_return();
         retval.start = input.LT(1);
@@ -94,13 +110,13 @@ public class ResourceSchemaParser extends Parser {
 
 
         try {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:45:2: ( ( property | resource )+ )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:45:4: ( property | resource )+
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:54:2: ( ( property | resource )+ )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:54:4: ( property | resource )+
             {
             root_0 = (CommonTree)adaptor.nil();
 
             retval.types = new HashSet<ResourceSchemaType>();
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:46:3: ( property | resource )+
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:55:3: ( property | resource )+
             int cnt1=0;
             loop1:
             do {
@@ -117,7 +133,7 @@ public class ResourceSchemaParser extends Parser {
 
                 switch (alt1) {
             	case 1 :
-            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:47:3: property
+            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:56:3: property
             	    {
             	    pushFollow(FOLLOW_property_in_dsl79);
             	    property1=property();
@@ -130,7 +146,7 @@ public class ResourceSchemaParser extends Parser {
             	    }
             	    break;
             	case 2 :
-            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:49:3: resource
+            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:58:3: resource
             	    {
             	    pushFollow(FOLLOW_resource_in_dsl88);
             	    resource2=resource();
@@ -180,7 +196,7 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "property"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:56:1: property returns [PropertyDeclaration property] : PROPERTY_DEC IDENT BRACKET_OPEN ( propertyDeclaration )* BRACKET_CLOSED ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:65:1: property returns [PropertyDeclaration property] : PROPERTY_DEC IDENT BRACKET_OPEN ( propertyDeclaration )* BRACKET_CLOSED ;
     public final ResourceSchemaParser.property_return property() throws RecognitionException {
         ResourceSchemaParser.property_return retval = new ResourceSchemaParser.property_return();
         retval.start = input.LT(1);
@@ -201,8 +217,8 @@ public class ResourceSchemaParser extends Parser {
 
         this.property = new PropertyDeclarationImpl();
         try {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:59:3: ( PROPERTY_DEC IDENT BRACKET_OPEN ( propertyDeclaration )* BRACKET_CLOSED )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:59:6: PROPERTY_DEC IDENT BRACKET_OPEN ( propertyDeclaration )* BRACKET_CLOSED
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:68:3: ( PROPERTY_DEC IDENT BRACKET_OPEN ( propertyDeclaration )* BRACKET_CLOSED )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:68:6: PROPERTY_DEC IDENT BRACKET_OPEN ( propertyDeclaration )* BRACKET_CLOSED
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -220,7 +236,7 @@ public class ResourceSchemaParser extends Parser {
             BRACKET_OPEN5_tree = (CommonTree)adaptor.create(BRACKET_OPEN5);
             adaptor.addChild(root_0, BRACKET_OPEN5_tree);
 
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:61:17: ( propertyDeclaration )*
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:70:17: ( propertyDeclaration )*
             loop2:
             do {
                 int alt2=2;
@@ -233,7 +249,7 @@ public class ResourceSchemaParser extends Parser {
 
                 switch (alt2) {
             	case 1 :
-            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:61:18: propertyDeclaration
+            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:70:18: propertyDeclaration
             	    {
             	    pushFollow(FOLLOW_propertyDeclaration_in_property142);
             	    propertyDeclaration6=propertyDeclaration();
@@ -283,7 +299,7 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "propertyDeclaration"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:65:1: propertyDeclaration returns [PropertyDeclaration property] : ( typeDeclaration | regexDeclaration ) ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:74:1: propertyDeclaration returns [PropertyDeclaration property] : ( typeDeclaration | regexDeclaration ) ;
     public final ResourceSchemaParser.propertyDeclaration_return propertyDeclaration() throws RecognitionException {
         ResourceSchemaParser.propertyDeclaration_return retval = new ResourceSchemaParser.propertyDeclaration_return();
         retval.start = input.LT(1);
@@ -297,13 +313,13 @@ public class ResourceSchemaParser extends Parser {
 
 
         try {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:66:2: ( ( typeDeclaration | regexDeclaration ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:66:4: ( typeDeclaration | regexDeclaration )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:75:2: ( ( typeDeclaration | regexDeclaration ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:75:4: ( typeDeclaration | regexDeclaration )
             {
             root_0 = (CommonTree)adaptor.nil();
 
             retval.property = this.property;
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:67:2: ( typeDeclaration | regexDeclaration )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:76:2: ( typeDeclaration | regexDeclaration )
             int alt3=2;
             int LA3_0 = input.LA(1);
 
@@ -321,7 +337,7 @@ public class ResourceSchemaParser extends Parser {
             }
             switch (alt3) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:68:2: typeDeclaration
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:77:2: typeDeclaration
                     {
                     pushFollow(FOLLOW_typeDeclaration_in_propertyDeclaration169);
                     typeDeclaration8=typeDeclaration();
@@ -333,7 +349,7 @@ public class ResourceSchemaParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:70:2: regexDeclaration
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:79:2: regexDeclaration
                     {
                     pushFollow(FOLLOW_regexDeclaration_in_propertyDeclaration175);
                     regexDeclaration9=regexDeclaration();
@@ -374,7 +390,7 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "typeDeclaration"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:77:1: typeDeclaration : TYPE_DEC ( '\"' )? datatype ( '\"' )? ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:86:1: typeDeclaration : TYPE_DEC ( '\"' )? datatype ( '\"' )? ;
     public final ResourceSchemaParser.typeDeclaration_return typeDeclaration() throws RecognitionException {
         ResourceSchemaParser.typeDeclaration_return retval = new ResourceSchemaParser.typeDeclaration_return();
         retval.start = input.LT(1);
@@ -392,8 +408,8 @@ public class ResourceSchemaParser extends Parser {
         CommonTree char_literal13_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:77:17: ( TYPE_DEC ( '\"' )? datatype ( '\"' )? )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:77:20: TYPE_DEC ( '\"' )? datatype ( '\"' )?
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:86:17: ( TYPE_DEC ( '\"' )? datatype ( '\"' )? )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:86:20: TYPE_DEC ( '\"' )? datatype ( '\"' )?
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -401,7 +417,7 @@ public class ResourceSchemaParser extends Parser {
             TYPE_DEC10_tree = (CommonTree)adaptor.create(TYPE_DEC10);
             adaptor.addChild(root_0, TYPE_DEC10_tree);
 
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:78:8: ( '\"' )?
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:87:8: ( '\"' )?
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -410,7 +426,7 @@ public class ResourceSchemaParser extends Parser {
             }
             switch (alt4) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:78:8: '\"'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:87:8: '\"'
                     {
                     char_literal11=(Token)match(input,19,FOLLOW_19_in_typeDeclaration202); 
                     char_literal11_tree = (CommonTree)adaptor.create(char_literal11);
@@ -429,7 +445,7 @@ public class ResourceSchemaParser extends Parser {
 
             adaptor.addChild(root_0, datatype12.getTree());
             this.property.setElementaryDataType((datatype12!=null?datatype12.type:null));
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:80:8: ( '\"' )?
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:89:8: ( '\"' )?
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -438,7 +454,7 @@ public class ResourceSchemaParser extends Parser {
             }
             switch (alt5) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:80:8: '\"'
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:89:8: '\"'
                     {
                     char_literal13=(Token)match(input,19,FOLLOW_19_in_typeDeclaration223); 
                     char_literal13_tree = (CommonTree)adaptor.create(char_literal13);
@@ -477,7 +493,7 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "regexDeclaration"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:86:1: regexDeclaration : REGEX_DEC '\"' IDENT '\"' ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:95:1: regexDeclaration : REGEX_DEC '\"' IDENT '\"' ;
     public final ResourceSchemaParser.regexDeclaration_return regexDeclaration() throws RecognitionException {
         ResourceSchemaParser.regexDeclaration_return retval = new ResourceSchemaParser.regexDeclaration_return();
         retval.start = input.LT(1);
@@ -495,8 +511,8 @@ public class ResourceSchemaParser extends Parser {
         CommonTree char_literal17_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:86:18: ( REGEX_DEC '\"' IDENT '\"' )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:86:21: REGEX_DEC '\"' IDENT '\"'
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:95:18: ( REGEX_DEC '\"' IDENT '\"' )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:95:21: REGEX_DEC '\"' IDENT '\"'
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -545,7 +561,7 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "resource"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:94:1: resource returns [ResourceSchema resource] : RESOURCE_DEC IDENT BRACKET_OPEN resourceDeclaration BRACKET_CLOSED ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:103:1: resource returns [ResourceSchema resource] : RESOURCE_DEC IDENT BRACKET_OPEN resourceDeclaration BRACKET_CLOSED ;
     public final ResourceSchemaParser.resource_return resource() throws RecognitionException {
         ResourceSchemaParser.resource_return retval = new ResourceSchemaParser.resource_return();
         retval.start = input.LT(1);
@@ -565,8 +581,8 @@ public class ResourceSchemaParser extends Parser {
         CommonTree BRACKET_CLOSED22_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:96:2: ( RESOURCE_DEC IDENT BRACKET_OPEN resourceDeclaration BRACKET_CLOSED )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:97:2: RESOURCE_DEC IDENT BRACKET_OPEN resourceDeclaration BRACKET_CLOSED
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:105:2: ( RESOURCE_DEC IDENT BRACKET_OPEN resourceDeclaration BRACKET_CLOSED )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:106:2: RESOURCE_DEC IDENT BRACKET_OPEN resourceDeclaration BRACKET_CLOSED
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -621,7 +637,7 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "resourceDeclaration"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:103:1: resourceDeclaration : ( cardinality IDENT )* ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:112:1: resourceDeclaration : ( cardinality IDENT )* ;
     public final ResourceSchemaParser.resourceDeclaration_return resourceDeclaration() throws RecognitionException {
         ResourceSchemaParser.resourceDeclaration_return retval = new ResourceSchemaParser.resourceDeclaration_return();
         retval.start = input.LT(1);
@@ -635,12 +651,12 @@ public class ResourceSchemaParser extends Parser {
         CommonTree IDENT24_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:103:21: ( ( cardinality IDENT )* )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:103:23: ( cardinality IDENT )*
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:112:21: ( ( cardinality IDENT )* )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:112:23: ( cardinality IDENT )*
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:103:23: ( cardinality IDENT )*
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:112:23: ( cardinality IDENT )*
             loop6:
             do {
                 int alt6=2;
@@ -653,7 +669,7 @@ public class ResourceSchemaParser extends Parser {
 
                 switch (alt6) {
             	case 1 :
-            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:103:24: cardinality IDENT
+            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:112:24: cardinality IDENT
             	    {
             	    pushFollow(FOLLOW_cardinality_in_resourceDeclaration323);
             	    cardinality23=cardinality();
@@ -703,7 +719,7 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "referenceDeclaration"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:110:1: referenceDeclaration : 'references' IDENT ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:119:1: referenceDeclaration : 'references' IDENT ;
     public final ResourceSchemaParser.referenceDeclaration_return referenceDeclaration() throws RecognitionException {
         ResourceSchemaParser.referenceDeclaration_return retval = new ResourceSchemaParser.referenceDeclaration_return();
         retval.start = input.LT(1);
@@ -717,8 +733,8 @@ public class ResourceSchemaParser extends Parser {
         CommonTree IDENT26_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:110:22: ( 'references' IDENT )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:110:24: 'references' IDENT
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:119:22: ( 'references' IDENT )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:119:24: 'references' IDENT
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -758,7 +774,7 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "cardinality"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:114:1: cardinality returns [Cardinality cardinality] : c1= cardinalityDeclaration ( 'AND' cn= cardinalityDeclaration )* ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:123:1: cardinality returns [Cardinality cardinality] : c1= cardinalityDeclaration ( 'AND' cn= cardinalityDeclaration )* ;
     public final ResourceSchemaParser.cardinality_return cardinality() throws RecognitionException {
         ResourceSchemaParser.cardinality_return retval = new ResourceSchemaParser.cardinality_return();
         retval.start = input.LT(1);
@@ -774,12 +790,12 @@ public class ResourceSchemaParser extends Parser {
         CommonTree string_literal27_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:115:6: (c1= cardinalityDeclaration ( 'AND' cn= cardinalityDeclaration )* )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:115:8: c1= cardinalityDeclaration ( 'AND' cn= cardinalityDeclaration )*
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:124:6: (c1= cardinalityDeclaration ( 'AND' cn= cardinalityDeclaration )* )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:124:8: c1= cardinalityDeclaration ( 'AND' cn= cardinalityDeclaration )*
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            RBEvaluator<Cardinality> eval = null;
+            RBEvaluator eval = null;
             pushFollow(FOLLOW_cardinalityDeclaration_in_cardinality394);
             c1=cardinalityDeclaration();
 
@@ -787,7 +803,7 @@ public class ResourceSchemaParser extends Parser {
 
             adaptor.addChild(root_0, c1.getTree());
             eval = (c1!=null?c1.evaluator:null);
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:117:6: ( 'AND' cn= cardinalityDeclaration )*
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:126:6: ( 'AND' cn= cardinalityDeclaration )*
             loop7:
             do {
                 int alt7=2;
@@ -800,7 +816,7 @@ public class ResourceSchemaParser extends Parser {
 
                 switch (alt7) {
             	case 1 :
-            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:117:7: 'AND' cn= cardinalityDeclaration
+            	    // de/lichtflut/rb/core/schema/ResourceSchema.g:126:7: 'AND' cn= cardinalityDeclaration
             	    {
             	    string_literal27=(Token)match(input,21,FOLLOW_21_in_cardinality403); 
             	    pushFollow(FOLLOW_cardinalityDeclaration_in_cardinality409);
@@ -848,7 +864,7 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "cardinalityDeclaration"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:123:1: cardinalityDeclaration returns [RBEvaluator<Cardinality> evaluator] : CARDINALITY INT ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:132:1: cardinalityDeclaration returns [RBEvaluator<Cardinality> evaluator] : CARDINALITY INT ;
     public final ResourceSchemaParser.cardinalityDeclaration_return cardinalityDeclaration() throws RecognitionException {
         ResourceSchemaParser.cardinalityDeclaration_return retval = new ResourceSchemaParser.cardinalityDeclaration_return();
         retval.start = input.LT(1);
@@ -862,8 +878,8 @@ public class ResourceSchemaParser extends Parser {
         CommonTree INT29_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:123:68: ( CARDINALITY INT )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:124:1: CARDINALITY INT
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:132:68: ( CARDINALITY INT )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:133:1: CARDINALITY INT
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -904,7 +920,7 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "datatype"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:128:1: datatype returns [ElementaryDataType type] : ( NUMERIC | TEXT | LOGICAL ) ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:137:1: datatype returns [ElementaryDataType type] : ( NUMERIC | TEXT | LOGICAL ) ;
     public final ResourceSchemaParser.datatype_return datatype() throws RecognitionException {
         ResourceSchemaParser.datatype_return retval = new ResourceSchemaParser.datatype_return();
         retval.start = input.LT(1);
@@ -920,12 +936,12 @@ public class ResourceSchemaParser extends Parser {
         CommonTree LOGICAL32_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:129:2: ( ( NUMERIC | TEXT | LOGICAL ) )
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:130:3: ( NUMERIC | TEXT | LOGICAL )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:138:2: ( ( NUMERIC | TEXT | LOGICAL ) )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:139:3: ( NUMERIC | TEXT | LOGICAL )
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:130:3: ( NUMERIC | TEXT | LOGICAL )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:139:3: ( NUMERIC | TEXT | LOGICAL )
             int alt8=3;
             switch ( input.LA(1) ) {
             case NUMERIC:
@@ -952,7 +968,7 @@ public class ResourceSchemaParser extends Parser {
 
             switch (alt8) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:131:3: NUMERIC
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:140:3: NUMERIC
                     {
                     NUMERIC30=(Token)match(input,NUMERIC,FOLLOW_NUMERIC_in_datatype466); 
                     NUMERIC30_tree = (CommonTree)adaptor.create(NUMERIC30);
@@ -963,7 +979,7 @@ public class ResourceSchemaParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:133:3: TEXT
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:142:3: TEXT
                     {
                     TEXT31=(Token)match(input,TEXT,FOLLOW_TEXT_in_datatype476); 
                     TEXT31_tree = (CommonTree)adaptor.create(TEXT31);
@@ -974,7 +990,7 @@ public class ResourceSchemaParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // de/lichtflut/rb/core/schema/ResourceSchema.g:135:3: LOGICAL
+                    // de/lichtflut/rb/core/schema/ResourceSchema.g:144:3: LOGICAL
                     {
                     LOGICAL32=(Token)match(input,LOGICAL,FOLLOW_LOGICAL_in_datatype486); 
                     LOGICAL32_tree = (CommonTree)adaptor.create(LOGICAL32);
