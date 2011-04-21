@@ -6,5 +6,6 @@ target
 *.iml
 *.tmprojtest
 pom-conf.tmproj
+core/bin
 
 

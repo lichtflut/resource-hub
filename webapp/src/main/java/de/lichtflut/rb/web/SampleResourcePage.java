@@ -25,14 +25,6 @@ public class SampleResourcePage extends WebPage {
 	 */
 	public SampleResourcePage(final PageParameters parameters) {
 		super(parameters);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.Component#onInitialize()
-	 */
-	@Override
-	protected void onInitialize() {
-		super.onInitialize();
 		add(new TextField<String>("value"));
 		add(new TextField<String>("resource"));
 	}

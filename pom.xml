@@ -9,6 +9,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>core</module>
+		<module>webck</module>
 		<module>webapp</module>
 	</modules>
 	<build>
