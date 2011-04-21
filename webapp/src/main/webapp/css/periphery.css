@@ -1,0 +1,32 @@
+
+div#periphery-view {
+	clear: both;
+}
+
+div#infovis {
+	float: left;
+	width:740px;
+	height:490px;
+	border: 1px solid red;
+}
+
+div#inner-details {
+	font-size: 9pt;
+	float: left;
+	width: 160px;
+	height: 490px;
+	border: 1px solid blue;
+}
+
+.node {
+	color: #111;
+	background: #DDD;
+	border: 1px solid #777;
+	-moz-border-radius: 2px;
+    -webkit-border-radius:2px; 
+    -khtml-border-radius:2px; 
+}
+
+.edge {
+	 color: #C17878,
+}
