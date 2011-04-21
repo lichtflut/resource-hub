@@ -1,8 +1,5 @@
 resource Person(
   hasMax 2 aNd hasMin 1 email
-  
-  
-  
   hasMin 1 wohnort
   )
   

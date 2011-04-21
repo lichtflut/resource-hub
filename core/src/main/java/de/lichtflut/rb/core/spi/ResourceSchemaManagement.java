@@ -4,14 +4,8 @@
 package de.lichtflut.rb.core.spi;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
-
-import org.antlr.runtime.RecognitionException;
-
-import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 /**
  * 
  * [TODO Insert description here.]
@@ -22,9 +16,18 @@ import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
  */
 public interface ResourceSchemaManagement {
 
-	public Set<ResourceSchemaType> generateSchemaModelThrough(InputStream is) throws  IOException, RecognitionException ;
-	public Set<ResourceSchemaType> generateSchemaModelThrough(File file) throws FileNotFoundException, IOException,RecognitionException ;
-	public Set<ResourceSchemaType> generateSchemaModelThrough(String s) throws RecognitionException ;
+	public RSParsingResult generateAndResolveSchemaModelThrough(InputStream is);
+	
+	public RSParsingResult generateAndResolveSchemaModelThrough(File f);
+	
+	public RSParsingResult generateAndResolveSchemaModelThrough(String s);
+	
+	public RSParsingResult generateSchemaModelThrough(InputStream is);
+	
+	public RSParsingResult generateSchemaModelThrough(File file);
+	
+	public RSParsingResult generateSchemaModelThrough(String s);
+	
 	
 	/**
 	 * TODO: There shall be some more overloaded methods to be more flexible
