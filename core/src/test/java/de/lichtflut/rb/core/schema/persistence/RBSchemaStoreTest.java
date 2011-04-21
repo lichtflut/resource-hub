@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.schema.persistence;
 import junit.framework.Assert;
 
 import org.arastreju.sge.Arastreju;
+import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
@@ -32,7 +33,9 @@ public class RBSchemaStoreTest {
 
 	@Test
 	public void testStore() {
-		 final RBSchemaStore store = new RBSchemaStore(Arastreju.getInstance().rootContext());
+		 final ArastrejuGate gate = Arastreju.getInstance().rootContext();
+		 
+		 final RBSchemaStore store = new RBSchemaStore(gate);
 		 
 		 final ResourceSchema schema = createSchema();
 		 
@@ -43,6 +46,16 @@ public class RBSchemaStoreTest {
 		 Assert.assertEquals(3, snSchema.getPropertyAssertions().size());
 		 
 		 System.out.println(snSchema);
+		 
+		 ResourceSchema schema2 = store.convert(snSchema);
+		 
+		 System.out.println(schema2);
+		 
+		 Assert.assertNotNull(schema2);
+		 
+		 Assert.assertEquals(3, schema2.getPropertyAssertions().size());
+		 
+		 
 	}
 	
 	// -----------------------------------------------------

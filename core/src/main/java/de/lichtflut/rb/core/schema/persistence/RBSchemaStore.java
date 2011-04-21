@@ -6,7 +6,10 @@ package de.lichtflut.rb.core.schema.persistence;
 import java.math.BigInteger;
 
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNUri;
@@ -16,6 +19,11 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
+import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 
 /**
  * <p>
@@ -47,6 +55,8 @@ public class RBSchemaStore {
 		final Context ctx = null;
 		final SNResourceSchema snSchema = new SNResourceSchema();
 		
+		final ModelingConversation mc = gate.startConversation();
+		
 		for (PropertyAssertion assertion : schema.getPropertyAssertions()) {
 			final SNPropertyAssertion snAssertion = new SNPropertyAssertion();
 			snAssertion.setMinOccurs(toScalar(assertion.getCardinality().getMinOccurs()), ctx);
@@ -57,7 +67,31 @@ public class RBSchemaStore {
 			addDeclaration(snAssertion, assertion.getProperty());
 		}
 		
+		mc.attach(snSchema);
+		
 		return snSchema;
+	}
+	
+	public SNPropertyDeclaration store(final PropertyDeclaration decl){
+		throw new NotYetImplementedException();
+	}
+	
+	public ResourceSchema convert(final SNResourceSchema snSchema) {
+		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema.getNamespace().toString(), snSchema.getName());
+		
+		for (SNPropertyAssertion snAssertion : snSchema.getPropertyAssertions()){
+			final SNPropertyDeclaration snDecl = snAssertion.getPropertyDeclaration();
+			final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
+			decl.setName(snDecl.getIdentifier().toString());
+			decl.setElementaryDataType(snDecl.getDatatype());
+			final PropertyAssertionImpl pa = new PropertyAssertionImpl(snAssertion.getDescriptor(), decl);
+			int min = toInteger(snAssertion.getMinOccurs());
+			int max = toInteger(snAssertion.getMaxOccurs());
+			pa.setCardinality(CardinalityFactory.getAbsoluteCardinality(max, min));
+			schema.addPropertyAssertion(pa);
+		}
+		
+		return schema;
 	}
 	
 	// -----------------------------------------------------
@@ -80,6 +114,10 @@ public class RBSchemaStore {
 	
 	private SNScalar toScalar(final int value) {
 		return new SNScalar(BigInteger.valueOf(value));
+	}
+	
+	private Integer toInteger(final SNScalar value) {
+		return value.getIntegerValue().intValue();
 	}
 	
 
