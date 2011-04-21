@@ -26,4 +26,8 @@ public interface RSParsingResult {
 	
 	public Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssoc();
 	
+	public boolean isErrorOccured();
+	
+	public void merge(RSParsingResult result);
+	
 }

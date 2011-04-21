@@ -14,10 +14,8 @@ import java.util.Set;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
-import org.arastreju.sge.model.ResourceID;
-
-import com.sun.java.swing.plaf.nimbus.RadioButtonPainter;
-
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.impl.RBCaseControlStream;
@@ -47,8 +45,9 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		try {
 			while((line = reader.readLine())!=null) bufferedInput.append(line).append("\n");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			RSParsingResultImpl result = new RSParsingResultImpl();
+			result.addErrorMessage("The following I/O-Error has been occured: " + e.getLocalizedMessage());
+			return result;
 		}
 		return generateSchemaModelThrough(bufferedInput.toString());
 	}
@@ -64,34 +63,56 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	}
 
 	public RSParsingResult generateSchemaModelThrough(String s) {
-		RBCaseControlStream stream = new RBCaseControlStream(s);
+		RSParsingResultImpl result = new RSParsingResultImpl();
+		try {
+			Set<ResourceSchemaType> resultTypes = parseDSL(s);
+			result.merge(convertToParsingResult(resultTypes));
+		} catch (RecognitionException e) {
+			result.addErrorMessage("The following Parsing-Error(s) has been occured: " + e.getLocalizedMessage());
+		}
+		return result;
+	}
+	
+	public RSParsingResult generateAndResolveSchemaModelThrough(InputStream is) {
+		RSParsingResultImpl result = new RSParsingResultImpl();
+		result.merge(generateSchemaModelThrough(is));
+		
+		return result;
+	}
+
+	public RSParsingResult generateAndResolveSchemaModelThrough(File f) {
+		RSParsingResultImpl result = new RSParsingResultImpl();
+		result.merge(generateSchemaModelThrough(f));
+		
+		return result;
+	}
+
+	public RSParsingResult generateAndResolveSchemaModelThrough(String s) {
+		RSParsingResultImpl result = new RSParsingResultImpl();
+		result.merge(generateSchemaModelThrough(s));
+		
+		return result;
+	}
+	
+	
+	private RSParsingResult convertToParsingResult(Set<ResourceSchemaType> types){
+		RSParsingResultImpl result = new RSParsingResultImpl();
+		for (ResourceSchemaType type : types) {
+			if(type instanceof ResourceSchema) result.addResourceSchema((ResourceSchema) type);
+			if(type instanceof PropertyDeclaration) result.addPropertyDeclaration((PropertyDeclaration) type);
+		}
+		return result;
+	}
+	
+	private Set<ResourceSchemaType> parseDSL(final String input) throws RecognitionException{
+		RBCaseControlStream stream = new RBCaseControlStream(input);
 		//Ignore Case, this is really important
 		stream.setCaseSensitive(false);
 		ResourceSchemaLexer lexer = new ResourceSchemaLexer(stream);
 		TokenStream tokens = new CommonTokenStream(lexer);
 		ResourceSchemaParser parser = new ResourceSchemaParser(tokens);
-		dsl_return result;
-		//result = parser.dsl();
-		return null;
-	}
-	
-	public RSParsingResult generateSchemaModelThrough(ResourceID id){
-		return null;
-	}
-
-	public RSParsingResult generateAndResolveSchemaModelThrough(InputStream is) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public RSParsingResult generateAndResolveSchemaModelThrough(File f) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public RSParsingResult generateAndResolveSchemaModelThrough(String s) {
-		// TODO Auto-generated method stub
-		return null;
+		dsl_return result = parser.dsl();
+		return result.types;
 	}
 
 }

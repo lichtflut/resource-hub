@@ -36,8 +36,6 @@ public class RSParsingResultImpl implements RSParsingResult{
 	}
 	
 
-
-
 	public void setPropertyDeclarations(
 			Collection<PropertyDeclaration> propertiesDeclarations) {
 		this.propertiesDeclarations = propertiesDeclarations;
@@ -75,6 +73,20 @@ public class RSParsingResultImpl implements RSParsingResult{
 
 	public Collection<ResourceSchema> getResourceSchemas() {
 		return this.resourceSchemas;
+	}
+
+	public boolean isErrorOccured() {
+		if(this.errorMessages.size()!=0) return false;
+		return true;
+	}
+
+	/**
+	 * TODO: If there are some duplicates while merging, try to filter them out
+	 */
+	public void merge(RSParsingResult result) {
+		this.addErrorMessage(result.getErrorMessages());
+		this.getPropertyDeclarations().addAll(result.getPropertyDeclarations());
+		this.getResourceSchemas().addAll(result.getResourceSchemas());
 	}
 	
 }
