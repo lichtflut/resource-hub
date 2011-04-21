@@ -23,7 +23,6 @@ import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
-import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 
 import de.lichtflut.infra.Infra;

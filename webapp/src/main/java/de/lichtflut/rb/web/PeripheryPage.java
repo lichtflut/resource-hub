@@ -43,17 +43,6 @@ public class PeripheryPage extends WebPage {
 		
 		gate = Arastreju.getInstance().rootContext();
 		
-	}
-	
-	// -----------------------------------------------------
-	
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.Component#onInitialize()
-	 */
-	@Override
-	protected void onInitialize() {
-		super.onInitialize();
-		
 		SemanticGraph g = loadGraph();
 		StringBuilder jsonTree = new StringBuilder("graph = [ ");
 			//new StringBuilder("graph = { id: 0, name: 'root', children: [ ");

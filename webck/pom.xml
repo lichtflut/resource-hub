@@ -6,15 +6,18 @@
 		<artifactId>lf.resource-browser</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>de.lichtflut</groupId>
+	
+	<groupId>de.lichtflut.rb</groupId>
 	<artifactId>lf.resource-browser.webck</artifactId>
 	<packaging>jar</packaging>
 	<name>RB Web Construction Kit</name>
 	<description/>
+	
 	<properties>
 		<wicket.version>1.5-M3</wicket.version>
+        <wicket-extensions.version>1.5-M2.1</wicket-extensions.version>
 		<jetty.version>6.1.25</jetty.version>
-		<wiquery.version>1.2.2</wiquery.version>
+		<wiquery.version>1.5-M1</wiquery.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -23,15 +26,23 @@
 			<version>${version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.odlabs.wiquery</groupId>
-			<artifactId>wiquery</artifactId>
-			<version>${wiquery.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket</artifactId>
 			<version>${wicket.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-extensions</artifactId>
+			<version>${wicket-extensions.version}</version>
+        </dependency>
+		<!--
+			<dependency>
+				<groupId>org.odlabs.wiquery</groupId>
+				<artifactId>wiquery</artifactId>
+				<version>${wiquery.version}</version>
+			</dependency
+		-->
+		
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>

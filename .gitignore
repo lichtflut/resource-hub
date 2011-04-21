@@ -4,7 +4,10 @@ target
 .settings
 .idea
 *.iml
+*.ipr
+*.iws
 *.tmprojtest
 pom-conf.tmproj
+core/bin
 
 

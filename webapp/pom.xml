@@ -8,16 +8,16 @@
 	    <version>0.1-SNAPSHOT</version>
 	</parent>
 	
-	<groupId>de.lichtflut</groupId>
-	<artifactId>lf.resource-browser.web</artifactId>
+	<groupId>de.lichtflut.rb</groupId>
+	<artifactId>lf.resource-browser.websample</artifactId>
 	<packaging>war</packaging>
-	<name>Resource Browser webapp</name>
+	<name>RB WebSample</name>
 	<description></description>
 	
 	<properties>
 		<wicket.version>1.5-M3</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
-		<wiquery.version>1.2.2</wiquery.version>
+		<wiquery.version>1.5-M1</wiquery.version>
 	</properties>
 	
 	<dependencies>
@@ -28,17 +28,24 @@
 			<version>${version}</version>
 		</dependency>
 		
-	   <dependency>
-    		<groupId>org.odlabs.wiquery</groupId>
-    		<artifactId>wiquery</artifactId>
-        	<version>${wiquery.version}</version>
-        </dependency>	
-        
+		<dependency>
+			<groupId>de.lichtflut.rb</groupId>
+			<artifactId>lf.resource-browser.webck</artifactId>
+			<version>${version}</version>
+		</dependency>
+		        
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket</artifactId>
 			<version>${wicket.version}</version>
 		</dependency>
+			<!--
+				<dependency>
+					<groupId>org.odlabs.wiquery</groupId>
+					<artifactId>wiquery</artifactId>
+					<version>${wiquery.version}</version>
+				</dependency
+			-->
 
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->
 		<dependency>
@@ -61,6 +68,7 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<finalName>websample</finalName>
 		<resources>
 			<resource>
 				<filtering>false</filtering>

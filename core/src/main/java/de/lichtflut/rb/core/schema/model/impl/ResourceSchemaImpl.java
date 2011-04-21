@@ -46,10 +46,15 @@ public class ResourceSchemaImpl implements ResourceSchema{
 	// -----------------------------------------------------
 	
 	//Constructor takes as argument an identifier which will help to define the Resource Identifier
-	public ResourceSchemaImpl(final String identifier) throws IllegalArgumentException{
-		/*TODO check if identifier is an valid uri, if not generate a valid one, if this is not possible, throw an exception???
-		 * Or generate it anyway?
-		 */
+	public ResourceSchemaImpl(final String nsUri, final String name) throws IllegalArgumentException{
+		this.resource = new SimpleResourceID(nsUri, name);
+	}
+	
+	//Constructor takes as argument an identifier which will help to define the Resource Identifier
+	/**
+	 * TODO: ToImplement
+	 */
+	public ResourceSchemaImpl(final String name) throws IllegalArgumentException{
 		this();
 	}
 	

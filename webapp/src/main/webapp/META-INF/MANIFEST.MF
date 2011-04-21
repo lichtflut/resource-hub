@@ -4,11 +4,10 @@ Class-Path: aduna-commons-collections-2.7.0.jar aduna-commons-concurre
  r aduna-commons-net-2.6.0.jar aduna-commons-text-2.6.0.jar aduna-comm
  ons-xml-2.6.0.jar antlr-2.7.7.jar antlr-3.1.3.jar antlr-runtime-3.1.3
  .jar arastreju.neo4j-0.5.0-SNAPSHOT.jar arastreju.sge-0.5.0-SNAPSHOT.
- jar geronimo-jta_1.1_spec-1.1.1.jar infra-1.0.7.jar jackson-core-asl-
- 1.6.1.jar jackson-mapper-asl-1.6.1.jar jdom-1.1.jar js-1.7R2.jar lf.r
- esource-browser.core.jar log4j-1.2.14.jar lucene-core-2.9.2.jar neo4j
- -index-1.1.jar neo4j-kernel-1.1.jar sesame-model-2.3.2.jar sesame-rio
- -api-2.3.2.jar sesame-rio-rdfxml-2.3.2.jar slf4j-api-1.5.8.jar slf4j-
- log4j12-1.5.10.jar stringtemplate-3.2.jar wicket-1.5-M3.jar wicket-re
- quest-1.5-M3.jar wicket-util-1.5-M3.jar wiquery-1.2.2.jar
+ jar geronimo-jta_1.1_spec-1.1.1.jar infra-1.0.7.jar jdom-1.1.jar lf.r
+ esource-browser.core.jar lf.resource-browser.webck.jar log4j-1.2.14.j
+ ar lucene-core-2.9.2.jar neo4j-index-1.1.jar neo4j-kernel-1.1.jar ses
+ ame-model-2.3.2.jar sesame-rio-api-2.3.2.jar sesame-rio-rdfxml-2.3.2.
+ jar slf4j-api-1.5.8.jar slf4j-log4j12-1.5.10.jar stringtemplate-3.2.j
+ ar wicket-1.5-M3.jar wicket-request-1.5-M3.jar wicket-util-1.5-M3.jar
 

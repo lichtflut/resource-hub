@@ -17,11 +17,22 @@ import java.util.Set;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
+<<<<<<< HEAD:core/src/main/java/de/lichtflut/rb/core/spi/impl/ResourceSchemaManagementImpl.java
 
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
+=======
+import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
+>>>>>>> b0945ca571b2b8fc7053851e9e4af3a57c5d1573:core/src/main/java/de/lichtflut/rb/core/spi/impl/ResourceSchemaManagementImpl.java
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
+import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.impl.RBCaseControlStream;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
@@ -44,17 +55,17 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	}
 	
 	public RSParsingResult generateSchemaModelThrough(InputStream is){
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		StringBuilder bufferedInput = new StringBuilder();
-		String line;
 		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			StringBuilder bufferedInput = new StringBuilder();
+			String line;
 			while((line = reader.readLine())!=null) bufferedInput.append(line).append("\n");
+			return generateSchemaModelThrough(bufferedInput.toString());
 		} catch (IOException e) {
 			RSParsingResultImpl result = new RSParsingResultImpl();
 			result.addErrorMessage("The following I/O-Error has been occured: " + e.getMessage());
 			return result;
 		}
-		return generateSchemaModelThrough(bufferedInput.toString());
 	}
 
 	public RSParsingResult generateSchemaModelThrough(File file){
@@ -147,6 +158,38 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		dsl_return result = parser.dsl();
 		
 		return result.types;
+	}
+
+	
+	/**
+	 * TODO: This is a mocked-response, please to the implementation asap
+	 */
+	public ResourceSchema getResourceSchemaFor(ResourceID id) {
+		ResourceSchemaImpl schema = new ResourceSchemaImpl("http://lichtflut.de#","personschema");
+		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl(); 
+		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl(); 
+		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl(); 
+		p1.setName("http://lichtflut.de/#geburtsdatum");
+		p2.setName("http://lichtflut.de/#email");
+		p3.setName("http://lichtflut.de/#alter");
+		
+		p1.setElementaryDataType(ElementaryDataType.DATE);
+		p2.setElementaryDataType(ElementaryDataType.STRING);
+		p3.setElementaryDataType(ElementaryDataType.INTEGER);
+		
+		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
+		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
+		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
+		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);
+		pa1.setCardinality(CardinalityFactory.hasExcactlyOne());
+		pa2.setCardinality(CardinalityFactory.hasAtLeastOneUpTo(3));
+		pa3.setCardinality(CardinalityFactory.hasExcactlyOne());
+		
+		schema.addPropertyAssertion(pa1);
+		schema.addPropertyAssertion(pa2);
+		schema.addPropertyAssertion(pa3);
+		
+		return schema;
 	}
 
 }
