@@ -47,17 +47,17 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	}
 	
 	public RSParsingResult generateSchemaModelThrough(InputStream is){
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		StringBuilder bufferedInput = new StringBuilder();
-		String line;
 		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			StringBuilder bufferedInput = new StringBuilder();
+			String line;
 			while((line = reader.readLine())!=null) bufferedInput.append(line).append("\n");
+			return generateSchemaModelThrough(bufferedInput.toString());
 		} catch (IOException e) {
 			RSParsingResultImpl result = new RSParsingResultImpl();
 			result.addErrorMessage("The following I/O-Error has been occured: " + e.getMessage());
 			return result;
 		}
-		return generateSchemaModelThrough(bufferedInput.toString());
 	}
 
 	public RSParsingResult generateSchemaModelThrough(File file){
