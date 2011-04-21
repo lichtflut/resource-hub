@@ -93,4 +93,18 @@ public class SNResourceSchema extends ResourceView {
 		revoke(toBeRemoved);
 	}
 	
+	// -----------------------------------------------------
+	
+	/* (non-Javadoc)
+	 * @see org.arastreju.sge.model.nodes.views.ResourceView#toString()
+	 */
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("ResourceSchema[" + super.toString() + "]\n");
+		for(SNPropertyAssertion pa : getPropertyAssertions()){
+			sb.append("\t" + pa + "\n");
+		}
+		return sb.toString();
+	}
+	
 }

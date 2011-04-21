@@ -102,6 +102,23 @@ public class SNPropertyDeclaration extends ResourceView {
 	
 	// -----------------------------------------------------
 	
+	/* (non-Javadoc)
+	 * @see org.arastreju.sge.model.nodes.views.ResourceView#toString()
+	 */
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("PropertyDeclaration[" + super.toString() + "]");
+		if (getIdentifier() != null) {
+			sb.append(" " + getIdentifier());
+		}
+		if (getDatatype() != null) {
+			sb.append(" " + getDatatype());
+		}
+		return sb.toString();
+	}
+	
+	// -----------------------------------------------------
+	
 	/**
 	 * Removes all associations with given predicate.
 	 * @param predicate The predicate.

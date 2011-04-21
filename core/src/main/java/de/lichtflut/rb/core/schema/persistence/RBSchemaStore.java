@@ -53,6 +53,8 @@ public class RBSchemaStore {
 			snAssertion.setMaxOccurs(toScalar(assertion.getCardinality().getMaxOccurs()), ctx);
 			snAssertion.setDescriptor(assertion.getPropertyDescriptor(), ctx);
 			snSchema.addPropertyAssertion(snAssertion, ctx);
+			
+			addDeclaration(snAssertion, assertion.getProperty());
 		}
 		
 		return snSchema;

@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
 			<artifactId>lf.resource-browser.core</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

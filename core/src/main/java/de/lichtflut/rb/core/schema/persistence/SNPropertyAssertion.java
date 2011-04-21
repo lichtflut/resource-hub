@@ -161,10 +161,12 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 	}
 	
 	public String toString(){
-		StringBuffer sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer("PropertyAssertion[" + super.toString() + "] ");
 		if (getDescriptor() != null){
 			sb.append(getDescriptor().getQualifiedName().toQName());
 		}
+		sb.append(" " + getMinOccurs() + ".." + getMaxOccurs());
+		sb.append("\n\t\t" + getPropertyDeclaration());
 		return sb.toString();
 	}
 	
