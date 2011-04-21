@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.schema.parser.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -22,8 +23,8 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 public class RSParsingResultImpl implements RSParsingResult{
 
 	private ArrayList<String> errorMessages = new ArrayList<String>();
-	private Collection<PropertyDeclaration> propertiesDeclarations;
-	private Collection<ResourceSchema> resourceSchemas;
+	private Collection<PropertyDeclaration> propertiesDeclarations = new LinkedList<PropertyDeclaration>();
+	private Collection<ResourceSchema> resourceSchemas = new LinkedList<ResourceSchema>();
 	
 
 		
@@ -76,8 +77,8 @@ public class RSParsingResultImpl implements RSParsingResult{
 	}
 
 	public boolean isErrorOccured() {
-		if(this.errorMessages.size()!=0) return false;
-		return true;
+		if(this.errorMessages.size()!=0) return true;
+		return false;
 	}
 
 	/**
