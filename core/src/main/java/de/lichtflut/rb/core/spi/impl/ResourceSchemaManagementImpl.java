@@ -14,6 +14,8 @@ import java.util.Set;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
+import org.arastreju.sge.model.ResourceID;
+
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
@@ -114,6 +116,11 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		dsl_return result = parser.dsl();
 		
 		return result.types;
+	}
+
+	public ResourceSchema getResourceSchemaFor(ResourceID id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

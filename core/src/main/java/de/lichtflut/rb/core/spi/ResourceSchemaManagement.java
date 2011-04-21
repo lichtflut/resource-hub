@@ -5,6 +5,10 @@ package de.lichtflut.rb.core.spi;
 
 import java.io.File;
 import java.io.InputStream;
+
+import org.arastreju.sge.model.ResourceID;
+
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 /**
  * 
@@ -28,6 +32,7 @@ public interface ResourceSchemaManagement {
 	
 	public RSParsingResult generateSchemaModelThrough(String s);
 	
+	public ResourceSchema getResourceSchemaFor(ResourceID id);
 	
 	/**
 	 * TODO: There shall be some more overloaded methods to be more flexible
