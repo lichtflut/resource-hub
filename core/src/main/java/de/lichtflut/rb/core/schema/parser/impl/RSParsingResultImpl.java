@@ -28,7 +28,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	
 
 		
-	public String getErrorMessages() {
+	public String getErrorMessagesAsString() {
 		StringBuilder sBuilder = new StringBuilder();
 		for (String message : errorMessages) {
 			sBuilder.append(message).append("\n");
@@ -36,6 +36,9 @@ public class RSParsingResultImpl implements RSParsingResult{
 		return sBuilder.toString();
 	}
 	
+	public Collection<String> getErrorMessages(){
+		return errorMessages;
+	}
 
 	public void setPropertyDeclarations(
 			Collection<PropertyDeclaration> propertiesDeclarations) {
@@ -86,7 +89,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	 * TODO: If there are some duplicates while merging, try to filter them out
 	 */
 	public void merge(RSParsingResult result) {
-		if(!result.getErrorMessages().equals("")) this.addErrorMessage(result.getErrorMessages());
+		if(!result.getErrorMessages().equals("")) this.addErrorMessage(result.getErrorMessagesAsString());
 		this.getPropertyDeclarations().addAll(result.getPropertyDeclarations());
 		this.getResourceSchemas().addAll(result.getResourceSchemas());
 	}

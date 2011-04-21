@@ -10,10 +10,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
+
+import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
@@ -90,6 +95,34 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	public RSParsingResult generateAndResolveSchemaModelThrough(String s) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.merge(generateSchemaModelThrough(s));
+		
+		Collection<ResourceSchema> DSLSchemas = result.getResourceSchemas();
+		HashMap<String, PropertyDeclaration> propertiesHash = new HashMap<String, PropertyDeclaration>();
+		HashMap<String, PropertyDeclaration> dSLPropertiesHash = new HashMap<String, PropertyDeclaration>();
+		
+		for(PropertyDeclaration declaration: result.getPropertyDeclarations())
+			dSLPropertiesHash.put(declaration.getName(), declaration);
+		
+		for(ResourceSchema schema: DSLSchemas){
+			Collection<PropertyAssertion> assertions = schema.getPropertyAssertions();
+			for(PropertyAssertion assertion : assertions){
+				propertiesHash.put(assertion.getPropertyIdentifier(), null);
+			}
+		}
+		
+		for(String assertionName : propertiesHash.keySet()){
+			if(dSLPropertiesHash.containsKey(assertionName)){
+				propertiesHash.put(assertionName, dSLPropertiesHash.get(assertionName));
+			}
+			else if(false){
+				//TODO try to get property from store.
+			}
+			else{
+				result.addErrorMessage("Property "+ assertionName + " not found!");
+			}
+		}
+		
+		result.setPropertyDeclarations(propertiesHash.values());
 		
 		return result;
 	}
