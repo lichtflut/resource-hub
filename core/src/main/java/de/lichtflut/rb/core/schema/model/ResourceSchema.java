@@ -10,6 +10,11 @@ import org.arastreju.sge.model.ResourceID;
 /**
  * <p>
  *  Schema for a resource type, e.g. a person, an organization or a project.
+ *  
+ *  ===ATTENTION===
+ *  There still exists one reference implementation {@link ResourceSchemaImpl}.
+ *  It's recommended to use this implementation, cause this is up to date and implementing the whole spec.
+ *  If you want to realize your own ResourceSchema-class, please be absolutely sure that you're already knowing the whole facts 
  * </p>
  *
  * <p>
@@ -41,4 +46,9 @@ public interface ResourceSchema extends ResourceSchemaType{
 	 * TODO: ToComment
 	 */
 	boolean resolveAssertions();
+	
+	/**
+	 * Please make sure that equals is correct implemented to avoid some merging redundancy conflicts e.g.
+	 */
+	boolean equals(Object obj);
 }

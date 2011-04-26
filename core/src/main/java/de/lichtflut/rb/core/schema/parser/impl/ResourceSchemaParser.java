@@ -795,7 +795,7 @@ public class ResourceSchemaParser extends Parser {
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            RBEvaluator eval = null;
+            RSEvaluator eval = null;
             pushFollow(FOLLOW_cardinalityDeclaration_in_cardinality394);
             c1=cardinalityDeclaration();
 
@@ -858,7 +858,7 @@ public class ResourceSchemaParser extends Parser {
     // $ANTLR end "cardinality"
 
     public static class cardinalityDeclaration_return extends ParserRuleReturnScope {
-        public RBEvaluator<Cardinality> evaluator;
+        public RSEvaluator<Cardinality> evaluator;
         CommonTree tree;
         public Object getTree() { return tree; }
     };
@@ -891,7 +891,7 @@ public class ResourceSchemaParser extends Parser {
             INT29_tree = (CommonTree)adaptor.create(INT29);
             adaptor.addChild(root_0, INT29_tree);
 
-            retval.evaluator = new RBCardinalityEvaluator(CARDINALITY28,Integer.parseInt(INT29.getText()));
+            retval.evaluator = new RSCardinalityEvaluator(CARDINALITY28,Integer.parseInt(INT29.getText()));
 
             }
 

@@ -8,8 +8,6 @@ import java.math.BigInteger;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
-import org.arastreju.sge.model.ElementaryDataType;
-import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNUri;
@@ -20,7 +18,6 @@ import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
@@ -64,7 +61,7 @@ public class RBSchemaStore {
 			snAssertion.setDescriptor(assertion.getPropertyDescriptor(), ctx);
 			snSchema.addPropertyAssertion(snAssertion, ctx);
 			
-			addDeclaration(snAssertion, assertion.getProperty());
+			addDeclaration(snAssertion, assertion.getPropertyDeclaration());
 		}
 		
 		mc.attach(snSchema);

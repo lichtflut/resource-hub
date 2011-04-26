@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core;
+package de.lichtflut.rb.core.schema.parser;
 
 import java.io.IOException;
 import org.antlr.runtime.RecognitionException;

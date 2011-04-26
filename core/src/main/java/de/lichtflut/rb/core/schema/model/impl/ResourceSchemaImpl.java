@@ -6,16 +6,18 @@ package de.lichtflut.rb.core.schema.model.impl;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
  * <p>
  *  Common implementation of {@link ResourceSchema}
+ *  Please note:
+ *  This class is flagged as final.
+ *  That means: If you're willing to remove it to get ability to inherit or sth. like that, please be absolutely sure,
+ *  that you know everything about this class when you want to override some members e.g. (See the test cases)
  * </p>
  *
  * <p>
@@ -24,7 +26,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  *
  * @author Nils Bleisch
  */
-public class ResourceSchemaImpl implements ResourceSchema{
+public final class ResourceSchemaImpl implements ResourceSchema{
 
 	//Instance members
 	private ResourceID resource;
@@ -102,5 +104,11 @@ public class ResourceSchemaImpl implements ResourceSchema{
 	}
 	
 	// -----------------------------------------------------
+	
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof ResourceSchema)) return false;
+		return this.resource.getQualifiedName().toURI().equals(((ResourceSchema) obj).getResourceID().getQualifiedName().toURI());
+	}
 	
 }//End of class ResourceSchemaImpl

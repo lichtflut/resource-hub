@@ -32,13 +32,17 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
  * This implementation tries to give you a perfect way of freedom to decide how to construct and build an object of this class.
  * Therefore this Class has a whole big chunk of constructors and setter/getter-members. Check it out! 
  *
+ * Please note:
+ * This class is flagged as final.
+ * That means: If you're willing to remove it to get ability to inherit or sth. like that, please be absolutely sure,
+ * that you know everything about this class when you want to override some members e.g. (See the test cases)
  * <p>
  * 	Created Apr 14, 2011
  * </p>
  * 
  * @author Nils Bleisch
  */
-public class PropertyDeclarationImpl implements PropertyDeclaration{
+public final class PropertyDeclarationImpl implements PropertyDeclaration{
 
 	//Instance members
 	private Set<Constraint> constraints;
@@ -119,6 +123,16 @@ public class PropertyDeclarationImpl implements PropertyDeclaration{
 		}
 		return false;
 	}
+	
+	//------------------------------------------------------
+	
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof PropertyDeclaration)) return false;
+		return this.identifierName.equals(((PropertyDeclaration) obj).getName());
+	}
+	
+	
 	
 	// -----------------------------------------------------
 

@@ -32,7 +32,7 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
-import de.lichtflut.rb.core.schema.parser.impl.RBCaseControlStream;
+import de.lichtflut.rb.core.schema.parser.impl.RSCaseControlStream;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 import de.lichtflut.rb.core.schema.parser.impl.ResourceSchemaLexer;
@@ -148,7 +148,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	}
 	
 	private Set<ResourceSchemaType> parseDSL(final String input, RSParsingResultImpl pResult) throws RecognitionException{
-		RBCaseControlStream stream = new RBCaseControlStream(input);
+		RSCaseControlStream stream = new RSCaseControlStream(input);
 		RSParsingResultErrorReporter eReporter = new RSParsingResultErrorReporter(pResult);
 		//Ignore Case, this is really important
 		stream.setCaseSensitive(false);

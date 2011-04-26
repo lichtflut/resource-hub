@@ -26,6 +26,12 @@ import org.arastreju.sge.model.ElementaryDataType;
  *  <ol>
  *  
  * </p>
+ * 
+ * 
+ *  ===ATTENTION===
+ *  There still exists one reference implementation {@link PropertyDeclarationImpl}.
+ *  It's recommended to use this implementation, cause this is up to date and implementing the whole spec.
+ *  If you want to realize your own ResourceSchema-class, please be absolutely sure that you're already knowing the whole facts
  *
  * <p>
  * 	Created Jan 27, 2011
@@ -83,6 +89,14 @@ public interface PropertyDeclaration  extends ResourceSchemaType{
 	
 		
 	// -----------------------------------------------------
+	
+	/**
+	 * Please make sure that equals is correct implemented to avoid some merging redundancy conflicts e.g.
+	 */
+	boolean equals(Object obj);
+	
+	
+	//------------------------------------------------------
 	
 	boolean isValue();
 	

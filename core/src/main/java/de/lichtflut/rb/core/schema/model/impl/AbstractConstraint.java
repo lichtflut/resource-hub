@@ -63,7 +63,7 @@ public abstract class AbstractConstraint implements Constraint{
 	
 	/**
 	 * TODO: Fix toString()
-	 * nature of Constraint is not the beste to implement an universal flexible toString() method
+	 * Nature of Constraint is not the best to implement an universal flexible toString() method
 	 */
 	public String toString(){
 		String output = "Type of Constraint is: "  + (isLiteralConstraint() ? 
