@@ -15,6 +15,7 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.arastreju.sge.context.Context;
@@ -67,6 +68,9 @@ public class SNPropertyDeclaration extends ResourceView {
 	
 	// -----------------------------------------------------
 
+	/**
+	 * Get the unique identifier.
+	 */
 	public SNUri getIdentifier() {
 		SemanticNode id = getSingleAssociationClient(RBSchema.HAS_IDENTIFIER);
 		if (id != null) {
@@ -100,6 +104,48 @@ public class SNPropertyDeclaration extends ResourceView {
 		}
 	}
 	
+	/**
+	 * Add a literal constraint to this Property Declaration.
+	 * @param contraint The literal constraint, e.g. a RegEX Pattern.
+	 * @param context The context.
+	 * @return The constraint node.
+	 */
+	public SNConstraint addLiteralConstraint(final String constraint, final Context context) {
+		final SNConstraint constraintNode = new SNConstraint(constraint, context);
+		Association.create(this, RBSchema.HAS_LITERAL_CONSTRAINT, constraintNode, context);
+		return constraintNode;
+	}
+	
+	/**
+	 * Add a type constraint to this Property Declaration.
+	 * @param constraint The type constraint.
+	 * @param context The context.
+	 * @return The constraint node.
+	 */
+	public SNConstraint addTypeConstraint(final ResourceID constraint, final Context context) {
+		final SNConstraint constraintNode = new SNConstraint(constraint, context);
+		Association.create(this, RBSchema.HAS_LITERAL_CONSTRAINT, constraintNode, context);
+		return constraintNode;
+	}
+	
+	/**
+	 * Get all constraints of this Property Declaration.
+ 	 * @return The set of all constraints.
+	 */
+	public Set<SNConstraint> getConstraints() {
+		final Set<SNConstraint> result = new HashSet<SNConstraint>();
+		for (Association assoc: getAssociations()){
+			if (RBSchema.HAS_LITERAL_CONSTRAINT.equals(assoc.getPredicate())){
+				result.add(new SNConstraint(assoc.getClient().asResource()));
+			} else if (RBSchema.HAS_TYPE_CONSTRAINT.equals(assoc.getPredicate())){
+				result.add(new SNConstraint(assoc.getClient().asResource()));
+			} else if (RBSchema.HAS_CONSTRAINT.equals(assoc.getPredicate())){
+				result.add(new SNConstraint(assoc.getClient().asResource()));
+			}
+		}
+		return result;
+	}
+	
 	// -----------------------------------------------------
 	
 	/* (non-Javadoc)
@@ -114,6 +160,7 @@ public class SNPropertyDeclaration extends ResourceView {
 		if (getDatatype() != null) {
 			sb.append(" " + getDatatype());
 		}
+		sb.append(" " + getConstraints());
 		return sb.toString();
 	}
 	

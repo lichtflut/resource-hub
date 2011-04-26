@@ -26,6 +26,10 @@ import org.arastreju.sge.model.ElementaryDataType;
  *  <ol>
  *  
  * </p>
+ * 
+ * <p>
+ * 	Each Property Declaration has a public URI and can be used isolated from Property Assertions.
+ * </p>
  *
  * <p>
  * 	Created Jan 27, 2011
@@ -49,6 +53,7 @@ public interface PropertyDeclaration  extends ResourceSchemaType{
 	
 	/**
 	 * Get the name of the property.
+	 * TODO: Should be Resource ID.
 	 * @return The name of the property.
 	 */
 	String getName();
@@ -59,7 +64,6 @@ public interface PropertyDeclaration  extends ResourceSchemaType{
 	 * @param the name or identifier you wish to set,
 	 */
 	void setName(String identifierString);
-	
 	
 	/**
 	 * The context independent constraints for this property.

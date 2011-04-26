@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -82,6 +83,9 @@ public class PropertyDeclarationImpl implements PropertyDeclaration{
 	// -----------------------------------------------------
 	
 	public Set<Constraint> getConstraints() {
+		if (constraints == null) {
+			return Collections.emptySet();
+		}
 		return constraints;
 	}
 
