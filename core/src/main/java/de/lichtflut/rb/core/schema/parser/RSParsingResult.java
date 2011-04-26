@@ -18,7 +18,9 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  */
 public interface RSParsingResult {
 
-	public String getErrorMessages();
+	public Collection<String> getErrorMessages();
+	
+	public String getErrorMessagesAsString();
 	
 	public Collection<PropertyDeclaration> getPropertyDeclarations();
 	

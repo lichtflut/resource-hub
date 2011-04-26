@@ -34,6 +34,15 @@ options {
 @members {
 	private PropertyDeclaration property = null;
 	private ResourceSchema resource = null;
+	private RSErrorReporter errorReporter = null;
+    public void setErrorReporter(RSErrorReporter errorReporter) {
+        this.errorReporter = errorReporter;
+    }
+    public void emitErrorMessage(String msg) {
+        errorReporter.reportError(msg);
+    }
+	
+	
 }
 
 

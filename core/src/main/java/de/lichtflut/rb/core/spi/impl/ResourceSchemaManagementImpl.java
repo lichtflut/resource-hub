@@ -10,13 +10,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
+
+import de.lichtflut.rb.core.schema.model.PropertyAssertion;
+
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
@@ -27,6 +33,7 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.impl.RBCaseControlStream;
+import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 import de.lichtflut.rb.core.schema.parser.impl.ResourceSchemaLexer;
 import de.lichtflut.rb.core.schema.parser.impl.ResourceSchemaParser;
@@ -47,17 +54,17 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	}
 	
 	public RSParsingResult generateSchemaModelThrough(InputStream is){
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		StringBuilder bufferedInput = new StringBuilder();
-		String line;
 		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			StringBuilder bufferedInput = new StringBuilder();
+			String line;
 			while((line = reader.readLine())!=null) bufferedInput.append(line).append("\n");
+			return generateSchemaModelThrough(bufferedInput.toString());
 		} catch (IOException e) {
 			RSParsingResultImpl result = new RSParsingResultImpl();
 			result.addErrorMessage("The following I/O-Error has been occured: " + e.getMessage());
 			return result;
 		}
-		return generateSchemaModelThrough(bufferedInput.toString());
 	}
 
 	public RSParsingResult generateSchemaModelThrough(File file){
@@ -73,7 +80,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	public RSParsingResult generateSchemaModelThrough(String s) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		try {
-			Set<ResourceSchemaType> resultTypes = parseDSL(s);
+			Set<ResourceSchemaType> resultTypes = parseDSL(s, result);
 			result.merge(convertToParsingResult(resultTypes));
 		} catch (RecognitionException e) {
 			result.addErrorMessage("The following Parsing-Error(s) has been occured: " + e.getMessage());
@@ -99,6 +106,34 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.merge(generateSchemaModelThrough(s));
 		
+		Collection<ResourceSchema> DSLSchemas = result.getResourceSchemas();
+		HashMap<String, PropertyDeclaration> propertiesHash = new HashMap<String, PropertyDeclaration>();
+		HashMap<String, PropertyDeclaration> dSLPropertiesHash = new HashMap<String, PropertyDeclaration>();
+		
+		for(PropertyDeclaration declaration: result.getPropertyDeclarations())
+			dSLPropertiesHash.put(declaration.getName(), declaration);
+		
+		for(ResourceSchema schema: DSLSchemas){
+			Collection<PropertyAssertion> assertions = schema.getPropertyAssertions();
+			for(PropertyAssertion assertion : assertions){
+				propertiesHash.put(assertion.getPropertyIdentifier(), null);
+			}
+		}
+		
+		for(String assertionName : propertiesHash.keySet()){
+			if(dSLPropertiesHash.containsKey(assertionName)){
+				propertiesHash.put(assertionName, dSLPropertiesHash.get(assertionName));
+			}
+			else if(false){
+				//TODO try to get property from store.
+			}
+			else{
+				result.addErrorMessage("Property "+ assertionName + " not found!");
+			}
+		}
+		
+		result.setPropertyDeclarations(propertiesHash.values());
+		
 		return result;
 	}
 	
@@ -112,21 +147,22 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		return result;
 	}
 	
-	private Set<ResourceSchemaType> parseDSL(final String input) throws RecognitionException{
+	private Set<ResourceSchemaType> parseDSL(final String input, RSParsingResultImpl pResult) throws RecognitionException{
 		RBCaseControlStream stream = new RBCaseControlStream(input);
+		RSParsingResultErrorReporter eReporter = new RSParsingResultErrorReporter(pResult);
 		//Ignore Case, this is really important
 		stream.setCaseSensitive(false);
 		ResourceSchemaLexer lexer = new ResourceSchemaLexer(stream);
 		TokenStream tokens = new CommonTokenStream(lexer);
 		ResourceSchemaParser parser = new ResourceSchemaParser(tokens);
+		parser.setErrorReporter(eReporter);
 		dsl_return result = parser.dsl();
-		
 		return result.types;
 	}
 
 	
 	/**
-	 * TODO: This is a mocked-response, please to the implementation asap
+	 * TODO: This is a mocked-response, please implement asap
 	 */
 	public ResourceSchema getResourceSchemaFor(ResourceID id) {
 		ResourceSchemaImpl schema = new ResourceSchemaImpl("http://lichtflut.de#","personschema");

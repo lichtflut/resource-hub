@@ -34,7 +34,7 @@ public interface PropertyAssertion extends ResourceSchemaType {
 	 * The concrete property of this assertion.
 	 * @return The property.
 	 */
-	PropertyDeclaration getProperty();
+	PropertyDeclaration getPropertyDeclaration();
 	
 	/**
 	 * The cardinality of this property,
