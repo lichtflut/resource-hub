@@ -33,7 +33,7 @@ public class ResourceSchemaParserTest extends TestCase
 		//Get ResourceSchemaTypes
 		RSParsingResult result = rManagement.generateSchemaModelThrough(
 				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL1.dsl"));
-		System.out.println("-->" + result.getErrorMessagesAsString() +"<--");		
+		assertFalse(result.isErrorOccured());		
 		//Iterate over collection and print out 'da' model
 		for (ResourceSchema resource : result.getResourceSchemas())
 				System.out.println("--------------------------\n"+	resource.toString());

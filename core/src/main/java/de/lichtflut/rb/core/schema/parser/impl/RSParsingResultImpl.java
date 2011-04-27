@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.schema.parser.impl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -14,7 +15,7 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 
 /**
  * <p>
- *  This is the reference implementation of {@link RSParsingResult}
+ *  This is the reference implementation for {@link RSParsingResult}
  * </p>
  *
  * <p>
@@ -104,13 +105,21 @@ public class RSParsingResultImpl implements RSParsingResult{
 	// -----------------------------------------------------
 
 	public Collection<PropertyDeclaration> getPropertyDeclarations() {
+		//return an empty collection if an error is occured
+		if(isErrorOccured()) return Collections.emptySet();
+		return getPropertyDeclarationsIgnoreErrors();
+	}
+	
+	// -----------------------------------------------------
+
+	public Collection<PropertyDeclaration> getPropertyDeclarationsIgnoreErrors() {
 		return this.propertiesDeclarations;
 	}
 
 	// -----------------------------------------------------
 
 	
-	public Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssoc() {
+	public Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssocIgnoreErrors(){
 		Collection<PropertyDeclaration> output = new HashSet<PropertyDeclaration>();
 		//Get all propertyDecs assigned to the ResourceSchema
 		for (ResourceSchema rSchema : this.resourceSchemas) {
@@ -124,13 +133,30 @@ public class RSParsingResultImpl implements RSParsingResult{
 		}
 		return output;
 	}
+	
+	// -----------------------------------------------------
+	
+	public Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssoc() {
+		//return an empty collection if an error is occured
+		if(isErrorOccured()) return Collections.emptySet();
+		return getPropertyDeclarationsWithoutResourceAssocIgnoreErrors();
+	}
+
+	// -----------------------------------------------------
+	
+	public Collection<ResourceSchema> getResourceSchemasIgnoreErrors() {
+		return this.resourceSchemas;
+	}
 
 	// -----------------------------------------------------
 	
 	public Collection<ResourceSchema> getResourceSchemas() {
-		return this.resourceSchemas;
+		//return an empty collection if an error is occured
+		if(isErrorOccured()) return Collections.emptySet();
+		return getResourceSchemasIgnoreErrors();
 	}
 
+	
 	// -----------------------------------------------------
 	
 	public boolean isErrorOccured() {
@@ -141,13 +167,14 @@ public class RSParsingResultImpl implements RSParsingResult{
 	// -----------------------------------------------------
 	
 	/**
-	 * duplicated properties has to be eliminated while merging. Therfore, both Collections are LinkedHashSets
-	 * and PropertyDeclaration and ResourceSchema have to override the equals.method.
+	 * duplicated properties has to be eliminated while merging. Therefore, both Collections are LinkedHashSets
+	 * and PropertyDeclaration and ResourceSchema have to override the equals-method.
 	 */
 	public void merge(RSParsingResult result) {
+		
 		if(!result.getErrorMessages().equals("")) this.errorMessages.addAll(((RSParsingResultImpl) result).errorMessages);
-		this.getPropertyDeclarations().addAll(result.getPropertyDeclarations());
-		this.getResourceSchemas().addAll(result.getResourceSchemas());
+		this.getPropertyDeclarationsIgnoreErrors().addAll(result.getPropertyDeclarationsIgnoreErrors());
+		this.getResourceSchemasIgnoreErrors().addAll(result.getResourceSchemasIgnoreErrors());
 	}
 
 	// -----------------------------------------------------

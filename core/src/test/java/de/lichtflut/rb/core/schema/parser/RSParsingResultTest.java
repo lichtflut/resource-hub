@@ -62,8 +62,8 @@ public class RSParsingResultTest extends TestCase
 		PropertyDeclaration pDec = new PropertyDeclarationImpl("http://lichtflut.de#testProperty");
 		rSchema.addPropertyAssertion(new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de","hasTestProp"), pDec));
 		pResult1.addResourceSchema(new ResourceSchemaImpl());
-		assertTrue(pResult1.getResourceSchemas().size()==1);
-		assertTrue(pResult1.getPropertyDeclarations().size()==0);
+		assertTrue(pResult1.getResourceSchemasIgnoreErrors().size()==1);
+		assertTrue(pResult1.getPropertyDeclarationsIgnoreErrors().size()==0);
 		assertTrue(pResult1.getErrorMessages().size()==2);
 		
 		RSParsingResultImpl pResult2 = new RSParsingResultImpl();
@@ -74,8 +74,8 @@ public class RSParsingResultTest extends TestCase
 		
 		pResult2.addPropertyDeclaration(pDec);
 		
-		assertTrue(pResult2.getResourceSchemas().size()==0);
-		assertTrue(pResult2.getPropertyDeclarations().size()==1);
+		assertTrue(pResult2.getResourceSchemasIgnoreErrors().size()==0);
+		assertTrue(pResult2.getPropertyDeclarationsIgnoreErrors().size()==1);
 		assertTrue(pResult2.getErrorMessages().size()==2);
 		assertTrue(pResult2.getErrorMessages(ErrorLevel.INTERPRETER).size()==2);
 		assertTrue(pResult2.getErrorMessages(ErrorLevel.GRAMMAR).size()==2);
@@ -96,10 +96,10 @@ public class RSParsingResultTest extends TestCase
 		assertTrue(pResult1.getErrorMessages(ErrorLevel.GRAMMAR).size()==(2 + 1));
 		assertTrue(pResult1.getErrorMessages(ErrorLevel.INTERPRETER).size()==(2 + 1));
 		//Let's check the ResourceSchemaModel
-		assertTrue(pResult1.getResourceSchemas().size()==1);
-		assertTrue(pResult1.getPropertyDeclarations().size()==1);
+		assertTrue(pResult1.getResourceSchemasIgnoreErrors().size()==1);
+		assertTrue(pResult1.getPropertyDeclarationsIgnoreErrors().size()==1);
 		//And last but not least, make sure, that the pDec should not occur, when it's is already assigned to a ResourceSchema 
-		assertTrue(pResult1.getPropertyDeclarationsWithoutResourceAssoc().size()==0);
+		assertTrue(pResult1.getPropertyDeclarationsWithoutResourceAssocIgnoreErrors().size()==0);
 		
 		
 	}

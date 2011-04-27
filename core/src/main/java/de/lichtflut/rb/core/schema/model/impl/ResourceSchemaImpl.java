@@ -3,11 +3,15 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.naming.VoidNamespace;
+
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
@@ -47,26 +51,37 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	
 	// -----------------------------------------------------
 	
+	//Constructor takes as argument an identifier which will define the ResourceIdentifier
+	public ResourceSchemaImpl(ResourceID id){
+		this.resource = id;
+	}
+	
+	// -----------------------------------------------------
+	
 	//Constructor takes as argument an identifier which will help to define the Resource Identifier
 	public ResourceSchemaImpl(final String nsUri, final String name) throws IllegalArgumentException{
+		if(!(QualifiedName.isUri(nsUri + name) || QualifiedName.isUri(nsUri + name)))
+			throw new IllegalArgumentException("The identifier " + nsUri + name + " is not a valid URI");
 		this.resource = new SimpleResourceID(nsUri, name);
 	}
 	
 	//Constructor takes as argument an identifier which will help to define the Resource Identifier
-	/**
-	 * TODO: ToImplement
-	 */
-	public ResourceSchemaImpl(final String name) throws IllegalArgumentException{
-		this();
+	public ResourceSchemaImpl(final String name){
+		if(!(QualifiedName.isUri(name) || QualifiedName.isUri(name)))
+			this.resource = new SimpleResourceID(new QualifiedName(VoidNamespace.getInstance(),name));
+		else
+			this.resource = new SimpleResourceID(new QualifiedName(name));
 	}
 	
-	public List<PropertyAssertion> getPropertyAssertions() {
+	// -----------------------------------------------------
+	
+	public Collection<PropertyAssertion> getPropertyAssertions() {
 		return this.propertyList;
 	}
 
 	// -----------------------------------------------------
 	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.core.schema.model.Constraint#isLiteralConstraint()
+	 * @see de.lichtflut.rb.core.schema.model.ResourceSchema#getResourceID()
 	 */
 	public ResourceID getResourceID() {
 		return this.resource;
@@ -79,25 +94,25 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	 */
 	@Override
 	public String toString(){
+		
 		StringBuffer sBuffer = new StringBuffer();
-		sBuffer.append("ResourceID " + getResourceID().toString() + "\n");
+		sBuffer.append("ResourceID " + getResourceID().getQualifiedName().toURI() + "\n");
 		for (PropertyAssertion property : getPropertyAssertions()) {
 			sBuffer.append("--p-r-o-p-e-r-t-y--\n" + property.toString() + "\n");
 		}
 		return sBuffer.toString();
 	}
 
+	// -----------------------------------------------------
+	
 	public void addPropertyAssertion(final PropertyAssertion assertion) {
 		propertyList.add(assertion);
 		
 	}
 
-	public boolean resolveAssertions() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public void setPropertyAssertions(final List<PropertyAssertion> assertions) {
+	// -----------------------------------------------------
+	
+	public void setPropertyAssertions(final Collection<PropertyAssertion> assertions) {
 		this.propertyList.clear();
 		this.propertyList.addAll(assertions);
 		
@@ -110,5 +125,15 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 		if(!(obj instanceof ResourceSchema)) return false;
 		return this.resource.getQualifiedName().toURI().equals(((ResourceSchema) obj).getResourceID().getQualifiedName().toURI());
 	}
+
+	// -----------------------------------------------------
+	
+
+	public boolean isResolved() {
+		for (PropertyAssertion assertion : this.propertyList) if(!assertion.isResolved()) return false;
+		return true;
+	}
+
+
 	
 }//End of class ResourceSchemaImpl

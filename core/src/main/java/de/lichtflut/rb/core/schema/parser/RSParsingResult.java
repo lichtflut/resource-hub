@@ -113,7 +113,7 @@ public interface RSParsingResult {
 	// -----------------------------------------------------
 	
 	/**
-	 * @return null when at least on error has been occurred
+	 * @return is empty when at least on error has been occurred
 	 */
 	public Collection<PropertyDeclaration> getPropertyDeclarations();
 	
@@ -121,14 +121,41 @@ public interface RSParsingResult {
 	
 
 	/**
-	 * @return null when at least on error has been occurred
+	 * @return is empty when at least on error has been occurred
 	 */
 	public Collection<ResourceSchema> getResourceSchemas();
 	
 	// -----------------------------------------------------
 	
 	/**
-	 * @return null when at least on error has been occurred
+	 * 
+	 * @return the ResourceSchema even if errors have been occured
+	 */
+	public Collection<ResourceSchema> getResourceSchemasIgnoreErrors();
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * 
+	 * @return the PropertyDeclaration even if errors have been occured
+	 */
+	public Collection <PropertyDeclaration> getPropertyDeclarationsIgnoreErrors();
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * 
+	 * @return the PropertyDeclaration which are not assigned to a ResourceSchema,  even if errors have been occured
+	 */
+	public Collection <PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssocIgnoreErrors();
+	
+	
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * all the PropertyDeclarations which are not assigned to a ResourceSchema
+	 * @return is empty when at least on error has been occurred
 	 */
 	public Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssoc();
 	
@@ -145,8 +172,10 @@ public interface RSParsingResult {
 	 * Merge another ParsingResult with this ParsingResult.
 	 * Duplicated model entries will be eliminated.
 	 * This member can be understand as "union"
-	 * TODO: Write a test to verify this
+	 * A Testcase still exists
 	 */
 	public void merge(RSParsingResult result);
+
+
 	
 }

@@ -41,11 +41,11 @@ import de.lichtflut.rb.core.schema.parser.impl.ResourceSchemaParser.dsl_return;
 import de.lichtflut.rb.core.spi.ResourceSchemaManagement;
 
 /**
- * [TODO Insert description here.]
+ * Reference impl of {@link ResourceSchemaManagement}
  * 
  * Created: Apr 19, 2011
  *
- * @author [SPECIFY USER: Window-> Preferences] 
+ * @author Nils Bleisch
  */
 public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 
@@ -125,6 +125,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 				propertiesHash.put(assertionName, dSLPropertiesHash.get(assertionName));
 			}
 			else if(false){
+				
 				//TODO try to get property from store.
 			}
 			else{
@@ -157,6 +158,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		ResourceSchemaParser parser = new ResourceSchemaParser(tokens);
 		parser.setErrorReporter(eReporter);
 		dsl_return result = parser.dsl();
+		
 		return result.types;
 	}
 

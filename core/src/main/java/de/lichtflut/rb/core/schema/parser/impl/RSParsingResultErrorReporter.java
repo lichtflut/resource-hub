@@ -5,11 +5,11 @@ package de.lichtflut.rb.core.schema.parser.impl;
 
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 /**
- * [TODO Insert description here.]
+ * Reference-Implementation of {@link RSErrorReporter}
  * 
  * Created: Apr 21, 2011
  *
- * @author [SPECIFY USER: Window-> Preferences] 
+ * @author Nils Bleisch
  */
 public class RSParsingResultErrorReporter implements RSErrorReporter{
 

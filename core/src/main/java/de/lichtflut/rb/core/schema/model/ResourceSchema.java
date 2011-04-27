@@ -3,8 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
-import java.util.List;
-
+import java.util.Collection;
 import org.arastreju.sge.model.ResourceID;
 
 /**
@@ -32,24 +31,24 @@ public interface ResourceSchema extends ResourceSchemaType{
 	ResourceID getResourceID();
 	
 	/**
-	 * TODO: ToComment
+	 * Get all the schema's {@link PropertyAssertion} as {@link Collection}
 	 */
-	List<PropertyAssertion> getPropertyAssertions();
+	Collection<PropertyAssertion> getPropertyAssertions();
 
 	/**
-	 * TODO: ToComment
+	 * Set the {@link Collection} of {@link PropertyAssertion} to the ResourceSchema
 	 */
-	void setPropertyAssertions(final List<PropertyAssertion> assertions);
+	void setPropertyAssertions(final Collection<PropertyAssertion> assertions);
 	
 	/**
-	 * TODO: ToComment
+	 * Add a additional {@link PropertyAssertion} to the ResourceSchema
 	 */
 	void addPropertyAssertion(final PropertyAssertion assertion);
 	
 	/**
-	 * TODO: ToComment
-	 */
-	boolean resolveAssertions();
+	 * iterate over its {@link PropertyAssertion} and returns false if just one of them is not resolved
+ 	 */
+	boolean isResolved();
 	
 	/**
 	 * Please make sure that equals is correct implemented to avoid some merging redundancy conflicts e.g.

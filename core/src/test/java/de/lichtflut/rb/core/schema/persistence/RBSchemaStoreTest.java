@@ -30,6 +30,7 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
  * @author Oliver Tigges
  */
 public class RBSchemaStoreTest {
+	
 
 	@Test
 	public void testStore() {
@@ -38,6 +39,8 @@ public class RBSchemaStoreTest {
 		 final RBSchemaStore store = new RBSchemaStore(gate);
 		 
 		 final ResourceSchema schema = createSchema();
+		 
+		 System.out.println(schema);
 		 
 		 final SNResourceSchema snSchema = store.store(schema);
 		 
@@ -65,9 +68,9 @@ public class RBSchemaStoreTest {
 		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl(); 
 		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl(); 
 		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl(); 
-		p1.setName("http://lichtflut.de/#geburtsdatum");
-		p2.setName("http://lichtflut.de/#email");
-		p3.setName("http://lichtflut.de/#alter");
+		p1.setName("http://lichtflut.de#geburtsdatum");
+		p2.setName("http://lichtflut.de#email");
+		p3.setName("http://lichtflut.de#alter");
 		
 		p1.setElementaryDataType(ElementaryDataType.DATE);
 		p2.setElementaryDataType(ElementaryDataType.STRING);

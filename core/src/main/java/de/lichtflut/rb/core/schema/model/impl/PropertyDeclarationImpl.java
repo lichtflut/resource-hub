@@ -8,6 +8,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.naming.VoidNamespace;
+
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 
@@ -48,7 +53,7 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	//Instance members
 	private Set<Constraint> constraints;
 	private ElementaryDataType type =  ElementaryDataType.UNDEFINED;
-	private String identifierName;
+	private ResourceID identifier;
 	
 	// -----------------------------------------------------
 	//Constructor
@@ -101,8 +106,8 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 
 	// -----------------------------------------------------
 	
-	public String getName() {
-		return identifierName;
+	public ResourceID getIdentifier() {
+		return identifier;
 	}
 
 	// -----------------------------------------------------
@@ -111,18 +116,9 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 		return ((!isElementary()) && (!isResourceReference()));
 	}
 
-	/**
-	 * TODO: specify what an elementary data-type exactly is
-	 */
+
 	public boolean isElementary() {
-		ElementaryDataType[] elementary_types = new ElementaryDataType[]{
-				ElementaryDataType.BOOLEAN,
-				ElementaryDataType.INTEGER,
-				ElementaryDataType.DECIMAL,
-				ElementaryDataType.STRING
-				//....not yet ready/
-		};
-		for (ElementaryDataType elementaryDataType : elementary_types) {
+		for (ElementaryDataType elementaryDataType :  ELEMENTATY_DATA_TYPES) {
 			if(this.type == elementaryDataType) return true;
 		}
 		return false;
@@ -133,7 +129,7 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	@Override
 	public boolean equals(Object obj){
 		if(!(obj instanceof PropertyDeclaration)) return false;
-		return this.identifierName.equals(((PropertyDeclaration) obj).getName());
+		return this.identifier.equals(((PropertyDeclaration) obj).getIdentifier());
 	}
 	
 	
@@ -165,8 +161,24 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 
 	// -----------------------------------------------------
 	
-	public void setName(String identifierString) {
-		this.identifierName = identifierString;
+	/**
+	 * @return the unqualified name of the internal resourceID
+	 */
+	public String getName(){
+		return getIdentifier().getName();
+	}
+	
+	// ---------------------------------------------------
+	
+	/**
+	 * Tries to generate an URI from the given String, if not, the default Namespace will be used
+	 */
+	public void setName(String identifierString){
+		if(!(QualifiedName.isUri(identifierString) || QualifiedName.isUri(identifierString)))
+			this.identifier = new SimpleResourceID(new QualifiedName(identifierString));
+		else{
+			this.identifier = new SimpleResourceID(VoidNamespace.getInstance(),identifierString);
+		}
 	}
 
 	/**

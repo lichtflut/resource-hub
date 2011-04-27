@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.schema.model;
 import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.naming.QualifiedName;
 
 
 /**
@@ -49,25 +50,26 @@ public interface PropertyAssertion extends ResourceSchemaType {
 	void setCardinality(Cardinality c);
 	
 	/**
-	 * TODO: ToComment
+	 * Resolved means, if this assertion is already assigned to a known PropertyDeclaration
 	 */
-	void setPropertyIdentifier(String identifier);
+	boolean isResolved();
 	
 	/**
-	 * TODO: ToComment
+	 * returns the String of the PropertyIdentifier as URI-Format.
+	 * This is necessary to resolve this PropertyAssertion with a given PropertyDeclaration
+	 * If this assertion is still resolved, the PropertyIdentifier is not more needed
 	 */
 	String getPropertyIdentifier();
 	
 	
 	/**
-	 * TODO: ToComment
+	 * returns the QualifiedName of the PropertyIdentifier.
+	 * This is necessary to resolve this PropertyAssertion with a given PropertyDeclaration
+	 * If this assertion is still resolved, the PropertyIdentifier is not more needed
 	 */
-	boolean resolveAssertion();
+	QualifiedName getQualifiedPropertyIdentifier();
 	
-	/**
-	 * TODO: ToComment
-	 */
-	boolean isResolved();
+	
 	
 	
 	/**

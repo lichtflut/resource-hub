@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.schema.model;
 import java.util.Set;
 
 import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.ResourceID;
 
 /**
  * <p>
@@ -27,17 +28,16 @@ import org.arastreju.sge.model.ElementaryDataType;
  *  
  * </p>
  * 
-<<<<<<< HEAD
- * 
- *  ===ATTENTION===
- *  There still exists one reference implementation {@link PropertyDeclarationImpl}.
- *  It's recommended to use this implementation, cause this is up to date and implementing the whole spec.
- *  If you want to realize your own ResourceSchema-class, please be absolutely sure that you're already knowing the whole facts
-=======
  * <p>
  * 	Each Property Declaration has a public URI and can be used isolated from Property Assertions.
  * </p>
->>>>>>> 2339820e7c016e2de368a24b30934fe413843de1
+ *
+ *  
+ *  ===ATTENTION===
+ *  There still exists one reference implementation {@link PropertyDeclarationImpl}.
+ *  It's recommended to use this implementation  because this is already implementing the whole spec right.
+ *  If you want to realize your own ResourceSchema-class, please be absolutely sure that you already know what you do.
+ *  
  *
  * <p>
  * 	Created Jan 27, 2011
@@ -47,6 +47,24 @@ import org.arastreju.sge.model.ElementaryDataType;
  */
 public interface PropertyDeclaration  extends ResourceSchemaType{
 
+	/**
+	 * TODO: Please continue this lists.
+	 */
+	ElementaryDataType[] ELEMENTATY_DATA_TYPES = new ElementaryDataType[]{
+			ElementaryDataType.BOOLEAN,
+			ElementaryDataType.INTEGER,
+			ElementaryDataType.DECIMAL,
+			ElementaryDataType.STRING,
+			ElementaryDataType.DATE,
+	};
+	
+	ElementaryDataType[] NON_ELEMENTATY_DATA_TYPES = new ElementaryDataType[]{
+			ElementaryDataType.RESOURCE,
+			ElementaryDataType.UNDEFINED,
+			ElementaryDataType.URI
+	};
+	
+	
 	/**
 	 * Get the {@link ElementaryDataType}.
 	 * @return The elementary property.
@@ -60,14 +78,19 @@ public interface PropertyDeclaration  extends ResourceSchemaType{
 	void setElementaryDataType(ElementaryDataType type);	
 	
 	/**
-	 * Get the name of the property.
-	 * TODO: Should be Resource ID.
-	 * @return The name of the property.
+	 * Get the identifier of the property.
+	 * @return The identifier of the property.
+	 */
+	ResourceID getIdentifier();
+	
+	/**
+	 * @return the unqualified name
 	 */
 	String getName();
 	
 	/**
 	 * Set the name or identifier of this property.
+	 * Tries to generate an URI from the given String, if not, the default Namespace will be used
 	 * @return void
 	 * @param the name or identifier you wish to set,
 	 */

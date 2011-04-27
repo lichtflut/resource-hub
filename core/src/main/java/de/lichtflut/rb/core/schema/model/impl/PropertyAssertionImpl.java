@@ -9,8 +9,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
-
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import org.arastreju.sge.naming.QualifiedName;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
@@ -115,21 +114,11 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 		return sBuffer.toString();
 	}
 
-	
-	/**
-	 * TODO: Implement and document
-	 */
 	public boolean isResolved() {
 		if(property == null) return false;
 		return true;
 	}
 
-	/**
-	 * TODO: Implement and document
-	 */
-	public boolean resolveAssertion() {
-		throw new NotYetImplementedException();
-	}
 
 	public void setCardinality(Cardinality c) {
 		this.cardinality = c;
@@ -143,6 +132,11 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 
 	public String getPropertyIdentifier() {
 		return this.propertyIdentifier;
+	}
+
+	public QualifiedName getQualifiedPropertyIdentifier() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
