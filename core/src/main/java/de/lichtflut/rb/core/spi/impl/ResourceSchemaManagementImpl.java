@@ -22,6 +22,7 @@ import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.neo4j.graphdb.event.ErrorState;
 
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -32,6 +33,7 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
+import de.lichtflut.rb.core.schema.parser.RSParsingResult.ErrorLevel;
 import de.lichtflut.rb.core.schema.parser.impl.RSCaseControlStream;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
@@ -104,6 +106,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 
 	public RSParsingResult generateAndResolveSchemaModelThrough(String s) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
+		result.setErrorLevel(ErrorLevel.INTERPRETER);
 		result.merge(generateSchemaModelThrough(s));
 		
 		Collection<ResourceSchema> DSLSchemas = result.getResourceSchemas();
@@ -141,6 +144,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	
 	private RSParsingResult convertToParsingResult(Set<ResourceSchemaType> types){
 		RSParsingResultImpl result = new RSParsingResultImpl();
+		result.setErrorLevel(ErrorLevel.INTERPRETER);
 		for (ResourceSchemaType type : types) {
 			if(type instanceof ResourceSchema) result.addResourceSchema((ResourceSchema) type);
 			if(type instanceof PropertyDeclaration) result.addPropertyDeclaration((PropertyDeclaration) type);

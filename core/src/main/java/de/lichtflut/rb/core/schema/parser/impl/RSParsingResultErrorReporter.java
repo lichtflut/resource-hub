@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.schema.parser.impl;
 
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
+import de.lichtflut.rb.core.schema.parser.RSParsingResult.ErrorLevel;
 /**
  * Reference-Implementation of {@link RSErrorReporter}
  * 
@@ -20,7 +21,7 @@ public class RSParsingResultErrorReporter implements RSErrorReporter{
 	}
 	
 	public void reportError(String error) {
-		result.addErrorMessage(error);
+		result.addErrorMessage(error, ErrorLevel.GRAMMAR);
 	}
 
 }
