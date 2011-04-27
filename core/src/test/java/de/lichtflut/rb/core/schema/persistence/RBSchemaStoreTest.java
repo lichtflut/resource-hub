@@ -20,7 +20,7 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Test case for storing and reading of Resource Schema Models to/from Arastreju.
  * </p>
  *
  * <p>

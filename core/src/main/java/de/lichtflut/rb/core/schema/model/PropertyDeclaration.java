@@ -27,11 +27,17 @@ import org.arastreju.sge.model.ElementaryDataType;
  *  
  * </p>
  * 
+<<<<<<< HEAD
  * 
  *  ===ATTENTION===
  *  There still exists one reference implementation {@link PropertyDeclarationImpl}.
  *  It's recommended to use this implementation, cause this is up to date and implementing the whole spec.
  *  If you want to realize your own ResourceSchema-class, please be absolutely sure that you're already knowing the whole facts
+=======
+ * <p>
+ * 	Each Property Declaration has a public URI and can be used isolated from Property Assertions.
+ * </p>
+>>>>>>> 2339820e7c016e2de368a24b30934fe413843de1
  *
  * <p>
  * 	Created Jan 27, 2011
@@ -55,6 +61,7 @@ public interface PropertyDeclaration  extends ResourceSchemaType{
 	
 	/**
 	 * Get the name of the property.
+	 * TODO: Should be Resource ID.
 	 * @return The name of the property.
 	 */
 	String getName();
@@ -65,7 +72,6 @@ public interface PropertyDeclaration  extends ResourceSchemaType{
 	 * @param the name or identifier you wish to set,
 	 */
 	void setName(String identifierString);
-	
 	
 	/**
 	 * The context independent constraints for this property.

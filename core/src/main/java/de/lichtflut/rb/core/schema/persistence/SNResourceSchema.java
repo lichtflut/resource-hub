@@ -10,10 +10,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
+import org.arastreju.sge.model.nodes.views.SNClass;
 
+import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.RBSchema;
 
 /**
@@ -41,6 +45,31 @@ public class SNResourceSchema extends ResourceView {
 	}
 	
 	// -----------------------------------------------------
+	
+	/**
+	 * Returns the Class described by this schemas.
+	 * @return The class node.
+	 */
+	public SNClass getDescribedClass() {
+		SemanticNode node = getSingleAssociationClient(RBSchema.DESCRIBES);
+		if (node != null){
+			return node.asResource().asClass();
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Set the Class described by this schema:.
+	 * @param property The class node.
+	 * @param context The context.
+	 */
+	public void setDescribedClass(final ResourceID clazz, final Context context) {
+		if (!Infra.equals(getDescribedClass(), clazz)){
+			removeAssociations(RBSchema.DESCRIBES);
+			Association.create(this, RBSchema.DESCRIBES, clazz, context);
+		}
+	}
 
 	/**
 	 * Adds the given PropertyAssertion to this class.
@@ -100,7 +129,8 @@ public class SNResourceSchema extends ResourceView {
 	 */
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("ResourceSchema[" + super.toString() + "]\n");
+		final StringBuilder sb = new StringBuilder("ResourceSchema[" + super.toString() + "]");
+		sb.append(" for " + getDescribedClass() + "\n");
 		for(SNPropertyAssertion pa : getPropertyAssertions()){
 			sb.append("\t" + pa + "\n");
 		}

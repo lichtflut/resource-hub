@@ -25,6 +25,10 @@ import org.arastreju.sge.model.ResourceID;
  */
 public interface ResourceSchema extends ResourceSchemaType{
 	
+	/**
+	 * The resource described by this schema.
+	 * @return The ID of the described resource.
+	 */
 	ResourceID getResourceID();
 	
 	/**

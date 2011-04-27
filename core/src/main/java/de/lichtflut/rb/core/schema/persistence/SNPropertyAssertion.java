@@ -71,7 +71,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 	 * @return The property decl.
 	 */
 	public SNPropertyDeclaration getPropertyDeclaration() {
-		SemanticNode node = getSingleClient(RBSchema.HAS_PROPERTY_DECL);
+		SemanticNode node = getSingleAssociationClient(RBSchema.HAS_PROPERTY_DECL);
 		if (node != null){
 			return new SNPropertyDeclaration(node.asResource());
 		} else {
@@ -96,7 +96,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 	 * @return The property.
 	 */
 	public ResourceID getDescriptor() {
-		SemanticNode node = getSingleClient(RBSchema.HAS_DESCRIPTOR);
+		SemanticNode node = getSingleAssociationClient(RBSchema.HAS_DESCRIPTOR);
 		if (node != null){
 			return node.asResource();
 		} else {
@@ -180,15 +180,6 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 		Set<Association> assocs = getAssociations(predicate);
 		for (Association assoc : assocs) {
 			revoke(assoc);
-		}
-	}
-	
-	private SemanticNode getSingleClient(final ResourceID predicate){
-		Association association = getSingleAssociation(predicate);
-		if (association != null){
-			return association.getClient();
-		} else {
-			return null;
 		}
 	}
 	
