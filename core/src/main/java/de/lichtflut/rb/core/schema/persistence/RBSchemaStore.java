@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.schema.persistence;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
@@ -53,10 +54,10 @@ public class RBSchemaStore {
 	
 	/**
 	 * Store the given schema.
+	 * @param ctx The context.
 	 * @return The corresponding persistence Resource Schema Node.
 	 */
-	public SNResourceSchema store(final ResourceSchema schema) {
-		final Context ctx = null;
+	public SNResourceSchema store(final ResourceSchema schema, Context ctx) {
 		final SNResourceSchema snSchema = new SNResourceSchema();
 		snSchema.setDescribedClass(schema.getResourceID(), ctx);
 		
@@ -77,8 +78,20 @@ public class RBSchemaStore {
 		return snSchema;
 	}
 	
-	public SNPropertyDeclaration store(final PropertyDeclaration decl){
-		throw new NotYetImplementedException();
+	public SNPropertyDeclaration store(final PropertyDeclaration decl, final Context ctx){
+		final String id = decl.getName();
+		final ResourceNode existing = gate.startConversation().findResource(new QualifiedName(id));
+		
+		final SNPropertyDeclaration snDecl;
+		if (existing != null) {
+			snDecl = new SNPropertyDeclaration(existing);
+		} else {
+			snDecl = new SNPropertyDeclaration();
+		}
+		convertDeclaration(decl, snDecl, ctx);
+		
+		gate.startConversation().attach(snDecl);
+		return snDecl;
 	}
 	
 	public SNResourceSchema loadSchemaForResource(final ResourceID clazz) {
@@ -101,7 +114,7 @@ public class RBSchemaStore {
 			final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
 			decl.setName(snDecl.getIdentifier().toString());
 			decl.setElementaryDataType(snDecl.getDatatype());
-			convertConstraints(decl, snDecl);
+			convertConstraints(snDecl, decl);
 			
 			// create Property Assertion
 			final PropertyAssertionImpl pa = new PropertyAssertionImpl(snAssertion.getDescriptor(), decl);
@@ -119,16 +132,18 @@ public class RBSchemaStore {
 	protected void addDeclaration(final SNPropertyAssertion assertion, PropertyDeclaration decl, final Context ctx) {
 		final String id = decl.getName();
 		final ResourceNode existing = gate.startConversation().findResource(new QualifiedName(id));
+		
+		List<ResourceNode> found = gate.startConversation().createQueryManager().findByTag(id);
+		found.size();
+		
 		if (existing != null) {
-			throw new NotYetImplementedException();
+			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration(existing);
+			assertion.setPropertyDeclaration(snDecl, ctx);
+			convertDeclaration(decl, snDecl, ctx);
 		} else {
 			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration();
-			snDecl.setDatatype(decl.getElementaryDataType(), ctx);
-			snDecl.setIdentifier(new SNUri(decl.getName()), ctx);
 			assertion.setPropertyDeclaration(snDecl, ctx);
-			for (Constraint constraint: decl.getConstraints()){
-				addConstraint(snDecl, constraint, ctx);
-			}
+			convertDeclaration(decl, snDecl, ctx);
 		}
 	}
 	
@@ -142,16 +157,25 @@ public class RBSchemaStore {
 		}
 	}
 	
-	protected void convertConstraints(final PropertyDeclarationImpl impl, final SNPropertyDeclaration decl) {
-		for (SNConstraint snConst : decl.getConstraints()){
+	protected void convertDeclaration(final PropertyDeclaration src, final SNPropertyDeclaration target, final Context ctx) {
+		final String id = src.getName();
+		target.setDatatype(src.getElementaryDataType(), ctx);
+		target.setIdentifier(new SNUri(id), ctx);
+		for (Constraint constraint: src.getConstraints()){
+			addConstraint(target, constraint, ctx);
+		}
+	}
+	
+	protected void convertConstraints(final SNPropertyDeclaration src, final PropertyDeclarationImpl target) {
+		for (SNConstraint snConst : src.getConstraints()){
 			if (snConst.isLiteralConstraint()){
 				final String value = snConst.getConstraintValue().asValue().getStringValue();
 				final Constraint constraint = ConstraintFactory.buildConstraint(value);
-				impl.addConstraint(constraint);
+				target.addConstraint(constraint);
 			} else if (snConst.isTypeConstraint()) {
 				final ResourceID type = snConst.getConstraintValue().asResource();
 				final Constraint constraint = ConstraintFactory.buildConstraint(type);
-				impl.addConstraint(constraint);
+				target.addConstraint(constraint);
 			} else {
 				throw new IllegalStateException();
 			}
