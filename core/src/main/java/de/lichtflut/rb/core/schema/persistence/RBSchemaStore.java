@@ -16,7 +16,6 @@ import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNUri;
-import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.QueryManager;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
@@ -95,8 +94,7 @@ public class RBSchemaStore {
 	}
 	
 	public SNPropertyDeclaration store(final PropertyDeclaration decl, final Context ctx){
-		final String id = decl.getName();
-		final ResourceNode existing = gate.startConversation().findResource(new QualifiedName(id));
+		final ResourceNode existing = gate.startConversation().findResource(decl.getIdentifier().getQualifiedName());
 		
 		final SNPropertyDeclaration snDecl;
 		if (existing != null) {
@@ -146,10 +144,10 @@ public class RBSchemaStore {
 	// -----------------------------------------------------
 	
 	protected void addDeclaration(final SNPropertyAssertion assertion, PropertyDeclaration decl, final Context ctx) {
-		final String id = decl.getName();
-		final ResourceNode existing = gate.startConversation().findResource(new QualifiedName(id));
+		final ResourceNode existing = gate.startConversation().findResource(decl.getIdentifier().getQualifiedName());
 		
-		List<ResourceNode> found = gate.startConversation().createQueryManager().findByTag(id);
+		List<ResourceNode> found = gate.startConversation().createQueryManager().
+										findByTag(decl.getIdentifier().getQualifiedName().toURI());
 		found.size();
 		
 		if (existing != null) {
@@ -174,7 +172,7 @@ public class RBSchemaStore {
 	}
 	
 	protected void convertDeclaration(final PropertyDeclaration src, final SNPropertyDeclaration target, final Context ctx) {
-		final String id = src.getName();
+		final String id = src.getIdentifier().getQualifiedName().toURI();
 		target.setDatatype(src.getElementaryDataType(), ctx);
 		target.setIdentifier(new SNUri(id), ctx);
 		for (Constraint constraint: src.getConstraints()){
