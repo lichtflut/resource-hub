@@ -9,8 +9,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.naming.VoidNamespace;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
@@ -46,14 +47,20 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 		cardinality = CardinalityFactory.hasOptionalOneToMany();
 	}
 	
+	// -----------------------------------------------------
+	
 	public PropertyAssertionImpl(String propertyIdentifier, Cardinality c){
 		this.cardinality = c;
 		this.propertyIdentifier = propertyIdentifier;
 	}
 	
+	// -----------------------------------------------------
+	
 	public PropertyAssertionImpl(String propertyIdentifier){
 		this.propertyIdentifier = propertyIdentifier;
 	}
+	
+	// -----------------------------------------------------
 	
 	public PropertyAssertionImpl(ResourceID propertyDescriptor,
 			PropertyDeclaration property, Cardinality cardinality,
@@ -65,12 +72,16 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 		this.constraints = constraints;
 	}
 
+	// -----------------------------------------------------
+	
 	/**
 	 * @return Returns the propertyDescriptor
 	 */
 	public ResourceID getPropertyDescriptor() {
 		return propertyDescriptor;
 	}
+	
+	// -----------------------------------------------------
 	
 	/**
 	 * @return Returns the property itself
@@ -79,6 +90,8 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 		return property;
 	}
 	
+	// -----------------------------------------------------
+	
 	/**
 	 * @return Returns the cardinality
 	 */
@@ -86,9 +99,10 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 		return cardinality;
 	}
 	
+	// -----------------------------------------------------
+	
 	/**
-	 * @return Returns a {@link Set} of constraints
-	 * TODO: Please check if this will be a correct merge without any redundant constraints
+	 * @return Returns a {@link Set} of constraints, containing the direct assertion constraints and the properties constraints
 	 */
 	public Set<Constraint> getConstraints() {
 		Set<Constraint> output = new HashSet<Constraint>();
@@ -96,6 +110,8 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 		output.addAll(this.constraints);
 		return output;
 	}
+	
+	// -----------------------------------------------------
 	
 	/**
 	 * @return Returns the toString()-representation of {@link PropertyAssertion} separated in '\n'
@@ -115,34 +131,43 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 		return sBuffer.toString();
 	}
 
+	// -----------------------------------------------------
 	
-	/**
-	 * TODO: Implement and document
-	 */
 	public boolean isResolved() {
 		if(property == null) return false;
 		return true;
 	}
 
-	/**
-	 * TODO: Implement and document
-	 */
-	public boolean resolveAssertion() {
-		throw new NotYetImplementedException();
-	}
-
+	// -----------------------------------------------------
+	
 	public void setCardinality(Cardinality c) {
 		this.cardinality = c;
 		
 	}
 
+	// -----------------------------------------------------
+	
 	public void setPropertyIdentifier(String identifier) {
 		this.propertyIdentifier = identifier;
 		
 	}
 
+	// -----------------------------------------------------
+	
 	public String getPropertyIdentifier() {
+		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isUri(this.propertyIdentifier)))
+			return  new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier).toURI();
 		return this.propertyIdentifier;
+	}
+
+	// -----------------------------------------------------
+	
+	public QualifiedName getQualifiedPropertyIdentifier() {
+		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isUri(this.propertyIdentifier)))
+			return new QualifiedName(this.propertyIdentifier);
+		else{
+			 return new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier);
+		}
 	}
 
 }

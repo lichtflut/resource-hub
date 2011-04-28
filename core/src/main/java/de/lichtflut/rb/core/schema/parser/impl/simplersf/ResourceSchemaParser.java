@@ -1,9 +1,9 @@
-// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/ResourceSchema.g 2011-04-21 16:18:06
+// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/ResourceSchema.g 2011-04-27 16:42:18
 
    /*
     * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
    */
-    package de.lichtflut.rb.core.schema.parser.impl;
+    package de.lichtflut.rb.core.schema.parser.impl.simplersf;
 	import de.lichtflut.rb.core.schema.model.Cardinality;
 	import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 	import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -13,6 +13,8 @@
 	import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 	import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
+import de.lichtflut.rb.core.schema.parser.impl.RSCardinalityEvaluator;
+import de.lichtflut.rb.core.schema.parser.impl.RSEvaluator;
 
 	import org.arastreju.sge.model.ElementaryDataType;
 	import java.util.HashSet;
@@ -775,7 +777,8 @@ public class ResourceSchemaParser extends Parser {
 
     // $ANTLR start "cardinality"
     // de/lichtflut/rb/core/schema/ResourceSchema.g:123:1: cardinality returns [Cardinality cardinality] : c1= cardinalityDeclaration ( 'AND' cn= cardinalityDeclaration )* ;
-    public final ResourceSchemaParser.cardinality_return cardinality() throws RecognitionException {
+    @SuppressWarnings("unchecked")
+	public final ResourceSchemaParser.cardinality_return cardinality() throws RecognitionException {
         ResourceSchemaParser.cardinality_return retval = new ResourceSchemaParser.cardinality_return();
         retval.start = input.LT(1);
 
@@ -795,7 +798,7 @@ public class ResourceSchemaParser extends Parser {
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            RBEvaluator eval = null;
+            RSEvaluator eval = null;
             pushFollow(FOLLOW_cardinalityDeclaration_in_cardinality394);
             c1=cardinalityDeclaration();
 
@@ -858,7 +861,7 @@ public class ResourceSchemaParser extends Parser {
     // $ANTLR end "cardinality"
 
     public static class cardinalityDeclaration_return extends ParserRuleReturnScope {
-        public RBEvaluator<Cardinality> evaluator;
+        public RSEvaluator<Cardinality> evaluator;
         CommonTree tree;
         public Object getTree() { return tree; }
     };
@@ -891,7 +894,7 @@ public class ResourceSchemaParser extends Parser {
             INT29_tree = (CommonTree)adaptor.create(INT29);
             adaptor.addChild(root_0, INT29_tree);
 
-            retval.evaluator = new RBCardinalityEvaluator(CARDINALITY28,Integer.parseInt(INT29.getText()));
+            retval.evaluator = new RSCardinalityEvaluator(CARDINALITY28,Integer.parseInt(INT29.getText()));
 
             }
 

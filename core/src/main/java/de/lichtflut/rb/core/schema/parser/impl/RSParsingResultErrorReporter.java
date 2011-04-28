@@ -3,24 +3,34 @@
  */
 package de.lichtflut.rb.core.schema.parser.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
+import de.lichtflut.rb.core.schema.parser.RSParsingResult.ErrorLevel;
 /**
- * [TODO Insert description here.]
+ * Reference-Implementation of {@link RSErrorReporter}
  * 
  * Created: Apr 21, 2011
  *
- * @author [SPECIFY USER: Window-> Preferences] 
+ * @author Nils Bleisch
  */
 public class RSParsingResultErrorReporter implements RSErrorReporter{
-
+	private final Logger logger = LoggerFactory.getLogger(RSParsingResultErrorReporter.class);
+	
 	private RSParsingResultImpl result;
+	
+	// -----------------------------------------------------
 
 	public RSParsingResultErrorReporter(RSParsingResultImpl result){
 		this.result = result;
 	}
 	
+	// -----------------------------------------------------
+	
 	public void reportError(String error) {
-		result.addErrorMessage(error);
+		logger.info("ErrorReporter has added the following error: " + error);
+		result.addErrorMessage(error, ErrorLevel.GRAMMAR);
 	}
 
 }

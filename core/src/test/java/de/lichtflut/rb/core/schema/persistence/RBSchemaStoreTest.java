@@ -30,9 +30,11 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
  * @author Oliver Tigges
  */
 public class RBSchemaStoreTest {
+	
 
 	@Test
 	public void testStore() {
+
 		 final ArastrejuGate gate = Arastreju.getInstance().rootContext();
 		 
 		 final RBSchemaStore store = new RBSchemaStore(gate);
@@ -40,6 +42,7 @@ public class RBSchemaStoreTest {
 		 final ResourceSchema schema = createSchema();
 		 
 		 final SNResourceSchema snSchema = store.store(schema, null);
+		 System.out.println(schema);
 		 
 		 Assert.assertNotNull(snSchema);
 		 
@@ -65,9 +68,9 @@ public class RBSchemaStoreTest {
 		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl(); 
 		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl(); 
 		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl(); 
-		p1.setName("http://lichtflut.de/#geburtsdatum");
-		p2.setName("http://lichtflut.de/#email");
-		p3.setName("http://lichtflut.de/#alter");
+		p1.setName("http://lichtflut.de#geburtsdatum");
+		p2.setName("http://lichtflut.de#email");
+		p3.setName("http://lichtflut.de#alter");
 		
 		p1.setElementaryDataType(ElementaryDataType.DATE);
 		p2.setElementaryDataType(ElementaryDataType.STRING);

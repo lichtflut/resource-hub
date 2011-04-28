@@ -3,12 +3,13 @@
  */
 package de.lichtflut.rb.core.schema.parser;
 
+
 /**
- * [TODO Insert description here.]
+ * This is to report and log occurred errors during parsing
  * 
  * Created: Apr 21, 2011
  *
- * @author [SPECIFY USER: Window-> Preferences] 
+ * @author Nils Bleisch
  */
 public interface RSErrorReporter {
 	public void reportError(String error);
