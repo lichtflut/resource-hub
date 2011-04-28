@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.spi.impl;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -82,17 +83,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	// -----------------------------------------------------
 	
 	public RSParsingResult generateSchemaModelThrough(String s) {
-		RSParsingResultImpl result = new RSParsingResultImpl();
-		RSParsingUnit pUnit = getFormat().getParsingUnit();
-		pUnit.setErrorReporter(new RSParsingResultErrorReporter(result));
-		Collection<ResourceSchemaType> resultTypes;
-		try {
-			resultTypes = pUnit.parse(s);
-			result.merge(convertToParsingResult(resultTypes));
-		} catch (RSMissingErrorReporterException e) {
-			result.addErrorMessage(e.getMessage(),ErrorLevel.SYSTEM);
-		}
-		return result;
+		return generateAndResolveSchemaModelThrough(new ByteArrayInputStream(s.getBytes()));
 	}
 	
 	// -----------------------------------------------------
