@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.spi.impl;
 
@@ -10,9 +10,11 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
+
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.ResourceID;
+
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
@@ -96,6 +98,8 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.merge(generateSchemaModelThrough(f));
 		result.setErrorLevel(ErrorLevel.INTERPRETER);
+		
+
 		
 		Collection<ResourceSchema> inputSchemas = result.getResourceSchemas();
 		HashMap<String, PropertyDeclaration> generalProperties = new HashMap<String, PropertyDeclaration>();

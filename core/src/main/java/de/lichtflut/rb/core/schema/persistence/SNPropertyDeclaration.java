@@ -18,6 +18,7 @@ package de.lichtflut.rb.core.schema.persistence;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
@@ -55,7 +56,8 @@ public class SNPropertyDeclaration extends ResourceView {
 	/**
 	 * Constructor for a new property declaration node.
 	 */
-	public SNPropertyDeclaration() {
+	public SNPropertyDeclaration(final Context context) {
+		Association.create(this, RDF.TYPE, RBSchema.PROPERTY_DECL,context);
 	}
 	
 	/**

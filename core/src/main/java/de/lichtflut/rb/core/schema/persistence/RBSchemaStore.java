@@ -4,18 +4,23 @@
 package de.lichtflut.rb.core.schema.persistence;
 
 import java.math.BigInteger;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNUri;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.query.QueryManager;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -77,6 +82,18 @@ public class RBSchemaStore {
 		return snSchema;
 	}
 	
+	public Collection<SNPropertyDeclaration> loadAllPropertyDeclarations(final Context ctx){
+		//Load all properties from store
+		LinkedList<SNPropertyDeclaration> output = new LinkedList<SNPropertyDeclaration>();
+		QueryManager qManager = this.gate.startConversation().createQueryManager();
+		Collection<Association> assocs = qManager.findIncomingAssociations(RBSchema.PROPERTY_DECL);
+		for (Association association : assocs) {
+			output.add(new SNPropertyDeclaration(association.getSupplier()));
+		}
+		
+		return output;
+	}
+	
 	public SNPropertyDeclaration store(final PropertyDeclaration decl, final Context ctx){
 		final String id = decl.getName();
 		final ResourceNode existing = gate.startConversation().findResource(new QualifiedName(id));
@@ -85,7 +102,7 @@ public class RBSchemaStore {
 		if (existing != null) {
 			snDecl = new SNPropertyDeclaration(existing);
 		} else {
-			snDecl = new SNPropertyDeclaration();
+			snDecl = new SNPropertyDeclaration(ctx);
 		}
 		convertDeclaration(decl, snDecl, ctx);
 		
@@ -140,7 +157,7 @@ public class RBSchemaStore {
 			assertion.setPropertyDeclaration(snDecl, ctx);
 			convertDeclaration(decl, snDecl, ctx);
 		} else {
-			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration();
+			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration(ctx);
 			assertion.setPropertyDeclaration(snDecl, ctx);
 			convertDeclaration(decl, snDecl, ctx);
 		}
