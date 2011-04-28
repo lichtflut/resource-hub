@@ -68,7 +68,7 @@ public interface PropertyAssertion extends ResourceSchemaType {
 	 * returns the String of the PropertyIdentifier as URI-Format.
 	 * This is necessary to resolve this PropertyAssertion with a given PropertyDeclaration
 	 * If this assertion is still resolved, the PropertyIdentifier is not more needed
-	 * If the propertyIdentifier is no valid URI, it's converted to the default void namespace uri
+	 * If the propertyIdentifier is not a valid URI, it's converted to the default void-namespace URI
 	 */
 	String getPropertyIdentifier();
 	
@@ -79,7 +79,7 @@ public interface PropertyAssertion extends ResourceSchemaType {
 	 * returns the QualifiedName of the PropertyIdentifier.
 	 * This is necessary to resolve this PropertyAssertion with a given PropertyDeclaration
 	 * If this assertion is still resolved, the PropertyIdentifier is not more needed
-	 * If the propertyIdentifier is no valid URI, it's converted to the default void namespace uri
+	 * If the propertyIdentifier is not a valid URI, it's converted to the default void-namespace URI
 	 */
 	QualifiedName getQualifiedPropertyIdentifier();
 	

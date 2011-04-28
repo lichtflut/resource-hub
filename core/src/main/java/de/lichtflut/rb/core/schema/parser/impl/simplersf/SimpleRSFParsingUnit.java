@@ -30,7 +30,7 @@ public class SimpleRSFParsingUnit implements RSParsingUnit{
 	private RSErrorReporter errorReporter= null;
 	
 	public RSFormat getFormat() {
-		return RSFormat.SIMPLE_RDF;
+		return RSFormat.SIMPLE_RSF;
 	}
 	
 	// -----------------------------------------------------

@@ -79,7 +79,7 @@ public interface PropertyDeclaration  extends ResourceSchemaType{
 	
 	/**
 	 * Get the identifier of the property.
-	 * If the identifier is no valid uri, it will be converted into the default uri with void namespace
+	 * If the identifier is not a valid uri, it will be converted into the default URI, including the void-namespace
 	 * @return The identifier of the property.
 	 */
 	ResourceID getIdentifier();

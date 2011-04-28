@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.Collection;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.parser.impl.simplersf.RSFormat;
 
 
 /**
@@ -24,22 +25,7 @@ public interface RSParsingUnit {
 		public RSMissingErrorReporterException(String string) {
 			super(string);
 		}}
-	
-	enum RSFormat{
-	
-		SIMPLE_RDF("simple-rdf");
 		
-		private String name = "undefined";
-		private RSFormat(String name){
-			this.name= name;
-		}
-		
-		public String toString(){
-			return name;
-		}
-	}
-	
-	
 	// -----------------------------------------------------
 	
 	/** 

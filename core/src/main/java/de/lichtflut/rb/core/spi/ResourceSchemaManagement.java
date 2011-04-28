@@ -8,10 +8,10 @@ import java.io.InputStream;
 import java.util.Collection;
 
 import org.arastreju.sge.model.ResourceID;
-import de.lichtflut.rb.core.schema.parser.RSParsingUnit.RSFormat;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
+import de.lichtflut.rb.core.schema.parser.impl.simplersf.RSFormat;
 /**
  * <p>
  * This is the RB's ResourceSchemaManagement "HighLevel" interface.
@@ -30,6 +30,12 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 public interface ResourceSchemaManagement {
 	
 
+	/**
+	 * Set the RSF  you just want to work with
+	 * @param {@link RSFormat}
+	 */
+	public void setFormat(RSFormat format);
+	
 	
 	public RSFormat getFormat();
 

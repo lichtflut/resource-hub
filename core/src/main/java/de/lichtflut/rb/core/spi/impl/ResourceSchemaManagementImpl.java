@@ -25,10 +25,7 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult.ErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSParsingUnit.RSMissingErrorReporterException;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
-import de.lichtflut.rb.core.schema.parser.RSParsingUnit.RSFormat;
-
-import de.lichtflut.rb.core.schema.parser.impl.simplersf.SimpleRSFParsingUnit;
-
+import de.lichtflut.rb.core.schema.parser.impl.simplersf.RSFormat;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
 import de.lichtflut.rb.core.spi.ResourceSchemaManagement;
 
@@ -43,14 +40,15 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 
 	private ArastrejuGate gate = null;
 	private RBSchemaStore store = null;
-	private RSParsingUnit parsingUnit = null;
+	private RSFormat format = null;
 	
 	public ResourceSchemaManagementImpl(ArastrejuGate gate) {
 		//Trigger a NullPointerException
 		gate.toString();
 		this.gate = gate;
 		store = new RBSchemaStore(this.gate);
-		parsingUnit = new SimpleRSFParsingUnit();
+		//Set SimpleRSF as default format and parsing unit
+		setFormat(RSFormat.SIMPLE_RSF);
 	}
 
 	// -----------------------------------------------------
@@ -85,10 +83,11 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	
 	public RSParsingResult generateSchemaModelThrough(String s) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
-		parsingUnit.setErrorReporter(new RSParsingResultErrorReporter(result));
+		RSParsingUnit pUnit = getFormat().getParsingUnit();
+		pUnit.setErrorReporter(new RSParsingResultErrorReporter(result));
 		Collection<ResourceSchemaType> resultTypes;
 		try {
-			resultTypes = parsingUnit.parse(s);
+			resultTypes = pUnit.parse(s);
 			result.merge(convertToParsingResult(resultTypes));
 		} catch (RSMissingErrorReporterException e) {
 			result.addErrorMessage(e.getMessage(),ErrorLevel.SYSTEM);
@@ -100,10 +99,11 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	
 	public RSParsingResult generateAndResolveSchemaModelThrough(InputStream is) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
-		parsingUnit.setErrorReporter(new RSParsingResultErrorReporter(result));
+		RSParsingUnit pUnit = getFormat().getParsingUnit();
+		pUnit.setErrorReporter(new RSParsingResultErrorReporter(result));
 		Collection<ResourceSchemaType> resultTypes;
 		try {
-			resultTypes = parsingUnit.parse(is);
+			resultTypes = pUnit.parse(is);
 			result.merge(convertToParsingResult(resultTypes));
 		} catch (RSMissingErrorReporterException e) {
 			result.addErrorMessage(e.getMessage(),ErrorLevel.SYSTEM);
@@ -177,10 +177,15 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		return store.convert(store.loadSchemaForResource(id));
 	}
 
+	
+	public void setFormat(RSFormat format){
+		this.format = format;
+	}
+	
 	// -----------------------------------------------------
 	
 	public RSFormat getFormat() {
-		return parsingUnit.getFormat();
+		return this.format;
 	}
 	
 	// -----------------------------------------------------
