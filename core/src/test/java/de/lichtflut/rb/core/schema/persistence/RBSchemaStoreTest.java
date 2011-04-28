@@ -34,6 +34,7 @@ public class RBSchemaStoreTest {
 
 	@Test
 	public void testStore() {
+
 		 final ArastrejuGate gate = Arastreju.getInstance().rootContext();
 		 
 		 final RBSchemaStore store = new RBSchemaStore(gate);

@@ -3,7 +3,7 @@
    /*
     * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
    */
-    package de.lichtflut.rb.core.schema.parser.impl;
+    package de.lichtflut.rb.core.schema.parser.impl.simplersf;
 	import de.lichtflut.rb.core.schema.model.Cardinality;
 	import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 	import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -13,6 +13,8 @@
 	import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 	import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
+import de.lichtflut.rb.core.schema.parser.impl.RSCardinalityEvaluator;
+import de.lichtflut.rb.core.schema.parser.impl.RSEvaluator;
 
 	import org.arastreju.sge.model.ElementaryDataType;
 	import java.util.HashSet;

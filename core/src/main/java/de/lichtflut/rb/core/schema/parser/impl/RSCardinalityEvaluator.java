@@ -14,6 +14,7 @@ import org.antlr.runtime.Token;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
+import de.lichtflut.rb.core.schema.parser.impl.simplersf.ResourceSchemaParser;
 
 public class RSCardinalityEvaluator implements RSEvaluator<Cardinality> {
 

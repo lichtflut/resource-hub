@@ -9,8 +9,8 @@ import junit.framework.TestCase;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
+import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 import de.lichtflut.rb.core.spi.ResourceSchemaManagement;
-import de.lichtflut.rb.core.spi.impl.ResourceSchemaManagementImpl;
 
 /**
  * <p>
@@ -28,7 +28,7 @@ public class ResourceSchemaParserTest extends TestCase
 {
 	
 	public void testParsingAndConstructingModelFromTestFile1() throws IOException, RecognitionException{
-		ResourceSchemaManagement rManagement = new ResourceSchemaManagementImpl();
+		ResourceSchemaManagement rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
 		
 		//Get ResourceSchemaTypes
 		RSParsingResult result = rManagement.generateSchemaModelThrough(

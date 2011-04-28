@@ -15,10 +15,14 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult.ErrorLevel;
 public class RSParsingResultErrorReporter implements RSErrorReporter{
 
 	private RSParsingResultImpl result;
+	
+	// -----------------------------------------------------
 
 	public RSParsingResultErrorReporter(RSParsingResultImpl result){
 		this.result = result;
 	}
+	
+	// -----------------------------------------------------
 	
 	public void reportError(String error) {
 		result.addErrorMessage(error, ErrorLevel.GRAMMAR);
