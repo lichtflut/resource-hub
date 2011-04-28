@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.parser;
 
+
 /**
  * This is to report and log occurred errors during parsing
  * 

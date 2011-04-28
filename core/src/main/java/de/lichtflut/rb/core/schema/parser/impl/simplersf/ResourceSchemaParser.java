@@ -777,7 +777,8 @@ public class ResourceSchemaParser extends Parser {
 
     // $ANTLR start "cardinality"
     // de/lichtflut/rb/core/schema/ResourceSchema.g:123:1: cardinality returns [Cardinality cardinality] : c1= cardinalityDeclaration ( 'AND' cn= cardinalityDeclaration )* ;
-    public final ResourceSchemaParser.cardinality_return cardinality() throws RecognitionException {
+    @SuppressWarnings("unchecked")
+	public final ResourceSchemaParser.cardinality_return cardinality() throws RecognitionException {
         ResourceSchemaParser.cardinality_return retval = new ResourceSchemaParser.cardinality_return();
         retval.start = input.LT(1);
 

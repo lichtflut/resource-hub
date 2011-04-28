@@ -130,8 +130,9 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		HashMap<String, PropertyDeclaration> propertiesHash = new HashMap<String, PropertyDeclaration>();
 		HashMap<String, PropertyDeclaration> dSLPropertiesHash = new HashMap<String, PropertyDeclaration>();
 		
+		//Put the properties into a hash with the name as identifier
 		for(PropertyDeclaration declaration: result.getPropertyDeclarations())
-			dSLPropertiesHash.put(declaration.getName(), declaration);
+			dSLPropertiesHash.put(declaration.getIdentifier().getQualifiedName().toURI(), declaration);
 		
 		for(ResourceSchema schema: DSLSchemas){
 			Collection<PropertyAssertion> assertions = schema.getPropertyAssertions();

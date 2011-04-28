@@ -91,10 +91,7 @@ public class RBSchemaStore {
 	// -----------------------------------------------------
 	
 	public ResourceSchema convert(final SNResourceSchema snSchema) {
-		/**
-		 * TODO: Described Class seems not be the right choice....
-		 */
-		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema.getDescribedClass());
+		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema.getQualifiedName().toURI());
 		
 		for (SNPropertyAssertion snAssertion : snSchema.getPropertyAssertions()){
 			

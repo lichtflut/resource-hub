@@ -14,8 +14,22 @@ import org.arastreju.sge.ArastrejuGate;
  */
 public interface RBServiceProvider {
 	
+	/**
+	 * @return an instance of {@link ArastrejuGate} which depends on the specific ServiceProvider
+	 */
 	ArastrejuGate openArastejuGateInstance();
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * {@link ResourceSchemaManagement} provides the ability to generate, manipulate, maintain,
+	 * persist and store an ResourceSchema through several I/O sources.
+	 * It's also interpreting the schema, checks for consistency and contains powerful error-processing mechanisms. 
+	 */
 	ResourceSchemaManagement getResourceSchemaManagement();
+	
+	// -----------------------------------------------------
+	
 	//TODO: Add more services
 	/*IdentityManagement getIdentityManagment();
 	MessagingService get MessagingService();

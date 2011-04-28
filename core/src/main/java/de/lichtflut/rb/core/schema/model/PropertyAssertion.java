@@ -31,11 +31,15 @@ public interface PropertyAssertion extends ResourceSchemaType {
 	 */
 	ResourceID getPropertyDescriptor();
 	
+	// -----------------------------------------------------
+	
 	/**
 	 * The concrete property of this assertion.
 	 * @return The property.
 	 */
 	PropertyDeclaration getPropertyDeclaration();
+	
+	// -----------------------------------------------------
 	
 	/**
 	 * The cardinality of this property,
@@ -43,34 +47,44 @@ public interface PropertyAssertion extends ResourceSchemaType {
 	 */
 	Cardinality getCardinality();
 	
+	// -----------------------------------------------------
+	
 	/**
 	 * Set cardinality of this property,
 	 * @param The cardinality.
 	 */
 	void setCardinality(Cardinality c);
 	
+	// -----------------------------------------------------
+	
 	/**
 	 * Resolved means, if this assertion is already assigned to a known PropertyDeclaration
 	 */
 	boolean isResolved();
 	
+	// -----------------------------------------------------
+	
 	/**
 	 * returns the String of the PropertyIdentifier as URI-Format.
 	 * This is necessary to resolve this PropertyAssertion with a given PropertyDeclaration
 	 * If this assertion is still resolved, the PropertyIdentifier is not more needed
+	 * If the propertyIdentifier is no valid URI, it's converted to the default void namespace uri
 	 */
 	String getPropertyIdentifier();
 	
+	
+	// -----------------------------------------------------
 	
 	/**
 	 * returns the QualifiedName of the PropertyIdentifier.
 	 * This is necessary to resolve this PropertyAssertion with a given PropertyDeclaration
 	 * If this assertion is still resolved, the PropertyIdentifier is not more needed
+	 * If the propertyIdentifier is no valid URI, it's converted to the default void namespace uri
 	 */
 	QualifiedName getQualifiedPropertyIdentifier();
 	
 	
-	
+	// -----------------------------------------------------
 	
 	/**
 	 * The constraints for this property assertion.
