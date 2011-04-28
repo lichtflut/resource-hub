@@ -3,17 +3,13 @@
  */
 package de.lichtflut.rb.core.spi.impl;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.HashMap;
-
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.ResourceID;
@@ -55,17 +51,17 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	// -----------------------------------------------------
 	
 	public RSParsingResult generateSchemaModelThrough(InputStream is){
+		RSParsingResultImpl result = new RSParsingResultImpl();
+		RSParsingUnit pUnit = getFormat().getParsingUnit();
+		pUnit.setErrorReporter(new RSParsingResultErrorReporter(result));
+		Collection<ResourceSchemaType> resultTypes;
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			StringBuilder bufferedInput = new StringBuilder();
-			String line;
-			while((line = reader.readLine())!=null) bufferedInput.append(line).append("\n");
-			return generateSchemaModelThrough(bufferedInput.toString());
-		} catch (IOException e) {
-			RSParsingResultImpl result = new RSParsingResultImpl();
-			result.addErrorMessage("The following I/O-Error has been occured: " + e.getMessage());
-			return result;
+			resultTypes = pUnit.parse(is);
+			result.merge(convertToParsingResult(resultTypes));
+		} catch (RSMissingErrorReporterException e) {
+			result.addErrorMessage(e.getMessage(),ErrorLevel.SYSTEM);
 		}
+		return result;
 	}
 
 	// -----------------------------------------------------
@@ -83,22 +79,14 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	// -----------------------------------------------------
 	
 	public RSParsingResult generateSchemaModelThrough(String s) {
-		return generateAndResolveSchemaModelThrough(new ByteArrayInputStream(s.getBytes()));
+		return generateSchemaModelThrough(new ByteArrayInputStream(s.getBytes()));
 	}
 	
 	// -----------------------------------------------------
 	
 	public RSParsingResult generateAndResolveSchemaModelThrough(InputStream is) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
-		RSParsingUnit pUnit = getFormat().getParsingUnit();
-		pUnit.setErrorReporter(new RSParsingResultErrorReporter(result));
-		Collection<ResourceSchemaType> resultTypes;
-		try {
-			resultTypes = pUnit.parse(is);
-			result.merge(convertToParsingResult(resultTypes));
-		} catch (RSMissingErrorReporterException e) {
-			result.addErrorMessage(e.getMessage(),ErrorLevel.SYSTEM);
-		}
+		result.merge(generateSchemaModelThrough(is));
 		return result;
 	}
 
@@ -107,47 +95,50 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	public RSParsingResult generateAndResolveSchemaModelThrough(File f) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.merge(generateSchemaModelThrough(f));
-		return result;
-	}
-
-	// -----------------------------------------------------
-	
-	public RSParsingResult generateAndResolveSchemaModelThrough(String s) {
-		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.setErrorLevel(ErrorLevel.INTERPRETER);
-		result.merge(generateSchemaModelThrough(s));
 		
-		Collection<ResourceSchema> DSLSchemas = result.getResourceSchemas();
-		HashMap<String, PropertyDeclaration> propertiesHash = new HashMap<String, PropertyDeclaration>();
-		HashMap<String, PropertyDeclaration> dSLPropertiesHash = new HashMap<String, PropertyDeclaration>();
+		Collection<ResourceSchema> inputSchemas = result.getResourceSchemas();
+		HashMap<String, PropertyDeclaration> generalProperties = new HashMap<String, PropertyDeclaration>();
+		//the explicit properties
+		HashMap<String, PropertyDeclaration> inputProperties = new HashMap<String, PropertyDeclaration>();
 		
 		//Put the properties into a hash with the name as identifier
 		for(PropertyDeclaration declaration: result.getPropertyDeclarations())
-			dSLPropertiesHash.put(declaration.getIdentifier().getQualifiedName().toURI(), declaration);
+			inputProperties.put(declaration.getIdentifier().getQualifiedName().toURI(), declaration);
 		
-		for(ResourceSchema schema: DSLSchemas){
+		//Iterate over the schemas and analyzing and resolving the propertyAssertions
+		for(ResourceSchema schema: inputSchemas){
 			Collection<PropertyAssertion> assertions = schema.getPropertyAssertions();
+			//Iterate over assertions of schema x
 			for(PropertyAssertion assertion : assertions){
-				propertiesHash.put(assertion.getPropertyIdentifier(), null);
+				generalProperties.put(assertion.getQualifiedPropertyIdentifier().toURI(), null);
 			}
 		}
 		
-		for(String assertionName : propertiesHash.keySet()){
-			if(dSLPropertiesHash.containsKey(assertionName)){
-				propertiesHash.put(assertionName, dSLPropertiesHash.get(assertionName));
+		//Iterate over the property identifier which have been assigned through the dedicated property assertions
+		for(String propertyIdentifier : generalProperties.keySet()){
+			//check is property is directly provided by the RSF
+			if(inputProperties.containsKey(propertyIdentifier)){
+				generalProperties.put(propertyIdentifier, inputProperties.get(propertyIdentifier));
 			}
 			else if(false){
 				
 				//TODO try to get property from store.
 			}
 			else{
-				result.addErrorMessage("Property "+ assertionName + " not found!");
+				result.addErrorMessage("Property "+ propertyIdentifier + " not found!");
 			}
 		}
 		
-		result.setPropertyDeclarations(propertiesHash.values());
+		result.setPropertyDeclarations(generalProperties.values());
 		
 		return result;
+	}
+
+	// -----------------------------------------------------
+	
+	public RSParsingResult generateAndResolveSchemaModelThrough(String s) {
+		return generateAndResolveSchemaModelThrough(new ByteArrayInputStream(s.getBytes()));
 	}
 	
 	// -----------------------------------------------------
@@ -182,7 +173,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	// -----------------------------------------------------
 
 	public void storeOrOverridePropertyDeclaration(PropertyDeclaration declaration) {
-		if(declaration!=null) store.store(declaration);
+		if(declaration!=null) store.store(declaration,null);
 	}
 	
 	// -----------------------------------------------------
@@ -196,7 +187,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	// -----------------------------------------------------
 	
 	public void storeOrOverrideResourceSchema(ResourceSchema schema) {
-		if(schema!=null) store.store(schema);
+		if(schema!=null) store.store(schema,null);
 	}
 	
 	// -----------------------------------------------------

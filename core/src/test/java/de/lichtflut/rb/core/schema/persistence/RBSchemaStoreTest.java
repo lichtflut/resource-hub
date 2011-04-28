@@ -41,7 +41,7 @@ public class RBSchemaStoreTest {
 		 
 		 final ResourceSchema schema = createSchema();
 		 
-		 final SNResourceSchema snSchema = store.store(schema);
+		 final SNResourceSchema snSchema = store.store(schema,null);
 		 System.out.println(schema);
 		 
 		 Assert.assertNotNull(snSchema);
