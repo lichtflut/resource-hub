@@ -27,7 +27,7 @@ import de.lichtflut.rb.core.spi.ResourceSchemaManagement;
 public class ResourceSchemaParserTest extends TestCase
 {
 	
-	public void testParsingAndConstructingModelFromTestFile1() throws IOException, RecognitionException{
+	public final void testParsingAndConstructingModelFromTestFile1() throws IOException, RecognitionException{
 		ResourceSchemaManagement rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
 		
 		//Get ResourceSchemaTypes

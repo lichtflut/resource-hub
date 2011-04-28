@@ -10,172 +10,169 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
  * <p>
- *  Wraps the parsing result in ResourceSchema- and PropertyDeclaration-sets, additional
- *  to the error messages which have been occurred.
+ * Wraps the parsing result in ResourceSchema- and PropertyDeclaration-sets,
+ * additional to the error messages which have been occurred.
  * </p>
- *
+ * 
  * <p>
- * 	Created Apr 20, 2011
+ * Created Apr 20, 2011
  * </p>
- *
+ * 
  * @author Nils Bleisch
  */
 public interface RSParsingResult {
 
-	
 	/**
-	 * Bit-masking enum shit
-	 * SYSTEM.add(GRAMMAR.add(...).....).add(.....)
+	 * Bit-masking enum shit SYSTEM.add(GRAMMAR.add(...).....).add(.....)
 	 */
-	enum ErrorLevel{
-		
+	enum ErrorLevel {
+
 		// ----------------------------
-		
-		SYSTEM(0),INTERPRETER(1),GRAMMAR(2), ALL(new ErrorLevel[]{SYSTEM, INTERPRETER, GRAMMAR});
+
+		SYSTEM(0), INTERPRETER(1), GRAMMAR(2), ALL(new ErrorLevel[] { SYSTEM,
+				INTERPRETER, GRAMMAR });
 		private int value = 0;
-		private ErrorLevel(int level){
-			this.value = 1<<level;
+
+		private ErrorLevel(int level) {
+			this.value = 1 << level;
 		}
-		
+
 		// ----------------------------
-		
-		private ErrorLevel(ErrorLevel[] lvl){
+
+		private ErrorLevel(ErrorLevel[] lvl) {
 			for (ErrorLevel errorLevel : lvl) {
 				this.add(errorLevel);
 			}
 		}
-		
+
 		// ----------------------------
-		
-		public boolean contains(ErrorLevel lvl){
-			
-			if((lvl.value & this.value)!= 0) return true;
+
+		public boolean contains(ErrorLevel lvl) {
+
+			if ((lvl.value & this.value) != 0)
+				return true;
 			return false;
 		}
-		
+
 		// ----------------------------
-		
+
 		/**
 		 * Self returning idiom 4tw
 		 */
-		public ErrorLevel add(ErrorLevel lvl){
-			if(!contains(lvl)) this.value += lvl.value;
+		public ErrorLevel add(ErrorLevel lvl) {
+			if (!contains(lvl))
+				this.value += lvl.value;
 			return this;
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @return those errors as collection where the filter is matching
 	 */
 	public Collection<String> getErrorMessages(ErrorLevel filter);
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * 
 	 * @return all errors as collection
 	 */
 	public Collection<String> getErrorMessages();
-	
+
 	// -----------------------------------------------------
-	
-	
+
 	/**
-	 * @return all the filter matching errors as one whole string concatenated with "\n"
+	 * @return all the filter matching errors as one whole string concatenated
+	 *         with "\n"
 	 */
 	public String getErrorMessagesAsString(ErrorLevel filter);
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * @return all errors as one whole string concatenated with "\n"
 	 */
 	public String getErrorMessagesAsString();
-	
+
 	// -----------------------------------------------------
-	
-	
+
 	/**
-	 * @return all the filter matching errors as one whole string concatenated with the given delimeter
+	 * @return all the filter matching errors as one whole string concatenated
+	 *         with the given delimeter
 	 */
 	public String getErrorMessagesAsString(String delim, ErrorLevel filter);
-	
+
 	// -----------------------------------------------------
-	
-	
+
 	/**
-	 * @return all errors as one whole string concatenated with the given delimeter
+	 * @return all errors as one whole string concatenated with the given
+	 *         delimeter
 	 */
 	public String getErrorMessagesAsString(String delim);
-	
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * @return is empty when at least on error has been occurred
 	 */
 	public Collection<PropertyDeclaration> getPropertyDeclarations();
-	
+
 	// -----------------------------------------------------
-	
 
 	/**
 	 * @return is empty when at least on error has been occurred
 	 */
 	public Collection<ResourceSchema> getResourceSchemas();
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * 
 	 * @return the ResourceSchema even if errors have been occured
 	 */
 	public Collection<ResourceSchema> getResourceSchemasIgnoreErrors();
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * 
 	 * @return the PropertyDeclaration even if errors have been occured
 	 */
-	public Collection <PropertyDeclaration> getPropertyDeclarationsIgnoreErrors();
-	
+	public Collection<PropertyDeclaration> getPropertyDeclarationsIgnoreErrors();
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * 
-	 * @return the PropertyDeclaration which are not assigned to a ResourceSchema,  even if errors have been occured
+	 * @return the PropertyDeclaration which are not assigned to a
+	 *         ResourceSchema, even if errors have been occured
 	 */
-	public Collection <PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssocIgnoreErrors();
-	
-	
-	
+	public Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssocIgnoreErrors();
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * all the PropertyDeclarations which are not assigned to a ResourceSchema
+	 * 
 	 * @return is empty when at least on error has been occurred
 	 */
 	public Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssoc();
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * Determines if at lest one error is occurred or not
 	 */
 	public boolean isErrorOccured();
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Merge another ParsingResult with this ParsingResult.
-	 * Duplicated model entries will be eliminated.
-	 * This member can be understand as "union"
-	 * A Testcase still exists
+	 * Merge another ParsingResult with this ParsingResult. Duplicated model
+	 * entries will be eliminated. This member can be understand as "union" A
+	 * Testcase still exists
 	 */
 	public void merge(RSParsingResult result);
 
-
-	
 }
