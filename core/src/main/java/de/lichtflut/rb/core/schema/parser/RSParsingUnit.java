@@ -11,9 +11,19 @@ import de.lichtflut.rb.core.schema.parser.impl.simplersf.RSFormat;
 
 
 /**
- * A RSParsingUnit consists of a lexer and a parser with a given format.
+ * <p>
+ * 	A RSParsingUnit consists of a lexer and a parser with a given format.
+ * </p>
  * 
+ * <p>
  * Created: Apr 28, 2011
+ * </p>
+ * 
+ * <pre>
+ * TODO: Some aspects to check
+ * - Shouldn't this be an abstract class (to enforce RSErrorReporter set in Constructor)
+ * - Why is RSMissingErrorReporterException inner class?
+ * </pre>
  *
  * @author Nils Bleisch
  */

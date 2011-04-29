@@ -10,6 +10,10 @@ import de.lichtflut.rb.core.schema.parser.RSParsingUnit;
  * An enum which represents and containts all the system registered types of RSF's
  * 
  * Created: Apr 28, 2011
+ * 
+ * <p>
+ *  TODO: Move to base package?
+ * </p>
  *
  * @author Nils Bleisch
  */

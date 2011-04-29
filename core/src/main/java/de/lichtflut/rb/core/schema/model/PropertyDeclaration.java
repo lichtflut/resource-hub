@@ -49,6 +49,8 @@ public interface PropertyDeclaration  extends ResourceSchemaType{
 
 	/**
 	 * TODO: Please continue this lists.
+	 * 
+	 * TODO: Why are Resource and URI non_elementary_data_types?!
 	 */
 	ElementaryDataType[] ELEMENTATY_DATA_TYPES = new ElementaryDataType[]{
 			ElementaryDataType.BOOLEAN,

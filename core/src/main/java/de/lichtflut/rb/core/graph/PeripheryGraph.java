@@ -14,10 +14,8 @@ package de.lichtflut.rb.core.graph;
  *
  * @author Oliver Tigges
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class PeripheryGraph {
-	
-	
 	
 	private Vertex root;
 	
