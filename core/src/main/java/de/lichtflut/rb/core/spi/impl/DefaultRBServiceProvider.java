@@ -5,8 +5,10 @@ package de.lichtflut.rb.core.spi.impl;
 
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
+
+import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+import de.lichtflut.rb.core.api.ResourceSchemaManagementImpl;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
-import de.lichtflut.rb.core.spi.ResourceSchemaManagement;
 
 /**
  * Reference implementation of {@link RBServiceProvider}

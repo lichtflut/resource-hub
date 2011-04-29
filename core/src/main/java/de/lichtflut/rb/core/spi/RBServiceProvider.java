@@ -5,8 +5,12 @@ package de.lichtflut.rb.core.spi;
 
 import org.arastreju.sge.ArastrejuGate;
 
+import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+
 /**
+ * <p>
  * The ServiceProvider which provides all existing RB-Services
+ * </p>
  * 
  * Created: Apr 28, 2011
  *

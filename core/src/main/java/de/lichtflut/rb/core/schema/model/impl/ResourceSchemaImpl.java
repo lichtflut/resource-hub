@@ -41,7 +41,11 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	
 	//Constructor stuff
 	
-	//Default constructor
+	/**
+	 * <p>
+	 * This is the default constructor
+	 * </p>
+	 */
 	public ResourceSchemaImpl(){
 		//Generates a SimpleResourceID instance with an random UUID for namespace and identifier each
 		this.resource = new SimpleResourceID(
@@ -51,21 +55,33 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	
 	// -----------------------------------------------------
 	
-	//Constructor takes as argument an identifier which will define the ResourceIdentifier
+	/**
+	 * <p>
+	 * Constructor takes as argument an identifier which will define the ResourceIdentifier
+	 * </p>
+	 */
 	public ResourceSchemaImpl(ResourceID id){
 		this.resource = id;
 	}
 	
 	// -----------------------------------------------------
 	
-	//Constructor takes as argument an identifier which will help to define the Resource Identifier
+	/**
+	 * <p>
+	 * Constructor takes as argument an identifier which will define the ResourceIdentifier
+	 * </p>
+	 */
 	public ResourceSchemaImpl(final String nsUri, final String name) throws IllegalArgumentException{
 		if(!(QualifiedName.isUri(nsUri + name) || QualifiedName.isUri(nsUri + name)))
 			throw new IllegalArgumentException("The identifier " + nsUri + name + " is not a valid URI");
 		this.resource = new SimpleResourceID(nsUri, name);
 	}
 	
-	//Constructor takes as argument an identifier which will help to define the Resource Identifier
+	/**
+	 * <p>
+	 * Constructor takes as argument an identifier which will define the ResourceIdentifier
+	 * </p>
+	 */
 	public ResourceSchemaImpl(final String name){
 		if(!(QualifiedName.isUri(name) || QualifiedName.isUri(name)))
 			this.resource = new SimpleResourceID(new QualifiedName(VoidNamespace.getInstance(),name));

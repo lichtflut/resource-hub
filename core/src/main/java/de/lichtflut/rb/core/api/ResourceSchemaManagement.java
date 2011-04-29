@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.spi;
+package de.lichtflut.rb.core.api;
 
 import java.io.File;
 import java.io.InputStream;

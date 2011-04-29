@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 
 /**
@@ -30,7 +31,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	private Collection<PropertyDeclaration> propertiesDeclarations = new LinkedHashSet<PropertyDeclaration>();
 	private Collection<ResourceSchema> resourceSchemas = new LinkedHashSet<ResourceSchema>();
 	//This is the default error level
-	private ErrorLevel level = ErrorLevel.ALL;
+	private RSErrorLevel level = RSErrorLevel.ALL;
 
 	// -----------------------------------------------------
 	
@@ -54,7 +55,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	// -----------------------------------------------------
 	
 
-	public void setErrorLevel(ErrorLevel lvl){
+	public void setErrorLevel(RSErrorLevel lvl){
 		this.level = lvl;
 	}
 	
@@ -72,7 +73,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	/**
 	 * Logs this message with the explicit given ErrorLevel
 	 */
-	public void addErrorMessage(String message, ErrorLevel lvl){
+	public void addErrorMessage(String message, RSErrorLevel lvl){
 		this.errorMessages.add(new Error(lvl, message));
 	}
 	
@@ -81,7 +82,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	/**
 	 * Logs this messages with the explicit given ErrorLevel
 	 */
-	public void setErrorMessages(Collection<String> errorMessages, ErrorLevel lvl) {
+	public void setErrorMessages(Collection<String> errorMessages, RSErrorLevel lvl) {
 		this.errorMessages = new LinkedList<Error>();
 		for (String message : errorMessages) {
 			this.errorMessages.add(new Error(lvl,message));
@@ -191,7 +192,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 
 	// -----------------------------------------------------
 	
-	public Collection<String> getErrorMessages(ErrorLevel filter) {
+	public Collection<String> getErrorMessages(RSErrorLevel filter) {
 		Collection<String> output = new LinkedList<String>();
 		for (Error error : this.errorMessages) {
 			//Check for filter
@@ -204,13 +205,13 @@ public class RSParsingResultImpl implements RSParsingResult{
 
 	// -----------------------------------------------------
 	
-	public String getErrorMessagesAsString(ErrorLevel filter) {
+	public String getErrorMessagesAsString(RSErrorLevel filter) {
 		return this.getErrorMessagesAsString("\n", this.level);
 	}
 
 	// -----------------------------------------------------
 	
-	public String getErrorMessagesAsString(String delim, ErrorLevel filter) {
+	public String getErrorMessagesAsString(String delim, RSErrorLevel filter) {
 		Collection<String> messages = getErrorMessages(filter);
 		StringBuilder sBuilder = new StringBuilder();
 		for (String error : messages) {
@@ -227,16 +228,16 @@ public class RSParsingResultImpl implements RSParsingResult{
 	 * Awesome tuple class, acts as tuple and is just needed here. 
 	 */
 	class Error { 
-		  private ErrorLevel lvl; 
+		  private RSErrorLevel lvl; 
 		  private String message; 
-		  public Error(ErrorLevel lvl,String message) { 
+		  public Error(RSErrorLevel lvl,String message) { 
 		    this.lvl = lvl; 
 		    this.message = message; 
 		  } 
 		  public String getMessage() { 
 		    return this.message; 
 		  } 
-		  public ErrorLevel getErrorLevel() { 
+		  public RSErrorLevel getErrorLevel() { 
 		    return this.lvl; 
 		  } 
 		}//End of class Error 

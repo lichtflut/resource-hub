@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.Collection;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterException;
 import de.lichtflut.rb.core.schema.parser.impl.simplersf.RSFormat;
 
 
@@ -27,28 +28,42 @@ import de.lichtflut.rb.core.schema.parser.impl.simplersf.RSFormat;
  *
  * @author Nils Bleisch
  */
-public interface RSParsingUnit {
+public abstract class RSParsingUnit {
 
-	//Define a special exception 
-	@SuppressWarnings("serial")
-	class RSMissingErrorReporterException extends Exception{
-		public RSMissingErrorReporterException(String string) {
-			super(string);
-		}}
-		
+	@SuppressWarnings("unused")
+	private RSErrorReporter errorsReporter=null;
+	
+	/**
+	 * <p>
+	 * This constructor is really recommended
+	 * </p>
+	 * @param errorReporter
+	 */
+	public RSParsingUnit(final RSErrorReporter errorReporter){
+		setErrorReporter(errorReporter);
+	}
+	
+	/**
+	 * <p>
+	 * Default constructor without the ability to
+	 * parse an predefined {@link RSErrorReporter} to this unit
+	 * </p>
+	 */
+	public RSParsingUnit(){}
+	
+	
+
+	/** 
+	 * @return {@link Collection} of {@link ResourceSchemaTypes} which has been tokenized and parsed
+	 */
+	public abstract Collection<ResourceSchemaType> parse(final String input) throws RSMissingErrorReporterException;
+	
 	// -----------------------------------------------------
 	
 	/** 
 	 * @return {@link Collection} of {@link ResourceSchemaTypes} which has been tokenized and parsed
 	 */
-	Collection<ResourceSchemaType> parse(final String input) throws RSMissingErrorReporterException;
-	
-	// -----------------------------------------------------
-	
-	/** 
-	 * @return {@link Collection} of {@link ResourceSchemaTypes} which has been tokenized and parsed
-	 */
-	Collection<ResourceSchemaType> parse(final InputStream input) throws RSMissingErrorReporterException;
+	public abstract Collection<ResourceSchemaType> parse(final InputStream input) throws RSMissingErrorReporterException;
 	
 	// -----------------------------------------------------
 	
@@ -58,11 +73,13 @@ public interface RSParsingUnit {
 	 * Set the RSErrorReporter to report errors while lexing
 	 * @param errorReporter
 	 */
-    public void setErrorReporter(final RSErrorReporter errorReporter);
+    public void setErrorReporter(final RSErrorReporter errorReporter){
+    	this.errorsReporter = errorReporter;
+    }
 	
 	// -----------------------------------------------------
 	
-	public RSFormat getFormat();
+	public abstract RSFormat getFormat();
 	
 	// -----------------------------------------------------
 

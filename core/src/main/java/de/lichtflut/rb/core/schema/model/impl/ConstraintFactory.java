@@ -33,7 +33,11 @@ public final class ConstraintFactory{
 	
 	// -----------------------------------------------------
 	
-	/*For future uses */
+	/**
+	 * <p>
+	 * For future uses
+	 * </p>
+	 */
 	public static ConstraintFactory getInstance(){
 		return instance;
 	}
@@ -149,7 +153,9 @@ public final class ConstraintFactory{
 	
 	
     //Constructor 
-    //Try to hide the constructor, to make this instance not directly accessible
+    /**
+     * Try to hide the constructor, to make this instance not directly accessible
+     */
     private ConstraintFactory(){}
 	
 	

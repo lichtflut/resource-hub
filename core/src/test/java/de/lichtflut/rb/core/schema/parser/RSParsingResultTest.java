@@ -3,15 +3,14 @@
  */
 package de.lichtflut.rb.core.schema.parser;
 
+import junit.framework.TestCase;
+
 import org.arastreju.sge.model.SimpleResourceID;
 
-import junit.framework.TestCase;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.schema.parser.RSParsingResult;
-import de.lichtflut.rb.core.schema.parser.RSParsingResult.ErrorLevel;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 
 /**
@@ -45,17 +44,17 @@ public class RSParsingResultTest extends TestCase
 		//add a errorMessage for the default ErrorLevel which should be ALL
 		pResult1.addErrorMessage(ERRORMESSAGES[0]);
 		//check the level, it's logged for all, so system must be allowed
-		assertEquals(ERRORMESSAGES[0], pResult1.getErrorMessagesAsString("",ErrorLevel.SYSTEM));
-		assertEquals(ERRORMESSAGES[0], pResult1.getErrorMessagesAsString("",ErrorLevel.ALL));
+		assertEquals(ERRORMESSAGES[0], pResult1.getErrorMessagesAsString("",RSErrorLevel.SYSTEM));
+		assertEquals(ERRORMESSAGES[0], pResult1.getErrorMessagesAsString("",RSErrorLevel.ALL));
 		assertEquals(ERRORMESSAGES[0] + "\n", pResult1.getErrorMessagesAsString());
 		assertTrue(pResult1.getErrorMessages().contains(ERRORMESSAGES[0]));
 		//Set the ErrorLevel to System
-		pResult1.setErrorLevel(ErrorLevel.SYSTEM);
+		pResult1.setErrorLevel(RSErrorLevel.SYSTEM);
 		//Add a Message
 		pResult1.addErrorMessage(ERRORMESSAGES[1]);
-		assertTrue(pResult1.getErrorMessagesAsString("",RSParsingResult.ErrorLevel.SYSTEM).contains(ERRORMESSAGES[1]));
-		assertTrue(pResult1.getErrorMessagesAsString("",RSParsingResult.ErrorLevel.ALL).contains(ERRORMESSAGES[1]));
-		assertFalse(pResult1.getErrorMessagesAsString("",RSParsingResult.ErrorLevel.INTERPRETER).contains(ERRORMESSAGES[1]));
+		assertTrue(pResult1.getErrorMessagesAsString("",RSErrorLevel.SYSTEM).contains(ERRORMESSAGES[1]));
+		assertTrue(pResult1.getErrorMessagesAsString("",RSErrorLevel.ALL).contains(ERRORMESSAGES[1]));
+		assertFalse(pResult1.getErrorMessagesAsString("",RSErrorLevel.INTERPRETER).contains(ERRORMESSAGES[1]));
 		
 		//Define and add ResourceSchema to pResult1
 		ResourceSchemaImpl rSchema = new ResourceSchemaImpl();
@@ -68,7 +67,7 @@ public class RSParsingResultTest extends TestCase
 		
 		RSParsingResultImpl pResult2 = new RSParsingResultImpl();
 		//Set the ErrorLevel for Interpreter and Grammar
-		pResult2.setErrorLevel(ErrorLevel.INTERPRETER.add(ErrorLevel.GRAMMAR));
+		pResult2.setErrorLevel(RSErrorLevel.INTERPRETER.add(RSErrorLevel.GRAMMAR));
 		pResult2.addErrorMessage(ERRORMESSAGES[2]);
 		pResult2.addErrorMessage(ERRORMESSAGES[3]);
 		
@@ -77,9 +76,9 @@ public class RSParsingResultTest extends TestCase
 		assertTrue(pResult2.getResourceSchemasIgnoreErrors().size()==0);
 		assertTrue(pResult2.getPropertyDeclarationsIgnoreErrors().size()==1);
 		assertTrue(pResult2.getErrorMessages().size()==2);
-		assertTrue(pResult2.getErrorMessages(ErrorLevel.INTERPRETER).size()==2);
-		assertTrue(pResult2.getErrorMessages(ErrorLevel.GRAMMAR).size()==2);
-		assertTrue(pResult2.getErrorMessages(ErrorLevel.SYSTEM).size()==0);
+		assertTrue(pResult2.getErrorMessages(RSErrorLevel.INTERPRETER).size()==2);
+		assertTrue(pResult2.getErrorMessages(RSErrorLevel.GRAMMAR).size()==2);
+		assertTrue(pResult2.getErrorMessages(RSErrorLevel.SYSTEM).size()==0);
 		
 		/**
 		 * Status Quo:
@@ -91,10 +90,10 @@ public class RSParsingResultTest extends TestCase
 		pResult1.merge(pResult2);
 		
 		//Let's check the errormessages
-		assertTrue(pResult1.getErrorMessages(ErrorLevel.ALL).size()==4);
-		assertTrue(pResult1.getErrorMessages(ErrorLevel.SYSTEM).size()==(1 + 1)); 
-		assertTrue(pResult1.getErrorMessages(ErrorLevel.GRAMMAR).size()==(2 + 1));
-		assertTrue(pResult1.getErrorMessages(ErrorLevel.INTERPRETER).size()==(2 + 1));
+		assertTrue(pResult1.getErrorMessages(RSErrorLevel.ALL).size()==4);
+		assertTrue(pResult1.getErrorMessages(RSErrorLevel.SYSTEM).size()==(1 + 1)); 
+		assertTrue(pResult1.getErrorMessages(RSErrorLevel.GRAMMAR).size()==(2 + 1));
+		assertTrue(pResult1.getErrorMessages(RSErrorLevel.INTERPRETER).size()==(2 + 1));
 		//Let's check the ResourceSchemaModel
 		assertTrue(pResult1.getResourceSchemasIgnoreErrors().size()==1);
 		assertTrue(pResult1.getPropertyDeclarationsIgnoreErrors().size()==1);

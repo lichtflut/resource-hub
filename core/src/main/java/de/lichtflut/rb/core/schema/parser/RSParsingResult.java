@@ -22,55 +22,12 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  */
 public interface RSParsingResult {
 
-	/**
-	 * Bit-masking enum shit SYSTEM.add(GRAMMAR.add(...).....).add(.....)
-	 */
-	enum ErrorLevel {
-
-		// ----------------------------
-
-		SYSTEM(0), INTERPRETER(1), GRAMMAR(2), ALL(new ErrorLevel[] { SYSTEM,
-				INTERPRETER, GRAMMAR });
-		private int value = 0;
-
-		private ErrorLevel(int level) {
-			this.value = 1 << level;
-		}
-
-		// ----------------------------
-
-		private ErrorLevel(ErrorLevel[] lvl) {
-			for (ErrorLevel errorLevel : lvl) {
-				this.add(errorLevel);
-			}
-		}
-
-		// ----------------------------
-
-		public boolean contains(ErrorLevel lvl) {
-
-			if ((lvl.value & this.value) != 0)
-				return true;
-			return false;
-		}
-
-		// ----------------------------
-
-		/**
-		 * Self returning idiom 4tw
-		 */
-		public ErrorLevel add(ErrorLevel lvl) {
-			if (!contains(lvl))
-				this.value += lvl.value;
-			return this;
-		}
-	}
 
 	/**
 	 * 
 	 * @return those errors as collection where the filter is matching
 	 */
-	public Collection<String> getErrorMessages(ErrorLevel filter);
+	public Collection<String> getErrorMessages(RSErrorLevel filter);
 
 	// -----------------------------------------------------
 
@@ -86,7 +43,7 @@ public interface RSParsingResult {
 	 * @return all the filter matching errors as one whole string concatenated
 	 *         with "\n"
 	 */
-	public String getErrorMessagesAsString(ErrorLevel filter);
+	public String getErrorMessagesAsString(RSErrorLevel filter);
 
 	// -----------------------------------------------------
 
@@ -101,7 +58,7 @@ public interface RSParsingResult {
 	 * @return all the filter matching errors as one whole string concatenated
 	 *         with the given delimeter
 	 */
-	public String getErrorMessagesAsString(String delim, ErrorLevel filter);
+	public String getErrorMessagesAsString(String delim, RSErrorLevel filter);
 
 	// -----------------------------------------------------
 

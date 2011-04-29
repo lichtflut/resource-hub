@@ -15,19 +15,22 @@ import org.antlr.runtime.TokenStream;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 import de.lichtflut.rb.core.schema.parser.RSParsingUnit;
+import de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterException;
 import de.lichtflut.rb.core.schema.parser.impl.RSCaseControlStream;
 import de.lichtflut.rb.core.schema.parser.impl.simplersf.ResourceSchemaParser.dsl_return;
 
 /**
- * Parsing-unit of SimpleRSF
- * 
+ * <p>
+ *  Parsing-unit of SimpleRSF.
+ *  </p>
+ *
  * Created: Apr 28, 2011
  *
  * @author Nils Bleisch
  */
-public class SimpleRSFParsingUnit implements RSParsingUnit{
+public class SimpleRSFParsingUnit extends RSParsingUnit {
 
-	private RSErrorReporter errorReporter= null;
+    private RSErrorReporter errorReporter= null;
 	
 	public RSFormat getFormat() {
 		return RSFormat.SIMPLE_RSF;

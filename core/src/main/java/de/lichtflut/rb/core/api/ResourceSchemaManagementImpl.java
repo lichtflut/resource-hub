@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.spi.impl;
+package de.lichtflut.rb.core.api;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -10,23 +10,19 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
-
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.ResourceID;
-
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.RSParsingUnit;
-import de.lichtflut.rb.core.schema.parser.RSParsingResult.ErrorLevel;
-import de.lichtflut.rb.core.schema.parser.RSParsingUnit.RSMissingErrorReporterException;
+import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 import de.lichtflut.rb.core.schema.parser.impl.simplersf.RSFormat;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
-import de.lichtflut.rb.core.spi.ResourceSchemaManagement;
 
 /**
  * Reference impl of {@link ResourceSchemaManagement}
@@ -60,8 +56,8 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		try {
 			resultTypes = pUnit.parse(is);
 			result.merge(convertToParsingResult(resultTypes));
-		} catch (RSMissingErrorReporterException e) {
-			result.addErrorMessage(e.getMessage(),ErrorLevel.SYSTEM);
+		} catch (de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterException e) {
+			result.addErrorMessage(e.getMessage(),RSErrorLevel.SYSTEM);
 		}
 		return result;
 	}
@@ -97,7 +93,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	public RSParsingResult generateAndResolveSchemaModelThrough(File f) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.merge(generateSchemaModelThrough(f));
-		result.setErrorLevel(ErrorLevel.INTERPRETER);
+		result.setErrorLevel(RSErrorLevel.INTERPRETER);
 		
 
 		
@@ -149,7 +145,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	
 	private RSParsingResult convertToParsingResult(Collection<ResourceSchemaType> types){
 		RSParsingResultImpl result = new RSParsingResultImpl();
-		result.setErrorLevel(ErrorLevel.INTERPRETER);
+		result.setErrorLevel(RSErrorLevel.INTERPRETER);
 		for (ResourceSchemaType type : types) {
 			if(type instanceof ResourceSchema) result.addResourceSchema((ResourceSchema) type);
 			if(type instanceof PropertyDeclaration) result.addPropertyDeclaration((PropertyDeclaration) type);
