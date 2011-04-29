@@ -97,7 +97,7 @@ public interface PropertyDeclaration  extends ResourceSchemaType{
 	 * @return void
 	 * @param the name or identifier you wish to set,
 	 */
-	void setName(String identifierString);
+	void setIdentifier(String identifierString);
 	
 	/**
 	 * The context independent constraints for this property.

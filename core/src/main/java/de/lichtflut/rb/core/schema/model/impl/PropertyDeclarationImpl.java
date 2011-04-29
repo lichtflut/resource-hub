@@ -170,14 +170,34 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	
 	// ---------------------------------------------------
 	
+	
 	/**
+	 * <p>
 	 * Tries to generate an URI from the given String, if not, the default Namespace will be used
+	 * This method is equivalent to {@link setName(String name)}
+	 * </p>
+	 */
+	public void setIdentifier(String identifierString){
+		setName(identifierString);
+	}
+	
+	// ---------------------------------------------------
+	
+	
+	
+	
+	/**
+	 * <p>
+	 * Tries to generate an URI from the given String, if not, the default Namespace will be used
+	 * This method is equivalent to {@link setName(String name)}
+	 * </p>
 	 */
 	public void setName(String identifierString){
-		if(!(QualifiedName.isUri(identifierString) || QualifiedName.isUri(identifierString)))
-			this.identifier = new SimpleResourceID(new QualifiedName(identifierString));
-		else{
+		
+		if(!(QualifiedName.isUri(identifierString) || QualifiedName.isUri(identifierString)))	
 			this.identifier = new SimpleResourceID(VoidNamespace.getInstance(),identifierString);
+		else{
+			this.identifier = new SimpleResourceID(new QualifiedName(identifierString));
 		}
 	}
 

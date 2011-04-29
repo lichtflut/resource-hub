@@ -66,7 +66,7 @@ property returns [PropertyDeclaration property]
 	@init{this.property = new PropertyDeclarationImpl();}
 	@after{this.property = null;}
 	 :  {$property = this.property;}
-	 PROPERTY_DEC IDENT {$property.setName($IDENT.text);}
+	 PROPERTY_DEC IDENT {$property.setIdentifier($IDENT.text);}
 	  BRACKET_OPEN (propertyDeclaration)* BRACKET_CLOSED;
 
 /*-------------------------------------------------------------------*/

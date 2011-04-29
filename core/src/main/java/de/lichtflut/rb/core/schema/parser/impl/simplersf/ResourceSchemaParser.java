@@ -1,5 +1,3 @@
-// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/ResourceSchema.g 2011-04-27 16:42:18
-
    /*
     * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
    */
@@ -12,19 +10,15 @@
 	import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 	import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 	import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
-import de.lichtflut.rb.core.schema.parser.impl.RSCardinalityEvaluator;
-import de.lichtflut.rb.core.schema.parser.impl.RSEvaluator;
-
+	import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
+	import de.lichtflut.rb.core.schema.parser.impl.RSCardinalityEvaluator;
+	import de.lichtflut.rb.core.schema.parser.impl.RSEvaluator;
 	import org.arastreju.sge.model.ElementaryDataType;
 	import java.util.HashSet;
 	import java.util.Set;
 
 
 import org.antlr.runtime.*;
-import java.util.Stack;
-import java.util.List;
-import java.util.ArrayList;
 
 
 import org.antlr.runtime.tree.*;
@@ -57,19 +51,20 @@ public class ResourceSchemaParser extends Parser {
     // delegators
 
 
-        public ResourceSchemaParser(TokenStream input) {
-            this(input, new RecognizerSharedState());
-        }
-        public ResourceSchemaParser(TokenStream input, RecognizerSharedState state) {
-            super(input, state);
-             
-        }
+    public ResourceSchemaParser(TokenStream input) {
+        this(input, new RecognizerSharedState());
+    }
+    
+    public ResourceSchemaParser(TokenStream input, RecognizerSharedState state) {
+        super(input, state);
+    }
         
     protected TreeAdaptor adaptor = new CommonTreeAdaptor();
 
     public void setTreeAdaptor(TreeAdaptor adaptor) {
         this.adaptor = adaptor;
     }
+    
     public TreeAdaptor getTreeAdaptor() {
         return adaptor;
     }
@@ -233,7 +228,7 @@ public class ResourceSchemaParser extends Parser {
             IDENT4_tree = (CommonTree)adaptor.create(IDENT4);
             adaptor.addChild(root_0, IDENT4_tree);
 
-            retval.property.setName((IDENT4!=null?IDENT4.getText():null));
+            retval.property.setIdentifier((IDENT4!=null?IDENT4.getText():null));
             BRACKET_OPEN5=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_property139); 
             BRACKET_OPEN5_tree = (CommonTree)adaptor.create(BRACKET_OPEN5);
             adaptor.addChild(root_0, BRACKET_OPEN5_tree);

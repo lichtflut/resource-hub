@@ -119,8 +119,8 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	@Override
 	public String toString() {
 		StringBuffer sBuffer = new StringBuffer();
-		sBuffer.append("propertyIdentifier: " +  this.propertyIdentifier);
-		sBuffer.append("\npropertyDescriptor: " + ((propertyDescriptor!=null) ? propertyDescriptor.toString() : ""));
+		sBuffer.append("propertyIdentifier: " +  this.getPropertyIdentifier());
+		sBuffer.append("\npropertyDescriptor: " + ((propertyDescriptor!=null) ? propertyDescriptor.getQualifiedName().toURI() : ""));
 		sBuffer.append("\nproperty: " + ((propertyDescriptor!=null) ? property.toString() : ""));
 		sBuffer.append("\ncardinality: "+ cardinality.toString());
 		if(null!=constraints){
@@ -155,7 +155,8 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	// -----------------------------------------------------
 	
 	public String getPropertyIdentifier() {
-		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isUri(this.propertyIdentifier)))
+		if(this.propertyIdentifier==null) return null;
+		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isQname(this.propertyIdentifier)))
 			return  new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier).toURI();
 		return this.propertyIdentifier;
 	}
@@ -163,7 +164,8 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	// -----------------------------------------------------
 	
 	public QualifiedName getQualifiedPropertyIdentifier() {
-		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isUri(this.propertyIdentifier)))
+		if(this.propertyIdentifier==null) return null;
+		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isQname(this.propertyIdentifier)))
 			return new QualifiedName(this.propertyIdentifier);
 		else{
 			 return new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier);
