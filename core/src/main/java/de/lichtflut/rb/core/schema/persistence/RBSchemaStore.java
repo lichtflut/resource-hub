@@ -81,17 +81,39 @@ public class RBSchemaStore {
 		return snSchema;
 	}
 	
-	public Collection<SNPropertyDeclaration> loadAllPropertyDeclarations(final Context ctx){
+	// -----------------------------------------------------
+	
+	/**
+	 * Loads all defined and persisted PropertyDeclarations from System
+	 */
+	public Collection<PropertyDeclaration> loadAllPropertyDeclarations(final Context ctx){
 		//Load all properties from store
-		LinkedList<SNPropertyDeclaration> output = new LinkedList<SNPropertyDeclaration>();
+		LinkedList<PropertyDeclaration> output = new LinkedList<PropertyDeclaration>();
 		QueryManager qManager = this.gate.startConversation().createQueryManager();
 		Collection<Association> assocs = qManager.findIncomingAssociations(RBSchema.PROPERTY_DECL);
 		for (Association association : assocs) {
-			output.add(new SNPropertyDeclaration(association.getSupplier()));
+			if(association==null) continue;
+			output.add(convert(new SNPropertyDeclaration(association.getSupplier())));
 		}
 		
 		return output;
 	}
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * Converts a {@link SNPropertyDeclaration} to {@link PropertyDeclaration}
+	 */
+	protected PropertyDeclaration convert(final SNPropertyDeclaration snDecl){
+		
+		PropertyDeclarationImpl pDec = new PropertyDeclarationImpl();
+		pDec.setIdentifier(snDecl.getIdentifier().getReferencedUri());
+		pDec.setElementaryDataType(snDecl.getDatatype());
+		convertConstraints(snDecl, pDec);
+		return pDec;
+	}
+	
+	// -----------------------------------------------------
 	
 	public SNPropertyDeclaration store(final PropertyDeclaration decl, final Context ctx){
 		final ResourceNode existing = gate.startConversation().findResource(decl.getIdentifier().getQualifiedName());
@@ -112,6 +134,8 @@ public class RBSchemaStore {
 		throw new NotYetImplementedException();
 	}
 	
+	// -----------------------------------------------------
+	
 	public SNResourceSchema loadPropertyDeclaration(final ResourceID decl) {
 		throw new NotYetImplementedException();
 	}
@@ -125,10 +149,7 @@ public class RBSchemaStore {
 			
 			// create Property Declaration
 			final SNPropertyDeclaration snDecl = snAssertion.getPropertyDeclaration();
-			final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
-			decl.setName(snDecl.getIdentifier().toString());
-			decl.setElementaryDataType(snDecl.getDatatype());
-			convertConstraints(snDecl, decl);
+			final PropertyDeclaration decl = convert(snDecl);
 			
 			// create Property Assertion
 			final PropertyAssertionImpl pa = new PropertyAssertionImpl(snAssertion.getDescriptor(), decl);
@@ -161,6 +182,8 @@ public class RBSchemaStore {
 		}
 	}
 	
+	// -----------------------------------------------------
+	
 	protected void addConstraint(final SNPropertyDeclaration decl, final Constraint constraint, final Context ctx) {
 		if (constraint.isLiteralConstraint()) {
 			decl.addLiteralConstraint(constraint.getLiteralConstraint(), ctx);
@@ -171,6 +194,8 @@ public class RBSchemaStore {
 		}
 	}
 	
+	// -----------------------------------------------------
+	
 	protected void convertDeclaration(final PropertyDeclaration src, final SNPropertyDeclaration target, final Context ctx) {
 		final String id = src.getIdentifier().getQualifiedName().toURI();
 		target.setDatatype(src.getElementaryDataType(), ctx);
@@ -179,6 +204,8 @@ public class RBSchemaStore {
 			addConstraint(target, constraint, ctx);
 		}
 	}
+	
+	// -----------------------------------------------------
 	
 	protected void convertConstraints(final SNPropertyDeclaration src, final PropertyDeclarationImpl target) {
 		for (SNConstraint snConst : src.getConstraints()){

@@ -12,5 +12,9 @@ package de.lichtflut.rb.core.schema.parser;
  * @author Nils Bleisch
  */
 public interface RSErrorReporter {
+	/**
+	 * No use to describe what this method should do ;)
+	 * @param error
+	 */
 	public void reportError(String error);
 }

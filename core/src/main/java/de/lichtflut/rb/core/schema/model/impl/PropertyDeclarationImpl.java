@@ -170,6 +170,16 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	
 	// ---------------------------------------------------
 	
+	/**
+	 * @return the qualified name of the internal resourceID
+	 */
+	public String getIdentifierString(){
+		return getIdentifier().getQualifiedName().toURI();
+	}
+	
+	// ---------------------------------------------------
+	
+	
 	
 	/**
 	 * <p>
@@ -206,7 +216,7 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	 */
 	public String toString(){
 		StringBuffer sBuffer = new StringBuffer();
-		sBuffer.append("Identifier: " + (getName()!=null ? getName() : "") );
+		sBuffer.append("Identifier: " + (this.getIdentifierString()!=null ? getIdentifierString() : "") );
 		sBuffer.append("\nDatatype: "+ getElementaryDataType().toString());
 		if(null!=constraints){
 			Iterator<Constraint> i = constraints.iterator();

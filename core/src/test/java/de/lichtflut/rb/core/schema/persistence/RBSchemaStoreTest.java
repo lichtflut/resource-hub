@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
+import java.util.Collection;
+
 import junit.framework.Assert;
 
 import org.arastreju.sge.Arastreju;
@@ -11,6 +13,7 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
 
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
@@ -35,19 +38,32 @@ public class RBSchemaStoreTest {
 	@Test
 	public void testStore() {
 
+
+		
 		 final ArastrejuGate gate = Arastreju.getInstance().rootContext();
 		 
 		 final RBSchemaStore store = new RBSchemaStore(gate);
 		 
+		 System.out.println("----------------");
+		 Collection<PropertyDeclaration> pDecs = store.loadAllPropertyDeclarations(null);
+		 System.out.println("Amount of stored PropertyDeclarations : " + pDecs.size());
+		 Assert.assertEquals(0, pDecs.size());
+		 
 		 final ResourceSchema schema = createSchema();
 		 
 		 final SNResourceSchema snSchema = store.store(schema,null);
+		 
+		 System.out.println("----------------");
+		 pDecs = store.loadAllPropertyDeclarations(null);
+		 System.out.println("Amount of stored PropertyDeclarations : " + pDecs.size());
+		 Assert.assertEquals(3, pDecs.size());
+		 
 		 System.out.println(schema);
 		 
 		 Assert.assertNotNull(snSchema);
-		 
+		 		 
 		 Assert.assertEquals(3, snSchema.getPropertyAssertions().size());
-		 
+
 		 System.out.println(snSchema);
 		 
 		 ResourceSchema schema2 = store.convert(snSchema);
@@ -58,6 +74,18 @@ public class RBSchemaStoreTest {
 		 
 		 Assert.assertEquals(3, schema2.getPropertyAssertions().size());
 		 
+		 
+		 System.out.println("----------------");
+		 pDecs = store.loadAllPropertyDeclarations(null);
+		 System.out.println("Amount of stored PropertyDeclarations : " + pDecs.size());
+		 Assert.assertEquals(3, pDecs.size());
+		 
+		 //Load all defined properties from store
+		 pDecs = store.loadAllPropertyDeclarations(null);
+		 System.out.println("---------");
+		 for (PropertyDeclaration pDec : pDecs) {
+			System.out.println(pDec);
+		}
 		 
 	}
 	

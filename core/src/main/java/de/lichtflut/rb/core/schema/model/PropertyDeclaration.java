@@ -92,6 +92,12 @@ public interface PropertyDeclaration  extends ResourceSchemaType{
 	String getName();
 	
 	/**
+	 * @return the qualified name
+	 */
+	String getIdentifierString();
+	
+	
+	/**
 	 * Set the name or identifier of this property.
 	 * Tries to generate an URI from the given String, if not, the default Namespace will be used
 	 * @return void

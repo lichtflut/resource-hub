@@ -82,6 +82,9 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	
 	// -----------------------------------------------------
 	
+	/**
+	 *{@inheritDoc}
+	 */
 	public RSParsingResult generateAndResolveSchemaModelThrough(InputStream is) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.merge(generateSchemaModelThrough(is));
@@ -172,7 +175,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	
 	// -----------------------------------------------------
 
-	public void storeOrOverridePropertyDeclaration(PropertyDeclaration declaration) {
+	public void storeOrOverridePropertyDeclaration(PropertyDeclaration declaration) {		
 		if(declaration!=null) store.store(declaration,null);
 	}
 	
