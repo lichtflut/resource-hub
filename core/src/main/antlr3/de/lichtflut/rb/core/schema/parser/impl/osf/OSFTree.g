@@ -86,11 +86,6 @@ import java.util.Set;
 
 }
 
-@rulecatch {
-	catch (RecognitionException e) {
-		throw e;
-	}
-} 
 
 osl returns [List<ResourceSchemaType> list] 
 	@init{ $list = new ArrayList<ResourceSchemaType>(); }
@@ -134,7 +129,7 @@ p_assertion returns [String type]
 
 value returns [Object obj]
 
-	: s=string {$obj = s.result;}
+	: ^(STRING s=string {$obj = s.result;})
 	| n=number {$obj = n.result;}
 	| a=array  {$obj = a.list;}
 	| TEXT     {$obj = ElementaryDataType.STRING;}

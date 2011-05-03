@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
-import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
@@ -46,7 +45,7 @@ public class OSFParsingUnit extends RSParsingUnit {
 	public Collection<ResourceSchemaType> parse(final String input)
 			throws RSMissingErrorReporterException {
 		if(errorReporter == null) throw new RSMissingErrorReporterException("RSErrorReporter can not be null");
-		return parseRSF(input);
+		return parseOSF(input);
 	}
 
 	// -----------------------------------------------------
@@ -76,12 +75,13 @@ public class OSFParsingUnit extends RSParsingUnit {
 	// -----------------------------------------------------
 	
 	
-	private Collection<ResourceSchemaType> parseRSF(final String input){
+	private Collection<ResourceSchemaType> parseOSF(final String input){
 		Collection<ResourceSchemaType> output = new LinkedList<ResourceSchemaType>();
 		RSCaseControlStream stream = new RSCaseControlStream(input);
 		//Ignore Case, this is really important
 		stream.setCaseSensitive(false);
 		OSFLexer lexer = new OSFLexer(stream);
+		lexer.setErrorReporter(errorReporter);
 		TokenStream tokens = new CommonTokenStream(lexer);
 		OSFParser parser = new OSFParser(tokens);
 		parser.setErrorReporter(errorReporter);

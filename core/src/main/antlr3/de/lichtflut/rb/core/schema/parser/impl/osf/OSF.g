@@ -46,9 +46,20 @@ import java.util.ArrayList;
   * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
 */
 package de.lichtflut.rb.core.schema.parser.impl.osf;
+import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 }
 
-// Optional step: Disable automatic error recovery
+@lexer::members {
+ private RSErrorReporter errorReporter = null;
+ public void setErrorReporter(RSErrorReporter errorReporter) {
+     this.errorReporter = errorReporter;
+ }
+ public void emitErrorMessage(String msg) {
+     errorReporter.reportError(msg);
+ }
+}
+
+
 @members {
 
 	private RSErrorReporter errorReporter = null;
@@ -60,15 +71,8 @@ package de.lichtflut.rb.core.schema.parser.impl.osf;
     }
 
 }
-// Alter code generation so catch-clauses get replace with
-// this action.
-@rulecatch {
-catch (RecognitionException e) {
-throw e;
-}
-} 
 
-osl 	:	descriptions  -> ^(DESCRIPTIONS descriptions) ;
+osl 	:	descriptions  -> ^(DESCRIPTIONS descriptions?) ;
 
 
 descriptions 
