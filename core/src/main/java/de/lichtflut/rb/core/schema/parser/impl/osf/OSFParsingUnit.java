@@ -91,7 +91,8 @@ public class OSFParsingUnit extends RSParsingUnit {
 			result = parser.osl();
 			treeParser = new OSFTree(new CommonTreeNodeStream(result.tree));
 			treeParser.setErrorReporter(this.errorReporter);
-			output =  treeParser.osl().list;
+			de.lichtflut.rb.core.schema.parser.impl.osf.OSFTree.osl_return osl_result = treeParser.osl();
+			output =  osl_result.list;
 		} catch (RecognitionException e) {
 			errorReporter.reportError(("A RecognitionException has been occurred: " + treeParser.getErrorMessage(e, null)));
 		}

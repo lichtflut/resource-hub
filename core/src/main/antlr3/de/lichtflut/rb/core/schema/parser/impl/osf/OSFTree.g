@@ -49,8 +49,9 @@ import java.util.Set;
     	}
 
     	private String extractString(CommonTree token) {
-        	StringBuffer sb = new StringBuffer(token.getText());
-        	return sb.toString();
+        	String extract = token.getText();
+        	extract = extract.replaceAll("\"","");
+        	return extract;
     	}
 
 		

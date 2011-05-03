@@ -97,15 +97,14 @@ public class OSFParser extends Parser {
     public String[] getTokenNames() { return OSFParser.tokenNames; }
     public String getGrammarFileName() { return "de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g"; }
 
-
-
-    	private RSErrorReporter errorReporter = null;
-        public void setErrorReporter(RSErrorReporter errorReporter) {
-            this.errorReporter = errorReporter;
-        }
-        public void emitErrorMessage(String msg) {
-            errorReporter.reportError(msg);
-        }
+    private RSErrorReporter errorReporter = null;
+    public void setErrorReporter(RSErrorReporter errorReporter) {
+        this.errorReporter = errorReporter;
+     }
+      
+    public void emitErrorMessage(String msg) {
+         errorReporter.reportError(msg);
+     }
 		
 
 

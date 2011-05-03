@@ -107,8 +107,9 @@ public class OSFTree extends TreeParser {
         	}
 
         	private String extractString(CommonTree token) {
-            	StringBuffer sb = new StringBuffer(token.getText());
-            	return sb.toString();
+            	String extract = token.getText();
+            	extract = extract.replaceAll("\"","");
+            	return extract;
         	}
 
     		
@@ -368,6 +369,7 @@ public class OSFTree extends TreeParser {
         }
         finally {
         }
+        
         return retval;
     }
     // $ANTLR end "description"

@@ -12,6 +12,5 @@ reSource "http://lichtflut.de#testResource2"{
 },
 
 PROPERTY "http://lichtflut.de#Wohnort"{
-	REGEX="EINSEINSEINS",
-	MAX=2
+	REGEX="EINSEINSEINS"
 }
