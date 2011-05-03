@@ -16,12 +16,12 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.RSParsingUnit;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
-import de.lichtflut.rb.core.schema.parser.impl.simplersf.RSFormat;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
 
 /**
@@ -149,6 +149,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	private RSParsingResult convertToParsingResult(Collection<ResourceSchemaType> types){
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.setErrorLevel(RSErrorLevel.INTERPRETER);
+		if(types==null) return result;
 		for (ResourceSchemaType type : types) {
 			if(type instanceof ResourceSchema) result.addResourceSchema((ResourceSchema) type);
 			if(type instanceof PropertyDeclaration) result.addPropertyDeclaration((PropertyDeclaration) type);

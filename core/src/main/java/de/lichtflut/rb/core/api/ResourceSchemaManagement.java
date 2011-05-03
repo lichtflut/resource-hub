@@ -10,8 +10,8 @@ import java.util.Collection;
 import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
-import de.lichtflut.rb.core.schema.parser.impl.simplersf.RSFormat;
 /**
  * <p>
  * This is the RB's ResourceSchemaManagement "HighLevel" interface.

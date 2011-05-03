@@ -1,35 +1,39 @@
 /*
  * Copyright 2009 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema.parser.impl.simplersf;
+package de.lichtflut.rb.core.schema.parser.impl.osf;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
-import java.util.Set;
+import java.util.LinkedList;
+
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
+import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.CommonTreeNodeStream;
+
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingUnit;
 import de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterException;
 import de.lichtflut.rb.core.schema.parser.impl.RSCaseControlStream;
-import de.lichtflut.rb.core.schema.parser.impl.simplersf.ResourceSchemaParser.dsl_return;
+import de.lichtflut.rb.core.schema.parser.impl.osf.OSFParser.osl_return;
 
 /**
  * <p>
- *  Parsing-unit of SimpleRSF.
+ *  Parsing-unit of OSF (Oliver Tigges Simple Format).
  *  </p>
  *
- * Created: Apr 28, 2011
+ * Created: Apr 03, 2011
  *
  * @author Nils Bleisch
  */
-public class SimpleRSFParsingUnit extends RSParsingUnit {
+public class OSFParsingUnit extends RSParsingUnit {
 
     private RSErrorReporter errorReporter= null;
 	
@@ -72,22 +76,26 @@ public class SimpleRSFParsingUnit extends RSParsingUnit {
 	// -----------------------------------------------------
 	
 	
-	private Set<ResourceSchemaType> parseRSF(final String input){
+	private Collection<ResourceSchemaType> parseRSF(final String input){
+		Collection<ResourceSchemaType> output = new LinkedList<ResourceSchemaType>();
 		RSCaseControlStream stream = new RSCaseControlStream(input);
 		//Ignore Case, this is really important
 		stream.setCaseSensitive(false);
-		ResourceSchemaLexer lexer = new ResourceSchemaLexer(stream);
+		OSFLexer lexer = new OSFLexer(stream);
 		TokenStream tokens = new CommonTokenStream(lexer);
-		ResourceSchemaParser parser = new ResourceSchemaParser(tokens);
+		OSFParser parser = new OSFParser(tokens);
 		parser.setErrorReporter(errorReporter);
+		OSFTree treeParser=null;
 		try {
-			dsl_return result;
-			result = parser.dsl();
-			return result.types;
+			osl_return result;
+			result = parser.osl();
+			treeParser = new OSFTree(new CommonTreeNodeStream(result.tree));
+			treeParser.setErrorReporter(this.errorReporter);
+			output =  treeParser.osl().list;
 		} catch (RecognitionException e) {
-			errorReporter.reportError(("A RecognitionException has been occurred: " + e.getMessage()));
+			errorReporter.reportError(("A RecognitionException has been occurred: " + treeParser.getErrorMessage(e, null)));
 		}
-		return null;
+		return output;
 	}
 	
 }

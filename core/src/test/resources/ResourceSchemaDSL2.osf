@@ -1,0 +1,18 @@
+
+RESOURCE "http://lichtflut.de#testResource1"{
+	PROPERTY "http://lichtflut.de#testResource1Wohnort"{
+		MAX=2,
+		MIN=1
+	}
+
+},
+
+
+RESOURCE "http://lichtflut.de#testResource2"{
+	PROPERTY "http://lichtflut.de#Wohnort"
+
+},
+
+PROPERTY "http://lichtflut.de#Wohnort"{
+	REGEX=3
+}

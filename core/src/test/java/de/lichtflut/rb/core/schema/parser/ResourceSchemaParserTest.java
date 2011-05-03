@@ -26,13 +26,12 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
  */
 public class ResourceSchemaParserTest extends TestCase
 {
-	
-	public final void testParsingAndConstructingModelFromTestFile1() throws IOException, RecognitionException{
+	public final void testParsingAndConstructingModelFromTestSimpleRSFFile1() throws IOException, RecognitionException{		
 		ResourceSchemaManagement rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
 		
 		//Get ResourceSchemaTypes
 		RSParsingResult result = rManagement.generateSchemaModelThrough(
-				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL1.dsl"));
+				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL1.rsf"));
 		assertFalse(result.isErrorOccured());		
 		//Iterate over collection and print out 'da' model
 		for (ResourceSchema resource : result.getResourceSchemas())
@@ -41,4 +40,26 @@ public class ResourceSchemaParserTest extends TestCase
 			System.out.println("--------------------------\n"+	property.toString());
 	
 	}
+	
+	//---------------------------------------------------------------------------
+	
+	public final void testParsingAndConstructingModelFromTestOSFFile2() throws IOException, RecognitionException{		
+		ResourceSchemaManagement rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
+		//Set parsing format to OSF
+		rManagement.setFormat(RSFormat.OSF);
+		//Get ResourceSchemaTypes
+		RSParsingResult result = rManagement.generateSchemaModelThrough(
+				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL2.osf"));
+		assertTrue(result.isErrorOccured());		
+		
+		
+		
+		//Iterate over collection and print out 'da' model
+		for (ResourceSchema resource : result.getResourceSchemas())
+				System.out.println("--------------------------\n"+	resource.toString());
+		for (PropertyDeclaration property : result.getPropertyDeclarations())
+			System.out.println("--------------------------\n"+	property.toString());
+	
+	}
+	
 }

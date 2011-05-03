@@ -9,14 +9,14 @@ options {
 tokens {
 	STRING; NUMBER;  ARRAY;BOOLEAN; TEXT;
 	COMMA = ','; TYPE; MAX; MIN; REGEX; CARDINALITY;
-	TRUE; FALSE; NULL; PROPERTY; RESOURCE; DESCRIPTIONS;
+	TRUE; FALSE; NULL; PROPERTY; RESOURCE; DESCRIPTIONS; PROPERTY_ASSERTION; PROPERTY_DEC;
 }
 
 @header {
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema.parser.impl;
+package de.lichtflut.rb.core.schema.parser.impl.osf;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -26,9 +26,18 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
+
 import org.arastreju.sge.model.ElementaryDataType;
 import java.util.HashSet;
 import java.util.Set;
+
+
+
+import org.antlr.runtime.*;
+import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
 
 }
 
@@ -36,27 +45,12 @@ import java.util.Set;
 /*
   * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
 */
-package de.lichtflut.rb.core.schema.parser.impl;
+package de.lichtflut.rb.core.schema.parser.impl.osf;
 }
 
 // Optional step: Disable automatic error recovery
 @members {
-protected void mismatch(IntStream input, int ttype, BitSet follow)
-throws RecognitionException
-{
-throw new MismatchedTokenException(ttype, input);
-}
-public Object recoverFromMismatchedSet(IntStream input,
-RecognitionException e,
-BitSet follow)
-throws RecognitionException
-{
-throw e;
-}
 
-
-private PropertyDeclaration property = null;
-	private ResourceSchema resource = null;
 	private RSErrorReporter errorReporter = null;
     public void setErrorReporter(RSErrorReporter errorReporter) {
         this.errorReporter = errorReporter;
@@ -89,17 +83,17 @@ description 	:
 
 property_dec 
 	:	PROPERTY
-		String
-		('{'!
-		(p_assertion '='! value(COMMA! p_assertion '='! value)*)?
-		'}'!)?;
+		string
+		('{'
+		(p_assertion '=' value(COMMA p_assertion '=' value)*)? 
+		'}')? -> ^(string PROPERTY_ASSERTION (^(p_assertion value))*);
 		
 resource_dec 
 	:	RESOURCE
-		String
-		'{'!
-		(property_dec (',' property_dec)*)?
-		'}'!;
+		string
+		'{'
+		(property_dec (',' property_dec)*)? 
+		'}' -> ^(string PROPERTY_DEC (property_dec)*);
 
 
 

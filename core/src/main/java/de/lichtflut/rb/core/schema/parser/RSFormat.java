@@ -1,9 +1,10 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema.parser.impl.simplersf;
+package de.lichtflut.rb.core.schema.parser;
 
-import de.lichtflut.rb.core.schema.parser.RSParsingUnit;
+import de.lichtflut.rb.core.schema.parser.impl.osf.OSFParsingUnit;
+import de.lichtflut.rb.core.schema.parser.impl.simplersf.SimpleRSFParsingUnit;
 
 /**
  * 
@@ -21,7 +22,8 @@ public enum RSFormat {
 
 
 	//If you have a RSParsingUnit for a new RSF, register it here!
-	SIMPLE_RSF("simple-rdf", new SimpleRSFParsingUnit());
+	SIMPLE_RSF("simple-rdf", new SimpleRSFParsingUnit()),
+	OSF("Oliver Tigges Simple Format", new OSFParsingUnit());
 	
 	private String name = "undefined";
 	private RSParsingUnit unit = null;

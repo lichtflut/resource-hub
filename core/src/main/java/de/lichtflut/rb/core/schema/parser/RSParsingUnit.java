@@ -8,7 +8,6 @@ import java.util.Collection;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 import de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterException;
-import de.lichtflut.rb.core.schema.parser.impl.simplersf.RSFormat;
 
 
 /**

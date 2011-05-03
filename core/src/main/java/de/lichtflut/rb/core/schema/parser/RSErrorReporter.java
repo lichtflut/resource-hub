@@ -16,5 +16,5 @@ public interface RSErrorReporter {
 	 * No use to describe what this method should do ;)
 	 * @param error
 	 */
-	public void reportError(String error);
+	public void reportError(String error);	
 }
