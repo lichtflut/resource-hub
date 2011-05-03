@@ -3,7 +3,9 @@ grammar OSF;
 
 
 options {
-	output = AST;
+  language = Java;
+  output = AST;
+  ASTLabelType = CommonTree;
 }
 
 tokens {
@@ -72,11 +74,11 @@ import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 
 }
 
-osl 	:	descriptions  -> ^(DESCRIPTIONS descriptions?) ;
+osl 	:	(descriptions EOF!)  -> ^(DESCRIPTIONS descriptions?);
 
 
 descriptions 
-	: (description (COMMA! description)*)?;
+	: (description (COMMA! description)* )?;
 
 description 	:
 	( property_dec -> ^(PROPERTY property_dec)
@@ -159,9 +161,6 @@ REGEX       : 'REGEX';
 
 String	: '"' ('a' .. 'z' | 'A' .. 'Z')('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '-' | '#' | '/' | ':' | '.' )+ '"';
 
-//String 	:
-//	 '"' ( EscapeSequence | ~('\u0000'..'\u001f' | '\\' | '\"' ) )* '"'
-//	;
 
 WS: (' '|'\n'|'\r'|'\t')+ {$channel=HIDDEN;} ; // ignore whitespace
 

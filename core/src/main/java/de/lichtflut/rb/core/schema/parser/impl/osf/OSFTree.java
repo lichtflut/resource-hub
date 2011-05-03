@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g 2011-05-03 20:22:56
+// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g 2011-05-03 22:46:52
 
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
@@ -152,7 +152,7 @@ public class OSFTree extends TreeParser {
     };
 
     // $ANTLR start "osl"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:90:1: osl returns [List<ResourceSchemaType> list] : ^( DESCRIPTIONS (d= description )* ) ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:91:1: osl returns [List<ResourceSchemaType> list] : ^( DESCRIPTIONS (d= description )* ) ;
     public final OSFTree.osl_return osl() throws RecognitionException {
         OSFTree.osl_return retval = new OSFTree.osl_return();
         retval.start = input.LT(1);
@@ -170,8 +170,8 @@ public class OSFTree extends TreeParser {
 
          retval.list = new ArrayList<ResourceSchemaType>(); 
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:92:2: ( ^( DESCRIPTIONS (d= description )* ) )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:92:4: ^( DESCRIPTIONS (d= description )* )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:93:2: ( ^( DESCRIPTIONS (d= description )* ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:93:4: ^( DESCRIPTIONS (d= description )* )
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -189,7 +189,7 @@ public class OSFTree extends TreeParser {
 
             if ( input.LA(1)==Token.DOWN ) {
                 match(input, Token.DOWN, null); 
-                // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:92:19: (d= description )*
+                // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:93:19: (d= description )*
                 loop1:
                 do {
                     int alt1=2;
@@ -202,7 +202,7 @@ public class OSFTree extends TreeParser {
 
                     switch (alt1) {
                 	case 1 :
-                	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:92:20: d= description
+                	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:93:20: d= description
                 	    {
                 	    _last = (CommonTree)input.LT(1);
                 	    pushFollow(FOLLOW_description_in_osl71);
@@ -249,7 +249,7 @@ public class OSFTree extends TreeParser {
     };
 
     // $ANTLR start "description"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:95:1: description returns [ResourceSchemaType type] : ( ^( PROPERTY p= property_dec ) | ^( RESOURCE r= resource_dec ) ) ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:96:1: description returns [ResourceSchemaType type] : ( ^( PROPERTY p= property_dec ) | ^( RESOURCE r= resource_dec ) ) ;
     public final OSFTree.description_return description() throws RecognitionException {
         OSFTree.description_return retval = new OSFTree.description_return();
         retval.start = input.LT(1);
@@ -270,12 +270,12 @@ public class OSFTree extends TreeParser {
         CommonTree RESOURCE3_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:95:47: ( ( ^( PROPERTY p= property_dec ) | ^( RESOURCE r= resource_dec ) ) )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:96:2: ( ^( PROPERTY p= property_dec ) | ^( RESOURCE r= resource_dec ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:96:47: ( ( ^( PROPERTY p= property_dec ) | ^( RESOURCE r= resource_dec ) ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:97:2: ( ^( PROPERTY p= property_dec ) | ^( RESOURCE r= resource_dec ) )
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:96:2: ( ^( PROPERTY p= property_dec ) | ^( RESOURCE r= resource_dec ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:97:2: ( ^( PROPERTY p= property_dec ) | ^( RESOURCE r= resource_dec ) )
             int alt2=2;
             int LA2_0 = input.LA(1);
 
@@ -293,7 +293,7 @@ public class OSFTree extends TreeParser {
             }
             switch (alt2) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:96:3: ^( PROPERTY p= property_dec )
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:97:3: ^( PROPERTY p= property_dec )
                     {
                     _last = (CommonTree)input.LT(1);
                     {
@@ -324,7 +324,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:97:3: ^( RESOURCE r= resource_dec )
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:98:3: ^( RESOURCE r= resource_dec )
                     {
                     _last = (CommonTree)input.LT(1);
                     {
@@ -369,7 +369,6 @@ public class OSFTree extends TreeParser {
         }
         finally {
         }
-        
         return retval;
     }
     // $ANTLR end "description"
@@ -381,7 +380,7 @@ public class OSFTree extends TreeParser {
     };
 
     // $ANTLR start "property_dec"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:102:1: property_dec returns [PropertyDeclaration pDec] : ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* ) ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:103:1: property_dec returns [PropertyDeclaration pDec] : ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* ) ;
     public final OSFTree.property_dec_return property_dec() throws RecognitionException {
         OSFTree.property_dec_return retval = new OSFTree.property_dec_return();
         retval.start = input.LT(1);
@@ -405,8 +404,8 @@ public class OSFTree extends TreeParser {
 
          retval.pDec = new PropertyDeclarationImpl();
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:104:2: ( ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* ) )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:104:4: ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:105:2: ( ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:105:4: ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* )
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -437,7 +436,7 @@ public class OSFTree extends TreeParser {
 
             adaptor.addChild(root_1, PROPERTY_ASSERTION5_tree);
 
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:105:3: ( ^(p= p_assertion v= value ) )*
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:106:3: ( ^(p= p_assertion v= value ) )*
             loop3:
             do {
                 int alt3=2;
@@ -450,7 +449,7 @@ public class OSFTree extends TreeParser {
 
                 switch (alt3) {
             	case 1 :
-            	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:105:4: ^(p= p_assertion v= value )
+            	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:106:4: ^(p= p_assertion v= value )
             	    {
             	    _last = (CommonTree)input.LT(1);
             	    {
@@ -514,7 +513,7 @@ public class OSFTree extends TreeParser {
     };
 
     // $ANTLR start "resource_dec"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:108:1: resource_dec returns [ResourceSchema rSchema] : ^( STRING s= string PROPERTY_DEC (a= assignment_dec )* ) ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:109:1: resource_dec returns [ResourceSchema rSchema] : ^( STRING s= string PROPERTY_DEC (a= assignment_dec )* ) ;
     public final OSFTree.resource_dec_return resource_dec() throws RecognitionException {
         OSFTree.resource_dec_return retval = new OSFTree.resource_dec_return();
         retval.start = input.LT(1);
@@ -535,8 +534,8 @@ public class OSFTree extends TreeParser {
         CommonTree PROPERTY_DEC7_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:109:2: ( ^( STRING s= string PROPERTY_DEC (a= assignment_dec )* ) )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:109:4: ^( STRING s= string PROPERTY_DEC (a= assignment_dec )* )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:110:2: ( ^( STRING s= string PROPERTY_DEC (a= assignment_dec )* ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:110:4: ^( STRING s= string PROPERTY_DEC (a= assignment_dec )* )
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -567,7 +566,7 @@ public class OSFTree extends TreeParser {
 
             adaptor.addChild(root_1, PROPERTY_DEC7_tree);
 
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:110:2: (a= assignment_dec )*
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:111:2: (a= assignment_dec )*
             loop4:
             do {
                 int alt4=2;
@@ -580,7 +579,7 @@ public class OSFTree extends TreeParser {
 
                 switch (alt4) {
             	case 1 :
-            	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:110:3: a= assignment_dec
+            	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:111:3: a= assignment_dec
             	    {
             	    _last = (CommonTree)input.LT(1);
             	    pushFollow(FOLLOW_assignment_dec_in_resource_dec193);
@@ -626,7 +625,7 @@ public class OSFTree extends TreeParser {
     };
 
     // $ANTLR start "assignment_dec"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:113:1: assignment_dec returns [PropertyAssertionImpl assertion] : ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* ) ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:114:1: assignment_dec returns [PropertyAssertionImpl assertion] : ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* ) ;
     public final OSFTree.assignment_dec_return assignment_dec() throws RecognitionException {
         OSFTree.assignment_dec_return retval = new OSFTree.assignment_dec_return();
         retval.start = input.LT(1);
@@ -653,8 +652,8 @@ public class OSFTree extends TreeParser {
         	retval.assertion = new PropertyAssertionImpl(null,pDec);
         	
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:118:2: ( ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* ) )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:118:4: ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:119:2: ( ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:119:4: ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* )
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -685,7 +684,7 @@ public class OSFTree extends TreeParser {
 
             adaptor.addChild(root_1, PROPERTY_ASSERTION9_tree);
 
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:118:73: ( ^(p= p_assertion v= value ) )*
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:119:73: ( ^(p= p_assertion v= value ) )*
             loop5:
             do {
                 int alt5=2;
@@ -698,7 +697,7 @@ public class OSFTree extends TreeParser {
 
                 switch (alt5) {
             	case 1 :
-            	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:118:74: ^(p= p_assertion v= value )
+            	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:119:74: ^(p= p_assertion v= value )
             	    {
             	    _last = (CommonTree)input.LT(1);
             	    {
@@ -762,7 +761,7 @@ public class OSFTree extends TreeParser {
     };
 
     // $ANTLR start "p_assertion"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:121:1: p_assertion returns [String type] : ( TYPE | MAX | MIN | REGEX | CARDINALITY );
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:122:1: p_assertion returns [String type] : ( TYPE | MAX | MIN | REGEX | CARDINALITY );
     public final OSFTree.p_assertion_return p_assertion() throws RecognitionException {
         OSFTree.p_assertion_return retval = new OSFTree.p_assertion_return();
         retval.start = input.LT(1);
@@ -785,7 +784,7 @@ public class OSFTree extends TreeParser {
         CommonTree CARDINALITY14_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:122:2: ( TYPE | MAX | MIN | REGEX | CARDINALITY )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:123:2: ( TYPE | MAX | MIN | REGEX | CARDINALITY )
             int alt6=5;
             switch ( input.LA(1) ) {
             case TYPE:
@@ -822,7 +821,7 @@ public class OSFTree extends TreeParser {
 
             switch (alt6) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:122:4: TYPE
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:123:4: TYPE
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -837,7 +836,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:123:4: MAX
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:124:4: MAX
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -852,7 +851,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 3 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:124:4: MIN
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:125:4: MIN
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -867,7 +866,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 4 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:125:4: REGEX
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:126:4: REGEX
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -882,7 +881,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 5 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:126:4: CARDINALITY
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:127:4: CARDINALITY
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -918,7 +917,7 @@ public class OSFTree extends TreeParser {
     };
 
     // $ANTLR start "value"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:130:1: value returns [Object obj] : ( ^( STRING s= string ) | n= number | a= array | TEXT | BOOLEAN | NUMBER | TRUE | FALSE | NULL );
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:131:1: value returns [Object obj] : ( ^( STRING s= string ) | n= number | a= array | TEXT | BOOLEAN | NUMBER | TRUE | FALSE | NULL );
     public final OSFTree.value_return value() throws RecognitionException {
         OSFTree.value_return retval = new OSFTree.value_return();
         retval.start = input.LT(1);
@@ -951,12 +950,12 @@ public class OSFTree extends TreeParser {
         CommonTree NULL21_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:132:2: ( ^( STRING s= string ) | n= number | a= array | TEXT | BOOLEAN | NUMBER | TRUE | FALSE | NULL )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:133:2: ( ^( STRING s= string ) | n= number | a= array | TEXT | BOOLEAN | NUMBER | TRUE | FALSE | NULL )
             int alt7=9;
             alt7 = dfa7.predict(input);
             switch (alt7) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:132:4: ^( STRING s= string )
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:133:4: ^( STRING s= string )
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -989,7 +988,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:133:4: n= number
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:134:4: n= number
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -1005,7 +1004,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 3 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:134:4: a= array
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:135:4: a= array
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -1021,7 +1020,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 4 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:135:4: TEXT
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:136:4: TEXT
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -1036,7 +1035,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 5 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:136:4: BOOLEAN
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:137:4: BOOLEAN
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -1051,7 +1050,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 6 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:137:4: NUMBER
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:138:4: NUMBER
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -1066,7 +1065,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 7 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:138:4: TRUE
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:139:4: TRUE
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -1081,7 +1080,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 8 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:139:4: FALSE
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:140:4: FALSE
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -1096,7 +1095,7 @@ public class OSFTree extends TreeParser {
                     }
                     break;
                 case 9 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:140:4: NULL
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:141:4: NULL
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -1132,7 +1131,7 @@ public class OSFTree extends TreeParser {
     };
 
     // $ANTLR start "string"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:143:1: string returns [String result] : String ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:144:1: string returns [String result] : String ;
     public final OSFTree.string_return string() throws RecognitionException {
         OSFTree.string_return retval = new OSFTree.string_return();
         retval.start = input.LT(1);
@@ -1147,8 +1146,8 @@ public class OSFTree extends TreeParser {
         CommonTree String22_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:144:2: ( String )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:144:4: String
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:145:2: ( String )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:145:4: String
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1182,7 +1181,7 @@ public class OSFTree extends TreeParser {
     };
 
     // $ANTLR start "number"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:148:1: number returns [Integer result] : ^( NUMBER Number ) ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:149:1: number returns [Integer result] : ^( NUMBER Number ) ;
     public final OSFTree.number_return number() throws RecognitionException {
         OSFTree.number_return retval = new OSFTree.number_return();
         retval.start = input.LT(1);
@@ -1199,8 +1198,8 @@ public class OSFTree extends TreeParser {
         CommonTree Number24_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:149:2: ( ^( NUMBER Number ) )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:149:4: ^( NUMBER Number )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:150:2: ( ^( NUMBER Number ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:150:4: ^( NUMBER Number )
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1251,7 +1250,7 @@ public class OSFTree extends TreeParser {
     };
 
     // $ANTLR start "array"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:153:1: array returns [List list] : ^( ARRAY (v= value )+ ) ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:154:1: array returns [List list] : ^( ARRAY (v= value )+ ) ;
     public final OSFTree.array_return array() throws RecognitionException {
         OSFTree.array_return retval = new OSFTree.array_return();
         retval.start = input.LT(1);
@@ -1269,8 +1268,8 @@ public class OSFTree extends TreeParser {
 
          retval.list = new ArrayList(); 
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:155:2: ( ^( ARRAY (v= value )+ ) )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:155:4: ^( ARRAY (v= value )+ )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:156:2: ( ^( ARRAY (v= value )+ ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:156:4: ^( ARRAY (v= value )+ )
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1287,7 +1286,7 @@ public class OSFTree extends TreeParser {
 
 
             match(input, Token.DOWN, null); 
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:155:12: (v= value )+
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:156:12: (v= value )+
             int cnt8=0;
             loop8:
             do {
@@ -1301,7 +1300,7 @@ public class OSFTree extends TreeParser {
 
                 switch (alt8) {
             	case 1 :
-            	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:155:13: v= value
+            	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:156:13: v= value
             	    {
             	    _last = (CommonTree)input.LT(1);
             	    pushFollow(FOLLOW_value_in_array467);
@@ -1404,7 +1403,7 @@ public class OSFTree extends TreeParser {
             this.transition = DFA7_transition;
         }
         public String getDescription() {
-            return "130:1: value returns [Object obj] : ( ^( STRING s= string ) | n= number | a= array | TEXT | BOOLEAN | NUMBER | TRUE | FALSE | NULL );";
+            return "131:1: value returns [Object obj] : ( ^( STRING s= string ) | n= number | a= array | TEXT | BOOLEAN | NUMBER | TRUE | FALSE | NULL );";
         }
     }
  
