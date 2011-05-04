@@ -32,5 +32,6 @@ public class HomePage extends WebPage {
         add(new BookmarkablePageLink("sampleResource", SampleResourcePage.class));
         
         add(new BookmarkablePageLink("peripheryView", PeripheryPage.class));
+        add(new BookmarkablePageLink("resourceschema", RSPage.class));
     }
 }
