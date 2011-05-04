@@ -113,6 +113,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 			for (PropertyAssertion assertion : rSchema.getPropertyAssertions()) {
 				PropertyDeclaration assertionPDec = assertion.getPropertyDeclaration();
 				if(assertionPDec==null){
+					//Get the pDec from given identifier
 					assertionPDec = persistedPDecsHash.get(assertion.getPropertyIdentifier());
 					//if assertionPDec is still null
 					result.addErrorMessage("Wasnt able to resolve PropertyDeclaration for " + assertionPDec.getIdentifierString());
@@ -126,12 +127,10 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 					//if persistedPDec is still null, it must be a new property
 					if(persistedPDec != null){
 						//Resolve and merge assertion
-						//Add constraints
-						assertionPDec.getConstraints().addAll(assertionPDec.getConstraints());
-						if((assertionPDec.getElementaryDataType()==ElementaryDataType.UNDEFINED)){
-							assertionPDec.setElementaryDataType(persistedPDec.getElementaryDataType());
-						}
+						mergePropertyDecs(assertionPDec,persistedPDec);
 					}
+				}else{
+					mergePropertyDecs(assertionPDec,persistedPDec);
 				}
 				persistedPDecsHash.put(assertionPDec.getIdentifierString(), assertionPDec);
 			}//End of Inner for
@@ -141,6 +140,14 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		return result;
 	}
 
+	private void mergePropertyDecs(PropertyDeclaration newOne, PropertyDeclaration oldOne){
+		newOne.getConstraints().addAll(oldOne.getConstraints());
+		if((newOne.getElementaryDataType()==ElementaryDataType.UNDEFINED)){
+			newOne.setElementaryDataType(oldOne.getElementaryDataType());
+		}
+	}
+	
+	
 	// -----------------------------------------------------
 	
 	public RSParsingResult generateAndResolveSchemaModelThrough(File f) {

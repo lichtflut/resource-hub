@@ -60,7 +60,7 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 public final class PropertyDeclarationImpl implements PropertyDeclaration{
 
 	//Instance members
-	private Set<Constraint> constraints;
+	private Set<Constraint> constraints = new HashSet<Constraint>();
 	private ElementaryDataType type =  ElementaryDataType.UNDEFINED;
 	private ResourceID identifier;
 	

@@ -46,12 +46,7 @@ public class ResourceSchemaParserTest extends TestCase
 				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL2.osf"));
 		assertFalse(result.isErrorOccured());		
 		
-		//Iterate over collection and print out 'da' model
-		for (ResourceSchema resource : result.getResourceSchemas())
-				System.out.println("--------------------------\n"+	resource.toString());
-		for (PropertyDeclaration property : result.getPropertyDeclarations())
-			System.out.println("--------------------------\n"+	property.toString());
-	
+		assertTrue(result.getPropertyDeclarations().size() == 5);
 	}
 	
 }
