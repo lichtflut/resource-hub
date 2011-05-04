@@ -23,6 +23,16 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
  * </p>
  *
  * <p>
+ * This instance is initialized with the following set of default values:
+ * <ol>
+ * <li>Cardinality = (min=0, max=infinity)</li>
+ * <li>Constraints = an empty set</li>
+ * </ol> 
+ * 
+ * 
+ * </p>
+ *
+ * <p>
  * 	Created Mar 16, 2011
  * </p>
  *
@@ -34,8 +44,9 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	//Instance members
 	private ResourceID propertyDescriptor;
 	private PropertyDeclaration property;
-	private Cardinality cardinality;
-	private Set<Constraint> constraints = null;
+	//Setting up the default cardinality
+	private Cardinality cardinality = CardinalityFactory.hasOptionalOneToMany();
+	private Set<Constraint> constraints = new HashSet<Constraint>();
 	private String propertyIdentifier = null;
 	
 	//Constructors
@@ -149,9 +160,15 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	
 	public void setPropertyIdentifier(String identifier) {
 		this.propertyIdentifier = identifier;
-		
+		//TODO This must form a valid URI
+		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isQname(this.propertyIdentifier)))
+			this.propertyIdentifier =  new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier).toURI();
 	}
 
+	public void setPropertyDescriptor(ResourceID propertyDescriptor){
+		this.propertyDescriptor = propertyDescriptor;
+	}
+	
 	// -----------------------------------------------------
 	
 	public String getPropertyIdentifier() {
@@ -164,11 +181,13 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	// -----------------------------------------------------
 	
 	public QualifiedName getQualifiedPropertyIdentifier() {
+		
 		if(this.propertyIdentifier==null) return null;
 		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isQname(this.propertyIdentifier)))
-			return new QualifiedName(this.propertyIdentifier);
+			return new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier);
 		else{
-			 return new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier);
+			return new QualifiedName(this.propertyIdentifier);
+			 
 		}
 	}
 

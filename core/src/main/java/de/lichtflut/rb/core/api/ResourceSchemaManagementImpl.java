@@ -10,8 +10,10 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
+
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -88,6 +90,54 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	public RSParsingResult generateAndResolveSchemaModelThrough(InputStream is) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.merge(generateSchemaModelThrough(is));
+		result.setErrorLevel(RSErrorLevel.INTERPRETER);
+		
+		//Load all persisted Properties
+		Collection<PropertyDeclaration> persistedPDecs = store.loadAllPropertyDeclarations(null);
+		Collection<PropertyDeclaration> globalPDecs = result.getPropertyDeclarations();
+		//build hashMaps for those to get some better access functionalities
+		HashMap<String, PropertyDeclaration> persistedPDecsHash = new HashMap<String, PropertyDeclaration>();
+		HashMap<String, PropertyDeclaration> globalPDecsHash = new HashMap<String, PropertyDeclaration>();
+		//TODO: Improve this, some points to optimize
+		//Fill those hashmaps
+		for (PropertyDeclaration pDec : persistedPDecs) persistedPDecsHash.put(pDec.getIdentifierString(),pDec);
+		for (PropertyDeclaration pDec : globalPDecs) globalPDecsHash.put(pDec.getIdentifierString(),pDec);
+		
+		//Merge them together, the newer global ones will override the older persisted ones
+		for (PropertyDeclaration pDec : globalPDecsHash.values()) {
+			persistedPDecsHash.put(pDec.getIdentifierString(), pDec);
+		}
+		
+		//Iterate over assertions:
+		for (ResourceSchema rSchema : result.getResourceSchemas()) {
+			for (PropertyAssertion assertion : rSchema.getPropertyAssertions()) {
+				PropertyDeclaration assertionPDec = assertion.getPropertyDeclaration();
+				if(assertionPDec==null){
+					assertionPDec = persistedPDecsHash.get(assertion.getPropertyIdentifier());
+					//if assertionPDec is still null
+					result.addErrorMessage("Wasnt able to resolve PropertyDeclaration for " + assertionPDec.getIdentifierString());
+					continue;
+				}
+				PropertyDeclaration persistedPDec = persistedPDecsHash.get(assertion.getPropertyDeclaration().getIdentifierString());
+				//This must be a new or inherited property
+				if(persistedPDec == null){
+					//check if it's inhertied
+					persistedPDec = persistedPDecsHash.get(assertion.getPropertyIdentifier());
+					//if persistedPDec is still null, it must be a new property
+					if(persistedPDec != null){
+						//Resolve and merge assertion
+						//Add constraints
+						assertionPDec.getConstraints().addAll(assertionPDec.getConstraints());
+						if((assertionPDec.getElementaryDataType()==ElementaryDataType.UNDEFINED)){
+							assertionPDec.setElementaryDataType(persistedPDec.getElementaryDataType());
+						}
+					}
+				}
+				persistedPDecsHash.put(assertionPDec.getIdentifierString(), assertionPDec);
+			}//End of Inner for
+		}
+		
+		result.setPropertyDeclarations(persistedPDecsHash.values());
 		return result;
 	}
 
@@ -95,46 +145,11 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	
 	public RSParsingResult generateAndResolveSchemaModelThrough(File f) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
-		result.merge(generateSchemaModelThrough(f));
-		result.setErrorLevel(RSErrorLevel.INTERPRETER);
-		
-
-		
-		Collection<ResourceSchema> inputSchemas = result.getResourceSchemas();
-		HashMap<String, PropertyDeclaration> generalProperties = new HashMap<String, PropertyDeclaration>();
-		//the explicit properties
-		HashMap<String, PropertyDeclaration> inputProperties = new HashMap<String, PropertyDeclaration>();
-		
-		//Put the properties into a hash with the name as identifier
-		for(PropertyDeclaration declaration: result.getPropertyDeclarations())
-			inputProperties.put(declaration.getIdentifier().getQualifiedName().toURI(), declaration);
-		
-		//Iterate over the schemas and analyzing and resolving the propertyAssertions
-		for(ResourceSchema schema: inputSchemas){
-			Collection<PropertyAssertion> assertions = schema.getPropertyAssertions();
-			//Iterate over assertions of schema x
-			for(PropertyAssertion assertion : assertions){
-				generalProperties.put(assertion.getQualifiedPropertyIdentifier().toURI(), null);
-			}
+		try {
+			result.merge(generateAndResolveSchemaModelThrough(new FileInputStream(f)));
+		} catch (FileNotFoundException e) {
+			result.addErrorMessage("File " + f.getAbsolutePath() + " was not found", RSErrorLevel.SYSTEM);
 		}
-		
-		//Iterate over the property identifier which have been assigned through the dedicated property assertions
-		for(String propertyIdentifier : generalProperties.keySet()){
-			//check is property is directly provided by the RSF
-			if(inputProperties.containsKey(propertyIdentifier)){
-				generalProperties.put(propertyIdentifier, inputProperties.get(propertyIdentifier));
-			}
-			else if(false){
-				
-				//TODO try to get property from store.
-			}
-			else{
-				result.addErrorMessage("Property "+ propertyIdentifier + " not found!");
-			}
-		}
-		
-		result.setPropertyDeclarations(generalProperties.values());
-		
 		return result;
 	}
 

@@ -17,4 +17,8 @@ public interface RSErrorReporter {
 	 * @param error
 	 */
 	public void reportError(String error);	
+	
+	
+	public boolean hasErrorReported();
+	
 }

@@ -33,4 +33,8 @@ public class RSParsingResultErrorReporter implements RSErrorReporter{
 		result.addErrorMessage(error, RSErrorLevel.GRAMMAR);
 	}
 
+	public boolean hasErrorReported() {
+		return result.isErrorOccured();
+	}
+
 }

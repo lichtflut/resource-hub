@@ -6,6 +6,7 @@ import org.arastreju.sge.model.ElementaryDataType;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
@@ -59,7 +60,8 @@ public final class OSFEvaluator {
      * @param value
      * @param tree
      */
-    public static void evaluateLocalPropertyDec(final PropertyAssertionImpl assertion, final String type, final Object value, OSFTree tree) {
+    public static void evaluateLocalPropertyDec(final PropertyAssertionImpl assertion,final ResourceSchema schema, final String type, final Object value, OSFTree tree) {
+    
     	PropertyDeclaration pDec = assertion.getPropertyDeclaration();
     	String errorMessage = "Inner Property#" + pDec.getName()+ ": ";
 		String typeLower = type.toLowerCase();
@@ -82,7 +84,7 @@ public final class OSFEvaluator {
 			else{
 				tree.emitErrorMessage(errorMessage + value.toString() + " is not a valid argument for " + type + " expecting a single numerical value");
 			}
-		}else if(typeLower.contains("max")){
+		}else if(typeLower.contains("cardinality")){
 			Cardinality c;
 			if(value instanceof List){
 				List values = (List) value;
@@ -102,6 +104,13 @@ public final class OSFEvaluator {
 				return;
 			}
 		}else{
+			//If some global values will be overridden, this property must be a subproperty of X
+			
+			String newIdentifierString = schema.getResourceID().getQualifiedName().toURI();
+			String oldIdentifierString = pDec.getIdentifierString();
+			if(!oldIdentifierString.contains(newIdentifierString)){
+				pDec.setIdentifier(newIdentifierString + "#" + pDec.getName());
+			}
 			evaluateGlobalPropertyDec(pDec,type, value, tree);
     	}
 	}

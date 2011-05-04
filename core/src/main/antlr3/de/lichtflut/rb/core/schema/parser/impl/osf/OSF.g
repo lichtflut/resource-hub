@@ -74,7 +74,7 @@ import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 
 }
 
-osl 	:	(descriptions EOF!)  -> ^(DESCRIPTIONS descriptions?);
+osl 	:	descriptions EOF  -> ^(DESCRIPTIONS descriptions?);
 
 
 descriptions 

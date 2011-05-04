@@ -34,6 +34,15 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
  *  <ol>
  *  
  * </p>
+ * <p>
+ * This instance is inititalized with the following set of default values:
+ * <ol>
+ * <li>type = UNDEFINED</li>>
+ * <li>constraints = an empty set </li>
+ * </ol> 
+ * 
+ * 
+ * </p>
  *
  * This implementation tries to give you a perfect way of freedom to decide how to construct and build an object of this class.
  * Therefore this Class has a whole big chunk of constructors and setter/getter-members. Check it out! 

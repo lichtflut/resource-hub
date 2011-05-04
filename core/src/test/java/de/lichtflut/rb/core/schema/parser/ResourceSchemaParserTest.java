@@ -33,12 +33,6 @@ public class ResourceSchemaParserTest extends TestCase
 		RSParsingResult result = rManagement.generateSchemaModelThrough(
 				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL1.rsf"));
 		assertFalse(result.isErrorOccured());		
-		//Iterate over collection and print out 'da' model
-		for (ResourceSchema resource : result.getResourceSchemas())
-				System.out.println("--------------------------\n"+	resource.toString());
-		for (PropertyDeclaration property : result.getPropertyDeclarations())
-			System.out.println("--------------------------\n"+	property.toString());
-	
 	}
 	
 	//---------------------------------------------------------------------------
@@ -48,7 +42,7 @@ public class ResourceSchemaParserTest extends TestCase
 		//Set parsing format to OSF
 		rManagement.setFormat(RSFormat.OSF);
 		//Get ResourceSchemaTypes
-		RSParsingResult result = rManagement.generateSchemaModelThrough(
+		RSParsingResult result = rManagement.generateAndResolveSchemaModelThrough(
 				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL2.osf"));
 		assertFalse(result.isErrorOccured());		
 		

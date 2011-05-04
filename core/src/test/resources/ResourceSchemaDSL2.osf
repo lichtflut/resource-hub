@@ -1,17 +1,33 @@
 ReSoURCE "http://lichtflut.de#testResource1"{
-	PROPERTY "http://lichtflut.de#testResource1Wohnort"{
+	PROPERTY "http://lichtflut.de#Wohnort"{
 		MAX=2,
-		MIN=1
+		MIN=1,
+		TYPE=TEXT
+	},
+	PROPERTY "DefaultWohnort"{
+		TYPE=Number
 	}
 
 },
 
-reSource "http://lichtflut.de#testResource2"{
-	PROPERTY "http://lichtflut.de#Wohnort"
+reSource "http://lichtflut.de#1testResource2"{
+	PROPERTY "http://lichtflut.de#Wohnort"{
+		CARDINALITY=[0,5]
+	}
 
 },
 
 PROPERTY "http://lichtflut.de#Wohnort"{
 	REGEX="EINSEINSEINS",
+	type=number
+},
+
+PROPERTY "DefaultWohnort"{
+	REGEX="hallo",
+	type=text
+},
+
+PROPERTY "wrongUri.de#HeyHO"{
+	REGEX="text",
 	type=number
 }

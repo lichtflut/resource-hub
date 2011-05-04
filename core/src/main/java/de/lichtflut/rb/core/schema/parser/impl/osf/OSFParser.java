@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g 2011-05-03 22:46:51
+// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g 2011-05-04 11:24:03
 
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
@@ -115,7 +115,7 @@ public class OSFParser extends Parser {
     };
 
     // $ANTLR start "osl"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:77:1: osl : ( descriptions EOF ) -> ^( DESCRIPTIONS ( descriptions )? ) ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:77:1: osl : descriptions EOF -> ^( DESCRIPTIONS ( descriptions )? ) ;
     public final OSFParser.osl_return osl() throws RecognitionException {
         OSFParser.osl_return retval = new OSFParser.osl_return();
         retval.start = input.LT(1);
@@ -130,23 +130,17 @@ public class OSFParser extends Parser {
         RewriteRuleTokenStream stream_EOF=new RewriteRuleTokenStream(adaptor,"token EOF");
         RewriteRuleSubtreeStream stream_descriptions=new RewriteRuleSubtreeStream(adaptor,"rule descriptions");
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:77:6: ( ( descriptions EOF ) -> ^( DESCRIPTIONS ( descriptions )? ) )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:77:8: ( descriptions EOF )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:77:6: ( descriptions EOF -> ^( DESCRIPTIONS ( descriptions )? ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:77:8: descriptions EOF
             {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:77:8: ( descriptions EOF )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:77:9: descriptions EOF
-            {
-            pushFollow(FOLLOW_descriptions_in_osl146);
+            pushFollow(FOLLOW_descriptions_in_osl145);
             descriptions1=descriptions();
 
             state._fsp--;
 
             stream_descriptions.add(descriptions1.getTree());
-            EOF2=(Token)match(input,EOF,FOLLOW_EOF_in_osl148);  
+            EOF2=(Token)match(input,EOF,FOLLOW_EOF_in_osl147);  
             stream_EOF.add(EOF2);
-
-
-            }
 
 
 
@@ -161,14 +155,14 @@ public class OSFParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (CommonTree)adaptor.nil();
-            // 77:29: -> ^( DESCRIPTIONS ( descriptions )? )
+            // 77:26: -> ^( DESCRIPTIONS ( descriptions )? )
             {
-                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:77:32: ^( DESCRIPTIONS ( descriptions )? )
+                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:77:29: ^( DESCRIPTIONS ( descriptions )? )
                 {
                 CommonTree root_1 = (CommonTree)adaptor.nil();
                 root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(DESCRIPTIONS, "DESCRIPTIONS"), root_1);
 
-                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:77:47: ( descriptions )?
+                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:77:44: ( descriptions )?
                 if ( stream_descriptions.hasNext() ) {
                     adaptor.addChild(root_1, stream_descriptions.nextTree());
 
@@ -239,7 +233,7 @@ public class OSFParser extends Parser {
                 case 1 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:81:5: description ( COMMA description )*
                     {
-                    pushFollow(FOLLOW_description_in_descriptions172);
+                    pushFollow(FOLLOW_description_in_descriptions169);
                     description3=description();
 
                     state._fsp--;
@@ -260,8 +254,8 @@ public class OSFParser extends Parser {
                     	case 1 :
                     	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:81:18: COMMA description
                     	    {
-                    	    COMMA4=(Token)match(input,COMMA,FOLLOW_COMMA_in_descriptions175); 
-                    	    pushFollow(FOLLOW_description_in_descriptions178);
+                    	    COMMA4=(Token)match(input,COMMA,FOLLOW_COMMA_in_descriptions172); 
+                    	    pushFollow(FOLLOW_description_in_descriptions175);
                     	    description5=description();
 
                     	    state._fsp--;
@@ -347,7 +341,7 @@ public class OSFParser extends Parser {
                 case 1 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:84:4: property_dec
                     {
-                    pushFollow(FOLLOW_property_dec_in_description195);
+                    pushFollow(FOLLOW_property_dec_in_description192);
                     property_dec6=property_dec();
 
                     state._fsp--;
@@ -386,7 +380,7 @@ public class OSFParser extends Parser {
                 case 2 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:85:4: resource_dec
                     {
-                    pushFollow(FOLLOW_resource_dec_in_description208);
+                    pushFollow(FOLLOW_resource_dec_in_description205);
                     resource_dec7=resource_dec();
 
                     state._fsp--;
@@ -494,10 +488,10 @@ public class OSFParser extends Parser {
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:91:2: ( PROPERTY string ( '{' ( p_assertion '=' value ( COMMA p_assertion '=' value )* )? '}' )? -> ^( string PROPERTY_ASSERTION ( ^( p_assertion value ) )* ) )
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:91:4: PROPERTY string ( '{' ( p_assertion '=' value ( COMMA p_assertion '=' value )* )? '}' )?
             {
-            PROPERTY8=(Token)match(input,PROPERTY,FOLLOW_PROPERTY_in_property_dec233);  
+            PROPERTY8=(Token)match(input,PROPERTY,FOLLOW_PROPERTY_in_property_dec230);  
             stream_PROPERTY.add(PROPERTY8);
 
-            pushFollow(FOLLOW_string_in_property_dec237);
+            pushFollow(FOLLOW_string_in_property_dec234);
             string9=string();
 
             state._fsp--;
@@ -514,7 +508,7 @@ public class OSFParser extends Parser {
                 case 1 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:93:4: '{' ( p_assertion '=' value ( COMMA p_assertion '=' value )* )? '}'
                     {
-                    char_literal10=(Token)match(input,30,FOLLOW_30_in_property_dec242);  
+                    char_literal10=(Token)match(input,30,FOLLOW_30_in_property_dec239);  
                     stream_30.add(char_literal10);
 
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:94:3: ( p_assertion '=' value ( COMMA p_assertion '=' value )* )?
@@ -528,16 +522,16 @@ public class OSFParser extends Parser {
                         case 1 :
                             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:94:4: p_assertion '=' value ( COMMA p_assertion '=' value )*
                             {
-                            pushFollow(FOLLOW_p_assertion_in_property_dec247);
+                            pushFollow(FOLLOW_p_assertion_in_property_dec244);
                             p_assertion11=p_assertion();
 
                             state._fsp--;
 
                             stream_p_assertion.add(p_assertion11.getTree());
-                            char_literal12=(Token)match(input,31,FOLLOW_31_in_property_dec249);  
+                            char_literal12=(Token)match(input,31,FOLLOW_31_in_property_dec246);  
                             stream_31.add(char_literal12);
 
-                            pushFollow(FOLLOW_value_in_property_dec251);
+                            pushFollow(FOLLOW_value_in_property_dec248);
                             value13=value();
 
                             state._fsp--;
@@ -558,19 +552,19 @@ public class OSFParser extends Parser {
                             	case 1 :
                             	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:94:26: COMMA p_assertion '=' value
                             	    {
-                            	    COMMA14=(Token)match(input,COMMA,FOLLOW_COMMA_in_property_dec253);  
+                            	    COMMA14=(Token)match(input,COMMA,FOLLOW_COMMA_in_property_dec250);  
                             	    stream_COMMA.add(COMMA14);
 
-                            	    pushFollow(FOLLOW_p_assertion_in_property_dec255);
+                            	    pushFollow(FOLLOW_p_assertion_in_property_dec252);
                             	    p_assertion15=p_assertion();
 
                             	    state._fsp--;
 
                             	    stream_p_assertion.add(p_assertion15.getTree());
-                            	    char_literal16=(Token)match(input,31,FOLLOW_31_in_property_dec257);  
+                            	    char_literal16=(Token)match(input,31,FOLLOW_31_in_property_dec254);  
                             	    stream_31.add(char_literal16);
 
-                            	    pushFollow(FOLLOW_value_in_property_dec259);
+                            	    pushFollow(FOLLOW_value_in_property_dec256);
                             	    value17=value();
 
                             	    state._fsp--;
@@ -591,7 +585,7 @@ public class OSFParser extends Parser {
 
                     }
 
-                    char_literal18=(Token)match(input,32,FOLLOW_32_in_property_dec268);  
+                    char_literal18=(Token)match(input,32,FOLLOW_32_in_property_dec265);  
                     stream_32.add(char_literal18);
 
 
@@ -603,7 +597,7 @@ public class OSFParser extends Parser {
 
 
             // AST REWRITE
-            // elements: p_assertion, value, string
+            // elements: value, p_assertion, string
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -622,7 +616,7 @@ public class OSFParser extends Parser {
 
                 adaptor.addChild(root_1, (CommonTree)adaptor.create(PROPERTY_ASSERTION, "PROPERTY_ASSERTION"));
                 // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:95:40: ( ^( p_assertion value ) )*
-                while ( stream_p_assertion.hasNext()||stream_value.hasNext() ) {
+                while ( stream_value.hasNext()||stream_p_assertion.hasNext() ) {
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:95:41: ^( p_assertion value )
                     {
                     CommonTree root_2 = (CommonTree)adaptor.nil();
@@ -634,8 +628,8 @@ public class OSFParser extends Parser {
                     }
 
                 }
-                stream_p_assertion.reset();
                 stream_value.reset();
+                stream_p_assertion.reset();
 
                 adaptor.addChild(root_0, root_1);
                 }
@@ -701,16 +695,16 @@ public class OSFParser extends Parser {
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:98:2: ( RESOURCE string '{' ( property_dec ( ',' property_dec )* )? '}' -> ^( string PROPERTY_DEC ( property_dec )* ) )
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:98:4: RESOURCE string '{' ( property_dec ( ',' property_dec )* )? '}'
             {
-            RESOURCE19=(Token)match(input,RESOURCE,FOLLOW_RESOURCE_in_resource_dec299);  
+            RESOURCE19=(Token)match(input,RESOURCE,FOLLOW_RESOURCE_in_resource_dec296);  
             stream_RESOURCE.add(RESOURCE19);
 
-            pushFollow(FOLLOW_string_in_resource_dec303);
+            pushFollow(FOLLOW_string_in_resource_dec300);
             string20=string();
 
             state._fsp--;
 
             stream_string.add(string20.getTree());
-            char_literal21=(Token)match(input,30,FOLLOW_30_in_resource_dec307);  
+            char_literal21=(Token)match(input,30,FOLLOW_30_in_resource_dec304);  
             stream_30.add(char_literal21);
 
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:101:3: ( property_dec ( ',' property_dec )* )?
@@ -724,7 +718,7 @@ public class OSFParser extends Parser {
                 case 1 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:101:4: property_dec ( ',' property_dec )*
                     {
-                    pushFollow(FOLLOW_property_dec_in_resource_dec312);
+                    pushFollow(FOLLOW_property_dec_in_resource_dec309);
                     property_dec22=property_dec();
 
                     state._fsp--;
@@ -745,10 +739,10 @@ public class OSFParser extends Parser {
                     	case 1 :
                     	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:101:18: ',' property_dec
                     	    {
-                    	    char_literal23=(Token)match(input,COMMA,FOLLOW_COMMA_in_resource_dec315);  
+                    	    char_literal23=(Token)match(input,COMMA,FOLLOW_COMMA_in_resource_dec312);  
                     	    stream_COMMA.add(char_literal23);
 
-                    	    pushFollow(FOLLOW_property_dec_in_resource_dec317);
+                    	    pushFollow(FOLLOW_property_dec_in_resource_dec314);
                     	    property_dec24=property_dec();
 
                     	    state._fsp--;
@@ -769,13 +763,13 @@ public class OSFParser extends Parser {
 
             }
 
-            char_literal25=(Token)match(input,32,FOLLOW_32_in_resource_dec326);  
+            char_literal25=(Token)match(input,32,FOLLOW_32_in_resource_dec323);  
             stream_32.add(char_literal25);
 
 
 
             // AST REWRITE
-            // elements: string, property_dec
+            // elements: property_dec, string
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -896,7 +890,7 @@ public class OSFParser extends Parser {
                 case 1 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:107:4: TYPE
                     {
-                    TYPE26=(Token)match(input,TYPE,FOLLOW_TYPE_in_p_assertion351);  
+                    TYPE26=(Token)match(input,TYPE,FOLLOW_TYPE_in_p_assertion348);  
                     stream_TYPE.add(TYPE26);
 
 
@@ -924,7 +918,7 @@ public class OSFParser extends Parser {
                 case 2 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:108:4: MAX
                     {
-                    MAX27=(Token)match(input,MAX,FOLLOW_MAX_in_p_assertion360);  
+                    MAX27=(Token)match(input,MAX,FOLLOW_MAX_in_p_assertion357);  
                     stream_MAX.add(MAX27);
 
 
@@ -952,7 +946,7 @@ public class OSFParser extends Parser {
                 case 3 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:109:4: MIN
                     {
-                    MIN28=(Token)match(input,MIN,FOLLOW_MIN_in_p_assertion370);  
+                    MIN28=(Token)match(input,MIN,FOLLOW_MIN_in_p_assertion367);  
                     stream_MIN.add(MIN28);
 
 
@@ -980,7 +974,7 @@ public class OSFParser extends Parser {
                 case 4 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:110:4: REGEX
                     {
-                    REGEX29=(Token)match(input,REGEX,FOLLOW_REGEX_in_p_assertion380);  
+                    REGEX29=(Token)match(input,REGEX,FOLLOW_REGEX_in_p_assertion377);  
                     stream_REGEX.add(REGEX29);
 
 
@@ -1008,7 +1002,7 @@ public class OSFParser extends Parser {
                 case 5 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:111:4: CARDINALITY
                     {
-                    CARDINALITY30=(Token)match(input,CARDINALITY,FOLLOW_CARDINALITY_in_p_assertion389);  
+                    CARDINALITY30=(Token)match(input,CARDINALITY,FOLLOW_CARDINALITY_in_p_assertion386);  
                     stream_CARDINALITY.add(CARDINALITY30);
 
 
@@ -1154,7 +1148,7 @@ public class OSFParser extends Parser {
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
-                    pushFollow(FOLLOW_string_in_value405);
+                    pushFollow(FOLLOW_string_in_value402);
                     string31=string();
 
                     state._fsp--;
@@ -1168,7 +1162,7 @@ public class OSFParser extends Parser {
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
-                    pushFollow(FOLLOW_number_in_value410);
+                    pushFollow(FOLLOW_number_in_value407);
                     number32=number();
 
                     state._fsp--;
@@ -1182,7 +1176,7 @@ public class OSFParser extends Parser {
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
-                    pushFollow(FOLLOW_array_in_value415);
+                    pushFollow(FOLLOW_array_in_value412);
                     array33=array();
 
                     state._fsp--;
@@ -1194,7 +1188,7 @@ public class OSFParser extends Parser {
                 case 4 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:119:4: TEXT
                     {
-                    TEXT34=(Token)match(input,TEXT,FOLLOW_TEXT_in_value420);  
+                    TEXT34=(Token)match(input,TEXT,FOLLOW_TEXT_in_value417);  
                     stream_TEXT.add(TEXT34);
 
 
@@ -1222,7 +1216,7 @@ public class OSFParser extends Parser {
                 case 5 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:120:4: BOOLEAN
                     {
-                    BOOLEAN35=(Token)match(input,BOOLEAN,FOLLOW_BOOLEAN_in_value429);  
+                    BOOLEAN35=(Token)match(input,BOOLEAN,FOLLOW_BOOLEAN_in_value426);  
                     stream_BOOLEAN.add(BOOLEAN35);
 
 
@@ -1250,7 +1244,7 @@ public class OSFParser extends Parser {
                 case 6 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:121:4: NUMBER
                     {
-                    NUMBER36=(Token)match(input,NUMBER,FOLLOW_NUMBER_in_value438);  
+                    NUMBER36=(Token)match(input,NUMBER,FOLLOW_NUMBER_in_value435);  
                     stream_NUMBER.add(NUMBER36);
 
 
@@ -1278,7 +1272,7 @@ public class OSFParser extends Parser {
                 case 7 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:122:4: TRUE
                     {
-                    TRUE37=(Token)match(input,TRUE,FOLLOW_TRUE_in_value447);  
+                    TRUE37=(Token)match(input,TRUE,FOLLOW_TRUE_in_value444);  
                     stream_TRUE.add(TRUE37);
 
 
@@ -1306,7 +1300,7 @@ public class OSFParser extends Parser {
                 case 8 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:123:4: FALSE
                     {
-                    FALSE38=(Token)match(input,FALSE,FOLLOW_FALSE_in_value456);  
+                    FALSE38=(Token)match(input,FALSE,FOLLOW_FALSE_in_value453);  
                     stream_FALSE.add(FALSE38);
 
 
@@ -1334,7 +1328,7 @@ public class OSFParser extends Parser {
                 case 9 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:124:4: NULL
                     {
-                    NULL39=(Token)match(input,NULL,FOLLOW_NULL_in_value465);  
+                    NULL39=(Token)match(input,NULL,FOLLOW_NULL_in_value462);  
                     stream_NULL.add(NULL39);
 
 
@@ -1401,7 +1395,7 @@ public class OSFParser extends Parser {
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:128:9: ( String -> ^( STRING String ) )
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:128:11: String
             {
-            String40=(Token)match(input,String,FOLLOW_String_in_string481);  
+            String40=(Token)match(input,String,FOLLOW_String_in_string478);  
             stream_String.add(String40);
 
 
@@ -1474,7 +1468,7 @@ public class OSFParser extends Parser {
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:132:8: ( Number -> ^( NUMBER Number ) )
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:132:10: Number
             {
-            Number41=(Token)match(input,Number,FOLLOW_Number_in_number502);  
+            Number41=(Token)match(input,Number,FOLLOW_Number_in_number499);  
             stream_Number.add(Number41);
 
 
@@ -1552,16 +1546,16 @@ public class OSFParser extends Parser {
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:136:7: ( '[' elements ']' -> ^( ARRAY elements ) )
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:136:9: '[' elements ']'
             {
-            char_literal42=(Token)match(input,33,FOLLOW_33_in_array521);  
+            char_literal42=(Token)match(input,33,FOLLOW_33_in_array518);  
             stream_33.add(char_literal42);
 
-            pushFollow(FOLLOW_elements_in_array523);
+            pushFollow(FOLLOW_elements_in_array520);
             elements43=elements();
 
             state._fsp--;
 
             stream_elements.add(elements43.getTree());
-            char_literal44=(Token)match(input,34,FOLLOW_34_in_array525);  
+            char_literal44=(Token)match(input,34,FOLLOW_34_in_array522);  
             stream_34.add(char_literal44);
 
 
@@ -1639,7 +1633,7 @@ public class OSFParser extends Parser {
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            pushFollow(FOLLOW_value_in_elements542);
+            pushFollow(FOLLOW_value_in_elements539);
             value45=value();
 
             state._fsp--;
@@ -1660,8 +1654,8 @@ public class OSFParser extends Parser {
             	case 1 :
             	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:139:18: COMMA value
             	    {
-            	    COMMA46=(Token)match(input,COMMA,FOLLOW_COMMA_in_elements545); 
-            	    pushFollow(FOLLOW_value_in_elements548);
+            	    COMMA46=(Token)match(input,COMMA,FOLLOW_COMMA_in_elements542); 
+            	    pushFollow(FOLLOW_value_in_elements545);
             	    value47=value();
 
             	    state._fsp--;
@@ -1702,52 +1696,52 @@ public class OSFParser extends Parser {
 
  
 
-    public static final BitSet FOLLOW_descriptions_in_osl146 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_osl148 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_description_in_descriptions172 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_COMMA_in_descriptions175 = new BitSet(new long[]{0x00000000000C0000L});
-    public static final BitSet FOLLOW_description_in_descriptions178 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_property_dec_in_description195 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_resource_dec_in_description208 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_PROPERTY_in_property_dec233 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_string_in_property_dec237 = new BitSet(new long[]{0x0000000040000002L});
-    public static final BitSet FOLLOW_30_in_property_dec242 = new BitSet(new long[]{0x0000000100007C00L});
-    public static final BitSet FOLLOW_p_assertion_in_property_dec247 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_property_dec249 = new BitSet(new long[]{0x00000002018381A0L});
-    public static final BitSet FOLLOW_value_in_property_dec251 = new BitSet(new long[]{0x0000000100000200L});
-    public static final BitSet FOLLOW_COMMA_in_property_dec253 = new BitSet(new long[]{0x0000000000007C00L});
-    public static final BitSet FOLLOW_p_assertion_in_property_dec255 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_property_dec257 = new BitSet(new long[]{0x00000002018381A0L});
-    public static final BitSet FOLLOW_value_in_property_dec259 = new BitSet(new long[]{0x0000000100000200L});
-    public static final BitSet FOLLOW_32_in_property_dec268 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RESOURCE_in_resource_dec299 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_string_in_resource_dec303 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_resource_dec307 = new BitSet(new long[]{0x0000000100040000L});
-    public static final BitSet FOLLOW_property_dec_in_resource_dec312 = new BitSet(new long[]{0x0000000100000200L});
-    public static final BitSet FOLLOW_COMMA_in_resource_dec315 = new BitSet(new long[]{0x0000000000040000L});
-    public static final BitSet FOLLOW_property_dec_in_resource_dec317 = new BitSet(new long[]{0x0000000100000200L});
-    public static final BitSet FOLLOW_32_in_resource_dec326 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TYPE_in_p_assertion351 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_MAX_in_p_assertion360 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_MIN_in_p_assertion370 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_REGEX_in_p_assertion380 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_CARDINALITY_in_p_assertion389 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_string_in_value405 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_number_in_value410 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_array_in_value415 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_value420 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_BOOLEAN_in_value429 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NUMBER_in_value438 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TRUE_in_value447 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_FALSE_in_value456 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NULL_in_value465 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_String_in_string481 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_Number_in_number502 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_33_in_array521 = new BitSet(new long[]{0x00000002018381A0L});
-    public static final BitSet FOLLOW_elements_in_array523 = new BitSet(new long[]{0x0000000400000000L});
-    public static final BitSet FOLLOW_34_in_array525 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_value_in_elements542 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_COMMA_in_elements545 = new BitSet(new long[]{0x00000002018381A0L});
-    public static final BitSet FOLLOW_value_in_elements548 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_descriptions_in_osl145 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_osl147 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_description_in_descriptions169 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_COMMA_in_descriptions172 = new BitSet(new long[]{0x00000000000C0000L});
+    public static final BitSet FOLLOW_description_in_descriptions175 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_property_dec_in_description192 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_resource_dec_in_description205 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_PROPERTY_in_property_dec230 = new BitSet(new long[]{0x0000000000800000L});
+    public static final BitSet FOLLOW_string_in_property_dec234 = new BitSet(new long[]{0x0000000040000002L});
+    public static final BitSet FOLLOW_30_in_property_dec239 = new BitSet(new long[]{0x0000000100007C00L});
+    public static final BitSet FOLLOW_p_assertion_in_property_dec244 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_property_dec246 = new BitSet(new long[]{0x00000002018381A0L});
+    public static final BitSet FOLLOW_value_in_property_dec248 = new BitSet(new long[]{0x0000000100000200L});
+    public static final BitSet FOLLOW_COMMA_in_property_dec250 = new BitSet(new long[]{0x0000000000007C00L});
+    public static final BitSet FOLLOW_p_assertion_in_property_dec252 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_property_dec254 = new BitSet(new long[]{0x00000002018381A0L});
+    public static final BitSet FOLLOW_value_in_property_dec256 = new BitSet(new long[]{0x0000000100000200L});
+    public static final BitSet FOLLOW_32_in_property_dec265 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RESOURCE_in_resource_dec296 = new BitSet(new long[]{0x0000000000800000L});
+    public static final BitSet FOLLOW_string_in_resource_dec300 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_resource_dec304 = new BitSet(new long[]{0x0000000100040000L});
+    public static final BitSet FOLLOW_property_dec_in_resource_dec309 = new BitSet(new long[]{0x0000000100000200L});
+    public static final BitSet FOLLOW_COMMA_in_resource_dec312 = new BitSet(new long[]{0x0000000000040000L});
+    public static final BitSet FOLLOW_property_dec_in_resource_dec314 = new BitSet(new long[]{0x0000000100000200L});
+    public static final BitSet FOLLOW_32_in_resource_dec323 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TYPE_in_p_assertion348 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_MAX_in_p_assertion357 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_MIN_in_p_assertion367 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_REGEX_in_p_assertion377 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_CARDINALITY_in_p_assertion386 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_string_in_value402 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_number_in_value407 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_array_in_value412 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_value417 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_BOOLEAN_in_value426 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NUMBER_in_value435 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TRUE_in_value444 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_FALSE_in_value453 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NULL_in_value462 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_String_in_string478 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_Number_in_number499 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_33_in_array518 = new BitSet(new long[]{0x00000002018381A0L});
+    public static final BitSet FOLLOW_elements_in_array520 = new BitSet(new long[]{0x0000000400000000L});
+    public static final BitSet FOLLOW_34_in_array522 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_value_in_elements539 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_COMMA_in_elements542 = new BitSet(new long[]{0x00000002018381A0L});
+    public static final BitSet FOLLOW_value_in_elements545 = new BitSet(new long[]{0x0000000000000202L});
 
 }

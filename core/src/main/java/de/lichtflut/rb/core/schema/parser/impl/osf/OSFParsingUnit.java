@@ -83,6 +83,7 @@ public class OSFParsingUnit extends RSParsingUnit {
 		stream.setCaseSensitive(false);
 		OSFLexer lexer = new OSFLexer(stream);
 		lexer.setErrorReporter(errorReporter);
+		if(errorReporter.hasErrorReported()) return output;
 		TokenStream tokens = new CommonTokenStream(lexer);
 		OSFParser parser = new OSFParser(tokens);
 		parser.setErrorReporter(errorReporter);
@@ -90,7 +91,7 @@ public class OSFParsingUnit extends RSParsingUnit {
 		try {
 			osl_return result;
 			result = parser.osl();
-			System.out.println(result.tree.toStringTree());
+			if(errorReporter.hasErrorReported()) return output;
 			treeParser = new OSFTree(new CommonTreeNodeStream(result.tree));
 			treeParser.setErrorReporter(this.errorReporter);
 			de.lichtflut.rb.core.schema.parser.impl.osf.OSFTree.osl_return osl_result = treeParser.osl();

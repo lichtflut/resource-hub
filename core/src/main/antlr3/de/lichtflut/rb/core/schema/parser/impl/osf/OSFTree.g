@@ -13,26 +13,23 @@ options {
  */
 package de.lichtflut.rb.core.schema.parser.impl.osf;
 
-import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
-
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.ElementaryDataType;
-import java.util.HashSet;
-import java.util.Set;
+
 
 
 }
 
 // Optional step: Disable automatic error recovery
 @members {
-
+	private ResourceSchemaImpl resourceSchema = null;
 	private RSErrorReporter errorReporter = null;
     	
     	public void setErrorReporter(RSErrorReporter errorReporter) {
@@ -107,7 +104,8 @@ property_dec returns [PropertyDeclaration pDec]
 	;
 		
 resource_dec returns [ResourceSchema rSchema]
-	: ^(STRING s=string {$rSchema = new ResourceSchemaImpl(s.result);} PROPERTY_DEC
+	: ^(STRING s=string {$rSchema = new ResourceSchemaImpl(s.result);
+	this.resourceSchema = (ResourceSchemaImpl) $rSchema;} PROPERTY_DEC
 	(a=assignment_dec{$rSchema.addPropertyAssertion(a.assertion);})*)
 	;
 
@@ -116,7 +114,9 @@ assignment_dec returns [PropertyAssertionImpl assertion]
 	PropertyDeclarationImpl pDec = new PropertyDeclarationImpl();
 	$assertion = new PropertyAssertionImpl(null,pDec);
 	}
-	: ^(STRING s=string {pDec.setIdentifier(s.result);} PROPERTY_ASSERTION (^(p=p_assertion v=value {OSFEvaluator.evaluateLocalPropertyDec($assertion,p.type,v.obj,this);}))*)
+	: ^(STRING s=string {pDec.setIdentifier(s.result); 
+	$assertion.setPropertyIdentifier(s.result);
+	$assertion.setPropertyDescriptor(new SimpleResourceID($assertion.getQualifiedPropertyIdentifier()));} PROPERTY_ASSERTION (^(p=p_assertion v=value {OSFEvaluator.evaluateLocalPropertyDec($assertion,this.resourceSchema,p.type,v.obj,this);}))*)
 	;
 
 p_assertion returns [String type] 
