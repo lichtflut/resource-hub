@@ -5,10 +5,12 @@ Class-Path: aduna-commons-collections-2.7.0.jar aduna-commons-concurre
  ons-xml-2.6.0.jar antlr-2.7.7.jar antlr-3.1.3.jar antlr-runtime-3.1.3
  .jar arastreju.neo4j-0.5.0-SNAPSHOT.jar arastreju.sge-0.5.0-SNAPSHOT.
  jar geronimo-jta_1.1_spec-1.1.1.jar infra-1.0.7.jar jdom-1.1.jar lf.r
- esource-browser.core.jar lf.resource-browser.webck.jar log4j-1.2.14.j
- ar lucene-core-2.9.2.jar neo4j-index-1.1.jar neo4j-kernel-1.1.jar ses
- ame-model-2.3.2.jar sesame-rio-api-2.3.2.jar sesame-rio-rdfxml-2.3.2.
- jar slf4j-api-1.5.8.jar slf4j-log4j12-1.5.10.jar stringtemplate-3.2.j
- ar wicket-1.5-M3.jar wicket-extensions-1.5-M2.1.jar wicket-request-1.
- 5-M3.jar wicket-util-1.5-M3.jar
+ esource-browser.core-0.1-SNAPSHOT.jar lf.resource-browser.webck-0.1-S
+ NAPSHOT.jar log4j-1.2.14.jar neo4j-1.3.jar neo4j-graph-algo-1.3.jar n
+ eo4j-index-1.3-1.3.M01.jar neo4j-jmx-1.3.jar neo4j-kernel-1.3.jar neo
+ 4j-lucene-index-1.3.jar neo4j-udc-1.3.jar org.apache.servicemix.bundl
+ es.lucene-3.0.1_2.jar sesame-model-2.3.2.jar sesame-rio-api-2.3.2.jar
+  sesame-rio-rdfxml-2.3.2.jar slf4j-api-1.5.8.jar slf4j-log4j12-1.5.10
+ .jar stringtemplate-3.2.jar wicket-1.5-M3.jar wicket-extensions-1.5-M
+ 2.1.jar wicket-request-1.5-M3.jar wicket-util-1.5-M3.jar
 
