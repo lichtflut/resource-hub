@@ -206,7 +206,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	// -----------------------------------------------------
 	
 	public String getErrorMessagesAsString(RSErrorLevel filter) {
-		return this.getErrorMessagesAsString("\n", this.level);
+		return this.getErrorMessagesAsString("\n", filter);
 	}
 
 	// -----------------------------------------------------

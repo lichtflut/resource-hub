@@ -5,17 +5,50 @@
 -->
 <html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd" >
     <head>  
-        <title>ResourceSchema</title>
+        <title>ResourceSchemaManagement</title>
     </head>
     <body>
+       <div id="schemaIN" style="float:left;">
         <strong>Please submit your Resource Schema</strong>
         <form wicket:id = "schemaForm" id = "schemaForm">
-        	<div>
-            	 <textarea wicket:id = "resourceschema">This is a comment</textarea>
-        	</div>
-        	<div>
-        		<input type = "submit" value = "Submit" id="formsubmit"/>
-        	</div>
-        </form>                   
+        <span wicket:id = "schemaErrors" style="color:red;"></span>
+        <span wicket:id = "schemaSuccess" style="color:green;"></span>
+        <table bgcolor="#cccccc" border="1">
+        	<tr>
+        		<th>
+        			Choose your preferred format:
+        		</th>
+        		<td><select wicket:id="formatlist">
+        			<option>Some format</option>
+        			<option>Some other format</option>
+        			</select>
+    			</td>
+    		</tr>
+    		<tr>
+    			<th align="left">
+    				Resource Schema:
+    			</th>	
+        		<td>
+        			<textarea wicket:id = "resourceschema" cols="20" rows="20"></textarea>
+        		</td>
+        	</tr>
+        	<tr>
+        		<td colspan="2">
+        			<input type = "submit" value = "Submit Schema" id="formsubmit"/>
+        		</td>
+        	
+        	</tr>
+        </table>
+        </form>  
+        </div>
+        <div id="schemaOUT" style="float: left">
+        <strong>Your defined schema is listed as follows</strong>
+        
+        <ul>
+        	<li wicket:id="resourcelist"></li>
+        </ul>
+        
+        </div>
+                        
     </body>
 </html>

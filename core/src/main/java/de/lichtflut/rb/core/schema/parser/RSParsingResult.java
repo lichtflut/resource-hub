@@ -131,5 +131,11 @@ public interface RSParsingResult {
 	 * Testcase still exists
 	 */
 	public void merge(RSParsingResult result);
+	
+	/**
+	 * Set the ErrorLevel which is used as default when no other ErrorLevel is explicitly given
+	 * @param lvl
+	 */
+	public void setErrorLevel(RSErrorLevel lvl);
 
 }
