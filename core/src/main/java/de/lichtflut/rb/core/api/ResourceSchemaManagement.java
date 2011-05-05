@@ -107,6 +107,22 @@ public interface ResourceSchemaManagement {
 	// -----------------------------------------------------
 	
 	/**
+	 * returns all the system-defined ResourceSchemas
+	 */
+	public Collection<ResourceSchema> getAllResourceSchemas();
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * returns all the system-defined PropertyDeclarations
+	 */
+	public Collection<PropertyDeclaration> getAllPropertyDeclarations();
+	
+	// -----------------------------------------------------
+	
+	
+	
+	/**
 	 * Stores or overrides the given ResourceSchema
 	 */
 	public void storeOrOverrideResourceSchema(ResourceSchema schema);

@@ -12,7 +12,7 @@ import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.associations.Association;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNUri;
@@ -90,14 +90,31 @@ public class RBSchemaStore {
 		//Load all properties from store
 		LinkedList<PropertyDeclaration> output = new LinkedList<PropertyDeclaration>();
 		QueryManager qManager = this.gate.startConversation().createQueryManager();
-		Collection<Association> assocs = qManager.findIncomingAssociations(RBSchema.PROPERTY_DECL);
-		for (Association association : assocs) {
-			if(association==null) continue;
-			output.add(convert(new SNPropertyDeclaration(association.getSupplier())));
+		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.PROPERTY_DECL);
+		for (Statement stmt : statements) {
+			if(stmt==null) continue;
+			output.add(convert(new SNPropertyDeclaration((ResourceNode) stmt.getSubject())));
 		}
-		
 		return output;
 	}
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * Loads all defined and persisted ResourceSchema'S from System
+	 */
+	public Collection<ResourceSchema> loadAllResourceSchemas(final Context ctx){
+		//Load all properties from store
+		LinkedList<ResourceSchema> output = new LinkedList<ResourceSchema>();
+		QueryManager qManager = this.gate.startConversation().createQueryManager();
+		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.DESCRIBES);
+		for (Statement stmt : statements) {
+			if(stmt==null) continue;
+			output.add(convert(new SNResourceSchema((ResourceNode) stmt.getSubject())));
+		}
+		return output;
+	}
+	
 	
 	// -----------------------------------------------------
 	

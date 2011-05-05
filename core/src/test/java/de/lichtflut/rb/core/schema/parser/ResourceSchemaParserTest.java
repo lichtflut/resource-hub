@@ -7,8 +7,6 @@ import java.io.IOException;
 import org.antlr.runtime.RecognitionException;
 import junit.framework.TestCase;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 

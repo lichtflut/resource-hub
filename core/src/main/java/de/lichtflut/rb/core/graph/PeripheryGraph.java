@@ -14,9 +14,10 @@ package de.lichtflut.rb.core.graph;
  *
  * @author Oliver Tigges
  */
-@SuppressWarnings("rawtypes")
+
 public class PeripheryGraph {
 	
+	@SuppressWarnings("unchecked")
 	private Vertex root;
 	
 	// -----------------------------------------------------
@@ -24,6 +25,7 @@ public class PeripheryGraph {
 	/**
 	 * @return the root
 	 */
+	@SuppressWarnings("unchecked")
 	public Vertex getRoot() {
 		return root;
 	}
@@ -31,6 +33,7 @@ public class PeripheryGraph {
 	/**
 	 * @param root the root to set
 	 */
+	@SuppressWarnings("unchecked")
 	public void setRoot(Vertex root) {
 		this.root = root;
 	}

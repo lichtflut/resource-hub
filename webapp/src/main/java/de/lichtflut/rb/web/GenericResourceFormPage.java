@@ -13,10 +13,12 @@ public class GenericResourceFormPage extends WebPage {
 
 	private static final long serialVersionUID = 1L;
 
-
+	public GenericResourceFormPage(){
+		this(null);
+	}
 
 	public GenericResourceFormPage(final PageParameters parameters) {
-
-        // Add the simplest type of label
+		
+        
 	}
 }

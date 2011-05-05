@@ -223,6 +223,18 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 			storeOrOverrideResourceSchema(schema);
 		}
 	}
+
+	// -----------------------------------------------------
+	
+	public Collection<PropertyDeclaration> getAllPropertyDeclarations() {
+		return this.store.loadAllPropertyDeclarations(null);
+	}
+
+	// -----------------------------------------------------
+	
+	public Collection<ResourceSchema> getAllResourceSchemas() {
+		return this.store.loadAllResourceSchemas(null);
+	}
 	
 	// -----------------------------------------------------
 

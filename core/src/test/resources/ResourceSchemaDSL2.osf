@@ -10,7 +10,7 @@ ReSoURCE "http://lichtflut.de#testResource1"{
 
 },
 
-reSource "http://lichtflut.de#1testResource2"{
+reSource "http://lichtflut.de#testResource2"{
 	PROPERTY "http://lichtflut.de#Wohnort"{
 		CARDINALITY=[0,5]
 	}

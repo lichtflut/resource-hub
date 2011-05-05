@@ -60,7 +60,8 @@ public final class OSFEvaluator {
      * @param value
      * @param tree
      */
-    public static void evaluateLocalPropertyDec(final PropertyAssertionImpl assertion,final ResourceSchema schema, final String type, final Object value, OSFTree tree) {
+    @SuppressWarnings("unchecked")
+	public static void evaluateLocalPropertyDec(final PropertyAssertionImpl assertion,final ResourceSchema schema, final String type, final Object value, OSFTree tree) {
     
     	PropertyDeclaration pDec = assertion.getPropertyDeclaration();
     	String errorMessage = "Inner Property#" + pDec.getName()+ ": ";
@@ -85,7 +86,6 @@ public final class OSFEvaluator {
 				tree.emitErrorMessage(errorMessage + value.toString() + " is not a valid argument for " + type + " expecting a single numerical value");
 			}
 		}else if(typeLower.contains("cardinality")){
-			Cardinality c;
 			if(value instanceof List){
 				List values = (List) value;
 				if(values.size()!=2){

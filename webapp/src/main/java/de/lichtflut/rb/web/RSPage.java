@@ -102,6 +102,8 @@ public class RSPage extends WebPage {
     				schemaErrors.setVisible(false);
     				schemaSuccess.setVisible(true);
     				schemaSuccess.setDefaultModelObject("Your given schema has been successfully stored");
+    				//rManagement.storeOrOverridePropertyDeclaration(result.getPropertyDeclarations());
+    				//rManagement.storeOrOverrideResourceSchema(result.getResourceSchemas());
     				this.getSession().setAttribute("resourceSchema",(Serializable) result.getResourceSchemas());
     				updateResourceList();
     			}
@@ -119,14 +121,16 @@ public class RSPage extends WebPage {
 	}
 
     
-    @SuppressWarnings({ "unchecked", "deprecation" })
+    @SuppressWarnings({ "deprecation", "unchecked" })
 	private void updateResourceList(){
-    	resourceList.removeAll();
-    	Collection<ResourceSchema> resourceSchemas = (Collection<ResourceSchema>) this.getSession().getAttribute("resourceSchema");
+    	resourceList.removeAll();	
+    	//Collection<ResourceSchema> resourceSchemas = rManagement.getAllResourceSchemas();
+    	Collection<ResourceSchema> resourceSchemas =
+    		(Collection<ResourceSchema>) this.getSession().getAttribute("resourceSchema");
 		if(resourceSchemas==null) resourceSchemas = new ArrayList<ResourceSchema>();
 		for (ResourceSchema resourceSchema : resourceSchemas) {
 			CharSequence url = urlFor(GenericResourceFormPage.class, new PageParameters("resourceid=" + resourceSchema.getResourceID().getQualifiedName().toURI()));
-			resourceList.add(new ExternalLink(resourceList.newChildId(), url.toString(),resourceSchema.getResourceID().getQualifiedName().getSimpleName()));
+			resourceList.add(new ExternalLink(resourceList.newChildId(), url.toString(),resourceSchema.getResourceID().getQualifiedName().getSimpleName()).setPopupSettings(null));
 		}
 		resourceList.modelChanged();
     }

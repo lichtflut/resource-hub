@@ -19,6 +19,14 @@ public class RBApplication extends WebApplication {
 	public RBApplication() {
 	}
 	
+	
+    protected void init() {
+        super.init();
+        mountPage("/RSSchema", RSPage.class);
+        mountPage("/Resource", GenericResourceFormPage.class);
+    }
+
+	
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
