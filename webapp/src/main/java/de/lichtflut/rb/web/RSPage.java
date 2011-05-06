@@ -8,24 +8,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import javax.security.auth.kerberos.ServicePermission;
-
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.RepeatingView;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.value.ValueMap;
-import org.arastreju.sge.model.nodes.views.ResourceView;
 
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -33,8 +25,7 @@ import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
-import de.lichtflut.rb.core.spi.impl.DefaultRBServiceProvider;
-import de.lichtflut.rb.web.components.ComponentFactory;
+
 
 /**
  * <p>
@@ -68,7 +59,7 @@ public class RSPage extends WebPage {
 
 	//-------------------------------------------
 
-    @SuppressWarnings({ "unchecked", "serial", "deprecation" })
+    @SuppressWarnings({ "unchecked", "serial" })
 	private void init(PageParameters parameters) {
     
     	final Label schemaErrors = new Label("schemaErrors", new Model<String>(""));
