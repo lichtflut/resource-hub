@@ -64,7 +64,8 @@ public class RSPage extends WebPage {
     
     	final Label schemaErrors = new Label("schemaErrors", new Model<String>(""));
     	schemaErrors.setEscapeModelStrings(false);
-    	final Label schemaSuccess = new Label("schemaSuccess", new Model<String>(""));
+    	final Label schemaSuccess = new Label("schemaSuccess", new Model<String>(""));   	
+    	
     	final TextArea<String> area = new TextArea<String>("resourceschema", Model.of("Insert your schema here"));
     	final DropDownChoice ddc = 
             new DropDownChoice ("formatlist",Model.of(""), new CollectionModel<RSFormat>(Arrays.asList(RSFormat.values())));
