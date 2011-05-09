@@ -5,7 +5,6 @@ package de.lichtflut.rb.web;
 
 import java.util.Collection;
 
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.web.components.GenericFormPanel;
@@ -13,7 +12,7 @@ import de.lichtflut.rb.web.components.GenericFormPanel;
 /**
  * TODO: to comment
  */
-public class GenericResourceFormPage extends WebPage {
+public class GenericResourceFormPage extends RBSuperPage {
 
 	private static final long serialVersionUID = 1L;
 

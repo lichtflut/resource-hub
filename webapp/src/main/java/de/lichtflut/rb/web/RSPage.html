@@ -29,7 +29,7 @@
     				Resource Schema:
     			</th>	
         		<td>
-        			<textarea wicket:id = "resourceschema" cols="20" rows="20"></textarea>
+        			<textarea wicket:id = "resourceschema" cols="30" rows="40"></textarea>
         		</td>
         	</tr>
         	<tr>
@@ -41,12 +41,16 @@
         </table>
         </form>  
         </div>
-        <div id="schemaOUT" style="float: left">
+        <div id="schemaOUT" style="float: left;">
         <strong>Your defined schema is listed as follows</strong>
         
-        <ul>
-        	<li wicket:id="resourcelist"></li>
-        </ul>
+        <div style="border:dashed;">
+        
+        	<ul>
+        		<li wicket:id="resourcelist"></li>
+        	</ul>
+        
+       	 </div>
         
         </div>
                         

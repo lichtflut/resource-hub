@@ -30,8 +30,8 @@ public class RBApplication extends WebApplication {
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class<HomePage> getHomePage() {
-		return HomePage.class;
+	public Class<RSPage> getHomePage() {
+		return RSPage.class;
 	}
 
 }

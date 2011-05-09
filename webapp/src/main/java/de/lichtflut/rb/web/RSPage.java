@@ -3,12 +3,9 @@
  */
 package de.lichtflut.rb.web;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -18,13 +15,11 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
-import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 
 
 /**
@@ -38,10 +33,9 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
  *
  * @author Nils Bleisch
  */
-public class RSPage extends WebPage {
+public class RSPage extends RBSuperPage {
 
-	private final ResourceSchemaManagement rManagement =
-			RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
+	private final ResourceSchemaManagement rManagement = this.getServiceProvider().getResourceSchemaManagement();
 	
 	private final RepeatingView resourceList =  new RepeatingView("resourcelist");
 ;
@@ -52,9 +46,6 @@ public class RSPage extends WebPage {
 	public RSPage(final PageParameters parameters) {
 		super(parameters);
 		init(parameters);
-		
-		
-		
 	}
 
 	//-------------------------------------------
@@ -117,9 +108,9 @@ public class RSPage extends WebPage {
 		if(resourceSchemas==null) resourceSchemas = new ArrayList<ResourceSchema>();
 		for (ResourceSchema resourceSchema : resourceSchemas) {
 			PageParameters params = new PageParameters();
-			params.add("resourceid", resourceSchema.getResourceID().getQualifiedName().toURI());
+			params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
 			CharSequence url = urlFor(GenericResourceFormPage.class, params);
-			resourceList.add(new ExternalLink(resourceList.newChildId(), url.toString(),resourceSchema.getResourceID().getQualifiedName().getSimpleName()).setPopupSettings(null));
+			resourceList.add(new ExternalLink(resourceList.newChildId(), url.toString(),resourceSchema.getDescribedResourceID().getQualifiedName().getSimpleName()).setPopupSettings(null));
 		}
 		resourceList.modelChanged();
     }

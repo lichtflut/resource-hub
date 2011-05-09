@@ -17,7 +17,7 @@ public class TestHomePage extends TestCase
 	@Override
 	public void setUp()
 	{
-		tester = new WicketTester(new WicketApplication());
+		tester = new WicketTester(new RBApplication());
 	}
 
 	public void testRenderMyPage()

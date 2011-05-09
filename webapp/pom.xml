@@ -18,6 +18,9 @@
 		<wicket.version>1.5-M3</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
 		<wiquery.version>1.5-M1</wiquery.version>
+		<!-- The beta version is chosen, because the Tomcat servlet container does only run with this version
+		 //-->
+		<weld.version>1.1.0.Beta1</weld.version>
 	</properties>
 	
 	<dependencies>
@@ -27,6 +30,13 @@
 			<artifactId>lf.resource-browser.core</artifactId>
 			<version>${version}</version>
 		</dependency>
+	<!--
+	<dependency>
+    	<groupId>org.jboss.weld.servlet</groupId>
+    	<artifactId>weld-servlet</artifactId>
+    	<version>${weld.version}</version>
+	</dependency>
+	//-->	
 		
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
@@ -65,6 +75,11 @@
 			<artifactId>jetty-management</artifactId>
 			<version>${jetty.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.weld</groupId>
+			<artifactId>weld-spi</artifactId>
+			<version>1.0-SP1</version>
 		</dependency>
 	</dependencies>
 	<build>
