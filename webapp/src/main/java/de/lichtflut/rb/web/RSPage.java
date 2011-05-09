@@ -35,10 +35,10 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
  */
 public class RSPage extends RBSuperPage {
 
-	private final ResourceSchemaManagement rManagement = this.getServiceProvider().getResourceSchemaManagement();
+	private  final ResourceSchemaManagement rManagement = this.getServiceProvider().getResourceSchemaManagement();
 	
 	private final RepeatingView resourceList =  new RepeatingView("resourcelist");
-;
+
 	
 	/**
 	 * @param parameters
@@ -51,8 +51,7 @@ public class RSPage extends RBSuperPage {
 	//-------------------------------------------
 
     @SuppressWarnings({ "unchecked", "serial" })
-	private void init(PageParameters parameters) {
-    
+	private void init(PageParameters parameters) { 
     	final Label schemaErrors = new Label("schemaErrors", new Model<String>(""));
     	schemaErrors.setEscapeModelStrings(false);
     	final Label schemaSuccess = new Label("schemaSuccess", new Model<String>(""));   	

@@ -6,29 +6,33 @@ package de.lichtflut.rb.web;
 import java.util.Collection;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.web.components.GenericFormPanel;
 
 /**
  * TODO: to comment
+ * 
+ * @author Nils Bleisch
  */
 public class GenericResourceFormPage extends RBSuperPage {
 
 	private static final long serialVersionUID = 1L;
 
+	private ResourceSchemaManagement rManagement = this.getServiceProvider().getResourceSchemaManagement();
+	
 	public GenericResourceFormPage(){
 		this(null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public GenericResourceFormPage(final PageParameters parameters) {
 		ResourceSchema schema=null;
 		String identifier = parameters.get("resourceid").toString();
-		Collection<ResourceSchema> resourceSchemas =
-			(Collection<ResourceSchema>) this.getSession().getAttribute("resourceSchema");
+		Collection<ResourceSchema> resourceSchemas = rManagement.getAllResourceSchemas();
 		if(resourceSchemas!=null){
 			for (ResourceSchema resourceSchema : resourceSchemas) {
-				if(resourceSchema.getResourceID().getQualifiedName().toURI().equals(identifier)){
+				if(resourceSchema.getDescribedResourceID().getQualifiedName().toURI().equals(identifier)){
 					schema = resourceSchema;
 				}
 			}
