@@ -173,7 +173,7 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	
 	public String getPropertyIdentifier() {
 		if(this.propertyIdentifier==null) return null;
-		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isQname(this.propertyIdentifier)))
+		if(!(QualifiedName.isUri(this.propertyIdentifier)))
 			return  new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier).toURI();
 		return this.propertyIdentifier;
 	}

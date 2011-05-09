@@ -94,9 +94,9 @@ public class RSPage extends WebPage {
     				schemaErrors.setVisible(false);
     				schemaSuccess.setVisible(true);
     				schemaSuccess.setDefaultModelObject("Your given schema has been successfully stored");
-    				//rManagement.storeOrOverridePropertyDeclaration(result.getPropertyDeclarations());
-    				//rManagement.storeOrOverrideResourceSchema(result.getResourceSchemas());
-    				this.getSession().setAttribute("resourceSchema",(Serializable) result.getResourceSchemas());
+    				rManagement.storeOrOverridePropertyDeclaration(result.getPropertyDeclarations());
+    				rManagement.storeOrOverrideResourceSchema(result.getResourceSchemas());
+    				//this.getSession().setAttribute("resourceSchema",(Serializable) result.getResourceSchemas());
     				updateResourceList();
     			}
     		}
@@ -116,9 +116,9 @@ public class RSPage extends WebPage {
     @SuppressWarnings({ "deprecation", "unchecked" })
 	private void updateResourceList(){
     	resourceList.removeAll();	
-    	//Collection<ResourceSchema> resourceSchemas = rManagement.getAllResourceSchemas();
-    	Collection<ResourceSchema> resourceSchemas =
-    		(Collection<ResourceSchema>) this.getSession().getAttribute("resourceSchema");
+    	Collection<ResourceSchema> resourceSchemas = rManagement.getAllResourceSchemas();
+    	//Collection<ResourceSchema> resourceSchemas =
+    	//	(Collection<ResourceSchema>) this.getSession().getAttribute("resourceSchema");
 		if(resourceSchemas==null) resourceSchemas = new ArrayList<ResourceSchema>();
 		for (ResourceSchema resourceSchema : resourceSchemas) {
 			CharSequence url = urlFor(GenericResourceFormPage.class, new PageParameters("resourceid=" + resourceSchema.getResourceID().getQualifiedName().toURI()));

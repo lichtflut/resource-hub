@@ -75,6 +75,10 @@ public class RBSchemaStoreTest {
 		 Assert.assertEquals(3, schema2.getPropertyAssertions().size());
 		 
 		 
+		 Collection<ResourceSchema> schemas = store.loadAllResourceSchemas(null);
+		 Assert.assertEquals(1,schemas.size());
+		 
+		 
 		 System.out.println("----------------");
 		 pDecs = store.loadAllPropertyDeclarations(null);
 		 System.out.println("Amount of stored PropertyDeclarations : " + pDecs.size());

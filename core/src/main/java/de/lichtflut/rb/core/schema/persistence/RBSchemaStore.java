@@ -62,7 +62,7 @@ public class RBSchemaStore {
 	 * @return The corresponding persistence Resource Schema Node.
 	 */
 	public SNResourceSchema store(final ResourceSchema schema, Context ctx) {
-		final SNResourceSchema snSchema = new SNResourceSchema();
+		final SNResourceSchema snSchema = new SNResourceSchema(ctx);
 		snSchema.setDescribedClass(schema.getResourceID(), ctx);
 		
 		final ModelingConversation mc = gate.startConversation();
@@ -107,7 +107,7 @@ public class RBSchemaStore {
 		//Load all properties from store
 		LinkedList<ResourceSchema> output = new LinkedList<ResourceSchema>();
 		QueryManager qManager = this.gate.startConversation().createQueryManager();
-		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.DESCRIBES);
+		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.ACTIVITY_CLASS);
 		for (Statement stmt : statements) {
 			if(stmt==null) continue;
 			output.add(convert(new SNResourceSchema((ResourceNode) stmt.getSubject())));
