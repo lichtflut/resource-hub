@@ -33,7 +33,8 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 public final class ResourceSchemaImpl implements ResourceSchema{
 
 	//Instance members
-	private ResourceID resource;
+	private ResourceID internalResource;
+	private ResourceID describedResource;
 	//LinkedList is chosen because it's more flexible compared to an index-driven list
 	private final List<PropertyAssertion> propertyList = new LinkedList<PropertyAssertion>();
 	
@@ -48,7 +49,7 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	 */
 	public ResourceSchemaImpl(){
 		//Generates a SimpleResourceID instance with an random UUID for namespace and identifier each
-		this.resource = new SimpleResourceID(
+		this.describedResource = new SimpleResourceID(
 				UUID.randomUUID().toString(),
 				UUID.randomUUID().toString());
 	}
@@ -57,11 +58,12 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	
 	/**
 	 * <p>
-	 * Constructor takes as argument an identifier which will define the ResourceIdentifier
+	 * Constructor takes as argument the internal ResourceID of this schema
+	 * This is necessary to make some override operations, instead of persisting a new schema in store
 	 * </p>
 	 */
 	public ResourceSchemaImpl(ResourceID id){
-		this.resource = id;
+		this.internalResource = id;
 	}
 	
 	// -----------------------------------------------------
@@ -72,9 +74,9 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	 * </p>
 	 */
 	public ResourceSchemaImpl(final String nsUri, final String name) throws IllegalArgumentException{
-		if(!(QualifiedName.isUri(nsUri + name) || QualifiedName.isUri(nsUri + name)))
+		if(!(QualifiedName.isUri(nsUri + name)))
 			throw new IllegalArgumentException("The identifier " + nsUri + name + " is not a valid URI");
-		this.resource = new SimpleResourceID(nsUri, name);
+		this.describedResource = new SimpleResourceID(nsUri, name);
 	}
 	
 	/**
@@ -83,10 +85,10 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	 * </p>
 	 */
 	public ResourceSchemaImpl(final String name){
-		if(!(QualifiedName.isUri(name) || QualifiedName.isUri(name)))
-			this.resource = new SimpleResourceID(new QualifiedName(VoidNamespace.getInstance(),name));
+		if(!(QualifiedName.isUri(name)))
+			this.describedResource = new SimpleResourceID(new QualifiedName(VoidNamespace.getInstance(),name));
 		else
-			this.resource = new SimpleResourceID(new QualifiedName(name));
+			this.describedResource = new SimpleResourceID(new QualifiedName(name));
 	}
 	
 	// -----------------------------------------------------
@@ -100,7 +102,7 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	 * @see de.lichtflut.rb.core.schema.model.ResourceSchema#getResourceID()
 	 */
 	public ResourceID getResourceID() {
-		return this.resource;
+		return this.internalResource;
 	}
 
 	// -----------------------------------------------------
@@ -112,7 +114,8 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	public String toString(){
 		
 		StringBuffer sBuffer = new StringBuffer();
-		sBuffer.append("ResourceID " + getResourceID().getQualifiedName().toURI() + "\n");
+		sBuffer.append("Described ResourceID " + getDescribedResourceID().getQualifiedName().toURI() + "\n");
+		sBuffer.append("Internal ResourceID " + ((getResourceID()==null) ? "null" : getResourceID().getQualifiedName().toURI()) + "\n");
 		for (PropertyAssertion property : getPropertyAssertions()) {
 			sBuffer.append("--p-r-o-p-e-r-t-y--\n" + property.toString() + "\n");
 		}
@@ -139,7 +142,7 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	@Override
 	public boolean equals(Object obj){
 		if(!(obj instanceof ResourceSchema)) return false;
-		return this.resource.getQualifiedName().toURI().equals(((ResourceSchema) obj).getResourceID().getQualifiedName().toURI());
+		return getDescribedResourceID().getQualifiedName().toURI().equals(((ResourceSchema) obj).getDescribedResourceID().getQualifiedName().toURI());
 	}
 
 	// -----------------------------------------------------
@@ -148,6 +151,18 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	public boolean isResolved() {
 		for (PropertyAssertion assertion : this.propertyList) if(!assertion.isResolved()) return false;
 		return true;
+	}
+
+	// -----------------------------------------------------
+	
+	
+	public ResourceID getDescribedResourceID() {
+		return this.describedResource;
+	}
+
+	
+	public void setDescribedResourceID(ResourceID id) {
+		this.describedResource = id;
 	}
 
 

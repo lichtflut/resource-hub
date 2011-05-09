@@ -62,8 +62,13 @@ public class RBSchemaStore {
 	 * @return The corresponding persistence Resource Schema Node.
 	 */
 	public SNResourceSchema store(final ResourceSchema schema, Context ctx) {
-		final SNResourceSchema snSchema = new SNResourceSchema(ctx);
-		snSchema.setDescribedClass(schema.getResourceID(), ctx);
+		final SNResourceSchema snSchema;
+		if(schema.getResourceID()!=null){
+			snSchema = new SNResourceSchema(schema.getResourceID().asResource());
+		}else{
+			snSchema = new SNResourceSchema(ctx);
+		}
+		snSchema.setDescribedClass(schema.getDescribedResourceID(), ctx);
 		
 		final ModelingConversation mc = gate.startConversation();
 		
@@ -160,8 +165,8 @@ public class RBSchemaStore {
 	// -----------------------------------------------------
 	
 	public ResourceSchema convert(final SNResourceSchema snSchema) {
-		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema.getQualifiedName().toURI());
-		
+		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema);
+		schema.setDescribedResourceID(snSchema.getDescribedClass());
 		for (SNPropertyAssertion snAssertion : snSchema.getPropertyAssertions()){
 			
 			// create Property Declaration
