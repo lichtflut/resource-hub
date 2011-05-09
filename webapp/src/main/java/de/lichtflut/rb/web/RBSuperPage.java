@@ -29,13 +29,21 @@ public abstract class RBSuperPage extends WebPage {
 	
 	private static RBServiceProvider provider =null;
 	
+	/**
+	 * Singleton pattern: There will be only one instance per runtime
+	 * @return {@link RBServiceProvider}
+	 */
 	public static RBServiceProvider  getServiceProvider(){
 		if(provider==null) provider= RBServiceProviderFactory.getDefaultServiceProvider();
 		return provider;
 	}
 	
-	//Constructor
+	// -----------------------------------------------------
 	
+	//Constructors
+	/**
+	 * Takes PageParamertes as argument
+	 */
 	public RBSuperPage(PageParameters params){
 		super(params);
 	}

@@ -20,12 +20,16 @@ public class GenericResourceFormPage extends RBSuperPage {
 
 	private static final long serialVersionUID = 1L;
 
-	private ResourceSchemaManagement rManagement = this.getServiceProvider().getResourceSchemaManagement();
-	
+	private ResourceSchemaManagement rManagement = getServiceProvider().getResourceSchemaManagement();
+	/**
+	 * Default Constructor, setting PageParameters to null
+	 */
 	public GenericResourceFormPage(){
 		this(null);
 	}
 
+	// -----------------------------------------------------
+	
 	public GenericResourceFormPage(final PageParameters parameters) {
 		ResourceSchema schema=null;
 		String identifier = parameters.get("resourceid").toString();

@@ -35,7 +35,7 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
  */
 public class RSPage extends RBSuperPage {
 
-	private  final ResourceSchemaManagement rManagement = this.getServiceProvider().getResourceSchemaManagement();
+	private  final ResourceSchemaManagement rManagement = getServiceProvider().getResourceSchemaManagement();
 	
 	private final RepeatingView resourceList =  new RepeatingView("resourcelist");
 
@@ -100,6 +100,8 @@ public class RSPage extends RBSuperPage {
 		updateResourceList();
 	}
 
+    
+	// -----------------------------------------------------
     
 	private void updateResourceList(){
     	resourceList.removeAll();	
