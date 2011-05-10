@@ -5,6 +5,7 @@ package de.lichtflut.rb.web;
 
 import javax.inject.Inject;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import de.lichtflut.rb.builders.SessionBuilder;
@@ -28,7 +29,7 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 public abstract class RBSuperPage extends WebPage {
 	
 	private static RBServiceProvider provider =null;
-	
+	private String title;
 	/**
 	 * Singleton pattern: There will be only one instance per runtime
 	 * @return {@link RBServiceProvider}
@@ -44,8 +45,10 @@ public abstract class RBSuperPage extends WebPage {
 	/**
 	 * Takes PageParamertes as argument
 	 */
-	public RBSuperPage(PageParameters params){
+	public RBSuperPage(String title, PageParameters params){
 		super(params);
+		this.title = title;
+		init();
 	}
 	
 	// -----------------------------------------------------
@@ -53,8 +56,16 @@ public abstract class RBSuperPage extends WebPage {
 	/**
 	 * Default constructor
 	 */
-	public RBSuperPage(){
+	public RBSuperPage(String title){
 		super();
+		this.title = title;
+		init();
+	}
+	
+	// -----------------------------------------------------
+	
+	public void init(){
+		add(new Label("title", title));
 	}
 	
 	// -----------------------------------------------------

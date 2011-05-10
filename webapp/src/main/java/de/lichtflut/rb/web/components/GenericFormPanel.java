@@ -4,12 +4,14 @@
 package de.lichtflut.rb.web.components;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEventSink;
+import org.apache.wicket.extensions.ajax.markup.html.WicketAjaxIndicatorAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -117,6 +119,7 @@ public class GenericFormPanel extends Panel {
 				private Fragment getFragmentForAssertion(PropertyAssertion assertion){
 					  PropertyDeclaration decl = assertion.getPropertyDeclaration();
 					  Fragment fragment=null;
+					  
 					  switch(decl.getElementaryDataType()){
 					  	case BOOLEAN : fragment = addCheckBoxFragment(decl); break;
 					  	case STRING : fragment = addTextBoxFragment(decl); break;
@@ -126,8 +129,6 @@ public class GenericFormPanel extends Panel {
 					  	case DATE : fragment = addCalendarFragment(decl); break;
 					  }
 					
-				      fragment = new Fragment("propertyInput","textInput", this);
-				      fragment.add(new TextField<String>("text", Model.of("")));
 				      return fragment;
 				}
 
@@ -136,9 +137,12 @@ public class GenericFormPanel extends Panel {
 				-------------------------------------------------------*/
 				
 				private Fragment addCalendarFragment(PropertyDeclaration decl) {
-					Fragment fragment = new Fragment("propertyInput","textInput", this);
-				     fragment.add(new TextField<String>("text", Model.of("")));
-				     return fragment;
+					Fragment fragment = new Fragment("propertyInput","dateInput", this);
+					TextField field = new TextField("dateField", Date.class);
+					fragment.add(field);
+					//org.apache.wicket.extensions.
+					//fragment.add(new DatePicker("dateFieldPicker", field));
+				    return fragment;
 				}
 
 				// -----------------------------------------------------

@@ -31,6 +31,7 @@ public class GenericResourceFormPage extends RBSuperPage {
 	// -----------------------------------------------------
 	
 	public GenericResourceFormPage(final PageParameters parameters) {
+		super("Resource " + parameters.get("resourceid"), parameters);
 		ResourceSchema schema=null;
 		String identifier = parameters.get("resourceid").toString();
 		Collection<ResourceSchema> resourceSchemas = rManagement.getAllResourceSchemas();

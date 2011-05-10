@@ -24,7 +24,10 @@
    				 <a href="#" wicket:id="addRow">Add row</a>
    				 </td>
    				 		<wicket:fragment wicket:id="textInput"><input  type="text" wicket:id="text" /></wicket:fragment>
-   				 		<wicket:fragment wicket:id="dateInput"><input  type="text" wicket:id="text" /></wicket:fragment>
+   				 		<wicket:fragment wicket:id="dateInput">
+   				 			<input  type="text" wicket:id="text" />
+   				 			<span wicket:id="dateFieldPicker"></span>
+   				 		</wicket:fragment>
    				 		<wicket:fragment wicket:id="referenceInput"><input  type="text" wicket:id="text" /></wicket:fragment>
    				 		<wicket:fragment wicket:id="checkboxInput"><input  type="checkbox" wicket:id="checkbox" /></wicket:fragment>
   			</tr>

@@ -10,7 +10,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.CollectionModel;
@@ -44,7 +45,7 @@ public class RSPage extends RBSuperPage {
 	 * @param parameters
 	 */
 	public RSPage(final PageParameters parameters) {
-		super(parameters);
+		super("Resource Schema", parameters);
 		init(parameters);
 	}
 
@@ -95,9 +96,8 @@ public class RSPage extends RBSuperPage {
     	form.add(area);
     	form.add(schemaSuccess.setVisible(false));
     	form.add(schemaErrors.setVisible(false));
+    	updateResourceList();
 		this.add(resourceList);
-		
-		updateResourceList();
 	}
 
     
@@ -110,11 +110,15 @@ public class RSPage extends RBSuperPage {
 		for (ResourceSchema resourceSchema : resourceSchemas) {
 			PageParameters params = new PageParameters();
 			params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
-			CharSequence url = urlFor(GenericResourceFormPage.class, params);
-			resourceList.add(new ExternalLink(resourceList.newChildId(), url.toString(),resourceSchema.getDescribedResourceID().getQualifiedName().getSimpleName()).setPopupSettings(null));
+			Fragment fragment = new Fragment(resourceList.newChildId(),"listPanel",this);
+			fragment.add(new BookmarkablePageLink<GenericResourceFormPage>("link",GenericResourceFormPage.class, params).
+					add(new Label("linkLabel",resourceSchema.getDescribedResourceID().getQualifiedName().getSimpleName())));
+			resourceList.add(fragment);
+			
 		}
 		resourceList.modelChanged();
     }
     
+
 	
 }
