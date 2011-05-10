@@ -9,7 +9,8 @@ RESOURCE "http://lichtflut.de#Mitarbeiter"{
 	
     PROPERTY "checkbox"{
 		CARDINALITY=[1,1],
-		TYPE = BOOLEAN
+		TYPE=BOOLEAN
+
 	},
 	
 	PROPERTY "http://lichtflut.de#Geburtsjahr"{
@@ -26,6 +27,11 @@ RESOURCE "http://lichtflut.de#Mitarbeiter"{
 	PROPERTY "http://lichtflut.de#MaximumStuff"{
 		MAX=3
 	}
+},
+
+
+PROPERTY "checkbox"{
+	TYPE = BOOLEAN
 },
 
 

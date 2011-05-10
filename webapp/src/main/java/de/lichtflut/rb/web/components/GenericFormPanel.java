@@ -88,8 +88,17 @@ public class GenericFormPanel extends Panel {
 			        item.add(inputList);
 			          
 			        AjaxSubmitLink addLink = new AjaxSubmitLink("addRow", form) {
+			        	   int max = assertion.getCardinality().getMaxOccurs();
+			        	   int min = assertion.getCardinality().getMinOccurs();
+			        	   int current = assertion.getCardinality().getMinOccurs();
+			        		
 			        	   @Override
 			        	   public void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			        		if(current<max){
+			        			current+=1;
+			        		}else{
+			        			//do nothing
+			        		}
 			       	        WebMarkupContainer container = new WebMarkupContainer(inputList.newChildId());
 			       	        container.setOutputMarkupId(true);
 					        container.add(getFragmentForAssertion(assertion));

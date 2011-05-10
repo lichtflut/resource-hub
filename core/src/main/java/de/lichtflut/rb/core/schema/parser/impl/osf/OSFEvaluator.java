@@ -3,6 +3,9 @@ package de.lichtflut.rb.core.schema.parser.impl.osf;
 import java.util.List;
 
 import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -62,7 +65,10 @@ public final class OSFEvaluator {
      */
     @SuppressWarnings("unchecked")
 	public static void evaluateLocalPropertyDec(final PropertyAssertionImpl assertion,final ResourceSchema schema, final String type, final Object value, OSFTree tree) {
-    
+    	ResourceID descriptor = assertion.getPropertyDescriptor();
+		if(!(descriptor.getQualifiedName().getSimpleName().startsWith("has"))){
+			assertion.setPropertyDescriptor(new SimpleResourceID(new QualifiedName(descriptor.getNamespace().getUri(),"has" + descriptor.getQualifiedName().getSimpleName())));
+		}
     	PropertyDeclaration pDec = assertion.getPropertyDeclaration();
     	String errorMessage = "Inner Property#" + pDec.getName()+ ": ";
 		String typeLower = type.toLowerCase();

@@ -119,6 +119,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 					result.addErrorMessage("Wasnt able to resolve PropertyDeclaration for " + assertionPDec.getIdentifierString());
 					continue;
 				}
+				String propertyIdentifier = assertion.getPropertyIdentifier();
 				PropertyDeclaration persistedPDec = persistedPDecsHash.get(assertion.getPropertyDeclaration().getIdentifierString());
 				//This must be a new or inherited property
 				if(persistedPDec == null){
