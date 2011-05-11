@@ -60,7 +60,13 @@ public class RBSchemaStore {
 	 * @return The corresponding persistence Resource Schema Node.
 	 */
 	public SNResourceSchema store(final ResourceSchema schema, Context ctx) {
-		final SNResourceSchema snSchema;
+		/*
+		 * How can we check if this schema does exists, and if so, replace it with the new one
+		 * SNResourceSchema snSchema = loadSchemaForResource(schema.getDescribedResourceID());
+		 * 
+		 * 
+		 */
+		SNResourceSchema snSchema;
 		if(schema.getResourceID()!=null){
 			snSchema = new SNResourceSchema(schema.getResourceID().asResource());
 		}else{
@@ -152,7 +158,7 @@ public class RBSchemaStore {
 	}
 	
 	public SNResourceSchema loadSchemaForResource(final ResourceID clazz) {
-		throw new NotYetImplementedException();
+		return null;
 	}
 	
 	// -----------------------------------------------------
