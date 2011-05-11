@@ -10,11 +10,11 @@
 <wicket:panel>
     <strong><span wicket:id="title"></span></strong>
 	<form wicket:id="form">
-		 <table bgcolor="#cccccc" border="1">
+		 <table wicket:id="superRootContainer" bgcolor="#cccccc" border="1">
 			 <tr wicket:id="propertylist">
    				 <th><span wicket:id="propertyLabel"></span></th>
    				 <td>
-   				 <table>
+   				 <table wicket:id="rootContainer">
    				 	<tr wicket:id="inputList">
    				 	<td>
    				 		<span wicket:id="propertyInput"></span>

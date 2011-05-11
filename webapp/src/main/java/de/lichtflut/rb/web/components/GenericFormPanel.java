@@ -9,9 +9,6 @@ import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.event.IEventSink;
-import org.apache.wicket.extensions.ajax.markup.html.WicketAjaxIndicatorAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -21,6 +18,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
+
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -70,13 +68,25 @@ public class GenericFormPanel extends Panel {
 	
 	private void init(ResourceSchema schema){
 		final Form form = new Form("form");
+		final WebMarkupContainer superRootContainer = new WebMarkupContainer("superRootContainer");
+		superRootContainer.setOutputMarkupId(true);
+		form.setOutputMarkupId(true);
 		if(schema!=null){
 			final List<PropertyAssertion> assertions = new ArrayList<PropertyAssertion>(schema.getPropertyAssertions());
-			form.add(new ListView("propertylist", assertions) {
+			
+			
+			
+			superRootContainer.add(new ListView("propertylist", assertions) {
 			    protected void populateItem(final ListItem item) {
 			        final PropertyAssertion assertion = (PropertyAssertion) item.getModelObject();
+			        final WebMarkupContainer rootContainer = new WebMarkupContainer("rootContainer");
 			        item.add(new Label("propertyLabel", assertion.getPropertyDeclaration().getName()));
+			        
+			        
+			        rootContainer.setOutputMarkupId(true);
+			        
 			        final RepeatingView inputList = new RepeatingView("inputList");
+			        
 			        int min = assertion.getCardinality().getMinOccurs();
 			        for(int x= 0; x<min; x++){
 				        WebMarkupContainer container = new WebMarkupContainer(inputList.newChildId());
@@ -85,8 +95,7 @@ public class GenericFormPanel extends Panel {
 				        inputList.add(container);
 			        }
 			       
-			        item.add(inputList);
-			          
+
 			        AjaxSubmitLink addLink = new AjaxSubmitLink("addRow", form) {
 			        	   int max = assertion.getCardinality().getMaxOccurs();
 			        	   int min = assertion.getCardinality().getMinOccurs();
@@ -103,9 +112,11 @@ public class GenericFormPanel extends Panel {
 			       	        container.setOutputMarkupId(true);
 					        container.add(getFragmentForAssertion(assertion));
 					        inputList.add(container);
-					        inputList.modelChanged();
-					        if(target!=null){
+					        if(target!=null){	
 					        	target.add(container);
+					        	target.add(form);
+					        	target.add(rootContainer);
+					        	target.add(superRootContainer);
 					        }
 			        	   }
 
@@ -117,7 +128,8 @@ public class GenericFormPanel extends Panel {
 			
 			        };
 			        addLink.setDefaultFormProcessing(false);
-			        item.add(inputList);
+			        rootContainer.add(inputList);
+			        item.add(rootContainer);
 			        item.add(addLink);
 			       
 			    }
@@ -182,9 +194,11 @@ public class GenericFormPanel extends Panel {
 				
 			    
 			    
-			});
+			});			
 		}
+		
 		this.add(new Label("title", Model.of(schema.getDescribedResourceID().getQualifiedName().getSimpleName())));
+		form.add(superRootContainer);
 		this.add(form);
 	}
 

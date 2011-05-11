@@ -30,10 +30,6 @@ RESOURCE "http://lichtflut.de#Mitarbeiter"{
 },
 
 
-PROPERTY "checkbox"{
-	TYPE = BOOLEAN
-},
-
 
 PROPERTY "http://lichtflut.de#Vorname"{
 	type=text

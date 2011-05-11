@@ -44,7 +44,7 @@ public class OSFPersistenceTest extends TestCase{
 		
 		//spec
 		int cnt_resources = 1;
-		int cnt_property_decs= 8;
+		int cnt_property_decs= 7;
 		
 		//Verify the pasring result
 		assertEquals(result.getPropertyDeclarations().size(), cnt_property_decs);
@@ -55,6 +55,9 @@ public class OSFPersistenceTest extends TestCase{
 		rManagement.storeOrOverrideResourceSchema(result.getResourceSchemas());
 		rManagement.storeOrOverridePropertyDeclaration(result.getPropertyDeclarations());
 		
+		
+		rManagement.storeOrOverrideResourceSchema(result.getResourceSchemas());
+		rManagement.storeOrOverridePropertyDeclaration(result.getPropertyDeclarations());
 		
 		//TODO Store of PropertyDeclaration builds some duplicates
 		
