@@ -3,27 +3,23 @@
  */
 package de.lichtflut.rb.web;
 
-import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * Application object for your web application. If you want to run this application without deploying, run the Start class.
  * 
  * @see de.lichtflut.rb.web.Start#main(String[])
  */
-public class WicketApplication extends WebApplication
-{    
+public class WicketApplication extends RBApplication {    
     /**
      * Constructor
      */
-	public WicketApplication()
-	{
+	public WicketApplication() {
 	}
 	
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
-	public Class<HomePage> getHomePage()
-	{
+	public Class<HomePage> getHomePage() {
 		return HomePage.class;
 	}
 

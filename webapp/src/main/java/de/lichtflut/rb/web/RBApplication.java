@@ -3,7 +3,7 @@
  */
 package de.lichtflut.rb.web;
 
-import org.apache.wicket.protocol.http.WebApplication;
+import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
 
 /**
  * Application object for your web application. 
@@ -11,7 +11,7 @@ import org.apache.wicket.protocol.http.WebApplication;
  * 
  * @see de.lichtflut.rb.web.Start#main(String[])
  */
-public class RBApplication extends WebApplication {
+public class RBApplication extends AbstractResourceBrowserApplication {
 	
     /**
      * Constructor

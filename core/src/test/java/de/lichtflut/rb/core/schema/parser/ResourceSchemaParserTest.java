@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.antlr.runtime.RecognitionException;
 import junit.framework.TestCase;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 
@@ -42,7 +43,11 @@ public class ResourceSchemaParserTest extends TestCase
 		//Get ResourceSchemaTypes
 		RSParsingResult result = rManagement.generateAndResolveSchemaModelThrough(
 				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL2.osf"));
-		assertFalse(result.isErrorOccured());		
+		assertFalse(result.isErrorOccured());	
+		
+		for (ResourceSchema rs : result.getResourceSchemas()) {
+			System.out.println(rs);	
+		}
 		
 		assertTrue(result.getPropertyDeclarations().size() == 5);
 	}
