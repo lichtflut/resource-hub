@@ -73,20 +73,13 @@ public class SNPropertyDeclaration extends ResourceView {
 	/**
 	 * Get the unique identifier.
 	 */
-	public SNUri getIdentifier() {
-		SemanticNode id = getSingleAssociationClient(RBSchema.HAS_IDENTIFIER);
-		if (id != null) {
-			return id.asValue().asUri();
-		} else {
-			return null;
-		}
+	public ResourceID getIdentifier() {
+		return this.getResource();
 	}
 	
-	public void setIdentifier(final SNUri id, final Context context) {
-		if (!Infra.equals(getIdentifier(), id)){
-			removeAssocs(RBSchema.HAS_IDENTIFIER);
-			Association.create(this, RBSchema.HAS_IDENTIFIER, id, context);
-		}
+	public void setIdentifier(final ResourceID id, final Context context) {
+		this.setName(id.getName());
+		this.setNamespace(id.getNamespace());
 	}
 	
 	public ElementaryDataType getDatatype() {

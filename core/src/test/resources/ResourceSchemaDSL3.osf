@@ -7,6 +7,12 @@ RESOURCE "http://lichtflut.de#Mitarbeiter"{
 		CARDINALITY=[1,1]
 	},
 	
+    PROPERTY "checkbox"{
+		CARDINALITY=[1,1],
+		TYPE=BOOLEAN
+
+	},
+	
 	PROPERTY "http://lichtflut.de#Geburtsjahr"{
 		CARDINALITY=[1,1]
 	},
@@ -22,6 +28,7 @@ RESOURCE "http://lichtflut.de#Mitarbeiter"{
 		MAX=3
 	}
 },
+
 
 
 PROPERTY "http://lichtflut.de#Vorname"{

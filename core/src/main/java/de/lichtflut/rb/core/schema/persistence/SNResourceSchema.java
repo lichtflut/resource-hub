@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.associations.Association;
@@ -41,7 +42,8 @@ public class SNResourceSchema extends ResourceView {
 	/**
 	 * Constructor for new Resource Schemas.
 	 */
-	public SNResourceSchema() {
+	public SNResourceSchema(Context ctx) {
+		Association.create(this, RDF.TYPE, RBSchema.ACTIVITY_CLASS,ctx);
 	}
 	
 	// -----------------------------------------------------
@@ -64,7 +66,7 @@ public class SNResourceSchema extends ResourceView {
 	 * @param property The class node.
 	 * @param context The context.
 	 */
-	public void setDescribedClass(final ResourceID clazz, final Context context) {
+	public void setDescribedClass(final ResourceID clazz, final Context context) {		
 		if (!Infra.equals(getDescribedClass(), clazz)){
 			removeAssociations(RBSchema.DESCRIBES);
 			Association.create(this, RBSchema.DESCRIBES, clazz, context);

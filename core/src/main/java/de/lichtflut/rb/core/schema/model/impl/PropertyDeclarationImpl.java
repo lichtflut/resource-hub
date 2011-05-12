@@ -213,7 +213,7 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	 */
 	public void setName(String identifierString){
 		
-		if(!(QualifiedName.isUri(identifierString) || QualifiedName.isUri(identifierString)))	
+		if(!(QualifiedName.isUri(identifierString)))	
 			this.identifier = new SimpleResourceID(VoidNamespace.getInstance(),identifierString);
 		else{
 			this.identifier = new SimpleResourceID(new QualifiedName(identifierString));

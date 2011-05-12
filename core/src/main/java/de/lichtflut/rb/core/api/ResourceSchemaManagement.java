@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.api;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Collection;
 
 import org.arastreju.sge.model.ResourceID;
@@ -27,7 +28,7 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
  *
  * @author Nils Bleisch
  */
-public interface ResourceSchemaManagement {
+public interface ResourceSchemaManagement extends Serializable{
 	
 
 	/**

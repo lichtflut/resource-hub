@@ -1,15 +1,3 @@
 Manifest-Version: 1.0
-Class-Path: aduna-commons-collections-2.7.0.jar aduna-commons-concurre
- nt-2.6.0.jar aduna-commons-i18n-1.3.0.jar aduna-commons-lang-2.8.0.ja
- r aduna-commons-net-2.6.0.jar aduna-commons-text-2.6.0.jar aduna-comm
- ons-xml-2.6.0.jar antlr-2.7.7.jar antlr-3.1.3.jar antlr-runtime-3.1.3
- .jar arastreju.neo4j.jar arastreju.sge.jar geronimo-jta_1.1_spec-1.1.
- 1.jar infra-1.0.7.jar jdom-1.1.jar lf.resource-browser.core.jar lf.re
- source-browser.webck.jar log4j-1.2.14.jar neo4j-1.3.jar neo4j-graph-a
- lgo-1.3.jar neo4j-index-1.3-1.3.M01.jar neo4j-jmx-1.3.jar neo4j-kerne
- l-1.3.jar neo4j-lucene-index-1.3.jar neo4j-udc-1.3.jar org.apache.ser
- vicemix.bundles.lucene-3.0.1_2.jar sesame-model-2.3.2.jar sesame-rio-
- api-2.3.2.jar sesame-rio-rdfxml-2.3.2.jar slf4j-api-1.5.8.jar slf4j-l
- og4j12-1.5.10.jar stringtemplate-3.2.jar wicket-1.5-M3.jar wicket-ext
- ensions-1.5-M2.1.jar wicket-request-1.5-M3.jar wicket-util-1.5-M3.jar
+Class-Path: aduna-commons-collections-2.7.0.jar 
 

@@ -12,8 +12,11 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
+
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.naming.QualifiedName;
 
 
 
@@ -677,7 +680,11 @@ public class OSFTree extends TreeParser {
             adaptor.addChild(root_1, s.getTree());
             pDec.setIdentifier(s.result); 
             	retval.assertion.setPropertyIdentifier(s.result);
-            	retval.assertion.setPropertyDescriptor(new SimpleResourceID(retval.assertion.getQualifiedPropertyIdentifier()));
+            	QualifiedName qName = retval.assertion.getQualifiedPropertyIdentifier();
+        		if(!(qName.getSimpleName().startsWith("has"))){
+        			retval.assertion.setPropertyDescriptor(new SimpleResourceID(qName.getNamespace().getUri(),"has"+qName.getSimpleName()));
+        		}
+            	
             _last = (CommonTree)input.LT(1);
             PROPERTY_ASSERTION9=(CommonTree)match(input,PROPERTY_ASSERTION,FOLLOW_PROPERTY_ASSERTION_in_assignment_dec226); 
             PROPERTY_ASSERTION9_tree = (CommonTree)adaptor.dupNode(PROPERTY_ASSERTION9);

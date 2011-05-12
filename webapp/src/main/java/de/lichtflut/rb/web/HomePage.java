@@ -23,7 +23,7 @@ public class HomePage extends WebPage {
 	 * @param parameters
 	 *            Page parameters
 	 */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
 	public HomePage(final PageParameters parameters) {
 
         // Add the simplest type of label

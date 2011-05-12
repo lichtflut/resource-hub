@@ -3,28 +3,24 @@
  */
 package de.lichtflut.rb.web;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
-import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 
 
 /**
@@ -38,30 +34,25 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
  *
  * @author Nils Bleisch
  */
-public class RSPage extends WebPage {
+public class RSPage extends RBSuperPage {
 
-	private final ResourceSchemaManagement rManagement =
-			RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
+	private  final ResourceSchemaManagement rManagement = getServiceProvider().getResourceSchemaManagement();
 	
 	private final RepeatingView resourceList =  new RepeatingView("resourcelist");
-;
+
 	
 	/**
 	 * @param parameters
 	 */
 	public RSPage(final PageParameters parameters) {
-		super(parameters);
+		super("Resource Schema", parameters);
 		init(parameters);
-		
-		
-		
 	}
 
 	//-------------------------------------------
 
     @SuppressWarnings({ "unchecked", "serial" })
-	private void init(PageParameters parameters) {
-    
+	private void init(PageParameters parameters) { 
     	final Label schemaErrors = new Label("schemaErrors", new Model<String>(""));
     	schemaErrors.setEscapeModelStrings(false);
     	final Label schemaSuccess = new Label("schemaSuccess", new Model<String>(""));   	
@@ -96,7 +87,6 @@ public class RSPage extends WebPage {
     				schemaSuccess.setDefaultModelObject("Your given schema has been successfully stored");
     				rManagement.storeOrOverridePropertyDeclaration(result.getPropertyDeclarations());
     				rManagement.storeOrOverrideResourceSchema(result.getResourceSchemas());
-    				//this.getSession().setAttribute("resourceSchema",(Serializable) result.getResourceSchemas());
     				updateResourceList();
     			}
     		}
@@ -106,26 +96,29 @@ public class RSPage extends WebPage {
     	form.add(area);
     	form.add(schemaSuccess.setVisible(false));
     	form.add(schemaErrors.setVisible(false));
-        
-		updateResourceList();
-
+    	updateResourceList();
 		this.add(resourceList);
 	}
 
     
-    @SuppressWarnings({ "deprecation", "unchecked" })
+	// -----------------------------------------------------
+    
 	private void updateResourceList(){
     	resourceList.removeAll();	
     	Collection<ResourceSchema> resourceSchemas = rManagement.getAllResourceSchemas();
-    	//Collection<ResourceSchema> resourceSchemas =
-//    		(Collection<ResourceSchema>) this.getSession().getAttribute("resourceSchema");
 		if(resourceSchemas==null) resourceSchemas = new ArrayList<ResourceSchema>();
 		for (ResourceSchema resourceSchema : resourceSchemas) {
-			CharSequence url = urlFor(GenericResourceFormPage.class, new PageParameters("resourceid=" + resourceSchema.getResourceID().getQualifiedName().toURI()));
-			resourceList.add(new ExternalLink(resourceList.newChildId(), url.toString(),resourceSchema.getResourceID().getQualifiedName().getSimpleName()).setPopupSettings(null));
+			PageParameters params = new PageParameters();
+			params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
+			Fragment fragment = new Fragment(resourceList.newChildId(),"listPanel",this);
+			fragment.add(new BookmarkablePageLink<GenericResourceFormPage>("link",GenericResourceFormPage.class, params).
+					add(new Label("linkLabel",resourceSchema.getDescribedResourceID().getQualifiedName().getSimpleName())));
+			resourceList.add(fragment);
+			
 		}
 		resourceList.modelChanged();
     }
     
+
 	
 }

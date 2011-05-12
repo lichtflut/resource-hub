@@ -15,9 +15,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNScalar;
-import org.arastreju.sge.model.nodes.views.SNUri;
 import org.arastreju.sge.query.QueryManager;
-
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -62,8 +60,19 @@ public class RBSchemaStore {
 	 * @return The corresponding persistence Resource Schema Node.
 	 */
 	public SNResourceSchema store(final ResourceSchema schema, Context ctx) {
-		final SNResourceSchema snSchema = new SNResourceSchema();
-		snSchema.setDescribedClass(schema.getResourceID(), ctx);
+		/*
+		 * How can we check if this schema does exists, and if so, replace it with the new one
+		 * SNResourceSchema snSchema = loadSchemaForResource(schema.getDescribedResourceID());
+		 * 
+		 * 
+		 */
+		SNResourceSchema snSchema;
+		if(schema.getResourceID()!=null){
+			snSchema = new SNResourceSchema(schema.getResourceID().asResource());
+		}else{
+			snSchema = new SNResourceSchema(ctx);
+		}
+		snSchema.setDescribedClass(schema.getDescribedResourceID(), ctx);
 		
 		final ModelingConversation mc = gate.startConversation();
 		
@@ -107,7 +116,7 @@ public class RBSchemaStore {
 		//Load all properties from store
 		LinkedList<ResourceSchema> output = new LinkedList<ResourceSchema>();
 		QueryManager qManager = this.gate.startConversation().createQueryManager();
-		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.DESCRIBES);
+		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.ACTIVITY_CLASS);
 		for (Statement stmt : statements) {
 			if(stmt==null) continue;
 			output.add(convert(new SNResourceSchema((ResourceNode) stmt.getSubject())));
@@ -124,7 +133,8 @@ public class RBSchemaStore {
 	protected PropertyDeclaration convert(final SNPropertyDeclaration snDecl){
 		
 		PropertyDeclarationImpl pDec = new PropertyDeclarationImpl();
-		pDec.setIdentifier(snDecl.getIdentifier().getReferencedUri());
+		
+		pDec.setIdentifier(snDecl.getQualifiedName().toURI());
 		pDec.setElementaryDataType(snDecl.getDatatype());
 		convertConstraints(snDecl, pDec);
 		return pDec;
@@ -148,7 +158,7 @@ public class RBSchemaStore {
 	}
 	
 	public SNResourceSchema loadSchemaForResource(final ResourceID clazz) {
-		throw new NotYetImplementedException();
+		return null;
 	}
 	
 	// -----------------------------------------------------
@@ -160,12 +170,13 @@ public class RBSchemaStore {
 	// -----------------------------------------------------
 	
 	public ResourceSchema convert(final SNResourceSchema snSchema) {
-		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema.getQualifiedName().toURI());
-		
+		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema);
+		schema.setDescribedResourceID(snSchema.getDescribedClass());
 		for (SNPropertyAssertion snAssertion : snSchema.getPropertyAssertions()){
 			
 			// create Property Declaration
 			final SNPropertyDeclaration snDecl = snAssertion.getPropertyDeclaration();
+			if(snDecl==null) continue;
 			final PropertyDeclaration decl = convert(snDecl);
 			
 			// create Property Assertion
@@ -182,7 +193,7 @@ public class RBSchemaStore {
 	// -----------------------------------------------------
 	
 	protected void addDeclaration(final SNPropertyAssertion assertion, PropertyDeclaration decl, final Context ctx) {
-		final ResourceNode existing = gate.startConversation().findResource(decl.getIdentifier().getQualifiedName());
+		final ResourceNode existing = gate.startConversation().findResource((decl.getIdentifier().getQualifiedName()));
 		
 		List<ResourceNode> found = gate.startConversation().createQueryManager().
 										findByTag(decl.getIdentifier().getQualifiedName().toURI());
@@ -194,6 +205,8 @@ public class RBSchemaStore {
 			convertDeclaration(decl, snDecl, ctx);
 		} else {
 			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration(ctx);
+			snDecl.setName(decl.getName());
+			snDecl.setNamespace(decl.getIdentifier().getNamespace());
 			assertion.setPropertyDeclaration(snDecl, ctx);
 			convertDeclaration(decl, snDecl, ctx);
 		}
@@ -214,9 +227,8 @@ public class RBSchemaStore {
 	// -----------------------------------------------------
 	
 	protected void convertDeclaration(final PropertyDeclaration src, final SNPropertyDeclaration target, final Context ctx) {
-		final String id = src.getIdentifier().getQualifiedName().toURI();
 		target.setDatatype(src.getElementaryDataType(), ctx);
-		target.setIdentifier(new SNUri(id), ctx);
+		target.setIdentifier(src.getIdentifier(), ctx);
 		for (Constraint constraint: src.getConstraints()){
 			addConstraint(target, constraint, ctx);
 		}

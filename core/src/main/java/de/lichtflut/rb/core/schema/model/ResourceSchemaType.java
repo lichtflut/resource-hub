@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import java.io.Serializable;
+
 /**
  * <p>
  * 	Marker Interface. 
@@ -16,4 +18,6 @@ package de.lichtflut.rb.core.schema.model;
  *
  * @author Nils Bleisch
  */
-public interface ResourceSchemaType {}
+public interface ResourceSchemaType extends Serializable {
+	//Null Interface
+}

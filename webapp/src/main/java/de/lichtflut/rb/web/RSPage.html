@@ -8,12 +8,13 @@
         <title>ResourceSchemaManagement</title>
     </head>
     <body>
-       <div id="schemaIN" style="float:left;">
+    <wicket:extend>
+       <div id="schemaIN">
         <strong>Please submit your Resource Schema</strong>
         <form wicket:id = "schemaForm" id = "schemaForm">
         <span wicket:id = "schemaErrors" style="color:red;"></span>
         <span wicket:id = "schemaSuccess" style="color:green;"></span>
-        <table bgcolor="#cccccc" border="1">
+        <table bgcolor="#cccccc" border="1" align="center">
         	<tr>
         		<th>
         			Choose your preferred format:
@@ -29,7 +30,7 @@
     				Resource Schema:
     			</th>	
         		<td>
-        			<textarea wicket:id = "resourceschema" cols="20" rows="20"></textarea>
+        			<textarea wicket:id = "resourceschema" cols="40" rows="40"></textarea>
         		</td>
         	</tr>
         	<tr>
@@ -41,14 +42,22 @@
         </table>
         </form>  
         </div>
-        <div id="schemaOUT" style="float: left">
+        <div id="schemaOUT">
         <strong>Your defined schema is listed as follows</strong>
         
-        <ul>
-        	<li wicket:id="resourcelist"></li>
-        </ul>
+        <div style="border:thin dashed;">
+        
+        	<ul>
+        		<li wicket:id="resourcelist">
+        		</li>
+        	
+        	</ul>
+       	 </div>
         
         </div>
-                        
+        	<wicket:fragment wicket:id="listPanel">
+        		<a href="#" wicket:id="link"><span wicket:id="linkLabel"></span></a>
+        	</wicket:fragment>
+    </wicket:extend>              
     </body>
 </html>
