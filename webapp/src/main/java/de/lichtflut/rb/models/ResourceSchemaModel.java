@@ -57,7 +57,7 @@ public class ResourceSchemaModel implements IModel<String> {
 	// -----------------------------------------------------
 	
 	public void detach() {
-		map = new MultiMap<String, String>();
+		//map = new MultiMap<String, String>();
 		
 	}
 	
