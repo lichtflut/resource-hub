@@ -27,7 +27,6 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.model.nodes.views.SNText;
-import org.arastreju.sge.model.nodes.views.SNUri;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.RBSchema;

@@ -6,6 +6,7 @@ package de.lichtflut.rb.web;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.apriori.Aras;
+import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -43,7 +44,7 @@ public class SampleResourcePage extends WebPage {
 	private static ResourceNode createSample() {
 		final SNClass personClass = 
 			new SimpleResourceID("urn:lf:classes:", "Person").asResource().asClass();
-		final ResourceNode nils = personClass.createInstance(new QualifiedName("urn:lf:people:Nils"));
+		final ResourceNode nils = personClass.createInstance( new QualifiedName("urn:lf:people:Nils"));
 		Association.create(nils, Aras.HAS_FORENAME, new SNText("Nils"));
 		Association.create(nils, Aras.HAS_SURNAME, new SNText("Flyshe"));
 		return nils;
