@@ -10,6 +10,7 @@ import junit.framework.Assert;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
 
@@ -78,7 +79,9 @@ public class RBSchemaStoreTest {
 		 Collection<ResourceSchema> schemas = store.loadAllResourceSchemas(null);
 		 Assert.assertEquals(1,schemas.size());
 		 
-		 Assert.assertNotNull(store.loadSchemaForResourceType(schema.getDescribedResourceID(),null));
+		 ResourceID describedResourceID = schema.getDescribedResourceID();
+		 
+		 Assert.assertNotNull(store.loadSchemaForResourceType(describedResourceID,null));
 		 
 		 System.out.println("----------------");
 		 pDecs = store.loadAllPropertyDeclarations(null);

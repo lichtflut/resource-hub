@@ -71,12 +71,12 @@ public class SNResourceSchema extends ResourceView {
 	 * @param property The class node.
 	 * @param context The context.
 	 */
-	public void setDescribedClass(final ResourceID clazz, final Context context) {	
+	public void setDescribedClass(final ResourceNode clazz, final Context context) {	
 		if (!Infra.equals(getDescribedClass(), clazz)){
 			removeAssociations(RBSchema.DESCRIBES);
 			removeAssociations(RBSchema.DESCRIBED_BY);
 			Association.create(this, RBSchema.DESCRIBES, clazz, context);
-			Association.create(clazz.asResource(), RBSchema.DESCRIBED_BY, this, context);
+			Association.create(clazz, RBSchema.DESCRIBED_BY, this, context);
 		}
 	}
 

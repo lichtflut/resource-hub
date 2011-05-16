@@ -76,7 +76,10 @@ public class RBSchemaStore {
 		}else{
 			snSchema = new SNResourceSchema(ctx);
 		}
-		snSchema.setDescribedClass(schema.getDescribedResourceID(), ctx);
+		
+		//TODO: Resolve from store
+		ResourceNode describedResource = schema.getDescribedResourceID().asResource();
+		snSchema.setDescribedClass(describedResource, ctx);
 		
 		final ModelingConversation mc = gate.startConversation();
 		

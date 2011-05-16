@@ -7,8 +7,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
+import static org.arastreju.sge.SNOPS.*;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
@@ -100,12 +100,8 @@ public class SemanticAttributeModel<T extends SemanticNode> implements IComponen
 			return (T) resource.getSingleAssociationClient(predicate);
 		}
 
-		public void setObject(final T object)
-		{
-			final ResourceNode node = rnModel.getObject();
-			final Association assoc = node.getSingleAssociation(predicate);
-			node.remove(assoc);
-			Association.create(node, predicate, object);
+		public void setObject(final T object) {		
+			replace(rnModel.getObject(), predicate, object);
 		}
 
 		public IModel<T> getWrappedModel() {
