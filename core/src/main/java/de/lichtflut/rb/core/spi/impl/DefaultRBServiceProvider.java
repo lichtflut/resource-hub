@@ -41,6 +41,7 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 		return schemaManagement;
 	}
 
+	
 	public ArastrejuGate openArastejuGateInstance() {
 		return gate;
 	}

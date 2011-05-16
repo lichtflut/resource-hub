@@ -12,7 +12,7 @@ RESOURCE "http://lichtflut.de#testResource1"{
 
 
 reSource "http://lichtflut.de#testResource2"{
-	PROPERTY "http://lichtflut.de#Wohnort" CARDINALITY=[0,5]
+	PROPERTY "http://lichtflut.de#Wohnort"{ CARDINALITY=[0,5]}
 
 },
 
@@ -21,7 +21,7 @@ PROPERTY "http://lichtflut.de#Wohnort"{
 	type=number
 },
 
-P: "Wohnort"
+PROPERTY "Wohnort"{
 	REGEX="hallo",
 	type=text
 },

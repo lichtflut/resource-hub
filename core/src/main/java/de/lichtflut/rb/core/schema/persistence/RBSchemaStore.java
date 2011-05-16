@@ -88,7 +88,6 @@ public class RBSchemaStore {
 			snSchema.addPropertyAssertion(snAssertion, ctx);
 			addDeclaration(snAssertion, assertion.getPropertyDeclaration(), ctx);
 		}
-		
 		mc.attach(snSchema);
 		
 		return snSchema;

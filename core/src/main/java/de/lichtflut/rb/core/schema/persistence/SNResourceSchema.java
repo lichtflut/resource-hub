@@ -76,6 +76,7 @@ public class SNResourceSchema extends ResourceView {
 			removeAssociations(RBSchema.DESCRIBES);
 			removeAssociations(RBSchema.DESCRIBED_BY);
 			Association.create(this, RBSchema.DESCRIBES, clazz, context);
+			Association.create(clazz.asResource(), RBSchema.DESCRIBED_BY, this, context);
 		}
 	}
 
@@ -92,9 +93,6 @@ public class SNResourceSchema extends ResourceView {
 	 */
 	public List<SNPropertyAssertion> getPropertyAssertions(){
 		Set<SNPropertyAssertion> result = new HashSet<SNPropertyAssertion>();
-//		for (SNClass superCl : getSuperClasses()) {
-//			result.addAll(superCl.getDeclaredPropertyDeclarations());
-//		}
 		result.addAll(getDeclaredPropertyAssertions());
 		List<SNPropertyAssertion> list = new ArrayList<SNPropertyAssertion>(result);
 		Collections.sort(list);

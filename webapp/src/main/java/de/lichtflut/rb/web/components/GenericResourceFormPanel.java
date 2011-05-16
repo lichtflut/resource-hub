@@ -35,25 +35,19 @@ import de.lichtflut.rb.models.ResourceSchemaModel;
  */
 @SuppressWarnings({ "serial", "unchecked" })
 public class GenericResourceFormPanel extends Panel {
-	
+	private final ResourceSchemaModel model;
 
 	//Constructors
 	
-	/**
-	 * 
-	 */
-	public GenericResourceFormPanel(String id, IModel model, ResourceSchema schema) {
-		super(id, model);
-		init(schema);
-	}
-	
+
 	// -----------------------------------------------------
 	
 	/**
 	 * 
 	 */
-	public GenericResourceFormPanel(String id, ResourceSchema schema) {
-		super(id);
+	public GenericResourceFormPanel(String id, ResourceSchema schema, final ResourceSchemaModel model) {
+		super(id,model);
+		this.model = model;
 		init(schema);
 	}
 
@@ -61,7 +55,7 @@ public class GenericResourceFormPanel extends Panel {
 	// -----------------------------------------------------
 	
 	private void init(ResourceSchema schema){
-		final ResourceSchemaModel rModel = ResourceSchemaModel.getInstance();
+		final ResourceSchemaModel rModel = this.model;
 		final Form form = new Form("form"){
 			@Override
 			protected void onSubmit() {
