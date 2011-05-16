@@ -28,11 +28,13 @@ import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
 
 /**
  * Reference impl of {@link ResourceSchemaManagement}
+ * This impl will take the default context (rbschema#context)
  * 
  * Created: Apr 19, 2011
  *
  * @author Nils Bleisch
  */
+@SuppressWarnings("serial")
 public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 
 	private ArastrejuGate gate = null;
@@ -119,7 +121,6 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 					result.addErrorMessage("Wasnt able to resolve PropertyDeclaration for " + assertionPDec.getIdentifierString());
 					continue;
 				}
-				String propertyIdentifier = assertion.getPropertyIdentifier();
 				PropertyDeclaration persistedPDec = persistedPDecsHash.get(assertion.getPropertyDeclaration().getIdentifierString());
 				//This must be a new or inherited property
 				if(persistedPDec == null){
@@ -182,8 +183,8 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	
 	// -----------------------------------------------------
 
-	public ResourceSchema getResourceSchemaFor(ResourceID id) {
-		return store.convert(store.loadSchemaForResource(id));
+	public ResourceSchema getResourceSchemaForResourceType(ResourceID id) {
+		return store.convertResourceSchema(store.loadSchemaForResourceType(id,null));
 	}
 
 	

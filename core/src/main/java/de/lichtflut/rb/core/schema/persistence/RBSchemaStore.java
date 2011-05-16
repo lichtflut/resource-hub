@@ -14,6 +14,8 @@ import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNContext;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.query.QueryManager;
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
@@ -60,6 +62,8 @@ public class RBSchemaStore {
 	 * @return The corresponding persistence Resource Schema Node.
 	 */
 	public SNResourceSchema store(final ResourceSchema schema, Context ctx) {
+		ctx = setUpContext(ctx);
+		
 		/*
 		 * How can we check if this schema does exists, and if so, replace it with the new one
 		 * SNResourceSchema snSchema = loadSchemaForResource(schema.getDescribedResourceID());
@@ -90,19 +94,21 @@ public class RBSchemaStore {
 		return snSchema;
 	}
 	
+
 	// -----------------------------------------------------
 	
 	/**
 	 * Loads all defined and persisted PropertyDeclarations from System
 	 */
-	public Collection<PropertyDeclaration> loadAllPropertyDeclarations(final Context ctx){
+	public Collection<PropertyDeclaration> loadAllPropertyDeclarations(Context ctx){
+		ctx = setUpContext(ctx);
 		//Load all properties from store
 		LinkedList<PropertyDeclaration> output = new LinkedList<PropertyDeclaration>();
 		QueryManager qManager = this.gate.startConversation().createQueryManager();
 		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.PROPERTY_DECL);
 		for (Statement stmt : statements) {
 			if(stmt==null) continue;
-			output.add(convert(new SNPropertyDeclaration((ResourceNode) stmt.getSubject())));
+			output.add(convertPropertyDeclaration(new SNPropertyDeclaration((ResourceNode) stmt.getSubject())));
 		}
 		return output;
 	}
@@ -112,37 +118,25 @@ public class RBSchemaStore {
 	/**
 	 * Loads all defined and persisted ResourceSchema'S from System
 	 */
-	public Collection<ResourceSchema> loadAllResourceSchemas(final Context ctx){
+	public Collection<ResourceSchema> loadAllResourceSchemas(Context ctx){
+		ctx = setUpContext(ctx);
 		//Load all properties from store
 		LinkedList<ResourceSchema> output = new LinkedList<ResourceSchema>();
 		QueryManager qManager = this.gate.startConversation().createQueryManager();
 		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.ACTIVITY_CLASS);
 		for (Statement stmt : statements) {
 			if(stmt==null) continue;
-			output.add(convert(new SNResourceSchema((ResourceNode) stmt.getSubject())));
+			output.add(convertResourceSchema(new SNResourceSchema((ResourceNode) stmt.getSubject())));
 		}
 		return output;
 	}
 	
+
 	
 	// -----------------------------------------------------
 	
-	/**
-	 * Converts a {@link SNPropertyDeclaration} to {@link PropertyDeclaration}
-	 */
-	protected PropertyDeclaration convert(final SNPropertyDeclaration snDecl){
-		
-		PropertyDeclarationImpl pDec = new PropertyDeclarationImpl();
-		
-		pDec.setIdentifier(snDecl.getQualifiedName().toURI());
-		pDec.setElementaryDataType(snDecl.getDatatype());
-		convertConstraints(snDecl, pDec);
-		return pDec;
-	}
-	
-	// -----------------------------------------------------
-	
-	public SNPropertyDeclaration store(final PropertyDeclaration decl, final Context ctx){
+	public SNPropertyDeclaration store(final PropertyDeclaration decl, Context ctx){
+		ctx = setUpContext(ctx);
 		final ResourceNode existing = gate.startConversation().findResource(decl.getIdentifier().getQualifiedName());
 		
 		final SNPropertyDeclaration snDecl;
@@ -151,90 +145,60 @@ public class RBSchemaStore {
 		} else {
 			snDecl = new SNPropertyDeclaration(ctx);
 		}
-		convertDeclaration(decl, snDecl, ctx);
+		convertPropertyDeclaration(decl, snDecl, ctx);
 		
 		gate.startConversation().attach(snDecl);
 		return snDecl;
 	}
 	
-	public SNResourceSchema loadSchemaForResource(final ResourceID clazz) {
-		return null;
+	// -----------------------------------------------------
+	
+	
+	public SNResourceSchema loadSchemaForResourceType(final ResourceID type,Context ctx) {
+		ctx = setUpContext(ctx);
+		ModelingConversation mc = gate.startConversation();
+		ResourceNode resourceType = mc.findResource(type.getQualifiedName());
+		if(resourceType==null) return null;
+		SemanticNode schema = resourceType.getSingleAssociationClient(RBSchema.DESCRIBED_BY);
+		if(schema==null) return null;
+		return  new SNResourceSchema(schema.asResource());
 	}
 	
 	// -----------------------------------------------------
 	
-	public SNResourceSchema loadPropertyDeclaration(final ResourceID decl) {
+	public SNResourceSchema loadPropertyDeclaration(final ResourceID decl,Context ctx) {
+		ctx = setUpContext(ctx);
 		throw new NotYetImplementedException();
 	}
-	
-	// -----------------------------------------------------
-	
-	public ResourceSchema convert(final SNResourceSchema snSchema) {
-		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema);
-		schema.setDescribedResourceID(snSchema.getDescribedClass());
-		for (SNPropertyAssertion snAssertion : snSchema.getPropertyAssertions()){
-			
-			// create Property Declaration
-			final SNPropertyDeclaration snDecl = snAssertion.getPropertyDeclaration();
-			if(snDecl==null) continue;
-			final PropertyDeclaration decl = convert(snDecl);
-			
-			// create Property Assertion
-			final PropertyAssertionImpl pa = new PropertyAssertionImpl(snAssertion.getDescriptor(), decl);
-			int min = toInteger(snAssertion.getMinOccurs());
-			int max = toInteger(snAssertion.getMaxOccurs());
-			pa.setCardinality(CardinalityFactory.getAbsoluteCardinality(max, min));
-			schema.addPropertyAssertion(pa);
-		}
 		
-		return schema;
+	
+	// -----------------------------------------------------
+	
+	private SNScalar toScalar(final int value) {
+		return new SNScalar(BigInteger.valueOf(value));
 	}
 	
 	// -----------------------------------------------------
 	
-	protected void addDeclaration(final SNPropertyAssertion assertion, PropertyDeclaration decl, final Context ctx) {
-		final ResourceNode existing = gate.startConversation().findResource((decl.getIdentifier().getQualifiedName()));
-		
-		List<ResourceNode> found = gate.startConversation().createQueryManager().
-										findByTag(decl.getIdentifier().getQualifiedName().toURI());
-		found.size();
-		
-		if (existing != null) {
-			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration(existing);
-			assertion.setPropertyDeclaration(snDecl, ctx);
-			convertDeclaration(decl, snDecl, ctx);
-		} else {
-			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration(ctx);
-			snDecl.setName(decl.getName());
-			snDecl.setNamespace(decl.getIdentifier().getNamespace());
-			assertion.setPropertyDeclaration(snDecl, ctx);
-			convertDeclaration(decl, snDecl, ctx);
+	private Integer toInteger(final SNScalar value) {
+		return value.getIntegerValue().intValue();
+	}
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * If no special context is set, this method will return the default schema-context
+	 * @param ctx
+	 * @return
+	 */
+	private Context setUpContext(Context ctx) {
+		if(ctx==null){
+			ctx = new SNContext(RBSchema.CONTEXT.asResource());
 		}
+		return ctx;
 	}
-	
-	// -----------------------------------------------------
-	
-	protected void addConstraint(final SNPropertyDeclaration decl, final Constraint constraint, final Context ctx) {
-		if (constraint.isLiteralConstraint()) {
-			decl.addLiteralConstraint(constraint.getLiteralConstraint(), ctx);
-		} else if (constraint.isResourceTypeConstraint()) {
-			decl.addTypeConstraint(constraint.getResourceTypeConstraint(), ctx);
-		} else {
-			throw new IllegalStateException();
-		}
-	}
-	
-	// -----------------------------------------------------
-	
-	protected void convertDeclaration(final PropertyDeclaration src, final SNPropertyDeclaration target, final Context ctx) {
-		target.setDatatype(src.getElementaryDataType(), ctx);
-		target.setIdentifier(src.getIdentifier(), ctx);
-		for (Constraint constraint: src.getConstraints()){
-			addConstraint(target, constraint, ctx);
-		}
-	}
-	
-	// -----------------------------------------------------
+
+	// -- CONVERSION STUFF------------------------------------
 	
 	protected void convertConstraints(final SNPropertyDeclaration src, final PropertyDeclarationImpl target) {
 		for (SNConstraint snConst : src.getConstraints()){
@@ -251,17 +215,90 @@ public class RBSchemaStore {
 			}
 			
 		}
+	}//End of method
+	
+	
+	// -----------------------------------------------------
+	
+	protected void convertPropertyDeclaration(final PropertyDeclaration src, final SNPropertyDeclaration target, final Context ctx) {
+		target.setDatatype(src.getElementaryDataType(), ctx);
+		target.setIdentifier(src.getIdentifier(), ctx);
+		for (Constraint constraint: src.getConstraints()){
+			addConstraint(target, constraint, ctx);
+		}
 	}
 	
 	// -----------------------------------------------------
 	
-	private SNScalar toScalar(final int value) {
-		return new SNScalar(BigInteger.valueOf(value));
+	public ResourceSchema convertResourceSchema(final SNResourceSchema snSchema) {
+		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema);
+		schema.setDescribedResourceID(snSchema.getDescribedClass());
+		for (SNPropertyAssertion snAssertion : snSchema.getPropertyAssertions()){
+			
+			// create Property Declaration
+			final SNPropertyDeclaration snDecl = snAssertion.getPropertyDeclaration();
+			if(snDecl==null) continue;
+			final PropertyDeclaration decl = convertPropertyDeclaration(snDecl);
+			
+			// create Property Assertion
+			final PropertyAssertionImpl pa = new PropertyAssertionImpl(snAssertion.getDescriptor(), decl);
+			int min = toInteger(snAssertion.getMinOccurs());
+			int max = toInteger(snAssertion.getMaxOccurs());
+			pa.setCardinality(CardinalityFactory.getAbsoluteCardinality(max, min));
+			schema.addPropertyAssertion(pa);
+		}
+		
+		return schema;
 	}
 	
-	private Integer toInteger(final SNScalar value) {
-		return value.getIntegerValue().intValue();
+	// -----------------------------------------------------
+	
+	/**
+	 * Converts a {@link SNPropertyDeclaration} to {@link PropertyDeclaration}
+	 */
+	protected PropertyDeclaration convertPropertyDeclaration(final SNPropertyDeclaration snDecl){
+		
+		PropertyDeclarationImpl pDec = new PropertyDeclarationImpl();
+		
+		pDec.setIdentifier(snDecl.getQualifiedName().toURI());
+		pDec.setElementaryDataType(snDecl.getDatatype());
+		convertConstraints(snDecl, pDec);
+		return pDec;
 	}
 	
-
+	
+	// -----------------------------------------------------
+	
+	protected void addDeclaration(final SNPropertyAssertion assertion, PropertyDeclaration decl, final Context ctx) {
+		final ResourceNode existing = gate.startConversation().findResource((decl.getIdentifier().getQualifiedName()));
+		
+		List<ResourceNode> found = gate.startConversation().createQueryManager().
+										findByTag(decl.getIdentifier().getQualifiedName().toURI());
+		found.size();
+		
+		if (existing != null) {
+			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration(existing);
+			assertion.setPropertyDeclaration(snDecl, ctx);
+			convertPropertyDeclaration(decl, snDecl, ctx);
+		} else {
+			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration(ctx);
+			snDecl.setName(decl.getName());
+			snDecl.setNamespace(decl.getIdentifier().getNamespace());
+			assertion.setPropertyDeclaration(snDecl, ctx);
+			convertPropertyDeclaration(decl, snDecl, ctx);
+		}
+	}
+	
+	// -----------------------------------------------------
+	
+	protected void addConstraint(final SNPropertyDeclaration decl, final Constraint constraint, final Context ctx) {
+		if (constraint.isLiteralConstraint()) {
+			decl.addLiteralConstraint(constraint.getLiteralConstraint(), ctx);
+		} else if (constraint.isResourceTypeConstraint()) {
+			decl.addTypeConstraint(constraint.getResourceTypeConstraint(), ctx);
+		} else {
+			throw new IllegalStateException();
+		}
+	}
+	
 }

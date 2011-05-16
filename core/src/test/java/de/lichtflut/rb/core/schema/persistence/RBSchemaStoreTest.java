@@ -66,7 +66,7 @@ public class RBSchemaStoreTest {
 
 		 System.out.println(snSchema);
 		 
-		 ResourceSchema schema2 = store.convert(snSchema);
+		 ResourceSchema schema2 = store.convertResourceSchema(snSchema);
 		 
 		 System.out.println(schema2);
 		 
@@ -78,6 +78,7 @@ public class RBSchemaStoreTest {
 		 Collection<ResourceSchema> schemas = store.loadAllResourceSchemas(null);
 		 Assert.assertEquals(1,schemas.size());
 		 
+		 Assert.assertNotNull(store.loadSchemaForResourceType(schema.getDescribedResourceID(),null));
 		 
 		 System.out.println("----------------");
 		 pDecs = store.loadAllPropertyDeclarations(null);

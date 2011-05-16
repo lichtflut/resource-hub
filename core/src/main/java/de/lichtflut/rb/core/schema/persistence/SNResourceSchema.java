@@ -34,6 +34,11 @@ import de.lichtflut.rb.core.schema.RBSchema;
  */
 public class SNResourceSchema extends ResourceView {
 	
+	/**
+	 * Generated serial number
+	 */
+	private static final long serialVersionUID = -2376213727456721748L;
+
 	public SNResourceSchema(final ResourceNode resource) {
 		super(resource);
 	}
@@ -66,9 +71,10 @@ public class SNResourceSchema extends ResourceView {
 	 * @param property The class node.
 	 * @param context The context.
 	 */
-	public void setDescribedClass(final ResourceID clazz, final Context context) {		
+	public void setDescribedClass(final ResourceID clazz, final Context context) {	
 		if (!Infra.equals(getDescribedClass(), clazz)){
 			removeAssociations(RBSchema.DESCRIBES);
+			removeAssociations(RBSchema.DESCRIBED_BY);
 			Association.create(this, RBSchema.DESCRIBES, clazz, context);
 		}
 	}
@@ -103,7 +109,7 @@ public class SNResourceSchema extends ResourceView {
 		List<SNPropertyAssertion> result = new ArrayList<SNPropertyAssertion>();
 		Set<Association> assocs = getAssociations(RBSchema.HAS_PROPERTY_ASSERT);
 		for (Association current : assocs) {
-			result.add(new SNPropertyAssertion(current.getClient().asResource()));
+			result.add(new SNPropertyAssertion(current.getObject().asResource()));
 		}
 		Collections.sort(result);
 		return result;
@@ -116,7 +122,7 @@ public class SNResourceSchema extends ResourceView {
 		Set<Association> assocs = getAssociations(RBSchema.HAS_PROPERTY_ASSERT);
 		Association toBeRemoved = null;
 		for (Association current : assocs) {
-			if (decl.equals(current.getClient())){
+			if (decl.equals(current.getObject())){
 				toBeRemoved = current;
 				break;
 			}

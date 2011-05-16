@@ -103,7 +103,7 @@ public interface ResourceSchemaManagement extends Serializable{
 	/**
 	 * returns the ResourceSchema for a given ResourceID
 	 */
-	public ResourceSchema getResourceSchemaFor(ResourceID id);
+	public ResourceSchema getResourceSchemaForResourceType(ResourceID id);
 	
 	// -----------------------------------------------------
 	
