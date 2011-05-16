@@ -7,6 +7,8 @@ import javax.inject.Inject;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.CssUtils;
+import org.w3c.dom.css.CSSPageRule;
 
 import de.lichtflut.rb.builders.SessionBuilder;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
@@ -78,5 +80,8 @@ public abstract class RBSuperPage extends WebPage {
 	/*public RBServiceProvider getServiceProvider(){
 		return builder.getServiceProvider();
 	}*/
+	
+	
+	
 	
 }

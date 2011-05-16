@@ -18,12 +18,16 @@ package de.lichtflut.rb.core.schema.persistence;
 import java.util.Set;
 
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.model.nodes.views.SNScalar;
+import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.RBSchema;
@@ -49,6 +53,11 @@ import de.lichtflut.rb.core.schema.RBSchema;
  * @author Oliver Tigges
  */
 public class SNPropertyAssertion extends ResourceView implements Comparable<SNPropertyAssertion>{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7077840107709042193L;
 
 	/**
 	 * Constructor for a new property declaration node.
@@ -98,7 +107,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 	public ResourceID getDescriptor() {
 		SemanticNode node = getSingleAssociationClient(RBSchema.HAS_DESCRIPTOR);
 		if (node != null){
-			return node.asResource();
+			return new SimpleResourceID(new QualifiedName(node.asValue().getStringValue()));
 		} else {
 			return null;
 		}
@@ -111,8 +120,9 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 	 */
 	public void setDescriptor(final ResourceID property, final Context context) {
 		if (!Infra.equals(getDescriptor(), property)){
+			SNValue pDescriptor = new SNValue(ElementaryDataType.URI,property.getQualifiedName().toURI());
 			removeAssocs(RBSchema.HAS_DESCRIPTOR);
-			Association.create(this, RBSchema.HAS_DESCRIPTOR, property, context);
+			Association.create(this, RBSchema.HAS_DESCRIPTOR, pDescriptor, context);
 		}
 	}
 	
