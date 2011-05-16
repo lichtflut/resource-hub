@@ -9,5 +9,7 @@ target
 *.tmprojtest
 pom-conf.tmproj
 core/bin
+webapp/bin
+webck/bin
 
 
