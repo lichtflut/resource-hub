@@ -7,12 +7,14 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
+import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNContext;
@@ -62,8 +64,7 @@ public class RBSchemaStore {
 	 * @return The corresponding persistence Resource Schema Node.
 	 */
 	public SNResourceSchema store(final ResourceSchema schema, Context ctx) {
-		ctx = setUpContext(ctx);
-		
+		ctx = setUpContext(ctx);		
 		/*
 		 * How can we check if this schema does exists, and if so, replace it with the new one
 		 * SNResourceSchema snSchema = loadSchemaForResource(schema.getDescribedResourceID());
@@ -71,10 +72,21 @@ public class RBSchemaStore {
 		 * 
 		 */
 		SNResourceSchema snSchema;
-		if(schema.getResourceID()!=null){
-			snSchema = new SNResourceSchema(schema.getResourceID().asResource());
-		}else{
-			snSchema = new SNResourceSchema(ctx);
+		snSchema = this.loadSchemaForResourceType(schema.getDescribedResourceID(), ctx);
+		if(snSchema==null){
+			if(schema.getResourceID()!=null){
+				snSchema = new SNResourceSchema(schema.getResourceID().asResource());
+			}else{
+				snSchema = new SNResourceSchema(ctx);
+			}
+		}
+		
+		//TODO: This is not the right way to do it. Some Assocaitons (PAssertion -> PDEc) will still stay there
+		//without any primary references
+		//Remove all old associations
+		Set<Association> assertions = snSchema.getAssociations(RBSchema.HAS_PROPERTY_ASSERT);
+		for (Association assoc : assertions) {
+			snSchema.remove(assoc);
 		}
 		
 		//TODO: Resolve from store

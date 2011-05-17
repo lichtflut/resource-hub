@@ -12,6 +12,7 @@ import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.naming.QualifiedName;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -79,9 +80,12 @@ public class RBSchemaStoreTest {
 		 Collection<ResourceSchema> schemas = store.loadAllResourceSchemas(null);
 		 Assert.assertEquals(1,schemas.size());
 		 
+	
+		 //Test that schema can be found for the desrcibed resource (RT)
 		 ResourceID describedResourceID = schema.getDescribedResourceID();
-		 
 		 Assert.assertNotNull(store.loadSchemaForResourceType(describedResourceID,null));
+		 //Test that there is schema for a RT, that doesnt exists
+		 Assert.assertNull(store.loadSchemaForResourceType(new SimpleResourceID(new QualifiedName("test")),null));
 		 
 		 System.out.println("----------------");
 		 pDecs = store.loadAllPropertyDeclarations(null);
