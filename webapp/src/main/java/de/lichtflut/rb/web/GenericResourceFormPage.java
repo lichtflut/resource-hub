@@ -36,7 +36,7 @@ public class GenericResourceFormPage extends RBSuperPage {
 		ResourceSchema schema = loadResourceSchemaFromParams(parameters);
 		//Add generic_form_panel to page
 		ResourceSchemaModel model = ResourceSchemaModel.getInstance();
-        this.add(new GenericResourceFormPanel("generic_form", schema,model));
+        this.add(new GenericResourceFormPanel("generic_form", schema));
 	}
 	
 	

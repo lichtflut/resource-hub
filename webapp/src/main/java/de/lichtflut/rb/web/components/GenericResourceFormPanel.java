@@ -4,8 +4,12 @@
 package de.lichtflut.rb.web.components;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -13,13 +17,21 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
+
+import sun.security.util.Resources_zh_TW;
 
 import de.lichtflut.infra.data.MultiMap;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.RBInvalidAttributeException;
+import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
+import de.lichtflut.rb.core.schema.model.ResocureTypeInstanceImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.models.ResourceSchemaModel;
 
 /**
@@ -35,19 +47,16 @@ import de.lichtflut.rb.models.ResourceSchemaModel;
  */
 @SuppressWarnings({ "serial", "unchecked" })
 public class GenericResourceFormPanel extends Panel {
-	private final ResourceSchemaModel model;
 
 	//Constructors
 	
-
 	// -----------------------------------------------------
 	
 	/**
 	 * 
 	 */
-	public GenericResourceFormPanel(String id, ResourceSchema schema, final ResourceSchemaModel model) {
-		super(id,model);
-		this.model = model;
+	public GenericResourceFormPanel(String id, ResourceSchema schema) {
+		super(id);
 		init(schema);
 	}
 
@@ -55,17 +64,17 @@ public class GenericResourceFormPanel extends Panel {
 	// -----------------------------------------------------
 	
 	private void init(ResourceSchema schema){
-		final ResourceSchemaModel rModel = this.model;
+		final ResocureTypeInstanceImpl instance = new ResocureTypeInstanceImpl(schema);
 		final Form form = new Form("form"){
 			@Override
 			protected void onSubmit() {
 				super.onSubmit();
-				MultiMap<String, String> map = rModel.getMultiMap();
+				Collection<String> attributes = instance.getAttributeNames();
 				StringBuilder string = new StringBuilder();
-				for(String key : map.keySet()){
+				for(String attribute : attributes){
 					String rightShift = "    ";
-					string.append(key + ":<br />");
-					for(String value : map.getValues(key)){
+					string.append(attribute + ":<br />");
+					for(String value : instance.getValuesFor(attribute)){
 						string.append(rightShift + "value->" +  value + "<br />");
 					}
 				}
@@ -75,38 +84,55 @@ public class GenericResourceFormPanel extends Panel {
 		form.setOutputMarkupId(true);
 		this.add(form);
 		form.add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
+		
 		if(schema!=null){
-			final List<PropertyAssertion> assertions = new ArrayList<PropertyAssertion>(schema.getPropertyAssertions());
-			form.add(new ListView("propertylist", assertions) {
-			    protected void populateItem(final ListItem item) {
-			        final PropertyAssertion assertion = (PropertyAssertion) item.getModelObject();
-			        item.add(new Label("propertyLabel", assertion.getPropertyDeclaration().getName()));
-			        item.add(getComponentForAssertion("propertyInput",assertion));
-			    }
-			    
-				
-				// -----------------------------------------------------
-				
-				private FormComponent getComponentForAssertion(String identifier, PropertyAssertion assertion){
-					String attributeDescriptor = assertion.getPropertyDescriptor().getQualifiedName().toURI();  
-					PropertyDeclaration decl = assertion.getPropertyDeclaration();
-					  FormComponent component = null;
-					  
-					  switch(decl.getElementaryDataType()){
-					  	case BOOLEAN : component = new TextField<String>(identifier,rModel.getModelForAttribute(attributeDescriptor)); break;
-					  	case STRING : component = new TextField<String>(identifier,rModel.getModelForAttribute(attributeDescriptor)).setRequired(true); break;
-					  	case INTEGER : component = new TextField<String>(identifier,rModel.getModelForAttribute(attributeDescriptor)); break;
-					  	case RESOURCE : component = new TextField<String>(identifier,rModel.getModelForAttribute(attributeDescriptor)); break;
-					  	case UNDEFINED : component = new TextField<String>(identifier,rModel.getModelForAttribute(attributeDescriptor)); break;
-					  	case DATE : component = new TextField<String>(identifier,rModel.getModelForAttribute(attributeDescriptor)); break;
-					  }
-
-				      return component;
-				}
-			    
-			});			
+			RepeatingView view = new RepeatingView("propertylist");
+			for (String attribute : instance.getAttributeNames()) {
+				KrassesModel model = new KrassesModel(instance, attribute);				
+				Fragment fragment = new Fragment(view.newChildId(), "referenceInput", this);			
+				fragment.add((new Label("propertyLabel", attribute)));
+				fragment.add( new TextField<String>("propertyInput",model));
+				view.add(fragment);
+			}
+			form.add(view);	
 		}//End of if(schema==null)
 
 
 	}//End of Method init
+	
+	
+	class KrassesModel implements IModel<String>{
+		private ResocureTypeInstanceImpl instance;
+		private String attribute;
+		private Integer ticket;
+		
+		public KrassesModel(ResocureTypeInstanceImpl instance, String attribute){
+			
+			this.instance = instance;
+			this.attribute = attribute;
+			try {
+				if(ticket==null) ticket = instance.generateTicketFor(attribute);
+			} catch (Exception e){
+				throw new IllegalArgumentException(e);
+			}
+		}
+		
+		public String getObject() {
+			return instance.getValueFor(attribute, ticket);
+		}
+
+		public void setObject(String object) {
+			try {
+				instance.addValueFor(attribute, object, ticket);
+			} catch (Exception e){
+				throw new IllegalArgumentException(e);
+			}
+			
+		}
+
+		public void detach() {
+			//Do nothing
+		}
+		
+	}
 }
