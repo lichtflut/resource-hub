@@ -30,6 +30,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  *
  * @author Nils Bleisch
  */
+@SuppressWarnings("serial")
 public final class ResourceSchemaImpl implements ResourceSchema{
 
 	//Instance members
@@ -164,6 +165,7 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	public void setDescribedResourceID(ResourceID id) {
 		this.describedResource = id;
 	}
+
 
 
 	

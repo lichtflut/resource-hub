@@ -61,4 +61,6 @@ public interface ResourceSchema extends ResourceSchemaType{
 	 * Please make sure that equals is correct implemented to avoid some merging redundancy conflicts e.g.
 	 */
 	boolean equals(Object obj);
+	
+	
 }

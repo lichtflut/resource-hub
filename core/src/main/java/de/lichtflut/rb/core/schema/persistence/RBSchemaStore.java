@@ -94,7 +94,6 @@ public class RBSchemaStore {
 		snSchema.setDescribedClass(describedResource, ctx);
 		
 		final ModelingConversation mc = gate.startConversation();
-		
 		for (PropertyAssertion assertion : schema.getPropertyAssertions()) {
 			final SNPropertyAssertion snAssertion = new SNPropertyAssertion();
 			snAssertion.setMinOccurs(toScalar(assertion.getCardinality().getMinOccurs()), ctx);
