@@ -11,9 +11,10 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.VoidNamespace;
-
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
+import de.lichtflut.rb.core.schema.model.ResourceTypeInstanceImpl;
 
 /**
  * <p>
@@ -161,9 +162,18 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 		return this.describedResource;
 	}
 
+	// -----------------------------------------------------
+	
 	
 	public void setDescribedResourceID(ResourceID id) {
 		this.describedResource = id;
+	}
+
+	// -----------------------------------------------------
+	
+	
+	public ResourceTypeInstance<String> generateTypeInstance() {
+		return new ResourceTypeInstanceImpl(this);
 	}
 
 

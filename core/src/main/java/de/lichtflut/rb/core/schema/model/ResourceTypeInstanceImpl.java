@@ -16,7 +16,7 @@ import java.util.HashMap;
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public class ResocureTypeInstanceImpl implements ResourceTypeInstance<String> {
+public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 
 	private HashMap<String, ValueHolder> internalRep = new HashMap<String, ValueHolder>();
 	private HashMap<String, RBValidator<String>> internalValidatorMap = new HashMap<String, RBValidator<String>>();
@@ -24,7 +24,7 @@ public class ResocureTypeInstanceImpl implements ResourceTypeInstance<String> {
 	
 	// --CONSTRUCTOR----------------------------------------
 	
-	public ResocureTypeInstanceImpl(ResourceSchema schema){
+	public ResourceTypeInstanceImpl(ResourceSchema schema){
 		this.schema=schema;
 		init();
 	}
@@ -36,9 +36,9 @@ public class ResocureTypeInstanceImpl implements ResourceTypeInstance<String> {
 	
 	// -----------------------------------------------------
 	
-	public int generateTicketFor(String attribute) throws RBInvalidValueException, RBInvalidAttributeException{
+	public Integer generateTicketFor(String attribute) throws RBInvalidValueException, RBInvalidAttributeException{
 		
-		if((!internalRep.containsKey(attribute)) ){
+		if((!containsAttribute(attribute))){
 			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined or does not have an assigned validator");
 		}
 		ValueHolder vHolder = this.internalRep.get(attribute);
@@ -49,19 +49,18 @@ public class ResocureTypeInstanceImpl implements ResourceTypeInstance<String> {
 		return ticket;
 	}
 	
-	public int addValueFor(String attribute, String value) throws RBInvalidValueException, RBInvalidAttributeException {
+	// -----------------------------------------------------
+	
+	
+	public Integer addValueFor(String attribute, String value) throws RBInvalidValueException, RBInvalidAttributeException {
 		if(value==null) value="";
 		RBValidator<String> validator = getValidatorFor(attribute);
-		
-		if((!internalRep.containsKey(attribute)) || validator==null){
+		if((!containsAttribute(attribute)) || validator==null){
 			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined or does not have an assigned validator");
 		}
 	
 		ValueHolder vHolder = this.internalRep.get(attribute);
-		int ticket = vHolder.generateTicket();
-		if(ticket==-1){
-			throw new RBInvalidValueException("The maximum count of values for " + attribute + " is reached, which is " + vHolder.getMetaData(MetaDataKeys.MAX));
-		}
+		int ticket = generateTicketFor(attribute);
 		try{
 			validator.isValid(value);
 		}catch(RBInvalidValueException exe){
@@ -75,11 +74,11 @@ public class ResocureTypeInstanceImpl implements ResourceTypeInstance<String> {
 	
 	// -----------------------------------------------------
 	
-	public int addValueFor(String attribute, String value, int ticket) throws RBInvalidValueException, RBInvalidAttributeException {
+	public void addValueFor(String attribute, String value, int ticket) throws RBInvalidValueException, RBInvalidAttributeException {
 		if(value==null) value="";
 		RBValidator<String> validator = getValidatorFor(attribute);
 		
-		if((!internalRep.containsKey(attribute)) || validator==null){
+		if((!containsAttribute(attribute)) || validator==null){
 			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined or does not have an assigned validator");
 		}
 	
@@ -92,11 +91,13 @@ public class ResocureTypeInstanceImpl implements ResourceTypeInstance<String> {
 		
 		//Set the value
 		if(!vHolder.setValue(value, ticket)) throw new RBInvalidValueException("The index " + ticket + " does not exists for attribute");
-		return ticket;
 	}
 
-	public int geMetaInfoFor(String attribute, MetaDataKeys key) {
-		return (Integer) this.internalRep.get(attribute).getMetaData(key);
+	// -----------------------------------------------------
+	
+	public Object geMetaInfoFor(String attribute, MetaDataKeys key) {
+		if(!containsAttribute(attribute)) return null;
+		return this.internalRep.get(attribute).getMetaData(key);
 	}
 	
 	
@@ -239,6 +240,16 @@ public class ResocureTypeInstanceImpl implements ResourceTypeInstance<String> {
 		
 		
 	}
+	
+	//--SANTA's LITTLE HELPER----------------------------------
+	
+	
+	private boolean containsAttribute(String attribute){
+		return internalRep.containsKey(attribute);
+	}
+	
+
+	
 	
 }
 

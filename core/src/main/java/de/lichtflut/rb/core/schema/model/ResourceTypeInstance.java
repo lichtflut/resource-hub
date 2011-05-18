@@ -24,19 +24,23 @@ public interface ResourceTypeInstance<T> extends Serializable{
 		TYPE
 	}
 	
-	
-	
 	/**
 	 * @param attribute
 	 * @param value
 	 * @throws <p>InvalidValueException when the value does not match the required datatype or constraints
 	 * or if the maximum count of possible values is reached (depends on the cardinality).
 	 * InvalidAttributeException if this attribute does not exists.</p>
-	 * @return the index where this value has been stored
+	 * @return the ticket where this value has been stored
 	 */
-	public int addValueFor(String attribute, T value) throws RBInvalidValueException, RBInvalidAttributeException;
+	public Integer addValueFor(String attribute, T value) throws RBInvalidValueException, RBInvalidAttributeException;
 	
 	// -----------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public void addValueFor(String attribute, String value, int ticket) throws RBInvalidValueException, RBInvalidAttributeException;
+	
 	
 	/**
 	 * 
@@ -60,8 +64,19 @@ public interface ResourceTypeInstance<T> extends Serializable{
 	
 	// -----------------------------------------------------
 	
+	/**
+	 * 
+	 */
+	public Integer generateTicketFor(String attribute) throws RBInvalidValueException, RBInvalidAttributeException;
 	
 	
+	// -----------------------------------------------------
 	
+	/**
+	 * 
+	 */
+	public Object  geMetaInfoFor(String attribute, MetaDataKeys key);
 	
+	// -----------------------------------------------------
+
 }

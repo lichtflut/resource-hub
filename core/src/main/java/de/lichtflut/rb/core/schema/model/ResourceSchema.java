@@ -63,4 +63,9 @@ public interface ResourceSchema extends ResourceSchemaType{
 	boolean equals(Object obj);
 	
 	
+	/**
+	 * generates an instance of the schema's described resource-type
+	 */
+	ResourceTypeInstance generateTypeInstance();
+	
 }
