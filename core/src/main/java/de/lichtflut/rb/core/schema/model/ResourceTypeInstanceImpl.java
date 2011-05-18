@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.arastreju.sge.model.ResourceID;
+
 /**
  * [TODO Insert description here.]
  * 
@@ -146,7 +148,7 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 							case DATE : Date.parse(value); break;
 						}
 					}catch(Exception any){
-						throw new RBInvalidValueException(value + " is not a valid value for the expected type " + pDec.getElementaryDataType());
+						throw new RBInvalidValueException("\"" + value + "\" is not a valid value for the expected type " + pDec.getElementaryDataType());
 					}
 					
 					// TODO Auto-generated method stub
@@ -158,8 +160,32 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 		}//End of for
 	}
 	
+	// -----------------------------------------------------
 	
-	class ValueHolder{
+	public ResourceID getResourceID() {
+		return null;
+	}
+
+	// -----------------------------------------------------
+	
+	public ResourceSchema getResourceSchema() {
+		return this.schema;
+	}
+
+	// -----------------------------------------------------
+	
+	public ResourceID getResourceTypeID() {
+		return this.schema.getDescribedResourceID();
+	}
+	
+	// -----------------------------------------------------
+	
+	//Value Holder helper class
+	
+	/**
+	 * 
+	 */
+	private class ValueHolder{
 		private ArrayList<String> values = new ArrayList<String>();
 		private ArrayList<Integer> tickets = new ArrayList<Integer>();
 		private Cardinality c;
@@ -246,10 +272,7 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 	
 	private boolean containsAttribute(String attribute){
 		return internalRep.containsKey(attribute);
-	}
-	
-
-	
+	}	
 	
 }
 

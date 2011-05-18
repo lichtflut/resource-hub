@@ -6,6 +6,8 @@ package de.lichtflut.rb.core.schema.model;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.arastreju.sge.model.ResourceID;
+
 /**
  * <p>
  * 	Represents an instance of a well defined ResourceType (RT)
@@ -49,6 +51,14 @@ public interface ResourceTypeInstance<T> extends Serializable{
 	
 	// -----------------------------------------------------
 	
+	/**
+	 * 
+	 */
+	public Collection<String> getAttributeNames();
+	
+	// -----------------------------------------------------
+	
+	
 	
 	/**
 	 * 
@@ -79,4 +89,26 @@ public interface ResourceTypeInstance<T> extends Serializable{
 	
 	// -----------------------------------------------------
 
+	/**
+	 * 
+	 */
+	public ResourceSchema getResourceSchema();
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public ResourceID getResourceTypeID();
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public ResourceID getResourceID();
+	
+	
+	// -----------------------------------------------------
+	
 }

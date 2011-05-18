@@ -3,36 +3,29 @@
  */
 package de.lichtflut.rb.web.components;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
+import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidationError;
+import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.ValidationError;
 
-import sun.security.util.Resources_zh_TW;
-
-import de.lichtflut.infra.data.MultiMap;
-import de.lichtflut.rb.core.schema.model.PropertyAssertion;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.RBInvalidAttributeException;
 import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
-import de.lichtflut.rb.core.schema.model.ResocureTypeInstanceImpl;
+import de.lichtflut.rb.core.schema.model.RBValidator;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
-import de.lichtflut.rb.models.ResourceSchemaModel;
 
 /**
  * <p>
@@ -64,7 +57,7 @@ public class GenericResourceFormPanel extends Panel {
 	// -----------------------------------------------------
 	
 	private void init(ResourceSchema schema){
-		final ResocureTypeInstanceImpl instance = new ResocureTypeInstanceImpl(schema);
+		final ResourceTypeInstance instance = schema.generateTypeInstance();
 		final Form form = new Form("form"){
 			@Override
 			protected void onSubmit() {
@@ -74,7 +67,7 @@ public class GenericResourceFormPanel extends Panel {
 				for(String attribute : attributes){
 					String rightShift = "    ";
 					string.append(attribute + ":<br />");
-					for(String value : instance.getValuesFor(attribute)){
+					for(Object value : instance.getValuesFor(attribute)){
 						string.append(rightShift + "value->" +  value + "<br />");
 					}
 				}
@@ -87,11 +80,26 @@ public class GenericResourceFormPanel extends Panel {
 		
 		if(schema!=null){
 			RepeatingView view = new RepeatingView("propertylist");
-			for (String attribute : instance.getAttributeNames()) {
+			for (final String attribute : (Collection<String>) instance.getAttributeNames()) {
 				KrassesModel model = new KrassesModel(instance, attribute);				
 				Fragment fragment = new Fragment(view.newChildId(), "referenceInput", this);			
 				fragment.add((new Label("propertyLabel", attribute)));
-				fragment.add( new TextField<String>("propertyInput",model));
+				FormComponent c = new TextField<String>("propertyInput",model);
+				c.add(new IValidator(){
+
+					public void validate(IValidatable validatable) {
+						RBValidator validator = instance.getValidatorFor(attribute);
+						try {
+							validator.isValid(validatable.getValue());
+						} catch (RBInvalidValueException e) {
+							ValidationError error = new ValidationError();
+							error.setMessage(e.getMessage());
+							validatable.error(error);
+						}
+					}
+					
+				});
+				fragment.add(c);
 				view.add(fragment);
 			}
 			form.add(view);	
@@ -100,13 +108,13 @@ public class GenericResourceFormPanel extends Panel {
 
 	}//End of Method init
 	
-	
+
 	class KrassesModel implements IModel<String>{
-		private ResocureTypeInstanceImpl instance;
+		private ResourceTypeInstance instance;
 		private String attribute;
 		private Integer ticket;
 		
-		public KrassesModel(ResocureTypeInstanceImpl instance, String attribute){
+		public KrassesModel(ResourceTypeInstance instance, String attribute){
 			
 			this.instance = instance;
 			this.attribute = attribute;
@@ -118,7 +126,7 @@ public class GenericResourceFormPanel extends Panel {
 		}
 		
 		public String getObject() {
-			return instance.getValueFor(attribute, ticket);
+			return (String) instance.getValueFor(attribute, ticket);
 		}
 
 		public void setObject(String object) {
