@@ -18,7 +18,7 @@ import org.arastreju.sge.model.ResourceID;
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
+public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 
 	private HashMap<String, ValueHolder> internalRep = new HashMap<String, ValueHolder>();
 	private HashMap<String, RBValidator<String>> internalValidatorMap = new HashMap<String, RBValidator<String>>();
@@ -181,12 +181,6 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 		}//End of for
 	}
 	
-	// -----------------------------------------------------
-	
-	public ResourceID getResourceID() {
-		return null;
-	}
-
 	// -----------------------------------------------------
 	
 	public ResourceSchema getResourceSchema() {

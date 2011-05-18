@@ -4,13 +4,10 @@
 package de.lichtflut.rb.web.components.genericresource;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -18,10 +15,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.RepeatingView;
-
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance.MetaDataKeys;
@@ -59,12 +53,14 @@ public class GenericResourceFormPanel extends Panel {
 	
 	private void init(ResourceSchema schema){
 		
-		
+		final ResourceTypeInstance instance = schema.generateTypeInstance();
 		final Form form = new Form("form"){
 			@Override
 			protected void onSubmit() {
 				super.onSubmit();
-				
+				if(provider.getResourceManagement().createOrUpdateRTInstance(instance)){
+					info("This instance has been successfully updated/created");
+				}
 				
 				//Here should be a redirect or something like that
 				
@@ -75,11 +71,11 @@ public class GenericResourceFormPanel extends Panel {
 		form.add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
 		
 		if(schema!=null){
-			final ResourceTypeInstance instance = schema.generateTypeInstance();
+			
 			RepeatingView view = new RepeatingView("propertylist");
 			for (final String attribute : (Collection<String>) instance.getAttributeNames()) {
 				boolean required=true;
-				int minimum_cnt = (Integer )instance.geMetaInfoFor(attribute, MetaDataKeys.MIN);
+				int minimum_cnt = (Integer )instance.geMetaInfoFor(attribute,MetaDataKeys.MIN);
 				if(minimum_cnt==0){
 					minimum_cnt=1;
 					required=false;	
