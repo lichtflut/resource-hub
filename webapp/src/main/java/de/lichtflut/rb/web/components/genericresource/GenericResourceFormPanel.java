@@ -4,7 +4,13 @@
 package de.lichtflut.rb.web.components.genericresource;
 
 import java.util.Collection;
+import java.util.Iterator;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -12,6 +18,8 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.RepeatingView;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -77,22 +85,52 @@ public class GenericResourceFormPanel extends Panel {
 					required=false;	
 				}
 				for(int cnt = 0; cnt< minimum_cnt; cnt++){
-					final GenericResourceModel model = new GenericResourceModel(instance, attribute);
-					//Add a fragment to this form panel
-					Fragment fragment = new Fragment(view.newChildId(), "referenceInput", this);			
-					fragment.add((new Label("propertyLabel", instance.getSimpleAttributeName(attribute) + 
-							(required ? " (*)" : ""))));
-					FormComponent c = new TextField<String>("propertyInput",model);
-					c.setRequired(required);
-					//Add a validator
-					c.add(new GenericResourceValidator(instance.getValidatorFor(attribute)));
-					fragment.add(c);
-					view.add(fragment);
+					view.add(buildItem(instance, attribute, view, required, (cnt+1)==minimum_cnt));
 				}
 			}
 			form.add(view);	
 		}//End of if(schema==null)
 
 	}//End of Method init
+	
+	
+	
+	private Component buildItem(final ResourceTypeInstance instance, final String attribute, final RepeatingView view, boolean required, boolean expendable){
+		final GenericResourceModel model = new GenericResourceModel(instance, attribute);
+		Fragment fragment = new Fragment(view.newChildId(), "referenceInput", this);			
+		fragment.add((new Label("propertyLabel", instance.getSimpleAttributeName(attribute) + 
+				(required ? " (*)" : ""))));
+		FormComponent c = new TextField<String>("propertyInput",model);
+		c.setRequired(required);
+		//Add a validator
+		c.add(new GenericResourceValidator(instance.getValidatorFor(attribute)));
+		fragment.add(c);
+		AjaxButton button = new AjaxButton("addField"){
+
+			@Override
+			protected void onError(AjaxRequestTarget target,Form<?> form) {
+				//Do nothing							
+			}
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target,Form<?> form) {
+			      Component item = buildItem(instance, attribute, view, false, true);
+			      // first execute javascript which creates a placeholder tag in markup for this item
+			      target.prependJavascript(
+			        String.format(
+			        "var item=document.createElement('%s');item.id='%s';"+
+			        "Wicket.$('%s').appendChild(item);",
+			        "tr", item.getMarkupId(), item.getMarkupId()));
+			      	view.add(item);
+			        target.addComponent(item);
+			}
+		};
+		button.add(new Label("linkLabel","(+)"));
+		button.setVisible((expendable &&
+				((Integer) instance.geMetaInfoFor(attribute, MetaDataKeys.MAX)) > 
+				((Integer) instance.geMetaInfoFor(attribute, MetaDataKeys.CURRENT))));
+		fragment.add(button);
+		return fragment;
+	}
 	
 }
