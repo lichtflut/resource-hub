@@ -79,6 +79,13 @@ public interface ResourceTypeInstance<T> extends Serializable{
 	 */
 	public Integer generateTicketFor(String attribute) throws RBInvalidValueException, RBInvalidAttributeException;
 	
+	// -----------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public void releaseTicketFor(String attribute, int ticket ) throws RBInvalidValueException,RBInvalidAttributeException;
+		
 	
 	// -----------------------------------------------------
 	

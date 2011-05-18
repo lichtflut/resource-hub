@@ -41,7 +41,7 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 	public Integer generateTicketFor(String attribute) throws RBInvalidValueException, RBInvalidAttributeException{
 		
 		if((!containsAttribute(attribute))){
-			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined or does not have an assigned validator");
+			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined");
 		}
 		ValueHolder vHolder = this.internalRep.get(attribute);
 		int ticket = vHolder.generateTicket();
@@ -50,6 +50,19 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 		}
 		return ticket;
 	}
+	
+	// -----------------------------------------------------
+	
+	public void releaseTicketFor(String attribute, int ticket ) throws RBInvalidValueException,RBInvalidAttributeException {
+		if((!containsAttribute(attribute))){
+			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined");
+		}
+		ValueHolder vHolder = this.internalRep.get(attribute);
+		if(!vHolder.removeTicket(ticket)){
+			//TODO: Analyze the specific cases
+			throw new RBInvalidValueException("The ticket does not exists or the minimum count of values for " + attribute + " is reached, which is " + vHolder.getMetaData(MetaDataKeys.MIN));
+		}
+	}	
 	
 	// -----------------------------------------------------
 	
@@ -118,10 +131,11 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 	// -----------------------------------------------------
 
 	public Collection<String> getValuesFor(String attribute) {
-		ArrayList<String> values = internalRep.get(attribute).values;
+		Collection<String> values = internalRep.get(attribute).getValues();
 		if(values!=null && values.size()!=0) return values;
 		return null;
 	}
+	
 	
 	// -----------------------------------------------------
 
@@ -186,9 +200,11 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 	 * 
 	 */
 	private class ValueHolder{
-		private ArrayList<String> values = new ArrayList<String>();
+		private HashMap<Integer,String> values = new HashMap<Integer,String>();
 		private ArrayList<Integer> tickets = new ArrayList<Integer>();
 		private Cardinality c;
+		//Auto increment ticket counter
+		private int ticketcnt=0;
 		
 		public ValueHolder(Cardinality c){
 			this.c =c;
@@ -210,7 +226,7 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 			for (Integer ticket : tickets) {
 				output.add(values.get(ticket));
 			}
-			return values;
+			return output;
 		}
 		
 		// -----------------------------------------------------
@@ -218,16 +234,7 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 		public boolean setValue(String value, int ticket){
 			//Check if the ticket does exists
 			if(!tickets.contains(ticket)) return false;
-			if(ticket>=values.size()){
-				values.add(ticket, value);
-			}else{
-				if(values.get(ticket)!=null){
-					values.set(ticket,value);
-				}else{
-					values.add(ticket, value);
-				}
-			}
-			
+			values.put(ticket, value);
 			return true;
 		}
 		
@@ -245,8 +252,9 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 			//If a ticket couldnt not be created
 			int ticket =-1;
 			if(tickets.size()< c.getMaxOccurs()){
-				ticket = tickets.size();
-				tickets.add(ticket,ticket);
+				ticket = (ticketcnt +1);
+				tickets.add(ticket);
+				//Set an initial value to null:
 				setValue(null, ticket);
 			}
 			return ticket;
@@ -254,14 +262,18 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 		
 		// -----------------------------------------------------
 		
-		public int removeTicket(int ticket){
-			//If a ticket couldnt not be created
-			if(tickets.size()> c.getMinOccurs()){
-				tickets.remove(ticket);
-			}else{
-				ticket=-1;
+		public boolean removeTicket(int ticket){
+			//If this ticket does not exists
+			if(!tickets.contains(ticket)){
+				//If the current amount of tickets is greater than the minimal cardinality
+				if(tickets.size()> c.getMinOccurs()){
+					tickets.remove((Integer) ticket);
+					//Remove tickets entry:
+					values.remove((Integer) ticket);
+					return true;
+				}
 			}
-			return ticket;
+			return false;
 		}
 		
 		
@@ -272,7 +284,9 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 	
 	private boolean containsAttribute(String attribute){
 		return internalRep.containsKey(attribute);
-	}	
+	}
+
+
 	
 }
 
