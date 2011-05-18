@@ -22,6 +22,7 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 
 	private HashMap<String, ValueHolder> internalRep = new HashMap<String, ValueHolder>();
 	private HashMap<String, RBValidator<String>> internalValidatorMap = new HashMap<String, RBValidator<String>>();
+	private HashMap<String, String> simpleAttributeNames = new HashMap<String, String>();
 	private ResourceSchema schema;
 	
 	// --CONSTRUCTOR----------------------------------------
@@ -136,6 +137,11 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 		return null;
 	}
 	
+	// -----------------------------------------------------
+
+	public String getSimpleAttributeName(String attribute) {
+		return simpleAttributeNames.get(attribute);
+	}
 	
 	// -----------------------------------------------------
 
@@ -170,6 +176,7 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 				}
 			});
 			//Validator has been added
+			simpleAttributeNames.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(), propertyAssertion.getPropertyDescriptor().getName());
 			internalRep.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(),new ValueHolder(propertyAssertion.getCardinality()));
 		}//End of for
 	}
@@ -285,7 +292,6 @@ public class ResourceTypeInstanceImpl implements ResourceTypeInstance<String> {
 	private boolean containsAttribute(String attribute){
 		return internalRep.containsKey(attribute);
 	}
-
 
 	
 }

@@ -10,7 +10,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.models.ResourceSchemaModel;
-import de.lichtflut.rb.web.components.GenericResourceFormPanel;
+import de.lichtflut.rb.web.components.genericresource.GenericResourceFormPanel;
 
 /**
  * TODO: to comment

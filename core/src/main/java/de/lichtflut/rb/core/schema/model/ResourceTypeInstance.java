@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.schema.model;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Locale;
 
 import org.arastreju.sge.model.ResourceID;
 
@@ -37,6 +38,12 @@ public interface ResourceTypeInstance<T> extends Serializable{
 	public Integer addValueFor(String attribute, T value) throws RBInvalidValueException, RBInvalidAttributeException;
 	
 	// -----------------------------------------------------
+	
+	
+	public String getSimpleAttributeName(String attribute);
+	
+	// -----------------------------------------------------
+		
 	
 	/**
 	 * 
