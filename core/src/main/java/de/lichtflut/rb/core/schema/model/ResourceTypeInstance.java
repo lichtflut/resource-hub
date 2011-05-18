@@ -10,6 +10,7 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.associations.Association;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 
@@ -37,6 +38,18 @@ public abstract class ResourceTypeInstance<T> extends ResourceView implements Se
 	private static final long serialVersionUID = 535252848460633518L;
 
 	
+	
+	//-- CONSTRUCTOR --------------------------------------
+	
+	
+	public ResourceTypeInstance(){
+		//do nothing
+	}
+		
+	
+	public ResourceTypeInstance(ResourceNode id){
+		super(id);
+	}
 	
 	/**
 	 * @param attribute

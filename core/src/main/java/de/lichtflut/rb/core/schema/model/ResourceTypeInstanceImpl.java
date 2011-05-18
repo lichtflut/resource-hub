@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * [TODO Insert description here.]
@@ -31,6 +32,13 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 		this.schema=schema;
 		init();
 	}
+	
+	public ResourceTypeInstanceImpl(ResourceSchema schema, ResourceNode node){
+		super(node);
+		this.schema=schema;
+		init();
+	}
+	
 	
 	public Collection<String> getAttributeNames(){
 		return internalRep.keySet();

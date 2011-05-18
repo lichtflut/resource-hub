@@ -70,7 +70,7 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 	/**
 	 * 
 	 */
-	public ResourceTypeManagement getResourceManagement() {
+	public ResourceTypeManagement getResourceTypeManagement() {
 		return this.typeManagement;
 	}
 

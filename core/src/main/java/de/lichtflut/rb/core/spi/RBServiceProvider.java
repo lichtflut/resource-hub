@@ -39,7 +39,7 @@ public interface RBServiceProvider {
 	 * {@link ResourceSchemaManagement} provides the ability to manage,
 	 * persist and store Resource-Types and RT-Instances.
 	 */
-	ResourceTypeManagement getResourceManagement();
+	ResourceTypeManagement getResourceTypeManagement();
 	
 	// -----------------------------------------------------
 	

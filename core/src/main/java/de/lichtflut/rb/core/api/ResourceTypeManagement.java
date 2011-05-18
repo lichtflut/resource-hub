@@ -4,7 +4,9 @@
 package de.lichtflut.rb.core.api;
 
 import java.io.Serializable;
+import java.util.Collection;
 
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 
 /**
@@ -29,4 +31,12 @@ public interface ResourceTypeManagement extends Serializable{
 	 * creates or updates a given {@link ResourceTypeInstance}
 	 */
 	public boolean createOrUpdateRTInstance(ResourceTypeInstance<Object> instance);
+
+	// -----------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public Collection<ResourceTypeInstance<Object>> loadAllResourceTypeInstancesForSchema(ResourceSchema schema);
+	
 }
