@@ -3,10 +3,8 @@
  */
 package de.lichtflut.rb.web;
 
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.apriori.Aras;
-import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -28,13 +26,13 @@ import de.lichtflut.rb.web.models.ResourceNodeModel;
  *
  * @author Oliver Tigges
  */
-public class SampleResourcePage extends WebPage {
+public class SampleResourcePage extends RBSuperPage {
 
 	/**
 	 * @param parameters
 	 */
 	public SampleResourcePage(final PageParameters parameters) {
-		super(parameters);
+		super("Sample Resource", parameters);
 		
 		add(new SampleResourcePanel("resourcePane", new ResourceNodeModel<ResourceNode>(createSample())));
 	}

@@ -104,16 +104,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.arastreju</groupId>
-			<artifactId>arastreju.neo4j</artifactId>
-			<version>0.5.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.arastreju</groupId>
-			<artifactId>arastreju.sge</artifactId>
-			<version>0.5.0-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 	<pluginRepositories>
 		<pluginRepository>

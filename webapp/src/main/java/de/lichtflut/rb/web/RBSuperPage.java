@@ -4,15 +4,18 @@
 package de.lichtflut.rb.web;
 
 import javax.inject.Inject;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.string.CssUtils;
-import org.w3c.dom.css.CSSPageRule;
 
 import de.lichtflut.rb.builders.SessionBuilder;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
+import de.lichtflut.rb.web.components.navigation.NavigationBar;
+import de.lichtflut.rb.web.components.navigation.NavigationNodePanel;
 
 /**
  * <p>
@@ -68,6 +71,18 @@ public abstract class RBSuperPage extends WebPage {
 	
 	public void init(){
 		add(new Label("title", title));
+		
+		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
+		
+		mainNavigation.addChild(new NavigationNodePanel("node", 
+				new BookmarkablePageLink<RSPage>("link", RSPage.class),
+				Model.of("Resource Schema")));
+		
+		mainNavigation.addChild(new NavigationNodePanel("node", 
+				new BookmarkablePageLink<SampleResourcePage>("link", SampleResourcePage.class),
+				Model.of("Sample Resource")));
+		
+		add(mainNavigation);
 	}
 	
 	// -----------------------------------------------------

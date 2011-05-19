@@ -3,23 +3,29 @@
     Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
 
 -->
-<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd" >
-    <head>  
-        <title>RBPrototype</title>
-    </head>
-    <body style="text-align: center; background-color: #9EB2CE;">
-    	<div class="page" style="background: #EBEFF5; margin: 10pt; text-align: center; width: 600px;">
-    		<div class="header" style="border-top:medium dashed #FFFFFF; margin-top: 20px;"">
-    			<strong><span wicket:id="title">Page title</span></strong>
-    		</div>
-    		<div class="primary-content" style="border-top:medium dashed #FFFFFF; text-align: center; margin-top: 20px;"">
-         		 <wicket:child />  
-       		 </div>  
-                
-       		 <div class="footer" style="border-top:medium dashed #FFFFFF; text-align: center; margin-top: 20px;">
-        		© Copyright 2010, Lichtflut Forschungs u. Entwicklungsgesellschaft
-        	</div>
-        
-        </div>           
-    </body>
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<head>
+    <title>RBPrototype</title>
+    <link rel="stylesheet" type="text/css" href="css/lfrb.css" media="screen"/>
+</head>
+<body style="text-align: center; background-color: #9EB2CE;">
+	<div class="page" style="background: #EBEFF5; margin: 10pt; text-align: center; width: 600px;">
+		<div class="header" style="border-top: medium dashed #FFFFFF; margin-top: 20px;"">
+			<strong><span wicket:id="title">Page title</span>
+			</strong>
+		</div>
+		<div id="firstlevelmenu">
+		      <div wicket:id="mainNavigation" class="navigation-bar horizontal"></div>
+		</div>
+		<div class="primary-content" style="border-top: medium dashed #FFFFFF; text-align: center; margin-top: 20px;"">
+			<wicket:child />
+		</div>
+
+		<div class="footer" style="border-top: medium dashed #FFFFFF; text-align: center; margin-top: 20px;">
+			&copy; Copyright 2011, lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+		</div>
+
+	</div>
+</body>
 </html>
