@@ -6,7 +6,13 @@ package de.lichtflut.rb.core.schema.model;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.associations.Association;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNValue;
+import org.arastreju.sge.model.nodes.views.ResourceView;
 
 /**
  * <p>
@@ -17,13 +23,32 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Nils Bleisch
  */
-public interface ResourceTypeInstance<T> extends Serializable{
+public abstract class ResourceTypeInstance<T> extends ResourceView implements Serializable{
 
-	enum MetaDataKeys{
+	public enum MetaDataKeys{
 		MAX,
 		MIN,
 		CURRENT,
 		TYPE
+	}
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 535252848460633518L;
+
+	
+	
+	//-- CONSTRUCTOR --------------------------------------
+	
+	
+	public ResourceTypeInstance(){
+		//do nothing
+	}
+		
+	
+	public ResourceTypeInstance(ResourceNode id){
+		super(id);
 	}
 	
 	/**
@@ -34,27 +59,33 @@ public interface ResourceTypeInstance<T> extends Serializable{
 	 * InvalidAttributeException if this attribute does not exists.</p>
 	 * @return the ticket where this value has been stored
 	 */
-	public Integer addValueFor(String attribute, T value) throws RBInvalidValueException, RBInvalidAttributeException;
+	public abstract Integer addValueFor(String attribute, T value) throws RBInvalidValueException, RBInvalidAttributeException;
+	
+	// -----------------------------------------------------
+	
+	
+	public abstract String getSimpleAttributeName(String attribute);
+	
+	// -----------------------------------------------------
+		
+	
+	/**
+	 * 
+	 */
+	public abstract void addValueFor(String attribute, String value, int ticket) throws RBInvalidValueException, RBInvalidAttributeException;
+	
+	
+	/**
+	 * 
+	 */
+	public abstract T getValueFor(String attribute, int index);
 	
 	// -----------------------------------------------------
 	
 	/**
 	 * 
 	 */
-	public void addValueFor(String attribute, String value, int ticket) throws RBInvalidValueException, RBInvalidAttributeException;
-	
-	
-	/**
-	 * 
-	 */
-	public T getValueFor(String attribute, int index);
-	
-	// -----------------------------------------------------
-	
-	/**
-	 * 
-	 */
-	public Collection<String> getAttributeNames();
+	public abstract Collection<String> getAttributeNames();
 	
 	// -----------------------------------------------------
 	
@@ -63,52 +94,66 @@ public interface ResourceTypeInstance<T> extends Serializable{
 	/**
 	 * 
 	 */
-	public Collection<T> getValuesFor(String attribute);
+	public abstract Collection<T> getValuesFor(String attribute);
 	
 	// -----------------------------------------------------
 	
 	/**
 	 * 
 	 */
-	public RBValidator getValidatorFor(String attribute);
+	public abstract RBValidator getValidatorFor(String attribute);
 	
 	// -----------------------------------------------------
 	
 	/**
 	 * 
 	 */
-	public Integer generateTicketFor(String attribute) throws RBInvalidValueException, RBInvalidAttributeException;
-	
+	public abstract Integer generateTicketFor(String attribute) throws RBInvalidValueException, RBInvalidAttributeException;
 	
 	// -----------------------------------------------------
 	
 	/**
 	 * 
 	 */
-	public Object  geMetaInfoFor(String attribute, MetaDataKeys key);
+	public abstract void releaseTicketFor(String attribute, int ticket ) throws RBInvalidValueException,RBInvalidAttributeException;
+		
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public abstract Object  geMetaInfoFor(String attribute, MetaDataKeys key);
 	
 	// -----------------------------------------------------
 
 	/**
 	 * 
 	 */
-	public ResourceSchema getResourceSchema();
+	public abstract ResourceSchema getResourceSchema();
 	
 	// -----------------------------------------------------
 	
 	/**
 	 * 
 	 */
-	public ResourceID getResourceTypeID();
+	public  abstract ResourceID getResourceTypeID();
 	
 	// -----------------------------------------------------
 	
 	/**
 	 * 
 	 */
-	public ResourceID getResourceID();
-	
-	
-	// -----------------------------------------------------
-	
+	public void createAssociations(Context ctx){
+		Association.create(this,RDF.TYPE, getResourceTypeID(),ctx);
+		ResourceSchema schema = getResourceSchema();
+		Collection<PropertyAssertion> assertions = schema.getPropertyAssertions();
+		for (PropertyAssertion pAssertion : assertions) {
+			Collection<T> values = this.getValuesFor(pAssertion.getPropertyDescriptor().getQualifiedName().toURI());
+			for (T value : values) {
+				Association.create(
+				this,pAssertion.getPropertyDescriptor(),new SNValue(pAssertion.getPropertyDeclaration().getElementaryDataType(),value),ctx);
+			}//End of inner for loop
+		}//End of outer for loop
+	}
 }

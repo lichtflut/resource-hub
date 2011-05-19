@@ -1,6 +1,6 @@
 RESOURCE "http://lichtflut.de#Mitarbeiter"{
 	PROPERTY "http://lichtflut.de#Vorname"{
-		CARDINALITY=[1,1]
+		CARDINALITY=[2,3]
 	},
 	
 	PROPERTY "http://lichtflut.de#Nachname"{

@@ -9,8 +9,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.models.ResourceSchemaModel;
-import de.lichtflut.rb.web.components.GenericResourceFormPanel;
+import de.lichtflut.rb.web.components.genericresource.GenericResourceFormPanel;
 
 /**
  * TODO: to comment
@@ -35,8 +34,7 @@ public class GenericResourceFormPage extends RBSuperPage {
 		super("Resource " + parameters.get("resourceid"), parameters);
 		ResourceSchema schema = loadResourceSchemaFromParams(parameters);
 		//Add generic_form_panel to page
-		ResourceSchemaModel model = ResourceSchemaModel.getInstance();
-        this.add(new GenericResourceFormPanel("generic_form", schema));
+        this.add(new GenericResourceFormPanel("generic_form", schema, getServiceProvider()));
 	}
 	
 	
