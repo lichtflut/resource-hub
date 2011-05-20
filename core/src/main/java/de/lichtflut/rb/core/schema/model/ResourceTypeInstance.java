@@ -132,7 +132,7 @@ public abstract class ResourceTypeInstance<T> extends ResourceView implements Se
 	/**
 	 * 
 	 */
-	public abstract Object  geMetaInfoFor(String attribute, MetaDataKeys key);
+	public abstract Object  getMetaInfoFor(String attribute, MetaDataKeys key);
 	
 	// -----------------------------------------------------
 

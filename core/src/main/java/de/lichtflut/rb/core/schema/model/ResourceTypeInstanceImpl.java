@@ -123,7 +123,7 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 
 	// -----------------------------------------------------
 	
-	public Object geMetaInfoFor(String attribute, MetaDataKeys key) {
+	public Object getMetaInfoFor(String attribute, MetaDataKeys key) {
 		if(!containsAttribute(attribute)) return null;
 		return this.internalRep.get(attribute).getMetaData(key);
 	}
@@ -132,7 +132,8 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 	
 	public Collection<Integer> getTicketsFor(String attribute) {
 		if(!containsAttribute(attribute)) return null;
-		return this.internalRep.get(attribute).getTickets();
+		//Clone this collection to prevent external modification on the internal tickets-set
+		return new ArrayList<Integer>(this.internalRep.get(attribute).getTickets());
 	}
 	
 	
