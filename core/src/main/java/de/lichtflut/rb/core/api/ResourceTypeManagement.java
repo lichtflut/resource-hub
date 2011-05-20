@@ -37,6 +37,7 @@ public interface ResourceTypeManagement extends Serializable{
 	/**
 	 * 
 	 */
-	public Collection<ResourceTypeInstance<Object>> loadAllResourceTypeInstancesForSchema(ResourceSchema schema);
+	@SuppressWarnings("unchecked")
+	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema);
 	
 }

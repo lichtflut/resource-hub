@@ -7,9 +7,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.ValueNode;
+
 
 /**
  * [TODO Insert description here.]
@@ -124,6 +128,13 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 		return this.internalRep.get(attribute).getMetaData(key);
 	}
 	
+	// -----------------------------------------------------
+	
+	public Collection<Integer> getTicketsFor(String attribute) {
+		if(!containsAttribute(attribute)) return null;
+		return this.internalRep.get(attribute).getTickets();
+	}
+	
 	
 	// -----------------------------------------------------
 	
@@ -178,14 +189,13 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 					}catch(Exception any){
 						throw new RBInvalidValueException("\"" + value + "\" is not a valid value for the expected type " + pDec.getElementaryDataType());
 					}
-					
-					// TODO Auto-generated method stub
-					return false;
+					return true;
 				}
 			});
 			//Validator has been added
 			simpleAttributeNames.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(), propertyAssertion.getPropertyDescriptor().getName());
-			internalRep.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(),new ValueHolder(propertyAssertion.getCardinality()));
+			ValueHolder vHolder = new ValueHolder(propertyAssertion.getCardinality(), getAssociationClients(propertyAssertion.getPropertyDescriptor()));
+			internalRep.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(),vHolder);
 		}//End of for
 	}
 	
@@ -215,9 +225,12 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 		//Auto increment ticket counter
 		private int ticketcnt=0;
 		
-		public ValueHolder(Cardinality c){
+		public ValueHolder(Cardinality c, Set<SemanticNode> set){
 			this.c =c;
+			init(set);
 		}
+		
+		// -----------------------------------------------------
 		
 		public Integer getMetaData(MetaDataKeys key) {
 			switch(key){
@@ -228,6 +241,13 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 			return null;
 		}
 
+		// -----------------------------------------------------
+		
+		public Collection<Integer> getTickets(){
+			return tickets;
+		}
+		
+		
 		// -----------------------------------------------------
 		
 		public Collection<String> getValues(){
@@ -286,7 +306,16 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 			return false;
 		}
 		
+		// -----------------------------------------------------
 		
+		private void init(Set<SemanticNode> set) {
+			if(set==null || set.size()==0) return;
+			for (SemanticNode semanticNode : set) {
+				ValueNode vNode = semanticNode.asValue();
+				int ticket_id = generateTicket();
+				setValue(vNode.getStringValue(), ticket_id);
+			}
+		}
 	}
 	
 	//--SANTA's LITTLE HELPER----------------------------------

@@ -98,6 +98,15 @@ public abstract class ResourceTypeInstance<T> extends ResourceView implements Se
 	
 	// -----------------------------------------------------
 	
+	
+	/**
+	 * 
+	 */
+	public abstract Collection<Integer> getTicketsFor(String attribute);
+	
+	// -----------------------------------------------------
+	
+	
 	/**
 	 * 
 	 */

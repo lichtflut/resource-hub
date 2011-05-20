@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.api;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -54,16 +55,19 @@ public class ResourceTypeManagementImpl implements ResourceTypeManagement{
 
 	// -----------------------------------------------------
 	
-	public Collection<ResourceTypeInstance<Object>> loadAllResourceTypeInstancesForSchema(ResourceSchema schema) {
+	@SuppressWarnings("unchecked")
+	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema) {
+		Collection<ResourceTypeInstance> output = new ArrayList<ResourceTypeInstance>();
 		ModelingConversation mc = gate.startConversation();
 		Set<Statement> statements = mc.createQueryManager().findIncomingStatements(schema.getDescribedResourceID());
 		for (Statement statement : statements) {
-			if(statement.getPredicate().equals(RDF.TYPE));
-			ResourceTypeInstanceImpl  instance = new ResourceTypeInstanceImpl(schema, statement.getSubject().asResource());
-			//....
+			if(statement.getPredicate().equals(RDF.TYPE)){
+				ResourceTypeInstance  instance = new ResourceTypeInstanceImpl(schema, statement.getSubject().asResource());
+				output.add(instance);
+			}
 		}
 		
-		return null;
+		return output;
 	}
 	
 	// -----------------------------------------------------	
