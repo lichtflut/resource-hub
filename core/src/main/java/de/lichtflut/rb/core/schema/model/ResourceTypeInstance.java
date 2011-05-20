@@ -158,6 +158,7 @@ public abstract class ResourceTypeInstance<T> extends ResourceView implements Se
 		ResourceSchema schema = getResourceSchema();
 		Collection<PropertyAssertion> assertions = schema.getPropertyAssertions();
 		for (PropertyAssertion pAssertion : assertions) {
+			this.removeAssociations(pAssertion.getPropertyDescriptor());
 			Collection<T> values = this.getValuesFor(pAssertion.getPropertyDescriptor().getQualifiedName().toURI());
 			for (T value : values) {
 				Association.create(

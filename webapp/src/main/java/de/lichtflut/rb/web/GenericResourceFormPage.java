@@ -66,6 +66,7 @@ public class GenericResourceFormPage extends RBSuperPage {
 	 * Load the ResourceTypeInstance from the give parameters
 	 */
 	@SuppressWarnings({ "unchecked", "unused" })
+	
 	private ResourceTypeInstance loadResourceTypeInstanceFromParams(ResourceSchema schema, PageParameters parameters){
 		String identifier = parameters.get("instanceid").toString();
 		Collection<ResourceTypeInstance> instances = rTypeManagement.loadAllResourceTypeInstancesForSchema(schema);

@@ -75,7 +75,7 @@ public class GenericResourceFormPanel extends Panel {
 			RepeatingView view = new RepeatingView("propertylist");
 			for (final String attribute : (Collection<String>) instance.getAttributeNames()) {
 				boolean required=true;
-				int minimum_cnt = (Integer )instance.geMetaInfoFor(attribute,MetaDataKeys.MIN);
+				int minimum_cnt = (Integer )instance.getMetaInfoFor(attribute,MetaDataKeys.MIN);
 				if(minimum_cnt==0){
 					minimum_cnt=1;
 					required=false;	
@@ -84,7 +84,7 @@ public class GenericResourceFormPanel extends Panel {
 				Collection<Integer> tickets = instance.getTicketsFor(attribute);
 				for(int cnt = 0; cnt< minimum_cnt; cnt++){
 					GenericResourceModel model;
-					if(cnt>= (tickets.size()-1)){
+					if(cnt>= (tickets.size())){
 						model =  new GenericResourceModel(instance, attribute);
 					}else{
 						model =  new GenericResourceModel(instance, attribute,(Integer) tickets.toArray()[cnt]);
@@ -130,8 +130,8 @@ public class GenericResourceFormPanel extends Panel {
 		};
 		button.add(new Label("linkLabel","(+)"));
 		button.setVisible((expendable &&
-				((Integer) instance.geMetaInfoFor(attribute, MetaDataKeys.MAX)) > 
-				((Integer) instance.geMetaInfoFor(attribute, MetaDataKeys.CURRENT))));
+				((Integer) instance.getMetaInfoFor(attribute, MetaDataKeys.MAX)) > 
+				((Integer) instance.getMetaInfoFor(attribute, MetaDataKeys.CURRENT))));
 		fragment.add(button);
 		return fragment;
 	}
