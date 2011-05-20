@@ -6,18 +6,24 @@ package de.lichtflut.rb.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+import de.lichtflut.rb.core.api.ResourceTypeManagement;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
@@ -37,6 +43,7 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 public class RSPage extends RBSuperPage {
 
 	private  final ResourceSchemaManagement rManagement = getServiceProvider().getResourceSchemaManagement();
+	private final ResourceTypeManagement rTypeManagement = getServiceProvider().getResourceTypeManagement();
 	
 	private final RepeatingView resourceList =  new RepeatingView("resourcelist");
 
@@ -103,18 +110,38 @@ public class RSPage extends RBSuperPage {
     
 	// -----------------------------------------------------
     
+	@SuppressWarnings({ "unchecked", "serial" })
 	private void updateResourceList(){
     	resourceList.removeAll();	
     	Collection<ResourceSchema> resourceSchemas = rManagement.getAllResourceSchemas();
 		if(resourceSchemas==null) resourceSchemas = new ArrayList<ResourceSchema>();
-		for (ResourceSchema resourceSchema : resourceSchemas) {
+		for (final ResourceSchema resourceSchema : resourceSchemas) {
+
+			Collection<ResourceTypeInstance<Object>> instances = rTypeManagement.loadAllResourceTypeInstancesForSchema(resourceSchema);
+			
+			ArrayList<ResourceTypeInstance<Object>> schemaInstances = 
+				new ArrayList<ResourceTypeInstance<Object>>((instances != null) ? instances : new HashSet<ResourceTypeInstance<Object>>());
+			
 			PageParameters params = new PageParameters();
 			params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
 			Fragment fragment = new Fragment(resourceList.newChildId(),"listPanel",this);
 			fragment.add(new BookmarkablePageLink<GenericResourceFormPage>("link",GenericResourceFormPage.class, params).
 					add(new Label("linkLabel",resourceSchema.getDescribedResourceID().getQualifiedName().getSimpleName())));
-			resourceList.add(fragment);
 			
+			fragment.add(new ListView("instancelist",schemaInstances){
+				@Override
+				protected void populateItem(ListItem item) {
+					ResourceTypeInstance instance = (ResourceTypeInstance) item.getModelObject();
+					PageParameters params = new PageParameters();
+					params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
+					params.add("instanceid", instance.getQualifiedName().toURI());
+					add(new BookmarkablePageLink<GenericResourceFormPage>("link",GenericResourceFormPage.class, params).
+					add(new Label("linkLabel",instance.getQualifiedName().getSimpleName())));
+				}
+				
+			});
+			
+			resourceList.add(fragment);
 		}
 		resourceList.modelChanged();
     }

@@ -42,28 +42,28 @@ public class GenericResourceFormPanel extends Panel {
 	/**
 	 * 
 	 */
-	public GenericResourceFormPanel(String id, ResourceSchema schema, RBServiceProvider provider) {
+	public GenericResourceFormPanel(String id, ResourceSchema schema, RBServiceProvider provider, ResourceTypeInstance instance) {
 		super(id);
 		this.provider=provider;
-		init(schema);
+		init(schema, instance);
 	}
 
 	
 	// -----------------------------------------------------
 	
-	private void init(ResourceSchema schema){
+	private void init(ResourceSchema schema, ResourceTypeInstance in){
 		
-		final ResourceTypeInstance instance = schema.generateTypeInstance();
+		final ResourceTypeInstance instance = (in==null ? schema.generateTypeInstance() : in);
 		final Form form = new Form("form"){
 			@Override
 			protected void onSubmit() {
 				super.onSubmit();
-				if(provider.getResourceManagement().createOrUpdateRTInstance(instance)){
+				if(provider.getResourceTypeManagement().createOrUpdateRTInstance(instance)){
 					info("This instance has been successfully updated/created");
+				}else{
+					error("Somethin went wrong, instance could'nt be created/updated");
 				}
-				
 				//Here should be a redirect or something like that
-				
 			}
 		};
 		form.setOutputMarkupId(true);

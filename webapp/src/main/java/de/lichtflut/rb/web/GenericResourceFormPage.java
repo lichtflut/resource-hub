@@ -8,7 +8,9 @@ import java.util.Collection;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+import de.lichtflut.rb.core.api.ResourceTypeManagement;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.web.components.genericresource.GenericResourceFormPanel;
 
 /**
@@ -21,6 +23,7 @@ public class GenericResourceFormPage extends RBSuperPage {
 	private static final long serialVersionUID = 1L;
 
 	private ResourceSchemaManagement rManagement = getServiceProvider().getResourceSchemaManagement();
+	private ResourceTypeManagement rTypeManagement = getServiceProvider().getResourceTypeManagement();
 	/**
 	 * Default Constructor, setting PageParameters to null
 	 */
@@ -34,7 +37,7 @@ public class GenericResourceFormPage extends RBSuperPage {
 		super("Resource " + parameters.get("resourceid"), parameters);
 		ResourceSchema schema = loadResourceSchemaFromParams(parameters);
 		//Add generic_form_panel to page
-        this.add(new GenericResourceFormPanel("generic_form", schema, getServiceProvider()));
+        this.add(new GenericResourceFormPanel("generic_form", schema, getServiceProvider(),loadResourceTypeInstanceFromParams(schema, parameters)));
 	}
 	
 	
@@ -55,6 +58,24 @@ public class GenericResourceFormPage extends RBSuperPage {
 			}
 		}
 		return schema;
+	}
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * Load the ResourceTypeInstance from the give parameters
+	 */
+	@SuppressWarnings({ "unchecked", "unused" })
+	private ResourceTypeInstance loadResourceTypeInstanceFromParams(ResourceSchema schema, PageParameters parameters){
+		String identifier = parameters.get("instanceid").toString();
+		Collection<ResourceTypeInstance<Object>> instances = rTypeManagement.loadAllResourceTypeInstancesForSchema(schema);
+		for (ResourceTypeInstance<Object> resourceTypeInstance : instances) {
+			if(resourceTypeInstance.getQualifiedName().toURI().equals(identifier)){
+				return resourceTypeInstance;
+			}
+		}
+		
+		return schema.generateTypeInstance();
 	}
 	
 	
