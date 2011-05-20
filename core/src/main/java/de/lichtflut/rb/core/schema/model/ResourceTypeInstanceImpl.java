@@ -261,7 +261,7 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 			//If a ticket couldnt not be created
 			int ticket =-1;
 			if(tickets.size()< c.getMaxOccurs()){
-				ticket = (ticketcnt +1);
+				ticket = (ticketcnt+=1);
 				tickets.add(ticket);
 				//Set an initial value to null:
 				setValue(null, ticket);
@@ -271,9 +271,10 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 		
 		// -----------------------------------------------------
 		
-		public boolean removeTicket(int ticket){
+		public boolean removeTicket(final Integer ticket){
+			
 			//If this ticket does not exists
-			if(!tickets.contains(ticket)){
+			if(tickets.contains(ticket)){
 				//If the current amount of tickets is greater than the minimal cardinality
 				if(tickets.size()> c.getMinOccurs()){
 					tickets.remove((Integer) ticket);
