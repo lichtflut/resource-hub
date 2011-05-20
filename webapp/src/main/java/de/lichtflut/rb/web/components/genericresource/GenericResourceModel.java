@@ -22,8 +22,13 @@ public class GenericResourceModel implements IModel<String> {
 	private String attribute;
 	private Integer ticket;
 	
+	public GenericResourceModel(ResourceTypeInstance<String> instance, String attribute, int ticket){
+		this.ticket = ticket;
+		this.instance = instance;
+		this.attribute = attribute;
+	}
+	
 	public GenericResourceModel(ResourceTypeInstance<String> instance, String attribute){
-		
 		this.instance = instance;
 		this.attribute = attribute;
 		try {
@@ -31,6 +36,7 @@ public class GenericResourceModel implements IModel<String> {
 		} catch (Exception e){
 			throw new IllegalArgumentException(e);
 		}
+
 	}
 	
 	public String getObject() {

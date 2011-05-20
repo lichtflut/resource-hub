@@ -117,10 +117,10 @@ public class RSPage extends RBSuperPage {
 		if(resourceSchemas==null) resourceSchemas = new ArrayList<ResourceSchema>();
 		for (final ResourceSchema resourceSchema : resourceSchemas) {
 
-			Collection<ResourceTypeInstance<Object>> instances = rTypeManagement.loadAllResourceTypeInstancesForSchema(resourceSchema);
+			Collection<ResourceTypeInstance> instances = rTypeManagement.loadAllResourceTypeInstancesForSchema(resourceSchema);
 			
-			ArrayList<ResourceTypeInstance<Object>> schemaInstances = 
-				new ArrayList<ResourceTypeInstance<Object>>((instances != null) ? instances : new HashSet<ResourceTypeInstance<Object>>());
+			ArrayList<ResourceTypeInstance> schemaInstances = 
+				new ArrayList<ResourceTypeInstance>((instances != null) ? instances : new HashSet<ResourceTypeInstance>());
 			
 			PageParameters params = new PageParameters();
 			params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
@@ -135,8 +135,8 @@ public class RSPage extends RBSuperPage {
 					PageParameters params = new PageParameters();
 					params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
 					params.add("instanceid", instance.getQualifiedName().toURI());
-					add(new BookmarkablePageLink<GenericResourceFormPage>("link",GenericResourceFormPage.class, params).
-					add(new Label("linkLabel",instance.getQualifiedName().getSimpleName())));
+					item.add(new BookmarkablePageLink<GenericResourceFormPage>("innerlink",GenericResourceFormPage.class, params).
+					add(new Label("innerlinkLabel",instance.getQualifiedName().getSimpleName())));
 				}
 				
 			});

@@ -57,11 +57,13 @@
         </div>
         	<wicket:fragment wicket:id="listPanel">
         		<a href="#" wicket:id="link"><span wicket:id="linkLabel"></span></a>
+        		<wicket:enclosure child="instancelist">
         		<ul>
         			<li wicket:id="instancelist">
-        				<a href="#" wicket:id="link"><span wicket:id="linkLabel"></span></a>
+        				<a href="#" wicket:id="innerlink"><span wicket:id="innerlinkLabel"></span></a>
         			</li>
         		</ul>
+        		</wicket:enclosure>
         	</wicket:fragment>
     </wicket:extend>              
     </body>

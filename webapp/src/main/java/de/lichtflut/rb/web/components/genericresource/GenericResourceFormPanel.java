@@ -80,8 +80,16 @@ public class GenericResourceFormPanel extends Panel {
 					minimum_cnt=1;
 					required=false;	
 				}
+				//Get predefined tickets, if there are some
+				Collection<Integer> tickets = instance.getTicketsFor(attribute);
 				for(int cnt = 0; cnt< minimum_cnt; cnt++){
-					view.add(buildItem(instance, attribute, view, required, (cnt+1)==minimum_cnt));
+					GenericResourceModel model;
+					if(cnt>= (tickets.size()-1)){
+						model =  new GenericResourceModel(instance, attribute);
+					}else{
+						model =  new GenericResourceModel(instance, attribute,(Integer) tickets.toArray()[cnt]);
+					}			
+					view.add(buildItem(instance,model, attribute, view, required, (cnt+1)==minimum_cnt));
 				}
 			}
 			form.add(view);	
@@ -91,8 +99,7 @@ public class GenericResourceFormPanel extends Panel {
 	
 	
 	
-	private Component buildItem(final ResourceTypeInstance instance, final String attribute, final RepeatingView view, boolean required, boolean expendable){
-		final GenericResourceModel model = new GenericResourceModel(instance, attribute);
+	private Component buildItem(final ResourceTypeInstance instance,final GenericResourceModel model, final String attribute, final RepeatingView view, boolean required, boolean expendable){
 		Fragment fragment = new Fragment(view.newChildId(), "referenceInput", this);			
 		fragment.add((new Label("propertyLabel", instance.getSimpleAttributeName(attribute) + 
 				(required ? " (*)" : ""))));
@@ -110,7 +117,7 @@ public class GenericResourceFormPanel extends Panel {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target,Form<?> form) {
-			      Component item = buildItem(instance, attribute, view, false, true);
+			      Component item = buildItem(instance,new GenericResourceModel(instance, attribute), attribute, view, false, true);
 			      // first execute javascript which creates a placeholder tag in markup for this item
 			      target.prependJavascript(
 			        String.format(
