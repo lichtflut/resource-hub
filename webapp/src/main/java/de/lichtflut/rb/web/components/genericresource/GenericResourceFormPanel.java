@@ -9,6 +9,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
@@ -16,6 +17,8 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.arastreju.sge.model.ElementaryDataType;
+
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance.MetaDataKeys;
@@ -103,11 +106,20 @@ public class GenericResourceFormPanel extends Panel {
 		Fragment fragment = new Fragment(view.newChildId(), "referenceInput", this);			
 		fragment.add((new Label("propertyLabel", instance.getSimpleAttributeName(attribute) + 
 				(required ? " (*)" : ""))));
-		FormComponent c = new TextField<String>("propertyInput",model);
-		c.setRequired(required);
-		//Add a validator
-		c.add(new GenericResourceValidator(instance.getValidatorFor(attribute)));
-		fragment.add(c);
+		//Decide which inputfield should be used
+		Fragment f;
+		switch((ElementaryDataType)instance.getMetaInfoFor(attribute, MetaDataKeys.TYPE)){
+			case BOOLEAN : {
+				f = new Fragment("propertyInput", "booleanInput", this);
+				f.add(new CheckBox("input",model)); break;
+			}
+			default: {
+				f = new Fragment("propertyInput","textInput", this);
+				f.add(new TextField("input",model).
+						add(new GenericResourceValidator(instance.getValidatorFor(attribute))).setRequired(required)); break;
+			}
+		}
+		fragment.add(f);
 		AjaxButton button = new AjaxButton("addField"){
 
 			@Override
@@ -134,6 +146,5 @@ public class GenericResourceFormPanel extends Panel {
 				((Integer) instance.getMetaInfoFor(attribute, MetaDataKeys.CURRENT))));
 		fragment.add(button);
 		return fragment;
-	}
-	
+	}	
 }

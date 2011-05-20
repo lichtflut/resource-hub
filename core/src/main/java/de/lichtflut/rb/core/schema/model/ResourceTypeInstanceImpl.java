@@ -3,12 +3,12 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
-
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -195,7 +195,7 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 			});
 			//Validator has been added
 			simpleAttributeNames.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(), propertyAssertion.getPropertyDescriptor().getName());
-			ValueHolder vHolder = new ValueHolder(propertyAssertion.getCardinality(), getAssociationClients(propertyAssertion.getPropertyDescriptor()));
+			ValueHolder vHolder = new ValueHolder(getAssociationClients(propertyAssertion.getPropertyDescriptor()), propertyAssertion);
 			internalRep.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(),vHolder);
 		}//End of for
 	}
@@ -219,25 +219,26 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 	/**
 	 * 
 	 */
-	private class ValueHolder{
+	private class ValueHolder implements Serializable{
 		private HashMap<Integer,String> values = new HashMap<Integer,String>();
 		private ArrayList<Integer> tickets = new ArrayList<Integer>();
-		private Cardinality c;
+		private PropertyAssertion assertion;
 		//Auto increment ticket counter
-		private int ticketcnt=0;
+		private Integer ticketcnt=0;
 		
-		public ValueHolder(Cardinality c, Set<SemanticNode> set){
-			this.c =c;
+		public ValueHolder(Set<SemanticNode> set, PropertyAssertion assertion){
+			this.assertion = assertion;
 			init(set);
 		}
 		
 		// -----------------------------------------------------
 		
-		public Integer getMetaData(MetaDataKeys key) {
+		public Object getMetaData(MetaDataKeys key) {
 			switch(key){
-			case MAX: return c.getMaxOccurs();
+			case MAX: return assertion.getCardinality().getMaxOccurs();
 			case CURRENT: return tickets.size();
-			case MIN: return c.getMinOccurs();
+			case MIN: return assertion.getCardinality().getMinOccurs();
+			case TYPE: return assertion.getPropertyDeclaration().getElementaryDataType();
 			}
 			return null;
 		}
@@ -281,7 +282,7 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 		public int generateTicket(){
 			//If a ticket couldnt not be created
 			int ticket =-1;
-			if(tickets.size()< c.getMaxOccurs()){
+			if(tickets.size()< assertion.getCardinality().getMaxOccurs()){
 				ticket = (ticketcnt+=1);
 				tickets.add(ticket);
 				//Set an initial value to null:
@@ -297,7 +298,7 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 			//If this ticket does not exists
 			if(tickets.contains(ticket)){
 				//If the current amount of tickets is greater than the minimal cardinality
-				if(tickets.size()> c.getMinOccurs()){
+				if(tickets.size()> assertion.getCardinality().getMinOccurs()){
 					tickets.remove((Integer) ticket);
 					//Remove tickets entry:
 					values.remove((Integer) ticket);

@@ -17,10 +17,11 @@ import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public class GenericResourceModel implements IModel<String> {
+public class GenericResourceModel<T> implements IModel<T> {
 	private ResourceTypeInstance<String> instance;
 	private String attribute;
 	private Integer ticket;
+	private T objectreference;
 	
 	public GenericResourceModel(ResourceTypeInstance<String> instance, String attribute, int ticket){
 		this.ticket = ticket;
@@ -39,13 +40,14 @@ public class GenericResourceModel implements IModel<String> {
 
 	}
 	
-	public String getObject() {
-		return (String) instance.getValueFor(attribute, ticket);
+	public T getObject() {
+		return convertStringToT(instance.getValueFor(attribute, ticket));
 	}
 
-	public void setObject(String object) {
+
+	public void setObject(T object) {
 		try {
-			instance.addValueFor(attribute, object, ticket);
+			instance.addValueFor(attribute,convertObject(object), ticket);
 		} catch (Exception e){
 			throw new IllegalArgumentException(e);
 		}
@@ -55,4 +57,22 @@ public class GenericResourceModel implements IModel<String> {
 	public void detach() {
 		//Do nothing
 	}
+
+	
+	private String convertObject(T object){
+		if(objectreference instanceof Boolean){
+			return ((Boolean)object).toString();
+		}
+		return object.toString();
+	}
+
+	@SuppressWarnings("unchecked")
+	private T convertStringToT(String value) {
+		if(objectreference instanceof Boolean){
+				return (T) new Boolean(value.toLowerCase());
+		}
+		return (T) value;
+	}
+
+	
 }
