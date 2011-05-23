@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.schema.model;
 import java.util.Collection;
 import org.arastreju.sge.model.ResourceID;
 
+
 /**
  * <p>
  *  Schema for a resource type, e.g. a person, an organization or a project.

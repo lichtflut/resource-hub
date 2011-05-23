@@ -14,7 +14,7 @@ import org.arastreju.sge.model.Statement;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstanceImpl;
+import de.lichtflut.rb.core.schema.model.impl.ResourceTypeInstanceImpl;
 
 /**
  * TODO: To comment

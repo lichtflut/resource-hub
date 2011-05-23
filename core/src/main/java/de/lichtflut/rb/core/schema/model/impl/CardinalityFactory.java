@@ -95,6 +95,11 @@ public final class CardinalityFactory{
     
 	static private final class UnboundedCardinalityImpl implements Cardinality{
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8837248407635938888L;
+
 		public UnboundedCardinalityImpl(){
 			//Default constructor, do nothing
 		}

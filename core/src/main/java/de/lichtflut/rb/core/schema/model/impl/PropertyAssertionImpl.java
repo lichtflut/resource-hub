@@ -41,6 +41,10 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 
 public class PropertyAssertionImpl implements PropertyAssertion{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -322769574493912661L;
 	//Instance members
 	private ResourceID propertyDescriptor;
 	private PropertyDeclaration property;

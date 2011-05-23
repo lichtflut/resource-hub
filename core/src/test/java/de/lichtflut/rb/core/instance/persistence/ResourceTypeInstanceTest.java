@@ -6,13 +6,8 @@ package de.lichtflut.rb.core.instance.persistence;
 import java.util.Collection;
 
 import junit.framework.TestCase;
-
-import org.arastreju.sge.Arastreju;
-import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
-
-
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
@@ -20,7 +15,6 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 

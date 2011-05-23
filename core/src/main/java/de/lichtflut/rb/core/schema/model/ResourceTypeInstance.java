@@ -14,6 +14,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 
+
 /**
  * <p>
  * 	Represents an instance of a well defined ResourceType (RT)
@@ -158,7 +159,11 @@ public abstract class ResourceTypeInstance<T> extends ResourceView implements Se
 		ResourceSchema schema = getResourceSchema();
 		Collection<PropertyAssertion> assertions = schema.getPropertyAssertions();
 		for (PropertyAssertion pAssertion : assertions) {
-			this.removeAssociations(pAssertion.getPropertyDescriptor());
+			try{
+				this.removeAssociations(pAssertion.getPropertyDescriptor());
+			}catch(org.neo4j.graphdb.NotFoundException e){
+				//If this node was not found, do nothing
+			}
 			Collection<T> values = this.getValuesFor(pAssertion.getPropertyDescriptor().getQualifiedName().toURI());
 			for (T value : values) {
 				Association.create(

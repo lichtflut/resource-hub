@@ -23,6 +23,11 @@ public abstract class AbstractConstraint implements Constraint{
 
 	// -----------------------------------------------------
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6062840670338394909L;
+
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.core.schema.Constraint#getLiteralConstraint()
 	 * STUB-method

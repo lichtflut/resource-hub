@@ -129,7 +129,9 @@ public class GenericResourceFormPanel extends Panel {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target,Form<?> form) {
-			      Component item = buildItem(instance,new GenericResourceModel(instance, attribute), attribute, view, false, true);
+				//This does not really work, so do nothing
+				//TODO: Fix it
+			    /*  Component item = buildItem(instance,new GenericResourceModel(instance, attribute), attribute, view, false, true);
 			      // first execute javascript which creates a placeholder tag in markup for this item
 			      target.prependJavascript(
 			        String.format(
@@ -137,7 +139,7 @@ public class GenericResourceFormPanel extends Panel {
 			        "Wicket.$('%s').appendChild(item);",
 			        "tr", item.getMarkupId(), item.getMarkupId()));
 			      	view.add(item);
-			        target.addComponent(item);
+			        target.addComponent(item); */
 			}
 		};
 		button.add(new Label("linkLabel","(+)"));

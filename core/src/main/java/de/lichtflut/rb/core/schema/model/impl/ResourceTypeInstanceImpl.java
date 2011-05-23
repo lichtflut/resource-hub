@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema.model;
+package de.lichtflut.rb.core.schema.model.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,6 +13,14 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.ValueNode;
+
+import de.lichtflut.rb.core.schema.model.PropertyAssertion;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.RBInvalidAttributeException;
+import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
+import de.lichtflut.rb.core.schema.model.RBValidator;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 
 
 /**

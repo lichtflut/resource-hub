@@ -14,7 +14,6 @@ import org.arastreju.sge.naming.VoidNamespace;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstanceImpl;
 
 /**
  * <p>
