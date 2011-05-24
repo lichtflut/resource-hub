@@ -4,26 +4,36 @@
 package de.lichtflut.rb.web;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.inject.Inject;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AbstractAutoCompleteRenderer;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import de.lichtflut.rb.builders.SessionBuilder;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 import de.lichtflut.rb.web.components.navigation.NavigationBar;
 import de.lichtflut.rb.web.components.navigation.NavigationNodePanel;
+
+
 
 /**
  * <p>
@@ -77,8 +87,9 @@ public abstract class RBSuperPage extends WebPage {
 	
 	// -----------------------------------------------------
 	
-	@SuppressWarnings("serial")
+	@SuppressWarnings({ "serial", "unchecked" })
 	public void init(){
+		final RBSuperPage pageRef = this;
 		add(new Label("title", title));
 		
 		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
@@ -93,32 +104,49 @@ public abstract class RBSuperPage extends WebPage {
 		
 		add(mainNavigation);
 		
-		final Form<String> searchForm = new Form<String>("searchForm");
+		final Form<ResourceTypeInstance> searchForm = new Form<ResourceTypeInstance>("searchForm");
 		this.add(searchForm);
-		
-		
-		final AutoCompleteTextField<String> autoCompleter = new AutoCompleteTextField<String>("searchInput", new Model<String>("")) {
-			  @SuppressWarnings("unchecked")
+		final HashMap<Integer, ResourceTypeInstance> selectableValues = new HashMap<Integer, ResourceTypeInstance>();
+		final AutoCompleteTextField autoCompleter =
+			new AutoCompleteTextField("searchInput",Model.of(""),new AbstractAutoCompleteRenderer<ResourceTypeInstance>(){
+
+				@Override
+				protected String getTextValue(ResourceTypeInstance object) {
+					return object.toString();
+				}
+
+				@Override
+				protected void renderChoice(ResourceTypeInstance object,Response response, final String criteria) {
+					response.write(getTextValue(object));					
+				}				
+			}){
+
 			protected Iterator getChoices(String input) {
+				
 				  Collection<ResourceSchema> rSchemas = provider.getResourceSchemaManagement().getAllResourceSchemas();
-			      return provider.getResourceTypeManagement().loadAllResourceTypeInstancesForSchema(rSchemas,input).iterator();
+				  Collection<ResourceTypeInstance> instances = provider.getResourceTypeManagement().loadAllResourceTypeInstancesForSchema(rSchemas,input);
+				  for (ResourceTypeInstance instance : instances) {
+					selectableValues.put(instance.toString().hashCode(),instance);
+				  }
+			      return instances.iterator();
 			  }
 			};
-		searchForm.add(autoCompleter);
-		autoCompleter.add(new AjaxFormSubmitBehavior(searchForm, "onchange")
-		 {
-			 protected void onSubmit(final AjaxRequestTarget target)
-			 {
-				 //target.addComponent(label);
-			 }
+			autoCompleter.add(new AjaxFormComponentUpdatingBehavior("onchange") {
 
-			 @Override
-			 protected void onError(AjaxRequestTarget target)
-			 {
-				 //Do nothing
-			 }
-		});
-		
+		        @Override
+		        protected void onUpdate(AjaxRequestTarget target) {
+		        	Object value =  autoCompleter.getDefaultModelObject();
+		        	if(value==null) return;
+		        	ResourceTypeInstance instance = selectableValues.get(value.toString().hashCode());
+		        	if(instance==null) return;
+		    		PageParameters params = new PageParameters();
+					params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
+					params.add("instanceid", instance.getQualifiedName().toURI());
+					pageRef.getRequestCycle().setResponsePage(GenericResourceFormPage.class, params);
+		        }
+		    });
+
+		searchForm.add(autoCompleter);		
 		
 	}
 	
