@@ -4,7 +4,9 @@
 package de.lichtflut.rb.core.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.arastreju.sge.ArastrejuGate;
@@ -56,17 +58,56 @@ public class ResourceTypeManagementImpl implements ResourceTypeManagement{
 	// -----------------------------------------------------
 	
 	@SuppressWarnings("unchecked")
-	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema) {
+	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter) {
 		Collection<ResourceTypeInstance> output = new ArrayList<ResourceTypeInstance>();
 		ModelingConversation mc = gate.startConversation();
 		Set<Statement> statements = mc.createQueryManager().findIncomingStatements(schema.getDescribedResourceID());
 		for (Statement statement : statements) {
 			if(statement.getPredicate().equals(RDF.TYPE)){
 				ResourceTypeInstance  instance = new ResourceTypeInstanceImpl(schema, statement.getSubject().asResource());
-				output.add(instance);
+				//check if this instance does match the filter and add it to the output collection		
+				List<String> keywords = Arrays.asList(filter.toLowerCase().split(filter));
+				Collection<String> attributes = instance.getAttributeNames();
+				boolean exit=false;
+				for (String attribute :  attributes ) {
+					if(exit) break;
+					for(Object value :instance.getValuesFor(attribute)){
+						for(String keyword : keywords){
+							if(value.toString().contains(keyword)){
+								output.add(instance);
+								exit=true;
+								break;
+							}
+						}
+					}
+					if(exit) break;
+				}
 			}
 		}
-		
+		return output;
+	}
+	
+	// -----------------------------------------------------
+	
+	@SuppressWarnings("unchecked")
+	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema) {
+		return  loadAllResourceTypeInstancesForSchema(schema,"");
+	}
+	
+	// -----------------------------------------------------
+	
+	@SuppressWarnings("unchecked")
+	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas) {
+		return loadAllResourceTypeInstancesForSchema(schemas,"");
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas, String filter) {
+		Collection<ResourceTypeInstance> output = new ArrayList<ResourceTypeInstance>();
+		for (ResourceSchema schema : schemas) {
+			output.addAll(loadAllResourceTypeInstancesForSchema(schema, filter));
+		}
 		return output;
 	}
 	

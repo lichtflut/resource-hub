@@ -3,15 +3,23 @@
  */
 package de.lichtflut.rb.web;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import javax.inject.Inject;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import de.lichtflut.rb.builders.SessionBuilder;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 import de.lichtflut.rb.web.components.navigation.NavigationBar;
@@ -69,6 +77,7 @@ public abstract class RBSuperPage extends WebPage {
 	
 	// -----------------------------------------------------
 	
+	@SuppressWarnings("serial")
 	public void init(){
 		add(new Label("title", title));
 		
@@ -83,6 +92,34 @@ public abstract class RBSuperPage extends WebPage {
 				Model.of("Sample Resource")));
 		
 		add(mainNavigation);
+		
+		final Form<String> searchForm = new Form<String>("searchForm");
+		this.add(searchForm);
+		
+		
+		final AutoCompleteTextField<String> autoCompleter = new AutoCompleteTextField<String>("searchInput", new Model<String>("")) {
+			  @SuppressWarnings("unchecked")
+			protected Iterator getChoices(String input) {
+				  Collection<ResourceSchema> rSchemas = provider.getResourceSchemaManagement().getAllResourceSchemas();
+			      return provider.getResourceTypeManagement().loadAllResourceTypeInstancesForSchema(rSchemas,input).iterator();
+			  }
+			};
+		searchForm.add(autoCompleter);
+		autoCompleter.add(new AjaxFormSubmitBehavior(searchForm, "onchange")
+		 {
+			 protected void onSubmit(final AjaxRequestTarget target)
+			 {
+				 //target.addComponent(label);
+			 }
+
+			 @Override
+			 protected void onError(AjaxRequestTarget target)
+			 {
+				 //Do nothing
+			 }
+		});
+		
+		
 	}
 	
 	// -----------------------------------------------------

@@ -32,12 +32,36 @@ public interface ResourceTypeManagement extends Serializable{
 	 */
 	public boolean createOrUpdateRTInstance(ResourceTypeInstance<Object> instance);
 
+
+	
+	/**
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas);
+	
 	// -----------------------------------------------------
 	
 	/**
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
+	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas, String filter);
+	
+	/**
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
 	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema);
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter);
+	
+	// -----------------------------------------------------
 	
 }

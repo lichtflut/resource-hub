@@ -7,7 +7,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -136,7 +140,7 @@ public class RSPage extends RBSuperPage {
 					params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
 					params.add("instanceid", instance.getQualifiedName().toURI());
 					item.add(new BookmarkablePageLink<GenericResourceFormPage>("innerlink",GenericResourceFormPage.class, params).
-					add(new Label("innerlinkLabel",instance.getQualifiedName().getSimpleName())));
+					add(new Label("innerlinkLabel",instance.toString())));
 				}
 				
 			});

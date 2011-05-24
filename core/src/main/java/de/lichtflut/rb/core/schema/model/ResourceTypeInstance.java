@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.schema.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.arastreju.sge.apriori.RDF;
@@ -170,5 +171,24 @@ public abstract class ResourceTypeInstance<T> extends ResourceView implements Se
 				this,pAssertion.getPropertyDescriptor(),new SNValue(pAssertion.getPropertyDeclaration().getElementaryDataType(),value),ctx);
 			}//End of inner for loop
 		}//End of outer for loop
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public String toString(){
+		//Show the first 2 Values
+		int maxVal=2;
+		String schemaName = this.getResourceSchema().getDescribedResourceID().getQualifiedName().getSimpleName();
+		StringBuilder output = new StringBuilder("[" + schemaName + "] ");
+		ArrayList<String> attributes = new ArrayList<String>(this.getAttributeNames());
+		for(int cnt = 0;(cnt < maxVal && cnt < attributes.size()); cnt++){
+			ArrayList<T> values = new ArrayList<T>(this.getValuesFor(attributes.get(cnt)));
+			if(values.size()>0){
+				output.append(this.getSimpleAttributeName(attributes.get(cnt)) + "=" + values.get(0).toString() + ", ");
+			}	
+		}
+		return output.toString();
 	}
 }
