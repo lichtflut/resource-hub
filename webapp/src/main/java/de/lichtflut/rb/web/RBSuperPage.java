@@ -53,6 +53,8 @@ public abstract class RBSuperPage extends WebPage {
 	
 	private static RBServiceProvider provider =null;
 	private String title;
+	@SuppressWarnings("unchecked")
+	private final HashMap<String, ResourceTypeInstance> selectableValues = new HashMap<String, ResourceTypeInstance>();
 	/**
 	 * Singleton pattern: There will be only one instance per runtime
 	 * @return {@link RBServiceProvider}
@@ -104,9 +106,6 @@ public abstract class RBSuperPage extends WebPage {
 		
 		add(mainNavigation);
 		
-		final Form<ResourceTypeInstance> searchForm = new Form<ResourceTypeInstance>("searchForm");
-		this.add(searchForm);
-		final HashMap<Integer, ResourceTypeInstance> selectableValues = new HashMap<Integer, ResourceTypeInstance>();
 		final AutoCompleteTextField autoCompleter =
 			new AutoCompleteTextField("searchInput",Model.of(""),new AbstractAutoCompleteRenderer<ResourceTypeInstance>(){
 
@@ -126,26 +125,27 @@ public abstract class RBSuperPage extends WebPage {
 				  Collection<ResourceSchema> rSchemas = provider.getResourceSchemaManagement().getAllResourceSchemas();
 				  Collection<ResourceTypeInstance> instances = provider.getResourceTypeManagement().loadAllResourceTypeInstancesForSchema(rSchemas,input);
 				  for (ResourceTypeInstance instance : instances) {
-					selectableValues.put(instance.toString().hashCode(),instance);
+					selectableValues.put(instance.toString().trim(),instance);
 				  }
 			      return instances.iterator();
 			  }
 			};
-			autoCompleter.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+			
 
-		        @Override
-		        protected void onUpdate(AjaxRequestTarget target) {
-		        	Object value =  autoCompleter.getDefaultModelObject();
-		        	if(value==null) return;
-		        	ResourceTypeInstance instance = selectableValues.get(value.toString().hashCode());
-		        	if(instance==null) return;
-		    		PageParameters params = new PageParameters();
-					params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
-					params.add("instanceid", instance.getQualifiedName().toURI());
-					pageRef.getRequestCycle().setResponsePage(GenericResourceFormPage.class, params);
-		        }
-		    });
-
+		final Form<ResourceTypeInstance> searchForm = new Form<ResourceTypeInstance>("searchForm"){
+			@Override
+			protected void onSubmit() {
+				Object value =  autoCompleter.getDefaultModelObject();
+	        	if(value==null) return;
+	        	ResourceTypeInstance instance = selectableValues.get(value.toString().trim());
+	        	if(instance==null) return;
+	    		PageParameters params = new PageParameters();
+				params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
+				params.add("instanceid", instance.getQualifiedName().toURI());
+				pageRef.getRequestCycle().setResponsePage(GenericResourceFormPage.class, params);
+			}
+		};
+		this.add(searchForm);
 		searchForm.add(autoCompleter);		
 		
 	}
