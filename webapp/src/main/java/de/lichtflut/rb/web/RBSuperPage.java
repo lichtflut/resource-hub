@@ -16,6 +16,8 @@ import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AbstractAutoCompleteRenderer;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -24,6 +26,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.JavascriptResourceReference;
 
 import de.lichtflut.rb.builders.SessionBuilder;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -32,6 +35,7 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 import de.lichtflut.rb.web.components.navigation.NavigationBar;
 import de.lichtflut.rb.web.components.navigation.NavigationNodePanel;
+import de.lichtflut.rb.web.resources.SharedResourceProvider;
 
 
 
@@ -85,6 +89,18 @@ public abstract class RBSuperPage extends WebPage {
 		super();
 		this.title = title;
 		init();
+	}
+	
+	// -----------------------------------------------------
+	
+	/* (non-Javadoc)
+	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
+	 */
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		super.renderHead(response);
+		response.renderJavascriptReference(new SharedResourceProvider().getJQueryCore());
+		response.renderJavascriptReference(new SharedResourceProvider().getJQueryUI());
 	}
 	
 	// -----------------------------------------------------
