@@ -11,6 +11,8 @@ import org.apache.wicket.model.IModel;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
+import de.lichtflut.rb.web.SampleResourcePage;
+import de.lichtflut.rb.web.components.fields.SNTimeSpecField;
 import de.lichtflut.rb.web.components.fields.SNTextField;
 import de.lichtflut.rb.web.models.ResourceNodeModel;
 
@@ -41,6 +43,7 @@ public class SampleResourcePanel extends Panel {
 		
 		form.add(new SNTextField("forename", Aras.HAS_FORENAME));
 		form.add(new SNTextField("surname", Aras.HAS_SURNAME));
+		form.add(new SNTimeSpecField("birthdate", SampleResourcePage.HAS_BIRTHDATE));
 		
 		form.add(new Button("save") {
 			public void onSubmit() {

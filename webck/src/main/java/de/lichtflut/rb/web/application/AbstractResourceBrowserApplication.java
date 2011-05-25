@@ -7,8 +7,10 @@ import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.arastreju.sge.model.nodes.views.SNText;
+import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 
 import de.lichtflut.rb.web.conversion.SNTextConverter;
+import de.lichtflut.rb.web.conversion.SNTimeSpecConverter;
 
 /**
  * <p>
@@ -30,6 +32,7 @@ public abstract class AbstractResourceBrowserApplication extends WebApplication 
 	protected IConverterLocator newConverterLocator() {
 		final ConverterLocator locator = new ConverterLocator();
 		locator.set(SNText.class, new SNTextConverter());
+		locator.set(SNTimeSpec.class, new SNTimeSpecConverter());
 		return locator;
 		
 	}
