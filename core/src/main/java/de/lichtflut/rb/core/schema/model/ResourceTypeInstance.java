@@ -186,7 +186,8 @@ public abstract class ResourceTypeInstance<T> extends ResourceView implements Se
 		for(int cnt = 0;(cnt < maxVal && cnt < attributes.size()); cnt++){
 			ArrayList<T> values = new ArrayList<T>(this.getValuesFor(attributes.get(cnt)));
 			if(values.size()>0){
-				output.append(this.getSimpleAttributeName(attributes.get(cnt)) + "=" + values.get(0).toString() + ", ");
+				if(cnt!=0) output.append(", ");
+				output.append(this.getSimpleAttributeName(attributes.get(cnt)) + "=" + values.get(0).toString());
 			}	
 		}
 		return output.toString();

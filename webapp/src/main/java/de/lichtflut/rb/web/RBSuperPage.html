@@ -7,25 +7,7 @@
 	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
 <head>
     <title>RBPrototype</title>
-    <link rel="stylesheet" type="text/css" href="css/lfrb.css" media="screen"/>
-    <wicket:head>
-           <style>
-               div.wicket-aa {
-                   font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
-                   font-size: 12px;
-                   background-color: white;
-                   border-width: 1px;
-                   border-color: #cccccc;
-                   border-style: solid;
-                   padding: 2px;
-                   margin: 1px 0 0 0;
-                   text-align:left;
-               }
-               div.wicket-aa ul { list-style:none; padding: 2px; margin:0; }
-               div.wicket-aa ul li.selected { background-color: #FFFF00; padding: 2px; margin:0; }
-           </style>    
-    </wicket:head>
-    
+    <link rel="stylesheet" type="text/css" href="css/lfrb.css" media="screen"/>    
 </head>
 <body style="text-align: center; background-color: #9EB2CE;">
 	<div class="page" style="background: #EBEFF5; margin: 10pt; text-align: center; width: 700px;">
@@ -36,14 +18,7 @@
 		<div id="firstlevelmenu">
 		      <div wicket:id="mainNavigation" class="navigation-bar horizontal"></div>
 		      <div id="schemaSearch">
- 			  	<form wicket:id="searchForm">
- 			  		<table>
- 			  			<tr>
- 			  				<td><input type="text" wicket:id="searchInput" size="50"/></td>
- 			  				<td><input type="submit" value="search" name="search"/></td>
- 			  			</tr>
- 					</table>
- 				</form>
+ 			  	<span wicket:id="searchBar"></span>
 			</div>
 		</div>
 		<div class="primary-content" style="border-top: medium dashed #FFFFFF; text-align: center; margin-top: 20px;"">
