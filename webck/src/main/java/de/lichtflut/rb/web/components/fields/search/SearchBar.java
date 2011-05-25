@@ -58,8 +58,10 @@ public abstract class SearchBar extends Panel {
 
 			protected Iterator getChoices(String input) {
 				
+			      String searchInput = generateSearchInput(input);
+				
 				  Collection<ResourceSchema> rSchemas = provider.getResourceSchemaManagement().getAllResourceSchemas();
-				  Collection<ResourceTypeInstance> instances = provider.getResourceTypeManagement().loadAllResourceTypeInstancesForSchema(rSchemas,input);
+				  Collection<ResourceTypeInstance> instances = provider.getResourceTypeManagement().loadAllResourceTypeInstancesForSchema(rSchemas,searchInput);
 				  for (ResourceTypeInstance instance : instances) {
 					selectableValues.put(instance.toString().trim().hashCode(),instance);
 				  }
@@ -83,6 +85,17 @@ public abstract class SearchBar extends Panel {
 		this.add(searchForm);
 		searchForm.add(autoCompleter);		
 		
+	}
+
+	// -----------------------------------------------------
+	
+	public String generateSearchInput(String input) {
+		String[] keywords = input.split(" ");
+		StringBuilder convertedInput = new StringBuilder();
+		for (int i = 0; i < keywords.length; i++) {
+			convertedInput.append("*"+keywords[i]+"*" );
+		}
+		return convertedInput.toString();
 	}
 
 	/**

@@ -90,16 +90,16 @@ public abstract class RBSuperPage extends WebPage {
 		
 		add(mainNavigation);
 		
-		this.add(new SearchBar("searchBar", getServiceProvider()) {
-			@SuppressWarnings("unchecked")
-			@Override
-			public void onSearchSubmit(ResourceTypeInstance instance) {
-				PageParameters params = new PageParameters();
-				params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
-				params.add("instanceid", instance.getQualifiedName().toURI());
-				getRequestCycle().setResponsePage(GenericResourceFormPage.class, params);				
-			}
-		});
+//		this.add(new SearchBar("searchBar", getServiceProvider()) {
+//			@SuppressWarnings("unchecked")
+//			@Override
+//			public void onSearchSubmit(ResourceTypeInstance instance) {
+//				PageParameters params = new PageParameters();
+//				params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
+//				params.add("instanceid", instance.getQualifiedName().toURI());
+//				getRequestCycle().setResponsePage(GenericResourceFormPage.class, params);				
+//			}
+//		});
 		
 	}
 	
