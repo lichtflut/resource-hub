@@ -93,7 +93,11 @@ public abstract class SearchBar extends Panel {
 		String[] keywords = input.split(" ");
 		StringBuilder convertedInput = new StringBuilder();
 		for (int i = 0; i < keywords.length; i++) {
-			convertedInput.append("*"+keywords[i]+"*" );
+			if(keywords[i].length()>0){
+				convertedInput.append(keywords[i]+"*" );
+			}else{
+				convertedInput.append(keywords[i]);
+			}
 		}
 		return convertedInput.toString();
 	}
