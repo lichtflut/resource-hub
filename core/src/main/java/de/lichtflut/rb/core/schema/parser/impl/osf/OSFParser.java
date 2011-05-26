@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g 2011-05-26 11:10:01
+// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g 2011-05-26 12:11:11
 
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
@@ -598,7 +598,7 @@ public class OSFParser extends Parser {
 
 
             // AST REWRITE
-            // elements: string, p_assertion, value
+            // elements: value, p_assertion, string
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -617,7 +617,7 @@ public class OSFParser extends Parser {
 
                 adaptor.addChild(root_1, (CommonTree)adaptor.create(PROPERTY_ASSERTION, "PROPERTY_ASSERTION"));
                 // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:95:40: ( ^( p_assertion value ) )*
-                while ( stream_p_assertion.hasNext()||stream_value.hasNext() ) {
+                while ( stream_value.hasNext()||stream_p_assertion.hasNext() ) {
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:95:41: ^( p_assertion value )
                     {
                     CommonTree root_2 = (CommonTree)adaptor.nil();
@@ -629,8 +629,8 @@ public class OSFParser extends Parser {
                     }
 
                 }
-                stream_p_assertion.reset();
                 stream_value.reset();
+                stream_p_assertion.reset();
 
                 adaptor.addChild(root_0, root_1);
                 }

@@ -115,6 +115,7 @@ public class GenericResourceFormPanel extends Panel {
 				f.add(new CheckBox("input",model)); break;
 			}
 			case DATE : {
+				
 				f = new Fragment("propertyInput","textInput", this);
 				TextField field = new TextField("input",model);
 				field.add(new DatePickerBehavior());

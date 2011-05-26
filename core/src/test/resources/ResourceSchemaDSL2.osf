@@ -2,7 +2,7 @@ RESOURCE "http://lichtflut.de#testResource1"{
 	PROPERTY "Wohnort"{
 		MAX=2,
 		MIN=1,
-		TYPE=TEXT
+		TYPE=text
 	},
 	PROPERTY "DefaultWohnort"{
 		TYPE=Number
@@ -18,13 +18,12 @@ reSource "http://lichtflut.de#testResource2"{
 
 PROPERTY "http://lichtflut.de#Wohnort"{
 	REGEX="EINSEINSEINS",
-	type=number
+	type=text
 },
 
 PROPERTY "Wohnort"{
 	REGEX="hallo",
-	type=text
-},
+	type=text},
 
 PROPERTY "wrongUri.de#HeyHO"{
 	REGEX="text",

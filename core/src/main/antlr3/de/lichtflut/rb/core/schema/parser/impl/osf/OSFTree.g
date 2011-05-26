@@ -141,6 +141,7 @@ value returns [Object obj]
 	| TEXT     {$obj = ElementaryDataType.STRING;}
 	| BOOLEAN  {$obj = ElementaryDataType.BOOLEAN;}
 	| NUMBER   {$obj = ElementaryDataType.INTEGER;}
+	| DATE 	   {$obj = ElementaryDataType.DATE;}
 	| TRUE     {$obj = Boolean.TRUE;}
 	| FALSE	   {$obj = Boolean.FALSE;}
 	| NULL 	   {$obj = null;}

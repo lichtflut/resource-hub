@@ -6,9 +6,11 @@ package de.lichtflut.rb.core.schema.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -167,8 +169,13 @@ public abstract class ResourceTypeInstance<T> extends ResourceView implements Se
 			}
 			Collection<T> values = this.getValuesFor(pAssertion.getPropertyDescriptor().getQualifiedName().toURI());
 			for (T value : values) {
+				Object val=value;
+				ElementaryDataType type = pAssertion.getPropertyDeclaration().getElementaryDataType();
+				switch(type){
+					case DATE: type = ElementaryDataType.STRING; 
+				}
 				Association.create(
-				this,pAssertion.getPropertyDescriptor(),new SNValue(pAssertion.getPropertyDeclaration().getElementaryDataType(),value),ctx);
+				this,pAssertion.getPropertyDescriptor(),new SNValue(type,val),ctx);
 			}//End of inner for loop
 		}//End of outer for loop
 	}
