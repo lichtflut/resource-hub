@@ -4,9 +4,14 @@
 package de.lichtflut.rb.core.schema.parser;
 
 import java.io.IOException;
+import java.util.Collection;
+
 import org.antlr.runtime.RecognitionException;
+import org.arastreju.sge.model.ElementaryDataType;
+
 import junit.framework.TestCase;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
@@ -45,12 +50,26 @@ public class ResourceSchemaParserTest extends TestCase
 				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL2.osf"));
 		System.out.println(result.getErrorMessagesAsString());
 		assertFalse(result.isErrorOccured());	
-		
+		boolean pAssertion=false;
 		for (ResourceSchema rs : result.getResourceSchemas()) {
+			
+			//--Search for a given property which must should exists on http://lichtflut.de#testResource2"
+			//-----------------------------
+			if(rs.getDescribedResourceID().getQualifiedName().toURI().equals("http://lichtflut.de#testResource2")){
+				Collection<PropertyAssertion> assertions = rs.getPropertyAssertions();
+				for (PropertyAssertion propertyAssertion : assertions) {
+					if(propertyAssertion.getPropertyDeclaration().getIdentifier().getQualifiedName().toURI().equals("http://lichtflut.de#Date")){
+						assertTrue(propertyAssertion.getPropertyDeclaration().getElementaryDataType() == ElementaryDataType.DATE);
+						pAssertion=true;
+					}
+				}
+			}
+			//-----------------------------
 			System.out.println(rs);	
 		}
-		
-		assertTrue(result.getPropertyDeclarations().size() == 5);
+		//Check if the "http://lichtflut.de#Data"-Properties type of "http://lichtflut.de#testResource2" is Date
+		assertTrue(pAssertion);
+		assertTrue(result.getPropertyDeclarations().size() == 6);
 	}
 	
 }

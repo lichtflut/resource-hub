@@ -12,7 +12,8 @@ RESOURCE "http://lichtflut.de#testResource1"{
 
 
 reSource "http://lichtflut.de#testResource2"{
-	PROPERTY "http://lichtflut.de#Wohnort"{ CARDINALITY=[0,5]}
+	PROPERTY "http://lichtflut.de#Wohnort"{ CARDINALITY=[0,5]},
+	PROPERTY "http://lichtflut.de#Date"{ min=1}
 
 },
 
@@ -28,4 +29,6 @@ PROPERTY "Wohnort"{
 PROPERTY "wrongUri.de#HeyHO"{
 	REGEX="text",
 	type=number
-}
+},
+
+PROPERTY "http://lichtflut.de#Date"{type=date}

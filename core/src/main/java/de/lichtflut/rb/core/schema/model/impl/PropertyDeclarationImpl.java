@@ -65,7 +65,7 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	private static final long serialVersionUID = -863599762328529038L;
 	//Instance members
 	private Set<Constraint> constraints = new HashSet<Constraint>();
-	private ElementaryDataType type =  ElementaryDataType.UNDEFINED;
+	private ElementaryDataType type =  ElementaryDataType.STRING;
 	//private ElementaryDataType type =  ElementaryDataType.UNDEFINED;
 	private ResourceID identifier;
 	

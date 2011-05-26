@@ -144,7 +144,9 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 
 	private void mergePropertyDecs(PropertyDeclaration newOne, PropertyDeclaration oldOne){
 		newOne.getConstraints().addAll(oldOne.getConstraints());
-		if((newOne.getElementaryDataType()==ElementaryDataType.UNDEFINED)){
+		//TODO: This is not correct. Due to the fact that the default value is STRING instead of UNDEFINED, we have to expand this selection
+		//This would make it impossible to overwrite a global value with a value of type string, please fix it
+		if(((newOne.getElementaryDataType()==ElementaryDataType.UNDEFINED)) ||(newOne.getElementaryDataType()==ElementaryDataType.STRING)){
 			newOne.setElementaryDataType(oldOne.getElementaryDataType());
 		}
 	}
