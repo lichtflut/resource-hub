@@ -116,8 +116,13 @@ assignment_dec returns [PropertyAssertionImpl assertion]
 	}
 	: ^(STRING s=string {pDec.setIdentifier(s.result); 
 	$assertion.setPropertyIdentifier(s.result);
-	$assertion.setPropertyDescriptor(new SimpleResourceID($assertion.getQualifiedPropertyIdentifier()));} PROPERTY_ASSERTION (^(p=p_assertion v=value {OSFEvaluator.evaluateLocalPropertyDec($assertion,this.resourceSchema,p.type,v.obj,this);}))*)
-	;
+	QualifiedName qName = $assertion.getQualifiedPropertyIdentifier();
+    if(!(qName.getSimpleName().startsWith("has"))){
+          $assertion.setPropertyDescriptor(new SimpleResourceID(qName.getNamespace().getUri(),"has"+qName.getSimpleName()));
+    }else{
+    	$assertion.setPropertyDescriptor(new SimpleResourceID($assertion.getQualifiedPropertyIdentifier()));}
+    }
+	PROPERTY_ASSERTION (^(p=p_assertion v=value {OSFEvaluator.evaluateLocalPropertyDec($assertion,this.resourceSchema,p.type,v.obj,this);}))*);
 
 p_assertion returns [String type] 
 	:	TYPE {$type = "type";}
