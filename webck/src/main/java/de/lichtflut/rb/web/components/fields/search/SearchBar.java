@@ -94,7 +94,7 @@ public abstract class SearchBar extends Panel {
 		StringBuilder convertedInput = new StringBuilder();
 		for (int i = 0; i < keywords.length; i++) {
 			if(keywords[i].length()>0){
-				convertedInput.append(keywords[i]+"*" );
+				convertedInput.append(keywords[i]+"*" + ((i < (keywords.length-1)) ? "AND" : "") + " ");
 			}else{
 				convertedInput.append(keywords[i]);
 			}
