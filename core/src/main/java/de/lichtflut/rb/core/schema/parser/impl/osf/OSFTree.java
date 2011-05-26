@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g 2011-05-04 11:24:04
+// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g 2011-05-26 10:58:55
 
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
@@ -12,11 +12,8 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
-
-import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.ElementaryDataType;
-import org.arastreju.sge.naming.QualifiedName;
 
 
 
@@ -30,38 +27,39 @@ import java.util.ArrayList;
 
 public class OSFTree extends TreeParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "STRING", "NUMBER", "ARRAY", "BOOLEAN", "TEXT", "COMMA", "TYPE", "MAX", "MIN", "REGEX", "CARDINALITY", "TRUE", "FALSE", "NULL", "PROPERTY", "RESOURCE", "DESCRIPTIONS", "PROPERTY_ASSERTION", "PROPERTY_DEC", "String", "Number", "Digit", "WS", "UnicodeEscape", "EscapeSequence", "HexDigit", "'{'", "'='", "'}'", "'['", "']'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "STRING", "NUMBER", "ARRAY", "BOOLEAN", "TEXT", "DATE", "COMMA", "TYPE", "MAX", "MIN", "REGEX", "CARDINALITY", "TRUE", "FALSE", "NULL", "PROPERTY", "RESOURCE", "DESCRIPTIONS", "PROPERTY_ASSERTION", "PROPERTY_DEC", "String", "Number", "Digit", "WS", "UnicodeEscape", "EscapeSequence", "HexDigit", "'{'", "'='", "'}'", "'['", "']'"
     };
-    public static final int PROPERTY_DEC=22;
-    public static final int NULL=17;
+    public static final int PROPERTY_DEC=23;
+    public static final int NULL=18;
     public static final int NUMBER=5;
-    public static final int MAX=11;
-    public static final int PROPERTY_ASSERTION=21;
-    public static final int REGEX=13;
-    public static final int MIN=12;
-    public static final int DESCRIPTIONS=20;
+    public static final int MAX=12;
+    public static final int PROPERTY_ASSERTION=22;
+    public static final int REGEX=14;
+    public static final int MIN=13;
+    public static final int DESCRIPTIONS=21;
     public static final int TEXT=8;
-    public static final int Digit=25;
+    public static final int Digit=26;
     public static final int EOF=-1;
-    public static final int HexDigit=29;
-    public static final int RESOURCE=19;
-    public static final int TRUE=15;
-    public static final int TYPE=10;
-    public static final int CARDINALITY=14;
-    public static final int T__30=30;
+    public static final int HexDigit=30;
+    public static final int RESOURCE=20;
+    public static final int TRUE=16;
+    public static final int TYPE=11;
+    public static final int CARDINALITY=15;
     public static final int T__31=31;
     public static final int T__32=32;
     public static final int BOOLEAN=7;
     public static final int T__33=33;
-    public static final int WS=26;
+    public static final int WS=27;
     public static final int T__34=34;
-    public static final int Number=24;
-    public static final int PROPERTY=18;
-    public static final int COMMA=9;
-    public static final int UnicodeEscape=27;
-    public static final int String=23;
-    public static final int FALSE=16;
-    public static final int EscapeSequence=28;
+    public static final int T__35=35;
+    public static final int Number=25;
+    public static final int PROPERTY=19;
+    public static final int COMMA=10;
+    public static final int UnicodeEscape=28;
+    public static final int String=24;
+    public static final int DATE=9;
+    public static final int FALSE=17;
+    public static final int EscapeSequence=29;
     public static final int ARRAY=6;
     public static final int STRING=4;
 
@@ -680,11 +678,7 @@ public class OSFTree extends TreeParser {
             adaptor.addChild(root_1, s.getTree());
             pDec.setIdentifier(s.result); 
             	retval.assertion.setPropertyIdentifier(s.result);
-            	QualifiedName qName = retval.assertion.getQualifiedPropertyIdentifier();
-        		if(!(qName.getSimpleName().startsWith("has"))){
-        			retval.assertion.setPropertyDescriptor(new SimpleResourceID(qName.getNamespace().getUri(),"has"+qName.getSimpleName()));
-        		}
-            	
+            	retval.assertion.setPropertyDescriptor(new SimpleResourceID(retval.assertion.getQualifiedPropertyIdentifier()));
             _last = (CommonTree)input.LT(1);
             PROPERTY_ASSERTION9=(CommonTree)match(input,PROPERTY_ASSERTION,FOLLOW_PROPERTY_ASSERTION_in_assignment_dec226); 
             PROPERTY_ASSERTION9_tree = (CommonTree)adaptor.dupNode(PROPERTY_ASSERTION9);
@@ -1361,15 +1355,15 @@ public class OSFTree extends TreeParser {
     static final String DFA7_minS =
         "\1\4\1\uffff\1\2\10\uffff";
     static final String DFA7_maxS =
-        "\1\21\1\uffff\1\21\10\uffff";
+        "\1\22\1\uffff\1\22\10\uffff";
     static final String DFA7_acceptS =
         "\1\uffff\1\1\1\uffff\1\3\1\4\1\5\1\7\1\10\1\11\1\2\1\6";
     static final String DFA7_specialS =
         "\13\uffff}>";
     static final String[] DFA7_transitionS = {
-            "\1\1\1\2\1\3\1\5\1\4\6\uffff\1\6\1\7\1\10",
+            "\1\1\1\2\1\3\1\5\1\4\7\uffff\1\6\1\7\1\10",
             "",
-            "\1\11\6\12\6\uffff\3\12",
+            "\1\11\6\12\7\uffff\3\12",
             "",
             "",
             "",
@@ -1416,23 +1410,23 @@ public class OSFTree extends TreeParser {
  
 
     public static final BitSet FOLLOW_DESCRIPTIONS_in_osl66 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_description_in_osl71 = new BitSet(new long[]{0x00000000000C0008L});
+    public static final BitSet FOLLOW_description_in_osl71 = new BitSet(new long[]{0x0000000000180008L});
     public static final BitSet FOLLOW_PROPERTY_in_description92 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_property_dec_in_description96 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_RESOURCE_in_description103 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_resource_dec_in_description107 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_STRING_in_property_dec135 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_string_in_property_dec139 = new BitSet(new long[]{0x0000000000200000L});
-    public static final BitSet FOLLOW_PROPERTY_ASSERTION_in_property_dec143 = new BitSet(new long[]{0x0000000000007C08L});
+    public static final BitSet FOLLOW_string_in_property_dec139 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_PROPERTY_ASSERTION_in_property_dec143 = new BitSet(new long[]{0x000000000000F808L});
     public static final BitSet FOLLOW_p_assertion_in_property_dec151 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_value_in_property_dec155 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_STRING_in_resource_dec179 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_string_in_resource_dec183 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_string_in_resource_dec183 = new BitSet(new long[]{0x0000000000800000L});
     public static final BitSet FOLLOW_PROPERTY_DEC_in_resource_dec187 = new BitSet(new long[]{0x0000000000000018L});
     public static final BitSet FOLLOW_assignment_dec_in_resource_dec193 = new BitSet(new long[]{0x0000000000000018L});
     public static final BitSet FOLLOW_STRING_in_assignment_dec218 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_string_in_assignment_dec222 = new BitSet(new long[]{0x0000000000200000L});
-    public static final BitSet FOLLOW_PROPERTY_ASSERTION_in_assignment_dec226 = new BitSet(new long[]{0x0000000000007C08L});
+    public static final BitSet FOLLOW_string_in_assignment_dec222 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_PROPERTY_ASSERTION_in_assignment_dec226 = new BitSet(new long[]{0x000000000000F808L});
     public static final BitSet FOLLOW_p_assertion_in_assignment_dec232 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_value_in_assignment_dec236 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_TYPE_in_p_assertion258 = new BitSet(new long[]{0x0000000000000002L});
@@ -1454,6 +1448,6 @@ public class OSFTree extends TreeParser {
     public static final BitSet FOLLOW_NUMBER_in_number434 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_Number_in_number436 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_ARRAY_in_array462 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_value_in_array467 = new BitSet(new long[]{0x00000000000381F8L});
+    public static final BitSet FOLLOW_value_in_array467 = new BitSet(new long[]{0x00000000000701F8L});
 
 }

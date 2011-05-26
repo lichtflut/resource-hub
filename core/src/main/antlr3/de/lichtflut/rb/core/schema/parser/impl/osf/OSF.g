@@ -148,7 +148,7 @@ Number	: '-'? Digit+ ( '.' Digit+)?;
 PROPERTY:	'PROPERTY';
 RESOURCE:	'RESOURCE';
 TEXT 	:	'TEXT';
-DATA 	:   'DATE';
+DATE 	:   'DATE';
 BOOLEAN :	'BOOLEAN';
 NUMBER 	:	'NUMBER';
 TRUE 	:	'TRUE';
