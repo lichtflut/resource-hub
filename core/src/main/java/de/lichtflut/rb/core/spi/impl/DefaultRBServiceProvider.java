@@ -5,6 +5,11 @@ package de.lichtflut.rb.core.spi.impl;
 
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.ArastrejuProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.api.ResourceSchemaManagementImpl;
 import de.lichtflut.rb.core.api.ResourceTypeManagement;
@@ -21,6 +26,8 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
  * @author Nils Bleisch
  */
 public class DefaultRBServiceProvider implements RBServiceProvider {
+	
+	private Logger logger = LoggerFactory.getLogger(DefaultRBServiceProvider.class);
 
 	private ArastrejuGate gate = null;
 	private ResourceSchemaManagement schemaManagement = null;
@@ -30,19 +37,13 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 	// --CONSTRUCTOR----------------------------------------
 	
 	/**
-	 * 
+	 * Default constructor.
 	 */
 	public DefaultRBServiceProvider(){
-		init();
-	}
-	
-	// -----------------------------------------------------
-	
-	/**
-	 * Initializing the services
-	 */
-	private void init(){
-		gate = Arastreju.getInstance().rootContext();
+		final RBConfig config = new RBConfig();
+		final ArastrejuProfile profile = config.getArastrejuConfiguration();
+		logger.info("Initializing Arastreju with profile: " + profile);
+		gate = Arastreju.getInstance(profile).rootContext();
 		schemaManagement = new ResourceSchemaManagementImpl(gate);
 		typeManagement = new ResourceTypeManagementImpl(gate);
 	}
