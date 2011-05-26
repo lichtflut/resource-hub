@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g 2011-05-04 11:24:03
+// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g 2011-05-26 10:36:20
 
 /*
   * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
@@ -22,27 +22,28 @@ public class OSFLexer extends Lexer {
     public static final int MIN=12;
     public static final int DESCRIPTIONS=20;
     public static final int TEXT=8;
-    public static final int Digit=25;
+    public static final int Digit=26;
     public static final int EOF=-1;
-    public static final int HexDigit=29;
+    public static final int HexDigit=30;
     public static final int RESOURCE=19;
     public static final int TRUE=15;
     public static final int TYPE=10;
     public static final int CARDINALITY=14;
-    public static final int T__30=30;
     public static final int T__31=31;
     public static final int T__32=32;
     public static final int BOOLEAN=7;
     public static final int T__33=33;
-    public static final int WS=26;
+    public static final int WS=27;
     public static final int T__34=34;
-    public static final int Number=24;
+    public static final int T__35=35;
+    public static final int Number=25;
     public static final int PROPERTY=18;
     public static final int COMMA=9;
-    public static final int UnicodeEscape=27;
-    public static final int String=23;
+    public static final int UnicodeEscape=28;
+    public static final int String=24;
+    public static final int DATE=23;
     public static final int FALSE=16;
-    public static final int EscapeSequence=28;
+    public static final int EscapeSequence=29;
     public static final int ARRAY=6;
     public static final int STRING=4;
 
@@ -88,35 +89,15 @@ public class OSFLexer extends Lexer {
     }
     // $ANTLR end "COMMA"
 
-    // $ANTLR start "T__30"
-    public final void mT__30() throws RecognitionException {
-        try {
-            int _type = T__30;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:25:7: ( '{' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:25:9: '{'
-            {
-            match('{'); 
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end "T__30"
-
     // $ANTLR start "T__31"
     public final void mT__31() throws RecognitionException {
         try {
             int _type = T__31;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:26:7: ( '=' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:26:9: '='
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:25:7: ( '{' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:25:9: '{'
             {
-            match('='); 
+            match('{'); 
 
             }
 
@@ -133,10 +114,10 @@ public class OSFLexer extends Lexer {
         try {
             int _type = T__32;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:27:7: ( '}' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:27:9: '}'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:26:7: ( '=' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:26:9: '='
             {
-            match('}'); 
+            match('='); 
 
             }
 
@@ -153,10 +134,10 @@ public class OSFLexer extends Lexer {
         try {
             int _type = T__33;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:28:7: ( '[' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:28:9: '['
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:27:7: ( '}' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:27:9: '}'
             {
-            match('['); 
+            match('}'); 
 
             }
 
@@ -173,6 +154,26 @@ public class OSFLexer extends Lexer {
         try {
             int _type = T__34;
             int _channel = DEFAULT_TOKEN_CHANNEL;
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:28:7: ( '[' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:28:9: '['
+            {
+            match('['); 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "T__34"
+
+    // $ANTLR start "T__35"
+    public final void mT__35() throws RecognitionException {
+        try {
+            int _type = T__35;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:29:7: ( ']' )
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:29:9: ']'
             {
@@ -186,17 +187,17 @@ public class OSFLexer extends Lexer {
         finally {
         }
     }
-    // $ANTLR end "T__34"
+    // $ANTLR end "T__35"
 
     // $ANTLR start "Number"
     public final void mNumber() throws RecognitionException {
         try {
             int _type = Number;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:144:8: ( ( '-' )? ( Digit )+ ( '.' ( Digit )+ )? )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:144:10: ( '-' )? ( Digit )+ ( '.' ( Digit )+ )?
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:145:8: ( ( '-' )? ( Digit )+ ( '.' ( Digit )+ )? )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:145:10: ( '-' )? ( Digit )+ ( '.' ( Digit )+ )?
             {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:144:10: ( '-' )?
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:145:10: ( '-' )?
             int alt1=2;
             int LA1_0 = input.LA(1);
 
@@ -205,7 +206,7 @@ public class OSFLexer extends Lexer {
             }
             switch (alt1) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:144:10: '-'
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:145:10: '-'
                     {
                     match('-'); 
 
@@ -214,7 +215,7 @@ public class OSFLexer extends Lexer {
 
             }
 
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:144:15: ( Digit )+
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:145:15: ( Digit )+
             int cnt2=0;
             loop2:
             do {
@@ -228,7 +229,7 @@ public class OSFLexer extends Lexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:144:15: Digit
+            	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:145:15: Digit
             	    {
             	    mDigit(); 
 
@@ -244,7 +245,7 @@ public class OSFLexer extends Lexer {
                 cnt2++;
             } while (true);
 
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:144:22: ( '.' ( Digit )+ )?
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:145:22: ( '.' ( Digit )+ )?
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -253,10 +254,10 @@ public class OSFLexer extends Lexer {
             }
             switch (alt4) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:144:24: '.' ( Digit )+
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:145:24: '.' ( Digit )+
                     {
                     match('.'); 
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:144:28: ( Digit )+
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:145:28: ( Digit )+
                     int cnt3=0;
                     loop3:
                     do {
@@ -270,7 +271,7 @@ public class OSFLexer extends Lexer {
 
                         switch (alt3) {
                     	case 1 :
-                    	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:144:28: Digit
+                    	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:145:28: Digit
                     	    {
                     	    mDigit(); 
 
@@ -308,8 +309,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = PROPERTY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:147:9: ( 'PROPERTY' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:147:11: 'PROPERTY'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:148:9: ( 'PROPERTY' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:148:11: 'PROPERTY'
             {
             match("PROPERTY"); 
 
@@ -329,8 +330,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = RESOURCE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:148:9: ( 'RESOURCE' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:148:11: 'RESOURCE'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:149:9: ( 'RESOURCE' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:149:11: 'RESOURCE'
             {
             match("RESOURCE"); 
 
@@ -350,8 +351,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = TEXT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:149:7: ( 'TEXT' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:149:9: 'TEXT'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:150:7: ( 'TEXT' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:150:9: 'TEXT'
             {
             match("TEXT"); 
 
@@ -371,8 +372,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = BOOLEAN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:150:9: ( 'BOOLEAN' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:150:11: 'BOOLEAN'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:151:9: ( 'BOOLEAN' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:151:11: 'BOOLEAN'
             {
             match("BOOLEAN"); 
 
@@ -392,8 +393,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = NUMBER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:151:9: ( 'NUMBER' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:151:11: 'NUMBER'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:152:9: ( 'NUMBER' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:152:11: 'NUMBER'
             {
             match("NUMBER"); 
 
@@ -413,8 +414,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = TRUE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:152:7: ( 'TRUE' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:152:9: 'TRUE'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:153:7: ( 'TRUE' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:153:9: 'TRUE'
             {
             match("TRUE"); 
 
@@ -434,8 +435,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = FALSE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:153:8: ( 'FALSE' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:153:10: 'FALSE'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:154:8: ( 'FALSE' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:154:10: 'FALSE'
             {
             match("FALSE"); 
 
@@ -455,8 +456,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = NULL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:154:7: ( 'NULL' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:154:9: 'NULL'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:155:7: ( 'NULL' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:155:9: 'NULL'
             {
             match("NULL"); 
 
@@ -476,8 +477,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = TYPE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:155:7: ( 'TYPE' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:155:9: 'TYPE'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:156:7: ( 'TYPE' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:156:9: 'TYPE'
             {
             match("TYPE"); 
 
@@ -497,8 +498,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = MIN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:156:6: ( 'MIN' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:156:8: 'MIN'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:157:6: ( 'MIN' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:157:8: 'MIN'
             {
             match("MIN"); 
 
@@ -518,8 +519,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = MAX;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:157:6: ( 'MAX' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:157:8: 'MAX'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:158:6: ( 'MAX' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:158:8: 'MAX'
             {
             match("MAX"); 
 
@@ -539,8 +540,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = CARDINALITY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:158:13: ( 'CARDINALITY' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:158:15: 'CARDINALITY'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:159:13: ( 'CARDINALITY' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:159:15: 'CARDINALITY'
             {
             match("CARDINALITY"); 
 
@@ -560,8 +561,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = REGEX;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:159:13: ( 'REGEX' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:159:15: 'REGEX'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:160:13: ( 'REGEX' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:160:15: 'REGEX'
             {
             match("REGEX"); 
 
@@ -581,8 +582,8 @@ public class OSFLexer extends Lexer {
         try {
             int _type = String;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:162:8: ( '\"' ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '-' | '#' | '/' | ':' | '.' )+ '\"' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:162:10: '\"' ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '-' | '#' | '/' | ':' | '.' )+ '\"'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:163:8: ( '\"' ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '-' | '#' | '/' | ':' | '.' )+ '\"' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:163:10: '\"' ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '-' | '#' | '/' | ':' | '.' )+ '\"'
             {
             match('\"'); 
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
@@ -594,7 +595,7 @@ public class OSFLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:162:39: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '-' | '#' | '/' | ':' | '.' )+
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:163:39: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '-' | '#' | '/' | ':' | '.' )+
             int cnt5=0;
             loop5:
             do {
@@ -649,10 +650,10 @@ public class OSFLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:165:3: ( ( ' ' | '\\n' | '\\r' | '\\t' )+ )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:165:5: ( ' ' | '\\n' | '\\r' | '\\t' )+
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:166:3: ( ( ' ' | '\\n' | '\\r' | '\\t' )+ )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:166:5: ( ' ' | '\\n' | '\\r' | '\\t' )+
             {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:165:5: ( ' ' | '\\n' | '\\r' | '\\t' )+
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:166:5: ( ' ' | '\\n' | '\\r' | '\\t' )+
             int cnt6=0;
             loop6:
             do {
@@ -705,11 +706,11 @@ public class OSFLexer extends Lexer {
     // $ANTLR start "EscapeSequence"
     public final void mEscapeSequence() throws RecognitionException {
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:168:6: ( '\\\\' ( UnicodeEscape | 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:168:10: '\\\\' ( UnicodeEscape | 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:169:6: ( '\\\\' ( UnicodeEscape | 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:169:10: '\\\\' ( UnicodeEscape | 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' )
             {
             match('\\'); 
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:168:15: ( UnicodeEscape | 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:169:15: ( UnicodeEscape | 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' )
             int alt7=9;
             switch ( input.LA(1) ) {
             case 'u':
@@ -766,63 +767,63 @@ public class OSFLexer extends Lexer {
 
             switch (alt7) {
                 case 1 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:168:16: UnicodeEscape
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:169:16: UnicodeEscape
                     {
                     mUnicodeEscape(); 
 
                     }
                     break;
                 case 2 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:168:31: 'b'
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:169:31: 'b'
                     {
                     match('b'); 
 
                     }
                     break;
                 case 3 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:168:35: 't'
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:169:35: 't'
                     {
                     match('t'); 
 
                     }
                     break;
                 case 4 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:168:39: 'n'
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:169:39: 'n'
                     {
                     match('n'); 
 
                     }
                     break;
                 case 5 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:168:43: 'f'
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:169:43: 'f'
                     {
                     match('f'); 
 
                     }
                     break;
                 case 6 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:168:47: 'r'
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:169:47: 'r'
                     {
                     match('r'); 
 
                     }
                     break;
                 case 7 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:168:51: '\\\"'
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:169:51: '\\\"'
                     {
                     match('\"'); 
 
                     }
                     break;
                 case 8 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:168:56: '\\''
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:169:56: '\\''
                     {
                     match('\''); 
 
                     }
                     break;
                 case 9 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:168:61: '\\\\'
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:169:61: '\\\\'
                     {
                     match('\\'); 
 
@@ -843,8 +844,8 @@ public class OSFLexer extends Lexer {
     // $ANTLR start "UnicodeEscape"
     public final void mUnicodeEscape() throws RecognitionException {
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:172:2: ( 'u' HexDigit HexDigit HexDigit HexDigit )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:172:4: 'u' HexDigit HexDigit HexDigit HexDigit
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:173:2: ( 'u' HexDigit HexDigit HexDigit HexDigit )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:173:4: 'u' HexDigit HexDigit HexDigit HexDigit
             {
             match('u'); 
             mHexDigit(); 
@@ -863,7 +864,7 @@ public class OSFLexer extends Lexer {
     // $ANTLR start "HexDigit"
     public final void mHexDigit() throws RecognitionException {
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:176:2: ( '0' .. '9' | 'A' .. 'F' | 'a' .. 'f' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:177:2: ( '0' .. '9' | 'A' .. 'F' | 'a' .. 'f' )
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='F')||(input.LA(1)>='a' && input.LA(1)<='f') ) {
@@ -887,8 +888,8 @@ public class OSFLexer extends Lexer {
     // $ANTLR start "Digit"
     public final void mDigit() throws RecognitionException {
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:180:2: ( '0' .. '9' )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:180:4: '0' .. '9'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:181:2: ( '0' .. '9' )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:181:4: '0' .. '9'
             {
             matchRange('0','9'); 
 
@@ -901,7 +902,7 @@ public class OSFLexer extends Lexer {
     // $ANTLR end "Digit"
 
     public void mTokens() throws RecognitionException {
-        // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:1:8: ( COMMA | T__30 | T__31 | T__32 | T__33 | T__34 | Number | PROPERTY | RESOURCE | TEXT | BOOLEAN | NUMBER | TRUE | FALSE | NULL | TYPE | MIN | MAX | CARDINALITY | REGEX | String | WS )
+        // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:1:8: ( COMMA | T__31 | T__32 | T__33 | T__34 | T__35 | Number | PROPERTY | RESOURCE | TEXT | BOOLEAN | NUMBER | TRUE | FALSE | NULL | TYPE | MIN | MAX | CARDINALITY | REGEX | String | WS )
         int alt8=22;
         alt8 = dfa8.predict(input);
         switch (alt8) {
@@ -913,37 +914,37 @@ public class OSFLexer extends Lexer {
                 }
                 break;
             case 2 :
-                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:1:16: T__30
-                {
-                mT__30(); 
-
-                }
-                break;
-            case 3 :
-                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:1:22: T__31
+                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:1:16: T__31
                 {
                 mT__31(); 
 
                 }
                 break;
-            case 4 :
-                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:1:28: T__32
+            case 3 :
+                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:1:22: T__32
                 {
                 mT__32(); 
 
                 }
                 break;
-            case 5 :
-                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:1:34: T__33
+            case 4 :
+                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:1:28: T__33
                 {
                 mT__33(); 
 
                 }
                 break;
-            case 6 :
-                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:1:40: T__34
+            case 5 :
+                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:1:34: T__34
                 {
                 mT__34(); 
+
+                }
+                break;
+            case 6 :
+                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:1:40: T__35
+                {
+                mT__35(); 
 
                 }
                 break;
@@ -1147,7 +1148,7 @@ public class OSFLexer extends Lexer {
             this.transition = DFA8_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( COMMA | T__30 | T__31 | T__32 | T__33 | T__34 | Number | PROPERTY | RESOURCE | TEXT | BOOLEAN | NUMBER | TRUE | FALSE | NULL | TYPE | MIN | MAX | CARDINALITY | REGEX | String | WS );";
+            return "1:1: Tokens : ( COMMA | T__31 | T__32 | T__33 | T__34 | T__35 | Number | PROPERTY | RESOURCE | TEXT | BOOLEAN | NUMBER | TRUE | FALSE | NULL | TYPE | MIN | MAX | CARDINALITY | REGEX | String | WS );";
         }
     }
  

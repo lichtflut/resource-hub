@@ -23,6 +23,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance.MetaDataKeys;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.web.behaviors.DatePickerBehavior;
 
 /**
  * <p>
@@ -112,6 +113,12 @@ public class GenericResourceFormPanel extends Panel {
 			case BOOLEAN : {
 				f = new Fragment("propertyInput", "booleanInput", this);
 				f.add(new CheckBox("input",model)); break;
+			}
+			case DATE : {
+				f = new Fragment("propertyInput","textInput", this);
+				TextField field = new TextField("input",model);
+				field.add(new DatePickerBehavior());
+				f.add(field.add(new GenericResourceValidator(instance.getValidatorFor(attribute))).setRequired(required)); break;
 			}
 			default: {
 				f = new Fragment("propertyInput","textInput", this);

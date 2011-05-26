@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g 2011-05-04 11:24:03
+// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g 2011-05-26 10:36:20
 
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
@@ -38,7 +38,7 @@ import org.antlr.runtime.tree.*;
 
 public class OSFParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "STRING", "NUMBER", "ARRAY", "BOOLEAN", "TEXT", "COMMA", "TYPE", "MAX", "MIN", "REGEX", "CARDINALITY", "TRUE", "FALSE", "NULL", "PROPERTY", "RESOURCE", "DESCRIPTIONS", "PROPERTY_ASSERTION", "PROPERTY_DEC", "String", "Number", "Digit", "WS", "UnicodeEscape", "EscapeSequence", "HexDigit", "'{'", "'='", "'}'", "'['", "']'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "STRING", "NUMBER", "ARRAY", "BOOLEAN", "TEXT", "COMMA", "TYPE", "MAX", "MIN", "REGEX", "CARDINALITY", "TRUE", "FALSE", "NULL", "PROPERTY", "RESOURCE", "DESCRIPTIONS", "PROPERTY_ASSERTION", "PROPERTY_DEC", "DATE", "String", "Number", "Digit", "WS", "UnicodeEscape", "EscapeSequence", "HexDigit", "'{'", "'='", "'}'", "'['", "']'"
     };
     public static final int PROPERTY_DEC=22;
     public static final int NULL=17;
@@ -49,27 +49,28 @@ public class OSFParser extends Parser {
     public static final int MIN=12;
     public static final int DESCRIPTIONS=20;
     public static final int TEXT=8;
-    public static final int Digit=25;
+    public static final int Digit=26;
     public static final int EOF=-1;
-    public static final int HexDigit=29;
+    public static final int HexDigit=30;
     public static final int RESOURCE=19;
     public static final int TRUE=15;
     public static final int TYPE=10;
     public static final int CARDINALITY=14;
-    public static final int T__30=30;
     public static final int T__31=31;
     public static final int T__32=32;
-    public static final int WS=26;
+    public static final int WS=27;
     public static final int T__33=33;
     public static final int BOOLEAN=7;
     public static final int T__34=34;
-    public static final int Number=24;
+    public static final int Number=25;
+    public static final int T__35=35;
     public static final int PROPERTY=18;
     public static final int COMMA=9;
-    public static final int UnicodeEscape=27;
-    public static final int String=23;
+    public static final int UnicodeEscape=28;
+    public static final int String=24;
+    public static final int DATE=23;
     public static final int FALSE=16;
-    public static final int EscapeSequence=28;
+    public static final int EscapeSequence=29;
     public static final int ARRAY=6;
     public static final int STRING=4;
 
@@ -476,11 +477,11 @@ public class OSFParser extends Parser {
         CommonTree COMMA14_tree=null;
         CommonTree char_literal16_tree=null;
         CommonTree char_literal18_tree=null;
-        RewriteRuleTokenStream stream_30=new RewriteRuleTokenStream(adaptor,"token 30");
         RewriteRuleTokenStream stream_32=new RewriteRuleTokenStream(adaptor,"token 32");
         RewriteRuleTokenStream stream_31=new RewriteRuleTokenStream(adaptor,"token 31");
         RewriteRuleTokenStream stream_PROPERTY=new RewriteRuleTokenStream(adaptor,"token PROPERTY");
         RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
+        RewriteRuleTokenStream stream_33=new RewriteRuleTokenStream(adaptor,"token 33");
         RewriteRuleSubtreeStream stream_p_assertion=new RewriteRuleSubtreeStream(adaptor,"rule p_assertion");
         RewriteRuleSubtreeStream stream_string=new RewriteRuleSubtreeStream(adaptor,"rule string");
         RewriteRuleSubtreeStream stream_value=new RewriteRuleSubtreeStream(adaptor,"rule value");
@@ -501,15 +502,15 @@ public class OSFParser extends Parser {
             int alt6=2;
             int LA6_0 = input.LA(1);
 
-            if ( (LA6_0==30) ) {
+            if ( (LA6_0==31) ) {
                 alt6=1;
             }
             switch (alt6) {
                 case 1 :
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:93:4: '{' ( p_assertion '=' value ( COMMA p_assertion '=' value )* )? '}'
                     {
-                    char_literal10=(Token)match(input,30,FOLLOW_30_in_property_dec239);  
-                    stream_30.add(char_literal10);
+                    char_literal10=(Token)match(input,31,FOLLOW_31_in_property_dec239);  
+                    stream_31.add(char_literal10);
 
                     // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:94:3: ( p_assertion '=' value ( COMMA p_assertion '=' value )* )?
                     int alt5=2;
@@ -528,8 +529,8 @@ public class OSFParser extends Parser {
                             state._fsp--;
 
                             stream_p_assertion.add(p_assertion11.getTree());
-                            char_literal12=(Token)match(input,31,FOLLOW_31_in_property_dec246);  
-                            stream_31.add(char_literal12);
+                            char_literal12=(Token)match(input,32,FOLLOW_32_in_property_dec246);  
+                            stream_32.add(char_literal12);
 
                             pushFollow(FOLLOW_value_in_property_dec248);
                             value13=value();
@@ -561,8 +562,8 @@ public class OSFParser extends Parser {
                             	    state._fsp--;
 
                             	    stream_p_assertion.add(p_assertion15.getTree());
-                            	    char_literal16=(Token)match(input,31,FOLLOW_31_in_property_dec254);  
-                            	    stream_31.add(char_literal16);
+                            	    char_literal16=(Token)match(input,32,FOLLOW_32_in_property_dec254);  
+                            	    stream_32.add(char_literal16);
 
                             	    pushFollow(FOLLOW_value_in_property_dec256);
                             	    value17=value();
@@ -585,8 +586,8 @@ public class OSFParser extends Parser {
 
                     }
 
-                    char_literal18=(Token)match(input,32,FOLLOW_32_in_property_dec265);  
-                    stream_32.add(char_literal18);
+                    char_literal18=(Token)match(input,33,FOLLOW_33_in_property_dec265);  
+                    stream_33.add(char_literal18);
 
 
                     }
@@ -685,10 +686,10 @@ public class OSFParser extends Parser {
         CommonTree char_literal21_tree=null;
         CommonTree char_literal23_tree=null;
         CommonTree char_literal25_tree=null;
-        RewriteRuleTokenStream stream_30=new RewriteRuleTokenStream(adaptor,"token 30");
-        RewriteRuleTokenStream stream_32=new RewriteRuleTokenStream(adaptor,"token 32");
+        RewriteRuleTokenStream stream_31=new RewriteRuleTokenStream(adaptor,"token 31");
         RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
         RewriteRuleTokenStream stream_RESOURCE=new RewriteRuleTokenStream(adaptor,"token RESOURCE");
+        RewriteRuleTokenStream stream_33=new RewriteRuleTokenStream(adaptor,"token 33");
         RewriteRuleSubtreeStream stream_property_dec=new RewriteRuleSubtreeStream(adaptor,"rule property_dec");
         RewriteRuleSubtreeStream stream_string=new RewriteRuleSubtreeStream(adaptor,"rule string");
         try {
@@ -704,8 +705,8 @@ public class OSFParser extends Parser {
             state._fsp--;
 
             stream_string.add(string20.getTree());
-            char_literal21=(Token)match(input,30,FOLLOW_30_in_resource_dec304);  
-            stream_30.add(char_literal21);
+            char_literal21=(Token)match(input,31,FOLLOW_31_in_resource_dec304);  
+            stream_31.add(char_literal21);
 
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:101:3: ( property_dec ( ',' property_dec )* )?
             int alt8=2;
@@ -763,8 +764,8 @@ public class OSFParser extends Parser {
 
             }
 
-            char_literal25=(Token)match(input,32,FOLLOW_32_in_resource_dec323);  
-            stream_32.add(char_literal25);
+            char_literal25=(Token)match(input,33,FOLLOW_33_in_resource_dec323);  
+            stream_33.add(char_literal25);
 
 
 
@@ -1053,7 +1054,7 @@ public class OSFParser extends Parser {
     };
 
     // $ANTLR start "value"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:114:1: value : ( string | number | array | TEXT -> TEXT | BOOLEAN -> BOOLEAN | NUMBER -> NUMBER | TRUE -> TRUE | FALSE -> FALSE | NULL -> NULL );
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:114:1: value : ( string | number | array | TEXT -> TEXT | BOOLEAN -> BOOLEAN | DATE -> DATE | NUMBER -> NUMBER | TRUE -> TRUE | FALSE -> FALSE | NULL -> NULL );
     public final OSFParser.value_return value() throws RecognitionException {
         OSFParser.value_return retval = new OSFParser.value_return();
         retval.start = input.LT(1);
@@ -1062,10 +1063,11 @@ public class OSFParser extends Parser {
 
         Token TEXT34=null;
         Token BOOLEAN35=null;
-        Token NUMBER36=null;
-        Token TRUE37=null;
-        Token FALSE38=null;
-        Token NULL39=null;
+        Token DATE36=null;
+        Token NUMBER37=null;
+        Token TRUE38=null;
+        Token FALSE39=null;
+        Token NULL40=null;
         OSFParser.string_return string31 = null;
 
         OSFParser.number_return number32 = null;
@@ -1075,20 +1077,22 @@ public class OSFParser extends Parser {
 
         CommonTree TEXT34_tree=null;
         CommonTree BOOLEAN35_tree=null;
-        CommonTree NUMBER36_tree=null;
-        CommonTree TRUE37_tree=null;
-        CommonTree FALSE38_tree=null;
-        CommonTree NULL39_tree=null;
+        CommonTree DATE36_tree=null;
+        CommonTree NUMBER37_tree=null;
+        CommonTree TRUE38_tree=null;
+        CommonTree FALSE39_tree=null;
+        CommonTree NULL40_tree=null;
         RewriteRuleTokenStream stream_BOOLEAN=new RewriteRuleTokenStream(adaptor,"token BOOLEAN");
         RewriteRuleTokenStream stream_TEXT=new RewriteRuleTokenStream(adaptor,"token TEXT");
+        RewriteRuleTokenStream stream_DATE=new RewriteRuleTokenStream(adaptor,"token DATE");
         RewriteRuleTokenStream stream_FALSE=new RewriteRuleTokenStream(adaptor,"token FALSE");
         RewriteRuleTokenStream stream_TRUE=new RewriteRuleTokenStream(adaptor,"token TRUE");
         RewriteRuleTokenStream stream_NULL=new RewriteRuleTokenStream(adaptor,"token NULL");
         RewriteRuleTokenStream stream_NUMBER=new RewriteRuleTokenStream(adaptor,"token NUMBER");
 
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:116:2: ( string | number | array | TEXT -> TEXT | BOOLEAN -> BOOLEAN | NUMBER -> NUMBER | TRUE -> TRUE | FALSE -> FALSE | NULL -> NULL )
-            int alt10=9;
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:116:2: ( string | number | array | TEXT -> TEXT | BOOLEAN -> BOOLEAN | DATE -> DATE | NUMBER -> NUMBER | TRUE -> TRUE | FALSE -> FALSE | NULL -> NULL )
+            int alt10=10;
             switch ( input.LA(1) ) {
             case String:
                 {
@@ -1100,7 +1104,7 @@ public class OSFParser extends Parser {
                 alt10=2;
                 }
                 break;
-            case 33:
+            case 34:
                 {
                 alt10=3;
                 }
@@ -1115,24 +1119,29 @@ public class OSFParser extends Parser {
                 alt10=5;
                 }
                 break;
-            case NUMBER:
+            case DATE:
                 {
                 alt10=6;
                 }
                 break;
-            case TRUE:
+            case NUMBER:
                 {
                 alt10=7;
                 }
                 break;
-            case FALSE:
+            case TRUE:
                 {
                 alt10=8;
                 }
                 break;
-            case NULL:
+            case FALSE:
                 {
                 alt10=9;
+                }
+                break;
+            case NULL:
+                {
+                alt10=10;
                 }
                 break;
             default:
@@ -1242,10 +1251,38 @@ public class OSFParser extends Parser {
                     }
                     break;
                 case 6 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:121:4: NUMBER
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:121:4: DATE
                     {
-                    NUMBER36=(Token)match(input,NUMBER,FOLLOW_NUMBER_in_value435);  
-                    stream_NUMBER.add(NUMBER36);
+                    DATE36=(Token)match(input,DATE,FOLLOW_DATE_in_value435);  
+                    stream_DATE.add(DATE36);
+
+
+
+                    // AST REWRITE
+                    // elements: DATE
+                    // token labels: 
+                    // rule labels: retval
+                    // token list labels: 
+                    // rule list labels: 
+                    // wildcard labels: 
+                    retval.tree = root_0;
+                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                    root_0 = (CommonTree)adaptor.nil();
+                    // 121:9: -> DATE
+                    {
+                        adaptor.addChild(root_0, stream_DATE.nextNode());
+
+                    }
+
+                    retval.tree = root_0;
+                    }
+                    break;
+                case 7 :
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:122:4: NUMBER
+                    {
+                    NUMBER37=(Token)match(input,NUMBER,FOLLOW_NUMBER_in_value444);  
+                    stream_NUMBER.add(NUMBER37);
 
 
 
@@ -1260,7 +1297,7 @@ public class OSFParser extends Parser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (CommonTree)adaptor.nil();
-                    // 121:11: -> NUMBER
+                    // 122:11: -> NUMBER
                     {
                         adaptor.addChild(root_0, stream_NUMBER.nextNode());
 
@@ -1269,11 +1306,11 @@ public class OSFParser extends Parser {
                     retval.tree = root_0;
                     }
                     break;
-                case 7 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:122:4: TRUE
+                case 8 :
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:123:4: TRUE
                     {
-                    TRUE37=(Token)match(input,TRUE,FOLLOW_TRUE_in_value444);  
-                    stream_TRUE.add(TRUE37);
+                    TRUE38=(Token)match(input,TRUE,FOLLOW_TRUE_in_value453);  
+                    stream_TRUE.add(TRUE38);
 
 
 
@@ -1288,7 +1325,7 @@ public class OSFParser extends Parser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (CommonTree)adaptor.nil();
-                    // 122:9: -> TRUE
+                    // 123:9: -> TRUE
                     {
                         adaptor.addChild(root_0, stream_TRUE.nextNode());
 
@@ -1297,11 +1334,11 @@ public class OSFParser extends Parser {
                     retval.tree = root_0;
                     }
                     break;
-                case 8 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:123:4: FALSE
+                case 9 :
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:124:4: FALSE
                     {
-                    FALSE38=(Token)match(input,FALSE,FOLLOW_FALSE_in_value453);  
-                    stream_FALSE.add(FALSE38);
+                    FALSE39=(Token)match(input,FALSE,FOLLOW_FALSE_in_value462);  
+                    stream_FALSE.add(FALSE39);
 
 
 
@@ -1316,7 +1353,7 @@ public class OSFParser extends Parser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (CommonTree)adaptor.nil();
-                    // 123:10: -> FALSE
+                    // 124:10: -> FALSE
                     {
                         adaptor.addChild(root_0, stream_FALSE.nextNode());
 
@@ -1325,11 +1362,11 @@ public class OSFParser extends Parser {
                     retval.tree = root_0;
                     }
                     break;
-                case 9 :
-                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:124:4: NULL
+                case 10 :
+                    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:125:4: NULL
                     {
-                    NULL39=(Token)match(input,NULL,FOLLOW_NULL_in_value462);  
-                    stream_NULL.add(NULL39);
+                    NULL40=(Token)match(input,NULL,FOLLOW_NULL_in_value471);  
+                    stream_NULL.add(NULL40);
 
 
 
@@ -1344,7 +1381,7 @@ public class OSFParser extends Parser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (CommonTree)adaptor.nil();
-                    // 124:9: -> NULL
+                    // 125:9: -> NULL
                     {
                         adaptor.addChild(root_0, stream_NULL.nextNode());
 
@@ -1379,24 +1416,24 @@ public class OSFParser extends Parser {
     };
 
     // $ANTLR start "string"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:128:1: string : String -> ^( STRING String ) ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:129:1: string : String -> ^( STRING String ) ;
     public final OSFParser.string_return string() throws RecognitionException {
         OSFParser.string_return retval = new OSFParser.string_return();
         retval.start = input.LT(1);
 
         CommonTree root_0 = null;
 
-        Token String40=null;
+        Token String41=null;
 
-        CommonTree String40_tree=null;
+        CommonTree String41_tree=null;
         RewriteRuleTokenStream stream_String=new RewriteRuleTokenStream(adaptor,"token String");
 
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:128:9: ( String -> ^( STRING String ) )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:128:11: String
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:129:9: ( String -> ^( STRING String ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:129:11: String
             {
-            String40=(Token)match(input,String,FOLLOW_String_in_string478);  
-            stream_String.add(String40);
+            String41=(Token)match(input,String,FOLLOW_String_in_string487);  
+            stream_String.add(String41);
 
 
 
@@ -1411,9 +1448,9 @@ public class OSFParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (CommonTree)adaptor.nil();
-            // 129:4: -> ^( STRING String )
+            // 130:4: -> ^( STRING String )
             {
-                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:129:7: ^( STRING String )
+                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:130:7: ^( STRING String )
                 {
                 CommonTree root_1 = (CommonTree)adaptor.nil();
                 root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(STRING, "STRING"), root_1);
@@ -1452,24 +1489,24 @@ public class OSFParser extends Parser {
     };
 
     // $ANTLR start "number"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:132:1: number : Number -> ^( NUMBER Number ) ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:133:1: number : Number -> ^( NUMBER Number ) ;
     public final OSFParser.number_return number() throws RecognitionException {
         OSFParser.number_return retval = new OSFParser.number_return();
         retval.start = input.LT(1);
 
         CommonTree root_0 = null;
 
-        Token Number41=null;
+        Token Number42=null;
 
-        CommonTree Number41_tree=null;
+        CommonTree Number42_tree=null;
         RewriteRuleTokenStream stream_Number=new RewriteRuleTokenStream(adaptor,"token Number");
 
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:132:8: ( Number -> ^( NUMBER Number ) )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:132:10: Number
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:133:8: ( Number -> ^( NUMBER Number ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:133:10: Number
             {
-            Number41=(Token)match(input,Number,FOLLOW_Number_in_number499);  
-            stream_Number.add(Number41);
+            Number42=(Token)match(input,Number,FOLLOW_Number_in_number508);  
+            stream_Number.add(Number42);
 
 
 
@@ -1484,9 +1521,9 @@ public class OSFParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (CommonTree)adaptor.nil();
-            // 132:17: -> ^( NUMBER Number )
+            // 133:17: -> ^( NUMBER Number )
             {
-                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:132:20: ^( NUMBER Number )
+                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:133:20: ^( NUMBER Number )
                 {
                 CommonTree root_1 = (CommonTree)adaptor.nil();
                 root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(NUMBER, "NUMBER"), root_1);
@@ -1525,38 +1562,38 @@ public class OSFParser extends Parser {
     };
 
     // $ANTLR start "array"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:136:1: array : '[' elements ']' -> ^( ARRAY elements ) ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:137:1: array : '[' elements ']' -> ^( ARRAY elements ) ;
     public final OSFParser.array_return array() throws RecognitionException {
         OSFParser.array_return retval = new OSFParser.array_return();
         retval.start = input.LT(1);
 
         CommonTree root_0 = null;
 
-        Token char_literal42=null;
-        Token char_literal44=null;
-        OSFParser.elements_return elements43 = null;
+        Token char_literal43=null;
+        Token char_literal45=null;
+        OSFParser.elements_return elements44 = null;
 
 
-        CommonTree char_literal42_tree=null;
-        CommonTree char_literal44_tree=null;
-        RewriteRuleTokenStream stream_33=new RewriteRuleTokenStream(adaptor,"token 33");
+        CommonTree char_literal43_tree=null;
+        CommonTree char_literal45_tree=null;
+        RewriteRuleTokenStream stream_35=new RewriteRuleTokenStream(adaptor,"token 35");
         RewriteRuleTokenStream stream_34=new RewriteRuleTokenStream(adaptor,"token 34");
         RewriteRuleSubtreeStream stream_elements=new RewriteRuleSubtreeStream(adaptor,"rule elements");
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:136:7: ( '[' elements ']' -> ^( ARRAY elements ) )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:136:9: '[' elements ']'
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:137:7: ( '[' elements ']' -> ^( ARRAY elements ) )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:137:9: '[' elements ']'
             {
-            char_literal42=(Token)match(input,33,FOLLOW_33_in_array518);  
-            stream_33.add(char_literal42);
+            char_literal43=(Token)match(input,34,FOLLOW_34_in_array527);  
+            stream_34.add(char_literal43);
 
-            pushFollow(FOLLOW_elements_in_array520);
-            elements43=elements();
+            pushFollow(FOLLOW_elements_in_array529);
+            elements44=elements();
 
             state._fsp--;
 
-            stream_elements.add(elements43.getTree());
-            char_literal44=(Token)match(input,34,FOLLOW_34_in_array522);  
-            stream_34.add(char_literal44);
+            stream_elements.add(elements44.getTree());
+            char_literal45=(Token)match(input,35,FOLLOW_35_in_array531);  
+            stream_35.add(char_literal45);
 
 
 
@@ -1571,9 +1608,9 @@ public class OSFParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (CommonTree)adaptor.nil();
-            // 136:26: -> ^( ARRAY elements )
+            // 137:26: -> ^( ARRAY elements )
             {
-                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:136:29: ^( ARRAY elements )
+                // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:137:29: ^( ARRAY elements )
                 {
                 CommonTree root_1 = (CommonTree)adaptor.nil();
                 root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(ARRAY, "ARRAY"), root_1);
@@ -1612,34 +1649,34 @@ public class OSFParser extends Parser {
     };
 
     // $ANTLR start "elements"
-    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:139:1: elements : value ( COMMA value )* ;
+    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:140:1: elements : value ( COMMA value )* ;
     public final OSFParser.elements_return elements() throws RecognitionException {
         OSFParser.elements_return retval = new OSFParser.elements_return();
         retval.start = input.LT(1);
 
         CommonTree root_0 = null;
 
-        Token COMMA46=null;
-        OSFParser.value_return value45 = null;
+        Token COMMA47=null;
+        OSFParser.value_return value46 = null;
 
-        OSFParser.value_return value47 = null;
+        OSFParser.value_return value48 = null;
 
 
-        CommonTree COMMA46_tree=null;
+        CommonTree COMMA47_tree=null;
 
         try {
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:139:9: ( value ( COMMA value )* )
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:139:11: value ( COMMA value )*
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:140:9: ( value ( COMMA value )* )
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:140:11: value ( COMMA value )*
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            pushFollow(FOLLOW_value_in_elements539);
-            value45=value();
+            pushFollow(FOLLOW_value_in_elements548);
+            value46=value();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, value45.getTree());
-            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:139:17: ( COMMA value )*
+            adaptor.addChild(root_0, value46.getTree());
+            // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:140:17: ( COMMA value )*
             loop11:
             do {
                 int alt11=2;
@@ -1652,15 +1689,15 @@ public class OSFParser extends Parser {
 
                 switch (alt11) {
             	case 1 :
-            	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:139:18: COMMA value
+            	    // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:140:18: COMMA value
             	    {
-            	    COMMA46=(Token)match(input,COMMA,FOLLOW_COMMA_in_elements542); 
-            	    pushFollow(FOLLOW_value_in_elements545);
-            	    value47=value();
+            	    COMMA47=(Token)match(input,COMMA,FOLLOW_COMMA_in_elements551); 
+            	    pushFollow(FOLLOW_value_in_elements554);
+            	    value48=value();
 
             	    state._fsp--;
 
-            	    adaptor.addChild(root_0, value47.getTree());
+            	    adaptor.addChild(root_0, value48.getTree());
 
             	    }
             	    break;
@@ -1703,24 +1740,24 @@ public class OSFParser extends Parser {
     public static final BitSet FOLLOW_description_in_descriptions175 = new BitSet(new long[]{0x0000000000000202L});
     public static final BitSet FOLLOW_property_dec_in_description192 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_resource_dec_in_description205 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_PROPERTY_in_property_dec230 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_string_in_property_dec234 = new BitSet(new long[]{0x0000000040000002L});
-    public static final BitSet FOLLOW_30_in_property_dec239 = new BitSet(new long[]{0x0000000100007C00L});
-    public static final BitSet FOLLOW_p_assertion_in_property_dec244 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_property_dec246 = new BitSet(new long[]{0x00000002018381A0L});
-    public static final BitSet FOLLOW_value_in_property_dec248 = new BitSet(new long[]{0x0000000100000200L});
+    public static final BitSet FOLLOW_PROPERTY_in_property_dec230 = new BitSet(new long[]{0x0000000001000000L});
+    public static final BitSet FOLLOW_string_in_property_dec234 = new BitSet(new long[]{0x0000000080000002L});
+    public static final BitSet FOLLOW_31_in_property_dec239 = new BitSet(new long[]{0x0000000200007C00L});
+    public static final BitSet FOLLOW_p_assertion_in_property_dec244 = new BitSet(new long[]{0x0000000100000000L});
+    public static final BitSet FOLLOW_32_in_property_dec246 = new BitSet(new long[]{0x00000004038381A0L});
+    public static final BitSet FOLLOW_value_in_property_dec248 = new BitSet(new long[]{0x0000000200000200L});
     public static final BitSet FOLLOW_COMMA_in_property_dec250 = new BitSet(new long[]{0x0000000000007C00L});
-    public static final BitSet FOLLOW_p_assertion_in_property_dec252 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_property_dec254 = new BitSet(new long[]{0x00000002018381A0L});
-    public static final BitSet FOLLOW_value_in_property_dec256 = new BitSet(new long[]{0x0000000100000200L});
-    public static final BitSet FOLLOW_32_in_property_dec265 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RESOURCE_in_resource_dec296 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_string_in_resource_dec300 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_resource_dec304 = new BitSet(new long[]{0x0000000100040000L});
-    public static final BitSet FOLLOW_property_dec_in_resource_dec309 = new BitSet(new long[]{0x0000000100000200L});
+    public static final BitSet FOLLOW_p_assertion_in_property_dec252 = new BitSet(new long[]{0x0000000100000000L});
+    public static final BitSet FOLLOW_32_in_property_dec254 = new BitSet(new long[]{0x00000004038381A0L});
+    public static final BitSet FOLLOW_value_in_property_dec256 = new BitSet(new long[]{0x0000000200000200L});
+    public static final BitSet FOLLOW_33_in_property_dec265 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RESOURCE_in_resource_dec296 = new BitSet(new long[]{0x0000000001000000L});
+    public static final BitSet FOLLOW_string_in_resource_dec300 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_resource_dec304 = new BitSet(new long[]{0x0000000200040000L});
+    public static final BitSet FOLLOW_property_dec_in_resource_dec309 = new BitSet(new long[]{0x0000000200000200L});
     public static final BitSet FOLLOW_COMMA_in_resource_dec312 = new BitSet(new long[]{0x0000000000040000L});
-    public static final BitSet FOLLOW_property_dec_in_resource_dec314 = new BitSet(new long[]{0x0000000100000200L});
-    public static final BitSet FOLLOW_32_in_resource_dec323 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_property_dec_in_resource_dec314 = new BitSet(new long[]{0x0000000200000200L});
+    public static final BitSet FOLLOW_33_in_resource_dec323 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_TYPE_in_p_assertion348 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_MAX_in_p_assertion357 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_MIN_in_p_assertion367 = new BitSet(new long[]{0x0000000000000002L});
@@ -1731,17 +1768,18 @@ public class OSFParser extends Parser {
     public static final BitSet FOLLOW_array_in_value412 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_TEXT_in_value417 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_BOOLEAN_in_value426 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NUMBER_in_value435 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TRUE_in_value444 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_FALSE_in_value453 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NULL_in_value462 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_String_in_string478 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_Number_in_number499 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_33_in_array518 = new BitSet(new long[]{0x00000002018381A0L});
-    public static final BitSet FOLLOW_elements_in_array520 = new BitSet(new long[]{0x0000000400000000L});
-    public static final BitSet FOLLOW_34_in_array522 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_value_in_elements539 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_COMMA_in_elements542 = new BitSet(new long[]{0x00000002018381A0L});
-    public static final BitSet FOLLOW_value_in_elements545 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_DATE_in_value435 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NUMBER_in_value444 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TRUE_in_value453 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_FALSE_in_value462 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NULL_in_value471 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_String_in_string487 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_Number_in_number508 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_34_in_array527 = new BitSet(new long[]{0x00000004038381A0L});
+    public static final BitSet FOLLOW_elements_in_array529 = new BitSet(new long[]{0x0000000800000000L});
+    public static final BitSet FOLLOW_35_in_array531 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_value_in_elements548 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_COMMA_in_elements551 = new BitSet(new long[]{0x00000004038381A0L});
+    public static final BitSet FOLLOW_value_in_elements554 = new BitSet(new long[]{0x0000000000000202L});
 
 }
