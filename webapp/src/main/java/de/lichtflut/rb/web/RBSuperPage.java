@@ -29,6 +29,7 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 import de.lichtflut.rb.web.components.fields.search.SearchBar;
 import de.lichtflut.rb.web.components.navigation.NavigationBar;
 import de.lichtflut.rb.web.components.navigation.NavigationNodePanel;
+import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 import de.lichtflut.rb.web.resources.SharedResourceProvider;
 
 

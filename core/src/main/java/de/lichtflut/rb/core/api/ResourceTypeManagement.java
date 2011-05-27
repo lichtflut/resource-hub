@@ -28,14 +28,34 @@ import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 public interface ResourceTypeManagement extends Serializable{
 	
 	/**
+	 * <p>SearchContext enum fields.</p>
+	 * <p>
+	 * <ul>
+	 * 	<li>CONJUNCT_MULTIPLE_KEYWORDS<br />
+	 *  Splitting up the filter string into a set of filters by blank " " 
+	 * 	<ul>
+	 * 		<li>filters are combined as logical conjunction (&&)</li>
+	 * 		<li>Each filter acts like "contains" and must not match the whole value excatly</li>
+	 * 	</ul>
+	 * </li>
+	 * </ul>
+	 * </p>
+	 */
+	enum SearchContext{
+		CONJUNCT_MULTIPLE_KEYWORDS
+	}
+	
+	
+	/**
 	 * creates or updates a given {@link ResourceTypeInstance}
+	 * @return true if the operation was successfull, false if not
 	 */
 	public boolean createOrUpdateRTInstance(ResourceTypeInstance<Object> instance);
 
-
 	
 	/**
-	 * 
+	 * returns all the type-instances of the given schemas without any exceptions
+	 * @param schemas the specified collection of schemas
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas);
@@ -43,13 +63,17 @@ public interface ResourceTypeManagement extends Serializable{
 	// -----------------------------------------------------
 	
 	/**
-	 * 
+	 * returns all the type-instances of the given schema which are matching to the given filter and SearchContext
+	 * @param schema the specified schemas collection
+	 * @param filter the search filter, including keywords or patterns which should match the type's attributes in a SearchContext defined way
+	 * @param ctx the SearchContext, if null, the default SearchContext "CONJUNCT_MULTIPLE_KEYWORDS" will be taken instead
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas, String filter);
+	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas, String filter, SearchContext ctx);
 	
 	/**
-	 * 
+	 * returns all the type-instances of the given schema without any exceptions
+	 * @param schema the specified schema
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema);
@@ -57,10 +81,13 @@ public interface ResourceTypeManagement extends Serializable{
 	// -----------------------------------------------------
 	
 	/**
-	 * 
+	 * returns all the type-instances of the given schema which are matching to the given filter and SearchContext
+	 * @param schema the specified schemas collection
+	 * @param filter the search filter, including keywords or patterns which should match the type's attributes in a SearchContext defined way
+	 * @param ctx the SearchContext, if null, the default SearchContext "CONJUNCT_MULTIPLE_KEYWORDS" will be taken instead
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter);
+	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter, SearchContext ctx);
 	
 	// -----------------------------------------------------
 	

@@ -1,10 +1,9 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.components.genericresource;
+package de.lichtflut.rb.web.models;
 
 import org.apache.wicket.model.IModel;
-
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 
 /**

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web;
+package de.lichtflut.rb.web.genericresource;
 
 import java.util.Collection;
 
@@ -11,7 +11,9 @@ import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.api.ResourceTypeManagement;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
-import de.lichtflut.rb.web.components.genericresource.GenericResourceFormPanel;
+import de.lichtflut.rb.web.RBSuperPage;
+import de.lichtflut.rb.web.components.GenericResourceFormPanel;
+
 
 /**
  * TODO: to comment
@@ -37,7 +39,9 @@ public class GenericResourceFormPage extends RBSuperPage {
 		super("Resource " + parameters.get("resourceid"), parameters);
 		ResourceSchema schema = loadResourceSchemaFromParams(parameters);
 		//Add generic_form_panel to page
-        this.add(new GenericResourceFormPanel("generic_form", schema, getServiceProvider(),loadResourceTypeInstanceFromParams(schema, parameters)));
+        this.add(new GenericResourceFormPanel("generic_form",
+        							  schema, getServiceProvider(),
+        							  loadResourceTypeInstanceFromParams(schema, parameters)));
 	}
 	
 	
@@ -65,7 +69,7 @@ public class GenericResourceFormPage extends RBSuperPage {
 	/**
 	 * Load the ResourceTypeInstance from the give parameters
 	 */
-	@SuppressWarnings({ "unchecked", "unused" })
+	@SuppressWarnings({ "unchecked"})
 	
 	private ResourceTypeInstance loadResourceTypeInstanceFromParams(ResourceSchema schema, PageParameters parameters){
 		String identifier = parameters.get("instanceid").toString();

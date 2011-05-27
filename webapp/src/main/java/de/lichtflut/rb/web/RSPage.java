@@ -31,6 +31,7 @@ import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
+import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 
 
 /**

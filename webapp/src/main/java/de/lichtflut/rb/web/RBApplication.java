@@ -4,6 +4,7 @@
 package de.lichtflut.rb.web;
 
 import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
+import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 
 /**
  * Application object for your web application. 

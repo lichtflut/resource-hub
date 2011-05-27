@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.components.genericresource;
+package de.lichtflut.rb.web.components.validators;
 
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.components.genericresource;
+package de.lichtflut.rb.web.components;
 
 import java.util.Collection;
 
@@ -11,7 +11,6 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -24,6 +23,8 @@ import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance.MetaDataKeys;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.behaviors.DatePickerBehavior;
+import de.lichtflut.rb.web.components.validators.GenericResourceValidator;
+import de.lichtflut.rb.web.models.GenericResourceModel;
 
 /**
  * <p>

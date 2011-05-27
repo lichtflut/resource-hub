@@ -6,7 +6,6 @@ package de.lichtflut.rb.core.schema.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;

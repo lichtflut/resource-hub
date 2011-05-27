@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
-import de.lichtflut.rb.core.api.ResourceSchemaManagementImpl;
 import de.lichtflut.rb.core.api.ResourceTypeManagement;
-import de.lichtflut.rb.core.api.ResourceTypeManagementImpl;
+import de.lichtflut.rb.core.api.impl.ResourceSchemaManagementImpl;
+import de.lichtflut.rb.core.api.impl.ResourceTypeManagementImpl;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**

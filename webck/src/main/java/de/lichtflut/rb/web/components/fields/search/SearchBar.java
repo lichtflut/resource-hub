@@ -13,13 +13,20 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
+
+import de.lichtflut.rb.core.api.ResourceTypeManagement;
+import de.lichtflut.rb.core.api.ResourceTypeManagement.SearchContext;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 
+
 /**
  * <p>
- *  A common search bar.
+ *  A common abstract search bar to search for {@link ResourceTypeInstance}.
+ *  This component is abstract. The onSearchSubmit method has to be overriden to define what is to do
+ *  in case of a valid search result was found.
+ *  {@link SearchContext}.CONJUNCT_MULTIPLE_KEYWORDS} is the default context.
  * </p>
  *
  * <p>
@@ -34,7 +41,7 @@ public abstract class SearchBar extends Panel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	private  SearchContext sContext = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
 
 	
 	@SuppressWarnings({ "unchecked", "serial" })
@@ -57,11 +64,10 @@ public abstract class SearchBar extends Panel {
 			}){
 
 			protected Iterator getChoices(String input) {
-				
-			      String searchInput = generateSearchInput(input);
-				
 				  Collection<ResourceSchema> rSchemas = provider.getResourceSchemaManagement().getAllResourceSchemas();
-				  Collection<ResourceTypeInstance> instances = provider.getResourceTypeManagement().loadAllResourceTypeInstancesForSchema(rSchemas,searchInput);
+				  ResourceTypeManagement typeManagement =provider.getResourceTypeManagement();
+				  Collection<ResourceTypeInstance> instances = 
+					  typeManagement.loadAllResourceTypeInstancesForSchema(rSchemas,input,sContext);
 				  for (ResourceTypeInstance instance : instances) {
 					selectableValues.put(instance.toString().trim().hashCode(),instance);
 				  }
@@ -89,19 +95,16 @@ public abstract class SearchBar extends Panel {
 
 	// -----------------------------------------------------
 	
-	public String generateSearchInput(String input) {
-		String[] keywords = input.split(" ");
-		StringBuilder convertedInput = new StringBuilder();
-		for (int i = 0; i < keywords.length; i++) {
-			if(keywords[i].length()>0){
-				convertedInput.append(keywords[i]+"*" + ((i < (keywords.length-1)) ? "AND" : "") + " ");
-			}else{
-				convertedInput.append(keywords[i]);
-			}
-		}
-		return convertedInput.toString();
+	/**
+	 * Setting up the SearchContext
+	 */
+	public void setSearchContext(SearchContext ctx){
+		this.sContext = ctx;
 	}
-
+	
+	
+	// -----------------------------------------------------
+	
 	/**
 	 * <p>
 	 * This method is called, when the search selection could be successfully matched

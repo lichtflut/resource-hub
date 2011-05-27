@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.api;
+package de.lichtflut.rb.core.api.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 
+import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.ElementaryDataType;
