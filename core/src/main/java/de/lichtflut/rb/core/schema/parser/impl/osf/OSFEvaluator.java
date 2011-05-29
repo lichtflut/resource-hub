@@ -6,7 +6,9 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.naming.VoidNamespace;
 
+import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -16,7 +18,7 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 
 /**
  * 
- * [TODO Insert description here.]
+ * Evaluates type value params from a given PropertyDeclaration and report errors to an {@link OSFTree}
  * 
  * Created: May 3, 2011
  *
@@ -41,6 +43,18 @@ public final class OSFEvaluator {
 			if(value instanceof ElementaryDataType)
 				pDec.setElementaryDataType((ElementaryDataType) value);
 			else{
+				if(value instanceof String){
+					//This might be a resource
+					pDec.setElementaryDataType(ElementaryDataType.RESOURCE);
+					//Check if the string can be a valid resource reference
+					String resource = value.toString();
+					if(!(QualifiedName.isQname(resource) || QualifiedName.isUri(resource))){
+						tree.emitErrorMessage(errorMessage + value.toString() + " is not a valid resource URI for " + type + " expecting on of " + "xyz://namespace#resource_name");
+					}else{
+						pDec.addConstraint(ConstraintFactory.buildConstraint(new SimpleResourceID(new QualifiedName(resource))));
+					}
+					return;
+				}
 				tree.emitErrorMessage(errorMessage + value.toString() + " is not a valid argument for " + type + " expecting on of " + ElementaryDataType.values().toString());
 			}
 		}else if(typeLower.contains("regex")){
