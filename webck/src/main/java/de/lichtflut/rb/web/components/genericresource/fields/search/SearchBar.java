@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.web.components.genericresource.fields.search;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -86,6 +87,10 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 			private static final long serialVersionUID = -653128720998419185L;
 			protected Iterator<ResourceTypeInstance> getChoices(final String input) {
 				Collection<ResourceSchema> rSchemas;
+				//if the keywords are not valid, return an iterator of an empty collection
+				if(!isKeywordsValidForSearch(input)){
+					return new ArrayList<ResourceTypeInstance>().iterator();
+				}
 				if(filter==null || filter.isEmpty()){
 					rSchemas = getServiceProvider().getResourceSchemaManagement().getAllResourceSchemas();
 				}else{
@@ -144,7 +149,23 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 	// -----------------------------------------------------
 	
 	/**
-	 * There is no effect in setting up the ViewMode here
+	 * <p>
+	 * Decides if the given keywords are sufficient and valid to process a search with them.
+	 * As Default, the keywords-length has to be greater than two, to make sure, that
+	 * there is no inefficient search for just 0, 1 or only 2 characters.
+	 * </p>
+	 */
+	protected boolean isKeywordsValidForSearch(String keywords){
+		if(keywords.length()>2){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	
+	/**
+	 * There is no effect in setting up the ViewMode here in this version
 	 */
 	public GenericResourceComponent setViewMode(ViewMode mode){
 		//Do nothing
