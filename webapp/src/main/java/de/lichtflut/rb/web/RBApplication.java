@@ -3,6 +3,9 @@
  */
 package de.lichtflut.rb.web;
 
+import org.apache.wicket.request.mapper.ICompoundRequestMapper;
+import org.apache.wicket.request.mapper.MountedMapper;
+
 import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
 import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 
@@ -23,9 +26,10 @@ public class RBApplication extends AbstractResourceBrowserApplication {
 	
     protected void init() {
         super.init();
-        mountPage("/RSSchema", RSPage.class);
-        mountPage("/Resource", GenericResourceFormPage.class);
-        mountPage("/SampleResourcePage", SampleResourcePage.class);
+        ICompoundRequestMapper mCompound = getRootRequestMapperAsCompound();
+        mCompound.add(new MountedMapper("/RSSchema", RSPage.class));
+        mCompound.add(new MountedMapper("/Resource", GenericResourceFormPage.class));
+        mCompound.add(new MountedMapper("/SampleResourcePage", SampleResourcePage.class));
     }
 
 	

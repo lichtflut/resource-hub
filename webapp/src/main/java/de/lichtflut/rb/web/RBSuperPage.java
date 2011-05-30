@@ -79,8 +79,8 @@ public abstract class RBSuperPage extends WebPage {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(new SharedResourceProvider().getJQueryCore());
-		response.renderJavaScriptReference(new SharedResourceProvider().getJQueryUI());
+		response.renderJavascriptReference(new SharedResourceProvider().getJQueryCore());
+		response.renderJavascriptReference(new SharedResourceProvider().getJQueryUI());
 	}
 	
 	// -----------------------------------------------------

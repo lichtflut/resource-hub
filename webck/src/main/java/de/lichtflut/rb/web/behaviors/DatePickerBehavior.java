@@ -4,7 +4,7 @@
 package de.lichtflut.rb.web.behaviors;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
@@ -18,7 +18,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  *
  * @author Oliver Tigges
  */
-public class DatePickerBehavior extends Behavior {
+public class DatePickerBehavior extends AbstractBehavior {
 
 	private static final long serialVersionUID = 4726508726816083420L;
 	private Component component;
@@ -38,8 +38,8 @@ public class DatePickerBehavior extends Behavior {
 	 * @see org.apache.wicket.behavior.AbstractBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(final Component component, final IHeaderResponse response) {
-		response.renderOnLoadJavaScript("$('#" + component.getMarkupId()+ "').datepicker()");
+	public void renderHead(final IHeaderResponse response) {
+		response.renderOnLoadJavascript("$('#" + component.getMarkupId()+ "').datepicker()");
 	}
 
 }
