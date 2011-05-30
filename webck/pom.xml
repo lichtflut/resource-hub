@@ -14,7 +14,7 @@
 	<description/>
 	
 	<properties>
-		<wicket.version>1.5-RC3</wicket.version>
+		<wicket.version>1.5-M3</wicket.version>
         <wicket-extensions.version>1.5-M2.1</wicket-extensions.version>
 		<jetty.version>6.1.25</jetty.version>
 		<wiquery.version>1.5-M1</wiquery.version>
@@ -27,16 +27,14 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-core</artifactId>
+			<artifactId>wicket</artifactId>
 			<version>${wicket.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
 			<version>${wicket-extensions.version}</version>
-			<type>jar</type>
-			<optional>false</optional>
-		</dependency>
+        </dependency>
 		<!--
 			<dependency>
 				<groupId>org.odlabs.wiquery</groupId>
@@ -63,12 +61,6 @@
 			<artifactId>jetty-management</artifactId>
 			<version>${jetty.version}</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache</groupId>
-			<artifactId>apache</artifactId>
-			<version>9</version>
-			<type>pom</type>
 		</dependency>
 	</dependencies>
 	<build>
