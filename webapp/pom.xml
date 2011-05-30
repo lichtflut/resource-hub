@@ -15,8 +15,9 @@
 	<description></description>
 	
 	<properties>
-		<wicket.version>1.5-M3</wicket.version>
+		<wicket.version>1.5-RC3</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
+		<wicket-extensions.version>1.5-M2.1</wicket-extensions.version>
 		<wiquery.version>1.5-M1</wiquery.version>
 		<!-- The beta version is chosen, because the Tomcat servlet container does only run with this version
 		 //-->
@@ -59,8 +60,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket</artifactId>
+			<artifactId>wicket-core</artifactId>
 			<version>${wicket.version}</version>
+			<type>jar</type>
+			<optional>false</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-extensions</artifactId>
+			<version>${wicket-extensions.version}</version>
 			<type>jar</type>
 			<optional>false</optional>
 		</dependency>
@@ -92,13 +100,6 @@
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-spi</artifactId>
 			<version>1.0-SP1</version>
-			<type>jar</type>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-extensions</artifactId>
-			<version>1.5-M3</version>
 			<type>jar</type>
 			<optional>false</optional>
 		</dependency>
