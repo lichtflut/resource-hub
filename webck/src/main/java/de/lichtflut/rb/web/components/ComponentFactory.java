@@ -6,7 +6,6 @@ package de.lichtflut.rb.web.components;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
@@ -298,8 +297,8 @@ public abstract class ComponentFactory {
 
     private static void addAll(final FormComponent comp, final Object... additives) {
         for (Object obj : additives) {
-            if (obj instanceof IBehavior) {
-                comp.add((IBehavior) obj);
+            if (obj instanceof Behavior) {
+                comp.add((Behavior) obj);
             } else if (obj instanceof IValidator) {
                 comp.add((IValidator) obj);
             } else if (obj instanceof Component) {
