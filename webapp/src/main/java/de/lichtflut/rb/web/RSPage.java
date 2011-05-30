@@ -7,11 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -36,7 +31,7 @@ import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  TODO [DESCRIPTION]
  * </p>
  *
  * <p>
@@ -46,9 +41,6 @@ import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
  * @author Nils Bleisch
  */
 public class RSPage extends RBSuperPage {
-
-	private  final ResourceSchemaManagement rManagement = getServiceProvider().getResourceSchemaManagement();
-	private final ResourceTypeManagement rTypeManagement = getServiceProvider().getResourceTypeManagement();
 	
 	private final RepeatingView resourceList =  new RepeatingView("resourcelist");
 
@@ -86,6 +78,7 @@ public class RSPage extends RBSuperPage {
     				schemaErrors.setVisible(true);
     				return;
     			}
+    			ResourceSchemaManagement rManagement = getRBServiceProvider().getResourceSchemaManagement();
     			rManagement.setFormat(format);
     			String input = area.getModelObject();
     			RSParsingResult result =
@@ -118,6 +111,8 @@ public class RSPage extends RBSuperPage {
 	@SuppressWarnings({ "unchecked", "serial" })
 	private void updateResourceList(){
     	resourceList.removeAll();	
+    	ResourceSchemaManagement rManagement = getRBServiceProvider().getResourceSchemaManagement();
+    	ResourceTypeManagement rTypeManagement = getRBServiceProvider().getResourceTypeManagement();
     	Collection<ResourceSchema> resourceSchemas = rManagement.getAllResourceSchemas();
 		if(resourceSchemas==null) resourceSchemas = new ArrayList<ResourceSchema>();
 		for (final ResourceSchema resourceSchema : resourceSchemas) {

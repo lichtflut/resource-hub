@@ -6,13 +6,11 @@ package de.lichtflut.rb.web.genericresource;
 import java.util.Collection;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-
-import de.lichtflut.rb.core.api.ResourceSchemaManagement;
-import de.lichtflut.rb.core.api.ResourceTypeManagement;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
-import de.lichtflut.rb.web.components.GenericResourceFormPanel;
+import de.lichtflut.rb.web.components.genericresource.panels.GenericResourceFormPanel;
 
 
 /**
@@ -24,8 +22,6 @@ public class GenericResourceFormPage extends RBSuperPage {
 
 	private static final long serialVersionUID = 1L;
 
-	private ResourceSchemaManagement rManagement = getServiceProvider().getResourceSchemaManagement();
-	private ResourceTypeManagement rTypeManagement = getServiceProvider().getResourceTypeManagement();
 	/**
 	 * Default Constructor, setting PageParameters to null
 	 */
@@ -39,9 +35,14 @@ public class GenericResourceFormPage extends RBSuperPage {
 		super("Resource " + parameters.get("resourceid"), parameters);
 		ResourceSchema schema = loadResourceSchemaFromParams(parameters);
 		//Add generic_form_panel to page
-        this.add(new GenericResourceFormPanel("generic_form",
-        							  schema, getServiceProvider(),
-        							  loadResourceTypeInstanceFromParams(schema, parameters)));
+        this.add(new GenericResourceFormPanel("generic_form",schema,loadResourceTypeInstanceFromParams(schema, parameters)){
+			private static final long serialVersionUID = 117114431624666607L;
+
+			public RBServiceProvider getServiceProvider() {
+				return getRBServiceProvider();
+			}
+
+        });
 	}
 	
 	
@@ -53,7 +54,7 @@ public class GenericResourceFormPage extends RBSuperPage {
 	private ResourceSchema loadResourceSchemaFromParams(PageParameters parameters){
 		ResourceSchema schema=null;
 		String identifier = parameters.get("resourceid").toString();
-		Collection<ResourceSchema> resourceSchemas = rManagement.getAllResourceSchemas();
+		Collection<ResourceSchema> resourceSchemas = getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas();
 		if(resourceSchemas!=null){
 			for (ResourceSchema resourceSchema : resourceSchemas) {
 				if(resourceSchema.getDescribedResourceID().getQualifiedName().toURI().equals(identifier)){
@@ -73,7 +74,7 @@ public class GenericResourceFormPage extends RBSuperPage {
 	
 	private ResourceTypeInstance loadResourceTypeInstanceFromParams(ResourceSchema schema, PageParameters parameters){
 		String identifier = parameters.get("instanceid").toString();
-		Collection<ResourceTypeInstance> instances = rTypeManagement.loadAllResourceTypeInstancesForSchema(schema);
+		Collection<ResourceTypeInstance> instances = getRBServiceProvider().getResourceTypeManagement().loadAllResourceTypeInstancesForSchema(schema);
 		for (ResourceTypeInstance<Object> resourceTypeInstance : instances) {
 			if(resourceTypeInstance.getQualifiedName().toURI().equals(identifier)){
 				return resourceTypeInstance;
@@ -82,6 +83,8 @@ public class GenericResourceFormPage extends RBSuperPage {
 		
 		return schema.generateTypeInstance();
 	}
+	
+	// -----------------------------------------------------
 	
 	
 }

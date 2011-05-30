@@ -3,30 +3,16 @@
  */
 package de.lichtflut.rb.web;
 
-import javax.inject.Inject;
-
-
-import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AbstractAutoCompleteRenderer;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer;
-import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.JavascriptResourceReference;
-
-import de.lichtflut.rb.builders.SessionBuilder;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
-import de.lichtflut.rb.web.components.fields.search.SearchBar;
+import de.lichtflut.rb.web.components.genericresource.fields.search.SearchBar;
 import de.lichtflut.rb.web.components.navigation.NavigationBar;
 import de.lichtflut.rb.web.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
@@ -57,7 +43,7 @@ public abstract class RBSuperPage extends WebPage {
 	 * Singleton pattern: There will be only one instance per runtime
 	 * @return {@link RBServiceProvider}
 	 */
-	public static RBServiceProvider  getServiceProvider(){
+	public static RBServiceProvider  getRBServiceProvider(){
 		if(provider==null) provider= RBServiceProviderFactory.getDefaultServiceProvider();
 		return provider;
 	}
@@ -87,7 +73,6 @@ public abstract class RBSuperPage extends WebPage {
 	
 	// -----------------------------------------------------
 	
-	@SuppressWarnings("serial")
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
@@ -102,6 +87,7 @@ public abstract class RBSuperPage extends WebPage {
 	
 	@SuppressWarnings({ "serial", "unchecked" })
 	public void init(){
+		
 		add(new Label("title", title));
 		
 		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
@@ -116,15 +102,19 @@ public abstract class RBSuperPage extends WebPage {
 		
 		add(mainNavigation);
 		
-		this.add(new SearchBar("searchBar", getServiceProvider()) {
-			@SuppressWarnings("unchecked")
-			@Override
+		this.add(new SearchBar("searchBar") {
+
 			public void onSearchSubmit(ResourceTypeInstance instance) {
 				PageParameters params = new PageParameters();
 				params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
 				params.add("instanceid", instance.getQualifiedName().toURI());
 				getRequestCycle().setResponsePage(GenericResourceFormPage.class, params);				
 			}
+
+			public RBServiceProvider getServiceProvider() {
+				return getRBServiceProvider();
+			}
+
 		});
 		
 	}
@@ -134,7 +124,7 @@ public abstract class RBSuperPage extends WebPage {
 	/**
 	 * @return the session scoped serviceProvider which is injected via CDI
 	 */
-	@Inject SessionBuilder builder;
+	//@Inject SessionBuilder builder;
 	//TODO: To fix
 	/*public RBServiceProvider getServiceProvider(){
 		return builder.getServiceProvider();

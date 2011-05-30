@@ -161,7 +161,7 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<Object> {
 	public Collection<Object> getValuesFor(String attribute) {
 		Collection<Object> values = internalRep.get(attribute).getValues();
 		if(values!=null && values.size()!=0) return values;
-		return null;
+		return new ArrayList<Object>();
 	}
 	
 	// -----------------------------------------------------

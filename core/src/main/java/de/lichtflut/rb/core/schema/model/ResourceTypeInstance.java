@@ -188,7 +188,7 @@ public abstract class ResourceTypeInstance<T extends Object> extends ResourceVie
 			for (T value : values) {
 				Object val=value;
 				ElementaryDataType type = pAssertion.getPropertyDeclaration().getElementaryDataType();
-				switch(type){
+				switch(type){ 
 					case DATE: type = ElementaryDataType.STRING; 
 				}
 				Association.create(

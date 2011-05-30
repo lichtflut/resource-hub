@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.components;
+package de.lichtflut.rb.web.components.genericresource.panels;
 
 import java.util.Collection;
 
@@ -18,11 +18,14 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
 
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance.MetaDataKeys;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.behaviors.DatePickerBehavior;
+import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
+import de.lichtflut.rb.web.components.genericresource.fields.search.SearchBar;
 import de.lichtflut.rb.web.components.validators.GenericResourceValidator;
 import de.lichtflut.rb.web.models.GenericResourceModel;
 
@@ -38,18 +41,15 @@ import de.lichtflut.rb.web.models.GenericResourceModel;
  * @author Nils Bleisch
  */
 @SuppressWarnings({ "serial", "unchecked" })
-public class GenericResourceFormPanel extends Panel {
-
-	private RBServiceProvider provider;
+public abstract class GenericResourceFormPanel extends Panel implements GenericResourceComponent{
 	
 	//Constructors
 	
 	/**
 	 * 
 	 */
-	public GenericResourceFormPanel(String id, ResourceSchema schema, RBServiceProvider provider, ResourceTypeInstance instance) {
+	public GenericResourceFormPanel(String id, ResourceSchema schema, ResourceTypeInstance instance) {
 		super(id);
-		this.provider=provider;
 		init(schema, instance);
 	}
 
@@ -63,7 +63,7 @@ public class GenericResourceFormPanel extends Panel {
 			@Override
 			protected void onSubmit() {
 				super.onSubmit();
-				if(provider.getResourceTypeManagement().createOrUpdateRTInstance(instance)){
+				if(getServiceProvider().getResourceTypeManagement().createOrUpdateRTInstance(instance)){
 					info("This instance has been successfully updated/created");
 				}else{
 					error("Somethin went wrong, instance could'nt be created/updated");
@@ -102,15 +102,32 @@ public class GenericResourceFormPanel extends Panel {
 
 	}//End of Method init
 	
+	// -----------------------------------------------------
 	
 	
 	private Component buildItem(final ResourceTypeInstance instance,final GenericResourceModel model, final String attribute, final RepeatingView view, boolean required, boolean expendable){
 		Fragment fragment = new Fragment(view.newChildId(), "referenceInput", this);			
 		fragment.add((new Label("propertyLabel", instance.getSimpleAttributeName(attribute) + 
 				(required ? " (*)" : ""))));
-		//Decide which inputfield should be used
-		Fragment f;
+		//Decide which input-field should be used
+		Fragment f=null;
+		final GenericResourceComponent rComponent = this;
 		switch((ElementaryDataType)instance.getMetaInfoFor(attribute, MetaDataKeys.TYPE)){
+			case RESOURCE : {
+				f = new Fragment("propertyInput", "resourceInput", this);
+				f.add(new SearchBar("searchbar"){
+					public void onSearchSubmit(ResourceTypeInstance instance) {
+						model.setObject(instance);
+					}
+
+					// ----------------------------------------
+					
+					public RBServiceProvider getServiceProvider() {
+						return rComponent.getServiceProvider();
+					}	
+				});
+				break;
+			}
 			case BOOLEAN : {
 				f = new Fragment("propertyInput", "booleanInput", this);
 				f.add(new CheckBox("input",model)); break;
@@ -158,4 +175,12 @@ public class GenericResourceFormPanel extends Panel {
 		fragment.add(button);
 		return fragment;
 	}	
+	
+	// -----------------------------------------------------
+	
+	public GenericResourceComponent setViewMode(ViewMode view){
+		throw new NotYetImplementedException();
+		
+	}
+	
 }
