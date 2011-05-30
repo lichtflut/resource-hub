@@ -15,7 +15,7 @@
 	<description></description>
 	
 	<properties>
-		<wicket.version>1.5-M3</wicket.version>
+		<wicket.version>1.5-RC4.2</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
 		<wiquery.version>1.5-M1</wiquery.version>
 		<!-- The beta version is chosen, because the Tomcat servlet container does only run with this version
@@ -34,13 +34,7 @@
 	//-->	
 		
 		        
-			<!--
-				<dependency>
-					<groupId>org.odlabs.wiquery</groupId>
-					<artifactId>wiquery</artifactId>
-					<version>${wiquery.version}</version>
-				</dependency
-			-->
+
 
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->
 		<dependency>
@@ -54,13 +48,6 @@
 			<groupId>de.lichtflut.rb</groupId>
 			<artifactId>lf.resource-browser.webck</artifactId>
 			<version>${version}</version>
-			<type>jar</type>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket</artifactId>
-			<version>${wicket.version}</version>
 			<type>jar</type>
 			<optional>false</optional>
 		</dependency>
@@ -92,13 +79,6 @@
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-spi</artifactId>
 			<version>1.0-SP1</version>
-			<type>jar</type>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-extensions</artifactId>
-			<version>1.5-M3</version>
 			<type>jar</type>
 			<optional>false</optional>
 		</dependency>

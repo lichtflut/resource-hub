@@ -3,7 +3,7 @@
  */
 package de.lichtflut.rb.web.resources;
 
-import org.apache.wicket.request.resource.CompressedResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -27,14 +27,14 @@ public class SharedResourceProvider {
 	 * @return The resource reference to JQuery Core.
 	 */
 	public ResourceReference getJQueryCore() {
-		return new CompressedResourceReference(SharedResourceProvider.class, "jquery-1.6.1.min.js");
+		return new PackageResourceReference(SharedResourceProvider.class, "jquery-1.6.1.min.js");
 	}
 	
 	/**
 	 * @return The resource reference to JQuery UI (full).
 	 */
 	public ResourceReference getJQueryUI() {
-		return new CompressedResourceReference(SharedResourceProvider.class, "jquery-ui-1.8.13.custom.min.js");
+		return new PackageResourceReference(SharedResourceProvider.class, "jquery-ui-1.8.13.custom.min.js");
 	}
 
 }

@@ -6,12 +6,14 @@ package de.lichtflut.rb.web.components.genericresource.fields.search;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AbstractAutoCompleteRenderer;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
+
 import de.lichtflut.rb.core.api.ResourceTypeManagement;
 import de.lichtflut.rb.core.api.ResourceTypeManagement.SearchContext;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -64,6 +66,7 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 	public SearchBar(final String id, final Collection<ResourceSchema> filter) {
 		super(id);
 		
+		// TODO Nils: Don't use implementation class HashMap as variable type but interface Map
 		final HashMap<Integer, ResourceTypeInstance<Object>> selectableValues = new HashMap<Integer, ResourceTypeInstance<Object>>();
 		final AutoCompleteTextField autoCompleter =
 			new AutoCompleteTextField("searchInput",Model.of(""),new AbstractAutoCompleteRenderer<ResourceTypeInstance<Object>>(){

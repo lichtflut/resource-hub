@@ -9,6 +9,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
@@ -79,13 +80,13 @@ public abstract class RBSuperPage extends WebPage {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavascriptReference(new SharedResourceProvider().getJQueryCore());
-		response.renderJavascriptReference(new SharedResourceProvider().getJQueryUI());
+		response.renderJavaScriptReference(new SharedResourceProvider().getJQueryCore());
+		response.renderJavaScriptReference(new SharedResourceProvider().getJQueryUI());
 	}
 	
 	// -----------------------------------------------------
 	
-	@SuppressWarnings({ "serial", "unchecked" })
+	@SuppressWarnings({ "serial", "rawtypes" })
 	public void init(){
 		
 		add(new Label("title", title));

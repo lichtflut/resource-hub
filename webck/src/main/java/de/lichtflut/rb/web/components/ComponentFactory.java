@@ -3,19 +3,26 @@
  */
 package de.lichtflut.rb.web.components;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.behavior.IBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.RadioChoice;
+import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.ComponentFeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.validation.IValidator;
-
-import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * ComponentFactory für Standard Ein- und Ausgabekompenenten inkl. ihrer Labels, FeedbackPanels, etc.
@@ -297,8 +304,8 @@ public abstract class ComponentFactory {
 
     private static void addAll(final FormComponent comp, final Object... additives) {
         for (Object obj : additives) {
-            if (obj instanceof IBehavior) {
-                comp.add((IBehavior) obj);
+            if (obj instanceof Behavior) {
+                comp.add((Behavior) obj);
             } else if (obj instanceof IValidator) {
                 comp.add((IValidator) obj);
             } else if (obj instanceof Component) {
