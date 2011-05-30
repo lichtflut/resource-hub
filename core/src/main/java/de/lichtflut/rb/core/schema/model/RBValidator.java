@@ -13,7 +13,7 @@ package de.lichtflut.rb.core.schema.model;
  *
  * @author Nils Bleisch
  */
-public abstract class RBValidator<T> {
+public abstract class RBValidator<T extends Object> {
 	
 	public abstract boolean isValid(T value) throws RBInvalidValueException;	
 }

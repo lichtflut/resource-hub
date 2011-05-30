@@ -23,17 +23,17 @@ import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 
 
 /**
- * [TODO Insert description here.]
+ * ReferenceImpl of {@link ResourceTypeInstanceImpl} for value-type {@link Object}
  * 
  * Created: May 17, 2011
  *
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
+public class ResourceTypeInstanceImpl extends ResourceTypeInstance<Object> {
 
 	private HashMap<String, ValueHolder> internalRep = new HashMap<String, ValueHolder>();
-	private HashMap<String, RBValidator<String>> internalValidatorMap = new HashMap<String, RBValidator<String>>();
+	private HashMap<String, RBValidator<Object>> internalValidatorMap = new HashMap<String, RBValidator<Object>>();
 	private HashMap<String, String> simpleAttributeNames = new HashMap<String, String>();
 	private ResourceSchema schema;
 	
@@ -87,9 +87,9 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 	// -----------------------------------------------------
 	
 	
-	public Integer addValueFor(String attribute, String value) throws RBInvalidValueException, RBInvalidAttributeException {
+	public Integer addValueFor(String attribute, Object value) throws RBInvalidValueException, RBInvalidAttributeException {
 		if(value==null) value="";
-		RBValidator<String> validator = getValidatorFor(attribute);
+		RBValidator<Object> validator = getValidatorFor(attribute);
 		if((!containsAttribute(attribute)) || validator==null){
 			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined or does not have an assigned validator");
 		}
@@ -109,9 +109,9 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 	
 	// -----------------------------------------------------
 	
-	public void addValueFor(String attribute, String value, int ticket) throws RBInvalidValueException, RBInvalidAttributeException {
+	public void addValueFor(String attribute, Object value, int ticket) throws RBInvalidValueException, RBInvalidAttributeException {
 		if(value==null) value="";
-		RBValidator<String> validator = getValidatorFor(attribute);
+		RBValidator<Object> validator = getValidatorFor(attribute);
 		
 		if((!containsAttribute(attribute)) || validator==null){
 			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined or does not have an assigned validator");
@@ -146,20 +146,20 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 	
 	// -----------------------------------------------------
 	
-	public RBValidator<String> getValidatorFor(String attribute) {
+	public RBValidator<Object> getValidatorFor(String attribute) {
 		return this.internalValidatorMap.get(attribute);
 	}
 
 	// -----------------------------------------------------
 	
-	public String getValueFor(String attribute, int index) {
+	public Object getValueFor(String attribute, int index) {
 		return internalRep.get(attribute).getValue(index);
 	}
 	
 	// -----------------------------------------------------
 
-	public Collection<String> getValuesFor(String attribute) {
-		Collection<String> values = internalRep.get(attribute).getValues();
+	public Collection<Object> getValuesFor(String attribute) {
+		Collection<Object> values = internalRep.get(attribute).getValues();
 		if(values!=null && values.size()!=0) return values;
 		return null;
 	}
@@ -178,21 +178,22 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 			final PropertyDeclaration pDec = propertyAssertion.getPropertyDeclaration();
 			//Setting up the validator for this property declaration
 			//In this version, constraints can be ignored
-			this.internalValidatorMap.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(), new RBValidator<String>(){
+			this.internalValidatorMap.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(), new RBValidator<Object>(){
 				@Override
-				public boolean isValid(String value)
+				public boolean isValid(Object value)
 						throws RBInvalidValueException {
-					String valueTmp = value.toLowerCase();
+					String valueTmp = value.toString().toLowerCase();
 					//Try to trigger an exception and catch them finally
 					try{
 						switch(pDec.getElementaryDataType()){
+							case RESOURCE : if(! (value instanceof ResourceID)){throw new Exception(""); } break;
 							//Check for boolean
 							case BOOLEAN : if(!(valueTmp.equals("0") || valueTmp.equals("1") || valueTmp.equals("true") || valueTmp.equals("false"))){
 								throw new Exception("");
 							} break;
 							case INTEGER: Integer.parseInt(valueTmp); break;
 							case DECIMAL: Double.parseDouble(valueTmp); break;
-							case DATE : Date.parse(value); break;
+							case DATE : Date.parse(value.toString()); break;
 						}
 					}catch(Exception any){
 						throw new RBInvalidValueException("\"" + value + "\" is not a valid value for the expected type " + pDec.getElementaryDataType());
@@ -227,7 +228,7 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 	 * 
 	 */
 	private class ValueHolder implements Serializable{
-		private HashMap<Integer,String> values = new HashMap<Integer,String>();
+		private HashMap<Integer,Object> values = new HashMap<Integer,Object>();
 		private ArrayList<Integer> tickets = new ArrayList<Integer>();
 		private PropertyAssertion assertion;
 		//Auto increment ticket counter
@@ -259,8 +260,8 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 		
 		// -----------------------------------------------------
 		
-		public Collection<String> getValues(){
-			ArrayList<String> output = new ArrayList<String>();
+		public Collection<Object> getValues(){
+			ArrayList<Object> output = new ArrayList<Object>();
 			for (Integer ticket : tickets) {
 				output.add(values.get(ticket));
 			}
@@ -269,7 +270,7 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 		
 		// -----------------------------------------------------
 		
-		public boolean setValue(String value, int ticket){
+		public boolean setValue(Object value, int ticket){
 			//Check if the ticket does exists
 			if(!tickets.contains(ticket)) return false;
 			values.put(ticket, value);
@@ -278,7 +279,7 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<String> {
 		
 		// -----------------------------------------------------
 		
-		public String getValue(int ticket){
+		public Object getValue(int ticket){
 			//Check if the ticket does exists
 			if(!tickets.contains(ticket)) return null;
 			return values.get(ticket);

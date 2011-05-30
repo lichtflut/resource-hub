@@ -6,7 +6,6 @@ package de.lichtflut.rb.core.schema.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ElementaryDataType;
@@ -27,7 +26,7 @@ import org.arastreju.sge.model.nodes.views.ResourceView;
  *
  * @author Nils Bleisch
  */
-public abstract class ResourceTypeInstance<T> extends ResourceView implements Serializable{
+public abstract class ResourceTypeInstance<T extends Object> extends ResourceView implements Serializable{
 
 	/**
 	 * Keys which help to get some meta data for a given attribute name during runtime
@@ -88,7 +87,7 @@ public abstract class ResourceTypeInstance<T> extends ResourceView implements Se
 	 * of if the ticket does not exists.
 	 * InvalidAttributeException if this attribute does not exists.</p>
 	 */
-	public abstract void addValueFor(String attribute, String value, int ticket) throws RBInvalidValueException, RBInvalidAttributeException;
+	public abstract void addValueFor(String attribute, T value, int ticket) throws RBInvalidValueException, RBInvalidAttributeException;
 	
 	
 	/**
@@ -126,7 +125,7 @@ public abstract class ResourceTypeInstance<T> extends ResourceView implements Se
 	/**
 	 * returns a {@RBValidator} for a given attribute
 	 */
-	public abstract RBValidator getValidatorFor(String attribute);
+	public abstract RBValidator<T> getValidatorFor(String attribute);
 	
 	// -----------------------------------------------------
 	
