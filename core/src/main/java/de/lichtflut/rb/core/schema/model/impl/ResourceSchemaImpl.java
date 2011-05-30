@@ -171,7 +171,7 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	// -----------------------------------------------------
 	
 	
-	public ResourceTypeInstance<String> generateTypeInstance() {
+	public ResourceTypeInstance<Object> generateTypeInstance() {
 		return new ResourceTypeInstanceImpl(this);
 	}
 

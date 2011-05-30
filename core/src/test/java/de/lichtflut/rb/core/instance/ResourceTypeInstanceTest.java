@@ -29,7 +29,7 @@ public class ResourceTypeInstanceTest extends TestCase{
 
 	public void testResourceTypeInstance(){
 		//Generate an instance for a given schema
-		ResourceTypeInstance<String> instance = createSchema().generateTypeInstance();
+		ResourceTypeInstance<Object> instance = createSchema().generateTypeInstance();
 		assertNotNull(instance);
 		
 		//Generate some tickets for fields

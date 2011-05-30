@@ -67,6 +67,6 @@ public interface ResourceSchema extends ResourceSchemaType{
 	/**
 	 * generates an instance of the schema's described resource-type
 	 */
-	ResourceTypeInstance generateTypeInstance();
+	ResourceTypeInstance<Object> generateTypeInstance();
 	
 }

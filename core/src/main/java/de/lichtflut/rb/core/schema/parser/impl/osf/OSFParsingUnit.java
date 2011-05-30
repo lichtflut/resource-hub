@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
-import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;

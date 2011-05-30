@@ -6,9 +6,7 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.naming.VoidNamespace;
 
-import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -30,7 +28,7 @@ public final class OSFEvaluator {
 	
 	
     /**
-     * 
+     * Please note: The type:resource has to be in a valid uri format
      * @param pDec
      * @param type
      * @param value
