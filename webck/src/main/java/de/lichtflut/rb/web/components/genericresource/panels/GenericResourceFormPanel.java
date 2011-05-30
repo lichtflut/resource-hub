@@ -89,11 +89,16 @@ public abstract class GenericResourceFormPanel extends Panel implements GenericR
 				Collection<Integer> tickets = instance.getTicketsFor(attribute);
 				for(int cnt = 0; cnt< minimum_cnt; cnt++){
 					GenericResourceModel model;
-					if(cnt>= (tickets.size())){
-						model =  new GenericResourceModel(instance, attribute);
-					}else{
-						model =  new GenericResourceModel(instance, attribute,(Integer) tickets.toArray()[cnt]);
-					}			
+					try{
+						if(cnt>= (tickets.size())){
+							model =  new GenericResourceModel(instance, attribute);
+						}else{
+							model =  new GenericResourceModel(instance, attribute,(Integer) tickets.toArray()[cnt]);
+						}
+					}catch(IllegalArgumentException any){
+						//If something went wrong with model creation, skip this field
+						continue ;
+					}
 					view.add(buildItem(instance,model, attribute, view, required, (cnt+1)==minimum_cnt));
 				}
 			}
