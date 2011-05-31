@@ -8,8 +8,8 @@ RESOURCE "http://lichtflut.de#Mitarbeiter"{
 	},
 	
     PROPERTY "http://lichtflut.de#Angst"{
-		CARDINALITY=[1,1],
-		TYPE=BOOLEAN
+		MIN=0,
+		TYPE="http://lichtflut.de#Chef"
 	},
 	
 	    PROPERTY "http://lichtflut.de#Email"{

@@ -122,6 +122,7 @@ public abstract class GenericResourceFormPanel extends Panel implements GenericR
 				f = new Fragment("propertyInput", "resourceInput", this);
 				f.add(new SearchBar("searchbar"){
 					public void onSearchSubmit(ResourceTypeInstance instance) {
+						
 						model.setObject(instance);
 					}
 

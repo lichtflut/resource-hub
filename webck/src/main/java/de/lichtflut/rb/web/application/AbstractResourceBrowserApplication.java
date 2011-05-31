@@ -9,6 +9,8 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 
+import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
+import de.lichtflut.rb.web.conversion.ResourceTypeInstanceConverter;
 import de.lichtflut.rb.web.conversion.SNTextConverter;
 import de.lichtflut.rb.web.conversion.SNTimeSpecConverter;
 
@@ -33,6 +35,7 @@ public abstract class AbstractResourceBrowserApplication extends WebApplication 
 		final ConverterLocator locator = new ConverterLocator();
 		locator.set(SNText.class, new SNTextConverter());
 		locator.set(SNTimeSpec.class, new SNTimeSpecConverter());
+		locator.set(ResourceTypeInstance.class, new ResourceTypeInstanceConverter());
 		return locator;
 		
 	}

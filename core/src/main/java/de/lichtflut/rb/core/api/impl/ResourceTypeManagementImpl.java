@@ -70,11 +70,13 @@ public class ResourceTypeManagementImpl implements ResourceTypeManagement{
 			//Check if this Instance depends on a ResourceSchema
 			Set<SemanticNode> clients = resourceNode.getAssociationClients(RDF.TYPE);
 			for (SemanticNode semanticNode : clients) {
-				if(semanticNode.isResourceNode() &&
-				   semanticNode.asResource().getQualifiedName().equals(schema.getDescribedResourceID().getQualifiedName())){
-					if(semanticNode.asResource().getSingleAssociationClient(RBSchema.DESCRIBED_BY) != null){
-						output.add(new ResourceTypeInstanceImpl(schema,resourceNode));
-						break;
+				if(semanticNode.isResourceNode()){
+					ResourceNode rNode = semanticNode.asResource();
+					if(rNode.getQualifiedName().equals(schema.getDescribedResourceID().getQualifiedName())){
+						if(rNode.asResource().getSingleAssociationClient(RBSchema.DESCRIBED_BY) != null){
+							output.add(new ResourceTypeInstanceImpl(schema,resourceNode));
+							break;
+						}
 					}
 				}
 			}

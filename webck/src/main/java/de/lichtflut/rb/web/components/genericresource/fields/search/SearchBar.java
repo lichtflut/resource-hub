@@ -66,7 +66,6 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 	@SuppressWarnings("unchecked")
 	public SearchBar(final String id, final Collection<ResourceSchema> filter) {
 		super(id);
-		
 		// TODO Nils: Don't use implementation class HashMap as variable type but interface Map
 		final HashMap<Integer, ResourceTypeInstance<Object>> selectableValues = new HashMap<Integer, ResourceTypeInstance<Object>>();
 		final AutoCompleteTextField autoCompleter =
@@ -143,8 +142,7 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 	 * to an existing {@link ResourceTypeInstance}
 	 * </p>
 	 */
-	@SuppressWarnings("unchecked")
-	public abstract void onSearchSubmit(ResourceTypeInstance instance);	
+	public abstract void onSearchSubmit(ResourceTypeInstance<Object> instance);	
 	
 	// -----------------------------------------------------
 	

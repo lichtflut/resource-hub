@@ -27,6 +27,7 @@ public class SharedResourceProvider {
 	 * @return The resource reference to JQuery Core.
 	 */
 	public ResourceReference getJQueryCore() {
+		
 		return new PackageResourceReference(SharedResourceProvider.class, "jquery-1.6.1.min.js");
 	}
 	

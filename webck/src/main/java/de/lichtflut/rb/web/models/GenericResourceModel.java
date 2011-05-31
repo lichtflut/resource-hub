@@ -28,14 +28,14 @@ import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
  */
 @SuppressWarnings("serial")
 public class GenericResourceModel<T> implements IModel<T> {
-	private ResourceTypeInstance<String> instance;
+	private ResourceTypeInstance<Object> instance;
 	private String attribute;
 	private Integer ticket;
 	private T objectreference;
 	
 	// ----------------------------------------
 	
-	public GenericResourceModel(ResourceTypeInstance<String> instance, String attribute, int ticket){
+	public GenericResourceModel(ResourceTypeInstance<Object> instance, String attribute, int ticket){
 		this.ticket = ticket;
 		this.instance = instance;
 		this.attribute = attribute;
@@ -43,7 +43,7 @@ public class GenericResourceModel<T> implements IModel<T> {
 	
 	// ----------------------------------------
 	
-	public GenericResourceModel(ResourceTypeInstance<String> instance, String attribute){
+	public GenericResourceModel(ResourceTypeInstance<Object> instance, String attribute){
 		this.instance = instance;
 		this.attribute = attribute;
 		try {
@@ -57,7 +57,11 @@ public class GenericResourceModel<T> implements IModel<T> {
 	}
 	
 	public T getObject() {
-		return convertStringToT(instance.getValueFor(attribute, ticket));
+		T final_value=null;
+		Object val = instance.getValueFor(attribute, ticket);
+		if(val instanceof String) final_value = convertStringToT((String) val);
+		else final_value = convertObjectToT(val);
+		return final_value;
 	}
 
 	// ----------------------------------------
@@ -93,6 +97,11 @@ public class GenericResourceModel<T> implements IModel<T> {
 		if(objectreference instanceof Boolean){
 				return (T) new Boolean(value.toLowerCase());
 		}
+		return (T) value;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private T convertObjectToT(Object value) {
 		return (T) value;
 	}
 
