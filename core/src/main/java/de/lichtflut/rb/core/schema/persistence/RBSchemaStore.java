@@ -271,6 +271,9 @@ public class RBSchemaStore {
 	
 	/**
 	 * Stores the schemaRepresentation for a given format
+	 * 
+	 * TODO: Write tests to verify this behavior
+	 *
 	 */
 	public void storeSchemaRepresentation(String representation, RSFormat format){
 		ModelingConversation mc = gate.startConversation();
@@ -293,6 +296,8 @@ public class RBSchemaStore {
 	/**
 	 * Returns a textual schema-reprenation of the given format.
 	 * @returns null if the format is null or unknown or if there is no representation for this schema available
+	 * TODO: Write tests to verify this behavior
+	 *
 	 */
 	public String loadSchemaRepresenation(RSFormat format){
 		try{
@@ -326,6 +331,7 @@ public class RBSchemaStore {
 	
 	// -----------------------------------------------------
 	
+
 	protected void addDeclaration(final SNPropertyAssertion assertion, PropertyDeclaration decl, final Context ctx) {
 		final ResourceNode existing = gate.startConversation().findResource((decl.getIdentifier().getQualifiedName()));
 		

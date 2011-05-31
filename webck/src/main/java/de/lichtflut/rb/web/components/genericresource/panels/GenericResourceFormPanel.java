@@ -31,7 +31,7 @@ import de.lichtflut.rb.web.models.GenericResourceModel;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  TODO: [DESCRIPTION]
  * </p>
  *
  * <p>

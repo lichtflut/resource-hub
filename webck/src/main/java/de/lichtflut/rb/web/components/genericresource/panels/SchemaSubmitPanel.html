@@ -1,0 +1,44 @@
+<!--
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+       <div id="schemaIN">
+        <strong>Please submit your Resource Schema</strong>
+        <form wicket:id = "schemaForm" id = "schemaForm">
+        <div wicket:id="feedback"></div>
+        <table bgcolor="#cccccc" border="1" align="center">
+        	<tr>
+        		<td>
+        			Choose your preferred format:
+        		</td>
+        		<td><select wicket:id="formatlist">
+        			<option>Some format</option>
+        			<option>Some other format</option>
+        			</select>
+    			</td>
+    		</tr>
+    		<tr>
+    			<td align="left">
+    				Resource Schema:
+    			</td>	
+        		<td>
+        			<textarea wicket:id = "resourceschema" cols="40" rows="40"></textarea>
+        		</td>
+        	</tr>
+        	<tr>
+        		<td colspan="2">
+        			<input type = "submit" value = "Submit schema" id="formsubmit"/>
+        		</td>
+        	
+        	</tr>
+        </table>
+        </form>  
+        </div>
+
+    </wicket:panel>              
+</html>
