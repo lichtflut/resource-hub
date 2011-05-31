@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -62,10 +65,21 @@ public class RSPage extends RBSuperPage {
     	final Label schemaSuccess = new Label("schemaSuccess", new Model<String>(""));   	
     	
     	final TextArea<String> area = new TextArea<String>("resourceschema", Model.of("Insert your schema here"));
+    	area.setOutputMarkupId(true);
     	final DropDownChoice ddc = 
             new DropDownChoice ("formatlist",Model.of(""), new CollectionModel<RSFormat>(Arrays.asList(RSFormat.values())));
-        
-        
+    	ddc.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            protected void onUpdate(AjaxRequestTarget target) {
+           	 ResourceSchemaManagement rManagement = getRBServiceProvider().getResourceSchemaManagement();
+        	 String representation = rManagement.loadSchemaRepresenation((RSFormat) ddc.getModelObject());
+        	 if((representation==null || representation.length()==0)) representation = "Insert your schema here";
+        	 area.setModelObject(representation);
+        	 target.add(area);
+            }
+        });
+
+    
+     
     	Form form = new Form("schemaForm"){
     		@Override
     		protected void onSubmit() {
@@ -92,6 +106,7 @@ public class RSPage extends RBSuperPage {
     				schemaSuccess.setDefaultModelObject("Your given schema has been successfully stored");
     				rManagement.storeOrOverridePropertyDeclaration(result.getPropertyDeclarations());
     				rManagement.storeOrOverrideResourceSchema(result.getResourceSchemas());
+    				rManagement.storeSchemaRepresentation(input, format);
     				updateResourceList();
     			}
     		}

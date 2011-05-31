@@ -12,10 +12,12 @@ import java.util.Set;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNContext;
 import org.arastreju.sge.model.nodes.views.SNScalar;
@@ -31,6 +33,7 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.schema.parser.RSFormat;
 
 /**
  * <p>
@@ -46,6 +49,7 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 public class RBSchemaStore {
 	
 	private final ArastrejuGate gate;
+
 
 	// -----------------------------------------------------
 	
@@ -263,6 +267,46 @@ public class RBSchemaStore {
 		
 		return schema;
 	}
+	
+	
+	/**
+	 * Stores the schemaRepresentation for a given format
+	 */
+	public void storeSchemaRepresentation(String representation, RSFormat format){
+		ModelingConversation mc = gate.startConversation();
+		ResourceNode rootNode = mc.findResource(RBSchema.ROOT_NODE.getQualifiedName());
+		if(rootNode==null) rootNode = RBSchema.ROOT_NODE;
+		Set<Association> assocs = rootNode.getAssociations(RBSchema.HAS_SCHEMA_REPRESENTATION);
+		for (Association association : assocs) {
+			rootNode.revoke(association);
+		}
+		assocs = rootNode.getAssociations(RBSchema.HAS_RS_FORMAT);
+		for (Association association : assocs) {
+			rootNode.revoke(association);
+		}
+		Association.create(rootNode,RBSchema.HAS_SCHEMA_REPRESENTATION,new SNValue(ElementaryDataType.STRING, representation),setUpContext(null));
+		Association.create(rootNode,RBSchema.HAS_RS_FORMAT,new SNValue(ElementaryDataType.STRING, format.toString()),setUpContext(null));
+		mc.attach(rootNode);
+	}
+	
+	
+	/**
+	 * Returns a textual schema-reprenation of the given format.
+	 * @returns null if the format is null or unknown or if there is no representation for this schema available
+	 */
+	public String loadSchemaRepresenation(RSFormat format){
+		try{
+			ModelingConversation mc = gate.startConversation();
+			ResourceNode rootNode = mc.findResource(RBSchema.ROOT_NODE.getQualifiedName());
+			if(rootNode.getSingleAssociationClient(RBSchema.HAS_RS_FORMAT).asValue().getStringValue().equals(format.toString())){
+				return rootNode.getSingleAssociationClient(RBSchema.HAS_SCHEMA_REPRESENTATION).asValue().getStringValue();
+			}
+		}catch(Exception any){
+			return null;
+		}
+		return null;
+	}
+	
 	
 	// -----------------------------------------------------
 	

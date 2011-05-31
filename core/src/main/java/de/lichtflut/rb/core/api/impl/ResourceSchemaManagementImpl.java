@@ -10,12 +10,16 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
-
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
+
+
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
@@ -41,6 +45,9 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	private ArastrejuGate gate = null;
 	private RBSchemaStore store = null;
 	private RSFormat format = null;
+	private final Logger logger = LoggerFactory.getLogger(RSParsingResultErrorReporter.class);
+	
+
 	
 	public ResourceSchemaManagementImpl(ArastrejuGate gate) {
 		//Trigger a NullPointerException
@@ -140,6 +147,10 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		}
 		
 		result.setPropertyDeclarations(persistedPDecsHash.values());
+		
+		if(result.isErrorOccured()) return result;
+		//Otherwise, do sth.?
+		
 		return result;
 	}
 
@@ -239,6 +250,18 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	
 	public Collection<ResourceSchema> getAllResourceSchemas() {
 		return this.store.loadAllResourceSchemas(null);
+	}
+
+	// -----------------------------------------------------
+	
+	public String loadSchemaRepresenation(RSFormat format) {
+		return this.store.loadSchemaRepresenation(format);
+	}
+
+	// -----------------------------------------------------
+
+	public void storeSchemaRepresentation(String representation, RSFormat format) {
+		this.store.storeSchemaRepresentation(representation, format);
 	}
 	
 	// -----------------------------------------------------

@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
-import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;

@@ -9,7 +9,7 @@ RESOURCE "http://lichtflut.de#Mitarbeiter"{
 	
     PROPERTY "http://lichtflut.de#Angst"{
 		MIN=0,
-		TYPE="http://lichtflut.de#Chef"
+		TYPE=boolean
 	},
 	
 	    PROPERTY "http://lichtflut.de#Email"{

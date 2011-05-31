@@ -44,6 +44,23 @@ public interface ResourceSchemaManagement extends Serializable{
 	 */
 	public RSFormat getFormat();
 
+	
+	// -----------------------------------------------------
+	
+	
+	/**
+	 * Stores the schemaRepresentation for a given format
+	 */
+	public void storeSchemaRepresentation(String representation, RSFormat format);
+	
+	
+	/**
+	 * Returns a textual schema-reprenation of the given format.
+	 * @returns null if the format is null or unknown or if there is no representation for this schema available
+	 */
+	public String loadSchemaRepresenation(RSFormat format);
+	
+	
 	// -----------------------------------------------------
 	
 	/**

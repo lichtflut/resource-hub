@@ -118,7 +118,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	 */
 	public SNConstraint addTypeConstraint(final ResourceID constraint, final Context context) {
 		final SNConstraint constraintNode = new SNConstraint(constraint, context);
-		Association.create(this, RBSchema.HAS_LITERAL_CONSTRAINT, constraintNode, context);
+		Association.create(this, RBSchema.HAS_TYPE_CONSTRAINT, constraintNode, context);
 		return constraintNode;
 	}
 	

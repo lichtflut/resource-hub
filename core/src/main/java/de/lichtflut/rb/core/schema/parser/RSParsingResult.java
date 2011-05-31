@@ -31,6 +31,7 @@ public interface RSParsingResult {
 
 	// -----------------------------------------------------
 
+	
 	/**
 	 * 
 	 * @return all errors as collection

@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.schema;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.naming.QualifiedName;
 
@@ -27,6 +28,11 @@ public interface RBSchema {
 
 	public static final ResourceID CONTEXT =   new SNResource(new QualifiedName(NAMESPACE_URI, "context"));
 	
+	
+	// -- ROOT-NODE ---------------------------------------
+	
+	public static final ResourceNode ROOT_NODE = new SNResource(new QualifiedName(NAMESPACE_URI, "SystemRoot"));
+	
 	// -- TYPES -------------------------------------------
 	
 	public static final ResourceID ACTIVITY_CLASS = new SimpleResourceID(NAMESPACE_URI, "ResourceSchema");
@@ -45,6 +51,8 @@ public interface RBSchema {
 	public static final ResourceID HAS_DESCRIPTOR = new SimpleResourceID(NAMESPACE_URI, "hasDescriptor");
 	public static final ResourceID HAS_IDENTIFIER = new SimpleResourceID(NAMESPACE_URI, "hasIdentifier");
 	public static final ResourceID HAS_DATATYPE = new SimpleResourceID(NAMESPACE_URI, "hasDatatype");
+	public static final ResourceID HAS_SCHEMA_REPRESENTATION = new SimpleResourceID(NAMESPACE_URI, "hasSchemaRepresentation");
+	public static final ResourceID HAS_RS_FORMAT = new SimpleResourceID(NAMESPACE_URI, "hasRSFormat");
 	
 	// -- CONSTRAINTS -------------------------------------
 	
