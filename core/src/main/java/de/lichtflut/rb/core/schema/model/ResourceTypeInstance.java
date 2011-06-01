@@ -69,6 +69,12 @@ public abstract class ResourceTypeInstance<T extends Object> extends ResourceVie
 	// -----------------------------------------------------
 	
 	/**
+	 * Get a collection of attribute names which are matched by the giveb simple name
+	 */
+	public abstract Collection<String> getAttributesNamesForSimple(String simple_attribute);
+	
+	
+	/**
 	 * Get a simple attribute-name representation of the origin ones. This is realized
 	 * by removing the prefix-namespaces. Please note, that this is just designed for display purposes.
 	 * All other methods still require the full qualified and unique attribute name

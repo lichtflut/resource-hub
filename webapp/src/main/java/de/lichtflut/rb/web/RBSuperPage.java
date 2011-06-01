@@ -88,8 +88,9 @@ public abstract class RBSuperPage extends WebPage {
 	
 	@SuppressWarnings({ "serial", "rawtypes" })
 	public void init(){
-		
-		add(new Label("title", title));
+		Label titleLabel = new Label("title", title);
+		titleLabel.setRenderBodyOnly(true);
+		add(titleLabel);
 		
 		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
 		
@@ -105,7 +106,7 @@ public abstract class RBSuperPage extends WebPage {
 		
 		this.add(new SearchBar("searchBar") {
 
-			public void onSearchSubmit(ResourceTypeInstance instance) {
+			public void onSearchSubmit(ResourceTypeInstance<Object> instance) {
 				PageParameters params = new PageParameters();
 				params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
 				params.add("instanceid", instance.getQualifiedName().toURI());

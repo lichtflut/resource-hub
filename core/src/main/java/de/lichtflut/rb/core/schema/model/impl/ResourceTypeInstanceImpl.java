@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -159,13 +160,29 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<Object> {
 	// -----------------------------------------------------
 
 	public Collection<Object> getValuesFor(String attribute) {
-		Collection<Object> values = internalRep.get(attribute).getValues();
-		if(values!=null && values.size()!=0) return values;
+		if(internalRep.get(attribute)!=null){
+			Collection<Object> values = internalRep.get(attribute).getValues();
+			if(values!=null && values.size()!=0) return values;
+		}
 		return new ArrayList<Object>();
 	}
 	
 	// -----------------------------------------------------
 
+	public Collection<String> getAttributesNamesForSimple(String simpleAttribute) {
+		List<String> output = new ArrayList<String>();
+		Set<String> keys = simpleAttributeNames.keySet();
+		for (String key : keys) {
+			if(simpleAttributeNames.get(key).equals(simpleAttribute)){
+				output.add(key);
+			}
+		}
+		return output;
+	}
+	
+	// -----------------------------------------------------
+
+	
 	public String getSimpleAttributeName(String attribute) {
 		return simpleAttributeNames.get(attribute);
 	}
@@ -334,6 +351,7 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<Object> {
 	private boolean containsAttribute(String attribute){
 		return internalRep.containsKey(attribute);
 	}
+
 
 	
 }

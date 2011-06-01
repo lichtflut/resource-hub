@@ -18,6 +18,7 @@ import de.lichtflut.rb.core.api.ResourceTypeManagement;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.web.components.genericresource.panels.ResourceRegisterPanel;
 import de.lichtflut.rb.web.components.genericresource.panels.SchemaSubmitPanel;
 import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 
@@ -48,7 +49,7 @@ public class RSPage extends RBSuperPage {
 
 	//-------------------------------------------
 
-    @SuppressWarnings({"serial" })
+    @SuppressWarnings({ })
 	private void init(PageParameters parameters) { 
     
     	add(new SchemaSubmitPanel("schemaSubmitPanel"){
@@ -60,6 +61,11 @@ public class RSPage extends RBSuperPage {
     	});
     	updateResourceList();
 		this.add(resourceList);
+		this.add(new ResourceRegisterPanel("resourceRegister", getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"" , null) {
+			public RBServiceProvider getServiceProvider() {
+				return getRBServiceProvider();
+			}
+		});
 	}
 
     
@@ -70,7 +76,7 @@ public class RSPage extends RBSuperPage {
     
 	// -----------------------------------------------------
     
-	@SuppressWarnings({ "unchecked", "serial" })
+	@SuppressWarnings({ "unchecked" })
 	private void updateResourceList(){
     	resourceList.removeAll();	
     	ResourceSchemaManagement rManagement = getRBServiceProvider().getResourceSchemaManagement();

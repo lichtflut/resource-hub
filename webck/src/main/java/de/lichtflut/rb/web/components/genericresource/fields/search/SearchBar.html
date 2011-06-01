@@ -22,13 +22,11 @@
            </style>    
     </wicket:head>
 <wicket:panel>
-     <form wicket:id="searchForm">
- 		<table>
- 			 <tr>
- 			  	<td><input type="text" wicket:id="searchInput" size="50"/></td>
- 			  	<td><input type="submit" value="search" name="search"/></td>
- 			 </tr>
- 		</table>
+     <form wicket:id="searchForm" id="quick-search">
+ 		<p>
+ 			<input id="qsearch" class="tbox" type="text" wicket:id="searchInput"/>
+ 			<input class="btn" alt="Search" type="image" name="searchsubmit" title="Search" src="css/images/search.gif" />
+ 		</p>
  	</form>
 </wicket:panel>
 </html>

@@ -9,44 +9,33 @@
     <title>RBPrototype</title>
     <link rel="stylesheet" type="text/css" href="css/websample.css" media="screen"/>
     <wicket:head>
-           <style>
-               div.wicket-aa {
-                   font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
-                   font-size: 12px;
-                   background-color: white;
-                   border-width: 1px;
-                   border-color: #cccccc;
-                   border-style: solid;
-                   padding: 2px;
-                   margin: 1px 0 0 0;
-                   text-align:left;
-               }
-               div.wicket-aa ul { list-style:none; padding: 2px; margin:0; }
-               div.wicket-aa ul li.selected { background-color: #FFFF00; padding: 2px; margin:0; }
-           </style>    
     </wicket:head>
 
 </head>
-<body style="text-align: center; background-color: #9EB2CE;">
-	<div class="page" style="background: #EBEFF5; margin: 10pt; text-align: center; width: 700px;">
-		<div class="header" style="border-top: medium dashed #FFFFFF; margin-top: 20px;"">
-			<strong><span wicket:id="title">Page title</span>
-			</strong>
-		</div>
-		<div id="firstlevelmenu">
-		      <div wicket:id="mainNavigation" class="navigation-bar horizontal"></div>
-		      <div id="schemaSearch">
- 			   <span wicket:id="searchBar"></span>
+<body>
+		<div id="header-wrap"><div id="header">
+		
+			<h1 id="logo-text">ResourceBrowser</h1>
+			<p id="intro"><span wicket:id="title"></span></p>
+		
+		
+			   <div id="nav" wicket:id="mainNavigation" class="navigation-bar horizontal"></div>
+			   
+			   <div id="header-image"></div> 
+			   
+	 			<span wicket:id="searchBar"></span>
+						
+		</div></div>
+		<!-- header ends here -->
+		<div id="content-outer">
+			<div id="content-outer2">
+			<wicket:child />
 			</div>
 		</div>
-		<div class="primary-content" style="border-top: medium dashed #FFFFFF; text-align: center; margin-top: 20px;"">
-			<wicket:child />
-		</div>
 
-		<div class="footer" style="border-top: medium dashed #FFFFFF; text-align: center; margin-top: 20px;">
+		<div id="footer-bottom">
 			&copy; Copyright 2011, lichtflut Forschungs- und Entwicklungsgesellschaft mbH
 		</div>
 
-	</div>
 </body>
 </html>

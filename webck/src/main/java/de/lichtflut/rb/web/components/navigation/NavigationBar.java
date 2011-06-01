@@ -36,10 +36,10 @@ public class NavigationBar extends Panel implements NavigationNode {
 		
 		final ListView<NavigationNode> itemView = new ListView<NavigationNode>("nodeList", children) {
 			protected void populateItem(final ListItem<NavigationNode> item) {
-				item.add(item.getModelObject().getComponent());
+				Component comp = item.getModelObject().getComponent();
+				item.add(comp);
 			}
 		};
-		
 		add(itemView);
 	}
 	
