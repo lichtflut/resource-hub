@@ -102,6 +102,7 @@ public abstract class RBSuperPage extends WebPage {
 				new BookmarkablePageLink<SampleResourcePage>("link", SampleResourcePage.class),
 				Model.of("Sample Resource")));
 		
+		
 		add(mainNavigation);
 		
 		this.add(new SearchBar("searchBar") {

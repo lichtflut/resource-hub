@@ -4,6 +4,7 @@
 package de.lichtflut.rb.web;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import org.apache.wicket.markup.html.basic.Label;
@@ -66,6 +67,15 @@ public class RSPage extends RBSuperPage {
 				return getRBServiceProvider();
 			}
 		});
+		
+		this.add(new ResourceRegisterPanel("resourceRegisterTest",
+				getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"lichtflut.de" ,Arrays.asList(new String[]{"hasNachname", "hasEmail", "blablubbla"})) {
+			public RBServiceProvider getServiceProvider() {
+				return getRBServiceProvider();
+			}
+		});
+		
+		
 	}
 
     

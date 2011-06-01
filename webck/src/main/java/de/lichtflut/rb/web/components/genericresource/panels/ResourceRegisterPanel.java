@@ -43,7 +43,7 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 	/**
 	 * 
 	 */
-	public ResourceRegisterPanel(String id, final Collection<ResourceTypeInstance> instances, ArrayList<String> fields){
+	public ResourceRegisterPanel(String id, final Collection<ResourceTypeInstance> instances, List<String> fields){
 		super(id);
 		List<RegisterRowEntry> entries = buildRegisterTableEntries(instances, fields, null);
 		init(entries);
@@ -55,7 +55,7 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 	/**
 	 * 
 	 */
-	public ResourceRegisterPanel(String id, final Collection<ResourceSchema> schemas, final String filter, ArrayList<String> fields) {
+	public ResourceRegisterPanel(String id, final Collection<ResourceSchema> schemas, final String filter, List<String> fields) {
 		super(id);
 		List<RegisterRowEntry> entries = buildRegisterTableEntries(schemas, filter, fields, null);
 		init(entries);
@@ -90,7 +90,7 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 	
 	
 	private List<RegisterRowEntry> buildRegisterTableEntries(Collection<ResourceSchema> schemas,
-			String filter,ArrayList<String> fields, SortCriteria criteria) {
+			String filter,List<String> fields, SortCriteria criteria) {
 		ResourceTypeManagement rManagement = getServiceProvider().getResourceTypeManagement();
 		Collection<ResourceTypeInstance> instances;
 		if(filter==null || filter.equals("")){
@@ -105,7 +105,7 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 	
 	
 	private List<RegisterRowEntry> buildRegisterTableEntries(Collection<ResourceTypeInstance> instances,
-			ArrayList<String> fields, SortCriteria criteria) {
+			List<String> fields, SortCriteria criteria) {
 		List<RegisterRowEntry> output = new ArrayList<RegisterRowEntry>();
 		if(fields==null || fields.size()==0){
 			fields = evaluateTotalFields(instances);
@@ -142,13 +142,13 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 	private class RegisterRowEntry{
 		private ArrayList<Component> components = new ArrayList<Component>(); 
 		
-		public RegisterRowEntry(ArrayList<String> fields){
+		public RegisterRowEntry(List<String> fields){
 			this(fields, null);
 		}
 		
 		// -----------------------------------------------------
 		
-		public RegisterRowEntry(ArrayList<String> fields, ResourceTypeInstance instance){
+		public RegisterRowEntry(List<String> fields, ResourceTypeInstance instance){
 			components.clear();
 			for (String field : fields) {
 				if(instance==null){
