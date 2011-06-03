@@ -114,7 +114,7 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 			String filter,List<String> fields, SortCriteria criteria) {
 		ResourceTypeManagement rManagement = getServiceProvider().getResourceTypeManagement();
 		Collection<ResourceTypeInstance> instances;
-		if(filter==null || filter.equals("")){
+		if(filter!=null && !filter.equals("")){
 			instances =	rManagement.loadAllResourceTypeInstancesForSchema(schemas, filter,SearchContext.CONJUNCT_MULTIPLE_KEYWORDS);
 		}else{
 			instances = rManagement.loadAllResourceTypeInstancesForSchema(schemas);
