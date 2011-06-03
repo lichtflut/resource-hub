@@ -38,13 +38,17 @@ import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
 @SuppressWarnings({ "serial", "unchecked" })
 public abstract class ResourceRegisterPanel extends Panel implements GenericResourceComponent{
 	
+	private Boolean simpleFieldNamesEnabled = false;
+	
+	
 	//Constructors
 	
 	/**
 	 * 
 	 */
-	public ResourceRegisterPanel(String id, final Collection<ResourceTypeInstance> instances, List<String> fields){
+	public ResourceRegisterPanel(String id, final Collection<ResourceTypeInstance> instances, List<String> fields, boolean simpleFlag){
 		super(id);
+		this.simpleFieldNamesEnabled= simpleFlag;
 		List<RegisterRowEntry> entries = buildRegisterTableEntries(instances, fields, null);
 		init(entries);
 	}
@@ -55,8 +59,9 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 	/**
 	 * 
 	 */
-	public ResourceRegisterPanel(String id, final Collection<ResourceSchema> schemas, final String filter, List<String> fields) {
+	public ResourceRegisterPanel(String id, final Collection<ResourceSchema> schemas, final String filter, List<String> fields, boolean simpleFlag){
 		super(id);
+		this.simpleFieldNamesEnabled = simpleFlag;
 		List<RegisterRowEntry> entries = buildRegisterTableEntries(schemas, filter, fields, null);
 		init(entries);
 	}
@@ -69,10 +74,26 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 		
 	}
 	
+	// -----------------------------------------------------
+	
+	/**
+	 * @param flag, <p>If the param is true,
+	 * this Component will display the simple attribute names associated to the full qualified one.
+	 * This is only possible, if there is no explicit given field specification
+	 * This might end up in some redundancies
+	 * </p>
+	 * @return {@link ResourceRegisterPanel} - self returing idiom
+	 */
+	public ResourceRegisterPanel enableSimpleFieldNames(boolean flag){
+		throw new UnsupportedOperationException();
+		//this.simpleFieldNamesEnabled=flag;
+		//return this;
+	}
 	
 	// -----------------------------------------------------
 	
 	private void init(final List<RegisterRowEntry> entries){
+		this.removeAll();
 		ListView<RegisterRowEntry> resourceTable = new ListView<RegisterRowEntry>("resourceTable", entries){
 			protected void populateItem(ListItem item) {
 				RegisterRowEntry entry = (RegisterRowEntry) item.getModelObject();
@@ -129,7 +150,14 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 		for (ResourceTypeInstance instance : instances) {
 			if(allreadyVisited.get(instance.getResourceTypeID().getQualifiedName().toURI())==null){
 				allreadyVisited.put(instance.getResourceTypeID().getQualifiedName().toURI(), Boolean.TRUE);
-				fields.addAll(instance.getAttributeNames());
+				Collection<String> attributeNames = instance.getAttributeNames();
+				if(this.simpleFieldNamesEnabled){
+					for (String attributeName : attributeNames) {
+						fields.add(instance.getSimpleAttributeName(attributeName));
+					}
+				}else{
+					fields.addAll(attributeNames);
+				}
 			}
 		}
 		return new ArrayList(fields);
@@ -152,6 +180,7 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 			components.clear();
 			for (String field : fields) {
 				if(instance==null){
+					//check if the field can be a simple name 
 					components.add(new Label("propertyField", Model.of(field)));
 				}else{
 					//Determine if the field is a simple attribute or not
@@ -165,8 +194,10 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 					}
 					String output="";
 					for (Object val : values) {
-						output = val.toString();
+						output = output + ", " +  val.toString();
 					}
+					//Cut of the trailing comma
+					if(output.length()>0) output =  output.substring(", ".length(),output.length());
 					components.add(new Label("propertyField", Model.of(output)));
 				}
 			}

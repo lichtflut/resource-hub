@@ -186,7 +186,9 @@ public abstract class ResourceTypeInstance<T extends Object> extends ResourceVie
 		Collection<PropertyAssertion> assertions = schema.getPropertyAssertions();
 		for (PropertyAssertion pAssertion : assertions) {
 			try{
-				this.removeAssociations(pAssertion.getPropertyDescriptor());
+				for (Association assoc : getAssociations(pAssertion.getPropertyDescriptor())) {
+					this.revoke(assoc);
+				}
 			}catch(org.neo4j.graphdb.NotFoundException e){
 				//If this node was not found, do nothing
 			}

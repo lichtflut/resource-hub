@@ -62,14 +62,14 @@ public class RSPage extends RBSuperPage {
     	});
     	updateResourceList();
 		this.add(resourceList);
-		this.add(new ResourceRegisterPanel("resourceRegister", getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"" , null) {
+		this.add(new ResourceRegisterPanel("resourceRegister", getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"" , null, false) {
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 		});
 		
 		this.add(new ResourceRegisterPanel("resourceRegisterTest",
-				getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"lichtflut.de" ,Arrays.asList(new String[]{"hasNachname", "hasEmail", "blablubbla"})) {
+				getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"lichtflut.de" ,Arrays.asList(new String[]{"hasNachname", "hasEmail", "blablubbla"}), true) {
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}

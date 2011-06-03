@@ -44,7 +44,8 @@ RESOURCE "http://lichtflut.de#Chef"{
 	
 	
 	PROPERTY "http://lichtflut.de#Alter"{
-		CARDINALITY=[1,1]
+		CARDINALITY=[1,1],
+		type=date
 	},
 	
 	PROPERTY "http://lichtflut.de#MindestensZwei"{
