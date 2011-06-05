@@ -130,11 +130,11 @@ public class SNPropertyDeclaration extends ResourceView {
 		final Set<SNConstraint> result = new HashSet<SNConstraint>();
 		for (Association assoc: getAssociations()){
 			if (RBSchema.HAS_LITERAL_CONSTRAINT.equals(assoc.getPredicate())){
-				result.add(new SNConstraint(assoc.getClient().asResource()));
+				result.add(new SNConstraint(assoc.getObject().asResource()));
 			} else if (RBSchema.HAS_TYPE_CONSTRAINT.equals(assoc.getPredicate())){
-				result.add(new SNConstraint(assoc.getClient().asResource()));
+				result.add(new SNConstraint(assoc.getObject().asResource()));
 			} else if (RBSchema.HAS_CONSTRAINT.equals(assoc.getPredicate())){
-				result.add(new SNConstraint(assoc.getClient().asResource()));
+				result.add(new SNConstraint(assoc.getObject().asResource()));
 			}
 		}
 		return result;
