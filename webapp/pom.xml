@@ -18,22 +18,10 @@
 		<wicket.version>1.5-RC4.2</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
 		<wiquery.version>1.5-M1</wiquery.version>
-		<!-- The beta version is chosen, because the Tomcat servlet container does only run with this version
-		 //-->
-		<weld.version>1.1.0.Beta1</weld.version>
 	</properties>
 	
 	<dependencies>
 		
-	<!--
-	<dependency>
-    	<groupId>org.jboss.weld.servlet</groupId>
-    	<artifactId>weld-servlet</artifactId>
-    	<version>${weld.version}</version>
-	</dependency>
-	//-->	
-		
-		        
 
 
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->
@@ -73,13 +61,6 @@
 			<version>${jetty.version}</version>
 			<type>jar</type>
 			<scope>provided</scope>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.weld</groupId>
-			<artifactId>weld-spi</artifactId>
-			<version>1.0-SP1</version>
-			<type>jar</type>
 			<optional>false</optional>
 		</dependency>
 	</dependencies>

@@ -3,9 +3,9 @@
  */
 package de.lichtflut.rb.builders;
 
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+//import javax.enterprise.context.SessionScoped;
+//import javax.enterprise.inject.Produces;
+//import javax.inject.Inject;
 
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
@@ -26,14 +26,14 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
  *
  * @author Nils Bleisch
  */
-@SessionScoped
+//@SessionScoped
 public final class SessionBuilder {
 
 	//Members
 	private RBServiceProvider serviceProvider;
 	
 	// -----------------------------------------------------
-	@Inject
+	//@Inject
 	public SessionBuilder(){
 		init();
 	}
@@ -45,7 +45,7 @@ public final class SessionBuilder {
 	}
 	
 	// -----------------------------------------------------
-	@Produces
+	//@Produces
 	public RBServiceProvider getServiceProvider() {
 		return this.serviceProvider;
 	}
