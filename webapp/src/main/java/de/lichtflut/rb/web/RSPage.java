@@ -62,7 +62,7 @@ public class RSPage extends RBSuperPage {
     	});
     	updateResourceList();
 		this.add(resourceList);
-		this.add(new ResourceRegisterPanel("resourceRegister", getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"" , null, true) {
+		this.add(new ResourceRegisterPanel("resourceRegister", getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"" , null, false) {
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}

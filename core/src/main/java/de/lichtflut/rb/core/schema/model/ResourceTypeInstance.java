@@ -13,7 +13,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
-import org.arastreju.sge.model.nodes.views.ResourceView;
+import org.arastreju.sge.model.nodes.views.SNEntity;
 
 
 /**
@@ -26,7 +26,7 @@ import org.arastreju.sge.model.nodes.views.ResourceView;
  *
  * @author Nils Bleisch
  */
-public abstract class ResourceTypeInstance<T extends Object> extends ResourceView implements Serializable{
+public abstract class ResourceTypeInstance<T extends Object> extends SNEntity implements Serializable{
 
 	/**
 	 * Keys which help to get some meta data for a given attribute name during runtime
