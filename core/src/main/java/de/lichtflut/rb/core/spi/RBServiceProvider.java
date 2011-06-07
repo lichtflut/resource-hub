@@ -6,7 +6,7 @@ package de.lichtflut.rb.core.spi;
 import org.arastreju.sge.ArastrejuGate;
 
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
-import de.lichtflut.rb.core.api.ResourceTypeManagement;
+import de.lichtflut.rb.core.api.RBEntityManagement;
 
 /**
  * <p>
@@ -36,10 +36,10 @@ public interface RBServiceProvider {
 	// -----------------------------------------------------
 	
 	/**
-	 * {@link ResourceSchemaManagement} provides the ability to manage,
-	 * persist and store Resource-Types and RT-Instances.
+	 * {@link RBEntityManagement} provides the ability to manage,
+	 * persist and store RB-Entities.
 	 */
-	ResourceTypeManagement getResourceTypeManagement();
+	RBEntityManagement getRBEntityManagement();
 	
 	// -----------------------------------------------------
 	

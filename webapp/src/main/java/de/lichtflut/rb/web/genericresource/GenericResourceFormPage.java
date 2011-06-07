@@ -6,8 +6,8 @@ package de.lichtflut.rb.web.genericresource;
 import java.util.Collection;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.components.genericresource.panels.GenericResourceFormPanel;
@@ -35,7 +35,7 @@ public class GenericResourceFormPage extends RBSuperPage {
 		super("Resource " + parameters.get("resourceid"), parameters);
 		ResourceSchema schema = loadResourceSchemaFromParams(parameters);
 		//Add generic_form_panel to page
-        this.add(new GenericResourceFormPanel("generic_form",schema,loadResourceTypeInstanceFromParams(schema, parameters)){
+        this.add(new GenericResourceFormPanel("generic_form",schema,loadRBEntitiesFromParams(schema, parameters)){
 			private static final long serialVersionUID = 117114431624666607L;
 
 			public RBServiceProvider getServiceProvider() {
@@ -72,16 +72,16 @@ public class GenericResourceFormPage extends RBSuperPage {
 	 */
 	@SuppressWarnings({ "unchecked"})
 	
-	private ResourceTypeInstance loadResourceTypeInstanceFromParams(ResourceSchema schema, PageParameters parameters){
+	private RBEntity loadRBEntitiesFromParams(ResourceSchema schema, PageParameters parameters){
 		String identifier = parameters.get("instanceid").toString();
-		Collection<ResourceTypeInstance> instances = getRBServiceProvider().getResourceTypeManagement().loadAllResourceTypeInstancesForSchema(schema);
-		for (ResourceTypeInstance<Object> resourceTypeInstance : instances) {
+		Collection<RBEntity> instances = getRBServiceProvider().getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
+		for (RBEntity<Object> resourceTypeInstance : instances) {
 			if(resourceTypeInstance.getQualifiedName().toURI().equals(identifier)){
 				return resourceTypeInstance;
 			}
 		}
 		
-		return schema.generateTypeInstance();
+		return schema.generateRBEntity();
 	}
 	
 	// -----------------------------------------------------

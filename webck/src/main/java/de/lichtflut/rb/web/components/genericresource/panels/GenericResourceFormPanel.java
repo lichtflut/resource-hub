@@ -17,11 +17,10 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
-
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance.MetaDataKeys;
+import de.lichtflut.rb.core.schema.model.RBEntity.MetaDataKeys;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.behaviors.DatePickerBehavior;
 import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
@@ -48,7 +47,7 @@ public abstract class GenericResourceFormPanel extends Panel implements GenericR
 	/**
 	 * 
 	 */
-	public GenericResourceFormPanel(String id, ResourceSchema schema, ResourceTypeInstance instance) {
+	public GenericResourceFormPanel(String id, ResourceSchema schema, RBEntity instance) {
 		super(id);
 		init(schema, instance);
 	}
@@ -56,14 +55,14 @@ public abstract class GenericResourceFormPanel extends Panel implements GenericR
 	
 	// -----------------------------------------------------
 	
-	private void init(ResourceSchema schema, ResourceTypeInstance in){
+	private void init(ResourceSchema schema, RBEntity in){
 		
-		final ResourceTypeInstance instance = (in==null ? schema.generateTypeInstance() : in);
+		final RBEntity instance = (in==null ? schema.generateRBEntity() : in);
 		final Form form = new Form("form"){
 			@Override
 			protected void onSubmit() {
 				super.onSubmit();
-				if(getServiceProvider().getResourceTypeManagement().createOrUpdateRTInstance(instance)){
+				if(getServiceProvider().getRBEntityManagement().createOrUpdateRTInstance(instance)){
 					info("This instance has been successfully updated/created");
 				}else{
 					error("Somethin went wrong, instance could'nt be created/updated");
@@ -110,7 +109,7 @@ public abstract class GenericResourceFormPanel extends Panel implements GenericR
 	// -----------------------------------------------------
 	
 	
-	private Component buildItem(final ResourceTypeInstance instance,final GenericResourceModel model, final String attribute, final RepeatingView view, boolean required, boolean expendable){
+	private Component buildItem(final RBEntity instance,final GenericResourceModel model, final String attribute, final RepeatingView view, boolean required, boolean expendable){
 		Fragment fragment = new Fragment(view.newChildId(), "referenceInput", this);			
 		fragment.add((new Label("propertyLabel", instance.getSimpleAttributeName(attribute) + 
 				(required ? " (*)" : ""))));
@@ -121,7 +120,7 @@ public abstract class GenericResourceFormPanel extends Panel implements GenericR
 			case RESOURCE : {
 				f = new Fragment("propertyInput", "resourceInput", this);
 				f.add(new SearchBar("searchbar"){
-					public void onSearchSubmit(ResourceTypeInstance instance) {
+					public void onSearchSubmit(RBEntity instance) {
 						
 						model.setObject(instance);
 					}

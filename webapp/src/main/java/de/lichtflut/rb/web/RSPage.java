@@ -15,9 +15,9 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
-import de.lichtflut.rb.core.api.ResourceTypeManagement;
+import de.lichtflut.rb.core.api.RBEntityManagement;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.components.genericresource.panels.ResourceRegisterPanel;
 import de.lichtflut.rb.web.components.genericresource.panels.SchemaSubmitPanel;
@@ -90,15 +90,15 @@ public class RSPage extends RBSuperPage {
 	private void updateResourceList(){
     	resourceList.removeAll();	
     	ResourceSchemaManagement rManagement = getRBServiceProvider().getResourceSchemaManagement();
-    	ResourceTypeManagement rTypeManagement = getRBServiceProvider().getResourceTypeManagement();
+    	RBEntityManagement rTypeManagement = getRBServiceProvider().getRBEntityManagement();
     	Collection<ResourceSchema> resourceSchemas = rManagement.getAllResourceSchemas();
 		if(resourceSchemas==null) resourceSchemas = new ArrayList<ResourceSchema>();
 		for (final ResourceSchema resourceSchema : resourceSchemas) {
 
-			Collection<ResourceTypeInstance> instances = rTypeManagement.loadAllResourceTypeInstancesForSchema(resourceSchema);
+			Collection<RBEntity> instances = rTypeManagement.loadAllResourceTypeInstancesForSchema(resourceSchema);
 			
-			ArrayList<ResourceTypeInstance> schemaInstances = 
-				new ArrayList<ResourceTypeInstance>((instances != null) ? instances : new HashSet<ResourceTypeInstance>());
+			ArrayList<RBEntity> schemaInstances = 
+				new ArrayList<RBEntity>((instances != null) ? instances : new HashSet<RBEntity>());
 			
 			PageParameters params = new PageParameters();
 			params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
@@ -109,7 +109,7 @@ public class RSPage extends RBSuperPage {
 			fragment.add(new ListView("instancelist",schemaInstances){
 				@Override
 				protected void populateItem(ListItem item) {
-					ResourceTypeInstance instance = (ResourceTypeInstance) item.getModelObject();
+					RBEntity instance = (RBEntity) item.getModelObject();
 					PageParameters params = new PageParameters();
 					params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
 					params.add("instanceid", instance.getQualifiedName().toURI());

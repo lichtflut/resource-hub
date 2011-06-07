@@ -8,12 +8,11 @@ import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ArastrejuProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
-import de.lichtflut.rb.core.api.ResourceTypeManagement;
+import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.api.impl.ResourceSchemaManagementImpl;
-import de.lichtflut.rb.core.api.impl.ResourceTypeManagementImpl;
+import de.lichtflut.rb.core.api.impl.RBEntityManagementImpl;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**
@@ -31,7 +30,7 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 
 	private ArastrejuGate gate = null;
 	private ResourceSchemaManagement schemaManagement = null;
-	private ResourceTypeManagement typeManagement = null;
+	private RBEntityManagement typeManagement = null;
 	
 	
 	// --CONSTRUCTOR----------------------------------------
@@ -45,7 +44,7 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 		logger.info("Initializing Arastreju with profile: " + profile);
 		gate = Arastreju.getInstance(profile).rootContext();
 		schemaManagement = new ResourceSchemaManagementImpl(gate);
-		typeManagement = new ResourceTypeManagementImpl(gate);
+		typeManagement = new RBEntityManagementImpl(gate);
 	}
 	
 	// -----------------------------------------------------
@@ -71,7 +70,7 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 	/**
 	 * 
 	 */
-	public ResourceTypeManagement getResourceTypeManagement() {
+	public RBEntityManagement getRBEntityManagement() {
 		return this.typeManagement;
 	}
 

@@ -26,7 +26,7 @@ import org.arastreju.sge.model.nodes.views.SNEntity;
  *
  * @author Nils Bleisch
  */
-public abstract class ResourceTypeInstance<T extends Object> extends SNEntity implements Serializable{
+public abstract class RBEntity<T extends Object> extends SNEntity implements Serializable{
 
 	/**
 	 * Keys which help to get some meta data for a given attribute name during runtime
@@ -44,7 +44,7 @@ public abstract class ResourceTypeInstance<T extends Object> extends SNEntity im
 	/**
 	 * Default constructor
 	 */
-	public ResourceTypeInstance(){
+	public RBEntity(){
 		//do nothing
 	}
 	
@@ -52,7 +52,7 @@ public abstract class ResourceTypeInstance<T extends Object> extends SNEntity im
 	 * Takes the node of this type as argument
 	 * @param id the {@link ResourceNode} id
 	 */
-	public ResourceTypeInstance(ResourceNode id){
+	public RBEntity(ResourceNode id){
 		super(id);
 	}
 	
@@ -210,7 +210,6 @@ public abstract class ResourceTypeInstance<T extends Object> extends SNEntity im
 	 */
 	@Override
 	public String toString(){
-		//Show the first 2 Values
 		int maxVal=2;
 		String schemaName = this.getResourceSchema().getDescribedResourceID().getQualifiedName().getSimpleName();
 		StringBuilder output = new StringBuilder("[" + schemaName + "] ");

@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.instance;
+package de.lichtflut.rb.core.rbentity;
 
 import junit.framework.TestCase;
 
@@ -9,8 +9,8 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 
 
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
@@ -25,11 +25,11 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
  *
  * @author Nils Bleisch
  */
-public class ResourceTypeInstanceTest extends TestCase{
+public class RBEntityTest extends TestCase{
 
 	public void testResourceTypeInstance(){
 		//Generate an instance for a given schema
-		ResourceTypeInstance<Object> instance = createSchema().generateTypeInstance();
+		RBEntity<Object> instance = createSchema().generateRBEntity();
 		assertNotNull(instance);
 		
 		//Generate some tickets for fields

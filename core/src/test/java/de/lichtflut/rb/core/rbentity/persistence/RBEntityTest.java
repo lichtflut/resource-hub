@@ -1,15 +1,16 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.instance.persistence;
+package de.lichtflut.rb.core.rbentity.persistence;
 
 import java.util.Collection;
 
 import junit.framework.TestCase;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
+
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
@@ -26,7 +27,7 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
  *
  * @author Nils Bleisch
  */
-public class ResourceTypeInstanceTest extends TestCase{
+public class RBEntityTest extends TestCase{
 
 	@SuppressWarnings("unchecked")
 	public void testResourceTypeInstance(){
@@ -37,7 +38,7 @@ public class ResourceTypeInstanceTest extends TestCase{
 		provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(schema);
 		
 		//Build an instance
-		ResourceTypeInstance<Object> instance = schema.generateTypeInstance();
+		RBEntity<Object> instance = schema.generateRBEntity();
 		assertNotNull(instance);
 		
 		try{
@@ -49,11 +50,11 @@ public class ResourceTypeInstanceTest extends TestCase{
 			any.printStackTrace();
 		}
 		//Try to create this
-		assertTrue(provider.getResourceTypeManagement().createOrUpdateRTInstance(instance));
-		Collection<ResourceTypeInstance> instances = provider.getResourceTypeManagement().loadAllResourceTypeInstancesForSchema(schema);
+		assertTrue(provider.getRBEntityManagement().createOrUpdateRTInstance(instance));
+		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
 		
 		assertTrue(instances.size()==1);
-		for (ResourceTypeInstance i : instances) {
+		for (RBEntity i : instances) {
 			assertTrue(i.getValuesFor("http://lichtflut.de#hatGeburtstag").contains("test1"));
 			assertTrue(i.getValuesFor("http://lichtflut.de#hatEmail").contains("test1@test.com"));
 			assertTrue(i.getValuesFor("http://lichtflut.de#hatAlter").contains("24"));

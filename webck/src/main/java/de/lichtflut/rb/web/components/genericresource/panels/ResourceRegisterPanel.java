@@ -16,12 +16,11 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.api.ResourceTypeManagement;
-import de.lichtflut.rb.core.api.ResourceTypeManagement.SearchContext;
+import de.lichtflut.rb.core.api.RBEntityManagement;
+import de.lichtflut.rb.core.api.RBEntityManagement.SearchContext;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
 
 /**
@@ -46,7 +45,7 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 	/**
 	 * 
 	 */
-	public ResourceRegisterPanel(String id, final Collection<ResourceTypeInstance> instances, List<String> fields, boolean simpleFlag){
+	public ResourceRegisterPanel(String id, final Collection<RBEntity> instances, List<String> fields, boolean simpleFlag){
 		super(id);
 		this.simpleFieldNamesEnabled= simpleFlag;
 		List<RegisterRowEntry> entries = buildRegisterTableEntries(instances, fields, null);
@@ -112,8 +111,8 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 	
 	private List<RegisterRowEntry> buildRegisterTableEntries(Collection<ResourceSchema> schemas,
 			String filter,List<String> fields, SortCriteria criteria) {
-		ResourceTypeManagement rManagement = getServiceProvider().getResourceTypeManagement();
-		Collection<ResourceTypeInstance> instances;
+		RBEntityManagement rManagement = getServiceProvider().getRBEntityManagement();
+		Collection<RBEntity> instances;
 		if(filter!=null && !filter.equals("")){
 			instances =	rManagement.loadAllResourceTypeInstancesForSchema(schemas, filter,SearchContext.CONJUNCT_MULTIPLE_KEYWORDS);
 		}else{
@@ -125,7 +124,7 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 	// -----------------------------------------------------
 	
 	
-	private List<RegisterRowEntry> buildRegisterTableEntries(Collection<ResourceTypeInstance> instances,
+	private List<RegisterRowEntry> buildRegisterTableEntries(Collection<RBEntity> instances,
 			List<String> fields, SortCriteria criteria) {
 		List<RegisterRowEntry> output = new ArrayList<RegisterRowEntry>();
 		if(fields==null || fields.size()==0){
@@ -135,7 +134,7 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 		//Add first the tile-row
 		output.add(new RegisterRowEntry(fields));
 		
-		for (ResourceTypeInstance instance : instances) {
+		for (RBEntity instance : instances) {
 			output.add(new RegisterRowEntry(fields, instance));
 		}
 		return output;
@@ -143,11 +142,11 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 	
 	// -----------------------------------------------------
 	
-	private ArrayList<String> evaluateTotalFields(Collection<ResourceTypeInstance> instances) {
+	private ArrayList<String> evaluateTotalFields(Collection<RBEntity> instances) {
 		Map<String, Object> allreadyVisited = new HashMap<String, Object>();
 		//Make a set to remove skip duplicates
 		Set<String> fields = new HashSet<String>();
-		for (ResourceTypeInstance instance : instances) {
+		for (RBEntity instance : instances) {
 			if(allreadyVisited.get(instance.getResourceTypeID().getQualifiedName().toURI())==null){
 				allreadyVisited.put(instance.getResourceTypeID().getQualifiedName().toURI(), Boolean.TRUE);
 				Collection<String> attributeNames = instance.getAttributeNames();
@@ -176,7 +175,7 @@ public abstract class ResourceRegisterPanel extends Panel implements GenericReso
 		
 		// -----------------------------------------------------
 		
-		public RegisterRowEntry(List<String> fields, ResourceTypeInstance instance){
+		public RegisterRowEntry(List<String> fields, RBEntity instance){
 			components.clear();
 			for (String field : fields) {
 				if(instance==null){

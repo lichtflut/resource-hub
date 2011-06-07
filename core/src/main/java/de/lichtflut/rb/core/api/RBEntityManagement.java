@@ -6,8 +6,8 @@ package de.lichtflut.rb.core.api;
 import java.io.Serializable;
 import java.util.Collection;
 
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 
 /**
  * <p>
@@ -25,7 +25,7 @@ import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
  *
  * @author Nils Bleisch
  */
-public interface ResourceTypeManagement extends Serializable{
+public interface RBEntityManagement extends Serializable{
 	
 	/**
 	 * <p>SearchContext enum fields.</p>
@@ -50,7 +50,7 @@ public interface ResourceTypeManagement extends Serializable{
 	 * creates or updates a given {@link ResourceTypeInstance}
 	 * @return true if the operation was successfull, false if not
 	 */
-	public boolean createOrUpdateRTInstance(ResourceTypeInstance<Object> instance);
+	public boolean createOrUpdateRTInstance(RBEntity<Object> instance);
 
 	
 	/**
@@ -58,7 +58,7 @@ public interface ResourceTypeManagement extends Serializable{
 	 * @param schemas the specified collection of schemas
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas);
+	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas);
 	
 	// -----------------------------------------------------
 	
@@ -69,14 +69,14 @@ public interface ResourceTypeManagement extends Serializable{
 	 * @param ctx the SearchContext, if null, the default SearchContext "CONJUNCT_MULTIPLE_KEYWORDS" will be taken instead
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas, String filter, SearchContext ctx);
+	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas, String filter, SearchContext ctx);
 	
 	/**
 	 * returns all the type-instances of the given schema without any exceptions
 	 * @param schema the specified schema
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema);
+	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(ResourceSchema schema);
 	
 	// -----------------------------------------------------
 	
@@ -87,7 +87,7 @@ public interface ResourceTypeManagement extends Serializable{
 	 * @param ctx the SearchContext, if null, the default SearchContext "CONJUNCT_MULTIPLE_KEYWORDS" will be taken instead
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter, SearchContext ctx);
+	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter, SearchContext ctx);
 	
 	// -----------------------------------------------------
 	

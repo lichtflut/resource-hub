@@ -10,7 +10,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 import de.lichtflut.rb.web.components.genericresource.fields.search.SearchBar;
@@ -35,6 +35,7 @@ import de.lichtflut.rb.web.resources.SharedResourceProvider;
  *
  * @author Nils Bleisch
  */
+@SuppressWarnings("serial")
 public abstract class RBSuperPage extends WebPage {
 	
 	private static RBServiceProvider provider =null;
@@ -86,7 +87,7 @@ public abstract class RBSuperPage extends WebPage {
 	
 	// -----------------------------------------------------
 	
-	@SuppressWarnings({ "serial", "rawtypes" })
+	@SuppressWarnings({ "serial"})
 	public void init(){
 		Label titleLabel = new Label("title", title);
 		titleLabel.setRenderBodyOnly(true);
@@ -107,7 +108,7 @@ public abstract class RBSuperPage extends WebPage {
 		
 		this.add(new SearchBar("searchBar") {
 
-			public void onSearchSubmit(ResourceTypeInstance<Object> instance) {
+			public void onSearchSubmit(RBEntity<Object> instance) {
 				PageParameters params = new PageParameters();
 				params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
 				params.add("instanceid", instance.getQualifiedName().toURI());
@@ -117,7 +118,6 @@ public abstract class RBSuperPage extends WebPage {
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
-
 		});
 		
 	}

@@ -14,11 +14,11 @@ import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.query.QueryManager;
-import de.lichtflut.rb.core.api.ResourceTypeManagement;
+import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
-import de.lichtflut.rb.core.schema.model.impl.ResourceTypeInstanceImpl;
+import de.lichtflut.rb.core.schema.model.impl.RBEntityImpl;
 
 /**
  * Reference implementation of {@ResourceTypeManagement} for a lucence based neo4j backend
@@ -28,7 +28,7 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceTypeInstanceImpl;
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public class ResourceTypeManagementImpl implements ResourceTypeManagement{
+public class RBEntityManagementImpl implements RBEntityManagement{
 
 	private ArastrejuGate gate;
 	
@@ -38,13 +38,13 @@ public class ResourceTypeManagementImpl implements ResourceTypeManagement{
 	 * This is the standard constructor
 	 * @param gate the ArastrejuGate instance which is necessary to store, update and resolve ResourceTypeInstances
 	*/
-	public ResourceTypeManagementImpl(ArastrejuGate gate){
+	public RBEntityManagementImpl(ArastrejuGate gate){
 		this.gate = gate;
 	}
 	
 	// -----------------------------------------------------
 	
-	public boolean createOrUpdateRTInstance(ResourceTypeInstance<Object> instance) {
+	public boolean createOrUpdateRTInstance(RBEntity<Object> instance) {
 		
 		ModelingConversation mc = gate.startConversation();
 		instance.createAssociations(null);
@@ -59,11 +59,11 @@ public class ResourceTypeManagementImpl implements ResourceTypeManagement{
 	// -----------------------------------------------------
 	
 	@SuppressWarnings("unchecked")
-	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter, SearchContext ctx) {
+	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter, SearchContext ctx) {
 		if(filter==null || filter.equals("")) return loadAllResourceTypeInstancesForSchema(schema);
 		if(ctx==null) ctx = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
 		filter = getConvertedFilterBySearchContext(filter, ctx);
-		Collection<ResourceTypeInstance> output = new ArrayList<ResourceTypeInstance>();
+		Collection<RBEntity> output = new ArrayList<RBEntity>();
 		QueryManager qManager = gate.startConversation().createQueryManager();
 		List<ResourceNode> nodes = qManager.findByTag(filter);
 		for (ResourceNode resourceNode : nodes) {
@@ -74,7 +74,7 @@ public class ResourceTypeManagementImpl implements ResourceTypeManagement{
 					ResourceNode rNode = semanticNode.asResource();
 					if(rNode.getQualifiedName().equals(schema.getDescribedResourceID().getQualifiedName())){
 						if(rNode.asResource().getSingleAssociationClient(RBSchema.DESCRIBED_BY) != null){
-							output.add(new ResourceTypeInstanceImpl(schema,resourceNode));
+							output.add(new RBEntityImpl(schema,resourceNode));
 							break;
 						}
 					}
@@ -87,13 +87,13 @@ public class ResourceTypeManagementImpl implements ResourceTypeManagement{
 	// -----------------------------------------------------
 	
 	@SuppressWarnings("unchecked")
-	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(ResourceSchema schema) {
-	      Collection<ResourceTypeInstance> output = new ArrayList<ResourceTypeInstance>();
+	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(ResourceSchema schema) {
+	      Collection<RBEntity> output = new ArrayList<RBEntity>();
           ModelingConversation mc = gate.startConversation();
           Set<Statement> statements = mc.createQueryManager().findIncomingStatements(schema.getDescribedResourceID());
           for (Statement statement : statements) {
              if(statement.getPredicate().equals(RDF.TYPE)){
-                 ResourceTypeInstance  instance = new ResourceTypeInstanceImpl(schema, statement.getSubject().asResource());
+            	 RBEntity  instance = new RBEntityImpl(schema, statement.getSubject().asResource());
                  output.add(instance);
              }
           }
@@ -103,8 +103,8 @@ public class ResourceTypeManagementImpl implements ResourceTypeManagement{
 	// -----------------------------------------------------
 	
 	@SuppressWarnings("unchecked")
-	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas) {
-		Collection<ResourceTypeInstance> output = new ArrayList<ResourceTypeInstance>();
+	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas) {
+		Collection<RBEntity> output = new ArrayList<RBEntity>();
 	    for (ResourceSchema resourceSchema : schemas) {
 			output.addAll(loadAllResourceTypeInstancesForSchema(resourceSchema));
 		}
@@ -113,11 +113,11 @@ public class ResourceTypeManagementImpl implements ResourceTypeManagement{
 	
 	
 	@SuppressWarnings("unchecked")
-	public Collection<ResourceTypeInstance> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas, String filter, SearchContext ctx) {
+	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas, String filter, SearchContext ctx) {
 		if(filter==null || filter.equals("")) return loadAllResourceTypeInstancesForSchema(schemas);
 		//Check if context is still null
 		if(ctx==null) ctx = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
-		Collection<ResourceTypeInstance> output = new ArrayList<ResourceTypeInstance>();
+		Collection<RBEntity> output = new ArrayList<RBEntity>();
 		for (ResourceSchema schema : schemas) {
 			output.addAll(loadAllResourceTypeInstancesForSchema(schema, filter,ctx));
 		}

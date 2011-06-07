@@ -16,22 +16,23 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.ValueNode;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.RBInvalidAttributeException;
 import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
 import de.lichtflut.rb.core.schema.model.RBValidator;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
+
 
 
 /**
- * ReferenceImpl of {@link ResourceTypeInstanceImpl} for value-type {@link Object}
+ * ReferenceImpl of {@link RBEntityImpl} for value-type {@link Object}
  * 
  * Created: May 17, 2011
  *
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public class ResourceTypeInstanceImpl extends ResourceTypeInstance<Object> {
+public class RBEntityImpl extends RBEntity<Object> {
 
 	private HashMap<String, ValueHolder> internalRep = new HashMap<String, ValueHolder>();
 	private HashMap<String, RBValidator<Object>> internalValidatorMap = new HashMap<String, RBValidator<Object>>();
@@ -40,12 +41,12 @@ public class ResourceTypeInstanceImpl extends ResourceTypeInstance<Object> {
 	
 	// --CONSTRUCTOR----------------------------------------
 	
-	public ResourceTypeInstanceImpl(ResourceSchema schema){
+	public RBEntityImpl(ResourceSchema schema){
 		this.schema=schema;
 		init();
 	}
 	
-	public ResourceTypeInstanceImpl(ResourceSchema schema, ResourceNode node){
+	public RBEntityImpl(ResourceSchema schema, ResourceNode node){
 		super(node);
 		this.schema=schema;
 		init();

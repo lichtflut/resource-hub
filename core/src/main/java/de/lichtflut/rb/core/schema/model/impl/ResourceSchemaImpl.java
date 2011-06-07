@@ -12,8 +12,8 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.VoidNamespace;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
 
 /**
  * <p>
@@ -171,8 +171,8 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	// -----------------------------------------------------
 	
 	
-	public ResourceTypeInstance<Object> generateTypeInstance() {
-		return new ResourceTypeInstanceImpl(this);
+	public RBEntity<Object> generateRBEntity() {
+		return new RBEntityImpl(this);
 	}
 
 

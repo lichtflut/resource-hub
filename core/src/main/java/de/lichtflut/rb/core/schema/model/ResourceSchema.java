@@ -65,8 +65,8 @@ public interface ResourceSchema extends ResourceSchemaType{
 	
 	
 	/**
-	 * generates an instance of the schema's described resource-type
+	 * generates an entity of the schema's described resource-type
 	 */
-	ResourceTypeInstance<Object> generateTypeInstance();
+	RBEntity<Object> generateRBEntity();
 	
 }

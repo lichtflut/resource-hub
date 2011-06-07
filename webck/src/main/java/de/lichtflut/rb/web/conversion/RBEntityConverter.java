@@ -6,7 +6,8 @@ package de.lichtflut.rb.web.conversion;
 import java.util.Locale;
 
 import org.apache.wicket.util.convert.converter.AbstractConverter;
-import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
+
+import de.lichtflut.rb.core.schema.model.RBEntity;
 
 /**
  * <p>
@@ -19,29 +20,29 @@ import de.lichtflut.rb.core.schema.model.ResourceTypeInstance;
  *
  * @author Nils Bleisch
  */
-@SuppressWarnings({ "serial", "unchecked" })
-public class ResourceTypeInstanceConverter extends AbstractConverter<ResourceTypeInstance> {
+@SuppressWarnings({ "serial"})
+public class RBEntityConverter extends AbstractConverter<RBEntityConverter> {
 
 	/**
 	 * Default Constructor.
 	 */
-	public ResourceTypeInstanceConverter() {
+	public RBEntityConverter() {
 	}
 
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String, java.util.Locale)
 	 */
-	public ResourceTypeInstance<Object> convertToObject(final String value, final Locale locale) {
+	public RBEntityConverter convertToObject(final String value, final Locale locale) {
 		throw new UnsupportedOperationException();
 	}
 
-	public String convertToString(final ResourceTypeInstance<Object> value, final Locale locale){
+	public String convertToString(final RBEntity<Object> value, final Locale locale){
 		return value.toString();
 	}
 
 	@Override
-	protected Class<ResourceTypeInstance> getTargetType() {
-		return ResourceTypeInstance.class;
+	protected Class<RBEntityConverter> getTargetType() {
+		return RBEntityConverter.class;
 	}
 	
 	
