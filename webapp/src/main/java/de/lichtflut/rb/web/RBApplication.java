@@ -26,6 +26,7 @@ public class RBApplication extends AbstractResourceBrowserApplication {
         mountPage("/RSSchema", RSPage.class);
         mountPage("/Resource", GenericResourceFormPage.class);
         mountPage("/SampleResourcePage", SampleResourcePage.class);
+        
     }
 
 	

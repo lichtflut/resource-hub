@@ -72,7 +72,7 @@ public abstract class RBSuperPage extends WebPage {
 		this.title = title;
 		init();
 	}
-	
+		
 	// -----------------------------------------------------
 	
 	/* (non-Javadoc)
