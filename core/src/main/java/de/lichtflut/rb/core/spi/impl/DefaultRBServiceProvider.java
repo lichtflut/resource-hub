@@ -39,7 +39,13 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 	 * Default constructor.
 	 */
 	public DefaultRBServiceProvider(){
-		final RBConfig config = new RBConfig();
+		this(new RBConfig());
+	}
+	
+	/**
+	 * Default constructor.
+	 */
+	public DefaultRBServiceProvider(final RBConfig config){
 		final ArastrejuProfile profile = config.getArastrejuConfiguration();
 		logger.info("Initializing Arastreju with profile: " + profile);
 		gate = Arastreju.getInstance(profile).rootContext();

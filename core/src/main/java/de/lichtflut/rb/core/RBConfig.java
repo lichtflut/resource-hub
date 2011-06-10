@@ -18,16 +18,51 @@ import org.arastreju.sge.ArastrejuProfile;
  */
 public class RBConfig implements RBConstants {
 	
+	private final String profileName;
+	private ArastrejuProfile profile;
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * Default constructor.
+	 */
+	public RBConfig() {
+		this.profileName = null;
+	}
+	
+	/**
+	 * Constructor.
+	 * @param arastrejuProfile The profile name for Arastreju. 
+	 */
+	public RBConfig(final String arastrejuProfile) {
+		this.profileName = arastrejuProfile;
+	}
+
+	// -----------------------------------------------------
+
+
 	/**
 	 * @return The Arastreju configuration properties.
 	 */
 	public ArastrejuProfile getArastrejuConfiguration() {
-		final ArastrejuProfile profile = ArastrejuProfile.read();
+		if (profile == null) {
+			initProfile();
+		} 
+		return profile;
+	}
+	
+	// -----------------------------------------------------
+	
+	private void initProfile() {
+		if (profileName == null) {
+			profile = ArastrejuProfile.read();
+		} else {
+			profile = ArastrejuProfile.read(profileName);
+		}
 		final String storeDir = System.getProperty(ARAS_STORE_DIRECTORY);
 		if (storeDir != null) {
 			profile.setProperty(ARAS_STORE_DIRECTORY, storeDir);
 		}
-		return profile;
 	}
 
 }
