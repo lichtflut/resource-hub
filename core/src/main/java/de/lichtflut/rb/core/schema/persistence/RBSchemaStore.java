@@ -248,6 +248,7 @@ public class RBSchemaStore {
 	// -----------------------------------------------------
 	
 	public ResourceSchema convertResourceSchema(final SNResourceSchema snSchema) {
+		if(snSchema==null) return null;
 		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema);
 		schema.setDescribedResourceID(snSchema.getDescribedClass());
 		for (SNPropertyAssertion snAssertion : snSchema.getPropertyAssertions()){
