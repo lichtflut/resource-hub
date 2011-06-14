@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.rbentity.persistence;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import junit.framework.TestCase;
@@ -30,7 +31,7 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 public class RBEntityTest extends TestCase{
 
 	@SuppressWarnings("unchecked")
-	public void testResourceTypeInstance(){
+	public void testPersistAndFindRBEntities(){
 		RBServiceProvider provider = RBServiceProviderFactory.getDefaultServiceProvider();
 		
 		ResourceSchema schema = createSchema();
@@ -61,6 +62,39 @@ public class RBEntityTest extends TestCase{
 		}	
 	}
 	
+	
+	@SuppressWarnings("unchecked")
+	public void testPersistAndFindASpecificEntity(){
+	RBServiceProvider provider = RBServiceProviderFactory.getDefaultServiceProvider();
+		
+		ResourceSchema schema = createSchema();
+		//Store the schema
+		provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(schema);
+		//Build an instance
+		RBEntity<Object> instance = schema.generateRBEntity();
+		assertNotNull(instance);
+		try{
+			instance.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
+			instance.addValueFor("http://lichtflut.de#hatEmail", "test1@test.com");
+			instance.addValueFor("http://lichtflut.de#hatAlter", "24");
+		
+		}catch(Exception any){
+			any.printStackTrace();
+		}
+		assertTrue(provider.getRBEntityManagement().createOrUpdateRTInstance(instance));
+		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
+		assertTrue(instances.size()==1);
+		RBEntity entity = new ArrayList<RBEntity>(instances).get(0);
+		
+		//Made some proofs
+		
+		assertEquals(provider.getRBEntityManagement().loadRBEntity(entity), entity);
+		assertEquals(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName()), entity);
+		assertEquals(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName().toURI()), entity);
+		//Add a hash on the entities identifier to generate an identifier which shouldnt exists.
+		//Now try to assert that loadRBEntity should return null for those identifiers
+		assertNull(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName().toURI()+ "#"));		
+	}
 	
 	
 	

@@ -6,17 +6,20 @@ package de.lichtflut.rb.web.components;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.*;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
 import junit.framework.TestCase;
+
 import org.apache.wicket.Page;
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
+import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
 
 /**
@@ -57,6 +60,7 @@ public class XHTMLValidationTest extends TestCase
 
 		
 		String body = tester.getLastResponse().getDocument();
+
 		//Try to validate the body against xhtml 1.0 strict
         try {
         	htmlPage = File.createTempFile("markup", ".test", new File("."));
@@ -67,11 +71,15 @@ public class XHTMLValidationTest extends TestCase
         	SchemaFactory factory =  SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         	
             Schema schema = factory.newSchema(schemaFile);
-            Validator validator = schema.newValidator();
-            Source source = new StreamSource(htmlPage);
 
+            
+            
+            
+            Validator validator = schema.newValidator();
+            validator.setResourceResolver(null);
+            Source source = new StreamSource(htmlPage);
+            
             validator.validate(source);
-            System.out.println(body + " is valid.");
             
             assertTrue(true);
         }

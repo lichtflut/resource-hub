@@ -11,6 +11,7 @@ import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.Statement;
+import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.QualifiedName;
@@ -20,6 +21,8 @@ import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.RBEntityImpl;
+import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
+import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 
 /**
  * Reference implementation of {@ResourceTypeManagement} for a lucence based neo4j backend
@@ -46,10 +49,9 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	// -----------------------------------------------------
 	
 	public boolean createOrUpdateRTInstance(RBEntity<Object> instance) {
-		
-		ModelingConversation mc = gate.startConversation();
-		instance.createAssociations(null);
 		try{
+			ModelingConversation mc = gate.startConversation();
+			instance.createAssociations(null);
 			mc.attach(instance);
 		}catch(Exception any){
 			return false;
@@ -156,10 +158,28 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	
 	@SuppressWarnings("unchecked")
 	public RBEntity loadRBEntity(QualifiedName qn) {
+		if(qn==null) return null;
 		ModelingConversation mc = this.gate.startConversation();
 		ResourceNode node = mc.findResource(qn);
+		if(node==null) return null;
+		//Try to find out the related RT's and Schemas
+		Set<Association> type_assocs = node.getAssociations(RDF.TYPE);
 		
-		
+		for (Association association : type_assocs) {
+			
+			if(association.getObject().isResourceNode()){
+				
+				Set<Association> potential_schemas = association.getObject().asResource().getAssociations(RBSchema.DESCRIBED_BY);
+				if(potential_schemas.size()<=0) return null;
+				
+				//There might be a resource schema, get 'dem!
+				ResourceNode schemaNode = (ResourceNode) new ArrayList<Association>(potential_schemas).get(0).getObject();
+				ResourceSchema schema = (new RBSchemaStore(this.gate).convertResourceSchema(new SNResourceSchema(schemaNode)));
+				//Build the RBEntity based on node and extracted schema
+				RBEntity entity = new RBEntityImpl(schema, node);
+				return entity;
+			}
+		}
 		
 		return null;
 	}
