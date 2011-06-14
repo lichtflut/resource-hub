@@ -6,6 +6,9 @@ package de.lichtflut.rb.core.api;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.naming.QualifiedName;
+
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
@@ -52,6 +55,46 @@ public interface RBEntityManagement extends Serializable{
 	 */
 	public boolean createOrUpdateRTInstance(RBEntity<Object> instance);
 
+	// -----------------------------------------------------
+	
+	/**
+	 * <p>
+	 * Returns a {@link RBEntity} for the given params
+	 * </p>
+	 * @param qn, the {@link QualifiedName} which has to be the ID of the RBEntity
+	 * @return the resolved {@link RBEntity}-node or
+	 * null if no {@link RBEntity} could be assigned to the params
+	 */
+	@SuppressWarnings("unchecked")
+	public RBEntity loadRBEntity(QualifiedName qn);
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * <p>
+	 * Returns a {@link RBEntity} for the given params
+	 * </p>
+	 * @param qn, the {@link String} which has to be the URI of the RBEntity
+	 * @return the resolved {@link RBEntity}-node or
+	 * null if no {@link RBEntity} could be assigned to the params
+	 */
+	@SuppressWarnings("unchecked")
+	public RBEntity loadRBEntity(String nodeIdentifier);
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * <p>
+	 * Returns a {@link RBEntity} for the given params
+	 * </p>
+	 * @param qn, the {@link ResourceNode} which has to be the Node of the RBEntity
+	 * @return the resolved {@link RBEntity}-node or
+	 * null if no {@link RBEntity} could be assigned to the params
+	 */
+	@SuppressWarnings("unchecked")
+	public RBEntity loadRBEntity(ResourceNode node);
+	
+	// -----------------------------------------------------
 	
 	/**
 	 * returns all the type-instances of the given schemas without any exceptions

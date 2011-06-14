@@ -48,7 +48,6 @@ public class ResourceSchemaParserTest extends TestCase
 		//Get ResourceSchemaTypes
 		RSParsingResult result = rManagement.generateAndResolveSchemaModelThrough(
 				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL2.osf"));
-		System.out.println(result.getErrorMessagesAsString());
 		assertFalse(result.isErrorOccured());	
 		boolean pAssertion=false;
 		for (ResourceSchema rs : result.getResourceSchemas()) {
@@ -65,7 +64,7 @@ public class ResourceSchemaParserTest extends TestCase
 				}
 			}
 			//-----------------------------
-			System.out.println(rs);	
+
 		}
 		//Check if the "http://lichtflut.de#Data"-Properties type of "http://lichtflut.de#testResource2" is Date
 		assertTrue(pAssertion);

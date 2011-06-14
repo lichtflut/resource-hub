@@ -13,6 +13,7 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.QueryManager;
 import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.schema.RBSchema;
@@ -149,6 +150,32 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 			}
 		}
 		return filter;
+	}
+
+	// -----------------------------------------------------
+	
+	@SuppressWarnings("unchecked")
+	public RBEntity loadRBEntity(QualifiedName qn) {
+		ModelingConversation mc = this.gate.startConversation();
+		ResourceNode node = mc.findResource(qn);
+		
+		
+		
+		return null;
+	}
+
+	// -----------------------------------------------------
+	
+	@SuppressWarnings("unchecked")
+	public RBEntity loadRBEntity(String nodeIdentifier) {
+		return loadRBEntity(new QualifiedName(nodeIdentifier));		
+	}
+	
+	// -----------------------------------------------------
+
+	@SuppressWarnings("unchecked")
+	public RBEntity loadRBEntity(ResourceNode node) {
+		return loadRBEntity(node.getQualifiedName());
 	}
 	
 }

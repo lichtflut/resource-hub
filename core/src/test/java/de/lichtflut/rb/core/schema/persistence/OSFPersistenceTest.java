@@ -65,16 +65,8 @@ public class OSFPersistenceTest extends TestCase{
 		assertEquals(rManagement.getAllResourceSchemas().size(),cnt_resources);
 		assertEquals(rManagement.getAllPropertyDeclarations().size(),(cnt_property_decs));
 		
-		System.out.println(rManagement.getAllResourceSchemas().toArray()[0].toString());
-		
-		Collection<PropertyDeclaration> decs = rManagement.getAllPropertyDeclarations();
-		for (PropertyDeclaration dec : decs) {
-			System.out.println(dec.toString());
-			
-		}
-		
-		
-		
+
+		Collection<PropertyDeclaration> decs = rManagement.getAllPropertyDeclarations();		
 		
 	}
 	

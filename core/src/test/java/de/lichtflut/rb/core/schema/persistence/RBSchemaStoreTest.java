@@ -46,31 +46,22 @@ public class RBSchemaStoreTest {
 		 
 		 final RBSchemaStore store = new RBSchemaStore(gate);
 		 
-		 System.out.println("----------------");
 		 Collection<PropertyDeclaration> pDecs = store.loadAllPropertyDeclarations(null);
-		 System.out.println("Amount of stored PropertyDeclarations : " + pDecs.size());
+
 		 Assert.assertEquals(0, pDecs.size());
 		 
 		 final ResourceSchema schema = createSchema();
 		 
 		 final SNResourceSchema snSchema = store.store(schema,null);
 		 
-		 System.out.println("----------------");
 		 pDecs = store.loadAllPropertyDeclarations(null);
-		 System.out.println("Amount of stored PropertyDeclarations : " + pDecs.size());
 		 Assert.assertEquals(3, pDecs.size());
-		 
-		 System.out.println(schema);
 		 
 		 Assert.assertNotNull(snSchema);
 		 		 
 		 Assert.assertEquals(3, snSchema.getPropertyAssertions().size());
-
-		 System.out.println(snSchema);
 		 
 		 ResourceSchema schema2 = store.convertResourceSchema(snSchema);
-		 
-		 System.out.println(schema2);
 		 
 		 Assert.assertNotNull(schema2);
 		 
@@ -87,17 +78,9 @@ public class RBSchemaStoreTest {
 		 //Test that there is schema for a RT, that doesnt exists
 		 Assert.assertNull(store.loadSchemaForResourceType(new SimpleResourceID(new QualifiedName("test")),null));
 		 
-		 System.out.println("----------------");
 		 pDecs = store.loadAllPropertyDeclarations(null);
-		 System.out.println("Amount of stored PropertyDeclarations : " + pDecs.size());
+
 		 Assert.assertEquals(3, pDecs.size());
-		 
-		 //Load all defined properties from store
-		 pDecs = store.loadAllPropertyDeclarations(null);
-		 System.out.println("---------");
-		 for (PropertyDeclaration pDec : pDecs) {
-			System.out.println(pDec);
-		}
 		 
 	}
 	
