@@ -5,9 +5,12 @@ package de.lichtflut.rb.core.rbentity.persistence;
 
 import java.util.Collection;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
+
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -27,8 +30,11 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
  *
  * @author Nils Bleisch
  */
-public class RBEntityTest extends TestCase{
+public class RBEntityTest {
 
+	
+	@Test
+	@Ignore
 	@SuppressWarnings("unchecked")
 	public void testResourceTypeInstance(){
 		RBServiceProvider provider = RBServiceProviderFactory.getDefaultServiceProvider();
@@ -39,7 +45,7 @@ public class RBEntityTest extends TestCase{
 		
 		//Build an instance
 		RBEntity<Object> instance = schema.generateRBEntity();
-		assertNotNull(instance);
+		Assert.assertNotNull(instance);
 		
 		try{
 			instance.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
@@ -50,14 +56,14 @@ public class RBEntityTest extends TestCase{
 			any.printStackTrace();
 		}
 		//Try to create this
-		assertTrue(provider.getRBEntityManagement().createOrUpdateRTInstance(instance));
+		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRTInstance(instance));
 		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
 		
-		assertTrue(instances.size()==1);
+		Assert.assertTrue(instances.size()==1);
 		for (RBEntity i : instances) {
-			assertTrue(i.getValuesFor("http://lichtflut.de#hatGeburtstag").contains("test1"));
-			assertTrue(i.getValuesFor("http://lichtflut.de#hatEmail").contains("test1@test.com"));
-			assertTrue(i.getValuesFor("http://lichtflut.de#hatAlter").contains("24"));
+			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatGeburtstag").contains("test1"));
+			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatEmail").contains("test1@test.com"));
+			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatAlter").contains("24"));
 		}	
 	}
 	

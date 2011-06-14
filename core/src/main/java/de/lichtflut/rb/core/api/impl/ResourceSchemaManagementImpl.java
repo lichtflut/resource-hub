@@ -30,6 +30,7 @@ import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
+import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 
 /**
  * Reference impl of {@link ResourceSchemaManagement}
@@ -198,7 +199,12 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	// -----------------------------------------------------
 
 	public ResourceSchema getResourceSchemaForResourceType(ResourceID id) {
-		return store.convertResourceSchema(store.loadSchemaForResourceType(id,null));
+		final SNResourceSchema schema = store.loadSchemaForResourceType(id,null);
+		if (schema == null) {
+			return null;
+		} else {
+			return store.convertResourceSchema(schema);
+		}
 	}
 
 	
