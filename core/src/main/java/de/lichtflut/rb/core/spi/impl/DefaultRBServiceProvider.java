@@ -67,7 +67,7 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 	/**
 	 * 
 	 */
-	public ArastrejuGate openArastejuGateInstance() {
+	public ArastrejuGate getArastejuGateInstance() {
 		return gate;
 	}
 

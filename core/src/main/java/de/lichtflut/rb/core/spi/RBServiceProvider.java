@@ -22,7 +22,7 @@ public interface RBServiceProvider {
 	/**
 	 * @return an instance of {@link ArastrejuGate} which depends on the specific ServiceProvider
 	 */
-	ArastrejuGate openArastejuGateInstance();
+	ArastrejuGate getArastejuGateInstance();
 	
 	// -----------------------------------------------------
 	
