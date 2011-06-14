@@ -3,12 +3,18 @@
  */
 package de.lichtflut.rb.web.components;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.*;
 import junit.framework.TestCase;
 import org.apache.wicket.Page;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
 import org.xml.sax.SAXException;
@@ -22,6 +28,7 @@ import org.xml.sax.SAXException;
 public class XHTMLValidationTest extends TestCase
 {
 	private WicketTester tester;
+	private File htmlPage;
 
 	@Override
 	public void setUp()
@@ -50,25 +57,35 @@ public class XHTMLValidationTest extends TestCase
 
 		
 		String body = tester.getLastResponse().getDocument();
-	
 		//Try to validate the body against xhtml 1.0 strict
         try {
+        	htmlPage = File.createTempFile("markup", ".test", new File("."));
+        	FileWriter fw = new FileWriter(htmlPage);
+        	fw.append(body).flush();
+
+        	File schemaFile =  new File("src/test/resources/xhtml1-strict.xsd");
+        	SchemaFactory factory =  SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         	
-            SchemaFactory factory =  SchemaFactory.newInstance("xhtml");
-            Schema schema = factory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream("xhtml1-strict.xsd")));
+            Schema schema = factory.newSchema(schemaFile);
             Validator validator = schema.newValidator();
-            Source source = new StreamSource(body);
+            Source source = new StreamSource(htmlPage);
+
             validator.validate(source);
             System.out.println(body + " is valid.");
+            
+            assertTrue(true);
         }
         catch (SAXException ex) {
             System.out.println(body + " is not valid because ");
             System.out.println(ex.getMessage());
-        } catch (IOException e) {
-			
+            assertTrue(false);
+        } catch (IOException e) {	
 			e.printStackTrace();
+			assertTrue(false);
 		}  
-
+        finally{
+        	htmlPage.delete();
+        }
 
 	}
 }
