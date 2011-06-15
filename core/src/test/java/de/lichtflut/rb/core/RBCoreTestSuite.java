@@ -12,7 +12,7 @@ import de.lichtflut.rb.core.schema.persistence.OSFPersistenceTest;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  [DESCRIPTION].
  * </p>
  *
  * <p>
@@ -23,7 +23,7 @@ import de.lichtflut.rb.core.schema.persistence.OSFPersistenceTest;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses( { RBEntityTest.class, OSFPersistenceTest.class })
+@SuiteClasses({RBEntityTest.class, OSFPersistenceTest.class})
 public class RBCoreTestSuite {
 
 }
