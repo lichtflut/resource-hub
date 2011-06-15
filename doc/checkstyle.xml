@@ -72,7 +72,6 @@
     <module name="VisibilityModifier"/>
     <module name="ArrayTypeStyle"/>
     <module name="FinalParameters"/>
-    <module name="TodoComment"/>
     <module name="UpperEll"/>
     <module name="MissingOverride"/>
     <module name="MissingOverride"/>
