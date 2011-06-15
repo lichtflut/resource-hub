@@ -5,9 +5,8 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: Copy of Sun Checks
-    Description: 
-Checkstyle configuration that checks the sun coding conventions.
+    Checkstyle-Configuration: plf
+    Description: none
 -->
 <module name="Checker">
   <property name="severity" value="warning"/>
@@ -105,7 +104,4 @@ Checkstyle configuration that checks the sun coding conventions.
     <property name="message" value="Line has trailing spaces."/>
   </module>
   <module name="FileLength"/>
-  <module name="Header">
-    <property name="headerFile" value="/home/raphael/Desktop/checkHeader"/>
-  </module>
 </module>
