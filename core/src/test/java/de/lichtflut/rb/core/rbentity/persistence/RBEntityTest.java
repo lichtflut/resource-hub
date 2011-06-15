@@ -25,55 +25,57 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 
 
 /**
- * Testcase to test ResourceTypeInstance- validators, ticket-algorithms and constraints
- * 
+ * Testcase to test ResourceTypeInstance- validators, ticket-algorithms and constraints.
+ *
  * Created: May 20, 2011
  *
  * @author Nils Bleisch
  */
-public class RBEntityTest {
+public final class RBEntityTest {
 
-	
+	/**
+	 * Test.
+	 */
 	@Test
 	@Ignore
 	@SuppressWarnings("unchecked")
 	public void testPersistAndFindRBEntities(){
 		RBServiceProvider provider = RBServiceProviderFactory.getDefaultServiceProvider();
-		
+
 		ResourceSchema schema = createSchema();
 		//Store the schema
 		provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(schema);
-		
+
 		//Build an instance
 		RBEntity<Object> instance = schema.generateRBEntity();
 		Assert.assertNotNull(instance);
-		
+
 		try{
 			instance.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
 			instance.addValueFor("http://lichtflut.de#hatEmail", "test1@test.com");
 			instance.addValueFor("http://lichtflut.de#hatAlter", "24");
-		
+
 		}catch(Exception any){
 			any.printStackTrace();
 		}
 		//Try to create this
 		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRTInstance(instance));
 		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
-		
+
 		Assert.assertTrue(instances.size()==1);
 		for (RBEntity i : instances) {
 			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatGeburtstag").contains("test1"));
 			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatEmail").contains("test1@test.com"));
 			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatAlter").contains("24"));
-		}	
+		}
 	}
-	
+
 	@Test
 	@Ignore
 	@SuppressWarnings("unchecked")
 	public void testPersistAndFindASpecificEntity(){
 	RBServiceProvider provider = RBServiceProviderFactory.getDefaultServiceProvider();
-		
+
 		ResourceSchema schema = createSchema();
 		//Store the schema
 		provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(schema);
@@ -84,7 +86,7 @@ public class RBEntityTest {
 			instance.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
 			instance.addValueFor("http://lichtflut.de#hatEmail", "test1@test.com");
 			instance.addValueFor("http://lichtflut.de#hatAlter", "24");
-		
+
 		}catch(Exception any){
 			any.printStackTrace();
 		}
@@ -92,32 +94,35 @@ public class RBEntityTest {
 		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
 		Assert.assertTrue(instances.size()==1);
 		RBEntity entity = new ArrayList<RBEntity>(instances).get(0);
-		
+
 		//Made some proofs
-		
+
 		Assert.assertEquals(provider.getRBEntityManagement().loadRBEntity(entity), entity);
 		Assert.assertEquals(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName()), entity);
 		Assert.assertEquals(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName().toURI()), entity);
 		//Add a hash on the entities identifier to generate an identifier which shouldnt exists.
 		//Now try to assert that loadRBEntity should return null for those identifiers
-		Assert.assertNull(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName().toURI()+ "#"));		
+		Assert.assertNull(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName().toURI()+ "#"));
 	}
-	
-	
-	
+
+
+	/**
+	 * Tests.
+	 * @return shema
+	 */
 	private ResourceSchema createSchema() {
 		ResourceSchemaImpl schema = new ResourceSchemaImpl("http://lichtflut.de#","personschema");
-		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl(); 
-		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl(); 
-		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl(); 
+		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
 		p1.setName("http://lichtflut.de#geburtsdatum");
 		p2.setName("http://lichtflut.de#email");
 		p3.setName("http://lichtflut.de#alter");
-		
+
 		p1.setElementaryDataType(ElementaryDataType.STRING);
 		p2.setElementaryDataType(ElementaryDataType.STRING);
 		p3.setElementaryDataType(ElementaryDataType.INTEGER);
-		
+
 		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
 		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
@@ -125,12 +130,12 @@ public class RBEntityTest {
 		pa1.setCardinality(CardinalityFactory.hasExcactlyOne());
 		pa2.setCardinality(CardinalityFactory.hasAtLeastOneUpTo(2));
 		pa3.setCardinality(CardinalityFactory.hasExcactlyOne());
-		
+
 		schema.addPropertyAssertion(pa1);
 		schema.addPropertyAssertion(pa2);
 		schema.addPropertyAssertion(pa3);
-		
+
 		return schema;
 	}
-	
+
 }

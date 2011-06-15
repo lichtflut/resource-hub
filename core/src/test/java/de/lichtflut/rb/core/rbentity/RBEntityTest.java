@@ -18,28 +18,31 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 
 
 /**
- * Testcase to test ResourceTypeInstance- validators, ticket-algorithms and constraints
- * 
+ * Testcase to test ResourceTypeInstance- validators, ticket-algorithms and constraints.
+ *
  * Created: May 20, 2011
  *
  * @author Nils Bleisch
  */
 public class RBEntityTest {
 
-	public void testResourceTypeInstance(){
+	/**
+	 * @param
+	 */
+	public final void testResourceTypeInstance(){
 		//Generate an instance for a given schema
 		RBEntity<Object> instance = createSchema().generateRBEntity();
 		Assert.assertNotNull(instance);
-		
+
 		//Generate some tickets for fields
-		
+
 		int ticket_hatGeburtstag1 =-1,
 			ticket_hatGeburtstag2 =-1, //hatGeburtstag is a hasExacltyOne Property
 			ticket_unknownAttribute =-1, //This attribute does not exists
 			ticket_hatEmail1 = -1,
 			ticket_hatEmail2 = -1,
 			ticket_hatAlter = -1;
-		
+
 		try {
 			ticket_hatGeburtstag1 = instance.generateTicketFor("http://lichtflut.de#hatGeburtstag");
 			ticket_hatEmail1 = instance.generateTicketFor("http://lichtflut.de#hatEmail");
@@ -55,29 +58,32 @@ public class RBEntityTest {
 		boolean exceptionOccured=false;
 		try {
 			instance.addValueFor("http://lichtflut.de#hatGeburtstag", "test", ticket_hatGeburtstag1);
-			Assert.assertTrue((instance.getValueFor("http://lichtflut.de#hatGeburtstag", ticket_hatGeburtstag1)).equals("test"));
+			Assert.assertTrue((instance.getValueFor("http://lichtflut.de#hatGeburtstag",
+					ticket_hatGeburtstag1)).equals("test"));
 			//Try to revoke the ticket, which should not be possible caused by the hasExacltyOneCardinality
 			exceptionOccured=true;
 			instance.releaseTicketFor("http://lichtflut.de#hatGeburtstag", ticket_hatGeburtstag1);
 			exceptionOccured=false;
 		} catch (Exception e) {
-		} 
+			e.printStackTrace();
+		}
 		Assert.assertTrue(exceptionOccured);
 		exceptionOccured=false;
-		
+
 		int ticket_hatEmail3 = -1;
-		
+
 		try{
 			/*Try to generate a new Ticket for hatEmail, which should not be possible,
 			 * because there are already two existing ones, which is the maximum
 			 */
 			ticket_hatEmail3 = instance.generateTicketFor("http://lichtflut.de#hatEmail");
 		}catch(Exception any){
+			any.printStackTrace();
 		}
 		//ticket_hatEmail3 must be still on it's intial value '-1'
 		Assert.assertTrue(ticket_hatEmail3==-1);
-		
-		
+
+
 		try{
 			exceptionOccured=true;
 			instance.addValueFor("http://lichtflut.de#hatEmail", "email@1", ticket_hatEmail1);
@@ -95,7 +101,7 @@ public class RBEntityTest {
 		}
 		Assert.assertFalse(exceptionOccured);
 		exceptionOccured=false;
-		
+
 		try{
 			Assert.assertNull((instance.getValueFor("http://lichtflut.de#hatEmail", ticket_hatEmail3)));
 			instance.addValueFor("http://lichtflut.de#hatEmail", "email@3", ticket_hatEmail3);
@@ -103,38 +109,41 @@ public class RBEntityTest {
 		}catch(Exception any){
 			any.printStackTrace();
 		}
-		
-		
+
+
 		//Check the build-in validation stuff. hatAlter's Datatype is Integer, let's try to add an alphanumeric string
-		
+
 		String message="";
 		try{
 			instance.addValueFor("http://lichtflut.de#hatAlter", "abc0153", ticket_hatAlter);
 		}catch(Exception any){
 			message = any.getMessage();
 		}
-		Assert.assertTrue(message.toLowerCase().contains("is not a valid value for the expected type integer")); 
+		Assert.assertTrue(message.toLowerCase().contains("is not a valid value for the expected type integer"));
 		Assert.assertNull(instance.getValueFor("http://lichtflut.de#hatAlter", ticket_hatAlter));
-		
-		
+
+
 	}
-	
-	
-	
-	
+
+
+
+	/**
+	 * @param
+	 * @return shema
+	 */
 	private ResourceSchema createSchema() {
 		ResourceSchemaImpl schema = new ResourceSchemaImpl("http://lichtflut.de#","personschema");
-		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl(); 
-		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl(); 
-		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl(); 
+		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
 		p1.setName("http://lichtflut.de#geburtsdatum");
 		p2.setName("http://lichtflut.de#email");
 		p3.setName("http://lichtflut.de#alter");
-		
+
 		p1.setElementaryDataType(ElementaryDataType.STRING);
 		p2.setElementaryDataType(ElementaryDataType.STRING);
 		p3.setElementaryDataType(ElementaryDataType.INTEGER);
-		
+
 		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
 		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
@@ -142,12 +151,12 @@ public class RBEntityTest {
 		pa1.setCardinality(CardinalityFactory.hasExcactlyOne());
 		pa2.setCardinality(CardinalityFactory.hasAtLeastOneUpTo(2));
 		pa3.setCardinality(CardinalityFactory.hasExcactlyOne());
-		
+
 		schema.addPropertyAssertion(pa1);
 		schema.addPropertyAssertion(pa2);
 		schema.addPropertyAssertion(pa3);
-		
+
 		return schema;
 	}
-	
+
 }
