@@ -25,8 +25,11 @@ import org.antlr.runtime.tree.*;
 
 public class ResourceSchemaParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "PROPERTY_DEC", "IDENT", "BRACKET_OPEN", "BRACKET_CLOSED", "TYPE_DEC", "REGEX_DEC", "RESOURCE_DEC", "CARDINALITY", "INT", "NUMERIC", "TEXT", "LOGICAL", "DELIM", "STRING", "WS", "'\"'", "'references'", "'AND'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "PROPERTY_DEC", "IDENT", "BRACKET_OPEN",
+        "BRACKET_CLOSED", "TYPE_DEC", "REGEX_DEC", "RESOURCE_DEC", "CARDINALITY", "INT",
+        "NUMERIC", "TEXT", "LOGICAL", "DELIM", "STRING", "WS", "'\"'", "'references'", "'AND'"
     };
+
     public static final int PROPERTY_DEC=4;
     public static final int T__21=21;
     public static final int T__20=20;
@@ -54,11 +57,10 @@ public class ResourceSchemaParser extends Parser {
     public ResourceSchemaParser(TokenStream input) {
         this(input, new RecognizerSharedState());
     }
-    
+
     public ResourceSchemaParser(TokenStream input, RecognizerSharedState state) {
         super(input, state);
     }
-        
     protected TreeAdaptor adaptor = new CommonTreeAdaptor();
 
     public void setTreeAdaptor(TreeAdaptor adaptor) {
@@ -82,9 +84,6 @@ public class ResourceSchemaParser extends Parser {
         public void emitErrorMessage(String msg) {
             errorReporter.reportError(msg);
         }
-    	
-    	
-
 
     public static class dsl_return extends ParserRuleReturnScope {
         public Set<ResourceSchemaType> types;
@@ -193,7 +192,8 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "property"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:65:1: property returns [PropertyDeclaration property] : PROPERTY_DEC IDENT BRACKET_OPEN ( propertyDeclaration )* BRACKET_CLOSED ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:65:1: property returns [PropertyDeclaration
+//    property] : PROPERTY_DEC IDENT BRACKET_OPEN ( propertyDeclaration )* BRACKET_CLOSED ;
     public final ResourceSchemaParser.property_return property() throws RecognitionException {
         ResourceSchemaParser.property_return retval = new ResourceSchemaParser.property_return();
         retval.start = input.LT(1);
@@ -214,22 +214,23 @@ public class ResourceSchemaParser extends Parser {
 
         this.property = new PropertyDeclarationImpl();
         try {
-            // de/lichtflut/rb/core/schema/ResourceSchema.g:68:3: ( PROPERTY_DEC IDENT BRACKET_OPEN ( propertyDeclaration )* BRACKET_CLOSED )
+            // de/lichtflut/rb/core/schema/ResourceSchema.g:68:3:
+//        	( PROPERTY_DEC IDENT BRACKET_OPEN ( propertyDeclaration )* BRACKET_CLOSED )
             // de/lichtflut/rb/core/schema/ResourceSchema.g:68:6: PROPERTY_DEC IDENT BRACKET_OPEN ( propertyDeclaration )* BRACKET_CLOSED
             {
             root_0 = (CommonTree)adaptor.nil();
 
             retval.property = this.property;
-            PROPERTY_DEC3=(Token)match(input,PROPERTY_DEC,FOLLOW_PROPERTY_DEC_in_property130); 
+            PROPERTY_DEC3=(Token)match(input,PROPERTY_DEC,FOLLOW_PROPERTY_DEC_in_property130);
             PROPERTY_DEC3_tree = (CommonTree)adaptor.create(PROPERTY_DEC3);
             adaptor.addChild(root_0, PROPERTY_DEC3_tree);
 
-            IDENT4=(Token)match(input,IDENT,FOLLOW_IDENT_in_property132); 
+            IDENT4=(Token)match(input,IDENT,FOLLOW_IDENT_in_property132);
             IDENT4_tree = (CommonTree)adaptor.create(IDENT4);
             adaptor.addChild(root_0, IDENT4_tree);
 
             retval.property.setIdentifier((IDENT4!=null?IDENT4.getText():null));
-            BRACKET_OPEN5=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_property139); 
+            BRACKET_OPEN5=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_property139);
             BRACKET_OPEN5_tree = (CommonTree)adaptor.create(BRACKET_OPEN5);
             adaptor.addChild(root_0, BRACKET_OPEN5_tree);
 
@@ -263,7 +264,7 @@ public class ResourceSchemaParser extends Parser {
                 }
             } while (true);
 
-            BRACKET_CLOSED7=(Token)match(input,BRACKET_CLOSED,FOLLOW_BRACKET_CLOSED_in_property146); 
+            BRACKET_CLOSED7=(Token)match(input,BRACKET_CLOSED,FOLLOW_BRACKET_CLOSED_in_property146);
             BRACKET_CLOSED7_tree = (CommonTree)adaptor.create(BRACKET_CLOSED7);
             adaptor.addChild(root_0, BRACKET_CLOSED7_tree);
 
@@ -296,7 +297,8 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "propertyDeclaration"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:74:1: propertyDeclaration returns [PropertyDeclaration property] : ( typeDeclaration | regexDeclaration ) ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:74:1: propertyDeclaration
+//    returns [PropertyDeclaration property] : ( typeDeclaration | regexDeclaration ) ;
     public final ResourceSchemaParser.propertyDeclaration_return propertyDeclaration() throws RecognitionException {
         ResourceSchemaParser.propertyDeclaration_return retval = new ResourceSchemaParser.propertyDeclaration_return();
         retval.start = input.LT(1);
@@ -410,7 +412,7 @@ public class ResourceSchemaParser extends Parser {
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            TYPE_DEC10=(Token)match(input,TYPE_DEC,FOLLOW_TYPE_DEC_in_typeDeclaration193); 
+            TYPE_DEC10=(Token)match(input,TYPE_DEC,FOLLOW_TYPE_DEC_in_typeDeclaration193);
             TYPE_DEC10_tree = (CommonTree)adaptor.create(TYPE_DEC10);
             adaptor.addChild(root_0, TYPE_DEC10_tree);
 
@@ -425,7 +427,7 @@ public class ResourceSchemaParser extends Parser {
                 case 1 :
                     // de/lichtflut/rb/core/schema/ResourceSchema.g:87:8: '\"'
                     {
-                    char_literal11=(Token)match(input,19,FOLLOW_19_in_typeDeclaration202); 
+                    char_literal11=(Token)match(input,19,FOLLOW_19_in_typeDeclaration202);
                     char_literal11_tree = (CommonTree)adaptor.create(char_literal11);
                     adaptor.addChild(root_0, char_literal11_tree);
 
@@ -513,20 +515,20 @@ public class ResourceSchemaParser extends Parser {
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            REGEX_DEC14=(Token)match(input,REGEX_DEC,FOLLOW_REGEX_DEC_in_regexDeclaration245); 
+            REGEX_DEC14=(Token)match(input,REGEX_DEC,FOLLOW_REGEX_DEC_in_regexDeclaration245);
             REGEX_DEC14_tree = (CommonTree)adaptor.create(REGEX_DEC14);
             adaptor.addChild(root_0, REGEX_DEC14_tree);
 
-            char_literal15=(Token)match(input,19,FOLLOW_19_in_regexDeclaration252); 
+            char_literal15=(Token)match(input,19,FOLLOW_19_in_regexDeclaration252);
             char_literal15_tree = (CommonTree)adaptor.create(char_literal15);
             adaptor.addChild(root_0, char_literal15_tree);
 
-            IDENT16=(Token)match(input,IDENT,FOLLOW_IDENT_in_regexDeclaration260); 
+            IDENT16=(Token)match(input,IDENT,FOLLOW_IDENT_in_regexDeclaration260);
             IDENT16_tree = (CommonTree)adaptor.create(IDENT16);
             adaptor.addChild(root_0, IDENT16_tree);
 
             this.property.addConstraint(ConstraintFactory.buildConstraint((IDENT16!=null?IDENT16.getText():null)));
-            char_literal17=(Token)match(input,19,FOLLOW_19_in_regexDeclaration269); 
+            char_literal17=(Token)match(input,19,FOLLOW_19_in_regexDeclaration269);
             char_literal17_tree = (CommonTree)adaptor.create(char_literal17);
             adaptor.addChild(root_0, char_literal17_tree);
 
@@ -592,7 +594,7 @@ public class ResourceSchemaParser extends Parser {
             adaptor.addChild(root_0, IDENT19_tree);
 
             this.resource = new ResourceSchemaImpl(IDENT19.getText()); retval.resource = this.resource;
-            BRACKET_OPEN20=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_resource307); 
+            BRACKET_OPEN20=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_resource307);
             BRACKET_OPEN20_tree = (CommonTree)adaptor.create(BRACKET_OPEN20);
             adaptor.addChild(root_0, BRACKET_OPEN20_tree);
 
@@ -602,7 +604,7 @@ public class ResourceSchemaParser extends Parser {
             state._fsp--;
 
             adaptor.addChild(root_0, resourceDeclaration21.getTree());
-            BRACKET_CLOSED22=(Token)match(input,BRACKET_CLOSED,FOLLOW_BRACKET_CLOSED_in_resource311); 
+            BRACKET_CLOSED22=(Token)match(input,BRACKET_CLOSED,FOLLOW_BRACKET_CLOSED_in_resource311);
             BRACKET_CLOSED22_tree = (CommonTree)adaptor.create(BRACKET_CLOSED22);
             adaptor.addChild(root_0, BRACKET_CLOSED22_tree);
 
@@ -675,7 +677,7 @@ public class ResourceSchemaParser extends Parser {
 
             	    adaptor.addChild(root_0, cardinality23.getTree());
             	    Cardinality cardinality = (cardinality23!=null?cardinality23.cardinality:null);
-            	    IDENT24=(Token)match(input,IDENT,FOLLOW_IDENT_in_resourceDeclaration333); 
+            	    IDENT24=(Token)match(input,IDENT,FOLLOW_IDENT_in_resourceDeclaration333);
             	    IDENT24_tree = (CommonTree)adaptor.create(IDENT24);
             	    adaptor.addChild(root_0, IDENT24_tree);
 
@@ -735,11 +737,11 @@ public class ResourceSchemaParser extends Parser {
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            string_literal25=(Token)match(input,20,FOLLOW_20_in_referenceDeclaration363); 
+            string_literal25=(Token)match(input,20,FOLLOW_20_in_referenceDeclaration363);
             string_literal25_tree = (CommonTree)adaptor.create(string_literal25);
             adaptor.addChild(root_0, string_literal25_tree);
 
-            IDENT26=(Token)match(input,IDENT,FOLLOW_IDENT_in_referenceDeclaration365); 
+            IDENT26=(Token)match(input,IDENT,FOLLOW_IDENT_in_referenceDeclaration365);
             IDENT26_tree = (CommonTree)adaptor.create(IDENT26);
             adaptor.addChild(root_0, IDENT26_tree);
 
@@ -771,7 +773,8 @@ public class ResourceSchemaParser extends Parser {
     };
 
     // $ANTLR start "cardinality"
-    // de/lichtflut/rb/core/schema/ResourceSchema.g:123:1: cardinality returns [Cardinality cardinality] : c1= cardinalityDeclaration ( 'AND' cn= cardinalityDeclaration )* ;
+    // de/lichtflut/rb/core/schema/ResourceSchema.g:123:1: cardinality returns
+    // [Cardinality cardinality] : c1= cardinalityDeclaration ( 'AND' cn= cardinalityDeclaration )* ;
     @SuppressWarnings("unchecked")
 	public final ResourceSchemaParser.cardinality_return cardinality() throws RecognitionException {
         ResourceSchemaParser.cardinality_return retval = new ResourceSchemaParser.cardinality_return();
@@ -816,7 +819,7 @@ public class ResourceSchemaParser extends Parser {
             	case 1 :
             	    // de/lichtflut/rb/core/schema/ResourceSchema.g:126:7: 'AND' cn= cardinalityDeclaration
             	    {
-            	    string_literal27=(Token)match(input,21,FOLLOW_21_in_cardinality403); 
+            	    string_literal27=(Token)match(input,21,FOLLOW_21_in_cardinality403);
             	    pushFollow(FOLLOW_cardinalityDeclaration_in_cardinality409);
             	    cn=cardinalityDeclaration();
 
@@ -881,11 +884,11 @@ public class ResourceSchemaParser extends Parser {
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            CARDINALITY28=(Token)match(input,CARDINALITY,FOLLOW_CARDINALITY_in_cardinalityDeclaration440); 
+            CARDINALITY28=(Token)match(input,CARDINALITY,FOLLOW_CARDINALITY_in_cardinalityDeclaration440);
             CARDINALITY28_tree = (CommonTree)adaptor.create(CARDINALITY28);
             adaptor.addChild(root_0, CARDINALITY28_tree);
 
-            INT29=(Token)match(input,INT,FOLLOW_INT_in_cardinalityDeclaration443); 
+            INT29=(Token)match(input,INT,FOLLOW_INT_in_cardinalityDeclaration443);
             INT29_tree = (CommonTree)adaptor.create(INT29);
             adaptor.addChild(root_0, INT29_tree);
 
@@ -968,7 +971,7 @@ public class ResourceSchemaParser extends Parser {
                 case 1 :
                     // de/lichtflut/rb/core/schema/ResourceSchema.g:140:3: NUMERIC
                     {
-                    NUMERIC30=(Token)match(input,NUMERIC,FOLLOW_NUMERIC_in_datatype466); 
+                    NUMERIC30=(Token)match(input,NUMERIC,FOLLOW_NUMERIC_in_datatype466);
                     NUMERIC30_tree = (CommonTree)adaptor.create(NUMERIC30);
                     adaptor.addChild(root_0, NUMERIC30_tree);
 
@@ -979,7 +982,7 @@ public class ResourceSchemaParser extends Parser {
                 case 2 :
                     // de/lichtflut/rb/core/schema/ResourceSchema.g:142:3: TEXT
                     {
-                    TEXT31=(Token)match(input,TEXT,FOLLOW_TEXT_in_datatype476); 
+                    TEXT31=(Token)match(input,TEXT,FOLLOW_TEXT_in_datatype476);
                     TEXT31_tree = (CommonTree)adaptor.create(TEXT31);
                     adaptor.addChild(root_0, TEXT31_tree);
 
@@ -990,7 +993,7 @@ public class ResourceSchemaParser extends Parser {
                 case 3 :
                     // de/lichtflut/rb/core/schema/ResourceSchema.g:144:3: LOGICAL
                     {
-                    LOGICAL32=(Token)match(input,LOGICAL,FOLLOW_LOGICAL_in_datatype486); 
+                    LOGICAL32=(Token)match(input,LOGICAL,FOLLOW_LOGICAL_in_datatype486);
                     LOGICAL32_tree = (CommonTree)adaptor.create(LOGICAL32);
                     adaptor.addChild(root_0, LOGICAL32_tree);
 

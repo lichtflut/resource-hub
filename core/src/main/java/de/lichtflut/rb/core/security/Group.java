@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.security;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  TODO: [DESCRIPTION].
  * </p>
  *
  * <p>
@@ -17,5 +17,5 @@ package de.lichtflut.rb.core.security;
 public interface Group {
 
 	String getDescription();
-	
+
 }

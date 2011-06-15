@@ -34,53 +34,52 @@ public class RSParsingResultImpl implements RSParsingResult{
 	private RSErrorLevel level = RSErrorLevel.ALL;
 
 	// -----------------------------------------------------
-	
+
 	public void setPropertyDeclarations(
 			Collection<PropertyDeclaration> propertiesDeclarations) {
 		this.propertiesDeclarations = propertiesDeclarations;
 	}
 
 	// -----------------------------------------------------
-	
+
 	public void addPropertyDeclaration(PropertyDeclaration property) {
 		this.propertiesDeclarations.add(property);
 	}
 
 	// -----------------------------------------------------
-	
+
 	public void addResourceSchema(ResourceSchema schema) {
 		this.resourceSchemas.add(schema);
 	}
 
 	// -----------------------------------------------------
-	
 
 	public void setErrorLevel(RSErrorLevel lvl){
 		this.level = lvl;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Logs this message with the pre-defined ErrorLevel 
+	 * Logs this message with the pre-defined ErrorLevel.
 	 */
 	public void setErrorMessages(Collection<String> errorMessages) {
 		this.setErrorMessages(errorMessages, this.level);
 	}
 
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Logs this message with the explicit given ErrorLevel
+	 * Logs this message with the explicit given ErrorLevel.
 	 */
 	public void addErrorMessage(String message, RSErrorLevel lvl){
 		this.errorMessages.add(new Error(lvl, message));
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Logs this messages with the explicit given ErrorLevel
+	 * Logs this messages with the explicit given ErrorLevel.
 	 */
 	public void setErrorMessages(Collection<String> errorMessages, RSErrorLevel lvl) {
 		this.errorMessages = new LinkedList<Error>();
@@ -91,14 +90,14 @@ public class RSParsingResultImpl implements RSParsingResult{
 
 	// -----------------------------------------------------
 	/**
-	 * Logs this message with the pre-defined ErrorLevel 
+	 * Logs this message with the pre-defined ErrorLevel.
 	 */
 	public void addErrorMessage(String message){
 		this.addErrorMessage(message, this.level);
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	public void setResourceSchemas(Collection<ResourceSchema> resourceSchemas) {
 		this.resourceSchemas = resourceSchemas;
 	}
@@ -110,7 +109,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 		if(isErrorOccured()) return Collections.emptySet();
 		return getPropertyDeclarationsIgnoreErrors();
 	}
-	
+
 	// -----------------------------------------------------
 
 	public Collection<PropertyDeclaration> getPropertyDeclarationsIgnoreErrors() {
@@ -119,7 +118,6 @@ public class RSParsingResultImpl implements RSParsingResult{
 
 	// -----------------------------------------------------
 
-	
 	public Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssocIgnoreErrors(){
 		Collection<PropertyDeclaration> output = new HashSet<PropertyDeclaration>();
 		//Get all propertyDecs assigned to the ResourceSchema
@@ -128,70 +126,69 @@ public class RSParsingResultImpl implements RSParsingResult{
 				output.add(assertion.getPropertyDeclaration());
 			}
 		}//End of outer for
-		
+
 		for (PropertyDeclaration pDec : this.propertiesDeclarations) {
-			if(output.contains(pDec)) output.remove(pDec);
+			if(output.contains(pDec)) {output.remove(pDec);}
 		}
 		return output;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	public Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssoc() {
 		//return an empty collection if an error is occured
-		if(isErrorOccured()) return Collections.emptySet();
+		if(isErrorOccured()){ return Collections.emptySet();}
 		return getPropertyDeclarationsWithoutResourceAssocIgnoreErrors();
 	}
 
 	// -----------------------------------------------------
-	
+
 	public Collection<ResourceSchema> getResourceSchemasIgnoreErrors() {
 		return this.resourceSchemas;
 	}
 
 	// -----------------------------------------------------
-	
+
 	public Collection<ResourceSchema> getResourceSchemas() {
 		//return an empty collection if an error is occured
-		if(isErrorOccured()) return Collections.emptySet();
+		if(isErrorOccured()) {return Collections.emptySet();}
 		return getResourceSchemasIgnoreErrors();
 	}
 
-	
 	// -----------------------------------------------------
-	
+
 	public boolean isErrorOccured() {
-		if(this.errorMessages.size()!=0) return true;
+		if(this.errorMessages.size()!=0) {return true;}
 		return false;
 	}
 
 	// -----------------------------------------------------
-	
+
 	/**
 	 * duplicated properties has to be eliminated while merging. Therefore, both Collections are LinkedHashSets
 	 * and PropertyDeclaration and ResourceSchema have to override the equals-method.
 	 */
 	public void merge(RSParsingResult result) {
-		
-		if(!result.getErrorMessages().equals("")) this.errorMessages.addAll(((RSParsingResultImpl) result).errorMessages);
+
+		if(!result.getErrorMessages().equals("")) {this.errorMessages.addAll(((RSParsingResultImpl) result).errorMessages);}
 		this.getPropertyDeclarationsIgnoreErrors().addAll(result.getPropertyDeclarationsIgnoreErrors());
 		this.getResourceSchemasIgnoreErrors().addAll(result.getResourceSchemasIgnoreErrors());
 	}
 
 	// -----------------------------------------------------
-	
+
 	public String getErrorMessagesAsString() {
 		return getErrorMessagesAsString(this.level);
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	public Collection<String> getErrorMessages(){
 		return getErrorMessages(this.level);
 	}
 
 	// -----------------------------------------------------
-	
+
 	public Collection<String> getErrorMessages(RSErrorLevel filter) {
 		Collection<String> output = new LinkedList<String>();
 		for (Error error : this.errorMessages) {
@@ -204,13 +201,13 @@ public class RSParsingResultImpl implements RSParsingResult{
 	}
 
 	// -----------------------------------------------------
-	
+
 	public String getErrorMessagesAsString(RSErrorLevel filter) {
 		return this.getErrorMessagesAsString("\n", filter);
 	}
 
 	// -----------------------------------------------------
-	
+
 	public String getErrorMessagesAsString(String delim, RSErrorLevel filter) {
 		Collection<String> messages = getErrorMessages(filter);
 		StringBuilder sBuilder = new StringBuilder();
@@ -223,9 +220,9 @@ public class RSParsingResultImpl implements RSParsingResult{
 	public String getErrorMessagesAsString(String delim) {
 		return this.getErrorMessagesAsString(delim, this.level);
 	}
-	
+
 	/**
-	 * Awesome tuple class, acts as tuple and is just needed here. 
+	 * Awesome tuple class, acts as tuple and is just needed here.
 	 */
 	class Error { 
 		  private RSErrorLevel lvl; 
@@ -233,13 +230,12 @@ public class RSParsingResultImpl implements RSParsingResult{
 		  public Error(RSErrorLevel lvl,String message) { 
 		    this.lvl = lvl; 
 		    this.message = message; 
-		  } 
+		  }
 		  public String getMessage() { 
 		    return this.message; 
-		  } 
+		  }
 		  public RSErrorLevel getErrorLevel() { 
 		    return this.lvl; 
-		  } 
+		  }
 		}//End of class Error 
-	
 }

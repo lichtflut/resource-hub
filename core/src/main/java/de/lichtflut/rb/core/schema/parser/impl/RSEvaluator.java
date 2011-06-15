@@ -7,18 +7,18 @@ import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 
 
 /**
- * Still provides the GOF-Interpreter pattern for some parsing stuff
- * 
- * 
+ * Still provides the GOF-Interpreter pattern for some parsing stuff.
+ *
+ *
  * Created: Apr 28, 2011
  *
  * @author Nils Bleisch
  */
 public interface RSEvaluator<E extends ResourceSchemaType> {
-	
+
 	boolean evaluate(E param);
-	
+
 	// -----------------------------------------------------
-	
+
 	E getResult();
 }

@@ -34,9 +34,9 @@ import de.lichtflut.rb.core.schema.RBSchema;
 
 /**
  * <p>
- * Represents the declaration of a Property, which can be assigned to a Class
+ * Represents the declaration of a Property, which can be assigned to a Class.
  * <p>
- * 
+ *
  * <p>
  * Consists of a property and constraints:
  * <ul>
@@ -44,7 +44,7 @@ import de.lichtflut.rb.core.schema.RBSchema;
  *  <li> datatype</li>
  *  <li> constraints</li>
  * </ul>
- * 
+ *
  * 	Created: 20.01.2009
  * </p>
  *
@@ -58,7 +58,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	public SNPropertyDeclaration(final Context context) {
 		Association.create(this, RDF.TYPE, RBSchema.PROPERTY_DECL,context);
 	}
-	
+
 	/**
 	 * Creates a view for given resource.
 	 * @param resource
@@ -66,7 +66,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	public SNPropertyDeclaration(final ResourceNode resource) {
 		super(resource);
 	}
-	
+
 	// -----------------------------------------------------
 
 	/**
@@ -75,12 +75,12 @@ public class SNPropertyDeclaration extends ResourceView {
 	public ResourceID getIdentifier() {
 		return this.getResource();
 	}
-	
+
 	public void setIdentifier(final ResourceID id, final Context context) {
 		this.setName(id.getName());
 		this.setNamespace(id.getNamespace());
 	}
-	
+
 	public ElementaryDataType getDatatype() {
 		SemanticNode type = getSingleAssociationClient(RBSchema.HAS_DATATYPE);
 		if (type != null) {
@@ -90,17 +90,17 @@ public class SNPropertyDeclaration extends ResourceView {
 			return null;
 		}
 	}
-	
+
 	public void setDatatype(final ElementaryDataType type, final Context context) {
 		if (!Infra.equals(getDatatype(), type)){
 			removeAssocs(RBSchema.HAS_DATATYPE);
 			Association.create(this, RBSchema.HAS_DATATYPE, new SNText(type.name()), context);
 		}
 	}
-	
+
 	/**
 	 * Add a literal constraint to this Property Declaration.
-	 * @param contraint The literal constraint, e.g. a RegEX Pattern.
+	 * @param constraint The literal constraint, e.g. a RegEX Pattern.
 	 * @param context The context.
 	 * @return The constraint node.
 	 */
@@ -109,7 +109,7 @@ public class SNPropertyDeclaration extends ResourceView {
 		Association.create(this, RBSchema.HAS_LITERAL_CONSTRAINT, constraintNode, context);
 		return constraintNode;
 	}
-	
+
 	/**
 	 * Add a type constraint to this Property Declaration.
 	 * @param constraint The type constraint.
@@ -121,7 +121,7 @@ public class SNPropertyDeclaration extends ResourceView {
 		Association.create(this, RBSchema.HAS_TYPE_CONSTRAINT, constraintNode, context);
 		return constraintNode;
 	}
-	
+
 	/**
 	 * Get all constraints of this Property Declaration.
  	 * @return The set of all constraints.
@@ -139,9 +139,9 @@ public class SNPropertyDeclaration extends ResourceView {
 		}
 		return result;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/* (non-Javadoc)
 	 * @see org.arastreju.sge.model.nodes.views.ResourceView#toString()
 	 */
@@ -157,9 +157,9 @@ public class SNPropertyDeclaration extends ResourceView {
 		sb.append(" " + getConstraints());
 		return sb.toString();
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * Removes all associations with given predicate.
 	 * @param predicate The predicate.
@@ -170,5 +170,4 @@ public class SNPropertyDeclaration extends ResourceView {
 			revoke(assoc);
 		}
 	}
-	
 }

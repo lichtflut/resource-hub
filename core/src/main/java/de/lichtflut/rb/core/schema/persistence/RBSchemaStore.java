@@ -47,33 +47,32 @@ import de.lichtflut.rb.core.schema.parser.RSFormat;
  * @author Oliver Tigges
  */
 public class RBSchemaStore {
-	
+
 	private final ArastrejuGate gate;
 
 
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Constructor. 
+	 * Constructor.
 	 */
 	public RBSchemaStore(final ArastrejuGate gate) {
 		this.gate = gate;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * Store the given schema.
 	 * @param ctx The context.
 	 * @return The corresponding persistence Resource Schema Node.
 	 */
 	public SNResourceSchema store(final ResourceSchema schema, Context ctx) {
-		ctx = setUpContext(ctx);		
+		ctx = setUpContext(ctx);
 		/*
 		 * How can we check if this schema does exists, and if so, replace it with the new one
 		 * SNResourceSchema snSchema = loadSchemaForResource(schema.getDescribedResourceID());
-		 * 
-		 * 
+		 *
 		 */
 		SNResourceSchema snSchema;
 		snSchema = this.loadSchemaForResourceType(schema.getDescribedResourceID(), ctx);
@@ -84,7 +83,7 @@ public class RBSchemaStore {
 				snSchema = new SNResourceSchema(ctx);
 			}
 		}
-		
+
 		//TODO: This is not the right way to do it. Some Assocaitons (PAssertion -> PDEc) will still stay there
 		//without any primary references
 		//Remove all old associations
@@ -92,11 +91,11 @@ public class RBSchemaStore {
 		for (Association assoc : assertions) {
 			snSchema.remove(assoc);
 		}
-		
+
 		//TODO: Resolve from store
 		ResourceNode describedResource = schema.getDescribedResourceID().asResource();
 		snSchema.setDescribedClass(describedResource, ctx);
-		
+
 		final ModelingConversation mc = gate.startConversation();
 		for (PropertyAssertion assertion : schema.getPropertyAssertions()) {
 			final SNPropertyAssertion snAssertion = new SNPropertyAssertion();
@@ -107,15 +106,15 @@ public class RBSchemaStore {
 			addDeclaration(snAssertion, assertion.getPropertyDeclaration(), ctx);
 		}
 		mc.attach(snSchema);
-		
+
 		return snSchema;
 	}
-	
 
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Loads all defined and persisted PropertyDeclarations from System
+	 * Loads all defined and persisted PropertyDeclarations from System.
+	 * @return Returns all propertydeclarations
 	 */
 	public Collection<PropertyDeclaration> loadAllPropertyDeclarations(Context ctx){
 		ctx = setUpContext(ctx);
@@ -124,16 +123,16 @@ public class RBSchemaStore {
 		QueryManager qManager = this.gate.startConversation().createQueryManager();
 		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.PROPERTY_DECL);
 		for (Statement stmt : statements) {
-			if(stmt==null) continue;
+			if(stmt==null){continue;}
 			output.add(convertPropertyDeclaration(new SNPropertyDeclaration((ResourceNode) stmt.getSubject())));
 		}
 		return output;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Loads all defined and persisted ResourceSchema'S from System
+	 * Loads all defined and persisted ResourceSchema'S from System.
 	 */
 	public Collection<ResourceSchema> loadAllResourceSchemas(Context ctx){
 		ctx = setUpContext(ctx);
@@ -142,20 +141,18 @@ public class RBSchemaStore {
 		QueryManager qManager = this.gate.startConversation().createQueryManager();
 		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.RESOURCE_SCHEMA);
 		for (Statement stmt : statements) {
-			if(stmt==null) continue;
+			if(stmt==null) {continue;}
 			output.add(convertResourceSchema(new SNResourceSchema((ResourceNode) stmt.getSubject())));
 		}
 		return output;
 	}
-	
 
-	
 	// -----------------------------------------------------
-	
+
 	public SNPropertyDeclaration store(final PropertyDeclaration decl, Context ctx){
 		ctx = setUpContext(ctx);
 		final ResourceNode existing = gate.startConversation().findResource(decl.getIdentifier().getQualifiedName());
-		
+
 		final SNPropertyDeclaration snDecl;
 		if (existing != null) {
 			snDecl = new SNPropertyDeclaration(existing);
@@ -163,48 +160,47 @@ public class RBSchemaStore {
 			snDecl = new SNPropertyDeclaration(ctx);
 		}
 		convertPropertyDeclaration(decl, snDecl, ctx);
-		
+
 		gate.startConversation().attach(snDecl);
 		return snDecl;
 	}
-	
+
 	// -----------------------------------------------------
-	
-	
+
 	public SNResourceSchema loadSchemaForResourceType(final ResourceID type,Context ctx) {
 		ctx = setUpContext(ctx);
 		ModelingConversation mc = gate.startConversation();
 		ResourceNode resourceType = mc.findResource(type.getQualifiedName());
-		if(resourceType==null) return null;
+		if(resourceType==null) {return null;}
 		SemanticNode schema = resourceType.getSingleAssociationClient(RBSchema.DESCRIBED_BY);
-		if(schema==null) return null;
+		if(schema==null) {return null;}
 		return  new SNResourceSchema(schema.asResource());
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	public SNResourceSchema loadPropertyDeclaration(final ResourceID decl,Context ctx) {
 		ctx = setUpContext(ctx);
 		throw new NotYetImplementedException();
 	}
-		
-	
+
+
 	// -----------------------------------------------------
-	
+
 	private SNScalar toScalar(final int value) {
 		return new SNScalar(BigInteger.valueOf(value));
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	private Integer toInteger(final SNScalar value) {
 		return value.getIntegerValue().intValue();
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * If no special context is set, this method will return the default schema-context
+	 * If no special context is set, this method will return the default schema-context.
 	 * @param ctx
 	 * @return
 	 */
@@ -216,7 +212,7 @@ public class RBSchemaStore {
 	}
 
 	// -- CONVERSION STUFF------------------------------------
-	
+
 	protected void convertConstraints(final SNPropertyDeclaration src, final PropertyDeclarationImpl target) {
 		for (SNConstraint snConst : src.getConstraints()){
 			if (snConst.isLiteralConstraint()){
@@ -230,13 +226,11 @@ public class RBSchemaStore {
 			} else {
 				throw new IllegalStateException();
 			}
-			
 		}
 	}//End of method
-	
-	
+
 	// -----------------------------------------------------
-	
+
 	protected void convertPropertyDeclaration(final PropertyDeclaration src, final SNPropertyDeclaration target, final Context ctx) {
 		target.setDatatype(src.getElementaryDataType(), ctx);
 		target.setIdentifier(src.getIdentifier(), ctx);
@@ -244,20 +238,20 @@ public class RBSchemaStore {
 			addConstraint(target, constraint, ctx);
 		}
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	public ResourceSchema convertResourceSchema(final SNResourceSchema snSchema) {
-		if(snSchema==null) return null;
+		if(snSchema==null) {return null;}
 		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema);
 		schema.setDescribedResourceID(snSchema.getDescribedClass());
 		for (SNPropertyAssertion snAssertion : snSchema.getPropertyAssertions()){
-			
+
 			// create Property Declaration
 			final SNPropertyDeclaration snDecl = snAssertion.getPropertyDeclaration();
-			if(snDecl==null) continue;
+			if(snDecl==null) {continue;}
 			final PropertyDeclaration decl = convertPropertyDeclaration(snDecl);
-			
+
 			// create Property Assertion
 			final PropertyAssertionImpl pa = new PropertyAssertionImpl(snAssertion.getDescriptor(), decl);
 			int min = toInteger(snAssertion.getMinOccurs());
@@ -265,21 +259,20 @@ public class RBSchemaStore {
 			pa.setCardinality(CardinalityFactory.getAbsoluteCardinality(max, min));
 			schema.addPropertyAssertion(pa);
 		}
-		
+
 		return schema;
 	}
-	
-	
+
 	/**
-	 * Stores the schemaRepresentation for a given format
-	 * 
+	 * Stores the schemaRepresentation for a given format.
+	 *
 	 * TODO: Write tests to verify this behavior
 	 *
 	 */
 	public void storeSchemaRepresentation(String representation, RSFormat format){
 		ModelingConversation mc = gate.startConversation();
 		ResourceNode rootNode = mc.findResource(RBSchema.ROOT_NODE.getQualifiedName());
-		if(rootNode==null) rootNode = RBSchema.ROOT_NODE;
+		if(rootNode==null) {rootNode = RBSchema.ROOT_NODE;}
 		Set<Association> assocs = rootNode.getAssociations(RBSchema.HAS_SCHEMA_REPRESENTATION);
 		for (Association association : assocs) {
 			rootNode.revoke(association);
@@ -292,8 +285,7 @@ public class RBSchemaStore {
 		Association.create(rootNode,RBSchema.HAS_RS_FORMAT,new SNValue(ElementaryDataType.STRING, format.toString()),setUpContext(null));
 		mc.attach(rootNode);
 	}
-	
-	
+
 	/**
 	 * Returns a textual schema-reprenation of the given format.
 	 * @returns null if the format is null or unknown or if there is no representation for this schema available
@@ -312,34 +304,31 @@ public class RBSchemaStore {
 		}
 		return null;
 	}
-	
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Converts a {@link SNPropertyDeclaration} to {@link PropertyDeclaration}
+	 * Converts a {@link SNPropertyDeclaration} to {@link PropertyDeclaration}.
 	 */
 	protected PropertyDeclaration convertPropertyDeclaration(final SNPropertyDeclaration snDecl){
-		
+
 		PropertyDeclarationImpl pDec = new PropertyDeclarationImpl();
-		
+
 		pDec.setIdentifier(snDecl.getQualifiedName().toURI());
 		pDec.setElementaryDataType(snDecl.getDatatype());
 		convertConstraints(snDecl, pDec);
 		return pDec;
 	}
-	
-	
+
 	// -----------------------------------------------------
-	
 
 	protected void addDeclaration(final SNPropertyAssertion assertion, PropertyDeclaration decl, final Context ctx) {
 		final ResourceNode existing = gate.startConversation().findResource((decl.getIdentifier().getQualifiedName()));
-		
+
 		List<ResourceNode> found = gate.startConversation().createQueryManager().
 										findByTag(decl.getIdentifier().getQualifiedName().toURI());
 		found.size();
-		
+
 		if (existing != null) {
 			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration(existing);
 			assertion.setPropertyDeclaration(snDecl, ctx);
@@ -352,9 +341,9 @@ public class RBSchemaStore {
 			convertPropertyDeclaration(decl, snDecl, ctx);
 		}
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	protected void addConstraint(final SNPropertyDeclaration decl, final Constraint constraint, final Context ctx) {
 		if (constraint.isLiteralConstraint()) {
 			decl.addLiteralConstraint(constraint.getLiteralConstraint(), ctx);
@@ -364,5 +353,4 @@ public class RBSchemaStore {
 			throw new IllegalStateException();
 		}
 	}
-	
 }

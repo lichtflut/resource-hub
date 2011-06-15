@@ -10,7 +10,7 @@ package de.lichtflut.rb.core.schema.parser;
  * or can be filtered from.
  * You can combine several ErrorLevels in using the "add"-method
  * </p>
- * 
+ *
  * Created: Apr 29, 2011
  *
  * @author Nils Bleisch
@@ -48,12 +48,12 @@ public enum RSErrorLevel {
 	// ----------------------------
 
 	/**
-	 * Self returning idiom 4tw
+	 * Self returning idiom 4tw.
 	 */
 	public RSErrorLevel add(RSErrorLevel lvl) {
 		if (!contains(lvl))
 			this.value += lvl.value;
 		return this;
-	}	
-	
+	}
+
 }

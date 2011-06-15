@@ -16,32 +16,30 @@ import de.lichtflut.rb.core.api.impl.RBEntityManagementImpl;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**
- * Reference implementation of {@link RBServiceProvider}
+ * Reference implementation of {@link RBServiceProvider}.
  * TODO: The rootContext of ArastrejuGate is used, this should be changed
- *  
- * 
+ *
  * Created: Apr 28, 2011
  *
  * @author Nils Bleisch
  */
 public class DefaultRBServiceProvider implements RBServiceProvider {
-	
+
 	private Logger logger = LoggerFactory.getLogger(DefaultRBServiceProvider.class);
 
 	private ArastrejuGate gate = null;
 	private ResourceSchemaManagement schemaManagement = null;
 	private RBEntityManagement typeManagement = null;
-	
-	
+
 	// --CONSTRUCTOR----------------------------------------
-	
+
 	/**
 	 * Default constructor.
 	 */
 	public DefaultRBServiceProvider(){
 		this(new RBConfig());
 	}
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -52,29 +50,29 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 		schemaManagement = new ResourceSchemaManagementImpl(gate);
 		typeManagement = new RBEntityManagementImpl(gate);
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public ResourceSchemaManagement getResourceSchemaManagement() {
 		return schemaManagement;
 	}
 
 	// -----------------------------------------------------
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public ArastrejuGate getArastejuGateInstance() {
 		return gate;
 	}
 
 	// -----------------------------------------------------
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public RBEntityManagement getRBEntityManagement() {
 		return this.typeManagement;

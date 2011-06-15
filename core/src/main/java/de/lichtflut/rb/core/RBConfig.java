@@ -7,9 +7,9 @@ import org.arastreju.sge.ArastrejuProfile;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  TODO: [DESCRIPTION].
  * </p>
- * 
+ *
  * <p>
  * 	Created May 26, 2011
  * </p>
@@ -17,22 +17,22 @@ import org.arastreju.sge.ArastrejuProfile;
  * @author Oliver Tigges
  */
 public class RBConfig implements RBConstants {
-	
+
 	private final String profileName;
 	private ArastrejuProfile profile;
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * Default constructor.
 	 */
 	public RBConfig() {
 		this.profileName = null;
 	}
-	
+
 	/**
 	 * Constructor.
-	 * @param arastrejuProfile The profile name for Arastreju. 
+	 * @param arastrejuProfile The profile name for Arastreju.
 	 */
 	public RBConfig(final String arastrejuProfile) {
 		this.profileName = arastrejuProfile;
@@ -44,16 +44,16 @@ public class RBConfig implements RBConstants {
 	/**
 	 * @return The Arastreju configuration properties.
 	 */
-	public ArastrejuProfile getArastrejuConfiguration() {
+	public ArastrejuProfile getArastrejuConfiguration(){
 		if (profile == null) {
 			initProfile();
-		} 
+		}
 		return profile;
 	}
-	
+
 	// -----------------------------------------------------
-	
-	private void initProfile() {
+
+	private void initProfile(){
 		if (profileName == null) {
 			profile = ArastrejuProfile.read();
 		} else {
