@@ -18,8 +18,10 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 
 
 /**
- * Testcase to test ResourceTypeInstance- validators, ticket-algorithms and constraints
- * 
+ * <p>
+ * Testcase to test ResourceTypeInstance- validators, ticket-algorithms and constraints.
+ * </p>
+ *
  * Created: May 20, 2011
  *
  * @author Nils Bleisch

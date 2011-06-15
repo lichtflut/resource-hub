@@ -35,7 +35,6 @@ public class RBEntityTest {
 
 	
 	@Test
-	@Ignore
 	@SuppressWarnings("unchecked")
 	public void testPersistAndFindRBEntities(){
 		RBServiceProvider provider = RBServiceProviderFactory.getDefaultServiceProvider();
@@ -69,7 +68,6 @@ public class RBEntityTest {
 	}
 	
 	@Test
-	@Ignore
 	@SuppressWarnings("unchecked")
 	public void testPersistAndFindASpecificEntity(){
 	RBServiceProvider provider = RBServiceProviderFactory.getDefaultServiceProvider();

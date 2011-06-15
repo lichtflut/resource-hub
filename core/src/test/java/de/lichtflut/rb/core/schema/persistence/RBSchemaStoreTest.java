@@ -15,9 +15,7 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
@@ -53,7 +51,6 @@ public class RBSchemaStoreTest {
 
 	
 	@Test
-	@Ignore
 	public void testStore() {
 		 final RBSchemaStore store = new RBSchemaStore(gate);
 		 
