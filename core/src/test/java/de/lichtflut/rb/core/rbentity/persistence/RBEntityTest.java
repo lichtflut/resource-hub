@@ -68,7 +68,8 @@ public class RBEntityTest {
 		}	
 	}
 	
-	
+	@Test
+	@Ignore
 	@SuppressWarnings("unchecked")
 	public void testPersistAndFindASpecificEntity(){
 	RBServiceProvider provider = RBServiceProviderFactory.getDefaultServiceProvider();
@@ -78,7 +79,7 @@ public class RBEntityTest {
 		provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(schema);
 		//Build an instance
 		RBEntity<Object> instance = schema.generateRBEntity();
-		assertNotNull(instance);
+		Assert.assertNotNull(instance);
 		try{
 			instance.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
 			instance.addValueFor("http://lichtflut.de#hatEmail", "test1@test.com");
@@ -87,19 +88,19 @@ public class RBEntityTest {
 		}catch(Exception any){
 			any.printStackTrace();
 		}
-		assertTrue(provider.getRBEntityManagement().createOrUpdateRTInstance(instance));
+		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRTInstance(instance));
 		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
-		assertTrue(instances.size()==1);
+		Assert.assertTrue(instances.size()==1);
 		RBEntity entity = new ArrayList<RBEntity>(instances).get(0);
 		
 		//Made some proofs
 		
-		assertEquals(provider.getRBEntityManagement().loadRBEntity(entity), entity);
-		assertEquals(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName()), entity);
-		assertEquals(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName().toURI()), entity);
+		Assert.assertEquals(provider.getRBEntityManagement().loadRBEntity(entity), entity);
+		Assert.assertEquals(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName()), entity);
+		Assert.assertEquals(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName().toURI()), entity);
 		//Add a hash on the entities identifier to generate an identifier which shouldnt exists.
 		//Now try to assert that loadRBEntity should return null for those identifiers
-		assertNull(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName().toURI()+ "#"));		
+		Assert.assertNull(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName().toURI()+ "#"));		
 	}
 	
 	

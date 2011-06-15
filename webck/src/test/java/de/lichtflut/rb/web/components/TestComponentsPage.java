@@ -1,6 +1,7 @@
 package de.lichtflut.rb.web.components;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * <p>
@@ -13,7 +14,11 @@ import org.apache.wicket.markup.html.WebPage;
 public class TestComponentsPage extends WebPage{
 
 	public TestComponentsPage(){
-		//this.add()	
+		super();
+	}
+	
+	public TestComponentsPage(PageParameters params){
+		super(params);
 	}
 	
 	

@@ -51,7 +51,9 @@ public class RBSchemaStoreTest {
 		gate.close();
 	}
 
+	
 	@Test
+	@Ignore
 	public void testStore() {
 		 final RBSchemaStore store = new RBSchemaStore(gate);
 		 
