@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.security;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  TODO: [DESCRIPTION].
  * </p>
  *
  * <p>
@@ -15,17 +15,17 @@ package de.lichtflut.rb.core.security;
  * @author Oliver Tigges
  */
 public class PasswordCredential implements Credential {
-	
+
 	private String password;
-	
-	public PasswordCredential(final String password) {
+
+	public PasswordCredential(final String password){
 		this.password = password;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.arastreju.sge.security.Credential#stringRepesentation()
 	 */
-	public String stringRepesentation() {
+	public String stringRepesentation(){
 		return password;
 	}
 

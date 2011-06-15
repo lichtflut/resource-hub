@@ -7,7 +7,7 @@ import org.arastreju.sge.ArastrejuProfile;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  TODO: DESCRIPTION.
  * </p>
  *
  * <p>
@@ -17,7 +17,7 @@ import org.arastreju.sge.ArastrejuProfile;
  * @author Oliver Tigges
  */
 public interface RBConstants {
-	
-	static String ARAS_STORE_DIRECTORY = ArastrejuProfile.ARAS_STORE_DIRECTORY;
+
+	String ARAS_STORE_DIRECTORY = ArastrejuProfile.ARAS_STORE_DIRECTORY;
 
 }

@@ -37,7 +37,7 @@ import de.lichtflut.rb.core.schema.RBSchema;
  * <p>
  * Represents the assertion of a Property Declaration to a Class.
  * <p>
- * 
+ *
  * <p>
  * Consists of a property and constraints:
  * <ul>
@@ -45,9 +45,9 @@ import de.lichtflut.rb.core.schema.RBSchema;
  *  <li> cardinality (minOccurs, maxOccurs)</li>
  *  <li> Many-In-Time-Flag (nyi)</li>
  * </ul>
- * 
+ *
  * 	Created: 20.01.2009
- * 
+ *
  * </p>
  *
  * @author Oliver Tigges
@@ -55,7 +55,7 @@ import de.lichtflut.rb.core.schema.RBSchema;
 public class SNPropertyAssertion extends ResourceView implements Comparable<SNPropertyAssertion>{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -7077840107709042193L;
 
@@ -64,7 +64,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 	 */
 	public SNPropertyAssertion() {
 	}
-	
+
 	/**
 	 * Creates a view for given resource.
 	 * @param resource
@@ -72,7 +72,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 	public SNPropertyAssertion(final ResourceNode resource) {
 		super(resource);
 	}
-	
+
 	//-----------------------------------------------------
 
 	/**
@@ -87,7 +87,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Set the Property Declaratio.
 	 * @param propertyDecl The property decl.
@@ -99,7 +99,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 			Association.create(this, RBSchema.HAS_PROPERTY_DECL, propertyDecl, context);
 		}
 	}
-	
+
 	/**
 	 * Returns the property declared by this property declaration.
 	 * @return The property.
@@ -112,7 +112,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Set the property declared by this property declaration.
 	 * @param property The property.
@@ -125,7 +125,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 			Association.create(this, RBSchema.HAS_DESCRIPTOR, pDescriptor, context);
 		}
 	}
-	
+
 	public SNScalar getMinOccurs(){
 		SemanticNode minOccurs = getSingleAssociationClient(RBSchema.MIN_OCCURS);
 		if (minOccurs != null) {
@@ -134,14 +134,14 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 			return null;
 		}
 	}
-	
+
 	public void setMinOccurs(final SNScalar minOccurs, final Context context) {
 		if (!Infra.equals(getMinOccurs(), minOccurs)){
 			removeAssocs(RBSchema.MIN_OCCURS);
 			Association.create(this, RBSchema.MIN_OCCURS, minOccurs, context);
 		}
 	}
-	
+
 	public SNScalar getMaxOccurs(){
 		SemanticNode maxOccurs = getSingleAssociationClient(RBSchema.MAX_OCCURS);
 		if (maxOccurs != null) {
@@ -150,16 +150,16 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 			return null;
 		}
 	}
-	
+
 	public void setMaxOccurs(final SNScalar minOccurs, final Context context) {
 		if (!Infra.equals(getMaxOccurs(), minOccurs)){
 			removeAssocs(RBSchema.MAX_OCCURS);
 			Association.create(this, RBSchema.MAX_OCCURS, minOccurs, context);
 		}
 	}
-	
+
 	//-----------------------------------------------------
-	
+
 	public int compareTo(final SNPropertyAssertion other) {
 		if (this.getDescriptor() == null){
 			return 1;
@@ -169,7 +169,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 			return Infra.compare(this.getDescriptor().getQualifiedName(), other.getDescriptor().getQualifiedName());
 		}
 	}
-	
+
 	public String toString(){
 		StringBuffer sb = new StringBuffer("PropertyAssertion[" + super.toString() + "] ");
 		if (getDescriptor() != null){
@@ -179,9 +179,9 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 		sb.append("\n\t\t" + getPropertyDeclaration());
 		return sb.toString();
 	}
-	
+
 	//-----------------------------------------------------
-	
+
 	/**
 	 * Removes all associations with given predicate.
 	 * @param predicate The predicate.
@@ -192,5 +192,4 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 			revoke(assoc);
 		}
 	}
-	
 }

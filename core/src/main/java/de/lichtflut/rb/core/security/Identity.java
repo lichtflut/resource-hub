@@ -21,14 +21,14 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 public interface Identity {
 
 	ResourceNode getAssociatedResource();
-	
+
 	String getName();
-	
+
 	Set<Role> getRoles();
-	
+
 	Set<Permission> getPermissions();
-	
+
 	boolean isInRole(Role role);
-	
+
 	boolean hasPermission(Permission permission);
 }

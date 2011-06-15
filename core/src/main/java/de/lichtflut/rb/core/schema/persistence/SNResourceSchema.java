@@ -32,16 +32,15 @@ import de.lichtflut.rb.core.schema.RBSchema;
  * @author Oliver Tigges
  */
 public class SNResourceSchema extends ResourceView {
-	
+
 	/**
-	 * Generated serial number
+	 * Generated serial number.
 	 */
 	private static final long serialVersionUID = -2376213727456721748L;
 
 	public SNResourceSchema(final ResourceNode resource) {
 		super(resource);
 	}
-	
 
 	/**
 	 * Constructor for new Resource Schemas.
@@ -49,9 +48,9 @@ public class SNResourceSchema extends ResourceView {
 	public SNResourceSchema(Context ctx) {
 		Association.create(this, RDF.TYPE, RBSchema.RESOURCE_SCHEMA,ctx);
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * Returns the Class described by this schemas.
 	 * @return The class node.
@@ -64,10 +63,10 @@ public class SNResourceSchema extends ResourceView {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Set the Class described by this schema:.
-	 * @param property The class node.
+	 * @param clazz The class node.
 	 * @param context The context.
 	 */
 	public void setDescribedClass(final ResourceNode clazz, final Context context) {	
@@ -85,7 +84,7 @@ public class SNResourceSchema extends ResourceView {
 	public void addPropertyAssertion(final SNPropertyAssertion pa, final Context ctx){
 		Association.create(this, RBSchema.HAS_PROPERTY_ASSERT, pa, ctx);
 	}
-	
+
 	/**
 	 * Collects all PropertyAssertions defined by this Schema.
 	 * @return The list of all property assertions.
@@ -97,7 +96,7 @@ public class SNResourceSchema extends ResourceView {
 		Collections.sort(list);
 		return list;
 	}
-	
+
 	/**
 	 * Returns only the property declarations declared for this classifier, not the inherited.
 	 * @return The list of property declarations.
@@ -113,7 +112,8 @@ public class SNResourceSchema extends ResourceView {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.arastreju.api.model.semantic.ResourceClassifier#removePropertyDeclaration(org.arastreju.api.model.semantic.SNPropertyDeclaration)
+	 * @see org.arastreju.api.model.semantic.ResourceClassifier#removePropertyDeclaration
+	 * (org.arastreju.api.model.semantic.SNPropertyDeclaration)
 	 */
 	public void removePropertyAssertion(SNPropertyAssertion decl) {
 		Set<Association> assocs = getAssociations(RBSchema.HAS_PROPERTY_ASSERT);
@@ -126,9 +126,9 @@ public class SNResourceSchema extends ResourceView {
 		}
 		revoke(toBeRemoved);
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/* (non-Javadoc)
 	 * @see org.arastreju.sge.model.nodes.views.ResourceView#toString()
 	 */
@@ -141,5 +141,5 @@ public class SNResourceSchema extends ResourceView {
 		}
 		return sb.toString();
 	}
-	
+
 }

@@ -17,5 +17,5 @@ package de.lichtflut.rb.core.security;
 public interface User extends Identity {
 
 	String getEmail();
-	
+
 }

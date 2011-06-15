@@ -14,11 +14,11 @@ import de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterExcept
  * <p>
  * 	A RSParsingUnit consists of a lexer and a parser with a given format.
  * </p>
- * 
+ *
  * <p>
  * Created: Apr 28, 2011
  * </p>
- * 
+ *
  * <pre>
  * TODO: Some aspects to check
  * - Shouldn't this be an abstract class (to enforce RSErrorReporter set in Constructor)
@@ -31,17 +31,17 @@ public abstract class RSParsingUnit {
 
 	@SuppressWarnings("unused")
 	private RSErrorReporter errorsReporter=null;
-	
+
 	/**
 	 * <p>
-	 * This constructor is really recommended
+	 * This constructor is really recommended.
 	 * </p>
 	 * @param errorReporter
 	 */
 	public RSParsingUnit(final RSErrorReporter errorReporter){
 		setErrorReporter(errorReporter);
 	}
-	
+
 	/**
 	 * <p>
 	 * Default constructor without the ability to
@@ -49,38 +49,33 @@ public abstract class RSParsingUnit {
 	 * </p>
 	 */
 	public RSParsingUnit(){}
-	
-	
 
-	/** 
-	 * @return {@link Collection} of {@link ResourceSchemaTypes} which has been tokenized and parsed
+	/**
+	 * @return {@link Collection} of {@link ResourceSchemaTypes} which has been tokenized and parsed.
 	 */
 	public abstract Collection<ResourceSchemaType> parse(final String input) throws RSMissingErrorReporterException;
-	
+
 	// -----------------------------------------------------
-	
-	/** 
-	 * @return {@link Collection} of {@link ResourceSchemaTypes} which has been tokenized and parsed
+
+	/**
+	 * @return {@link Collection} of {@link ResourceSchemaTypes} which has been tokenized and parsed.
 	 */
 	public abstract Collection<ResourceSchemaType> parse(final InputStream input) throws RSMissingErrorReporterException;
-	
+
 	// -----------------------------------------------------
-	
-	
-	
+
 	/**
-	 * Set the RSErrorReporter to report errors while lexing
+	 * Set the RSErrorReporter to report errors while lexing.
 	 * @param errorReporter
 	 */
     public void setErrorReporter(final RSErrorReporter errorReporter){
     	this.errorsReporter = errorReporter;
     }
-	
-	// -----------------------------------------------------
-	
-	public abstract RSFormat getFormat();
-	
+
 	// -----------------------------------------------------
 
-	
+	public abstract RSFormat getFormat();
+
+	// -----------------------------------------------------
+
 }

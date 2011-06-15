@@ -12,16 +12,16 @@ import org.antlr.runtime.ANTLRStringStream;
  */
 public class RSCaseControlStream extends ANTLRStringStream {
 
-  private boolean caseSensitive = true; 
+  private boolean caseSensitive = true;
 
-  /** Copy data from string to a local char array */
+  /** Copy data from string to a local char array. */
   public RSCaseControlStream(String input) {
     super();
     this.data = input.toCharArray();
     this.n = input.length();
   }
 
-  /** This is the preferred constructor as no data is actually copied */
+  /** This is the preferred constructor as no data is actually copied. */
   public RSCaseControlStream(char[] data, int numberOfActualCharsInArray) {
     super();
     this.data = data;

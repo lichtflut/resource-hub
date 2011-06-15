@@ -13,27 +13,26 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  * Wraps the parsing result in ResourceSchema- and PropertyDeclaration-sets,
  * additional to the error messages which have been occurred.
  * </p>
- * 
+ *
  * <p>
  * Created Apr 20, 2011
  * </p>
- * 
+ *
  * @author Nils Bleisch
  */
 public interface RSParsingResult {
 
 
 	/**
-	 * 
+	 *
 	 * @return those errors as collection where the filter is matching
 	 */
 	public Collection<String> getErrorMessages(RSErrorLevel filter);
 
 	// -----------------------------------------------------
 
-	
 	/**
-	 * 
+	 *
 	 * @return all errors as collection
 	 */
 	public Collection<String> getErrorMessages();
@@ -86,7 +85,7 @@ public interface RSParsingResult {
 	// -----------------------------------------------------
 
 	/**
-	 * 
+	 *
 	 * @return the ResourceSchema even if errors have been occured
 	 */
 	public Collection<ResourceSchema> getResourceSchemasIgnoreErrors();
@@ -94,7 +93,7 @@ public interface RSParsingResult {
 	// -----------------------------------------------------
 
 	/**
-	 * 
+	 *
 	 * @return the PropertyDeclaration even if errors have been occured
 	 */
 	public Collection<PropertyDeclaration> getPropertyDeclarationsIgnoreErrors();
@@ -102,7 +101,7 @@ public interface RSParsingResult {
 	// -----------------------------------------------------
 
 	/**
-	 * 
+	 *
 	 * @return the PropertyDeclaration which are not assigned to a
 	 *         ResourceSchema, even if errors have been occured
 	 */
@@ -111,8 +110,8 @@ public interface RSParsingResult {
 	// -----------------------------------------------------
 
 	/**
-	 * all the PropertyDeclarations which are not assigned to a ResourceSchema
-	 * 
+	 * all the PropertyDeclarations which are not assigned to a ResourceSchema.
+	 *
 	 * @return is empty when at least on error has been occurred
 	 */
 	public Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssoc();
@@ -120,7 +119,7 @@ public interface RSParsingResult {
 	// -----------------------------------------------------
 
 	/**
-	 * Determines if at lest one error is occurred or not
+	 * Determines if at lest one error is occurred or not.
 	 */
 	public boolean isErrorOccured();
 
@@ -132,9 +131,9 @@ public interface RSParsingResult {
 	 * Testcase still exists
 	 */
 	public void merge(RSParsingResult result);
-	
+
 	/**
-	 * Set the ErrorLevel which is used as default when no other ErrorLevel is explicitly given
+	 * Set the ErrorLevel which is used as default when no other ErrorLevel is explicitly given.
 	 * @param lvl
 	 */
 	public void setErrorLevel(RSErrorLevel lvl);

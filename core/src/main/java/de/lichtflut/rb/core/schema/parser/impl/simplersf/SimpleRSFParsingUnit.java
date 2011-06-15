@@ -32,24 +32,24 @@ import de.lichtflut.rb.core.schema.parser.impl.simplersf.ResourceSchemaParser.ds
 public class SimpleRSFParsingUnit extends RSParsingUnit {
 
     private RSErrorReporter errorReporter= null;
-	
+
 	public RSFormat getFormat() {
 		return RSFormat.SIMPLE_RSF;
 	}
-	
+
 	// -----------------------------------------------------
 
 	public Collection<ResourceSchemaType> parse(final String input)
 			throws RSMissingErrorReporterException {
-		if(errorReporter == null) throw new RSMissingErrorReporterException("RSErrorReporter can not be null");
+		if(errorReporter == null){ throw new RSMissingErrorReporterException("RSErrorReporter can not be null");}
 		return parseRSF(input);
 	}
 
 	// -----------------------------------------------------
-	
+
 	public Collection<ResourceSchemaType> parse(final InputStream input)
 			throws RSMissingErrorReporterException {
-		if(errorReporter == null) throw new RSMissingErrorReporterException("RSErrorReporter can not be null");
+		if(errorReporter == null) {throw new RSMissingErrorReporterException("RSErrorReporter can not be null");}
 		try {
 			//Build a String from InputStream
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -64,14 +64,14 @@ public class SimpleRSFParsingUnit extends RSParsingUnit {
 	}
 
 	// -----------------------------------------------------
-	
+
 	public void setErrorReporter(final RSErrorReporter errorReporter) {
 		this.errorReporter = errorReporter;
 	}
 
 	// -----------------------------------------------------
-	
-	
+
+
 	private Set<ResourceSchemaType> parseRSF(final String input){
 		RSCaseControlStream stream = new RSCaseControlStream(input);
 		//Ignore Case, this is really important
@@ -89,5 +89,4 @@ public class SimpleRSFParsingUnit extends RSParsingUnit {
 		}
 		return null;
 	}
-	
 }

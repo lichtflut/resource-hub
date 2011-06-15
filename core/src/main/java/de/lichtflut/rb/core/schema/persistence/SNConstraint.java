@@ -33,14 +33,14 @@ import de.lichtflut.rb.core.schema.RBSchema;
  * <p>
  * Represents the declaration of a Constraint for a Property Declaration or Assertion.
  * <p>
- * 
+ *
  * <p>
  * There are two types of Constraints:
  * <ul>
  *  <li>type constraints (for resource references)</li>
  *  <li>literal constraints (for values)</li>
  * </ul>
- * 
+ *
  * 	Created: 26.04.2011
  * </p>
  *
@@ -53,7 +53,7 @@ public class SNConstraint extends ResourceView {
 	 */
 	public SNConstraint() {
 	}
-	
+
 	/**
 	 * Creates a view for given resource.
 	 * @param resource
@@ -61,7 +61,7 @@ public class SNConstraint extends ResourceView {
 	public SNConstraint(final ResourceNode resource) {
 		super(resource);
 	}
-	
+
 	/**
 	 * Creates a new literal constraint.
 	 * @param literalConstraint The literal constraint.
@@ -71,7 +71,7 @@ public class SNConstraint extends ResourceView {
 		Association.create(this, RDF.TYPE, RBSchema.LITERAL_CONSTRAINT, ctx);
 		Association.create(this, RBSchema.HAS_CONSTRAINT_VALUE, new SNText(literalConstraint), ctx);
 	}
-	
+
 	/**
 	 * Creates a new type constraint.
 	 * @param typeConstraint The type constraint.
@@ -81,23 +81,23 @@ public class SNConstraint extends ResourceView {
 		Association.create(this, RDF.TYPE, RBSchema.TYPE_CONSTRAINT, ctx);
 		Association.create(this, RBSchema.HAS_CONSTRAINT_VALUE, typeConstraint, ctx);
 	}
-	
+
 	// -----------------------------------------------------
 
 	public boolean isLiteralConstraint() {
 		return isOfType(RBSchema.LITERAL_CONSTRAINT);
 	}
-	
+
 	public boolean isTypeConstraint() {
 		return isOfType(RBSchema.TYPE_CONSTRAINT);
 	}
-	
+
 	public SemanticNode getConstraintValue() {
 		return getSingleAssociationClient(RBSchema.HAS_CONSTRAINT_VALUE);
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/* (non-Javadoc)
 	 * @see org.arastreju.sge.model.nodes.views.ResourceView#toString()
 	 */
@@ -106,18 +106,18 @@ public class SNConstraint extends ResourceView {
 		final StringBuilder sb = new StringBuilder("Constraint[" + super.toString() + "]");
 		return sb.toString();
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	private boolean isOfType(final ResourceID type) {
 		final Set<SemanticNode> types = getAssociationClients(RDF.TYPE);
 		for (SemanticNode current : types) {
-			if (current.isResourceNode() && 
+			if (current.isResourceNode() &&
 					current.asResource().asClass().isSpecializationOf(type)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 }

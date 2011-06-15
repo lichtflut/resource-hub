@@ -7,7 +7,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  TODO: [DESCRIPTION].
  * </p>
  *
  * <p>
@@ -17,9 +17,9 @@ import org.arastreju.sge.model.nodes.ResourceNode;
  * @author Oliver Tigges
  */
 public interface Permission {
-	
+
 	ResourceNode getAssociatedResource();
-	
+
 	String getName();
 
 }
