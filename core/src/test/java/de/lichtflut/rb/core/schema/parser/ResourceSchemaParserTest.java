@@ -6,14 +6,14 @@ package de.lichtflut.rb.core.schema.parser;
 import java.io.IOException;
 import java.util.Collection;
 
+import junit.framework.Assert;
+
 import org.antlr.runtime.RecognitionException;
 import org.arastreju.sge.model.ElementaryDataType;
 
-import junit.framework.TestCase;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 
 /**
@@ -28,7 +28,7 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
  * @author Nils Bleisch
  * 
  */
-public class ResourceSchemaParserTest extends TestCase
+public class ResourceSchemaParserTest 
 {
 	public final void testParsingAndConstructingModelFromTestSimpleRSFFile1() throws IOException, RecognitionException{		
 		ResourceSchemaManagement rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
@@ -36,7 +36,7 @@ public class ResourceSchemaParserTest extends TestCase
 		//Get ResourceSchemaTypes
 		RSParsingResult result = rManagement.generateSchemaModelThrough(
 				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL1.rsf"));
-		assertFalse(result.isErrorOccured());		
+		Assert.assertFalse(result.isErrorOccured());		
 	}
 	
 	//---------------------------------------------------------------------------
@@ -48,7 +48,7 @@ public class ResourceSchemaParserTest extends TestCase
 		//Get ResourceSchemaTypes
 		RSParsingResult result = rManagement.generateAndResolveSchemaModelThrough(
 				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL2.osf"));
-		assertFalse(result.isErrorOccured());	
+		Assert.assertFalse(result.isErrorOccured());	
 		boolean pAssertion=false;
 		for (ResourceSchema rs : result.getResourceSchemas()) {
 			
@@ -58,7 +58,7 @@ public class ResourceSchemaParserTest extends TestCase
 				Collection<PropertyAssertion> assertions = rs.getPropertyAssertions();
 				for (PropertyAssertion propertyAssertion : assertions) {
 					if(propertyAssertion.getPropertyDeclaration().getIdentifier().getQualifiedName().toURI().equals("http://lichtflut.de#Date")){
-						assertTrue(propertyAssertion.getPropertyDeclaration().getElementaryDataType() == ElementaryDataType.DATE);
+						Assert.assertTrue(propertyAssertion.getPropertyDeclaration().getElementaryDataType() == ElementaryDataType.DATE);
 						pAssertion=true;
 					}
 				}
@@ -67,8 +67,8 @@ public class ResourceSchemaParserTest extends TestCase
 
 		}
 		//Check if the "http://lichtflut.de#Data"-Properties type of "http://lichtflut.de#testResource2" is Date
-		assertTrue(pAssertion);
-		assertTrue(result.getPropertyDeclarations().size() == 6);
+		Assert.assertTrue(pAssertion);
+		Assert.assertTrue(result.getPropertyDeclarations().size() == 6);
 	}
 	
 }

@@ -13,6 +13,9 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -35,15 +38,21 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
  * @author Oliver Tigges
  */
 public class RBSchemaStoreTest {
+
+	private ArastrejuGate gate;
+
+	@Before
+	public void setUp() {
+		gate = Arastreju.getInstance().rootContext();
+	}
 	
+	@After
+	public void tearDown() {
+		gate.close();
+	}
 
 	@Test
 	public void testStore() {
-
-
-		
-		 final ArastrejuGate gate = Arastreju.getInstance().rootContext();
-		 
 		 final RBSchemaStore store = new RBSchemaStore(gate);
 		 
 		 Collection<PropertyDeclaration> pDecs = store.loadAllPropertyDeclarations(null);

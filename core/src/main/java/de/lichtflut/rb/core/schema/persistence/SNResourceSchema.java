@@ -47,7 +47,7 @@ public class SNResourceSchema extends ResourceView {
 	 * Constructor for new Resource Schemas.
 	 */
 	public SNResourceSchema(Context ctx) {
-		Association.create(this, RDF.TYPE, RBSchema.ACTIVITY_CLASS,ctx);
+		Association.create(this, RDF.TYPE, RBSchema.RESOURCE_SCHEMA,ctx);
 	}
 	
 	// -----------------------------------------------------

@@ -3,11 +3,10 @@
  */
 package de.lichtflut.rb.core.rbentity;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
-
 
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -25,12 +24,12 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
  *
  * @author Nils Bleisch
  */
-public class RBEntityTest extends TestCase{
+public class RBEntityTest {
 
 	public void testResourceTypeInstance(){
 		//Generate an instance for a given schema
 		RBEntity<Object> instance = createSchema().generateRBEntity();
-		assertNotNull(instance);
+		Assert.assertNotNull(instance);
 		
 		//Generate some tickets for fields
 		
@@ -50,20 +49,20 @@ public class RBEntityTest extends TestCase{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		assertTrue(ticket_hatGeburtstag2 == -1 && ticket_unknownAttribute == -1);
-		assertTrue(ticket_hatGeburtstag1 != -1 && ticket_hatEmail1 != -1 && ticket_hatEmail2 != -1 && ticket_hatAlter != -1);
+		Assert.assertTrue(ticket_hatGeburtstag2 == -1 && ticket_unknownAttribute == -1);
+		Assert.assertTrue(ticket_hatGeburtstag1 != -1 && ticket_hatEmail1 != -1 && ticket_hatEmail2 != -1 && ticket_hatAlter != -1);
 		//Try to write an value to hatGeburtstag with the given ticket.
 		boolean exceptionOccured=false;
 		try {
 			instance.addValueFor("http://lichtflut.de#hatGeburtstag", "test", ticket_hatGeburtstag1);
-			assertTrue((instance.getValueFor("http://lichtflut.de#hatGeburtstag", ticket_hatGeburtstag1)).equals("test"));
+			Assert.assertTrue((instance.getValueFor("http://lichtflut.de#hatGeburtstag", ticket_hatGeburtstag1)).equals("test"));
 			//Try to revoke the ticket, which should not be possible caused by the hasExacltyOneCardinality
 			exceptionOccured=true;
 			instance.releaseTicketFor("http://lichtflut.de#hatGeburtstag", ticket_hatGeburtstag1);
 			exceptionOccured=false;
 		} catch (Exception e) {
 		} 
-		assertTrue(exceptionOccured);
+		Assert.assertTrue(exceptionOccured);
 		exceptionOccured=false;
 		
 		int ticket_hatEmail3 = -1;
@@ -76,31 +75,31 @@ public class RBEntityTest extends TestCase{
 		}catch(Exception any){
 		}
 		//ticket_hatEmail3 must be still on it's intial value '-1'
-		assertTrue(ticket_hatEmail3==-1);
+		Assert.assertTrue(ticket_hatEmail3==-1);
 		
 		
 		try{
 			exceptionOccured=true;
 			instance.addValueFor("http://lichtflut.de#hatEmail", "email@1", ticket_hatEmail1);
 			instance.addValueFor("http://lichtflut.de#hatEmail", "email@2", ticket_hatEmail2);
-			assertTrue((instance.getValueFor("http://lichtflut.de#hatEmail", ticket_hatEmail1)).equals("email@1"));
-			assertTrue((instance.getValueFor("http://lichtflut.de#hatEmail", ticket_hatEmail2)).equals("email@2"));
+			Assert.assertTrue((instance.getValueFor("http://lichtflut.de#hatEmail", ticket_hatEmail1)).equals("email@1"));
+			Assert.assertTrue((instance.getValueFor("http://lichtflut.de#hatEmail", ticket_hatEmail2)).equals("email@2"));
 			instance.releaseTicketFor("http://lichtflut.de#hatEmail", ticket_hatEmail1);
 			//Generate hatEmail3-ticket
 			ticket_hatEmail3 = instance.generateTicketFor("http://lichtflut.de#hatEmail");
 			//Check for ticket1, which should not exists anymore
-			assertNull(instance.getValueFor("http://lichtflut.de#hatEmail", ticket_hatEmail1));
+			Assert.assertNull(instance.getValueFor("http://lichtflut.de#hatEmail", ticket_hatEmail1));
 			exceptionOccured=false;
 		}catch(Exception any){
 			any.printStackTrace();
 		}
-		assertFalse(exceptionOccured);
+		Assert.assertFalse(exceptionOccured);
 		exceptionOccured=false;
 		
 		try{
-			assertNull((instance.getValueFor("http://lichtflut.de#hatEmail", ticket_hatEmail3)));
+			Assert.assertNull((instance.getValueFor("http://lichtflut.de#hatEmail", ticket_hatEmail3)));
 			instance.addValueFor("http://lichtflut.de#hatEmail", "email@3", ticket_hatEmail3);
-			assertTrue((instance.getValueFor("http://lichtflut.de#hatEmail", ticket_hatEmail3)).equals("email@3"));
+			Assert.assertTrue((instance.getValueFor("http://lichtflut.de#hatEmail", ticket_hatEmail3)).equals("email@3"));
 		}catch(Exception any){
 			any.printStackTrace();
 		}
@@ -114,8 +113,8 @@ public class RBEntityTest extends TestCase{
 		}catch(Exception any){
 			message = any.getMessage();
 		}
-		assertTrue(message.toLowerCase().contains("is not a valid value for the expected type integer")); 
-		assertNull(instance.getValueFor("http://lichtflut.de#hatAlter", ticket_hatAlter));
+		Assert.assertTrue(message.toLowerCase().contains("is not a valid value for the expected type integer")); 
+		Assert.assertNull(instance.getValueFor("http://lichtflut.de#hatAlter", ticket_hatAlter));
 		
 		
 	}

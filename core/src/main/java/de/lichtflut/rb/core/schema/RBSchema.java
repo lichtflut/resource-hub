@@ -35,7 +35,7 @@ public interface RBSchema {
 	
 	// -- TYPES -------------------------------------------
 	
-	public static final ResourceID ACTIVITY_CLASS = new SimpleResourceID(NAMESPACE_URI, "ResourceSchema");
+	public static final ResourceID RESOURCE_SCHEMA = new SimpleResourceID(NAMESPACE_URI, "ResourceSchema");
 	public static final ResourceID PROPERTY_ASSERT = new SimpleResourceID(NAMESPACE_URI, "PropertyAssertion");
 	public static final ResourceID PROPERTY_DECL = new SimpleResourceID(NAMESPACE_URI, "PropertyDeclaration");
 	public static final ResourceID TYPE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "TypeConstraint");

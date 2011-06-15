@@ -140,7 +140,7 @@ public class RBSchemaStore {
 		//Load all properties from store
 		LinkedList<ResourceSchema> output = new LinkedList<ResourceSchema>();
 		QueryManager qManager = this.gate.startConversation().createQueryManager();
-		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.ACTIVITY_CLASS);
+		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.RESOURCE_SCHEMA);
 		for (Statement stmt : statements) {
 			if(stmt==null) continue;
 			output.add(convertResourceSchema(new SNResourceSchema((ResourceNode) stmt.getSubject())));
