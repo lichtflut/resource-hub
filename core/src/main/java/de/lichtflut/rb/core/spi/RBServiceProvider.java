@@ -18,7 +18,7 @@ import de.lichtflut.rb.core.api.RBEntityManagement;
  * @author Nils Bleisch
  */
 public interface RBServiceProvider {
-	
+
 	/**
 	 * @return an instance of {@link ArastrejuGate} which depends on the specific ServiceProvider
 	 */

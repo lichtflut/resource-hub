@@ -9,7 +9,7 @@ import org.arastreju.sge.ArastrejuProfile;
  * <p>
  *  [DESCRIPTION]
  * </p>
- *
+ * 
  * <p>
  * 	Created May 26, 2011
  * </p>
