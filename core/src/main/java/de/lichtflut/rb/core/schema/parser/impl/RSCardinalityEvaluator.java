@@ -8,15 +8,28 @@ import org.antlr.runtime.Token;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
 import de.lichtflut.rb.core.schema.parser.impl.simplersf.ResourceSchemaParser;
-
+/**
+ *
+ * TODO Discription.
+ */
 public class RSCardinalityEvaluator implements RSEvaluator<Cardinality> {
 
+	/**
+	 *
+	 */
 	private Cardinality cardinality;
 
-	public RSCardinalityEvaluator(Token t, int amount){
-		if(!(t.getType()==ResourceSchemaParser.CARDINALITY))
+	/**
+	 *TODO .
+	 * @param t -
+	 * @param amount -
+	 */
+	public RSCardinalityEvaluator(final Token t, final int amount){
+		if(!(t.getType()==ResourceSchemaParser.CARDINALITY)){
 			throw new IllegalArgumentException(
-					"Type of the given token " + t.getType() + " must be " + ResourceSchemaParser.CARDINALITY + " (CARDINALITY)");
+					"Type of the given token " + t.getType() + " must be " + ResourceSchemaParser.CARDINALITY
+					+ " (CARDINALITY)");
+		}
 		String tokenLabel = t.getText().toLowerCase();
 		if (tokenLabel.equals("has")){
 			 this.cardinality = CardinalityFactory.hasExactly(amount);
@@ -30,6 +43,9 @@ public class RSCardinalityEvaluator implements RSEvaluator<Cardinality> {
 		}
 	}
 
+	/**
+	 * @return cardinatily
+	 */
 	public Cardinality getResult(){
 		return this.cardinality;
 	}
@@ -37,11 +53,13 @@ public class RSCardinalityEvaluator implements RSEvaluator<Cardinality> {
 	/**
 	 * This is not the correct implementation.
 	 * TODO: Fix it
+	 * @param c -
+	 * @return -
 	 */
-	public boolean evaluate(Cardinality c) {
+	public boolean evaluate(final Cardinality c) {
 		int max_c1 = c.getMaxOccurs(), max_c2 = cardinality.getMaxOccurs();
 		int min_c1 = c.getMinOccurs(), min_c2 = cardinality.getMinOccurs();
-		this.cardinality =  (CardinalityFactory.getAbsoluteCardinality(Math.max(max_c1,max_c2), Math.min(min_c2, min_c1) ));
+		this.cardinality =  (CardinalityFactory.getAbsoluteCardinality(Math.max(max_c1,max_c2), Math.min(min_c2, min_c1)));
 		return true;
 	}
 }

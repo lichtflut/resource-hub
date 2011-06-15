@@ -18,7 +18,7 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
-import de.lichtflut.rb.core.schema.parser.RSParsingUnit;
+import de.lichtflut.rb.core.schema.parser.RSParsingUnitFactory;
 import de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterException;
 import de.lichtflut.rb.core.schema.parser.impl.RSCaseControlStream;
 import de.lichtflut.rb.core.schema.parser.impl.osf.OSFParser.osl_return;
@@ -32,33 +32,45 @@ import de.lichtflut.rb.core.schema.parser.impl.osf.OSFParser.osl_return;
  *
  * @author Nils Bleisch
  */
-public class OSFParsingUnit extends RSParsingUnit {
+public class OSFParsingUnit extends RSParsingUnitFactory {
 
+	/**
+	 *
+	 */
     private RSErrorReporter errorReporter= null;
-	
+
+    /**
+     *@return Simple Format
+     */
 	public RSFormat getFormat() {
 		return RSFormat.SIMPLE_RSF;
 	}
-	
+
 	// -----------------------------------------------------
 
 	public Collection<ResourceSchemaType> parse(final String input)
 			throws RSMissingErrorReporterException {
-		if(errorReporter == null) throw new RSMissingErrorReporterException("RSErrorReporter can not be null");
+		if(errorReporter == null) {
+			throw new RSMissingErrorReporterException("RSErrorReporter can not be null");
+		}
 		return parseOSF(input);
 	}
 
 	// -----------------------------------------------------
-	
+
 	public Collection<ResourceSchemaType> parse(final InputStream input)
 			throws RSMissingErrorReporterException {
-		if(errorReporter == null) throw new RSMissingErrorReporterException("RSErrorReporter can not be null");
+		if(errorReporter == null){
+			throw new RSMissingErrorReporterException("RSErrorReporter can not be null");
+		}
 		try {
 			//Build a String from InputStream
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 			StringBuilder bufferedInput = new StringBuilder();
 			String line;
-			while((line = reader.readLine())!=null) bufferedInput.append(line).append("\n");
+			while((line = reader.readLine())!=null){
+				bufferedInput.append(line).append("\n");
+			}
 			return parse(bufferedInput.toString());
 		} catch (IOException e) {
 			errorReporter.reportError("The following I/O-Error has been occured: " + e.getMessage());
@@ -67,14 +79,13 @@ public class OSFParsingUnit extends RSParsingUnit {
 	}
 
 	// -----------------------------------------------------
-	
+
 	public void setErrorReporter(final RSErrorReporter errorReporter) {
 		this.errorReporter = errorReporter;
 	}
 
 	// -----------------------------------------------------
-	
-	
+
 	private Collection<ResourceSchemaType> parseOSF(final String input){
 		Collection<ResourceSchemaType> output = new LinkedList<ResourceSchemaType>();
 		RSCaseControlStream stream = new RSCaseControlStream(input);
@@ -82,7 +93,9 @@ public class OSFParsingUnit extends RSParsingUnit {
 		stream.setCaseSensitive(false);
 		OSFLexer lexer = new OSFLexer(stream);
 		lexer.setErrorReporter(errorReporter);
-		if(errorReporter.hasErrorReported()) return output;
+		if(errorReporter.hasErrorReported()){
+			return output;
+		}
 		TokenStream tokens = new CommonTokenStream(lexer);
 		OSFParser parser = new OSFParser(tokens);
 		parser.setErrorReporter(errorReporter);
@@ -90,15 +103,16 @@ public class OSFParsingUnit extends RSParsingUnit {
 		try {
 			osl_return result;
 			result = parser.osl();
-			if(errorReporter.hasErrorReported()) return output;
+			if(errorReporter.hasErrorReported()){
+				return output;
+			}
 			treeParser = new OSFTree(new CommonTreeNodeStream(result.tree));
 			treeParser.setErrorReporter(this.errorReporter);
 			de.lichtflut.rb.core.schema.parser.impl.osf.OSFTree.osl_return osl_result = treeParser.osl();
 			output =  osl_result.list;
-		} catch (RecognitionException e) {			
+		} catch (RecognitionException e) {
 			errorReporter.reportError(("A RecognitionException has been occurred: " + treeParser.getErrorMessage(e, null)));
 		}
 		return output;
 	}
-	
 }

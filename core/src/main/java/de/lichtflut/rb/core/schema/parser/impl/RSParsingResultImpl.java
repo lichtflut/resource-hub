@@ -16,7 +16,7 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 
 /**
  * <p>
- *  This is the reference implementation for {@link RSParsingResult}
+ *  This is the reference implementation for {@link RSParsingResult}.
  * </p>
  *
  * <p>
@@ -27,34 +27,62 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
  */
 public class RSParsingResultImpl implements RSParsingResult{
 
+	/**
+	 *
+	 */
 	private Collection<Error> errorMessages = new LinkedList<Error>();
+	/**
+	 *
+	 */
 	private Collection<PropertyDeclaration> propertiesDeclarations = new LinkedHashSet<PropertyDeclaration>();
+	/**
+	 *
+	 */
 	private Collection<ResourceSchema> resourceSchemas = new LinkedHashSet<ResourceSchema>();
+	/**
+	 *
+	 */
 	//This is the default error level
 	private RSErrorLevel level = RSErrorLevel.ALL;
 
 	// -----------------------------------------------------
 
+	/**
+	 * Sets property declarations.
+	 * @param propertiesDeclarations -
+	 */
 	public void setPropertyDeclarations(
-			Collection<PropertyDeclaration> propertiesDeclarations) {
+			final Collection<PropertyDeclaration> propertiesDeclarations) {
 		this.propertiesDeclarations = propertiesDeclarations;
 	}
 
 	// -----------------------------------------------------
 
-	public void addPropertyDeclaration(PropertyDeclaration property) {
+	/**
+	 * Adds a proppertydeclaration.
+	 * @param property -
+	 */
+	public void addPropertyDeclaration(final PropertyDeclaration property) {
 		this.propertiesDeclarations.add(property);
 	}
 
 	// -----------------------------------------------------
 
-	public void addResourceSchema(ResourceSchema schema) {
+	/**
+	 * Adds a resource schema.
+	 * @param schema -
+	 */
+	public void addResourceSchema(final ResourceSchema schema) {
 		this.resourceSchemas.add(schema);
 	}
 
 	// -----------------------------------------------------
 
-	public void setErrorLevel(RSErrorLevel lvl){
+	/**
+	 * Sets the Errorlevel.
+	 * @param lvl - Errorlevel
+	 */
+	public void setErrorLevel(final RSErrorLevel lvl){
 		this.level = lvl;
 	}
 
@@ -62,8 +90,9 @@ public class RSParsingResultImpl implements RSParsingResult{
 
 	/**
 	 * Logs this message with the pre-defined ErrorLevel.
+	 * @param errorMessages -
 	 */
-	public void setErrorMessages(Collection<String> errorMessages) {
+	public void setErrorMessages(final Collection<String> errorMessages) {
 		this.setErrorMessages(errorMessages, this.level);
 	}
 
@@ -71,8 +100,10 @@ public class RSParsingResultImpl implements RSParsingResult{
 
 	/**
 	 * Logs this message with the explicit given ErrorLevel.
+	 * @param message -
+	 * @param lvl - Errorlevel
 	 */
-	public void addErrorMessage(String message, RSErrorLevel lvl){
+	public void addErrorMessage(final String message, final RSErrorLevel lvl){
 		this.errorMessages.add(new Error(lvl, message));
 	}
 
@@ -80,8 +111,10 @@ public class RSParsingResultImpl implements RSParsingResult{
 
 	/**
 	 * Logs this messages with the explicit given ErrorLevel.
+	 * @param errorMessages -
+	 * @param lvl - Errorlevel
 	 */
-	public void setErrorMessages(Collection<String> errorMessages, RSErrorLevel lvl) {
+	public void setErrorMessages(final Collection<String> errorMessages, RSErrorLevel lvl) {
 		this.errorMessages = new LinkedList<Error>();
 		for (String message : errorMessages) {
 			this.errorMessages.add(new Error(lvl,message));
@@ -91,19 +124,28 @@ public class RSParsingResultImpl implements RSParsingResult{
 	// -----------------------------------------------------
 	/**
 	 * Logs this message with the pre-defined ErrorLevel.
+	 * @param message -
 	 */
-	public void addErrorMessage(String message){
+	public void addErrorMessage(final String message){
 		this.addErrorMessage(message, this.level);
 	}
 
 	// -----------------------------------------------------
 
-	public void setResourceSchemas(Collection<ResourceSchema> resourceSchemas) {
+	/**
+	 * Set Resourceschemas.
+	 * @param resourceSchemas -
+	 */
+	public void setResourceSchemas(final Collection<ResourceSchema> resourceSchemas) {
 		this.resourceSchemas = resourceSchemas;
 	}
 
 	// -----------------------------------------------------
 
+	/**
+	 * Returns all Propertydeclarations.
+	 * @return Propertydeclarations
+	 */
 	public Collection<PropertyDeclaration> getPropertyDeclarations() {
 		//return an empty collection if an error is occured
 		if(isErrorOccured()) return Collections.emptySet();

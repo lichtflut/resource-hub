@@ -15,7 +15,7 @@ import org.antlr.runtime.TokenStream;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
-import de.lichtflut.rb.core.schema.parser.RSParsingUnit;
+import de.lichtflut.rb.core.schema.parser.RSParsingUnitFactory;
 import de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterException;
 import de.lichtflut.rb.core.schema.parser.impl.RSCaseControlStream;
 import de.lichtflut.rb.core.schema.parser.impl.simplersf.ResourceSchemaParser.dsl_return;
@@ -29,7 +29,7 @@ import de.lichtflut.rb.core.schema.parser.impl.simplersf.ResourceSchemaParser.ds
  *
  * @author Nils Bleisch
  */
-public class SimpleRSFParsingUnit extends RSParsingUnit {
+public class SimpleRSFParsingUnit extends RSParsingUnitFactory {
 
     private RSErrorReporter errorReporter= null;
 

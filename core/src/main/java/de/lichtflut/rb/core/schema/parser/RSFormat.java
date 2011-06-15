@@ -22,19 +22,25 @@ public enum RSFormat {
 
 
 	//If you have a RSParsingUnit for a new RSF, register it here!
+	/**
+	 * RS-format SIMPLE_RSF.
+	 */
 	SIMPLE_RSF("simple-rdf", new SimpleRSFParsingUnit()),
+	/**
+	 * RS-format OSF.
+	 */
 	OSF("Oliver Tigges Simple Format", new OSFParsingUnit());
 
 	private String name = "undefined";
-	private RSParsingUnit unit = null;
-	private RSFormat(String name, RSParsingUnit unit){
+	private RSParsingUnitFactory unit = null;
+	private RSFormat(String name, RSParsingUnitFactory unit){
 		this.name= name;
 		this.unit = unit;
 	}
 
 	// -----------------------------------------------------
 
-	public RSParsingUnit getParsingUnit(){
+	public RSParsingUnitFactory getParsingUnit(){
 		return unit;
 	}
 

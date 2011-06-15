@@ -12,34 +12,50 @@ import org.antlr.runtime.ANTLRStringStream;
  */
 public class RSCaseControlStream extends ANTLRStringStream {
 
+	/**
+	 *
+	 */
   private boolean caseSensitive = true;
 
-  /** Copy data from string to a local char array. */
-  public RSCaseControlStream(String input) {
+  /**
+   * Copy data from string to a local char array.
+   * @param input String to be converted to char[]
+   */
+  public RSCaseControlStream(final String input) {
     super();
     this.data = input.toCharArray();
     this.n = input.length();
   }
 
-  /** This is the preferred constructor as no data is actually copied. */
-  public RSCaseControlStream(char[] data, int numberOfActualCharsInArray) {
+  /**
+   * This is the preferred constructor as no data is actually copied.
+   * @param data -
+   * @param numberOfActualCharsInArray -
+   */
+  public RSCaseControlStream(final char[] data, final int numberOfActualCharsInArray) {
     super();
     this.data = data;
     this.n = numberOfActualCharsInArray;
   }
 
   @Override
-  public int LA(int i) {
+  public int LA(final int i) {
     int c = super.LA(i);
     return (!isCaseSensitive()) ? Character.toUpperCase(c) : c;
   }
 
-
-  public void setCaseSensitive(boolean caseSensitive) {
+  /**
+   * Set case sensitivity.
+   * @param caseSensitive -
+   */
+  public void setCaseSensitive(final boolean caseSensitive) {
 	this.caseSensitive = caseSensitive;
   }
 
-
+  /**
+   * Returns whether case sensitivtity is true or false.
+   * @return true if it is case sensitive, false if not
+   */
   public boolean isCaseSensitive() {
 	return caseSensitive;
   }
