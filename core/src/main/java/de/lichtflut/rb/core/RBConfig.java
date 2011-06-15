@@ -18,7 +18,13 @@ import org.arastreju.sge.ArastrejuProfile;
  */
 public class RBConfig implements RBConstants {
 
+	/**
+	 * Profilename.
+	 */
 	private final String profileName;
+	/**
+	 * Profile.
+	 */
 	private ArastrejuProfile profile;
 
 	// -----------------------------------------------------
@@ -53,6 +59,9 @@ public class RBConfig implements RBConstants {
 
 	// -----------------------------------------------------
 
+	/**
+	 * Initializes a profile.
+	 */
 	private void initProfile(){
 		if (profileName == null) {
 			profile = ArastrejuProfile.read();

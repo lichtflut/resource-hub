@@ -5,9 +5,9 @@ package de.lichtflut.rb.core.schema.parser.exception;
 
 /**
  * <p>
- * 	Exception which is fired if an ErrorReporter is not set when it's required
+ * 	Exception which is fired if an ErrorReporter is not set when it's required.
  * </p>
- * 
+ *
  * Created: Apr 29, 2011
  *
  * @author Nils Bleisch
@@ -15,8 +15,11 @@ package de.lichtflut.rb.core.schema.parser.exception;
 @SuppressWarnings("serial")
 public class RSMissingErrorReporterException extends Exception {
 
-	public RSMissingErrorReporterException(String string) {
+	/**
+	 * @param string Errormessage
+	 */
+	public RSMissingErrorReporterException(final String string) {
 		super(string);
 	}
-	
+
 }

@@ -18,6 +18,9 @@ import org.arastreju.sge.ArastrejuProfile;
  */
 public interface RBConstants {
 
+	/**
+	 * Arastreju store directory.
+	 */
 	String ARAS_STORE_DIRECTORY = ArastrejuProfile.ARAS_STORE_DIRECTORY;
 
 }

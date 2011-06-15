@@ -16,23 +16,40 @@ import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
  * @author Nils Bleisch
  */
 public class RSParsingResultErrorReporter implements RSErrorReporter{
+	/**
+	 *
+	 */
 	private final Logger logger = LoggerFactory.getLogger(RSParsingResultErrorReporter.class);
-
+	/**
+	 *
+	 */
 	private RSParsingResultImpl result;
 
 	// -----------------------------------------------------
 
-	public RSParsingResultErrorReporter(RSParsingResultImpl result){
+	/**
+	 * TODO .
+	 * @param result -
+	 */
+	public RSParsingResultErrorReporter(final RSParsingResultImpl result){
 		this.result = result;
 	}
 
 	// -----------------------------------------------------
 
-	public void reportError(String error) {
+	/**
+	 * Adds Error to Result.
+	 * @param error that has occured
+	 */
+	public void reportError(final String error) {
 		logger.info("ErrorReporter has added the following error: " + error);
 		result.addErrorMessage(error, RSErrorLevel.GRAMMAR);
 	}
 
+	/**
+	 * Returns if an error is occured.
+	 * @return true if error is occured, false if not
+	 */
 	public boolean hasErrorReported() {
 		return result.isErrorOccured();
 	}

@@ -14,9 +14,13 @@ package de.lichtflut.rb.core.schema.parser;
 public interface RSErrorReporter {
 	/**
 	 * No use to describe what this method should do ;) .
-	 * @param error
+	 * @param error to report
 	 */
-	public void reportError(String error);
+	void reportError(String error);
 
-	public boolean hasErrorReported();
+	/**
+	 * Checks whether error has been reported.
+	 * @return true if error has been reported, false if not
+	 */
+	boolean hasErrorReported();
 }
