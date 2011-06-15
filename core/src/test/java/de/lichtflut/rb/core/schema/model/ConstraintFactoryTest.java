@@ -17,22 +17,21 @@ import junit.framework.TestCase;
  * <p>
  *  Some tests to proof and specify the behavior of {@link ConstaintFactory}.
  * </p>
- * 
+ *
  *  <p>
  * 	 Created Apr 12, 2011
  *  </p>
  *
  * @author Nils Bleisch
- * 
+ *
  */
-public class ConstraintFactoryTest extends TestCase
-{
+public class ConstraintFactoryTest extends TestCase{
 	/**
 	 * <p>
-	 * This test makes some assertion about the general nature of ConstraintFactory:
-	 *    <ul> 
+	 * This test makes some assertion about the general nature of ConstraintFactory.
+	 *    <ul>
      *    	 <li> the one and only instance of ConstraintFactory is given by the class itself as singleton
-     *     <ul>
+     *    </ul>
      * </p>
 	 */
 	@SuppressWarnings("static-access")
@@ -43,38 +42,38 @@ public class ConstraintFactoryTest extends TestCase
 		assertSame("getInstance() should deliver allways the same instance",
 				factory,ConstraintFactory.getInstance());
 		assertSame("getInstance() should deliver allways the same instance",
-				factory,factory.getInstance());	
-						
+				factory,factory.getInstance());
+
 	}//End of method testFactoryInCommon()
-	
+
    //-------------------------------//
-	
+
 	/**
 	 * <p>
-	 * This test checks the possibility of raised {@link NullPointerException} during wrong buildConstraint()-calls
+	 * This test checks the possibility of raised {@link NullPointerException} during wrong buildConstraint()-calls.
      * </p>
 	 */
-	@SuppressWarnings("static-access")	
+	@SuppressWarnings("static-access")
    public void testNullPointerExceptionInBuildingConstraints(){
 		ConstraintFactory f = ConstraintFactory.getInstance();
 		boolean exceptionIsOccured=false;
 		try{
 		  String[] a =null;
-		  f.buildConstraint(a);	
+		  f.buildConstraint(a);
 		}catch(NullPointerException exe){
 			exceptionIsOccured=true;
 		}
 		assertEquals(true,exceptionIsOccured);
-		
+
 		exceptionIsOccured=false;
 		try{
 		  Collection<String> a =null;
-		  f.buildConstraint(a);	
+		  f.buildConstraint(a);
 		}catch(NullPointerException exe){
 			exceptionIsOccured=true;
 		}
 		assertEquals(true,exceptionIsOccured);
-		
+
 		//For the following calls, no exception should be raised
 		String a = null;
 		f.buildConstraint(a);
@@ -83,41 +82,46 @@ public class ConstraintFactoryTest extends TestCase
 		ResourceID id = null;
 		f.buildConstraint(id);
    }
- 
+
   //-------------------------------//
-	
-	
+
+/**
+ * TODO:.
+ */
   @SuppressWarnings("static-access")
    public void testBuildPatternConstraint(){
 	   ConstraintFactory f = ConstraintFactory.getInstance();
 	   String[] patterns = new String[]{"Pattern1", "Pattern2", null};
 	   //check some constraints based on patterns-array
-	   
-	   //1) verify that a null value is interpreted as blank "" 
+
+	   //1) verify that a null value is interpreted as blank ""
 	   Constraint c = f.buildConstraint(patterns[2]);
 	   assertNotNull(c);
 	   assertTrue(c.isLiteralConstraint());
 	   assertFalse(c.isResourceTypeConstraint());
 	   assertEquals(c.getLiteralConstraint(),"");
-	   
+
 	   //2) verify that a non null value pattern as parameter is equal compared to the value from getLiteralConstraint
 	   c = f.buildConstraint(patterns[0]);
 	   assertNotNull(c);
 	   assertTrue(c.isLiteralConstraint());
 	   assertFalse(c.isResourceTypeConstraint());
 	   assertEquals(c.getLiteralConstraint(),patterns[0]);
-	   
+
 	   //3) verify that a collection of patterns is concatenated to one whole pattern string
 	   c = f.buildConstraint(patterns);
 	   assertNotNull(c);
 	   assertTrue(c.isLiteralConstraint());
 	   assertFalse(c.isResourceTypeConstraint());
 	   assertEquals(c.getLiteralConstraint(),patterns[0] + patterns[1] + "");
-	   
+
    }
-  
+
   //-------------------------------//
-	
+
+  /**
+   * TODO:.
+   */
   @SuppressWarnings("static-access")
   public void testBuildResourceTypeConstraint(){
 	   ConstraintFactory f = ConstraintFactory.getInstance();
@@ -128,19 +132,18 @@ public class ConstraintFactoryTest extends TestCase
 	   assertFalse(c.isResourceTypeConstraint());
 	   assertNull(c.getLiteralConstraint());
 	   assertNull(c.getResourceTypeConstraint());
-	   
+
 	   id = new SimpleResourceID(
 				"NAMESPACE",
 				"IDENTIFIER");
-	   
+
 	   c = f.buildConstraint(id);
 	   assertNotNull(c);
 	   assertFalse(c.isLiteralConstraint());
 	   assertTrue(c.isResourceTypeConstraint());
 	   assertNull(c.getLiteralConstraint());
 	   assertEquals(c.getResourceTypeConstraint(), id);
-	   
+
   }
-  
-	
+
 }
