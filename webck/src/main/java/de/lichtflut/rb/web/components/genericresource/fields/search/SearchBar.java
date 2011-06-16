@@ -17,7 +17,7 @@ import org.apache.wicket.request.Response;
 
 import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.api.RBEntityManagement.SearchContext;
-import de.lichtflut.rb.core.schema.model.RBEntityFactory;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
 
@@ -67,28 +67,28 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 	public SearchBar(final String id, final Collection<ResourceSchema> filter) {
 		super(id);
 		// TODO Nils: Don't use implementation class HashMap as variable type but interface Map
-		final HashMap<Integer, RBEntityFactory<Object>> selectableValues = new HashMap<Integer, RBEntityFactory<Object>>();
+		final HashMap<Integer, RBEntity<Object>> selectableValues = new HashMap<Integer, RBEntity<Object>>();
 		final AutoCompleteTextField autoCompleter =
-			new AutoCompleteTextField("searchInput",Model.of(""),new AbstractAutoCompleteRenderer<RBEntityFactory<Object>>(){
+			new AutoCompleteTextField("searchInput",Model.of(""),new AbstractAutoCompleteRenderer<RBEntity<Object>>(){
 				private static final long serialVersionUID = 2950543012596722925L;
 			
-				protected String getTextValue(final RBEntityFactory<Object> object) {
+				protected String getTextValue(final RBEntity<Object> object) {
 					return object.toString();
 				}
 
 				// -----------------------------------------------------
 				
-				protected void renderChoice(final RBEntityFactory<Object> object,final Response response, final String criteria) {
+				protected void renderChoice(final RBEntity<Object> object,final Response response, final String criteria) {
 					response.write(getTextValue(object));					
 				}				
 			}){
 
 			private static final long serialVersionUID = -653128720998419185L;
-			protected Iterator<RBEntityFactory> getChoices(final String input) {
+			protected Iterator<RBEntity> getChoices(final String input) {
 				Collection<ResourceSchema> rSchemas;
 				//if the keywords are not valid, return an iterator of an empty collection
 				if(!isKeywordsValidForSearch(input)){
-					return new ArrayList<RBEntityFactory>().iterator();
+					return new ArrayList<RBEntity>().iterator();
 				}
 				if(filter==null || filter.isEmpty()){
 					rSchemas = getServiceProvider().getResourceSchemaManagement().getAllResourceSchemas();
@@ -96,9 +96,9 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 					rSchemas = filter;
 				}
 				  final RBEntityManagement typeManagement =getServiceProvider().getRBEntityManagement();
-				  final Collection<RBEntityFactory> instances = 
+				  final Collection<RBEntity> instances = 
 					  typeManagement.loadAllResourceTypeInstancesForSchema(rSchemas,input,sContext);
-				  for (final RBEntityFactory instance : instances) {
+				  for (final RBEntity instance : instances) {
 					selectableValues.put(instance.toString().trim().hashCode(),instance);
 				  }
 			      return instances.iterator();
@@ -106,12 +106,12 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 			};
 			
 
-		final Form<RBEntityFactory<Object>> searchForm = new Form<RBEntityFactory<Object>>("searchForm"){
+		final Form<RBEntity<Object>> searchForm = new Form<RBEntity<Object>>("searchForm"){
 			private static final long serialVersionUID = -2551391635434282054L;
 			protected void onSubmit() {
 				Object value =  autoCompleter.getDefaultModelObject();
 	        	if(value==null) return;
-	        	RBEntityFactory instance = selectableValues.get(value.toString().trim().hashCode());
+	        	RBEntity instance = selectableValues.get(value.toString().trim().hashCode());
 	        	//Reset selectableValues
 	        	selectableValues.clear();
 	        	if(instance==null) return;
@@ -142,7 +142,7 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 	 * to an existing {@link ResourceTypeInstance}
 	 * </p>
 	 */
-	public abstract void onSearchSubmit(RBEntityFactory<Object> instance);	
+	public abstract void onSearchSubmit(RBEntity<Object> instance);	
 	
 	// -----------------------------------------------------
 	

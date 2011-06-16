@@ -25,7 +25,7 @@ import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 
 /**
  * <p>
- *  TODO [DESCRIPTION]
+ *  TODO [DESCRIPTION].
  * </p>
  *
  * <p>

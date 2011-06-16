@@ -19,7 +19,7 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.RBInvalidAttributeException;
 import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
-import de.lichtflut.rb.core.schema.model.RBValidatorFactory;
+import de.lichtflut.rb.core.schema.model.RBValidator;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 
@@ -33,10 +33,10 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  */
 @SuppressWarnings("serial")
 public class RBEntityImpl extends RBEntity<Object> {
-	
+
 
 	private HashMap<String, ValueHolder> internalRep = new HashMap<String, ValueHolder>();
-	private HashMap<String, RBValidatorFactory<Object>> internalValidatorMap = new HashMap<String, RBValidatorFactory<Object>>();
+	private HashMap<String, RBValidator<Object>> internalValidatorMap = new HashMap<String, RBValidator<Object>>();
 	private HashMap<String, String> simpleAttributeNames = new HashMap<String, String>();
 	private ResourceSchema schema;
 	
@@ -94,7 +94,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 	
 	public Integer addValueFor(String attribute, Object value) throws RBInvalidValueException, RBInvalidAttributeException {
 		if(value==null) value="";
-		RBValidatorFactory<Object> validator = getValidatorFor(attribute);
+		RBValidator<Object> validator = getValidatorFor(attribute);
 		if((!containsAttribute(attribute)) || validator==null){
 			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined or does not have an assigned validator");
 		}
@@ -116,7 +116,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 	
 	public void addValueFor(String attribute, Object value, int ticket) throws RBInvalidValueException, RBInvalidAttributeException {
 		if(value==null) value="";
-		RBValidatorFactory<Object> validator = getValidatorFor(attribute);
+		RBValidator<Object> validator = getValidatorFor(attribute);
 		
 		if((!containsAttribute(attribute)) || validator==null){
 			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined or does not have an assigned validator");
@@ -151,7 +151,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 	
 	// -----------------------------------------------------
 	
-	public RBValidatorFactory<Object> getValidatorFor(String attribute) {
+	public RBValidator<Object> getValidatorFor(String attribute) {
 		return this.internalValidatorMap.get(attribute);
 	}
 
@@ -199,7 +199,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 			final PropertyDeclaration pDec = propertyAssertion.getPropertyDeclaration();
 			//Setting up the validator for this property declaration
 			//In this version, constraints can be ignored
-			this.internalValidatorMap.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(), new RBValidatorFactory<Object>(){
+			this.internalValidatorMap.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(), new RBValidator<Object>(){
 				@Override
 				public boolean isValid(Object value)
 						throws RBInvalidValueException {

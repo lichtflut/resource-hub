@@ -169,7 +169,7 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	 * @return a {@link RBValidatorFactory} for a given attribute.
 	 *
 	 */
-	public abstract RBValidatorFactory<T> getValidatorFor(final String attribute);
+	public abstract RBValidator<T> getValidatorFor(final String attribute);
 
 	// -----------------------------------------------------
 
