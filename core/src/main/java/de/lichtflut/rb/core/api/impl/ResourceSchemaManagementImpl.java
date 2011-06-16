@@ -33,9 +33,9 @@ import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 
 /**
- * Reference impl of {@link ResourceSchemaManagement}
+ * Reference impl of {@link ResourceSchemaManagement}.
  * This impl will take the default context (rbschema#context)
- * 
+ *
  * Created: Apr 19, 2011
  *
  * @author Nils Bleisch
@@ -43,14 +43,22 @@ import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 @SuppressWarnings("serial")
 public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 
+
+	// -------------MEMBER-FIELDS--------------------------
+
 	private ArastrejuGate gate = null;
 	private RBSchemaStore store = null;
 	private RSFormat format = null;
-	private final Logger logger = LoggerFactory.getLogger(RSParsingResultErrorReporter.class);
-	
 
-	
-	public ResourceSchemaManagementImpl(ArastrejuGate gate) {
+	//logger
+	private final Logger logger = LoggerFactory.getLogger(RSParsingResultErrorReporter.class);
+
+
+	/**
+	 *
+	 * @param gate -
+	 */
+	public ResourceSchemaManagementImpl(final ArastrejuGate gate){
 		//Trigger a NullPointerException
 		gate.toString();
 		this.gate = gate;
@@ -60,8 +68,10 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	}
 
 	// -----------------------------------------------------
-	
-	public RSParsingResult generateSchemaModelThrough(InputStream is){
+
+	/** {@inheritDoc} */
+	@Override
+	public RSParsingResult generateSchemaModelThrough(final InputStream is){
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		RSParsingUnitFactory pUnit = getFormat().getParsingUnit();
 		pUnit.setErrorReporter(new RSParsingResultErrorReporter(result));
@@ -76,8 +86,10 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	}
 
 	// -----------------------------------------------------
-	
-	public RSParsingResult generateSchemaModelThrough(File file){
+
+	/** {@inheritDoc} */
+	@Override
+	public RSParsingResult generateSchemaModelThrough(final File file){
 		try {
 			return generateSchemaModelThrough(new FileInputStream(file));
 		} catch (FileNotFoundException e) {
@@ -88,21 +100,22 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	}
 
 	// -----------------------------------------------------
-	
-	public RSParsingResult generateSchemaModelThrough(String s) {
+
+	/** {@inheritDoc} */
+	@Override
+	public RSParsingResult generateSchemaModelThrough(final String s){
 		return generateSchemaModelThrough(new ByteArrayInputStream(s.getBytes()));
 	}
-	
+
 	// -----------------------------------------------------
-	
-	/**
-	 *{@inheritDoc}
-	 */
-	public RSParsingResult generateAndResolveSchemaModelThrough(InputStream is) {
+
+	/** {@inheritDoc} */
+	@Override
+	public RSParsingResult generateAndResolveSchemaModelThrough(final InputStream is){
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.merge(generateSchemaModelThrough(is));
 		result.setErrorLevel(RSErrorLevel.INTERPRETER);
-		
+
 		//Load all persisted Properties
 		Collection<PropertyDeclaration> persistedPDecs = store.loadAllPropertyDeclarations(null);
 		Collection<PropertyDeclaration> globalPDecs = result.getPropertyDeclarations();
@@ -111,14 +124,14 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		HashMap<String, PropertyDeclaration> globalPDecsHash = new HashMap<String, PropertyDeclaration>();
 		//TODO: Improve this, some points to optimize
 		//Fill those hashmaps
-		for (PropertyDeclaration pDec : persistedPDecs) persistedPDecsHash.put(pDec.getIdentifierString(),pDec);
-		for (PropertyDeclaration pDec : globalPDecs) globalPDecsHash.put(pDec.getIdentifierString(),pDec);
-		
+		for (PropertyDeclaration pDec : persistedPDecs){persistedPDecsHash.put(pDec.getIdentifierString(),pDec);}
+		for (PropertyDeclaration pDec : globalPDecs){ globalPDecsHash.put(pDec.getIdentifierString(),pDec);}
+
 		//Merge them together, the newer global ones will override the older persisted ones
 		for (PropertyDeclaration pDec : globalPDecsHash.values()) {
 			persistedPDecsHash.put(pDec.getIdentifierString(), pDec);
 		}
-		
+
 		//Iterate over assertions:
 		for (ResourceSchema rSchema : result.getResourceSchemas()) {
 			for (PropertyAssertion assertion : rSchema.getPropertyAssertions()) {
@@ -127,10 +140,12 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 					//Get the pDec from given identifier
 					assertionPDec = persistedPDecsHash.get(assertion.getPropertyIdentifier());
 					//if assertionPDec is still null
-					result.addErrorMessage("Wasnt able to resolve PropertyDeclaration for " + assertionPDec.getIdentifierString());
+					result.addErrorMessage("Wasnt able to resolve PropertyDeclaration for "
+							+ assertionPDec.getIdentifierString());
 					continue;
 				}
-				PropertyDeclaration persistedPDec = persistedPDecsHash.get(assertion.getPropertyDeclaration().getIdentifierString());
+				PropertyDeclaration persistedPDec =
+					persistedPDecsHash.get(assertion.getPropertyDeclaration().getIdentifierString());
 				//This must be a new or inherited property
 				if(persistedPDec == null){
 					//check if it's inhertied
@@ -146,28 +161,44 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 				persistedPDecsHash.put(assertionPDec.getIdentifierString(), assertionPDec);
 			}//End of Inner for
 		}
-		
+
 		result.setPropertyDeclarations(persistedPDecsHash.values());
-		
-		if(result.isErrorOccured()) return result;
+
+		if(result.isErrorOccured()){
+			return result;
+		}
 		//Otherwise, do sth.?
-		
 		return result;
 	}
 
-	private void mergePropertyDecs(PropertyDeclaration newOne, PropertyDeclaration oldOne){
+	// -----------------------------------------------------
+
+	/**
+	 * <p>
+	 * Merges two {@link PropertyDeclarations} the newOne has a higher priority.
+	 * </p>
+	 * @param newOne -
+	 * @param oldOne -
+	 */
+	private void mergePropertyDecs(final PropertyDeclaration newOne, final PropertyDeclaration oldOne){
 		newOne.getConstraints().addAll(oldOne.getConstraints());
-		//TODO: This is not correct. Due to the fact that the default value is STRING instead of UNDEFINED, we have to expand this selection
-		//This would make it impossible to overwrite a global value with a value of type string, please fix it
-		if(((newOne.getElementaryDataType()==ElementaryDataType.UNDEFINED)) ||(newOne.getElementaryDataType()==ElementaryDataType.STRING)){
+		/* TODO: This is not correct.
+		 * Due to the fact that the default value is STRING instead of UNDEFINED, we have to expand this selection
+		 * This would make it impossible to overwrite a global value with a value of type string, please fix it
+		 */
+		if(((newOne.getElementaryDataType()==ElementaryDataType.UNDEFINED))
+				||(newOne.getElementaryDataType()==ElementaryDataType.STRING)){
 			newOne.setElementaryDataType(oldOne.getElementaryDataType());
 		}
 	}
-	
-	
+
+
+
 	// -----------------------------------------------------
-	
-	public RSParsingResult generateAndResolveSchemaModelThrough(File f) {
+
+	/** {@inheritDoc} */
+	@Override
+	public RSParsingResult generateAndResolveSchemaModelThrough(final File f) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		try {
 			result.merge(generateAndResolveSchemaModelThrough(new FileInputStream(f)));
@@ -178,27 +209,38 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	}
 
 	// -----------------------------------------------------
-	
-	public RSParsingResult generateAndResolveSchemaModelThrough(String s) {
+
+	/** {@inheritDoc} */
+	@Override
+	public RSParsingResult generateAndResolveSchemaModelThrough(final String s) {
 		return generateAndResolveSchemaModelThrough(new ByteArrayInputStream(s.getBytes()));
 	}
-	
+
 	// -----------------------------------------------------
-	
-	private RSParsingResult convertToParsingResult(Collection<ResourceSchemaType> types){
+
+	/**
+	 * <p>
+	 * This method converts a {@link Collection} of {@link ResourceSchemaType} types to a {@link RSParsingResult}.
+	 * </p>
+	 * @param types -the given type-collection
+	 * @return the parsing result
+	 */
+	private RSParsingResult convertToParsingResult(final Collection<ResourceSchemaType> types){
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.setErrorLevel(RSErrorLevel.INTERPRETER);
-		if(types==null) return result;
+		if(types==null){ return result;}
 		for (ResourceSchemaType type : types) {
-			if(type instanceof ResourceSchema) result.addResourceSchema((ResourceSchema) type);
-			if(type instanceof PropertyDeclaration) result.addPropertyDeclaration((PropertyDeclaration) type);
+			if(type instanceof ResourceSchema){result.addResourceSchema((ResourceSchema) type);}
+			if(type instanceof PropertyDeclaration){result.addPropertyDeclaration((PropertyDeclaration) type);}
 		}
 		return result;
 	}
-	
+
 	// -----------------------------------------------------
 
-	public ResourceSchema getResourceSchemaForResourceType(ResourceID id) {
+	/** {@inheritDoc} */
+	@Override
+	public ResourceSchema getResourceSchemaForResourceType(final ResourceID id) {
 		final SNResourceSchema schema = store.loadSchemaForResourceType(id,null);
 		if (schema == null) {
 			return null;
@@ -207,69 +249,88 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		}
 	}
 
-	
-	public void setFormat(RSFormat format){
+	/** {@inheritDoc} */
+	@Override
+	public void setFormat(final RSFormat format){
 		this.format = format;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
+	/** {@inheritDoc} */
+	@Override
 	public RSFormat getFormat() {
 		return this.format;
 	}
-	
+
 	// -----------------------------------------------------
 
-	public void storeOrOverridePropertyDeclaration(PropertyDeclaration declaration) {		
-		if(declaration!=null) store.store(declaration,null);
+	/** {@inheritDoc} */
+	@Override
+	public void storeOrOverridePropertyDeclaration(final PropertyDeclaration declaration) {
+		if(declaration!=null){store.store(declaration,null);}
 	}
-	
+
 	// -----------------------------------------------------
 
-	public void storeOrOverridePropertyDeclaration(Collection<PropertyDeclaration> declarations) {
+	/** {@inheritDoc} */
+	@Override
+	public void storeOrOverridePropertyDeclaration(final Collection<PropertyDeclaration> declarations) {
 		for (PropertyDeclaration propertyDeclaration : declarations) {
 			storeOrOverridePropertyDeclaration(propertyDeclaration);
 		}
 	}
 
 	// -----------------------------------------------------
-	
-	public void storeOrOverrideResourceSchema(ResourceSchema schema) {
-		if(schema!=null) store.store(schema,null);
+
+	/** {@inheritDoc} */
+	@Override
+	public void storeOrOverrideResourceSchema(final ResourceSchema schema) {
+		if(schema!=null){ store.store(schema,null);}
 	}
-	
+
 	// -----------------------------------------------------
 
-	public void storeOrOverrideResourceSchema(Collection<ResourceSchema> schemas) {
+	/** {@inheritDoc} */
+	@Override
+	public void storeOrOverrideResourceSchema(final Collection<ResourceSchema> schemas) {
 		for (ResourceSchema schema : schemas) {
 			storeOrOverrideResourceSchema(schema);
 		}
 	}
 
 	// -----------------------------------------------------
-	
+
+	/** {@inheritDoc} */
+	@Override
 	public Collection<PropertyDeclaration> getAllPropertyDeclarations() {
 		return this.store.loadAllPropertyDeclarations(null);
 	}
 
 	// -----------------------------------------------------
-	
+
+	/** {@inheritDoc} */
+	@Override
 	public Collection<ResourceSchema> getAllResourceSchemas() {
 		return this.store.loadAllResourceSchemas(null);
 	}
 
 	// -----------------------------------------------------
-	
-	public String loadSchemaRepresenation(RSFormat format) {
+
+	/** {@inheritDoc} */
+	@Override
+	public String loadSchemaRepresenation(final RSFormat format) {
 		return this.store.loadSchemaRepresenation(format);
 	}
 
 	// -----------------------------------------------------
 
-	public void storeSchemaRepresentation(String representation, RSFormat format) {
+	/** {@inheritDoc} */
+	@Override
+	public void storeSchemaRepresentation(final String representation, final RSFormat format) {
 		this.store.storeSchemaRepresentation(representation, format);
 	}
-	
+
 	// -----------------------------------------------------
 
 }
