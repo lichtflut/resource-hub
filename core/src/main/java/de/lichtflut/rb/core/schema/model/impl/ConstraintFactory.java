@@ -27,27 +27,28 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 
 public final class ConstraintFactory{
 
-	
+
 	//Let's instance of this class be a Singleton
-	private static ConstraintFactory instance =  new ConstraintFactory();
-	
+	private static final ConstraintFactory INSTANCE =  new ConstraintFactory();
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * <p>
-	 * For future uses
+	 * For future uses.
 	 * </p>
+	 * @return the singleton-instance of {@link ConstraintFactory}
 	 */
 	public static ConstraintFactory getInstance(){
-		return instance;
+		return INSTANCE;
 	}
-	
+
 	// -----------------------------------------------------
-	
-	
+
+
 	/**
-	 * Builds a Pattern-Constraint
-	 * @param literal, if this param is null, a blank "" will be chosen instead
+	 * Builds a Pattern-Constraint.
+	 * @param literal - if this param is null, a blank "" will be chosen instead
 	 * @return {@link Constraint}
 	 */
 	public static Constraint buildConstraint(final String literal){
@@ -57,56 +58,64 @@ public final class ConstraintFactory{
 		 */
 		return buildConstraint(new String[]{literal});
 	}
-	
-	
+
+
 	/**
-	 * Builds a Resource-Constraint
-	 * @param constraint
+	 * Builds a Resource-Constraint.
+	 * @param constraint -
 	 * @return {@link Constraint}
 	 */
 	public static Constraint buildConstraint(final ResourceID constraint){
-		return buildContraintInstanceFromParams(null, constraint); 
+		return buildContraintInstanceFromParams(null, constraint);
 	}
-	
-	
+
+
 	// -----------------------------------------------------
-	
+
 	/**
+	 * <p>
 	 * Please note, that this method is for future uses.
 	 * All those literals will be concatenated in order to build one whole literal string.
-	 * If an element is null, a blank "" will be taken instead
-	 * @param literals
+	 * If an element is null, a blank "" will be taken instead.
+	 * Throws a NullPointerException if the specified collection is null.
+	 * </p>
+	 * @param literals - the described literals
 	 * @return {@link Constraint}
-	 * @throws NullPointerException - if the specified collection is null.
 	 */
 	public static Constraint buildConstraint(final String[] literals){
-		if (literals==null) throw new NullPointerException("literals can not be null");
+		if (literals==null){
+			throw new NullPointerException("literals can not be null");
+		}
 		//Build one whole literal
 		StringBuffer literal = new StringBuffer("");
 		for (String string : literals) {
 			//If the string is null, append a blank "" instead of "null"
 			literal.append(string==null ? "" : string);
 		}
-		return buildContraintInstanceFromParams(literal.toString(), null); 
+		return buildContraintInstanceFromParams(literal.toString(), null);
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
+	 * <p>
 	 * Please note, that this method is for future uses.
 	 * All those literals will be concatenated in order to build one whole literal string.
-	 * If an element is null, a blank "" will be taken instead
-	 * @param literals
+	 * If an element is null, a blank "" will be taken instead.
+	 * Throws a NullPointerException if the specified collection is null.
+	 * </p>
+	 * @param literals - the described literals
 	 * @return {@link Constraint}
-	 * @throws NullPointerException - if the specified collection is null.
 	 */
 	public static Constraint buildConstraint(final Collection<String> literals){
-		if (literals==null) throw new NullPointerException("literals can not be null");
+		if (literals==null){
+			throw new NullPointerException("literals can not be null");
+		}
 		return buildConstraint(
 				(new ArrayList<String>(literals).toArray(new String[literals.size()]))
 				);
 	}
-	
+
 	/**
 	 * TODO: PLEASE FIX AND TO COMMMENT! AND This is not the way I like it.
 	 * Don't generate thousands of anonymous classes in a running system instance if you even don't need them.
@@ -115,17 +124,15 @@ public final class ConstraintFactory{
 	 * if literal is not null, override "boolean is LiteralConstraint" with returning true and so on....
 	 * So REMEMBER! THIS IS NOT FINAL, PLEASE CHANGE IT IF YA CAN READ DIZ.
 	 * Also just ask you the following: Is a ConstraintFactory even necessary for all the known use-cases?
-	 * 
-	 * @param literal
-	 * @param resource
-	 * @return
+	 *
+	 * @param literal -
+	 * @param resource -
+	 * @return the constructed Constraint
 	 */
 	private static Constraint buildContraintInstanceFromParams(final String literal, final ResourceID resource){
 		return new AbstractConstraint(){
-			
-			/**
-			 * 
-			 */
+
+
 			private static final long serialVersionUID = 8494235989367306587L;
 
 			public String getLiteralConstraint() {
@@ -139,29 +146,29 @@ public final class ConstraintFactory{
 			}
 
 			// -----------------------------------------------------
-			
+
 			public boolean isLiteralConstraint() {
 				return literal==null ? false : true;
 			}
 
 			// -----------------------------------------------------
-			
+
 
 			public boolean isResourceTypeConstraint() {
 				return resource==null ? false : true;
 			}
 		};
 	}
-	
-	
+
+
 	// -----------------------------------------------------
-	
-	
-    //Constructor 
+
+
+
     /**
-     * Try to hide the constructor, to make this instance not directly accessible
+     * Try to hide the constructor, to make this instance not directly accessible.
      */
     private ConstraintFactory(){}
-	
-	
+
+
 }

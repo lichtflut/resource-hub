@@ -24,159 +24,232 @@ public final class CardinalityBuilder{
 
 	//Let's instance of this class be a Singleton
 
-	private static CardinalityBuilder instance =  new CardinalityBuilder();
+	private static final CardinalityBuilder INSTANCE =  new CardinalityBuilder();
 
-	/*
-	 * For future uses
+	/**
+	 * For future uses.
+	 * @return the singleton-instance of this builder
 	 */
 	public static CardinalityBuilder getInstance(){
-		return instance;
+		return INSTANCE;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
+	/**
+	 * @return a 1:1-Cardinality
+	 */
 	public static Cardinality hasExcactlyOne(){
 		return hasExactly(1);
 	}
-	
+
 	// -----------------------------------------------------
-	
+
+	/**
+	 * @return a 0:1-Cardinality
+	 */
 	public static Cardinality hasOptionalOne(){
 		return hasOptionalOneUpTo(1);
 	}
 
 	// -----------------------------------------------------
-	
+
+	/**
+	 * @return a 1:N-Cardinality
+	 */
 	public static Cardinality hasAtLeastOneToMany(){
 		return getAbsoluteCardinality(-1,1);
    }
-	
+
 	// -----------------------------------------------------
-	
-	public static Cardinality hasAtLeast(int least){
+
+	/**
+	 * @param least -
+	 * @return a least:N-Cardinality
+	 */
+	public static Cardinality hasAtLeast(final int least){
 		return getAbsoluteCardinality(-1,Math.abs(least));
    }
-	
+
 	// -----------------------------------------------------
-	
+
+	/**
+	 * @return a 0:N-Cardinality
+	 */
 	public static Cardinality hasOptionalOneToMany(){
        return new UnboundedCardinalityImpl();
 	}
-	
-	public static Cardinality hasAtLeastOneUpTo(int max){
+
+	// -----------------------------------------------------
+
+	/**
+	 * @param max -
+	 * @return a 1:max-Cardinality
+	 */
+	public static Cardinality hasAtLeastOneUpTo(final int max){
 	  return getAbsoluteCardinality(Math.abs(max),1);
    }
-	
+
 	// -----------------------------------------------------
-	
-	public static Cardinality hasOptionalOneUpTo(int max){
+
+	/**
+	 * @param max -
+	 * @return a 0:max-Cardinality
+	 */
+	public static Cardinality hasOptionalOneUpTo(final int max){
 	  return getAbsoluteCardinality(Math.abs(max),0);
 	}
 
 	// -----------------------------------------------------
-	
-	public static Cardinality hasExactly(int value){
+
+	/**
+	 * @param value -
+	 * @return a value:value-Cardinality
+	 */
+	public static Cardinality hasExactly(final int value){
 	     return getAbsoluteCardinality(Math.abs(value),Math.abs(value));
 	}
-	
+
 	// -----------------------------------------------------
-	
-    public static Cardinality getAbsoluteCardinality(int max, int min) throws IllegalArgumentException{
+
+	/**
+	 * Throws an {@link IllegalArgumentException} if max < min.
+	 * @param max -
+	 * @param min -
+	 * @return a min:max-Cardinality
+	 */
+    public static Cardinality getAbsoluteCardinality(final int max, final int min){
     	return new UnboundedCardinalityImpl(max, min);
     }
-    
-    
-    // -----------------------------------------------------
-	
-    //Constructor 
-    //Try to hide the constructor, to make this instance not directly accessible
+
+
+    // -----------CONSTRUCTOR--------------------------------------
+
+    /**
+     * Try to hide the constructor, to make this instance not directly accessible.
+     */
     private CardinalityBuilder(){}
-    
-    
-	static private final class UnboundedCardinalityImpl implements Cardinality{
-		
-		/**
-		 * 
-		 */
+
+
+    /**
+     *
+     * ReferneceImplementation of an unbounded Cardinality.
+     * There is nothing more to say here.
+     *
+     * Created: Jun 16, 2011
+     *
+     * @author Nils Bleisch
+     */
+    private static final class UnboundedCardinalityImpl implements Cardinality{
+
 		private static final long serialVersionUID = -8837248407635938888L;
 
+		/**
+		 * Default Constructor.
+		 */
 		public UnboundedCardinalityImpl(){
 			//Default constructor, do nothing
 		}
-		
+
 		/**
-		 * Max should be greater than Min, otherwise, an {@link IllegalArgumentException} will be raised
-		 * @param max, int, unbound could be set up with -1 
-		 * @param min, int, a negative value is interpreted as a positive one 
-		 * @throws IllegalArgumentException
+		 * Max should be greater than Min, otherwise, an {@link IllegalArgumentException} will be raised.
+		 * @param max - unbound could be set up with -1.
+		 * @param min - a negative value is interpreted as a positive one.
 		 */
-		public UnboundedCardinalityImpl(int max, int min) throws IllegalArgumentException{
-			min = Math.abs(min);
-			if((max < min) && (max!=-1)) throw new IllegalArgumentException(
-								"The minimum count of " + min + " must be less than the maximum count of " + max);
+		public UnboundedCardinalityImpl(final int max,final int min){
+			int minimum = min;
+			minimum = Math.abs(min);
+			if((max < min) && (max!=-1)){
+				throw new IllegalArgumentException(
+						"The minimum count of " + minimum + " must be less than the maximum count of " + max);
+			}
 			setMax(max);
-			setMin(min);
+			setMin(minimum);
 		}
-		
+
 
 		//Define inner members and fields
 		private int max=-1, min=0;
-		
+
+		/**
+		 * @return the maximal occurence, if unbounded Integer.MAX_VALUE is returned
+		 */
 		public int getMaxOccurs(){
 			return getMax()==-1 ? Integer.MAX_VALUE : getMax();
 		}
 
 		// -----------------------------------------------------
-		
+
+		/**
+		 * @return the minimal occurence
+		 */
 		public int getMinOccurs() {
 			return Math.abs(getMin());
 		}
 
 		// -----------------------------------------------------
-		
+
+		/**
+		 * @return true if is single cardinality
+		 */
 		public boolean isSingle() {
 			return (getMax()==1);
 		}
 
 		// -----------------------------------------------------
-		
+
+		/**
+		 * @return true if is unbounded cardinality
+		 */
 		public boolean isUnbound() {
 			return (getMax()==-1);
 		}
-		
+
 		// -----------------------------------------------------
-		
+
 		//Getters and Setters
-		
+		/**
+		 * @return the maximum
+		 */
 		public int getMax() {
 			return max;
 		}
 
 		// -----------------------------------------------------
-		
-		private void setMax(int max) {
+
+		/**
+		 * @param max -
+		 */
+		private void setMax(final int max) {
 			this.max = max;
 		}
 
 		// -----------------------------------------------------
-		
+
+		/**
+		 * @return the minimum
+		 */
 		public int getMin() {
 			return min;
 		}
 
 		// -----------------------------------------------------
-		
-		private void setMin(int min) {
+
+		/**
+		 * @param min -
+		 */
+		private void setMin(final int min) {
 			this.min = min;
 		}
- 
+
 		// -----------------------------------------------------
 		@Override
 		public String toString(){
-			return ("Min: " + getMinOccurs() +  ", Max: " + ((getMaxOccurs()==Integer.MAX_VALUE) ? "unlimited" : getMaxOccurs()));
+			return ("Min: " + getMinOccurs()
+					+  ", Max: "
+					+ ((getMaxOccurs()==Integer.MAX_VALUE) ? "unlimited" : getMaxOccurs()));
 		}
-		
-		
+
 	}//End of inner class CardinalityImpl
 
 }
