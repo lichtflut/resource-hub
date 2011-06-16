@@ -79,7 +79,10 @@
       <property name="checkFirstSentence" value="false"/>
     </module>
     <module name="JavadocType"/>
-    <module name="JavadocVariable"/>
+    <module name="JavadocVariable">
+      <property name="excludeScope" value="private"/>
+      <property name="scope" value="public"/>
+    </module>
     <module name="AbstractClassName"/>
     <module name="PackageName">
       <property name="format" value="^de.lichtflut.[a-z]+(\.[a-zA-Z_][a-zA-Z0-9_]*)*$"/>

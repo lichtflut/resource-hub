@@ -16,26 +16,26 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.ValueNode;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.RBEntity;
+import de.lichtflut.rb.core.schema.model.RBEntityFactory;
 import de.lichtflut.rb.core.schema.model.RBInvalidAttributeException;
 import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
-import de.lichtflut.rb.core.schema.model.RBValidator;
+import de.lichtflut.rb.core.schema.model.RBValidatorFactory;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 
 
 /**
  * ReferenceImpl of {@link RBEntityImpl} for value-type {@link Object}
- * 
+ *
  * Created: May 17, 2011
  *
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public class RBEntityImpl extends RBEntity<Object> {
+public class RBEntityImpl extends RBEntityFactory<Object> {
 
 	private HashMap<String, ValueHolder> internalRep = new HashMap<String, ValueHolder>();
-	private HashMap<String, RBValidator<Object>> internalValidatorMap = new HashMap<String, RBValidator<Object>>();
+	private HashMap<String, RBValidatorFactory<Object>> internalValidatorMap = new HashMap<String, RBValidatorFactory<Object>>();
 	private HashMap<String, String> simpleAttributeNames = new HashMap<String, String>();
 	private ResourceSchema schema;
 	
@@ -91,7 +91,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 	
 	public Integer addValueFor(String attribute, Object value) throws RBInvalidValueException, RBInvalidAttributeException {
 		if(value==null) value="";
-		RBValidator<Object> validator = getValidatorFor(attribute);
+		RBValidatorFactory<Object> validator = getValidatorFor(attribute);
 		if((!containsAttribute(attribute)) || validator==null){
 			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined or does not have an assigned validator");
 		}
@@ -113,7 +113,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 	
 	public void addValueFor(String attribute, Object value, int ticket) throws RBInvalidValueException, RBInvalidAttributeException {
 		if(value==null) value="";
-		RBValidator<Object> validator = getValidatorFor(attribute);
+		RBValidatorFactory<Object> validator = getValidatorFor(attribute);
 		
 		if((!containsAttribute(attribute)) || validator==null){
 			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined or does not have an assigned validator");
@@ -148,7 +148,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 	
 	// -----------------------------------------------------
 	
-	public RBValidator<Object> getValidatorFor(String attribute) {
+	public RBValidatorFactory<Object> getValidatorFor(String attribute) {
 		return this.internalValidatorMap.get(attribute);
 	}
 
@@ -196,7 +196,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 			final PropertyDeclaration pDec = propertyAssertion.getPropertyDeclaration();
 			//Setting up the validator for this property declaration
 			//In this version, constraints can be ignored
-			this.internalValidatorMap.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(), new RBValidator<Object>(){
+			this.internalValidatorMap.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(), new RBValidatorFactory<Object>(){
 				@Override
 				public boolean isValid(Object value)
 						throws RBInvalidValueException {

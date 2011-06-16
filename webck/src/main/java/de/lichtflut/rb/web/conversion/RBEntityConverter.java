@@ -7,7 +7,7 @@ import java.util.Locale;
 
 import org.apache.wicket.util.convert.converter.AbstractConverter;
 
-import de.lichtflut.rb.core.schema.model.RBEntity;
+import de.lichtflut.rb.core.schema.model.RBEntityFactory;
 
 /**
  * <p>
@@ -36,7 +36,7 @@ public class RBEntityConverter extends AbstractConverter<RBEntityConverter> {
 		throw new UnsupportedOperationException();
 	}
 
-	public String convertToString(final RBEntity<Object> value, final Locale locale){
+	public String convertToString(final RBEntityFactory<Object> value, final Locale locale){
 		return value.toString();
 	}
 

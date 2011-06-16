@@ -8,7 +8,7 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 
 import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
-import de.lichtflut.rb.core.schema.model.RBValidator;
+import de.lichtflut.rb.core.schema.model.RBValidatorFactory;
 
 /**
  * <p>
@@ -25,9 +25,9 @@ import de.lichtflut.rb.core.schema.model.RBValidator;
 @SuppressWarnings("serial")
 public class GenericResourceValidator implements IValidator<String> {
 
-	private RBValidator<String> validator;
+	private RBValidatorFactory<String> validator;
 	
-	public GenericResourceValidator(RBValidator<String> validator){
+	public GenericResourceValidator(RBValidatorFactory<String> validator){
 		this.validator=validator;
 	}
 	
