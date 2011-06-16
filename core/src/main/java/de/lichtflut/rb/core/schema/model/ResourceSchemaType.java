@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 	Marker Interface. 
+ * 	Marker Interface.
  *  Interface which makes clear which entity belongs to the ResourceSchemaModels (Polymorphism 4tw)
  *  There are no special members, this interface has to be interpreted as special label.
  * </p>

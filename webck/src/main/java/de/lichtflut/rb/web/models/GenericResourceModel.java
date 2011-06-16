@@ -5,7 +5,7 @@ package de.lichtflut.rb.web.models;
 
 import org.apache.wicket.model.IModel;
 
-import de.lichtflut.rb.core.schema.model.RBEntity;
+import de.lichtflut.rb.core.schema.model.RBEntityFactory;
 import de.lichtflut.rb.core.schema.model.RBInvalidAttributeException;
 import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
 
@@ -28,14 +28,14 @@ import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
  */
 @SuppressWarnings("serial")
 public class GenericResourceModel<T> implements IModel<T> {
-	private RBEntity<Object> instance;
+	private RBEntityFactory<Object> instance;
 	private String attribute;
 	private Integer ticket;
 	private T objectreference;
 	
 	// ----------------------------------------
 	
-	public GenericResourceModel(RBEntity<Object> instance, String attribute, int ticket){
+	public GenericResourceModel(RBEntityFactory<Object> instance, String attribute, int ticket){
 		this.ticket = ticket;
 		this.instance = instance;
 		this.attribute = attribute;
@@ -43,7 +43,7 @@ public class GenericResourceModel<T> implements IModel<T> {
 	
 	// ----------------------------------------
 	
-	public GenericResourceModel(RBEntity<Object> instance, String attribute){
+	public GenericResourceModel(RBEntityFactory<Object> instance, String attribute){
 		this.instance = instance;
 		this.attribute = attribute;
 		try {

@@ -6,7 +6,7 @@ package de.lichtflut.rb.web.genericresource;
 import java.util.Collection;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import de.lichtflut.rb.core.schema.model.RBEntity;
+import de.lichtflut.rb.core.schema.model.RBEntityFactory;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
@@ -72,10 +72,10 @@ public class GenericResourceFormPage extends RBSuperPage {
 	 */
 	@SuppressWarnings({ "unchecked"})
 	
-	private RBEntity loadRBEntitiesFromParams(ResourceSchema schema, PageParameters parameters){
+	private RBEntityFactory loadRBEntitiesFromParams(ResourceSchema schema, PageParameters parameters){
 		String identifier = parameters.get("instanceid").toString();
-		Collection<RBEntity> instances = getRBServiceProvider().getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
-		for (RBEntity<Object> resourceTypeInstance : instances) {
+		Collection<RBEntityFactory> instances = getRBServiceProvider().getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
+		for (RBEntityFactory<Object> resourceTypeInstance : instances) {
 			if(resourceTypeInstance.getQualifiedName().toURI().equals(identifier)){
 				return resourceTypeInstance;
 			}

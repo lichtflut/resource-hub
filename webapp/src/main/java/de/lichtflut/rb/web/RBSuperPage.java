@@ -10,7 +10,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import de.lichtflut.rb.core.schema.model.RBEntity;
+import de.lichtflut.rb.core.schema.model.RBEntityFactory;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 import de.lichtflut.rb.web.components.genericresource.fields.search.SearchBar;
@@ -108,7 +108,7 @@ public abstract class RBSuperPage extends WebPage {
 		
 		this.add(new SearchBar("searchBar") {
 
-			public void onSearchSubmit(RBEntity<Object> instance) {
+			public void onSearchSubmit(RBEntityFactory<Object> instance) {
 				PageParameters params = new PageParameters();
 				params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
 				params.add("instanceid", instance.getQualifiedName().toURI());

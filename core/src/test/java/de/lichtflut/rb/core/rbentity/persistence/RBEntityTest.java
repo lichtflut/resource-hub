@@ -13,7 +13,7 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.schema.model.RBEntity;
+import de.lichtflut.rb.core.schema.model.RBEntityFactory;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
@@ -47,7 +47,7 @@ public final class RBEntityTest {
 		provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(schema);
 
 		//Build an instance
-		RBEntity<Object> instance = schema.generateRBEntity();
+		RBEntityFactory<Object> instance = schema.generateRBEntity();
 		Assert.assertNotNull(instance);
 
 		try{
@@ -60,10 +60,10 @@ public final class RBEntityTest {
 		}
 		//Try to create this
 		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRTInstance(instance));
-		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
+		Collection<RBEntityFactory> instances = provider.getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
 
 		Assert.assertTrue(instances.size()==1);
-		for (RBEntity i : instances) {
+		for (RBEntityFactory i : instances) {
 			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatGeburtstag").contains("test1"));
 			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatEmail").contains("test1@test.com"));
 			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatAlter").contains("24"));
@@ -80,7 +80,7 @@ public final class RBEntityTest {
 		//Store the schema
 		provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(schema);
 		//Build an instance
-		RBEntity<Object> instance = schema.generateRBEntity();
+		RBEntityFactory<Object> instance = schema.generateRBEntity();
 		Assert.assertNotNull(instance);
 		try{
 			instance.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
@@ -91,9 +91,9 @@ public final class RBEntityTest {
 			any.printStackTrace();
 		}
 		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRTInstance(instance));
-		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
+		Collection<RBEntityFactory> instances = provider.getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
 		Assert.assertTrue(instances.size()==1);
-		RBEntity entity = new ArrayList<RBEntity>(instances).get(0);
+		RBEntityFactory entity = new ArrayList<RBEntityFactory>(instances).get(0);
 
 		//Made some proofs
 

@@ -18,7 +18,7 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.QueryManager;
 import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.schema.RBSchema;
-import de.lichtflut.rb.core.schema.model.RBEntity;
+import de.lichtflut.rb.core.schema.model.RBEntityFactory;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
@@ -48,7 +48,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	
 	// -----------------------------------------------------
 	
-	public boolean createOrUpdateRTInstance(RBEntity<Object> instance) {
+	public boolean createOrUpdateRTInstance(RBEntityFactory<Object> instance) {
 		try{
 			ModelingConversation mc = gate.startConversation();
 			instance.createAssociations(null);
@@ -62,11 +62,11 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	// -----------------------------------------------------
 	
 	@SuppressWarnings("unchecked")
-	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter, SearchContext ctx) {
+	public Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter, SearchContext ctx) {
 		if(filter==null || filter.equals("")) return loadAllResourceTypeInstancesForSchema(schema);
 		if(ctx==null) ctx = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
 		filter = getConvertedFilterBySearchContext(filter, ctx);
-		Collection<RBEntity> output = new ArrayList<RBEntity>();
+		Collection<RBEntityFactory> output = new ArrayList<RBEntityFactory>();
 		QueryManager qManager = gate.startConversation().createQueryManager();
 		List<ResourceNode> nodes = qManager.findByTag(filter);
 		for (ResourceNode resourceNode : nodes) {
@@ -90,13 +90,13 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	// -----------------------------------------------------
 	
 	@SuppressWarnings("unchecked")
-	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(ResourceSchema schema) {
-	      Collection<RBEntity> output = new ArrayList<RBEntity>();
+	public Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(ResourceSchema schema) {
+	      Collection<RBEntityFactory> output = new ArrayList<RBEntityFactory>();
           ModelingConversation mc = gate.startConversation();
           Set<Statement> statements = mc.createQueryManager().findIncomingStatements(schema.getDescribedResourceID());
           for (Statement statement : statements) {
              if(statement.getPredicate().equals(RDF.TYPE)){
-            	 RBEntity  instance = new RBEntityImpl(schema, statement.getSubject().asResource());
+            	 RBEntityFactory  instance = new RBEntityImpl(schema, statement.getSubject().asResource());
                  output.add(instance);
              }
           }
@@ -106,8 +106,8 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	// -----------------------------------------------------
 	
 	@SuppressWarnings("unchecked")
-	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas) {
-		Collection<RBEntity> output = new ArrayList<RBEntity>();
+	public Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas) {
+		Collection<RBEntityFactory> output = new ArrayList<RBEntityFactory>();
 	    for (ResourceSchema resourceSchema : schemas) {
 			output.addAll(loadAllResourceTypeInstancesForSchema(resourceSchema));
 		}
@@ -116,11 +116,11 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	
 	
 	@SuppressWarnings("unchecked")
-	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas, String filter, SearchContext ctx) {
+	public Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas, String filter, SearchContext ctx) {
 		if(filter==null || filter.equals("")) return loadAllResourceTypeInstancesForSchema(schemas);
 		//Check if context is still null
 		if(ctx==null) ctx = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
-		Collection<RBEntity> output = new ArrayList<RBEntity>();
+		Collection<RBEntityFactory> output = new ArrayList<RBEntityFactory>();
 		for (ResourceSchema schema : schemas) {
 			output.addAll(loadAllResourceTypeInstancesForSchema(schema, filter,ctx));
 		}
@@ -157,7 +157,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	// -----------------------------------------------------
 	
 	@SuppressWarnings("unchecked")
-	public RBEntity loadRBEntity(QualifiedName qn) {
+	public RBEntityFactory loadRBEntity(QualifiedName qn) {
 		if(qn==null) return null;
 		ModelingConversation mc = this.gate.startConversation();
 		ResourceNode node = mc.findResource(qn);
@@ -176,7 +176,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 				ResourceNode schemaNode = (ResourceNode) new ArrayList<Association>(potential_schemas).get(0).getObject();
 				ResourceSchema schema = (new RBSchemaStore(this.gate).convertResourceSchema(new SNResourceSchema(schemaNode)));
 				//Build the RBEntity based on node and extracted schema
-				RBEntity entity = new RBEntityImpl(schema, node);
+				RBEntityFactory entity = new RBEntityImpl(schema, node);
 				return entity;
 			}
 		}
@@ -187,14 +187,14 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	// -----------------------------------------------------
 	
 	@SuppressWarnings("unchecked")
-	public RBEntity loadRBEntity(String nodeIdentifier) {
+	public RBEntityFactory loadRBEntity(String nodeIdentifier) {
 		return loadRBEntity(new QualifiedName(nodeIdentifier));		
 	}
 	
 	// -----------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-	public RBEntity loadRBEntity(ResourceNode node) {
+	public RBEntityFactory loadRBEntity(ResourceNode node) {
 		return loadRBEntity(node.getQualifiedName());
 	}
 	
