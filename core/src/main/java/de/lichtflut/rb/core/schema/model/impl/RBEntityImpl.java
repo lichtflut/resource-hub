@@ -33,11 +33,14 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  */
 @SuppressWarnings("serial")
 public class RBEntityImpl extends RBEntityFactory<Object> {
+	
 
 	private HashMap<String, ValueHolder> internalRep = new HashMap<String, ValueHolder>();
 	private HashMap<String, RBValidatorFactory<Object>> internalValidatorMap = new HashMap<String, RBValidatorFactory<Object>>();
 	private HashMap<String, String> simpleAttributeNames = new HashMap<String, String>();
 	private ResourceSchema schema;
+	
+	private String xy = "";
 	
 	// --CONSTRUCTOR----------------------------------------
 	
