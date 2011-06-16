@@ -26,7 +26,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
  * ReferenceImpl of {@link RBEntityImpl} for value-type {@link Object}
- * 
+ *
  * Created: May 17, 2011
  *
  * @author Nils Bleisch
