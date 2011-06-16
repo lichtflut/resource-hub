@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
-import de.lichtflut.rb.core.schema.model.RBEntityFactory;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
@@ -57,48 +57,48 @@ public interface RBEntityManagement extends Serializable{
 	/**
 	 * creates or updates a given {@link ResourceTypeInstance}.
 	 * @return true if the operation was successfull, false if not
-	 * @param instance - The {@link RBEntityFactory} which shall be created or updated
+	 * @param instance - The {@link RBEntity} which shall be created or updated
 	 */
-	boolean createOrUpdateRTInstance(RBEntityFactory<Object> instance);
+	boolean createOrUpdateRTInstance(RBEntity<Object> instance);
 
 	// -----------------------------------------------------
 
 	/**
 	 * <p>
-	 * Returns a {@link RBEntityFactory} for the given params.
+	 * Returns a {@link RBEntity} for the given params.
 	 * </p>
 	 * @param qn , the {@link QualifiedName} which has to be the ID of the RBEntity
-	 * @return the resolved {@link RBEntityFactory}-node or
-	 * null if no {@link RBEntityFactory} could be assigned to the params
+	 * @return the resolved {@link RBEntity}-node or
+	 * null if no {@link RBEntity} could be assigned to the params
 	 */
 	@SuppressWarnings("rawtypes")
-	RBEntityFactory loadRBEntity(QualifiedName qn);
+	RBEntity loadRBEntity(QualifiedName qn);
 
 	// -----------------------------------------------------
 
 	/**
 	 * <p>
-	 * Returns a {@link RBEntityFactory} for the given params.
+	 * Returns a {@link RBEntity} for the given params.
 	 * </p>
 	 * @param nodeIdentifier - the {@link String} which has to be the URI of the RBEntity
-	 * @return the resolved {@link RBEntityFactory}-node or
-	 * null if no {@link RBEntityFactory} could be assigned to the params
+	 * @return the resolved {@link RBEntity}-node or
+	 * null if no {@link RBEntity} could be assigned to the params
 	 */
 	@SuppressWarnings("rawtypes")
-	RBEntityFactory loadRBEntity(String nodeIdentifier);
+	RBEntity loadRBEntity(String nodeIdentifier);
 
 	// -----------------------------------------------------
 
 	/**
 	 * <p>
-	 * Returns a {@link RBEntityFactory} for the given params.
+	 * Returns a {@link RBEntity} for the given params.
 	 * </p>
 	 * @param node - the {@link ResourceNode} which has to be the Node of the RBEntity
-	 * @return the resolved {@link RBEntityFactory}-node or
-	 * null if no {@link RBEntityFactory} could be assigned to the params
+	 * @return the resolved {@link RBEntity}-node or
+	 * null if no {@link RBEntity} could be assigned to the params
 	 */
 	@SuppressWarnings("rawtypes")
-	RBEntityFactory loadRBEntity(ResourceNode node);
+	RBEntity loadRBEntity(ResourceNode node);
 
 	// -----------------------------------------------------
 
@@ -107,10 +107,10 @@ public interface RBEntityManagement extends Serializable{
 	 * Returns all the type-instances of the given schemas without any exceptions.
 	 * </p>
 	 * @param schemas the specified collection of schemas
-	 * @return a {@link Collection} of {@link RBEntityFactory} which are dependent on the given schemas
+	 * @return a {@link Collection} of {@link RBEntity} which are dependent on the given schemas
 	 */
 	@SuppressWarnings("rawtypes")
-	Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas);
+	Collection<RBEntity> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas);
 
 	// -----------------------------------------------------
 
@@ -122,10 +122,10 @@ public interface RBEntityManagement extends Serializable{
 	 * @param filter - the search filter,
 	 *  including keywords or patterns which should match the type's attributes in a SearchContext defined way
 	 * @param ctx -  the SearchContext, if null, the default SearchContext "CONJUNCT_MULTIPLE_KEYWORDS" will be taken instead
-	 * @return a {@link Collection} of {@link RBEntityFactory} which depends on the given schemas, filter and searchcontext
+	 * @return a {@link Collection} of {@link RBEntity} which depends on the given schemas, filter and searchcontext
 	 */
 	@SuppressWarnings("rawtypes")
-	Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(final Collection<ResourceSchema> schemas,
+	Collection<RBEntity> loadAllResourceTypeInstancesForSchema(final Collection<ResourceSchema> schemas,
 			final String filter, final SearchContext ctx);
 
 	/**
@@ -133,10 +133,10 @@ public interface RBEntityManagement extends Serializable{
 	 * Returns all the type-instances of the given schema without any exceptions.
 	 * </p>
 	 * @param schema -  the specified schema
-	 * @return a {@link Collection} of {@link RBEntityFactory} which depends on the given schema
+	 * @return a {@link Collection} of {@link RBEntity} which depends on the given schema
 	 */
 	@SuppressWarnings("rawtypes")
-	Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(ResourceSchema schema);
+	Collection<RBEntity> loadAllResourceTypeInstancesForSchema(ResourceSchema schema);
 
 	// -----------------------------------------------------
 
@@ -148,10 +148,10 @@ public interface RBEntityManagement extends Serializable{
 	 * @param filter - the search filter,
 	 *  including keywords or patterns which should match the type's attributes in a SearchContext defined way
 	 * @param ctx - the SearchContext, if null, the default SearchContext "CONJUNCT_MULTIPLE_KEYWORDS" will be taken instead
-	 * @return  a {@link Collection} of {@link RBEntityFactory} which depends on the given schema, filter and searchcontext
+	 * @return  a {@link Collection} of {@link RBEntity} which depends on the given schema, filter and searchcontext
 	 */
 	@SuppressWarnings("rawtypes")
-	Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter, SearchContext ctx);
+	Collection<RBEntity> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter, SearchContext ctx);
 
 	// -----------------------------------------------------
 

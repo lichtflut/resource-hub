@@ -82,7 +82,11 @@
       <property name="checkFirstSentence" value="false"/>
     </module>
     <module name="JavadocType"/>
-    <module name="AbstractClassName"/>
+    <module name="AbstractClassName">
+      <property name="severity" value="ignore"/>
+      <property name="format" value="^.*$"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
     <module name="PackageName">
       <property name="format" value="^de.lichtflut.[a-z]+(\.[a-zA-Z_][a-zA-Z0-9_]*)*$"/>
     </module>

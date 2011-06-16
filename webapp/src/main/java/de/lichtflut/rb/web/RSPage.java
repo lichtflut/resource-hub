@@ -16,7 +16,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.api.RBEntityManagement;
-import de.lichtflut.rb.core.schema.model.RBEntityFactory;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.components.genericresource.panels.ResourceRegisterPanel;
@@ -95,10 +95,10 @@ public class RSPage extends RBSuperPage {
 		if(resourceSchemas==null) resourceSchemas = new ArrayList<ResourceSchema>();
 		for (final ResourceSchema resourceSchema : resourceSchemas) {
 
-			Collection<RBEntityFactory> instances = rTypeManagement.loadAllResourceTypeInstancesForSchema(resourceSchema);
+			Collection<RBEntity> instances = rTypeManagement.loadAllResourceTypeInstancesForSchema(resourceSchema);
 			
-			ArrayList<RBEntityFactory> schemaInstances = 
-				new ArrayList<RBEntityFactory>((instances != null) ? instances : new HashSet<RBEntityFactory>());
+			ArrayList<RBEntity> schemaInstances = 
+				new ArrayList<RBEntity>((instances != null) ? instances : new HashSet<RBEntity>());
 			
 			PageParameters params = new PageParameters();
 			params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
@@ -109,7 +109,7 @@ public class RSPage extends RBSuperPage {
 			fragment.add(new ListView("instancelist",schemaInstances){
 				@Override
 				protected void populateItem(ListItem item) {
-					RBEntityFactory instance = (RBEntityFactory) item.getModelObject();
+					RBEntity instance = (RBEntity) item.getModelObject();
 					PageParameters params = new PageParameters();
 					params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
 					params.add("instanceid", instance.getQualifiedName().toURI());

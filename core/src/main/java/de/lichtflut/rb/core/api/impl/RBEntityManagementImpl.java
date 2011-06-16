@@ -18,7 +18,7 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.QueryManager;
 import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.schema.RBSchema;
-import de.lichtflut.rb.core.schema.model.RBEntityFactory;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
@@ -54,7 +54,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean createOrUpdateRTInstance(final RBEntityFactory<Object> instance) {
+	public boolean createOrUpdateRTInstance(final RBEntity<Object> instance) {
 		try{
 			ModelingConversation mc = gate.startConversation();
 			instance.createAssociations(null);
@@ -70,7 +70,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	/** {@inheritDoc} */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(
+	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(
 			final ResourceSchema schema, final String filter, final SearchContext ctx) {
 		SearchContext context = ctx;
 		String filterString = filter;
@@ -81,7 +81,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 			context = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
 		}
 		filterString = getConvertedFilterBySearchContext(filterString, context);
-		Collection<RBEntityFactory> output = new ArrayList<RBEntityFactory>();
+		Collection<RBEntity> output = new ArrayList<RBEntity>();
 		QueryManager qManager = gate.startConversation().createQueryManager();
 		List<ResourceNode> nodes = qManager.findByTag(filterString);
 		for (ResourceNode resourceNode : nodes) {
@@ -107,13 +107,13 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	/** {@inheritDoc} */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(final ResourceSchema schema) {
-	      Collection<RBEntityFactory> output = new ArrayList<RBEntityFactory>();
+	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(final ResourceSchema schema) {
+	      Collection<RBEntity> output = new ArrayList<RBEntity>();
           ModelingConversation mc = gate.startConversation();
           Set<Statement> statements = mc.createQueryManager().findIncomingStatements(schema.getDescribedResourceID());
           for (Statement statement : statements) {
              if(statement.getPredicate().equals(RDF.TYPE)){
-            	 RBEntityFactory  instance = new RBEntityImpl(schema, statement.getSubject().asResource());
+            	 RBEntity  instance = new RBEntityImpl(schema, statement.getSubject().asResource());
                  output.add(instance);
              }
           }
@@ -125,8 +125,8 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	/** {@inheritDoc} */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(final Collection<ResourceSchema> schemas) {
-		Collection<RBEntityFactory> output = new ArrayList<RBEntityFactory>();
+	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(final Collection<ResourceSchema> schemas) {
+		Collection<RBEntity> output = new ArrayList<RBEntity>();
 	    for (ResourceSchema resourceSchema : schemas) {
 			output.addAll(loadAllResourceTypeInstancesForSchema(resourceSchema));
 		}
@@ -138,7 +138,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	/** {@inheritDoc} */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(
+	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(
 			final Collection<ResourceSchema> schemas, final String filter,  final SearchContext ctx) {
 		SearchContext context = ctx;
 		String filterString = filter;
@@ -148,7 +148,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 		if(ctx==null){
 			context = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
 		}
-		Collection<RBEntityFactory> output = new ArrayList<RBEntityFactory>();
+		Collection<RBEntity> output = new ArrayList<RBEntity>();
 		for (ResourceSchema schema : schemas) {
 			output.addAll(loadAllResourceTypeInstancesForSchema(schema, filterString,context));
 		}
@@ -160,7 +160,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	/** {@inheritDoc} */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public RBEntityFactory loadRBEntity(final QualifiedName qn) {
+	public RBEntity loadRBEntity(final QualifiedName qn) {
 		if(qn==null){ return null;}
 		ModelingConversation mc = this.gate.startConversation();
 		ResourceNode node = mc.findResource(qn);
@@ -178,7 +178,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 				ResourceSchema schema =
 					(new RBSchemaStore(this.gate).convertResourceSchema(new SNResourceSchema(schemaNode)));
 				//Build the RBEntity based on node and extracted schema
-				RBEntityFactory entity = new RBEntityImpl(schema, node);
+				RBEntity entity = new RBEntityImpl(schema, node);
 				return entity;
 			}
 		}
@@ -191,7 +191,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	/** {@inheritDoc} */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public RBEntityFactory loadRBEntity(final String nodeIdentifier) {
+	public RBEntity loadRBEntity(final String nodeIdentifier) {
 		return loadRBEntity(new QualifiedName(nodeIdentifier));
 	}
 
@@ -200,7 +200,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	/** {@inheritDoc} */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public RBEntityFactory loadRBEntity(final ResourceNode node) {
+	public RBEntity loadRBEntity(final ResourceNode node) {
 		return loadRBEntity(node.getQualifiedName());
 	}
 

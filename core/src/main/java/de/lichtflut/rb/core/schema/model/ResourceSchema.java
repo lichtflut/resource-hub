@@ -72,7 +72,7 @@ public interface ResourceSchema extends ResourceSchemaType{
 	 * generates an entity of the schema's described resource-type.
 	 * @return Entity  of the schema's described resource-type
 	 */
-	RBEntityFactory<Object> generateRBEntity();
+	RBEntity<Object> generateRBEntity();
 
 	/**
 	 * Overriding to match conventions while ioverriding 'equals()' method..

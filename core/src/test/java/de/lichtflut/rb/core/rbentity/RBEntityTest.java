@@ -8,7 +8,7 @@ import junit.framework.Assert;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 
-import de.lichtflut.rb.core.schema.model.RBEntityFactory;
+import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
@@ -33,7 +33,7 @@ public class RBEntityTest {
 	 */
 	public final void testResourceTypeInstance(){
 		//Generate an instance for a given schema
-		RBEntityFactory<Object> instance = createSchema().generateRBEntity();
+		RBEntity<Object> instance = createSchema().generateRBEntity();
 		Assert.assertNotNull(instance);
 
 		//Generate some tickets for fields
