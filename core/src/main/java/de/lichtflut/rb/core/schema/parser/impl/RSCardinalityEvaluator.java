@@ -20,7 +20,7 @@ public class RSCardinalityEvaluator implements RSEvaluator<Cardinality> {
 	private Cardinality cardinality;
 
 	/**
-	 *TODO .
+	 *TODO: DESCRIPTION.
 	 * @param t -
 	 * @param amount -
 	 */

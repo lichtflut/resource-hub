@@ -32,15 +32,15 @@ public enum RSFormat {
 	OSF("Oliver Tigges Simple Format", new OSFParsingUnit());
 
 	private String name = "undefined";
-	private RSParsingUnitFactory unit = null;
-	private RSFormat(String name, RSParsingUnitFactory unit){
+	private AbstractRSParsingUnit unit = null;
+	private RSFormat(String name, AbstractRSParsingUnit unit){
 		this.name= name;
 		this.unit = unit;
 	}
 
 	// -----------------------------------------------------
 
-	public RSParsingUnitFactory getParsingUnit(){
+	public AbstractRSParsingUnit getParsingUnit(){
 		return unit;
 	}
 

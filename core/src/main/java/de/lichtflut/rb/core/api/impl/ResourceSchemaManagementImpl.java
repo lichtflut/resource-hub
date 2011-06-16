@@ -25,7 +25,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
-import de.lichtflut.rb.core.schema.parser.RSParsingUnitFactory;
+import de.lichtflut.rb.core.schema.parser.AbstractRSParsingUnit;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
@@ -73,7 +73,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	@Override
 	public RSParsingResult generateSchemaModelThrough(final InputStream is){
 		RSParsingResultImpl result = new RSParsingResultImpl();
-		RSParsingUnitFactory pUnit = getFormat().getParsingUnit();
+		AbstractRSParsingUnit pUnit = getFormat().getParsingUnit();
 		pUnit.setErrorReporter(new RSParsingResultErrorReporter(result));
 		Collection<ResourceSchemaType> resultTypes;
 		try {

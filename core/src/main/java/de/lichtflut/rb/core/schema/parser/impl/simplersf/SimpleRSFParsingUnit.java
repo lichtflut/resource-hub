@@ -15,7 +15,7 @@ import org.antlr.runtime.TokenStream;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
-import de.lichtflut.rb.core.schema.parser.RSParsingUnitFactory;
+import de.lichtflut.rb.core.schema.parser.AbstractRSParsingUnit;
 import de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterException;
 import de.lichtflut.rb.core.schema.parser.impl.RSCaseControlStream;
 import de.lichtflut.rb.core.schema.parser.impl.simplersf.ResourceSchemaParser.dsl_return;
@@ -29,16 +29,24 @@ import de.lichtflut.rb.core.schema.parser.impl.simplersf.ResourceSchemaParser.ds
  *
  * @author Nils Bleisch
  */
-public class SimpleRSFParsingUnit extends RSParsingUnitFactory {
+public class SimpleRSFParsingUnit extends AbstractRSParsingUnit {
 
     private RSErrorReporter errorReporter= null;
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public RSFormat getFormat() {
 		return RSFormat.SIMPLE_RSF;
 	}
 
 	// -----------------------------------------------------
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Collection<ResourceSchemaType> parse(final String input)
 			throws RSMissingErrorReporterException {
 		if(errorReporter == null){ throw new RSMissingErrorReporterException("RSErrorReporter can not be null");}
@@ -46,7 +54,10 @@ public class SimpleRSFParsingUnit extends RSParsingUnitFactory {
 	}
 
 	// -----------------------------------------------------
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Collection<ResourceSchemaType> parse(final InputStream input)
 			throws RSMissingErrorReporterException {
 		if(errorReporter == null) {throw new RSMissingErrorReporterException("RSErrorReporter can not be null");}
@@ -55,7 +66,9 @@ public class SimpleRSFParsingUnit extends RSParsingUnitFactory {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 			StringBuilder bufferedInput = new StringBuilder();
 			String line;
-			while((line = reader.readLine())!=null) bufferedInput.append(line).append("\n");
+			while((line = reader.readLine())!=null){
+				bufferedInput.append(line).append("\n");
+			}
 			return parse(bufferedInput.toString());
 		} catch (IOException e) {
 			errorReporter.reportError("The following I/O-Error has been occured: " + e.getMessage());
@@ -64,7 +77,10 @@ public class SimpleRSFParsingUnit extends RSParsingUnitFactory {
 	}
 
 	// -----------------------------------------------------
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void setErrorReporter(final RSErrorReporter errorReporter) {
 		this.errorReporter = errorReporter;
 	}
@@ -72,6 +88,11 @@ public class SimpleRSFParsingUnit extends RSParsingUnitFactory {
 	// -----------------------------------------------------
 
 
+    /**
+     * Wrapes parser and lexer.
+     * @param input -
+     * @return Set of {@link ResourceSchemaType}
+     */
 	private Set<ResourceSchemaType> parseRSF(final String input){
 		RSCaseControlStream stream = new RSCaseControlStream(input);
 		//Ignore Case, this is really important

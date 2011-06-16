@@ -41,8 +41,8 @@ public final class OSFEvaluator {
 		String typeLower = type.toLowerCase();
 		if(typeLower.contains("type")){
 			if(value instanceof ElementaryDataType){
-				pDec.setElementaryDataType((ElementaryDataType) value);}
-			else{
+				pDec.setElementaryDataType((ElementaryDataType) value);
+			}else{
 				if(value instanceof String){
 					//This might be a resource
 					pDec.setElementaryDataType(ElementaryDataType.RESOURCE);

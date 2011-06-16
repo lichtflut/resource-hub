@@ -18,7 +18,7 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
-import de.lichtflut.rb.core.schema.parser.RSParsingUnitFactory;
+import de.lichtflut.rb.core.schema.parser.AbstractRSParsingUnit;
 import de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterException;
 import de.lichtflut.rb.core.schema.parser.impl.RSCaseControlStream;
 import de.lichtflut.rb.core.schema.parser.impl.osf.OSFParser.osl_return;
@@ -32,7 +32,7 @@ import de.lichtflut.rb.core.schema.parser.impl.osf.OSFParser.osl_return;
  *
  * @author Nils Bleisch
  */
-public class OSFParsingUnit extends RSParsingUnitFactory {
+public class OSFParsingUnit extends AbstractRSParsingUnit {
 
 	/**
 	 *
@@ -48,6 +48,10 @@ public class OSFParsingUnit extends RSParsingUnitFactory {
 
 	// -----------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Collection<ResourceSchemaType> parse(final String input)
 			throws RSMissingErrorReporterException {
 		if(errorReporter == null) {
@@ -57,7 +61,10 @@ public class OSFParsingUnit extends RSParsingUnitFactory {
 	}
 
 	// -----------------------------------------------------
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Collection<ResourceSchemaType> parse(final InputStream input)
 			throws RSMissingErrorReporterException {
 		if(errorReporter == null){
@@ -79,13 +86,22 @@ public class OSFParsingUnit extends RSParsingUnitFactory {
 	}
 
 	// -----------------------------------------------------
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void setErrorReporter(final RSErrorReporter errorReporter) {
 		this.errorReporter = errorReporter;
 	}
 
 	// -----------------------------------------------------
 
+	/**
+	 * Wraps parser and lexer. This is the entrypoint to parse a String
+	 * in order to get a schema.
+	 * @param input -
+	 * @return Collection of {@link ResourceSchemaType}
+	 */
 	private Collection<ResourceSchemaType> parseOSF(final String input){
 		Collection<ResourceSchemaType> output = new LinkedList<ResourceSchemaType>();
 		RSCaseControlStream stream = new RSCaseControlStream(input);

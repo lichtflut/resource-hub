@@ -13,9 +13,15 @@ import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
  * Created: Apr 28, 2011
  *
  * @author Nils Bleisch
+ * @param <E>
  */
 public interface RSEvaluator<E extends ResourceSchemaType> {
 
+	/**
+	 * 
+	 * @param param
+	 * @return
+	 */
 	boolean evaluate(E param);
 
 	// -----------------------------------------------------
