@@ -33,25 +33,43 @@ public enum RSFormat {
 
 	private String name = "undefined";
 	private AbstractRSParsingUnit unit = null;
-	private RSFormat(String name, AbstractRSParsingUnit unit){
+
+	/**
+	 * Constructor.
+	 * @param name -
+	 * @param unit -
+	 */
+	private RSFormat(final String name, final AbstractRSParsingUnit unit){
 		this.name= name;
 		this.unit = unit;
 	}
 
 	// -----------------------------------------------------
 
+	/**
+	 * Returns ParsingUnit.
+	 * @return {@link AbstractRSParsingUnit}
+	 */
 	public AbstractRSParsingUnit getParsingUnit(){
 		return unit;
 	}
 
 	// -----------------------------------------------------
 
+	/**
+	 * Returns format name.
+	 * @return String
+	 */
 	public String getFormatName(){
 		return this.toString();
 	}
 
 	// -----------------------------------------------------
 
+	/**
+	 * Overriding toString method.
+	 * @return String
+	 */
 	public String toString(){
 		return name;
 	}

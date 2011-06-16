@@ -23,14 +23,22 @@ public enum RSErrorLevel {
 			INTERPRETER, GRAMMAR });
 	private int value = 0;
 
-	private RSErrorLevel(int level) {
+	/**
+	 * Constructor.
+	 * @param level -
+	 */
+	private RSErrorLevel(final int level) {
 		//Bit-masking enum shit SYSTEM.add(GRAMMAR.add(...).....).add(.....)
 		this.value = 1 << level;
 	}
 
 	// ----------------------------
 
-	private RSErrorLevel(RSErrorLevel[] lvl) {
+	/**
+	 * Constructor.
+	 * @param lvl -
+	 */
+	private RSErrorLevel(final RSErrorLevel[] lvl) {
 		for (RSErrorLevel errorLevel : lvl) {
 			this.add(errorLevel);
 		}
@@ -38,10 +46,15 @@ public enum RSErrorLevel {
 
 	// ----------------------------
 
-	public boolean contains(RSErrorLevel lvl) {
-
-		if ((lvl.value & this.value) != 0)
+	/**
+	 * TODO: DESCRIPTION.
+	 * @param lvl -
+	 * @return boolean
+	 */
+	public boolean contains(final RSErrorLevel lvl) {
+		if ((lvl.value & this.value) != 0){
 			return true;
+		}
 		return false;
 	}
 
@@ -49,10 +62,13 @@ public enum RSErrorLevel {
 
 	/**
 	 * Self returning idiom 4tw.
+	 * @param lvl -
+	 * @return RSErrorLevel -
 	 */
-	public RSErrorLevel add(RSErrorLevel lvl) {
-		if (!contains(lvl))
+	public RSErrorLevel add(final RSErrorLevel lvl) {
+		if (!contains(lvl)){
 			this.value += lvl.value;
+		}
 		return this;
 	}
 

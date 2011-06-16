@@ -24,63 +24,76 @@ public interface RSParsingResult {
 
 
 	/**
-	 *
+	 * Returns those errors as collection where the filter is matching.
+	 * @param filter -
 	 * @return those errors as collection where the filter is matching
 	 */
-	public Collection<String> getErrorMessages(RSErrorLevel filter);
+	Collection<String> getErrorMessages(RSErrorLevel filter);
 
 	// -----------------------------------------------------
 
 	/**
-	 *
+	 * Returns all errors as collection.
 	 * @return all errors as collection
 	 */
-	public Collection<String> getErrorMessages();
+	Collection<String> getErrorMessages();
 
 	// -----------------------------------------------------
 
 	/**
+	 * Returns all the filter matching errors as one whole string concatenated
+	 *         with "\n".
 	 * @return all the filter matching errors as one whole string concatenated
 	 *         with "\n"
 	 */
-	public String getErrorMessagesAsString(RSErrorLevel filter);
+	String getErrorMessagesAsString(RSErrorLevel filter);
 
 	// -----------------------------------------------------
 
 	/**
+	 * Returns all errors as one whole string concatenated with "\n".
 	 * @return all errors as one whole string concatenated with "\n"
 	 */
-	public String getErrorMessagesAsString();
+	String getErrorMessagesAsString();
 
 	// -----------------------------------------------------
 
 	/**
+	 * Returns all the filter matching errors as one whole string concatenated
+	 *         with the given delimeter.
+	 * @param delim -
+	 * @param filter -
 	 * @return all the filter matching errors as one whole string concatenated
 	 *         with the given delimeter
 	 */
-	public String getErrorMessagesAsString(String delim, RSErrorLevel filter);
+	String getErrorMessagesAsString(String delim, RSErrorLevel filter);
 
 	// -----------------------------------------------------
 
 	/**
+	 * Returns all errors as one whole string concatenated with the given
+	 *         delimeter.
+	 * @param delim -
 	 * @return all errors as one whole string concatenated with the given
 	 *         delimeter
 	 */
-	public String getErrorMessagesAsString(String delim);
+	String getErrorMessagesAsString(String delim);
 
 	// -----------------------------------------------------
 
 	/**
+	 * Returns a Collection of property declarations.
 	 * @return is empty when at least on error has been occurred
 	 */
-	public Collection<PropertyDeclaration> getPropertyDeclarations();
+	Collection<PropertyDeclaration> getPropertyDeclarations();
 
 	// -----------------------------------------------------
 
 	/**
+	 * Returns Collection of ResourceSchemas.
 	 * @return is empty when at least on error has been occurred
 	 */
-	public Collection<ResourceSchema> getResourceSchemas();
+	Collection<ResourceSchema> getResourceSchemas();
 
 	// -----------------------------------------------------
 

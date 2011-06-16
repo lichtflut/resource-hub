@@ -10,12 +10,11 @@ import junit.framework.Assert;
 
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
@@ -125,9 +124,9 @@ public final class RBEntityTest {
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
 		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
 		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);
-		pa1.setCardinality(CardinalityFactory.hasExcactlyOne());
-		pa2.setCardinality(CardinalityFactory.hasAtLeastOneUpTo(2));
-		pa3.setCardinality(CardinalityFactory.hasExcactlyOne());
+		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
+		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
+		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
 
 		schema.addPropertyAssertion(pa1);
 		schema.addPropertyAssertion(pa2);

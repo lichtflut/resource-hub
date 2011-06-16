@@ -18,13 +18,17 @@ import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 public interface RSEvaluator<E extends ResourceSchemaType> {
 
 	/**
-	 * 
-	 * @param param
-	 * @return
+	 * Tries to evaluate the given param.
+	 * @param param -
+	 * @return is successful return true, if not return false
 	 */
 	boolean evaluate(E param);
 
 	// -----------------------------------------------------
 
+	/**
+	 * Returns evaluated result.
+	 * @return E -
+	 */
 	E getResult();
 }

@@ -16,9 +16,10 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
@@ -111,9 +112,9 @@ public class RBSchemaStoreTest {
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
 		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
 		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);
-		pa1.setCardinality(CardinalityFactory.hasExcactlyOne());
-		pa2.setCardinality(CardinalityFactory.hasAtLeastOneUpTo(3));
-		pa3.setCardinality(CardinalityFactory.hasExcactlyOne());
+		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
+		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(3));
+		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		
 		schema.addPropertyAssertion(pa1);
 		schema.addPropertyAssertion(pa2);
