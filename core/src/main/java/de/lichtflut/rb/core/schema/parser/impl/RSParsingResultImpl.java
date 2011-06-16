@@ -114,7 +114,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	 * @param errorMessages -
 	 * @param lvl - Errorlevel
 	 */
-	public void setErrorMessages(final Collection<String> errorMessages, RSErrorLevel lvl) {
+	public void setErrorMessages(final Collection<String> errorMessages, final RSErrorLevel lvl) {
 		this.errorMessages = new LinkedList<Error>();
 		for (String message : errorMessages) {
 			this.errorMessages.add(new Error(lvl,message));
@@ -144,7 +144,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 
 	/**
 	 * Returns all Propertydeclarations.
-	 * @return Propertydeclarations
+	 * @return Propertydeclarationsgit check
 	 */
 	public Collection<PropertyDeclaration> getPropertyDeclarations() {
 		//return an empty collection if an error is occured
