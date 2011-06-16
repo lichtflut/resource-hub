@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Represents a "Graph"-Vertex.
  * </p>
  *
  * <p>
@@ -16,33 +16,39 @@ import java.util.List;
  * </p>
  *
  * @author Oliver Tigges
+ * @param <T> - describes the vertex-value type
  */
 public class Vertex<T> {
 
 	private final T data;
-	
-	private final List<Edge> edges = new ArrayList<Edge>(); 
+
+	private final List<Edge> edges = new ArrayList<Edge>();
 
 	// -----------------------------------------------------
-	
+
+	/**
+	 * @param data -
+	 */
 	public Vertex(final T data) {
 		this.data = data;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * @return the data
 	 */
 	public T getData() {
 		return data;
 	}
-	
+
+	// -----------------------------------------------------
+
 	/**
 	 * @return the edges
 	 */
 	public List<Edge> getEdges() {
 		return edges;
 	}
-	
+
 }

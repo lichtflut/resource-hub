@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.graph;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Represents a PeripheryGraph.
  * </p>
  *
  * <p>
@@ -16,30 +16,38 @@ package de.lichtflut.rb.core.graph;
  */
 
 public class PeripheryGraph {
-	
-	@SuppressWarnings("unchecked")
+
+
+	@SuppressWarnings("rawtypes")
 	private Vertex root;
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * @return the root
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Vertex getRoot() {
 		return root;
 	}
 
+	// -----------------------------------------------------
+
 	/**
-	 * @param root the root to set
+	 * @param root - the root to set
 	 */
-	@SuppressWarnings("unchecked")
-	public void setRoot(Vertex root) {
+	@SuppressWarnings("rawtypes")
+	public void setRoot(final Vertex root) {
 		this.root = root;
 	}
-	
-	public void autoRoot() {
-		
+
+	// -----------------------------------------------------
+
+	/**
+	 *
+	 */
+	public void autoRoot(){
+
 	}
-	
+
 }

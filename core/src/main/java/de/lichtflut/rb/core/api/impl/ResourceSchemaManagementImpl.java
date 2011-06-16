@@ -80,6 +80,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 			resultTypes = pUnit.parse(is);
 			result.merge(convertToParsingResult(resultTypes));
 		} catch (de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterException e) {
+			logger.error("An error-reporter is not set", e);
 			result.addErrorMessage(e.getMessage(),RSErrorLevel.SYSTEM);
 		}
 		return result;
@@ -94,6 +95,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 			return generateSchemaModelThrough(new FileInputStream(file));
 		} catch (FileNotFoundException e) {
 			RSParsingResultImpl result = new RSParsingResultImpl();
+			logger.info("File " + file.getAbsolutePath() + " was not found");
 			result.addErrorMessage("File " + file.getAbsolutePath() + " was not found");
 			return result;
 		}
@@ -203,6 +205,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 		try {
 			result.merge(generateAndResolveSchemaModelThrough(new FileInputStream(f)));
 		} catch (FileNotFoundException e) {
+			logger.info("Schema-File " + f.getAbsolutePath() + " was not found");
 			result.addErrorMessage("File " + f.getAbsolutePath() + " was not found", RSErrorLevel.SYSTEM);
 		}
 		return result;

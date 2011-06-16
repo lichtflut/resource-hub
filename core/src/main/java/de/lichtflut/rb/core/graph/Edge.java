@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.graph;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  [DESCRIPTION].
  * </p>
  *
  * <p>
