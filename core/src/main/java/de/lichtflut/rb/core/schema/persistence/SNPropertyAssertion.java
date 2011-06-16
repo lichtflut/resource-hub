@@ -67,7 +67,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 
 	/**
 	 * Creates a view for given resource.
-	 * @param resource
+	 * @param resource -
 	 */
 	public SNPropertyAssertion(final ResourceNode resource) {
 		super(resource);
@@ -126,6 +126,10 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 		}
 	}
 
+	/**
+	 * Retiurns the min. occurences.
+	 * @return {@link SNScalar}
+	 */
 	public SNScalar getMinOccurs(){
 		SemanticNode minOccurs = getSingleAssociationClient(RBSchema.MIN_OCCURS);
 		if (minOccurs != null) {
@@ -135,6 +139,11 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 		}
 	}
 
+	/**
+	 * Sets the min. occurences
+	 * @param minOccurs -
+	 * @param context -
+	 */
 	public void setMinOccurs(final SNScalar minOccurs, final Context context) {
 		if (!Infra.equals(getMinOccurs(), minOccurs)){
 			removeAssocs(RBSchema.MIN_OCCURS);
@@ -142,6 +151,10 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 		}
 	}
 
+	/**
+	 * Retiurns the max. occurences.
+	 * @return {@link SNScalar}
+	 */
 	public SNScalar getMaxOccurs(){
 		SemanticNode maxOccurs = getSingleAssociationClient(RBSchema.MAX_OCCURS);
 		if (maxOccurs != null) {
@@ -151,6 +164,11 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 		}
 	}
 
+	/**
+	 * Sets the max. occurences
+	 * @param minOccurs -
+	 * @param context -
+	 */
 	public void setMaxOccurs(final SNScalar minOccurs, final Context context) {
 		if (!Infra.equals(getMaxOccurs(), minOccurs)){
 			removeAssocs(RBSchema.MAX_OCCURS);
@@ -160,6 +178,10 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 
 	//-----------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public int compareTo(final SNPropertyAssertion other) {
 		if (this.getDescriptor() == null){
 			return 1;
@@ -170,6 +192,10 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString(){
 		StringBuffer sb = new StringBuffer("PropertyAssertion[" + super.toString() + "] ");
 		if (getDescriptor() != null){

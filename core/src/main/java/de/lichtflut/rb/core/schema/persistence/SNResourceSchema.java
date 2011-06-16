@@ -38,14 +38,19 @@ public class SNResourceSchema extends ResourceView {
 	 */
 	private static final long serialVersionUID = -2376213727456721748L;
 
+	/**
+	 * Constructor.
+	 * @param resource -
+	 */
 	public SNResourceSchema(final ResourceNode resource) {
 		super(resource);
 	}
 
 	/**
 	 * Constructor for new Resource Schemas.
+	 *  @param ctx -
 	 */
-	public SNResourceSchema(Context ctx) {
+	public SNResourceSchema(final Context ctx) {
 		Association.create(this, RDF.TYPE, RBSchema.RESOURCE_SCHEMA,ctx);
 	}
 
@@ -69,7 +74,7 @@ public class SNResourceSchema extends ResourceView {
 	 * @param clazz The class node.
 	 * @param context The context.
 	 */
-	public void setDescribedClass(final ResourceNode clazz, final Context context) {	
+	public void setDescribedClass(final ResourceNode clazz, final Context context) {
 		if (!Infra.equals(getDescribedClass(), clazz)){
 			removeAssociations(RBSchema.DESCRIBES);
 			removeAssociations(RBSchema.DESCRIBED_BY);
@@ -80,6 +85,8 @@ public class SNResourceSchema extends ResourceView {
 
 	/**
 	 * Adds the given PropertyAssertion to this class.
+	 * @param pa -
+	 * @param ctx -
 	 */
 	public void addPropertyAssertion(final SNPropertyAssertion pa, final Context ctx){
 		Association.create(this, RBSchema.HAS_PROPERTY_ASSERT, pa, ctx);
@@ -111,11 +118,12 @@ public class SNResourceSchema extends ResourceView {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.arastreju.api.model.semantic.ResourceClassifier#removePropertyDeclaration
+	/**
+	 * @see org.arastreju.api.model.semantic.ResourceClassifier#removePropertyDeclaration.
 	 * (org.arastreju.api.model.semantic.SNPropertyDeclaration)
+	 * @param decl -
 	 */
-	public void removePropertyAssertion(SNPropertyAssertion decl) {
+	public void removePropertyAssertion(final SNPropertyAssertion decl) {
 		Set<Association> assocs = getAssociations(RBSchema.HAS_PROPERTY_ASSERT);
 		Association toBeRemoved = null;
 		for (Association current : assocs) {
@@ -129,8 +137,8 @@ public class SNResourceSchema extends ResourceView {
 
 	// -----------------------------------------------------
 
-	/* (non-Javadoc)
-	 * @see org.arastreju.sge.model.nodes.views.ResourceView#toString()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
@@ -141,5 +149,4 @@ public class SNResourceSchema extends ResourceView {
 		}
 		return sb.toString();
 	}
-
 }

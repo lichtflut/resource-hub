@@ -42,6 +42,7 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 
 	/**
 	 * Default constructor.
+	 * @param config -
 	 */
 	public DefaultRBServiceProvider(final RBConfig config){
 		final ArastrejuProfile profile = config.getArastrejuConfiguration();
@@ -54,8 +55,9 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 	// -----------------------------------------------------
 
 	/**
-	 *
+	 *{@inheritDoc}
 	 */
+	@Override
 	public ResourceSchemaManagement getResourceSchemaManagement() {
 		return schemaManagement;
 	}
@@ -63,8 +65,9 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 	// -----------------------------------------------------
 
 	/**
-	 *
+	 *{@inheritDoc}
 	 */
+	@Override
 	public ArastrejuGate getArastejuGateInstance() {
 		return gate;
 	}
@@ -72,8 +75,9 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 	// -----------------------------------------------------
 
 	/**
-	 *
+	 *{@inheritDoc}
 	 */
+	@Override
 	public RBEntityManagement getRBEntityManagement() {
 		return this.typeManagement;
 	}
