@@ -12,12 +12,13 @@ import de.lichtflut.rb.core.spi.impl.DefaultRBServiceProvider;
  *
  * @author Nils Bleisch
  */
-public class RBServiceProviderFactory {
+public final class RBServiceProviderFactory {
 
 	/**
+	 * Private Constructor.
 	 * @return {@link DefaultRBServiceProvider} with Arastreju's root-context inside
 	 */
-	public static RBServiceProvider getDefaultServiceProvider(){
+	private static RBServiceProvider getDefaultServiceProvider(){
 		return new DefaultRBServiceProvider();
 	}
 

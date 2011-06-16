@@ -46,6 +46,7 @@ import de.lichtflut.rb.core.schema.RBSchema;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings("serial")
 public class SNConstraint extends ResourceView {
 
 	/**
@@ -56,7 +57,7 @@ public class SNConstraint extends ResourceView {
 
 	/**
 	 * Creates a view for given resource.
-	 * @param resource
+	 * @param resource -
 	 */
 	public SNConstraint(final ResourceNode resource) {
 		super(resource);
@@ -84,22 +85,33 @@ public class SNConstraint extends ResourceView {
 
 	// -----------------------------------------------------
 
+	/**
+	 * Returns whether constraint is literal constraint.
+	 * @return boolean
+	 */
 	public boolean isLiteralConstraint() {
 		return isOfType(RBSchema.LITERAL_CONSTRAINT);
 	}
-
+	/**
+	 * Returns whether constraint is type constraint.
+	 * @return boolean
+	 */
 	public boolean isTypeConstraint() {
 		return isOfType(RBSchema.TYPE_CONSTRAINT);
 	}
 
+	/**
+	 * Value of constraint.
+	 * @return {@link SemanticNode}
+	 */
 	public SemanticNode getConstraintValue() {
 		return getSingleAssociationClient(RBSchema.HAS_CONSTRAINT_VALUE);
 	}
 
 	// -----------------------------------------------------
 
-	/* (non-Javadoc)
-	 * @see org.arastreju.sge.model.nodes.views.ResourceView#toString()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
@@ -109,11 +121,15 @@ public class SNConstraint extends ResourceView {
 
 	// -----------------------------------------------------
 
+	/**
+	 * Checks if constraint is of a given type.
+	 * @param type -
+	 * @return boolean true if constraint is of given type, false if not
+	 */
 	private boolean isOfType(final ResourceID type) {
 		final Set<SemanticNode> types = getAssociationClients(RDF.TYPE);
 		for (SemanticNode current : types) {
-			if (current.isResourceNode() &&
-					current.asResource().asClass().isSpecializationOf(type)) {
+			if (current.isResourceNode() &&	current.asResource().asClass().isSpecializationOf(type)) {
 				return true;
 			}
 		}

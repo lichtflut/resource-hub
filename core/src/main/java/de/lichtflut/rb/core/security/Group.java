@@ -16,6 +16,10 @@ package de.lichtflut.rb.core.security;
  */
 public interface Group {
 
+	/**
+	 * Returns Description.
+	 * @return String
+	 */
 	String getDescription();
 
 }

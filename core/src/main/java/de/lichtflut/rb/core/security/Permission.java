@@ -18,8 +18,16 @@ import org.arastreju.sge.model.nodes.ResourceNode;
  */
 public interface Permission {
 
+	/**
+	 * TODO: DISCRIPTION.
+	 * @return {@link ResourceNode}
+	 */
 	ResourceNode getAssociatedResource();
 
+	/**
+	 * Returns name of permission.
+	 * @return String
+	 */
 	String getName();
 
 }

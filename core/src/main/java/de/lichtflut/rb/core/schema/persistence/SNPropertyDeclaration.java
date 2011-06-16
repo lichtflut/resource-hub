@@ -50,10 +50,12 @@ import de.lichtflut.rb.core.schema.RBSchema;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings("serial")
 public class SNPropertyDeclaration extends ResourceView {
 
 	/**
 	 * Constructor for a new property declaration node.
+	 * @param context -
 	 */
 	public SNPropertyDeclaration(final Context context) {
 		Association.create(this, RDF.TYPE, RBSchema.PROPERTY_DECL,context);
@@ -61,7 +63,7 @@ public class SNPropertyDeclaration extends ResourceView {
 
 	/**
 	 * Creates a view for given resource.
-	 * @param resource
+	 * @param resource -
 	 */
 	public SNPropertyDeclaration(final ResourceNode resource) {
 		super(resource);
@@ -71,16 +73,26 @@ public class SNPropertyDeclaration extends ResourceView {
 
 	/**
 	 * Get the unique identifier.
+	 * @return {@link ResourceID}
 	 */
 	public ResourceID getIdentifier() {
 		return this.getResource();
 	}
 
+	/**
+	 * Sets identifier.
+	 * @param id -
+	 * @param context -
+	 */
 	public void setIdentifier(final ResourceID id, final Context context) {
 		this.setName(id.getName());
 		this.setNamespace(id.getNamespace());
 	}
 
+	/**
+	 * Returns the datatype.
+	 * @return {@link ElementaryDataType}
+	 */
 	public ElementaryDataType getDatatype() {
 		SemanticNode type = getSingleAssociationClient(RBSchema.HAS_DATATYPE);
 		if (type != null) {
@@ -91,6 +103,11 @@ public class SNPropertyDeclaration extends ResourceView {
 		}
 	}
 
+	/**
+	 * Sets the datatype.
+	 * @param type -
+	 * @param context -
+	 */
 	public void setDatatype(final ElementaryDataType type, final Context context) {
 		if (!Infra.equals(getDatatype(), type)){
 			removeAssocs(RBSchema.HAS_DATATYPE);

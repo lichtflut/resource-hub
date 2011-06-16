@@ -18,13 +18,18 @@ public class PasswordCredential implements Credential {
 
 	private String password;
 
+	/**
+	 * Constructor.
+	 * @param password -
+	 */
 	public PasswordCredential(final String password){
 		this.password = password;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.arastreju.sge.security.Credential#stringRepesentation()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String stringRepesentation(){
 		return password;
 	}

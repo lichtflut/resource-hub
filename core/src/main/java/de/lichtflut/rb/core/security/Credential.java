@@ -16,6 +16,10 @@ package de.lichtflut.rb.core.security;
  */
 public interface Credential {
 
+	/**
+	 * TODO DESCRIPTION.
+	 * @return String
+	 */
 	String stringRepesentation();
 
 }

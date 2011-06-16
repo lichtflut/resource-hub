@@ -30,6 +30,7 @@ public interface RBServiceProvider {
 	 * {@link ResourceSchemaManagement} provides the ability to generate, manipulate, maintain,
 	 * persist and store an ResourceSchema through several I/O sources.
 	 * It's also interpreting the schema, checks for consistency and contains powerful error-processing mechanisms.
+	 * @return {@link ResourceSchemaManagement}
 	 */
 	ResourceSchemaManagement getResourceSchemaManagement();
 
@@ -38,6 +39,7 @@ public interface RBServiceProvider {
 	/**
 	 * {@link RBEntityManagement} provides the ability to manage,
 	 * persist and store RB-Entities.
+	 * @return {@link RBEntityManagement}
 	 */
 	RBEntityManagement getRBEntityManagement();
 
