@@ -19,151 +19,176 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
  * Whatever you want to manage, this service tries to give you the tools to do that.
  * No additional knowledge-base about infrastructure, technology stack e.g. should be required/necessary.
  * </p>
- * 
+ *
  * Try to make this interface as flexible as you can.
- * 
+ *
  * Please note, that this is not yet ready
- * 
+ *
  * Created: Apr 19, 2011
  *
  * @author Nils Bleisch
  */
 public interface ResourceSchemaManagement extends Serializable{
-	
+
 
 	/**
+	 * <p>
 	 * Set the RSF  you just want to work with
-	 * This is used for parsing and converting a given input into a ResourceSchema 
-	 * @param {@link RSFormat}
+	 * This is used for parsing and converting a given input into a ResourceSchema.
+	 * </p>
+	 * @param format - {@link RSFormat}
 	 */
-	public void setFormat(RSFormat format);
-	
+	void setFormat(RSFormat format);
+
 	/**
-	 * Get the {@link RSFormat} 
+	 * Get the {@link RSFormat}.
 	 * @return The assigned {@link RSFormat}
 	 */
-	public RSFormat getFormat();
+	RSFormat getFormat();
 
-	
+
 	// -----------------------------------------------------
-	
-	
+
+
 	/**
-	 * Stores the schemaRepresentation for a given format
+	 * Stores the schemaRepresentation for a given format.
+	 * @param representation - the textstyle schema representation
+	 * @param format - {@link RSFormat} to describe the format of the representation
 	 */
-	public void storeSchemaRepresentation(String representation, RSFormat format);
-	
-	
+	void storeSchemaRepresentation(String representation, RSFormat format);
+
+
 	/**
 	 * Returns a textual schema-reprenation of the given format.
-	 * @returns null if the format is null or unknown or if there is no representation for this schema available
+	 * @param format - {@link RSFormat} to describe the format of the representation you want to load
+	 * @return null if the format is null or unknown or if there is no representation for this schema available
 	 */
-	public String loadSchemaRepresenation(RSFormat format);
-	
-	
+	String loadSchemaRepresenation(RSFormat format);
+
+
 	// -----------------------------------------------------
-	
+
 	/**
 	  * A ResourceSchema is being parsed and interpreted for a given input, based by an already defined RSFormat
 	  * What does "resolve" in this context mean? It's the primary process of interpreting and parsing the result,
 	  * connecting ResourceSchmema to PropertyDeclarations over PropertyAssertion, check for consistency,
-	  * converting given constraints or human readable semantics into system a system readable style and check the availability of requested resource-types.
+	  * converting the given constraints or human readable semantics into
+	  * a system readable style and check the availability of requested resource-types.
+	  * @param is - the {@link InputStream} which contains the ResourceSchema in the given {@link RSFormat}
+	  * @return the {@link RSParsingResult}
 	 */
-	public RSParsingResult generateAndResolveSchemaModelThrough(InputStream is);
-	
+	 RSParsingResult generateAndResolveSchemaModelThrough(InputStream is);
+
 	// -----------------------------------------------------
-	
+
 	/**
 	  * A ResourceSchema is being parsed and interpreted for a given input, based by an already defined RSFormat
 	  * What does "resolve" in this context mean? It's the primary process of interpreting and parsing the result,
 	  * connecting ResourceSchmema to PropertyDeclarations over PropertyAssertion, check for consistency,
-	  * converting given constraints or human readable semantics into system a system readable style and check the availability of requested resource-types.
+	  * converting the given constraints or human readable semantics into
+	  * a system readable style and check the availability of requested resource-types.
+	  * @param file - the {@link File} which contains the ResourceSchema in the given {@link RSFormat}
+	  * @return the {@link RSParsingResult}
 	 */
-	public RSParsingResult generateAndResolveSchemaModelThrough(File f);
-	
+	RSParsingResult generateAndResolveSchemaModelThrough(File file);
+
 	// -----------------------------------------------------
-	
+
 	/**
 	  * A ResourceSchema is being parsed and interpreted for a given input, based by an already defined RSFormat
 	  * What does "resolve" in this context mean? It's the primary process of interpreting and parsing the result,
 	  * connecting ResourceSchmema to PropertyDeclarations over PropertyAssertion, check for consistency,
-	  * converting given constraints or human readable semantics into system a system readable style and check the availability of requested resource-types.
+	  * converting the given constraints or human readable semantics into
+	  * a system readable style and check the availability of requested resource-types.
+	  * @param s - the {@link String} which contains the ResourceSchema in the given {@link RSFormat}
+	  * @return the {@link RSParsingResult}
 	 */
-	public RSParsingResult generateAndResolveSchemaModelThrough(String s);
-	
+	RSParsingResult generateAndResolveSchemaModelThrough(String s);
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * A ResourceSchema is being parsed and interpreted for a given input, based by an already defined RSFormat
 	 * There will be with the exclusion of some grammar-syntax errors no further resolution and reasoning/interpreting-processes.
+	 * @param is - the {@link InputStream} which contains the ResourceSchema in the given {@link RSFormat}
+	 * @return the {@link RSParsingResult}
 	 */
-	public RSParsingResult generateSchemaModelThrough(InputStream is);
-	
+	RSParsingResult generateSchemaModelThrough(InputStream is);
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * A ResourceSchema is being parsed and interpreted for a given input, based by an already defined RSFormat
 	 * There will be with the exclusion of some grammar-syntax errors no further resolution and reasoning/interpreting-processes.
+	 * @param file - the {@link File} which contains the ResourceSchema in the given {@link RSFormat}
+	 * @return the {@link RSParsingResult}
 	 */
-	public RSParsingResult generateSchemaModelThrough(File file);
-	
+	RSParsingResult generateSchemaModelThrough(File file);
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * A ResourceSchema is being parsed and interpreted for a given input, based by an already defined RSFormat
 	 * There will be with the exclusion of some grammar-syntax errors no further resolution and reasoning/interpreting-processes.
+	 * @param s - the {@link String} which contains the ResourceSchema in the given {@link RSFormat}
+	 * @return the {@link RSParsingResult}
 	 */
-	public RSParsingResult generateSchemaModelThrough(String s);
-	
+	RSParsingResult generateSchemaModelThrough(String s);
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * returns the ResourceSchema for a given ResourceID
+	 * Returns a {@link ResourceSchema} for a given ResourceType.
+	 * @param id - the {@link ResourceID} of the ResourceType
+	 * @return the ResourceSchema for the given {@link ResourceID}
 	 */
-	public ResourceSchema getResourceSchemaForResourceType(ResourceID id);
-	
+	ResourceSchema getResourceSchemaForResourceType(ResourceID id);
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * returns all the system-defined ResourceSchemas
+	 * @return all the system-known ResourceSchemas
 	 */
-	public Collection<ResourceSchema> getAllResourceSchemas();
-	
+	Collection<ResourceSchema> getAllResourceSchemas();
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * returns all the system-defined PropertyDeclarations
+	 * @return all the system-known PropertyDeclarations
 	 */
-	public Collection<PropertyDeclaration> getAllPropertyDeclarations();
-	
+	Collection<PropertyDeclaration> getAllPropertyDeclarations();
+
 	// -----------------------------------------------------
-	
-	
-	
+
+
+
 	/**
-	 * Stores or overrides the given ResourceSchema
+	 * Stores or overrides the given ResourceSchema with the given one.
+	 * @param schema - the {@link ResourceSchema}
 	 */
-	public void storeOrOverrideResourceSchema(ResourceSchema schema);
-	
+	void storeOrOverrideResourceSchema(ResourceSchema schema);
+
 	// -----------------------------------------------------
-	
 	/**
-	 * Stores or overrides the given PropertyDeclaration 
+	 * Stores or overrides the given ResourceSchema with the given one.
+	 * @param declaration - the {@link PropertyDeclaration}
 	 */
-	public void storeOrOverridePropertyDeclaration(PropertyDeclaration declaration);
-	
+	void storeOrOverridePropertyDeclaration(PropertyDeclaration declaration);
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Stores or overrides the given ResourceSchema's
+	 * Stores or overrides the given ResourceSchema's.
+	 * @param schema - the {@link Collection} of {@link ResourceSchema}'s
 	 */
-	public void storeOrOverrideResourceSchema(Collection<ResourceSchema> schema);
-	
+	void storeOrOverrideResourceSchema(Collection<ResourceSchema> schema);
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Stores or overrides the given PropertyDeclaration's
+	 * Stores or overrides the given PropertyDeclarations's.
+	 * @param declarations - the {@link Collection} of {@link PropertyDeclaration}'s
 	 */
-	public void storeOrOverridePropertyDeclaration(Collection<PropertyDeclaration> declaration);
-		
+	void storeOrOverridePropertyDeclaration(Collection<PropertyDeclaration> declarations);
+
 }

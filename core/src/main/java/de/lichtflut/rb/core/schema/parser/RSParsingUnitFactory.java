@@ -5,9 +5,6 @@ package de.lichtflut.rb.core.schema.parser;
 
 import java.io.InputStream;
 import java.util.Collection;
-
-import org.junit.experimental.theories.Theory;
-
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 import de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterException;
 

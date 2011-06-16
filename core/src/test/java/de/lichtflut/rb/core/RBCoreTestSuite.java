@@ -12,7 +12,7 @@ import de.lichtflut.rb.core.schema.persistence.OSFPersistenceTest;
 
 /**
  * <p>
- *  [DESCRIPTION].
+ * [TODO: DESCRIPTION].
  * </p>
  *
  * <p>

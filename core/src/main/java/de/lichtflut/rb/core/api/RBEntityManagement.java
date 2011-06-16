@@ -71,7 +71,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return the resolved {@link RBEntityFactory}-node or
 	 * null if no {@link RBEntityFactory} could be assigned to the params
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	RBEntityFactory loadRBEntity(QualifiedName qn);
 
 	// -----------------------------------------------------
@@ -84,7 +84,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return the resolved {@link RBEntityFactory}-node or
 	 * null if no {@link RBEntityFactory} could be assigned to the params
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	RBEntityFactory loadRBEntity(String nodeIdentifier);
 
 	// -----------------------------------------------------
@@ -97,7 +97,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return the resolved {@link RBEntityFactory}-node or
 	 * null if no {@link RBEntityFactory} could be assigned to the params
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	RBEntityFactory loadRBEntity(ResourceNode node);
 
 	// -----------------------------------------------------
@@ -109,7 +109,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @param schemas the specified collection of schemas
 	 * @return a {@link Collection} of {@link RBEntityFactory} which are dependent on the given schemas
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas);
 
 	// -----------------------------------------------------
@@ -124,8 +124,9 @@ public interface RBEntityManagement extends Serializable{
 	 * @param ctx -  the SearchContext, if null, the default SearchContext "CONJUNCT_MULTIPLE_KEYWORDS" will be taken instead
 	 * @return a {@link Collection} of {@link RBEntityFactory} which depends on the given schemas, filter and searchcontext
 	 */
-	@SuppressWarnings("unchecked")
-	 Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas, String filter, SearchContext ctx);
+	@SuppressWarnings("rawtypes")
+	Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(final Collection<ResourceSchema> schemas,
+			final String filter, final SearchContext ctx);
 
 	/**
 	 * <p>
@@ -134,8 +135,8 @@ public interface RBEntityManagement extends Serializable{
 	 * @param schema -  the specified schema
 	 * @return a {@link Collection} of {@link RBEntityFactory} which depends on the given schema
 	 */
-	@SuppressWarnings("unchecked")
-	 Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(ResourceSchema schema);
+	@SuppressWarnings("rawtypes")
+	Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(ResourceSchema schema);
 
 	// -----------------------------------------------------
 
@@ -149,8 +150,8 @@ public interface RBEntityManagement extends Serializable{
 	 * @param ctx - the SearchContext, if null, the default SearchContext "CONJUNCT_MULTIPLE_KEYWORDS" will be taken instead
 	 * @return  a {@link Collection} of {@link RBEntityFactory} which depends on the given schema, filter and searchcontext
 	 */
-	@SuppressWarnings("unchecked")
-	 Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter, SearchContext ctx);
+	@SuppressWarnings("rawtypes")
+	Collection<RBEntityFactory> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter, SearchContext ctx);
 
 	// -----------------------------------------------------
 
