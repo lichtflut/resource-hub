@@ -13,19 +13,19 @@ import org.arastreju.sge.model.ResourceID;
  *   <li>Type-Of constraints for resource references</li>
  *  </ol>
  * </p>
- *  
+ *
  *  <p>
  *  Type constraint for resource references have to be interpreted as follows:
- *  <pre> 
+ *  <pre>
  *  	if constraint type is X and the resource applied id Y
  *  	the constraint is fulfilled
  *  	if (X rdf:type Y) is true
  *   </pre>
  * </p>
- *  
- *  
+ *
+ *
  * <p>
- * Please note, that cardinality (min occurs, max occurs) are not constraints. 
+ * Please note, that cardinality (min occurs, max occurs) are not constraints.
  * </p>
  *
  * <p>
@@ -35,32 +35,32 @@ import org.arastreju.sge.model.ResourceID;
  * @author Oliver Tigges
  */
 public interface Constraint extends ResourceSchemaType{
-	
+
 	/**
 	 * Check if this constraint is for literal values.
 	 * @return true if this constraint is for literal values.
 	 */
 	boolean isLiteralConstraint();
-	
+
 	/**
 	 * Check if this constraint is a type-of constraint for resources.
 	 * @return true if this constraint is for resources.
 	 */
 	boolean isResourceTypeConstraint();
-	
+
 	/**
 	 * Get the literal constraint, a regular expression pattern. If this constraint is a resource type constraint
 	 * (isLiteralConstraint() returns false) null will be returned;
 	 * @return The literal constraint or null.
 	 */
 	String getLiteralConstraint();
-	
+
 	/**
-	 * Get the resource type constraint, i.e. the type of which the resource must be. 
+	 * Get the resource type constraint, i.e. the type of which the resource must be.
 	 * If this constraint is a literal constraint
 	 * (isResourceTypeConstraint() returns false) null will be returned;
 	 * @return The resource type or null.
 	 */
 	ResourceID getResourceTypeConstraint();
-	
+
 }

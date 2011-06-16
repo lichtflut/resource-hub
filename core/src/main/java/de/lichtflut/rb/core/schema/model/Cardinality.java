@@ -9,12 +9,12 @@ package de.lichtflut.rb.core.schema.model;
  *  In contrast to the concept of 'cardinality' in software modeling or design
  *  the cardinality of a PropertyDeclaration is rather a recommendation than obligatory.
  * </p>
- * 
+ *
  * <p>
- * 	The methods are may seem slightly redundant. If <code>isSingle()</code> is true, this 
+ * 	The methods are may seem slightly redundant. If <code>isSingle()</code> is true, this
  *  could also be expressed by max occurs = 1. But this cardinality representation can be
- *  used in a fuzzy mode (isSingle()/isUnbound()) and in an exact mode. Additionally 
- *  <code>isUnbound()</code> must be true if max occurs will be grater than Integer.MAX_VALUE;  
+ *  used in a fuzzy mode (isSingle()/isUnbound()) and in an exact mode. Additionally
+ *  <code>isUnbound()</code> must be true if max occurs will be grater than Integer.MAX_VALUE;
  * </p>
  *
  * <p>
@@ -24,13 +24,29 @@ package de.lichtflut.rb.core.schema.model;
  * @author Oliver Tigges
  */
 public interface Cardinality extends ResourceSchemaType{
-	
+
+	/**
+	 * Returns if Attribute can have unlimited values.
+	 * @return boolean
+	 */
 	boolean isUnbound();
-	
+
+	/**
+	 * Returns if Attribute can have only one value.
+	 * @return boolean
+	 */
 	boolean isSingle();
 
+	/**
+	 * Returns min. occurence of a value.
+	 * @return int
+	 */
 	int getMinOccurs();
-	
+
+	/**
+	 * Returns max. occurence of a value.
+	 * @return int
+	 */
 	int getMaxOccurs();
-	
+
 }

@@ -25,12 +25,13 @@ import org.arastreju.sge.model.nodes.views.SNEntity;
  * Created: May 17, 2011
  *
  * @author Nils Bleisch
+ * @param <T>
  */
 public abstract class RBEntityFactory<T extends Object> extends SNEntity
 		implements Serializable {
 
 	/**
-	 * Keys which help to get some meta data for a given attribute name during
+	 * Keys which help to get some meta data for a given attribute name during.
 	 * runtime
 	 */
 	public enum MetaDataKeys {
@@ -77,10 +78,11 @@ public abstract class RBEntityFactory<T extends Object> extends SNEntity
 
 	/**
 	 * Get a collection of attribute names which are matched by the given simple name.
+	 * @param simpleAttribute -
 	 * @return Collection of names which are matched by the given simple name
 	 */
 	public abstract Collection<String> getAttributesNamesForSimple(
-			String simple_attribute);
+			String simpleAttribute);
 
 	/**
 	 * Get a simple attribute-name representation of the origin ones. This is

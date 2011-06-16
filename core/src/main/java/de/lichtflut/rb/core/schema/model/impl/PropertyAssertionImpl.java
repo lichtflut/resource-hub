@@ -19,7 +19,7 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 
 /**
  * <p>
-	Implementation of {@link PropertyAssertion}
+	Implementation of {@link PropertyAssertion}.
  * </p>
  *
  * <p>
@@ -27,9 +27,9 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
  * <ol>
  * <li>Cardinality = (min=0, max=infinity)</li>
  * <li>Constraints = an empty set</li>
- * </ol> 
- * 
- * 
+ * </ol>
+ *
+ *
  * </p>
  *
  * <p>
@@ -40,46 +40,57 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
  */
 
 public class PropertyAssertionImpl implements PropertyAssertion{
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -322769574493912661L;
 	//Instance members
 	private ResourceID propertyDescriptor;
 	private PropertyDeclaration property;
 	//Setting up the default cardinality
-	private Cardinality cardinality = CardinalityFactory.hasOptionalOneToMany();
+	private Cardinality cardinality = CardinalityBuilder.hasOptionalOneToMany();
 	private Set<Constraint> constraints = new HashSet<Constraint>();
 	private String propertyIdentifier = null;
-	
-	//Constructors
-	public PropertyAssertionImpl(ResourceID propertyDescriptor,
-			PropertyDeclaration property) {
+
+	/**
+	 * Constructor.
+	 * @param propertyDescriptor -
+	 * @param property -
+	 */
+	public PropertyAssertionImpl(final ResourceID propertyDescriptor,
+			final PropertyDeclaration property) {
 		super();
 		this.propertyDescriptor = propertyDescriptor;
 		this.property = property;
-		cardinality = CardinalityFactory.hasOptionalOneToMany();
+		cardinality = CardinalityBuilder.hasOptionalOneToMany();
 	}
-	
-	// -----------------------------------------------------
-	
-	public PropertyAssertionImpl(String propertyIdentifier, Cardinality c){
+
+	/**
+	 * Constructor.
+	 * @param propertyIdentifier -
+	 * @param c -
+	 */
+	public PropertyAssertionImpl(final String propertyIdentifier, final Cardinality c){
 		this.cardinality = c;
 		this.propertyIdentifier = propertyIdentifier;
 	}
-	
-	// -----------------------------------------------------
-	
-	public PropertyAssertionImpl(String propertyIdentifier){
+
+	/**
+	 * Constructor.
+	 * @param propertyIdentifier -
+	 */
+	public PropertyAssertionImpl(final String propertyIdentifier){
 		this.propertyIdentifier = propertyIdentifier;
 	}
-	
-	// -----------------------------------------------------
-	
-	public PropertyAssertionImpl(ResourceID propertyDescriptor,
-			PropertyDeclaration property, Cardinality cardinality,
-			Set<Constraint> constraints) {
+
+	/**
+	 * Constructor.
+	 * @param propertyDescriptor -
+	 * @param property -
+	 * @param cardinality -
+	 * @param constraints -
+	 */
+	public PropertyAssertionImpl(final ResourceID propertyDescriptor,
+			final PropertyDeclaration property, final Cardinality cardinality,
+			final Set<Constraint> constraints) {
 		super();
 		this.propertyDescriptor = propertyDescriptor;
 		this.property = property;
@@ -88,110 +99,134 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	}
 
 	// -----------------------------------------------------
-	
+
 	/**
-	 * @return Returns the propertyDescriptor
+	 * {@inheritDoc}
 	 */
+	@Override
 	public ResourceID getPropertyDescriptor() {
 		return propertyDescriptor;
 	}
-	
-	// -----------------------------------------------------
-	
+
 	/**
-	 * @return Returns the property itself
+	 * {@inheritDoc}
 	 */
+	@Override
 	public PropertyDeclaration getPropertyDeclaration() {
 		return property;
 	}
-	
-	// -----------------------------------------------------
-	
+
 	/**
-	 * @return Returns the cardinality
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Cardinality getCardinality() {
 		return cardinality;
 	}
-	
-	// -----------------------------------------------------
-	
+
 	/**
-	 * @return Returns a {@link Set} of constraints, containing the direct assertion constraints and the properties constraints
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<Constraint> getConstraints() {
 		Set<Constraint> output = new HashSet<Constraint>();
 		output.addAll(getPropertyDeclaration().getConstraints());
 		output.addAll(this.constraints);
 		return output;
 	}
-	
-	// -----------------------------------------------------
-	
+
 	/**
-	 * @return Returns the toString()-representation of {@link PropertyAssertion} separated in '\n'
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
 		StringBuffer sBuffer = new StringBuffer();
 		sBuffer.append("propertyIdentifier: " +  this.getPropertyIdentifier());
-		sBuffer.append("\npropertyDescriptor: " + ((propertyDescriptor!=null) ? propertyDescriptor.getQualifiedName().toURI() : ""));
+		sBuffer.append("\npropertyDescriptor: " + ((propertyDescriptor!=null)
+					? propertyDescriptor.getQualifiedName().toURI() : ""));
 		sBuffer.append("\nproperty: " + ((propertyDescriptor!=null) ? property.toString() : ""));
 		sBuffer.append("\ncardinality: "+ cardinality.toString());
 		if(null!=constraints){
 			Iterator<Constraint> i = constraints.iterator();
-			while(i.hasNext())
+			while(i.hasNext()){
 				sBuffer.append("\ncardinality: "+i.next().toString());
+			}
 		}
 		return sBuffer.toString();
 	}
 
 	// -----------------------------------------------------
-	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean isResolved() {
-		if(property == null) return false;
+		if(property == null){
+			return false;
+		}
 		return true;
 	}
 
 	// -----------------------------------------------------
-	
-	public void setCardinality(Cardinality c) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setCardinality(final Cardinality c) {
 		this.cardinality = c;
-		
+
 	}
 
 	// -----------------------------------------------------
-	
-	public void setPropertyIdentifier(String identifier) {
+
+	/**
+	 * Sets the property identifier.
+	 * @param identifier -
+	 */
+	public void setPropertyIdentifier(final String identifier) {
 		this.propertyIdentifier = identifier;
 		//TODO This must form a valid URI
-		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isQname(this.propertyIdentifier)))
+		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isQname(this.propertyIdentifier))){
 			this.propertyIdentifier =  new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier).toURI();
+		}
 	}
 
-	public void setPropertyDescriptor(ResourceID propertyDescriptor){
+	/**
+	 * Sets the property descriptor.
+	 * @param propertyDescriptor -
+	 */
+	public void setPropertyDescriptor(final ResourceID propertyDescriptor){
 		this.propertyDescriptor = propertyDescriptor;
 	}
-	
-	// -----------------------------------------------------
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getPropertyIdentifier() {
-		if(this.propertyIdentifier==null) return null;
-		if(!(QualifiedName.isUri(this.propertyIdentifier)))
+		if(this.propertyIdentifier==null){
+			return null;
+		}
+		if(!(QualifiedName.isUri(this.propertyIdentifier))){
 			return  new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier).toURI();
+		}
 		return this.propertyIdentifier;
 	}
 
 	// -----------------------------------------------------
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public QualifiedName getQualifiedPropertyIdentifier() {
-		
-		if(this.propertyIdentifier==null) return null;
-		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isQname(this.propertyIdentifier)))
+		if(this.propertyIdentifier==null){
+			return null;
+		}
+		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isQname(this.propertyIdentifier))){
 			return new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier);
-		else{
+	}else{
 			return new QualifiedName(this.propertyIdentifier);
-			 
 		}
 	}
 

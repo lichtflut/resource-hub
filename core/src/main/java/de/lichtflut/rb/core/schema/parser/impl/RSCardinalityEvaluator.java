@@ -6,7 +6,7 @@ package de.lichtflut.rb.core.schema.parser.impl;
 import org.antlr.runtime.Token;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
-import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.parser.impl.simplersf.ResourceSchemaParser;
 /**
  *
@@ -32,11 +32,11 @@ public class RSCardinalityEvaluator implements RSEvaluator<Cardinality> {
 		}
 		String tokenLabel = t.getText().toLowerCase();
 		if (tokenLabel.equals("has")){
-			 this.cardinality = CardinalityFactory.hasExactly(amount);
+			 this.cardinality = CardinalityBuilder.hasExactly(amount);
 		}else if (tokenLabel.contains("min")){
-			this.cardinality = CardinalityFactory.hasAtLeast(amount);
+			this.cardinality = CardinalityBuilder.hasAtLeast(amount);
 		}else if (tokenLabel.contains("max")){
-			this.cardinality = CardinalityFactory.hasOptionalOneUpTo(amount);
+			this.cardinality = CardinalityBuilder.hasOptionalOneUpTo(amount);
 		}else{
 			throw new IllegalArgumentException(
 				 t.getText() + " is unknown");
@@ -59,7 +59,7 @@ public class RSCardinalityEvaluator implements RSEvaluator<Cardinality> {
 	public boolean evaluate(final Cardinality c) {
 		int max_c1 = c.getMaxOccurs(), max_c2 = cardinality.getMaxOccurs();
 		int min_c1 = c.getMinOccurs(), min_c2 = cardinality.getMinOccurs();
-		this.cardinality =  (CardinalityFactory.getAbsoluteCardinality(Math.max(max_c1,max_c2), Math.min(min_c2, min_c1)));
+		this.cardinality =  (CardinalityBuilder.getAbsoluteCardinality(Math.max(max_c1,max_c2), Math.min(min_c2, min_c1)));
 		return true;
 	}
 }

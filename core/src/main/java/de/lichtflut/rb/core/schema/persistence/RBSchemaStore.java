@@ -28,7 +28,7 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
@@ -256,7 +256,7 @@ public class RBSchemaStore {
 			final PropertyAssertionImpl pa = new PropertyAssertionImpl(snAssertion.getDescriptor(), decl);
 			int min = toInteger(snAssertion.getMinOccurs());
 			int max = toInteger(snAssertion.getMaxOccurs());
-			pa.setCardinality(CardinalityFactory.getAbsoluteCardinality(max, min));
+			pa.setCardinality(CardinalityBuilder.getAbsoluteCardinality(max, min));
 			schema.addPropertyAssertion(pa);
 		}
 

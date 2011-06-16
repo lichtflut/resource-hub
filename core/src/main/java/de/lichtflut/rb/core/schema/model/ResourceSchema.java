@@ -74,4 +74,10 @@ public interface ResourceSchema extends ResourceSchemaType{
 	 */
 	RBEntityFactory<Object> generateRBEntity();
 
+	/**
+	 * Overriding to match conventions while ioverriding 'equals()' method..
+	 * @return int
+	 */
+	int hashCode();
+
 }

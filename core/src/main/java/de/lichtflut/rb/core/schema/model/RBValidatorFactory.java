@@ -12,8 +12,15 @@ package de.lichtflut.rb.core.schema.model;
  * Created: May 17, 2011
  *
  * @author Nils Bleisch
+ * @param <T>
  */
 public abstract class RBValidatorFactory<T extends Object> {
-	
-	public abstract boolean isValid(T value) throws RBInvalidValueException;	
+
+	/**
+	 * Checks wheather validation was successfull or not.
+	 * @param value -
+	 * @return true if validated successfull, false if not
+	 * @throws RBInvalidValueException -
+	 */
+	public abstract boolean isValid(T value) throws RBInvalidValueException;
 }

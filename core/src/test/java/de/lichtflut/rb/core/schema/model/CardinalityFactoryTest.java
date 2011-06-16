@@ -5,13 +5,13 @@ package de.lichtflut.rb.core.schema.model;
 
 import org.junit.Test;
 
-import de.lichtflut.rb.core.schema.model.impl.CardinalityFactory;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import junit.framework.TestCase;
 
 
 /**
  * <p>
- *  Some tests to proof and specify the behavior of {@link CardinalityFactory}.
+ *  Some tests to proof and specify the behavior of {@link CardinalityBuilder}.
  * </p>
  *
  *  <p>
@@ -35,9 +35,9 @@ public class CardinalityFactoryTest extends TestCase{
 	@Test (expected=IllegalArgumentException.class)
 	public void testFactoryInCommon(){
 		//Let's proof that singleton pattern of CardinalityFactory is still working
-		CardinalityFactory factory = CardinalityFactory.getInstance();
+		CardinalityBuilder factory = CardinalityBuilder.getInstance();
 		assertSame("getInstance() should deliver allways the same instance",
-				factory,CardinalityFactory.getInstance());
+				factory,CardinalityBuilder.getInstance());
 		assertSame("getInstance() should deliver allways the same instance",
 				factory,factory.getInstance());
 
@@ -61,7 +61,7 @@ public class CardinalityFactoryTest extends TestCase{
 	 */
   @SuppressWarnings("static-access")
    public void testBuildSingleCardinalities(){
-	   CardinalityFactory f = CardinalityFactory.getInstance();
+	   CardinalityBuilder f = CardinalityBuilder.getInstance();
 	   Cardinality c = f.hasExcactlyOne();
 	   assertEquals(true, c.isSingle());
 	   assertEquals(false, c.isUnbound());
@@ -95,7 +95,7 @@ public class CardinalityFactoryTest extends TestCase{
    */
   @SuppressWarnings("static-access")
   public void testBuildHABTMCardinalities(){
-	   CardinalityFactory f = CardinalityFactory.getInstance();
+	   CardinalityBuilder f = CardinalityBuilder.getInstance();
 	   Cardinality c = f.hasAtLeastOneToMany();
 	   assertEquals(false, c.isSingle());
 	   assertEquals(true, c.isUnbound());
