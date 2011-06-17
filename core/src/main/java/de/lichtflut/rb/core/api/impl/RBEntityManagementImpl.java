@@ -79,6 +79,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 		}
 		if(ctx==null){
 			context = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
+			new Integer(6);
 		}
 		filterString = getConvertedFilterBySearchContext(filterString, context);
 		Collection<RBEntity> output = new ArrayList<RBEntity>();
