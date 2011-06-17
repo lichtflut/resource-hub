@@ -43,6 +43,7 @@ public interface RSParsingResult {
 	/**
 	 * Returns all the filter matching errors as one whole string concatenated
 	 *         with "\n".
+	 *         @param filter -
 	 * @return all the filter matching errors as one whole string concatenated
 	 *         with "\n"
 	 */
@@ -101,7 +102,7 @@ public interface RSParsingResult {
 	 *
 	 * @return the ResourceSchema even if errors have been occured
 	 */
-	public Collection<ResourceSchema> getResourceSchemasIgnoreErrors();
+	Collection<ResourceSchema> getResourceSchemasIgnoreErrors();
 
 	// -----------------------------------------------------
 
@@ -109,7 +110,7 @@ public interface RSParsingResult {
 	 *
 	 * @return the PropertyDeclaration even if errors have been occured
 	 */
-	public Collection<PropertyDeclaration> getPropertyDeclarationsIgnoreErrors();
+	Collection<PropertyDeclaration> getPropertyDeclarationsIgnoreErrors();
 
 	// -----------------------------------------------------
 
@@ -118,7 +119,7 @@ public interface RSParsingResult {
 	 * @return the PropertyDeclaration which are not assigned to a
 	 *         ResourceSchema, even if errors have been occured
 	 */
-	public Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssocIgnoreErrors();
+	Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssocIgnoreErrors();
 
 	// -----------------------------------------------------
 
@@ -127,14 +128,15 @@ public interface RSParsingResult {
 	 *
 	 * @return is empty when at least on error has been occurred
 	 */
-	public Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssoc();
+	Collection<PropertyDeclaration> getPropertyDeclarationsWithoutResourceAssoc();
 
 	// -----------------------------------------------------
 
 	/**
 	 * Determines if at lest one error is occurred or not.
+	 * @return boolean true if error occured, false if not
 	 */
-	public boolean isErrorOccured();
+	boolean isErrorOccured();
 
 	// -----------------------------------------------------
 
@@ -142,13 +144,13 @@ public interface RSParsingResult {
 	 * Merge another ParsingResult with this ParsingResult. Duplicated model
 	 * entries will be eliminated. This member can be understand as "union" A
 	 * Testcase still exists
+	 * @param result -
 	 */
-	public void merge(RSParsingResult result);
+	void merge(RSParsingResult result);
 
 	/**
 	 * Set the ErrorLevel which is used as default when no other ErrorLevel is explicitly given.
-	 * @param lvl
+	 * @param lvl -
 	 */
-	public void setErrorLevel(RSErrorLevel lvl);
-
+	void setErrorLevel(RSErrorLevel lvl);
 }
