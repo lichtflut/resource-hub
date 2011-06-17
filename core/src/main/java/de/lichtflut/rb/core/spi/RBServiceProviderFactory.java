@@ -15,11 +15,16 @@ import de.lichtflut.rb.core.spi.impl.DefaultRBServiceProvider;
 public final class RBServiceProviderFactory {
 
 	/**
-	 * Private Constructor.
-	 * @return {@link DefaultRBServiceProvider} with Arastreju's root-context inside
+	 * @return {@link DefaultRBServiceProvider} with Arastreju's root-context inside.
 	 */
-	private static RBServiceProvider getDefaultServiceProvider(){
+	public static RBServiceProvider getDefaultServiceProvider(){
 		return new DefaultRBServiceProvider();
 	}
+
+	/**
+	 * Default constructor which is private.
+	 */
+	private RBServiceProviderFactory(){}
+
 
 }

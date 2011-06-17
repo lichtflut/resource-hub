@@ -2,15 +2,11 @@
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.schema.parser;
-
 import java.io.IOException;
 import java.util.Collection;
-
 import junit.framework.Assert;
-
 import org.antlr.runtime.RecognitionException;
 import org.arastreju.sge.model.ElementaryDataType;
-
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -31,8 +27,8 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 public class ResourceSchemaParserTest {
 	/**
 	 *
-	 * @throws IOException
-	 * @throws RecognitionException
+	 * @throws IOException for
+	 * @throws RecognitionException when something went wrong during parsing
 	 */
 	public final void testParsingAndConstructingModelFromTestSimpleRSFFile1() throws IOException, RecognitionException{
 		ResourceSchemaManagement rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
@@ -44,8 +40,11 @@ public class ResourceSchemaParserTest {
 	}
 
 	//---------------------------------------------------------------------------
+
 	/**
 	 *
+	 * @throws IOException when the specified file does not exists
+	 * @throws RecognitionException when something went wrong during parsing
 	 */
 	public final void testParsingAndConstructingModelFromTestOSFFile2() throws IOException, RecognitionException{
 		ResourceSchemaManagement rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();

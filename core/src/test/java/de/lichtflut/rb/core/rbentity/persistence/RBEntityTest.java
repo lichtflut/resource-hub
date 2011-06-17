@@ -33,10 +33,10 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 public final class RBEntityTest {
 
 	/**
-	 * Test.
+	 * Test to persist and find entities.
 	 */
+	@SuppressWarnings("rawtypes")
 	@Test
-	@SuppressWarnings("unchecked")
 	public void testPersistAndFindRBEntities(){
 		RBServiceProvider provider = RBServiceProviderFactory.getDefaultServiceProvider();
 
@@ -68,8 +68,11 @@ public final class RBEntityTest {
 		}
 	}
 
+	/**
+	 * Test to persist and find the specific entity.
+	 */
+	@SuppressWarnings("rawtypes")
 	@Test
-	@SuppressWarnings("unchecked")
 	public void testPersistAndFindASpecificEntity(){
 	RBServiceProvider provider = RBServiceProviderFactory.getDefaultServiceProvider();
 

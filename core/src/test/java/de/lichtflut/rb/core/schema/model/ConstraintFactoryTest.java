@@ -7,9 +7,7 @@ import java.util.Collection;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
-
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
-import de.lichtflut.rb.core.schema.model.Constraint;
 import junit.framework.TestCase;
 
 

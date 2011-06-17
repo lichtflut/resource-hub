@@ -73,20 +73,20 @@ public class CardinalityFactoryTest extends TestCase{
 	   assertEquals(false, c.isUnbound());
 	   assertEquals(1,c.getMaxOccurs());
 	   assertEquals(0,c.getMinOccurs());
-
-	   int amount = 5;
-	   c = f.hasExactly(amount);
+	   final int aMount = 5;
+	   int amount_current = aMount;
+	   c = f.hasExactly(amount_current);
 	   assertEquals(false, c.isSingle());
 	   assertEquals(false, c.isUnbound());
-	   assertEquals(amount,c.getMaxOccurs());
-	   assertEquals(amount,c.getMinOccurs());
+	   assertEquals(amount_current,c.getMaxOccurs());
+	   assertEquals(amount_current,c.getMinOccurs());
 
-	   amount = -5;
-	   c = f.hasExactly(amount);
+	   amount_current = - aMount;
+	   c = f.hasExactly(amount_current);
 	   assertEquals(false, c.isSingle());
 	   assertEquals(false, c.isUnbound());
-	   assertEquals(Math.abs(amount),c.getMaxOccurs());
-	   assertEquals(Math.abs(amount),c.getMinOccurs());
+	   assertEquals(Math.abs(amount_current),c.getMaxOccurs());
+	   assertEquals(Math.abs(amount_current),c.getMinOccurs());
    }
   //-------------------------------//
 
@@ -108,17 +108,18 @@ public class CardinalityFactoryTest extends TestCase{
 	   assertEquals(Integer.MAX_VALUE,c.getMaxOccurs());
 	   assertEquals(0,c.getMinOccurs());
 
-	   int amount = -5;
-	   c = f.hasOptionalOneUpTo(amount);
+	   final int aMount = 5;
+	   int amount_current = aMount;
+	   c = f.hasOptionalOneUpTo(amount_current);
 	   assertEquals(false, c.isSingle());
 	   assertEquals(false, c.isUnbound());
-	   assertEquals(Math.abs(amount),c.getMaxOccurs());
+	   assertEquals(Math.abs(amount_current),c.getMaxOccurs());
 	   assertEquals(0,c.getMinOccurs());
 
-	   c = f.hasAtLeastOneUpTo(amount);
+	   c = f.hasAtLeastOneUpTo(amount_current);
 	   assertEquals(false, c.isSingle());
 	   assertEquals(false, c.isUnbound());
-	   assertEquals(Math.abs(amount),c.getMaxOccurs());
+	   assertEquals(Math.abs(amount_current),c.getMaxOccurs());
 	   assertEquals(1,c.getMinOccurs());
 
   }

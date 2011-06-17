@@ -40,74 +40,86 @@ public class RBSchemaStoreTest {
 
 	private ArastrejuGate gate;
 
+	/**
+	 * Set-Up method.
+	 */
 	@Before
 	public void setUp() {
 		gate = Arastreju.getInstance().rootContext();
 	}
-	
+
+	/**
+	 * Tear-Down method.
+	 */
 	@After
 	public void tearDown() {
 		gate.close();
 	}
 
-	
+
+	/**
+	 * Does test the RBSchemaStore, persist and load-functionality.
+	 */
 	@Test
 	public void testStore() {
 		 final RBSchemaStore store = new RBSchemaStore(gate);
-		 
+
 		 Collection<PropertyDeclaration> pDecs = store.loadAllPropertyDeclarations(null);
 
 		 Assert.assertEquals(0, pDecs.size());
-		 
+
 		 final ResourceSchema schema = createSchema();
-		 
+
 		 final SNResourceSchema snSchema = store.store(schema,null);
-		 
+
 		 pDecs = store.loadAllPropertyDeclarations(null);
 		 Assert.assertEquals(3, pDecs.size());
-		 
+
 		 Assert.assertNotNull(snSchema);
-		 		 
+
 		 Assert.assertEquals(3, snSchema.getPropertyAssertions().size());
-		 
+
 		 ResourceSchema schema2 = store.convertResourceSchema(snSchema);
-		 
+
 		 Assert.assertNotNull(schema2);
-		 
+
 		 Assert.assertEquals(3, schema2.getPropertyAssertions().size());
-		 
-		 
+
+
 		 Collection<ResourceSchema> schemas = store.loadAllResourceSchemas(null);
 		 Assert.assertEquals(1,schemas.size());
-		 
-	
+
+
 		 //Test that schema can be found for the desrcibed resource (RT)
 		 ResourceID describedResourceID = schema.getDescribedResourceID();
 		 Assert.assertNotNull(store.loadSchemaForResourceType(describedResourceID,null));
 		 //Test that there is schema for a RT, that doesnt exists
 		 Assert.assertNull(store.loadSchemaForResourceType(new SimpleResourceID(new QualifiedName("test")),null));
-		 
+
 		 pDecs = store.loadAllPropertyDeclarations(null);
 
 		 Assert.assertEquals(3, pDecs.size());
-		 
+
 	}
-	
+
 	// -----------------------------------------------------
-	
+
+	/**
+	 * @return the created {@link ResourceSchema}
+	 */
 	private ResourceSchema createSchema() {
 		ResourceSchemaImpl schema = new ResourceSchemaImpl("http://lichtflut.de#","personschema");
-		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl(); 
-		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl(); 
-		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl(); 
+		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
 		p1.setName("http://lichtflut.de#geburtsdatum");
 		p2.setName("http://lichtflut.de#email");
 		p3.setName("http://lichtflut.de#alter");
-		
+
 		p1.setElementaryDataType(ElementaryDataType.DATE);
 		p2.setElementaryDataType(ElementaryDataType.STRING);
 		p3.setElementaryDataType(ElementaryDataType.INTEGER);
-		
+
 		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
 		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
@@ -115,12 +127,12 @@ public class RBSchemaStoreTest {
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(3));
 		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		
+
 		schema.addPropertyAssertion(pa1);
 		schema.addPropertyAssertion(pa2);
 		schema.addPropertyAssertion(pa3);
-		
+
 		return schema;
 	}
-	
+
 }
