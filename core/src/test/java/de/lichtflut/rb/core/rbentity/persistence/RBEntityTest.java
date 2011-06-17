@@ -107,6 +107,14 @@ public final class RBEntityTest {
 
 
 	/**
+	 * DEMO-TEST to test hudson.
+	 */
+	@Test
+	public void testHudson(){
+		Assert.assertTrue(false);
+	}
+
+	/**
 	 * Tests.
 	 * @return shema
 	 */
