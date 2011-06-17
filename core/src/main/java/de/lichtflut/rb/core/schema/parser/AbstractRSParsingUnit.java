@@ -42,7 +42,6 @@ public abstract class AbstractRSParsingUnit {
 	 */
 	public AbstractRSParsingUnit(final RSErrorReporter errorReporter) {
 		setErrorReporter(errorReporter);
-		new Integer(9);
 	}
 
 	/**
