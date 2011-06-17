@@ -105,15 +105,6 @@ public final class RBEntityTest {
 		Assert.assertNull(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName().toURI()+ "#"));
 	}
 
-
-	/**
-	 * DEMO-TEST to test hudson.
-	 */
-	@Test
-	public void testHudson(){
-		Assert.assertTrue(false);
-	}
-
 	/**
 	 * Tests.
 	 * @return shema
