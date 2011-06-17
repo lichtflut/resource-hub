@@ -25,5 +25,5 @@ import de.lichtflut.rb.core.schema.persistence.OSFPersistenceTest;
 @RunWith(Suite.class)
 @SuiteClasses({RBEntityTest.class, OSFPersistenceTest.class})
 public class RBCoreTestSuite {
-
+	
 }

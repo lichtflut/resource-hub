@@ -46,7 +46,7 @@ public class CardinalityFactoryTest extends TestCase{
 		boolean exceptionIsOccured=false;
 		try{
 		  final Integer min = -3;
-		  factory.getAbsoluteCardinality(min, -1);
+		  factory.getAbsoluteCardinality(6, -1);
 		}catch(IllegalArgumentException exe){
 			exceptionIsOccured=true;
 		}

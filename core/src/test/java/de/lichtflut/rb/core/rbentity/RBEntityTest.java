@@ -72,7 +72,7 @@ public class RBEntityTest {
 		Assert.assertTrue(exceptionOccured);
 		exceptionOccured=false;
 
-		int ticket_hatEmail3 = -1;
+		int ticket_hatEmail3 = 6;
 
 		try{
 			/*Try to generate a new Ticket for hatEmail, which should not be possible,
