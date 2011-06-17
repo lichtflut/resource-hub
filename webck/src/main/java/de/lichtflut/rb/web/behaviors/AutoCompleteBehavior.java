@@ -13,7 +13,7 @@ import de.lichtflut.rb.web.resources.SharedResourceProvider;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  [DESCRIPTION].
  * </p>
  *
  * <p>
@@ -25,33 +25,33 @@ import de.lichtflut.rb.web.resources.SharedResourceProvider;
 public class AutoCompleteBehavior extends AbstractDefaultAjaxBehavior {
 
 	/**
-	 * 
+	 *
 	 */
 	public AutoCompleteBehavior() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#onBind()
 	 */
 	@Override
 	protected void onBind() {
-		
+
 		getCallbackUrl();
-		
+
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(Component c, IHeaderResponse response) {
+	public void renderHead(final Component c, final IHeaderResponse response) {
 		super.renderHead(c, response);
 		final SharedResourceProvider resourceProvider = new SharedResourceProvider();
 		response.renderJavaScriptReference(resourceProvider.getJQueryCore());
 		response.renderJavaScriptReference(resourceProvider.getJQueryUI());
 	}
-	
+
 
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)

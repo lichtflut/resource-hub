@@ -5,7 +5,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * <p>
- * This Page should include all available RBComponents 
+ * This Page should include all available RBComponents.
  * </p>
  * @author Nils Bleisch
  *
@@ -13,13 +13,20 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 @SuppressWarnings("serial")
 public class TestComponentsPage extends WebPage{
 
+	/**
+	 *
+	 */
 	public TestComponentsPage(){
 		super();
 	}
-	
-	public TestComponentsPage(PageParameters params){
+
+	/**
+	 *
+	 * @param params /
+	 */
+	public TestComponentsPage(final PageParameters params){
 		super(params);
 	}
-	
-	
+
+
 }

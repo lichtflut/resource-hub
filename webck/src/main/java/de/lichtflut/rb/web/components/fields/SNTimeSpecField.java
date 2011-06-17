@@ -25,7 +25,7 @@ import de.lichtflut.rb.web.models.SemanticAttributeModel;
 public class SNTimeSpecField extends TextField<SNTimeSpec> {
 
 	/**
-	 * @param id
+	 * @param id /
 	 */
 	public SNTimeSpecField(final String id) {
 		super(id, SNTimeSpec.class);
@@ -33,25 +33,25 @@ public class SNTimeSpecField extends TextField<SNTimeSpec> {
 
 
 	/**
-	 * @param id
-	 * @param model
+	 * @param id /
+	 * @param model /
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SNTimeSpecField(final String id, final IModel model) {
 		super(id, model, SNTimeSpec.class);
 	}
-	
+
 	/**
-	 * @param id
-	 * @param model
+	 * @param id /
+	 * @param predicate /
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SNTimeSpecField(final String id, final ResourceID predicate) {
 		super(id, new SemanticAttributeModel(predicate), SNTimeSpec.class);
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.Component#onInitialize()
 	 */

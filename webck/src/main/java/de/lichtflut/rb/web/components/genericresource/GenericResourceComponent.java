@@ -14,31 +14,35 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
  * <p>
  * 	Created May 25, 2011
  * </p>
- * 
+ *
  * @author Nils Bleisch
  *
  */
 public interface GenericResourceComponent {
 
+	/**
+	 *
+	 *
+	 */
 	public enum ViewMode{
 		READ,
 		WRITE,
 		READ_WRITE
 	}
-	
-	
+
+
 	/**
-	 * Setting up the ViewMode in self returning idiom style
-	 * @param view, the given view
-	 * @return
+	 * Setting up the ViewMode in self returning idiom style.
+	 * @param view / the given view
+	 * @return /
 	 */
-	public GenericResourceComponent setViewMode(ViewMode view);
-	
-	
+	GenericResourceComponent setViewMode(ViewMode view);
+
+
 	/**
-	 * 
+	 *
 	 * @return An instance of {@link RBServiceProvider}
 	 */
-	public RBServiceProvider getServiceProvider();
-	
+	RBServiceProvider getServiceProvider();
+
 }

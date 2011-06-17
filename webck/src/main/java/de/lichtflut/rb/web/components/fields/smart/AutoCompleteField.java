@@ -8,7 +8,7 @@ import org.apache.wicket.model.IModel;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  [DESCRIPTION].
  * </p>
  *
  * <p>
@@ -16,43 +16,44 @@ import org.apache.wicket.model.IModel;
  * </p>
  *
  * @author Oliver Tigges
+ * @param <T> /
  */
 public class AutoCompleteField<T> extends TextField<T> {
 
 	/**
-	 * @param id
+	 * @param id /
 	 */
-	public AutoCompleteField(String id) {
+	public AutoCompleteField(final String id) {
 		super(id);
 	}
-	
+
 	/**
-	 * @param id
-	 * @param type
+	 * @param id /
+	 * @param type /
 	 */
-	public AutoCompleteField(String id, Class<T> type) {
+	public AutoCompleteField(final String id, final Class<T> type) {
 		super(id, type);
 	}
 
 	/**
-	 * @param id
-	 * @param model
-	 * @param type
+	 * @param id /
+	 * @param model /
+	 * @param type /
 	 */
-	public AutoCompleteField(String id, IModel<T> model, Class<T> type) {
+	public AutoCompleteField(final String id, final IModel<T> model, final Class<T> type) {
 		super(id, model, type);
 	}
 
 	/**
-	 * @param id
-	 * @param model
+	 * @param id /
+	 * @param model /
 	 */
-	public AutoCompleteField(String id, IModel<T> model) {
+	public AutoCompleteField(final String id, final IModel<T> model) {
 		super(id, model);
 	}
 
 	// -----------------------------------------------------
-	
+
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.Component#onInitialize()
 	 */
@@ -60,6 +61,5 @@ public class AutoCompleteField<T> extends TextField<T> {
 	protected void onInitialize() {
 		super.onInitialize();
 	}
-	
 
 }

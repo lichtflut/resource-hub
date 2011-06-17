@@ -39,29 +39,32 @@ import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
 public abstract class SearchBar extends Panel implements GenericResourceComponent{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private  SearchContext sContext = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
 
-	
+
 	// --CONSTRUCTORS---------------------------------------
-	
+
 	/**
 	 * The default constructor.
 	 * Any ResourceTypeInstance will be matched against the search-keywords
+	 * @param id /
 	 */
 	public SearchBar(final String id){
 		this(id, null);
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * <p>
 	 * Only the ResourceTypeInstances depending to the given ResourceSchema-collection,
-	 * called filter come into the question of being matched against the keywords
+	 * called filter come into the question of being matched against the keywords.
 	 * </p>
+	 * @param id /
+	 * @param filter /
 	 */
 	@SuppressWarnings("unchecked")
 	public SearchBar(final String id, final Collection<ResourceSchema> filter) {
@@ -71,16 +74,16 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 		final AutoCompleteTextField autoCompleter =
 			new AutoCompleteTextField("searchInput",Model.of(""),new AbstractAutoCompleteRenderer<RBEntity<Object>>(){
 				private static final long serialVersionUID = 2950543012596722925L;
-			
+
 				protected String getTextValue(final RBEntity<Object> object) {
 					return object.toString();
 				}
 
 				// -----------------------------------------------------
-				
+
 				protected void renderChoice(final RBEntity<Object> object,final Response response, final String criteria) {
-					response.write(getTextValue(object));					
-				}				
+					response.write(getTextValue(object));
+				}
 			}){
 
 			private static final long serialVersionUID = -653128720998419185L;
@@ -96,7 +99,7 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 					rSchemas = filter;
 				}
 				  final RBEntityManagement typeManagement =getServiceProvider().getRBEntityManagement();
-				  final Collection<RBEntity> instances = 
+				  final Collection<RBEntity> instances =
 					  typeManagement.loadAllResourceTypeInstancesForSchema(rSchemas,input,sContext);
 				  for (final RBEntity instance : instances) {
 					selectableValues.put(instance.toString().trim().hashCode(),instance);
@@ -104,73 +107,85 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 			      return instances.iterator();
 			  }
 			};
-			
+
 
 		final Form<RBEntity<Object>> searchForm = new Form<RBEntity<Object>>("searchForm"){
 			private static final long serialVersionUID = -2551391635434282054L;
 			protected void onSubmit() {
 				Object value =  autoCompleter.getDefaultModelObject();
-	        	if(value==null) return;
+	        	if(value==null) {
+					return;
+				}
 	        	RBEntity instance = selectableValues.get(value.toString().trim().hashCode());
 	        	//Reset selectableValues
 	        	selectableValues.clear();
-	        	if(instance==null) return;
+	        	if(instance==null) {
+					return;
+				}
 	        	onSearchSubmit(instance);
 			}
 		};
 		this.add(searchForm);
-		searchForm.add(autoCompleter);		
-		
+		searchForm.add(autoCompleter);
+
 	}
 
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Setting up the SearchContext in self-returning idiom style
+	 * Setting up the SearchContext in self-returning idiom style.
+	 * @param ctx /
+	 * @return this
 	 */
-	public SearchBar setSearchContext(SearchContext ctx){
+	public SearchBar setSearchContext(final SearchContext ctx){
 		this.sContext = ctx;
 		return this;
 	}
-	
-	
+
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * <p>
-	 * This method is called, when the search selection could be successfully matched
+	 * This method is called, when the search selection could be successfully matched.
 	 * to an existing {@link ResourceTypeInstance}
+	 * @param instance
 	 * </p>
 	 */
-	public abstract void onSearchSubmit(RBEntity<Object> instance);	
-	
+	public abstract void onSearchSubmit(RBEntity<Object> instance);
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * <p>
 	 * Decides if the given keywords are sufficient and valid to process a search with them.
 	 * As Default, the keywords-length has to be greater than two, to make sure, that
 	 * there is no inefficient search for just 0, 1 or only 2 characters.
 	 * </p>
+	 * @param keywords /
+	 * @return boolean
 	 */
-	protected boolean isKeywordsValidForSearch(String keywords){
+	protected boolean isKeywordsValidForSearch(final String keywords){
 		if(keywords.length()>2){
 			return true;
-		}else{
-			return false;
 		}
+
+		return false;
+
 	}
-	
-	
+
+
 	/**
-	 * There is no effect in setting up the ViewMode here in this version
+	 * There is no effect in setting up the ViewMode here in this version.
+	 * @param mode /
+	 * @return mode /
 	 */
-	public GenericResourceComponent setViewMode(ViewMode mode){
+	public GenericResourceComponent setViewMode(final ViewMode mode){
 		//Do nothing
 		return this;
 	}
-	
+
 	// -----------------------------------------------------
-	
-	
+
+
 }

@@ -24,7 +24,7 @@ import de.lichtflut.rb.web.models.SemanticAttributeModel;
 public class SNTextField extends TextField<SNText> {
 
 	/**
-	 * @param id
+	 * @param id /
 	 */
 	public SNTextField(final String id) {
 		super(id, SNText.class);
@@ -32,17 +32,17 @@ public class SNTextField extends TextField<SNText> {
 
 
 	/**
-	 * @param id
-	 * @param model
+	 * @param id /
+	 * @param model /
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SNTextField(final String id, final IModel model) {
 		super(id, model, SNText.class);
 	}
-	
+
 	/**
-	 * @param id
-	 * @param model
+	 * @param id /
+	 * @param predicate /
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SNTextField(final String id, final ResourceID predicate) {

@@ -25,7 +25,7 @@ import de.lichtflut.rb.web.conversion.SNTimeSpecConverter;
  * @author Oliver Tigges
  */
 public abstract class AbstractResourceBrowserApplication extends WebApplication {
-	
+
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.Application#newConverterLocator()
 	 */
@@ -36,7 +36,7 @@ public abstract class AbstractResourceBrowserApplication extends WebApplication 
 		locator.set(SNTimeSpec.class, new SNTimeSpecConverter());
 		locator.set(RBEntity.class, new RBEntityConverter());
 		return locator;
-		
+
 	}
 
 }

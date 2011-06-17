@@ -8,16 +8,16 @@ import java.util.Iterator;
 
 /**
  * StringAutoCompleteHandler.
- * 
+ *
  * @author Aderhold.Erik
  */
 public interface StringAutoCompleteHandler extends Serializable {
-	
+
 	/**
-	 * Ermittelt die Auswahlmöglichkeiten des StringAutoCompleteFeldes.
-	 * 
+	 * Ermittelt die Auswahlmï¿½glichkeiten des StringAutoCompleteFeldes.
+	 *
 	 * @param input the input
-	 * @return Iterator<String> Auswahlmöglichkeiten
+	 * @return Iterator<String> Auswahlmï¿½glichkeiten
 	 */
 	Iterator<String> getChoices(final String input);
 }
