@@ -112,6 +112,6 @@
   <module name="FileLength"/>
   <module name="SuppressionCommentFilter"/>
   <module name="SuppressionFilter">
-    <property name="file" value="/home/raphael/projects/rb-prototype/doc/suppress.xml"/>
+    <property name="file" value="${basedir/doc/suppress.xml"/>
   </module>
 </module>
