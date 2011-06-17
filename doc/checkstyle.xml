@@ -5,12 +5,13 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: RB-Checkstyle
+    Checkstyle-Configuration: plf
     Description: none
 -->
 <module name="Checker">
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
+    <module name="FileContentsHolder"/>
     <module name="JavadocMethod">
       <property name="suppressLoadErrors" value="true"/>
     </module>
@@ -109,4 +110,8 @@
     <property name="message" value="Line has trailing spaces."/>
   </module>
   <module name="FileLength"/>
+  <module name="SuppressionCommentFilter"/>
+  <module name="SuppressionFilter">
+    <property name="file" value="/home/raphael/projects/rb-prototype/doc/suppress.xml"/>
+  </module>
 </module>
