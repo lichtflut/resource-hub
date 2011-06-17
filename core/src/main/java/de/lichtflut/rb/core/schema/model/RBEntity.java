@@ -110,8 +110,7 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	 * </p>
 	 * @throws RBInvalidAttributeException
 	 * 			<p>
-	 * 			  InvalidAttributeException if this attribute does
-	 *         not exists.
+	 * 			  if this attribute does not exists.
 	 *         </p>
 	 */
 	public abstract void addValueFor(String attribute, T value, int ticket)

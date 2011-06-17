@@ -105,7 +105,6 @@ public final class RBEntityTest {
 		Assert.assertNull(provider.getRBEntityManagement().loadRBEntity(entity.getQualifiedName().toURI()+ "#"));
 	}
 
-
 	/**
 	 * Tests.
 	 * @return shema

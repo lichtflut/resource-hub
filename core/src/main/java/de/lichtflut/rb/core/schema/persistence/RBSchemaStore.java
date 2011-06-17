@@ -70,7 +70,6 @@ public class RBSchemaStore {
 	 * @return The corresponding persistence Resource Schema Node.
 	 */
 	public SNResourceSchema store(final ResourceSchema schema, final Context ctx) {
-		@SuppressWarnings("unused")
 		Context context = setUpContext(ctx);
 		/*
 		 * How can we check if this schema does exists, and if so, replace it with the new one
