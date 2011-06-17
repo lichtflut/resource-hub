@@ -17,19 +17,19 @@ import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
  * <p>
  *  Some tests to proof and specify the RSParsingResult
  * </p>
- * 
+ *
  *  <p>
  * 	 Created Apr. 26, 2011
  *  </p>
  *
  * @author Nils Bleisch
- * 
+ *
  */
 public class RSParsingResultTest extends TestCase
 {
-	
+
 	public void testParsingAndConstructing(){
-		
+
 		//Some declaration stuff
 		String ERRORMESSAGES[] = new String[]{
 				"TEST ERROR MESSAGE 1",
@@ -37,7 +37,7 @@ public class RSParsingResultTest extends TestCase
 				"TEST ERROR MESSAGE 3",
 				"TEST ERROR MESSAGE 4",
 				};
-		
+
 		RSParsingResultImpl pResult1 = new RSParsingResultImpl();
 		//Let's proof the errorHandling:
 		//==================================
@@ -55,7 +55,7 @@ public class RSParsingResultTest extends TestCase
 		assertTrue(pResult1.getErrorMessagesAsString("",RSErrorLevel.SYSTEM).contains(ERRORMESSAGES[1]));
 		assertTrue(pResult1.getErrorMessagesAsString("",RSErrorLevel.ALL).contains(ERRORMESSAGES[1]));
 		assertFalse(pResult1.getErrorMessagesAsString("",RSErrorLevel.INTERPRETER).contains(ERRORMESSAGES[1]));
-		
+
 		//Define and add ResourceSchema to pResult1
 		ResourceSchemaImpl rSchema = new ResourceSchemaImpl();
 		PropertyDeclaration pDec = new PropertyDeclarationImpl("http://lichtflut.de#testProperty");
@@ -64,42 +64,42 @@ public class RSParsingResultTest extends TestCase
 		assertTrue(pResult1.getResourceSchemasIgnoreErrors().size()==1);
 		assertTrue(pResult1.getPropertyDeclarationsIgnoreErrors().size()==0);
 		assertTrue(pResult1.getErrorMessages().size()==2);
-		
+
 		RSParsingResultImpl pResult2 = new RSParsingResultImpl();
 		//Set the ErrorLevel for Interpreter and Grammar
 		pResult2.setErrorLevel(RSErrorLevel.INTERPRETER.add(RSErrorLevel.GRAMMAR));
 		pResult2.addErrorMessage(ERRORMESSAGES[2]);
 		pResult2.addErrorMessage(ERRORMESSAGES[3]);
-		
+
 		pResult2.addPropertyDeclaration(pDec);
-		
+
 		assertTrue(pResult2.getResourceSchemasIgnoreErrors().size()==0);
 		assertTrue(pResult2.getPropertyDeclarationsIgnoreErrors().size()==1);
 		assertTrue(pResult2.getErrorMessages().size()==2);
 		assertTrue(pResult2.getErrorMessages(RSErrorLevel.INTERPRETER).size()==2);
 		assertTrue(pResult2.getErrorMessages(RSErrorLevel.GRAMMAR).size()==2);
 		assertTrue(pResult2.getErrorMessages(RSErrorLevel.SYSTEM).size()==0);
-		
+
 		/**
 		 * Status Quo:
 		 * pResult1 -> 1 Message for All, 1 Message for System, 1 ResourceSchema with assigned PDec
 		 * pResult2 -> 2 Messages for Grammar and System, 1 PDec (Same as in pResult1)
 		 * Next task is to make sure what must happen after merge
 		 */
-		
+
 		pResult1.merge(pResult2);
-		
+		final int size = 4;
 		//Let's check the errormessages
-		assertTrue(pResult1.getErrorMessages(RSErrorLevel.ALL).size()==4);
-		assertTrue(pResult1.getErrorMessages(RSErrorLevel.SYSTEM).size()==(1 + 1)); 
+		assertTrue(pResult1.getErrorMessages(RSErrorLevel.ALL).size()==size);
+		assertTrue(pResult1.getErrorMessages(RSErrorLevel.SYSTEM).size()==(1 + 1));
 		assertTrue(pResult1.getErrorMessages(RSErrorLevel.GRAMMAR).size()==(2 + 1));
 		assertTrue(pResult1.getErrorMessages(RSErrorLevel.INTERPRETER).size()==(2 + 1));
 		//Let's check the ResourceSchemaModel
 		assertTrue(pResult1.getResourceSchemasIgnoreErrors().size()==1);
 		assertTrue(pResult1.getPropertyDeclarationsIgnoreErrors().size()==1);
-		//And last but not least, make sure, that the pDec should not occur, when it's is already assigned to a ResourceSchema 
+		//And last but not least, make sure, that the pDec should not occur, when it's is already assigned to a ResourceSchema
 		assertTrue(pResult1.getPropertyDeclarationsWithoutResourceAssocIgnoreErrors().size()==0);
-		
-		
+
+
 	}
 }
