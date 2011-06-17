@@ -53,10 +53,12 @@ public class RSParsingResultTest extends TestCase{
 		//Set the ErrorLevel to System
 		pResult1.setErrorLevel(RSErrorLevel.SYSTEM);
 		//Add a Message
+
 		pResult1.addErrorMessage(cERRORMESSAGES[1]);
 		assertTrue(pResult1.getErrorMessagesAsString("",RSErrorLevel.SYSTEM).contains(cERRORMESSAGES[1]));
 		assertTrue(pResult1.getErrorMessagesAsString("",RSErrorLevel.ALL).contains(cERRORMESSAGES[1]));
 		assertFalse(pResult1.getErrorMessagesAsString("",RSErrorLevel.INTERPRETER).contains(cERRORMESSAGES[1]));
+
 
 		//Define and add ResourceSchema to pResult1
 		ResourceSchemaImpl rSchema = new ResourceSchemaImpl();
@@ -70,8 +72,10 @@ public class RSParsingResultTest extends TestCase{
 		RSParsingResultImpl pResult2 = new RSParsingResultImpl();
 		//Set the ErrorLevel for Interpreter and Grammar
 		pResult2.setErrorLevel(RSErrorLevel.INTERPRETER.add(RSErrorLevel.GRAMMAR));
+
 		pResult2.addErrorMessage(cERRORMESSAGES[2]);
 		pResult2.addErrorMessage(cERRORMESSAGES[(2 + 1)]);
+
 
 		pResult2.addPropertyDeclaration(pDec);
 
@@ -93,6 +97,7 @@ public class RSParsingResultTest extends TestCase{
 
 		//Let's check the errormessages
 		assertTrue(pResult1.getErrorMessages(RSErrorLevel.ALL).size()==(2+2));
+
 		assertTrue(pResult1.getErrorMessages(RSErrorLevel.SYSTEM).size()==(1 + 1));
 		assertTrue(pResult1.getErrorMessages(RSErrorLevel.GRAMMAR).size()==(2 + 1));
 		assertTrue(pResult1.getErrorMessages(RSErrorLevel.INTERPRETER).size()==(2 + 1));
