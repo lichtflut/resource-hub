@@ -11,7 +11,7 @@ import java.util.Iterator;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AbstractAutoCompleteRenderer;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.Panel;
+
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
 
@@ -19,7 +19,8 @@ import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.api.RBEntityManagement.SearchContext;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
+import de.lichtflut.rb.web.ck.components.CKComponent;
+
 
 
 /**
@@ -36,7 +37,7 @@ import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
  *
  * @author Nils Bleisch
  */
-public abstract class SearchBar extends Panel implements GenericResourceComponent{
+public abstract class SearchBar extends CKComponent{
 
 	/**
 	 *
@@ -180,9 +181,9 @@ public abstract class SearchBar extends Panel implements GenericResourceComponen
 	 * @param mode /
 	 * @return mode /
 	 */
-	public GenericResourceComponent setViewMode(final ViewMode mode){
-		//Do nothing
-		return this;
+	public CKComponent setViewMode(final ViewMode mode){
+		throw new UnsupportedOperationException();
+		//return this;
 	}
 
 	// -----------------------------------------------------

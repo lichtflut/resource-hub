@@ -11,15 +11,15 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.CollectionModel;
+
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
-import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
+import de.lichtflut.rb.web.ck.components.CKComponent;
 
 
 
@@ -34,7 +34,9 @@ import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
  *
  * @author Nils Bleisch
  */
-public abstract class SchemaSubmitPanel extends Panel implements GenericResourceComponent {
+
+public abstract class SchemaSubmitPanel extends CKComponent {
+
 	private static final long serialVersionUID = 5141797984277420136L;
 
 	//-------------------------------------------
@@ -115,8 +117,7 @@ public abstract class SchemaSubmitPanel extends Panel implements GenericResource
 	 * @param view /
 	 * @return NotYetImplementedException
 	 */
-
-	public GenericResourceComponent setViewMode(final ViewMode view) {
+	public CKComponent setViewMode(final ViewMode view) {
 		throw new NotYetImplementedException();
 	}
 

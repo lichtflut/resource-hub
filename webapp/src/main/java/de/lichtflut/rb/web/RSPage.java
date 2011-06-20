@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -19,6 +20,7 @@ import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.components.genericresource.panels.ResourceRegisterPanel;
 import de.lichtflut.rb.web.components.genericresource.panels.SchemaSubmitPanel;
 import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
@@ -62,12 +64,37 @@ public class RSPage extends RBSuperPage {
     	});
     	updateResourceList();
 		this.add(resourceList);
-		this.add(new ResourceRegisterPanel("resourceRegister", getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"" , null, false) {
+		ResourceRegisterPanel panel = new ResourceRegisterPanel("resourceRegister", getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"" , null, false) {
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
+		};
+		
+
+		
+		panel.addBehavior(panel.SHOW_DETAILS, new CKBehavior() {
+			
+			@Override
+			public Object execute(Object... objects) {
+				String identifier = (String) objects[0];
+				String value = (String) objects[3];
+				final RBEntity instance = (RBEntity) objects[1];
+				if(value.contains("a")){
+					return new Link(identifier) {
+						public void onClick() {
+							PageParameters params = new PageParameters();
+							params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
+							params.add("instanceid", instance.getQualifiedName().toURI());
+							setResponsePage(GenericResourceFormPage.class, params);
+						}
+					};
+				}else{
+					return new Label(identifier, value);
+				}
+			}
 		});
 		
+		this.add(panel);
 		this.add(new ResourceRegisterPanel("resourceRegisterTest",
 				getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"M�ller" ,Arrays.asList(new String[]{"hasNachname", "hasEmail", "blablubbla"}), true) {
 			public RBServiceProvider getServiceProvider() {
