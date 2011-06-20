@@ -10,22 +10,34 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.api.RBEntityManagement.SearchContext;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
+import de.lichtflut.rb.web.ck.behavior.CKBehavior;
+import de.lichtflut.rb.web.ck.components.CKComponent;
 
 /**
  * <p>
  * TODO: [DESCRIPTION].
+ * 
+ * Supported Behaviors:
+ * <ul>
+ * <li>
+ * 	SHOW_DETAILS: Occurence: Rendering each value cell. param: field-name, entity 
+ * </li>
+ * 
+ * </ul>
+ * 
  * </p>
  *
  * <p>
@@ -35,8 +47,9 @@ import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
  * @author Nils Bleisch
  */
 @SuppressWarnings({ "serial", "unchecked" })
-public abstract class ResourceRegisterPanel extends Panel implements
-		GenericResourceComponent {
+public abstract class ResourceRegisterPanel extends CKComponent{
+
+	public String SHOW_DETAILS = "xyz";
 
 	private Boolean simpleFieldNamesEnabled = false;
 
@@ -81,6 +94,21 @@ public abstract class ResourceRegisterPanel extends Panel implements
 			final Collection<ResourceSchema> schemas, final String filter,
 			final List<String> fields, final boolean simpleFlag) {
 		super(id);
+
+addBehavior(SHOW_DETAILS, new CKBehavior() {
+			@Override
+			public Object execute(Object... objects){
+				String identifier = (String) objects[0];
+				String value = (String) objects[3];
+				final RBEntity instance = (RBEntity) objects[1];
+				if(value.contains("a")){
+					return new ExternalLink(identifier, Model.of("http://google.com?q=" + value), Model.of("google") );
+				}else{
+					return new Label(identifier, value);
+				}
+			}
+		});
+
 		this.simpleFieldNamesEnabled = simpleFlag;
 		List<RegisterRowEntry> entries = buildRegisterTableEntries(schemas,
 				filter, fields, null);
@@ -93,7 +121,7 @@ public abstract class ResourceRegisterPanel extends Panel implements
 	 * @param view /
 	 * @return /
 	 */
-	public GenericResourceComponent setViewMode(final ViewMode view) {
+	public CKComponent setViewMode(final ViewMode view) {
 		throw new NotYetImplementedException();
 
 	}
@@ -267,8 +295,13 @@ public abstract class ResourceRegisterPanel extends Panel implements
 						output = output.substring(", ".length(),
 								output.length());
 					}
+					if(getBehavior(SHOW_DETAILS)!=null){
+						components.add((Component) getBehavior(SHOW_DETAILS)
+								.execute("propertyField", instance, output, field));
+					}else{
 					components
 							.add(new Label("propertyField", Model.of(output)));
+					}
 				}
 			}
 		}

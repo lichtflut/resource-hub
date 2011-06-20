@@ -14,16 +14,16 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
+
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.model.RBEntity;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.RBEntity.MetaDataKeys;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.behaviors.DatePickerBehavior;
-import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
+import de.lichtflut.rb.web.ck.components.CKComponent;
 import de.lichtflut.rb.web.components.genericresource.fields.search.SearchBar;
 import de.lichtflut.rb.web.components.validators.GenericResourceValidator;
 import de.lichtflut.rb.web.models.GenericResourceModel;
@@ -40,8 +40,7 @@ import de.lichtflut.rb.web.models.GenericResourceModel;
  * @author Nils Bleisch
  */
 @SuppressWarnings({ "serial", "unchecked" })
-public abstract class GenericResourceFormPanel extends Panel implements
-		GenericResourceComponent {
+public abstract class GenericResourceFormPanel extends CKComponent {
 
 	// Constructors
 
@@ -153,7 +152,7 @@ public abstract class GenericResourceFormPanel extends Panel implements
 				.getSimpleAttributeName(attribute) + (required ? " (*)" : ""))));
 		// Decide which input-field should be used
 		Fragment f = null;
-		final GenericResourceComponent rComponent = this;
+		final CKComponent rComponent = this;
 		switch ((ElementaryDataType) instance.getMetaInfoFor(attribute,
 				MetaDataKeys.TYPE)) {
 		case RESOURCE: {
@@ -234,7 +233,7 @@ public abstract class GenericResourceFormPanel extends Panel implements
 	 * @return
 	 * 			  /
 	 */
-	public GenericResourceComponent setViewMode(final ViewMode view) {
+	public CKComponent setViewMode(final ViewMode view) {
 		throw new NotYetImplementedException();
 	}
 
