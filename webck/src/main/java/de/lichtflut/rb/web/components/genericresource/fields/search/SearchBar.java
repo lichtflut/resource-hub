@@ -72,6 +72,7 @@ public abstract class SearchBar extends CKComponent{
 		super(id);
 		// TODO Nils: Don't use implementation class HashMap as variable type but interface Map
 		final HashMap<Integer, RBEntity<Object>> selectableValues = new HashMap<Integer, RBEntity<Object>>();
+		@SuppressWarnings("rawtypes")
 		final AutoCompleteTextField autoCompleter =
 			new AutoCompleteTextField("searchInput",Model.of(""),new AbstractAutoCompleteRenderer<RBEntity<Object>>(){
 				private static final long serialVersionUID = 2950543012596722925L;
@@ -112,6 +113,7 @@ public abstract class SearchBar extends CKComponent{
 
 		final Form<RBEntity<Object>> searchForm = new Form<RBEntity<Object>>("searchForm"){
 			private static final long serialVersionUID = -2551391635434282054L;
+			@SuppressWarnings("rawtypes")
 			protected void onSubmit() {
 				Object value =  autoCompleter.getDefaultModelObject();
 	        	if(value==null) {

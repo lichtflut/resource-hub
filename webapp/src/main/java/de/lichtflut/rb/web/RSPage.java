@@ -73,7 +73,7 @@ public class RSPage extends RBSuperPage {
 			}
 		};
 
-		panel.addBehavior(panel.SHOW_DETAILS, new CKBehavior() {
+		panel.addBehavior(panel.getSHOW_DETAILS(), new CKBehavior() {
 
 			@SuppressWarnings("rawtypes")
 			@Override

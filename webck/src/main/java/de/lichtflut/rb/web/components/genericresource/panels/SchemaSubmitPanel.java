@@ -60,7 +60,8 @@ public abstract class SchemaSubmitPanel extends CKComponent {
 
     	final TextArea<String> area = new TextArea<String>("resourceschema", Model.of("Insert your schema here"));
     	area.setOutputMarkupId(true);
-    	final DropDownChoice ddc = new DropDownChoice (
+    	@SuppressWarnings("rawtypes")
+		final DropDownChoice ddc = new DropDownChoice (
     			"formatlist",
     			Model.of(""),
     			new CollectionModel<RSFormat>(Arrays.asList(RSFormat.values())));
@@ -78,7 +79,8 @@ public abstract class SchemaSubmitPanel extends CKComponent {
         });
 
 
-    	Form form = new Form("schemaForm"){
+    	@SuppressWarnings("rawtypes")
+		Form form = new Form("schemaForm"){
     		@Override
     		protected void onSubmit() {
     			super.onSubmit();

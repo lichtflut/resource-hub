@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings("serial")
 public class NavigationBar extends Panel implements NavigationNode {
 
 	private final List<NavigationNode> children = new ArrayList<NavigationNode>();

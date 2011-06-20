@@ -23,6 +23,7 @@ import org.arastreju.sge.model.nodes.views.SNTimeSpec;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings({ "rawtypes", "serial" })
 public class SNTimeSpecConverter extends AbstractConverter {
 
 	private final TimeMask mask;

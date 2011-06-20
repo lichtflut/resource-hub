@@ -31,6 +31,7 @@ import de.lichtflut.rb.web.models.ResourceNodeModel;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings("serial")
 public class SampleResourcePage extends RBSuperPage {
 
 	public static final ResourceID HAS_BIRTHDATE = new SimpleResourceID("urn:lf:predicates:", "hasBirthdate");

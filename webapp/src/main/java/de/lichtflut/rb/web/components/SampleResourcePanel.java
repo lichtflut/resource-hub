@@ -27,6 +27,7 @@ import de.lichtflut.rb.web.models.ResourceNodeModel;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings("serial")
 public class SampleResourcePanel extends Panel {
 
 	/**

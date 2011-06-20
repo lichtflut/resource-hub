@@ -59,6 +59,7 @@ public abstract class CKComponent extends Panel {
 	 * TODO: DESCRIPTION.
 	 * If the ViewMode is not supported, an {@link UnsupportedOperationException} is raised.
 	 * @param mode -
+	 * @return -
 	 */
 	public abstract CKComponent setViewMode(final ViewMode mode);
 
@@ -66,6 +67,7 @@ public abstract class CKComponent extends Panel {
 	 * TODO DESCRIPTION.
 	 * @param key -
 	 * @param behavior -
+	 * @return -
 	 */
 	public CKComponent addBehavior(final String key,final CKBehavior behavior){
 		behaviorRegistry.put(key, behavior);

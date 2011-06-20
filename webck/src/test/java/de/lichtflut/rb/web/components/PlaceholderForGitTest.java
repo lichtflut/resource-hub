@@ -5,7 +5,7 @@ package de.lichtflut.rb.web.components;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  [DESCRIPTION].
  * </p>
  *
  * <p>

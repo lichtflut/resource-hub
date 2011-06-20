@@ -18,6 +18,7 @@ import org.apache.wicket.model.IModel;
  * @author Oliver Tigges
  * @param <T> /
  */
+@SuppressWarnings("serial")
 public class AutoCompleteField<T> extends TextField<T> {
 
 	/**

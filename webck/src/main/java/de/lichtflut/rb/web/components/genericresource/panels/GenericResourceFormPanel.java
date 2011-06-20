@@ -52,6 +52,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	 * @param instance
 	 *            /
 	 */
+	@SuppressWarnings("rawtypes")
 	public GenericResourceFormPanel(final String id,
 			final ResourceSchema schema, final RBEntity instance) {
 		super(id);
@@ -67,6 +68,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	 *            /
 	 *
 	 */
+	@SuppressWarnings("rawtypes")
 	private void init(final ResourceSchema schema, final RBEntity in) {
 
 		final RBEntity instance = (in == null ? schema.generateRBEntity() : in);
@@ -142,6 +144,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	 *            /
 	 * @return fragment /
 	 */
+	@SuppressWarnings("rawtypes")
 	private Component buildItem(final RBEntity instance,
 			final GenericResourceModel model, final String attribute,
 			final RepeatingView view, final boolean required,
@@ -155,8 +158,8 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 		final CKComponent rComponent = this;
 		switch ((ElementaryDataType) instance.getMetaInfoFor(attribute,
 				MetaDataKeys.TYPE)) {
-		case RESOURCE: {
-			f = new Fragment("propertyInput", "resourceInput", this);
+		case RESOURCE:
+		f = new Fragment("propertyInput", "resourceInput", this);
 			f.add(new SearchBar("searchbar") {
 				public void onSearchSubmit(final RBEntity instance) {
 
@@ -170,7 +173,6 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 				}
 			});
 			break;
-		}
 		case BOOLEAN:
 			f = new Fragment("propertyInput", "booleanInput", this);
 			f.add(new CheckBox("input", model));

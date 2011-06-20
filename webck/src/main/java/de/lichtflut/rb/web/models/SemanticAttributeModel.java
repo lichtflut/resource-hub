@@ -30,6 +30,7 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings("serial")
 public class SemanticAttributeModel<T extends SemanticNode> implements IComponentAssignedModel<T>, IModel<T> {
 
 	private final ResourceID predicate;

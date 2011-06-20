@@ -17,6 +17,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings("serial")
 public class SemanticNodeOptionRenderer implements IChoiceRenderer<ResourceID> {
 
 	/* (non-Javadoc)

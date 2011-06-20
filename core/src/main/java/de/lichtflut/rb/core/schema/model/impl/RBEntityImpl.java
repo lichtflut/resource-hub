@@ -261,6 +261,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 			//In this version, "Constraints" can be ignored
 			this.internalValidatorMap.put(
 					propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(), new RBValidator<Object>(){
+				@SuppressWarnings("deprecation")
 				@Override
 				public boolean isValid(final Object value)
 						throws RBInvalidValueException {

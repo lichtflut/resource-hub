@@ -18,6 +18,7 @@ import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
  */
 public class XHTMLValidationTest extends TestCase{
 	private WicketTester tester;
+	@SuppressWarnings("unused")
 	private File htmlPage;
 
 	@Override
@@ -39,6 +40,7 @@ public class XHTMLValidationTest extends TestCase{
     /**
      *
      */
+	@SuppressWarnings("unused")
 	public void testRenderMyPage(){
 		//start and render the test page
 		tester.startPage(TestComponentsPage.class);

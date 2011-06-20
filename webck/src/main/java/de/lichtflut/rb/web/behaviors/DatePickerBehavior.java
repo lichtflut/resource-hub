@@ -18,6 +18,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings("serial")
 public class DatePickerBehavior extends Behavior {
 
 	private Component component;

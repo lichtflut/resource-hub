@@ -25,7 +25,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.validation.IValidator;
 
 /**
- * ComponentFactory für Standard Ein- und Ausgabekompenenten inkl. ihrer Labels, FeedbackPanels, etc.
+ * ComponentFactory fï¿½r Standard Ein- und Ausgabekompenenten inkl. ihrer Labels, FeedbackPanels, etc.
  *
  * @author Erik Aderhold
  */
@@ -37,11 +37,12 @@ public abstract class ComponentFactory {
      * Erzeugt ein neues Textfield mit Label und Feedbackpanel.
      *
      * @param name      Der technische Name.
-     * @param container Der Container, dem das Feld hinzugefügt werden soll.
-     * @param additives Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param container Der Container, dem das Feld hinzugefï¿½gt werden soll.
+     * @param additives Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Das initialisierte {@link TextField}.
      */
-    public static TextField addTextField(final String name, final MarkupContainer container, final Object... additives) {
+    @SuppressWarnings("rawtypes")
+	public static TextField addTextField(final String name, final MarkupContainer container, final Object... additives) {
         return addTypedTextField(name, container, String.class, additives);
     }
 
@@ -49,11 +50,12 @@ public abstract class ComponentFactory {
      * Erzeugt ein neues Textfield mit Label und Feedbackpanel.
      *
      * @param name      Der technische Name.
-     * @param container Der Container, dem das Feld hinzugefügt werden soll.
-     * @param additives Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param container Der Container, dem das Feld hinzugefï¿½gt werden soll.
+     * @param additives Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Das initialisierte {@link TextField}.
      */
-    public static <T> TextField<T> addTypedTextField(final String name, final MarkupContainer container, final T clasz, final Object... additives) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static <T> TextField<T> addTypedTextField(final String name, final MarkupContainer container, final T clasz, final Object... additives) {
         final TextField field = new TextField<T>(name);
         initializeField(name, container, field, true);
         addAll(field, additives);
@@ -64,13 +66,14 @@ public abstract class ComponentFactory {
      * Erzeugt ein neues Textfield mit Feedbackpanel und <b>wahlweise</b> Label.
      *
      * @param name        Der technische Name.
-     * @param container   Der Container, dem das Feld hinzugefügt werden soll.
+     * @param container   Der Container, dem das Feld hinzugefï¿½gt werden soll.
      * @param clasz       Der Typ.
      * @param createLabel Das createLabel Flag
-     * @param additives   Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param additives   Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Das initialisierte {@link TextField}.
      */
-    public static <T> TextField<T> addTypedTextField(final String name, final MarkupContainer container, final T clasz,
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T> TextField<T> addTypedTextField(final String name, final MarkupContainer container, final T clasz,
                                                      final boolean createLabel, final Object... additives) {
         final TextField field = new TextField<T>(name);
         initializeField(name, container, field, createLabel);
@@ -83,12 +86,13 @@ public abstract class ComponentFactory {
      *
      * @param name      Der technische Name.
      * @param labelName Der spezielle LabelName.
-     * @param container Der Container, dem das Feld hinzugefügt werden soll.
+     * @param container Der Container, dem das Feld hinzugefï¿½gt werden soll.
      * @param clasz     Die Typ-Klasse. (z.B. Integer.class, String.class,...)
-     * @param additives Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param additives Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Das initialisierte {@link TextField}.
      */
-    public static <T> TextField<T> addTypedTextField(final String name, final String labelName, final MarkupContainer container,
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static <T> TextField<T> addTypedTextField(final String name, final String labelName, final MarkupContainer container,
                                                             final T clasz, final Object... additives) {
         final TextField field = new TextField<T>(name);
         initializeField(name, labelName, container, field, true);
@@ -102,11 +106,12 @@ public abstract class ComponentFactory {
      *
      * @param name      Der technische Name.
      * @param model     Das model der Komponente.
-     * @param container Der Container, dem das Feld hinzugefügt werden soll.
-     * @param additives Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param container Der Container, dem das Feld hinzugefï¿½gt werden soll.
+     * @param additives Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Das initialisierte {@link TextField}.
      */
-    public static TextField addTextField(final String name, final IModel<?> model, final MarkupContainer container, final Object... additives) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static TextField addTextField(final String name, final IModel<?> model, final MarkupContainer container, final Object... additives) {
         final TextField field = new TextField(name, model);
         initializeField(name, container, field, true);
         addAll(field, additives);
@@ -117,12 +122,13 @@ public abstract class ComponentFactory {
      * Erzeugt ein neues AutoCompleteTextfield mit Label und Feedbackpanel.
      *
      * @param name      Der technische Name.
-     * @param container Der Container, dem das Feld hinzugefügt werden soll.
+     * @param container Der Container, dem das Feld hinzugefï¿½gt werden soll.
      * @param handler   the handler
-     * @param additives Behaviours und Validatoren die hinzugefügt werden sollen.
+     * @param additives Behaviours und Validatoren die hinzugefï¿½gt werden sollen.
      * @return Das initialisierte {@link TextField}.
      */
-    public static AutoCompleteTextField addAutoCompleteTextField(final String name, final MarkupContainer container,
+    @SuppressWarnings({ "rawtypes", "serial" })
+	public static AutoCompleteTextField addAutoCompleteTextField(final String name, final MarkupContainer container,
                                                                  final StringAutoCompleteHandler handler, final Object... additives) {
         final AutoCompleteTextField field = new AutoCompleteTextField(name) {
 
@@ -140,11 +146,12 @@ public abstract class ComponentFactory {
      * Erzeugt eine neue TextArea mit Label und Feedbackpanel.
      *
      * @param name      Der technische Name.
-     * @param container Der Container, dem das Feld hinzugefügt werden soll.
-     * @param additives Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param container Der Container, dem das Feld hinzugefï¿½gt werden soll.
+     * @param additives Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Die initialisierte {@link TextArea}.
      */
-    public static TextArea addTextArea(final String name, final MarkupContainer container, final Object... additives) {
+    @SuppressWarnings("rawtypes")
+	public static TextArea addTextArea(final String name, final MarkupContainer container, final Object... additives) {
         final TextArea textArea = new TextArea(name);
         initializeField(name, container, textArea, true);
         addAll(textArea, additives);
@@ -156,27 +163,29 @@ public abstract class ComponentFactory {
      * Erzeugt ein neues Auswahlfeld.
      *
      * @param name      Der technische Name.
-     * @param container Der Container, dem das Feld hinzugefügt werden soll.
-     * @param values    Die möglichen Werte.
-     * @param additives Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param container Der Container, dem das Feld hinzugefï¿½gt werden soll.
+     * @param values    Die mï¿½glichen Werte.
+     * @param additives Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Die initialisierte {@link DropDownChoice}.
      */
-    public static DropDownChoice addDropDownChoice(final String name, final MarkupContainer container, final Object[] values, final Object... additives) {
+    @SuppressWarnings("rawtypes")
+	public static DropDownChoice addDropDownChoice(final String name, final MarkupContainer container, final Object[] values, final Object... additives) {
         return addDropDownChoice(name, container, values, Boolean.TRUE, additives);
     }
 
     /**
-     * Erzeugt ein neues Auswahlfeld, es wird anhand des Flags isEnum geprüft, ob die Values aus einer Ratingenumration
+     * Erzeugt ein neues Auswahlfeld, es wird anhand des Flags isEnum geprï¿½ft, ob die Values aus einer Ratingenumration
      * stammen.
      *
      * @param name      Der technische Name.
-     * @param container Der Container, dem das Feld hinzugefügt werden soll.
-     * @param values    Die möglichen Werte.
+     * @param container Der Container, dem das Feld hinzugefï¿½gt werden soll.
+     * @param values    Die mï¿½glichen Werte.
      * @param isEnum    Flag, ob die Values aus einer Enumeration genommen werden
-     * @param additives Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param additives Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Die initialisierte {@link DropDownChoice}.
      */
-    public static DropDownChoice addDropDownChoice(final String name, final MarkupContainer container,
+    @SuppressWarnings("rawtypes")
+	public static DropDownChoice addDropDownChoice(final String name, final MarkupContainer container,
                                                    final Object[] values, final boolean isEnum, final Object... additives) {
         return addDropDownChoice(name, container, values, isEnum, true, true, additives);
     }
@@ -185,18 +194,19 @@ public abstract class ComponentFactory {
      * Erzeugt ein neues Auswahlfeld, mit wahlweise Label
      *
      * @param name        Der technische Name.
-     * @param container   Der Container, dem das Feld hinzugefügt werden soll.
-     * @param values      Die möglichen Werte.
+     * @param container   Der Container, dem das Feld hinzugefï¿½gt werden soll.
+     * @param values      Die mï¿½glichen Werte.
      * @param isEnum      Flag, ob die Values aus einer Enumeration genommen werden
      * @param createLabel Flag ob Label generiert werden soll.
-     * @param additives   Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param additives   Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Die initialisierte {@link DropDownChoice}.
      */
-    public static DropDownChoice addDropDownChoice(final String name, final MarkupContainer container, final Object[] values,
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static DropDownChoice addDropDownChoice(final String name, final MarkupContainer container, final Object[] values,
                                                    final boolean isEnum, final boolean createLabel, final Object... additives) {
         final DropDownChoice field;
 
-//        Enum spezifische I18N-Valueauflösung auskommentiert!!
+//        Enum spezifische I18N-Valueauflï¿½sung auskommentiert!!
 //        if (!isEnum) {
             field = new DropDownChoice<Object>(name, Arrays.asList(values), new ChoiceRenderer() {
                 private static final long serialVersionUID = 1L;
@@ -211,7 +221,8 @@ public abstract class ComponentFactory {
                 /**
                  * {@inheritDoc}
                  */
-                public Object getIdValue(final Object object) {
+                @SuppressWarnings("unused")
+				public Object getIdValue(final Object object) {
                     return object;
                 }
             });
@@ -229,12 +240,13 @@ public abstract class ComponentFactory {
      * Erzeugt ein neues RadioChoiceFeld.
      *
      * @param name      Der technische Name.
-     * @param container Der Container, dem das Feld hinzugefügt werden soll.
-     * @param values    Die möglichen Werte.
-     * @param additives Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param container Der Container, dem das Feld hinzugefï¿½gt werden soll.
+     * @param values    Die mï¿½glichen Werte.
+     * @param additives Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Die initialisierte {@link DropDownChoice}.
      */
-    public static RadioChoice addRadioChoice(final String name, final MarkupContainer container, final Object[] values, final Object... additives) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static RadioChoice addRadioChoice(final String name, final MarkupContainer container, final Object[] values, final Object... additives) {
         final RadioChoice field = new RadioChoice(name, Arrays.asList(values)/*, new I18nChoiceRenderer()*/);
         initializeField(name, container, field, true);
         addAll(field, additives);
@@ -246,12 +258,13 @@ public abstract class ComponentFactory {
      *
      * @param name      Der technische Name.
      * @param label     Das internationalisierte Label.
-     * @param container Der Container, dem das Feld hinzugefügt werden soll.
-     * @param values    Die möglichen Werte.
-     * @param additives Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param container Der Container, dem das Feld hinzugefï¿½gt werden soll.
+     * @param values    Die mï¿½glichen Werte.
+     * @param additives Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Die initialisierte {@link DropDownChoice}.
      */
-    public static RadioChoice addRadioChoice(final String name, final String label, final MarkupContainer container, final Object[] values, final Object... additives) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static RadioChoice addRadioChoice(final String name, final String label, final MarkupContainer container, final Object[] values, final Object... additives) {
         final RadioChoice field = new RadioChoice(name, Arrays.asList(values)/*, new I18nChoiceRenderer()*/);
         initializeField(name, label, container, field, true);
         addAll(field, additives);
@@ -262,8 +275,8 @@ public abstract class ComponentFactory {
      * Erzeugt eine neue Checkbox.
      *
      * @param name      Der technische Name.
-     * @param container Der Container, dem das Feld hinzugefügt werden soll.
-     * @param additives Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param container Der Container, dem das Feld hinzugefï¿½gt werden soll.
+     * @param additives Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Die initialisierte {@link CheckBox}.
      */
     public static CheckBox addCheckBox(final String name, final MarkupContainer container, final Object... additives) {
@@ -274,8 +287,8 @@ public abstract class ComponentFactory {
      * Erzeugt eine neue Checkbox.
      *
      * @param name      Der technische Name.
-     * @param container Der Container, dem das Feld hinzugefügt werden soll.
-     * @param additives Behaviours und Validatored die hinzugefügt werden sollen.
+     * @param container Der Container, dem das Feld hinzugefï¿½gt werden soll.
+     * @param additives Behaviours und Validatored die hinzugefï¿½gt werden sollen.
      * @return Die initialisierte {@link CheckBox}.
      */
     public static CheckBox addCheckBox(final String name, final MarkupContainer container, final boolean createLabel, final Object... additives) {
@@ -289,7 +302,7 @@ public abstract class ComponentFactory {
      * Erzeugt ein neues informatorisches Textfeld.
      *
      * @param name       Der technische Name.
-     * @param container  Der Container, dem das Label hinzugefügt werden soll.
+     * @param container  Der Container, dem das Label hinzugefï¿½gt werden soll.
      * @param model      Das Model.
      * @return Das initialisierte {@link Label}.
      */
@@ -302,7 +315,8 @@ public abstract class ComponentFactory {
 
     // ----------------------------------------------------
 
-    private static void addAll(final FormComponent comp, final Object... additives) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	private static void addAll(final FormComponent comp, final Object... additives) {
         for (Object obj : additives) {
             if (obj instanceof Behavior) {
                 comp.add((Behavior) obj);
@@ -351,7 +365,7 @@ addGenericResourceView(String wicketpanelID, ResourceType resourceType);    <wic
 addTextfieldPanel("textfeld-ID");  <wicket:panel wicket:id="textfeld-ID">[Panel eigenes Markup]</wicket:panel>
 
 
-//Beispiel HTML für Factory-Methoden
+//Beispiel HTML fï¿½r Factory-Methoden
 
 // Anrede ist DropDownChoice
 <div class="form-field">

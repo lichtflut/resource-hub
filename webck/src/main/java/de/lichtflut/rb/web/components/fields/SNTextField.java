@@ -21,6 +21,7 @@ import de.lichtflut.rb.web.models.SemanticAttributeModel;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings("serial")
 public class SNTextField extends TextField<SNText> {
 
 	/**

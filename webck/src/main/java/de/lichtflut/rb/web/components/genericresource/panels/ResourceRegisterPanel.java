@@ -29,15 +29,15 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
 /**
  * <p>
  * TODO: [DESCRIPTION].
- * 
+ *
  * Supported Behaviors:
  * <ul>
  * <li>
- * 	SHOW_DETAILS: Occurence: Rendering each value cell. param: field-name, entity 
+ * 	SHOW_DETAILS: Occurence: Rendering each value cell. param: field-name, entity
  * </li>
- * 
+ *
  * </ul>
- * 
+ *
  * </p>
  *
  * <p>
@@ -49,7 +49,15 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
 @SuppressWarnings({ "serial", "unchecked" })
 public abstract class ResourceRegisterPanel extends CKComponent{
 
-	public String SHOW_DETAILS = "xyz";
+	private String SHOW_DETAILS = "xyz";
+
+	public String getSHOW_DETAILS() {
+		return SHOW_DETAILS;
+	}
+
+	public void setSHOW_DETAILS(String sHOW_DETAILS) {
+		SHOW_DETAILS = sHOW_DETAILS;
+	}
 
 	private Boolean simpleFieldNamesEnabled = false;
 
@@ -65,6 +73,7 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 	 * @param simpleFlag
 	 *            /
 	 */
+	@SuppressWarnings("rawtypes")
 	public ResourceRegisterPanel(final String id,
 			final Collection<RBEntity> instances, final List<String> fields,
 			final boolean simpleFlag) {
@@ -96,6 +105,7 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 		super(id);
 
 addBehavior(SHOW_DETAILS, new CKBehavior() {
+			@SuppressWarnings({ "rawtypes", "unused" })
 			@Override
 			public Object execute(Object... objects){
 				String identifier = (String) objects[0];
@@ -154,6 +164,7 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 		this.removeAll();
 		ListView<RegisterRowEntry> resourceTable = new ListView<RegisterRowEntry>(
 				"resourceTable", entries) {
+			@SuppressWarnings("rawtypes")
 			protected void populateItem(ListItem item) {
 				RegisterRowEntry entry = (RegisterRowEntry) item
 						.getModelObject();
@@ -178,6 +189,7 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 	 * @param criteria /
 	 * @return /
 	 */
+	@SuppressWarnings("rawtypes")
 	private List<RegisterRowEntry> buildRegisterTableEntries(
 			final Collection<ResourceSchema> schemas, final String filter,
 			final List<String> fields, final SortCriteria criteria) {
@@ -202,6 +214,7 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 	 * @param criteria /
 	 *@return /
 	 */
+	@SuppressWarnings("rawtypes")
 	private List<RegisterRowEntry> buildRegisterTableEntries(
 			final Collection<RBEntity> instances, final List<String> fields,
 			final SortCriteria criteria) {
@@ -226,6 +239,7 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 	 * @param instances /
 	 * @return /
 	 */
+	@SuppressWarnings("rawtypes")
 	private ArrayList<String> evaluateTotalFields(final Collection<RBEntity> instances) {
 		Map<String, Object> allreadyVisited = new HashMap<String, Object>();
 		// Make a set to remove skip duplicates
@@ -269,6 +283,7 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 		 * @param fields /
 		 * @param instance /
 		 */
+		@SuppressWarnings("rawtypes")
 		public RegisterRowEntry(final List<String> fields, final RBEntity instance) {
 			components.clear();
 			for (String field : fields) {

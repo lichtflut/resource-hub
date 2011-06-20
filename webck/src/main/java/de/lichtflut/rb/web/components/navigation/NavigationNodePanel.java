@@ -25,6 +25,7 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings("serial")
 public class NavigationNodePanel extends Panel implements NavigationNode {
 
 	/**

@@ -19,6 +19,7 @@ import org.arastreju.sge.model.nodes.views.SNText;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings({ "serial", "rawtypes" })
 public class SNTextConverter extends AbstractConverter {
 
 	/**

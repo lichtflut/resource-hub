@@ -22,6 +22,7 @@ import de.lichtflut.rb.web.resources.SharedResourceProvider;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings("serial")
 public class AutoCompleteBehavior extends AbstractDefaultAjaxBehavior {
 
 	/**
