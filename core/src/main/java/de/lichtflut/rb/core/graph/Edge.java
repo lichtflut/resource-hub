@@ -16,4 +16,6 @@ package de.lichtflut.rb.core.graph;
  */
 public class Edge {
 
+
+
 }
