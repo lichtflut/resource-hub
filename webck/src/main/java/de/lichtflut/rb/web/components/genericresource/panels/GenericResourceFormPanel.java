@@ -30,179 +30,212 @@ import de.lichtflut.rb.web.models.GenericResourceModel;
 
 /**
  * <p>
- *  TODO: [DESCRIPTION].
+ * TODO: [DESCRIPTION].
  * </p>
- *
+ * 
  * <p>
- * 	Created May 6, 2011
+ * Created May 6, 2011
  * </p>
- *
+ * 
  * @author Nils Bleisch
  */
 @SuppressWarnings({ "serial", "unchecked" })
-public abstract class GenericResourceFormPanel extends Panel implements GenericResourceComponent{
+public abstract class GenericResourceFormPanel extends Panel implements
+		GenericResourceComponent {
 
-	//Constructors
+	// Constructors
 
 	/**
-	 *@param id /
-	 *@param schema /
-	 *@param instance /
+	 * @param id
+	 *            /
+	 * @param schema
+	 *            /
+	 * @param instance
+	 *            /
 	 */
-	public GenericResourceFormPanel(final String id, final ResourceSchema schema, final RBEntity instance) {
+	public GenericResourceFormPanel(final String id,
+			final ResourceSchema schema, final RBEntity instance) {
 		super(id);
 		init(schema, instance);
 	}
 
-
 	// -----------------------------------------------------
 
 	/**
-	 * @param schema /
-	 * @param in /
-	 *
+	 * @param schema
+	 *            /
+	 * @param in
+	 *            /
+	 * 
 	 */
-	private void init(final ResourceSchema schema, final RBEntity in){
+	private void init(final ResourceSchema schema, final RBEntity in) {
 
-		final RBEntity instance = (in==null ? schema.generateRBEntity() : in);
-		final Form form = new Form("form"){
+		final RBEntity instance = (in == null ? schema.generateRBEntity() : in);
+		final Form form = new Form("form") {
 			@Override
 			protected void onSubmit() {
 				super.onSubmit();
-				if(getServiceProvider().getRBEntityManagement().createOrUpdateRTInstance(instance)){
+				if (getServiceProvider().getRBEntityManagement()
+						.createOrUpdateRTInstance(instance)) {
 					info("This instance has been successfully updated/created");
-				}else{
+				} else {
 					error("Somethin went wrong, instance could'nt be created/updated");
 				}
-				//Here should be a redirect or something like that
+				// Here should be a redirect or something like that
 			}
 		};
 		form.setOutputMarkupId(true);
 		this.add(form);
 		form.add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
 
-		if(schema!=null){
+		if (schema != null) {
 
 			RepeatingView view = new RepeatingView("propertylist");
-			for (final String attribute : (Collection<String>) instance.getAttributeNames()) {
-				boolean required=true;
-				int minimum_cnt = (Integer)instance.getMetaInfoFor(attribute,MetaDataKeys.MIN);
-				if(minimum_cnt==0){
-					minimum_cnt=1;
-					required=false;
+			for (final String attribute : (Collection<String>) instance
+					.getAttributeNames()) {
+				boolean required = true;
+				int minimum_cnt = (Integer) instance.getMetaInfoFor(attribute,
+						MetaDataKeys.MIN);
+				if (minimum_cnt == 0) {
+					minimum_cnt = 1;
+					required = false;
 				}
-				//Get predefined tickets, if there are some
+				// Get predefined tickets, if there are some
 				Collection<Integer> tickets = instance.getTicketsFor(attribute);
-				for(int cnt = 0; cnt< minimum_cnt; cnt++){
+				for (int cnt = 0; cnt < minimum_cnt; cnt++) {
 					GenericResourceModel model;
-					try{
-						if(cnt>= (tickets.size())){
-							model =  new GenericResourceModel(instance, attribute);
-						}else{
-							model =  new GenericResourceModel(instance,
-									attribute,(Integer) tickets.toArray()[cnt]);
+					try {
+						if (cnt >= (tickets.size())) {
+							model = new GenericResourceModel(instance,
+									attribute);
+						} else {
+							model = new GenericResourceModel(instance,
+									attribute, (Integer) tickets.toArray()[cnt]);
 						}
-					}catch(IllegalArgumentException any){
-						//If something went wrong with model creation, skip this field
-						continue ;
+					} catch (IllegalArgumentException any) {
+						// If something went wrong with model creation, skip
+						// this field
+						continue;
 					}
-					view.add(buildItem(instance,model, attribute, view, required, (cnt+1)==minimum_cnt));
+					view.add(buildItem(instance, model, attribute, view,
+							required, (cnt + 1) == minimum_cnt));
 				}
 			}
 			form.add(view);
-		}//End of if(schema==null)
+		}// End of if(schema==null)
 
-	}//End of Method init
+	}// End of Method init
 
 	// -----------------------------------------------------
 
-/**
- *@param instance /
- *@param model /
- *@param attribute /
- *@param view /
- *@param required /
- *@param expendable /
- */
+	/**
+	 * @param instance
+	 *            /
+	 * @param model
+	 *            /
+	 * @param attribute
+	 *            /
+	 * @param view
+	 *            /
+	 * @param required
+	 *            /
+	 * @param expendable
+	 *            /
+	 * @return fragment /
+	 */
 	private Component buildItem(final RBEntity instance,
 			final GenericResourceModel model, final String attribute,
-			final RepeatingView view, final boolean required, final boolean expendable){
-		Fragment fragment = new Fragment(view.newChildId(), "referenceInput", this);
-		fragment.add((new Label("propertyLabel", instance.getSimpleAttributeName(attribute) +
-				(required ? " (*)" : ""))));
-		//Decide which input-field should be used
-		Fragment f=null;
+			final RepeatingView view, final boolean required,
+			final boolean expendable) {
+		Fragment fragment = new Fragment(view.newChildId(), "referenceInput",
+				this);
+		fragment.add((new Label("propertyLabel", instance
+				.getSimpleAttributeName(attribute) + (required ? " (*)" : ""))));
+		// Decide which input-field should be used
+		Fragment f = null;
 		final GenericResourceComponent rComponent = this;
-		switch((ElementaryDataType)instance.getMetaInfoFor(attribute, MetaDataKeys.TYPE)){
-			case RESOURCE : {
-				f = new Fragment("propertyInput", "resourceInput", this);
-				f.add(new SearchBar("searchbar"){
-					public void onSearchSubmit(final RBEntity instance) {
+		switch ((ElementaryDataType) instance.getMetaInfoFor(attribute,
+				MetaDataKeys.TYPE)) {
+		case RESOURCE: {
+			f = new Fragment("propertyInput", "resourceInput", this);
+			f.add(new SearchBar("searchbar") {
+				public void onSearchSubmit(final RBEntity instance) {
 
-						model.setObject(instance);
-					}
+					model.setObject(instance);
+				}
 
-					// ----------------------------------------
+				// ----------------------------------------
 
-					public RBServiceProvider getServiceProvider() {
-						return rComponent.getServiceProvider();
-					}
-				});
-				break;
-			}
-			case BOOLEAN :
+				public RBServiceProvider getServiceProvider() {
+					return rComponent.getServiceProvider();
+				}
+			});
+			break;
+		}
+		case BOOLEAN:
 			f = new Fragment("propertyInput", "booleanInput", this);
-			f.add(new CheckBox("input",model));
+			f.add(new CheckBox("input", model));
 			break;
-		case DATE :
-			f = new Fragment("propertyInput","textInput", this);
-			TextField field = new TextField("input",model);
+		case DATE:
+			f = new Fragment("propertyInput", "textInput", this);
+			TextField field = new TextField("input", model);
 			field.add(new DatePickerBehavior());
-			f.add(field.add(new GenericResourceValidator(instance.getValidatorFor(attribute))).setRequired(required));
+			f.add(field.add(
+					new GenericResourceValidator(instance
+							.getValidatorFor(attribute))).setRequired(required));
 			break;
-		default: f = new Fragment("propertyInput","textInput", this);
-			f.add(new TextField("input",model).
-					add(new GenericResourceValidator(instance.getValidatorFor(attribute))).
-					setRequired(required));
+		default:
+			f = new Fragment("propertyInput", "textInput", this);
+			f.add(new TextField("input", model).add(
+					new GenericResourceValidator(instance
+							.getValidatorFor(attribute))).setRequired(required));
 			break;
 		}
 		fragment.add(f);
-		AjaxButton button = new AjaxButton("addField"){
+		AjaxButton button = new AjaxButton("addField") {
 
 			@Override
-			protected void onError(final AjaxRequestTarget target,final Form<?> form) {
-				//Do nothing
+			protected void onError(final AjaxRequestTarget target,
+					final Form<?> form) {
+				// Do nothing
 			}
 
 			@Override
-			protected void onSubmit(final AjaxRequestTarget target,final Form<?> form) {
-				//This does not really work, so do nothing
-				//TODO: Fix it
-			    /*  Component item = buildItem(instance,new GenericResourceModel(instance, attribute),
-			     *  attribute, view, false, true);
-			      // first execute javascript which creates a placeholder tag in markup for this item
-			      target.prependJavascript(
-			        String.format(
-			        "var item=document.createElement('%s');item.id='%s';"+
-			        "Wicket.$('%s').appendChild(item);",
-			        "tr", item.getMarkupId(), item.getMarkupId()));
-			      	view.add(item);
-			        target.addComponent(item); */
+			protected void onSubmit(final AjaxRequestTarget target,
+					final Form<?> form) {
+				// This does not really work, so do nothing
+				// TODO: Fix it
+				/*
+				 * Component item = buildItem(instance,new
+				 * GenericResourceModel(instance, attribute), attribute, view,
+				 * false, true); // first execute javascript which creates a
+				 * placeholder tag in markup for this item
+				 * target.prependJavascript( String.format(
+				 * "var item=document.createElement('%s');item.id='%s';"+
+				 * "Wicket.$('%s').appendChild(item);", "tr",
+				 * item.getMarkupId(), item.getMarkupId())); view.add(item);
+				 * target.addComponent(item);
+				 */
 			}
 		};
-		button.add(new Label("linkLabel","(+)"));
-		button.setVisible((expendable
-				&& ((Integer) instance.getMetaInfoFor(attribute, MetaDataKeys.MAX)) >
-				((Integer) instance.getMetaInfoFor(attribute, MetaDataKeys.CURRENT))));
+		button.add(new Label("linkLabel", "(+)"));
+		button.setVisible((expendable && ((Integer) instance.getMetaInfoFor(
+				attribute, MetaDataKeys.MAX)) > ((Integer) instance
+				.getMetaInfoFor(attribute, MetaDataKeys.CURRENT))));
 		fragment.add(button);
 		return fragment;
-	}	
-	
-	// -----------------------------------------------------
-	
-	public GenericResourceComponent setViewMode(ViewMode view){
-		throw new NotYetImplementedException();
-		
 	}
-	
+
+	// -----------------------------------------------------
+
+	/**
+	 * @param view
+	 *            /
+	 * @return
+	 * 			  /
+	 */
+	public GenericResourceComponent setViewMode(final ViewMode view) {
+		throw new NotYetImplementedException();
+	}
+
 }
