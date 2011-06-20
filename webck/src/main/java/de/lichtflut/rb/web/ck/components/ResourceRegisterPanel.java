@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.components.genericresource.panels;
+package de.lichtflut.rb.web.ck.components;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,41 +24,33 @@ import de.lichtflut.rb.core.api.RBEntityManagement.SearchContext;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
-import de.lichtflut.rb.web.ck.components.CKComponent;
 
 /**
  * <p>
  * TODO: [DESCRIPTION].
- * 
+ *
  * Supported Behaviors:
  * <ul>
  * <li>
  * <<<<<<< Updated upstream SHOW_DETAILS: Occurence: Rendering each value cell.
  * param: field-name, entity ======= SHOW_DETAILS: Occurence: Rendering each
  * value cell. param: field-name, entity. >>>>>>> Stashed changes</li>
- * 
+ *
  * </ul>
- * 
+ *
  * </p>
- * 
+ *
  * <p>
  * Created May 6, 2011
  * </p>
- * 
+ *
  * @author Nils Bleisch
  */
 @SuppressWarnings({ "serial", "unchecked" })
 public abstract class ResourceRegisterPanel extends CKComponent {
 
-	private String SHOW_DETAILS = "xyz";
+	public static final String SHOW_DETAILS = "xyz";
 
-	public String getSHOW_DETAILS() {
-		return SHOW_DETAILS;
-	}
-
-	public void setSHOW_DETAILS(String sHOW_DETAILS) {
-		SHOW_DETAILS = sHOW_DETAILS;
-	}
 
 	private Boolean simpleFieldNamesEnabled = false;
 
@@ -98,7 +90,7 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 	 *            /
 	 * @param simpleFlag
 	 *            /
-	 * 
+	 *
 	 */
 	public ResourceRegisterPanel(final String id,
 			final Collection<ResourceSchema> schemas, final String filter,
@@ -170,7 +162,7 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 		ListView<RegisterRowEntry> resourceTable = new ListView<RegisterRowEntry>(
 				"resourceTable", entries) {
 			@SuppressWarnings("rawtypes")
-			protected void populateItem(ListItem item) {
+			protected void populateItem(final ListItem item){
 
 				RegisterRowEntry entry = (RegisterRowEntry) item
 						.getModelObject();
@@ -188,7 +180,7 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param schemas
 	 *            /
 	 * @param filter
@@ -287,7 +279,7 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 		private ArrayList<Component> components = new ArrayList<Component>();
 
 		/**
-		 * 
+		 *
 		 * @param fields
 		 *            /
 		 */

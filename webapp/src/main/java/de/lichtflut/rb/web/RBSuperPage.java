@@ -13,7 +13,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
-import de.lichtflut.rb.web.components.genericresource.fields.search.SearchBar;
+import de.lichtflut.rb.web.ck.components.SearchBar;
 import de.lichtflut.rb.web.components.navigation.NavigationBar;
 import de.lichtflut.rb.web.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;

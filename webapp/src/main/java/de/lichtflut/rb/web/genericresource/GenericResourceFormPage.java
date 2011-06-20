@@ -10,7 +10,7 @@ import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
-import de.lichtflut.rb.web.components.genericresource.panels.GenericResourceFormPanel;
+import de.lichtflut.rb.web.ck.components.GenericResourceFormPanel;
 
 
 /**

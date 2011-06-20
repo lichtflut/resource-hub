@@ -71,7 +71,7 @@ public abstract class CKComponent extends Panel {
 	 * @param behavior - Desired behavior
 	 * @return {@link CKComponent}
 	 */
-	public CKComponent addBehavior(final String key,final CKBehavior behavior){
+	public final CKComponent addBehavior(final String key,final CKBehavior behavior){
 		behaviorRegistry.put(key, behavior);
 		return this;
 	}
@@ -81,7 +81,7 @@ public abstract class CKComponent extends Panel {
 	 * @param key - Name of the behavior
 	 * @return {@link CKBehavior}
 	 */
-	public CKBehavior getBehavior(final String key){
+	public final CKBehavior getBehavior(final String key){
 		return behaviorRegistry.get(key);
 	}
 
@@ -90,14 +90,14 @@ public abstract class CKComponent extends Panel {
 	 * @param key - Name of the behavior which is to be removed
 	 * @return {@link CKBehavior}
 	 */
-	public CKBehavior removeBehavior(final String key){
+	public final CKBehavior removeBehavior(final String key){
 		return behaviorRegistry.remove(key);
 	}
 
 	/**
 	 * Clears all behaviors for this component.
 	 */
-	public void resetBehaviors(){
+	public final void resetBehaviors(){
 		behaviorRegistry.clear();
 	}
 }

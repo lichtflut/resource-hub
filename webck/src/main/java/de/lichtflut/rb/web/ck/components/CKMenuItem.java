@@ -2,10 +2,7 @@ package de.lichtflut.rb.web.ck.components;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.wicket.markup.html.WebPage;
-
-import de.lichtflut.rb.web.ck.components.CKDestinationType;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 @SuppressWarnings("serial")
@@ -16,12 +13,12 @@ public class CKMenuItem extends CKComponent {
 	private Class<? extends WebPage> responsePageClass;
 	private WebPage responsePage;
 	private String externalLink;
-	
+
 	private List<CKMenuItem> subMenuItemList = new ArrayList<CKMenuItem>();
 	private boolean seperator = false;
 	private boolean submenuTitle = false;
-	
-	public CKMenuItem(String id) {
+
+	public CKMenuItem(final String id){
 		super(id);
 //		setSubmenuTitleTitle(true);
 //		setMenuText(submenuTitle);
@@ -36,11 +33,11 @@ public class CKMenuItem extends CKComponent {
 	}
 
 	@Override
-	public CKComponent setViewMode(ViewMode mode) {
+	public CKComponent setViewMode(final ViewMode mode) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 //	public CKMenuItem(boolean seperator){
 //		setSeperator(true);
 //		setDestinationType(CKDestinationType.NONE);
@@ -60,7 +57,7 @@ public class CKMenuItem extends CKComponent {
 		setSubMenuItemList(new ArrayList<CKMenuItem>());
 		setDestinationType(CKDestinationType.WEB_PAGE_CLASS);
 	}
-	
+
 	public CKMenuItem(String menuText, Class<? extends WebPage> destinationWebPage,List<CKMenuItem> subMenuItemList) throws InstantiationException, IllegalAccessException {
 		this(menuText,destinationWebPage.newInstance(),subMenuItemList);
 		setDestinationType(CKDestinationType.WEB_PAGE_CLASS);
@@ -72,12 +69,12 @@ public class CKMenuItem extends CKComponent {
 		setSubMenuItemList(subMenuItemList);
 		setDestinationType(CKDestinationType.WEB_PAGE_INSTANCE);
 	}
-	
-	
+
+
 //	public static CKMenuItem getMenuSeperator(){
 //		return new CKMenuItem(true);
 //	}
-	
+
 	public String getMenuText() {
 		return menuText;
 	}

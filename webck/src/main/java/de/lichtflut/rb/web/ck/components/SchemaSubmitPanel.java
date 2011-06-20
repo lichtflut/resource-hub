@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.components.genericresource.panels;
+package de.lichtflut.rb.web.ck.components;
 
 import java.util.Arrays;
 
@@ -19,7 +19,6 @@ import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
-import de.lichtflut.rb.web.ck.components.CKComponent;
 
 
 
@@ -61,7 +60,7 @@ public abstract class SchemaSubmitPanel extends CKComponent {
     	final TextArea<String> area = new TextArea<String>("resourceschema", Model.of("Insert your schema here"));
     	area.setOutputMarkupId(true);
     	@SuppressWarnings("rawtypes")
-		final DropDownChoice ddc = new DropDownChoice (
+		final DropDownChoice ddc = new DropDownChoice(
     			"formatlist",
     			Model.of(""),
     			new CollectionModel<RSFormat>(Arrays.asList(RSFormat.values())));

@@ -21,8 +21,8 @@ import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
-import de.lichtflut.rb.web.components.genericresource.panels.ResourceRegisterPanel;
-import de.lichtflut.rb.web.components.genericresource.panels.SchemaSubmitPanel;
+import de.lichtflut.rb.web.ck.components.ResourceRegisterPanel;
+import de.lichtflut.rb.web.ck.components.SchemaSubmitPanel;
 import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 
 /**
@@ -73,7 +73,7 @@ public class RSPage extends RBSuperPage {
 			}
 		};
 
-		panel.addBehavior(panel.getSHOW_DETAILS(), new CKBehavior() {
+		panel.addBehavior(panel.SHOW_DETAILS, new CKBehavior() {
 
 			@SuppressWarnings("rawtypes")
 			@Override

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.components.genericresource.panels;
+package de.lichtflut.rb.web.ck.components;
 
 import java.util.Collection;
 
@@ -23,8 +23,6 @@ import de.lichtflut.rb.core.schema.model.RBEntity.MetaDataKeys;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.behaviors.DatePickerBehavior;
-import de.lichtflut.rb.web.ck.components.CKComponent;
-import de.lichtflut.rb.web.components.genericresource.fields.search.SearchBar;
 import de.lichtflut.rb.web.components.validators.GenericResourceValidator;
 import de.lichtflut.rb.web.models.GenericResourceModel;
 
