@@ -30,6 +30,11 @@ public class SNTextConverter extends AbstractConverter {
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String, java.util.Locale)
 	 */
+	/**
+	 * @param value /
+	 * @param locale /
+	 * @return /
+	 */
 	public Object convertToObject(final String value, final Locale locale) {
 		return new SNText(value);
 	}

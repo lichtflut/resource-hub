@@ -38,11 +38,14 @@ public class NavigationNodePanel extends Panel implements NavigationNode {
 		add(link);
 		link.add(new Label("label", label));
 	}
-	
+
 	// -----------------------------------------------------
 
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#isExpandable()
+	 */
+	/**
+	 * @return false /
 	 */
 	public boolean isExpandable() {
 		return false;
@@ -51,12 +54,18 @@ public class NavigationNodePanel extends Panel implements NavigationNode {
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#isExpanded()
 	 */
+	/**
+	 * @return false /
+	 */
 	public boolean isExpanded() {
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#isActive()
+	 */
+	/**
+	 * @return false /
 	 */
 	public boolean isActive() {
 		return false;
@@ -65,12 +74,18 @@ public class NavigationNodePanel extends Panel implements NavigationNode {
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#hasChildren()
 	 */
+	/**
+	 * @return false /
+	 */
 	public boolean hasChildren() {
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#getChildren()
+	 */
+	/**
+	 * @return /
 	 */
 	public List<NavigationNode> getChildren() {
 		return Collections.emptyList();
@@ -79,14 +94,21 @@ public class NavigationNodePanel extends Panel implements NavigationNode {
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#getComponent()
 	 */
+	/**
+	 * @return /
+	 */
 	public Component getComponent() {
 		return this;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#addChild(de.lichtflut.rb.web.components.navigation.NavigationNode)
 	 */
-	public NavigationNode addChild(NavigationNode node) {
+	/**
+	 * @param node /
+	 * @return /
+	 */
+	public NavigationNode addChild(final NavigationNode node) {
 		throw new NotYetImplementedException();
 	}
 

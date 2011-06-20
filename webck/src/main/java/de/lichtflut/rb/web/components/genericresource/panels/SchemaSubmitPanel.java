@@ -25,7 +25,7 @@ import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
 
 /**
  * <p>
- *  TODO: [DESCRIPTION]
+ *  TODO: [DESCRIPTION].
  * </p>
  *
  * <p>
@@ -35,21 +35,27 @@ import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
  * @author Nils Bleisch
  */
 public abstract class SchemaSubmitPanel extends Panel implements GenericResourceComponent {
-	
 	private static final long serialVersionUID = 5141797984277420136L;
 
 	//-------------------------------------------
-	
-	public SchemaSubmitPanel(String id) {
+
+	/**
+	 *@param id /
+	 */
+
+	public SchemaSubmitPanel(final String id) {
 		super(id);
 		init();
 	}
 
 	//-------------------------------------------
-	
+
+	/**
+	 *
+	 */
 	@SuppressWarnings({ "unchecked", "serial" })
-	private void init() { 
-  	
+	private void init() {
+
     	final TextArea<String> area = new TextArea<String>("resourceschema", Model.of("Insert your schema here"));
     	area.setOutputMarkupId(true);
     	final DropDownChoice ddc = new DropDownChoice (
@@ -57,17 +63,19 @@ public abstract class SchemaSubmitPanel extends Panel implements GenericResource
     			Model.of(""),
     			new CollectionModel<RSFormat>(Arrays.asList(RSFormat.values())));
     	ddc.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-    		
-            protected void onUpdate(AjaxRequestTarget target) {
+
+            protected void onUpdate(final AjaxRequestTarget target) {
            	 ResourceSchemaManagement rManagement = getServiceProvider().getResourceSchemaManagement();
         	 String representation = rManagement.loadSchemaRepresenation((RSFormat) ddc.getModelObject());
-        	 if((representation==null || representation.length()==0)) representation = "Insert your schema here";
+        	 if((representation==null || representation.length()==0)) {
+				representation = "Insert your schema here";
+			}
         	 area.setModelObject(representation);
         	 target.add(area);
             }
         });
 
-    
+
     	Form form = new Form("schemaForm"){
     		@Override
     		protected void onSubmit() {
@@ -85,9 +93,9 @@ public abstract class SchemaSubmitPanel extends Panel implements GenericResource
     				rManagement.generateAndResolveSchemaModelThrough(input);
     			if(result.isErrorOccured()){
     				error(result.getErrorMessagesAsString("\n", RSErrorLevel.ALL));
-    			
+
     			}else{
-    				
+
     				rManagement.storeOrOverridePropertyDeclaration(result.getPropertyDeclarations());
     				rManagement.storeOrOverrideResourceSchema(result.getResourceSchemas());
     				rManagement.storeSchemaRepresentation(input, format);
@@ -102,9 +110,14 @@ public abstract class SchemaSubmitPanel extends Panel implements GenericResource
 	}
 
     // -----------------------------------------------------
-    
-	public GenericResourceComponent setViewMode(ViewMode view) {
+
+	/**
+	 * @param view /
+	 * @return NotYetImplementedException
+	 */
+
+	public GenericResourceComponent setViewMode(final ViewMode view) {
 		throw new NotYetImplementedException();
 	}
-    
+
 }

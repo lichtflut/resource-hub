@@ -27,7 +27,7 @@ import de.lichtflut.rb.web.components.genericresource.GenericResourceComponent;
  * <p>
  * TODO: [DESCRIPTION].
  * </p>
- * 
+ *
  * <p>
  * Created May 6, 2011
  * </p>

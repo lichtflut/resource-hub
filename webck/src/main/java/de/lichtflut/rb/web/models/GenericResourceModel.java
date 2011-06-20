@@ -11,7 +11,7 @@ import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
 
 /**
  * TODO: [DESCRIPTION]
- * 
+ *
  * <p>
  * ...
  * If the second constructor is used. It might return an {@link IllegalArgumentException} if not ticket
@@ -19,12 +19,14 @@ import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
  * ...
  * the detach-method does not have any affect. this model is not detachable
  * </p>
- * 
+ *
  *  <p>
  * 	Created May 18, 2011
  * </p>
- * 
+ *
  * @author Nils Bleisch
+ * 
+ * @param <T> /
  */
 @SuppressWarnings("serial")
 public class GenericResourceModel<T> implements IModel<T> {
@@ -32,22 +34,32 @@ public class GenericResourceModel<T> implements IModel<T> {
 	private String attribute;
 	private Integer ticket;
 	private T objectreference;
-	
+
 	// ----------------------------------------
-	
-	public GenericResourceModel(RBEntity<Object> instance, String attribute, int ticket){
+	/**
+	 * @param instance /
+	 * @param attribute /
+	 * @param ticket /
+	 */
+	public GenericResourceModel(final RBEntity<Object> instance, final String attribute, final int ticket){
 		this.ticket = ticket;
 		this.instance = instance;
 		this.attribute = attribute;
 	}
-	
+
 	// ----------------------------------------
-	
-	public GenericResourceModel(RBEntity<Object> instance, String attribute){
+
+	/**
+	 * @param instance /
+	 * @param attribute /
+	 */
+	public GenericResourceModel(final RBEntity<Object> instance, final String attribute){
 		this.instance = instance;
 		this.attribute = attribute;
 		try {
-			if(ticket==null) ticket = instance.generateTicketFor(attribute);
+			if(ticket==null) {
+				ticket = instance.generateTicketFor(attribute);
+			}
 		} catch (RBInvalidValueException e){
 			throw new IllegalArgumentException(e);
 		}catch(RBInvalidAttributeException e){
@@ -55,35 +67,51 @@ public class GenericResourceModel<T> implements IModel<T> {
 		}
 
 	}
-	
+
+	/**
+	 * @return /
+	 */
 	public T getObject() {
 		T final_value=null;
 		Object val = instance.getValueFor(attribute, ticket);
-		if(val instanceof String) final_value = convertStringToT((String) val);
-		else final_value = convertObjectToT(val);
+		if(val instanceof String) {
+			final_value = convertStringToT((String) val);
+		} else {
+			final_value = convertObjectToT(val);
+		}
 		return final_value;
 	}
 
 	// ----------------------------------------
 
-	public void setObject(T object) {
+	/**
+	 * @param object /
+	 */
+	public void setObject(final T object) {
 		try {
 			instance.addValueFor(attribute,convertObject(object), ticket);
 		} catch (Exception e){
 			throw new IllegalArgumentException(e);
 		}
-		
+
 	}
 
 	// ----------------------------------------
-	
+
+	/**
+	 *
+	 */
 	public void detach() {
 		//Do nothing
 	}
 
 	// ----------------------------------------
-	
-	private String convertObject(T object){
+
+	/**
+	 * @param object /
+	 * @return /
+	 */
+	private String convertObject(final T object){
 		if(objectreference instanceof Boolean){
 			return ((Boolean)object).toString();
 		}
@@ -91,19 +119,27 @@ public class GenericResourceModel<T> implements IModel<T> {
 	}
 
 	// ----------------------------------------
-	
+
+	/**
+	 * @param value /
+	 * @return /
+	 */
 	@SuppressWarnings("unchecked")
-	private T convertStringToT(String value) {
+	private T convertStringToT(final String value) {
 		if(objectreference instanceof Boolean){
 				return (T) new Boolean(value.toLowerCase());
 		}
 		return (T) value;
 	}
-	
+
+	/**
+	 * @param value /
+	 * @return /
+	 */
 	@SuppressWarnings("unchecked")
-	private T convertObjectToT(Object value) {
+	private T convertObjectToT(final Object value) {
 		return (T) value;
 	}
 
-	
+
 }

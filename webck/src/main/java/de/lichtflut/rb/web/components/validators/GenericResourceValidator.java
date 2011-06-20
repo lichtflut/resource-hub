@@ -12,13 +12,13 @@ import de.lichtflut.rb.core.schema.model.RBValidator;
 
 /**
  * <p>
- * TODO: To comment
+ * TODO: To comment.
  * </p>
- * 
+ *
  *  <p>
  * 	Created May 18, 2011
  * </p>
- * 
+ *
  * @author Nils Bleisch
  *
  */
@@ -26,13 +26,18 @@ import de.lichtflut.rb.core.schema.model.RBValidator;
 public class GenericResourceValidator implements IValidator<String> {
 
 	private RBValidator<String> validator;
-	
-	public GenericResourceValidator(RBValidator<String> validator){
+
+	/**
+	 * @param validator /
+	 */
+	public GenericResourceValidator(final RBValidator<String> validator){
 		this.validator=validator;
 	}
-	
-	
-	public void validate(IValidatable<String> validatable) {
+
+	/**
+	 * @param validatable /
+	 */
+	public void validate(final IValidatable<String> validatable) {
 		try {
 			validator.isValid(validatable.getValue());
 		} catch (RBInvalidValueException e) {

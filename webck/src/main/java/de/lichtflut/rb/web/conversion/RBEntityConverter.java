@@ -32,10 +32,20 @@ public class RBEntityConverter extends AbstractConverter<RBEntityConverter> {
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String, java.util.Locale)
 	 */
+	/**
+	 * @param value /
+	 * @param locale /
+	 * @return UnsupportedOperationException /
+	 */
 	public RBEntityConverter convertToObject(final String value, final Locale locale) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param value /
+	 * @param locale /
+	 * @return /
+	 */
 	public String convertToString(final RBEntity<Object> value, final Locale locale){
 		return value.toString();
 	}
@@ -44,8 +54,4 @@ public class RBEntityConverter extends AbstractConverter<RBEntityConverter> {
 	protected Class<RBEntityConverter> getTargetType() {
 		return RBEntityConverter.class;
 	}
-	
-	
-
-
 }

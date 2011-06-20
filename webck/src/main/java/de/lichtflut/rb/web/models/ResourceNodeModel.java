@@ -5,7 +5,6 @@ package de.lichtflut.rb.web.models;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.model.AbstractPropertyModel;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IChainingModel;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IDetachable;
@@ -17,7 +16,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  [DESCRIPTION].
  * </p>
  *
  * <p>
@@ -29,33 +28,32 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 public class ResourceNodeModel<T extends ResourceNode> implements IComponentInheritedModel<T>, IChainingModel<T> {
 
 	private Object target;
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * 
+	 * @param model /
 	 */
 	public ResourceNodeModel(final IModel<T> model) {
 		target = model;
 	}
-	
+
 	/**
-	 * 
+	 * @param node /
 	 */
 	public ResourceNodeModel(final ResourceNode node) {
 		target = node;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
+	 * @return /
 	 */
 	@SuppressWarnings("unchecked")
-	public T getObject()
-	{
-		if (target instanceof IModel)
-		{
+	public T getObject(){
+		if (target instanceof IModel){
 			return ((IModel<T>)target).getObject();
 		}
 		return (T)target;
@@ -63,27 +61,23 @@ public class ResourceNodeModel<T extends ResourceNode> implements IComponentInhe
 
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
+	 * @param object /
 	 */
 	@SuppressWarnings("unchecked")
-	public void setObject(T object)
-	{
-		if (target instanceof IModel)
-		{
+	public void setObject(final T object){
+		if (target instanceof IModel){
 			((IModel<T>)target).setObject(object);
-		}
-		else
-		{
+			}else{
 			target = object;
 		}
 	}
 
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
+	 * @return /
 	 */
-	public IModel<?> getChainedModel()
-	{
-		if (target instanceof IModel)
-		{
+	public IModel<?> getChainedModel(){
+		if (target instanceof IModel){
 			return (IModel<?>)target;
 		}
 		return null;
@@ -91,39 +85,38 @@ public class ResourceNodeModel<T extends ResourceNode> implements IComponentInhe
 
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
+	 * @param model /
 	 */
-	public void setChainedModel(IModel<?> model)
-	{
+	public void setChainedModel(final IModel<?> model){
 		target = model;
 	}
 
 	/**
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
-	public void detach()
-	{
-		if (target instanceof IDetachable)
-		{
+	public void detach(){
+		if (target instanceof IDetachable){
 			((IDetachable)target).detach();
 		}
 	}
 
 	/**
-	 * Returns the property expression that should be used against the target object
-	 * 
-	 * @param component
-	 * @return property expression that should be used against the target object
+	 * Returns the property expression that should be used against the target object.
+	 *
+	 * @param component /
+	 * @return property expression that should be used against the target object /
 	 */
-	protected String propertyExpression(Component component)
-	{
+	protected String propertyExpression(final Component component){
 		return component.getId();
 	}
 
 	/**
 	 * @see org.apache.wicket.model.IComponentInheritedModel#wrapOnInheritance(org.apache.wicket.Component)
+	 * @param <C> /
+	 * @param component /
+	 * @return /
 	 */
-	public <C> IWrapModel<C> wrapOnInheritance(Component component)
-	{
+	public <C> IWrapModel<C> wrapOnInheritance(final Component component){
 		return new SemanticAttributeCompoundModel<C>(component);
 	}
 
@@ -131,29 +124,27 @@ public class ResourceNodeModel<T extends ResourceNode> implements IComponentInhe
 	 * Binds this model to a special property by returning a model that has this compound model as
 	 * its nested/wrapped model and the property which should be evaluated. This can be used if the
 	 * id of the Component isn't a valid property for the data object.
-	 * 
-	 * @param property
-	 * @return The IModel that is a wrapper around the current model and the property
-	 * @param <S>
+	 *
+	 * @param property /
+	 * @return The IModel that is a wrapper around the current model and the property /
+	 * @param <S> /
 	 *            the type of the property
 	 */
-	public <S> IModel<S> bind(String property)
-	{
+	public <S> IModel<S> bind(final String property){
 		return new PropertyModel<S>(this, property);
 	}
 
 	/**
-	 * Component aware variation of the {@link CompoundPropertyModel} that components that inherit
+	 * Component aware variation of the {@link CompoundPropertyModel} that components that inherit.
 	 * the model get
-	 * 
+	 *
 	 * @author ivaynberg
 	 * @param <C>
 	 *            The model object type
 	 */
 	private class SemanticAttributeCompoundModel<C> extends AbstractPropertyModel<C>
 		implements
-			IWrapModel<C>
-	{
+			IWrapModel<C>{
 
 		private final Component owner;
 
@@ -161,26 +152,25 @@ public class ResourceNodeModel<T extends ResourceNode> implements IComponentInhe
 		 * Constructor.
 		 * @param owner The component that this model has been attached to
 		 */
-		public SemanticAttributeCompoundModel(final Component owner)
-		{
+		public SemanticAttributeCompoundModel(final Component owner){
 			super(ResourceNodeModel.this);
 			this.owner = owner;
 		}
 
 		/**
 		 * @see org.apache.wicket.model.AbstractPropertyModel#propertyExpression()
+		 * @return /
 		 */
 		@Override
-		protected String propertyExpression()
-		{
+		protected String propertyExpression(){
 			return ResourceNodeModel.this.propertyExpression(owner);
 		}
 
 		/**
 		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
+		 * @return /
 		 */
-		public IModel<T> getWrappedModel()
-		{
+		public IModel<T> getWrappedModel(){
 			return ResourceNodeModel.this;
 		}
 
@@ -188,8 +178,7 @@ public class ResourceNodeModel<T extends ResourceNode> implements IComponentInhe
 		 * @see org.apache.wicket.model.AbstractPropertyModel#detach()
 		 */
 		@Override
-		public void detach()
-		{
+		public void detach(){
 			super.detach();
 			ResourceNodeModel.this.detach();
 		}
@@ -197,12 +186,12 @@ public class ResourceNodeModel<T extends ResourceNode> implements IComponentInhe
 
 	/**
 	 * @see java.lang.Object#toString()
+	 * @return /
 	 */
 	@Override
-	public String toString()
-	{
-		AppendingStringBuffer sb = new AppendingStringBuffer().append("Model:classname=[" +
-			getClass().getName() + "]");
+	public String toString(){
+		AppendingStringBuffer sb = new AppendingStringBuffer().append("Model:classname=["
+				+ getClass().getName() + "]");
 		sb.append(":nestedModel=[").append(target).append("]");
 		return sb.toString();
 	}

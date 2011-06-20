@@ -25,15 +25,15 @@ import org.apache.wicket.markup.html.panel.Panel;
 public class NavigationBar extends Panel implements NavigationNode {
 
 	private final List<NavigationNode> children = new ArrayList<NavigationNode>();
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * @param id The component ID.
 	 */
 	public NavigationBar(final String id) {
 		super(id);
-		
+
 		final ListView<NavigationNode> itemView = new ListView<NavigationNode>("nodeList", children) {
 			protected void populateItem(final ListItem<NavigationNode> item) {
 				Component comp = item.getModelObject().getComponent();
@@ -42,11 +42,14 @@ public class NavigationBar extends Panel implements NavigationNode {
 		};
 		add(itemView);
 	}
-	
+
 	// -----------------------------------------------------
 
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#isExpandable()
+	 */
+	/**
+	 * @return boolean /
 	 */
 	public boolean isExpandable() {
 		return false;
@@ -55,12 +58,18 @@ public class NavigationBar extends Panel implements NavigationNode {
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#isExpanded()
 	 */
+	/**
+	 * @return boolean
+	 */
 	public boolean isExpanded() {
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#isActive()
+	 */
+	/**
+	 * @return boolean
 	 */
 	public boolean isActive() {
 		return false;
@@ -69,12 +78,18 @@ public class NavigationBar extends Panel implements NavigationNode {
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#hasChildren()
 	 */
+	/**
+	 * @return boolean /
+	 */
 	public boolean hasChildren() {
 		return !children.isEmpty();
 	}
 
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#getChildren()
+	 */
+	/**
+	 * @return children /
 	 */
 	public List<NavigationNode> getChildren() {
 		return children;
@@ -83,12 +98,19 @@ public class NavigationBar extends Panel implements NavigationNode {
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#getComponent()
 	 */
+	/**
+	 * @return this /
+	 */
 	public Component getComponent() {
 		return this;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#addChild(de.lichtflut.rb.web.components.navigation.NavigationNode)
+	 */
+	/**
+	 * @param node /
+	 * @return this
 	 */
 	public NavigationNode addChild(final NavigationNode node) {
 		this.children.add(node);

@@ -32,11 +32,11 @@ import de.lichtflut.rb.web.models.GenericResourceModel;
  * <p>
  * TODO: [DESCRIPTION].
  * </p>
- * 
+ *
  * <p>
  * Created May 6, 2011
  * </p>
- * 
+ *
  * @author Nils Bleisch
  */
 @SuppressWarnings({ "serial", "unchecked" })
@@ -66,7 +66,7 @@ public abstract class GenericResourceFormPanel extends Panel implements
 	 *            /
 	 * @param in
 	 *            /
-	 * 
+	 *
 	 */
 	private void init(final ResourceSchema schema, final RBEntity in) {
 

@@ -26,7 +26,7 @@ import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 public class SNTimeSpecConverter extends AbstractConverter {
 
 	private final TimeMask mask;
-	
+
 	// -----------------------------------------------------
 
 	/**
@@ -35,19 +35,25 @@ public class SNTimeSpecConverter extends AbstractConverter {
 	public SNTimeSpecConverter() {
 		this(TimeMask.TIMESTAMP);
 	}
-	
+
 	/**
 	 * Default Constructor.
+	 * @param mask /
 	 */
 	public SNTimeSpecConverter(final TimeMask mask) {
 		this.mask = mask;
 	}
-	
+
 	// -----------------------------------------------------
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
-	 */ 
+	 */
+	/**
+	 * @param value /
+	 * @param locale /
+	 * @return /
+	 */
 	public SNTimeSpec convertToObject(final String value, final Locale locale) {
 		if (value == null || Strings.isEmpty(value)) {
 			return null;
@@ -58,9 +64,12 @@ public class SNTimeSpecConverter extends AbstractConverter {
 
 	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToString(Object, java.util.Locale)
+	 * @param value /
+	 * @param locale /
+	 * @return /
 	 */
 	@Override
-	public String convertToString(final Object value, Locale locale) {
+	public String convertToString(final Object value, final Locale locale) {
 		final DateFormat dateFormat = getDateFormat(locale);
 		if (dateFormat != null) {
 			return toString((SNTimeSpec) value, dateFormat);
@@ -70,16 +79,17 @@ public class SNTimeSpecConverter extends AbstractConverter {
 
 
 	/**
-	 * @param locale
+	 * @param locale /
 	 * @return Returns the date format.
 	 */
-	public DateFormat getDateFormat(Locale locale) {
-		if (locale == null) {
-			locale = Locale.getDefault();
+	public DateFormat getDateFormat(final Locale locale) {
+		Locale tempLocale = locale;
+		if (tempLocale == null) {
+			tempLocale = Locale.getDefault();
 		}
 		return DateFormat.getDateInstance(DateFormat.SHORT, locale);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
 	 */
@@ -87,7 +97,12 @@ public class SNTimeSpecConverter extends AbstractConverter {
 	protected Class<?> getTargetType() {
 		return SNTimeSpec.class;
 	}
-	
+
+	/**
+	 * @param spec /
+	 * @param format /
+	 * @return /
+	 */
 	protected String toString(final SNTimeSpec spec, final DateFormat format) {
 		return format.format(spec.getTimeValue());
 	}

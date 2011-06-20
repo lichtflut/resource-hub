@@ -8,7 +8,7 @@ import org.arastreju.sge.model.ResourceID;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  [DESCRIPTION].
  * </p>
  *
  * <p>
@@ -22,6 +22,10 @@ public class SemanticNodeOptionRenderer implements IChoiceRenderer<ResourceID> {
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(java.lang.Object)
 	 */
+	/**
+	 * @param resource /
+	 * @return /
+	 */
 	public Object getDisplayValue(final ResourceID resource) {
 		return resource.toString();
 	}
@@ -29,7 +33,12 @@ public class SemanticNodeOptionRenderer implements IChoiceRenderer<ResourceID> {
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getIdValue(java.lang.Object, int)
 	 */
-	public String getIdValue(final ResourceID resource, int index) {
+	/**
+	 * @param resource /
+	 * @param index /
+	 * @return /
+	 */
+	public String getIdValue(final ResourceID resource, final int index) {
 		return resource.getQualifiedName().toURI();
 	}
 

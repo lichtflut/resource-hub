@@ -8,7 +8,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * <p>
- *  Provider for shared resources as
+ *  Provider for shared resources as.
  *  <ul>
  *  	<li>JavaScript</li>
  *  	<li>CSS</li>
@@ -22,15 +22,15 @@ import org.apache.wicket.request.resource.ResourceReference;
  * @author Oliver Tigges
  */
 public class SharedResourceProvider {
-	
+
 	/**
 	 * @return The resource reference to JQuery Core.
 	 */
 	public ResourceReference getJQueryCore() {
-		
+
 		return new PackageResourceReference(SharedResourceProvider.class, "jquery-1.6.1.min.js");
 	}
-	
+
 	/**
 	 * @return The resource reference to JQuery UI (full).
 	 */
