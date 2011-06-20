@@ -49,25 +49,27 @@ public abstract class CKComponent extends Panel {
 
 
 	/**
-	 *
+	 * Returns ServiceProvider.
+	 * This method musst be overridden.
 	 * @return An instance of {@link RBServiceProvider}
 	 */
 	public abstract RBServiceProvider getServiceProvider();
 
 
 	/**
-	 * TODO: DESCRIPTION.
+	 * Sets the view mode for the component. This method musst be overridden.
 	 * If the ViewMode is not supported, an {@link UnsupportedOperationException} is raised.
 	 * @param mode -
 	 * @return -
 	 */
+
 	public abstract CKComponent setViewMode(final ViewMode mode);
 
 	/**
-	 * TODO DESCRIPTION.
-	 * @param key -
-	 * @param behavior -
-	 * @return -
+	 * Adds a behavior to a component.
+	 * @param key - Name of the behavior
+	 * @param behavior - Desired behavior
+	 * @return {@link CKComponent}
 	 */
 	public CKComponent addBehavior(final String key,final CKBehavior behavior){
 		behaviorRegistry.put(key, behavior);
@@ -75,8 +77,8 @@ public abstract class CKComponent extends Panel {
 	}
 
 	/**
-	 * TODO DESCRIPTION.
-	 * @param key -
+	 * Returns the behavior for the passed Key.
+	 * @param key - Name of the behavior
 	 * @return {@link CKBehavior}
 	 */
 	public CKBehavior getBehavior(final String key){
@@ -84,8 +86,8 @@ public abstract class CKComponent extends Panel {
 	}
 
 	/**
-	 * TODO DESCRIPTION.
-	 * @param key -
+	 * Removes a behavior for this component.
+	 * @param key - Name of the behavior which is to be removed
 	 * @return {@link CKBehavior}
 	 */
 	public CKBehavior removeBehavior(final String key){
@@ -93,7 +95,7 @@ public abstract class CKComponent extends Panel {
 	}
 
 	/**
-	 * TODO DESCRIPTION.
+	 * Clears all behaviors for this component.
 	 */
 	public void resetBehaviors(){
 		behaviorRegistry.clear();
