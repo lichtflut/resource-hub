@@ -29,25 +29,26 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
 /**
  * <p>
  * TODO: [DESCRIPTION].
- *
+ * 
  * Supported Behaviors:
  * <ul>
  * <li>
- * 	SHOW_DETAILS: Occurence: Rendering each value cell. param: field-name, entity
- * </li>
- *
+ * <<<<<<< Updated upstream SHOW_DETAILS: Occurence: Rendering each value cell.
+ * param: field-name, entity ======= SHOW_DETAILS: Occurence: Rendering each
+ * value cell. param: field-name, entity. >>>>>>> Stashed changes</li>
+ * 
  * </ul>
- *
+ * 
  * </p>
- *
+ * 
  * <p>
  * Created May 6, 2011
  * </p>
- *
+ * 
  * @author Nils Bleisch
  */
 @SuppressWarnings({ "serial", "unchecked" })
-public abstract class ResourceRegisterPanel extends CKComponent{
+public abstract class ResourceRegisterPanel extends CKComponent {
 
 	private String SHOW_DETAILS = "xyz";
 
@@ -97,23 +98,25 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 	 *            /
 	 * @param simpleFlag
 	 *            /
-	 *
+	 * 
 	 */
 	public ResourceRegisterPanel(final String id,
 			final Collection<ResourceSchema> schemas, final String filter,
 			final List<String> fields, final boolean simpleFlag) {
 		super(id);
 
-addBehavior(SHOW_DETAILS, new CKBehavior() {
+		addBehavior(SHOW_DETAILS, new CKBehavior() {
 			@SuppressWarnings({ "rawtypes", "unused" })
 			@Override
-			public Object execute(Object... objects){
+			public Object execute(final Object... objects) {
 				String identifier = (String) objects[0];
-				String value = (String) objects[3];
+				String value = (String) objects[2];
 				final RBEntity instance = (RBEntity) objects[1];
-				if(value.contains("a")){
-					return new ExternalLink(identifier, Model.of("http://google.com?q=" + value), Model.of("google") );
-				}else{
+				if (value.contains("a")) {
+					return new ExternalLink(identifier, Model
+							.of("http://google.com?q=" + value), Model
+							.of("google"));
+				} else {
 					return new Label(identifier, value);
 				}
 			}
@@ -128,7 +131,8 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 	// -----------------------------------------------------
 
 	/**
-	 * @param view /
+	 * @param view
+	 *            /
 	 * @return /
 	 */
 	public CKComponent setViewMode(final ViewMode view) {
@@ -158,7 +162,8 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 	// -----------------------------------------------------
 
 	/**
-	 * @param entries /
+	 * @param entries
+	 *            /
 	 */
 	private void init(final List<RegisterRowEntry> entries) {
 		this.removeAll();
@@ -166,11 +171,12 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 				"resourceTable", entries) {
 			@SuppressWarnings("rawtypes")
 			protected void populateItem(ListItem item) {
+
 				RegisterRowEntry entry = (RegisterRowEntry) item
 						.getModelObject();
 				ListView<Component> propertyLine = new ListView<Component>(
 						"propertyLine", entry.getComponentList()) {
-					protected void populateItem(ListItem item) {
+					protected void populateItem(final ListItem item) {
 						item.add((Component) item.getModelObject());
 					}
 				};
@@ -182,11 +188,15 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 	}
 
 	/**
-	 *
-	 * @param schemas /
-	 * @param filter /
-	 * @param fields /
-	 * @param criteria /
+	 * 
+	 * @param schemas
+	 *            /
+	 * @param filter
+	 *            /
+	 * @param fields
+	 *            /
+	 * @param criteria
+	 *            /
 	 * @return /
 	 */
 	@SuppressWarnings("rawtypes")
@@ -209,17 +219,20 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 	// -----------------------------------------------------
 
 	/**
-	 * @param instances /
-	 * @param fields /
-	 * @param criteria /
-	 *@return /
+	 * @param instances
+	 *            /
+	 * @param fields
+	 *            /
+	 * @param criteria
+	 *            /
+	 * @return /
 	 */
 	@SuppressWarnings("rawtypes")
 	private List<RegisterRowEntry> buildRegisterTableEntries(
 			final Collection<RBEntity> instances, final List<String> fields,
 			final SortCriteria criteria) {
 		List<RegisterRowEntry> output = new ArrayList<RegisterRowEntry>();
-		List<String>tempFields = fields;
+		List<String> tempFields = fields;
 		if (tempFields == null || tempFields.size() == 0) {
 			tempFields = evaluateTotalFields(instances);
 		}
@@ -236,11 +249,13 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 	// -----------------------------------------------------
 
 	/**
-	 * @param instances /
+	 * @param instances
+	 *            /
 	 * @return /
 	 */
 	@SuppressWarnings("rawtypes")
-	private ArrayList<String> evaluateTotalFields(final Collection<RBEntity> instances) {
+	private ArrayList<String> evaluateTotalFields(
+			final Collection<RBEntity> instances) {
 		Map<String, Object> allreadyVisited = new HashMap<String, Object>();
 		// Make a set to remove skip duplicates
 		Set<String> fields = new HashSet<String>();
@@ -265,14 +280,16 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 	}
 
 	// -----------------------------------------------------
-/**
+	/**
  *
  */
 	private class RegisterRowEntry {
 		private ArrayList<Component> components = new ArrayList<Component>();
+
 		/**
-		 *
-		 * @param fields /
+		 * 
+		 * @param fields
+		 *            /
 		 */
 		public RegisterRowEntry(final List<String> fields) {
 			this(fields, null);
@@ -280,11 +297,14 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 
 		// -----------------------------------------------------
 		/**
-		 * @param fields /
-		 * @param instance /
+		 * @param fields
+		 *            /
+		 * @param instance
+		 *            /
 		 */
 		@SuppressWarnings("rawtypes")
-		public RegisterRowEntry(final List<String> fields, final RBEntity instance) {
+		public RegisterRowEntry(final List<String> fields,
+				final RBEntity instance) {
 			components.clear();
 			for (String field : fields) {
 				if (instance == null) {
@@ -310,12 +330,13 @@ addBehavior(SHOW_DETAILS, new CKBehavior() {
 						output = output.substring(", ".length(),
 								output.length());
 					}
-					if(getBehavior(SHOW_DETAILS)!=null){
+					if (getBehavior(SHOW_DETAILS) != null) {
 						components.add((Component) getBehavior(SHOW_DETAILS)
-								.execute("propertyField", instance, output, field));
-					}else{
-					components
-							.add(new Label("propertyField", Model.of(output)));
+								.execute("propertyField", instance, output,
+										field));
+					} else {
+						components.add(new Label("propertyField", Model
+								.of(output)));
 					}
 				}
 			}
