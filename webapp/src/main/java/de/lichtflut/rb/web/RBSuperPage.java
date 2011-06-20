@@ -24,7 +24,7 @@ import de.lichtflut.rb.web.resources.SharedResourceProvider;
 /**
  * <p>
  * TODO: To comment
- *  Root/super-Page, 
+ *  Root/super-Page,
  *  including important/essential services and configuration-options via CDI.
  *  Each further page should be a subclass of this.
  * </p>
@@ -37,21 +37,23 @@ import de.lichtflut.rb.web.resources.SharedResourceProvider;
  */
 @SuppressWarnings("serial")
 public abstract class RBSuperPage extends WebPage {
-	
-	private static RBServiceProvider provider =null;
+
+	private static RBServiceProvider provider = null;
 	private String title;
-	
+
 	/**
-	 * Singleton pattern: There will be only one instance per runtime
+	 * Singleton pattern: There will be only one instance per runtime.
 	 * @return {@link RBServiceProvider}
 	 */
 	public static RBServiceProvider  getRBServiceProvider(){
-		if(provider==null) provider= RBServiceProviderFactory.getDefaultServiceProvider();
+		if(provider==null) {
+			provider= RBServiceProviderFactory.getDefaultServiceProvider();
+		}
 		return provider;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	//Constructors
 	/**
 	 * Takes PageParamertes as argument
@@ -61,69 +63,72 @@ public abstract class RBSuperPage extends WebPage {
 		this.title = title;
 		init();
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Default constructor
+	 * Default constructor.
+	 * @param title /
 	 */
 	public RBSuperPage(String title){
 		super();
 		this.title = title;
 		init();
 	}
-		
+
 	// -----------------------------------------------------
-	
+
 	/* (non-Javadoc)
 	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(IHeaderResponse response) {
+	public void renderHead(final IHeaderResponse response) {
 		super.renderHead(response);
 		response.renderJavaScriptReference(new SharedResourceProvider().getJQueryCore());
 		response.renderJavaScriptReference(new SharedResourceProvider().getJQueryUI());
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	@SuppressWarnings({ "serial"})
+	/**
+	 *
+	 */
 	public void init(){
 		Label titleLabel = new Label("title", title);
 		titleLabel.setRenderBodyOnly(true);
 		add(titleLabel);
-		
+
 		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
-		
-		mainNavigation.addChild(new NavigationNodePanel("node", 
+
+		mainNavigation.addChild(new NavigationNodePanel("node",
 				new BookmarkablePageLink<RSPage>("link", RSPage.class),
 				Model.of("Resource Schema")));
-		
-		mainNavigation.addChild(new NavigationNodePanel("node", 
+
+		mainNavigation.addChild(new NavigationNodePanel("node",
 				new BookmarkablePageLink<SampleResourcePage>("link", SampleResourcePage.class),
 				Model.of("Sample Resource")));
-		
-		
+
 		add(mainNavigation);
-		
+
 		this.add(new SearchBar("searchBar") {
 
-			public void onSearchSubmit(RBEntity<Object> instance) {
+			public void onSearchSubmit(final RBEntity<Object> instance) {
 				PageParameters params = new PageParameters();
 				params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
 				params.add("instanceid", instance.getQualifiedName().toURI());
-				getRequestCycle().setResponsePage(GenericResourceFormPage.class, params);				
+				getRequestCycle().setResponsePage(GenericResourceFormPage.class, params);
 			}
 
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 		});
-		
+
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * @return the session scoped serviceProvider which is injected via CDI
 	 */
@@ -132,8 +137,5 @@ public abstract class RBSuperPage extends WebPage {
 	/*public RBServiceProvider getServiceProvider(){
 		return builder.getServiceProvider();
 	}*/
-	
-	
-	
-	
+
 }

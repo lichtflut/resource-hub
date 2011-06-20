@@ -31,21 +31,30 @@ public final class SessionBuilder {
 
 	//Members
 	private RBServiceProvider serviceProvider;
-	
+
 	// -----------------------------------------------------
 	//@Inject
+	/**
+	 *
+	 */
 	public SessionBuilder(){
 		init();
 	}
-	
+
 	// -----------------------------------------------------
-	
+
+	/**
+	 *
+	 */
 	private void init(){
 		this.serviceProvider = RBServiceProviderFactory.getDefaultServiceProvider();
 	}
-	
+
 	// -----------------------------------------------------
 	//@Produces
+	/**
+	 *@return /
+	 */
 	public RBServiceProvider getServiceProvider() {
 		return this.serviceProvider;
 	}

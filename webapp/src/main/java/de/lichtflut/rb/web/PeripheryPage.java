@@ -30,27 +30,26 @@ import org.arastreju.sge.model.SemanticGraph;
  * @author Oliver Tigges
  */
 public class PeripheryPage extends WebPage {
-	
+
 	private final ArastrejuGate gate;
-	
+
 	// -----------------------------------------------------
 
 	/**
-	 * 
+	 * @param params /
 	 */
 	public PeripheryPage(final PageParameters params) {
 		super(params);
-		
+
 		gate = Arastreju.getInstance().rootContext();
-		
+
 		SemanticGraph g = loadGraph();
 		StringBuilder jsonTree = new StringBuilder("graph = [ ");
 			//new StringBuilder("graph = { id: 0, name: 'root', children: [ ");
-		
-		
+
 		JsonBinding binding = new JsonBinding();
 		try {
-			ByteArrayOutputStream os = new ByteArrayOutputStream(1000);
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			binding.write(g, os);
 			jsonTree.append(os.toString());
 		} catch (IOException e) {
@@ -58,15 +57,17 @@ public class PeripheryPage extends WebPage {
 		} catch (OntologyIOException e) {
 			e.printStackTrace();
 		}
-		
+
 		jsonTree.append("];");
-		
+
 		add(new Label("jsonTree", Model.of(jsonTree.toString())).setEscapeModelStrings(false));
-		
+
 	}
-	
+
 	// -----------------------------------------------------
-	
+	/**
+	 *@return /
+	 */
 	protected SemanticGraph loadGraph(){
 		final SemanticGraphIO io = new RdfXmlBinding();
 		try {

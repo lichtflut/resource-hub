@@ -32,33 +32,36 @@ import de.lichtflut.rb.web.models.ResourceNodeModel;
  * @author Oliver Tigges
  */
 public class SampleResourcePage extends RBSuperPage {
-	
+
 	public static final ResourceID HAS_BIRTHDATE = new SimpleResourceID("urn:lf:predicates:", "hasBirthdate");
-	
+
 	// -----------------------------------------------------
 
 	/**
-	 * @param parameters
+	 * @param parameters /
 	 */
 	public SampleResourcePage(final PageParameters parameters) {
 		super("Sample Resource", parameters);
-		
+
 		add(new SampleResourcePanel("resourcePane", new ResourceNodeModel<ResourceNode>(createSample())));
 	}
-	
+
 	// -----------------------------------------------------
-	
+
+	/**
+	 * @return /
+	 */
 	private static ResourceNode createSample() {
-		
-		
-		final SNClass personClass = 
+
+
+		final SNClass personClass =
 			new SimpleResourceID("urn:lf:classes:", "Person").asResource().asClass();
-		final ResourceNode nils = personClass.createInstance( new QualifiedName("urn:lf:people:Nils"));
+		final ResourceNode nils = personClass.createInstance(new QualifiedName("urn:lf:people:Nils"));
 		Association.create(nils, Aras.HAS_FORENAME, new SNText("Nils"));
 		Association.create(nils, Aras.HAS_SURNAME, new SNText("Flyshe"));
 		Association.create(nils, HAS_BIRTHDATE, new SNTimeSpec(new Date(), TimeMask.DATE));
 		return nils;
 	}
-	
+
 
 }

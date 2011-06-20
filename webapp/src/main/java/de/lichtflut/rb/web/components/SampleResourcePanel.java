@@ -18,7 +18,7 @@ import de.lichtflut.rb.web.models.ResourceNodeModel;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  [DESCRIPTION].
  * </p>
  *
  * <p>
@@ -38,20 +38,20 @@ public class SampleResourcePanel extends Panel {
 	public SampleResourcePanel(final String id, final IModel<ResourceNode> model) {
 		super(id, new ResourceNodeModel<ResourceNode>(model));
 		final Form form = new Form("form");
-		
+
 		form.add(new FeedbackPanel("feedback"));
-		
+
 		form.add(new SNTextField("forename", Aras.HAS_FORENAME));
 		form.add(new SNTextField("surname", Aras.HAS_SURNAME));
 		form.add(new SNTimeSpecField("birthdate", SampleResourcePage.HAS_BIRTHDATE));
-		
+
 		form.add(new Button("save") {
 			public void onSubmit() {
 				info("Associations: " + model.getObject().getAssociations());
 			};
 		});
-		
+
 		add(form);
 	}
-	
+
 }

@@ -14,8 +14,8 @@ import de.lichtflut.rb.web.components.genericresource.panels.GenericResourceForm
 
 
 /**
- * TODO: to comment
- * 
+ * TODO: to comment.
+ *
  * @author Nils Bleisch
  */
 public class GenericResourceFormPage extends RBSuperPage {
@@ -23,14 +23,16 @@ public class GenericResourceFormPage extends RBSuperPage {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Default Constructor, setting PageParameters to null
+	 * Default Constructor, setting PageParameters to null.
 	 */
 	public GenericResourceFormPage(){
 		this(null);
 	}
 
 	// -----------------------------------------------------
-	
+	/**
+	 * @param parameters /
+	 */
 	public GenericResourceFormPage(final PageParameters parameters) {
 		super("Resource " + parameters.get("resourceid"), parameters);
 		ResourceSchema schema = loadResourceSchemaFromParams(parameters);
@@ -44,14 +46,15 @@ public class GenericResourceFormPage extends RBSuperPage {
 
         });
 	}
-	
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Load the ResourceSchema for the give parameters
+	 * Load the ResourceSchema for the give parameters.
+	 * @param parameters /
+	 * @return /
 	 */
-	private ResourceSchema loadResourceSchemaFromParams(PageParameters parameters){
+	private ResourceSchema loadResourceSchemaFromParams(final PageParameters parameters){
 		ResourceSchema schema=null;
 		String identifier = parameters.get("resourceid").toString();
 		Collection<ResourceSchema> resourceSchemas = getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas();
@@ -64,27 +67,30 @@ public class GenericResourceFormPage extends RBSuperPage {
 		}
 		return schema;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Load the ResourceTypeInstance from the give parameters
+	 * Load the ResourceTypeInstance from the give parameters.
+	 * @param schema /
+	 * @param parameters /
+	 * @return /
 	 */
-	@SuppressWarnings({ "unchecked"})
-	
-	private RBEntity loadRBEntitiesFromParams(ResourceSchema schema, PageParameters parameters){
+
+	@SuppressWarnings("rawtypes")
+	private RBEntity loadRBEntitiesFromParams(final ResourceSchema schema, final PageParameters parameters){
 		String identifier = parameters.get("instanceid").toString();
-		Collection<RBEntity> instances = getRBServiceProvider().getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
+		Collection<RBEntity> instances =
+			getRBServiceProvider().getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
 		for (RBEntity<Object> resourceTypeInstance : instances) {
 			if(resourceTypeInstance.getQualifiedName().toURI().equals(identifier)){
 				return resourceTypeInstance;
 			}
 		}
-		
+
 		return schema.generateRBEntity();
 	}
-	
+
 	// -----------------------------------------------------
-	
-	
+
 }
