@@ -20,7 +20,7 @@ import org.arastreju.sge.model.SemanticGraph;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  [DESCRIPTION].
  * </p>
  *
  * <p>
@@ -29,6 +29,7 @@ import org.arastreju.sge.model.SemanticGraph;
  *
  * @author Oliver Tigges
  */
+@SuppressWarnings("serial")
 public class PeripheryPage extends WebPage {
 
 	private final ArastrejuGate gate;

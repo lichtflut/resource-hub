@@ -56,9 +56,11 @@ public abstract class RBSuperPage extends WebPage {
 
 	//Constructors
 	/**
-	 * Takes PageParamertes as argument
+	 * Takes PageParamertes as argument.
+	 * @param title /
+	 * @param params /
 	 */
-	public RBSuperPage(String title, PageParameters params){
+	public RBSuperPage(final String title, final PageParameters params){
 		super(params);
 		this.title = title;
 		init();
@@ -70,7 +72,7 @@ public abstract class RBSuperPage extends WebPage {
 	 * Default constructor.
 	 * @param title /
 	 */
-	public RBSuperPage(String title){
+	public RBSuperPage(final String title){
 		super();
 		this.title = title;
 		init();
@@ -90,7 +92,7 @@ public abstract class RBSuperPage extends WebPage {
 
 	// -----------------------------------------------------
 
-	@SuppressWarnings({ "serial"})
+
 	/**
 	 *
 	 */

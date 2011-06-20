@@ -9,6 +9,7 @@
     Description: none
 -->
 <module name="Checker">
+  <property name="basedir" value="."/>
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
     <module name="FileContentsHolder"/>

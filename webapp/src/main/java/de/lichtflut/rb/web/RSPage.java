@@ -38,12 +38,12 @@ import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
  */
 @SuppressWarnings("serial")
 public class RSPage extends RBSuperPage {
-	
+
 	private final RepeatingView resourceList =  new RepeatingView("resourcelist");
 
-	
+
 	/**
-	 * @param parameters
+	 * @param parameters /
 	 */
 	public RSPage(final PageParameters parameters) {
 		super("Resource Schema", parameters);
@@ -52,38 +52,42 @@ public class RSPage extends RBSuperPage {
 
 	//-------------------------------------------
 
-    @SuppressWarnings({ })
-	private void init(PageParameters parameters) { 
-    
+    /**
+     * @param parameters /
+     */
+	private void init(final PageParameters parameters) {
+
     	add(new SchemaSubmitPanel("schemaSubmitPanel"){
 
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
-    		
+
     	});
     	updateResourceList();
 		this.add(resourceList);
-		ResourceRegisterPanel panel = new ResourceRegisterPanel("resourceRegister", getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"" , null, false) {
+		ResourceRegisterPanel panel = new ResourceRegisterPanel("resourceRegister",
+				getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"" , null, false) {
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 		};
-		
 
-		
 		panel.addBehavior(panel.SHOW_DETAILS, new CKBehavior() {
-			
+
+			@SuppressWarnings("rawtypes")
 			@Override
-			public Object execute(Object... objects) {
+			public Object execute(final Object... objects) {
 				String identifier = (String) objects[0];
-				String value = (String) objects[3];
+				final int a = 3;
+				String value = (String) objects[a];
 				final RBEntity instance = (RBEntity) objects[1];
 				if(value.contains("a")){
 					return new Link(identifier) {
 						public void onClick() {
 							PageParameters params = new PageParameters();
-							params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
+							params.add("resourceid", instance.getResourceSchema().
+									getDescribedResourceID().getQualifiedName().toURI());
 							params.add("instanceid", instance.getQualifiedName().toURI());
 							setResponsePage(GenericResourceFormPage.class, params);
 						}
@@ -93,64 +97,72 @@ public class RSPage extends RBSuperPage {
 				}
 			}
 		});
-		
+
 		this.add(panel);
 		this.add(new ResourceRegisterPanel("resourceRegisterTest",
-				getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"M�ller" ,Arrays.asList(new String[]{"hasNachname", "hasEmail", "blablubbla"}), true) {
+				getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),
+				"M�ller" ,Arrays.asList(new String[]{"hasNachname", "hasEmail", "blablubbla"}), true) {
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 		});
-		
-		
+
 	}
 
-    
+	/**
+	 *
+	 */
     protected void onBeforeRender() {
     	super.onBeforeRender();
     	updateResourceList();
     }
-    
+
 	// -----------------------------------------------------
-    
-	@SuppressWarnings({ "unchecked" })
+
+
+	/**
+	 *
+	 */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
 	private void updateResourceList(){
-    	resourceList.removeAll();	
+    	resourceList.removeAll();
     	ResourceSchemaManagement rManagement = getRBServiceProvider().getResourceSchemaManagement();
     	RBEntityManagement rTypeManagement = getRBServiceProvider().getRBEntityManagement();
     	Collection<ResourceSchema> resourceSchemas = rManagement.getAllResourceSchemas();
-		if(resourceSchemas==null) resourceSchemas = new ArrayList<ResourceSchema>();
+		if(resourceSchemas==null) {
+			resourceSchemas = new ArrayList<ResourceSchema>();
+		}
 		for (final ResourceSchema resourceSchema : resourceSchemas) {
 
 			Collection<RBEntity> instances = rTypeManagement.loadAllResourceTypeInstancesForSchema(resourceSchema);
-			
-			ArrayList<RBEntity> schemaInstances = 
+
+			ArrayList<RBEntity> schemaInstances =
 				new ArrayList<RBEntity>((instances != null) ? instances : new HashSet<RBEntity>());
-			
+
 			PageParameters params = new PageParameters();
 			params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
 			Fragment fragment = new Fragment(resourceList.newChildId(),"listPanel",this);
 			fragment.add(new BookmarkablePageLink<GenericResourceFormPage>("link",GenericResourceFormPage.class, params).
-					add(new Label("linkLabel",resourceSchema.getDescribedResourceID().getQualifiedName().getSimpleName())));
-			
+					add(new Label("linkLabel",resourceSchema.getDescribedResourceID().
+							getQualifiedName().getSimpleName())));
+
 			fragment.add(new ListView("instancelist",schemaInstances){
 				@Override
-				protected void populateItem(ListItem item) {
+				protected void populateItem(final ListItem item) {
 					RBEntity instance = (RBEntity) item.getModelObject();
 					PageParameters params = new PageParameters();
 					params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
 					params.add("instanceid", instance.getQualifiedName().toURI());
-					item.add(new BookmarkablePageLink<GenericResourceFormPage>("innerlink",GenericResourceFormPage.class, params).
+					item.add(new BookmarkablePageLink<GenericResourceFormPage>("innerlink",
+							GenericResourceFormPage.class, params).
 					add(new Label("innerlinkLabel",instance.toString())));
 				}
-				
 			});
-			
+
 			resourceList.add(fragment);
 		}
 		resourceList.modelChanged();
     }
-    
 
-	
+
 }
