@@ -1,6 +1,18 @@
 package de.lichtflut.rb.web.ck.components;
 
-public class CKDestinationType {
+/**
+ *
+ * @author raphael
+ *
+ */
+
+public final class CKDestinationType {
+
+	/**
+	 *
+	 */
+	private CKDestinationType(){
+	}
 
 	public static final int WEB_PAGE_CLASS = 1;
 	public static final int WEB_PAGE_INSTANCE = 2;
