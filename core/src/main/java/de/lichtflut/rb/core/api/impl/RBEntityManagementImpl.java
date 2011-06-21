@@ -184,7 +184,11 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 				return entity;
 			}
 		}
-		return null;
+		if(node instanceof RBEntity){
+			return (RBEntity) node;
+		}else{
+			return null;
+		}
 	}
 
 	// -----------------------------------------------------
