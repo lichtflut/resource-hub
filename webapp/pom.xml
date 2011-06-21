@@ -101,6 +101,19 @@
 			</plugin>
 		</plugins>
 	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+				  	<configLocation>${basedir}/checkstyle.xml</configLocation>
+					<propertyExpansion>basedir=${basedir}</propertyExpansion>
+				</configuration>
+			</plugin>
+		</plugins>
+  	</reporting>
 	
 		<repositories>
    			<repository>
