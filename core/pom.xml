@@ -90,8 +90,10 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>2.6</version>
 				<configuration>
-				  	<configLocation>${basedir}/checkstyle.xml</configLocation>
+				 	<configLocation>${basedir}/checkstyle.xml</configLocation>
 					<propertyExpansion>basedir=${basedir}</propertyExpansion>
+					<failOnViolation>true</failOnViolation>
+					<consoleOutput>true</consoleOutput>
 				</configuration>
 			</plugin>
 		</plugins>
