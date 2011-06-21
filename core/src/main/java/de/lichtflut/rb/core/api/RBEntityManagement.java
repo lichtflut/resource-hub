@@ -59,7 +59,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return true if the operation was successfull, false if not
 	 * @param instance - The {@link RBEntity} which shall be created or updated
 	 */
-	boolean createOrUpdateRTInstance(RBEntity<Object> instance);
+	boolean createOrUpdateRBEntity(RBEntity<Object> instance);
 
 	// -----------------------------------------------------
 
@@ -110,7 +110,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return a {@link Collection} of {@link RBEntity} which are dependent on the given schemas
 	 */
 	@SuppressWarnings("rawtypes")
-	Collection<RBEntity> loadAllResourceTypeInstancesForSchema(Collection<ResourceSchema> schemas);
+	Collection<RBEntity> loadAllRBEntitiesForSchema(Collection<ResourceSchema> schemas);
 
 	// -----------------------------------------------------
 
@@ -125,7 +125,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return a {@link Collection} of {@link RBEntity} which depends on the given schemas, filter and searchcontext
 	 */
 	@SuppressWarnings("rawtypes")
-	Collection<RBEntity> loadAllResourceTypeInstancesForSchema(final Collection<ResourceSchema> schemas,
+	Collection<RBEntity> loadAllRBEntitiesForSchema(final Collection<ResourceSchema> schemas,
 			final String filter, final SearchContext ctx);
 
 	/**
@@ -136,7 +136,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return a {@link Collection} of {@link RBEntity} which depends on the given schema
 	 */
 	@SuppressWarnings("rawtypes")
-	Collection<RBEntity> loadAllResourceTypeInstancesForSchema(ResourceSchema schema);
+	Collection<RBEntity> loadAllRBEntitiesForSchema(ResourceSchema schema);
 
 	// -----------------------------------------------------
 
@@ -151,7 +151,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return  a {@link Collection} of {@link RBEntity} which depends on the given schema, filter and searchcontext
 	 */
 	@SuppressWarnings("rawtypes")
-	Collection<RBEntity> loadAllResourceTypeInstancesForSchema(ResourceSchema schema, String filter, SearchContext ctx);
+	Collection<RBEntity> loadAllRBEntitiesForSchema(ResourceSchema schema, String filter, SearchContext ctx);
 
 	// -----------------------------------------------------
 

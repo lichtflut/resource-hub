@@ -57,8 +57,8 @@ public final class RBEntityTest {
 			any.printStackTrace();
 		}
 		//Try to create this
-		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRTInstance(instance));
-		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
+		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRBEntity(instance));
+		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllRBEntitiesForSchema(schema);
 
 		Assert.assertTrue(instances.size()==1);
 		for (RBEntity i : instances) {
@@ -90,8 +90,8 @@ public final class RBEntityTest {
 		}catch(Exception any){
 			any.printStackTrace();
 		}
-		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRTInstance(instance));
-		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllResourceTypeInstancesForSchema(schema);
+		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRBEntity(instance));
+		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllRBEntitiesForSchema(schema);
 		Assert.assertTrue(instances.size()==1);
 		RBEntity entity = new ArrayList<RBEntity>(instances).get(0);
 

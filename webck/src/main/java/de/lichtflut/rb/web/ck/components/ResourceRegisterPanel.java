@@ -199,11 +199,11 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 				.getRBEntityManagement();
 		Collection<RBEntity> instances;
 		if (filter != null && !filter.equals("")) {
-			instances = rManagement.loadAllResourceTypeInstancesForSchema(
+			instances = rManagement.loadAllRBEntitiesForSchema(
 					schemas, filter, SearchContext.CONJUNCT_MULTIPLE_KEYWORDS);
 		} else {
 			instances = rManagement
-					.loadAllResourceTypeInstancesForSchema(schemas);
+					.loadAllRBEntitiesForSchema(schemas);
 		}
 		return buildRegisterTableEntries(instances, fields, criteria);
 	}

@@ -54,7 +54,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean createOrUpdateRTInstance(final RBEntity<Object> instance) {
+	public boolean createOrUpdateRBEntity(final RBEntity<Object> instance) {
 		try{
 			ModelingConversation mc = gate.startConversation();
 			instance.createAssociations(null);
@@ -70,12 +70,12 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	/** {@inheritDoc} */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(
+	public Collection<RBEntity> loadAllRBEntitiesForSchema(
 			final ResourceSchema schema, final String filter, final SearchContext ctx) {
 		SearchContext context = ctx;
 		String filterString = filter;
 		if(filter==null || filter.equals("")){
-			return loadAllResourceTypeInstancesForSchema(schema);
+			return loadAllRBEntitiesForSchema(schema);
 		}
 		if(ctx==null){
 			context = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
@@ -109,7 +109,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	/** {@inheritDoc} */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(final ResourceSchema schema) {
+	public Collection<RBEntity> loadAllRBEntitiesForSchema(final ResourceSchema schema) {
 	      Collection<RBEntity> output = new ArrayList<RBEntity>();
           ModelingConversation mc = gate.startConversation();
           Set<Statement> statements = mc.createQueryManager().findIncomingStatements(schema.getDescribedResourceID());
@@ -127,10 +127,10 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	/** {@inheritDoc} */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(final Collection<ResourceSchema> schemas) {
+	public Collection<RBEntity> loadAllRBEntitiesForSchema(final Collection<ResourceSchema> schemas) {
 		Collection<RBEntity> output = new ArrayList<RBEntity>();
 	    for (ResourceSchema resourceSchema : schemas) {
-			output.addAll(loadAllResourceTypeInstancesForSchema(resourceSchema));
+			output.addAll(loadAllRBEntitiesForSchema(resourceSchema));
 		}
 	    return output;
 	}
@@ -140,19 +140,19 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	/** {@inheritDoc} */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Collection<RBEntity> loadAllResourceTypeInstancesForSchema(
+	public Collection<RBEntity> loadAllRBEntitiesForSchema(
 			final Collection<ResourceSchema> schemas, final String filter,  final SearchContext ctx) {
 		SearchContext context = ctx;
 		String filterString = filter;
 		if(filter==null || filter.equals("")){
-			return loadAllResourceTypeInstancesForSchema(schemas);
+			return loadAllRBEntitiesForSchema(schemas);
 		}
 		if(ctx==null){
 			context = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
 		}
 		Collection<RBEntity> output = new ArrayList<RBEntity>();
 		for (ResourceSchema schema : schemas) {
-			output.addAll(loadAllResourceTypeInstancesForSchema(schema, filterString,context));
+			output.addAll(loadAllRBEntitiesForSchema(schema, filterString,context));
 		}
 		return output;
 	}

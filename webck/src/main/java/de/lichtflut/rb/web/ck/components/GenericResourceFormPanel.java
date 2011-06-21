@@ -75,7 +75,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			protected void onSubmit() {
 				super.onSubmit();
 				if (getServiceProvider().getRBEntityManagement()
-						.createOrUpdateRTInstance(instance)) {
+						.createOrUpdateRBEntity(instance)) {
 					info("This instance has been successfully updated/created");
 				} else {
 					error("Somethin went wrong, instance could'nt be created/updated");

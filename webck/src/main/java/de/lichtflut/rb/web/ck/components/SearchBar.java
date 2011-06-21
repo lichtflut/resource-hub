@@ -101,7 +101,7 @@ public abstract class SearchBar extends CKComponent{
 				}
 				  final RBEntityManagement typeManagement =getServiceProvider().getRBEntityManagement();
 				  final Collection<RBEntity> instances =
-					  typeManagement.loadAllResourceTypeInstancesForSchema(rSchemas,input,sContext);
+					  typeManagement.loadAllRBEntitiesForSchema(rSchemas,input,sContext);
 				  for (final RBEntity instance : instances) {
 					selectableValues.put(instance.toString().trim().hashCode(),instance);
 				  }
