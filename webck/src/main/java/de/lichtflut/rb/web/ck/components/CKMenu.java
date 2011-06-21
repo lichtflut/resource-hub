@@ -5,39 +5,43 @@ package de.lichtflut.rb.web.ck.components;
 
 import java.util.List;
 
-import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
-
-import de.lichtflut.rb.web.ck.components.CKMenuItem;
-import de.lichtflut.rb.web.ck.components.CKDestinationType;
-
 
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**
- * [TODO Insert description here.]
- * 
+ * Wrapper class for CKMenu components.
+ * This class builds a hierarchical menu from given parameters.
+ *
  * Created: Jun 20, 2011
  *
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
 public class CKMenu extends CKComponent {
-	
+
 
 //	private ResourceReference SHORTCUTS_CSS = new CompressedResourceReference(MultiLevelCssMenu.class,"css/MultiLevelCssMenu.css");
 //	private ResourceReference SHORTCUTS_JAVASCRIPT = new CompressedResourceReference(MultiLevelCssMenu.class,"js/jqueryMin.js");
-//	private ResourceReference SHORTCUTS_JAVASCRIPT2 = new CompressedResourceReference(MultiLevelCssMenu.class,"js/MultiLevelCssMenu.js");
-	
+//	private ResourceReference SHORTCUTS_JAVASCRIPT2 = new
+//			CompressedResourceReference(MultiLevelCssMenu.class,"js/MultiLevelCssMenu.js");
 
-	public CKMenu(String id) {
+	/**
+	 * Constructor.
+	 * @param id - wicket:id of component
+	 * @param menuItemList - List of {@link CKMenuItem}
+	 */
+	public CKMenu(final String id, final List<CKMenuItem> menuItemList) {
 		super(id);
-		// TODO Auto-generated constructor stub
+		//TODO:
+		setRenderBodyOnly(true);
+		NestedMenu multiLevelMenu = new NestedMenu("menu",menuItemList);
+		multiLevelMenu.setRenderBodyOnly(true);
+		add(multiLevelMenu);
 	}
 
 	/**
@@ -53,83 +57,100 @@ public class CKMenu extends CKComponent {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CKComponent setViewMode(ViewMode mode) {
+	public CKComponent setViewMode(final ViewMode mode) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	public CKMenu(String id, List<CKMenuItem> menuItemList) {
-		super(id);
-		//TODO
-		setRenderBodyOnly(true);
-		CKMenu multiLevelMenu = new CKMenu("multiLevelMenu",menuItemList);
-		multiLevelMenu.setRenderBodyOnly(true);
-		add(multiLevelMenu);
-	}
-	
-	
-	
-	@Override
-	public void renderHead(IHeaderResponse response) {
-//		response.renderCSSReference(SHORTCUTS_CSS);
-//		response.renderJavascriptReference(SHORTCUTS_JAVASCRIPT);
-//		response.renderJavascriptReference(SHORTCUTS_JAVASCRIPT2);
-	}
 
-	
-	private void processResponse(CKMenuItem menuItem){
-		switch(menuItem.getDestinationType()){
-			case CKDestinationType.EXTERNAL_LINK:	
-				//forward to external link
+
+//	@Override
+//	public void renderHead(IHeaderResponse response) {
+////		response.renderCSSReference(SHORTCUTS_CSS);
+////		response.renderJavascriptReference(SHORTCUTS_JAVASCRIPT);
+////		response.renderJavascriptReference(SHORTCUTS_JAVASCRIPT2);
+//	}
+
+
+	/**
+	 * Checks type of the link and acts accordingly.
+	 * TODO: CKECK IF IT IS ACTUALLY NEEDED
+	 * @param menuItem - {@link CKMenuItem} to be processed.
+	 */
+	private void processResponse(final CKMenuItem menuItem){
+		switch(menuItem.getLinkType()){
+			case CKLinkType.EXTERNAL_LINK:
+				//TODO: forward to external link
 				break;
-			case CKDestinationType.WEB_PAGE_CLASS:
+			case CKLinkType.WEB_PAGE_CLASS:
 				setResponsePage(menuItem.getResponsePageClass());
 				break;
-			case CKDestinationType.WEB_PAGE_INSTANCE:
+			case CKLinkType.WEB_PAGE_INSTANCE:
 				setResponsePage(menuItem.getResponsePage());
 				break;
-			case CKDestinationType.NONE:
-				//TODO throw exception 
+			case CKLinkType.NONE:
+				//TODO throw exception
 				break;
+		default:
+			break;
 		}
 	}
-	
-	class MultiLevelMenu extends Panel {
 
-		public MultiLevelMenu(String id,List<CKMenuItem> menuItemList) {
+	/**
+	 *
+	 * [TODO Insert description here.
+	 *
+	 * Created: Jun 21, 2011
+	 *
+	 * @author Ravi Knox
+	 */
+	class NestedMenu extends CKComponent {
+
+		/**
+		 * Constructor.
+		 * @param id - wicket:id of the component
+		 * @param menuItemList - List of {@link CKMenuItem} to be displayed
+		 */
+		@SuppressWarnings("rawtypes")
+		public NestedMenu(final String id,final List<CKMenuItem> menuItemList) {
 			super(id);
 			if(menuItemList==null || menuItemList.size()==0) {
 				return;
 			}
-			ListView menu = buildMultiLevelMenu("menuList", menuItemList);
+			ListView menu = buildNestedMenu("menuList", menuItemList);
 			menu.setReuseItems(true);
 			add(menu);
-		}	
-		
-		@SuppressWarnings("unchecked")
-		private ListView buildMultiLevelMenu(String id,List<CKMenuItem> menuItemList) {
-			return new ListView(id, menuItemList) {			
+		}
+
+		/**
+		 * Builds a nested menu.
+		 * @param id - wicket:id of component
+		 * @param menuItemList - List of {@link CKMenuItem} to be displayed
+		 * @return {@link ListView}
+		 */
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		private ListView buildNestedMenu(final String id,final List<CKMenuItem> menuItemList) {
+			return new ListView(id, menuItemList) {
 				public void populateItem(final ListItem item) {
 					final CKMenuItem menuItem = ((CKMenuItem) item.getModelObject());
 					Link link = new Link("menuLink") {
 						@Override
 						public void onClick() {
-							if (menuItem!=null ) {
+							if (menuItem!=null){
 								processResponse(menuItem);
 							}
 						}
 					};
-					
+
 					Label linkText = new Label("menuLinkText", menuItem.getMenuText());
 					linkText.setRenderBodyOnly(true);
 					link.add(linkText);
 					item.add(link);
-					
-					
+
+
 					List<CKMenuItem> submenuItemList = menuItem.getSubMenuItemList();
 					//INFO If submenu exists, output it to html. If not, add empty markup container and hide it.
 					if(submenuItemList != null && submenuItemList.size()>0) {
-						MultiLevelMenu subLevelMenu = new MultiLevelMenu("submenuListContainer",submenuItemList);
+						CKMenu subLevelMenu = new CKMenu("submenuListContainer",submenuItemList);
 						subLevelMenu.setRenderBodyOnly(true);
 						item.add(subLevelMenu);
 					}else {
@@ -139,6 +160,24 @@ public class CKMenu extends CKComponent {
 					}
 				}
 			};
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public RBServiceProvider getServiceProvider() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public CKComponent setViewMode(final ViewMode mode) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 }

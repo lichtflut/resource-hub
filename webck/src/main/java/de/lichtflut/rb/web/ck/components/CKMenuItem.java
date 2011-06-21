@@ -1,14 +1,25 @@
 package de.lichtflut.rb.web.ck.components;
 
+import java.awt.MenuItem;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.wicket.markup.html.WebPage;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import org.apache.wicket.markup.html.link.ExternalLink;
 
+/**
+ *<p>
+ * Describes the CK-type MenuItem, which are used to build {@link CKMenu}.
+ *</p>
+ * Created: Jun 21, 2011
+ *
+ * @author Ravi Knox
+ */
 @SuppressWarnings("serial")
-public class CKMenuItem extends CKComponent {
+public class CKMenuItem implements Serializable{
 
-	private int destinationType;
+	private int linkType;
 	private String menuText;
 	private Class<? extends WebPage> responsePageClass;
 	private WebPage responsePage;
@@ -18,113 +29,222 @@ public class CKMenuItem extends CKComponent {
 	private boolean seperator = false;
 	private boolean submenuTitle = false;
 
-	public CKMenuItem(final String id){
-		super(id);
-//		setSubmenuTitleTitle(true);
-//		setMenuText(submenuTitle);
-//		setDestinationType(DestinationType.NONE);
-		// TODO Auto-generated constructor stub
+	/**
+	 * Constructor.
+	 * TODO: CHECK IF NEEDED.
+	 * @param submenuTitle - Linktitle
+	 */
+	public CKMenuItem(final String submenuTitle){
+		setSubmenuTitleTitle(true);
+		setMenuText(submenuTitle);
+		setDestinationType(CKLinkType.NONE);
 	}
 
-	@Override
-	public RBServiceProvider getServiceProvider() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Constructor. Link acts as a seperator.
+	 * @param seperator - true if link should act as a seperator, false if not.
+	 */
+	public CKMenuItem(final boolean seperator){
+		setSeperator(true);
+		setDestinationType(CKLinkType.NONE);
 	}
 
-	@Override
-	public CKComponent setViewMode(final ViewMode mode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-//	public CKMenuItem(boolean seperator){
-//		setSeperator(true);
-//		setDestinationType(CKDestinationType.NONE);
-//	}
-
-	public <T extends WebPage>CKMenuItem(String menuText, T destinationPage) {
-//		setMenuText(menuText);
-		super(menuText);
+	/**
+	 * Constructor.
+	 * @param <T> -
+	 * @param menuText -
+	 * @param destinationPage -
+	 */
+	public <T extends WebPage>CKMenuItem(final String menuText,final T destinationPage) {
+		setMenuText(menuText);
 		setResponsePage(destinationPage);
 		setSubMenuItemList(new ArrayList<CKMenuItem>());
-		setDestinationType(CKDestinationType.WEB_PAGE_INSTANCE);
+		setDestinationType(CKLinkType.WEB_PAGE_INSTANCE);
 	}
-	public CKMenuItem(String menuText, Class<? extends WebPage> destinationPageClass) {
-//		setMenuText(menuText);
-		super(menuText);
+
+	/**
+	 * Constructor.
+	 * @param menuText -
+	 * @param destinationPageClass -
+	 */
+	public CKMenuItem(final String menuText, final Class<? extends WebPage> destinationPageClass) {
+		setMenuText(menuText);
 		setResponsePageClass(destinationPageClass);
 		setSubMenuItemList(new ArrayList<CKMenuItem>());
-		setDestinationType(CKDestinationType.WEB_PAGE_CLASS);
+		setDestinationType(CKLinkType.WEB_PAGE_CLASS);
 	}
 
-	public CKMenuItem(String menuText, Class<? extends WebPage> destinationWebPage,List<CKMenuItem> subMenuItemList) throws InstantiationException, IllegalAccessException {
+	/**
+	 * Constructor.
+	 * @param menuText -
+	 * @param destinationWebPage -
+	 * @param subMenuItemList -
+	 * @throws InstantiationException -
+	 * @throws IllegalAccessException -
+	 */
+	public CKMenuItem(final String menuText, final Class<? extends WebPage> destinationWebPage
+			,final List<CKMenuItem> subMenuItemList) throws InstantiationException, IllegalAccessException {
 		this(menuText,destinationWebPage.newInstance(),subMenuItemList);
-		setDestinationType(CKDestinationType.WEB_PAGE_CLASS);
+		setDestinationType(CKLinkType.WEB_PAGE_CLASS);
 	}
-	public <T extends WebPage>CKMenuItem(String menuText, T destinationPage,List<CKMenuItem> subMenuItemList) {
-//		setMenuText(menuText);
-		super(menuText);
+
+	/**
+	 * Constructor.
+	 * @param <T> -
+	 * @param menuText -
+	 * @param destinationPage -
+	 * @param subMenuItemList -
+	 */
+	public <T extends WebPage>CKMenuItem(final String menuText, final T destinationPage,final List<CKMenuItem> subMenuItemList) {
+		setMenuText(menuText);
 		setResponsePage(destinationPage);
 		setSubMenuItemList(subMenuItemList);
-		setDestinationType(CKDestinationType.WEB_PAGE_INSTANCE);
+		setDestinationType(CKLinkType.WEB_PAGE_INSTANCE);
 	}
 
+	/**
+	 * Returns seperator.
+	 * @return {@link CKMenuItem}
+	 */
+	public static CKMenuItem getMenuSeperator(){
+		return new CKMenuItem(true);
+	}
 
-//	public static CKMenuItem getMenuSeperator(){
-//		return new CKMenuItem(true);
-//	}
-
+	/**
+	 * Returns linktext.
+	 * @return {@link String}
+	 */
 	public String getMenuText() {
 		return menuText;
 	}
-	public void setMenuText(String text) {
+
+	/**
+	 * Sets menutext.
+	 * @param text - {@link String} value for menutext
+	 */
+	public void setMenuText(final String text) {
 		this.menuText = text;
 	}
+
+	/**
+	 * Returns Responsepage.
+	 * @return {@link WebPage}
+	 */
 	public WebPage getResponsePage() {
 		return responsePage;
 	}
-	public <T extends WebPage> void setResponsePage(T destinationPage) {
+
+	/**
+	 * Sets ResponsePage.
+	 * @param <T> -
+	 * @param destinationPage -
+	 */
+	public <T extends WebPage> void setResponsePage(final T destinationPage) {
 		this.responsePage = destinationPage;
 	}
-	public void addSubmenu(CKMenuItem subMenuItem){
+
+	/**
+	 * Adds submenu.
+	 * @param subMenuItem -
+	 */
+	public void addSubmenu(final CKMenuItem subMenuItem){
 		getSubMenuItemList().add(subMenuItem);
 	}
+
+	/**
+	 * Returns submenu.
+	 * @return List of {@link CKMenuItem}
+	 */
 	public List<CKMenuItem> getSubMenuItemList() {
 		return subMenuItemList;
 	}
-	public void setSubMenuItemList(List<CKMenuItem> subMenuItemList) {
+
+	/**
+	 * Sets submenu-itemlist.
+	 * @param subMenuItemList -
+	 */
+	public void setSubMenuItemList(final List<CKMenuItem> subMenuItemList) {
 		this.subMenuItemList = subMenuItemList;
 	}
+
+	/**
+	 * Returns wheather {@link MenuItem} is seperator.
+	 * @return true if {@link MenuItem} is seperator, false if not
+	 */
 	public boolean isSeperator() {
 		return seperator;
 	}
-	public void setSeperator(boolean seperator) {
+
+	/**
+	 * Sets if {@link MenuItem} is seperator.
+	 * @param seperator - true if seperator, no if not
+	 */
+	public void setSeperator(final boolean seperator) {
 		this.seperator = seperator;
 	}
+
+	/**
+	 * Returns if {@link MenuItem} is submenu-title.
+	 * @return {@link Boolean} - true if {@link MenuItem} is submenu-title, false if not
+	 */
 	public boolean isSubmenuTitle() {
 		return submenuTitle;
 	}
-	public void setSubmenuTitleTitle(boolean title) {
+
+	/**
+	 * Sets if {@link MenuItem} is submenu-title.
+	 * @param title - true if {@link MenuItem} is submenu-title, false if not
+	 */
+	public void setSubmenuTitleTitle(final boolean title) {
 		this.submenuTitle = title;
 	}
-	public int getDestinationType() {
-		return destinationType;
+
+	/**
+	 * Returns linktype.
+	 * @return {@link CKLinkType}
+	 */
+	public int getLinkType() {
+		return linkType;
 	}
-	public void setDestinationType(int destinationType) {
-		this.destinationType = destinationType;
+
+	/**
+	 * Sets LinkType.
+	 * @param linkType - {@link CKLinkType}
+	 */
+	public void setDestinationType(final int linkType) {
+		this.linkType = linkType;
 	}
+
+	/**
+	 * Returns ResponsePageClass.
+	 * @return {@link WebPage}
+	 */
 	public Class<? extends WebPage> getResponsePageClass() {
 		return responsePageClass;
 	}
+
+	/**
+	 * Sets ResponsePageClass.
+	 * @param destinationPageClass -
+	 */
 	public void setResponsePageClass(
-			Class<? extends WebPage> destinationPageClass) {
+			final Class<? extends WebPage> destinationPageClass) {
 		this.responsePageClass = destinationPageClass;
 	}
+
+	/**
+	 * Returns externalLink as String.
+	 * @return {@link String}
+	 */
 	public String getExternalLink() {
 		return externalLink;
 	}
-	public void setExternalLink(String externalLink) {
+
+	/**
+	 * Sets externalLink.
+	 * @param externalLink -
+	 */
+	public void setExternalLink(final String externalLink) {
 		this.externalLink = externalLink;
 	}
 

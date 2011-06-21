@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -15,12 +17,15 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+
 import de.lichtflut.rb.core.api.RBEntityManagement;
+import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
+import de.lichtflut.rb.web.ck.components.CKMenu;
+import de.lichtflut.rb.web.ck.components.CKMenuItem;
 import de.lichtflut.rb.web.ck.components.ResourceRegisterPanel;
 import de.lichtflut.rb.web.ck.components.SchemaSubmitPanel;
 import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
@@ -55,8 +60,10 @@ public class RSPage extends RBSuperPage {
     /**
      * @param parameters /
      */
+	@SuppressWarnings("static-access")
 	private void init(final PageParameters parameters) {
 
+		add(new CKMenu("nested-menu", buildMenu()));
     	add(new SchemaSubmitPanel("schemaSubmitPanel"){
 
 			public RBServiceProvider getServiceProvider() {
@@ -107,6 +114,31 @@ public class RSPage extends RBSuperPage {
 			}
 		});
 
+	}
+
+	/**
+	 * Builds the menu.
+	 * @return List of {@link CKMenuItem}
+	 */
+	private List<CKMenuItem> buildMenu() {
+		CKMenuItem menuItem1 = new CKMenuItem("");
+		CKMenuItem menuItem2 = new CKMenuItem("Sample Resource Page", new SampleResourcePage(getPageParameters()));
+		CKMenuItem menuItem3 = new CKMenuItem("Sample Resource Page", new SampleResourcePage(getPageParameters()));
+		menuItem1.setSeperator(true);
+		CKMenuItem submenuItem = new CKMenuItem("Sub-menu", new SampleResourcePage(getPageParameters()));
+
+		List<CKMenuItem> submenuList = new ArrayList<CKMenuItem>();
+		List<CKMenuItem> primaryMenu = new ArrayList<CKMenuItem>();
+
+		primaryMenu.add(menuItem1);
+		primaryMenu.add(menuItem2);
+		primaryMenu.add(menuItem3);
+
+		submenuList.add(submenuItem);
+
+		menuItem2.setSubMenuItemList(submenuList);
+
+		return primaryMenu;
 	}
 
 	/**
