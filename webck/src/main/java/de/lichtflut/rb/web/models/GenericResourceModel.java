@@ -25,7 +25,7 @@ import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
  * </p>
  *
  * @author Nils Bleisch
- * 
+ *
  * @param <T> /
  */
 @SuppressWarnings("serial")

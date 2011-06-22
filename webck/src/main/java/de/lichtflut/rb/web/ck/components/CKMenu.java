@@ -38,13 +38,9 @@ public class CKMenu extends CKComponent {
 	 */
 	public CKMenu(final String id, final List<CKMenuItem> menuItemList) {
 		super(id);
-		//TODO:
 		setRenderBodyOnly(true);
 		this.menuItemList = menuItemList;
-		NestedMenu multiLevelMenu = new NestedMenu("menu",menuItemList);
-		multiLevelMenu.setRenderBodyOnly(true);
-		add(multiLevelMenu);
-//		buildComponent();
+		buildComponent();
 	}
 
 	/**
@@ -104,15 +100,13 @@ public class CKMenu extends CKComponent {
 		 * @param id - wicket:id of the component
 		 * @param menuItemList - List of {@link CKMenuItem} to be displayed
 		 */
-		@SuppressWarnings("rawtypes")
+
 		public NestedMenu(final String id,final List<CKMenuItem> menuItemList) {
 			super(id);
 			if(menuItemList==null || menuItemList.size()==0) {
 				return;
 			}
-			ListView menu = buildNestedMenu("menuList", menuItemList);
-			menu.setReuseItems(true);
-			add(menu);
+			buildComponent();
 		}
 
 		/**
@@ -121,7 +115,7 @@ public class CKMenu extends CKComponent {
 		 * @param menuItemList - List of {@link CKMenuItem} to be displayed
 		 * @return {@link ListView}
 		 */
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		private ListView buildNestedMenu(final String id,final List<CKMenuItem> menuItemList) {
 			return new ListView(id, menuItemList) {
 				public void populateItem(final ListItem item) {
@@ -141,8 +135,7 @@ public class CKMenu extends CKComponent {
 						linkText.setRenderBodyOnly(true);
 						link.add(linkText);
 						item.add(link);
-					}else{
-						System.out.println();
+
 					}
 
 					List<CKMenuItem> submenuItemList = menuItem.getSubMenuItemList();
@@ -178,18 +171,20 @@ public class CKMenu extends CKComponent {
 			return null;
 		}
 
+		@SuppressWarnings("rawtypes")
 		@Override
 		protected void initComponent(final CKValueWrapperModel model) {
-
+			ListView menu = buildNestedMenu("menuList", menuItemList);
+			menu.setReuseItems(true);
+			add(menu);
 		}
 	}
 
-
 	@Override
 	protected void initComponent(final CKValueWrapperModel model){
-//		NestedMenu multiLevelMenu = new NestedMenu("menu",menuItemList);
-//		multiLevelMenu.setRenderBodyOnly(true);
-//		this.add(multiLevelMenu);
+		NestedMenu multiLevelMenu = new NestedMenu("menu",menuItemList);
+		multiLevelMenu.setRenderBodyOnly(true);
+		this.add(multiLevelMenu);
 	}
 }
 

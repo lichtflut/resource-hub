@@ -24,6 +24,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
  * </p>
  *
  * @author Oliver Tigges
+ * @param <T>
  */
 @SuppressWarnings("serial")
 public class ResourceNodeModel<T extends ResourceNode> implements IComponentInheritedModel<T>, IChainingModel<T> {

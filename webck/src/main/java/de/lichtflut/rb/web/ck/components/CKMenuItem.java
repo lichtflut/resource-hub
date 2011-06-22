@@ -19,6 +19,7 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
 @SuppressWarnings("serial")
 public class CKMenuItem extends CKComponent implements Serializable{
 
+	@SuppressWarnings("unused")
 	private CKLink ckLink;
 	private CKLinkType linkType;
 	private String menuText;
@@ -45,10 +46,12 @@ public class CKMenuItem extends CKComponent implements Serializable{
 	/**
 	 * Constructor.
 	 * @param ckLink - {@link CKLink}
+	 * @param linkText -
 	 */
-	public CKMenuItem(final CKLink ckLink){
+	public CKMenuItem(final String linkText, final CKLink ckLink){
 		super(ckLink.getId());
 		this.ckLink = ckLink;
+		setMenuText(linkText);
 	}
 	/**
 	 * Constructor. Link acts as a seperator.
@@ -281,10 +284,10 @@ public class CKMenuItem extends CKComponent implements Serializable{
 	}
 
 	@Override
-	protected void initComponent(CKValueWrapperModel model) {
+	protected void initComponent(final CKValueWrapperModel model) {
 
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
