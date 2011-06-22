@@ -129,7 +129,9 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 	@Override
 	public Collection<RBEntity> loadAllRBEntitiesForSchema(final Collection<ResourceSchema> schemas) {
 		Collection<RBEntity> output = new ArrayList<RBEntity>();
-		if(schemas==null) return output; 
+		if(schemas==null){
+			return output;
+		}
 	    for (ResourceSchema resourceSchema : schemas) {
 			output.addAll(loadAllRBEntitiesForSchema(resourceSchema));
 		}
