@@ -19,7 +19,7 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
  *  This model represents a single value of a resource. This value is the Object of
  *  a {@link ResourceNode}'s Statement with a given Predicate.
  * </p>
- * 
+ *
  * <p>
  * 	This model will search for a {@link ResourceNodeModel} up in the component hierarchy.
  * </p>
@@ -34,7 +34,7 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
 public class SemanticAttributeModel<T extends SemanticNode> implements IComponentAssignedModel<T>, IModel<T> {
 
 	private final ResourceID predicate;
-	
+
 	// -----------------------------------------------------
 	
 	/**
