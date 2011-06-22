@@ -19,6 +19,7 @@ import de.lichtflut.rb.web.ck.components.CKMenuItem;
  *
  * @author Ravi Knox
  */
+@SuppressWarnings("serial")
 public class TestMenuComponentPage extends WebPage{
 
 	/**

@@ -83,6 +83,7 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 	// -----------------------------------------------------
 
 	/**
+	 * Constructor.
 	 * @param id
 	 *            /
 	 * @param schemas

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.wicket.markup.html.WebPage;
 
+import de.lichtflut.rb.core.spi.RBServiceProvider;
+
 
 /**
  *<p>
@@ -15,8 +17,9 @@ import org.apache.wicket.markup.html.WebPage;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class CKMenuItem implements Serializable{
+public class CKMenuItem extends CKComponent implements Serializable{
 
+	private CKLink ckLink;
 	private CKLinkType linkType;
 	private String menuText;
 	private Class<? extends WebPage> responsePageClass;
@@ -29,20 +32,30 @@ public class CKMenuItem implements Serializable{
 
 	/**
 	 * Constructor.
-	 * TODO: CHECK IF NEEDED.
 	 * @param submenuTitle - Linktitle
 	 */
 	public CKMenuItem(final String submenuTitle){
+		super(submenuTitle);
 		setSubmenuTitleTitle(true);
 		setMenuText(submenuTitle);
 		setDestinationType(CKLinkType.NONE);
+		this.buildComponent();
 	}
 
+	/**
+	 * Constructor.
+	 * @param ckLink - {@link CKLink}
+	 */
+	public CKMenuItem(final CKLink ckLink){
+		super(ckLink.getId());
+		this.ckLink = ckLink;
+	}
 	/**
 	 * Constructor. Link acts as a seperator.
 	 * @param seperator - true if link should act as a seperator, false if not.
 	 */
 	public CKMenuItem(final boolean seperator){
+		super("seperator");
 		setSeperator(true);
 		setDestinationType(CKLinkType.NONE);
 	}
@@ -54,6 +67,7 @@ public class CKMenuItem implements Serializable{
 	 * @param destinationPage -
 	 */
 	public <T extends WebPage>CKMenuItem(final String menuText,final T destinationPage) {
+		super(menuText);
 		setMenuText(menuText);
 		setResponsePage(destinationPage);
 		setSubMenuItemList(new ArrayList<CKMenuItem>());
@@ -66,6 +80,7 @@ public class CKMenuItem implements Serializable{
 	 * @param destinationPageClass -
 	 */
 	public CKMenuItem(final String menuText, final Class<? extends WebPage> destinationPageClass) {
+		super(menuText);
 		setMenuText(menuText);
 		setResponsePageClass(destinationPageClass);
 		setSubMenuItemList(new ArrayList<CKMenuItem>());
@@ -94,6 +109,7 @@ public class CKMenuItem implements Serializable{
 	 * @param subMenuItemList -
 	 */
 	public <T extends WebPage>CKMenuItem(final String menuText, final T destinationPage,final List<CKMenuItem> subMenuItemList) {
+		super(menuText);
 		setMenuText(menuText);
 		setResponsePage(destinationPage);
 		setSubMenuItemList(subMenuItemList);
@@ -244,6 +260,31 @@ public class CKMenuItem implements Serializable{
 	 */
 	public void setExternalLink(final String externalLink) {
 		this.externalLink = externalLink;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RBServiceProvider getServiceProvider() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public CKComponent setViewMode(final ViewMode mode) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void initComponent(CKValueWrapperModel model) {
+
+		// TODO Auto-generated method stub
+		
 	}
 
 }
