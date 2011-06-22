@@ -46,16 +46,18 @@ public abstract class SchemaSubmitPanel extends CKComponent {
 
 	public SchemaSubmitPanel(final String id) {
 		super(id);
-		init();
+		this.buildComponent();
 	}
 
 	//-------------------------------------------
 
-	/**
-	 *
-	 */
+
+
+	// -----------------------------------------------------
+
 	@SuppressWarnings({ "unchecked", "serial" })
-	private void init() {
+	@Override
+	protected void initComponent(final CKValueWrapperModel model) {
 
     	final TextArea<String> area = new TextArea<String>("resourceschema", Model.of("Insert your schema here"));
     	area.setOutputMarkupId(true);

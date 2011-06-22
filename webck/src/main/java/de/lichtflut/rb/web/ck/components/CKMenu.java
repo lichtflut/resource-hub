@@ -179,6 +179,18 @@ public class CKMenu extends CKComponent {
 			// TODO Auto-generated method stub
 			return null;
 		}
+
+		@Override
+		protected void initComponent(final CKValueWrapperModel model) {
+			// TODO Auto-generated method stub
+		}
+	}
+
+
+	@Override
+	protected void initComponent(final CKValueWrapperModel model){
+		// TODO Auto-generated method stub
+
 	}
 }
 

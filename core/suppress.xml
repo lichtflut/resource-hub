@@ -7,4 +7,12 @@
 <suppressions>
     <suppress checks="MagicNumberCheck"
               files="[a-zA-Z0-9]*Test[a-zA-Z0-9]*.java"/>
+   <suppress checks="[a-zA-Z0-9]*"
+              files="[a-zA-Z0-9]*Lexer.java"/>
+   <suppress checks="[a-zA-Z0-9]*"
+              files="[a-zA-Z0-9]*Tree.java"/>
+   <suppress checks="[a-zA-Z0-9]*"
+              files="[a-zA-Z0-9]*Parser.java"/>
+   <suppress checks="MethodName"
+              files="RSCaseControlStream.java"/>
 </suppressions>

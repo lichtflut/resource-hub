@@ -7,14 +7,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-
+import java.util.Map;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AbstractAutoCompleteRenderer;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.form.Form;
-
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
-
 import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.api.RBEntityManagement.SearchContext;
 import de.lichtflut.rb.core.schema.model.RBEntity;
@@ -38,9 +36,8 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  */
 public abstract class SearchBar extends CKComponent{
 
-	/**
-	 *
-	 */
+
+	private static final String FILTER = "filter";
 	private static final long serialVersionUID = 1L;
 	private  SearchContext sContext = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
 
@@ -66,11 +63,77 @@ public abstract class SearchBar extends CKComponent{
 	 * @param id /
 	 * @param filter /
 	 */
-	@SuppressWarnings("unchecked")
 	public SearchBar(final String id, final Collection<ResourceSchema> filter) {
 		super(id);
-		// TODO Nils: Don't use implementation class HashMap as variable type but interface Map
-		final HashMap<Integer, RBEntity<Object>> selectableValues = new HashMap<Integer, RBEntity<Object>>();
+		if(filter!=null){
+			this.getModel().addValue(FILTER, new ArrayList<ResourceSchema>(filter));
+		}
+		buildComponent();
+	}
+
+	// -----------------------------------------------------
+
+	/**
+	 * Setting up the SearchContext in self-returning idiom style.
+	 * @param ctx /
+	 * @return this
+	 */
+	public SearchBar setSearchContext(final SearchContext ctx){
+		this.sContext = ctx;
+		return this;
+	}
+
+
+	// -----------------------------------------------------
+
+	/**
+	 * <p>
+	 * This method is called, when the search selection could be successfully matched.
+	 * to an existing {@link ResourceTypeInstance}
+	 * @param instance
+	 * </p>
+	 */
+	public abstract void onSearchSubmit(RBEntity<Object> instance);
+
+	// -----------------------------------------------------
+
+	/**
+	 * <p>
+	 * Decides if the given keywords are sufficient and valid to process a search with them.
+	 * As Default, the keywords-length has to be greater than two, to make sure, that
+	 * there is no inefficient search for just 0, 1 or only 2 characters.
+	 * </p>
+	 * @param keywords /
+	 * @return boolean
+	 */
+	protected boolean isKeywordsValidForSearch(final String keywords){
+		if(keywords.length()>2){
+			return true;
+		}
+
+		return false;
+
+	}
+
+	// -----------------------------------------------------
+
+	/**
+	 * There is no effect in setting up the ViewMode here in this version.
+	 * @param mode /
+	 * @return mode /
+	 */
+	public CKComponent setViewMode(final ViewMode mode){
+		throw new UnsupportedOperationException();
+		//return this;
+	}
+
+	// -----------------------------------------------------
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void initComponent(final CKValueWrapperModel model) {
+		final Collection<ResourceSchema> filter = (Collection<ResourceSchema>) model.getValue(FILTER);
+		final Map<Integer, RBEntity<Object>> selectableValues = new HashMap<Integer, RBEntity<Object>>();
 		@SuppressWarnings("rawtypes")
 		final AutoCompleteTextField autoCompleter =
 			new AutoCompleteTextField("searchInput",Model.of(""),new AbstractAutoCompleteRenderer<RBEntity<Object>>(){
@@ -129,62 +192,6 @@ public abstract class SearchBar extends CKComponent{
 		};
 		this.add(searchForm);
 		searchForm.add(autoCompleter);
-
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * Setting up the SearchContext in self-returning idiom style.
-	 * @param ctx /
-	 * @return this
-	 */
-	public SearchBar setSearchContext(final SearchContext ctx){
-		this.sContext = ctx;
-		return this;
-	}
-
-
-	// -----------------------------------------------------
-
-	/**
-	 * <p>
-	 * This method is called, when the search selection could be successfully matched.
-	 * to an existing {@link ResourceTypeInstance}
-	 * @param instance
-	 * </p>
-	 */
-	public abstract void onSearchSubmit(RBEntity<Object> instance);
-
-	// -----------------------------------------------------
-
-	/**
-	 * <p>
-	 * Decides if the given keywords are sufficient and valid to process a search with them.
-	 * As Default, the keywords-length has to be greater than two, to make sure, that
-	 * there is no inefficient search for just 0, 1 or only 2 characters.
-	 * </p>
-	 * @param keywords /
-	 * @return boolean
-	 */
-	protected boolean isKeywordsValidForSearch(final String keywords){
-		if(keywords.length()>2){
-			return true;
-		}
-
-		return false;
-
-	}
-
-
-	/**
-	 * There is no effect in setting up the ViewMode here in this version.
-	 * @param mode /
-	 * @return mode /
-	 */
-	public CKComponent setViewMode(final ViewMode mode){
-		throw new UnsupportedOperationException();
-		//return this;
 	}
 
 	// -----------------------------------------------------

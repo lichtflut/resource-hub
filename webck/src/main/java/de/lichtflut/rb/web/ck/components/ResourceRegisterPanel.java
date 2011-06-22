@@ -10,20 +10,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
-
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.api.RBEntityManagement.SearchContext;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.web.ck.behavior.CKBehavior;
+
 
 /**
  * <p>
@@ -49,11 +46,16 @@ import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 @SuppressWarnings({ "serial", "unchecked" })
 public abstract class ResourceRegisterPanel extends CKComponent {
 
-	public static final String SHOW_DETAILS = "xyz";
+	/**
+	 *
+	 */
+	public static final String SHOW_DETAILS = "de.lichtflut.web.ck.show_details.behavior";
 
-
-	private Boolean simpleFieldNamesEnabled = false;
-
+	private static final String INSTANCES = "instances",
+								SCHEMAS = "schemas",
+								FILTER = "filter",
+								FIELDS = "fields",
+								SIMPLE_FLAG = "simple_flag";
 	// Constructors
 
 	/**
@@ -71,10 +73,11 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 			final Collection<RBEntity> instances, final List<String> fields,
 			final boolean simpleFlag) {
 		super(id);
-		this.simpleFieldNamesEnabled = simpleFlag;
-		List<RegisterRowEntry> entries = buildRegisterTableEntries(instances,
-				fields, null);
-		init(entries);
+		CKValueWrapperModel model = this.getModel();
+		model.addValue(INSTANCES, instances == null ? null :  new ArrayList<RBEntity>(instances));
+		model.addValue(FIELDS, fields == null ? null : new ArrayList<String>(fields));
+		model.addValue(SIMPLE_FLAG, simpleFlag);
+		buildComponent();
 	}
 
 	// -----------------------------------------------------
@@ -96,28 +99,12 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 			final Collection<ResourceSchema> schemas, final String filter,
 			final List<String> fields, final boolean simpleFlag) {
 		super(id);
-
-		addBehavior(SHOW_DETAILS, new CKBehavior() {
-			@SuppressWarnings({ "rawtypes", "unused" })
-			@Override
-			public Object execute(final Object... objects) {
-				String identifier = (String) objects[0];
-				String value = (String) objects[2];
-				final RBEntity instance = (RBEntity) objects[1];
-				if (value.contains("a")) {
-					return new ExternalLink(identifier, Model
-							.of("http://google.com?q=" + value), Model
-							.of("google"));
-				} else {
-					return new Label(identifier, value);
-				}
-			}
-		});
-
-		this.simpleFieldNamesEnabled = simpleFlag;
-		List<RegisterRowEntry> entries = buildRegisterTableEntries(schemas,
-				filter, fields, null);
-		init(entries);
+		CKValueWrapperModel model = this.getModel();
+		model.addValue(SCHEMAS, schemas == null ? null : new ArrayList<ResourceSchema>(schemas));
+		model.addValue(FIELDS, fields == null ? null : new ArrayList<String>(fields));
+		model.addValue(FILTER, filter);
+		model.addValue(SIMPLE_FLAG, simpleFlag);
+		buildComponent();
 	}
 
 	// -----------------------------------------------------
@@ -128,7 +115,7 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 	 * @return /
 	 */
 	public CKComponent setViewMode(final ViewMode view) {
-		throw new NotYetImplementedException();
+		throw new NotImplementedException();
 
 	}
 
@@ -158,7 +145,6 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 	 *            /
 	 */
 	private void init(final List<RegisterRowEntry> entries) {
-		this.removeAll();
 		ListView<RegisterRowEntry> resourceTable = new ListView<RegisterRowEntry>(
 				"resourceTable", entries) {
 			@SuppressWarnings("rawtypes")
@@ -258,7 +244,7 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 						.getQualifiedName().toURI(), Boolean.TRUE);
 				Collection<String> attributeNames = instance
 						.getAttributeNames();
-				if (this.simpleFieldNamesEnabled) {
+				if ((Boolean)this.getModel().getValue(SIMPLE_FLAG)) {
 					for (String attributeName : attributeNames) {
 						fields.add(instance
 								.getSimpleAttributeName(attributeName));
@@ -355,4 +341,28 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 
 	}
 
+	// -----------------------------------------------------
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	protected void initComponent(final CKValueWrapperModel model) {
+		List<RegisterRowEntry> entries=null;
+		try{
+		if(model.getValue(INSTANCES)!=null){
+			entries = buildRegisterTableEntries(
+					(Collection<RBEntity>)model.getValue(INSTANCES),
+					(List<String>)model.getValue(FIELDS), null);
+		}else{
+			entries = buildRegisterTableEntries(
+					(Collection<ResourceSchema>)model.getValue(SCHEMAS),
+					(String)model.getValue(FILTER),
+					(List<String>)model.getValue(FIELDS), null);
+		}
+		//If something went wrong
+		}catch(Exception any){
+			getLogger().error(this.getClass().getName() + " could not be initalized ", any);
+			entries=null;
+		}
+		init(entries);
+	}
 }
