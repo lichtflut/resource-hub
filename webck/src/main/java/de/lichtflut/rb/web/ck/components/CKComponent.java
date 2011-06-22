@@ -4,11 +4,15 @@
 package de.lichtflut.rb.web.ck.components;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
@@ -50,6 +54,8 @@ public abstract class CKComponent extends Panel {
 
 	private Map<String, CKBehavior> behaviorRegistry = new HashMap<String, CKBehavior>();
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	/**
 	 * Component view modes.
 	 * TODO: DESCRIPTION.
@@ -65,8 +71,86 @@ public abstract class CKComponent extends Panel {
 	 * @param id -
 	 */
 	public CKComponent(final String id){
-		super(id);
+		super(id, new CKValueWrapperModel());
 	}
+
+	// -----------------------------------------------------
+
+	/**
+	 * @return the wrapped model.
+	 */
+	@SuppressWarnings("rawtypes")
+	protected CKValueWrapperModel getModel(){
+		IModel model = this.getDefaultModel();
+		if(model instanceof CKValueWrapperModel){
+			return (CKValueWrapperModel) model;
+		}
+		return null;
+	}
+
+	// -----------------------------------------------------
+
+	/**
+	 * @return the logger.
+	 */
+	protected Logger getLogger(){
+		return this.logger;
+	}
+
+	// -----------------------------------------------------
+
+	/**
+	 *
+	 */
+	public final void refreshComponent(){
+		buildComponent();
+	}
+
+	// -----------------------------------------------------
+
+
+	/**
+	 *
+	 */
+	@Override
+	protected void onModelChanged() {
+		super.onModelChanged();
+		refreshComponent();
+	}
+
+	// -----------------------------------------------------
+
+	/**
+	 *
+	 */
+	@Override
+	protected void onModelChanging() {
+		super.onModelChanging();
+		refreshComponent();
+	}
+
+	// -----------------------------------------------------
+
+	/**
+	 *
+	 */
+	public final void buildComponent(){
+		this.removeAll();
+		try{
+			initComponent(getModel());
+		}catch(Exception any){
+			getLogger().error("Something went wrong during initComponent", any);
+		}
+		initStyle();
+	}
+
+
+	// -----------------------------------------------------
+
+	/**
+	 * @param model - the {@link CKValueWrapperModel} which might contain the component relevant members/value
+	 */
+	protected abstract void initComponent(final CKValueWrapperModel model);
 
 	// -----------------------------------------------------
 
@@ -161,5 +245,60 @@ public abstract class CKComponent extends Panel {
 	 */
 	public final void resetBehaviors(){
 		behaviorRegistry.clear();
+	}
+
+	// -----------------------------------------------------
+
+	/**
+	 *
+	 */
+	 public static final class CKValueWrapperModel implements IModel<Map<String, Serializable>>{
+
+		private static final long serialVersionUID = 7096039978739520112L;
+		private Map<String,Serializable> obj = new HashMap<String, Serializable>();
+
+		@Override
+		public void detach() {
+			this.obj=null;
+		}
+
+		// -----------------------------------------------------
+
+		/**
+		 *
+		 * @param key -
+		 * @param value -
+		 */
+		public void addValue(final String key,final  Serializable value){
+			this.obj.put(key, null);
+		}
+
+		// -----------------------------------------------------
+
+		/**
+		 *
+		 * @param key -
+		 * @return the {@link Object} as associtated values
+		 */
+		public Serializable getValue(final String key){
+			return this.obj.get(key);
+		}
+
+		// -----------------------------------------------------
+
+		@Override
+		public Map<String, Serializable> getObject() {
+			return obj;
+		}
+
+		// -----------------------------------------------------
+
+		@Override
+		public void setObject(final Map<String,Serializable> map) {
+			this.obj = map;
+		}
+
+
+
 	}
 }

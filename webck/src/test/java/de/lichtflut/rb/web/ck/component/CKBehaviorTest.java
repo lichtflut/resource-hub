@@ -132,6 +132,11 @@ public final class CKBehaviorTest extends TestCase{
 
 		}
 
+		@Override
+		protected void initComponent(final CKValueWrapperModel model) {
+
+		}
+
 	}
 
 }

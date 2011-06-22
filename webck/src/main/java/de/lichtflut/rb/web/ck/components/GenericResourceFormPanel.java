@@ -37,11 +37,14 @@ import de.lichtflut.rb.web.models.GenericResourceModel;
  *
  * @author Nils Bleisch
  */
-@SuppressWarnings({ "serial", "unchecked" })
+@SuppressWarnings({ "serial", "rawtypes", "unchecked" })
 public abstract class GenericResourceFormPanel extends CKComponent {
 
-	// Constructors
+	private ResourceSchema schema;
 
+	private RBEntity instance;
+
+	// Constructors
 	/**
 	 * @param id
 	 *            /
@@ -50,11 +53,11 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	 * @param instance
 	 *            /
 	 */
-	@SuppressWarnings("rawtypes")
 	public GenericResourceFormPanel(final String id,
 			final ResourceSchema schema, final RBEntity instance) {
 		super(id);
-		init(schema, instance);
+		this.schema=schema;
+		this.instance = instance;
 	}
 
 	// -----------------------------------------------------
@@ -66,7 +69,6 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	 *            /
 	 *
 	 */
-	@SuppressWarnings("rawtypes")
 	private void init(final ResourceSchema schema, final RBEntity in) {
 
 		final RBEntity instance = (in == null ? schema.generateRBEntity() : in);
@@ -142,7 +144,6 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	 *            /
 	 * @return fragment /
 	 */
-	@SuppressWarnings("rawtypes")
 	private Component buildItem(final RBEntity instance,
 			final GenericResourceModel model, final String attribute,
 			final RepeatingView view, final boolean required,
@@ -236,5 +237,13 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	public CKComponent setViewMode(final ViewMode view) {
 		throw new NotYetImplementedException();
 	}
+
+	// -----------------------------------------------------
+
+	@Override
+	protected void initComponent(final CKValueWrapperModel model) {
+		init(schema, instance);
+	}
+
 
 }

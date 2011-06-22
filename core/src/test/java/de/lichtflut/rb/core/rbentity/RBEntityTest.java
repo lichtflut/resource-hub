@@ -31,7 +31,7 @@ public class RBEntityTest {
 	/**
 	 * @param
 	 */
-	public final void testResourceTypeInstance(){
+	public final void testResourceTypeInstance(){		
 		//Generate an instance for a given schema
 		RBEntity<Object> instance = createSchema().generateRBEntity();
 		Assert.assertNotNull(instance);
