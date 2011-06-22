@@ -70,6 +70,6 @@ public class TestMenuComponentPage extends WebPage{
 
 		primaryLink2.setSubMenuItemList(secondLevelMenu);
 		subMenu2.setSubMenuItemList(thirdLevelMenu);
-		add(new CKMenu("test-menu", firstLevelMenu));
+		add(new CKMenu("menu", firstLevelMenu));
 	}
 }

@@ -44,6 +44,7 @@ public class CKMenu extends CKComponent {
 		NestedMenu multiLevelMenu = new NestedMenu("menu",menuItemList);
 		multiLevelMenu.setRenderBodyOnly(true);
 		add(multiLevelMenu);
+//		buildComponent();
 	}
 
 	/**
@@ -63,15 +64,6 @@ public class CKMenu extends CKComponent {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
-//	@Override
-//	public void renderHead(IHeaderResponse response) {
-////		response.renderCSSReference(SHORTCUTS_CSS);
-////		response.renderJavascriptReference(SHORTCUTS_JAVASCRIPT);
-////		response.renderJavascriptReference(SHORTCUTS_JAVASCRIPT2);
-//	}
-
 
 	/**
 	 * Checks type of the link and acts accordingly.
@@ -198,7 +190,6 @@ public class CKMenu extends CKComponent {
 //		NestedMenu multiLevelMenu = new NestedMenu("menu",menuItemList);
 //		multiLevelMenu.setRenderBodyOnly(true);
 //		this.add(multiLevelMenu);
-//		buildComponent();
 	}
 }
 
