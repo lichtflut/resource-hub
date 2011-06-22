@@ -58,6 +58,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 		super(id);
 		this.schema=schema;
 		this.instance = instance;
+		this.buildComponent();
 	}
 
 	// -----------------------------------------------------

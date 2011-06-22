@@ -270,7 +270,7 @@ public abstract class CKComponent extends Panel {
 		 * @param value -
 		 */
 		public void addValue(final String key,final  Serializable value){
-			this.obj.put(key, null);
+			this.obj.put(key, value);
 		}
 
 		// -----------------------------------------------------

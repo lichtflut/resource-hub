@@ -15,7 +15,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.api.RBEntityManagement.SearchContext;
 import de.lichtflut.rb.core.schema.model.RBEntity;
@@ -101,8 +102,8 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 			final List<String> fields, final boolean simpleFlag) {
 		super(id);
 		CKValueWrapperModel model = this.getModel();
-		model.addValue(SCHEMAS, schemas == null ? null : new ArrayList<ResourceSchema>(schemas));
-		model.addValue(FIELDS, fields == null ? null : new ArrayList<String>(fields));
+		model.addValue(SCHEMAS, ((schemas == null) ? null :  new ArrayList<ResourceSchema>(schemas)));
+		model.addValue(FIELDS, ((fields == null) ? null : new ArrayList<String>(fields)));
 		model.addValue(FILTER, filter);
 		model.addValue(SIMPLE_FLAG, simpleFlag);
 		buildComponent();
@@ -116,7 +117,7 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 	 * @return /
 	 */
 	public CKComponent setViewMode(final ViewMode view) {
-		throw new NotImplementedException();
+		throw new NotYetImplementedException();
 
 	}
 

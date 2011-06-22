@@ -7,7 +7,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
-import static org.arastreju.sge.SNOPS.*;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -29,6 +29,7 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
  * </p>
  *
  * @author Oliver Tigges
+ * @param <T> -
  */
 @SuppressWarnings("serial")
 public class SemanticAttributeModel<T extends SemanticNode> implements IComponentAssignedModel<T>, IModel<T> {
@@ -36,51 +37,46 @@ public class SemanticAttributeModel<T extends SemanticNode> implements IComponen
 	private final ResourceID predicate;
 
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Creates a new model for the object with given predicate.s 
+	 * Creates a new model for the object with given predicate.
 	 * @param predicate The predicate.
 	 */
 	public SemanticAttributeModel(final ResourceID predicate) {
 		this.predicate = predicate;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
+	@Override
 	public T getObject() {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-	 */
+	@Override
 	public void setObject(final T object) {
 		throw new NotYetImplementedException();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
+	@Override
 	public void detach() {
 	}
 
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
-	 */
+	@Override
 	public IWrapModel<T> wrapOnAssignment(final Component component) {
 		return new AssignmentWrapper(component);
 	}
-	
-	
+
+
 	// -----------------------------------------------------
-	
+
+	/**
+	 *
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private class AssignmentWrapper implements IWrapModel<T> {
 
 		private final Component component;
 		private ResourceNodeModel<ResourceNode> rnModel = null;
-		
+
 		/**
 		 * Constructor.
 		 * @param component The assigned component.
@@ -89,26 +85,34 @@ public class SemanticAttributeModel<T extends SemanticNode> implements IComponen
 			this.component = component;
 		}
 
+		@Override
 		public void detach() {
 			SemanticAttributeModel.this.detach();
 		}
 
+		@Override
 		public T getObject() {
-			ResourceNode resource = findResource(); 
+			ResourceNode resource = findResource();
 			if (resource == null) {
 				return null;
 			}
 			return (T) resource.getSingleAssociationClient(predicate);
 		}
 
-		public void setObject(final T object) {		
-			replace(rnModel.getObject(), predicate, object);
+		@Override
+		public void setObject(final T object) {
+			SNOPS.replace(rnModel.getObject(), predicate, object);
 		}
 
+		@Override
 		public IModel<T> getWrappedModel() {
 			return SemanticAttributeModel.this;
 		}
-		
+
+		/**
+		 *
+		 * @return the resourceNode.
+		 */
 		private ResourceNode findResource() {
 			if (rnModel != null) {
 				return rnModel.getObject();
