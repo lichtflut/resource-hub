@@ -71,6 +71,8 @@ public abstract class CKComponent extends Panel {
 	// -----------------------------------------------------
 
 	/**
+	 * This method is initializing the custom style-sheets,
+	 * delivered by the STYLE_BEHAVIOR-assignd behavior.
 	 * TODO: This method is not yet ready.
 	 */
 	@SuppressWarnings("unused")
