@@ -78,16 +78,16 @@ public class CKMenu extends CKComponent {
 	 */
 	private void processResponse(final CKMenuItem menuItem){
 		switch(menuItem.getLinkType()){
-			case CKLinkType.EXTERNAL_LINK:
+			case EXTERNAL_LINK:
 				//TODO: forward to external link
 				break;
-			case CKLinkType.WEB_PAGE_CLASS:
+			case WEB_PAGE_CLASS:
 				setResponsePage(menuItem.getResponsePageClass());
 				break;
-			case CKLinkType.WEB_PAGE_INSTANCE:
+			case WEB_PAGE_INSTANCE:
 				setResponsePage(menuItem.getResponsePage());
 				break;
-			case CKLinkType.NONE:
+			case NONE:
 				//TODO throw exception
 				break;
 		default:

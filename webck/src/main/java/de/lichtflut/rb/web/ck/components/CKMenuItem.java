@@ -4,9 +4,8 @@ import java.awt.MenuItem;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.ExternalLink;
+
 
 /**
  *<p>
@@ -19,7 +18,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 @SuppressWarnings("serial")
 public class CKMenuItem implements Serializable{
 
-	private int linkType;
+	private CKLinkType linkType;
 	private String menuText;
 	private Class<? extends WebPage> responsePageClass;
 	private WebPage responsePage;
@@ -203,7 +202,7 @@ public class CKMenuItem implements Serializable{
 	 * Returns linktype.
 	 * @return {@link CKLinkType}
 	 */
-	public int getLinkType() {
+	public CKLinkType getLinkType() {
 		return linkType;
 	}
 
@@ -211,7 +210,7 @@ public class CKMenuItem implements Serializable{
 	 * Sets LinkType.
 	 * @param linkType - {@link CKLinkType}
 	 */
-	public void setDestinationType(final int linkType) {
+	public void setDestinationType(final CKLinkType linkType) {
 		this.linkType = linkType;
 	}
 
