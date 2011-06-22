@@ -30,7 +30,7 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 public final class SessionBuilder {
 
 	//Members
-	private RBServiceProvider serviceProvider;   
+	private RBServiceProvider serviceProvider;
 
 	// -----------------------------------------------------
 	//@Inject

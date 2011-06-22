@@ -9,6 +9,7 @@
     Description: none
 -->
 <module name="Checker">
+  <property name="severity" value="warning"/>
   <module name="TreeWalker">
     <module name="FileContentsHolder"/>
     <module name="JavadocMethod">
@@ -91,7 +92,7 @@
       <property name="format" value="^de.lichtflut.[a-z]+(\.[a-zA-Z_][a-zA-Z0-9_]*)*$"/>
     </module>
     <module name="StaticVariableName">
-      <property name="format" value="^[a-z][a-zA-Z0-9][_]*$"/>
+      <property name="format" value="^[a-z][a-zA-Z0-9_]*$"/>
     </module>
     <module name="JavadocStyle"/>
     <module name="JavadocType"/>
@@ -101,6 +102,8 @@
     <module name="LineLength">
       <property name="max" value="140"/>
     </module>
+    <module name="MemberName"/>
+    <module name="ConstantName"/>
   </module>
   <module name="NewlineAtEndOfFile"/>
   <module name="Translation"/>

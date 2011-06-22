@@ -1,6 +1,5 @@
 package de.lichtflut.rb.web.ck.components;
 
-import java.awt.MenuItem;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

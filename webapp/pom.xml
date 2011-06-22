@@ -108,6 +108,7 @@
 					<propertyExpansion>basedir=${basedir}</propertyExpansion>
 					<failOnViolation>true</failOnViolation>
 					<consoleOutput>true</consoleOutput>
+					<consoleOutput>true</consoleOutput>
 				</configuration>
 			</plugin>
 		</plugins>
