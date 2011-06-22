@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
 import de.lichtflut.rb.web.ck.components.CKMenu;
-import de.lichtflut.rb.web.ck.components.ResourceRegisterPanel;
 /**
  *
  * [TODO Insert description here.
@@ -19,7 +18,6 @@ import de.lichtflut.rb.web.ck.components.ResourceRegisterPanel;
  */
 public class CKMenuTest extends TestCase{
 
-	@SuppressWarnings("unused")
 	private WicketTester tester;
 
 	@Override

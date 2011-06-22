@@ -63,7 +63,7 @@ public class RSPage extends RBSuperPage {
 	@SuppressWarnings("static-access")
 	private void init(final PageParameters parameters) {
 
-		add(new CKMenu("nested-menu", buildMenu()));
+		add(new CKMenu("menu", buildMenu()));
     	add(new SchemaSubmitPanel("schemaSubmitPanel"){
 
 			public RBServiceProvider getServiceProvider() {
@@ -121,7 +121,7 @@ public class RSPage extends RBSuperPage {
 	 * @return List of {@link CKMenuItem}
 	 */
 	private List<CKMenuItem> buildMenu() {
-		CKMenuItem menuItem1 = new CKMenuItem("");
+		CKMenuItem menuItem1 = new CKMenuItem("Sample Resource Page", new SampleResourcePage(getPageParameters()));
 		CKMenuItem menuItem2 = new CKMenuItem("Sample Resource Page", new SampleResourcePage(getPageParameters()));
 		CKMenuItem menuItem3 = new CKMenuItem("Sample Resource Page", new SampleResourcePage(getPageParameters()));
 		menuItem1.setSeperator(true);

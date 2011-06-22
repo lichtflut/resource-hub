@@ -19,6 +19,7 @@ import de.lichtflut.rb.web.ck.components.CKMenuItem;
  *
  * @author Ravi Knox
  */
+@SuppressWarnings("serial")
 public class TestMenuComponentPage extends WebPage{
 
 	/**
@@ -69,6 +70,6 @@ public class TestMenuComponentPage extends WebPage{
 
 		primaryLink2.setSubMenuItemList(secondLevelMenu);
 		subMenu2.setSubMenuItemList(thirdLevelMenu);
-		add(new CKMenu("menu", firstLevelMenu));
+		add(new CKMenu("test-menu", firstLevelMenu));
 	}
 }

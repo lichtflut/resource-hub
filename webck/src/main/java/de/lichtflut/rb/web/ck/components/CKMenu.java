@@ -24,6 +24,7 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
 @SuppressWarnings("serial")
 public class CKMenu extends CKComponent {
 
+	private List<CKMenuItem> menuItemList;
 
 //	private ResourceReference SHORTCUTS_CSS = new CompressedResourceReference(MultiLevelCssMenu.class,"css/MultiLevelCssMenu.css");
 //	private ResourceReference SHORTCUTS_JAVASCRIPT = new CompressedResourceReference(MultiLevelCssMenu.class,"js/jqueryMin.js");
@@ -39,6 +40,7 @@ public class CKMenu extends CKComponent {
 		super(id);
 		//TODO:
 		setRenderBodyOnly(true);
+		this.menuItemList = menuItemList;
 		NestedMenu multiLevelMenu = new NestedMenu("menu",menuItemList);
 		multiLevelMenu.setRenderBodyOnly(true);
 		add(multiLevelMenu);
@@ -132,20 +134,24 @@ public class CKMenu extends CKComponent {
 			return new ListView(id, menuItemList) {
 				public void populateItem(final ListItem item) {
 					final CKMenuItem menuItem = ((CKMenuItem) item.getModelObject());
-					Link link = new Link("menuLink") {
-						@Override
-						public void onClick() {
-							if (menuItem!=null){
-								processResponse(menuItem);
+
+					if(menuItem instanceof CKMenuItem){
+						Link link = new Link("menuLink") {
+							@Override
+							public void onClick() {
+								if (menuItem!=null){
+									processResponse(menuItem);
+								}
 							}
-						}
-					};
+						};
 
-					Label linkText = new Label("menuLinkText", menuItem.getMenuText());
-					linkText.setRenderBodyOnly(true);
-					link.add(linkText);
-					item.add(link);
-
+						Label linkText = new Label("menuLinkText", menuItem.getMenuText());
+						linkText.setRenderBodyOnly(true);
+						link.add(linkText);
+						item.add(link);
+					}else{
+						System.out.println();
+					}
 
 					List<CKMenuItem> submenuItemList = menuItem.getSubMenuItemList();
 					//INFO If submenu exists, output it to html. If not, add empty markup container and hide it.
@@ -182,15 +188,17 @@ public class CKMenu extends CKComponent {
 
 		@Override
 		protected void initComponent(final CKValueWrapperModel model) {
-			// TODO Auto-generated method stub
+
 		}
 	}
 
 
 	@Override
 	protected void initComponent(final CKValueWrapperModel model){
-		// TODO Auto-generated method stub
-
+//		NestedMenu multiLevelMenu = new NestedMenu("menu",menuItemList);
+//		multiLevelMenu.setRenderBodyOnly(true);
+//		this.add(multiLevelMenu);
+//		buildComponent();
 	}
 }
 
