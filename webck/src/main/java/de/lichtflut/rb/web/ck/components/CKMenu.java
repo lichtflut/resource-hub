@@ -24,7 +24,7 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
 @SuppressWarnings("serial")
 public class CKMenu extends CKComponent {
 
-	private List<CKMenuItem> menuItemList;
+	private final List<CKMenuItem> menuItemList;
 
 //	private ResourceReference SHORTCUTS_CSS = new CompressedResourceReference(MultiLevelCssMenu.class,"css/MultiLevelCssMenu.css");
 //	private ResourceReference SHORTCUTS_JAVASCRIPT = new CompressedResourceReference(MultiLevelCssMenu.class,"js/jqueryMin.js");
@@ -118,11 +118,11 @@ public class CKMenu extends CKComponent {
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		private ListView buildNestedMenu(final String id,final List<CKMenuItem> menuItemList) {
 			return new ListView(id, menuItemList) {
+				@Override
 				public void populateItem(final ListItem item) {
 					final CKMenuItem menuItem = ((CKMenuItem) item.getModelObject());
 
-					if(menuItem instanceof CKMenuItem){
-						Link link = new Link("menuLink") {
+						final Link link = new Link("menuLink") {
 							@Override
 							public void onClick() {
 								if (menuItem!=null){
@@ -131,21 +131,20 @@ public class CKMenu extends CKComponent {
 							}
 						};
 
-						Label linkText = new Label("menuLinkText", menuItem.getMenuText());
+						final Label linkText = new Label("menuLinkText", menuItem.getMenuText());
 						linkText.setRenderBodyOnly(true);
 						link.add(linkText);
 						item.add(link);
 
-					}
-
-					List<CKMenuItem> submenuItemList = menuItem.getSubMenuItemList();
+					final List<CKMenuItem> submenuItemList = menuItem.getSubMenuItemList();
 					//INFO If submenu exists, output it to html. If not, add empty markup container and hide it.
 					if(submenuItemList != null && submenuItemList.size()>0) {
-						CKMenu subLevelMenu = new CKMenu("submenuListContainer",submenuItemList);
+						final CKMenu subLevelMenu = new CKMenu("submenuListContainer",submenuItemList);
 						subLevelMenu.setRenderBodyOnly(true);
 						item.add(subLevelMenu);
 					}else {
-						WebMarkupContainer submenuMarkupContainer = new WebMarkupContainer("submenuListContainer");
+						final WebMarkupContainer submenuMarkupContainer =
+									new WebMarkupContainer("submenuListContainer");
 						submenuMarkupContainer.setRenderBodyOnly(true);
 						item.add(submenuMarkupContainer);
 					}
@@ -174,7 +173,7 @@ public class CKMenu extends CKComponent {
 		@SuppressWarnings("rawtypes")
 		@Override
 		protected void initComponent(final CKValueWrapperModel model) {
-			ListView menu = buildNestedMenu("menuList", menuItemList);
+			final ListView menu = buildNestedMenu("menuList", menuItemList);
 			menu.setReuseItems(true);
 			add(menu);
 		}
@@ -182,7 +181,7 @@ public class CKMenu extends CKComponent {
 
 	@Override
 	protected void initComponent(final CKValueWrapperModel model){
-		NestedMenu multiLevelMenu = new NestedMenu("menu",menuItemList);
+		final NestedMenu multiLevelMenu = new NestedMenu("menu",menuItemList);
 		multiLevelMenu.setRenderBodyOnly(true);
 		this.add(multiLevelMenu);
 	}
