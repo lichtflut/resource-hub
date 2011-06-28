@@ -31,6 +31,7 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 
 	private AbstractLink link;
 	private final List<NavigationNode> children = new ArrayList<NavigationNode>();
+	@SuppressWarnings("unused")
 	private IModel<String> label;
 
 	/**
@@ -150,80 +151,4 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-//	/**
-//	 *
-//	 * [TODO Insert description here.
-//	 *
-//	 * Created: Jun 27, 2011
-//	 *
-//	 * @author Ravi Knox
-//	 */
-//	public class NavigationNodeSubPanel extends CKComponent {
-//
-//		/**
-//		 * TODO DESCRIPTION.
-//		 *
-//		 * @param children
-//		 *            -
-//		 */
-//		public NavigationNodeSubPanel(final List<NavigationNode> children) {
-//			super("child");
-//
-//			// final ListView<NavigationNode> itemView = new
-//			// ListView<NavigationNode>("nodeList", children) {
-//			// @Override
-//			// protected void populateItem(final ListItem<NavigationNode> item)
-//			// {
-//			// Component comp = item.getModelObject().getComponent();
-//			// item.add(comp);
-//			// }
-//			// };
-//			// add(itemView);
-//
-//			final ListView<NavigationNode> itemView = new ListView<NavigationNode>(
-//					"child", children) {
-//				@Override
-//				protected void populateItem(final ListItem<NavigationNode> item) {
-//					// Component comp = item.getModelObject().getComponent();
-//					item.add(new Label("label", "label"));
-//					// itemView.add("link", item);
-//					add(item);
-//				}
-//			};
-//
-//			add(itemView);
-//
-//		}
-//
-//		/**
-//		 * TODO DESCRIPTION.
-//		 *
-//		 * @param component
-//		 *            -
-//		 */
-//		public NavigationNodeSubPanel(final Component component) {
-//			super("child");
-//			add(component);
-//
-//		}
-//
-//		@Override
-//		protected void initComponent(final CKValueWrapperModel model) {
-//			// TODO Auto-generated method stub
-//
-//		}
-//
-//		@Override
-//		public RBServiceProvider getServiceProvider() {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
-//
-//		@Override
-//		public CKComponent setViewMode(final ViewMode mode) {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
-//	}
 }

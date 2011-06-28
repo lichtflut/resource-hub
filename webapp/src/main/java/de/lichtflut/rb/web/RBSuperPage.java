@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.web;
 
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -118,9 +119,17 @@ public abstract class RBSuperPage extends WebPage {
 
 		NavigationNodePanel subMenu = new NavigationNodePanel("node",
 				new BookmarkablePageLink<SampleResourcePage>("link", SampleResourcePage.class),
-				Model.of("lvl 2 Menu"));
+				Model.of("lvl 2.1 Menu"));
+
+		subMenu.add(new Behavior() {
+			@SuppressWarnings("unused")
+			public void onClick(){
+				setResponsePage(RSPage.class);
+			}
+		});
 		menuItem.addChild(subMenu);
-		menuItem.addChild(new NavigationNodePanel("node", new ExternalLink("link", Model.of("http://google.de?search=level2")), Model.of("LVL 2 Menu")));
+		menuItem.addChild(new NavigationNodePanel("node", new ExternalLink("link",
+				Model.of("http://google.de?search=level2")), Model.of("LVL 2.2 Menu")));
 		mainNavigation.addChild(menuItem);
 
 //
