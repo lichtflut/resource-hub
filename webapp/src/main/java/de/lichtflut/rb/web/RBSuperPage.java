@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -111,10 +112,24 @@ public abstract class RBSuperPage extends WebPage {
 				new BookmarkablePageLink<SampleResourcePage>("link", SampleResourcePage.class),
 				Model.of("Sample Resource")));
 
+		NavigationNodePanel menuItem = new NavigationNodePanel("node",
+				new BookmarkablePageLink<SampleResourcePage>("link", SampleResourcePage.class),
+				Model.of("lvl 1 Menu"));
+
+		NavigationNodePanel subMenu = new NavigationNodePanel("node",
+				new BookmarkablePageLink<SampleResourcePage>("link", SampleResourcePage.class),
+				Model.of("lvl 2 Menu"));
+		menuItem.addChild(subMenu);
+		menuItem.addChild(new NavigationNodePanel("node", new ExternalLink("link", Model.of("http://google.de?search=level2")), Model.of("LVL 2 Menu")));
+		mainNavigation.addChild(menuItem);
+
+//
+//		mainNavigation.addChild(nestedMenu);
 		add(mainNavigation);
 
 		this.add(new SearchBar("searchBar") {
 
+			@Override
 			public void onSearchSubmit(final RBEntity<Object> instance) {
 				PageParameters params = new PageParameters();
 				params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
@@ -122,6 +137,7 @@ public abstract class RBSuperPage extends WebPage {
 				getRequestCycle().setResponsePage(GenericResourceFormPage.class, params);
 			}
 
+			@Override
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}

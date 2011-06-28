@@ -9,7 +9,9 @@ import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
+
+import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.web.ck.components.CKComponent;
 
 /**
  * <p>
@@ -23,7 +25,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * @author Oliver Tigges
  */
 @SuppressWarnings("serial")
-public class NavigationBar extends Panel implements NavigationNode {
+public class NavigationBar extends CKComponent implements NavigationNode {
 
 	private final List<NavigationNode> children = new ArrayList<NavigationNode>();
 
@@ -36,6 +38,7 @@ public class NavigationBar extends Panel implements NavigationNode {
 		super(id);
 
 		final ListView<NavigationNode> itemView = new ListView<NavigationNode>("nodeList", children) {
+			@Override
 			protected void populateItem(final ListItem<NavigationNode> item) {
 				Component comp = item.getModelObject().getComponent();
 				item.add(comp);
@@ -52,6 +55,7 @@ public class NavigationBar extends Panel implements NavigationNode {
 	/**
 	 * @return boolean /
 	 */
+	@Override
 	public boolean isExpandable() {
 		return false;
 	}
@@ -62,6 +66,7 @@ public class NavigationBar extends Panel implements NavigationNode {
 	/**
 	 * @return boolean
 	 */
+	@Override
 	public boolean isExpanded() {
 		return false;
 	}
@@ -72,6 +77,7 @@ public class NavigationBar extends Panel implements NavigationNode {
 	/**
 	 * @return boolean
 	 */
+	@Override
 	public boolean isActive() {
 		return false;
 	}
@@ -82,6 +88,7 @@ public class NavigationBar extends Panel implements NavigationNode {
 	/**
 	 * @return boolean /
 	 */
+	@Override
 	public boolean hasChildren() {
 		return !children.isEmpty();
 	}
@@ -92,6 +99,7 @@ public class NavigationBar extends Panel implements NavigationNode {
 	/**
 	 * @return children /
 	 */
+	@Override
 	public List<NavigationNode> getChildren() {
 		return children;
 	}
@@ -102,6 +110,7 @@ public class NavigationBar extends Panel implements NavigationNode {
 	/**
 	 * @return this /
 	 */
+	@Override
 	public Component getComponent() {
 		return this;
 	}
@@ -113,9 +122,28 @@ public class NavigationBar extends Panel implements NavigationNode {
 	 * @param node /
 	 * @return this
 	 */
+	@Override
 	public NavigationNode addChild(final NavigationNode node) {
 		this.children.add(node);
 		return this;
+	}
+
+	@Override
+	protected void initComponent(final CKValueWrapperModel model) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public RBServiceProvider getServiceProvider() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CKComponent setViewMode(final ViewMode mode) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
