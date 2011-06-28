@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.web;
 
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -15,6 +14,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
+import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.SearchBar;
 import de.lichtflut.rb.web.components.navigation.NavigationBar;
 import de.lichtflut.rb.web.components.navigation.NavigationNodePanel;
@@ -121,19 +121,11 @@ public abstract class RBSuperPage extends WebPage {
 				new BookmarkablePageLink<SampleResourcePage>("link", SampleResourcePage.class),
 				Model.of("lvl 2.1 Menu"));
 
-		subMenu.add(new Behavior() {
-			@SuppressWarnings("unused")
-			public void onClick(){
-				setResponsePage(RSPage.class);
-			}
-		});
 		menuItem.addChild(subMenu);
 		menuItem.addChild(new NavigationNodePanel("node", new ExternalLink("link",
 				Model.of("http://google.de?search=level2")), Model.of("LVL 2.2 Menu")));
 		mainNavigation.addChild(menuItem);
 
-//
-//		mainNavigation.addChild(nestedMenu);
 		add(mainNavigation);
 
 		this.add(new SearchBar("searchBar") {
