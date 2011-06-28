@@ -32,11 +32,11 @@ import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 
 /**
  * <p>
- *  TODO [DESCRIPTION].
+ * TODO [DESCRIPTION].
  * </p>
  *
  * <p>
- * 	Created Jan 5, 2011
+ * Created Jan 5, 2011
  * </p>
  *
  * @author Nils Bleisch
@@ -44,37 +44,40 @@ import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 @SuppressWarnings("serial")
 public class RSPage extends RBSuperPage {
 
-	private final RepeatingView resourceList =  new RepeatingView("resourcelist");
-
+	private final RepeatingView resourceList = new RepeatingView("resourcelist");
 
 	/**
-	 * @param parameters /
+	 * @param parameters
+	 *            /
 	 */
 	public RSPage(final PageParameters parameters) {
 		super("Resource Schema", parameters);
 		init(parameters);
 	}
 
-	//-------------------------------------------
+	// -------------------------------------------
 
-    /**
-     * @param parameters /
-     */
+	/**
+	 * @param parameters
+	 *            /
+	 */
 	@SuppressWarnings("static-access")
 	private void init(final PageParameters parameters) {
 
 		add(new CKMenu("menu", buildMenu()));
-    	add(new SchemaSubmitPanel("schemaSubmitPanel"){
+		add(new SchemaSubmitPanel("schemaSubmitPanel") {
 
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 
-    	});
-    	updateResourceList();
+		});
+		updateResourceList();
 		this.add(resourceList);
-		ResourceRegisterPanel panel = new ResourceRegisterPanel("resourceRegister",
-				getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),"" , null, false) {
+		ResourceRegisterPanel panel = new ResourceRegisterPanel(
+				"resourceRegister", getRBServiceProvider()
+						.getResourceSchemaManagement().getAllResourceSchemas(),
+				"", null, false) {
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
@@ -89,17 +92,21 @@ public class RSPage extends RBSuperPage {
 				final int a = 3;
 				String value = (String) objects[a];
 				final RBEntity instance = (RBEntity) objects[1];
-				if(value.contains("a")){
+				if (value.contains("a")) {
 					return new Link(identifier) {
 						public void onClick() {
 							PageParameters params = new PageParameters();
-							params.add("resourceid", instance.getResourceSchema().
-									getDescribedResourceID().getQualifiedName().toURI());
-							params.add("instanceid", instance.getQualifiedName().toURI());
-							setResponsePage(GenericResourceFormPage.class, params);
+							params.add("resourceid", instance
+									.getResourceSchema()
+									.getDescribedResourceID()
+									.getQualifiedName().toURI());
+							params.add("instanceid", instance
+									.getQualifiedName().toURI());
+							setResponsePage(GenericResourceFormPage.class,
+									params);
 						}
 					};
-				}else{
+				} else {
 					return new Label(identifier, value);
 				}
 			}
@@ -107,8 +114,10 @@ public class RSPage extends RBSuperPage {
 
 		this.add(panel);
 		this.add(new ResourceRegisterPanel("resourceRegisterTest",
-				getRBServiceProvider().getResourceSchemaManagement().getAllResourceSchemas(),
-				"M�ller" ,Arrays.asList(new String[]{"hasNachname", "hasEmail", "blablubbla"}), true) {
+				getRBServiceProvider().getResourceSchemaManagement()
+						.getAllResourceSchemas(), "M�ller", Arrays
+						.asList(new String[] { "hasNachname", "hasEmail",
+								"blablubbla" }), true) {
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
@@ -118,14 +127,19 @@ public class RSPage extends RBSuperPage {
 
 	/**
 	 * Builds the menu.
+	 *
 	 * @return List of {@link CKMenuItem}
 	 */
 	private List<CKMenuItem> buildMenu() {
-		CKMenuItem menuItem1 = new CKMenuItem("Sample Resource Page", new SampleResourcePage(getPageParameters()));
-		CKMenuItem menuItem2 = new CKMenuItem("Sample Resource Page", new SampleResourcePage(getPageParameters()));
-		CKMenuItem menuItem3 = new CKMenuItem("Sample Resource Page", new SampleResourcePage(getPageParameters()));
+		CKMenuItem menuItem1 = new CKMenuItem("Sample Resource Page",
+				new SampleResourcePage(getPageParameters()));
+		CKMenuItem menuItem2 = new CKMenuItem("Sample Resource Page",
+				new SampleResourcePage(getPageParameters()));
+		CKMenuItem menuItem3 = new CKMenuItem("Sample Resource Page",
+				new SampleResourcePage(getPageParameters()));
 		menuItem1.setSeperator(true);
-		CKMenuItem submenuItem = new CKMenuItem("Sub-menu", new SampleResourcePage(getPageParameters()));
+		CKMenuItem submenuItem = new CKMenuItem("Sub-menu",
+				new SampleResourcePage(getPageParameters()));
 
 		List<CKMenuItem> submenuList = new ArrayList<CKMenuItem>();
 		List<CKMenuItem> primaryMenu = new ArrayList<CKMenuItem>();
@@ -142,59 +156,69 @@ public class RSPage extends RBSuperPage {
 	}
 
 	/**
-	 *
-	 */
-    protected void onBeforeRender() {
-    	super.onBeforeRender();
-    	updateResourceList();
-    }
+*
+*/
+	protected void onBeforeRender() {
+		super.onBeforeRender();
+		updateResourceList();
+	}
 
 	// -----------------------------------------------------
 
-
 	/**
-	 *
-	 */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	private void updateResourceList(){
-    	resourceList.removeAll();
-    	ResourceSchemaManagement rManagement = getRBServiceProvider().getResourceSchemaManagement();
-    	RBEntityManagement rTypeManagement = getRBServiceProvider().getRBEntityManagement();
-    	Collection<ResourceSchema> resourceSchemas = rManagement.getAllResourceSchemas();
-		if(resourceSchemas==null) {
+*
+*/
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void updateResourceList() {
+		resourceList.removeAll();
+		ResourceSchemaManagement rManagement = getRBServiceProvider()
+				.getResourceSchemaManagement();
+		RBEntityManagement rTypeManagement = getRBServiceProvider()
+				.getRBEntityManagement();
+		Collection<ResourceSchema> resourceSchemas = rManagement
+				.getAllResourceSchemas();
+		if (resourceSchemas == null) {
 			resourceSchemas = new ArrayList<ResourceSchema>();
 		}
 		for (final ResourceSchema resourceSchema : resourceSchemas) {
 
-			Collection<RBEntity> instances = rTypeManagement.loadAllRBEntitiesForSchema(resourceSchema);
+			Collection<RBEntity> instances = rTypeManagement
+					.loadAllRBEntitiesForSchema(resourceSchema);
 
-			ArrayList<RBEntity> schemaInstances =
-				new ArrayList<RBEntity>((instances != null) ? instances : new HashSet<RBEntity>());
+			ArrayList<RBEntity> schemaInstances = new ArrayList<RBEntity>(
+					(instances != null) ? instances : new HashSet<RBEntity>());
 
 			PageParameters params = new PageParameters();
-			params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
-			Fragment fragment = new Fragment(resourceList.newChildId(),"listPanel",this);
-			fragment.add(new BookmarkablePageLink<GenericResourceFormPage>("link",GenericResourceFormPage.class, params).
-					add(new Label("linkLabel",resourceSchema.getDescribedResourceID().
-							getQualifiedName().getSimpleName())));
+			params.add("resourceid", resourceSchema.getDescribedResourceID()
+					.getQualifiedName().toURI());
+			Fragment fragment = new Fragment(resourceList.newChildId(),
+					"listPanel", this);
+			fragment.add(new BookmarkablePageLink<GenericResourceFormPage>(
+					"link", GenericResourceFormPage.class, params)
+					.add(new Label("linkLabel", resourceSchema
+							.getDescribedResourceID().getQualifiedName()
+							.getSimpleName())));
 
-			fragment.add(new ListView("instancelist",schemaInstances){
+			fragment.add(new ListView("instancelist", schemaInstances) {
 				@Override
 				protected void populateItem(final ListItem item) {
 					RBEntity instance = (RBEntity) item.getModelObject();
 					PageParameters params = new PageParameters();
-					params.add("resourceid", resourceSchema.getDescribedResourceID().getQualifiedName().toURI());
-					params.add("instanceid", instance.getQualifiedName().toURI());
-					item.add(new BookmarkablePageLink<GenericResourceFormPage>("innerlink",
-							GenericResourceFormPage.class, params).
-					add(new Label("innerlinkLabel",instance.toString())));
+					params.add("resourceid", resourceSchema
+							.getDescribedResourceID().getQualifiedName()
+							.toURI());
+					params.add("instanceid", instance.getQualifiedName()
+							.toURI());
+					item.add(new BookmarkablePageLink<GenericResourceFormPage>(
+							"innerlink", GenericResourceFormPage.class, params)
+							.add(new Label("innerlinkLabel", instance
+									.toString())));
 				}
 			});
 
 			resourceList.add(fragment);
 		}
 		resourceList.modelChanged();
-    }
-
+	}
 
 }

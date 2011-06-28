@@ -8,12 +8,11 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
 
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
+import de.lichtflut.rb.web.ck.components.CKLink;
 
 /**
  * <p>
@@ -29,7 +28,7 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
 @SuppressWarnings("serial")
 public class NavigationNodePanel extends CKComponent implements NavigationNode {
 
-	private AbstractLink link;
+	private CKLink link;
 	private final List<NavigationNode> children = new ArrayList<NavigationNode>();
 	@SuppressWarnings("unused")
 	private IModel<String> label;
@@ -37,18 +36,15 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 	/**
 	 * Constructor.
 	 *
-	 * @param id
-	 *            The component ID.
-	 * @param link
-	 *            The link (must have component ID 'link')
-	 * @param label
-	 *            The label.
+	 * @param id - The component ID.
+	 * @param link - The link (must have component ID 'link')
+	 * @param label - The label.
 	 */
-	public NavigationNodePanel(final String id, final AbstractLink link,
+	public NavigationNodePanel(final String id, final CKLink link,
 			final IModel<String> label) {
 		super(id);
 		this.link = link;
-		link.add(new Label("label", label));
+//		link.add(new Label("label", label));
 		this.label = label;
 		this.buildComponent();
 	}
@@ -57,8 +53,6 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @return false /
 	 */
 	@Override
 	public boolean isExpandable() {
@@ -123,7 +117,7 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
-		this.add(link);
+		add(link);
 
 		if (children != null && children.size() > 0) {
 			final NavigationBar subLevelMenu = new NavigationBar("child");

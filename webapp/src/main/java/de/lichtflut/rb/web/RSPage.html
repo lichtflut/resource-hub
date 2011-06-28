@@ -1,10 +1,10 @@
 <!--
 
-    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
 
 -->
 <html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd" >
-    <head>  
+    <head>
         <title>ResourceSchemaManagement</title>
     </head>
     <body>
@@ -20,30 +20,30 @@
         
         <div style="border:thin dashed;">
         
-        	<ul>
-        		<li wicket:id="resourcelist">
-        		</li>
-        	
-        	</ul>
-       	 </div>
+         <ul>
+         <li wicket:id="resourcelist">
+         </li>
+        
+         </ul>
+        </div>
         
         </div>
-        	<wicket:fragment wicket:id="listPanel">
-        		<a href="#" wicket:id="link"><span wicket:id="linkLabel"></span></a>
-        		<wicket:enclosure child="instancelist">
-        		<ul>
-        			<li wicket:id="instancelist">
-        				<a href="#" wicket:id="innerlink"><span wicket:id="innerlinkLabel"></span></a>
-        			</li>
-        		</ul>
-        		</wicket:enclosure>
-        	</wicket:fragment>
-        	
-        	<span wicket:id="resourceRegister"></span>
-        	
-        	
-        	<span wicket:id="resourceRegisterTest"></span>
-        	
-    </wicket:extend>              
+         <wicket:fragment wicket:id="listPanel">
+         <a href="#" wicket:id="link"><span wicket:id="linkLabel"></span></a>
+         <wicket:enclosure child="instancelist">
+         <ul>
+         <li wicket:id="instancelist">
+         <a href="#" wicket:id="innerlink"><span wicket:id="innerlinkLabel"></span></a>
+         </li>
+         </ul>
+         </wicket:enclosure>
+         </wicket:fragment>
+        
+         <span wicket:id="resourceRegister"></span>
+        
+        
+         <span wicket:id="resourceRegisterTest"></span>
+        
+    </wicket:extend>
     </body>
 </html>

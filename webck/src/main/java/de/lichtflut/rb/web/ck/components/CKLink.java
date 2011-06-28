@@ -4,6 +4,8 @@
 package de.lichtflut.rb.web.ck.components;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 
@@ -12,7 +14,6 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**
  * [TODO Insert description here.
- * TODO: ADD OTHER LINKTYPES {@link CKLinkType}
  *
  * Created: Jun 22, 2011
  *
@@ -21,29 +22,32 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
 @SuppressWarnings({ "rawtypes", "serial" })
 public class CKLink extends CKComponent{
 
-	@SuppressWarnings("unused")
-	private final Object link;
+	private final AbstractLink link;
 	/**
 	 * Constructor.
+	 * @param id -
 	 * @param destination -
 	 * @param linkLabel -
 	 * @param type -
 	 */
-	public CKLink(final String destination, final String linkLabel, final CKLinkType type){
-		super("menuLink");
+	public CKLink(final String id, final String destination, final String linkLabel, final CKLinkType type){
+		super(id);
 		if(type != CKLinkType.EXTERNAL_LINK) {
 			throw new UnsupportedOperationException();
 		}
-		link = new ExternalLink("menuLink", destination);
+		link = new ExternalLink("link", destination);
+		link.add(new Label("label", linkLabel));
+		add(link);
 	}
 
 	/**
 	 * TODO: DESCRIPTION.
+	 * @param id -
 	 * @param label -
 	 * @param cls -
 	 * @param type -
 	 */
-	public CKLink(final String label, final WebPage cls, final CKLinkType type){
+	public CKLink(final String id, final String label, final WebPage cls, final CKLinkType type){
 		super("menuLink");
 		if(type != CKLinkType.WEB_PAGE_CLASS) {
 			throw new UnsupportedOperationException();
