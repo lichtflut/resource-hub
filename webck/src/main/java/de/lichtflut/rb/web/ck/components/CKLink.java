@@ -26,17 +26,17 @@ public class CKLink extends CKComponent{
 	/**
 	 * Constructor.
 	 * @param id -
+ 	 * @param label -
 	 * @param destination -
-	 * @param linkLabel -
 	 * @param type -
 	 */
-	public CKLink(final String id, final String destination, final String linkLabel, final CKLinkType type){
+	public CKLink(final String id, final String label, final String destination, final CKLinkType type){
 		super(id);
 		if(type != CKLinkType.EXTERNAL_LINK) {
 			throw new UnsupportedOperationException();
 		}
 		link = new ExternalLink("link", destination);
-		link.add(new Label("label", linkLabel));
+		link.add(new Label("label", label));
 		add(link);
 	}
 
@@ -47,18 +47,20 @@ public class CKLink extends CKComponent{
 	 * @param cls -
 	 * @param type -
 	 */
-	public CKLink(final String id, final String label, final WebPage cls, final CKLinkType type){
-		super("menuLink");
+	public CKLink(final String id, final String label, final Class<? extends WebPage> cls, final CKLinkType type){
+		super(id);
 		if(type != CKLinkType.WEB_PAGE_CLASS) {
 			throw new UnsupportedOperationException();
 		}
-		link = new Link("label"){
+		link = new Link("link"){
 
 			@Override
 			public void onClick() {
 				setResponsePage(cls);
 			}
 		};
+		link.add(new Label("label", label));
+		add(link);
 	}
 
 	@Override

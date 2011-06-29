@@ -105,19 +105,19 @@ public abstract class RBSuperPage extends WebPage {
 		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
 
 		mainNavigation.addChild(new NavigationNodePanel("node",
-				new CKLink("link", "http://google.de", "Google 1", CKLinkType.EXTERNAL_LINK),
+				new CKLink("link", "Resource Schema", RSPage.class, CKLinkType.WEB_PAGE_CLASS),
 				Model.of("Navi Label")));
 
 		mainNavigation.addChild(new NavigationNodePanel("node",
-				new CKLink("link", "http://google.de", "Google 2", CKLinkType.EXTERNAL_LINK),
+				new CKLink("link", "Sample Resource Page", SampleResourcePage.class, CKLinkType.WEB_PAGE_CLASS),
 				Model.of("Sample Resource")));
 
 		NavigationNodePanel menuItem = new NavigationNodePanel("node",
-				new CKLink("link", "http://google.de", "Google 3", CKLinkType.EXTERNAL_LINK),
+				new CKLink("link", "Google 3", "http://google.de", CKLinkType.EXTERNAL_LINK),
 				Model.of("lvl 1 Menu"));
 
 		NavigationNodePanel subMenu = new NavigationNodePanel("node",
-				new CKLink("link", "http://google.de", "Google 3.1", CKLinkType.EXTERNAL_LINK),
+				new CKLink("link", "Google 3.1", "http://google.de", CKLinkType.EXTERNAL_LINK),
 				Model.of("lvl 2.1 Menu"));
 
 		menuItem.addChild(subMenu);
