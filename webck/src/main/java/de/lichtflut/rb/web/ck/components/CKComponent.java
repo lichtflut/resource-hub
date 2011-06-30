@@ -100,7 +100,9 @@ public abstract class CKComponent extends Panel {
 	// -----------------------------------------------------
 
 	/**
-	 *
+	 * This method removes all exsiting components,
+	 * is initalizing the style, dependend on the style behavior and
+	 * calls the internal initComponent - method to rebuild the components-tree.
 	 */
 	public final void refreshComponent(){
 		buildComponent();
@@ -110,7 +112,9 @@ public abstract class CKComponent extends Panel {
 
 
 	/**
-	 *
+	 * This method removes all exsiting components,
+	 * is initalizing the style, dependend on the style behavior and
+	 * calls the internal initComponent - method to rebuild the components-tree.
 	 */
 	public final void buildComponent(){
 		this.removeAll();
@@ -126,6 +130,7 @@ public abstract class CKComponent extends Panel {
 	// -----------------------------------------------------
 
 	/**
+	 * This method should be implemented with the components specific initialization-procedure.
 	 * @param model - the {@link CKValueWrapperModel} which might contain the component relevant members/value
 	 */
 	protected abstract void initComponent(final CKValueWrapperModel model);
