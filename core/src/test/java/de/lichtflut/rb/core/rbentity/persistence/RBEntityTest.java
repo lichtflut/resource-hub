@@ -11,6 +11,7 @@ import junit.framework.Assert;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
+
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
@@ -113,25 +114,33 @@ public final class RBEntityTest {
 		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
 		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
 		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p4 = new PropertyDeclarationImpl();
 		p1.setName("http://lichtflut.de#geburtsdatum");
 		p2.setName("http://lichtflut.de#email");
 		p3.setName("http://lichtflut.de#alter");
+		p4.setName("http://lichtflut.de#kind");
 
 		p1.setElementaryDataType(ElementaryDataType.STRING);
 		p2.setElementaryDataType(ElementaryDataType.STRING);
 		p3.setElementaryDataType(ElementaryDataType.INTEGER);
+		p4.setElementaryDataType(ElementaryDataType.RESOURCE);
 
 		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
+
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
 		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
 		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);
+		PropertyAssertionImpl pa4 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#", "hatKind"), p4);
+
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
 		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
+		pa4.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 
 		schema.addPropertyAssertion(pa1);
 		schema.addPropertyAssertion(pa2);
 		schema.addPropertyAssertion(pa3);
+		schema.addPropertyAssertion(pa4);
 
 		return schema;
 	}

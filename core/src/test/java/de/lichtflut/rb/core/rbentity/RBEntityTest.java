@@ -4,11 +4,13 @@
 package de.lichtflut.rb.core.rbentity;
 
 import junit.framework.Assert;
-
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.RBEntity;
+import de.lichtflut.rb.core.schema.model.RBInvalidAttributeException;
+import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
@@ -26,14 +28,15 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
  *
  * @author Nils Bleisch
  */
-public class RBEntityTest {
+public final class RBEntityTest{
 
 	/**
 	 * @param
 	 */
-	public final void testResourceTypeInstance(){
+	@Test
+	public void testResourceTypeInstance(){
 		//Generate an instance for a given schema
-		RBEntity<Object> instance = createSchema().generateRBEntity();
+		RBEntity<Object> instance = createPersonSchema().generateRBEntity();
 		Assert.assertNotNull(instance);
 
 		//Generate some tickets for fields
@@ -67,12 +70,12 @@ public class RBEntityTest {
 			instance.releaseTicketFor("http://lichtflut.de#hatGeburtstag", ticket_hatGeburtstag1);
 			exceptionOccured=false;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("ok! "+e.getMessage());
 		}
 		Assert.assertTrue(exceptionOccured);
 		exceptionOccured=false;
 
-		int ticket_hatEmail3 = 6;
+		int ticket_hatEmail3 = -1;
 
 		try{
 			/*Try to generate a new Ticket for hatEmail, which should not be possible,
@@ -80,7 +83,7 @@ public class RBEntityTest {
 			 */
 			ticket_hatEmail3 = instance.generateTicketFor("http://lichtflut.de#hatEmail");
 		}catch(Exception any){
-			any.printStackTrace();
+			System.out.println("ok! "+any.getMessage());
 		}
 		//ticket_hatEmail3 must be still on it's intial value '-1'
 		Assert.assertTrue(ticket_hatEmail3==-1);
@@ -99,7 +102,7 @@ public class RBEntityTest {
 			Assert.assertNull(instance.getValueFor("http://lichtflut.de#hatEmail", ticket_hatEmail1));
 			exceptionOccured=false;
 		}catch(Exception any){
-			any.printStackTrace();
+			System.out.println("ok! "+any.getMessage());
 		}
 		Assert.assertFalse(exceptionOccured);
 		exceptionOccured=false;
@@ -128,36 +131,137 @@ public class RBEntityTest {
 	}
 
 
+	/**
+	 * @param
+	 */
+	@Test
+	public void testResourceType(){
+
+		boolean invalidValueExeptionThrown = false;
+
+		ResourceSchema personSchema = createPersonSchema();
+		RBEntity<Object> person0 = personSchema.generateRBEntity();
+		Assert.assertNotNull(person0);
+		RBEntity<Object> person1 = personSchema.generateRBEntity();
+		Assert.assertNotNull(person1);
+
+		ResourceSchema carSchema = createCarSchema(personSchema);
+		RBEntity<Object> car0 = carSchema.generateRBEntity();
+
+		int ticket0=-1;
+		int ticket1=-1;
+		try {
+
+			person0.addValueFor("http://lichtflut.de#hatGeburtstag", "test");
+			ticket0 = person0.addValueFor("http://lichtflut.de#hatEmail", "hans@hans.de");
+			person0.addValueFor("http://lichtflut.de#hatAlter", 5);
+
+			car0.addValueFor("http://lichtflut.de#hatMarke", "Audi quattro");
+			car0.addValueFor("http://lichtflut.de#hatModell", "RS 5");
+			car0.addValueFor("http://lichtflut.de#hatAlter", 1);
+			ticket1 = car0.addValueFor("http://lichtflut.de#hatHalter", person1);
+
+			person1.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
+			person1.addValueFor("http://lichtflut.de#hatEmail", "peter@hans.de");
+			person1.addValueFor("http://lichtflut.de#hatAlter", 32);
+			person1.addValueFor("http://lichtflut.de#hatKind", car0);
+
+		} catch (RBInvalidValueException e) {
+			invalidValueExeptionThrown = true;
+		} catch (RBInvalidAttributeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Assert.assertTrue(invalidValueExeptionThrown);
+
+		RBEntity entity = (RBEntity) car0.getValueFor("http://lichtflut.de#hatHalter", ticket1);
+
+		Assert.assertTrue(((String) entity.getValueFor("http://lichtflut.de#hatEmail", ticket0)).contains("peter@hans.de"));
+
+	}
+
 
 	/**
 	 * @return shema
 	 */
-	private ResourceSchema createSchema(){
+	private ResourceSchema createPersonSchema(){
 		ResourceSchemaImpl schema = new ResourceSchemaImpl("http://lichtflut.de#","personschema");
 		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
 		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
 		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p4 = new PropertyDeclarationImpl();
 		p1.setName("http://lichtflut.de#geburtsdatum");
 		p2.setName("http://lichtflut.de#email");
 		p3.setName("http://lichtflut.de#alter");
+		p4.setName("http://lichtflut.de#kind");
 
 		p1.setElementaryDataType(ElementaryDataType.STRING);
 		p2.setElementaryDataType(ElementaryDataType.STRING);
 		p3.setElementaryDataType(ElementaryDataType.INTEGER);
+		p4.setElementaryDataType(ElementaryDataType.RESOURCE);
 
 		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
+		p4.addConstraint(ConstraintFactory.buildConstraint(schema.getDescribedResourceID()));
+
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
 		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
 		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);
+		PropertyAssertionImpl pa4 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#", "hatKind"), p4);
+
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
 		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
+		pa4.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 
 		schema.addPropertyAssertion(pa1);
 		schema.addPropertyAssertion(pa2);
 		schema.addPropertyAssertion(pa3);
+		schema.addPropertyAssertion(pa4);
 
 		return schema;
 	}
+
+	/**
+	 * @return shema
+	 * @param referredSchema -
+	 */
+	private ResourceSchema createCarSchema(final ResourceSchema referredSchema){
+		ResourceSchemaImpl schema = new ResourceSchemaImpl("http://lichtflut.de#","autoschema");
+		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p4 = new PropertyDeclarationImpl();
+		p1.setName("http://lichtflut.de#marke");
+		p2.setName("http://lichtflut.de#modell");
+		p3.setName("http://lichtflut.de#alter");
+		p4.setName("http://lichtflut.de#halter");
+
+		p1.setElementaryDataType(ElementaryDataType.STRING);
+		p2.setElementaryDataType(ElementaryDataType.STRING);
+		p3.setElementaryDataType(ElementaryDataType.INTEGER);
+		p4.setElementaryDataType(ElementaryDataType.RESOURCE);
+
+		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
+		p4.addConstraint(ConstraintFactory.buildConstraint(referredSchema.getDescribedResourceID()));
+
+		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatMarke"), p1);
+		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatModell"), p2);
+		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);
+		PropertyAssertionImpl pa4 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#", "hatHalter"), p4);
+
+		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
+		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
+		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
+		pa4.setCardinality(CardinalityBuilder.hasExcactlyOne());
+
+		schema.addPropertyAssertion(pa1);
+		schema.addPropertyAssertion(pa2);
+		schema.addPropertyAssertion(pa3);
+		schema.addPropertyAssertion(pa4);
+
+		return schema;
+	}
+
 
 }

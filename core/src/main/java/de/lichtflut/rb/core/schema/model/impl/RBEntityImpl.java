@@ -14,6 +14,8 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.ValueNode;
+
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.RBEntity;
@@ -269,8 +271,22 @@ public class RBEntityImpl extends RBEntity<Object> {
 					//Try to trigger an exception and catch them finally
 					try{
 						switch(pDec.getElementaryDataType()){
-							case RESOURCE : if(! (value instanceof ResourceID)){
-								throw new Exception("");
+							case RESOURCE :
+								if(! (value instanceof RBEntity)){
+									throw new Exception("");
+								}
+								Collection<Constraint> constraints = pDec.getConstraints();
+								for (Constraint constraint : constraints) {
+									if(!constraint.isResourceTypeConstraint()){
+										throw new Exception();
+									}
+									RBEntity<Object> entity = (RBEntity<Object>)value;
+									if(!constraint.getResourceTypeConstraint().getQualifiedName().
+											equals(entity.getResourceTypeID().
+													getQualifiedName())){
+										throw new Exception(constraint.getResourceTypeConstraint().
+												getQualifiedName().toString());
+									}
 								}
 							break;
 							//Check for boolean
@@ -287,10 +303,11 @@ public class RBEntityImpl extends RBEntity<Object> {
 							default: break;
 						}
 					}catch(Exception any){
+							//entity.getResourceTypeID()
 						throw new RBInvalidValueException(
 								"\""+value
 								+"\" is not a valid value for the expected type "
-								+pDec.getElementaryDataType());
+								+pDec.getElementaryDataType().name());
 					}
 					return true;
 				}
