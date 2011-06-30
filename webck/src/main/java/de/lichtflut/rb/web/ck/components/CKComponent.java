@@ -112,28 +112,6 @@ public abstract class CKComponent extends Panel {
 	/**
 	 *
 	 */
-	@Override
-	protected void onModelChanged() {
-		super.onModelChanged();
-		refreshComponent();
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 *
-	 */
-	@Override
-	protected void onModelChanging() {
-		super.onModelChanging();
-		refreshComponent();
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 *
-	 */
 	public final void buildComponent(){
 		this.removeAll();
 		try{

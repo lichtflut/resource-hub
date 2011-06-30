@@ -3,15 +3,18 @@
  */
 package de.lichtflut.rb.web;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
+import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
 import de.lichtflut.rb.web.ck.components.SearchBar;
@@ -108,24 +111,45 @@ public abstract class RBSuperPage extends WebPage {
 				new CKLink("link", "Resource Schema", RSPage.class, CKLinkType.WEB_PAGE_CLASS),
 				Model.of("Navi Label")));
 
-		mainNavigation.addChild(new NavigationNodePanel("node",
-				new CKLink("link", "Sample Resource Page", SampleResourcePage.class, CKLinkType.WEB_PAGE_CLASS),
-				Model.of("Sample Resource")));
+		CKLink link = new CKLink("link", "Sample Resource Page", SampleResourcePage.class, CKLinkType.WEB_PAGE_CLASS);
 
+		NavigationNodePanel menuItem2 = new NavigationNodePanel("node",	link, Model.of("Sample Resource"));
+
+		mainNavigation.addChild(menuItem2);
+
+		CKLink hideMe = new CKLink("link", "Hide me", SampleResourcePage.class, CKLinkType.WEB_PAGE_CLASS);
 		NavigationNodePanel menuItem = new NavigationNodePanel("node",
-				new CKLink("link", "Google 3", "http://google.de", CKLinkType.EXTERNAL_LINK),
-				Model.of("lvl 1 Menu"));
+				hideMe,	Model.of("lvl 1 Menu"));
+
+		hideMe.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
+
+			@SuppressWarnings("rawtypes")
+			@Override
+			public Object execute(final Object... objects) {
+				Component comp = (Link) objects[0];
+				comp.setVisible(false);
+				return null;
+			}
+		});
 
 		NavigationNodePanel subMenu = new NavigationNodePanel("node",
 				new CKLink("link", "Google 3.1", "http://google.de", CKLinkType.EXTERNAL_LINK),
+				Model.of("lvl 2.2 Menu"));
+
+		NavigationNodePanel subMenu2 = new NavigationNodePanel("node",
+				new CKLink("link", "Google 3.2", "http://google.de", CKLinkType.EXTERNAL_LINK),
 				Model.of("lvl 2.1 Menu"));
 
 		menuItem.addChild(subMenu);
-//		menuItem.addChild(new NavigationNodePanel("node", new ExternalLink("link",
-//				Model.of("http://google.de?search=level2")), Model.of("LVL 2.2 Menu")));
+		menuItem.addChild(subMenu2);
+
 		mainNavigation.addChild(menuItem);
 
 		add(mainNavigation);
+		mainNavigation.buildComponent();
+		mainNavigation.buildComponent();
+		mainNavigation.buildComponent();
+		mainNavigation.buildComponent();
 
 		this.add(new SearchBar("searchBar") {
 

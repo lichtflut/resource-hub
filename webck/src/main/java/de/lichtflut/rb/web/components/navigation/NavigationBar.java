@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 
@@ -36,46 +37,30 @@ public class NavigationBar extends CKComponent implements NavigationNode {
 	 */
 	public NavigationBar(final String id) {
 		super(id);
+		buildComponent();
 
-		final ListView<NavigationNode> itemView = new ListView<NavigationNode>("nodeList", children) {
-			@Override
-			protected void populateItem(final ListItem<NavigationNode> item) {
-				Component comp = item.getModelObject().getComponent();
-				item.add(comp);
-			}
-		};
-		add(itemView);
 	}
 
 	// -----------------------------------------------------
 
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#isExpandable()
-	 */
 	/**
-	 * @return boolean /
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean isExpandable() {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#isExpanded()
-	 */
 	/**
-	 * @return boolean
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean isExpanded() {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#isActive()
-	 */
 	/**
-	 * @return boolean
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean isActive() {
@@ -130,8 +115,18 @@ public class NavigationBar extends CKComponent implements NavigationNode {
 
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
-		// TODO Auto-generated method stub
 
+		final ListView<NavigationNode> itemView = new ListView<NavigationNode>("nodeList", children) {
+			@Override
+			protected void populateItem(final ListItem<NavigationNode> item) {
+				Component comp = item.getModelObject().getComponent();
+				((CKComponent) comp).buildComponent();
+				item.add(comp);
+			}
+		};
+		add(itemView);
+		add(new WebMarkupContainer("ck-header"));
+		add(new WebMarkupContainer("ck-footer"));
 	}
 
 	@Override

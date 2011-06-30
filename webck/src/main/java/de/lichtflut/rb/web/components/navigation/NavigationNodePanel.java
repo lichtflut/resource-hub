@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -30,8 +33,9 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 
 	private CKLink link;
 	private final List<NavigationNode> children = new ArrayList<NavigationNode>();
-	@SuppressWarnings("unused")
-	private IModel<String> label;
+	private static final Behavior CSS_CLASS_EVEN =  new AttributeAppender("class", Model.of("even"), " ");
+	private static final Behavior CSS_CLASS_ODD =  new AttributeAppender("class", Model.of("odd"), " ");
+	// -----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -44,8 +48,6 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 			final IModel<String> label) {
 		super(id);
 		this.link = link;
-//		link.add(new Label("label", label));
-		this.label = label;
 		this.buildComponent();
 	}
 
@@ -109,19 +111,33 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 	 */
 	@Override
 	public NavigationNode addChild(final NavigationNode node) {
-		// throw new NotYetImplementedException();
 		children.add(node);
-		buildComponent();
+		this.buildComponent();
 		return node;
+	}
+
+	/**
+	 * Checks if {@link NavigationNodePanel} is even or odd numbered.
+	 * @param node -
+	 * @return boolean - true if node is even, false if not
+	 */
+	public boolean isEven(final NavigationNode node){
+		int index = children.indexOf(node);
+		// Adding +1 coz indexOf starts with zero
+		if(((index + 1) % 2) == 1){
+			return false;
+		}
+			return true;
+
 	}
 
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 		add(link);
-
-		if (children != null && children.size() > 0) {
+		if (hasChildren()) {
 			final NavigationBar subLevelMenu = new NavigationBar("child");
 			for(NavigationNode node : children){
+				addOddOrEvenAttribute(node);
 				subLevelMenu.addChild(node);
 			}
 			subLevelMenu.setRenderBodyOnly(true);
@@ -132,6 +148,8 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 			childContainer.setRenderBodyOnly(true);
 			this.add(childContainer);
 		}
+		add(new WebMarkupContainer("ck-header"));
+		add(new WebMarkupContainer("ck-footer"));
 	}
 
 	@Override
@@ -144,5 +162,30 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 	public CKComponent setViewMode(final ViewMode mode) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * Checks whether node is odd or even and sets the "class" attribute accordingly.
+	 * @param node -
+	 * @return {@link NavigationNode}
+	 */
+	private NavigationNode addOddOrEvenAttribute(final NavigationNode node){
+		List<? extends Behavior> behaviors = node.getComponent().getBehaviors();
+
+		// Check if behavior already extists. If yes, throw it..
+		for (Behavior behavior : behaviors) {
+			if(behavior.equals(CSS_CLASS_EVEN)){
+				node.getComponent().remove(CSS_CLASS_EVEN);
+			}else if(behavior.equals(CSS_CLASS_ODD)){
+				node.getComponent().remove(CSS_CLASS_ODD);
+			}
+		}
+		// Add behavior
+		if(isEven(node)){
+			node.getComponent().add(CSS_CLASS_EVEN);
+		}else if(!isEven(node)){
+			node.getComponent().add(CSS_CLASS_ODD);
+		}
+		return node;
 	}
 }

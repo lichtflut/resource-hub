@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.web.ck.components;
 
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -22,7 +23,27 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
 @SuppressWarnings({ "rawtypes", "serial" })
 public class CKLink extends CKComponent{
 
+
+	//Behavior-Keys
+	/**
+	 * <p>
+	 * This behavior is called, when the link is clicked.
+	 * If not set, by default the page passed as an argument is called.
+	 * Does not work for external-links!!
+	 * </p>
+	 * <p>
+	 * The following params will be parsed to the behavior in a well-defined order:
+	 * <ol>
+	 * 	<li>{@link Class}, the ck-components-class</li>
+	 * 	<li>String, the link label</li>
+	 * 	<li>Component, the ck-components-class</li>
+	 * </ol>
+	 * </p>
+	 */
+	public static final String ON_LINK_CLICK_BEHAVIOR = "de.lichtflut.web.ck.behavior.onClick";
+
 	private final AbstractLink link;
+
 	/**
 	 * Constructor.
 	 * @param id -
@@ -38,6 +59,8 @@ public class CKLink extends CKComponent{
 		link = new ExternalLink("link", destination);
 		link.add(new Label("label", label));
 		add(link);
+		add(new WebMarkupContainer("ck-header"));
+		add(new WebMarkupContainer("ck-footer"));
 	}
 
 	/**
@@ -53,14 +76,19 @@ public class CKLink extends CKComponent{
 			throw new UnsupportedOperationException();
 		}
 		link = new Link("link"){
-
 			@Override
 			public void onClick() {
-				setResponsePage(cls);
+				if((getBehavior(ON_LINK_CLICK_BEHAVIOR) != null)){
+					getBehavior(ON_LINK_CLICK_BEHAVIOR).execute(this, label, getParent());
+				}else{
+					setResponsePage(cls);
+				}
 			}
 		};
 		link.add(new Label("label", label));
 		add(link);
+		add(new WebMarkupContainer("ck-header"));
+		add(new WebMarkupContainer("ck-footer"));
 	}
 
 	@Override
