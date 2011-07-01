@@ -18,8 +18,8 @@ import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
 import de.lichtflut.rb.web.ck.components.SearchBar;
-import de.lichtflut.rb.web.components.navigation.NavigationBar;
-import de.lichtflut.rb.web.components.navigation.NavigationNodePanel;
+import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
+import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 import de.lichtflut.rb.web.resources.SharedResourceProvider;
 
@@ -107,19 +107,19 @@ public abstract class RBSuperPage extends WebPage {
 
 		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
 
-		mainNavigation.addChild(new NavigationNodePanel("node",
-				new CKLink("link", "Resource Schema", RSPage.class, CKLinkType.WEB_PAGE_CLASS),
-				Model.of("Navi Label")));
+		mainNavigation.addChild(new NavigationNodePanel(
+				new CKLink("link", "Resource Schema", RSPage.class, CKLinkType.WEB_PAGE_CLASS)
+				));
 
 		CKLink link = new CKLink("link", "Sample Resource Page", SampleResourcePage.class, CKLinkType.WEB_PAGE_CLASS);
 
-		NavigationNodePanel menuItem2 = new NavigationNodePanel("node",	link, Model.of("Sample Resource"));
+		NavigationNodePanel menuItem2 = new NavigationNodePanel(link);
 
 		mainNavigation.addChild(menuItem2);
 
 		CKLink hideMe = new CKLink("link", "Hide me", SampleResourcePage.class, CKLinkType.WEB_PAGE_CLASS);
-		NavigationNodePanel menuItem = new NavigationNodePanel("node",
-				hideMe,	Model.of("lvl 1 Menu"));
+		NavigationNodePanel menuItem = new NavigationNodePanel(
+				hideMe);
 
 		hideMe.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
 
@@ -132,13 +132,13 @@ public abstract class RBSuperPage extends WebPage {
 			}
 		});
 
-		NavigationNodePanel subMenu = new NavigationNodePanel("node",
-				new CKLink("link", "Google 3.1", "http://google.de", CKLinkType.EXTERNAL_LINK),
-				Model.of("lvl 2.2 Menu"));
+		NavigationNodePanel subMenu = new NavigationNodePanel(
+				new CKLink("link", "Google 3.1", "http://google.de", CKLinkType.EXTERNAL_LINK)
+				);
 
-		NavigationNodePanel subMenu2 = new NavigationNodePanel("node",
-				new CKLink("link", "Google 3.2", "http://google.de", CKLinkType.EXTERNAL_LINK),
-				Model.of("lvl 2.1 Menu"));
+		NavigationNodePanel subMenu2 = new NavigationNodePanel(
+				new CKLink("link", "Google 3.2", "http://google.de", CKLinkType.EXTERNAL_LINK)
+				);
 
 		menuItem.addChild(subMenu);
 		menuItem.addChild(subMenu2);
