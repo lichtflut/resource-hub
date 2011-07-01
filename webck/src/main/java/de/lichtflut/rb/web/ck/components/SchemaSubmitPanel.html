@@ -7,10 +7,11 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
-       <div id="schemaIN">
-        <p>Please submit your Resource Schema</p>
-        <form wicket:id = "schemaForm" id = "schemaForm">
-        <div wicket:id="feedback"></div>
+<div class="ck-header">
+        
+        <div wicket:id="feedback"></div></div>
+<div class="ck-content">
+      <form wicket:id = "schemaForm" id = "schemaForm">
         <table>
         	<tr>
         		<td>
@@ -23,22 +24,22 @@
     			</td>
     		</tr>
     		<tr>
-    			<td align="left">
+    			<td>
     				Resource Schema:
     			</td>	
         		<td>
-        			<textarea wicket:id = "resourceschema" cols="60" rows="40"></textarea>
+        			<textarea wicket:id = "resourceschema" class="ck-text-value"></textarea>
         		</td>
         	</tr>
         	<tr>
         		<td colspan="2">
-        			<input type = "submit" value = "Submit schema" id="formsubmit"/>
+        			<input type = "submit" value = "Submit schema" class="ck-submit-button"/>
         		</td>
         	
         	</tr>
         </table>
         </form>  
-        </div>
-
+</div>
+<div class="footer"></div>
     </wicket:panel>              
 </html>

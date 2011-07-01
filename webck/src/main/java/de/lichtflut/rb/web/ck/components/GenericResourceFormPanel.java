@@ -88,7 +88,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 		};
 		form.setOutputMarkupId(true);
 		this.add(form);
-		form.add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
+		this.add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
 
 		if (schema != null) {
 
@@ -213,7 +213,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 				 * placeholder tag in markup for this item
 				 * target.prependJavascript( String.format(
 				 * "var item=document.createElement('%s');item.id='%s';"+
-				 * "Wicket.$('%s').appendChild(item);", "tr",
+				 * "Wicket.$('%s').appeinitComponentndChild(item);", "tr",
 				 * item.getMarkupId(), item.getMarkupId())); view.add(item);
 				 * target.addComponent(item);
 				 */

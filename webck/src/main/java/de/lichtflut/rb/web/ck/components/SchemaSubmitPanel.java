@@ -110,7 +110,7 @@ public abstract class SchemaSubmitPanel extends CKComponent {
     	};
     	add(form);
     	form.add(ddc);
-    	form.add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
+    	add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
     	form.add(area);
 	}
 

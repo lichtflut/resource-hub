@@ -5,28 +5,20 @@
 -->
 <html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd" >
   <wicket:head>
-       <style>
-               div.wicket-aa {
-                   font-family: "Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
-                   font-size: 12px;
-                   background-color: white;
-                   border-width: 1px;
-                   border-color: #cccccc;
-                   border-style: solid;
-                   padding: 2px;
-                   margin: 1px 0 0 0;
-                   text-align:left;
-               }
-               div.wicket-aa ul { list-style:none; padding: 2px; margin:0; }
-               div.wicket-aa ul li.selected { background-color: #FFFF00; padding: 2px; margin:0; }
-           </style>    
+
     </wicket:head>
 <wicket:panel>
+<div class="ck-component search-bar">
+<div class="ck-header"></div>
+<div class="ck-content">
      <form wicket:id="searchForm" id="quick-search">
  		<p>
- 			<input id="qsearch" class="tbox" type="text" wicket:id="searchInput"/>
- 			<input class="btn" alt="Search" type="image" name="searchsubmit" title="Search" src="css/images/search.gif" />
+ 			<input id="qsearch" class="ck-search-value" type="text" wicket:id="searchInput"/>
+ 			<input class="ck-submit-button" alt="Search" type="image" name="searchsubmit" title="Search" src="css/images/search.gif" />
  		</p>
  	</form>
+ 	</div>
+ 	</div>
+ 	<div class="ck-footer"></div>
 </wicket:panel>
 </html>

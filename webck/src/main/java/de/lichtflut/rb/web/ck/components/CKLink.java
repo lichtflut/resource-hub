@@ -59,8 +59,6 @@ public class CKLink extends CKComponent{
 		link = new ExternalLink("link", destination);
 		link.add(new Label("label", label));
 		add(link);
-		add(new WebMarkupContainer("ck-header"));
-		add(new WebMarkupContainer("ck-footer"));
 	}
 
 	/**
@@ -70,7 +68,8 @@ public class CKLink extends CKComponent{
 	 * @param cls -
 	 * @param type -
 	 */
-	public CKLink(final String id, final String label, final Class<? extends WebPage> cls, final CKLinkType type){
+	public CKLink(final String id, final String label, final Class<? extends WebPage> cls,
+			final CKLinkType type){
 		super(id);
 		if(type != CKLinkType.WEB_PAGE_CLASS) {
 			throw new UnsupportedOperationException();
@@ -81,14 +80,14 @@ public class CKLink extends CKComponent{
 				if((getBehavior(ON_LINK_CLICK_BEHAVIOR) != null)){
 					getBehavior(ON_LINK_CLICK_BEHAVIOR).execute(this, label, getParent());
 				}else{
+//					((CKComponent)this.getParent()).getBehavior(key)
 					setResponsePage(cls);
 				}
 			}
 		};
+
 		link.add(new Label("label", label));
 		add(link);
-		add(new WebMarkupContainer("ck-header"));
-		add(new WebMarkupContainer("ck-footer"));
 	}
 
 	@Override

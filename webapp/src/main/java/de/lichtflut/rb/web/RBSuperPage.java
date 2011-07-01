@@ -8,7 +8,6 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import de.lichtflut.rb.core.schema.model.RBEntity;
@@ -108,8 +107,10 @@ public abstract class RBSuperPage extends WebPage {
 		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
 
 		mainNavigation.addChild(new NavigationNodePanel(
+
 				new CKLink("link", "Resource Schema", RSPage.class, CKLinkType.WEB_PAGE_CLASS)
 				));
+
 
 		CKLink link = new CKLink("link", "Sample Resource Page", SampleResourcePage.class, CKLinkType.WEB_PAGE_CLASS);
 
@@ -118,8 +119,10 @@ public abstract class RBSuperPage extends WebPage {
 		mainNavigation.addChild(menuItem2);
 
 		CKLink hideMe = new CKLink("link", "Hide me", SampleResourcePage.class, CKLinkType.WEB_PAGE_CLASS);
+
 		NavigationNodePanel menuItem = new NavigationNodePanel(
 				hideMe);
+
 
 		hideMe.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
 
@@ -133,12 +136,14 @@ public abstract class RBSuperPage extends WebPage {
 		});
 
 		NavigationNodePanel subMenu = new NavigationNodePanel(
+
 				new CKLink("link", "Google 3.1", "http://google.de", CKLinkType.EXTERNAL_LINK)
 				);
 
 		NavigationNodePanel subMenu2 = new NavigationNodePanel(
 				new CKLink("link", "Google 3.2", "http://google.de", CKLinkType.EXTERNAL_LINK)
 				);
+
 
 		menuItem.addChild(subMenu);
 		menuItem.addChild(subMenu2);

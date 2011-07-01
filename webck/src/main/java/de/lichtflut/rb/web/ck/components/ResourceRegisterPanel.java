@@ -320,6 +320,7 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 					}
 				}
 			}
+			
 		}
 
 		// -----------------------------------------------------

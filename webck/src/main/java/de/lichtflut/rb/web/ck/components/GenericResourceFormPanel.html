@@ -9,31 +9,38 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
+<div class="ck-component generic-resource-form-panel">
+<div class="ck-header">
+	  			<div wicket:id="feedback"></div>
+	
+</div>
+<div class="ck-content">
 	<form wicket:id="form">
-
-		<div wicket:id="feedback"></div>
-
 		
-		<table  bgcolor="#cccccc" border="1">
+		<table>
 			 <tr wicket:id="propertylist">
   			</tr>
   			
   			<tr>
-  				<td colspan="2"> <input type="submit" value="Create instance" /></td>
+  			
+  				<td colspan="2"> <input type="submit" value="Create instance" class="ck-submit-button"/></td>
   			</tr>
 		</table>
 	</form>
 	
 		<wicket:fragment wicket:id="referenceInput">
-   				 <td><span wicket:id="propertyLabel"></span></td>
+   				 <td><span wicket:id="propertyLabel" class="label"></span></td>
    				 <td>
    				 		<span wicket:id="propertyInput"></span>
    				 		<a href="#" wicket:id="addField"><span wicket:id="linkLabel"></span></a>
    				 </td>
    		</wicket:fragment>
-   		<wicket:fragment wicket:id="resourceInput"><span wicket:id="searchbar"></span></wicket:fragment>
-   		<wicket:fragment wicket:id="textInput"><input  type="text" wicket:id="input" /></wicket:fragment>
-   		<wicket:fragment wicket:id="booleanInput"><input  type="checkbox" wicket:id="input" /></wicket:fragment>
+   		<wicket:fragment wicket:id="resourceInput"><span wicket:id="searchbar" class="ck-search-value"></span></wicket:fragment>
+   		<wicket:fragment wicket:id="textInput"><input  type="text" wicket:id="input" class="ck-text-value"/></wicket:fragment>
+   		<wicket:fragment wicket:id="booleanInput"><input  type="checkbox" wicket:id="input" class="ck-logical-value"/></wicket:fragment>
+</div>
+<div class="ck-footer"></div>
+</div>
 </wicket:panel>
 </html>
 
