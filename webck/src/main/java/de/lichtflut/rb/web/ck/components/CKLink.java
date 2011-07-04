@@ -107,6 +107,33 @@ public class CKLink extends CKComponent{
 			throw new UnsupportedOperationException();
 		}
 		link = new BookmarkablePageLink("link", cls, params);
+		link.add(new Label("label", label));
+		add(link);
+	}
+
+	/**
+	 * TODO: Constructor for Custom Link.
+	 * @param id -
+	 * @param label -
+	 * @param type -
+	 */
+	public CKLink(final String id, final String label, final CKLinkType type){
+		super(id);
+		if(type != CKLinkType.CUSTOM_BEHAVIOR){
+			throw new UnsupportedOperationException();
+		}
+		link = new Link("link") {
+
+			// TODO: add further infos of this obj for developers.
+			@Override
+			public void onClick() {
+				if((getBehavior(ON_LINK_CLICK_BEHAVIOR) != null)){
+					getBehavior(ON_LINK_CLICK_BEHAVIOR).execute(this, label, getParent());
+				}
+			}
+		};
+		link.add(new Label("label", label));
+		add(link);
 	}
 
 	@Override
