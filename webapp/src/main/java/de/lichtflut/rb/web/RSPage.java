@@ -230,13 +230,10 @@ public class RSPage extends RBSuperPage {
 	 */
 	@SuppressWarnings("rawtypes")
 	private NavigationBar fillMenu(final NavigationBar sidebar) {
-
 		NavigationNodePanel submitLink = new NavigationNodePanel(new CKLink("link",
 				"Submit Schema", RSPage.class, CKLinkType.WEB_PAGE_CLASS));
 		sidebar.addChild(submitLink);
-
 		// ---------------- Manage Entities Link -------------------
-
 		NavigationNodePanel linkManageEntities = new NavigationNodePanel(
 				new CKLink("link", "Manage Entities", RSPage.class,
 						CKLinkType.WEB_PAGE_CLASS));
@@ -249,7 +246,6 @@ public class RSPage extends RBSuperPage {
 		NavigationNodePanel linkUpdate = new NavigationNodePanel(
 				new CKLink("link", "Update", RSPage.class,
 						CKLinkType.WEB_PAGE_CLASS));
-
 		// Load all Schemas
 		ResourceSchemaManagement rManagement = getRBServiceProvider()
 				.getResourceSchemaManagement();
@@ -260,7 +256,6 @@ public class RSPage extends RBSuperPage {
 		if (resourceSchemas == null) {
 			resourceSchemas = new ArrayList<ResourceSchema>();
 		}
-
 		// CREATE LINK
 		for (final ResourceSchema resourceSchema : resourceSchemas) {
 			PageParameters params = new PageParameters();
@@ -269,14 +264,12 @@ public class RSPage extends RBSuperPage {
 
 			CKLink link = new CKLink("link", resourceSchema.getDescribedResourceID()
 					.getQualifiedName().getSimpleName(), CKLinkType.CUSTOM_BEHAVIOR);
-			
+
 			link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
-				
 				@Override
-				public Object execute(Object... objects) {
+				public Object execute(final Object... objects) {
 					component.removeAll();
 					component.add(new GenericResourceFormPanel("content-area", resourceSchema, null) {
-
 						public RBServiceProvider getServiceProvider() {
 							return getRBServiceProvider();
 						}
@@ -287,17 +280,15 @@ public class RSPage extends RBSuperPage {
 			NavigationNodePanel node = new NavigationNodePanel(link);
 			linkCreate.addChild(node);
 		}
-		
+
 		// SHOW LINK
 		// Iterate through Schemas an load all Entities of the Schema type
 		for (final ResourceSchema resourceSchema : resourceSchemas) {
 
 			Collection<RBEntity> instances = rTypeManagement
 					.loadAllRBEntitiesForSchema(resourceSchema);
-
-			ArrayList<RBEntity> schemaInstances = new ArrayList<RBEntity>(
-					(instances != null) ? instances : new HashSet<RBEntity>());
-
+//			ArrayList<RBEntity> schemaInstances = new ArrayList<RBEntity>(
+//					(instances != null) ? instances : new HashSet<RBEntity>());
 			PageParameters params = new PageParameters();
 			params.add("resourceid", resourceSchema.getDescribedResourceID()
 					.getQualifiedName().toURI());
@@ -308,17 +299,17 @@ public class RSPage extends RBSuperPage {
 //							GenericResourceFormPage.class, params,
 //							CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS));
 
-			
 			NavigationNodePanel node = new NavigationNodePanel(new CKLink("link",
 					resourceSchema.getDescribedResourceID().getQualifiedName().getSimpleName(),
 						CKLinkType.CUSTOM_BEHAVIOR));
 			node.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
 				@Override
-				public Object execute(Object... objects) {
+				public Object execute(final Object... objects) {
 					component.removeAll();
 					ArrayList<ResourceSchema> schemaList = new ArrayList<ResourceSchema>();
 					schemaList.add(getRBServiceProvider()
-							.getResourceSchemaManagement().getResourceSchemaForResourceType(resourceSchema.getResourceID()));
+							.getResourceSchemaManagement()
+								.getResourceSchemaForResourceType(resourceSchema.getResourceID()));
 					ResourceRegisterPanel panel = new ResourceRegisterPanel("content-area", schemaList,
 									"", null, false){
 						public RBServiceProvider getServiceProvider() {
@@ -344,7 +335,6 @@ public class RSPage extends RBSuperPage {
 //				node.addChild(navinode);
 //			}
 		}
-		
 		// UPDATE LINK
 		// Iterate through Schemas an load all Entities of the Schema type
 		for (final ResourceSchema resourceSchema : resourceSchemas) {
@@ -359,13 +349,11 @@ public class RSPage extends RBSuperPage {
 			params.add("resourceid", resourceSchema.getDescribedResourceID()
 					.getQualifiedName().toURI());
 
-			
 			NavigationNodePanel node = new NavigationNodePanel(
 					new CKLink("link", resourceSchema.getDescribedResourceID()
 							.getQualifiedName().getSimpleName(),
 							GenericResourceFormPage.class, params,
 							CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS));
-
 			linkUpdate.addChild(node);
 
 			for (RBEntity instance : schemaInstances) {
@@ -380,8 +368,6 @@ public class RSPage extends RBSuperPage {
 				node.addChild(navinode);
 			}
 		}
-
-		
 
 		// Add links
 		linkManageEntities.addChild(linkCreate);
