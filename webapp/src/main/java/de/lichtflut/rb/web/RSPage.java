@@ -263,19 +263,21 @@ public class RSPage extends RBSuperPage {
 							.getQualifiedName().getSimpleName(),
 							GenericResourceFormPage.class,
 							CKLinkType.WEB_PAGE_CLASS)//.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR,
-//									new CKBehavior() {
-//										@Override
-//										public Object execute(Object... objects) {
-//											this.add(new GenericResourceFormPanel("generic_form",schema,null){
-//												private static final long serialVersionUID = 117114431624666607L;
+//								new CKBehavior() {
+//									@Override
+//									public Object execute(Object... objects) {
+//										this.add(
+//								new GenericResourceFormPanel("generic_form",schema,null){
+//											private static final long serialVersionUID =
+//													117114431624666607L;
 //
-//												public RBServiceProvider getServiceProvider() {
-//													return getRBServiceProvider();
-//												}
+//											public RBServiceProvider getServiceProvider() {
+//												return getRBServiceProvider();
+//											}
 //
-//									        });
-//										}
-//									})
+//									       });
+//									}
+//								})
 					);
 			linkCreate.addChild(node);
 		}
