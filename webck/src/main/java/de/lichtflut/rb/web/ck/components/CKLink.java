@@ -6,8 +6,10 @@ package de.lichtflut.rb.web.ck.components;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 
@@ -44,7 +46,7 @@ public class CKLink extends CKComponent{
 	private final AbstractLink link;
 
 	/**
-	 * Constructor.
+	 * Constructor for External Link.
 	 * @param id -
  	 * @param label -
 	 * @param destination -
@@ -61,7 +63,7 @@ public class CKLink extends CKComponent{
 	}
 
 	/**
-	 * TODO: DESCRIPTION.
+	 * TODO: Constructor for Internal Link.
 	 * @param id -
 	 * @param label -
 	 * @param cls -
@@ -87,6 +89,24 @@ public class CKLink extends CKComponent{
 
 		link.add(new Label("label", label));
 		add(link);
+	}
+
+	/**
+	 * TODO: Constructor for BookmarkablePageLink.
+	 * @param id -
+	 * @param label -
+	 * @param cls -
+	 * @param params -
+	 * @param type -
+	 */
+	@SuppressWarnings("unchecked")
+	public CKLink(final String id, final String label, final Class<? extends WebPage> cls, final PageParameters params,
+			final CKLinkType type){
+		super(id);
+		if(type != CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS){
+			throw new UnsupportedOperationException();
+		}
+		link = new BookmarkablePageLink("link", cls, params);
 	}
 
 	@Override

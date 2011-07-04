@@ -17,6 +17,10 @@ public enum CKLinkType {
 	 */
 	WEB_PAGE_INSTANCE,
 	/**
+	 * This link's action should refer to a {@link Class} of {@link Page}.
+	 */
+	BOOKMARKABLE_WEB_PAGE_CLASS,
+	/**
 	 * This link's action should refer to an external resource.
 	 */
 	EXTERNAL_LINK,
