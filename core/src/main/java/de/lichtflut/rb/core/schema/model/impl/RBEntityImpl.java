@@ -147,7 +147,8 @@ public class RBEntityImpl extends RBEntity<Object> {
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+	 * @throws RBInvalidAttributeException */
 	@Override
 	public void addValueFor(final String attribute, final Object val,final int ticket)
 		throws RBInvalidValueException, RBInvalidAttributeException {
@@ -276,17 +277,21 @@ public class RBEntityImpl extends RBEntity<Object> {
 									throw new Exception("");
 								}
 								Collection<Constraint> constraints = pDec.getConstraints();
+								boolean isValid = false;
 								for (Constraint constraint : constraints) {
 									if(!constraint.isResourceTypeConstraint()){
 										throw new Exception();
 									}
 									RBEntity<Object> entity = (RBEntity<Object>)value;
-									if(!constraint.getResourceTypeConstraint().getQualifiedName().
+									if(constraint.getResourceTypeConstraint().getQualifiedName().
 											equals(entity.getResourceTypeID().
 													getQualifiedName())){
-										throw new Exception(constraint.getResourceTypeConstraint().
-												getQualifiedName().toString());
+										isValid=true;
+										break;
 									}
+								}
+								if(!isValid){
+									throw new Exception("");
 								}
 							break;
 							//Check for boolean
@@ -298,7 +303,9 @@ public class RBEntityImpl extends RBEntity<Object> {
 							}
 							break;
 							case INTEGER: Integer.parseInt(valueTmp); break;
-							case DECIMAL: Double.parseDouble(valueTmp); break;
+							case DECIMAL:
+								Double.parseDouble(valueTmp);
+								break;
 							case DATE : Date.parse(value.toString()); break;
 							default: break;
 						}

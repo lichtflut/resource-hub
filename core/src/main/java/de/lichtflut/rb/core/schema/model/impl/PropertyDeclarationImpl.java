@@ -122,10 +122,14 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	 */
 	public void addConstraint(final Constraint constraint) {
 		if(constraints!=null){
-			constraints.add(constraint);
+			if(validateContraint(constraint)){
+				constraints.add(constraint);
+			}
 		}else{
 			Set<Constraint> constraints = new HashSet<Constraint>();
-			constraints.add(constraint);
+			if(validateContraint(constraint)){
+				constraints.add(constraint);
+			}
 			setConstraints(constraints);
 		}
 	}
@@ -302,5 +306,19 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 			}
 		}
 		return sBuffer.toString();
+	}
+
+	/**
+	 * @param constraint -
+	 *@return boolean -
+	 */
+	public boolean validateContraint(final Constraint constraint){
+		switch(getElementaryDataType()){
+		case RESOURCE:
+			return constraint.isResourceTypeConstraint();
+		default:
+			break;
+		}
+		return true;
 	}
 }
