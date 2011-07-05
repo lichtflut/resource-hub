@@ -568,4 +568,7 @@ ol.commentlist {
 	content: "."; 
 }
 
-
+#sidebar-left{
+	width: 100px;
+	color: back;
+	}
