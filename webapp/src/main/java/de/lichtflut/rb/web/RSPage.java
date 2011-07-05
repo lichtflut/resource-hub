@@ -4,7 +4,6 @@
 package de.lichtflut.rb.web;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -67,7 +66,7 @@ public class RSPage extends RBSuperPage {
 	@SuppressWarnings("static-access")
 	private void init(final PageParameters parameters) {
 
-		component = new WebMarkupContainer("ckcomponent");
+		component = new WebMarkupContainer("ck-component");
 
 		component.add(new SchemaSubmitPanel("content-area") {
 
@@ -76,59 +75,37 @@ public class RSPage extends RBSuperPage {
 			}
 
 		});
+		this.add(component);
 		// ------------ Navigation - Sidebar ------------
 
 		NavigationBar sidebar = new NavigationBar("sidebar-right");
 		fillMenu(sidebar);
 		add(sidebar);
 		// -----------------------------------------------
-//		add(new SchemaSubmitPanel("schemaSubmitPanel") {
-//
+
+//		updateResourceList();
+//		this.add(resourceList);
+//		ResourceRegisterPanel panel = new ResourceRegisterPanel(
+//				"resourceRegister", getRBServiceProvider()
+//						.getResourceSchemaManagement().getAllResourceSchemas(),
+//				"", null, false) {
 //			public RBServiceProvider getServiceProvider() {
 //				return getRBServiceProvider();
 //			}
-//
+//		};
+
+//		panel.refreshComponent();
+//		this.add(panel);
+//		this.add(new ResourceRegisterPanel("resourceRegisterTest",
+//				getRBServiceProvider().getResourceSchemaManagement()
+//						.getAllResourceSchemas(), "Tigges", Arrays
+//						.asList(new String[] { "hasNachname", "hasEmail",
+//								"blablubbla" }), true) {
+//			public RBServiceProvider getServiceProvider() {
+//				return getRBServiceProvider();
+//			}
 //		});
-		updateResourceList();
-		this.add(resourceList);
-		ResourceRegisterPanel panel = new ResourceRegisterPanel(
-				"resourceRegister", getRBServiceProvider()
-						.getResourceSchemaManagement().getAllResourceSchemas(),
-				"", null, false) {
-			public RBServiceProvider getServiceProvider() {
-				return getRBServiceProvider();
-			}
-		};
-
-		panel.addBehavior(panel.SHOW_DETAILS, new CKBehavior() {
-
-			@SuppressWarnings("rawtypes")
-			@Override
-			public Object execute(final Object... objects) {
-				String identifier = (String) objects[0];
-				final int a = 2;
-				String value = (String) objects[a];
-				@SuppressWarnings("unused")
-				final RBEntity instance = (RBEntity) objects[1];
-				if (value.contains("a")) {
-					return new CKLink(identifier, "bla", RSPage.class, CKLinkType.WEB_PAGE_CLASS);
-				} else {
-					return new Label(identifier, value);
-				}
-			}
-		});
-		panel.refreshComponent();
-		this.add(panel);
-		this.add(new ResourceRegisterPanel("resourceRegisterTest",
-				getRBServiceProvider().getResourceSchemaManagement()
-						.getAllResourceSchemas(), "Tigges", Arrays
-						.asList(new String[] { "hasNachname", "hasEmail",
-								"blablubbla" }), true) {
-			public RBServiceProvider getServiceProvider() {
-				return getRBServiceProvider();
-			}
-		});
-		this.add(component);
+//		this.add(component);
 	}
 
 	/**
@@ -293,34 +270,33 @@ public class RSPage extends RBSuperPage {
 			params.add("resourceid", resourceSchema.getDescribedResourceID()
 					.getQualifiedName().toURI());
 
-//			NavigationNodePanel node = new NavigationNodePanel(
-//					new CKLink("link", resourceSchema.getDescribedResourceID()
-//							.getQualifiedName().getSimpleName(),
-//							GenericResourceFormPage.class, params,
-//							CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS));
 
-			NavigationNodePanel node = new NavigationNodePanel(new CKLink("link",
+			CKLink link = new CKLink("link",
 					resourceSchema.getDescribedResourceID().getQualifiedName().getSimpleName(),
-						CKLinkType.CUSTOM_BEHAVIOR));
-			node.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
+					CKLinkType.CUSTOM_BEHAVIOR);
+			link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
 				@Override
 				public Object execute(final Object... objects) {
 					component.removeAll();
 					ArrayList<ResourceSchema> schemaList = new ArrayList<ResourceSchema>();
 					schemaList.add(getRBServiceProvider()
 							.getResourceSchemaManagement()
-								.getResourceSchemaForResourceType(resourceSchema.getResourceID()));
-					ResourceRegisterPanel panel = new ResourceRegisterPanel("content-area", schemaList,
+								.getResourceSchemaForResourceType(resourceSchema.getDescribedResourceID()));
+				ResourceRegisterPanel	panel = new ResourceRegisterPanel("content-area", schemaList,
 									"", null, false){
 						public RBServiceProvider getServiceProvider() {
 							return getRBServiceProvider();
 						}
 					};
+					CKLink updateLink = new CKLink("propertyField", "Update","http://google.de",
+							CKLinkType.EXTERNAL_LINK);
+					panel.addLink(updateLink);
+					panel.refreshComponent();
 					component.add(panel);
 					return null;
 				}
 			});
-			node.refreshComponent();
+			NavigationNodePanel node = new NavigationNodePanel(link);
 			linkShow.addChild(node);
 
 //			for (RBEntity instance : schemaInstances) {
@@ -338,7 +314,6 @@ public class RSPage extends RBSuperPage {
 		// UPDATE LINK
 		// Iterate through Schemas an load all Entities of the Schema type
 		for (final ResourceSchema resourceSchema : resourceSchemas) {
-
 			Collection<RBEntity> instances = rTypeManagement
 					.loadAllRBEntitiesForSchema(resourceSchema);
 

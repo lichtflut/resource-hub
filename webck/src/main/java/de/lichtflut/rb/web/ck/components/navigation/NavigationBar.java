@@ -116,7 +116,7 @@ public class NavigationBar extends CKComponent implements NavigationNode {
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 
-		final ListView<NavigationNode> itemView = new ListView<NavigationNode>("nodeList", children) {
+		final ListView<NavigationNode> itemView = new ListView<NavigationNode>("linkList", children) {
 			@Override
 			protected void populateItem(final ListItem<NavigationNode> item) {
 				Component comp = item.getModelObject().getComponent();

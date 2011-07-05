@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -47,6 +48,8 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 @SuppressWarnings({ "serial", "unchecked" })
 public abstract class ResourceRegisterPanel extends CKComponent {
 
+	private List<CKLink> linkList = new ArrayList<CKLink>();
+	//Behavior-Keys
 	/**
 	 *
 	 */
@@ -259,6 +262,17 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 		return new ArrayList(fields);
 	}
 
+	/**
+	 * TODO DESCRIPTION.
+	 * @param link -
+	 * @return {@link NavigationNodePanel}
+	 */
+	public CKLink addLink(final CKLink link){
+		linkList.add(link);
+//		this.buildComponent();
+		return link;
+	}
+
 	// -----------------------------------------------------
 	/**
  *
@@ -321,6 +335,20 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 				}
 			}
 
+//			NavigationBar bar = new NavigationBar("propertyField");
+			if(linkList != null && linkList.size() > 0){
+				for (CKLink node : linkList) {
+					components.add(node);
+				}
+			}
+//			CKLink deleteLink = new CKLink("link", "Delete", CKLinkType.CUSTOM_BEHAVIOR);
+//			deleteLink.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, getBehavior(DELETE_ROW_ITEM));
+//			bar.addChild(new NavigationNodePanel(deleteLink));
+
+//			CKLink detailLink = new CKLink("propertyField", "Details", CKLinkType.CUSTOM_BEHAVIOR);
+//			detailLink.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, getBehavior(SHOW_DETAILS));
+//			components.add(detailLink);
+//			components.add(bar);
 		}
 
 		// -----------------------------------------------------
