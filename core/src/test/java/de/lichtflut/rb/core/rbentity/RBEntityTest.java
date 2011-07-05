@@ -189,17 +189,19 @@ public final class RBEntityTest {
 					"hans@hans.de");
 			person0.addValueFor("http://lichtflut.de#hatAlter", "5");
 
-			car0.addValueFor("http://lichtflut.de#hatMarke", "Audi quattro");
-			car0.addValueFor("http://lichtflut.de#hatModell", "RS 5");
-			car0.addValueFor("http://lichtflut.de#hatAlter", "1");
-			ticket1 = car0
-					.addValueFor("http://lichtflut.de#hatHalter", person1);
-			//car0.addValueFor("http://lichtflut.de#hatHalter", car0);
 
 			person1.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
 			person1.addValueFor("http://lichtflut.de#hatEmail", "peter@hans.de");
 			person1.addValueFor("http://lichtflut.de#hatAlter", "32");
-			person1.addValueFor("http://lichtflut.de#hatKind", car0);
+			//person1.addValueFor("http://lichtflut.de#hatKind", car0);
+
+			car0.addValueFor("http://lichtflut.de#hatMarke", "Audi quattro");
+			car0.addValueFor("http://lichtflut.de#hatModell", "RS 5");
+			car0.addValueFor("http://lichtflut.de#hatAlter", 4);
+			ticket1 = car0
+					.addValueFor("http://lichtflut.de#hatHalter", person1);
+			//car0.addValueFor("http://lichtflut.de#hatHalter", car0);
+
 
 		} catch (RBInvalidValueException e) {
 			invalidValueExeptionThrown = true;
@@ -207,8 +209,7 @@ public final class RBEntityTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		Assert.assertTrue(invalidValueExeptionThrown);
+		Assert.assertFalse(invalidValueExeptionThrown);
 
 		RBEntity entity = (RBEntity) car0.getValueFor(
 				"http://lichtflut.de#hatHalter", ticket1);
@@ -218,8 +219,9 @@ public final class RBEntityTest {
 				.contains("peter@hans.de"));
 
 		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRBEntity(person0));
-		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRBEntity(car0));
 		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRBEntity(person1));
+		Assert.assertFalse(provider.getRBEntityManagement().createOrUpdateRBEntity(car0));
+
 
 	}
 
@@ -293,7 +295,7 @@ public final class RBEntityTest {
 		p3.setElementaryDataType(ElementaryDataType.INTEGER);
 		p4.setElementaryDataType(ElementaryDataType.RESOURCE);
 
-		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
+		//p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
 		p4.addConstraint(ConstraintFactory.buildConstraint(referredSchema
 				.getDescribedResourceID()));
 
