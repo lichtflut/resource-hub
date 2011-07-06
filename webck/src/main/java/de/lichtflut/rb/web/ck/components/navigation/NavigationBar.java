@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.Model;
 
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -28,6 +31,8 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
 @SuppressWarnings("serial")
 public class NavigationBar extends CKComponent implements NavigationNode {
 
+	private static final Behavior CSS_CLASS_EVEN =  new AttributeAppender("class", Model.of("even"), " ");
+	private static final Behavior CSS_CLASS_ODD =  new AttributeAppender("class", Model.of("odd"), " ");
 	private final List<NavigationNode> children = new ArrayList<NavigationNode>();
 
 	// -----------------------------------------------------
@@ -116,11 +121,19 @@ public class NavigationBar extends CKComponent implements NavigationNode {
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 
-		final ListView<NavigationNode> itemView = new ListView<NavigationNode>("linkList", children) {
+		final ListView<NavigationNode> itemView = new ListView<NavigationNode>("nodeList", children) {
+			private boolean isEven = false;
 			@Override
 			protected void populateItem(final ListItem<NavigationNode> item) {
 				Component comp = item.getModelObject().getComponent();
 				((CKComponent) comp).buildComponent();
+				if(isEven){
+					comp.add(CSS_CLASS_EVEN);
+					isEven = false;
+				}else{
+					comp.add(CSS_CLASS_ODD);
+					isEven = true;
+				}
 				item.add(comp);
 			}
 		};

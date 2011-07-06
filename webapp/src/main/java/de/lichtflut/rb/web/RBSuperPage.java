@@ -105,27 +105,13 @@ public abstract class RBSuperPage extends WebPage {
 		add(titleLabel);
 
 		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
-
 		mainNavigation.addChild(new NavigationNodePanel(
+				new CKLink("link", "Resource Schema", RSPage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
+		mainNavigation.addChild(new NavigationNodePanel(new CKLink("link", "Sample Resource Page",
+				SampleResourcePage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
 
-				new CKLink("link", "Resource Schema", RSPage.class, CKLinkType.WEB_PAGE_CLASS)
-				));
-
-
-		CKLink link = new CKLink("link", "Sample Resource Page", SampleResourcePage.class, CKLinkType.WEB_PAGE_CLASS);
-
-		NavigationNodePanel menuItem2 = new NavigationNodePanel(link);
-
-		mainNavigation.addChild(menuItem2);
-
-		CKLink hideMe = new CKLink("link", "Hide me", SampleResourcePage.class, CKLinkType.WEB_PAGE_CLASS);
-
-		NavigationNodePanel menuItem = new NavigationNodePanel(
-				hideMe);
-
-
+		CKLink hideMe = new CKLink("link", "Hide me", CKLinkType.CUSTOM_BEHAVIOR);
 		hideMe.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
-
 			@SuppressWarnings("rawtypes")
 			@Override
 			public Object execute(final Object... objects) {
@@ -134,27 +120,14 @@ public abstract class RBSuperPage extends WebPage {
 				return null;
 			}
 		});
-
+		NavigationNodePanel menuItem = new NavigationNodePanel(hideMe);
 		NavigationNodePanel subMenu = new NavigationNodePanel(
-
 				new CKLink("link", "Google 3.1", "http://google.de", CKLinkType.EXTERNAL_LINK)
 				);
 
-		NavigationNodePanel subMenu2 = new NavigationNodePanel(
-				new CKLink("link", "Google 3.2", "http://google.de", CKLinkType.EXTERNAL_LINK)
-				);
-
-
 		menuItem.addChild(subMenu);
-		menuItem.addChild(subMenu2);
-
 		mainNavigation.addChild(menuItem);
-
 		add(mainNavigation);
-		mainNavigation.buildComponent();
-		mainNavigation.buildComponent();
-		mainNavigation.buildComponent();
-		mainNavigation.buildComponent();
 
 		this.add(new SearchBar("searchBar") {
 

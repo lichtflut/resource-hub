@@ -17,13 +17,18 @@
  
 /* ----------------------------------------------
    HTML ELEMENTS
-------------------------------------------------- */ 
+------------------------------------------------- */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{
+	margin:0;
+	padding:0;
+}
 body {
 	font: 11px 'Lucida Grande', Verdana, Helvetica, sans-serif;
-	color: #666666; 	
+	color: #6A6969; 	
 	margin: 0; padding: 0 0 50px 0; 
 	background: #F6F5F5 url(images/bg.gif) repeat-x; 
 	text-align: center;
+	background-color: #FFFFFF;
 }
 /* Links */
 a:link, a:visited { 
@@ -187,7 +192,6 @@ input.button {
 #content-outer {
 	background: #fff;
 	padding: 5px 0;		
-	border-bottom: 1px solid #E8E8E8;	
 	text-align: left;	
 
 }
@@ -569,6 +573,25 @@ ol.commentlist {
 }
 
 #sidebar-left{
-	width: 100px;
-	color: back;
+	float: left;
+	width: 300px;
+	padding-bottom: 30px;
+    padding-left: 50px;
+    padding-right: 20px;
+}
+	
+.generic-resource-form-panel{
+	float:left;
+	width: 60%;
+}
+.schema-submit-panel{
+	float:left;
+	width: 60%;
+}
+#main{
+	
+	}
+div.schema-submit-panel textarea{
+	width: 300px;
+	height: 300px;
 	}

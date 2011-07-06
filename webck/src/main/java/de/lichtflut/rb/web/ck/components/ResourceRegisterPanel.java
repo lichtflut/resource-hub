@@ -22,7 +22,7 @@ import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.api.RBEntityManagement.SearchContext;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-
+import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 
 /**
  * <p>
@@ -46,20 +46,32 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  * @author Nils Bleisch
  */
 @SuppressWarnings({ "serial", "unchecked" })
-public abstract class ResourceRegisterPanel extends CKComponent {
+public abstract class ResourceRegisterPanel extends CKComponent{
 
-	private List<CKLink> linkList = new ArrayList<CKLink>();
+	private List<CKLink> nodeList = new ArrayList<CKLink>();
 	//Behavior-Keys
 	/**
 	 *
 	 */
 	public static final String SHOW_DETAILS = "de.lichtflut.web.ck.show_details.behavior";
 
-	private static final String INSTANCES = "instances",
-								SCHEMAS = "schemas",
-								FILTER = "filter",
-								FIELDS = "fields",
-								SIMPLE_FLAG = "simple_flag";
+	/**
+	 *
+	 */
+	public static final String DELETE_ROW_ITEM = "de.lichtflut.web.ck.delete_row_item.behavior";
+
+	/**
+	 *
+	 */
+	public static final String UPDATE_ROW_ITEM = "de.lichtflut.web.ck.update_row_item.behavior";
+
+	@SuppressWarnings("rawtypes")
+	private Collection<RBEntity> instances = new ArrayList<RBEntity>();
+	private List<String> fields = new ArrayList<String>();
+	private Collection<ResourceSchema> schemas = new ArrayList<ResourceSchema>();
+	private String filter = "";
+	private boolean simpleFlag;
+
 	// Constructors
 
 	/**
@@ -77,10 +89,9 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 			final Collection<RBEntity> instances, final List<String> fields,
 			final boolean simpleFlag) {
 		super(id);
-		CKValueWrapperModel model = this.getModel();
-		model.addValue(INSTANCES, instances == null ? null :  new ArrayList<RBEntity>(instances));
-		model.addValue(FIELDS, fields == null ? null : new ArrayList<String>(fields));
-		model.addValue(SIMPLE_FLAG, simpleFlag);
+		this.instances = (ArrayList<RBEntity>) instances;
+		this.fields = (ArrayList<String>) fields;
+		this.simpleFlag = simpleFlag;
 		buildComponent();
 	}
 
@@ -104,11 +115,10 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 			final Collection<ResourceSchema> schemas, final String filter,
 			final List<String> fields, final boolean simpleFlag) {
 		super(id);
-		CKValueWrapperModel model = this.getModel();
-		model.addValue(SCHEMAS, ((schemas == null) ? null :  new ArrayList<ResourceSchema>(schemas)));
-		model.addValue(FIELDS, ((fields == null) ? null : new ArrayList<String>(fields)));
-		model.addValue(FILTER, filter);
-		model.addValue(SIMPLE_FLAG, simpleFlag);
+		this.filter = filter;
+		this.fields = fields;
+		this.simpleFlag = simpleFlag;
+		this.schemas = schemas;
 		buildComponent();
 	}
 
@@ -182,13 +192,11 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 	 *            /
 	 * @return /
 	 */
-	@SuppressWarnings("rawtypes")
 	private List<RegisterRowEntry> buildRegisterTableEntries(
 			final Collection<ResourceSchema> schemas, final String filter,
 			final List<String> fields, final SortCriteria criteria) {
 		RBEntityManagement rManagement = getServiceProvider()
 				.getRBEntityManagement();
-		Collection<RBEntity> instances;
 		if (filter != null && !filter.equals("")) {
 			instances = rManagement.loadAllRBEntitiesForSchema(
 					schemas, filter, SearchContext.CONJUNCT_MULTIPLE_KEYWORDS);
@@ -219,8 +227,7 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 		if (tempFields == null || tempFields.size() == 0) {
 			tempFields = evaluateTotalFields(instances);
 		}
-
-		// Add first the tile-row
+		// Add first the title-row
 		output.add(new RegisterRowEntry(tempFields));
 
 		for (RBEntity instance : instances) {
@@ -249,7 +256,7 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 						.getQualifiedName().toURI(), Boolean.TRUE);
 				Collection<String> attributeNames = instance
 						.getAttributeNames();
-				if ((Boolean)this.getModel().getValue(SIMPLE_FLAG)) {
+				if (simpleFlag) {
 					for (String attributeName : attributeNames) {
 						fields.add(instance
 								.getSimpleAttributeName(attributeName));
@@ -264,13 +271,13 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 
 	/**
 	 * TODO DESCRIPTION.
-	 * @param link -
+	 * @param node -
 	 * @return {@link NavigationNodePanel}
 	 */
-	public CKLink addLink(final CKLink link){
-		linkList.add(link);
-//		this.buildComponent();
-		return link;
+	public CKLink addLink(final CKLink node){
+		nodeList.add(node);
+		this.buildComponent();
+		return node;
 	}
 
 	// -----------------------------------------------------
@@ -335,20 +342,62 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 				}
 			}
 
-//			NavigationBar bar = new NavigationBar("propertyField");
-			if(linkList != null && linkList.size() > 0){
-				for (CKLink node : linkList) {
-					components.add(node);
-				}
-			}
 //			CKLink deleteLink = new CKLink("link", "Delete", CKLinkType.CUSTOM_BEHAVIOR);
-//			deleteLink.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, getBehavior(DELETE_ROW_ITEM));
+//			deleteLink.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
+//
+//				@Override
+//				public Object execute(Object... objects) {
+//					getParent().setVisible(false);
+//					return null;
+//				}
+//			});
 //			bar.addChild(new NavigationNodePanel(deleteLink));
 
-//			CKLink detailLink = new CKLink("propertyField", "Details", CKLinkType.CUSTOM_BEHAVIOR);
-//			detailLink.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, getBehavior(SHOW_DETAILS));
-//			components.add(detailLink);
-//			components.add(bar);
+//			bar.addChild(new NavigationNodePanel(detailLink));
+
+			final CKLink detailsLink = new CKLink("propertyField", "Details", CKLinkType.CUSTOM_BEHAVIOR);
+			final CKLink deleteLink = new CKLink("propertyField", "Delete", CKLinkType.CUSTOM_BEHAVIOR);
+			nodeList.add(detailsLink);
+
+
+			detailsLink.addBehavior(SHOW_DETAILS, new CKBehavior() {
+
+				@Override
+				public Object execute(final Object... objects) {
+					((Component) objects[2]).setVisible(false);
+					return null;
+				}
+			});
+			deleteLink.addBehavior("test", new CKBehavior() {
+
+				@Override
+				public Object execute(final Object... objects) {
+					((Component) objects[2]).getParent().setVisible(false);
+					components.add(((Component) objects[2]));
+					return null;
+				}
+			});
+			components.add(detailsLink);
+			components.add(deleteLink);
+
+
+
+			if(getBehavior(SHOW_DETAILS) != null){
+				CKLink link = new CKLink("propertyField", "Details", CKLinkType.CUSTOM_BEHAVIOR);
+				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, getBehavior(SHOW_DETAILS));
+				components.add(link);
+			}
+			if(getBehavior(UPDATE_ROW_ITEM) != null){
+				CKLink link = new CKLink("propertyField", "Update", CKLinkType.CUSTOM_BEHAVIOR);
+				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, getBehavior(UPDATE_ROW_ITEM));
+				components.add(link);
+			}
+			if(getBehavior(DELETE_ROW_ITEM) != null){
+				CKLink link = new CKLink("propertyField", "Delete", CKLinkType.CUSTOM_BEHAVIOR);
+				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, getBehavior(DELETE_ROW_ITEM));
+				components.add(link);
+			}
+
 		}
 
 		// -----------------------------------------------------
@@ -374,20 +423,19 @@ public abstract class ResourceRegisterPanel extends CKComponent {
 
 	// -----------------------------------------------------
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 		List<RegisterRowEntry> entries=null;
 		try{
-		if(model.getValue(INSTANCES)!=null){
+		if(instances != null && instances.size() > 0){
 			entries = buildRegisterTableEntries(
-					(Collection<RBEntity>)model.getValue(INSTANCES),
-					(List<String>)model.getValue(FIELDS), null);
+					instances,
+					fields, null);
 		}else{
 			entries = buildRegisterTableEntries(
-					(Collection<ResourceSchema>)model.getValue(SCHEMAS),
-					(String)model.getValue(FILTER),
-					(List<String>)model.getValue(FIELDS), null);
+					schemas,
+					filter,
+					fields, null);
 		}
 		//If something went wrong
 		}catch(Exception any){
