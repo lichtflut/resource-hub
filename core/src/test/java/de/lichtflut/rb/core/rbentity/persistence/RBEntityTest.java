@@ -90,10 +90,12 @@ public final class RBEntityTest {
 			p0.addValueFor("http://lichtflut.de#hatEmail", "hans@test.com");
 			p0.addValueFor("http://lichtflut.de#hatAlter", "2");
 
+			Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllRBEntitiesForSchema(schema);
+
 			p1.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
 			p1.addValueFor("http://lichtflut.de#hatEmail", "test1@test.com");
 			p1.addValueFor("http://lichtflut.de#hatAlter", "24");
-			//p1.addValueFor("http://lichtflut.de#hatKind", p0);
+			//p1.addValueFor("http://lichtflut.de#hatKind", new ArrayList<RBEntity>(instances).get(0));
 
 		}catch(Exception any){
 			any.printStackTrace();

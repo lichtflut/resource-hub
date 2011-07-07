@@ -35,7 +35,7 @@ public final class RBEntityTest {
 	/**
 	 * @param
 	 */
-	@Test
+	//@Test
 	public void testResourceTypeInstance() {
 		// Generate an instance for a given schema
 		RBEntity<Object> instance = createPersonSchema().generateRBEntity();
@@ -80,7 +80,7 @@ public final class RBEntityTest {
 					ticket_hatGeburtstag1);
 			exceptionOccured = false;
 		} catch (Exception e) {
-			System.out.println("ok! " + e.getMessage());
+			System.out.println(e.getMessage());
 		}
 		Assert.assertTrue(exceptionOccured);
 		exceptionOccured = false;
@@ -197,10 +197,15 @@ public final class RBEntityTest {
 
 			car0.addValueFor("http://lichtflut.de#hatMarke", "Audi quattro");
 			car0.addValueFor("http://lichtflut.de#hatModell", "a");
-			car0.addValueFor("http://lichtflut.de#hatAlter", 4);
+			String invalidValueMessage = "";
+			try{
+				car0.addValueFor("http://lichtflut.de#hatAlter", 4);
+			}catch(RBInvalidValueException e){
+				invalidValueMessage=e.getMessage();
+			}
+			Assert.assertTrue(invalidValueMessage.equals("\"4\" does not match \"[1-3]\""));
 			ticket1 = car0
 					.addValueFor("http://lichtflut.de#hatHalter", person1);
-			//car0.addValueFor("http://lichtflut.de#hatHalter", car0);
 
 
 		} catch (RBInvalidValueException e) {
@@ -292,7 +297,7 @@ public final class RBEntityTest {
 		p3.setElementaryDataType(ElementaryDataType.INTEGER);
 		p4.setElementaryDataType(ElementaryDataType.RESOURCE);
 
-		p3.addConstraint(ConstraintFactory.buildConstraint("[2-4]"));
+		p3.addConstraint(ConstraintFactory.buildConstraint("[1-3]"));
 		p4.addConstraint(ConstraintFactory.buildConstraint(referredSchema
 				.getDescribedResourceID()));
 
