@@ -280,10 +280,8 @@ public class RSPage extends RBSuperPage {
 						@Override
 						public Object execute(final Object... objects) {
 							component.removeAll();
-							RBEntity instance = rTypeManagement.loadRBEntity(
-									resourceSchema.getDescribedResourceID().getQualifiedName());
 							GenericResourceFormPanel resourceFormPanel = new GenericResourceFormPanel(
-									"content-area",	resourceSchema, instance) {
+									"content-area",	resourceSchema, (RBEntity) objects[0]) {
 								@Override
 								public RBServiceProvider getServiceProvider() {
 									// TODO Auto-generated method stub
