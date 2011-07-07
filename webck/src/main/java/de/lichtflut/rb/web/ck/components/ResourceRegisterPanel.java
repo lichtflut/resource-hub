@@ -48,22 +48,27 @@ import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 @SuppressWarnings({ "serial", "unchecked" })
 public abstract class ResourceRegisterPanel extends CKComponent{
 
-	private List<CKLink> nodeList = new ArrayList<CKLink>();
 	//Behavior-Keys
 	/**
-	 *
+	 * TODO DESCRIPTION.
 	 */
 	public static final String SHOW_DETAILS = "de.lichtflut.web.ck.show_details.behavior";
 
 	/**
-	 *
+	 * TODO DESCRIPTION.
 	 */
 	public static final String DELETE_ROW_ITEM = "de.lichtflut.web.ck.delete_row_item.behavior";
 
 	/**
-	 *
+	 * TODO DESCRIPTION.
 	 */
 	public static final String UPDATE_ROW_ITEM = "de.lichtflut.web.ck.update_row_item.behavior";
+
+	/**
+	 * TODO DESCRIPTION.
+	 * with params
+	 */
+	public static final String ADD_CUSTOM_ROW_ITEM = "de.lichtflut.web.ck.custom_row_item.behavior";
 
 	@SuppressWarnings("rawtypes")
 	private Collection<RBEntity> instances = new ArrayList<RBEntity>();
@@ -269,16 +274,6 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 		return new ArrayList(fields);
 	}
 
-	/**
-	 * TODO DESCRIPTION.
-	 * @param node -
-	 * @return {@link NavigationNodePanel}
-	 */
-	public CKLink addLink(final CKLink node){
-		nodeList.add(node);
-		this.buildComponent();
-		return node;
-	}
 
 	// -----------------------------------------------------
 	/**
@@ -331,56 +326,16 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 						output = output.substring(", ".length(),
 								output.length());
 					}
-					if (getBehavior(SHOW_DETAILS) != null) {
-						components.add((Component) getBehavior(SHOW_DETAILS)
-								.execute("propertyField", instance, output,
-										field));
-					} else {
+//					if (getBehavior(SHOW_DETAILS) != null) {
+//						components.add((Component) getBehavior(SHOW_DETAILS)
+//								.execute("propertyField", instance, output,
+//										field));
+//					} else {
 						components.add(new Label("propertyField", Model
 								.of(output)));
-					}
+//					}
 				}
 			}
-
-//			CKLink deleteLink = new CKLink("link", "Delete", CKLinkType.CUSTOM_BEHAVIOR);
-//			deleteLink.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
-//
-//				@Override
-//				public Object execute(Object... objects) {
-//					getParent().setVisible(false);
-//					return null;
-//				}
-//			});
-//			bar.addChild(new NavigationNodePanel(deleteLink));
-
-//			bar.addChild(new NavigationNodePanel(detailLink));
-
-			final CKLink detailsLink = new CKLink("propertyField", "Details", CKLinkType.CUSTOM_BEHAVIOR);
-			final CKLink deleteLink = new CKLink("propertyField", "Delete", CKLinkType.CUSTOM_BEHAVIOR);
-			nodeList.add(detailsLink);
-
-
-			detailsLink.addBehavior(SHOW_DETAILS, new CKBehavior() {
-
-				@Override
-				public Object execute(final Object... objects) {
-					((Component) objects[2]).setVisible(false);
-					return null;
-				}
-			});
-			deleteLink.addBehavior("test", new CKBehavior() {
-
-				@Override
-				public Object execute(final Object... objects) {
-					((Component) objects[2]).getParent().setVisible(false);
-					components.add(((Component) objects[2]));
-					return null;
-				}
-			});
-			components.add(detailsLink);
-			components.add(deleteLink);
-
-
 
 			if(getBehavior(SHOW_DETAILS) != null){
 				CKLink link = new CKLink("propertyField", "Details", CKLinkType.CUSTOM_BEHAVIOR);
@@ -396,6 +351,10 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 				CKLink link = new CKLink("propertyField", "Delete", CKLinkType.CUSTOM_BEHAVIOR);
 				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, getBehavior(DELETE_ROW_ITEM));
 				components.add(link);
+			}
+			if(getBehavior(ADD_CUSTOM_ROW_ITEM) != null){
+				CKBehavior behavior = getBehavior(ADD_CUSTOM_ROW_ITEM);
+				components.add((Component) behavior.execute(this));
 			}
 
 		}

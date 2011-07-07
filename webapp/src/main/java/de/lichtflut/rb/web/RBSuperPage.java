@@ -106,7 +106,7 @@ public abstract class RBSuperPage extends WebPage {
 
 		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
 		mainNavigation.addChild(new NavigationNodePanel(
-				new CKLink("link", "Resource Schema", RSPage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
+				new CKLink("link", "Home", RSPage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
 		mainNavigation.addChild(new NavigationNodePanel(new CKLink("link", "Sample Resource Page",
 				SampleResourcePage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
 
