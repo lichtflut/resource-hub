@@ -193,10 +193,10 @@ public final class RBEntityTest {
 			person1.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
 			person1.addValueFor("http://lichtflut.de#hatEmail", "peter@hans.de");
 			person1.addValueFor("http://lichtflut.de#hatAlter", "32");
-			//person1.addValueFor("http://lichtflut.de#hatKind", car0);
+			person1.addValueFor("http://lichtflut.de#hatKind", person0);
 
 			car0.addValueFor("http://lichtflut.de#hatMarke", "Audi quattro");
-			car0.addValueFor("http://lichtflut.de#hatModell", "RS 5");
+			car0.addValueFor("http://lichtflut.de#hatModell", "a");
 			car0.addValueFor("http://lichtflut.de#hatAlter", 4);
 			ticket1 = car0
 					.addValueFor("http://lichtflut.de#hatHalter", person1);
@@ -204,6 +204,7 @@ public final class RBEntityTest {
 
 
 		} catch (RBInvalidValueException e) {
+			e.printStackTrace();
 			invalidValueExeptionThrown = true;
 		} catch (RBInvalidAttributeException e) {
 			// TODO Auto-generated catch block
@@ -217,10 +218,6 @@ public final class RBEntityTest {
 		Assert.assertTrue(((String) entity.getValueFor(
 				"http://lichtflut.de#hatEmail", ticket0))
 				.contains("peter@hans.de"));
-
-		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRBEntity(person0));
-		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRBEntity(person1));
-		Assert.assertFalse(provider.getRBEntityManagement().createOrUpdateRBEntity(car0));
 
 
 	}
@@ -295,7 +292,7 @@ public final class RBEntityTest {
 		p3.setElementaryDataType(ElementaryDataType.INTEGER);
 		p4.setElementaryDataType(ElementaryDataType.RESOURCE);
 
-		//p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
+		p3.addConstraint(ConstraintFactory.buildConstraint("[2-4]"));
 		p4.addConstraint(ConstraintFactory.buildConstraint(referredSchema
 				.getDescribedResourceID()));
 

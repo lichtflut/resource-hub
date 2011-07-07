@@ -285,7 +285,7 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	 */
 	@Override
 	public String toString() {
-		int maxVal = 2;
+		final int maxVal = 5;
 		String schemaName = this.getResourceSchema().getDescribedResourceID()
 				.getQualifiedName().getSimpleName();
 		StringBuilder output = new StringBuilder("[" + schemaName + "] ");

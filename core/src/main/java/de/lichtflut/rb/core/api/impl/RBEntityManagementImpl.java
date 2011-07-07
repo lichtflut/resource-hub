@@ -60,6 +60,7 @@ public class RBEntityManagementImpl implements RBEntityManagement{
 			instance.createAssociations(null);
 			mc.attach(instance);
 		}catch(Exception any){
+			any.printStackTrace();
 			return false;
 		}
 		return true;

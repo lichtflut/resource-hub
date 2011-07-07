@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
+
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -100,9 +102,11 @@ public class RBEntityImpl extends RBEntity<Object> {
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+	 * @throws RBInvalidAttributeException
+	 * @throws RBInvalidValueException */
 	@Override
-	public void releaseTicketFor(final String attribute, final int ticket) throws RBInvalidValueException,RBInvalidAttributeException {
+	public void releaseTicketFor(final String attribute, final int ticket) throws RBInvalidAttributeException, RBInvalidValueException {
 		if((!containsAttribute(attribute))){
 			throw new RBInvalidAttributeException("The attribute " + attribute + " is not defined");
 		}
@@ -277,16 +281,16 @@ public class RBEntityImpl extends RBEntity<Object> {
 									throw new Exception("");
 								}
 								Collection<Constraint> constraints = pDec.getConstraints();
-								boolean isValid = false;
+								boolean isValid = true;
 								for (Constraint constraint : constraints) {
 									if(!constraint.isResourceTypeConstraint()){
 										throw new Exception();
 									}
 									RBEntity<Object> entity = (RBEntity<Object>)value;
-									if(constraint.getResourceTypeConstraint().getQualifiedName().
+									if(!constraint.getResourceTypeConstraint().getQualifiedName().
 											equals(entity.getResourceTypeID().
 													getQualifiedName())){
-										isValid=true;
+										isValid=false;
 										break;
 									}
 								}
@@ -302,19 +306,36 @@ public class RBEntityImpl extends RBEntity<Object> {
 								throw new Exception("");
 							}
 							break;
-							case INTEGER: Integer.parseInt(valueTmp); break;
+							case INTEGER:
+								try{
+									Integer.parseInt(valueTmp);
+								}catch(Exception any){
+									throw new Exception("");
+								}
+								validateRegex(pDec, String.valueOf(value));
+								break;
 							case DECIMAL:
-								Double.parseDouble(valueTmp);
+								try{
+									Double.parseDouble(valueTmp);
+								}catch(Exception any){
+									throw new Exception("");
+								}
+								validateRegex(pDec, String.valueOf(value));
 								break;
 							case DATE : Date.parse(value.toString()); break;
+							case STRING:
+								validateRegex(pDec, (String) value);
+								break;
 							default: break;
 						}
 					}catch(Exception any){
-							//entity.getResourceTypeID()
-						throw new RBInvalidValueException(
-								"\""+value
-								+"\" is not a valid value for the expected type "
-								+pDec.getElementaryDataType().name());
+						String message = any.getMessage();
+						if(message.equals("")){
+							message = "\""+value
+							+"\" is not a valid value for the expected type "
+							+pDec.getElementaryDataType().name();
+						}
+						throw new RBInvalidValueException(message);
 					}
 					return true;
 				}
@@ -328,6 +349,20 @@ public class RBEntityImpl extends RBEntity<Object> {
 					propertyAssertion);
 			internalRep.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(),vHolder);
 		}//End of for
+	}
+
+	/**
+	 *
+	 * @throws Exception -
+	 * @param pDec -
+	 * @param value -
+	 */
+	private void validateRegex(final PropertyDeclaration pDec, final String value) throws Exception{
+		for (Constraint constraint : pDec.getConstraints()) {
+			if(!Pattern.matches(constraint.getLiteralConstraint(), (CharSequence) value)){
+				throw new Exception("\""+value+"\" does not match \""+constraint.getLiteralConstraint()+"\"");
+			}
+		}
 	}
 
 	// -----------------------------------------------------

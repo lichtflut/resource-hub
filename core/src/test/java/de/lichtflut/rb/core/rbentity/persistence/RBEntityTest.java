@@ -80,21 +80,29 @@ public final class RBEntityTest {
 		//Store the schema
 		provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(schema);
 		//Build an instance
-		RBEntity<Object> instance = schema.generateRBEntity();
-		Assert.assertNotNull(instance);
+		RBEntity<Object> p0 = schema.generateRBEntity();
+		Assert.assertNotNull(p0);
+		RBEntity<Object> p1 = schema.generateRBEntity();
+		Assert.assertNotNull(p1);
 		try{
-			instance.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
-			instance.addValueFor("http://lichtflut.de#hatEmail", "test1@test.com");
-			instance.addValueFor("http://lichtflut.de#hatAlter", "24");
+
+			p0.addValueFor("http://lichtflut.de#hatGeburtstag", "test2");
+			p0.addValueFor("http://lichtflut.de#hatEmail", "hans@test.com");
+			p0.addValueFor("http://lichtflut.de#hatAlter", "2");
+
+			p1.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
+			p1.addValueFor("http://lichtflut.de#hatEmail", "test1@test.com");
+			p1.addValueFor("http://lichtflut.de#hatAlter", "24");
+			//p1.addValueFor("http://lichtflut.de#hatKind", p0);
 
 		}catch(Exception any){
 			any.printStackTrace();
 		}
-		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRBEntity(instance));
+		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRBEntity(p0));
+		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateRBEntity(p1));
 		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllRBEntitiesForSchema(schema);
-		Assert.assertTrue(instances.size()==1);
+		Assert.assertTrue(instances.size()==2);
 		RBEntity entity = new ArrayList<RBEntity>(instances).get(0);
-
 		//Made some proofs
 
 		Assert.assertEquals(provider.getRBEntityManagement().loadRBEntity(entity), entity);
@@ -126,6 +134,7 @@ public final class RBEntityTest {
 		p4.setElementaryDataType(ElementaryDataType.RESOURCE);
 
 		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
+		p4.addConstraint(ConstraintFactory.buildConstraint(schema.getDescribedResourceID()));
 
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
 		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
