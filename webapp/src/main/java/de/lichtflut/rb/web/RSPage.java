@@ -221,7 +221,7 @@ public class RSPage extends RBSuperPage {
 		// Load all Schemas
 		ResourceSchemaManagement rManagement = getRBServiceProvider()
 				.getResourceSchemaManagement();
-		RBEntityManagement rTypeManagement = getRBServiceProvider()
+		final RBEntityManagement rTypeManagement = getRBServiceProvider()
 				.getRBEntityManagement();
 		Collection<ResourceSchema> resourceSchemas = rManagement
 				.getAllResourceSchemas();
@@ -233,10 +233,8 @@ public class RSPage extends RBSuperPage {
 			PageParameters params = new PageParameters();
 			params.add("resourceid", resourceSchema.getDescribedResourceID()
 					.getQualifiedName().toURI());
-
 			CKLink link = new CKLink("link", resourceSchema.getDescribedResourceID()
 					.getQualifiedName().getSimpleName(), CKLinkType.CUSTOM_BEHAVIOR);
-
 			link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
 				@Override
 				public Object execute(final Object... objects) {
@@ -260,7 +258,6 @@ public class RSPage extends RBSuperPage {
 			PageParameters params = new PageParameters();
 			params.add("resourceid", resourceSchema.getDescribedResourceID()
 					.getQualifiedName().toURI());
-
 			CKLink link = new CKLink("link",
 					resourceSchema.getDescribedResourceID().getQualifiedName().getSimpleName(),
 					CKLinkType.CUSTOM_BEHAVIOR);
@@ -279,26 +276,54 @@ public class RSPage extends RBSuperPage {
 							return getRBServiceProvider();
 						}
 					};
-
-//					CKLink updateLink = new CKLink("link", "Update","http://google.de",
-//							CKLinkType.EXTERNAL_LINK);
-//					panel.addLink(new NavigationNodePanel(updateLink));
+					panel.addBehavior(ResourceRegisterPanel.SHOW_DETAILS, new CKBehavior() {
+						@Override
+						public Object execute(final Object... objects) {
+							component.removeAll();
+							RBEntity instance = rTypeManagement.loadRBEntity(
+									resourceSchema.getDescribedResourceID().getQualifiedName());
+							GenericResourceFormPanel resourceFormPanel = new GenericResourceFormPanel(
+									"content-area",	resourceSchema, instance) {
+								@Override
+								public RBServiceProvider getServiceProvider() {
+									// TODO Auto-generated method stub
+									return null;
+								}
+							};
+							component.add(resourceFormPanel);
+							return null;
+						}
+					});
+					panel.addBehavior(ResourceRegisterPanel.DELETE_ROW_ITEM, new CKBehavior() {
+						@Override
+						public Object execute(final Object... objects) {
+							CKLink deleteLink = (CKLink) objects[0];
+							deleteLink.setVisible(false);
+							return null;
+						}
+					});
+					panel.addBehavior(ResourceRegisterPanel.ADD_CUSTOM_ROW_ITEM, new CKBehavior() {
+						@Override
+						public Object execute(final Object... objects) {
+							return new CKLink("propertyField", "Google", "http://google.com/search?q="
+										+ resourceSchema.getDescribedResourceID()
+											.getQualifiedName().getSimpleName(),
+											CKLinkType.EXTERNAL_LINK);
+						}
+					});
+					panel.refreshComponent();
 					component.add(panel);
 					return null;
 				}
 			});
-			NavigationNodePanel node = new NavigationNodePanel(link);
-			linkShow.addChild(node);
+			linkShow.addChild(new NavigationNodePanel(link));
 		}
 		// UPDATE LINK
 		// Iterate through Schemas an load all Entities of the Schema type
 		for (final ResourceSchema resourceSchema : resourceSchemas) {
-			Collection<RBEntity> instances = rTypeManagement
-					.loadAllRBEntitiesForSchema(resourceSchema);
-
+			Collection<RBEntity> instances = rTypeManagement.loadAllRBEntitiesForSchema(resourceSchema);
 			ArrayList<RBEntity> schemaInstances = new ArrayList<RBEntity>(
 					(instances != null) ? instances : new HashSet<RBEntity>());
-
 			PageParameters params = new PageParameters();
 			params.add("resourceid", resourceSchema.getDescribedResourceID()
 					.getQualifiedName().toURI());
@@ -328,7 +353,6 @@ public class RSPage extends RBSuperPage {
 		linkManageEntities.addChild(linkShow);
 		linkManageEntities.addChild(linkUpdate);
 		sidebar.addChild(linkManageEntities);
-
 		return sidebar;
 	}
 }
