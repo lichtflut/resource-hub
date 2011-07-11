@@ -338,8 +338,17 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 			}
 
 			if(getBehavior(SHOW_DETAILS) != null){
+				final CKBehavior show_details = getBehavior(SHOW_DETAILS);
 				CKLink link = new CKLink("propertyField", "Details", CKLinkType.CUSTOM_BEHAVIOR);
-				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, getBehavior(SHOW_DETAILS));
+					
+				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
+					
+					@Override
+					public Object execute(Object... objects) {
+						show_details.execute(instance);
+						return null;
+					}
+				});
 				components.add(link);
 			}
 			if(getBehavior(UPDATE_ROW_ITEM) != null){
