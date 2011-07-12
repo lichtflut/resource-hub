@@ -31,9 +31,8 @@ import de.lichtflut.rb.web.ck.behavior.CKBehavior;
  * Supported Behaviors:
  * <ul>
  * <li>
- * <<<<<<< Updated upstream SHOW_DETAILS: Occurence: Rendering each value cell.
- * param: field-name, entity ======= SHOW_DETAILS: Occurence: Rendering each
- * value cell. param: field-name, entity. >>>>>>> Stashed changes</li>
+ * SHOW_DETAILS: Occurence: Rendering each
+ * value cell. param: field-name, entity.</li>
  *
  * </ul>
  *
@@ -50,23 +49,63 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 
 	//Behavior-Keys
 	/**
-	 * TODO DESCRIPTION.
+	 * <p>
+	 * This behavior is called only when specified.
+	 * The Behavior describes the action which will be executed by the link.
+	 * </p>
+	 * <p>
+	 * The following params will be parsed to the behavior in a well-defined order:
+	 * <ol>
+	 * 	<li>{@link Class}, the ck-components-class</li>
+	 * </ol>
+	 * </p>
 	 */
 	public static final String SHOW_DETAILS = "de.lichtflut.web.ck.show_details.behavior";
 
 	/**
-	 * TODO DESCRIPTION.
+	 * <p>
+	 * This behavior is called only when specified.
+	 * The Behavior describes the action which will be executed by the link.
+	 * </p>
+	 * <p>
+	 * The following params will be parsed to the behavior in a well-defined order:
+	 * <ol>
+	 * 	<li>{@link Class}, the ck-components-class</li>
+	 * </ol>
+	 * </p>
 	 */
 	public static final String DELETE_ROW_ITEM = "de.lichtflut.web.ck.delete_row_item.behavior";
 
 	/**
-	 * TODO DESCRIPTION.
+	 * <p>
+	 * This behavior is called only when specified.
+	 * The Behavior describes the action which will be executed by the link.
+	 * </p>
+	 * <p>
+	 * The following params will be parsed to the behavior in a well-defined order:
+	 * <ol>
+	 * 	<li>{@link Class}, the ck-components-class</li>
+	 * </ol>
+	 * </p>
 	 */
 	public static final String UPDATE_ROW_ITEM = "de.lichtflut.web.ck.update_row_item.behavior";
 
 	/**
-	 * TODO DESCRIPTION.
-	 * with params
+	 * <p>
+	 * This behavior is called only when specified.
+	 * The CKBehavior should return a CK-Component which will be added
+	 * to the {@link ResourceRegisterPanel}
+	 * </p>
+	 * <p>
+	 * The component-id must be "propertyField".
+	 * </p>
+	 * <p>
+	 * The following params will be parsed to the behavior in a well-defined order:
+	 * <ol>
+	 * 	<li>{@link Class}, the ck-components-class</li>
+	 * 	<li>String, the link label</li>
+	 * </ol>
+	 * </p>
 	 */
 	public static final String ADD_CUSTOM_ROW_ITEM = "de.lichtflut.web.ck.custom_row_item.behavior";
 
@@ -180,7 +219,6 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 				};
 				item.add(propertyLine);
 			}
-
 		};
 		this.add(resourceTable);
 	}
@@ -338,34 +376,47 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 			}
 
 			if(getBehavior(SHOW_DETAILS) != null){
-				final CKBehavior show_details = getBehavior(SHOW_DETAILS);
+				final CKBehavior showDetails = getBehavior(SHOW_DETAILS);
 				CKLink link = new CKLink("propertyField", "Details", CKLinkType.CUSTOM_BEHAVIOR);
-					
-				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
-					
+				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior(){
 					@Override
-					public Object execute(Object... objects) {
-						show_details.execute(instance);
+					public Object execute(final Object... objects) {
+						showDetails.execute(instance);
 						return null;
 					}
 				});
 				components.add(link);
 			}
 			if(getBehavior(UPDATE_ROW_ITEM) != null){
+				final CKBehavior updateDetails = getBehavior(UPDATE_ROW_ITEM);
 				CKLink link = new CKLink("propertyField", "Update", CKLinkType.CUSTOM_BEHAVIOR);
-				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, getBehavior(UPDATE_ROW_ITEM));
+				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
+					
+					@Override
+					public Object execute(Object... objects) {
+						updateDetails.execute(instance);
+						return null;
+					}
+				});
 				components.add(link);
 			}
 			if(getBehavior(DELETE_ROW_ITEM) != null){
+				final CKBehavior deleteDetails = getBehavior(DELETE_ROW_ITEM);
 				CKLink link = new CKLink("propertyField", "Delete", CKLinkType.CUSTOM_BEHAVIOR);
-				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, getBehavior(DELETE_ROW_ITEM));
+				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
+					
+					@Override
+					public Object execute(Object... objects) {
+						deleteDetails.execute(instance);
+						return null;
+					}
+				});
 				components.add(link);
 			}
 			if(getBehavior(ADD_CUSTOM_ROW_ITEM) != null){
 				CKBehavior behavior = getBehavior(ADD_CUSTOM_ROW_ITEM);
 				components.add((Component) behavior.execute(this));
 			}
-
 		}
 
 		// -----------------------------------------------------
@@ -377,7 +428,6 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 		public ArrayList<Component> getComponentList() {
 			return components;
 		}
-
 	}
 
 	// -----------------------------------------------------

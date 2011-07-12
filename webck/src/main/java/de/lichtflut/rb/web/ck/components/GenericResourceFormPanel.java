@@ -41,7 +41,6 @@ import de.lichtflut.rb.web.models.GenericResourceModel;
 public abstract class GenericResourceFormPanel extends CKComponent {
 
 	private ResourceSchema schema;
-
 	private RBEntity instance;
 
 	// Constructors
@@ -62,7 +61,6 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	}
 
 	// -----------------------------------------------------
-
 	/**
 	 * @param schema
 	 *            /
@@ -91,7 +89,6 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 		this.add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
 
 		if (schema != null) {
-
 			RepeatingView view = new RepeatingView("propertylist");
 			for (final String attribute : (Collection<String>) instance
 					.getAttributeNames()) {
@@ -165,7 +162,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 
 					model.setObject(instance);
 				}
-
+				
 				// ----------------------------------------
 
 				public RBServiceProvider getServiceProvider() {
@@ -245,6 +242,4 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	protected void initComponent(final CKValueWrapperModel model) {
 		init(schema, instance);
 	}
-
-
 }

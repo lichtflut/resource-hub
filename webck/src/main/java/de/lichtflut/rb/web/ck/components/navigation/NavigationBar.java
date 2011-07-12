@@ -72,45 +72,32 @@ public class NavigationBar extends CKComponent implements NavigationNode {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#hasChildren()
-	 */
 	/**
-	 * @return boolean /
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean hasChildren() {
 		return !children.isEmpty();
 	}
 
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#getChildren()
-	 */
 	/**
-	 * @return children /
+	 * {@inheritDoc}
 	 */
 	@Override
 	public List<NavigationNode> getChildren() {
 		return children;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#getComponent()
-	 */
 	/**
-	 * @return this /
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Component getComponent() {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.web.components.navigation.NavigationNode#addChild(de.lichtflut.rb.web.components.navigation.NavigationNode)
-	 */
 	/**
-	 * @param node /
-	 * @return this
+	 * {@inheritDoc}
 	 */
 	@Override
 	public NavigationNode addChild(final NavigationNode node) {

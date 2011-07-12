@@ -30,51 +30,52 @@ import org.apache.wicket.Component;
  */
 public interface NavigationNode extends Serializable {
 	/**
-	 *
-	 * @return /
+	 * Returns whether NavigationNode is visible or not.
+	 * @return TRUE if node is Visible, FALSE if not
 	 */
 	boolean isVisible();
 	/**
-	 *
-	 * @return /
+	 * Returns whether NavigationNode is enabled or not.
+	 * @return TRUE if node is enabled, FALSE if not
 	 */
 	boolean isEnabled();
 	/**
-	 *
-	 * @return /
+	 * Returns whether NavigationNode is expandable or not.
+	 * @return TRUE if node is expandable, FALSE if not
 	 */
 	boolean isExpandable();
 	/**
-	 *
-	 * @return /
+	 * Returns whether NavigationNode is expanded or not.
+	 * @return TRUE if node is expanded, FALSE if not
 	 */
 	boolean isExpanded();
 	/**
-	 *
-	 * @return /
+	 * Returns whether NavigationNode is active or not.
+	 * @return TRUE if node is active, FALSE if not
 	 */
 	boolean isActive();
 	/**
-	 *
-	 * @return /
+	 * Returns whether NavigationNode has children or not.
+	 * @return TRUE if node has children, FALSE if not
 	 */
 	boolean hasChildren();
 
 	/**
-	 *
-	 * @return /
+	 * Returns a List of all children.
+	 * @return List of all children
 	 */
 	List<NavigationNode> getChildren();
 
 	/**
-	 * @return The wicket component representing this node.
+	 * Returns the wicket component representing this node.
+	 * @return The wicket component representing this node
 	 */
 	Component getComponent();
 
 	/**
 	 * Add a child node.
-	 * @param node The child node.
-	 * @return This.
+	 * @param node - The child node
+	 * @return this
 	 */
 	NavigationNode addChild(NavigationNode node);
 
