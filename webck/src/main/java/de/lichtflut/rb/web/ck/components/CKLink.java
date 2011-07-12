@@ -42,7 +42,7 @@ public class CKLink extends CKComponent{
 	 * </p>
 	 */
 	public static final String ON_LINK_CLICK_BEHAVIOR = "de.lichtflut.web.ck.behavior.onClick";
-	
+
 	private final AbstractLink link;
 
 	/**

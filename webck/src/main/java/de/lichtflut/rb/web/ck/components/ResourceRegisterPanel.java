@@ -391,9 +391,9 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 				final CKBehavior updateDetails = getBehavior(UPDATE_ROW_ITEM);
 				CKLink link = new CKLink("propertyField", "Update", CKLinkType.CUSTOM_BEHAVIOR);
 				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
-					
+
 					@Override
-					public Object execute(Object... objects) {
+					public Object execute(final Object... objects) {
 						updateDetails.execute(instance);
 						return null;
 					}
@@ -404,9 +404,9 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 				final CKBehavior deleteDetails = getBehavior(DELETE_ROW_ITEM);
 				CKLink link = new CKLink("propertyField", "Delete", CKLinkType.CUSTOM_BEHAVIOR);
 				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
-					
+
 					@Override
-					public Object execute(Object... objects) {
+					public Object execute(final Object... objects) {
 						deleteDetails.execute(instance);
 						return null;
 					}

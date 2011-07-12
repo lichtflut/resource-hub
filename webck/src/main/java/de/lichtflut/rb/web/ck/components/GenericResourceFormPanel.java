@@ -162,7 +162,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 
 					model.setObject(instance);
 				}
-				
+
 				// ----------------------------------------
 
 				public RBServiceProvider getServiceProvider() {
