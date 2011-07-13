@@ -181,14 +181,13 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 	// -----------------------------------------------------
 
 	/**
-	 * @param flag
-	 *            ,
-	 *            <p>
-	 *            If the param is true, this Component will display the simple
-	 *            attribute names associated to the full qualified one. This is
-	 *            only possible, if there is no explicit given field
-	 *            specification This might end up in some redundancies
-	 *            </p>
+	 * <p>
+	 *   If the param is true, this Component will display the simple
+	 *   attribute names associated to the full qualified one. This is
+	 *   only possible, if there is no explicit given field
+	 *   specification This might end up in some redundancies
+	 * </p>
+	 * @param flag -
 	 * @return {@link ResourceRegisterPanel} - self returing idiom
 	 */
 	public ResourceRegisterPanel enableSimpleFieldNames(final boolean flag) {
@@ -297,8 +296,7 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 					.getQualifiedName().toURI()) == null) {
 				allreadyVisited.put(instance.getResourceTypeID()
 						.getQualifiedName().toURI(), Boolean.TRUE);
-				Collection<String> attributeNames = instance
-						.getAttributeNames();
+				Collection<String> attributeNames = instance.getAttributeNames();
 				if (simpleFlag) {
 					for (String attributeName : attributeNames) {
 						fields.add(instance
@@ -369,8 +367,15 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 //								.execute("propertyField", instance, output,
 //										field));
 //					} else {
-						components.add(new Label("propertyField", Model
+						if(instance.isResourceNode()){
+							CKLink link;
+							link = new CKLink("propertyField", output, "http://google.de",
+									CKLinkType.EXTERNAL_LINK);
+							components.add(link);
+						}else{
+							components.add(new Label("propertyField", Model
 								.of(output)));
+						}
 //					}
 				}
 			}
