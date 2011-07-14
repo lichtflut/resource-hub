@@ -20,7 +20,8 @@
 		<table>
 			 <tr wicket:id="propertylist">
   			</tr>
-  			<tr>
+  			
+  			<!-- <tr>
   				<td colspan="2">
   					<table wicket:id="customValueContainer">
   						<tr wicket:id="customValues">
@@ -29,7 +30,12 @@
   					</table>
   				</td>
   			</tr>
+  			 -->
+  			<tr wicket:id="customValues">
+  				
+  			</tr>
   			<tr>
+
   				<td colspan="2"> <input wicket:id="customInput" type="button" class="ck-button" /></td>
   			</tr>
   			<tr>
@@ -44,6 +50,7 @@
    				 		<span wicket:id="propertyInput"></span>
    				 		<a href="#" wicket:id="addField"><span wicket:id="linkLabel"></span></a>
    				 </td>
+   				 <wicket:fragment wicket:id="newTextInput"><tr><td colspan="2"><input  type="text" wicket:id="newInput" class="ck-text-value"/></td></tr></wicket:fragment>
    		</wicket:fragment>
    		<wicket:fragment wicket:id="resource">
    			<select wicket:id="option" class="drop-down">
@@ -56,15 +63,15 @@
    		<wicket:fragment wicket:id="addNonSchemaValues">
    			<td>
    				<input type="text" wicket:id="key" class="ck-text-value">
+   			</td>
+   			<td>
    				<input type="text" wicket:id="value" class="ck-text-value">
    			</td>
    		</wicket:fragment>
    		<wicket:fragment wicket:id="customInput">
-   			<tr>
    				 <td>
    				 		<a href="#" wicket:id="addCustomFields"><span wicket:id="linkLabel"></span></a>
    				 </td>
-   			</tr>
    		</wicket:fragment>
 </div>
 <div class="ck-footer"></div>

@@ -3,9 +3,7 @@
  */
 package de.lichtflut.rb.web.ck.components;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -19,15 +17,9 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.RepeatingView;
-import org.apache.wicket.markup.repeater.util.ModelIteratorAdapter;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
@@ -37,8 +29,6 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.RBEntity.MetaDataKeys;
-import de.lichtflut.rb.core.schema.model.RBInvalidAttributeException;
-import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.web.behaviors.DatePickerBehavior;
 import de.lichtflut.rb.web.components.validators.GenericResourceValidator;
@@ -60,7 +50,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 
 	private ResourceSchema schema;
 	private RBEntity instance;
-
+	private Fragment f = null;
 	// Constructors
 	/**
 	 * @param id
@@ -139,79 +129,30 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 				}
 			}
 			form.add(view);
-			final WebMarkupContainer container = new WebMarkupContainer("customValueContainer");
-			container.setOutputMarkupId(true);
-			
-			final RepeatingView customview = new RepeatingView("customValues");
-
-			container.add(customview);
+			// Add container for custom key-value pairs
+			final RepeatingView nonSchemaView = new RepeatingView("customValues");
 			AjaxButton button = new AjaxButton("customInput", Model.of("Add Vaules!")) {
 
 				@Override
 				protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-					System.out.println("HALLO +++++++++++++++++++++++++++++++++++++++++++");
-					buildCustomItem(instance, form, target);
+					// TODO: ADD GenericResourceModel parameter!!!!!!
+					addNonSchemaFields(form, nonSchemaView, target);
 				}
 
 				@Override
 				protected void onError(final AjaxRequestTarget target, final Form<?> form) {
-					System.out.println("ERROR +++++++++++++++++++++++++++++++++++++++++++");
-					// TODO: ADD GenericResourceForm parameter!!!!!!
-					Fragment fragment = new Fragment(customview.newChildId(), "addNonSchemaValues", this.getParent().getParent(), null);
-					fragment.setOutputMarkupId(true);
-					fragment.add(new TextField("key"));
-					fragment.add(new TextField("value"));
-					customview.add(fragment);
-					target.add(container);
-					target.focusComponent(fragment);
+					// TODO: ADD GenericResourceModel parameter!!!!!!
+					addNonSchemaFields(form, nonSchemaView, target);
 				}
 			};
-			form.add(container);
+			form.add(nonSchemaView);
 			form.add(button);
 		}// End of if(schema==null)
 
 	}// End of Method init
 
-	/**
-	 * Appends GenericResourceForm to add custom fields.
-	 * @param instance -
-	 * @param form -
-	 * @param target -
-	 * @return {@link Component}
-	 */
-	private void buildCustomItem(final RBEntity instance, Form<?> form, AjaxRequestTarget target) {
-//		final RepeatingView view = new RepeatingView("customInput");
-//		final Fragment fragment = new Fragment(view.newChildId(), "customProperties", this);
-//		
-//		Fragment f = new Fragment(view.newChildId(), "addNonSchemaValues", this);
-//		f.add(new TextField("key"));
-//		f.add(new TextField("value"));
-//		view.add(f);
-//		
-//		AjaxButton button = new AjaxButton("addCustomFields") {
-//
-//			@Override
-//			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-//				Fragment f = new Fragment(view.newChildId(), "addNonSchemaValues", this);
-//				f.add(new TextField("key"));
-//				f.add(new TextField("value"));
-//				view.add(f);
-////				view.modelChanged();
-//			}
-//
-//			@Override
-//			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
-//				// TODO Auto-generated method stub
-//			}
-//		};
-//		// TODO Auto-generated method stub
-//		button.add(new Label("linkLabel", "add additional values"));
-//		fragment.add(button);
-//		view.add(fragment);
-		System.out.println("########################################################");
-	}
-
 	// -----------------------------------------------------
+
 
 	/**
 	 * @param instance
@@ -232,12 +173,12 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			final GenericResourceModel model, final String attribute,
 			final RepeatingView view, final boolean required,
 			final boolean expendable) {
-		Fragment fragment = new Fragment(view.newChildId(), "referenceInput",
+		final Fragment fragment = new Fragment(view.newChildId(), "referenceInput",
 				this);
 		fragment.add((new Label("propertyLabel", instance
 				.getSimpleAttributeName(attribute) + (required ? " (*)" : ""))));
 		// Decide which input-field should be used
-		Fragment f = null;
+		f = null;
 
 		switch ((ElementaryDataType) instance.getMetaInfoFor(attribute,
 				MetaDataKeys.TYPE)) {
@@ -304,12 +245,14 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			@Override
 			protected void onError(final AjaxRequestTarget target,
 					final Form<?> form) {
-				// Do nothing
+				addSingleNonSchemaField(form, view, target);
 			}
 
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target,
 					final Form<?> form) {
+
+				addSingleNonSchemaField(form, view, target);
 				// This does not really work, so do nothing
 				// TODO: Fix it
 				/*
@@ -331,6 +274,39 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 				.getMetaInfoFor(attribute, MetaDataKeys.CURRENT))));
 		fragment.add(button);
 		return fragment;
+	}
+
+	/**
+	 * @param container -
+	 * @param view -
+	 * @param target -
+	 */
+	private void addSingleNonSchemaField(final WebMarkupContainer container,
+			final RepeatingView view, final AjaxRequestTarget target) {
+		Fragment fragment = new Fragment(view.newChildId(), "newTextInput", this, null);
+		fragment.setOutputMarkupId(true);
+		fragment.add(new TextField("newInput"));
+//		f.setOutputMarkupId(true);
+		view.setOutputMarkupId(true);
+		f.add(fragment);
+		target.add(view.getParent());
+		target.focusComponent(fragment);
+	}
+
+	/**
+	 * @param container -
+	 * @param customview -
+	 * @param target -
+	 */
+	private void addNonSchemaFields(final WebMarkupContainer container,
+			final RepeatingView customview, final AjaxRequestTarget target) {
+		Fragment fragment = new Fragment(customview.newChildId(), "addNonSchemaValues", this, null);
+		fragment.setOutputMarkupId(true);
+		fragment.add(new TextField("key"));
+		fragment.add(new TextField("value"));
+		customview.add(fragment);
+		target.add(container);
+		target.focusComponent(fragment);
 	}
 
 	// -----------------------------------------------------
