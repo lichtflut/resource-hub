@@ -9,6 +9,7 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.RBEntity;
+import de.lichtflut.rb.core.schema.model.RBEntity.MetaDataKeys;
 import de.lichtflut.rb.core.schema.model.RBInvalidAttributeException;
 import de.lichtflut.rb.core.schema.model.RBInvalidValueException;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -35,7 +36,7 @@ public final class RBEntityTest {
 	/**
 	 * @param
 	 */
-	//@Test
+	@Test
 	public void testResourceTypeInstance() {
 		// Generate an instance for a given schema
 		RBEntity<Object> instance = createPersonSchema().generateRBEntity();
@@ -200,6 +201,7 @@ public final class RBEntityTest {
 			String invalidValueMessage = "";
 			try{
 				car0.addValueFor("http://lichtflut.de#hatAlter", 4);
+
 			}catch(RBInvalidValueException e){
 				invalidValueMessage=e.getMessage();
 			}
@@ -216,9 +218,11 @@ public final class RBEntityTest {
 			e.printStackTrace();
 		}
 		Assert.assertFalse(invalidValueExeptionThrown);
-
+		
 		RBEntity entity = (RBEntity) car0.getValueFor(
 				"http://lichtflut.de#hatHalter", ticket1);
+		
+		System.out.println("-->"+car0.getMetaInfoFor("http://lichtflut.de#hatHalter", MetaDataKeys.TYPE));
 
 		Assert.assertTrue(((String) entity.getValueFor(
 				"http://lichtflut.de#hatEmail", ticket0))
