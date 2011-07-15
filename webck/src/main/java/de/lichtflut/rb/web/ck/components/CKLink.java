@@ -81,7 +81,6 @@ public class CKLink extends CKComponent{
 				if((getBehavior(ON_LINK_CLICK_BEHAVIOR) != null)){
 					getBehavior(ON_LINK_CLICK_BEHAVIOR).execute(this, label, getParent());
 				}else{
-//					((CKComponent)this.getParent()).getBehavior(key)
 					setResponsePage(cls);
 				}
 			}
@@ -123,7 +122,6 @@ public class CKLink extends CKComponent{
 			throw new UnsupportedOperationException();
 		}
 		link = new Link("link") {
-
 			// TODO: add further infos of this obj for developers.
 			@Override
 			public void onClick() {
@@ -139,7 +137,6 @@ public class CKLink extends CKComponent{
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override

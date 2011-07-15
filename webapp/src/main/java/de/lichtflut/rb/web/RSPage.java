@@ -267,8 +267,7 @@ public class RSPage extends RBSuperPage {
 					component.removeAll();
 
 					ArrayList<ResourceSchema> schemaList = new ArrayList<ResourceSchema>();
-					schemaList.add(getRBServiceProvider()
-							.getResourceSchemaManagement()
+					schemaList.add(getRBServiceProvider().getResourceSchemaManagement()
 								.getResourceSchemaForResourceType(resourceSchema.getDescribedResourceID()));
 					ResourceRegisterPanel	panel = new ResourceRegisterPanel("content-area", schemaList,
 									"", null, false){

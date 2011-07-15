@@ -4,24 +4,32 @@
 package de.lichtflut.rb.web.ck.components;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.RBEntity.MetaDataKeys;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.behaviors.DatePickerBehavior;
 import de.lichtflut.rb.web.components.validators.GenericResourceValidator;
 import de.lichtflut.rb.web.models.GenericResourceModel;
@@ -41,9 +49,8 @@ import de.lichtflut.rb.web.models.GenericResourceModel;
 public abstract class GenericResourceFormPanel extends CKComponent {
 
 	private ResourceSchema schema;
-
 	private RBEntity instance;
-
+	private Fragment f = null;
 	// Constructors
 	/**
 	 * @param id
@@ -62,7 +69,6 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	}
 
 	// -----------------------------------------------------
-
 	/**
 	 * @param schema
 	 *            /
@@ -91,8 +97,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 		this.add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
 
 		if (schema != null) {
-
-			RepeatingView view = new RepeatingView("propertylist");
+			final RepeatingView view = new RepeatingView("propertylist");
 			for (final String attribute : (Collection<String>) instance
 					.getAttributeNames()) {
 				boolean required = true;
@@ -124,11 +129,30 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 				}
 			}
 			form.add(view);
+			// Add container for custom key-value pairs
+			final RepeatingView nonSchemaView = new RepeatingView("customValues");
+			AjaxButton button = new AjaxButton("customInput", Model.of("Add Vaules!")) {
+
+				@Override
+				protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+					// TODO: ADD GenericResourceModel parameter!!!!!!
+					addNonSchemaFields(form, nonSchemaView, target);
+				}
+
+				@Override
+				protected void onError(final AjaxRequestTarget target, final Form<?> form) {
+					// TODO: ADD GenericResourceModel parameter!!!!!!
+					addNonSchemaFields(form, nonSchemaView, target);
+				}
+			};
+			form.add(nonSchemaView);
+			form.add(button);
 		}// End of if(schema==null)
 
 	}// End of Method init
 
 	// -----------------------------------------------------
+
 
 	/**
 	 * @param instance
@@ -149,27 +173,50 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			final GenericResourceModel model, final String attribute,
 			final RepeatingView view, final boolean required,
 			final boolean expendable) {
-		Fragment fragment = new Fragment(view.newChildId(), "referenceInput",
+		final Fragment fragment = new Fragment(view.newChildId(), "referenceInput",
 				this);
 		fragment.add((new Label("propertyLabel", instance
 				.getSimpleAttributeName(attribute) + (required ? " (*)" : ""))));
 		// Decide which input-field should be used
-		Fragment f = null;
-		final CKComponent rComponent = this;
+		f = null;
+
 		switch ((ElementaryDataType) instance.getMetaInfoFor(attribute,
 				MetaDataKeys.TYPE)) {
 		case RESOURCE:
-		f = new Fragment("propertyInput", "resourceInput", this);
-			f.add(new SearchBar("searchbar") {
-				public void onSearchSubmit(final RBEntity instance) {
-
-					model.setObject(instance);
+			// Works only with one Resource reference so far...
+			ResourceID uri = null;
+			List<PropertyAssertion> propertyAssertionsList = (List) instance.getResourceSchema().getPropertyAssertions();
+			for (PropertyAssertion assertion : propertyAssertionsList) {
+				if(null!=assertion.getConstraints()){
+					Set<Constraint> constraints =  assertion.getConstraints();
+					for (Constraint constraint : constraints) {
+						uri = constraint.getResourceTypeConstraint();
+					}
 				}
+			}
+			f = new Fragment("propertyInput", "resource", this);
+			List entityList = (List) getServiceProvider().getRBEntityManagement()
+				.loadAllRBEntitiesForSchema(getServiceProvider().getResourceSchemaManagement()
+						.getResourceSchemaForResourceType(uri));
 
-				// ----------------------------------------
+			IChoiceRenderer renderer = new IChoiceRenderer<RBEntity>() {
+				@Override
+				public Object getDisplayValue(final RBEntity object) {
+					return object.toString();
+				}
+				@Override
+				public String getIdValue(final RBEntity object, final int index) {
+					// TODO Auto-generated method stub
+					return object.getQualifiedName().toURI();
+				}
+			};
 
-				public RBServiceProvider getServiceProvider() {
-					return rComponent.getServiceProvider();
+			f.add(new DropDownChoice<RBEntity>("option", model, entityList, renderer){
+				protected boolean wantOnSelectionChangedNotifications(){
+					return false;
+				}
+				protected void onSelectionChanged(final RBEntity entity){
+					model.setObject(entity);
 				}
 			});
 			break;
@@ -198,12 +245,14 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			@Override
 			protected void onError(final AjaxRequestTarget target,
 					final Form<?> form) {
-				// Do nothing
+				addSingleNonSchemaField(form, view, target);
 			}
 
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target,
 					final Form<?> form) {
+
+				addSingleNonSchemaField(form, view, target);
 				// This does not really work, so do nothing
 				// TODO: Fix it
 				/*
@@ -227,6 +276,39 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 		return fragment;
 	}
 
+	/**
+	 * @param container -
+	 * @param view -
+	 * @param target -
+	 */
+	private void addSingleNonSchemaField(final WebMarkupContainer container,
+			final RepeatingView view, final AjaxRequestTarget target) {
+		Fragment fragment = new Fragment(view.newChildId(), "newTextInput", this, null);
+		fragment.setOutputMarkupId(true);
+		fragment.add(new TextField("newInput"));
+//		f.setOutputMarkupId(true);
+		view.setOutputMarkupId(true);
+		f.add(fragment);
+		target.add(view.getParent());
+		target.focusComponent(fragment);
+	}
+
+	/**
+	 * @param container -
+	 * @param customview -
+	 * @param target -
+	 */
+	private void addNonSchemaFields(final WebMarkupContainer container,
+			final RepeatingView customview, final AjaxRequestTarget target) {
+		Fragment fragment = new Fragment(customview.newChildId(), "addNonSchemaValues", this, null);
+		fragment.setOutputMarkupId(true);
+		fragment.add(new TextField("key"));
+		fragment.add(new TextField("value"));
+		customview.add(fragment);
+		target.add(container);
+		target.focusComponent(fragment);
+	}
+
 	// -----------------------------------------------------
 
 	/**
@@ -245,6 +327,4 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	protected void initComponent(final CKValueWrapperModel model) {
 		init(schema, instance);
 	}
-
-
 }

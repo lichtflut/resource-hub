@@ -46,9 +46,9 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 	}
 
 	/**
-	 * TODO DESCRIPTION.
-	 * @param id -
-	 * @param link -
+	 * This constructor is private since the wicket:id is always "node".
+	 * @param id - wicket:id
+	 * @param link - {@link CKLink}
 	 */
 	protected NavigationNodePanel(final String id, final CKLink link) {
 		super(id);
@@ -123,7 +123,7 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 
 	/**
 	 * Checks if {@link NavigationNodePanel} is even or odd numbered.
-	 * @param node -
+	 * @param node - {@link NavigationNodePanel}
 	 * @return boolean - true if node is even, false if not
 	 */
 	public boolean isEven(final NavigationNode node){
@@ -171,12 +171,11 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 
 	/**
 	 * Checks whether node is odd or even and sets the "class" attribute accordingly.
-	 * @param node -
+	 * @param node - {@link NavigationNode}
 	 * @return {@link NavigationNode}
 	 */
 	private NavigationNode addOddOrEvenAttribute(final NavigationNode node){
 		List<? extends Behavior> behaviors = node.getComponent().getBehaviors();
-
 		// Check if behavior already extists. If yes, throw it..
 		for (Behavior behavior : behaviors) {
 			if(behavior.equals(CSS_CLASS_EVEN)){
