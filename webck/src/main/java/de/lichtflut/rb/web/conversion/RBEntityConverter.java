@@ -20,8 +20,8 @@ import de.lichtflut.rb.core.schema.model.RBEntity;
  *
  * @author Nils Bleisch
  */
-@SuppressWarnings({ "serial"})
-public class RBEntityConverter extends AbstractConverter<RBEntityConverter> {
+@SuppressWarnings({ "serial", "rawtypes"})
+public class RBEntityConverter extends AbstractConverter<RBEntity> {
 
 	/**
 	 * Default Constructor.
@@ -37,8 +37,9 @@ public class RBEntityConverter extends AbstractConverter<RBEntityConverter> {
 	 * @param locale /
 	 * @return UnsupportedOperationException /
 	 */
-	public RBEntityConverter convertToObject(final String value, final Locale locale) {
+	public RBEntity<Object> convertToObject(final String value, final Locale locale) {
 		throw new UnsupportedOperationException();
+
 	}
 
 	/**
@@ -51,7 +52,7 @@ public class RBEntityConverter extends AbstractConverter<RBEntityConverter> {
 	}
 
 	@Override
-	protected Class<RBEntityConverter> getTargetType() {
-		return RBEntityConverter.class;
+	protected Class<RBEntity> getTargetType() {
+		return RBEntity.class;
 	}
 }
