@@ -159,19 +159,13 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 
 
 	/**
-	 * @param instance
-	 *            /
-	 * @param model
-	 *            /
-	 * @param attribute
-	 *            /
-	 * @param view
-	 *            /
-	 * @param required
-	 *            /
-	 * @param expendable
-	 *            /
-	 * @return fragment /
+	 * @param instance -
+	 * @param model -
+	 * @param attribute -
+	 * @param view -
+	 * @param required -
+	 * @param expendable -
+	 * @return fragment -
 	 */
 	private Component buildItem(final RBEntity instance,
 			final GenericResourceModel model, final String attribute,
@@ -254,13 +248,32 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			@Override
 			protected void onError(final AjaxRequestTarget target,
 					final Form<?> form) {
-				addSingleField(form, inputFields, target, instance, attribute);
+				addFieldAndCheckVisibility(instance, attribute, inputFields,
+						target, form);
 			}
 
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target,
 					final Form<?> form) {
+				addFieldAndCheckVisibility(instance, attribute, inputFields,
+						target, form);
+			}
+
+			/**
+			 * @param instance
+			 * @param attribute
+			 * @param inputFields
+			 * @param target
+			 * @param form
+			 */
+			private void addFieldAndCheckVisibility(final RBEntity instance,
+					final String attribute, final RepeatingView inputFields,
+					final AjaxRequestTarget target, final Form<?> form) {
 				addSingleField(form, inputFields, target, instance, attribute);
+				if((Integer)(instance.getTicketsFor(attribute).size())
+						>= (Integer) instance.getMetaInfoFor(attribute, MetaDataKeys.MAX)){
+					this.setVisible(false);
+				}
 			}
 		};
 		button.add(new Label("linkLabel", "(+)"));
