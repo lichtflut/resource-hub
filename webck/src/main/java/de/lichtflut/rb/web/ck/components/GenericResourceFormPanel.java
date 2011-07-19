@@ -38,7 +38,8 @@ import de.lichtflut.rb.web.models.GenericResourceModel;
 
 /**
  * <p>
- * TODO: [DESCRIPTION].
+ * This Form Panel is used to show or edit {@link RBEntity}s.
+ * Its components will be created according to a given {@link ResourceSchema}.
  * </p>
  *
  * <p>
@@ -52,14 +53,14 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 
 	private ResourceSchema schema;
 	private RBEntity instance;
-	private GenericResourceModel model;
 
-	// Constructors
+	// ------------------------------------------------------------
+
 	/**
-	 * TODO: DESCIPTION.
-	 * @param id -
-	 * @param schema -
-	 * @param instance -
+	 * Constrcutor.
+	 * @param id - {@link CKComponent} ID
+	 * @param schema - {@link ResourceSchema}
+	 * @param instance - {@link RBEntity} Instance
 	 */
 	public GenericResourceFormPanel(final String id,
 			final ResourceSchema schema, final RBEntity instance) {
@@ -70,10 +71,11 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	}
 
 	// -----------------------------------------------------
+
 	/**
-	 * TODO: DESCRIPTION.
-	 * @param schema -
-	 * @param in -
+	 * Initializes this {@link CKComponent}.
+	 * @param schema - {@link ResourceSchema}
+	 * @param in - {@link RBEntity}
 	 */
 	private void init(final ResourceSchema schema, final RBEntity in) {
 
@@ -106,6 +108,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 					minimum_cnt = 1;
 					required = false;
 				}
+				GenericResourceModel model;
 				// Get predefined tickets, if there are some
 				Collection<Integer> tickets = instance.getTicketsFor(attribute);
 				if(tickets.size() > minimum_cnt){
@@ -184,7 +187,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 		switch ((ElementaryDataType) instance.getMetaInfoFor(attribute,
 				MetaDataKeys.TYPE)) {
 		case RESOURCE:
-			// Works only with one Resource reference so far...
+			// TODO: Works only with one Resource Type reference so far...
 			ResourceID uri = null;
 			List<PropertyAssertion> propertyAssertionsList = (List) instance.getResourceSchema().getPropertyAssertions();
 			for (PropertyAssertion assertion : propertyAssertionsList) {
@@ -221,10 +224,12 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 							.loadRBEntity(entity.getQualifiedName()));
 					}
 			}.setType(RBEntity.class));
+			inputFields.add(f);
 			break;
 		case BOOLEAN:
 			f = new Fragment("propertyInput", "booleanInput", this);
 			f.add(new CheckBox("input", model));
+			inputFields.add(f);
 			break;
 		case DATE:
 			f = new Fragment("propertyInput", "textInput", this);
@@ -233,6 +238,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			f.add(field.add(
 					new GenericResourceValidator(instance
 							.getValidatorFor(attribute))).setRequired(required));
+			inputFields.add(f);
 			break;
 		default:
 			f = new Fragment("propertyInput", "textInput", this);
@@ -248,27 +254,13 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			@Override
 			protected void onError(final AjaxRequestTarget target,
 					final Form<?> form) {
-				addSingleField(form, inputFields, target, model, instance, attribute);
+				addSingleField(form, inputFields, target, instance, attribute);
 			}
 
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target,
 					final Form<?> form) {
-				addSingleField(form, inputFields, target, model, instance, attribute);
-
-				// This does not really work, so do nothing
-				// TODO: Fix it
-				/*
-				 * Component item = buildItem(instance,new
-				 * GenericResourceModel(instance, attribute), attribute, view,
-				 * false, true); // first execute javascript which creates a
-				 * placeholder tag in markup for this item
-				 * target.prependJavascript( String.format(
-				 * "var item=document.createElement('%s');item.id='%s';"+
-				 * "Wicket.$('%s').appeinitComponentndChild(item);", "tr",
-				 * item.getMarkupId(), item.getMarkupId())); view.add(item);
-				 * target.addComponent(item);
-				 */
+				addSingleField(form, inputFields, target, instance, attribute);
 			}
 		};
 		button.add(new Label("linkLabel", "(+)"));
@@ -280,28 +272,85 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	}
 
 	/**
+	 * Adds a single field to a form.
+	 * This method is called by the {@link GenericResourceFormPanel}.
 	 * @param container -
 	 * @param view -
 	 * @param target -
-	 * @param resourceModel -
 	 * @param attribute -
 	 * @param entity -
 	 */
 	private void addSingleField(final WebMarkupContainer container,
 			final RepeatingView view, final AjaxRequestTarget target,
-				final GenericResourceModel resourceModel, final RBEntity entity, final String attribute) {
-		Fragment fragment = new Fragment(view.newChildId(), "newTextInput", this);
-		fragment.setOutputMarkupId(true);
+				final RBEntity entity, final String attribute) {
+		//TODO REFACTOR (call buildItem?)
+		Fragment fragment = null;
+		int ticket = -1;
 		try {
-			fragment.add(new TextField("newInputField", new GenericResourceModel(entity,
-					attribute, entity.generateTicketFor(attribute))));
+			ticket = entity.generateTicketFor(attribute);
 		} catch (RBInvalidValueException e) {
-			// TODO Auto-generated catch block
+			error("Could not generate Ticket");
 			e.printStackTrace();
 		} catch (RBInvalidAttributeException e) {
-			// TODO Auto-generated catch block
+			error("Could not generate Ticket");
 			e.printStackTrace();
 		}
+		final GenericResourceModel model = new GenericResourceModel(entity,attribute, ticket);
+		switch((ElementaryDataType) entity.getMetaInfoFor(attribute, MetaDataKeys.TYPE)){
+		case RESOURCE:
+			ResourceID uri = null;
+			List<PropertyAssertion> propertyAssertionsList = (List) entity.getResourceSchema().getPropertyAssertions();
+			for (PropertyAssertion assertion : propertyAssertionsList) {
+				if(null!=assertion.getConstraints()){
+					Set<Constraint> constraints =  assertion.getConstraints();
+					for (Constraint constraint : constraints) {
+						uri = constraint.getResourceTypeConstraint();
+					}
+				}
+			}
+			fragment = new Fragment(view.newChildId(), "resource", this);
+			List entityList = (List) getServiceProvider().getRBEntityManagement()
+				.loadAllRBEntitiesForSchema(getServiceProvider().getResourceSchemaManagement()
+						.getResourceSchemaForResourceType(uri));
+
+			IChoiceRenderer renderer = new IChoiceRenderer<RBEntity>() {
+				@Override
+				public Object getDisplayValue(final RBEntity object) {
+					return object.getQualifiedName();
+				}
+				@Override
+				public String getIdValue(final RBEntity object, final int index) {
+					return object.getQualifiedName().toString();
+				}
+			};
+
+			fragment.add(new DropDownChoice<RBEntity>("option", model, entityList, renderer){
+				protected boolean wantOnSelectionChangedNotifications(){
+					return false;
+				}
+				@Override
+				protected void onSelectionChanged(final RBEntity entity){
+					model.setObject(getServiceProvider().getRBEntityManagement()
+							.loadRBEntity(entity.getQualifiedName()));
+					}
+			}.setType(RBEntity.class));
+			break;
+		case BOOLEAN:
+			fragment = new Fragment(view.newChildId(), "booleanInput", this);
+			fragment.add(new CheckBox("input", model));
+			break;
+		case DATE:
+			fragment = new Fragment(view.newChildId(), "textInput", this);
+			TextField field = new TextField("input", model);
+			field.add(new DatePickerBehavior());
+			fragment.add(field.add(new GenericResourceValidator(entity.getValidatorFor(attribute))));
+			break;
+		default:
+			fragment = new Fragment(view.newChildId(), "textInput", this);
+			fragment.add(new TextField("input", model));
+			break;
+		}
+		fragment.setOutputMarkupId(true);
 		view.add(fragment);
 		target.add(container);
 		target.focusComponent(fragment);

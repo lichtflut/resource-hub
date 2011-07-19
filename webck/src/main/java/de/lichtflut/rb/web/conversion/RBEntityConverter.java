@@ -39,7 +39,6 @@ public class RBEntityConverter extends AbstractConverter<RBEntity> {
 	 */
 	public RBEntity<Object> convertToObject(final String value, final Locale locale) {
 		throw new UnsupportedOperationException();
-
 	}
 
 	/**
