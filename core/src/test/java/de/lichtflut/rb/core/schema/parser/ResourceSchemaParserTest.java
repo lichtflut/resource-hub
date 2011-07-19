@@ -7,6 +7,8 @@ import java.util.Collection;
 import junit.framework.Assert;
 import org.antlr.runtime.RecognitionException;
 import org.arastreju.sge.model.ElementaryDataType;
+import org.junit.Test;
+
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -30,6 +32,7 @@ public class ResourceSchemaParserTest {
 	 * @throws IOException for
 	 * @throws RecognitionException when something went wrong during parsing
 	 */
+	@Test
 	public final void testParsingAndConstructingModelFromTestSimpleRSFFile1() throws IOException, RecognitionException{
 		ResourceSchemaManagement rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
 
@@ -46,6 +49,7 @@ public class ResourceSchemaParserTest {
 	 * @throws IOException when the specified file does not exists
 	 * @throws RecognitionException when something went wrong during parsing
 	 */
+	@Test
 	public final void testParsingAndConstructingModelFromTestOSFFile2() throws IOException, RecognitionException{
 		ResourceSchemaManagement rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
 		//Set parsing format to OSF

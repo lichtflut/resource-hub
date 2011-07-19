@@ -161,7 +161,7 @@ CARDINALITY :	'CARDINALITY';
 REGEX       : 'REGEX';
 
 
-String	: '"' ('a' .. 'z' | 'A' .. 'Z')('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '-' | '#' | '/' | ':' | '.' )+ '"';
+String	: '"' ('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '-' | '#' | '/' | ':' | '.' )+ '"';
 
 
 WS: (' '|'\n'|'\r'|'\t')+ {$channel=HIDDEN;} ; // ignore whitespace

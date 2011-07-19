@@ -607,7 +607,7 @@ public class OSFLexer extends Lexer {
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSF.g:164:10: '\"' ( 'a' .. 'z' | 'A' .. 'Z' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '-' | '#' | '/' | ':' | '.' )+ '\"'
             {
             match('\"'); 
-            if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
+            if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z')||(input.LA(1)>='0' && input.LA(1)<='9') ) {
                 input.consume();
 
             }
