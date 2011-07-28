@@ -117,11 +117,10 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 				for (int cnt = 0; cnt < minimum_cnt; cnt++) {
 					try {
 						if (cnt >= (tickets.size())) {
-							model = new GenericResourceModel<RBEntity>(instance,
-									attribute);
+							model = new GenericResourceModel<RBEntity>(instance,attribute);
 						} else {
-							model = new GenericResourceModel<RBEntity>(instance,
-									attribute, (Integer) tickets.toArray()[cnt]);
+							model = new GenericResourceModel<RBEntity>(instance,attribute,
+									(Integer) tickets.toArray()[cnt]);
 						}
 					} catch (IllegalArgumentException any) {
 						// If something went wrong with model creation, skip
@@ -181,14 +180,15 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 		switch ((ElementaryDataType) instance.getMetaInfoFor(attribute,
 				MetaDataKeys.TYPE)) {
 		case RESOURCE:
-			// TODO: Works only with one Resource Type reference so far...
 			ResourceID uri = null;
 			List<PropertyAssertion> propertyAssertionsList = (List) instance.getResourceSchema().getPropertyAssertions();
 			for (PropertyAssertion assertion : propertyAssertionsList) {
 				if(null!=assertion.getConstraints()){
-					Set<Constraint> constraints =  assertion.getConstraints();
-					for (Constraint constraint : constraints) {
-						uri = constraint.getResourceTypeConstraint();
+					if(assertion.getPropertyDescriptor().toString().equals(attribute.toString())){
+						Set<Constraint> constraints =  assertion.getConstraints();
+						for (Constraint constraint : constraints) {
+							uri = constraint.getResourceTypeConstraint();
+						}
 					}
 				}
 			}
@@ -200,7 +200,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			IChoiceRenderer renderer = new IChoiceRenderer<RBEntity>() {
 				@Override
 				public Object getDisplayValue(final RBEntity object) {
-					return object.getQualifiedName();
+					return object.toString();
 				}
 				@Override
 				public String getIdValue(final RBEntity object, final int index) {
@@ -209,15 +209,11 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			};
 
 			f.add(new DropDownChoice<RBEntity>("option", model, entityList, renderer){
-				protected boolean wantOnSelectionChangedNotifications(){
-					return false;
-				}
 				@Override
 				protected void onSelectionChanged(final RBEntity entity){
-					model.setObject(getServiceProvider().getRBEntityManagement()
-							.loadRBEntity(entity.getQualifiedName()));
-					}
-			}.setType(RBEntity.class));
+					model.setObject(entity.getQualifiedName());
+				}
+			});
 			inputFields.add(f);
 			break;
 		case BOOLEAN:
@@ -296,7 +292,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 	private void addSingleField(final WebMarkupContainer container,
 			final RepeatingView view, final AjaxRequestTarget target,
 				final RBEntity entity, final String attribute) {
-		//TODO REFACTOR (call buildItem?)
+		// REFACTOR (call buildItem?)
 		Fragment fragment = null;
 		int ticket = -1;
 		try {

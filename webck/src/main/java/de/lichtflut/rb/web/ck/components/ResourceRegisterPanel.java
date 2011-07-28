@@ -16,11 +16,13 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
+import org.arastreju.sge.model.ElementaryDataType;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.api.RBEntityManagement.SearchContext;
 import de.lichtflut.rb.core.schema.model.RBEntity;
+import de.lichtflut.rb.core.schema.model.RBEntity.MetaDataKeys;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 
@@ -92,6 +94,21 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 
 	/**
 	 * <p>
+	 * This behavior is executed when an attribute of type "resource" is encountered.
+	 * It must return a which will be added to the {@link ResourceRegisterPanel}.
+	 * </p>
+	 * <p>
+	 * The following params will be parsed to the behavior in a well-defined order:
+	 * <ol>
+	 * 	<li>{@link Class}, the ck-components-class</li>
+	 * 	<li>String, the link label</li>
+	 * </ol>
+	 * </p>
+	 */
+	public static final String RESOURCE_FIELD_BEHAVIOR = "de.lichtflut.web.ck.resource_field_behavior.behavior";
+
+	/**
+	 * <p>
 	 * This behavior is called only when specified.
 	 * The CKBehavior should return a CK-Component which will be added
 	 * to the {@link ResourceRegisterPanel}
@@ -102,8 +119,9 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 	 * <p>
 	 * The following params will be parsed to the behavior in a well-defined order:
 	 * <ol>
-	 * 	<li>{@link Class}, the ck-components-class</li>
-	 * 	<li>String, the link label</li>
+	 *  <li>{@link String}, wicket-id</li>
+	 * 	<li>{@link RBEntity}, the RBEntity</li>
+	 * 	<li>String, the component label</li>
 	 * </ol>
 	 * </p>
 	 */
@@ -362,16 +380,23 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 						output = output.substring(", ".length(),
 								output.length());
 					}
+					// TODO: Set getBehavior to CUSTOM_Field_BEHAVIOR or whatever and remove comments
 //					if (getBehavior(SHOW_DETAILS) != null) {
 //						components.add((Component) getBehavior(SHOW_DETAILS)
 //								.execute("propertyField", instance, output,
 //										field));
 //					} else {
-						if(instance.isResourceNode()){
+						if(instance.getMetaInfoFor(field, MetaDataKeys.TYPE).equals(ElementaryDataType.RESOURCE)){
+							if(getBehavior(RESOURCE_FIELD_BEHAVIOR)!= null){
+								components.add(
+									(Component) getBehavior(RESOURCE_FIELD_BEHAVIOR)
+									.execute("propertyField", instance, output));
+							}else{
 							CKLink link;
-							link = new CKLink("propertyField", output, "http://google.de",
-									CKLinkType.EXTERNAL_LINK);
-							components.add(link);
+								link = new CKLink("propertyField", output, "http://google.de",
+										CKLinkType.EXTERNAL_LINK);
+								components.add(link);
+							}
 						}else{
 							components.add(new Label("propertyField", Model
 								.of(output)));

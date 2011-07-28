@@ -76,7 +76,7 @@ public class GenericResourceModel<T> implements IModel<T> {
 		Object val = instance.getValueFor(attribute, ticket);
 		if(val instanceof String) {
 			final_value = convertStringToT((String) val);
-		} else {
+		}else {
 			final_value = convertObjectToT(val);
 		}
 		return final_value;
@@ -89,7 +89,11 @@ public class GenericResourceModel<T> implements IModel<T> {
 	 */
 	public void setObject(final T object) {
 		try {
-			instance.addValueFor(attribute,convertObject(object), ticket);
+			if(object instanceof RBEntity){
+				instance.addValueFor(attribute, object, ticket);
+			}else{
+				instance.addValueFor(attribute,convertObject(object), ticket);
+			}
 		} catch (Exception e){
 			throw new IllegalArgumentException(e);
 		}
