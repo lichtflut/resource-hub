@@ -133,6 +133,7 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 	private Collection<ResourceSchema> schemas = new ArrayList<ResourceSchema>();
 	private String filter = "";
 	private boolean simpleFlag;
+	private boolean sortedAscending = true;
 
 	// Constructors
 
@@ -356,10 +357,28 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 		public RegisterRowEntry(final List<String> fields,
 				final RBEntity instance) {
 			components.clear();
-			for (String field : fields) {
+			for (final String field : fields) {
 				if (instance == null) {
 					// check if the field can be a simple name
-					components.add(new Label("propertyField", Model.of(field)));
+					CKLink link = new CKLink("propertyField", field, CKLinkType.CUSTOM_BEHAVIOR);
+					link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
+
+						@Override
+						public Object execute(final Object... objects) {
+							if(sortedAscending){
+								RBEntity.sortByAttribute((List<RBEntity>) instances, field,
+										sortedAscending);
+								sortedAscending = false;
+							}else{
+								RBEntity.sortByAttribute((List<RBEntity>) instances, field,
+										sortedAscending);
+								sortedAscending = true;
+							}
+							refreshComponent();
+							return null;
+						}
+					});
+					components.add(link);
 				} else {
 					// Determine if the field is a simple attribute or not
 					Collection values = instance.getValuesFor(field);

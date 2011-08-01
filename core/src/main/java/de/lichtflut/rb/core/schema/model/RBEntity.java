@@ -6,6 +6,10 @@ package de.lichtflut.rb.core.schema.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ElementaryDataType;
@@ -280,6 +284,45 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 
 	// -----------------------------------------------------
 
+	/**
+	 * <p>
+	 * Sorts a {@link List} of {@link RBEntity} by the specified attribute.
+	 * Sorting attributes of {@link ElementaryDataType}.RESOURCE is not possible.
+	 * </p>
+	 * @param entities - {@link List} of {@link RBEntity}
+	 * @param attribute - which attribute to order by
+	 * @param ascending - true if list is to be sorted in an anscending order, false if in a descending order
+	 */
+	@SuppressWarnings("rawtypes")
+	public static void sortByAttribute(final List<RBEntity> entities, final String attribute, final boolean ascending){
+		if((entities.size() > 0)){
+			RBEntity entity = entities.get(entities.size()-1);
+			if(entity.getValuesFor(attribute).size()<1){
+				try {
+					throw new RBInvalidAttributeException("There is no such attribute: " + attribute);
+				} catch (RBInvalidAttributeException e) {
+					e.printStackTrace();
+				}
+			}
+			if(!entity.getMetaInfoFor(attribute, MetaDataKeys.TYPE).equals(ElementaryDataType.RESOURCE)){
+				Comparator<RBEntity> comparator = new Comparator<RBEntity>(){
+
+					@Override
+					public int compare(final RBEntity e1, final RBEntity e2) {
+						return (e1.getValueFor(attribute, 0).toString())
+							.compareToIgnoreCase(e2.getValueFor(attribute, 0).toString());
+					}
+				};
+				if(ascending){
+					Collections.sort(entities, comparator);
+				}else{
+					Collections.sort(entities, Collections.reverseOrder(comparator));
+				}
+			}
+		}
+	}
+
+	// ------------------------------------------------------------
 	/**
 	 * {@inheritDoc}}.
 	 */
