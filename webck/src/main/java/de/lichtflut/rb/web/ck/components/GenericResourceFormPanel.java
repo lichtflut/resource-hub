@@ -85,7 +85,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			protected void onSubmit() {
 				super.onSubmit();
 				if (getServiceProvider().getRBEntityManagement()
-						.createOrUpdateRBEntity(instance)) {
+						.createOrUpdateEntity(instance)) {
 					info("This instance has been successfully updated/created");
 				} else {
 					error("Somethin went wrong, instance could'nt be created/updated");
@@ -194,7 +194,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			}
 			f = new Fragment("propertyInput", "resource", this);
 			List entityList = (List) getServiceProvider().getRBEntityManagement()
-				.loadAllRBEntitiesForSchema(getServiceProvider().getResourceSchemaManagement()
+				.loadAllEntitiesForSchema(getServiceProvider().getResourceSchemaManagement()
 						.getResourceSchemaForResourceType(uri));
 
 			IChoiceRenderer renderer = new IChoiceRenderer<RBEntity>() {
@@ -319,7 +319,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			}
 			fragment = new Fragment(view.newChildId(), "resource", this);
 			List entityList = (List) getServiceProvider().getRBEntityManagement()
-				.loadAllRBEntitiesForSchema(getServiceProvider().getResourceSchemaManagement()
+				.loadAllEntitiesForSchema(getServiceProvider().getResourceSchemaManagement()
 						.getResourceSchemaForResourceType(uri));
 
 			IChoiceRenderer renderer = new IChoiceRenderer<RBEntity>() {
@@ -340,7 +340,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 				@Override
 				protected void onSelectionChanged(final RBEntity entity){
 					model.setObject(getServiceProvider().getRBEntityManagement()
-							.loadRBEntity(entity.getQualifiedName()));
+							.loadEntity(entity.getQualifiedName()));
 					}
 			}.setType(RBEntity.class));
 			break;

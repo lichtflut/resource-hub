@@ -62,6 +62,7 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	}
 
 	/**
+<<<<<<< HEAD
 	 * @param attribute - {@link String} representing the attribute
 	 * @param value - {@link Object}
 	 * @throws RBInvalidValueException -

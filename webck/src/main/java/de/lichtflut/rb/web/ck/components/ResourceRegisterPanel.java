@@ -259,11 +259,11 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 		RBEntityManagement rManagement = getServiceProvider()
 				.getRBEntityManagement();
 		if (filter != null && !filter.equals("")) {
-			instances = rManagement.loadAllRBEntitiesForSchema(
+			instances = rManagement.loadAllEntitiesForSchema(
 					schemas, filter, SearchContext.CONJUNCT_MULTIPLE_KEYWORDS);
 		} else {
 			instances = rManagement
-					.loadAllRBEntitiesForSchema(schemas);
+					.loadAllEntitiesForSchema(schemas);
 		}
 		return buildRegisterTableEntries(instances, fields, criteria);
 	}
