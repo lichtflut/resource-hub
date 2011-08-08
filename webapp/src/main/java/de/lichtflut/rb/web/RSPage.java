@@ -135,7 +135,7 @@ public class RSPage extends RBSuperPage {
 		for (final ResourceSchema resourceSchema : resourceSchemas) {
 
 			Collection<RBEntity> instances = rTypeManagement
-					.loadAllRBEntitiesForSchema(resourceSchema);
+					.loadAllEntitiesForSchema(resourceSchema);
 
 			final ArrayList<RBEntity> schemaInstances = new ArrayList<RBEntity>(
 					(instances != null) ? instances : new HashSet<RBEntity>());
@@ -318,7 +318,7 @@ public class RSPage extends RBSuperPage {
 		// UPDATE LINK
 		// Iterate through Schemas an load all Entities of the Schema type
 		for (final ResourceSchema resourceSchema : resourceSchemas) {
-			Collection<RBEntity> instances = rTypeManagement.loadAllRBEntitiesForSchema(resourceSchema);
+			Collection<RBEntity> instances = rTypeManagement.loadAllEntitiesForSchema(resourceSchema);
 			ArrayList<RBEntity> schemaInstances = new ArrayList<RBEntity>(
 					(instances != null) ? instances : new HashSet<RBEntity>());
 			PageParameters params = new PageParameters();

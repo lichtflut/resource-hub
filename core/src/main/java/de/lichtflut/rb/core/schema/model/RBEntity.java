@@ -59,16 +59,20 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	}
 
 	/**
-	 * @param attribute -
-	 * @param value -
-	 * @throws RBInvalidValueException -
-	 * @throws RBInvalidAttributeException -
-	 * <p>
-	 *         InvalidValueException when the value does not match the required
-	 *         datatype or constraints or if the maximum count of possible
-	 *         values is reached (depends on the cardinality).
-	 *         InvalidAttributeException if this attribute does not exists.
-	 *         </p>
+	 * @param attribute
+	 *            -
+	 * @param value
+	 *            -
+	 * @throws RBInvalidValueException
+	 *             -
+	 * @throws RBInvalidAttributeException
+	 *             -
+	 *             <p>
+	 *             InvalidValueException when the value does not match the
+	 *             required datatype or constraints or if the maximum count of
+	 *             possible values is reached (depends on the cardinality).
+	 *             InvalidAttributeException if this attribute does not exists.
+	 *             </p>
 	 * @return the ticket where this value has been stored
 	 */
 	public abstract Integer addValueFor(String attribute, T value)

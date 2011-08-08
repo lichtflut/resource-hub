@@ -184,6 +184,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	 */
 	private void mergePropertyDecs(final PropertyDeclaration newOne, final PropertyDeclaration oldOne){
 		newOne.getConstraints().addAll(oldOne.getConstraints());
+		System.out.println("new->"+newOne+" old-->"+oldOne);
 		/* TODO: This is not correct.
 		 * Due to the fact that the default value is STRING instead of UNDEFINED, we have to expand this selection
 		 * This would make it impossible to overwrite a global value with a value of type string, please fix it

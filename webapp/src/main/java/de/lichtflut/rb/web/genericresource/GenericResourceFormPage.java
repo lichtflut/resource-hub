@@ -81,7 +81,7 @@ public class GenericResourceFormPage extends RBSuperPage {
 	private RBEntity loadRBEntitiesFromParams(final ResourceSchema schema, final PageParameters parameters){
 		String identifier = parameters.get("instanceid").toString();
 		Collection<RBEntity> instances =
-			getRBServiceProvider().getRBEntityManagement().loadAllRBEntitiesForSchema(schema);
+			getRBServiceProvider().getRBEntityManagement().loadAllEntitiesForSchema(schema);
 		for (RBEntity<Object> resourceTypeInstance : instances) {
 			if(resourceTypeInstance.getQualifiedName().toURI().equals(identifier)){
 				return resourceTypeInstance;

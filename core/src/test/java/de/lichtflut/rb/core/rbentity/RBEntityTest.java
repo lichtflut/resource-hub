@@ -69,6 +69,7 @@ public final class RBEntityTest {
 		// Try to write an value to hatGeburtstag with the given ticket.
 		boolean exceptionOccured = false;
 		try {
+			instance.addValueFor("http://lichtflut.de#xyz", "hans");
 			instance.addValueFor("http://lichtflut.de#hatGeburtstag", "test",
 					ticket_hatGeburtstag1);
 			Assert.assertTrue((instance.getValueFor(
@@ -76,12 +77,12 @@ public final class RBEntityTest {
 					.equals("test"));
 			// Try to revoke the ticket, which should not be possible caused by
 			// the hasExacltyOneCardinality
-			exceptionOccured = true;
+			exceptionOccured = false;
 			instance.releaseTicketFor("http://lichtflut.de#hatGeburtstag",
 					ticket_hatGeburtstag1);
-			exceptionOccured = false;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			exceptionOccured=true;
 		}
 		Assert.assertTrue(exceptionOccured);
 		exceptionOccured = false;
@@ -218,10 +219,10 @@ public final class RBEntityTest {
 			e.printStackTrace();
 		}
 		Assert.assertFalse(invalidValueExeptionThrown);
-		
+
 		RBEntity entity = (RBEntity) car0.getValueFor(
 				"http://lichtflut.de#hatHalter", ticket1);
-		
+
 		System.out.println("-->"+car0.getMetaInfoFor("http://lichtflut.de#hatHalter", MetaDataKeys.TYPE));
 
 		Assert.assertTrue(((String) entity.getValueFor(

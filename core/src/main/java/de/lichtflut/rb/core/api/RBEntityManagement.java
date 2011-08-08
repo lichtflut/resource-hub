@@ -59,7 +59,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return true if the operation was successfull, false if not
 	 * @param instance - The {@link RBEntity} which shall be created or updated
 	 */
-	boolean createOrUpdateRBEntity(RBEntity<Object> instance);
+	boolean createOrUpdateEntity(RBEntity<Object> instance);
 
 	// -----------------------------------------------------
 
@@ -72,7 +72,7 @@ public interface RBEntityManagement extends Serializable{
 	 * null if no {@link RBEntity} could be assigned to the params
 	 */
 	@SuppressWarnings("rawtypes")
-	RBEntity loadRBEntity(QualifiedName qn);
+	RBEntity loadEntity(QualifiedName qn);
 
 	// -----------------------------------------------------
 
@@ -85,7 +85,7 @@ public interface RBEntityManagement extends Serializable{
 	 * null if no {@link RBEntity} could be assigned to the params
 	 */
 	@SuppressWarnings("rawtypes")
-	RBEntity loadRBEntity(String nodeIdentifier);
+	RBEntity loadEntity(String nodeIdentifier);
 
 	// -----------------------------------------------------
 
@@ -98,7 +98,7 @@ public interface RBEntityManagement extends Serializable{
 	 * null if no {@link RBEntity} could be assigned to the params
 	 */
 	@SuppressWarnings("rawtypes")
-	RBEntity loadRBEntity(ResourceNode node);
+	RBEntity loadEntity(ResourceNode node);
 
 	// -----------------------------------------------------
 
@@ -110,7 +110,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return a {@link Collection} of {@link RBEntity} which are dependent on the given schemas
 	 */
 	@SuppressWarnings("rawtypes")
-	Collection<RBEntity> loadAllRBEntitiesForSchema(Collection<ResourceSchema> schemas);
+	Collection<RBEntity> loadAllEntitiesForSchema(Collection<ResourceSchema> schemas);
 
 	// -----------------------------------------------------
 
@@ -125,7 +125,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return a {@link Collection} of {@link RBEntity} which depends on the given schemas, filter and searchcontext
 	 */
 	@SuppressWarnings("rawtypes")
-	Collection<RBEntity> loadAllRBEntitiesForSchema(final Collection<ResourceSchema> schemas,
+	Collection<RBEntity> loadAllEntitiesForSchema(final Collection<ResourceSchema> schemas,
 			final String filter, final SearchContext ctx);
 
 	/**
@@ -136,7 +136,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return a {@link Collection} of {@link RBEntity} which depends on the given schema
 	 */
 	@SuppressWarnings("rawtypes")
-	Collection<RBEntity> loadAllRBEntitiesForSchema(ResourceSchema schema);
+	Collection<RBEntity> loadAllEntitiesForSchema(ResourceSchema schema);
 
 	// -----------------------------------------------------
 
@@ -151,7 +151,7 @@ public interface RBEntityManagement extends Serializable{
 	 * @return  a {@link Collection} of {@link RBEntity} which depends on the given schema, filter and searchcontext
 	 */
 	@SuppressWarnings("rawtypes")
-	Collection<RBEntity> loadAllRBEntitiesForSchema(ResourceSchema schema, String filter, SearchContext ctx);
+	Collection<RBEntity> loadAllEntitiesForSchema(ResourceSchema schema, String filter, SearchContext ctx);
 
 	// -----------------------------------------------------
 

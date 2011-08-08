@@ -84,7 +84,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			protected void onSubmit() {
 				super.onSubmit();
 				if (getServiceProvider().getRBEntityManagement()
-						.createOrUpdateRBEntity(instance)) {
+						.createOrUpdateEntity(instance)) {
 					info("This instance has been successfully updated/created");
 				} else {
 					error("Somethin went wrong, instance could'nt be created/updated");
@@ -196,7 +196,7 @@ public abstract class GenericResourceFormPanel extends CKComponent {
 			}
 			f = new Fragment("propertyInput", "resource", this);
 			List entityList = (List) getServiceProvider().getRBEntityManagement()
-				.loadAllRBEntitiesForSchema(getServiceProvider().getResourceSchemaManagement()
+				.loadAllEntitiesForSchema(getServiceProvider().getResourceSchemaManagement()
 						.getResourceSchemaForResourceType(uri));
 
 			IChoiceRenderer renderer = new IChoiceRenderer<RBEntity>() {
