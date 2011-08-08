@@ -55,16 +55,15 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 
 	/**
 	 * Takes the node of this type as argument.
-	 * @param id
-	 *            the {@link ResourceNode} id
+	 * @param id - the {@link ResourceNode} id
 	 */
 	public RBEntity(final ResourceNode id) {
 		super(id);
 	}
 
 	/**
-	 * @param attribute -
-	 * @param value -
+	 * @param attribute - {@link String} representing the attribute
+	 * @param value - {@link Object}
 	 * @throws RBInvalidValueException -
 	 * @throws RBInvalidAttributeException -
 	 * <p>
@@ -101,18 +100,17 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	// -----------------------------------------------------
 
 	/**
-	 * @param attribute -
-	 * @param value -
-	 * @param ticket
-	 *            the reference to an existing value assignment
-	 * @throws RBInvalidValueException
 	 * <p>
 	 *         InvalidValueException when the value does not match the required
 	 *         datatype or constraints or if the maximum count of possible
 	 *         values is reached (depends on the cardinality). of if the ticket
 	 *         does not exists.
 	 * </p>
-	 * @throws RBInvalidAttributeException
+	 * @param attribute - {@link String} representing the attribute
+	 * @param value - {@link Object}
+	 * @param ticket - the reference to an existing value assignment
+	 * @throws RBInvalidValueException -
+	 * @throws RBInvalidAttributeException -
 	 * 			<p>
 	 * 			  if this attribute does not exists.
 	 *         </p>
@@ -124,7 +122,7 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	 * <p>
 	 * Tries to return the value which matches to the given attribute and index.
 	 * </p>
-	 * @param attribute -
+	 * @param attribute - {@link String} representing the attribute
 	 * @param index -
 	 * @return the value or null if no value could be found for the attribute and index
 	 */
@@ -157,7 +155,7 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	 * <p>
 	 * Return all the existing tickets for a given attribute.
 	 * </p>
-	 * @param attribute -
+	 * @param attribute - {@link String} representing the attribute
 	 * @return the requested set of tickets as {@link Collection}
 	 */
 	public abstract Collection<Integer> getTicketsFor(final String attribute);
@@ -168,7 +166,7 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	 * <p>
 	 *  .
 	 * </p>
-	 * @param attribute -
+	 * @param attribute - {@link String} representing the attribute
 	 * @return a {@link RBValidatorFactory} for a given attribute.
 	 *
 	 */
@@ -180,12 +178,11 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	 * <p>
 	 * Tries to generate and return a ticket for given attribute.
 	 * </p>
-	 * @param attribute -
+	 * @param attribute - {@link String} representing the attribute
 	 * @throws RBInvalidValueException if the maximum count of possible values
 	 *         (tickets) is reached (depends on the cardinality). or if the
 	 *         ticket does not exists.
 	 * @throws RBInvalidAttributeException if this attribute does not exists.
-	 *
 	 * @return the ticket id
 	 */
 	public abstract Integer generateTicketFor(final String attribute)
@@ -197,7 +194,7 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	 * <p>
 	 * Tries to release and remove an exisiting ticket.
 	 * </p>
-	 * @param attribute -
+	 * @param attribute - {@link String} representing the attribute
 	 * @param ticket -
 	 * @throws RBInvalidValueException if the minimum count of possible values
 	 *         (tickets) is reached (depends on the cardinality). or if the
@@ -215,7 +212,7 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	 * Returns the MetaInformations for a given attribute specified with a key.
 	 * </p>
 	 * @param key - the specified key
-	 * @param attribute - the attribute
+	 * @param attribute - {@link String} representing the attribute
 	 * @return the MetaInfo as Object. The key does specify what for a type it will be.
 	 */
 	public abstract Object getMetaInfoFor(final String attribute, final MetaDataKeys key);

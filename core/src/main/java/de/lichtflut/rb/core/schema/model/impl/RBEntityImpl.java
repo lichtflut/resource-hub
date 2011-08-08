@@ -53,7 +53,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 	 * <p>
 	 * Construct an new entity-instance for a given {@link ResourceSchema}.
 	 * </p>
-	 * @param schema -
+	 * @param schema - The ResourceSchema for the RBEntity
 	 */
 	public RBEntityImpl(final ResourceSchema schema){
 		this.schema=schema;
@@ -64,7 +64,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 	 * <p>
 	 * Construct an entity-instance for given {@link ResourceSchema} and an existing {@link ResourceNode}.
 	 * </p>
-	 * @param schema -
+	 * @param schema - The ResourceSchema for the RBEntity
 	 * @param node -
 	 */
 	public RBEntityImpl(final ResourceSchema schema, final ResourceNode node){
@@ -268,7 +268,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 			//In this version, "Constraints" can be ignored
 			this.internalValidatorMap.put(
 					propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(), new RBValidator<Object>(){
-				@SuppressWarnings("deprecation")
+				@SuppressWarnings({ "deprecation", "unchecked" })
 				@Override
 				public boolean isValid(final Object value)
 						throws RBInvalidValueException {
@@ -352,10 +352,10 @@ public class RBEntityImpl extends RBEntity<Object> {
 	}
 
 	/**
-	 *
+	 * Validates a {@link String} for a {@link PropertyDeclaration}.
+	 * @param pDec - {@link PropertyDeclaration} to validate the given String against
+	 * @param value - {@link String} which is to be validated
 	 * @throws Exception -
-	 * @param pDec -
-	 * @param value -
 	 */
 	private void validateRegex(final PropertyDeclaration pDec, final String value) throws Exception{
 		for (Constraint constraint : pDec.getConstraints()) {
@@ -408,6 +408,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 		// -----------------------------------------------------
 
 		/**
+		 * Returns MetaData for a given key.
 		 * @param key the type of the MetaData you're asking for
 		 * @return the MetaData as Object
 		 */
@@ -424,6 +425,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 		// -----------------------------------------------------
 
 		/**
+		 * Returns all tickets.
 		 * @return the set of existing tickets
 		 */
 		public Collection<Integer> getTickets(){
@@ -433,6 +435,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 		// -----------------------------------------------------
 
 		/**
+		 * Returns the assigned values.
 		 * @return all the assigned values
 		 */
 		public Collection<Object> getValues(){
@@ -449,7 +452,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 		 * <p>
 		 * Set the value for a given ticket.
 		 * </p>
-		 * @param value -
+		 * @param value - Value to be set.
 		 * @param ticket -
 		 * @return true is the value could be addes successfully, false if not
 		 */
@@ -465,6 +468,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 		// -----------------------------------------------------
 
 		/**
+		 * Returns the value for a ticket.
 		 * @param ticket - the ticket you're asking for
 		 * @return the Value for the given ticket
 		 */
@@ -479,6 +483,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 		// -----------------------------------------------------
 
 		/**
+		 * Generates a new ticket.
 		 * @return the new generated ticket as integer
 		 */
 		public int generateTicket(){
@@ -496,6 +501,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 		// -----------------------------------------------------
 
 		/**
+		 * Removes a ticket.
 		 * @param ticket - the ticket you want to remove
 		 * @return true if the ticket could be removed, false if not
 		 */
