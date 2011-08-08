@@ -3,7 +3,11 @@
  */
 package de.lichtflut.rb.core.rbentity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
@@ -162,6 +166,7 @@ public final class RBEntityTest {
 	/**
 	 * @param
 	 */
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testResourceType() {
 
@@ -230,6 +235,59 @@ public final class RBEntityTest {
 				.contains("peter@hans.de"));
 
 
+	}
+
+	/**
+	 * Test sortByAttribute method of RBEntity.
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	public void testSortByAttribute(){
+		List<RBEntity> list = new ArrayList<RBEntity>();
+		String attribute = "http://lichtflut.de#hatEmail";
+		String emailA = "a@web.de";
+		String emailG = "gTest@web.de";
+		String emailAAF = "aaf@xyz.com";
+		String emailAV = "av@yahoo.com";
+		String emailM = "m@web.de";
+
+		//Generate and fill RBEntites
+		RBEntity e1 = createPersonSchema().generateRBEntity();
+		RBEntity e2 = createPersonSchema().generateRBEntity();
+		RBEntity e3 = createPersonSchema().generateRBEntity();
+		RBEntity e4 = createPersonSchema().generateRBEntity();
+		RBEntity e5 = createPersonSchema().generateRBEntity();
+		try {
+			e4.addValueFor(attribute, emailG);
+			e1.addValueFor(attribute, emailA);
+			e2.addValueFor(attribute, emailM);
+			e3.addValueFor(attribute, emailAV);
+			e5.addValueFor(attribute, emailAAF);
+		} catch (RBInvalidValueException e) {
+			e.printStackTrace();
+		} catch (RBInvalidAttributeException e) {
+			e.printStackTrace();
+		}
+		list.add(e1);
+		list.add(e2);
+		list.add(e3);
+		list.add(e4);
+		list.add(e5);
+		RBEntity.sortByAttribute(list, attribute, true);
+
+		Assert.assertTrue(list.get(0).getValueFor(attribute, 0).equals(emailA));
+		Assert.assertTrue(list.get(1).getValueFor(attribute, 0).equals(emailAAF));
+		Assert.assertTrue(list.get(2).getValueFor(attribute, 0).equals(emailAV));
+		Assert.assertTrue(list.get(3).getValueFor(attribute, 0).equals(emailG));
+		Assert.assertTrue(list.get(4).getValueFor(attribute, 0).equals(emailM));
+
+		RBEntity.sortByAttribute(list, attribute, false);
+		System.out.println(list.get(4).getValueFor(attribute, 0));
+		Assert.assertTrue(list.get(0).getValueFor(attribute, 0).equals(emailM));
+		Assert.assertTrue(list.get(1).getValueFor(attribute, 0).equals(emailG));
+		Assert.assertTrue(list.get(2).getValueFor(attribute, 0).equals(emailAV));
+		Assert.assertTrue(list.get(3).getValueFor(attribute, 0).equals(emailAAF));
+		Assert.assertTrue(list.get(4).getValueFor(attribute, 0).toString().equals(emailA));
 	}
 
 	/**

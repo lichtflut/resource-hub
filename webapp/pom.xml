@@ -15,15 +15,12 @@
 	<description></description>
 	
 	<properties>
-		<wicket.version>1.5-RC4.2</wicket.version>
+		<wicket.version>1.5-RC5.1</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
 		<wiquery.version>1.5-M1</wiquery.version>
 	</properties>
 	
 	<dependencies>
-		
-
-
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
@@ -113,13 +110,12 @@
 			</plugin>
 		</plugins>
 	</build>
-		<repositories>
-   			<repository>
-     			<id>wiquery repository</id>
-     			<name>wiQuery repository</name>
-     			<url>http://wiquery.googlecode.com/svn/repo/</url>
-     			<layout>default</layout>
-   			</repository>
-		</repositories>
-		
-	</project>
+	<repositories>
+		<repository>
+			<id>wiquery repository</id>
+			<name>wiQuery repository</name>
+			<url>http://wiquery.googlecode.com/svn/repo/</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>		
+</project>
