@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import javax.smartcardio.ATR;
+
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -130,8 +132,9 @@ public class RBEntityImpl extends RBEntity<Object> {
 		}
 		RBValidator<Object> validator = getValidatorFor(attribute);
 		if((!containsAttribute(attribute)) || validator==null){
-			throw new RBInvalidAttributeException(
-					"The attribute " + attribute + " is not defined or does not have an assigned validator");
+			this.internalValidatorMap.put(attribute, createValidatorFor(val));
+//			throw new RBInvalidAttributeException(
+//					"The attribute " + attribute + " is not defined or does not have an assigned validator");
 		}
 
 		ValueHolder vHolder = this.internalRep.get(attribute);
@@ -255,6 +258,86 @@ public class RBEntityImpl extends RBEntity<Object> {
 	// -----------------------------------------------------
 
 	/**
+	 * @return RBValidator
+	 * @param  pDec PropertyDeclaration
+	 */
+
+	private RBValidator<Object> createValidatorFor(final PropertyDeclaration pDec){
+		return new RBValidator<Object>(){
+			@SuppressWarnings("deprecation")
+			@Override
+			public boolean isValid(final Object value)
+					throws RBInvalidValueException {
+				String valueTmp = value.toString().toLowerCase();
+				//Try to trigger an exception and catch them finally
+				try{
+					switch(pDec.getElementaryDataType()){
+						case RESOURCE :
+							if(! (value instanceof RBEntity)){
+								throw new Exception("");
+							}
+							Collection<Constraint> constraints = pDec.getConstraints();
+							boolean isValid = true;
+							for (Constraint constraint : constraints) {
+								if(!constraint.isResourceTypeConstraint()){
+									throw new Exception();
+								}
+								RBEntity<Object> entity = (RBEntity<Object>)value;
+								if(!constraint.getResourceTypeConstraint().getQualifiedName().
+										equals(entity.getResourceTypeID().
+												getQualifiedName())){
+									isValid=false;
+									break;
+								}
+							}
+							if(!isValid){
+								throw new Exception("");
+							}
+						break;
+						//Check for boolean
+						case BOOLEAN : if(!(valueTmp.equals("0")
+								||valueTmp.equals("1")
+								|| valueTmp.equals("true")
+								|| valueTmp.equals("false"))){
+							throw new Exception("");
+						}
+						break;
+						case INTEGER:
+							try{
+								Integer.parseInt(valueTmp);
+							}catch(Exception any){
+								throw new Exception("");
+							}
+							validateRegex(pDec, String.valueOf(value));
+							break;
+						case DECIMAL:
+							try{
+								Double.parseDouble(valueTmp);
+							}catch(Exception any){
+								throw new Exception("");
+							}
+							validateRegex(pDec, String.valueOf(value));
+							break;
+						case DATE : Date.parse(value.toString()); break;
+						case STRING:
+							validateRegex(pDec, (String) value);
+							break;
+						default: break;
+					}
+				}catch(Exception any){
+					String message = any.getMessage();
+					if(message.equals("")){
+						message = "\""+value
+						+"\" is not a valid value for the expected type "
+						+pDec.getElementaryDataType().name();
+					}
+					throw new RBInvalidValueException(message);
+				}
+				return true;
+			}};
+		};
+
+	/**
 	 * <p>
 	 * 	This method does some initializing-stuff
 	 * 	and might generate/fill values and tickets if this instance does already exists.
@@ -266,80 +349,8 @@ public class RBEntityImpl extends RBEntity<Object> {
 			final PropertyDeclaration pDec = propertyAssertion.getPropertyDeclaration();
 			//Set up the validator for this property declaration
 			//In this version, "Constraints" can be ignored
-			this.internalValidatorMap.put(
-					propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(), new RBValidator<Object>(){
-				@SuppressWarnings("deprecation")
-				@Override
-				public boolean isValid(final Object value)
-						throws RBInvalidValueException {
-					String valueTmp = value.toString().toLowerCase();
-					//Try to trigger an exception and catch them finally
-					try{
-						switch(pDec.getElementaryDataType()){
-							case RESOURCE :
-								if(! (value instanceof RBEntity)){
-									throw new Exception("");
-								}
-								Collection<Constraint> constraints = pDec.getConstraints();
-								boolean isValid = true;
-								for (Constraint constraint : constraints) {
-									if(!constraint.isResourceTypeConstraint()){
-										throw new Exception();
-									}
-									RBEntity<Object> entity = (RBEntity<Object>)value;
-									if(!constraint.getResourceTypeConstraint().getQualifiedName().
-											equals(entity.getResourceTypeID().
-													getQualifiedName())){
-										isValid=false;
-										break;
-									}
-								}
-								if(!isValid){
-									throw new Exception("");
-								}
-							break;
-							//Check for boolean
-							case BOOLEAN : if(!(valueTmp.equals("0")
-									||valueTmp.equals("1")
-									|| valueTmp.equals("true")
-									|| valueTmp.equals("false"))){
-								throw new Exception("");
-							}
-							break;
-							case INTEGER:
-								try{
-									Integer.parseInt(valueTmp);
-								}catch(Exception any){
-									throw new Exception("");
-								}
-								validateRegex(pDec, String.valueOf(value));
-								break;
-							case DECIMAL:
-								try{
-									Double.parseDouble(valueTmp);
-								}catch(Exception any){
-									throw new Exception("");
-								}
-								validateRegex(pDec, String.valueOf(value));
-								break;
-							case DATE : Date.parse(value.toString()); break;
-							case STRING:
-								validateRegex(pDec, (String) value);
-								break;
-							default: break;
-						}
-					}catch(Exception any){
-						String message = any.getMessage();
-						if(message.equals("")){
-							message = "\""+value
-							+"\" is not a valid value for the expected type "
-							+pDec.getElementaryDataType().name();
-						}
-						throw new RBInvalidValueException(message);
-					}
-					return true;
-				}
-			});
+			this.internalValidatorMap.put(propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(),
+					createValidatorFor(pDec));
 			//Validator has been added
 			simpleAttributeNames.put(
 					propertyAssertion.getPropertyDescriptor().getQualifiedName().toURI(),

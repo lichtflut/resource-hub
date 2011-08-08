@@ -88,10 +88,18 @@ public final class RBEntityTest {
 			System.out.println(e.getMessage());
 			exceptionOccured=true;
 		}
+
 		Assert.assertTrue(exceptionOccured);
 		exceptionOccured = false;
 
 		int ticket_hatEmail3 = -1;
+
+		try{
+			int a = instance.addValueFor("http://lichtflut.de#hatOhren", "ja");
+			System.out.println("hansa-+-->"+a);
+		}catch(Exception any){
+			any.printStackTrace();
+		}
 
 		try {
 			/*
