@@ -10,9 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
-import de.lichtflut.rb.core.api.ResourceSchemaManagement;
-import de.lichtflut.rb.core.schema.model.PropertyAssertion;
-
 
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.ElementaryDataType;
@@ -20,13 +17,15 @@ import org.arastreju.sge.model.ResourceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
-import de.lichtflut.rb.core.schema.parser.RSFormat;
-import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.AbstractRSParsingUnit;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
+import de.lichtflut.rb.core.schema.parser.RSFormat;
+import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
@@ -55,7 +54,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 
 
 	/**
-	 *
+	 * Constructor.
 	 * @param gate -
 	 */
 	public ResourceSchemaManagementImpl(final ArastrejuGate gate){
@@ -226,7 +225,7 @@ public class ResourceSchemaManagementImpl implements ResourceSchemaManagement {
 	 * <p>
 	 * This method converts a {@link Collection} of {@link ResourceSchemaType} types to a {@link RSParsingResult}.
 	 * </p>
-	 * @param types -the given type-collection
+	 * @param types - the given type-collection
 	 * @return the parsing result
 	 */
 	private RSParsingResult convertToParsingResult(final Collection<ResourceSchemaType> types){

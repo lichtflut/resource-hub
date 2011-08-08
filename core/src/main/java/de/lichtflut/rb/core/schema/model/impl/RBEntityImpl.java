@@ -132,6 +132,7 @@ public class RBEntityImpl extends RBEntity<Object> {
 		}
 		RBValidator<Object> validator = getValidatorFor(attribute);
 		if((!containsAttribute(attribute)) || validator==null){
+			PropertyDeclaration pDec = 
 			this.internalValidatorMap.put(attribute, createValidatorFor(val));
 //			throw new RBInvalidAttributeException(
 //					"The attribute " + attribute + " is not defined or does not have an assigned validator");
