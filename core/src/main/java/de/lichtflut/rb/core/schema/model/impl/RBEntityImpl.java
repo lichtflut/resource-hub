@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import javax.smartcardio.ATR;
-
+import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.ValueNode;
@@ -123,19 +123,43 @@ public class RBEntityImpl extends RBEntity<Object> {
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+	 * @throws RBInvalidAttributeException
+	 * @throws RBInvalidValueException */
 	@Override
-	public Integer addValueFor(final String attribute,  final Object val) throws RBInvalidValueException, RBInvalidAttributeException {
+	public Integer addValueFor(final String attribute,  final Object val) throws RBInvalidAttributeException, RBInvalidValueException {
 		Object value = val;
 		if(value==null){
 			value="";
 		}
 		RBValidator<Object> validator = getValidatorFor(attribute);
 		if((!containsAttribute(attribute)) || validator==null){
-			PropertyDeclaration pDec = 
-			this.internalValidatorMap.put(attribute, createValidatorFor(val));
-//			throw new RBInvalidAttributeException(
-//					"The attribute " + attribute + " is not defined or does not have an assigned validator");
+
+
+			PropertyDeclarationImpl pDec = new PropertyDeclarationImpl();
+			pDec.setName(attribute);
+			PropertyAssertionImpl pAss = new PropertyAssertionImpl(new SimpleResourceID(attribute), pDec);
+
+			Class type = val.getClass();
+			if(type.equals(RBEntity.class)){
+				pDec.setElementaryDataType(ElementaryDataType.RESOURCE);
+			}else if(type.equals(Integer.class)){
+				pDec.setElementaryDataType(ElementaryDataType.INTEGER);
+			}else if(type.equals(Boolean.class)){
+				pDec.setElementaryDataType(ElementaryDataType.BOOLEAN);
+			}else{
+				pDec.setElementaryDataType(ElementaryDataType.STRING);
+			}
+
+			this.internalValidatorMap.put(attribute,createValidatorFor(pDec));
+
+			ValueHolder vHolder = new ValueHolder(
+					getAssociationClients(pAss.getPropertyDescriptor()),
+					pAss);
+
+			this.internalRep.put(attribute, vHolder);
+			validator = getValidatorFor(attribute);
+
 		}
 
 		ValueHolder vHolder = this.internalRep.get(attribute);

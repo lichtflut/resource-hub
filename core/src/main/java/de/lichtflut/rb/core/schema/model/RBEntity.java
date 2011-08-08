@@ -251,6 +251,8 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 		ResourceSchema schema = getResourceSchema();
 		Collection<PropertyAssertion> assertions = schema
 				.getPropertyAssertions();
+		System.out.println("ns"+this.getAssociations().toString());
+		System.out.println("s"+assertions.size());
 		for (PropertyAssertion pAssertion : assertions) {
 			try {
 				for (Association assoc : getAssociations(pAssertion

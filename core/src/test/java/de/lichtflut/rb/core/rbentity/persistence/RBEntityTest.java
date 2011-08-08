@@ -52,6 +52,7 @@ public final class RBEntityTest {
 			instance.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
 			instance.addValueFor("http://lichtflut.de#hatEmail", "test1@test.com");
 			instance.addValueFor("http://lichtflut.de#hatAlter", "24");
+			instance.addValueFor("http://lichtflut.de#hatOhren", "zwei");
 
 		}catch(Exception any){
 			any.printStackTrace();
@@ -65,6 +66,7 @@ public final class RBEntityTest {
 			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatGeburtstag").contains("test1"));
 			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatEmail").contains("test1@test.com"));
 			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatAlter").contains("24"));
+			Assert.assertTrue(i.getValuesFor(null).contains("zwei"));
 		}
 	}
 

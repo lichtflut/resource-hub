@@ -94,13 +94,6 @@ public final class RBEntityTest {
 
 		int ticket_hatEmail3 = -1;
 
-		try{
-			int a = instance.addValueFor("http://lichtflut.de#hatOhren", "ja");
-			System.out.println("hansa-+-->"+a);
-		}catch(Exception any){
-			any.printStackTrace();
-		}
-
 		try {
 			/*
 			 * Try to generate a new Ticket for hatEmail, which should not be
@@ -296,6 +289,22 @@ public final class RBEntityTest {
 		Assert.assertTrue(list.get(2).getValueFor(attribute, 0).equals(emailAV));
 		Assert.assertTrue(list.get(3).getValueFor(attribute, 0).equals(emailAAF));
 		Assert.assertTrue(list.get(4).getValueFor(attribute, 0).toString().equals(emailA));
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void testNonSchemaProperties(){
+		ResourceSchema schema = createPersonSchema();
+		RBEntity instance = schema.generateRBEntity();
+		try{
+			int a = instance.addValueFor("http://lichtflut.de#hatOhren", true);
+			instance.addValueFor("http://lichtflut.de#hatOhren", false, a);
+			System.out.println(instance.getValueFor("http://lichtflut.de#hatOhren", a));
+		}catch(Exception any){
+			any.printStackTrace();
+		}
 	}
 
 	/**
