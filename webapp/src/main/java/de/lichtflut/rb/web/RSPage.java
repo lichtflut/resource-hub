@@ -29,6 +29,7 @@ import de.lichtflut.rb.web.ck.components.ResourceRegisterPanel;
 import de.lichtflut.rb.web.ck.components.SchemaSubmitPanel;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
+import de.lichtflut.rb.web.components.registration.Login;
 import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 
 /**
@@ -77,9 +78,10 @@ public class RSPage extends RBSuperPage {
 		this.add(component);
 		// ------------ Navigation - Sidebar ------------
 
-		NavigationBar sidebar = new NavigationBar("sidebar-right");
+		NavigationBar sidebar = new NavigationBar("sidebar-left");
 		fillMenu(sidebar);
 		add(sidebar);
+		add(new Login("sidebar-right"));
 		// -----------------------------------------------
 
 //		updateResourceList();

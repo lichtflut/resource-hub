@@ -11,9 +11,10 @@ Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
 
     <wicket:extend>
 
-      <div id="sidebar-left" wicket:id="sidebar-right"></div>     
+      <div id="sidebar-left" wicket:id="sidebar-left"></div>     
+      <div id="sidebar-right" wicket:id="sidebar-right"></div>     
  
-        <div wicket:id="ck-component"><span wicket:id="content-area"></span></div>
+        <div wicket:id="ck-component" id="main-content"><span wicket:id="content-area"></span></div>
          <wicket:fragment wicket:id="listPanel">
          <a href="#" wicket:id="link"><span wicket:id="linkLabel"></span></a>
          <wicket:enclosure child="instancelist">

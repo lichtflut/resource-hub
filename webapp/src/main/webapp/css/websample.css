@@ -574,19 +574,25 @@ ol.commentlist {
 
 #sidebar-left{
 	float: left;
-	width: 300px;
+	width: 250px;
 	padding-bottom: 30px;
     padding-left: 50px;
     padding-right: 20px;
 }
 	
+#sidebar-right{
+	float: right;
+	width: 230px;
+	padding-bottom: 30px;
+    padding-right: 50px;
+    padding-left: 20px;
+}
 .generic-resource-form-panel{
 	float:left;
 	width: 60%;
 }
 .schema-submit-panel{
-	float:left;
-	width: 60%;
+
 }
 #main{
 	
@@ -594,4 +600,10 @@ ol.commentlist {
 div.schema-submit-panel textarea{
 	width: 300px;
 	height: 300px;
+	}
+	
+#main-content{
+	margin-left: auto;
+    margin-right: auto;
+    width: 750px;
 	}
