@@ -1,0 +1,27 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd" >
+<wicket:panel>
+	<div class="login">
+	<form wicket:id="form" class="form">
+		<div class="row">
+			<span>Username</span><br />
+			<input wicket:id="username" type="text" />
+		</div>
+		<div class="row">
+			<span>Password</span><br />
+			<input wicket:id="password" type="password" />
+		</div>
+		<div class="row">
+			<input wicket:id="submitButton" type="submit" />
+		</div>
+	</form>
+	</div>
+	<div>
+		<a wicket:id="registerLink" href="#">Register now</a>
+	</div>
+</wicket:panel>
+</html>
