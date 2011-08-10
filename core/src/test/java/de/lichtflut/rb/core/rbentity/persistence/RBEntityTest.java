@@ -12,6 +12,7 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
 
+import de.lichtflut.rb.core.api.impl.RBEntityManagementImpl;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
@@ -59,7 +60,8 @@ public final class RBEntityTest {
 		}
 		//Try to create this
 		Assert.assertTrue(provider.getRBEntityManagement().createOrUpdateEntity(instance));
-		Collection<RBEntity> instances = provider.getRBEntityManagement().loadAllEntitiesForSchema(schema);
+		RBEntityManagementImpl rbManagement = (RBEntityManagementImpl) provider.getRBEntityManagement();
+		Collection<RBEntity> instances = rbManagement.loadAllEntitiesForSchema(schema);
 
 		Assert.assertTrue(instances.size()==1);
 		for (RBEntity i : instances) {

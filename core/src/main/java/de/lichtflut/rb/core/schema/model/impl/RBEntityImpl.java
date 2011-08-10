@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -137,8 +138,10 @@ public class RBEntityImpl extends RBEntity<Object> {
 
 
 			PropertyDeclarationImpl pDec = new PropertyDeclarationImpl();
-			pDec.setName(attribute);
-			PropertyAssertionImpl pAss = new PropertyAssertionImpl(new SimpleResourceID(attribute), pDec);
+			final int offset = 3;
+			final int hat = attribute.lastIndexOf("hat");
+			pDec.setName(attribute.substring(0, hat)+attribute.substring(hat+offset).toLowerCase());
+			pDec.setIdentifier(attribute);
 
 			Class type = val.getClass();
 			if(type.equals(RBEntity.class)){
@@ -151,13 +154,13 @@ public class RBEntityImpl extends RBEntity<Object> {
 				pDec.setElementaryDataType(ElementaryDataType.STRING);
 			}
 
-			this.internalValidatorMap.put(attribute,createValidatorFor(pDec));
+			PropertyAssertionImpl pAss = new PropertyAssertionImpl(new SimpleResourceID(attribute), pDec);
 
-			ValueHolder vHolder = new ValueHolder(
-					getAssociationClients(pAss.getPropertyDescriptor()),
-					pAss);
+			this.internalValidatorMap.put(pDec.getIdentifierString(), createValidatorFor(pDec));
 
-			this.internalRep.put(attribute, vHolder);
+			this.internalRep.put(pDec.getIdentifierString(),
+					new ValueHolder(getAssociationClients(new SimpleResourceID(attribute)),
+					pAss));
 			validator = getValidatorFor(attribute);
 
 		}
@@ -582,6 +585,15 @@ public class RBEntityImpl extends RBEntity<Object> {
 	 */
 	private boolean containsAttribute(final String attribute){
 		return internalRep.containsKey(attribute);
+	}
+
+	@Override
+	public Collection<PropertyAssertion> getPropertyAssertions() {
+		List<PropertyAssertion> assertions = new LinkedList<PropertyAssertion>();
+		for(String key : getAttributeNames()){
+			assertions.add(internalRep.get(key).assertion);
+		}
+		return assertions;
 	}
 
 

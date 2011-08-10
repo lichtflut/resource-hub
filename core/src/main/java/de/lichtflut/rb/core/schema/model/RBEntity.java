@@ -240,6 +240,11 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	// -----------------------------------------------------
 
 	/**
+	 * @return Collection<PropertyAssertion>
+	 */
+	public abstract Collection<PropertyAssertion> getPropertyAssertions();
+
+	/**
 	 * <p>
 	 * Creates associations based on the internal key-value map. The new
 	 * association might replace an existing older one.
@@ -248,11 +253,11 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 	 */
 	public void createAssociations(final Context ctx){
 		Association.create(this, RDF.TYPE, getResourceTypeID(), ctx);
+
 		ResourceSchema schema = getResourceSchema();
-		Collection<PropertyAssertion> assertions = schema
-				.getPropertyAssertions();
-		System.out.println("ns"+this.getAssociations().toString());
-		System.out.println("s"+assertions.size());
+		Collection<PropertyAssertion> assertions = getPropertyAssertions();
+
+
 		for (PropertyAssertion pAssertion : assertions) {
 			try {
 				for (Association assoc : getAssociations(pAssertion
@@ -265,6 +270,7 @@ public abstract class RBEntity<T extends Object> extends SNEntity
 			}
 			Collection<T> values = this.getValuesFor(pAssertion
 					.getPropertyDescriptor().getQualifiedName().toURI());
+
 			for (T value : values) {
 				Object val = value;
 				ElementaryDataType type = pAssertion.getPropertyDeclaration()
