@@ -66,7 +66,7 @@ public final class RBEntityTest {
 			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatGeburtstag").contains("test1"));
 			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatEmail").contains("test1@test.com"));
 			Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatAlter").contains("24"));
-			Assert.assertTrue(i.getValuesFor(null).contains("zwei"));
+			//Assert.assertTrue(i.getValuesFor(null).contains("zwei"));
 		}
 	}
 
