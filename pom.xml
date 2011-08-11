@@ -99,14 +99,8 @@
 		</dependency>
 		<dependency>
 			<groupId>de.lichtflut</groupId>
-			<artifactId>infra</artifactId>
-			<version>1.0.7</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.persistence</groupId>
-					<artifactId>javax.persistence</artifactId>
-				</exclusion>
-			</exclusions>
+			<artifactId>lf.foundation.infra</artifactId>
+			<version>1.1.0</version>
 		</dependency>
 	</dependencies>
 	<repositories>

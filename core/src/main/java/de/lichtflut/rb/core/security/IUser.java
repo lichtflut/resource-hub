@@ -14,7 +14,7 @@ package de.lichtflut.rb.core.security;
  *
  * @author Oliver Tigges
  */
-public interface User extends Identity {
+public interface IUser extends Identity {
 
 	/**
 	 * Returns Email.

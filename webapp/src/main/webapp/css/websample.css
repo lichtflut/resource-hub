@@ -607,3 +607,18 @@ div.schema-submit-panel textarea{
     margin-right: auto;
     width: 750px;
 	}
+	
+.login-panel{
+	width:200px;
+}
+.logout-panel{
+	width:200px;
+}
+.registration-panel{
+	width: 200px;
+}
+.login-register-panel{
+	margin-left: auto;
+	margin-right: auto;
+	width: 250px;
+}
