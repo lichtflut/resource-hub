@@ -55,5 +55,5 @@ public interface INewRBEntity {
 	 * @return - {@link String}
 	 */
 	String toString();
-	
+
 }

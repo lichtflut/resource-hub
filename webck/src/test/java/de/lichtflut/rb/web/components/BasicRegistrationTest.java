@@ -37,8 +37,7 @@ public class BasicRegistrationTest extends TestCase{
 
 		//assert all components were rendered
 		tester.assertContains("wicket:id=\"registration\"");
-		tester.assertContains("wicket:id=\"firstName\"");
-		tester.assertContains("wicket:id=\"lastName\"");
+		tester.assertContains("wicket:id=\"username\"");
 		tester.assertContains("wicket:id=\"email\"");
 		tester.assertContains("wicket:id=\"password\"");
 		tester.assertContains("wicket:id=\"confirmPassword\"");

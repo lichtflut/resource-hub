@@ -20,6 +20,7 @@ import de.lichtflut.rb.core.api.RBEntityManagement;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.security.impl.MockLoginService;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKLink;
@@ -29,7 +30,7 @@ import de.lichtflut.rb.web.ck.components.ResourceRegisterPanel;
 import de.lichtflut.rb.web.ck.components.SchemaSubmitPanel;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
-import de.lichtflut.rb.web.components.registration.Login;
+import de.lichtflut.rb.web.components.login.LoginPanel;
 import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 
 /**
@@ -81,7 +82,7 @@ public class RSPage extends RBSuperPage {
 		NavigationBar sidebar = new NavigationBar("sidebar-left");
 		fillMenu(sidebar);
 		add(sidebar);
-		add(new Login("sidebar-right"));
+		add(new LoginPanel("sidebar-right", new MockLoginService()));
 		// -----------------------------------------------
 
 //		updateResourceList();

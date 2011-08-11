@@ -5,10 +5,12 @@ package de.lichtflut.rb.web.components;
 
 import org.apache.wicket.markup.html.WebPage;
 
-import de.lichtflut.rb.web.components.registration.BasicRegistration;
+import de.lichtflut.rb.core.security.IAuthenticationService;
+import de.lichtflut.rb.core.security.IUser;
+import de.lichtflut.rb.web.components.login.BasicRegistrationPanel;
 
 /**
- * This page is used to test the {@link BasicRegistration}.
+ * This page is used to test the {@link BasicRegistrationPanel}.
  *
  * Created: Aug 9, 2011
  *
@@ -21,7 +23,18 @@ public class BasicRegistrationTestPage extends WebPage{
 	 * Default Constructor.
 	 */
 	public BasicRegistrationTestPage(){
-		this.add(new BasicRegistration("registration"));
+		this.add(new BasicRegistrationPanel("registration", new IAuthenticationService() {
+			@Override
+			public boolean registerNewUser(final IUser user) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			@Override
+			public boolean authenticateUser(final String username, final String password) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		}));
 	}
 
 }

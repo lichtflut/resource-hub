@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.web.ck.behavior;
 
+import java.io.Serializable;
+
 /**
  * [TODO Insert description here.
  *
@@ -10,7 +12,7 @@ package de.lichtflut.rb.web.ck.behavior;
  *
  * @author Ravi Knox
  */
-public interface CKBehavior {
+public interface CKBehavior extends Serializable {
 
 	/**
 	 * TODO: DESCRIPTION.

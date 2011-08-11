@@ -17,7 +17,7 @@ import de.lichtflut.rb.core.schema.model.IRBMetaInfo;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  [DESCRIPTION].
  * </p>
  *
  * <p>
@@ -27,18 +27,18 @@ import de.lichtflut.rb.core.schema.model.IRBMetaInfo;
  * @author Oliver Tigges
  */
 public class SchemaBasedRBEntity implements INewRBEntity {
-	
+
 	private final ResourceNode node;
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * @param node
+	 * @param node -
 	 */
 	public SchemaBasedRBEntity(final ResourceNode node) {
 		this.node = node;
 	}
-	
+
 	// -----------------------------------------------------
 
 	/* (non-Javadoc)
@@ -49,7 +49,7 @@ public class SchemaBasedRBEntity implements INewRBEntity {
 		// create a copy of Resource ID
 		return new SimpleResourceID(node);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see de.lichtflut.rb.core.schema.model.INewRBEntity#getQualifiedName()
 	 */
@@ -57,7 +57,7 @@ public class SchemaBasedRBEntity implements INewRBEntity {
 	public QualifiedName getQualifiedName() {
 		return node.getQualifiedName();
 	}
-	
+
 	// -----------------------------------------------------
 
 	/* (non-Javadoc)
@@ -72,7 +72,7 @@ public class SchemaBasedRBEntity implements INewRBEntity {
 	 * @see de.lichtflut.rb.core.schema.model.INewRBEntity#addField(de.lichtflut.rb.core.schema.model.IRBField)
 	 */
 	@Override
-	public boolean addField(IRBField field) {
+	public boolean addField(final IRBField field) {
 		throw new NotYetImplementedException();
 	}
 
@@ -83,6 +83,5 @@ public class SchemaBasedRBEntity implements INewRBEntity {
 	public IRBMetaInfo getRBMetaInfo() {
 		throw new NotYetImplementedException();
 	}
-	
 
 }

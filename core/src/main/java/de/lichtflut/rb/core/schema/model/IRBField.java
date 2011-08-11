@@ -54,7 +54,7 @@ public interface IRBField {
 	 * @return - {@link Cardinality}
 	 */
 	Cardinality getCardinality();
-	
+
 	/**
 	 * Returns wheather this field is known to the RBSchema.
 	 * If it is not known, it is a 'custom-' attribute which is always of type String.
@@ -75,5 +75,5 @@ public interface IRBField {
 	 * @return - list of {@link Pattern}
 	 */
 	List<Pattern> getConstraints();
-	
+
 }

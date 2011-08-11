@@ -5,10 +5,12 @@ package de.lichtflut.rb.web.components;
 
 import org.apache.wicket.markup.html.WebPage;
 
-import de.lichtflut.rb.web.components.registration.Login;
+import de.lichtflut.rb.core.security.IAuthenticationService;
+import de.lichtflut.rb.core.security.IUser;
+import de.lichtflut.rb.web.components.login.LoginPanel;
 
 /**
- * This page is used to test the {@link Login}.
+ * This page is used to test the {@link LoginPanel}.
  *
  * Created: Aug 9, 2011
  *
@@ -21,6 +23,20 @@ public class LoginTestPage extends WebPage {
 	 * Default Constructor.
 	 */
 	public LoginTestPage(){
-		add(new Login("login"));
+		add(new LoginPanel("login", new IAuthenticationService(){
+
+			@Override
+			public boolean authenticateUser(final String username, final String password) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean registerNewUser(final IUser user) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+		}));
 	}
 }
