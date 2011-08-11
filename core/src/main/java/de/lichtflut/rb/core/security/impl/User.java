@@ -28,6 +28,7 @@ public class User implements IUser {
 
 	private String name;
 	private String password;
+	private String email;
 	/**
 	 * Default Constructor.
 	 */
@@ -117,8 +118,15 @@ public class User implements IUser {
 	 */
 	@Override
 	public String getEmail() {
-		// TODO Auto-generated method stub
-		return null;
+		return email;
+	}
+
+	/**
+	 * Sets the email.
+	 * @param email - Users email
+	 */
+	public void setEmail(final String email) {
+		this.email = email;
 	}
 
 }

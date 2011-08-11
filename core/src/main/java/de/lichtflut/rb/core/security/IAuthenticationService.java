@@ -21,6 +21,12 @@ public interface IAuthenticationService {
 	boolean authenticateUser(String username, String password);
 
 	/**
+	 * Log out a authenticated User.
+	 * @return true if user was logged out successful, false if not
+	 */
+	boolean logoutUser();
+
+	/**
 	 * Register a new {@link IUser}.
 	 * @param user - new User
 	 * @return true if {@link IUser} was registered sucessful, false if not

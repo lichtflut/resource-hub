@@ -10,7 +10,6 @@ import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 
 import de.lichtflut.rb.core.security.IAuthenticationService;
 import de.lichtflut.rb.core.security.impl.User;
@@ -32,17 +31,18 @@ public class BasicRegistrationPanel extends Panel {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public BasicRegistrationPanel(final String id, final IAuthenticationService service) {
 		super(id);
+		setOutputMarkupId(true);
 		final User user = new User();
 		Form form = new Form("form", new CompoundPropertyModel(user));
-		form.add(new TextField("username", new Model("")));
-		form.add(new TextField("email", new Model("")));
-		form.add(new PasswordTextField("password", new Model("")));
-		form.add(new PasswordTextField("confirmPassword", new Model("")));
+		form.add(new TextField("name"));
+		form.add(new TextField("email"));
+		form.add(new PasswordTextField("password"));
 		form.add(new AjaxButton("submitButton"){
 
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				service.registerNewUser(user);
+				target.add(BasicRegistrationPanel.this.replaceWith(new LogoutPanel(id, service)));
 			}
 
 			@Override

@@ -111,7 +111,7 @@ public abstract class RBSuperPage extends WebPage {
 
 		// Security-Stuff Link
 		NavigationNode securityStuff = new NavigationNodePanel(new CKLink("link", "Security-Related", CKLinkType.CUSTOM_BEHAVIOR));
-		CKLink login = new CKLink("link", "Security Stuff", LoginPanelPage.class, CKLinkType.WEB_PAGE_CLASS);
+		CKLink login = new CKLink("link", "Login & Registration Modul", LoginPanelPage.class, CKLinkType.WEB_PAGE_CLASS);
 		securityStuff.addChild(new NavigationNodePanel(login));
 
 		mainNavigation.addChild(securityStuff);

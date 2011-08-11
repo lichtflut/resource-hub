@@ -35,15 +35,16 @@ public class LoginPanel extends Panel {
 	public LoginPanel(final String id, final IAuthenticationService service){
 		super(id);
 		setOutputMarkupId(true);
-		User user = new User();
+		final User user = new User();
 		Form form = new Form("form", new CompoundPropertyModel(user));
 		form.add(new TextField("name"));
 		form.add(new PasswordTextField("password"));
 		form.add(new AjaxButton("submitButton") {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-				LoginPanel.this.setEnabled(false);
-				target.add(LoginPanel.this);
+				if(service.authenticateUser(user.getName(), user.getPassword())){
+					target.add(LoginPanel.this.replaceWith(new LogoutPanel(id, service)));
+				}
 			}
 			@Override
 			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
@@ -52,7 +53,6 @@ public class LoginPanel extends Panel {
 		});
 		add(form);
 		add(new Link("registerLink", Model.of("Register now")) {
-
 			@Override
 			public void onClick(){
 				LoginPanel.this.replaceWith(new BasicRegistrationPanel(id, service));

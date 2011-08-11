@@ -5,11 +5,11 @@
 -->
 <html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd" >
 <wicket:panel>
-<div class="login">
+<div class="registration-panel">
 	<form wicket:id="form">
 		<div class="row">
 	 		<span>Name</span><br />
-	    	<input wicket:id="username" type="text" />
+	    	<input wicket:id="name" type="text" />
 	    </div>
 	    <div class="row">
 	    	<span>E-mail</span><br />
@@ -18,10 +18,6 @@
 	    <div class="row">
 	    	<span>Password</span><br />
 	    	<input wicket:id="password" type="password" />
-	    </div>
-	    <div class="row">
-	    	<span>Confirm Password</span><br />
-	    	<input wicket:id="confirmPassword" type="password" />
 	    </div>
 	    <div class="row">
 	 	   <input wicket:id="submitButton" type="submit" />

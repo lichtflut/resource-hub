@@ -52,9 +52,15 @@ public class MockLoginService implements IAuthenticationService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean registerNewUser(final IUser user) {
-		authenticatedUser.add((User) user);
+	public boolean logoutUser(){
 		return true;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean registerNewUser(final IUser user) {
+		return authenticatedUser.add((User) user);
 	}
 
 }
