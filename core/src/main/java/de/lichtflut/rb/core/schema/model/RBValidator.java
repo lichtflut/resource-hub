@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import java.io.Serializable;
+
 /**
  * <p>
  * Abstract validator.
@@ -14,7 +16,7 @@ package de.lichtflut.rb.core.schema.model;
  * @author Nils Bleisch
  * @param <T> -
  */
-public abstract class RBValidator<T extends Object> {
+public abstract class RBValidator<T extends Object> implements Serializable {
 
 	/**
 	 * @param value - the value which shoould be validated
