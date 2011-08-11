@@ -28,20 +28,20 @@ public interface IRBField {
 	 * Returns the field's simple name.
 	 * @return - simple name of this field
 	 */
-	String getSimpleName();
+	String getLabel();
 
 	/**
 	 * Returns the value of this RBField.
 	 * This can be any type from String to Date, depending on the RBSchema.
 	 * @return - Value of this field as a list
 	 */
-	List<Object> getFieldValue();
+	List<Object> getFieldValues();
 
 	/**
 	 * Sets the value for this RBField.
 	 * @param fieldValue - this fields value as a list
 	 */
-	void setFieldValue(List<Object> fieldValue);
+	void setFieldValues(List<Object> fieldValue);
 
 	/**
 	 * Returns the type of this filed according to the RBSchema.
@@ -50,11 +50,23 @@ public interface IRBField {
 	ElementaryDataType getDataType();
 
 	/**
+	 * Returns the {@link Cardinality} for this field.
+	 * @return - {@link Cardinality}
+	 */
+	Cardinality getCardinality();
+	
+	/**
 	 * Returns wheather this field is known to the RBSchema.
 	 * If it is not known, it is a 'custom-' attribute which is always of type String.
 	 * @return - true if yes, false if not.
 	 */
 	boolean isKnownToSchema();
+
+	/**
+	 * Returns whether this field contains a resource reference.
+	 * @return boolean - true if this field is a resource reference, false if not
+	 */
+	boolean isResourceReference();
 
 	/**
 	 * Returns this field's constraint according to the RBSchema.
@@ -63,16 +75,5 @@ public interface IRBField {
 	 * @return - list of {@link Pattern}
 	 */
 	List<Pattern> getConstraints();
-
-	/**
-	 * Returns the {@link Cardinality} for this field.
-	 * @return - {@link Cardinality}
-	 */
-	Cardinality getCardinality();
-
-	/**
-	 * Returns wheather this field contains a resource reference.
-	 * @return boolean - true if this field is a resource reference, false if not
-	 */
-	boolean isResourceReference();
+	
 }
