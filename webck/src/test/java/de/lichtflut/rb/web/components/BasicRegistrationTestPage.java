@@ -34,6 +34,11 @@ public class BasicRegistrationTestPage extends WebPage{
 				// TODO Auto-generated method stub
 				return false;
 			}
+			@Override
+			public boolean logoutUser() {
+				// TODO Auto-generated method stub
+				return false;
+			}
 		}));
 	}
 

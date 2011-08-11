@@ -37,6 +37,12 @@ public class LoginTestPage extends WebPage {
 				return false;
 			}
 
+			@Override
+			public boolean logoutUser() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
 		}));
 	}
 }
