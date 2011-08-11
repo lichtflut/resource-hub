@@ -3,22 +3,21 @@
  */
 package de.lichtflut.rb.web;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
-import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
 import de.lichtflut.rb.web.ck.components.SearchBar;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
+import de.lichtflut.rb.web.ck.components.navigation.NavigationNode;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
+import de.lichtflut.rb.web.components.LoginPanelPage;
 import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 import de.lichtflut.rb.web.resources.SharedResourceProvider;
 
@@ -110,23 +109,12 @@ public abstract class RBSuperPage extends WebPage {
 		mainNavigation.addChild(new NavigationNodePanel(new CKLink("link", "Sample Resource Page",
 				SampleResourcePage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
 
-		CKLink hideMe = new CKLink("link", "Hide me", CKLinkType.CUSTOM_BEHAVIOR);
-		hideMe.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
-			@SuppressWarnings("rawtypes")
-			@Override
-			public Object execute(final Object... objects) {
-				Component comp = (Link) objects[0];
-				comp.setVisible(false);
-				return null;
-			}
-		});
-		NavigationNodePanel menuItem = new NavigationNodePanel(hideMe);
-		NavigationNodePanel subMenu = new NavigationNodePanel(
-				new CKLink("link", "Google 3.1", "http://google.de", CKLinkType.EXTERNAL_LINK)
-				);
+		// Security-Stuff Link
+		NavigationNode securityStuff = new NavigationNodePanel(new CKLink("link", "Security-Related", CKLinkType.CUSTOM_BEHAVIOR));
+		CKLink login = new CKLink("link", "Security Stuff", LoginPanelPage.class, CKLinkType.WEB_PAGE_CLASS);
+		securityStuff.addChild(new NavigationNodePanel(login));
 
-		menuItem.addChild(subMenu);
-		mainNavigation.addChild(menuItem);
+		mainNavigation.addChild(securityStuff);
 		add(mainNavigation);
 
 		this.add(new SearchBar("searchBar") {
