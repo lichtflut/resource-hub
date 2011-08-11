@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.security.impl;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -24,7 +25,8 @@ import de.lichtflut.rb.core.security.Role;
  *
  * @author Ravi Knox
  */
-public class User implements IUser {
+@SuppressWarnings("serial")
+public class User implements IUser, Serializable {
 
 	private String name;
 	private String password;
