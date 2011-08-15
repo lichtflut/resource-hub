@@ -3,9 +3,9 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -16,6 +16,7 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.model.INewRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.IRBMetaInfo;
+import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
@@ -33,6 +34,7 @@ public class NewRBEntity implements INewRBEntity {
 
 	private final ResourceNode node;
 	private final ResourceSchema schema;
+	private List<IRBField> fields;
 
 	// -----------------------------------------------------
 
@@ -68,10 +70,36 @@ public class NewRBEntity implements INewRBEntity {
 		super();
 		this.node = node;
 		this.schema = schema;
+		initializeFields();
 	}
 
 	// -----------------------------------------------------
 
+	/**
+	 * <p>
+	 * Initialized this {@link INewRBEntity}s {@link IRBField}s
+	 * </p>
+	 * <p>
+	 * If a {@link RBSchema} extists it is taken into account, as well as
+	 * additional fields which may not be specified in the schema, but present in
+	 * the Entity itself.
+	 * </p>
+	 * <p>
+	 * If no {@link RBSchema} exists, the {@link IRBField}s will be created
+	 * according to the values present in the Entity itself.
+	 */
+	private void initializeFields() {
+		fields = new ArrayList<IRBField>();
+		if(schema == null){
+			// TODO: implement
+			throw new NotYetImplementedException("Only RBEntites with RBSchemas are supported!");
+		}else{
+			for (PropertyAssertion assertion : schema.getPropertyAssertions()) {
+				fields.add(new RBField(assertion,
+						node.getAssociationClients(assertion.getPropertyDeclaration().getIdentifier())));
+			}
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -97,8 +125,7 @@ public class NewRBEntity implements INewRBEntity {
 	 */
 	@Override
 	public List<IRBField> getAllFields() {
-		System.out.println(node.getAssociations());
-		throw new NotYetImplementedException();
+		return fields;
 	}
 
 	/**
@@ -106,7 +133,7 @@ public class NewRBEntity implements INewRBEntity {
 	 */
 	@Override
 	public boolean addField(final IRBField field) {
-		throw new NotYetImplementedException();
+		return fields.add(field);
 	}
 
 	/**
@@ -116,61 +143,4 @@ public class NewRBEntity implements INewRBEntity {
 	public IRBMetaInfo getRBMetaInfo() {
 		throw new NotYetImplementedException();
 	}
-
-	/**
-	 * TestMain.
-	 * @param args -
-	 */
-	public static void main(final String[] args){
-		NewRBEntity entity = new NewRBEntity(NewRBEntity.createPersonSchema());
-		System.out.println(entity.getAllFields());
-	}
-
-	/**
-	 * @return schema
-	 */
-	private static ResourceSchema createPersonSchema() {
-		ResourceSchemaImpl schema = new ResourceSchemaImpl(
-				"http://lichtflut.de#", "personschema");
-		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
-		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
-		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
-		PropertyDeclarationImpl p4 = new PropertyDeclarationImpl();
-		p1.setName("http://lichtflut.de#geburtsdatum");
-		p2.setName("http://lichtflut.de#email");
-		p3.setName("http://lichtflut.de#alter");
-		p4.setName("http://lichtflut.de#kind");
-
-		p1.setElementaryDataType(ElementaryDataType.STRING);
-		p2.setElementaryDataType(ElementaryDataType.STRING);
-		p3.setElementaryDataType(ElementaryDataType.INTEGER);
-		p4.setElementaryDataType(ElementaryDataType.RESOURCE);
-
-		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
-		p4.addConstraint(ConstraintFactory.buildConstraint(schema
-				.getDescribedResourceID()));
-
-		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hatGeburtstag"),
-				p1);
-		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hatEmail"), p2);
-		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hatAlter"), p3);
-		PropertyAssertionImpl pa4 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hatKind"), p4);
-
-		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
-		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		pa4.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
-
-		schema.addPropertyAssertion(pa1);
-		schema.addPropertyAssertion(pa2);
-		schema.addPropertyAssertion(pa3);
-		schema.addPropertyAssertion(pa4);
-
-		return schema;
-	}
-
 }

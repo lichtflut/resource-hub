@@ -9,9 +9,9 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 
 /**
- * Represents a resource type defined by a RBResourceSchema.
+ * An IRBField represents an edge of a RBEntity.
  *
- * Created: Aug 8, 2011
+ * Created: Aug 15, 2011
  *
  * @author Ravi Knox
  */

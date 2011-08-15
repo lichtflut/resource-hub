@@ -4,7 +4,7 @@
 package de.lichtflut.rb.core.schema.model;
 
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.Set;
 
 import org.arastreju.sge.model.ElementaryDataType;
 
@@ -72,8 +72,8 @@ public interface IRBField {
 	 * Returns this field's constraint according to the RBSchema.
 	 * TODO: specify return type (Constraint / Pattern)?!
 	 * TODO: If reference type Resource = full quallified ResourceURI as constraint?!
-	 * @return - list of {@link Pattern}
+	 * @return - list of {@link Constraint}
 	 */
-	List<Pattern> getConstraints();
+	Set<Constraint> getConstraints();
 
 }
