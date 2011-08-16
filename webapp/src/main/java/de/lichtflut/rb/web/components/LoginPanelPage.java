@@ -18,7 +18,7 @@ import de.lichtflut.rb.web.components.login.LoginPanel;
 public class LoginPanelPage extends RBSuperPage {
 
 	/**
-	 * Default Constructor.
+	 * Constructor.
 	 */
 	public LoginPanelPage() {
 		super("login");

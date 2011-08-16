@@ -13,7 +13,7 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.schema.model.INewRBEntity;
+import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.IRBMetaInfo;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
@@ -21,7 +21,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
  * <p>
- *  Implementation of {@link INewRBEntity}.
+ *  Implementation of {@link IRBEntity}.
  * </p>
  *
  * <p>
@@ -30,7 +30,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  *
  * @author Oliver Tigges
  */
-public class NewRBEntity implements INewRBEntity {
+public class NewRBEntity implements IRBEntity {
 
 	private final ResourceNode node;
 	private final ResourceSchema schema;
@@ -77,7 +77,7 @@ public class NewRBEntity implements INewRBEntity {
 
 	/**
 	 * <p>
-	 * Initialized this {@link INewRBEntity}s {@link IRBField}s
+	 * Initialized this {@link IRBEntity}s {@link IRBField}s
 	 * </p>
 	 * <p>
 	 * If a {@link RBSchema} extists it is taken into account, as well as

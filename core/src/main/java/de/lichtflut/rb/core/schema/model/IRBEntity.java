@@ -15,7 +15,7 @@ import org.arastreju.sge.naming.QualifiedName;
  *
  * @author Ravi Knox
  */
-public interface INewRBEntity {
+public interface IRBEntity {
 
 	/**
 	 * Returns the {@link ResourceID} of this node/Entity.
