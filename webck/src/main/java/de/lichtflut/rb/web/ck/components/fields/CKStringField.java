@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
@@ -28,9 +29,11 @@ class CKStringField extends CKComponent {
 	 * @param id - wicket:id
 	 * @param field -
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public CKStringField(final String id, final IRBField field) {
 		super(id);
-			add(new Label("label", field.getLabel()));
+		setDefaultModel(new ListModel(field.getFieldValues()));
+			add(new Label("label", new Model(field.getLabel())));
 			add(createField("value", field));
 	}
 

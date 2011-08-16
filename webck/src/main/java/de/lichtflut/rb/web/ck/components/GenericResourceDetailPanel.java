@@ -24,7 +24,7 @@ import de.lichtflut.rb.web.ck.components.fields.CKFieldPanel;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public abstract class GenericResourceDetailPanel extends CKComponent {
+public abstract class GenericResourceDetailPanel extends CKComponent  {
 
 	/**
 	 * Constructor.
@@ -34,7 +34,12 @@ public abstract class GenericResourceDetailPanel extends CKComponent {
 	@SuppressWarnings("rawtypes")
 	public GenericResourceDetailPanel(final String id, final IRBEntity entity) {
 		super(id);
-		Form form = new Form("form");
+		Form form = new Form("form"){
+		@Override
+		protected void onSubmit() {
+			super.onSubmit();
+		}
+	};
 		RepeatingView view = new RepeatingView("field-item");
 		for (IRBField field : entity.getAllFields()) {
 			Fragment f = new Fragment(view.newChildId(), "field", this);

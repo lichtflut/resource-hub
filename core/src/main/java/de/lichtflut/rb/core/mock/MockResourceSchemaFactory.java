@@ -22,7 +22,7 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
  *
  * @author Ravi Knox
  */
-public class ResourceSchemaFactory {
+public class MockResourceSchemaFactory {
 
 	/**
 	 * <p>

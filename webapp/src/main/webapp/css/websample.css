@@ -622,3 +622,8 @@ div.schema-submit-panel textarea{
 	margin-right: auto;
 	width: 250px;
 }
+.mock-resource-panel{
+	margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+}

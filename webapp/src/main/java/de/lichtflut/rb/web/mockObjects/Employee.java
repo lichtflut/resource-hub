@@ -3,17 +3,16 @@
  */
 package de.lichtflut.rb.web.mockObjects;
 
-import de.lichtflut.rb.core.mock.ResourceSchemaFactory;
-import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
+import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 import de.lichtflut.rb.web.ck.components.GenericResourceDetailPanel;
 
 /**
- * [TODO Insert description here.
- *
+ * <p>
+ * This webpage displays an example Resource in an Editor.
+ * </p>
  * Created: Aug 16, 2011
  *
  * @author Ravi Knox
@@ -26,8 +25,7 @@ public class Employee extends RBSuperPage {
 	 */
 	public Employee() {
 		super("Mockpage-Employee");
-		IRBEntity entity = new NewRBEntity(ResourceSchemaFactory.createOnlyStringSchema());
-		add(new GenericResourceDetailPanel("mockEmployee", entity) {
+		add(new GenericResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createStringBasedNewRBEntity()) {
 
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {

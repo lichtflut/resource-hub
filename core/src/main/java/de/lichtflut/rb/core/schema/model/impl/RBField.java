@@ -49,7 +49,7 @@ public class RBField implements IRBField {
 
 	@Override
 	public String getFieldName() {
-		return assertion.getPropertyIdentifier();
+		return assertion.getPropertyDeclaration().getIdentifierString();
 	}
 
 	@Override
