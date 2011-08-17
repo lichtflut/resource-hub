@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.mock;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.arastreju.sge.model.ElementaryDataType;
@@ -30,6 +31,37 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 public class MockNewRBEntityFactory {
 
 	/**
+	 * <p>
+	 * Creates a {@link NewRBEntity} with appropriate values.
+	 * </p>
+	 * <p>
+	 * {@link ElementaryDataType}: Date, String, Integer
+	 * </p>
+	 * @return Instance of {@link NewRBEntity}
+	 */
+	public static NewRBEntity createNewRBEntity(){
+		List<List<Object>> list = new ArrayList<List<Object>>();
+		List<Object> emailList = new ArrayList<Object>();
+		List<Object> ageList = new ArrayList<Object>();
+		List<Object> dateOfBirth = new ArrayList<Object>();
+		dateOfBirth.add(new Date(1985, 12, 23));
+		emailList.add("max@moritz.de");
+		emailList.add("chef@koch.de");
+		ageList.add(23);
+		list.add(dateOfBirth);
+		list.add(emailList);
+		list.add(ageList);
+
+		int counter = 0;
+		NewRBEntity entity = new NewRBEntity(createPersonSchema());
+		for (IRBField field : entity.getAllFields()) {
+			field.setFieldValues(list.get(counter));
+			counter++;
+		}
+		return entity;
+	}
+
+	/**
 	 * Creates a {@link NewRBEntity} with appropriate values.
 	 * @return Instance of {@link NewRBEntity}
 	 */
@@ -46,7 +78,7 @@ public class MockNewRBEntityFactory {
 		list.add(ageList);
 		list.add(childrenList);
 		int counter = 0;
-		NewRBEntity entity = new NewRBEntity(createStringOnlySchema());
+		NewRBEntity entity = new NewRBEntity(createOnlyStringSchema());
 		for (IRBField field : entity.getAllFields()) {
 			field.setFieldValues(list.get(counter));
 			counter++;
@@ -54,13 +86,14 @@ public class MockNewRBEntityFactory {
 		return entity;
 	}
 	
+
 	/**
 	 * <p>
 	 * Returns a {@link ResourceSchema} based on Strings only.
 	 * </p>
 	 * @return schema -
 	 */
-	private static ResourceSchema createStringOnlySchema() {
+	private static ResourceSchema createOnlyStringSchema() {
 		ResourceSchemaImpl schema = new ResourceSchemaImpl(
 				"http://lichtflut.de#", "Stringschema");
 		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
@@ -90,6 +123,46 @@ public class MockNewRBEntityFactory {
 		schema.addPropertyAssertion(pa2);
 		schema.addPropertyAssertion(pa3);
 		schema.addPropertyAssertion(pa4);
+
+		return schema;
+	}
+	
+	/**
+	 * Creates a {@link ResourceSchema} with String, Integer, Date {@link ElementaryDataType}s.
+	 * @return schema
+	 */
+	private static ResourceSchema createPersonSchema() {
+		ResourceSchemaImpl schema = new ResourceSchemaImpl(
+				"http://lichtflut.de#", "personschema");
+		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
+		p1.setName("http://lichtflut.de#geburtsdatum");
+		p2.setName("http://lichtflut.de#email");
+		p3.setName("http://lichtflut.de#alter");
+
+		p1.setElementaryDataType(ElementaryDataType.DATE);
+		p2.setElementaryDataType(ElementaryDataType.STRING);
+		p3.setElementaryDataType(ElementaryDataType.INTEGER);
+
+		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
+
+		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(
+				new SimpleResourceID("http://lichtflut.de#", "hatGeburtstag"),
+				p1);
+		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(
+				new SimpleResourceID("http://lichtflut.de#", "hatEmail"), p2);
+		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(
+				new SimpleResourceID("http://lichtflut.de#", "hatAlter"), p3);
+
+
+		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
+		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
+		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
+
+		schema.addPropertyAssertion(pa1);
+		schema.addPropertyAssertion(pa2);
+		schema.addPropertyAssertion(pa3);
 
 		return schema;
 	}

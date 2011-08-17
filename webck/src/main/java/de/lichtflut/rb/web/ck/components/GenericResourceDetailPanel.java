@@ -4,13 +4,14 @@
 package de.lichtflut.rb.web.ck.components;
 
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
-import de.lichtflut.rb.web.ck.components.fields.CKFieldPanel;
+import de.lichtflut.rb.web.ck.components.fields.CKRowItem;
 
 /**
  * <p>
@@ -35,6 +36,7 @@ public abstract class GenericResourceDetailPanel extends CKComponent  {
 	@SuppressWarnings("rawtypes")
 	public GenericResourceDetailPanel(final String id, final IRBEntity entity) {
 		super(id);
+		add(new FeedbackPanel("feedbackPanel"));
 		Form form = new Form("form"){
 		@Override
 		protected void onSubmit() {
@@ -60,7 +62,7 @@ public abstract class GenericResourceDetailPanel extends CKComponent  {
 		RepeatingView view = new RepeatingView("field-item");
 		for (IRBField field : entity.getAllFields()) {
 			Fragment f = new Fragment(view.newChildId(), "field", this);
-			f.add(new CKFieldPanel("row", field));
+			f.add(new CKRowItem("row", field));
 			view.add(f);
 		}
 		form.add(view);

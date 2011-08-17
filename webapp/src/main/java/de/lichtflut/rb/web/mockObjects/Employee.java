@@ -25,7 +25,7 @@ public class Employee extends RBSuperPage {
 	 */
 	public Employee() {
 		super("Mockpage-Employee");
-		add(new GenericResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createStringBasedNewRBEntity()) {
+		add(new GenericResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createNewRBEntity()) {
 
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {

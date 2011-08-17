@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +23,8 @@ import de.lichtflut.rb.core.schema.model.PropertyAssertion;
  *
  * @author Ravi Knox
  */
-public class RBField implements IRBField {
+@SuppressWarnings("serial")
+public class RBField implements IRBField, Serializable {
 
 	private PropertyAssertion assertion;
 	private List<Object> values;

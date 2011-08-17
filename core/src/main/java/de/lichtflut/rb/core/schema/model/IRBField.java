@@ -16,7 +16,7 @@ import org.arastreju.sge.model.ElementaryDataType;
  *
  * @author Ravi Knox
  */
-public interface IRBField {
+public interface IRBField{
 
 	/**
 	 * Returns the (attribute / )name of this RBField.

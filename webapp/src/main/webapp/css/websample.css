@@ -627,3 +627,6 @@ div.schema-submit-panel textarea{
     margin-right: auto;
     width: 500px;
 }
+.required{
+	color: #ff0000;
+}

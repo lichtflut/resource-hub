@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.web.ck.components.fields;
 
+import org.apache.wicket.markup.html.basic.Label;
+
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -15,24 +17,34 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class CKFieldPanel extends CKComponent {
+public class CKRowItem extends CKComponent {
 
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
 	 * @param field - instance of {@link IRBField}
 	 */
-	public CKFieldPanel(final String id, final IRBField field) {
+	public CKRowItem(final String id, final IRBField field) {
 		super(id);
+		// Check if minOccur is one. If yes append '*'
+		if(field.getCardinality().getMinOccurs() == 1){
+			Label label = new Label("label", field.getLabel() + " <span class=\"required\">*</span>");
+			add(label.setEscapeModelStrings(false));
+		}else{
+			add(new Label("label", field.getLabel()));
+		}
+		// Add appropriate Input-Field
 		switch(field.getDataType()){
-		case STRING:
-			add(new CKStringField("field", field));
+		case BOOLEAN:
+//			add(new CKCheckBoxField("field", field));
 			break;
-			default:
+		default:
+			add(new CKTextField("field", field));
 			break;
 		}
 	}
 
+	// ------------------------------------------------------------
 	/**
 	 * {@inheritDoc}
 	 */
