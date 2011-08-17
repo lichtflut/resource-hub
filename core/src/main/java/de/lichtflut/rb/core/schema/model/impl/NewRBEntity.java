@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.IRBMetaInfo;
@@ -30,7 +32,8 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  *
  * @author Oliver Tigges
  */
-public class NewRBEntity implements IRBEntity {
+@SuppressWarnings("serial")
+public class NewRBEntity implements IRBEntity, Serializable {
 
 	private final ResourceNode node;
 	private final ResourceSchema schema;

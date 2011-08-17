@@ -58,7 +58,6 @@ class CKTextField extends CKComponent {
 	private ListView<Object> createListView(final IModel<List<Object>> listModel) {
 		final ListView<Object> listView = new ListView<Object>("listView",
 				listModel) {
-			private static final long serialVersionUID = 1L;
 			private int actualOccurence = 1;
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
@@ -82,10 +81,10 @@ class CKTextField extends CKComponent {
 						textField.setType(String.class);
 					break;
 				}
-				actualOccurence++;
 				if(field.getCardinality().getMinOccurs() <= actualOccurence){
 					textField.setRequired(true);
 				}
+				actualOccurence++;
 				item.add(textField);
 			}
 		};

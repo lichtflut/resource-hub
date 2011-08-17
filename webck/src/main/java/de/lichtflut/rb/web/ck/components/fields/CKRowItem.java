@@ -36,7 +36,7 @@ public class CKRowItem extends CKComponent {
 		// Add appropriate Input-Field
 		switch(field.getDataType()){
 		case BOOLEAN:
-//			add(new CKCheckBoxField("field", field));
+			add(new CKCheckBoxField("field", field));
 			break;
 		default:
 			add(new CKTextField("field", field));

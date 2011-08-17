@@ -48,6 +48,7 @@ public abstract class CKComponent extends Panel {
 	 * <ol>
 	 * 	<li>{@link Class}, the ck-components-class</li>
 	 * </ol>
+	 * TODO: CKValueWrapper still needed?
 	 * </p>
 	 */
 	public static final String STYLE_BEHAVIOR = "de.lichtflut.web.ck.behavior.style";

@@ -35,7 +35,7 @@ public class MockNewRBEntityFactory {
 	 * Creates a {@link NewRBEntity} with appropriate values.
 	 * </p>
 	 * <p>
-	 * {@link ElementaryDataType}: Date, String, Integer
+	 * {@link ElementaryDataType}: Date, String, Integer, Boolean
 	 * </p>
 	 * @return Instance of {@link NewRBEntity}
 	 */
@@ -44,14 +44,16 @@ public class MockNewRBEntityFactory {
 		List<Object> emailList = new ArrayList<Object>();
 		List<Object> ageList = new ArrayList<Object>();
 		List<Object> dateOfBirth = new ArrayList<Object>();
+		List<Object> eyesightList = new ArrayList<Object>();
 		dateOfBirth.add(new Date(1985, 12, 23));
 		emailList.add("max@moritz.de");
 		emailList.add("chef@koch.de");
 		ageList.add(23);
+		eyesightList.add(false);
 		list.add(dateOfBirth);
 		list.add(emailList);
 		list.add(ageList);
-
+		list.add(eyesightList);
 		int counter = 0;
 		NewRBEntity entity = new NewRBEntity(createPersonSchema());
 		for (IRBField field : entity.getAllFields()) {
@@ -137,32 +139,39 @@ public class MockNewRBEntityFactory {
 		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
 		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
 		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p4 = new PropertyDeclarationImpl();
 		p1.setName("http://lichtflut.de#geburtsdatum");
 		p2.setName("http://lichtflut.de#email");
 		p3.setName("http://lichtflut.de#alter");
+		p4.setName("http://lichtflut.de#badEyesight");
 
 		p1.setElementaryDataType(ElementaryDataType.DATE);
 		p2.setElementaryDataType(ElementaryDataType.STRING);
 		p3.setElementaryDataType(ElementaryDataType.INTEGER);
+		p4.setElementaryDataType(ElementaryDataType.BOOLEAN);
 
 		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
 
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hatGeburtstag"),
+				new SimpleResourceID("http://lichtflut.de#", "hasDateOfBirth"),
 				p1);
 		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hatEmail"), p2);
+				new SimpleResourceID("http://lichtflut.de#", "hasEmail"), p2);
 		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hatAlter"), p3);
+				new SimpleResourceID("http://lichtflut.de#", "hasAge"), p3);
+		PropertyAssertionImpl pa4 = new PropertyAssertionImpl(
+				new SimpleResourceID("http://lichtflut.de#", "hasEyeSight"), p4);
 
 
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
 		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
+		pa4.setCardinality(CardinalityBuilder.hasExcactlyOne());
 
 		schema.addPropertyAssertion(pa1);
 		schema.addPropertyAssertion(pa2);
 		schema.addPropertyAssertion(pa3);
+		schema.addPropertyAssertion(pa4);
 
 		return schema;
 	}

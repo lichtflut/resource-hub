@@ -630,3 +630,10 @@ div.schema-submit-panel textarea{
 .required{
 	color: #ff0000;
 }
+.column{
+	display: inline-table;
+    width: 120px;
+}
+.row{
+	
+}
