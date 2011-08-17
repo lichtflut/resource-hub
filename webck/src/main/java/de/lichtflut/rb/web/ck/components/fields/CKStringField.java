@@ -3,11 +3,15 @@
  */
 package de.lichtflut.rb.web.ck.components.fields;
 
+import java.util.List;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 
 import de.lichtflut.rb.core.schema.model.IRBField;
@@ -26,37 +30,45 @@ class CKStringField extends CKComponent {
 
 	/**
 	 * Constructor.
+	 *
 	 * @param id - wicket:id
 	 * @param field -
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public CKStringField(final String id, final IRBField field) {
 		super(id);
-		setDefaultModel(new ListModel(field.getFieldValues()));
-			add(new Label("label", new Model(field.getLabel())));
-			add(createField("value", field));
+		IModel<List<String>> listModel = new ListModel(field.getFieldValues());
+//		setDefaultModel(listModel);
+
+		if (listModel.getObject().size() == 0) {
+			// Display at least one textfield.
+			listModel.getObject().add("");
+		}
+		add(new Label("label", new Model(field.getLabel())));
+		add(createListView(listModel));
 	}
 
 	/**
-	 * Creates a {@link RepeatingView} containing a {@link Label} and a {@link TextField}.
-	 * @param fieldName - Value set as Label
-	 * @param field - value set as Textfield
-	 * @return RepeatingView containing all the field's values
+	 * Creates a {@link ListView} containing {@link TextField}.
+	 * @param listModel - instance of {@link ListModel}
+	 * @return A ListView of TextFields
 	 */
-	private RepeatingView createField(final String fieldName, final IRBField field) {
-		RepeatingView view = new RepeatingView("value");
-		if(field.getFieldValues().size() == 0){
-			Fragment f = new Fragment(view.newChildId(), "textInput", this);
-			f.add(new TextField<String>("input", Model.of("")));
-			view.add(f);
-		}else{
-			for (Object object : field.getFieldValues()) {
-				Fragment f = new Fragment(view.newChildId(), "textInput", this);
-				f.add(new TextField<String>("input", Model.of(object.toString())));
-				view.add(f);
+	private ListView<String> createListView(final IModel<List<String>> listModel) {
+		final ListView<String> listView = new ListView<String>("listView",
+				listModel) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void populateItem(final ListItem<String> item) {
+				TextField<String> textField = new TextField<String>("value",
+			            new PropertyModel<String>(listModel, "" + item.getIndex()));
+				textField.setType(String.class);
+				item.add(textField);
 			}
-		}
-		return view;
+		};
+		listView.setReuseItems(true);
+		setOutputMarkupId(true);
+		return listView;
 	}
 
 	/**

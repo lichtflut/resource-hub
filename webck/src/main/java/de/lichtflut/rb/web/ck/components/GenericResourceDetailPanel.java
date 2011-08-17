@@ -9,6 +9,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.components.fields.CKFieldPanel;
 
 /**
@@ -38,6 +39,22 @@ public abstract class GenericResourceDetailPanel extends CKComponent  {
 		@Override
 		protected void onSubmit() {
 			super.onSubmit();
+			getParent().replaceWith(new GenericResourceDetailPanel(id, entity) {
+				@Override
+				public CKComponent setViewMode(final ViewMode mode) {
+					// TODO Auto-generated method stub
+					return null;
+				}
+				@Override
+				protected void initComponent(final CKValueWrapperModel model) {
+					// TODO Auto-generated method stub
+				}
+				@Override
+				public RBServiceProvider getServiceProvider() {
+					// TODO Auto-generated method stub
+					return null;
+				}
+			});
 		}
 	};
 		RepeatingView view = new RepeatingView("field-item");
