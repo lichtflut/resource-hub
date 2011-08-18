@@ -30,8 +30,8 @@ public class CKCheckBoxField extends CKComponent {
 	/**
 	 * Constructor.
 	 *
-	 * @param id -
-	 * @param field -
+	 * @param id - wicket:id
+	 * @param field - instance of {@link IRBField}
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public CKCheckBoxField(final String id, final IRBField field) {

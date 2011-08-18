@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.mockObjects;
+package de.lichtflut.rb.web.mockPages;
 
 import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
@@ -25,7 +25,7 @@ public class Employee extends RBSuperPage {
 	 */
 	public Employee() {
 		super("Mockpage-Employee");
-		add(new GenericResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createNewRBEntity()) {
+		add(new GenericResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createComplexNewRBEntity()){
 
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {

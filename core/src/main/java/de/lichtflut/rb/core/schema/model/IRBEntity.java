@@ -52,7 +52,7 @@ public interface IRBEntity {
 	/**
 	 * String representation of this RBEntity.
 	 * TODO: Specify pattern
-	 * @return - {@link String}
+	 * @return {@link String}
 	 */
 	String toString();
 

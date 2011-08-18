@@ -69,7 +69,7 @@ public abstract class CKComponent extends Panel {
 	// ------------- Constructor ---------------------------
 	/**
 	 * Constructor.
-	 * @param id -
+	 * @param id - wicket:id
 	 */
 	public CKComponent(final String id){
 		super(id, new CKValueWrapperModel());

@@ -14,7 +14,6 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.IRBMetaInfo;
@@ -23,11 +22,11 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
  * <p>
- *  Implementation of {@link IRBEntity}.
+ * Implementation of {@link IRBEntity}.
  * </p>
  *
  * <p>
- * 	Created Aug 11, 2011
+ * Created Aug 11, 2011
  * </p>
  *
  * @author Oliver Tigges
@@ -50,7 +49,8 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	/**
 	 * Creates an entity based on given node without schema.
-	 * @param node The node.
+	 *
+	 * @param node - The node.
 	 */
 	public NewRBEntity(final ResourceNode node) {
 		this(node, null);
@@ -58,7 +58,8 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	/**
 	 * Creates a new entity with a given schema.
-	 * @param schema The schema.
+	 *
+	 * @param schema - The schema.
 	 */
 	public NewRBEntity(final ResourceSchema schema) {
 		this(new SNResource(), schema);
@@ -66,8 +67,11 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	/**
 	 * Creates an entity based on node and schema.
-	 * @param node The node.
-	 * @param schema The schema.
+	 *
+	 * @param node
+	 *            The node.
+	 * @param schema
+	 *            The schema.
 	 */
 	public NewRBEntity(final ResourceNode node, final ResourceSchema schema) {
 		super();
@@ -83,23 +87,25 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * Initialized this {@link IRBEntity}s {@link IRBField}s
 	 * </p>
 	 * <p>
-	 * If a {@link RBSchema} extists it is taken into account, as well as
-	 * additional fields which may not be specified in the schema, but present in
-	 * the Entity itself.
+	 * If a {@link ResourceSchema} extists it is taken into account, as well as
+	 * additional fields which may not be specified in the schema, but present
+	 * in the Entity itself.
 	 * </p>
 	 * <p>
-	 * If no {@link RBSchema} exists, the {@link IRBField}s will be created
+	 * If no {@link ResourceSchema} exists, the {@link IRBField}s will be created
 	 * according to the values present in the Entity itself.
 	 */
 	private void initializeFields() {
 		fields = new ArrayList<IRBField>();
-		if(schema == null){
+		if (schema == null) {
 			// TODO: implement
-			throw new NotYetImplementedException("Only RBEntites with RBSchemas are supported!");
-		}else{
+			throw new NotYetImplementedException(
+					"Only RBEntites with RBSchemas are supported!");
+		} else {
 			for (PropertyAssertion assertion : schema.getPropertyAssertions()) {
-				fields.add(new RBField(assertion,
-						node.getAssociationClients(assertion.getPropertyDeclaration().getIdentifier())));
+				fields.add(new RBField(assertion, node
+						.getAssociationClients(assertion
+								.getPropertyDeclaration().getIdentifier())));
 			}
 		}
 	}
@@ -145,5 +151,21 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	@Override
 	public IRBMetaInfo getRBMetaInfo() {
 		throw new NotYetImplementedException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString(){
+		String s = getQualifiedName() + ", ";
+		for(IRBField field : getAllFields()){
+			if(field.isResourceReference()){
+				s += field.getLabel() + ": " + field.getConstraints() + ", ";
+			}else{
+				s += (field.getLabel() + ": " + field.getFieldValues() + ", ");
+			}
+		}
+		return s;
 	}
 }

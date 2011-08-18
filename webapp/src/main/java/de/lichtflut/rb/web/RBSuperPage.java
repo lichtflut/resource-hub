@@ -16,7 +16,8 @@ import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationNode;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.web.components.LoginPanelPage;
-import de.lichtflut.rb.web.mockObjects.Employee;
+import de.lichtflut.rb.web.mockPages.Employee;
+import de.lichtflut.rb.web.mockPages.EmplyeeView;
 import de.lichtflut.rb.web.resources.SharedResourceProvider;
 
 
@@ -111,15 +112,16 @@ public abstract class RBSuperPage extends WebPage {
 		NavigationNode securityStuff = new NavigationNodePanel(new CKLink("link", "Security-Related", CKLinkType.CUSTOM_BEHAVIOR));
 		CKLink login = new CKLink("link", "Login & Registration Modul", LoginPanelPage.class, CKLinkType.WEB_PAGE_CLASS);
 		securityStuff.addChild(new NavigationNodePanel(login));
-
 		mainNavigation.addChild(securityStuff);
 
 		// Mock NewRBEntity-Pages
 		NavigationNode mockPages = new NavigationNodePanel(new CKLink("link", "Mock-Pages", CKLinkType.CUSTOM_BEHAVIOR));
 		CKLink mockEmployee = new CKLink("link", "Employee", Employee.class, CKLinkType.WEB_PAGE_CLASS);
 		mockPages.addChild(new NavigationNodePanel(mockEmployee));
-
+		CKLink mockView = new CKLink("link", "TableView", EmplyeeView.class, CKLinkType.WEB_PAGE_CLASS);
+		mockPages.addChild(new NavigationNodePanel(mockView));
 		mainNavigation.addChild(mockPages);
+
 		add(mainNavigation);
 
 //		this.add(new SearchBar("searchBar") {

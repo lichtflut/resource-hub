@@ -38,6 +38,9 @@ public class CKRowItem extends CKComponent {
 		case BOOLEAN:
 			add(new CKCheckBoxField("field", field));
 			break;
+		case RESOURCE:
+			add(new CKDropDownChoice("field", field));
+			break;
 		default:
 			add(new CKTextField("field", field));
 			break;
