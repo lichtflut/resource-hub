@@ -9,7 +9,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import de.lichtflut.rb.core.spi.RBServiceProvider;
-import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
@@ -17,7 +16,7 @@ import de.lichtflut.rb.web.ck.components.navigation.NavigationNode;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.web.components.LoginPanelPage;
 import de.lichtflut.rb.web.mockPages.Employee;
-import de.lichtflut.rb.web.mockPages.EmplyeeView;
+import de.lichtflut.rb.web.mockPages.EmployeeView;
 import de.lichtflut.rb.web.resources.SharedResourceProvider;
 
 
@@ -119,7 +118,7 @@ public abstract class RBSuperPage extends WebPage {
 		NavigationNode mockPages = new NavigationNodePanel(new CKLink("link", "Mock-Pages", CKLinkType.CUSTOM_BEHAVIOR));
 		CKLink mockEmployee = new CKLink("link", "Employee", Employee.class, CKLinkType.WEB_PAGE_CLASS);
 		mockPages.addChild(new NavigationNodePanel(mockEmployee));
-		CKLink mockView = new CKLink("link", "TableView", EmplyeeView.class, CKLinkType.WEB_PAGE_CLASS);
+		CKLink mockView = new CKLink("link", "TableView", EmployeeView.class, CKLinkType.WEB_PAGE_CLASS);
 		mockPages.addChild(new NavigationNodePanel(mockView));
 		mainNavigation.addChild(mockPages);
 

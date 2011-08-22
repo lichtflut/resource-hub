@@ -30,6 +30,13 @@ public interface IRBEntity {
 	QualifiedName getQualifiedName();
 
 	/**
+	 * Returns the {@link IRBField} for a Fieldname.
+	 * @param fieldname - Fieldname
+	 * @return null if {@link IRBField} is not found
+	 */
+	IRBField getField(String fieldname);
+
+	/**
 	 * Returns all fields of the NewRBEntity.
 	 * @return - All RBFields of this entity
 	 */

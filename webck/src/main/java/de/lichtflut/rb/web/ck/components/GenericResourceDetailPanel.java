@@ -11,7 +11,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
-import de.lichtflut.rb.web.ck.components.fields.CKRowItem;
+import de.lichtflut.rb.web.ck.components.fields.CKFormRowItem;
 
 /**
  * <p>
@@ -62,7 +62,7 @@ public abstract class GenericResourceDetailPanel extends CKComponent  {
 		RepeatingView view = new RepeatingView("field-item");
 		for (IRBField field : entity.getAllFields()) {
 			Fragment f = new Fragment(view.newChildId(), "field", this);
-			f.add(new CKRowItem("row", field));
+			f.add(new CKFormRowItem("row", field));
 			view.add(f);
 		}
 		form.add(view);

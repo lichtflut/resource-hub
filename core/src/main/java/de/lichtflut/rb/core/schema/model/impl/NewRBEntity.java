@@ -127,7 +127,18 @@ public class NewRBEntity implements IRBEntity, Serializable {
 		return node.getQualifiedName();
 	}
 
-	// -----------------------------------------------------
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IRBField getField(final String fieldname) {
+		for (IRBField field : fields) {
+			if(field.getFieldName().equals(fieldname)){
+				return field;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * {@inheritDoc}
