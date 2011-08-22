@@ -48,7 +48,8 @@ public abstract class RBSuperPage extends WebPage {
 	 */
 	public static RBServiceProvider  getRBServiceProvider(){
 		if(provider==null) {
-			provider= RBServiceProviderFactory.getDefaultServiceProvider();
+			// TODO uncomment
+//			provider= RBServiceProviderFactory.getDefaultServiceProvider();
 		}
 		return provider;
 	}

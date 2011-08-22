@@ -78,33 +78,10 @@ public class RSPage extends RBSuperPage {
 		// ------------ Navigation - Sidebar ------------
 
 		NavigationBar sidebar = new NavigationBar("sidebar-left");
-		fillMenu(sidebar);
+		//TODO uncomment
+//		fillMenu(sidebar);
 		add(sidebar);
-		// -----------------------------------------------
 
-//		updateResourceList();
-//		this.add(resourceList);
-//		ResourceRegisterPanel panel = new ResourceRegisterPanel(
-//				"resourceRegister", getRBServiceProvider()
-//						.getResourceSchemaManagement().getAllResourceSchemas(),
-//				"", null, false) {
-//			public RBServiceProvider getServiceProvider() {
-//				return getRBServiceProvider();
-//			}
-//		};
-
-//		panel.refreshComponent();
-//		this.add(panel);
-//		this.add(new ResourceRegisterPanel("resourceRegisterTest",
-//				getRBServiceProvider().getResourceSchemaManagement()
-//						.getAllResourceSchemas(), "Tigges", Arrays
-//						.asList(new String[] { "hasNachname", "hasEmail",
-//								"blablubbla" }), true) {
-//			public RBServiceProvider getServiceProvider() {
-//				return getRBServiceProvider();
-//			}
-//		});
-//		this.add(component);
 	}
 
 	/**
@@ -117,85 +94,86 @@ public class RSPage extends RBSuperPage {
 
 	// -----------------------------------------------------
 
+	// TODO uncomment
 	/**
 	 *
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+//	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void updateResourceList() {
-		resourceList.removeAll();
-		ResourceSchemaManagement rManagement = getRBServiceProvider()
-				.getResourceSchemaManagement();
-		RBEntityManagement rTypeManagement = getRBServiceProvider()
-				.getRBEntityManagement();
-		Collection<ResourceSchema> resourceSchemas = rManagement
-				.getAllResourceSchemas();
-		if (resourceSchemas == null) {
-			resourceSchemas = new ArrayList<ResourceSchema>();
-		}
-		for (final ResourceSchema resourceSchema : resourceSchemas) {
-
-			Collection<RBEntity> instances = rTypeManagement
-					.loadAllEntitiesForSchema(resourceSchema);
-
-			final ArrayList<RBEntity> schemaInstances = new ArrayList<RBEntity>(
-					(instances != null) ? instances : new HashSet<RBEntity>());
-
-			PageParameters params = new PageParameters();
-			params.add("resourceid", resourceSchema.getDescribedResourceID()
-					.getQualifiedName().toURI());
-			Fragment fragment = new Fragment(resourceList.newChildId(),
-					"listPanel", this);
-			fragment.add(new BookmarkablePageLink<GenericResourceFormPage>(
-					"link", GenericResourceFormPage.class, params)
-					.add(new Label("linkLabel", resourceSchema
-							.getDescribedResourceID().getQualifiedName()
-							.getSimpleName())));
-
-			fragment.add(new ListView("instancelist", schemaInstances) {
-				@Override
-				protected void populateItem(final ListItem item) {
-					RBEntity instance = (RBEntity) item.getModelObject();
-					PageParameters params = new PageParameters();
-					params.add("resourceid", resourceSchema
-							.getDescribedResourceID().getQualifiedName()
-							.toURI());
-					params.add("instanceid", instance.getQualifiedName()
-							.toURI());
-					Fragment fragment = new Fragment(resourceList.newChildId(),
-							"listPanel", this);
-					fragment.add(new BookmarkablePageLink<GenericResourceFormPage>(
-							"link", GenericResourceFormPage.class, params)
-							.add(new Label("linkLabel", resourceSchema
-									.getDescribedResourceID()
-									.getQualifiedName().getSimpleName())));
-
-					fragment.add(new ListView("instancelist", schemaInstances) {
-						@Override
-						protected void populateItem(final ListItem item) {
-							RBEntity instance = (RBEntity) item
-									.getModelObject();
-							PageParameters params = new PageParameters();
-							params.add("resourceid", resourceSchema
-									.getDescribedResourceID()
-									.getQualifiedName().toURI());
-							params.add("instanceid", instance
-									.getQualifiedName().toURI());
-							item.add(new BookmarkablePageLink<GenericResourceFormPage>(
-									"innerlink", GenericResourceFormPage.class,
-									params).add(new Label("innerlinkLabel",
-									instance.toString())));
-						}
-					});
-					item.add(new BookmarkablePageLink<GenericResourceFormPage>(
-							"innerlink", GenericResourceFormPage.class, params)
-							.add(new Label("innerlinkLabel", instance
-									.toString())));
-				}
-			});
-
-			resourceList.add(fragment);
-		}
-		resourceList.modelChanged();
+//		resourceList.removeAll();
+//		ResourceSchemaManagement rManagement = getRBServiceProvider()
+//				.getResourceSchemaManagement();
+//		RBEntityManagement rTypeManagement = getRBServiceProvider()
+//				.getRBEntityManagement();
+//		Collection<ResourceSchema> resourceSchemas = rManagement
+//				.getAllResourceSchemas();
+//		if (resourceSchemas == null) {
+//			resourceSchemas = new ArrayList<ResourceSchema>();
+//		}
+//		for (final ResourceSchema resourceSchema : resourceSchemas) {
+//
+//			Collection<RBEntity> instances = rTypeManagement
+//					.loadAllEntitiesForSchema(resourceSchema);
+//
+//			final ArrayList<RBEntity> schemaInstances = new ArrayList<RBEntity>(
+//					(instances != null) ? instances : new HashSet<RBEntity>());
+//
+//			PageParameters params = new PageParameters();
+//			params.add("resourceid", resourceSchema.getDescribedResourceID()
+//					.getQualifiedName().toURI());
+//			Fragment fragment = new Fragment(resourceList.newChildId(),
+//					"listPanel", this);
+//			fragment.add(new BookmarkablePageLink<GenericResourceFormPage>(
+//					"link", GenericResourceFormPage.class, params)
+//					.add(new Label("linkLabel", resourceSchema
+//							.getDescribedResourceID().getQualifiedName()
+//							.getSimpleName())));
+//
+//			fragment.add(new ListView("instancelist", schemaInstances) {
+//				@Override
+//				protected void populateItem(final ListItem item) {
+//					RBEntity instance = (RBEntity) item.getModelObject();
+//					PageParameters params = new PageParameters();
+//					params.add("resourceid", resourceSchema
+//							.getDescribedResourceID().getQualifiedName()
+//							.toURI());
+//					params.add("instanceid", instance.getQualifiedName()
+//							.toURI());
+//					Fragment fragment = new Fragment(resourceList.newChildId(),
+//							"listPanel", this);
+//					fragment.add(new BookmarkablePageLink<GenericResourceFormPage>(
+//							"link", GenericResourceFormPage.class, params)
+//							.add(new Label("linkLabel", resourceSchema
+//									.getDescribedResourceID()
+//									.getQualifiedName().getSimpleName())));
+//
+//					fragment.add(new ListView("instancelist", schemaInstances) {
+//						@Override
+//						protected void populateItem(final ListItem item) {
+//							RBEntity instance = (RBEntity) item
+//									.getModelObject();
+//							PageParameters params = new PageParameters();
+//							params.add("resourceid", resourceSchema
+//									.getDescribedResourceID()
+//									.getQualifiedName().toURI());
+//							params.add("instanceid", instance
+//									.getQualifiedName().toURI());
+//							item.add(new BookmarkablePageLink<GenericResourceFormPage>(
+//									"innerlink", GenericResourceFormPage.class,
+//									params).add(new Label("innerlinkLabel",
+//									instance.toString())));
+//						}
+//					});
+//					item.add(new BookmarkablePageLink<GenericResourceFormPage>(
+//							"innerlink", GenericResourceFormPage.class, params)
+//							.add(new Label("innerlinkLabel", instance
+//									.toString())));
+//				}
+//			});
+//
+//			resourceList.add(fragment);
+//		}
+//		resourceList.modelChanged();
 	}
 
 
