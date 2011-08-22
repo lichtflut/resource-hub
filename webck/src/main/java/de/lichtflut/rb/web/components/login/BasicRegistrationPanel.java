@@ -8,6 +8,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 
@@ -33,10 +34,11 @@ public class BasicRegistrationPanel extends Panel {
 		super(id);
 		setOutputMarkupId(true);
 		final User user = new User();
+		add(new FeedbackPanel("feedbackPanel"));
 		Form form = new Form("form", new CompoundPropertyModel(user));
-		form.add(new TextField("name"));
-		form.add(new TextField("email"));
-		form.add(new PasswordTextField("password"));
+		form.add(new TextField("name").setRequired(true));
+		form.add(new TextField("email").setRequired(true));
+		form.add(new PasswordTextField("password").setRequired(true));
 		form.add(new AjaxButton("submitButton"){
 
 			@Override

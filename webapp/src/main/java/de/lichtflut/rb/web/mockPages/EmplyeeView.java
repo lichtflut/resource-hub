@@ -3,7 +3,9 @@
  */
 package de.lichtflut.rb.web.mockPages;
 
+import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.web.RBSuperPage;
+import de.lichtflut.rb.web.ck.components.GenericResourcesViewPanel;
 
 /**
  * [TODO Insert description here.
@@ -21,6 +23,7 @@ public class EmplyeeView extends RBSuperPage {
 	public EmplyeeView() {
 		super("Mock-Employees-View");
 
+		add(new GenericResourcesViewPanel("mockEmployee", MockNewRBEntityFactory.getListOfNewRBEntities()));
 	}
 
 }

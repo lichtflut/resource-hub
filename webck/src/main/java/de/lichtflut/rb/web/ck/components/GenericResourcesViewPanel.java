@@ -3,9 +3,16 @@
  */
 package de.lichtflut.rb.web.ck.components;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.repeater.RepeatingView;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
+import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**
@@ -18,6 +25,8 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
 @SuppressWarnings("serial")
 public class GenericResourcesViewPanel extends CKComponent {
 
+	private Set<String> tableHeader = new HashSet<String>();
+
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
@@ -25,7 +34,21 @@ public class GenericResourcesViewPanel extends CKComponent {
 	 */
 	public GenericResourcesViewPanel(final String id,final List<IRBEntity> entites){
 		super(id);
-		
+		RepeatingView header = new RepeatingView("ckTableHeader");
+		RepeatingView rows = new RepeatingView("ckTableRow");
+
+		for (IRBEntity entity : entites) {
+			for (IRBField field : entity.getAllFields()) {
+				if(!tableHeader.contains(field.getFieldName())) {
+					tableHeader.add(field.getFieldName());
+				}
+				Fragment f = new Fragment(header.newChildId(), "header", this);
+				f.add(new Label("headerData", field.getFieldValues().toString()));
+				header.add(f);
+			}
+		}
+//		add(header);
+//		add(rows);
 	}
 	/**
 	 * {@inheritDoc}
