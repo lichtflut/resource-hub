@@ -3,9 +3,12 @@
  */
 package de.lichtflut.rb.web.ck.components.fields;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -31,6 +34,11 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
 @SuppressWarnings("serial")
 public class CKDropDownChoice extends CKComponent {
 
+	private ListView<DropDownChoice<IRBEntity>> listView;
+	private int identifier = 1;
+	private IChoiceRenderer<IRBEntity> renderer;
+	private List<DropDownChoice<IRBEntity>> ddcList;
+
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
@@ -39,14 +47,22 @@ public class CKDropDownChoice extends CKComponent {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public CKDropDownChoice(final String id,final IRBField field) {
 		super(id);
-		IModel<List<IRBEntity>> listModel = new ListModel(field.getFieldValues());
-		List<IRBEntity> allEntites = (List<IRBEntity>) new MockRBEntityManagement()
+		setOutputMarkupId(true);
+		ddcList = new ArrayList<DropDownChoice<IRBEntity>>();
+		final IModel<List<IRBEntity>> listModel = new ListModel(field.getFieldValues());
+		final List<IRBEntity> allEntites = (List<IRBEntity>) new MockRBEntityManagement()
 			.loadAllEntitiesForSchema(MockResourceSchemaFactory.createPersonSchema());
-//		if (listModel.getObject().size() == 0) {
-//			// Display at least one textfield.
-//			listModel.getObject().add(false);
-//		}
 		add(createListView(listModel, allEntites));
+		add(new AddValueAjaxButton("button", field){
+
+			@Override
+			public void addField(final AjaxRequestTarget target, final Form<?> form) {
+				listView.getModelObject().add((DropDownChoice<IRBEntity>) new DropDownChoice<IRBEntity>("resourceList",
+						new PropertyModel(listModel, "" + (identifier++)),
+						allEntites, renderer).setOutputMarkupId(true));
+				target.add(listView.getParent());
+			}
+		});
 	}
 
 	// ------------------------------------------------------------
@@ -58,15 +74,15 @@ public class CKDropDownChoice extends CKComponent {
 	 * @param allEntites - List of all {@link IRBEntity} available of the resource-type
 	 * @return A ListView of {@link DropDownChoice}
 	 */
-	private ListView<IRBEntity> createListView(
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private ListView<DropDownChoice<IRBEntity>> createListView(
 			final IModel<List<IRBEntity>> listModel, final List<IRBEntity> allEntites) {
 //		Use this to get the ResourceTypeId for IRBManagement to loadAllRBentites(uri)
 //		ResourceID uri = null;
 //		for (Constraint c : field.getConstraints()) {
 //			uri = c.getResourceTypeConstraint();
 //		}
-
-		final IChoiceRenderer<IRBEntity> renderer = new IChoiceRenderer<IRBEntity>() {
+		renderer = new IChoiceRenderer<IRBEntity>() {
 			@Override
 			public Object getDisplayValue(final IRBEntity object) {
 				return object.toString();
@@ -77,17 +93,16 @@ public class CKDropDownChoice extends CKComponent {
 			}
 		};
 
-		final ListView<IRBEntity> listView = new ListView<IRBEntity>("listView",
-				listModel) {
-			@SuppressWarnings({ "unchecked", "rawtypes" })
+		ddcList.add(new DropDownChoice<IRBEntity>("resourceList",
+				new PropertyModel(listModel, "" + (identifier++)), allEntites, renderer));
+		listView = new ListView<DropDownChoice<IRBEntity>>("listView", ddcList) {
 			@Override
-			protected void populateItem(final ListItem<IRBEntity> item) {
-				DropDownChoice<IRBEntity> ddc = new DropDownChoice<IRBEntity>("resourceList",
-						new PropertyModel(listModel, "" + item.getId()), allEntites, renderer);
-				item.add(ddc);
+			protected void populateItem(final ListItem<DropDownChoice<IRBEntity>> item) {
+				item.add(item.getModelObject());
 			}
 		};
 		listView.setReuseItems(true);
+		listView.setOutputMarkupId(true);
 		setOutputMarkupId(true);
 		return listView;
 	}

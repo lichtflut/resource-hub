@@ -10,16 +10,15 @@
 </wicket:head>
 	<wicket:panel>
 		<span>
-			<span class="column">
-				<span wicket:id="listView">
-					<select wicket:id="resourceList">
-						<option value="one">ONE</option>
-						<option value="two">TWO</option>
-					</select>
-				</span>
+			<span wicket:id="listView">
+				<select	wicket:id="resourceList"  class="drop-down-choice">
+					<option value="one">ONE</option>
+					<option value="two">TWO</option>
+				</select>
 			</span>
+		<span wicket:id="button"></span>
 		</span>
-		<wicket:fragment wicket:id="textInput"><input  type="checkbox" wicket:id="input" class="ck-logical-value"/></wicket:fragment>
+	<wicket:fragment wicket:id="textInput"><input  type="checkbox" wicket:id="input" class="ck-logical-value"/></wicket:fragment>
 	</wicket:panel>
 </html>
 

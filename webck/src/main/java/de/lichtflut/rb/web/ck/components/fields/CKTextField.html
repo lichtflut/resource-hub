@@ -10,7 +10,10 @@
 </wicket:head>
 	<wicket:panel>
 		<span>
-			<span class="column"><span wicket:id="listView"><input type="text" wicket:id="value"/></span></span>
+			<span wicket:id="container">
+				<span wicket:id="listView"><input type="text" wicket:id="value"/></span>
+				<span wicket:id="button"></span>
+			</span>
 		</span>
 		<wicket:fragment wicket:id="textInput"><input  type="text" wicket:id="input" class="ck-text-value"/></wicket:fragment>
 	</wicket:panel>

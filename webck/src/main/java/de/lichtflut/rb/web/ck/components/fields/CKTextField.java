@@ -6,6 +6,9 @@ package de.lichtflut.rb.web.ck.components.fields;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -29,7 +32,8 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
 class CKTextField extends CKComponent {
 
 	private IRBField field;
-
+	private ListView<Object> listView;
+	private WebMarkupContainer container;
 	/**
 	 * Constructor.
 	 *
@@ -40,14 +44,27 @@ class CKTextField extends CKComponent {
 	public CKTextField(final String id, final IRBField field) {
 		super(id);
 		this.field = field;
-		IModel<List<Object>> listModel = new ListModel(field.getFieldValues());
-//		setDefaultModel(listModel);
+		container = new WebMarkupContainer("container");
+		container.setOutputMarkupId(true);
+		final IModel<List<Object>> listModel = new ListModel(field.getFieldValues());
 
 		if (listModel.getObject().size() == 0) {
 			// Display at least one textfield.
 			listModel.getObject().add("");
 		}
-		add(createListView(listModel));
+		container.add(createListView(listModel));
+		container.add(new AddValueAjaxButton("button", field) {
+			@Override
+			public void addField(final AjaxRequestTarget target, final Form<?> form) {
+				TextField field = createTextField(listModel, new ListItem("sdf", 44));
+				field.setOutputMarkupId(true);
+				listView.getModelObject().add(field);
+				form.add(listView);
+				target.add(listView.getParent());
+				target.focusComponent(field);
+			}
+		});
+		add(container);
 	}
 
 	/**
@@ -56,31 +73,13 @@ class CKTextField extends CKComponent {
 	 * @return A ListView of TextFields
 	 */
 	private ListView<Object> createListView(final IModel<List<Object>> listModel) {
-		final ListView<Object> listView = new ListView<Object>("listView",
+		listView = new ListView<Object>("listView",
 				listModel) {
 			private int actualOccurence = 1;
-			@SuppressWarnings({ "rawtypes", "unchecked" })
+			@SuppressWarnings({ "rawtypes" })
 			@Override
 			protected void populateItem(final ListItem<Object> item) {
-				TextField textField;
-				switch (field.getDataType()) {
-					case DATE:
-						textField = new TextField<Date>("value",
-								new PropertyModel(listModel, "" + item.getIndex()));
-						textField.add(new DatePickerBehavior());
-						textField.setType(Date.class);
-					break;
-					case INTEGER:
-						textField = new TextField<Integer>("value",
-								new PropertyModel(listModel, "" + item.getIndex()));
-						textField.setType(Integer.class);
-						break;
-					default:
-						textField = new TextField<Integer>("value",
-								new PropertyModel(listModel, "" + item.getIndex()));
-						textField.setType(String.class);
-					break;
-				}
+				 TextField textField = createTextField(listModel, item);
 				if(field.getCardinality().getMinOccurs() <= actualOccurence){
 					textField.setRequired(true);
 				}
@@ -89,8 +88,38 @@ class CKTextField extends CKComponent {
 			}
 		};
 		listView.setReuseItems(true);
-		setOutputMarkupId(true);
+		listView.setOutputMarkupId(true);
 		return listView;
+	}
+
+	/**
+	 * @param listModel -
+	 * @param item -
+	 * @return -
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private TextField createTextField(
+			final IModel<List<Object>> listModel, final ListItem<Object> item) {
+		TextField textField;
+		switch (field.getDataType()) {
+			case DATE:
+				textField = new TextField<Date>("value",
+						new PropertyModel(listModel, "" + item.getIndex()));
+				textField.add(new DatePickerBehavior());
+				textField.setType(Date.class);
+			break;
+			case INTEGER:
+				textField = new TextField<Integer>("value",
+						new PropertyModel(listModel, "" + item.getIndex()));
+				textField.setType(Integer.class);
+				break;
+			default:
+				textField = new TextField<Integer>("value",
+						new PropertyModel(listModel, "" + item.getIndex()));
+				textField.setType(String.class);
+			break;
+		}
+		return textField;
 	}
 
 	/**

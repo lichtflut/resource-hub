@@ -345,7 +345,7 @@ public final class MockNewRBEntityFactory {
 				new SimpleResourceID("http://lichtflut.de#", "hasChildren"), p4);
 
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
+		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(10));
 		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		pa4.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 
