@@ -31,6 +31,32 @@ abstract class AddValueAjaxButton extends CKComponent {
 	public AddValueAjaxButton(final String id, final IRBField field) {
 		super(id);
 		this.field = field;
+		initComponent(null);
+	}
+
+	/**
+	 * Check if visibility is allowed.
+	 * @return True if Cardinality MAX > field.size
+	 */
+	private boolean checkVisibility() {
+		if((field.getCardinality().getMaxOccurs()) > (field.getFieldValues().size())){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * TODO Comment.
+	 * @param target -
+	 * @param form -
+	 */
+	public abstract void addField(final AjaxRequestTarget target, final Form<?> form);
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void initComponent(final CKValueWrapperModel model) {
 		setOutputMarkupId(true);
 		AjaxButton button = new  AjaxButton("addField") {
 			@Override
@@ -53,33 +79,6 @@ abstract class AddValueAjaxButton extends CKComponent {
 		add(button);
 		button.setVisible(checkVisibility());
 		button.add(new Label("linkLabel", "(+)"));
-	}
-
-	/**
-	 * TODO comment.
-	 * @return -
-	 */
-	private boolean checkVisibility() {
-		if(field.getCardinality().getMaxOccurs() >= (field.getFieldValues().size())){
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * TODO Comment.
-	 * @param target -
-	 * @param form -
-	 */
-	public abstract void addField(final AjaxRequestTarget target, final Form<?> form);
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void initComponent(final CKValueWrapperModel model) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
