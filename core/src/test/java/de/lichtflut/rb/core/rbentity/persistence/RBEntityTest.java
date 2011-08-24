@@ -12,6 +12,7 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
 
+import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
 import de.lichtflut.rb.core.api.impl.RBEntityManagementImpl;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -140,7 +141,6 @@ public final class RBEntityTest {
         // identifiers
         Assert.assertNull(provider.getRBEntityManagement().loadEntity(
                 entity.getQualifiedName().toURI() + "#"));
-
     }
 
     /**
@@ -150,10 +150,24 @@ public final class RBEntityTest {
     public void testNewRBEntity() {
         ResourceSchema schema = createSchema();
         NewRBEntity e = new NewRBEntity(schema);
-        ArrayList<Object> hs = new ArrayList<Object>();
-        hs.add("hans@franz.de");
-        e.getAllFields().get(1).setFieldValues(hs);
-        e.createAssociations(null);
+        RBServiceProvider provider = RBServiceProviderFactory
+                .getDefaultServiceProvider();
+        NewRBEntityManagement m = new NewRBEntityManagement(
+                provider.getArastejuGateInstance());
+        e.getField("http://lichtflut.de#email").getFieldValues()
+                .add("hans@franz.de");
+        m.store(e);
+        System.out.println(m.find(e.getID(), schema));
+        e.getField("http://lichtflut.de#email").getFieldValues()
+                .set(0, "peter@mueller.de");
+        m.store(e);
+        System.out.println(m.find(e.getID(), schema));
+        // for (Object o : e.getField("http://lichtflut.de#email")
+        // .getFieldValues()) {
+        // System.out.println(o.toString());
+        // }
+        //
+        // System.out.println(MockNewRBEntityFactory.createNewRBEntity().getID());
     }
 
     /**
