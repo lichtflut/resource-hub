@@ -43,7 +43,7 @@ public interface IRBEntity {
 	List<IRBField> getAllFields();
 
 	/**
-	 * Add RBField to RBEntity.
+	 * Add {@link IRBField} to RBEntity.
 	 * @param field - {@link IRBField}
 	 * @return true if added successfully, false if not
 	 */

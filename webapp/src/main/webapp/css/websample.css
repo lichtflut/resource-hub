@@ -821,3 +821,9 @@ div.schema-submit-panel textarea {
 .drop-down-choice{
 	width: 140px;
 }
+.ck-resource-panel{
+	background-color: #F5F5F5;
+    margin: 10px auto;
+    padding: 5px;
+    width: 700px;
+}
