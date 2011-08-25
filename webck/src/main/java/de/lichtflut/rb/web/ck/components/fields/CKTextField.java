@@ -11,8 +11,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.repeater.RepeatingView;
 
+import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.behaviors.DatePickerBehavior;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 import de.lichtflut.rb.web.models.NewGenericResourceModel;
@@ -76,12 +76,18 @@ class CKTextField extends CKComponent {
 		TextField textField;
 		switch (field.getDataType()) {
 			case DATE:
+				if (!(value instanceof Date)) {
+					throw new IllegalStateException("Not a date: " + value);
+				}
 				textField = new TextField(view.newChildId(),
 						new NewGenericResourceModel(field, value));
 				textField.add(new DatePickerBehavior());
 				textField.setType(Date.class);
 			break;
 			case INTEGER:
+				if (!(value instanceof Integer)) {
+					throw new IllegalStateException("Not an integer: " + value);
+				}
 				textField = new TextField(view.newChildId(),
 						new NewGenericResourceModel(field, value));
 				textField.setType(Integer.class);
@@ -107,7 +113,7 @@ class CKTextField extends CKComponent {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RBServiceProvider getServiceProvider() {
+	public NewRBEntityManagement getServiceProvider() {
 		// TODO Auto-generated method stub
 		return null;
 	}

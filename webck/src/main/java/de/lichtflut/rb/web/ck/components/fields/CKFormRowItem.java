@@ -5,8 +5,8 @@ package de.lichtflut.rb.web.ck.components.fields;
 
 import org.apache.wicket.markup.html.basic.Label;
 
+import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 
 /**
@@ -61,7 +61,7 @@ public class CKFormRowItem extends CKComponent {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RBServiceProvider getServiceProvider() {
+	public NewRBEntityManagement getServiceProvider() {
 		// TODO Auto-generated method stub
 		return null;
 	}

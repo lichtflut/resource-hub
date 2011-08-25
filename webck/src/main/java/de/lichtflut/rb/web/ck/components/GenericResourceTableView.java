@@ -12,6 +12,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Fragment;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
@@ -106,7 +107,7 @@ public abstract class GenericResourceTableView extends CKComponent {
 	public static final String ADD_CUSTOM_ROW_ITEM = "de.lichtflut.web.ck.custom_row_item.behavior";
 
 	private Map<String, String> tableHeader = new HashMap<String, String>();
-	private int colCount;
+	private List<IRBEntity> entites = new ArrayList<IRBEntity>();
 
 	/**
 	 * Constructor.
@@ -115,10 +116,8 @@ public abstract class GenericResourceTableView extends CKComponent {
 	 */
 	public GenericResourceTableView(final String id,final List<IRBEntity> entites){
 		super(id);
-		colCount = 0;
-		indexTableHeader(entites);
-		addHeader();
-		addRows(entites);
+		this.entites = entites;
+		buildComponent();
 	}
 
 	/**
@@ -131,24 +130,61 @@ public abstract class GenericResourceTableView extends CKComponent {
 			protected void populateItem(final ListItem item) {
 				final IRBEntity e = (IRBEntity) item.getModelObject();
 				List<IRBField> fields = sortFieldsForPresentation(e);
+				// TODO: Find better solution to display RUD behaviors
+				if(getBehavior(SHOW_DETAILS) != null){
+					fields.add(null);
+				}
+//				if(getBehavior(UPDATE_ROW_ITEM) != null){
+//					fields.add(null);
+//				}
+//				if(getBehavior(DELETE_ROW_ITEM) != null){
+//					fields.add(null);
+//				}
 				ListView<Object> data = new ListView<Object>("cell", fields) {
 					@Override
 					protected void populateItem(final ListItem item) {
 						IRBField field =  (IRBField) item.getModelObject();
 						String output = "";
-						for (Object s : field.getFieldValues()) {
-							output += s;
-						}
-						if(getBehavior(ADD_CUSTOM_ROW_ITEM) != null){
-							item.add((Component) getBehavior(ADD_CUSTOM_ROW_ITEM).execute("data", e, field));
-						}else if ((getBehavior(RESOURCE_FIELD_BEHAVIOR) != null) && (field.isResourceReference())) {
-							item.add((Component) getBehavior(RESOURCE_FIELD_BEHAVIOR)
-									.execute("data", e, field));
+						if (field != null){
+							for (Object s : field.getFieldValues()) {
+								output += s;
+							}
+							if (getBehavior(ADD_CUSTOM_ROW_ITEM) != null) {
+								item.add((Component) getBehavior(
+										ADD_CUSTOM_ROW_ITEM).execute("data", e,
+										field));
+							}else if((getBehavior(RESOURCE_FIELD_BEHAVIOR) != null)
+									&& (field.isResourceReference())) {
+								item.add((Component) getBehavior(
+										RESOURCE_FIELD_BEHAVIOR).execute(
+										"data", e, field));
+							}else {
+								item.add(new Label("data", output));
+							}
 						}else{
-							item.add(new Label("data", output));
-						}
-						if(getBehavior(SHOW_DETAILS) != null){
-							item.add(new Label("data", "lg"));
+							if(getBehavior(SHOW_DETAILS) != null){
+//								item.add(new CKLink("data", "Details", "http://google.com/search=Details",
+//										CKLinkType.EXTERNAL_LINK));
+//								item.add(new Label("data", "BlaBlaBla"));
+//								removeBehavior(SHOW_DETAILS);
+								Fragment f = new Fragment("data", "detailsLink",
+										getParent().getParent().getParent());
+								f.add(new CKLink("details", "Details", "http://google.com/search=Details",
+										CKLinkType.EXTERNAL_LINK));
+//								f.add(new CKLink("update", "updateLink", "http://google.com/search=Details",
+//										CKLinkType.EXTERNAL_LINK));
+								item.add(f);
+							}
+//							if(getBehavior(UPDATE_ROW_ITEM) != null){
+//								item.add(new CKLink("data", "Details", "http://google.com/search=Update",
+//										CKLinkType.EXTERNAL_LINK));
+//								removeBehavior(UPDATE_ROW_ITEM);
+//							}
+//							if(getBehavior(DELETE_ROW_ITEM) != null){
+//								item.add(new CKLink("data", "Details", "http://google.com/search=Delete",
+//										CKLinkType.EXTERNAL_LINK));
+//								removeBehavior(DELETE_ROW_ITEM);
+//							}
 						}
 					}
 				};
@@ -177,10 +213,15 @@ public abstract class GenericResourceTableView extends CKComponent {
 	 */
 	@SuppressWarnings({ "rawtypes"})
 	private void addHeader() {
+		//Create List for ListView
 		List<String> titles = new ArrayList<String>();
 		for (String string : tableHeader.values()) {
 			titles.add(string);
 		}
+		// TODO: FIX
+//		if(getBehavior(SHOW_DETAILS) != null){
+//			titles.add("Details");
+//		}
 		this.add(new ListView<String>("tableHeader", titles){
 			@Override
 			protected void populateItem(final ListItem item) {
@@ -201,9 +242,12 @@ public abstract class GenericResourceTableView extends CKComponent {
 				}
 			}
 		}
-		colCount = tableHeader.size();
-		if(getBehavior(SHOW_DETAILS) != null){
-			colCount ++;
-		}
+	}
+
+	@Override
+	protected void initComponent(final CKValueWrapperModel model) {
+		indexTableHeader(entites);
+		addHeader();
+		addRows(entites);
 	}
 }

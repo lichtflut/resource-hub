@@ -67,11 +67,7 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 	@Override
 	public void setObject(final T object) {
 		try {
-			if(value instanceof RBEntity){
-				values.set(index, convertObject(object));
-			}else{
-				values.set(index, convertObject(object));
-			}
+			values.set(index, object);
 		} catch (Exception e){
 			throw new IllegalArgumentException(e);
 		}
@@ -96,17 +92,6 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 	@SuppressWarnings("unchecked")
 	private T convertObjectToT(final Object value) {
 		return (T) value;
-	}
-
-	/**
-	 * @param object /
-	 * @return /
-	 */
-	private String convertObject(final T object){
-		if(value instanceof Boolean){
-			return ((Boolean)object).toString();
-		}
-		return object.toString();
 	}
 
 }

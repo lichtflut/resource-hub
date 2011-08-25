@@ -7,10 +7,11 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.Panel;
 
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
-import de.lichtflut.rb.web.ck.components.CKComponent;
+import de.lichtflut.rb.web.ck.components.CKComponent.CKValueWrapperModel;
+import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
 
 /**
  * [TODO Insert description here.
@@ -20,7 +21,7 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-abstract class AddValueAjaxButton extends CKComponent {
+abstract class AddValueAjaxButton extends Panel {
 
 	private IRBField field;
 	/**
@@ -53,9 +54,8 @@ abstract class AddValueAjaxButton extends CKComponent {
 	public abstract void addField(final AjaxRequestTarget target, final Form<?> form);
 
 	/**
-	 * {@inheritDoc}
+	 * Historical.
 	 */
-	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 		setOutputMarkupId(true);
 		AjaxButton button = new  AjaxButton("addField") {
@@ -72,6 +72,10 @@ abstract class AddValueAjaxButton extends CKComponent {
 			private void addFieldAndCheckVisibility(final AjaxRequestTarget target, final Form<?> form) {
 				addField(target, form);
 				this.setVisible(checkVisibility());
+				final IFeedbackContainerProvider provider = findParent(IFeedbackContainerProvider.class);
+				if (provider != null) {
+					target.add(provider.getFeedbackContainer());
+				}
 			}
 
 		};
@@ -79,24 +83,6 @@ abstract class AddValueAjaxButton extends CKComponent {
 		add(button);
 		button.setVisible(checkVisibility());
 		button.add(new Label("linkLabel", "(+)"));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RBServiceProvider getServiceProvider() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CKComponent setViewMode(final ViewMode mode) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
