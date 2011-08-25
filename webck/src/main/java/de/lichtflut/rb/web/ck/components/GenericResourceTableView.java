@@ -106,6 +106,7 @@ public abstract class GenericResourceTableView extends CKComponent {
 	public static final String ADD_CUSTOM_ROW_ITEM = "de.lichtflut.web.ck.custom_row_item.behavior";
 
 	private Map<String, String> tableHeader = new HashMap<String, String>();
+	private int colCount;
 
 	/**
 	 * Constructor.
@@ -114,6 +115,7 @@ public abstract class GenericResourceTableView extends CKComponent {
 	 */
 	public GenericResourceTableView(final String id,final List<IRBEntity> entites){
 		super(id);
+		colCount = 0;
 		indexTableHeader(entites);
 		addHeader();
 		addRows(entites);
@@ -124,7 +126,7 @@ public abstract class GenericResourceTableView extends CKComponent {
 	 */
 	@SuppressWarnings("rawtypes")
 	private void addRows(final List<IRBEntity> entites) {
-		this.add(new ListView<IRBEntity>("row", entites) {
+		ListView<IRBEntity> view = new ListView<IRBEntity>("row", entites) {
 			@Override
 			protected void populateItem(final ListItem item) {
 				final IRBEntity e = (IRBEntity) item.getModelObject();
@@ -145,24 +147,29 @@ public abstract class GenericResourceTableView extends CKComponent {
 						}else{
 							item.add(new Label("data", output));
 						}
+						if(getBehavior(SHOW_DETAILS) != null){
+							item.add(new Label("data", "lg"));
+						}
 					}
 				};
 				item.add(data);
 			}
+		};
+		this.add(view);
+	}
 
-			/**
-			 * Sorts the IRBFields according to the table header.
-			 * @param e - instance of IRBEntity
-			 * @return list of IRBFields
-			 */
-			private List<IRBField> sortFieldsForPresentation(final IRBEntity e) {
-				List<IRBField> fields = new ArrayList<IRBField>();
-				for(String s : tableHeader.keySet()){
-					fields.add(e.getField(s));
-				}
-				return fields;
-			}
-		});
+	/**
+	 * Sorts the IRBFields according to the table header.
+	 *
+	 * @param e - instance of {@link IRBEntity}
+	 * @return list of {@link IRBField}
+	 */
+	private List<IRBField> sortFieldsForPresentation(final IRBEntity e) {
+		List<IRBField> fields = new ArrayList<IRBField>();
+		for (String s : tableHeader.keySet()) {
+			fields.add(e.getField(s));
+		}
+		return fields;
 	}
 
 	/**
@@ -193,6 +200,10 @@ public abstract class GenericResourceTableView extends CKComponent {
 					tableHeader.put(field.getFieldName(), field.getLabel());
 				}
 			}
+		}
+		colCount = tableHeader.size();
+		if(getBehavior(SHOW_DETAILS) != null){
+			colCount ++;
 		}
 	}
 }
