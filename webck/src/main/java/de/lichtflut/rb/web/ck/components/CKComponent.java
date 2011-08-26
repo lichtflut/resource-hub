@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.CssResourceReference;
@@ -14,7 +15,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 
 /**
@@ -48,6 +49,7 @@ public abstract class CKComponent extends Panel {
 	 * <ol>
 	 * 	<li>{@link Class}, the ck-components-class</li>
 	 * </ol>
+	 * TODO: CKValueWrapper still needed?
 	 * </p>
 	 */
 	public static final String STYLE_BEHAVIOR = "de.lichtflut.web.ck.behavior.style";
@@ -68,7 +70,7 @@ public abstract class CKComponent extends Panel {
 	// ------------- Constructor ---------------------------
 	/**
 	 * Constructor.
-	 * @param id -
+	 * @param id - wicket:id
 	 */
 	public CKComponent(final String id){
 		super(id, new CKValueWrapperModel());
@@ -174,7 +176,7 @@ public abstract class CKComponent extends Panel {
 	 * This method musst be overridden.
 	 * @return An instance of {@link RBServiceProvider}
 	 */
-	public abstract RBServiceProvider getServiceProvider();
+	public abstract NewRBEntityManagement getServiceProvider();
 
 	// -----------------------------------------------------
 

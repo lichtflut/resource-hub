@@ -14,7 +14,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 
 /**
@@ -130,7 +130,7 @@ public class NavigationBar extends CKComponent implements NavigationNode {
 	}
 
 	@Override
-	public RBServiceProvider getServiceProvider() {
+	public NewRBEntityManagement getServiceProvider() {
 		// TODO Auto-generated method stub
 		return null;
 	}

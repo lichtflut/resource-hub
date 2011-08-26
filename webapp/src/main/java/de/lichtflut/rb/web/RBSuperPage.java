@@ -8,17 +8,15 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
-import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
-import de.lichtflut.rb.web.ck.components.SearchBar;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationNode;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.web.components.LoginPanelPage;
-import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
+import de.lichtflut.rb.web.mockPages.EmployeePage;
+import de.lichtflut.rb.web.mockPages.EmployeeView;
 import de.lichtflut.rb.web.resources.SharedResourceProvider;
 
 
@@ -49,7 +47,8 @@ public abstract class RBSuperPage extends WebPage {
 	 */
 	public static RBServiceProvider  getRBServiceProvider(){
 		if(provider==null) {
-			provider= RBServiceProviderFactory.getDefaultServiceProvider();
+			// TODO uncomment
+//			provider= RBServiceProviderFactory.getDefaultServiceProvider();
 		}
 		return provider;
 	}
@@ -106,32 +105,40 @@ public abstract class RBSuperPage extends WebPage {
 		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
 		mainNavigation.addChild(new NavigationNodePanel(
 				new CKLink("link", "Home", RSPage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
-		mainNavigation.addChild(new NavigationNodePanel(new CKLink("link", "Sample Resource Page",
-				SampleResourcePage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
+//		mainNavigation.addChild(new NavigationNodePanel(new CKLink("link", "Sample Resource Page",
+//				SampleResourcePage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
 
 		// Security-Stuff Link
 		NavigationNode securityStuff = new NavigationNodePanel(new CKLink("link", "Security-Related", CKLinkType.CUSTOM_BEHAVIOR));
 		CKLink login = new CKLink("link", "Login & Registration Modul", LoginPanelPage.class, CKLinkType.WEB_PAGE_CLASS);
 		securityStuff.addChild(new NavigationNodePanel(login));
-
 		mainNavigation.addChild(securityStuff);
+
+		// Mock NewRBEntity-Pages
+		NavigationNode mockPages = new NavigationNodePanel(new CKLink("link", "Mock-Pages", CKLinkType.CUSTOM_BEHAVIOR));
+		CKLink mockEmployee = new CKLink("link", "Employee", EmployeePage.class, CKLinkType.WEB_PAGE_CLASS);
+		mockPages.addChild(new NavigationNodePanel(mockEmployee));
+		CKLink mockView = new CKLink("link", "TableView", EmployeeView.class, CKLinkType.WEB_PAGE_CLASS);
+		mockPages.addChild(new NavigationNodePanel(mockView));
+		mainNavigation.addChild(mockPages);
+
 		add(mainNavigation);
 
-		this.add(new SearchBar("searchBar") {
-
-			@Override
-			public void onSearchSubmit(final RBEntity<Object> instance) {
-				PageParameters params = new PageParameters();
-				params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
-				params.add("instanceid", instance.getQualifiedName().toURI());
-				getRequestCycle().setResponsePage(GenericResourceFormPage.class, params);
-			}
-
-			@Override
-			public RBServiceProvider getServiceProvider() {
-				return getRBServiceProvider();
-			}
-		});
+//		this.add(new SearchBar("searchBar") {
+//
+//			@Override
+//			public void onSearchSubmit(final RBEntity<Object> instance) {
+//				PageParameters params = new PageParameters();
+//				params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
+//				params.add("instanceid", instance.getQualifiedName().toURI());
+//				getRequestCycle().setResponsePage(GenericResourceFormPage.class, params);
+//			}
+//
+//			@Override
+//			public RBServiceProvider getServiceProvider() {
+//				return getRBServiceProvider();
+//			}
+//		});
 
 	}
 

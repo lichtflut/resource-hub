@@ -6,9 +6,10 @@ package de.lichtflut.rb.web.genericresource;
 import java.util.Collection;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.GenericResourceFormPanel;
 
@@ -40,7 +41,7 @@ public class GenericResourceFormPage extends RBSuperPage {
         this.add(new GenericResourceFormPanel("generic_form",schema,loadRBEntitiesFromParams(schema, parameters)){
 			private static final long serialVersionUID = 117114431624666607L;
 
-			public RBServiceProvider getServiceProvider() {
+			public NewRBEntityManagement getServiceProvider() {
 				return getRBServiceProvider();
 			}
 

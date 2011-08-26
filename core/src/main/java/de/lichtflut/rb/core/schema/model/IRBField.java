@@ -4,7 +4,7 @@
 package de.lichtflut.rb.core.schema.model;
 
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.Set;
 
 import org.arastreju.sge.model.ElementaryDataType;
 
@@ -16,24 +16,24 @@ import org.arastreju.sge.model.ElementaryDataType;
  *
  * @author Ravi Knox
  */
-public interface IRBField {
+public interface IRBField{
 
 	/**
 	 * Returns the (attribute / )name of this RBField.
-	 * @return - name of this field
+	 * @return Name of this field
 	 */
 	String getFieldName();
 
 	/**
 	 * Returns the field's simple name.
-	 * @return - simple name of this field
+	 * @return Simple name of this field
 	 */
 	String getLabel();
 
 	/**
 	 * Returns the value of this RBField.
 	 * This can be any type from String to Date, depending on the RBSchema.
-	 * @return - Value of this field as a list
+	 * @return Value of this field as a list
 	 */
 	List<Object> getFieldValues();
 
@@ -45,26 +45,26 @@ public interface IRBField {
 
 	/**
 	 * Returns the type of this filed according to the RBSchema.
-	 * @return - {@link ElementaryDataType}
+	 * @return This field's {@link ElementaryDataType}
 	 */
 	ElementaryDataType getDataType();
 
 	/**
 	 * Returns the {@link Cardinality} for this field.
-	 * @return - {@link Cardinality}
+	 * @return This field's {@link Cardinality}
 	 */
 	Cardinality getCardinality();
 
 	/**
 	 * Returns wheather this field is known to the RBSchema.
 	 * If it is not known, it is a 'custom-' attribute which is always of type String.
-	 * @return - true if yes, false if not.
+	 * @return True if yes, false if not.
 	 */
 	boolean isKnownToSchema();
 
 	/**
 	 * Returns whether this field contains a resource reference.
-	 * @return boolean - true if this field is a resource reference, false if not
+	 * @return True if this field is a resource reference, false if not
 	 */
 	boolean isResourceReference();
 
@@ -72,8 +72,8 @@ public interface IRBField {
 	 * Returns this field's constraint according to the RBSchema.
 	 * TODO: specify return type (Constraint / Pattern)?!
 	 * TODO: If reference type Resource = full quallified ResourceURI as constraint?!
-	 * @return - list of {@link Pattern}
+	 * @return List of {@link Constraint}
 	 */
-	List<Pattern> getConstraints();
+	Set<Constraint> getConstraints();
 
 }

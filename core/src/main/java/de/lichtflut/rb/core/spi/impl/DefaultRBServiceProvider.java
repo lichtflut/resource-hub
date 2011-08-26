@@ -8,11 +8,13 @@ import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ArastrejuProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.api.RBEntityManagement;
-import de.lichtflut.rb.core.api.impl.ResourceSchemaManagementImpl;
+import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
 import de.lichtflut.rb.core.api.impl.RBEntityManagementImpl;
+import de.lichtflut.rb.core.api.impl.ResourceSchemaManagementImpl;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**
@@ -25,61 +27,72 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
  */
 public class DefaultRBServiceProvider implements RBServiceProvider {
 
-	private Logger logger = LoggerFactory.getLogger(DefaultRBServiceProvider.class);
+    private final Logger logger = LoggerFactory
+            .getLogger(DefaultRBServiceProvider.class);
 
-	private ArastrejuGate gate = null;
-	private ResourceSchemaManagement schemaManagement = null;
-	private RBEntityManagement typeManagement = null;
+    private ArastrejuGate gate = null;
+    private ResourceSchemaManagement schemaManagement = null;
+    private RBEntityManagement typeManagement = null;
+    private NewRBEntityManagement newTypeManagement = null;
 
-	// --CONSTRUCTOR----------------------------------------
+    // --CONSTRUCTOR----------------------------------------
 
-	/**
-	 * Default constructor.
-	 */
-	public DefaultRBServiceProvider(){
-		this(new RBConfig());
-	}
+    /**
+     * Default constructor.
+     */
+    public DefaultRBServiceProvider() {
+        this(new RBConfig());
+    }
 
-	/**
-	 * Default constructor.
-	 * @param config -
-	 */
-	public DefaultRBServiceProvider(final RBConfig config){
-		final ArastrejuProfile profile = config.getArastrejuConfiguration();
-		logger.info("Initializing Arastreju with profile: " + profile);
-		gate = Arastreju.getInstance(profile).rootContext();
-		schemaManagement = new ResourceSchemaManagementImpl(gate);
-		typeManagement = new RBEntityManagementImpl(gate);
-	}
+    /**
+     * Default constructor.
+     * @param config -
+     */
+    public DefaultRBServiceProvider(final RBConfig config) {
+        final ArastrejuProfile profile = config.getArastrejuConfiguration();
+        logger.info("Initializing Arastreju with profile: " + profile);
+        gate = Arastreju.getInstance(profile).rootContext();
+        schemaManagement = new ResourceSchemaManagementImpl(gate);
+        typeManagement = new RBEntityManagementImpl(gate);
+        newTypeManagement = new NewRBEntityManagement(gate);
+    }
 
-	// -----------------------------------------------------
+    // -----------------------------------------------------
 
-	/**
-	 *{@inheritDoc}
-	 */
-	@Override
-	public ResourceSchemaManagement getResourceSchemaManagement() {
-		return schemaManagement;
-	}
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public ResourceSchemaManagement getResourceSchemaManagement() {
+        return schemaManagement;
+    }
 
-	// -----------------------------------------------------
+    // -----------------------------------------------------
 
-	/**
-	 *{@inheritDoc}
-	 */
-	@Override
-	public ArastrejuGate getArastejuGateInstance() {
-		return gate;
-	}
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public ArastrejuGate getArastejuGateInstance() {
+        return gate;
+    }
 
-	// -----------------------------------------------------
+    // -----------------------------------------------------
 
-	/**
-	 *{@inheritDoc}
-	 */
-	@Override
-	public RBEntityManagement getRBEntityManagement() {
-		return this.typeManagement;
-	}
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public RBEntityManagement getRBEntityManagement() {
+        return typeManagement;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public NewRBEntityManagement getNewRBEntityManagement() {
+        return newTypeManagement;
+    }
 
 }

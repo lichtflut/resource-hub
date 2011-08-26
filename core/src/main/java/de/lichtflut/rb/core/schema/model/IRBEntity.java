@@ -9,13 +9,13 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 
 /**
- * Represents a resource type defined by a RBResourceSchema.
+ * An IRBField represents an edge of a RBEntity.
  *
- * Created: Aug 8, 2011
+ * Created: Aug 15, 2011
  *
  * @author Ravi Knox
  */
-public interface INewRBEntity {
+public interface IRBEntity {
 
 	/**
 	 * Returns the {@link ResourceID} of this node/Entity.
@@ -30,13 +30,20 @@ public interface INewRBEntity {
 	QualifiedName getQualifiedName();
 
 	/**
+	 * Returns the {@link IRBField} for a Fieldname.
+	 * @param fieldname - Fieldname
+	 * @return null if {@link IRBField} is not found
+	 */
+	IRBField getField(String fieldname);
+
+	/**
 	 * Returns all fields of the NewRBEntity.
 	 * @return - All RBFields of this entity
 	 */
 	List<IRBField> getAllFields();
 
 	/**
-	 * Add RBField to RBEntity.
+	 * Add {@link IRBField} to RBEntity.
 	 * @param field - {@link IRBField}
 	 * @return true if added successfully, false if not
 	 */
@@ -52,7 +59,7 @@ public interface INewRBEntity {
 	/**
 	 * String representation of this RBEntity.
 	 * TODO: Specify pattern
-	 * @return - {@link String}
+	 * @return {@link String}
 	 */
 	String toString();
 

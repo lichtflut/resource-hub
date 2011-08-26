@@ -6,6 +6,7 @@ package de.lichtflut.rb.web;
 
 import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
 import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
+import de.lichtflut.rb.web.mockPages.RepeaterPage;
 
 /**
  * Application object for your web application.
@@ -29,6 +30,7 @@ public class RBApplication extends AbstractResourceBrowserApplication {
         mountPage("/RSSchema", RSPage.class);
         mountPage("/Resource", GenericResourceFormPage.class);
         mountPage("/SampleResourcePage", SampleResourcePage.class);
+        mountPage("/r2", RepeaterPage.class);
     }
 
 

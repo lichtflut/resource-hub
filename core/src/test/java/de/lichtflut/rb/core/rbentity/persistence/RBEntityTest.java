@@ -12,11 +12,13 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
 
+import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
 import de.lichtflut.rb.core.api.impl.RBEntityManagementImpl;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
+import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
@@ -114,6 +116,7 @@ public final class RBEntityTest {
         } catch (Exception any) {
             any.printStackTrace();
         }
+
         Assert.assertTrue(provider.getRBEntityManagement()
                 .createOrUpdateEntity(p0));
         Assert.assertTrue(provider.getRBEntityManagement()
@@ -138,6 +141,33 @@ public final class RBEntityTest {
         // identifiers
         Assert.assertNull(provider.getRBEntityManagement().loadEntity(
                 entity.getQualifiedName().toURI() + "#"));
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testNewRBEntity() {
+        ResourceSchema schema = createSchema();
+        NewRBEntity e = new NewRBEntity(schema);
+        RBServiceProvider provider = RBServiceProviderFactory
+                .getDefaultServiceProvider();
+        NewRBEntityManagement m = new NewRBEntityManagement(
+                provider.getArastejuGateInstance());
+        e.getField("http://lichtflut.de#email").getFieldValues()
+                .add("hans@franz.de");
+        m.store(e);
+        System.out.println(m.find(e.getID(), schema));
+        e.getField("http://lichtflut.de#email").getFieldValues()
+                .set(0, "peter@mueller.de");
+        m.store(e);
+        System.out.println(m.find(e.getID(), schema));
+        // for (Object o : e.getField("http://lichtflut.de#email")
+        // .getFieldValues()) {
+        // System.out.println(o.toString());
+        // }
+        //
+        // System.out.println(MockNewRBEntityFactory.createNewRBEntity().getID());
     }
 
     /**

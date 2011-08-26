@@ -1,0 +1,33 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd" >
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+<div class="ck-component ck-table">
+<div class="ck-header"></div>
+
+<div class="ck-content">
+
+	<table class="ck-component ck-table">
+		<tr>
+			<th  wicket:id="tableHeader"><span wicket:id="headerData">[TableHeader]</span></th>
+
+		</tr>
+		<tr wicket:id="row">
+			<td wicket:id="cell"><span wicket:id="data"></span> </td>
+		</tr> 
+	</table>
+</div>
+
+<div class="ck-footer"></div>
+</div>
+<wicket:fragment wicket:id="detailsLink"><span class="" wicket:id="details"></span></wicket:fragment>
+<wicket:fragment wicket:id="updateLink"><span class="" wicket:id="update"></span></wicket:fragment>
+
+</wicket:panel>
+</html>
