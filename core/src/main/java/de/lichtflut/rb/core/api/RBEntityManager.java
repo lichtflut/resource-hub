@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.api;
 
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.schema.model.INewRBEntity;
+import de.lichtflut.rb.core.schema.model.IRBEntity;
 
 /**
  * <p>
@@ -25,18 +25,18 @@ public interface RBEntityManager {
 	 * @param qn The qualified name.
 	 * @return The entity or null.
 	 */
-	INewRBEntity find(QualifiedName qn);
+	IRBEntity find(QualifiedName qn);
 	
 	/**
 	 * Validates and stores the entity.
 	 * @param entity The entity.
 	 */
-	void store(INewRBEntity entity);
+	void store(IRBEntity entity);
 	
 	/**
 	 * Removes all visible associations of given entity. 
 	 * @param entity The entity.
 	 */
-	void remove(INewRBEntity entity);
+	void remove(IRBEntity entity);
 
 }
