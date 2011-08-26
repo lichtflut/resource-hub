@@ -7,10 +7,14 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.VoidNamespace;
+
+import de.lichtflut.rb.core.schema.model.INewRBEntity;
+import de.lichtflut.rb.core.schema.model.LabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -234,6 +238,18 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 		return new RBEntityImpl(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public LabelBuilder getLabelBuilder() {
+		return new LabelBuilder() {
+			@Override
+			public String build(INewRBEntity entity) {
+				return entity.toString();
+			}
+		};
+	}
 
 
 
