@@ -13,7 +13,7 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.VoidNamespace;
 
-import de.lichtflut.rb.core.schema.model.INewRBEntity;
+import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.LabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.RBEntity;
@@ -245,7 +245,7 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	public LabelBuilder getLabelBuilder() {
 		return new LabelBuilder() {
 			@Override
-			public String build(INewRBEntity entity) {
+			public String build(IRBEntity entity) {
 				return entity.toString();
 			}
 		};
