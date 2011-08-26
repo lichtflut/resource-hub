@@ -47,6 +47,7 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 			index = values.size();
 		}
 	}
+
 	@Override
 	public void detach() {
 		// Do nothing

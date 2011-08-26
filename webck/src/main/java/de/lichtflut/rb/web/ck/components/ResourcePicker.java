@@ -3,9 +3,9 @@
  */
 package de.lichtflut.rb.web.ck.components;
 
+import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.web.models.ReferencedEntityModel;
 
@@ -23,18 +23,10 @@ public abstract class ResourcePicker extends CKComponent {
 	// ------------------------------------------------------------
 
 	/**
-	 * Default constructor.
-	 * @param id The wicket ID.
-	 */
-	public ResourcePicker(final String id) {
-		super(id);
-	}
-
-	/**
 	 * @param id The wicket ID.
 	 * @param entity The exitisting entity to be displayed.
 	 */
-	public ResourcePicker(final String id, final IRBEntity entity) {
+	public ResourcePicker(final String id, final IModel<IRBEntity> entity) {
 		super(id);
 		initModel(entity);
 	}
@@ -63,11 +55,11 @@ public abstract class ResourcePicker extends CKComponent {
 	 * Initializes the Component's DefaultModel.
 	 * @param entity - instance of {@link IRBEntity}
 	 */
-	private void initModel(final IRBEntity entity) {
+	private void initModel(final IModel<IRBEntity> entity) {
 		setDefaultModel(new ReferencedEntityModel(entity) {
 			@Override
 			public IRBEntity resolve(final ResourceID id) {
-				return MockNewRBEntityFactory.createComplexNewRBEntity();
+				return getServiceProvider().find(id);
 			}
 		});
 	}

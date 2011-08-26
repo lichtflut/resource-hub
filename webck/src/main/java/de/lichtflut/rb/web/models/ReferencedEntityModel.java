@@ -18,24 +18,28 @@ import de.lichtflut.rb.core.schema.model.IRBEntity;
 @SuppressWarnings("serial")
 public abstract class ReferencedEntityModel implements IModel<ResourceID> {
 
-	private IRBEntity entity;
+	private IModel<IRBEntity> entity;
 
 	/**
 	 * Default Constructor.
 	 * @param entity - instance of {@link IRBEntity}
 	 */
-	public ReferencedEntityModel(final IRBEntity entity) {
+	public ReferencedEntityModel(final IModel<IRBEntity> entity) {
 		this.entity = entity;
 	}
 
 	@Override
 	public ResourceID getObject() {
-		return entity.getID();
+		if (entity != null && entity.getObject() != null) {
+			return entity.getObject().getID();
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public void setObject(final ResourceID id) {
-		this.entity = resolve(id);
+		entity.setObject(resolve(id));
 	}
 
 	@Override
