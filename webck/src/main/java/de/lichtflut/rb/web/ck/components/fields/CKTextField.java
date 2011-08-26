@@ -4,18 +4,19 @@
 package de.lichtflut.rb.web.ck.components.fields;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.model.Model;
 
-import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
 import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.behaviors.DatePickerBehavior;
 import de.lichtflut.rb.web.ck.components.CKComponent;
-import de.lichtflut.rb.web.models.NewGenericResourceModel;
 
 /**
  * This field displays a String in a simple {@link TextField}.
@@ -30,6 +31,8 @@ class CKTextField extends CKComponent {
 	private IRBField field;
 	private WebMarkupContainer container;
 	private RepeatingView view;
+	private List<Object> values;
+	private int index = 0;
 
 	// ------------------------------------------------------------
 
@@ -43,22 +46,25 @@ class CKTextField extends CKComponent {
 	public CKTextField(final String id, final IRBField field) {
 		super(id);
 		this.field = field;
+		values = field.getFieldValues();
 		container = new WebMarkupContainer("container");
 		container.setOutputMarkupId(true);
 		view = new RepeatingView("repeatingView");
-		view.setOutputMarkupId(true);
-		for (Object o : field.getFieldValues()) {
-			view.add(createTextField(o));
+		System.out.println(values.size());
+		while(index < values.size()){
+			System.out.println(index);
+			view.add(createTextField(index));
+			index++;
 		}
 		container.add(view);
 		add(container);
 		add(new AddValueAjaxButton("button", field) {
 			@Override
 			public void addField(final AjaxRequestTarget target, final Form<?> form) {
-				TextField textField = createTextField("");
+				TextField textField = createTextField(index++);
 				textField.setOutputMarkupId(true);
 				view.add(textField);
-				target.add(container);
+				target.add(form.getParent());
 				target.focusComponent(textField);
 			}
 		});
@@ -68,36 +74,37 @@ class CKTextField extends CKComponent {
 
 	/**
 	 * Creates a {@link TextField} with appropriate {@link NewGenericResourceModel} and value.
-	 * @param value - Object to be displayed in {@link TextField}
+	 * @param i - marking the occurence of the displayed value in {@link IRBField}
 	 * @return - instance of {@link TextField}
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private TextField createTextField(final Object value) {
+	private TextField createTextField(final int i) {
 		TextField textField;
 		switch (field.getDataType()) {
 			case DATE:
-				if (!(value instanceof Date)) {
-					throw new IllegalStateException("Not a date: " + value);
+				if (!(values.get(i) instanceof Date)) {
+					throw new IllegalStateException("Not a date: " + values.get(i));
 				}
 				textField = new TextField(view.newChildId(),
-						new NewGenericResourceModel(field, value));
+						Model.of(""));
 				textField.add(new DatePickerBehavior());
 				textField.setType(Date.class);
 			break;
 			case INTEGER:
-				if (!(value instanceof Integer)) {
-					throw new IllegalStateException("Not an integer: " + value);
+				if (!(values.get(i) instanceof Integer)) {
+					throw new IllegalStateException("Not an integer: " + i);
 				}
 				textField = new TextField(view.newChildId(),
-						new NewGenericResourceModel(field, value));
+						Model.of(""));
 				textField.setType(Integer.class);
 				break;
 			default:
-				textField = new TextField<Integer>(view.newChildId(),
-						new NewGenericResourceModel(field, value));
+				textField = new TextField(view.newChildId(),
+						Model.of(""));
 				textField.setType(String.class);
 			break;
 		}
+		index++;
 		return textField;
 	}
 
@@ -113,7 +120,7 @@ class CKTextField extends CKComponent {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public NewRBEntityManagement getServiceProvider() {
+	public RBServiceProvider getServiceProvider() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -3,33 +3,11 @@
  */
 package de.lichtflut.rb.web;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import de.lichtflut.rb.core.api.RBEntityManagement;
-import de.lichtflut.rb.core.api.ResourceSchemaManagement;
-import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
-import de.lichtflut.rb.core.schema.model.RBEntity;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.web.ck.behavior.CKBehavior;
-import de.lichtflut.rb.web.ck.components.CKLink;
-import de.lichtflut.rb.web.ck.components.CKLinkType;
-import de.lichtflut.rb.web.ck.components.GenericResourceFormPanel;
-import de.lichtflut.rb.web.ck.components.ResourceRegisterPanel;
-import de.lichtflut.rb.web.ck.components.SchemaSubmitPanel;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
-import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
-import de.lichtflut.rb.web.genericresource.GenericResourceFormPage;
 
 /**
  * <p>
@@ -67,13 +45,14 @@ public class RSPage extends RBSuperPage {
 
 		component = new WebMarkupContainer("ck-component");
 
-		component.add(new SchemaSubmitPanel("content-area") {
+		component.add(new WebMarkupContainer("content-area").setOutputMarkupPlaceholderTag(true));
+//		component.add(new SchemaSubmitPanel("content-area") {
+//
+//			public NewRBEntityManagement getServiceProvider() {
+//				return getRBServiceProvider();
+//			}
 
-			public NewRBEntityManagement getServiceProvider() {
-				return getRBServiceProvider();
-			}
-
-		});
+//		});
 		this.add(component);
 		// ------------ Navigation - Sidebar ------------
 

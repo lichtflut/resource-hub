@@ -33,11 +33,9 @@ public class RepeaterPage extends WebPage implements IFeedbackContainerProvider 
 		for (IRBField field : entity.getAllFields()) {
 			view.add(new FieldSet(view.newChildId(), field));
 		}
-		
 		Form form = new Form("form");
 		form.add(view);
 		add(form);
-		
 	}
 
 	@Override

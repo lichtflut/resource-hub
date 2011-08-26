@@ -3,8 +3,8 @@
  */
 package de.lichtflut.rb.web.mockPages;
 
-import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
 import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -29,7 +29,7 @@ public class EmployeeView extends RBSuperPage {
 			new GenericResourceTableView("mockEmployeeView", MockNewRBEntityFactory.getListOfNewRBEntities()){
 
 			@Override
-			public NewRBEntityManagement getServiceProvider() {
+			public RBServiceProvider getServiceProvider() {
 				// TODO Auto-generated method stub
 				return null;
 			}

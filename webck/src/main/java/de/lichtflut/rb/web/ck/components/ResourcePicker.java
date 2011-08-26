@@ -59,7 +59,8 @@ public abstract class ResourcePicker extends CKComponent {
 		setDefaultModel(new ReferencedEntityModel(entity) {
 			@Override
 			public IRBEntity resolve(final ResourceID id) {
-				return getServiceProvider().find(id);
+//				return getServiceProvider().find(id);
+				return null;
 			}
 		});
 	}

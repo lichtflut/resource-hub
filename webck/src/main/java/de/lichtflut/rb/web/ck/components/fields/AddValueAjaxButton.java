@@ -10,7 +10,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.web.ck.components.CKComponent.CKValueWrapperModel;
 import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
 
 /**
@@ -32,31 +31,6 @@ abstract class AddValueAjaxButton extends Panel {
 	public AddValueAjaxButton(final String id, final IRBField field) {
 		super(id);
 		this.field = field;
-		initComponent(null);
-	}
-
-	/**
-	 * Check if visibility is allowed.
-	 * @return True if Cardinality MAX > field.size
-	 */
-	private boolean checkVisibility() {
-		if((field.getCardinality().getMaxOccurs()) > (field.getFieldValues().size())){
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * TODO Comment.
-	 * @param target -
-	 * @param form -
-	 */
-	public abstract void addField(final AjaxRequestTarget target, final Form<?> form);
-
-	/**
-	 * Historical.
-	 */
-	protected void initComponent(final CKValueWrapperModel model) {
 		setOutputMarkupId(true);
 		AjaxButton button = new  AjaxButton("addField") {
 			@Override
@@ -84,5 +58,23 @@ abstract class AddValueAjaxButton extends Panel {
 		button.setVisible(checkVisibility());
 		button.add(new Label("linkLabel", "(+)"));
 	}
+
+	/**
+	 * Check if visibility is allowed.
+	 * @return True if Cardinality MAX > field.size
+	 */
+	private boolean checkVisibility() {
+		if((field.getCardinality().getMaxOccurs()) > (field.getFieldValues().size())){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Adds appropriate Field to {@link AjaxRequestTarget}.
+	 * @param target - {@link AjaxRequestTarget}
+	 * @param form - {@link Form}
+	 */
+	public abstract void addField(final AjaxRequestTarget target, final Form<?> form);
 
 }

@@ -8,7 +8,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.spi.impl.DefaultRBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
@@ -38,15 +38,16 @@ import de.lichtflut.rb.web.resources.SharedResourceProvider;
 @SuppressWarnings("serial")
 public abstract class RBSuperPage extends WebPage {
 
-	private static RBServiceProvider provider = null;
+	private static DefaultRBServiceProvider provider = null;
 	private String title;
 
 	/**
 	 * Singleton pattern: There will be only one instance per runtime.
-	 * @return {@link RBServiceProvider}
+	 * @return {@link NewRBEntityManagement}
 	 */
-	public static RBServiceProvider  getRBServiceProvider(){
+	public static DefaultRBServiceProvider  getRBServiceProvider(){
 		if(provider==null) {
+			System.out.println();
 			// TODO uncomment
 //			provider= RBServiceProviderFactory.getDefaultServiceProvider();
 		}

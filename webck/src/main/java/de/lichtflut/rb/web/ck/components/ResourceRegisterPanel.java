@@ -253,11 +253,12 @@ public abstract class ResourceRegisterPanel extends CKComponent{
 	 *            /
 	 * @return /
 	 */
+	@SuppressWarnings("null")
 	private List<RegisterRowEntry> buildRegisterTableEntries(
 			final Collection<ResourceSchema> schemas, final String filter,
 			final List<String> fields, final SortCriteria criteria) {
-		RBEntityManagement rManagement = getServiceProvider()
-				.getRBEntityManagement();
+		RBEntityManagement rManagement = null;
+
 		if (filter != null && !filter.equals("")) {
 			instances = rManagement.loadAllEntitiesForSchema(
 					schemas, filter, SearchContext.CONJUNCT_MULTIPLE_KEYWORDS);

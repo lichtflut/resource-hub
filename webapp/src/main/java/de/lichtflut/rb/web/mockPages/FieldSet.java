@@ -1,6 +1,5 @@
 package de.lichtflut.rb.web.mockPages;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -10,14 +9,18 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
-import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.ElementaryDataType;
-import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
 import de.lichtflut.rb.web.models.NewGenericResourceModel;
-
+/**
+ * [TODO Insert description here.
+ *
+ * Created: Aug 26, 2011
+ *
+ * @author Ravi Knox
+ */
 @SuppressWarnings("serial")
 public class FieldSet extends Panel {
 
@@ -33,7 +36,7 @@ public class FieldSet extends Panel {
 		setOutputMarkupId(true);
 		view = new RepeatingView("valueField");
 		for (Object o : field.getFieldValues()) {
-			view.add(new TextField(view.newChildId(),new NewGenericResourceModel(field, o), getClass(field.getDataType())));
+			view.add(new TextField(view.newChildId(),new NewGenericResourceModel(field, 0), getClass(field.getDataType())));
 		}
 
 		add(new Label("label", field.getLabel()));
@@ -42,31 +45,34 @@ public class FieldSet extends Panel {
 
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-				view.add(new TextField(view.newChildId(), new NewGenericResourceModel(field, ""),
+				view.add(new TextField(view.newChildId(), new NewGenericResourceModel(field, 0),
 						FieldSet.this.getClass(field.getDataType())));
 				target.add(FieldSet.this);
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
+			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
 				onSubmit(target, form);
 				target.add(findParent(IFeedbackContainerProvider.class).getFeedbackContainer());
 			}
-			
 		});
 	}
 
-	private Class getClass(ElementaryDataType type) {
+	/**
+	 * .
+	 * @param type -
+	 * @return -
+	 */
+	private Class getClass(final ElementaryDataType type) {
 		switch (type) {
 		case DATE:
 			return Date.class;
 		case INTEGER:
-			return Integer.class;	
+			return Integer.class;
 		case RESOURCE:
 			return Object.class;
 		default:
 			return String.class;
 		}
 	}
-	
 }

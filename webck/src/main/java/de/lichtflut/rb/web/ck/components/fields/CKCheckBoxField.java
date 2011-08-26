@@ -12,8 +12,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 
-import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
 import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 
 /**
@@ -24,7 +24,7 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class CKCheckBoxField extends CKComponent {
+class CKCheckBoxField extends CKComponent {
 
 
 	/**
@@ -77,7 +77,7 @@ public class CKCheckBoxField extends CKComponent {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public NewRBEntityManagement getServiceProvider() {
+	public RBServiceProvider getServiceProvider() {
 		// TODO Auto-generated method stub
 		return null;
 	}

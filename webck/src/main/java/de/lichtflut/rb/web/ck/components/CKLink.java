@@ -11,7 +11,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 
 /**
@@ -140,7 +140,7 @@ public class CKLink extends CKComponent{
 	}
 
 	@Override
-	public NewRBEntityManagement getServiceProvider() {
+	public RBServiceProvider getServiceProvider() {
 		// TODO Auto-generated method stub
 		return null;
 	}

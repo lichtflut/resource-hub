@@ -89,7 +89,7 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
 
     /**
      *
-     * @return
+     * @return -
      */
     public NewRBEntityManagement getNewRBEntityManagement() {
         return newTypeManagement;

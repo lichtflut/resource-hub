@@ -23,7 +23,6 @@ public interface INewRBEntityManagement extends Serializable {
      *
      * Returns an Entity for a given ResourceID.
      */
-
     NewRBEntity find(ResourceID resourceID);
 
     /**
@@ -33,7 +32,6 @@ public interface INewRBEntityManagement extends Serializable {
      *
      * Stores an Entity and returns the saved entity.
      */
-
     IRBEntity store(IRBEntity entity);
 
 }

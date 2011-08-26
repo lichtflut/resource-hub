@@ -8,7 +8,6 @@ import java.util.List;
 import org.apache.wicket.model.IModel;
 
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.schema.model.RBEntity;
 
 /**
  * [TODO Insert description here.
@@ -37,14 +36,15 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 	 * pass an empty {@link String} ("") as parameter o.
 	 * </p>
 	 * @param field - instance of {@link IRBField}
-	 * @param o - value of this TextField
+	 * @param index - index of the value in {@link IRBField}
 	 */
-	public NewGenericResourceModel(final IRBField field, final Object o){
-		value = o;
+	public NewGenericResourceModel(final IRBField field, final int index){
+		this.index = index;
 		values = field.getFieldValues();
-		index = values.indexOf(o);
-		if(index == -1){
-			index = values.size();
+		if(index >= values.size()){
+			values.add("");
+		}else{
+			value = values.get(index);
 		}
 	}
 
