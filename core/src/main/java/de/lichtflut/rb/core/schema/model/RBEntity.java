@@ -30,7 +30,9 @@ import org.arastreju.sge.model.nodes.views.SNEntity;
  *
  * @author Nils Bleisch
  * @param <T>
+ * @deprecated Use {@link INewRBEntity} instead
  */
+@Deprecated
 public abstract class RBEntity<T extends Object> extends SNEntity
 		implements Serializable {
 
