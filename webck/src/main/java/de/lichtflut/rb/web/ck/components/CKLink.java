@@ -63,7 +63,7 @@ public class CKLink extends CKComponent{
 	}
 
 	/**
-	 * TODO: Constructor for Internal Link.
+	 * Constructor for Internal Link.
 	 * @param id -
 	 * @param label -
 	 * @param cls -
@@ -91,7 +91,35 @@ public class CKLink extends CKComponent{
 	}
 
 	/**
-	 * TODO: Constructor for BookmarkablePageLink.
+	 * Constructor for Internal Link using an instance of {@link WebPage}.
+	 * @param id -
+	 * @param label -
+	 * @param page -
+	 * @param type -
+	 */
+	public CKLink(final String id, final String label, final WebPage page,
+			final CKLinkType type){
+		super(id);
+		if(type != CKLinkType.WEB_PAGE_INSTANCE) {
+			throw new UnsupportedOperationException();
+		}
+		link = new Link("link"){
+			@Override
+			public void onClick() {
+				if((getBehavior(ON_LINK_CLICK_BEHAVIOR) != null)){
+					getBehavior(ON_LINK_CLICK_BEHAVIOR).execute(this, label, getParent());
+				}else{
+					setResponsePage(page);
+				}
+			}
+		};
+
+		link.add(new Label("label", label));
+		add(link);
+	}
+
+	/**
+	 * Constructor for BookmarkablePageLink.
 	 * @param id -
 	 * @param label -
 	 * @param cls -
@@ -111,7 +139,7 @@ public class CKLink extends CKComponent{
 	}
 
 	/**
-	 * TODO: Constructor for Custom Link.
+	 * Constructor for Custom Link.
 	 * @param id -
 	 * @param label -
 	 * @param type -
@@ -136,18 +164,18 @@ public class CKLink extends CKComponent{
 
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
-		// TODO Auto-generated method stub
+		// Do nothing
 	}
 
 	@Override
 	public RBServiceProvider getServiceProvider() {
-		// TODO Auto-generated method stub
+		// Do nothing
 		return null;
 	}
 
 	@Override
 	public CKComponent setViewMode(final ViewMode mode) {
-		// TODO Auto-generated method stub
+		// Do nothing
 		return null;
 	}
 }

@@ -198,6 +198,7 @@ public abstract class CKComponent extends Panel {
 	 */
 	public final CKComponent addBehavior(final String key,final CKBehavior behavior){
 		behaviorRegistry.put(key, behavior);
+		buildComponent();
 		return this;
 	}
 

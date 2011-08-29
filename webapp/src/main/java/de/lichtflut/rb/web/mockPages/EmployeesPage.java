@@ -3,12 +3,14 @@
  */
 package de.lichtflut.rb.web.mockPages;
 
+import org.apache.wicket.markup.html.basic.Label;
+
 import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKComponent;
-import de.lichtflut.rb.web.ck.components.GenericResourceTableView;
+import de.lichtflut.rb.web.ck.components.ResourceTableView;
 
 /**
  * [TODO Insert description here.
@@ -18,15 +20,15 @@ import de.lichtflut.rb.web.ck.components.GenericResourceTableView;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class EmployeeView extends RBSuperPage {
+public class EmployeesPage extends RBSuperPage {
 
 	/**
 	 * Constructor.
 	 */
-	public EmployeeView() {
+	public EmployeesPage() {
 		super("Mock-Employees-View");
-		GenericResourceTableView view =
-			new GenericResourceTableView("mockEmployeeView", MockNewRBEntityFactory.getListOfNewRBEntities()){
+		ResourceTableView view =
+			new ResourceTableView("mockEmployeeView", MockNewRBEntityFactory.getListOfNewRBEntities()){
 
 			@Override
 			public RBServiceProvider getServiceProvider() {
@@ -40,12 +42,28 @@ public class EmployeeView extends RBSuperPage {
 				return null;
 			}
 		};
-		view.addBehavior(GenericResourceTableView.SHOW_DETAILS, new CKBehavior() {
+		view.addBehavior(ResourceTableView.SHOW_DETAILS, new CKBehavior() {
 
 			@Override
 			public Object execute(final Object... objects) {
 				// TODO Auto-generated method stub
 				return null;
+			}
+		});
+//		view.addBehavior(ResourceTableView.UPDATE_ROW_ITEM, new CKBehavior() {
+//
+//			@Override
+//			public Object execute(final Object... objects) {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//		});
+		view.addBehavior(ResourceTableView.DELETE_ROW_ITEM, new CKBehavior() {
+
+			@Override
+			public Object execute(final Object... objects) {
+				// TODO Auto-generated method stub
+				return new Label((String)objects[0], objects[1].toString());
 			}
 		});
 		add(view);

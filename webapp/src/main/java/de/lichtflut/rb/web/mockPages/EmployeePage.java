@@ -6,6 +6,7 @@ package de.lichtflut.rb.web.mockPages;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
 import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
+import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -30,6 +31,35 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 		super("Mockpage-Employee");
 		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
 		add(new ResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createComplexNewRBEntity()){
+
+			@Override
+			public CKComponent setViewMode(final ViewMode mode) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			protected void initComponent(final CKValueWrapperModel model) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public RBServiceProvider getServiceProvider() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * Contructor.
+	 * @param entity - instance of {@link IRBEntity}
+	 */
+	public EmployeePage(final IRBEntity entity) {
+		super("Mockpage-Employee");
+		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
+		add(new ResourceDetailPanel("mockEmployee", entity){
 
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {

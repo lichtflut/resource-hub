@@ -16,7 +16,7 @@ import de.lichtflut.rb.web.ck.components.navigation.NavigationNode;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.web.components.LoginPanelPage;
 import de.lichtflut.rb.web.mockPages.EmployeePage;
-import de.lichtflut.rb.web.mockPages.EmployeeView;
+import de.lichtflut.rb.web.mockPages.EmployeesPage;
 import de.lichtflut.rb.web.resources.SharedResourceProvider;
 
 
@@ -119,7 +119,7 @@ public abstract class RBSuperPage extends WebPage {
 		NavigationNode mockPages = new NavigationNodePanel(new CKLink("link", "Mock-Pages", CKLinkType.CUSTOM_BEHAVIOR));
 		CKLink mockEmployee = new CKLink("link", "Employee", EmployeePage.class, CKLinkType.WEB_PAGE_CLASS);
 		mockPages.addChild(new NavigationNodePanel(mockEmployee));
-		CKLink mockView = new CKLink("link", "TableView", EmployeeView.class, CKLinkType.WEB_PAGE_CLASS);
+		CKLink mockView = new CKLink("link", "TableView", EmployeesPage.class, CKLinkType.WEB_PAGE_CLASS);
 		mockPages.addChild(new NavigationNodePanel(mockView));
 		mainNavigation.addChild(mockPages);
 
