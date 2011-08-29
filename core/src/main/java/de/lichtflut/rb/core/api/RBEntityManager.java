@@ -19,22 +19,22 @@ import de.lichtflut.rb.core.schema.model.IRBEntity;
  * @author Oliver Tigges
  */
 public interface RBEntityManager {
-	
+
 	/**
 	 * Find an RBEntity by it's qualified name. The schema will be loaded implicitly.
 	 * @param qn The qualified name.
 	 * @return The entity or null.
 	 */
 	IRBEntity find(QualifiedName qn);
-	
+
 	/**
 	 * Validates and stores the entity.
 	 * @param entity The entity.
 	 */
 	void store(IRBEntity entity);
-	
+
 	/**
-	 * Removes all visible associations of given entity. 
+	 * Removes all visible associations of given entity.
 	 * @param entity The entity.
 	 */
 	void remove(IRBEntity entity);

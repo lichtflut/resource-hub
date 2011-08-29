@@ -248,7 +248,7 @@ public final class MockNewRBEntityFactory {
 		PropertyAssertionImpl pa4 = new PropertyAssertionImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasChild"), p4);
 
-		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
+		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(5));
 		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		pa4.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 

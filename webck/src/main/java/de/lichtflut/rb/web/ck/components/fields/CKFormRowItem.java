@@ -26,6 +26,7 @@ public class CKFormRowItem extends CKComponent {
 	 */
 	public CKFormRowItem(final String id, final IRBField field) {
 		super(id);
+		this.setOutputMarkupId(true);
 		// Check if minOccur is one. If yes append '*'
 		if(field.getCardinality().getMinOccurs() == 1){
 			Label label = new Label("label", field.getLabel() + " <span class=\"required\">*</span>");

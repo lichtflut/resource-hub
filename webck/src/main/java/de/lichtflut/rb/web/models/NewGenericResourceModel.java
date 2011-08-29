@@ -32,8 +32,7 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 	 * Constructor.
 	 * </p>
 	 * <p>
-	 * If no value is defiened for this TextField,
-	 * pass an empty {@link String} ("") as parameter o.
+	 * TODO: DESCRIPTION
 	 * </p>
 	 * @param field - instance of {@link IRBField}
 	 * @param index - index of the value in {@link IRBField}

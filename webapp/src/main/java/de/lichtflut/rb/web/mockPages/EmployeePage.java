@@ -9,7 +9,7 @@ import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.CKComponent;
-import de.lichtflut.rb.web.ck.components.GenericResourceDetailPanel;
+import de.lichtflut.rb.web.ck.components.ResourceDetailPanel;
 import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
 
 /**
@@ -29,7 +29,7 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 	public EmployeePage() {
 		super("Mockpage-Employee");
 		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
-		add(new GenericResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createStringBasedNewRBEntity()){
+		add(new ResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createComplexNewRBEntity()){
 
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {

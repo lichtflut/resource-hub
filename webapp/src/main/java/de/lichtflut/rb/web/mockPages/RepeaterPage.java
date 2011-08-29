@@ -26,6 +26,7 @@ public class RepeaterPage extends WebPage implements IFeedbackContainerProvider 
 	/**
 	 * Constructor.
 	 */
+	@SuppressWarnings("rawtypes")
 	public RepeaterPage(){
 		NewRBEntity entity = MockNewRBEntityFactory.createNewRBEntity();
 		add(new FeedbackPanel("feedbackPanel").setOutputMarkupPlaceholderTag(true));

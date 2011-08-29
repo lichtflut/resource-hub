@@ -20,7 +20,7 @@ import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-abstract class AddValueAjaxButton extends Panel {
+public abstract class AddValueAjaxButton extends Panel {
 
 	private IRBField field;
 	/**
@@ -40,7 +40,7 @@ abstract class AddValueAjaxButton extends Panel {
 
 			@Override
 			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
-				addFieldAndCheckVisibility(target, form);
+				onSubmit(target, form);
 			}
 
 			private void addFieldAndCheckVisibility(final AjaxRequestTarget target, final Form<?> form) {
