@@ -34,4 +34,9 @@ public interface INewRBEntityManagement extends Serializable {
      */
     IRBEntity store(IRBEntity entity);
 
+    /**
+     * Deletes an {@link IRBEntity}.
+     * @param entity - instance of {@link IRBEntity} which is to be deleted
+     */
+    void delete(IRBEntity entity);
 }

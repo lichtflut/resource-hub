@@ -6,6 +6,7 @@ package de.lichtflut.rb.web.mockPages;
 import org.apache.wicket.markup.html.basic.Label;
 
 import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
+import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
@@ -38,6 +39,12 @@ public class EmployeesPage extends RBSuperPage {
 
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public INewRBServiceProvider getNewServiceProvider() {
 				// TODO Auto-generated method stub
 				return null;
 			}

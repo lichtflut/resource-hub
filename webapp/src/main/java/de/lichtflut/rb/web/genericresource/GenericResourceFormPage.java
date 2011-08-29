@@ -9,6 +9,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.GenericResourceFormPanel;
@@ -43,6 +44,11 @@ public class GenericResourceFormPage extends RBSuperPage {
 
 			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
+			}
+
+			@Override
+			public INewRBServiceProvider getNewServiceProvider() {
+				return null;
 			}
 
         });

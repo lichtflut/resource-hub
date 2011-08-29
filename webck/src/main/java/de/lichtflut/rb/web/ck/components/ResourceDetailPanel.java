@@ -9,6 +9,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.web.ck.components.CKComponent.CKValueWrapperModel;
 import de.lichtflut.rb.web.ck.components.fields.CKFormRowItem;
 
 /**
@@ -26,14 +27,21 @@ import de.lichtflut.rb.web.ck.components.fields.CKFormRowItem;
 @SuppressWarnings("serial")
 public abstract class ResourceDetailPanel extends CKComponent  {
 
+	private IRBEntity entity;
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
 	 * @param entity - Instance of {@link IRBEntity}
 	 */
-	@SuppressWarnings("rawtypes")
 	public ResourceDetailPanel(final String id, final IRBEntity entity) {
 		super(id);
+		this.entity = entity;
+		buildComponent();
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	protected void initComponent(final CKValueWrapperModel model) {
 		setOutputMarkupId(true);
 		add(new FeedbackPanel("feedbackPanel"));
 		Form form = new Form("form") {
@@ -48,5 +56,6 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		}
 		form.add(view);
 		add(form);
+
 	}
 }

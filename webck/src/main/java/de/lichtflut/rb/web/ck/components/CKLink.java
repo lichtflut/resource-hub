@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 
@@ -176,6 +177,12 @@ public class CKLink extends CKComponent{
 	@Override
 	public CKComponent setViewMode(final ViewMode mode) {
 		// Do nothing
+		return null;
+	}
+
+	@Override
+	public INewRBServiceProvider getNewServiceProvider() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

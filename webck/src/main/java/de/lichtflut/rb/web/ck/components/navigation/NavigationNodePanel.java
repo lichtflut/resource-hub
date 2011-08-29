@@ -12,6 +12,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 
+import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 import de.lichtflut.rb.web.ck.components.CKLink;
@@ -191,5 +192,11 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 			node.getComponent().add(CSS_CLASS_ODD);
 		}
 		return node;
+	}
+
+	@Override
+	public INewRBServiceProvider getNewServiceProvider() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

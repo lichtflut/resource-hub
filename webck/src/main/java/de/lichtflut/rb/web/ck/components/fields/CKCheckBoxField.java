@@ -8,13 +8,12 @@ import java.util.List;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
-import de.lichtflut.rb.web.ck.components.CKComponent;
 
 /**
  * This field displays a Boolean as a {@link CheckBox}.
@@ -24,7 +23,7 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-class CKCheckBoxField extends CKComponent {
+class CKCheckBoxField extends Panel {
 
 
 	/**
@@ -69,34 +68,6 @@ class CKCheckBoxField extends CKComponent {
 		listView.setReuseItems(true);
 		setOutputMarkupId(true);
 		return listView;
-	}
-
-	// ------------------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RBServiceProvider getServiceProvider() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CKComponent setViewMode(final ViewMode mode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void initComponent(final CKValueWrapperModel model) {
-		// TODO Auto-generated method stub
 	}
 
 }

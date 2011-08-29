@@ -8,6 +8,7 @@ import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
 
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.api.INewRBEntityManagement;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
@@ -84,4 +85,9 @@ public class NewRBEntityManagement implements INewRBEntityManagement {
 
         return null;
     }
+
+	@Override
+	public void delete(final IRBEntity entity) {
+		throw new NotYetImplementedException();
+	}
 }

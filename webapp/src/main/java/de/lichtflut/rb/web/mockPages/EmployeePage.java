@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
 import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
+import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -39,13 +40,13 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 			}
 
 			@Override
-			protected void initComponent(final CKValueWrapperModel model) {
+			public RBServiceProvider getServiceProvider() {
 				// TODO Auto-generated method stub
-
+				return null;
 			}
 
 			@Override
-			public RBServiceProvider getServiceProvider() {
+			public INewRBServiceProvider getNewServiceProvider() {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -68,13 +69,13 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 			}
 
 			@Override
-			protected void initComponent(final CKValueWrapperModel model) {
+			public RBServiceProvider getServiceProvider() {
 				// TODO Auto-generated method stub
-
+				return null;
 			}
 
 			@Override
-			public RBServiceProvider getServiceProvider() {
+			public INewRBServiceProvider getNewServiceProvider() {
 				// TODO Auto-generated method stub
 				return null;
 			}

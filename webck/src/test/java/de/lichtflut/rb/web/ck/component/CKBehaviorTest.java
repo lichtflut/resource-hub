@@ -9,6 +9,7 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
 import org.junit.Test;
 
+import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
@@ -44,6 +45,7 @@ public final class CKBehaviorTest extends TestCase{
 	/**
 	 * Test to persist and find entities.
 	 */
+	@SuppressWarnings("serial")
 	@Test
 	public void testCKBehavior(){
 		TestComponent tComponent = new TestComponent();
@@ -136,6 +138,11 @@ public final class CKBehaviorTest extends TestCase{
 		@Override
 		protected void initComponent(final CKValueWrapperModel model) {
 
+		}
+
+		@Override
+		public INewRBServiceProvider getNewServiceProvider() {
+			return null;
 		}
 
 	}

@@ -16,6 +16,11 @@ package de.lichtflut.rb.core.schema.model;
  */
 public interface LabelBuilder {
 
+	/**
+	 * TODO: DESCRIPTION.
+	 * @param entity -
+	 * @return -
+	 */
 	String build(IRBEntity entity);
-	
+
 }

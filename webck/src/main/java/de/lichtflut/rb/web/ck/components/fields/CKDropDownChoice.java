@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
@@ -20,8 +21,6 @@ import de.lichtflut.rb.core.mock.MockRBEntityManagement;
 import de.lichtflut.rb.core.mock.MockResourceSchemaFactory;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
-import de.lichtflut.rb.web.ck.components.CKComponent;
 
 /**
  * TODO: Replace IRBManagementService-Mock
@@ -32,7 +31,7 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class CKDropDownChoice extends CKComponent {
+public class CKDropDownChoice extends Panel {
 
 	private ListView<DropDownChoice<IRBEntity>> listView;
 	private int identifier = 1;
@@ -105,33 +104,6 @@ public class CKDropDownChoice extends CKComponent {
 		listView.setOutputMarkupId(true);
 		setOutputMarkupId(true);
 		return listView;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void initComponent(final CKValueWrapperModel model) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RBServiceProvider getServiceProvider() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CKComponent setViewMode(final ViewMode mode) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

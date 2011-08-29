@@ -245,7 +245,7 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	public LabelBuilder getLabelBuilder() {
 		return new LabelBuilder() {
 			@Override
-			public String build(IRBEntity entity) {
+			public String build(final IRBEntity entity) {
 				return entity.toString();
 			}
 		};
