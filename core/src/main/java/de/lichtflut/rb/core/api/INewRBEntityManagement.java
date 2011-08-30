@@ -6,7 +6,6 @@ import java.util.List;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
 
 /**
@@ -28,11 +27,11 @@ public interface INewRBEntityManagement extends Serializable {
     NewRBEntity find(ResourceID resourceID);
 
     /**
-     * Finds all {@link IRBEntity}s for a given {@link ResourceSchema}.
-     * @param schema - instance of {@link ResourceSchema}
+     * Finds all {@link IRBEntity}s for a given ResourceSchema.
+     * @param id - id of the ResourceSchema
      * @return a list of {@link IRBEntity}
      */
-    List<IRBEntity> findAll(ResourceSchema schema);
+    List<IRBEntity> findAll(ResourceID id);
 
     /**
      *

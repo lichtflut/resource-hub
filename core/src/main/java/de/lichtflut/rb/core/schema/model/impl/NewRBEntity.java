@@ -161,7 +161,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 */
 	@Override
 	public IRBMetaInfo getRBMetaInfo() {
-		throw new NotYetImplementedException();
+		return new RBMetaInfo(schema);
 	}
 
 	/**

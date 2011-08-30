@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import org.arastreju.sge.model.ResourceID;
+
 /**
  * [TODO Insert description here.
  *
@@ -12,4 +14,9 @@ package de.lichtflut.rb.core.schema.model;
  */
 public interface IRBMetaInfo {
 
+	/**
+	 * Returns the {@link ResourceID} of this {@link ResourceSchema}.
+	 * @return {@link ResourceID} of this {@link ResourceSchema}
+	 */
+	ResourceID getSchemaID();
 }
