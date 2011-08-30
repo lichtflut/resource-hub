@@ -35,7 +35,7 @@ public class RBField implements IRBField, Serializable {
 
 	/**
 	 * Constructor.
-	 * @param assertion - {@link PropertyAssertion}
+	 * @param assertion - {@link PropertyAssertion}. <code>null</code> if assertion is not known to Schema
 	 * @param values - values of this field
 	 */
 	public RBField(final PropertyAssertion assertion, final Set<SemanticNode> values) {
@@ -104,4 +104,5 @@ public class RBField implements IRBField, Serializable {
 	public String toString(){
 		return this.getLabel();
 	}
+
 }

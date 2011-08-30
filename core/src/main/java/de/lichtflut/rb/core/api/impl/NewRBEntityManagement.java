@@ -1,5 +1,7 @@
 package de.lichtflut.rb.core.api.impl;
 
+import java.util.List;
+
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
@@ -57,6 +59,12 @@ public class NewRBEntityManagement implements INewRBEntityManagement {
         return new NewRBEntity(node, schema);
     }
 
+	@Override
+	public List<IRBEntity> findAll(final ResourceSchema schema) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
     @Override
     public IRBEntity store(final IRBEntity entity) {
 
@@ -90,4 +98,5 @@ public class NewRBEntityManagement implements INewRBEntityManagement {
 	public void delete(final IRBEntity entity) {
 		throw new NotYetImplementedException();
 	}
+
 }

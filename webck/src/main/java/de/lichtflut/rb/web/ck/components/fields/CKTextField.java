@@ -51,8 +51,7 @@ class CKTextField extends Panel {
 		container.setOutputMarkupId(true);
 		view = new RepeatingView("repeatingView");
 		while(index < values.size()){
-			view.add(createTextField(index));
-			index++;
+			view.add(createTextField(index++));
 		}
 		container.add(view);
 		add(container);

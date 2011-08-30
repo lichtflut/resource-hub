@@ -39,7 +39,8 @@ public class CKFormRowItem extends Panel {
 			add(new CKCheckBoxField("field", field));
 			break;
 		case RESOURCE:
-			add(new CKDropDownChoice("field", field));
+//			add(new CKDropDownChoice("field", field));
+			add(new ResourceField("field", field));
 			break;
 		default:
 			add(new CKTextField("field", field));

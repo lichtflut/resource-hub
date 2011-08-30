@@ -3,14 +3,24 @@
  */
 package de.lichtflut.rb.web.ck.components;
 
+import java.util.HashSet;
+
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNEntity;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.web.ck.components.CKComponent.CKValueWrapperModel;
+import de.lichtflut.rb.core.schema.model.impl.RBField;
 import de.lichtflut.rb.web.ck.components.fields.CKFormRowItem;
+import de.lichtflut.rb.web.models.NewGenericResourceModel;
 
 /**
  * <p>
@@ -47,15 +57,55 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		Form form = new Form("form") {
 			@Override
 			protected void onSubmit() {
-				// Do nothing
+//				getNewServiceProvider().getRBEntityManagement().store(entity);
 			}
 		};
-		RepeatingView view = new RepeatingView("field-item");
+		final RepeatingView view = new RepeatingView("fieldItem");
 		for (IRBField field : entity.getAllFields()) {
 			view.add(new CKFormRowItem(view.newChildId(), field));
 		}
+		form.add(new AjaxButton("addKeyValue") {
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target,final Form<?> form) {
+				final SNEntity snEntity = new SNEntity();
+				IRBField field = new RBField(null, new HashSet<SemanticNode>(){{add(snEntity);}});
+				entity.addField(field);
+				view.add(new KeyValueField(view.newChildId(), field));
+				form.add(view);
+				target.add(form);
+			}
+			@Override
+			protected void onError(final AjaxRequestTarget target,final  Form<?> form) {
+				onSubmit(target, form);
+			}
+		});
 		form.add(view);
 		add(form);
 
+	}
+
+	/**
+	 * Helperclass.
+	 *
+	 * Created: Aug 30, 2011
+	 *
+	 * @author Ravi Knox
+	 */
+	class KeyValueField extends Panel{
+
+		/**
+		 * Constructor.
+		 * @param id - wicket:id
+		 * @param field - instance of {@link IRBField}
+		 */
+		public KeyValueField(final String id, final IRBField field){
+			super(id);
+			int index = (entity.getAllFields().size());
+			WebMarkupContainer container = new WebMarkupContainer("container");
+			index++;
+			container.add(new TextField<String>("key", new NewGenericResourceModel<String>(field, index)));
+			container.add(new TextField<String>("value", new NewGenericResourceModel<String>(field, index)));
+			add(container);
+		}
 	}
 }

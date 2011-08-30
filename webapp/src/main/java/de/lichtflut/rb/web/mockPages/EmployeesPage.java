@@ -3,8 +3,6 @@
  */
 package de.lichtflut.rb.web.mockPages;
 
-import org.apache.wicket.markup.html.basic.Label;
-
 import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProvider;
@@ -69,8 +67,7 @@ public class EmployeesPage extends RBSuperPage {
 
 			@Override
 			public Object execute(final Object... objects) {
-				// TODO Auto-generated method stub
-				return new Label((String)objects[0], objects[1].toString());
+				return null;
 			}
 		});
 		add(view);

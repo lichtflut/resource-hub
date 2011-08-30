@@ -19,6 +19,7 @@ import de.lichtflut.rb.web.models.ReferencedEntityModel;
 public abstract class ResourcePicker extends CKComponent {
 
 	private static final long serialVersionUID = 1L;
+	private IModel<IRBEntity> entity;
 
 	// ------------------------------------------------------------
 
@@ -28,7 +29,7 @@ public abstract class ResourcePicker extends CKComponent {
 	 */
 	public ResourcePicker(final String id, final IModel<IRBEntity> entity) {
 		super(id);
-		initModel(entity);
+		buildComponent();
 	}
 
 	// ------------------------------------------------------------
@@ -36,17 +37,11 @@ public abstract class ResourcePicker extends CKComponent {
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
+		initModel(entity);
 
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CKComponent setViewMode(final ViewMode mode) {
-		return this;
 	}
 
 	// ------------------------------------------------------------
@@ -55,12 +50,12 @@ public abstract class ResourcePicker extends CKComponent {
 	 * Initializes the Component's DefaultModel.
 	 * @param entity - instance of {@link IRBEntity}
 	 */
+	@SuppressWarnings("serial")
 	private void initModel(final IModel<IRBEntity> entity) {
 		setDefaultModel(new ReferencedEntityModel(entity) {
 			@Override
 			public IRBEntity resolve(final ResourceID id) {
-//				return getServiceProvider().find(id);
-				return null;
+				return getNewServiceProvider().getRBEntityManagement().find(id);
 			}
 		});
 	}

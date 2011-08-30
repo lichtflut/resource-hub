@@ -233,7 +233,7 @@ public abstract class ResourceTableView extends CKComponent {
 						});
 					}
 				};
-				link.add(new Label("label", "DetailsLink"));
+				link.add(new Label("label", "Details"));
 				f.add(link);
 				}else{
 					f.add((Component) getBehavior(s).execute("featureLink", e,ResourceTableView.this));
@@ -255,7 +255,7 @@ public abstract class ResourceTableView extends CKComponent {
 						});
 					}
 				};
-				link.add(new Label("label", "UpdateLink"));
+				link.add(new Label("label", "Update"));
 				f.add(link);
 				}else{
 					f.add((Component) getBehavior(s).execute("details", e,ResourceTableView.this));
@@ -268,7 +268,7 @@ public abstract class ResourceTableView extends CKComponent {
 						getNewServiceProvider().getRBEntityManagement().delete(e);
 					}
 				};
-				link.add(new Label("label", "DeleteLink"));
+				link.add(new Label("label", "Delete"));
 				f.add(link);
 				}else{
 					f = new Fragment("data", "customLink", this);

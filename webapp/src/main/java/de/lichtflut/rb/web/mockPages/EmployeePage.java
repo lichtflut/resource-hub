@@ -32,22 +32,17 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 		super("Mockpage-Employee");
 		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
 		add(new ResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createComplexNewRBEntity()){
-
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {
-				// TODO Auto-generated method stub
 				return null;
 			}
-
 			@Override
 			public RBServiceProvider getServiceProvider() {
-				// TODO Auto-generated method stub
 				return null;
 			}
-
 			@Override
 			public INewRBServiceProvider getNewServiceProvider() {
-				// TODO Auto-generated method stub
+				getNewServiceProvider();
 				return null;
 			}
 		});
@@ -64,19 +59,16 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {
-				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
 			public RBServiceProvider getServiceProvider() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
 			public INewRBServiceProvider getNewServiceProvider() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		});
