@@ -15,7 +15,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 
 /**
@@ -131,19 +130,13 @@ public class NavigationBar extends CKComponent implements NavigationNode {
 	}
 
 	@Override
-	public RBServiceProvider getServiceProvider() {
+	public INewRBServiceProvider getServiceProvider() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public CKComponent setViewMode(final ViewMode mode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public INewRBServiceProvider getNewServiceProvider() {
 		// TODO Auto-generated method stub
 		return null;
 	}

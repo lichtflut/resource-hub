@@ -17,7 +17,7 @@ public final class RBServiceProviderFactory {
 	/**
 	 * @return {@link DefaultRBServiceProvider} with Arastreju's root-context inside.
 	 */
-	public static RBServiceProvider getDefaultServiceProvider(){
+	public static DefaultRBServiceProvider getDefaultServiceProvider(){
 		return new DefaultRBServiceProvider();
 	}
 

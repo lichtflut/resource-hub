@@ -17,14 +17,12 @@ import de.lichtflut.rb.core.schema.model.IRBField;
 @SuppressWarnings("serial")
 public class KeyValueWrapperModel implements IModel<String> {
 
-	private IRBField field;
 
 	/**
 	 * Constructor.
 	 * @param field - instance of {@link IRBField} which represents a Key-Value-Pair
 	 */
 	public KeyValueWrapperModel(final IRBField field){
-		this.field = field;
 	}
 	@Override
 	public void detach() {

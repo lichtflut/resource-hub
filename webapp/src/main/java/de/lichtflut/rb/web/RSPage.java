@@ -4,14 +4,13 @@
 package de.lichtflut.rb.web;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
 
 /**
  * <p>
- * TODO [DESCRIPTION].
+ * Sample page for Web-CK.
  * </p>
  *
  * <p>
@@ -23,7 +22,7 @@ import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
 @SuppressWarnings("serial")
 public class RSPage extends RBSuperPage {
 
-	private final RepeatingView resourceList = new RepeatingView("resourcelist");
+//	private final RepeatingView resourceList = new RepeatingView("resourcelist");
 	private WebMarkupContainer component;
 
 	/**

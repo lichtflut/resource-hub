@@ -17,12 +17,17 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
  * <p>
  * This class provides static {@link ResourceSchema}s for testing purposes.
  * </p>
- * 
+ *
  * Created: Aug 16, 2011
  *
  * @author Ravi Knox
  */
-public class MockResourceSchemaFactory {
+public final class MockResourceSchemaFactory {
+
+	/**
+	 * Constructor.
+	 */
+	private MockResourceSchemaFactory(){};
 
 	/**
 	 * <p>
@@ -113,9 +118,8 @@ public class MockResourceSchemaFactory {
 	}
 
 	/**
-	 * TODO: refactor for public use.
-	 * @param referredSchema
-	 * @return
+	 * @param referredSchema -
+	 * @return -
 	 */
 	@SuppressWarnings("unused")
 	private ResourceSchema createCarSchema(final ResourceSchema referredSchema) {

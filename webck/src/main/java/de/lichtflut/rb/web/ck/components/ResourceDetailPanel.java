@@ -19,6 +19,7 @@ import org.arastreju.sge.model.nodes.views.SNEntity;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.impl.RBField;
+import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.web.ck.components.fields.CKFormRowItem;
 import de.lichtflut.rb.web.models.NewGenericResourceModel;
 
@@ -52,17 +53,24 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
-		setOutputMarkupId(true);
-		add(new FeedbackPanel("feedbackPanel"));
+		this.setOutputMarkupId(true);
+		this.add(new FeedbackPanel("feedbackPanel"));
 		Form form = new Form("form") {
 			@Override
 			protected void onSubmit() {
-//				getNewServiceProvider().getRBEntityManagement().store(entity);
+				getServiceProvider().getRBEntityManagement().store(entity);
 			}
 		};
 		final RepeatingView view = new RepeatingView("fieldItem");
 		for (IRBField field : entity.getAllFields()) {
-			view.add(new CKFormRowItem(view.newChildId(), field));
+			view.add(new CKFormRowItem(view.newChildId(), field){
+				@Override
+				public INewRBServiceProvider getServiceProvider() {
+					return ResourceDetailPanel.this.getServiceProvider();
+				}
+				@Override
+				public CKComponent setViewMode(final ViewMode mode) {return null;}
+			});
 		}
 		form.add(new AjaxButton("addKeyValue") {
 			@Override
@@ -80,7 +88,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 			}
 		});
 		form.add(view);
-		add(form);
+		this.add(form);
 
 	}
 

@@ -30,7 +30,7 @@ public class FieldSet extends Panel {
 	 * @param id - wicket:id
 	 * @param field -
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
 	public FieldSet(final String id, final IRBField field) {
 		super(id);
 		setOutputMarkupId(true);
@@ -63,6 +63,7 @@ public class FieldSet extends Panel {
 	 * @param type -
 	 * @return -
 	 */
+	@SuppressWarnings("rawtypes")
 	private Class getClass(final ElementaryDataType type) {
 		switch (type) {
 		case DATE:

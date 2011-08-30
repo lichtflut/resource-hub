@@ -8,14 +8,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AbstractAutoCompleteRenderer;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
-import de.lichtflut.rb.core.api.RBEntityManagement;
+
+import de.lichtflut.rb.core.api.INewRBEntityManagement;
 import de.lichtflut.rb.core.api.RBEntityManagement.SearchContext;
-import de.lichtflut.rb.core.schema.model.RBEntity;
+import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 
@@ -36,9 +38,10 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  */
 public abstract class SearchBar extends CKComponent{
 
-
+// TODO: integrate NewRBService
 	private static final String FILTER = "filter";
 	private static final long serialVersionUID = 1L;
+	@SuppressWarnings("unused")
 	private  SearchContext sContext = SearchContext.CONJUNCT_MULTIPLE_KEYWORDS;
 
 
@@ -93,7 +96,7 @@ public abstract class SearchBar extends CKComponent{
 	 * @param instance
 	 * </p>
 	 */
-	public abstract void onSearchSubmit(RBEntity<Object> instance);
+	public abstract void onSearchSubmit(IRBEntity instance);
 
 	// -----------------------------------------------------
 
@@ -133,39 +136,43 @@ public abstract class SearchBar extends CKComponent{
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 		final Collection<ResourceSchema> filter = (Collection<ResourceSchema>) model.getValue(FILTER);
-		final Map<Integer, RBEntity<Object>> selectableValues = new HashMap<Integer, RBEntity<Object>>();
+		final Map<Integer, IRBEntity> selectableValues = new HashMap<Integer, IRBEntity>();
 		@SuppressWarnings("rawtypes")
 		final AutoCompleteTextField autoCompleter =
-			new AutoCompleteTextField("searchInput",Model.of(""),new AbstractAutoCompleteRenderer<RBEntity<Object>>(){
+			new AutoCompleteTextField("searchInput",Model.of(""),new AbstractAutoCompleteRenderer<IRBEntity>(){
 				private static final long serialVersionUID = 2950543012596722925L;
 
-				protected String getTextValue(final RBEntity<Object> object) {
+				protected String getTextValue(final IRBEntity object) {
 					return object.toString();
 				}
 
 				// -----------------------------------------------------
 
-				protected void renderChoice(final RBEntity<Object> object,final Response response, final String criteria) {
+				protected void renderChoice(final IRBEntity object,final Response response, final String criteria) {
 					response.write(getTextValue(object));
 				}
 			}){
 
 			private static final long serialVersionUID = -653128720998419185L;
-			protected Iterator<RBEntity> getChoices(final String input) {
+			@SuppressWarnings("null")
+			protected Iterator<IRBEntity> getChoices(final String input) {
+				@SuppressWarnings("unused")
 				Collection<ResourceSchema> rSchemas;
 				//if the keywords are not valid, return an iterator of an empty collection
 				if(!isKeywordsValidForSearch(input)){
-					return new ArrayList<RBEntity>().iterator();
+					return new ArrayList<IRBEntity>().iterator();
 				}
 				if(filter==null || filter.isEmpty()){
 					rSchemas = getServiceProvider().getResourceSchemaManagement().getAllResourceSchemas();
 				}else{
 					rSchemas = filter;
 				}
-				  final RBEntityManagement typeManagement =getServiceProvider().getRBEntityManagement();
-				  final Collection<RBEntity> instances =
-					  typeManagement.loadAllEntitiesForSchema(rSchemas,input,sContext);
-				  for (final RBEntity instance : instances) {
+				  @SuppressWarnings("unused")
+				final INewRBEntityManagement typeManagement =getServiceProvider().getRBEntityManagement();
+				  final Collection<IRBEntity> instances = null;
+//				  TODO: FIX!!!
+//					  typeManagement.loadAllEntitiesForSchema(rSchemas,input,sContext);
+				  for (final IRBEntity instance : instances) {
 					selectableValues.put(instance.toString().trim().hashCode(),instance);
 				  }
 			      return instances.iterator();
@@ -173,15 +180,14 @@ public abstract class SearchBar extends CKComponent{
 			};
 
 
-		final Form<RBEntity<Object>> searchForm = new Form<RBEntity<Object>>("searchForm"){
+		final Form<IRBEntity> searchForm = new Form<IRBEntity>("searchForm"){
 			private static final long serialVersionUID = -2551391635434282054L;
-			@SuppressWarnings("rawtypes")
 			protected void onSubmit() {
 				Object value =  autoCompleter.getDefaultModelObject();
 	        	if(value==null) {
 					return;
 				}
-	        	RBEntity instance = selectableValues.get(value.toString().trim().hashCode());
+	        	IRBEntity instance = selectableValues.get(value.toString().trim().hashCode());
 	        	//Reset selectableValues
 	        	selectableValues.clear();
 	        	if(instance==null) {

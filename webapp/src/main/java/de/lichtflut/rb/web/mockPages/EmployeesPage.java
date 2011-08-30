@@ -3,16 +3,14 @@
  */
 package de.lichtflut.rb.web.mockPages;
 
-import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 import de.lichtflut.rb.web.ck.components.ResourceTableView;
 
 /**
- * [TODO Insert description here.
+ * SamplePage for {@link ResourceTableView}.
  *
  * Created: Aug 18, 2011
  *
@@ -27,25 +25,13 @@ public class EmployeesPage extends RBSuperPage {
 	public EmployeesPage() {
 		super("Mock-Employees-View");
 		ResourceTableView view =
-			new ResourceTableView("mockEmployeeView", MockNewRBEntityFactory.getListOfNewRBEntities()){
-
+			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getRBEntityManagement().findAll(null)){
 			@Override
-			public RBServiceProvider getServiceProvider() {
-				// TODO Auto-generated method stub
-				return null;
+			public INewRBServiceProvider getServiceProvider() {
+				return getRBServiceProvider();
 			}
-
 			@Override
-			public CKComponent setViewMode(final ViewMode mode) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public INewRBServiceProvider getNewServiceProvider() {
-				// TODO Auto-generated method stub
-				return null;
-			}
+			public CKComponent setViewMode(final ViewMode mode) {return null;}
 		};
 		view.addBehavior(ResourceTableView.SHOW_DETAILS, new CKBehavior() {
 

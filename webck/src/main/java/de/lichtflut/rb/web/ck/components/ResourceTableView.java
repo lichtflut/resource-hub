@@ -18,7 +18,6 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**
  * <p>
@@ -225,11 +224,9 @@ public abstract class ResourceTableView extends CKComponent {
 							@Override
 							public CKComponent setViewMode(final ViewMode mode) {return null;}
 							@Override
-							protected void initComponent(final CKValueWrapperModel model) {}
-							@Override
-							public RBServiceProvider getServiceProvider() {return null;}
-							@Override
-							public INewRBServiceProvider getNewServiceProvider() {return null;}
+							public INewRBServiceProvider getServiceProvider() {
+								return ResourceTableView.this.getServiceProvider();
+							}
 						});
 					}
 				};
@@ -249,9 +246,7 @@ public abstract class ResourceTableView extends CKComponent {
 							@Override
 							protected void initComponent(final CKValueWrapperModel model) {}
 							@Override
-							public RBServiceProvider getServiceProvider() {return null;}
-							@Override
-							public INewRBServiceProvider getNewServiceProvider() {return null;}
+							public INewRBServiceProvider getServiceProvider() {return null;}
 						});
 					}
 				};
@@ -265,7 +260,7 @@ public abstract class ResourceTableView extends CKComponent {
 				link = new Link("featureLink") {
 					@Override
 					public void onClick() {
-						getNewServiceProvider().getRBEntityManagement().delete(e);
+						getServiceProvider().getRBEntityManagement().delete(e);
 					}
 				};
 				link.add(new Label("label", "Delete"));

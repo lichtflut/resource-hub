@@ -8,7 +8,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import de.lichtflut.rb.core.spi.impl.DefaultRBServiceProvider;
+import de.lichtflut.rb.core.mock.MockRBServiceProvider;
+import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
@@ -38,18 +39,16 @@ import de.lichtflut.rb.web.resources.SharedResourceProvider;
 @SuppressWarnings("serial")
 public abstract class RBSuperPage extends WebPage {
 
-	private static DefaultRBServiceProvider provider = null;
+	private static INewRBServiceProvider provider = null;
 	private String title;
 
 	/**
 	 * Singleton pattern: There will be only one instance per runtime.
-	 * @return {@link NewRBEntityManagement}
+	 * @return {@link INewRBServiceProvider}
 	 */
-	public static DefaultRBServiceProvider  getRBServiceProvider(){
+	public static INewRBServiceProvider  getRBServiceProvider(){
 		if(provider==null) {
-			System.out.println();
-			// TODO uncomment
-//			provider= RBServiceProviderFactory.getDefaultServiceProvider();
+			provider= new MockRBServiceProvider();
 		}
 		return provider;
 	}

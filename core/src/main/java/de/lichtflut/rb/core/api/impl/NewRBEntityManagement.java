@@ -59,7 +59,6 @@ public class NewRBEntityManagement implements INewRBEntityManagement {
         return new NewRBEntity(node, schema);
     }
 
-
 	@Override
 	public List<IRBEntity> findAll(final ResourceID id) {
 		// TODO Auto-generated method stub

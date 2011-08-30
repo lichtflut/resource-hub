@@ -10,7 +10,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -112,7 +111,7 @@ public final class CKBehaviorTest extends TestCase{
 		}
 
 		@Override
-		public RBServiceProvider getServiceProvider(){
+		public INewRBServiceProvider getServiceProvider(){
 			return null;
 		}
 
@@ -139,12 +138,6 @@ public final class CKBehaviorTest extends TestCase{
 		protected void initComponent(final CKValueWrapperModel model) {
 
 		}
-
-		@Override
-		public INewRBServiceProvider getNewServiceProvider() {
-			return null;
-		}
-
 	}
 
 }

@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 
 /**
@@ -175,16 +174,9 @@ public abstract class CKComponent extends Panel {
 	/**
 	 * Returns ServiceProvider.
 	 * This method musst be overridden.
-	 * @return An instance of {@link RBServiceProvider}
+	 * @return An instance of {@link INewRBServiceProvider}
 	 */
-	public abstract RBServiceProvider getServiceProvider();
-
-	/**
-	 * Returns ServiceProvider.
-	 * This method musst be overridden.
-	 * @return An instance of {@link RBServiceProvider}
-	 */
-	public abstract INewRBServiceProvider getNewServiceProvider();
+	public abstract INewRBServiceProvider getServiceProvider();
 
 	// -----------------------------------------------------
 

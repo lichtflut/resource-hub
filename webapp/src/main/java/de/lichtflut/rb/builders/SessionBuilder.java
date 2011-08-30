@@ -7,8 +7,8 @@ package de.lichtflut.rb.builders;
 //import javax.enterprise.inject.Produces;
 //import javax.inject.Inject;
 
-import de.lichtflut.rb.core.spi.RBServiceProvider;
-import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
+import de.lichtflut.rb.core.mock.MockRBServiceProvider;
+import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 
 /**
  * <p>
@@ -16,7 +16,7 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
  * The own time to live is the same as the user's session- one.
  * It builds instance of:
  * <ul>
- * <li>{@link RBServiceProvider}</li>
+ * <li>{@link INewRBServiceProvider}</li>
  * </ul>
  * </p>
  *
@@ -30,7 +30,7 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 public final class SessionBuilder {
 
 	//Members
-	private RBServiceProvider serviceProvider;
+	private INewRBServiceProvider serviceProvider;
 
 	// -----------------------------------------------------
 	//@Inject
@@ -47,7 +47,7 @@ public final class SessionBuilder {
 	 *
 	 */
 	private void init(){
-		this.serviceProvider = RBServiceProviderFactory.getDefaultServiceProvider();
+		this.serviceProvider = new MockRBServiceProvider();
 	}
 
 	// -----------------------------------------------------
@@ -55,7 +55,7 @@ public final class SessionBuilder {
 	/**
 	 *@return /
 	 */
-	public RBServiceProvider getServiceProvider() {
+	public INewRBServiceProvider getServiceProvider() {
 		return this.serviceProvider;
 	}
 

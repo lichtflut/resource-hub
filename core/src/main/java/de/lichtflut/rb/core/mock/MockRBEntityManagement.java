@@ -3,73 +3,50 @@
  */
 package de.lichtflut.rb.core.mock;
 
-import java.util.Collection;
+import java.util.List;
 
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.api.IRBEntityManagement;
+import de.lichtflut.rb.core.api.INewRBEntityManagement;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
  * <p>
- * This class provides static {@link IRBEntityManagement} for testing purposes.
+ * This class provides a static {@link INewRBEntityManagement} for testing purposes.
  * </p>
  * Created: Aug 18, 2011
  *
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class MockRBEntityManagement implements IRBEntityManagement {
+public class MockRBEntityManagement implements INewRBEntityManagement {
+
+	private List<IRBEntity> entities = MockNewRBEntityFactory.getListOfNewRBEntities();
 
 	@Override
-	public boolean createOrUpdateEntity(final IRBEntity instance) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public IRBEntity loadEntity(final QualifiedName qn) {
-		// TODO Auto-generated method stub
+	public IRBEntity find(final ResourceID resourceID) {
+		for (IRBEntity e : entities) {
+			if(e.getID().equals(resourceID)){
+				return e;
+			}
+		}
 		return null;
 	}
 
 	@Override
-	public IRBEntity loadEntity(final String nodeIdentifier) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<IRBEntity> findAll(final ResourceID id) {
+		return entities;
 	}
 
 	@Override
-	public IRBEntity loadEntity(final ResourceNode node) {
-		// TODO Auto-generated method stub
-		return null;
+	public IRBEntity store(final IRBEntity entity) {
+		entities.add(entity);
+		return entity;
 	}
 
 	@Override
-	public Collection<IRBEntity> loadAllEntitiesForSchema(
-			final Collection<ResourceSchema> schemas) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<IRBEntity> loadAllEntitiesForSchema(
-			final Collection<ResourceSchema> schemas, final String filter, final SearchContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<IRBEntity> loadAllEntitiesForSchema(final ResourceSchema schema) {
-		return MockNewRBEntityFactory.getListOfNewRBEntities();	}
-
-	@Override
-	public Collection<IRBEntity> loadAllEntitiesForSchema(
-			final ResourceSchema schema, final String filter, final SearchContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
+	public void delete(final IRBEntity entity) {
+		entities.remove(entity);
 	}
 
 }

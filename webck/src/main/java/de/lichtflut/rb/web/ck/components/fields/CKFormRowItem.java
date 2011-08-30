@@ -4,9 +4,10 @@
 package de.lichtflut.rb.web.ck.components.fields;
 
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
 
 import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.web.ck.components.CKComponent;
 
 /**
  * A RBFieldPanel represents a {@link IRBField}.
@@ -16,8 +17,9 @@ import de.lichtflut.rb.core.schema.model.IRBField;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class CKFormRowItem extends Panel {
+public abstract class CKFormRowItem extends CKComponent {
 
+	private IRBField field;
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
@@ -25,6 +27,13 @@ public class CKFormRowItem extends Panel {
 	 */
 	public CKFormRowItem(final String id, final IRBField field) {
 		super(id);
+		this.field = field;
+		buildComponent();
+	}
+
+
+	@Override
+	protected void initComponent(final CKValueWrapperModel model) {
 		this.setOutputMarkupId(true);
 		// Check if minOccur is one. If yes append '*'
 		if(field.getCardinality().getMinOccurs() == 1){
@@ -39,8 +48,14 @@ public class CKFormRowItem extends Panel {
 			add(new CKCheckBoxField("field", field));
 			break;
 		case RESOURCE:
-//			add(new CKDropDownChoice("field", field));
-			add(new ResourceField("field", field));
+			add(new ResourceField("field", field){
+				@Override
+				public INewRBServiceProvider getServiceProvider() {
+					return CKFormRowItem.this.getServiceProvider();
+				}
+				@Override
+				public CKComponent setViewMode(final ViewMode mode) {return null;}
+			});
 			break;
 		default:
 			add(new CKTextField("field", field));

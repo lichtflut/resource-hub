@@ -10,30 +10,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.api.RBEntityManagement;
+import de.lichtflut.rb.core.api.INewRBEntityManagement;
 import de.lichtflut.rb.core.api.ResourceSchemaManagement;
 import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
-import de.lichtflut.rb.core.api.impl.RBEntityManagementImpl;
 import de.lichtflut.rb.core.api.impl.ResourceSchemaManagementImpl;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 
 /**
- * Reference implementation of {@link RBServiceProvider}.
+ * Reference implementation of {@link INewRBServiceProvider}.
  * TODO: The rootContext of ArastrejuGate is used, this should be changed
  *
  * Created: Apr 28, 2011
  *
  * @author Nils Bleisch
  */
-public class DefaultRBServiceProvider implements RBServiceProvider {
+public class DefaultRBServiceProvider implements INewRBServiceProvider {
 
     private final Logger logger = LoggerFactory
             .getLogger(DefaultRBServiceProvider.class);
 
     private ArastrejuGate gate = null;
     private ResourceSchemaManagement schemaManagement = null;
-    private RBEntityManagement typeManagement = null;
-    private NewRBEntityManagement newTypeManagement = null;
+    private INewRBEntityManagement typeManagement = null;
 
     // --CONSTRUCTOR----------------------------------------
 
@@ -53,8 +51,7 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
         logger.info("Initializing Arastreju with profile: " + profile);
         gate = Arastreju.getInstance(profile).rootContext();
         schemaManagement = new ResourceSchemaManagementImpl(gate);
-        typeManagement = new RBEntityManagementImpl(gate);
-        newTypeManagement = new NewRBEntityManagement(gate);
+        typeManagement = new NewRBEntityManagement(gate);
     }
 
     // -----------------------------------------------------
@@ -83,16 +80,8 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
      *{@inheritDoc}
      */
     @Override
-    public RBEntityManagement getRBEntityManagement() {
+    public INewRBEntityManagement getRBEntityManagement() {
         return typeManagement;
-    }
-
-    /**
-     *
-     * @return -
-     */
-    public NewRBEntityManagement getNewRBEntityManagement() {
-        return newTypeManagement;
     }
 
 }
