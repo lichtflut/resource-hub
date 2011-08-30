@@ -6,12 +6,10 @@ package de.lichtflut.rb.web.ck.components;
 import java.util.Iterator;
 
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.web.components.fields.smart.AutoCompleteField;
 import de.lichtflut.rb.web.models.ReferencedEntityModel;
 
 /**
