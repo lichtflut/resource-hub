@@ -16,6 +16,7 @@ import org.apache.wicket.request.Response;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
+import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.web.models.ReferencedEntityModel;
 
 /**
@@ -29,6 +30,7 @@ public abstract class ResourcePicker extends CKComponent {
 
 	private static final long serialVersionUID = 1L;
 	private IModel<IRBEntity> entity;
+	private String inputSnippet = "";
 
 	// ------------------------------------------------------------
 
@@ -51,61 +53,33 @@ public abstract class ResourcePicker extends CKComponent {
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 		initModel(entity);
-//		@SuppressWarnings("unchecked")
-//		AutoCompleteTextField autoTextfield = new AutoCompleteTextField("inputField",
-//				new AbstractAutoCompleteRenderer<IRBEntity>() {
-//
-//			@Override
-//			protected void renderChoice(final IRBEntity object, final Response response,
-//					final String criteria) {
-//				response.write(getTextValue(object));
-//			}
-//
-//			@Override
-//			protected String getTextValue(final IRBEntity object) {
-//				String s = "";
-//				for (IRBField field : object.getAllFields()) {
-//					for (Object o : field.getFieldValues()) {
-//						if(o != null){
-//							s +=  (o.toString() + ", ");
-//						}
-//					}
-//				}
-//				return s;
-//			}
-//		}) {
-//			@Override
-//			protected Iterator getChoices(final String input) {
-//				System.out.println(entity.getObject().getRBMetaInfo().getSchemaID() + " -SchemaID");
-//				List<IRBEntity> entites = getServiceProvider().getRBEntityManagement()
-//					.findAll(entity.getObject().getRBMetaInfo().getSchemaID());
-//				return entites.iterator();
-//			}
-//		};
 		final List<IRBEntity> entites = getServiceProvider().getRBEntityManagement()
 		.findAll(entity.getObject().getRBMetaInfo().getSchemaID());
-
+		// Define Renderer for AutocompletTextField
 		IAutoCompleteRenderer<IRBEntity> inforenderer = new AbstractAutoCompleteRenderer<IRBEntity>() {
-
 			@Override
 			protected void renderChoice(final IRBEntity entity, final Response response,
 					final String criteria) {
-				response.write("<div style='float:left; color:red; '>");
+				String infoSnippetLabel = "";
+				for(IRBField field : entity.getAllFields()){
+					if(field.getFieldValues().toString().contains(inputSnippet)){
+						infoSnippetLabel = field.getLabel() + ": " + field.getFieldValues();
+						break;
+					}
+				}
+				response.write("<div class='resource-picker-value'>");
 				response.write(entity.getID().toString());
-				response.write("</div><div style='text-align:right; width:100%;'>");
-				response.write(entity.getRBMetaInfo().getSchemaID().toString());
+				response.write("</div><div class='resource-picker-info'>");
+				response.write(infoSnippetLabel);
 				response.write("</div>");
 			}
-
 			@Override
 			protected String getTextValue(final IRBEntity entity) {
 				return entity.getID().toString();
 			}
 		};
-
 		TextField<IRBEntity> autoTextfield = new AutoCompleteTextField<IRBEntity>("inputField",
 				(IModel<IRBEntity>) getDefaultModel(), inforenderer) {
-
 			@Override
 			protected Iterator<IRBEntity> getChoices(final String input) {
 				List<IRBEntity> entityList = new ArrayList<IRBEntity>();
@@ -116,28 +90,11 @@ public abstract class ResourcePicker extends CKComponent {
 						entityList.add(s);
 					}
 				}
+				inputSnippet = input;
 			return entityList.iterator();
 			}
 		};
-
-//			new TextField<IRBEntity>("inputField", (IModel<IRBEntity>) getDefaultModel());
-//		autoTextfield.add(new AutoCompleteBehavior(new StringAutoCompleteRenderer()){
-//
-//			@Override
-//			protected Iterator getChoices(final String input) {
-//				List<IRBEntity> entityList = new ArrayList<IRBEntity>();
-//				Iterator i = entites.iterator();
-//				while(i.hasNext()){
-//					IRBEntity s = (IRBEntity) i.next();
-//					if(s.toString().contains(input)){
-//						entityList.add(s);
-//					}
-//				}
-//			return entityList.iterator();
-//			}
-//		});
 		add(autoTextfield);
-
 	}
 
 	// ------------------------------------------------------------

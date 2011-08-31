@@ -849,3 +849,11 @@ div.schema-submit-panel textarea {
 .resource-picker-input{
 	
 }
+.resource-picker-info{
+	text-align:right;
+	width:100%;
+}
+.resource-picker-value{
+	float:left;
+	color:red; 	
+}
