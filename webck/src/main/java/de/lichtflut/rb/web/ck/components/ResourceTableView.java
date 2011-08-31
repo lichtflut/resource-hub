@@ -199,7 +199,10 @@ public abstract class ResourceTableView extends CKComponent {
 			IRBField field = (IRBField) item.getModelObject();
 			String output = "";
 			for (Object s : field.getFieldValues()) {
-				output += s;
+				if(s == null){
+					s = "";
+				}
+				output = output.concat(s.toString());
 			}
 			if (getBehavior(ADD_CUSTOM_ROW_ITEM) != null) {
 				item.add((Component) getBehavior(ADD_CUSTOM_ROW_ITEM).execute(

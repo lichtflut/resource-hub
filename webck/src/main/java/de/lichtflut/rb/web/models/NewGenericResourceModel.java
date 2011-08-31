@@ -80,7 +80,7 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 	@SuppressWarnings("unchecked")
 	private T convertStringToT(final String finalValue) {
 		if(value instanceof Boolean){
-				return (T) new Boolean(finalValue.toLowerCase());
+				return (T) Boolean.valueOf(finalValue.toLowerCase());
 		}
 		return (T) value;
 	}

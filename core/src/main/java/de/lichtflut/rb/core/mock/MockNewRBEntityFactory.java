@@ -28,6 +28,7 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
  *
  * @author Ravi Knox
  */
+// CHECKSTYLE:OFF
 public final class MockNewRBEntityFactory {
 
 	private static final int MAX_AGE = 50;
@@ -50,6 +51,7 @@ public final class MockNewRBEntityFactory {
 	 *
 	 * @return Instance of {@link NewRBEntity}
 	 */
+	@SuppressWarnings("deprecation")
 	public static NewRBEntity createNewRBEntity() {
 		int age = getRandomNumer(MAX_AGE);
 		List<List<Object>> list = new ArrayList<List<Object>>();
@@ -85,6 +87,7 @@ public final class MockNewRBEntityFactory {
 	 *
 	 * @return Instance of {@link NewRBEntity}
 	 */
+	@SuppressWarnings("deprecation")
 	public static NewRBEntity createComplexNewRBEntity() {
 		ResourceSchema schema = createComplexPersonSchema();
 		List<List<Object>> list = new ArrayList<List<Object>>();
@@ -140,6 +143,7 @@ public final class MockNewRBEntityFactory {
 	 * return a list of {@link IRBEntity}.
 	 * @return -
 	 */
+	@SuppressWarnings("deprecation")
 	public static List<IRBEntity> getListOfNewRBEntities(){
 		List<IRBEntity> list = new ArrayList<IRBEntity>();
 		list.add(createComplexNewRBEntity(new Date(1956, 03, 12), "nr1@google.com", 42,
@@ -195,6 +199,7 @@ public final class MockNewRBEntityFactory {
 	 * @param schema -
 	 * @return NewRBEntity
 	 */
+	@SuppressWarnings("deprecation")
 	private static NewRBEntity createChildlessComplexPerson(
 			final ResourceSchema schema) {
 		List<List<Object>> list = new ArrayList<List<Object>>();
