@@ -5,10 +5,13 @@ package de.lichtflut.rb.core.schema.model.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.naming.QualifiedName;
@@ -96,6 +99,10 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * according to the values present in the Entity itself.
 	 */
 	private void initializeFields() {
+		final Set<ResourceID> predicates = new HashSet<ResourceID>();
+		for(Association current : node.getAssociations()) {
+			predicates.add(current.getPredicate());
+		}
 		fields = new ArrayList<IRBField>();
 		if (schema == null) {
 			// TODO: implement
@@ -103,10 +110,17 @@ public class NewRBEntity implements IRBEntity, Serializable {
 					"Only RBEntites with RBSchemas are supported!");
 		} else {
 			for (PropertyAssertion assertion : schema.getPropertyAssertions()) {
+				final ResourceID predicate = assertion
+					.getPropertyDeclaration().getIdentifier();
 				fields.add(new RBField(assertion, node
-						.getAssociationClients(assertion
-								.getPropertyDeclaration().getIdentifier())));
+						.getAssociationClients(predicate)));
+				predicates.remove(predicate);
 			}
+		}
+		// TODO: Remove from blacklist rdf(s):*
+		for (ResourceID predicate : predicates) {
+			fields.add(new RBField(predicate, node
+					.getAssociationClients(predicate)));
 		}
 	}
 
@@ -125,6 +139,22 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	@Override
 	public QualifiedName getQualifiedName() {
 		return node.getQualifiedName();
+	}
+
+
+	@Override
+	public String getLabel() {
+		return getField(LABEL).getFieldValues().toString();
+	}
+
+	@Override
+	public String getShortDescription() {
+		return getField(DESCRIPTION).getFieldValues().toString();
+	}
+
+	@Override
+	public String getRelativeImagePath() {
+		return getField(IMAGE_PATH).getFieldValues().toString();
 	}
 
 	/**
@@ -165,6 +195,14 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	}
 
 	/**
+	 * Returns this RBEntity as a {@link ResourceNode}.
+	 * @return this RBEntity as a {@link ResourceNode}
+	 */
+	ResourceNode getNode(){
+		return node;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -179,5 +217,4 @@ public class NewRBEntity implements IRBEntity, Serializable {
 		}
 		return s;
 	}
-
 }

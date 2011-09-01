@@ -17,6 +17,9 @@ import org.arastreju.sge.naming.QualifiedName;
  */
 public interface IRBEntity {
 
+	String LABEL = "de.lichtflut.core.rb.entity.header";
+	String IMAGE_PATH = "de.lichtflut.core.rb.entity.imagepath";
+	String DESCRIPTION = "de.lichtflut.core.rb.entity.description";
 	/**
 	 * Returns the {@link ResourceID} of this node/Entity.
 	 * @return - {@link ResourceID}
@@ -28,6 +31,27 @@ public interface IRBEntity {
 	 * @return - Entities qualified name
 	 */
 	QualifiedName getQualifiedName();
+
+	/**
+	 * Returns a Label for this {@link IRBEntity}.
+	 * It may consist of various {@link IRBField}s.
+	 * It does not have to be unique.
+	 * @return {@link String} representation for this {@link IRBEntity}
+	 */
+	String getLabel();
+
+	/**
+	 * Returns a short description for this {@link IRBEntity}.
+	 * It may consist of various {@link IRBField}s.
+	 * @return a short description for this {@link IRBEntity}
+	 */
+	String getShortDescription();
+
+	/**
+	 * Returns the relative path to this {@link IRBEntity}'s image file.
+	 * @return the relative path to this {@link IRBEntity}'s image file
+	 */
+	String getRelativeImagePath();
 
 	/**
 	 * Returns the {@link IRBField} for a Fieldname.
@@ -55,6 +79,8 @@ public interface IRBEntity {
 	 * @return - {@link IRBMetaInfo}
 	 */
 	IRBMetaInfo getRBMetaInfo();
+
+	// ------------------------------------------------------------
 
 	/**
 	 * String representation of this RBEntity.

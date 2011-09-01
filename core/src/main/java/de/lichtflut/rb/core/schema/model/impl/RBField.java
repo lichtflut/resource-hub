@@ -5,10 +5,12 @@ package de.lichtflut.rb.core.schema.model.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
@@ -27,6 +29,7 @@ import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 public class RBField implements IRBField, Serializable {
 
 	private PropertyAssertion assertion;
+	private ResourceID predicate;
 	private List<Object> values;
 	private boolean isKnownToSchema;
 
@@ -44,7 +47,23 @@ public class RBField implements IRBField, Serializable {
 			this.isKnownToSchema = true;
 		}
 		this.values = new ArrayList<Object>();
-		this.values.addAll(values);
+		if(values != null){
+			this.values.addAll(values);
+		}
+	}
+
+	/**
+	 * Constructor.
+	 * @param predicate - the predicate
+	 * @param values - values of this field
+	 */
+	public RBField(final ResourceID predicate, final Set<SemanticNode> values) {
+		this.predicate = predicate;
+		this.isKnownToSchema = false;
+		this.values = new ArrayList<Object>();
+		if(values != null){
+			this.values.addAll(values);
+		}
 	}
 
 	//------------------------------------------------------------
@@ -56,7 +75,11 @@ public class RBField implements IRBField, Serializable {
 
 	@Override
 	public String getLabel() {
-		return assertion.getPropertyDeclaration().getName();
+		if (isKnownToSchema) {
+			return assertion.getPropertyDeclaration().getName();
+		} else {
+			return predicate.getName();
+		}
 	}
 
 	@Override
@@ -71,12 +94,20 @@ public class RBField implements IRBField, Serializable {
 
 	@Override
 	public ElementaryDataType getDataType() {
-		return assertion.getPropertyDeclaration().getElementaryDataType();
+		if (assertion != null) {
+			return assertion.getPropertyDeclaration().getElementaryDataType();
+		} else {
+			return ElementaryDataType.STRING;
+		}
 	}
 
 	@Override
 	public Cardinality getCardinality() {
-		return assertion.getCardinality();
+		if (assertion != null) {
+			return assertion.getCardinality();
+		} else {
+			return CardinalityBuilder.hasOptionalOneToMany();
+		}
 	}
 
 	@Override
@@ -86,12 +117,20 @@ public class RBField implements IRBField, Serializable {
 
 	@Override
 	public boolean isResourceReference() {
-		return assertion.getPropertyDeclaration().isResourceReference();
+		if (assertion != null) {
+			return assertion.getPropertyDeclaration().isResourceReference();
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	public Set<Constraint> getConstraints() {
-		return assertion.getConstraints();
+		if (assertion != null) {
+			return assertion.getPropertyDeclaration().getConstraints();
+		} else {
+			return Collections.emptySet();
+		}
 	}
 
 	// -----------------------------------------------------
