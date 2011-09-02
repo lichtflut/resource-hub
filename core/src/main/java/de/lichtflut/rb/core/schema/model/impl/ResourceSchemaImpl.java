@@ -13,7 +13,6 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.VoidNamespace;
 
-import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.LabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.RBEntity;
@@ -35,13 +34,15 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public final class ResourceSchemaImpl implements ResourceSchema{
+public final class ResourceSchemaImpl implements ResourceSchema {
 
 	//Instance members
 	private ResourceID internalResource;
 	private ResourceID describedResource;
 	//LinkedList is chosen because it's more flexible compared to an index-driven list
 	private final List<PropertyAssertion> propertyList = new LinkedList<PropertyAssertion>();
+	
+	private LabelBuilder labelBuilder = LabelBuilder.DEFAULT;
 
 	// -----------------------------------------------------
 
@@ -52,7 +53,7 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	 * This is the default constructor.
 	 * </p>
 	 */
-	public ResourceSchemaImpl(){
+	public ResourceSchemaImpl() {
 		//Generates a SimpleResourceID instance with an random UUID for namespace and identifier each
 		this.describedResource = new SimpleResourceID(
 				UUID.randomUUID().toString(),
@@ -68,7 +69,7 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	 * </p>
 	 * @param id - the internal ResourceID
 	 */
-	public ResourceSchemaImpl(final ResourceID id){
+	public ResourceSchemaImpl(final ResourceID id) {
 		this.internalResource = id;
 	}
 
@@ -185,9 +186,7 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	@Override
 	public int hashCode(){
 		return super.hashCode();
-
 	}
-
 
 	// -----------------------------------------------------
 
@@ -227,6 +226,14 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	public void setDescribedResourceID(final ResourceID id) {
 		this.describedResource = id;
 	}
+	
+	/**
+	 * Set the {@link LabelBuilder}.
+	 * @param labelBuilder the labelBuilder to set
+	 */
+	public void setLabelBuilder(final LabelBuilder labelBuilder) {
+		this.labelBuilder = labelBuilder;
+	}
 
 	// -----------------------------------------------------
 
@@ -243,12 +250,7 @@ public final class ResourceSchemaImpl implements ResourceSchema{
 	 */
 	@Override
 	public LabelBuilder getLabelBuilder() {
-		return new LabelBuilder() {
-			@Override
-			public String build(final IRBEntity entity) {
-				return entity.toString();
-			}
-		};
+		return labelBuilder;
 	}
 
 

@@ -16,11 +16,20 @@ package de.lichtflut.rb.core.schema.model;
  */
 public interface LabelBuilder {
 
+	final LabelBuilder DEFAULT = new DefaultBuilder();
+	
 	/**
-	 * TODO: DESCRIPTION.
-	 * @param entity -
-	 * @return -
+	 * Builds a label for the given entity.
+	 * @param entity The entity to be labeled.
+	 * @return The entitie's label.
 	 */
 	String build(IRBEntity entity);
+	
+	public static class DefaultBuilder implements LabelBuilder {
+		@Override
+		public String build(IRBEntity entity) {
+			return entity.toString();
+		}
+	}
 
 }
