@@ -60,17 +60,17 @@ public abstract class ResourcePicker extends CKComponent {
 			@Override
 			protected void renderChoice(final IRBEntity entity, final Response response,
 					final String criteria) {
-				String infoSnippetLabel = "";
+				String popupInfo = "";
 				for(IRBField field : entity.getAllFields()){
 					if(field.getFieldValues().toString().contains(inputSnippet)){
-						infoSnippetLabel = field.getLabel() + ": " + field.getFieldValues();
+						popupInfo = field.getLabel() + ": " + field.getFieldValues();
 						break;
 					}
 				}
 				response.write("<div class='resource-picker-value'>");
 				response.write(entity.getID().toString());
 				response.write("</div><div class='resource-picker-info'>");
-				response.write(infoSnippetLabel);
+				response.write(popupInfo);
 				response.write("</div>");
 			}
 			@Override
@@ -94,6 +94,7 @@ public abstract class ResourcePicker extends CKComponent {
 			return entityList.iterator();
 			}
 		};
+		autoTextfield.setType(ResourceID.class);
 		add(autoTextfield);
 	}
 

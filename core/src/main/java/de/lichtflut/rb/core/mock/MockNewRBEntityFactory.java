@@ -7,8 +7,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
@@ -105,9 +109,13 @@ public final class MockNewRBEntityFactory {
 		list.add(ageList);
 		list.add(childrenList);
 		int counter = 0;
-		NewRBEntity entity = new NewRBEntity(schema);
+		SNResource node = new SNResource();
+		SNOPS.associate(node, Aras.HAS_MIDDLE_NAME, new SNText("H."));
+		NewRBEntity entity = new NewRBEntity(node, schema);
 		for (IRBField field : entity.getAllFields()) {
-			field.setFieldValues(list.get(counter));
+			if (counter < list.size()) {
+				field.setFieldValues(list.get(counter));
+			}
 			counter++;
 		}
 		return entity;

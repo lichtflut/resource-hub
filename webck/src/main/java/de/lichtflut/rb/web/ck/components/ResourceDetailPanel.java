@@ -18,6 +18,7 @@ import org.arastreju.sge.model.nodes.views.SNEntity;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.impl.RBField;
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.web.ck.components.fields.CKFormRowItem;
@@ -76,7 +77,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target,final Form<?> form) {
 				final SNEntity snEntity = new SNEntity();
-				IRBField field = new RBField(null, new HashSet<SemanticNode>(){{add(snEntity);}});
+				IRBField field = new RBField((PropertyAssertion)null, new HashSet<SemanticNode>(){{add(snEntity);}});
 				entity.addField(field);
 				view.add(new KeyValueField(view.newChildId(), field));
 				form.add(view);
