@@ -6,6 +6,7 @@ package de.lichtflut.rb.web.ck.components;
 import java.util.HashSet;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
@@ -130,20 +131,47 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		 */
 		public KeyValueField(final String id, final IRBEntity entity){
 			super(id);
-			int index = (entity.getAllFields().size());
 			WebMarkupContainer container = new WebMarkupContainer("container");
-			index++;
-			String predicate = "";
-			String value = "";
-			TextField<String> predicateTextField = new TextField<String>("key", Model.of(predicate));
-			TextField<String> valuetextField = new TextField<String>("value", Model.of(value));
-			container.add(predicateTextField);
-			container.add(valuetextField);
+			final TextField<String> predicate = new TextField<String>("key", Model.of(""));
+			final TextField<String> value = new TextField<String>("value", Model.of(""));
+			predicate.add(new AjaxFormComponentUpdatingBehavior("onBlur") {
+
+				@Override
+				protected void onUpdate(final AjaxRequestTarget target) {
+					if(!value.getModelObject().equals("")){
+						addRBField(predicate.getModelObject(), value.getModelObject());
+					}
+				}
+			});
+			value.add(new AjaxFormComponentUpdatingBehavior("onBlur") {
+
+				@Override
+				protected void onUpdate(final AjaxRequestTarget target) {
+					if(!value.getModelObject().equals("")){
+						addRBField(predicate.getModelObject(), value.getModelObject());
+
+					}
+				}
+			});
+//			HashSet<SemanticNode> values = new HashSet<SemanticNode>();
+//			values.add(new SNValue(ElementaryDataType.STRING, value));
+//			IRBField field = new RBField(new SimpleResourceID(predicate), values);
+//			entity.addField(field);
+			container.add(predicate);
+			container.add(value);
+			add(container);
+		}
+
+		/**
+		 * Add an {@link IRBField} to the existing {@link IRBEntity}.
+		 * @param predicate - Predicate of the new {@link IRBField}
+		 * @param value - Value of the new {@link IRBField}
+		 */
+		private void addRBField(final String predicate, final String value){
 			HashSet<SemanticNode> values = new HashSet<SemanticNode>();
 			values.add(new SNValue(ElementaryDataType.STRING, value));
 			IRBField field = new RBField(new SimpleResourceID(predicate), values);
 			entity.addField(field);
-			add(container);
 		}
 	}
 }
