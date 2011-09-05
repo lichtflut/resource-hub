@@ -7,7 +7,10 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -70,7 +73,8 @@ public abstract class ResourceField extends CKComponent {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private ResourcePicker createResourcePicker(final int i){
-		ResourcePicker picker = new ResourcePicker(view.newChildId(), new NewGenericResourceModel(field, i), field){
+		ResourcePicker picker = new ResourcePicker(view.newChildId(), new NewGenericResourceModel(field, i),
+				extractTypeConstraint(field)){
 			@Override
 			public INewRBServiceProvider getServiceProvider() {
 				return ResourceField.this.getServiceProvider();
@@ -82,5 +86,21 @@ public abstract class ResourceField extends CKComponent {
 		};
 		picker.setOutputMarkupId(true);
 		return picker;
+	}
+
+	/**
+	 * Extracts the resourceTypeConstraint of this {@link IRBField}.
+	 * @param field - IRBField
+	 * @return the resourceTypeConstraint as an {@link ResourceID}
+	 */
+	private ResourceID extractTypeConstraint(final IRBField field) {
+		if(field.getDataType().equals(ElementaryDataType.RESOURCE)){
+			for (Constraint c : field.getConstraints()) {
+				if(c.isResourceTypeConstraint()){
+					return c.getResourceTypeConstraint().asResource();
+				}
+			}
+		}
+		return null;
 	}
 }
