@@ -41,7 +41,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	private ResourceID describedResource;
 	//LinkedList is chosen because it's more flexible compared to an index-driven list
 	private final List<PropertyAssertion> propertyList = new LinkedList<PropertyAssertion>();
-	
+
 	private LabelBuilder labelBuilder = LabelBuilder.DEFAULT;
 
 	// -----------------------------------------------------
@@ -226,7 +226,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	public void setDescribedResourceID(final ResourceID id) {
 		this.describedResource = id;
 	}
-	
+
 	/**
 	 * Set the {@link LabelBuilder}.
 	 * @param labelBuilder the labelBuilder to set
@@ -240,6 +240,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public RBEntity<Object> generateRBEntity() {
 		return new RBEntityImpl(this);

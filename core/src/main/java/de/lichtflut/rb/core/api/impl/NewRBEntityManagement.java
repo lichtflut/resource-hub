@@ -59,12 +59,6 @@ public class NewRBEntityManagement implements INewRBEntityManagement {
         return new NewRBEntity(node, schema);
     }
 
-	@Override
-	public List<IRBEntity> findAll(final ResourceID id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
     @Override
     public IRBEntity store(final IRBEntity entity) {
 
@@ -97,6 +91,12 @@ public class NewRBEntityManagement implements INewRBEntityManagement {
 	@Override
 	public void delete(final IRBEntity entity) {
 		throw new NotYetImplementedException();
+	}
+
+	@Override
+	public List<IRBEntity> findAllByType(final ResourceID type) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

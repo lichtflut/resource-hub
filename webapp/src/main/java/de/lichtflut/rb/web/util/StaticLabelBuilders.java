@@ -21,7 +21,12 @@ import de.lichtflut.rb.web.metamodel.WSConstants;
  *
  * @author Oliver Tigges
  */
-public class StaticLabelBuilders {
+public final class StaticLabelBuilders {
+
+	/**
+	 * Private Constructor.
+	 */
+	private StaticLabelBuilders(){}
 
 	/**
 	 * Get the label builder for persons.
@@ -30,12 +35,12 @@ public class StaticLabelBuilders {
 	public static LabelBuilder forPerson() {
 		return new LabelBuilder() {
 			@Override
-			public String build(IRBEntity entity) {
+			public String build(final IRBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_FORENAME, WSConstants.HAS_SURNAME);
 			}
 		};
 	}
-	
+
 	/**
 	 * Get the label builder for organizations.
 	 * @return The organization label builder.
@@ -43,12 +48,12 @@ public class StaticLabelBuilders {
 	public static LabelBuilder forOrganization() {
 		return new LabelBuilder() {
 			@Override
-			public String build(IRBEntity entity) {
+			public String build(final IRBEntity entity) {
 				return entity.toString();
 			}
 		};
 	}
-	
+
 	/**
 	 * Get the label builder for addresses.
 	 * @return The address label builder.
@@ -56,12 +61,12 @@ public class StaticLabelBuilders {
 	public static LabelBuilder forAddress() {
 		return new LabelBuilder() {
 			@Override
-			public String build(IRBEntity entity) {
+			public String build(final IRBEntity entity) {
 				return entity.toString();
 			}
 		};
 	}
-	
+
 	/**
 	 * Get the label builder for projects.
 	 * @return The project label builder.
@@ -69,12 +74,12 @@ public class StaticLabelBuilders {
 	public static LabelBuilder forProject() {
 		return new LabelBuilder() {
 			@Override
-			public String build(IRBEntity entity) {
+			public String build(final IRBEntity entity) {
 				return entity.toString();
 			}
 		};
 	}
-	
+
 	/**
 	 * Get the label builder for cities.
 	 * @return The city label builder.
@@ -82,30 +87,40 @@ public class StaticLabelBuilders {
 	public static LabelBuilder forCity() {
 		return new LabelBuilder() {
 			@Override
-			public String build(IRBEntity entity) {
+			public String build(final IRBEntity entity) {
 				return entity.toString();
 			}
 		};
 	}
-	
+
 	// -----------------------------------------------------
-	
-	private static String getLabel(IRBEntity entity, ResourceID... predicates) {
+
+	/**
+	 * TODO: DESCRIPTION.
+	 * @param entity -
+	 * @param predicates -
+	 * @return -
+	 */
+	private static String getLabel(final IRBEntity entity, final ResourceID... predicates) {
 		final StringBuilder sb = new StringBuilder();
 		for(ResourceID predicate : predicates) {
 			append(sb, entity, predicate);
 		}
 		return sb.toString().trim();
 	}
-	
-	private static void append(StringBuilder sb, IRBEntity entity, ResourceID predicate) {
+
+	/**
+	 * TODO: DESCRIPTION.
+	 * @param sb -
+	 * @param entity -
+	 * @param predicate -
+	 */
+	private static void append(final StringBuilder sb, final IRBEntity entity, final ResourceID predicate) {
 		final IRBField field = entity.getField(predicate.getQualifiedName().toURI());
 		for (Object value : field.getFieldValues()) {
 			sb.append(value);
 			sb.append(" ");
 		}
 	}
-	
 
-	
 }

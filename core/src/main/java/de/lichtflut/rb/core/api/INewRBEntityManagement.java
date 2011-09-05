@@ -26,11 +26,11 @@ public interface INewRBEntityManagement extends Serializable {
     IRBEntity find(ResourceID resourceID);
 
     /**
-     * Finds all {@link IRBEntity}s for a given ResourceSchema.
-     * @param id - id of the ResourceSchema
+     * Finds all {@link IRBEntity}s for a given type.
+     * @param type - id of the Resourcetype
      * @return a list of {@link IRBEntity}
      */
-    List<IRBEntity> findAll(ResourceID id);
+    List<IRBEntity> findAllByType(ResourceID type);
 
     /**
      *

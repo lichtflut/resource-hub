@@ -34,13 +34,19 @@ public class MockRBEntityManagement implements INewRBEntityManagement {
 	}
 
 	@Override
-	public List<IRBEntity> findAll(final ResourceID id) {
+	public List<IRBEntity> findAllByType(final ResourceID id) {
 		return entities;
 	}
 
 	@Override
 	public IRBEntity store(final IRBEntity entity) {
-		entities.add(entity);
+		if(entities.contains(entity)){
+			entities.remove(entity);
+			entities.add(entity);
+
+		}else{
+			entities.add(entity);
+		}
 		return entity;
 	}
 

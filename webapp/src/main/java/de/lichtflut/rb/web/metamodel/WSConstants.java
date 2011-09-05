@@ -18,7 +18,7 @@ import org.arastreju.sge.model.SimpleResourceID;
  * @author Oliver Tigges
  */
 public interface WSConstants {
-	
+
 	String NAMESPACE_URI = "http://lichtflut.de#";
 
 	ResourceID HAS_FORENAME = new SimpleResourceID(NAMESPACE_URI, "Vorname");

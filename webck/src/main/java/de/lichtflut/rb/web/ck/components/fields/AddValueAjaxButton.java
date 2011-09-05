@@ -53,7 +53,6 @@ public abstract class AddValueAjaxButton extends Panel {
 			}
 
 		};
-
 		add(button);
 		button.setVisible(checkVisibility());
 		button.add(new Label("linkLabel", "(+)"));

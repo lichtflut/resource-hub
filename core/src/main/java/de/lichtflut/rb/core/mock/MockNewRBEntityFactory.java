@@ -10,6 +10,7 @@ import java.util.List;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNText;
@@ -36,7 +37,7 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 public final class MockNewRBEntityFactory {
 
 	private static final int MAX_AGE = 50;
-
+	private static ResourceID resID = createChildlessComplexPerson(createPersonSchema()).getID();
 	/**
 	 * Private Constructor.
 	 */
@@ -344,8 +345,9 @@ public final class MockNewRBEntityFactory {
 		p4.setElementaryDataType(ElementaryDataType.RESOURCE);
 
 		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
-		p4.addConstraint(ConstraintFactory.buildConstraint(schema
-				.getDescribedResourceID()));
+//		p4.addConstraint(ConstraintFactory.buildConstraint(schema
+//				.getDescribedResourceID()));
+		p4.addConstraint(ConstraintFactory.buildConstraint(resID));	
 
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasDateOfBirth"),

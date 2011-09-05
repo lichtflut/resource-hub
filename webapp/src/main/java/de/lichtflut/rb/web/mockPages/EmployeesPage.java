@@ -25,7 +25,7 @@ public class EmployeesPage extends RBSuperPage {
 	public EmployeesPage() {
 		super("Mock-Employees-View");
 		ResourceTableView view =
-			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getRBEntityManagement().findAll(null)){
+			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getRBEntityManagement().findAllByType(null)){
 			@Override
 			public INewRBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();

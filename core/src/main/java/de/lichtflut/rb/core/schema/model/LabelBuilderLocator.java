@@ -17,7 +17,7 @@ import org.arastreju.sge.model.ResourceID;
  * @author Oliver Tigges
  */
 public abstract class LabelBuilderLocator {
-	
+
 	/**
 	 * Locates the label builder for the given type.
 	 * @param type The resource type.

@@ -6,6 +6,7 @@ package de.lichtflut.rb.web.models;
 import java.util.List;
 
 import org.apache.wicket.model.IModel;
+import org.arastreju.sge.model.ElementaryDataType;
 
 import de.lichtflut.rb.core.schema.model.IRBField;
 
@@ -41,7 +42,13 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 		this.index = index;
 		values = field.getFieldValues();
 		if(index >= values.size()){
-			values.add("");
+			if(field.getDataType().equals(ElementaryDataType.STRING)){
+				values.add("");
+			}
+			if(field.getDataType().equals(ElementaryDataType.RESOURCE)){
+//				values.add(new NewRbnew SNResource());
+				System.out.println();
+			}
 		}else{
 			value = values.get(index);
 		}
@@ -55,7 +62,6 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 	@Override
 	public T getObject() {
 		T finalValue = null;
-
 		if(value instanceof String) {
 			finalValue = convertStringToT((String) value);
 		}else {

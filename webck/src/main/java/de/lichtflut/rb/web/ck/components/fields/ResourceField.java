@@ -51,9 +51,11 @@ public abstract class ResourceField extends CKComponent {
 		add(new AddValueAjaxButton("button", field) {
 			@Override
 			public void addField(final AjaxRequestTarget target, final Form<?> form) {
-				form.add(createResourcePicker(index++));
+				ResourcePicker picker = createResourcePicker(index++);
+				picker.setOutputMarkupId(true);
+				view.add(picker);
 				target.add(form);
-				target.focusComponent(form);
+				target.focusComponent(picker);
 			}
 		});
 	}

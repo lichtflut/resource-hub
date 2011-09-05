@@ -16,7 +16,6 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.IRBMetaInfo;
@@ -104,11 +103,6 @@ public class NewRBEntity implements IRBEntity, Serializable {
 			predicates.add(current.getPredicate());
 		}
 		fields = new ArrayList<IRBField>();
-		if (schema == null) {
-			// TODO: implement
-			throw new NotYetImplementedException(
-					"Only RBEntites with RBSchemas are supported!");
-		} else {
 			for (PropertyAssertion assertion : schema.getPropertyAssertions()) {
 				final ResourceID predicate = assertion
 					.getPropertyDeclaration().getIdentifier();
@@ -116,7 +110,6 @@ public class NewRBEntity implements IRBEntity, Serializable {
 						.getAssociationClients(predicate)));
 				predicates.remove(predicate);
 			}
-		}
 		// TODO: Remove from blacklist rdf(s):*
 		for (ResourceID predicate : predicates) {
 			fields.add(new RBField(predicate, node

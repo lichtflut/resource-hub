@@ -54,8 +54,9 @@ public abstract class ResourcePicker extends CKComponent {
 	protected void initComponent(final CKValueWrapperModel model) {
 		initModel(entity);
 		final List<IRBEntity> entites = getServiceProvider().getRBEntityManagement()
-		.findAll(entity.getObject().getRBMetaInfo().getSchemaID());
+		.findAllByType(entity.getObject().getID());
 		// Define Renderer for AutocompletTextField
+//		final List<IRBEntity> entites = MockNewRBEntityFactory.getListOfNewRBEntities();
 		IAutoCompleteRenderer<IRBEntity> inforenderer = new AbstractAutoCompleteRenderer<IRBEntity>() {
 			@Override
 			protected void renderChoice(final IRBEntity entity, final Response response,
