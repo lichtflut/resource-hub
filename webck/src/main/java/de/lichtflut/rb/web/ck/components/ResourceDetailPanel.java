@@ -13,12 +13,14 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.model.Model;
+import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.model.nodes.views.SNEntity;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.impl.RBField;
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.web.ck.components.fields.CKFormRowItem;
@@ -76,10 +78,14 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		form.add(new AjaxButton("addKeyValue") {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target,final Form<?> form) {
-				final SNEntity snEntity = new SNEntity();
-				IRBField field = new RBField((PropertyAssertion)null, new HashSet<SemanticNode>(){{add(snEntity);}});
-				entity.addField(field);
-				view.add(new KeyValueField(view.newChildId(), field));
+//				SNValue node = new SNValue(ElementaryDataType.STRING, "");
+//				HashSet<SemanticNode> set = new HashSet<SemanticNode>();
+//				set.add(node);
+//				IRBField field = new RBField(new SimpleResourceID("hatHaus"),set);
+//				SNOPS.associate(node, Aras.HAS_MIDDLE_NAME, new SNText("H."));
+//				IRBField field = new RBField((PropertyAssertion)null, new HashSet<SemanticNode>(){{add(snEntity);}});
+//				entity.addField(field);
+				view.add(new KeyValueField(view.newChildId(), entity));
 				form.add(view);
 				target.add(form);
 			}
@@ -114,6 +120,29 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 			index++;
 			container.add(new TextField<String>("key", new NewGenericResourceModel<String>(field, index)));
 			container.add(new TextField<String>("value", new NewGenericResourceModel<String>(field, index)));
+			add(container);
+		}
+
+		/**
+		 * Constructor.
+		 * @param id - wicket:id
+		 * @param entity - instance of {@link IRBField}
+		 */
+		public KeyValueField(final String id, final IRBEntity entity){
+			super(id);
+			int index = (entity.getAllFields().size());
+			WebMarkupContainer container = new WebMarkupContainer("container");
+			index++;
+			String predicate = "";
+			String value = "";
+			TextField<String> predicateTextField = new TextField<String>("key", Model.of(predicate));
+			TextField<String> valuetextField = new TextField<String>("value", Model.of(value));
+			container.add(predicateTextField);
+			container.add(valuetextField);
+			HashSet<SemanticNode> values = new HashSet<SemanticNode>();
+			values.add(new SNValue(ElementaryDataType.STRING, value));
+			IRBField field = new RBField(new SimpleResourceID(predicate), values);
+			entity.addField(field);
 			add(container);
 		}
 	}

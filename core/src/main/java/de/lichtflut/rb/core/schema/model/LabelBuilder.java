@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import java.io.Serializable;
+
 /**
  * <p>
  *  Builder for labels based on a resource's attributes.
@@ -29,7 +31,8 @@ public interface LabelBuilder {
 	 *
 	 * [TODO Insert description here.
 	 */
-	public static class DefaultBuilder implements LabelBuilder {
+	@SuppressWarnings("serial")
+	public static class DefaultBuilder implements LabelBuilder, Serializable {
 		@Override
 		public String build(final IRBEntity entity) {
 			return entity.toString();

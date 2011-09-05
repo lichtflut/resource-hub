@@ -70,7 +70,10 @@ public class RBField implements IRBField, Serializable {
 
 	@Override
 	public String getFieldName() {
+		if(isKnownToSchema){
 		return assertion.getPropertyDeclaration().getIdentifierString();
+		}
+		return predicate.toString();
 	}
 
 	@Override

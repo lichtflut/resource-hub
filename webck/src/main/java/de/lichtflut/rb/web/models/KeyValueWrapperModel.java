@@ -5,6 +5,7 @@ package de.lichtflut.rb.web.models;
 
 import org.apache.wicket.model.IModel;
 
+import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 
 /**
@@ -17,13 +18,22 @@ import de.lichtflut.rb.core.schema.model.IRBField;
 @SuppressWarnings("serial")
 public class KeyValueWrapperModel implements IModel<String> {
 
-
+	private IRBEntity entity;
 	/**
 	 * Constructor.
 	 * @param field - instance of {@link IRBField} which represents a Key-Value-Pair
 	 */
 	public KeyValueWrapperModel(final IRBField field){
 	}
+
+	/**
+	 * Constructor.
+	 * @param entity - instance of {@link IRBEntity} to which a new {@link IRBField} will be added.
+	 */
+	public KeyValueWrapperModel(final IRBEntity entity){
+		this.entity = entity;
+	}
+
 	@Override
 	public void detach() {
 		// Do nothing
@@ -31,8 +41,7 @@ public class KeyValueWrapperModel implements IModel<String> {
 
 	@Override
 	public String getObject() {
-		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
 
 	@Override

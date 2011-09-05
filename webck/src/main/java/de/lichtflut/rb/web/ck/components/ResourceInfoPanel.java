@@ -3,10 +3,6 @@
  */
 package de.lichtflut.rb.web.ck.components;
 
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.basic.MultiLineLabel;
-import org.apache.wicket.markup.html.image.Image;
-
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 
@@ -46,9 +42,6 @@ public class ResourceInfoPanel extends CKComponent {
 	 */
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
-		add(new Label("header", entity.getLabel()));
-		add(new MultiLineLabel("description", entity.getShortDescription()));
-		add(new Image("image", entity.getRelativeImagePath()));
 	}
 
 	/**

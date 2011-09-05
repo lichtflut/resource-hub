@@ -49,13 +49,13 @@ public class EmployeesPage extends RBSuperPage {
 //				return null;
 //			}
 //		});
-		view.addBehavior(ResourceTableView.DELETE_ROW_ITEM, new CKBehavior() {
-
-			@Override
-			public Object execute(final Object... objects) {
-				return null;
-			}
-		});
+//		view.addBehavior(ResourceTableView.DELETE_ROW_ITEM, new CKBehavior() {
+//
+//			@Override
+//			public Object execute(final Object... objects) {
+//				return null;
+//			}
+//		});
 		add(view);
 	}
 

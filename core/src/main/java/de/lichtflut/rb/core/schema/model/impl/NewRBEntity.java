@@ -137,17 +137,14 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	@Override
 	public String getLabel() {
-		return getField(LABEL).getFieldValues().toString();
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public String getShortDescription() {
-		return getField(DESCRIPTION).getFieldValues().toString();
-	}
-
-	@Override
-	public String getRelativeImagePath() {
-		return getField(IMAGE_PATH).getFieldValues().toString();
+	public ResourceID getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
@@ -210,4 +207,5 @@ public class NewRBEntity implements IRBEntity, Serializable {
 		}
 		return s;
 	}
+
 }

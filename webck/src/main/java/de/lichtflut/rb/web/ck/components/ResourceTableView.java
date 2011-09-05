@@ -274,6 +274,8 @@ public abstract class ResourceTableView extends CKComponent {
 				}
 			}
 			item.add(f);
+		}else if (item.getModelObject() == null) {
+				item.add(new Label("data", ""));
 		}
 	}
 
@@ -287,7 +289,8 @@ public abstract class ResourceTableView extends CKComponent {
 	private List<Object> sortFieldsForPresentation(final IRBEntity e) {
 		List<Object> fields = new ArrayList<Object>();
 		for (String s : tableHeader.keySet()) {
-			fields.add(e.getField(s));
+			IRBField field = e.getField(s);
+			fields.add(field);
 		}
 		return fields;
 	}
