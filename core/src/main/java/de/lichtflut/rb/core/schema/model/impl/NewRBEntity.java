@@ -103,17 +103,19 @@ public class NewRBEntity implements IRBEntity, Serializable {
 			predicates.add(current.getPredicate());
 		}
 		fields = new ArrayList<IRBField>();
-			for (PropertyAssertion assertion : schema.getPropertyAssertions()) {
-				final ResourceID predicate = assertion
-					.getPropertyDeclaration().getIdentifier();
-				fields.add(new RBField(assertion, node
-						.getAssociationClients(predicate)));
-				predicates.remove(predicate);
+		if (schema != null) {
+		for (PropertyAssertion assertion : schema.getPropertyAssertions()) {
+			final ResourceID predicate = assertion
+				.getPropertyDeclaration().getIdentifier();
+			fields.add(new RBField(assertion, node
+				.getAssociationClients(predicate)));
+			predicates.remove(predicate);
 			}
+		}
 		// TODO: Remove from blacklist rdf(s):*
 		for (ResourceID predicate : predicates) {
 			fields.add(new RBField(predicate, node
-					.getAssociationClients(predicate)));
+				.getAssociationClients(predicate)));
 		}
 	}
 

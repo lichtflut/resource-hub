@@ -13,8 +13,10 @@ import org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteR
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
+import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.web.models.ReferencedEntityModel;
@@ -31,20 +33,39 @@ public abstract class ResourcePicker extends CKComponent {
 	private static final long serialVersionUID = 1L;
 	private IModel<IRBEntity> entity;
 	private String inputSnippet = "";
+	private ResourceID type;
 
 	// ------------------------------------------------------------
 
 	/**
-	 * @param id The wicket ID.
-	 * @param entity The exitisting entity to be displayed.
+	 * @param id - The wicket ID.
+	 * @param entity - The existing entity to be displayed.
+	 * @param field - instance of {@link IRBField}
 	 */
-	public ResourcePicker(final String id, final IModel<IRBEntity> entity) {
+	public ResourcePicker(final String id, final IModel<IRBEntity> entity,final IRBField field) {
 		super(id);
 		this.entity = entity;
+		type = extractTypeConstraint(field);
 		buildComponent();
 	}
 
 	// ------------------------------------------------------------
+
+	/**
+	 * Extracts the resourceTypeConstraint of this {@link IRBField}.
+	 * @param field - IRBField
+	 * @return the resourceTypeConstraint as an {@link ResourceID}
+	 */
+	private ResourceID extractTypeConstraint(final IRBField field) {
+		if(field.getDataType().equals(ElementaryDataType.RESOURCE)){
+			for (Constraint c : field.getConstraints()) {
+				if(c.isResourceTypeConstraint()){
+					return c.getResourceTypeConstraint().asResource();
+				}
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -53,8 +74,7 @@ public abstract class ResourcePicker extends CKComponent {
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 		initModel(entity);
-		final List<IRBEntity> entites = getServiceProvider().getRBEntityManagement()
-		.findAllByType(entity.getObject().getID());
+		final List<IRBEntity> entites = getServiceProvider().getRBEntityManagement().findAllByType(type);
 		// Define Renderer for AutocompletTextField
 //		final List<IRBEntity> entites = MockNewRBEntityFactory.getListOfNewRBEntities();
 		IAutoCompleteRenderer<IRBEntity> inforenderer = new AbstractAutoCompleteRenderer<IRBEntity>() {

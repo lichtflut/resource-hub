@@ -8,7 +8,9 @@ import java.util.List;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.ElementaryDataType;
 
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
 
 /**
  * [TODO Insert description here.
@@ -46,8 +48,11 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 				values.add("");
 			}
 			if(field.getDataType().equals(ElementaryDataType.RESOURCE)){
-//				values.add(new NewRbnew SNResource());
-				System.out.println();
+				for (Constraint c : field.getConstraints()) {
+					if(c.isResourceTypeConstraint()){
+						values.add(new NewRBEntity(c.getResourceTypeConstraint().asResource()));
+					}
+				}
 			}
 		}else{
 			value = values.get(index);

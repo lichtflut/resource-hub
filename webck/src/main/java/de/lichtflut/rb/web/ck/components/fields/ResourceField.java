@@ -46,6 +46,9 @@ public abstract class ResourceField extends CKComponent {
 		while(index < field.getFieldValues().size()){
 			view.add(createResourcePicker(index++));
 		}
+		if(field.getFieldValues().size() <= 0){
+			view.add(createResourcePicker(index++));
+		}
 		container.add(view);
 		add(container);
 		add(new AddValueAjaxButton("button", field) {
@@ -67,7 +70,7 @@ public abstract class ResourceField extends CKComponent {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private ResourcePicker createResourcePicker(final int i){
-		ResourcePicker picker = new ResourcePicker(view.newChildId(), new NewGenericResourceModel(field, i)){
+		ResourcePicker picker = new ResourcePicker(view.newChildId(), new NewGenericResourceModel(field, i), field){
 			@Override
 			public INewRBServiceProvider getServiceProvider() {
 				return ResourceField.this.getServiceProvider();
