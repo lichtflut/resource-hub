@@ -286,9 +286,9 @@ public final class MockNewRBEntityFactory {
 		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
 		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
 		PropertyDeclarationImpl p4 = new PropertyDeclarationImpl();
-		p1.setName("http://lichtflut.de#geburtsdatum");
+		p1.setName("http://lichtflut.de#dateOfBirth");
 		p2.setName("http://lichtflut.de#email");
-		p3.setName("http://lichtflut.de#alter");
+		p3.setName("http://lichtflut.de#age");
 		p4.setName("http://lichtflut.de#badEyesight");
 
 		p1.setElementaryDataType(ElementaryDataType.DATE);

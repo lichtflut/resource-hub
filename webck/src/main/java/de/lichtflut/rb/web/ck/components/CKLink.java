@@ -35,15 +35,16 @@ public class CKLink extends CKComponent{
 	 * <p>
 	 * The following params will be parsed to the behavior in a well-defined order:
 	 * <ol>
-	 * 	<li>{@link Class}, the ck-components-class</li>
-	 * 	<li>String, the link label</li>
-	 * 	<li>Component, the ck-components-class</li>
+	 * 	<li>{@link CKL}, the ck-components-class</li>
+	 * 	<li>{@link String}, the link label</li>
+	 * 	<li>{@link CKComponent}, the ck-component parent-class</li>
 	 * </ol>
 	 * </p>
 	 */
 	public static final String ON_LINK_CLICK_BEHAVIOR = "de.lichtflut.web.ck.behavior.onClick";
 
-	private final AbstractLink link;
+	private AbstractLink link;
+	private String label;
 
 	/**
 	 * Constructor for External Link.
@@ -78,11 +79,7 @@ public class CKLink extends CKComponent{
 		link = new Link("link"){
 			@Override
 			public void onClick() {
-				if((getBehavior(ON_LINK_CLICK_BEHAVIOR) != null)){
-					getBehavior(ON_LINK_CLICK_BEHAVIOR).execute(this, label, getParent());
-				}else{
 					setResponsePage(cls);
-				}
 			}
 		};
 
@@ -106,11 +103,7 @@ public class CKLink extends CKComponent{
 		link = new Link("link"){
 			@Override
 			public void onClick() {
-				if((getBehavior(ON_LINK_CLICK_BEHAVIOR) != null)){
-					getBehavior(ON_LINK_CLICK_BEHAVIOR).execute(this, label, getParent());
-				}else{
 					setResponsePage(page);
-				}
 			}
 		};
 
@@ -146,25 +139,26 @@ public class CKLink extends CKComponent{
 	 */
 	public CKLink(final String id, final String label, final CKLinkType type){
 		super(id);
+		this.label = label;
 		if(type != CKLinkType.CUSTOM_BEHAVIOR){
 			throw new UnsupportedOperationException();
 		}
+		buildComponent();
+	}
+
+	@Override
+	protected void initComponent(final CKValueWrapperModel model) {
 		link = new Link("link") {
 			// TODO: add further infos of this obj for developers.
 			@Override
 			public void onClick() {
 				if((getBehavior(ON_LINK_CLICK_BEHAVIOR) != null)){
-					getBehavior(ON_LINK_CLICK_BEHAVIOR).execute(this, label, getParent());
+					getBehavior(ON_LINK_CLICK_BEHAVIOR).execute();
 				}
 			}
 		};
 		link.add(new Label("label", label));
 		add(link);
-	}
-
-	@Override
-	protected void initComponent(final CKValueWrapperModel model) {
-		// Do nothing
 	}
 
 	@Override

@@ -79,13 +79,6 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		form.add(new AjaxButton("addKeyValue") {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target,final Form<?> form) {
-//				SNValue node = new SNValue(ElementaryDataType.STRING, "");
-//				HashSet<SemanticNode> set = new HashSet<SemanticNode>();
-//				set.add(node);
-//				IRBField field = new RBField(new SimpleResourceID("hatHaus"),set);
-//				SNOPS.associate(node, Aras.HAS_MIDDLE_NAME, new SNText("H."));
-//				IRBField field = new RBField((PropertyAssertion)null, new HashSet<SemanticNode>(){{add(snEntity);}});
-//				entity.addField(field);
 				view.add(new KeyValueField(view.newChildId(), entity));
 				form.add(view);
 				target.add(form);
@@ -153,10 +146,6 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 					}
 				}
 			});
-//			HashSet<SemanticNode> values = new HashSet<SemanticNode>();
-//			values.add(new SNValue(ElementaryDataType.STRING, value));
-//			IRBField field = new RBField(new SimpleResourceID(predicate), values);
-//			entity.addField(field);
 			container.add(predicate);
 			container.add(value);
 			add(container);
