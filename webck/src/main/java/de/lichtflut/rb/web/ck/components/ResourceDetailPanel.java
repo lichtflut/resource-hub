@@ -43,6 +43,7 @@ import de.lichtflut.rb.web.models.NewGenericResourceModel;
 public abstract class ResourceDetailPanel extends CKComponent  {
 
 	private IRBEntity entity;
+
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
@@ -73,7 +74,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 					return ResourceDetailPanel.this.getServiceProvider();
 				}
 				@Override
-				public CKComponent setViewMode(final ViewMode mode) {return null;}
+				public CKComponent setViewMode(final ViewMode view) {return null;}
 			});
 		}
 		form.add(new AjaxButton("addKeyValue") {

@@ -33,6 +33,7 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 		add(new ResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createPerson()){
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {
+					this.setEnabled(false);
 				return null;
 			}
 			@Override
@@ -52,6 +53,7 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 		add(new ResourceDetailPanel("mockEmployee", entity){
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {
+				this.setEnabled(false);
 				return null;
 			}
 			@Override

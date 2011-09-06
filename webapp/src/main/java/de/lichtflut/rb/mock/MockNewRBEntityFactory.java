@@ -211,7 +211,6 @@ public final class MockNewRBEntityFactory {
 		list.add(memberList);
 		list.add(descriptionList);
 		int counter = 0;
-		System.out.println("MockNewRBEntityFactory.createOrganization() " + organizationSchema.getPropertyAssertions().size());
 		NewRBEntity entity = new NewRBEntity(createOrganisationSchema());
 		for (IRBField field : entity.getAllFields()) {
 			field.setFieldValues(list.get(counter));
@@ -530,6 +529,7 @@ public final class MockNewRBEntityFactory {
 		PropertyDeclarationImpl p5 = new PropertyDeclarationImpl();
 		p5.setName("http://lichtflut.de#CEO");
 		p5.setElementaryDataType(ElementaryDataType.RESOURCE);
+		p5.addConstraint(ConstraintFactory.buildConstraint(personSchema.getDescribedResourceID()));
 		PropertyAssertionImpl pa5 = new PropertyAssertionImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasCEO"), p5);
 		pa5.setCardinality(CardinalityBuilder.hasExcactlyOne());

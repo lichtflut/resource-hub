@@ -857,3 +857,8 @@ div.schema-submit-panel textarea {
 	float:left;
 	color:red; 	
 }
+
+form input.disabled{
+    background-color: #ffffff;
+    border: none;
+}
