@@ -8,8 +8,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import de.lichtflut.rb.core.mock.MockRBServiceProvider;
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.mock.MockRBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;

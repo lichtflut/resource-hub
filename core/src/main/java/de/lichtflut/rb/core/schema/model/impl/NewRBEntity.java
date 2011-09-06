@@ -139,8 +139,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	@Override
 	public String getLabel() {
-		// TODO Auto-generated method stub
-		return null;
+		return schema.getLabelBuilder().build(this);
 	}
 
 	@Override

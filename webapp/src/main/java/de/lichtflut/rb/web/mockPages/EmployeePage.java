@@ -5,9 +5,9 @@ package de.lichtflut.rb.web.mockPages;
 
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
-import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 import de.lichtflut.rb.web.ck.components.ResourceDetailPanel;

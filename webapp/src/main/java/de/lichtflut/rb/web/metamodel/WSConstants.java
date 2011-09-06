@@ -21,8 +21,8 @@ public interface WSConstants {
 
 	String NAMESPACE_URI = "http://lichtflut.de#";
 
-	ResourceID HAS_FORENAME = new SimpleResourceID(NAMESPACE_URI, "Vorname");
+	ResourceID HAS_FORENAME = new SimpleResourceID(NAMESPACE_URI, "Firstname");
 
-	ResourceID HAS_SURNAME = new SimpleResourceID(NAMESPACE_URI, "Nachname");
+	ResourceID HAS_SURNAME = new SimpleResourceID(NAMESPACE_URI, "Lastname");
 
 }

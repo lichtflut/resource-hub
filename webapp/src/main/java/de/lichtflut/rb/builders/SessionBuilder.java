@@ -7,8 +7,8 @@ package de.lichtflut.rb.builders;
 //import javax.enterprise.inject.Produces;
 //import javax.inject.Inject;
 
-import de.lichtflut.rb.core.mock.MockRBServiceProvider;
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.mock.MockRBServiceProvider;
 
 /**
  * <p>

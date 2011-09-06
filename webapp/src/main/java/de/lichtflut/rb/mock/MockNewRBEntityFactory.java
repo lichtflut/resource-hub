@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.mock;
+package de.lichtflut.rb.mock;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +24,7 @@ import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.web.util.StaticLabelBuilders;
 
 /**
  * <p>
@@ -96,15 +97,21 @@ public final class MockNewRBEntityFactory {
 	public static NewRBEntity createComplexNewRBEntity() {
 		ResourceSchema schema = createComplexPersonSchema();
 		List<List<Object>> list = new ArrayList<List<Object>>();
+		List<Object> firstName = new ArrayList<Object>();
+		List<Object> lastName = new ArrayList<Object>();
 		List<Object> emailList = new ArrayList<Object>();
 		List<Object> ageList = new ArrayList<Object>();
 		List<Object> dateOfBirth = new ArrayList<Object>();
 		List<Object> childrenList = new ArrayList<Object>();
+		firstName.add("Ravi");
+		lastName.add("Knox");
 		dateOfBirth.add(new Date(1985, 12, 23));
 		emailList.add("max@moritz.de");
 		emailList.add("chef@koch.de");
 		ageList.add(getRandomNumer(MAX_AGE));
 		childrenList.add(createChildlessComplexPerson(schema));
+		list.add(firstName);
+		list.add(lastName);
 		list.add(dateOfBirth);
 		list.add(emailList);
 		list.add(ageList);
@@ -178,17 +185,25 @@ public final class MockNewRBEntityFactory {
 	 * @param resource -
 	 * @return Instance of {@link NewRBEntity}
 	 */
+	@SuppressWarnings("deprecation")
 	private static NewRBEntity createComplexNewRBEntity(final Date date,final String email,final int age, final IRBEntity resource) {
 		ResourceSchema schema = createComplexPersonSchema();
 		List<List<Object>> list = new ArrayList<List<Object>>();
+		List<Object> firstName = new ArrayList<Object>();
+		List<Object> lastName = new ArrayList<Object>();
 		List<Object> emailList = new ArrayList<Object>();
 		List<Object> ageList = new ArrayList<Object>();
 		List<Object> dateOfBirth = new ArrayList<Object>();
 		List<Object> childrenList = new ArrayList<Object>();
-		dateOfBirth.add(date);
-		emailList.add(email);
-		ageList.add(age);
-		childrenList.add(resource);
+		firstName.add("Ravi");
+		lastName.add("Knox");
+		dateOfBirth.add(new Date(1985, 12, 23));
+		emailList.add("max@moritz.de");
+		emailList.add("chef@koch.de");
+		ageList.add(getRandomNumer(MAX_AGE));
+		childrenList.add(createChildlessComplexPerson(schema));
+		list.add(firstName);
+		list.add(lastName);
 		list.add(dateOfBirth);
 		list.add(emailList);
 		list.add(ageList);
@@ -329,46 +344,63 @@ public final class MockNewRBEntityFactory {
 	 */
 	private static ResourceSchema createComplexPersonSchema() {
 		ResourceSchemaImpl schema = new ResourceSchemaImpl(
-				"http://lichtflut.de#", "personschema");
+				"http://lichtflut.de#", "Person");
 		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
-		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
 		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
 		PropertyDeclarationImpl p4 = new PropertyDeclarationImpl();
-		p1.setName("http://lichtflut.de#dateOfBirth");
-		p2.setName("http://lichtflut.de#email");
-		p3.setName("http://lichtflut.de#age");
-		p4.setName("http://lichtflut.de#child");
+		PropertyDeclarationImpl p5 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p6 = new PropertyDeclarationImpl();
+		PropertyDeclarationImpl p7 = new PropertyDeclarationImpl();
+		p1.setName("http://lichtflut.de#Firstname");
+		p3.setName("http://lichtflut.de#Lastname");
+		p4.setName("http://lichtflut.de#dateOfBirth");
+		p5.setName("http://lichtflut.de#email");
+		p6.setName("http://lichtflut.de#age");
+		p7.setName("http://lichtflut.de#child");
 
-		p1.setElementaryDataType(ElementaryDataType.DATE);
-		p2.setElementaryDataType(ElementaryDataType.STRING);
-		p3.setElementaryDataType(ElementaryDataType.INTEGER);
-		p4.setElementaryDataType(ElementaryDataType.RESOURCE);
+		p1.setElementaryDataType(ElementaryDataType.STRING);
+		p3.setElementaryDataType(ElementaryDataType.STRING);
+		p4.setElementaryDataType(ElementaryDataType.DATE);
+		p5.setElementaryDataType(ElementaryDataType.STRING);
+		p6.setElementaryDataType(ElementaryDataType.INTEGER);
+		p7.setElementaryDataType(ElementaryDataType.RESOURCE);
 
-		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
+		p5.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
 //		p4.addConstraint(ConstraintFactory.buildConstraint(schema
 //				.getDescribedResourceID()));
 		p4.addConstraint(ConstraintFactory.buildConstraint(resID));	
 
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasDateOfBirth"),
+				new SimpleResourceID("http://lichtflut.de#", "hasFirstName"),
 				p1);
-		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasEmail"), p2);
 		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasAge"), p3);
+				new SimpleResourceID("http://lichtflut.de#", "hasLastname"),
+				p3);
 		PropertyAssertionImpl pa4 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasChildren"), p4);
+				new SimpleResourceID("http://lichtflut.de#", "hasDateOfBirth"),
+				p4);
+		PropertyAssertionImpl pa5 = new PropertyAssertionImpl(
+				new SimpleResourceID("http://lichtflut.de#", "hasEmail"), p5);
+		PropertyAssertionImpl pa6 = new PropertyAssertionImpl(
+				new SimpleResourceID("http://lichtflut.de#", "hasAge"), p6);
+		PropertyAssertionImpl pa7 = new PropertyAssertionImpl(
+				new SimpleResourceID("http://lichtflut.de#", "hasChildren"), p7);
 
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(10));
-		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		pa4.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
+		pa3.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
+		pa4.setCardinality(CardinalityBuilder.hasAtLeastOneToMany());
+		pa5.setCardinality(CardinalityBuilder.hasExcactlyOne());
+		pa6.setCardinality(CardinalityBuilder.hasExcactlyOne());
+		pa7.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 
 		schema.addPropertyAssertion(pa1);
-		schema.addPropertyAssertion(pa2);
 		schema.addPropertyAssertion(pa3);
 		schema.addPropertyAssertion(pa4);
+		schema.addPropertyAssertion(pa5);
+		schema.addPropertyAssertion(pa6);
+		schema.addPropertyAssertion(pa7);
 
+		schema.setLabelBuilder(StaticLabelBuilders.forPerson());
 		return schema;
 	}
 

@@ -8,9 +8,9 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 
-import de.lichtflut.rb.core.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
+import de.lichtflut.rb.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
 
 /**
