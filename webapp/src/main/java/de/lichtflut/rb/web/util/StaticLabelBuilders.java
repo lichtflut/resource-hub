@@ -52,7 +52,7 @@ public final class StaticLabelBuilders implements Serializable{
 		return new LabelBuilder() {
 			@Override
 			public String build(final IRBEntity entity) {
-				return entity.toString();
+				return getLabel(entity, WSConstants.HAS_ORGA_NAME);
 			}
 		};
 	}
@@ -65,7 +65,7 @@ public final class StaticLabelBuilders implements Serializable{
 		return new LabelBuilder() {
 			@Override
 			public String build(final IRBEntity entity) {
-				return entity.toString();
+				return getLabel(entity, WSConstants.HAS_STREET, WSConstants.HAS_HOUSNR, WSConstants.HAS_CITY_RESOURCE);
 			}
 		};
 	}
@@ -91,7 +91,7 @@ public final class StaticLabelBuilders implements Serializable{
 		return new LabelBuilder() {
 			@Override
 			public String build(final IRBEntity entity) {
-				return entity.toString();
+				return getLabel(entity, WSConstants.HAS_CITY, WSConstants.HAS_COUNTRY);
 			}
 		};
 	}
@@ -109,7 +109,7 @@ public final class StaticLabelBuilders implements Serializable{
 		for(ResourceID predicate : predicates) {
 			append(sb, entity, predicate);
 		}
-		return sb.toString().trim();
+		return sb.substring(0, sb.length()-2);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public final class StaticLabelBuilders implements Serializable{
 		final IRBField field = entity.getField(predicate.getQualifiedName().toURI());
 		for (Object value : field.getFieldValues()) {
 			sb.append(value);
-			sb.append(" ");
+			sb.append(", ");
 		}
 	}
 

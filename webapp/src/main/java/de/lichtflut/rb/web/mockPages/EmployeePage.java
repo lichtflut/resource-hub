@@ -30,7 +30,7 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 	public EmployeePage() {
 		super("Mockpage-Employee");
 		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
-		add(new ResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createComplexNewRBEntity()){
+		add(new ResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createPerson()){
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {
 				return null;

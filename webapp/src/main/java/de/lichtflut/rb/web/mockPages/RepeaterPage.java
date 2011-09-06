@@ -28,7 +28,7 @@ public class RepeaterPage extends WebPage implements IFeedbackContainerProvider 
 	 */
 	@SuppressWarnings("rawtypes")
 	public RepeaterPage(){
-		NewRBEntity entity = MockNewRBEntityFactory.createNewRBEntity();
+		NewRBEntity entity = MockNewRBEntityFactory.createPerson();
 		add(new FeedbackPanel("feedbackPanel").setOutputMarkupPlaceholderTag(true));
 		RepeatingView view = new RepeatingView("container");
 		for (IRBField field : entity.getAllFields()) {
