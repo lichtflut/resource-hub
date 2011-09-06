@@ -228,8 +228,8 @@ public abstract class ResourceTableView extends CKComponent {
 					for (final Object entityAttribute : field.getFieldValues()) {
 						final IRBEntity entity = (IRBEntity) entityAttribute;
 						if(entity != null){
-							CKLink link = new CKLink(view.newChildId(), entity
-									.toString(), CKLinkType.CUSTOM_BEHAVIOR);
+							CKLink link = new CKLink(view.newChildId(), entity.getLabel(),
+									CKLinkType.CUSTOM_BEHAVIOR);
 							link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
 
 								@Override

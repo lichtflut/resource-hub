@@ -69,7 +69,7 @@ public abstract class ResourcePicker extends CKComponent {
 					}
 				}
 				response.write("<div class='resource-picker-value'>");
-				response.write(entity.getID().toString());
+				response.write(entity.getLabel());
 				response.write("</div><div class='resource-picker-info'>");
 				response.write(popupInfo);
 				response.write("</div>");

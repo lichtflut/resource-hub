@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.web.util;
 
+import java.io.Serializable;
+
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
@@ -21,7 +23,8 @@ import de.lichtflut.rb.web.metamodel.WSConstants;
  *
  * @author Oliver Tigges
  */
-public final class StaticLabelBuilders {
+@SuppressWarnings("serial")
+public final class StaticLabelBuilders implements Serializable{
 
 	/**
 	 * Private Constructor.

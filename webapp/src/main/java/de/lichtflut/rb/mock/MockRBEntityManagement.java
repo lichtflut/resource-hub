@@ -21,11 +21,11 @@ import de.lichtflut.rb.core.schema.model.IRBEntity;
 @SuppressWarnings("serial")
 public class MockRBEntityManagement implements INewRBEntityManagement {
 
-	private List<IRBEntity> entities = MockNewRBEntityFactory.getListOfNewRBEntities();
+	private List<IRBEntity> persons = MockNewRBEntityFactory.getListOfNewRBEntities();
 
 	@Override
 	public IRBEntity find(final ResourceID resourceID) {
-		for (IRBEntity e : entities) {
+		for (IRBEntity e : persons) {
 			if(e.getID().equals(resourceID)){
 				return e;
 			}
@@ -35,24 +35,24 @@ public class MockRBEntityManagement implements INewRBEntityManagement {
 
 	@Override
 	public List<IRBEntity> findAllByType(final ResourceID id) {
-		return entities;
+		return persons;
 	}
 
 	@Override
 	public IRBEntity store(final IRBEntity entity) {
-		if(entities.contains(entity)){
-			entities.remove(entity);
-			entities.add(entity);
+		if(persons.contains(entity)){
+			persons.remove(entity);
+			persons.add(entity);
 
 		}else{
-			entities.add(entity);
+			persons.add(entity);
 		}
 		return entity;
 	}
 
 	@Override
 	public void delete(final IRBEntity entity) {
-		entities.remove(entity);
+		persons.remove(entity);
 	}
 
 }

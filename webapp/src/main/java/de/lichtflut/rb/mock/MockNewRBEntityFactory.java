@@ -226,20 +226,45 @@ public final class MockNewRBEntityFactory {
 	@SuppressWarnings("deprecation")
 	private static NewRBEntity createChildlessComplexPerson(
 			final ResourceSchema schema) {
+//		List<List<Object>> list = new ArrayList<List<Object>>();
+//		List<Object> emailList = new ArrayList<Object>();
+//		List<Object> ageList = new ArrayList<Object>();
+//		List<Object> dateOfBirth = new ArrayList<Object>();
+//		List<Object> childrenList = new ArrayList<Object>();
+//		dateOfBirth.add(new Date(2002, 10, 1));
+//		emailList.add("kind@moritz.de");
+//		ageList.add(2);
+//		list.add(dateOfBirth);
+//		list.add(emailList);
+//		list.add(ageList);
+//		list.add(childrenList);
+//		int counter = 0;
+//		NewRBEntity entity = new NewRBEntity(createPersonSchema());
+//		for (IRBField field : entity.getAllFields()) {
+//			field.setFieldValues(list.get(counter));
+//			counter++;
+//		}
 		List<List<Object>> list = new ArrayList<List<Object>>();
+		List<Object> firstName = new ArrayList<Object>();
+		List<Object> lastName = new ArrayList<Object>();
 		List<Object> emailList = new ArrayList<Object>();
 		List<Object> ageList = new ArrayList<Object>();
 		List<Object> dateOfBirth = new ArrayList<Object>();
 		List<Object> childrenList = new ArrayList<Object>();
-		dateOfBirth.add(new Date(2002, 10, 1));
-		emailList.add("kind@moritz.de");
-		ageList.add(2);
+		firstName.add("Kind1");
+		lastName.add("Knox");
+		dateOfBirth.add(new Date(1985, 12, 23));
+		emailList.add("max@moritz.de");
+		emailList.add("chef@koch.de");
+		ageList.add(getRandomNumer(MAX_AGE));
+		list.add(firstName);
+		list.add(lastName);
 		list.add(dateOfBirth);
 		list.add(emailList);
 		list.add(ageList);
 		list.add(childrenList);
 		int counter = 0;
-		NewRBEntity entity = new NewRBEntity(createPersonSchema());
+		NewRBEntity entity = new NewRBEntity(schema);
 		for (IRBField field : entity.getAllFields()) {
 			field.setFieldValues(list.get(counter));
 			counter++;
@@ -368,7 +393,7 @@ public final class MockNewRBEntityFactory {
 		p5.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
 //		p4.addConstraint(ConstraintFactory.buildConstraint(schema
 //				.getDescribedResourceID()));
-		p4.addConstraint(ConstraintFactory.buildConstraint(resID));	
+		p7.addConstraint(ConstraintFactory.buildConstraint(resID));	
 
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasFirstName"),

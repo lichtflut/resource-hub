@@ -16,7 +16,7 @@ import java.io.Serializable;
  *
  * @author Oliver Tigges
  */
-public interface LabelBuilder {
+public interface LabelBuilder extends Serializable{
 
 	LabelBuilder DEFAULT = new DefaultBuilder();
 
