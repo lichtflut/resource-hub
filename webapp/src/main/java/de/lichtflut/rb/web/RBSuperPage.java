@@ -140,6 +140,12 @@ public abstract class RBSuperPage extends WebPage {
 //			}
 //		});
 
+		// Add left sidebar
+		NavigationBar menuLeft = new NavigationBar("sidebarLeft");
+
+		NavigationNode showByTypes = new NavigationNodePanel(new CKLink("link", "Show Be Type", CKLinkType.CUSTOM_BEHAVIOR));
+		getRBServiceProvider().getRBEntityManagement().g
+
 	}
 
 	// -----------------------------------------------------
