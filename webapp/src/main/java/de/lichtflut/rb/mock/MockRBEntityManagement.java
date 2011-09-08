@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.mock;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
@@ -21,11 +22,11 @@ import de.lichtflut.rb.core.schema.model.IRBEntity;
 @SuppressWarnings("serial")
 public class MockRBEntityManagement implements INewRBEntityManagement {
 
-	private List<IRBEntity> persons = MockNewRBEntityFactory.getListOfPersons();
+	private List<IRBEntity> dataPool = MockNewRBEntityFactory.getAllEntities();
 
 	@Override
 	public IRBEntity find(final ResourceID resourceID) {
-		for (IRBEntity e : persons) {
+		for (IRBEntity e : dataPool) {
 			if(e.getID().equals(resourceID)){
 				return e;
 			}
@@ -35,24 +36,44 @@ public class MockRBEntityManagement implements INewRBEntityManagement {
 
 	@Override
 	public List<IRBEntity> findAllByType(final ResourceID id) {
-		return persons;
+		if (id != null) {
+			List<IRBEntity> list = new ArrayList<IRBEntity>();
+			for (IRBEntity e : dataPool) {
+				if (e.getType().equals(id)) {
+					list.add(e);
+				}
+			}
+			return list;
+		}
+		return dataPool;
 	}
 
 	@Override
 	public IRBEntity store(final IRBEntity entity) {
-		if(persons.contains(entity)){
-			persons.remove(entity);
-			persons.add(entity);
+		if(dataPool.contains(entity)){
+			dataPool.remove(entity);
+			dataPool.add(entity);
 
 		}else{
-			persons.add(entity);
+			dataPool.add(entity);
 		}
 		return entity;
 	}
 
 	@Override
 	public void delete(final IRBEntity entity) {
-		persons.remove(entity);
+		dataPool.remove(entity);
+	}
+
+	@Override
+	public List<ResourceID> findAllTypes() {
+		List<ResourceID> list = new ArrayList<ResourceID>();
+		for (IRBEntity e : dataPool) {
+			if(!list.contains(e.getType())){
+				list.add(e.getType());
+			}
+		}
+		return list;
 	}
 
 }

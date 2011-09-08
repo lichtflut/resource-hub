@@ -28,6 +28,7 @@ import de.lichtflut.rb.web.models.ReferencedEntityModel;
  */
 public abstract class ResourcePicker extends CKComponent {
 
+	//TODO: REFACTOR
 	private static final long serialVersionUID = 1L;
 	private IModel<IRBEntity> entity;
 	private String inputSnippet = "";

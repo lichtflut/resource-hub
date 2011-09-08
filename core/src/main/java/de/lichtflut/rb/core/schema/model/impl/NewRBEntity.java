@@ -144,7 +144,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	@Override
 	public ResourceID getType() {
-		// TODO Auto-generated method stub
+		// TODO Get type from node
 		return schema.getDescribedResourceID();
 	}
 
@@ -198,6 +198,9 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 */
 	@Override
 	public String toString(){
+		if(getLabel() != null || getLabel().equals("")){
+			return getLabel();
+		}
 		String s = getQualifiedName() + ", ";
 		for(IRBField field : getAllFields()){
 			if(field.isResourceReference()){

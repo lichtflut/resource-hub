@@ -50,7 +50,13 @@ public final class MockNewRBEntityFactory {
 
 	// ------------------------------------------------------------
 
-
+	public static List<IRBEntity> getAllEntities(){
+		List<IRBEntity> list = new ArrayList<IRBEntity>();
+		list.addAll(getListOfPersons());
+		list.addAll(getListOfOrganizations());
+		list.add(createAddress());
+		return list;
+	}
 	/**
 	 * <p>
 	 * Creates a {@link NewRBEntity} with appropriate values.
@@ -68,7 +74,6 @@ public final class MockNewRBEntityFactory {
 		List<Object> lastName = new ArrayList<Object>();
 		List<Object> address = new ArrayList<Object>();
 		List<Object> emailList = new ArrayList<Object>();
-		List<Object> ageList = new ArrayList<Object>();
 		List<Object> dateOfBirth = new ArrayList<Object>();
 		List<Object> childrenList = new ArrayList<Object>();
 		firstName.add("Ravi");
@@ -77,14 +82,12 @@ public final class MockNewRBEntityFactory {
 		dateOfBirth.add(new Date(1985, 12, 23));
 		emailList.add("max@moritz.de");
 		emailList.add("chef@koch.de");
-		ageList.add(getRandomNumer(MAX_AGE));
 		childrenList.add(createChildlessComplexPerson(createPersonSchema()));
 		list.add(firstName);
 		list.add(lastName);
 		list.add(address);
 		list.add(dateOfBirth);
 		list.add(emailList);
-		list.add(ageList);
 		list.add(childrenList);
 		int counter = 0;
 		NewRBEntity entity = new NewRBEntity(createPersonSchema());
@@ -94,7 +97,8 @@ public final class MockNewRBEntityFactory {
 			}
 			counter++;
 		}
-		return entity;
+		return createPerson("Oliver", "Tigges", createAddress("Lustheide", "50", createCity("51427", "Bergisch Gladbach", "Germany")),
+				new Date(1975, 8, 15), "otigges@lichtflut.de", null);
 	}
 
 	/**
@@ -130,12 +134,30 @@ public final class MockNewRBEntityFactory {
 	@SuppressWarnings("deprecation")
 	public static List<IRBEntity> getListOfPersons(){
 		List<IRBEntity> list = new ArrayList<IRBEntity>();
-//		list.add(createComplexNewRBEntity(new Date(1956, 03, 12), "nr1@google.com", 42,
-//				createChildlessComplexPerson(createPersonSchema())));
-//		list.add(createComplexNewRBEntity(new Date(1999, 07, 11), "nr2@google.com", 40, null));
-//		list.add(createComplexNewRBEntity(new Date(1989, 01, 01), "nr3@google.com", 27,
-//				createChildlessComplexPerson(createPersonSchema())));
-		list.add(createOrganization());
+		list.add(createPerson("Oliver", "Tigges", createAddress("Lustheide", "50", createCity("51427", "Bergisch Gladbach", "Germany")),
+				new Date(1975, 8, 15), "otigges@lichtflut.de", null));
+		list.add(createPerson("Alexander", "von Aesch", createAddress("Lustheide", "11", createCity("51429", "Bergisch Gladbach", "Germany")),
+				new Date(1972, 2, 12), "avaesch@lichtflut.de", null));
+		list.add(createPerson("Nils", "Bleisch", createAddress("Lustheide", "66", createCity("51427", "Bergisch Gladbach", "Germany")),
+				new Date(1987, 1, 1), "nbleisch@lichtflut.de", null));
+		list.add(createPerson("Erik", "Aderhold", createAddress("Bahnhofstrasse", "7", createCity("50435", "Leverkusen", "Germany")),
+				new Date(1974, 2, 26), "eaderhold@lichtflut.de", createPerson("Tim", "Aderhold", createAddress("Bahnhofstrasse",
+						"7", createCity("50435", "Leverkusen", "Germany")),	new Date(2011, 8, 15), null, null)));
+		list.add(createPerson("Raphael", "Esterle", createAddress("Mülheimer Straße", "216", createCity("51469", "Bergisch Gladbach", "Germany")),
+				new Date(1991, 10, 20), "resterle@lichtflut.de", null));
+		list.add(createPerson("Ravi", "Knox", createAddress("Mülheimer Strasse", "216", createCity("51469", "Bergisch Gladbach", "Germany")),
+				new Date(1985, 12, 23), "rknox@lichtflut.de", null));
+		list.add(createPerson(null,null, createAddress(null, null, createCity(null, null, null)),
+				null, null, null));
+		return list;
+	}
+
+	/**
+	 * return a list of {@link IRBEntity}.
+	 * @return -
+	 */
+	public static List<IRBEntity> getListOfOrganizations(){
+		List<IRBEntity> list = new ArrayList<IRBEntity>();
 		return list;
 	}
 
@@ -147,19 +169,13 @@ public final class MockNewRBEntityFactory {
 		List<List<Object>> list = new ArrayList<List<Object>>();
 		List<Object> streetList = new ArrayList<Object>();
 		List<Object> houseNrList = new ArrayList<Object>();
-		List<Object> zipCodeList = new ArrayList<Object>();
 		List<Object> cityList = new ArrayList<Object>();
-		List<Object> countryList = new ArrayList<Object>();
 		streetList.add("Lustheide");
 		houseNrList.add("85");
-		zipCodeList.add(51427);
-		cityList.add("Bergisch Gladbach");
-		countryList.add("Germany");
+		cityList.add(createCity());
 		list.add(streetList);
 		list.add(houseNrList);
-		list.add(zipCodeList);
 		list.add(cityList);
-		list.add(countryList);
 		int counter = 0;
 		NewRBEntity entity = new NewRBEntity(createAddressSchema());
 		for (IRBField field : entity.getAllFields()) {
@@ -171,10 +187,13 @@ public final class MockNewRBEntityFactory {
 
 	public static IRBEntity createCity(){
 		List<List<Object>> list = new ArrayList<List<Object>>();
+		List<Object> zipCodelist = new ArrayList<Object>();
 		List<Object> cityList = new ArrayList<Object>();
 		List<Object> countryList = new ArrayList<Object>();
+		zipCodelist.add("51427");
 		cityList.add("Bergisch Gladbach");
 		countryList.add("Germany");
+		list.add(zipCodelist);
 		list.add(cityList);
 		list.add(countryList);
 		int counter = 0;
@@ -234,31 +253,50 @@ public final class MockNewRBEntityFactory {
 	 * @param resource -
 	 * @return Instance of {@link NewRBEntity}
 	 */
-	@SuppressWarnings("deprecation")
-	private static NewRBEntity createComplexNewRBEntity(final Date date,final String email,final int age, final IRBEntity resource) {
-		ResourceSchema schema = createPersonSchema();
+	private static NewRBEntity createPerson(String firstname, String lastname, IRBEntity address1,Date date,String email,IRBEntity children) {
 		List<List<Object>> list = new ArrayList<List<Object>>();
 		List<Object> firstName = new ArrayList<Object>();
 		List<Object> lastName = new ArrayList<Object>();
+		List<Object> address = new ArrayList<Object>();
 		List<Object> emailList = new ArrayList<Object>();
-		List<Object> ageList = new ArrayList<Object>();
 		List<Object> dateOfBirth = new ArrayList<Object>();
 		List<Object> childrenList = new ArrayList<Object>();
-		firstName.add("Ravi");
-		lastName.add("Knox");
-		dateOfBirth.add(new Date(1985, 12, 23));
-		emailList.add("max@moritz.de");
-		emailList.add("chef@koch.de");
-		ageList.add(getRandomNumer(MAX_AGE));
-		childrenList.add(createChildlessComplexPerson(schema));
+		firstName.add(firstname);
+		lastName.add(lastname);
+		address.add(address1);
+		dateOfBirth.add(date);
+		emailList.add(email);
+		childrenList.add(children);
 		list.add(firstName);
 		list.add(lastName);
+		list.add(address);
 		list.add(dateOfBirth);
 		list.add(emailList);
-		list.add(ageList);
 		list.add(childrenList);
 		int counter = 0;
-		NewRBEntity entity = new NewRBEntity(schema);
+		NewRBEntity entity = new NewRBEntity(createPersonSchema());
+		for (IRBField field : entity.getAllFields()) {
+			if (counter < list.size()) {
+				field.setFieldValues(list.get(counter));
+			}
+			counter++;
+		}
+		return entity;
+	}
+
+	private static IRBEntity createAddress(String street, String houseNr, IRBEntity city){
+		List<List<Object>> list = new ArrayList<List<Object>>();
+		List<Object> streetList = new ArrayList<Object>();
+		List<Object> houseNrList = new ArrayList<Object>();
+		List<Object> cityList = new ArrayList<Object>();
+		streetList.add(street);
+		houseNrList.add(houseNr);
+		cityList.add(city);
+		list.add(streetList);
+		list.add(houseNrList);
+		list.add(cityList);
+		int counter = 0;
+		NewRBEntity entity = new NewRBEntity(createAddressSchema());
 		for (IRBField field : entity.getAllFields()) {
 			field.setFieldValues(list.get(counter));
 			counter++;
@@ -266,6 +304,25 @@ public final class MockNewRBEntityFactory {
 		return entity;
 	}
 
+	private static IRBEntity createCity(String zipCode, String city, String country){
+		List<List<Object>> list = new ArrayList<List<Object>>();
+		List<Object> cityList = new ArrayList<Object>();
+		List<Object> zipCodeList = new ArrayList<Object>();
+		List<Object> countryList = new ArrayList<Object>();
+		zipCodeList.add(zipCode);
+		cityList.add(city);
+		countryList.add(country);
+		list.add(zipCodeList);
+		list.add(cityList);
+		list.add(countryList);
+		int counter = 0;
+		NewRBEntity entity = new NewRBEntity(createCitySchema());
+		for (IRBField field : entity.getAllFields()) {
+			field.setFieldValues(list.get(counter));
+			counter++;
+		}
+		return entity;
+	}
 	/**
 	 * Creates a {@link NewRBEntity} based on createComplexPerson but without
 	 * children.
@@ -377,7 +434,7 @@ public final class MockNewRBEntityFactory {
 
 		PropertyDeclarationImpl p8 = new PropertyDeclarationImpl();
 		p8.setName("http://lichtflut.de#Address");
-		p8.setElementaryDataType(ElementaryDataType.STRING);
+		p8.setElementaryDataType(ElementaryDataType.RESOURCE);
 		p8.addConstraint(ConstraintFactory.buildConstraint(addressSchema.getDescribedResourceID()));
 		PropertyAssertionImpl pa8 = new PropertyAssertionImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasAddress"), p8);
@@ -401,14 +458,6 @@ public final class MockNewRBEntityFactory {
 				new SimpleResourceID("http://lichtflut.de#", "hasEmail"), p5);
 		pa5.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 		personSchema.addPropertyAssertion(pa5);
-
-		PropertyDeclarationImpl p6 = new PropertyDeclarationImpl();
-		p6.setElementaryDataType(ElementaryDataType.INTEGER);
-		p6.setName("http://lichtflut.de#age");
-		PropertyAssertionImpl pa6 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasAge"), p6);
-		pa6.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		personSchema.addPropertyAssertion(pa6);
 		
 		PropertyDeclarationImpl p7 = new PropertyDeclarationImpl();
 		p7.setName("http://lichtflut.de#child");
@@ -451,28 +500,14 @@ public final class MockNewRBEntityFactory {
 		addressSchema.addPropertyAssertion(pa5);
 
 		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
-		p2.setName("http://lichtflut.de#ZipCode");
-		p2.setElementaryDataType(ElementaryDataType.INTEGER);
+		p2.setName("http://lichtflut.de#City");
+		p2.setElementaryDataType(ElementaryDataType.RESOURCE);
 		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(
-			new SimpleResourceID("http://lichtflut.de#", "hasZipCode"), p2);
+			new SimpleResourceID("http://lichtflut.de#", "hasCity"), p2);
 		pa2.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		addressSchema.addPropertyAssertion(pa2);
+		p2.addConstraint(ConstraintFactory.buildConstraint(citySchema.getDescribedResourceID()));
 		
-		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
-		p3.setName("http://lichtflut.de#City");
-		p3.setElementaryDataType(ElementaryDataType.STRING);
-		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasCity"), p3);
-		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		addressSchema.addPropertyAssertion(pa3);
-		
-		PropertyDeclarationImpl p4 = new PropertyDeclarationImpl();
-		p4.setName("http://lichtflut.de#Country");
-		p4.setElementaryDataType(ElementaryDataType.STRING);
-		PropertyAssertionImpl pa4 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasCountry"), p4);
-		addressSchema.addPropertyAssertion(pa4);
-
 		addressSchema.setLabelBuilder(StaticLabelBuilders.forAddress());
 		}
 
@@ -486,25 +521,34 @@ public final class MockNewRBEntityFactory {
 	 */
 	private static ResourceSchema createCitySchema(){
 
-		if(citySchema.getPropertyAssertions().size()  < 1 ){
-			
-		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
-		p1.setName("http://lichtflut.de#City");
-		p1.setElementaryDataType(ElementaryDataType.STRING);
-		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasCity"), p1);
-		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		citySchema.addPropertyAssertion(pa1);
+		if (citySchema.getPropertyAssertions().size() < 1) {
 
-		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
-		p2.setName("http://lichtflut.de#Country");
-		p2.setElementaryDataType(ElementaryDataType.STRING);
-		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasCountry"), p2);
-		pa2.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		citySchema.addPropertyAssertion(pa2);
+			PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
+			p1.setName("http://lichtflut.de#Zipcode");
+			p1.setElementaryDataType(ElementaryDataType.STRING);
+			PropertyAssertionImpl pa1 = new PropertyAssertionImpl(
+					new SimpleResourceID("http://lichtflut.de#", "hasZipcode"), p1);
+			pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
+			citySchema.addPropertyAssertion(pa1);
 
-		citySchema.setLabelBuilder(StaticLabelBuilders.forCity());
+			PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
+			p2.setName("http://lichtflut.de#City");
+			p2.setElementaryDataType(ElementaryDataType.STRING);
+			PropertyAssertionImpl pa2 = new PropertyAssertionImpl(
+					new SimpleResourceID("http://lichtflut.de#", "hasCity"), p2);
+			pa2.setCardinality(CardinalityBuilder.hasExcactlyOne());
+			citySchema.addPropertyAssertion(pa2);
+
+			PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
+			p3.setName("http://lichtflut.de#Country");
+			p3.setElementaryDataType(ElementaryDataType.STRING);
+			PropertyAssertionImpl pa3 = new PropertyAssertionImpl(
+					new SimpleResourceID("http://lichtflut.de#", "hasCountry"),
+					p3);
+			pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
+			citySchema.addPropertyAssertion(pa3);
+
+			citySchema.setLabelBuilder(StaticLabelBuilders.forCity());
 		}
 		return citySchema;
 	}

@@ -33,9 +33,9 @@ public interface WSConstants {
 
 	ResourceID HAS_STREET = new SimpleResourceID(NAMESPACE_URI, "Street");
 
-	ResourceID HAS_CITY_RESOURCE = new SimpleResourceID(NAMESPACE_URI, "City");
-
 	// ---------- Country -----------------------------------------
+
+	ResourceID HAS_ZIPCODE = new SimpleResourceID(NAMESPACE_URI, "Zipcode");
 
 	ResourceID HAS_CITY = new SimpleResourceID(NAMESPACE_URI, "City");
 

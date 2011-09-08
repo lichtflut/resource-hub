@@ -135,6 +135,7 @@ public class NewRBEntityManagement implements INewRBEntityManagement {
 
 	@Override
 	public List<IRBEntity> findAllByType(final ResourceID type) {
+
 		ModelingConversation mc = provider.getArastejuGateInstance()
 				.startConversation();
 		List<ResourceNode> nodes = mc.createQueryManager().findByType(type);
@@ -142,6 +143,12 @@ public class NewRBEntityManagement implements INewRBEntityManagement {
 		for (ResourceNode n : nodes) {
 			System.out.println("***" + n);
 		}
+
+		return null;
+	}
+
+	@Override
+	public List<ResourceID> findAllTypes() {
 		return null;
 	}
 

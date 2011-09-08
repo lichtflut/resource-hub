@@ -65,7 +65,7 @@ public final class StaticLabelBuilders implements Serializable{
 		return new LabelBuilder() {
 			@Override
 			public String build(final IRBEntity entity) {
-				return getLabel(entity, WSConstants.HAS_STREET, WSConstants.HAS_HOUSNR, WSConstants.HAS_CITY_RESOURCE);
+				return getLabel(entity, WSConstants.HAS_STREET, WSConstants.HAS_HOUSNR, WSConstants.HAS_CITY);
 			}
 		};
 	}
@@ -91,7 +91,7 @@ public final class StaticLabelBuilders implements Serializable{
 		return new LabelBuilder() {
 			@Override
 			public String build(final IRBEntity entity) {
-				return getLabel(entity, WSConstants.HAS_CITY, WSConstants.HAS_COUNTRY);
+				return getLabel(entity, WSConstants.HAS_ZIPCODE, WSConstants.HAS_CITY, WSConstants.HAS_COUNTRY);
 			}
 		};
 	}

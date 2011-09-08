@@ -34,6 +34,7 @@ import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 @SuppressWarnings("serial")
 public abstract class ResourceTableView extends CKComponent {
 
+	//TODO: REFACTOR
 	// Behavior-Keys
 	/**
 	 * <p>
