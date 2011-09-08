@@ -189,7 +189,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * Returns this RBEntity as a {@link ResourceNode}.
 	 * @return this RBEntity as a {@link ResourceNode}
 	 */
-	ResourceNode getNode(){
+	public ResourceNode getNode(){
 		return node;
 	}
 

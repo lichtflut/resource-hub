@@ -51,7 +51,7 @@ public class DefaultRBServiceProvider implements INewRBServiceProvider {
         logger.info("Initializing Arastreju with profile: " + profile);
         gate = Arastreju.getInstance(profile).rootContext();
         schemaManagement = new ResourceSchemaManagementImpl(gate);
-        typeManagement = new NewRBEntityManagement(gate);
+        typeManagement = new NewRBEntityManagement(this);
     }
 
     // -----------------------------------------------------
