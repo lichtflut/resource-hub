@@ -59,6 +59,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 		this.setOutputMarkupId(true);
+		this.add(new ResourceInfoPanel("infoPanel", entity));
 		this.add(new FeedbackPanel("feedbackPanel"));
 		Form form = new Form("form") {
 			@Override

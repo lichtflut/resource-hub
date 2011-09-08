@@ -22,7 +22,15 @@ import de.lichtflut.rb.core.schema.model.IRBEntity;
 @SuppressWarnings("serial")
 public class MockRBEntityManagement implements INewRBEntityManagement {
 
-	private List<IRBEntity> dataPool = MockNewRBEntityFactory.getAllEntities();
+	private List<IRBEntity> dataPool;
+
+	/**
+	 * Constructor.
+	 */
+	public MockRBEntityManagement(){
+		dataPool = new ArrayList<IRBEntity>();
+		 dataPool.addAll(MockNewRBEntityFactory.getAllEntities());
+	}
 
 	@Override
 	public IRBEntity find(final ResourceID resourceID) {

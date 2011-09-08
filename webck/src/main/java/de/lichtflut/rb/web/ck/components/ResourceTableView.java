@@ -215,7 +215,9 @@ public abstract class ResourceTableView extends CKComponent {
 				output = output.concat(s.toString() + ", ");
 			}
 			// Cut of last ", "
-			output = output.substring(0, output.length() - 2);
+			if(output.length() > 0){
+				output = output.substring(0, output.length() - 2);
+			}
 			if (getBehavior(ADD_CUSTOM_ROW_ITEM) != null) {
 				item.add((Component) getBehavior(ADD_CUSTOM_ROW_ITEM).execute(
 						"data", e, field));
@@ -391,5 +393,13 @@ public abstract class ResourceTableView extends CKComponent {
 		indexTableHeader(entites);
 		addHeader();
 		addRows(entites);
+		CKLink link = new CKLink("addEntity", "Add new Item", CKLinkType.CUSTOM_BEHAVIOR);
+		link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
+			@Override
+			public Object execute(final Object... objects) {
+				return null;
+			}
+		});
+		add(link);
 	}
 }

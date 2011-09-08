@@ -65,7 +65,13 @@ public abstract class ResourcePicker extends CKComponent {
 				String popupInfo = "";
 				for(IRBField field : entity.getAllFields()){
 					if(field.getFieldValues().toString().contains(inputSnippet)){
-						popupInfo = field.getLabel() + ": " + field.getFieldValues();
+						popupInfo = field.getLabel() + ": ";
+						for (Object o : field.getFieldValues()) {
+							if(o != null){
+							popupInfo = popupInfo.concat(o.toString() + ", ");
+							}
+						}
+						popupInfo = popupInfo.substring(0, popupInfo.length()-2);
 						break;
 					}
 				}

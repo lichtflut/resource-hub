@@ -121,9 +121,13 @@ public final class StaticLabelBuilders implements Serializable{
 	private static void append(final StringBuilder sb, final IRBEntity entity, final ResourceID predicate) {
 		final IRBField field = entity.getField(predicate.getQualifiedName().toURI());
 		for (Object value : field.getFieldValues()) {
-			sb.append(value);
+			if((field.isResourceReference()) && (value != null)){
+				IRBEntity e = (IRBEntity) value;
+				sb.append(e.getLabel());
+			}else{
+				sb.append(value);
+			}
 			sb.append(", ");
 		}
 	}
-
 }

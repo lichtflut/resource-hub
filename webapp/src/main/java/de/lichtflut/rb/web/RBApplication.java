@@ -33,6 +33,8 @@ public class RBApplication extends AbstractResourceBrowserApplication {
         mountPage("/r2", RepeaterPage.class);
         mountPage("/view", EmployeesPage.class);
         mountPage("/detail", EmployeePage.class);
+
+        getMarkupSettings().setStripWicketTags(true);
     }
 
 

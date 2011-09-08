@@ -134,30 +134,38 @@ public final class MockNewRBEntityFactory {
 	@SuppressWarnings("deprecation")
 	public static List<IRBEntity> getListOfPersons(){
 		List<IRBEntity> list = new ArrayList<IRBEntity>();
-		list.add(createPerson("Oliver", "Tigges", createAddress("Lustheide", "50", createCity("51427", "Bergisch Gladbach", "Germany")),
-				new Date(1975, 8, 15), "otigges@lichtflut.de", null));
-		list.add(createPerson("Alexander", "von Aesch", createAddress("Lustheide", "11", createCity("51429", "Bergisch Gladbach", "Germany")),
-				new Date(1972, 2, 12), "avaesch@lichtflut.de", null));
-		list.add(createPerson("Nils", "Bleisch", createAddress("Lustheide", "66", createCity("51427", "Bergisch Gladbach", "Germany")),
-				new Date(1987, 1, 1), "nbleisch@lichtflut.de", null));
-		list.add(createPerson("Erik", "Aderhold", createAddress("Bahnhofstrasse", "7", createCity("50435", "Leverkusen", "Germany")),
-				new Date(1974, 2, 26), "eaderhold@lichtflut.de", createPerson("Tim", "Aderhold", createAddress("Bahnhofstrasse",
-						"7", createCity("50435", "Leverkusen", "Germany")),	new Date(2011, 8, 15), null, null)));
-		list.add(createPerson("Raphael", "Esterle", createAddress("Mülheimer Straße", "216", createCity("51469", "Bergisch Gladbach", "Germany")),
-				new Date(1991, 10, 20), "resterle@lichtflut.de", null));
-		list.add(createPerson("Ravi", "Knox", createAddress("Mülheimer Strasse", "216", createCity("51469", "Bergisch Gladbach", "Germany")),
-				new Date(1985, 12, 23), "rknox@lichtflut.de", null));
+		IRBEntity bergischGladbach =  createCity("51427", "Bergisch Gladbach", "Germany");
+		IRBEntity lustheide50 = createAddress("Lustheide", "50", bergischGladbach);
+		list.add(lustheide50);
+		list.add(bergischGladbach);
+		list.add(createPerson("Oliver", "Tigges", lustheide50, new Date(1975, 8, 15), "otigges@lichtflut.de", null));
+
+		IRBEntity lustheide11 = createAddress("Lustheide", "11", bergischGladbach);
+		list.add(lustheide11);
+		list.add(createPerson("Alexander", "von Aesch", lustheide11, new Date(1972, 2, 12), "avaesch@lichtflut.de", null));
+		
+		IRBEntity bergischGladbach51427 = createCity("51427", "Bergisch Gladbach", "Germany");
+		list.add(bergischGladbach51427);
+		IRBEntity lustheide66 = createAddress("Lustheide", "66", bergischGladbach51427);
+		list.add(lustheide66);
+		list.add(createPerson("Nils", "Bleisch", lustheide66, new Date(1987, 1, 1), "nbleisch@lichtflut.de", null));
+		
+		IRBEntity leverkusen = createCity("50435", "Leverkusen", "Germany");
+		list.add(leverkusen);
+		IRBEntity bahnhofStr = createAddress("Bahnhofstrasse", "7", leverkusen);
+		list.add(bahnhofStr);
+		IRBEntity benAderhold = createPerson("Ben", "Aderhold", bahnhofStr,	new Date(2011, 8, 15), null, null);
+		list.add(benAderhold);
+		list.add(createPerson("Erik", "Aderhold", bahnhofStr, new Date(1974, 2, 26), "eaderhold@lichtflut.de", benAderhold));
+		
+		IRBEntity bergischGladbach51469 = createCity("51469", "Bergisch Gladbach", "Germany");
+		list.add(bergischGladbach51469);
+		IRBEntity muelheimerStr = createAddress("Mülheimer Straße", "216", bergischGladbach51469);
+		list.add(muelheimerStr);
+		list.add(createPerson("Raphael", "Esterle", muelheimerStr, new Date(1991, 10, 20), "resterle@lichtflut.de", null));
+		list.add(createPerson("Ravi", "Knox", muelheimerStr, new Date(1985, 12, 23), "rknox@lichtflut.de", null));
 		list.add(createPerson(null,null, createAddress(null, null, createCity(null, null, null)),
 				null, null, null));
-		return list;
-	}
-
-	/**
-	 * return a list of {@link IRBEntity}.
-	 * @return -
-	 */
-	public static List<IRBEntity> getListOfOrganizations(){
-		List<IRBEntity> list = new ArrayList<IRBEntity>();
 		return list;
 	}
 
@@ -236,6 +244,51 @@ public final class MockNewRBEntityFactory {
 			counter++;
 		}
 		return entity;
+	}
+
+	/**
+	 * Return an Organization.
+	 * @return -
+	 */
+	public static IRBEntity createOrganization(String name, IRBEntity ceo, IRBEntity address, boolean independent,
+			List<IRBEntity> member, String description){
+		List<List<Object>> list = new ArrayList<List<Object>>();
+		List<Object> nameList = new ArrayList<Object>();
+		List<Object> ceoList = new ArrayList<Object>();
+		List<Object> locationList = new ArrayList<Object>();
+		List<Object> independentList = new ArrayList<Object>();
+		List<Object> memberList = new ArrayList<Object>();
+		List<Object> descriptionList = new ArrayList<Object>();
+		nameList.add(name);
+		ceoList.add(ceo);
+		locationList.add(address);
+		independentList.add(independent);
+		memberList.addAll(memberList);
+		descriptionList.add(description);
+		list.add(nameList);
+		list.add(ceoList);
+		list.add(locationList);
+		list.add(independentList);
+		list.add(memberList);
+		list.add(descriptionList);
+		int counter = 0;
+		NewRBEntity entity = new NewRBEntity(createOrganisationSchema());
+		for (IRBField field : entity.getAllFields()) {
+			field.setFieldValues(list.get(counter));
+			counter++;
+		}
+		return entity;
+	}
+
+	/**
+	 * return a list of {@link IRBEntity}.
+	 * @return -
+	 */
+	public static List<IRBEntity> getListOfOrganizations(){
+		List<IRBEntity> list = new ArrayList<IRBEntity>();
+		list.add(createOrganization("Microsoft", createPerson("Bill", "Gates", createAddress(null, null, createCity(null, null, "United Stated of America")), new Date(28, 10, 1955), "bill@microsoft.com", null), createAddress(null, null, null), true, null, "Microsoft sells OSs"));
+		list.add(createOrganization());
+		return list;
 	}
 
 	// ------------------------------------------------------------

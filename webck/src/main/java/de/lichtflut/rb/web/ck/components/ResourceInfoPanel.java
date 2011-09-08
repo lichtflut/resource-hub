@@ -3,8 +3,10 @@
  */
 package de.lichtflut.rb.web.ck.components;
 
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Panel;
+
 import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 
 /**
  * This Panel represents an {@link IRBEntity}.
@@ -22,10 +24,9 @@ import de.lichtflut.rb.core.spi.INewRBServiceProvider;
  *
  * @author Ravi Knox
  */
-public class ResourceInfoPanel extends CKComponent {
+public class ResourceInfoPanel extends Panel {
 
 	private static final long serialVersionUID = 1L;
-	private IRBEntity entity;
 
 	/**
 	 * @param id - wicket:id
@@ -33,27 +34,7 @@ public class ResourceInfoPanel extends CKComponent {
 	 */
 	public ResourceInfoPanel(final String id, final IRBEntity entity) {
 		super(id);
-		this.entity = entity;
-		buildComponent();
+		add(new Label("label", entity.getLabel()));
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void initComponent(final CKValueWrapperModel model) {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public INewRBServiceProvider getServiceProvider() {return null;}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CKComponent setViewMode(final ViewMode mode) {return null;}
 
 }
