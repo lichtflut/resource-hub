@@ -95,7 +95,11 @@ public class NewRBEntityManagement implements INewRBEntityManagement {
 
 	@Override
 	public List<IRBEntity> findAllByType(final ResourceID type) {
-		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ResourceID> findAllTypes() {
 		return null;
 	}
 

@@ -33,6 +33,13 @@ public interface INewRBEntityManagement extends Serializable {
     List<IRBEntity> findAllByType(ResourceID type);
 
     /**
+     * TODO: Move to appropriate Service
+     * Returns a list of all Types.
+     * @return -
+     */
+    List<ResourceID> findAllTypes();
+
+    /**
      *
      * @param entity /
      * @return

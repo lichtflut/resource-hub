@@ -144,7 +144,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	@Override
 	public ResourceID getType() {
-		// TODO Auto-generated method stub
+		// TODO Get type from node
 		return schema.getDescribedResourceID();
 	}
 

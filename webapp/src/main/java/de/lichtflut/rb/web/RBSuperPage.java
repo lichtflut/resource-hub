@@ -3,10 +3,13 @@
  */
 package de.lichtflut.rb.web;
 
+import java.util.List;
+
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.mock.MockRBServiceProvider;
@@ -124,28 +127,20 @@ public abstract class RBSuperPage extends WebPage {
 
 		add(mainNavigation);
 
-//		this.add(new SearchBar("searchBar") {
-//
-//			@Override
-//			public void onSearchSubmit(final RBEntity<Object> instance) {
-//				PageParameters params = new PageParameters();
-//				params.add("resourceid", instance.getResourceSchema().getDescribedResourceID().getQualifiedName().toURI());
-//				params.add("instanceid", instance.getQualifiedName().toURI());
-//				getRequestCycle().setResponsePage(GenericResourceFormPage.class, params);
-//			}
-//
-//			@Override
-//			public RBServiceProvider getServiceProvider() {
-//				return getRBServiceProvider();
-//			}
-//		});
-
 		// Add left sidebar
 		NavigationBar menuLeft = new NavigationBar("sidebarLeft");
 
 		NavigationNode showByTypes = new NavigationNodePanel(new CKLink("link", "Show Be Type", CKLinkType.CUSTOM_BEHAVIOR));
-		getRBServiceProvider().getRBEntityManagement().g
-
+		List<ResourceID> types = getRBServiceProvider().getRBEntityManagement().findAllTypes();
+		for (ResourceID type : types) {
+			PageParameters param = new PageParameters();
+			param.add("type", type);
+			CKLink link = new CKLink("link", type.getName(),
+					EmployeesPage.class, param, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS);
+			showByTypes.addChild(new NavigationNodePanel(link));
+		}
+		menuLeft.addChild(showByTypes);
+		add(menuLeft);
 	}
 
 	// -----------------------------------------------------

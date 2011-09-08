@@ -22,7 +22,7 @@ import de.lichtflut.rb.core.schema.model.IRBEntity;
 @SuppressWarnings("serial")
 public class MockRBEntityManagement implements INewRBEntityManagement {
 
-	private List<IRBEntity> dataPool = MockNewRBEntityFactory.getListOfPersons();
+	private List<IRBEntity> dataPool = MockNewRBEntityFactory.getAllEntities();
 
 	@Override
 	public IRBEntity find(final ResourceID resourceID) {
@@ -39,22 +39,12 @@ public class MockRBEntityManagement implements INewRBEntityManagement {
 		if (id != null) {
 			List<IRBEntity> list = new ArrayList<IRBEntity>();
 			for (IRBEntity e : dataPool) {
-				System.out.println(e.getType() + " + " + id);
 				if (e.getType().equals(id)) {
 					list.add(e);
 				}
 			}
-			System.out.println(list.size() + " -size");
 			return list;
 		}
-		return dataPool;
-	}
-
-	/**
-	 * Returns a list of all Entities.
-	 * @return -
-	 */
-	public List<IRBEntity> findAll() {
 		return dataPool;
 	}
 
@@ -73,6 +63,17 @@ public class MockRBEntityManagement implements INewRBEntityManagement {
 	@Override
 	public void delete(final IRBEntity entity) {
 		dataPool.remove(entity);
+	}
+
+	@Override
+	public List<ResourceID> findAllTypes() {
+		List<ResourceID> list = new ArrayList<ResourceID>();
+		for (IRBEntity e : dataPool) {
+			if(!list.contains(e.getType())){
+				list.add(e.getType());
+			}
+		}
+		return list;
 	}
 
 }

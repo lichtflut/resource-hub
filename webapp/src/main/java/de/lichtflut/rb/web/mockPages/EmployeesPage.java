@@ -3,6 +3,11 @@
  */
 package de.lichtflut.rb.web.mockPages;
 
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
+
 import de.lichtflut.rb.core.spi.INewRBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
@@ -23,9 +28,19 @@ public class EmployeesPage extends RBSuperPage {
 	 * Constructor.
 	 */
 	public EmployeesPage() {
-		super("Mock-Employees-View");
+		this(null);
+	}
+
+	/**
+	 * Constructor.
+	 * @param params -
+	 */
+	public EmployeesPage(final PageParameters params) {
+		super("Mock-View");
+		StringValue uri = params.get("type");
+		ResourceID type = new SimpleResourceID(uri.toString());
 		ResourceTableView view =
-			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getRBEntityManagement().findAllByType(null)){
+			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getRBEntityManagement().findAllByType(type)){
 			@Override
 			public INewRBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();

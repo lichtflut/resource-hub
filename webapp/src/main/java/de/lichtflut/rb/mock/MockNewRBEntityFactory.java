@@ -50,7 +50,13 @@ public final class MockNewRBEntityFactory {
 
 	// ------------------------------------------------------------
 
-
+	public static List<IRBEntity> getAllEntities(){
+		List<IRBEntity> list = new ArrayList<IRBEntity>();
+		list.addAll(getListOfPersons());
+		list.addAll(getListOfOrganizations());
+		list.add(createAddress());
+		return list;
+	}
 	/**
 	 * <p>
 	 * Creates a {@link NewRBEntity} with appropriate values.
@@ -163,19 +169,13 @@ public final class MockNewRBEntityFactory {
 		List<List<Object>> list = new ArrayList<List<Object>>();
 		List<Object> streetList = new ArrayList<Object>();
 		List<Object> houseNrList = new ArrayList<Object>();
-		List<Object> zipCodeList = new ArrayList<Object>();
 		List<Object> cityList = new ArrayList<Object>();
-		List<Object> countryList = new ArrayList<Object>();
 		streetList.add("Lustheide");
 		houseNrList.add("85");
-		zipCodeList.add(51427);
-		cityList.add("Bergisch Gladbach");
-		countryList.add("Germany");
+		cityList.add(createCity());
 		list.add(streetList);
 		list.add(houseNrList);
-		list.add(zipCodeList);
 		list.add(cityList);
-		list.add(countryList);
 		int counter = 0;
 		NewRBEntity entity = new NewRBEntity(createAddressSchema());
 		for (IRBField field : entity.getAllFields()) {
