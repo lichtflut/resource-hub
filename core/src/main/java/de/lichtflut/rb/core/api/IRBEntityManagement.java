@@ -15,7 +15,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 /**
  * <p>
  * ===ATTENTION===<br>
- * This is a copy of {@link RBEntityManagement} adjusted to work with {@link IRBEntity}
+ * This is a copy of {@link OldRBEntityManagement} adjusted to work with {@link IRBEntity}
  * </p>
  * <p>
  * This is the RB's ResourceTypeManagement "HighLevel" interface.

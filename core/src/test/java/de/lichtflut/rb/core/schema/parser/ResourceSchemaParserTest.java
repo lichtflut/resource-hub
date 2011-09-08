@@ -9,7 +9,7 @@ import org.antlr.runtime.RecognitionException;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+import de.lichtflut.rb.core.api.ResourceSchemaManager;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
@@ -34,7 +34,7 @@ public class ResourceSchemaParserTest {
 	 */
 	@Test
 	public final void testParsingAndConstructingModelFromTestSimpleRSFFile1() throws IOException, RecognitionException{
-		ResourceSchemaManagement rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
+		ResourceSchemaManager rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
 
 		//Get ResourceSchemaTypes
 		RSParsingResult result = rManagement.generateSchemaModelThrough(
@@ -51,7 +51,7 @@ public class ResourceSchemaParserTest {
 	 */
 	@Test
 	public final void testParsingAndConstructingModelFromTestOSFFile2() throws IOException, RecognitionException{
-		ResourceSchemaManagement rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
+		ResourceSchemaManager rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
 		//Set parsing format to OSF
 		rManagement.setFormat(RSFormat.OSF);
 		//Get ResourceSchemaTypes

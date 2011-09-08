@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.associations.Association;
@@ -38,24 +39,37 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	private final ResourceNode node;
 	private final ResourceSchema schema;
+	private final List<ResourceID> type;
 	private List<IRBField> fields;
 
 	// -----------------------------------------------------
 
 	/**
 	 * Creates a new entity without schema.
+	 * @param type -
 	 */
-	public NewRBEntity() {
-		this(new SNResource());
+	public NewRBEntity(final ResourceID type) {
+		this(new SNResource(), type);
 	}
 
 	/**
 	 * Creates an entity based on given node without schema.
 	 *
 	 * @param node - The node.
+	 * @param type -
 	 */
-	public NewRBEntity(final ResourceNode node) {
-		this(node, null);
+	public NewRBEntity(final ResourceNode node, final ResourceID type) {
+		super();
+		this.node=node;
+		this.type = new ArrayList<ResourceID>();
+		this.schema = null;
+		if(node.getAssociations(RDF.TYPE).isEmpty()){
+			this.type.add(type);
+		}else{
+			for (Association assoc : node.getAssociations(RDF.TYPE)) {
+				this.type.add(assoc.getObject().asResource().asClass());
+			}
+		}
 	}
 
 	/**
@@ -79,6 +93,8 @@ public class NewRBEntity implements IRBEntity, Serializable {
 		super();
 		this.node = node;
 		this.schema = schema;
+		this.type=new ArrayList<ResourceID>();
+		this.type.add(schema.getDescribedResourceID());
 		initializeFields();
 	}
 
@@ -139,15 +155,18 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	@Override
 	public String getLabel() {
-		return schema.getLabelBuilder().build(this);
+		if(null!=schema){
+			return schema.getLabelBuilder().build(this);
+		}else{
+			return "";
+		}
 	}
 
 	@Override
 	public ResourceID getType() {
 //		node.asEntity().getMainClass();
 		// TODO Get type from node
-		//System.out.println(node.asClass().getQualifiedName());
-		return schema.getDescribedResourceID();
+		return type.get(0);
 	}
 
 	/**
@@ -191,7 +210,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * Returns this RBEntity as a {@link ResourceNode}.
 	 * @return this RBEntity as a {@link ResourceNode}
 	 */
-	ResourceNode getNode(){
+	public ResourceNode getNode(){
 		return node;
 	}
 

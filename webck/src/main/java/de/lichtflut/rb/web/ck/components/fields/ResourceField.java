@@ -12,7 +12,7 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.core.spi.IRBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 import de.lichtflut.rb.web.ck.components.ResourcePicker;
 import de.lichtflut.rb.web.models.NewGenericResourceModel;
@@ -76,7 +76,7 @@ public abstract class ResourceField extends CKComponent {
 		ResourcePicker picker = new ResourcePicker(view.newChildId(), new NewGenericResourceModel(field, i),
 				extractTypeConstraint(field)){
 			@Override
-			public INewRBServiceProvider getServiceProvider() {
+			public IRBServiceProvider getServiceProvider() {
 				return ResourceField.this.getServiceProvider();
 			}
 			@Override

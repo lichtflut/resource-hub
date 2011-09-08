@@ -10,28 +10,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.api.INewRBEntityManagement;
-import de.lichtflut.rb.core.api.ResourceSchemaManagement;
-import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
-import de.lichtflut.rb.core.api.impl.ResourceSchemaManagementImpl;
-import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.core.api.RBEntityManager;
+import de.lichtflut.rb.core.api.ResourceSchemaManager;
+import de.lichtflut.rb.core.api.impl.RBEntityManagerImpl;
+import de.lichtflut.rb.core.api.impl.ResourceSchemaManagerImpl;
+import de.lichtflut.rb.core.spi.IRBServiceProvider;
 
 /**
- * Reference implementation of {@link INewRBServiceProvider}.
+ * Reference implementation of {@link IRBServiceProvider}.
  * TODO: The rootContext of ArastrejuGate is used, this should be changed
  *
  * Created: Apr 28, 2011
  *
  * @author Nils Bleisch
  */
-public class DefaultRBServiceProvider implements INewRBServiceProvider {
+public class DefaultRBServiceProvider implements IRBServiceProvider {
 
     private final Logger logger = LoggerFactory
             .getLogger(DefaultRBServiceProvider.class);
 
     private ArastrejuGate gate = null;
-    private ResourceSchemaManagement schemaManagement = null;
-    private INewRBEntityManagement typeManagement = null;
+    private ResourceSchemaManager schemaManagement = null;
+    private RBEntityManager typeManagement = null;
 
     // --CONSTRUCTOR----------------------------------------
 
@@ -50,8 +50,8 @@ public class DefaultRBServiceProvider implements INewRBServiceProvider {
         final ArastrejuProfile profile = config.getArastrejuConfiguration();
         logger.info("Initializing Arastreju with profile: " + profile);
         gate = Arastreju.getInstance(profile).rootContext();
-        schemaManagement = new ResourceSchemaManagementImpl(gate);
-        typeManagement = new NewRBEntityManagement(gate);
+        schemaManagement = new ResourceSchemaManagerImpl(gate);
+        typeManagement = new RBEntityManagerImpl(this);
     }
 
     // -----------------------------------------------------
@@ -60,7 +60,7 @@ public class DefaultRBServiceProvider implements INewRBServiceProvider {
      *{@inheritDoc}
      */
     @Override
-    public ResourceSchemaManagement getResourceSchemaManagement() {
+    public ResourceSchemaManager getResourceSchemaManagement() {
         return schemaManagement;
     }
 
@@ -80,7 +80,7 @@ public class DefaultRBServiceProvider implements INewRBServiceProvider {
      *{@inheritDoc}
      */
     @Override
-    public INewRBEntityManagement getRBEntityManagement() {
+    public RBEntityManager getRBEntityManagement() {
         return typeManagement;
     }
 

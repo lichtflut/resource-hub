@@ -3,6 +3,28 @@
  */
 package de.lichtflut.rb.core.rbentity.persistence;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.junit.Test;
+
+import de.lichtflut.rb.core.api.impl.RBEntityManagerImpl;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
+import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
+import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.RBField;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
+
 
 /**
  * Testcase to test ResourceTypeInstance- validators, ticket-algorithms and constraints.
@@ -123,79 +145,81 @@ public final class RBEntityTest {
 //                entity.getQualifiedName().toURI() + "#"));
 //    }
 //
-//    /**
-//     *
-//     */
-//    @Test
-//    public void testNewRBEntity() {
-//        ResourceSchema schema = createSchema();
-//        NewRBEntity e = new NewRBEntity(schema);
-//        RBServiceProvider provider = RBServiceProviderFactory
-//                .getDefaultServiceProvider();
-//        NewRBEntityManagement m = new NewRBEntityManagement(
-//                provider.getArastejuGateInstance());
-//        e.getField("http://lichtflut.de#email").getFieldValues()
-//                .add("hans@franz.de");
-//        m.store(e);
-//        System.out.println(m.find(e.getID(), schema));
-//        e.getField("http://lichtflut.de#email").getFieldValues()
-//                .set(0, "peter@mueller.de");
-//        m.store(e);
-//        System.out.println(m.find(e.getID(), schema));
-//        // for (Object o : e.getField("http://lichtflut.de#email")
-//        // .getFieldValues()) {
-//        // System.out.println(o.toString());
-//        // }
-//        //
-//        // System.out.println(MockNewRBEntityFactory.createNewRBEntity().getID());
-//    }
-//
-//    /**
-//     * Tests.
-//     * @return shema
-//     */
-//    private ResourceSchema createSchema() {
-//        ResourceSchemaImpl schema = new ResourceSchemaImpl(
-//                "http://lichtflut.de#", "personschema");
-//        PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
-//        PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
-//        PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
-//        PropertyDeclarationImpl p4 = new PropertyDeclarationImpl();
-//        p1.setName("http://lichtflut.de#geburtsdatum");
-//        p2.setName("http://lichtflut.de#email");
-//        p3.setName("http://lichtflut.de#alter");
-//        p4.setName("http://lichtflut.de#kind");
-//
-//        p1.setElementaryDataType(ElementaryDataType.STRING);
-//        p2.setElementaryDataType(ElementaryDataType.STRING);
-//        p3.setElementaryDataType(ElementaryDataType.INTEGER);
-//        p4.setElementaryDataType(ElementaryDataType.RESOURCE);
-//
-//        p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
-//        p4.addConstraint(ConstraintFactory.buildConstraint(schema
-//                .getDescribedResourceID()));
-//
-//        PropertyAssertionImpl pa1 = new PropertyAssertionImpl(
-//                new SimpleResourceID("http://lichtflut.de#", "hatGeburtstag"),
-//                p1);
-//        PropertyAssertionImpl pa2 = new PropertyAssertionImpl(
-//                new SimpleResourceID("http://lichtflut.de#", "hatEmail"), p2);
-//        PropertyAssertionImpl pa3 = new PropertyAssertionImpl(
-//                new SimpleResourceID("http://lichtflut.de#", "hatAlter"), p3);
-//        PropertyAssertionImpl pa4 = new PropertyAssertionImpl(
-//                new SimpleResourceID("http://lichtflut.de#", "hatKind"), p4);
-//
-//        pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
-//        pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
-//        pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
-//        pa4.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
-//
-//        schema.addPropertyAssertion(pa1);
-//        schema.addPropertyAssertion(pa2);
-//        schema.addPropertyAssertion(pa3);
-//        schema.addPropertyAssertion(pa4);
-//
-//        return schema;
-//    }
+    /**
+     *
+     */
+    @Test
+    public void testNewRBEntity() {
+        ResourceSchema schema = createSchema();
+        NewRBEntity e = new NewRBEntity(schema);
+        NewRBEntity e1 = new NewRBEntity(schema);
+        RBEntityManagerImpl m = new RBEntityManagerImpl(
+        		RBServiceProviderFactory
+                .getDefaultServiceProvider());
+        e.getField("http://lichtflut.de#email").getFieldValues()
+                .add("mutter");
+        m.store(e);
+        e1.getField("http://lichtflut.de#email").getFieldValues()
+                .add("kind");
+        RBField newField = new RBField(new SimpleResourceID("http://lichtflut.de#whatever"), null);
+        e1.addField(newField);
+        e1.getField("http://lichtflut.de#kind").getFieldValues().add(e);
+        e.getField("http://lichtflut.de#kind").getFieldValues().add(e1);
+        m.store(e);
+        System.out.println("type:"+m.find(e1.getID()).getNode().getSingleAssociation(RDF.TYPE));
+        System.out.println("id-->"+m.findAllByType(new SimpleResourceID("http://lichtflut.de#personschema")).size());
+         
+        
+        
+        // System.out.println(MockNewRBEntityFactory.createNewRBEntity().getID());
+    }
+
+    /**
+     * Tests.
+     * @return shema
+     */
+    private ResourceSchema createSchema() {
+        ResourceSchemaImpl schema = new ResourceSchemaImpl(
+                "http://lichtflut.de#", "personschema");
+        PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
+        PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
+        PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
+        PropertyDeclarationImpl p4 = new PropertyDeclarationImpl();
+        p1.setName("http://lichtflut.de#geburtsdatum");
+        p2.setName("http://lichtflut.de#email");
+        p3.setName("http://lichtflut.de#alter");
+        p4.setName("http://lichtflut.de#kind");
+
+        p1.setElementaryDataType(ElementaryDataType.STRING);
+        p2.setElementaryDataType(ElementaryDataType.STRING);
+        p3.setElementaryDataType(ElementaryDataType.INTEGER);
+        p4.setElementaryDataType(ElementaryDataType.RESOURCE);
+
+        p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
+        p4.addConstraint(ConstraintFactory.buildConstraint(schema
+                .getDescribedResourceID()));
+
+        PropertyAssertionImpl pa1 = new PropertyAssertionImpl(
+                new SimpleResourceID("http://lichtflut.de#", "hatGeburtstag"),
+                p1);
+        PropertyAssertionImpl pa2 = new PropertyAssertionImpl(
+                new SimpleResourceID("http://lichtflut.de#", "hatEmail"), p2);
+        PropertyAssertionImpl pa3 = new PropertyAssertionImpl(
+                new SimpleResourceID("http://lichtflut.de#", "hatAlter"), p3);
+        PropertyAssertionImpl pa4 = new PropertyAssertionImpl(
+                new SimpleResourceID("http://lichtflut.de#", "hatKind"), p4);
+
+        pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
+        pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
+        pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
+        pa4.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
+
+        schema.addPropertyAssertion(pa1);
+        schema.addPropertyAssertion(pa2);
+        schema.addPropertyAssertion(pa3);
+        schema.addPropertyAssertion(pa4);
+
+        return schema;
+    }
 
 }

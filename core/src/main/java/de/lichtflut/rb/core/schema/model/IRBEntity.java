@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.schema.model;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
 
 /**
@@ -42,7 +43,12 @@ public interface IRBEntity {
 	 * @return the {@link ResourceID} of this RBEntity's type
 	 */
 	ResourceID getType();
-
+	
+	/**
+	 * 
+	 */
+	ResourceNode getNode();
+	
 	/**
 	 * Returns the {@link IRBField} for a Fieldname.
 	 * @param fieldname - Fieldname

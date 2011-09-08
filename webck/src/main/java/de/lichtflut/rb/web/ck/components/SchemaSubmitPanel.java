@@ -15,7 +15,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.CollectionModel;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+import de.lichtflut.rb.core.api.ResourceSchemaManager;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
@@ -69,7 +69,7 @@ public abstract class SchemaSubmitPanel extends CKComponent {
     	ddc.add(new AjaxFormComponentUpdatingBehavior("onchange") {
 
             protected void onUpdate(final AjaxRequestTarget target) {
-           	 ResourceSchemaManagement rManagement = getServiceProvider().getResourceSchemaManagement();
+           	 ResourceSchemaManager rManagement = getServiceProvider().getResourceSchemaManagement();
         	 String representation = rManagement.loadSchemaRepresenation((RSFormat) ddc.getModelObject());
         	 if((representation==null || representation.length()==0)) {
 				representation = "Insert your schema here";
@@ -91,7 +91,7 @@ public abstract class SchemaSubmitPanel extends CKComponent {
     				error("You have to select at least one format");
     				return;
     			}
-    			ResourceSchemaManagement rManagement = getServiceProvider().getResourceSchemaManagement();
+    			ResourceSchemaManager rManagement = getServiceProvider().getResourceSchemaManagement();
     			rManagement.setFormat(format);
     			String input = area.getModelObject();
     			RSParsingResult result =

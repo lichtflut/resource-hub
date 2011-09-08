@@ -9,20 +9,20 @@ import java.util.Collection;
 
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+import de.lichtflut.rb.core.api.ResourceSchemaManager;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 
 /**
- * Mock-Implementation of {@link ResourceSchemaManagement}.
+ * Mock-Implementation of {@link ResourceSchemaManager}.
  *
  * Created: Aug 30, 2011
  *
  * @author Ravi Knox
  */
-public class MockResourceSchemaManagement implements ResourceSchemaManagement {
+public class MockResourceSchemaManagement implements ResourceSchemaManager {
 
 	private static final long serialVersionUID = 1L;
 

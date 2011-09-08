@@ -11,7 +11,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.core.spi.IRBServiceProvider;
 import de.lichtflut.rb.mock.MockRBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
@@ -42,14 +42,14 @@ import de.lichtflut.rb.web.resources.SharedResourceProvider;
 @SuppressWarnings("serial")
 public abstract class RBSuperPage extends WebPage {
 
-	private static INewRBServiceProvider provider = null;
+	private static IRBServiceProvider provider = null;
 	private String title;
 
 	/**
 	 * Singleton pattern: There will be only one instance per runtime.
-	 * @return {@link INewRBServiceProvider}
+	 * @return {@link IRBServiceProvider}
 	 */
-	public static INewRBServiceProvider  getRBServiceProvider(){
+	public static IRBServiceProvider  getRBServiceProvider(){
 		if(provider==null) {
 			provider= new MockRBServiceProvider();
 		}
