@@ -162,11 +162,12 @@ public final class RBEntityTest {
         e1.getField("http://lichtflut.de#email").getFieldValues()
                 .add("kind");
         RBField newField = new RBField(new SimpleResourceID("http://lichtflut.de#whatever"), null);
+        newField.getFieldValues().add("hohä");
         e1.addField(newField);
         e1.getField("http://lichtflut.de#kind").getFieldValues().add(e);
         e.getField("http://lichtflut.de#kind").getFieldValues().add(e1);
         m.store(e);
-        System.out.println("type:"+m.find(e1.getID()).getNode().getSingleAssociation(RDF.TYPE));
+        System.out.println("type:"+m.find(e.getID()).getAllFields().size());
         System.out.println("id-->"+m.findAllByType(new SimpleResourceID("http://lichtflut.de#personschema")).size());
          
         
