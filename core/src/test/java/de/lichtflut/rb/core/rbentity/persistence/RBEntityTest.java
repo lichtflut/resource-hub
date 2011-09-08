@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.api.impl.NewRBEntityManagement;
+import de.lichtflut.rb.core.api.impl.RBEntityManagerImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
@@ -21,7 +23,6 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.RBField;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 
 
@@ -152,7 +153,7 @@ public final class RBEntityTest {
         ResourceSchema schema = createSchema();
         NewRBEntity e = new NewRBEntity(schema);
         NewRBEntity e1 = new NewRBEntity(schema);
-        NewRBEntityManagement m = new NewRBEntityManagement(
+        RBEntityManagerImpl m = new RBEntityManagerImpl(
         		RBServiceProviderFactory
                 .getDefaultServiceProvider());
         e.getField("http://lichtflut.de#email").getFieldValues()
@@ -162,12 +163,11 @@ public final class RBEntityTest {
                 .add("kind");
         RBField newField = new RBField(new SimpleResourceID("http://lichtflut.de#whatever"), null);
         e1.addField(newField);
-        e1.getField("http://lichtflut.de#whatever").getFieldValues().add(e);
+        e1.getField("http://lichtflut.de#kind").getFieldValues().add(e);
         e.getField("http://lichtflut.de#kind").getFieldValues().add(e1);
         m.store(e);
-        m.store(e1);
-        System.out.println(m.find(e1.getID()).getType());
-        System.out.println("id-->"+m.findAllByType(new SimpleResourceID("personschema")));
+        System.out.println("type:"+m.find(e1.getID()).getNode().getSingleAssociation(RDF.TYPE));
+        System.out.println("id-->"+m.findAllByType(new SimpleResourceID("http://lichtflut.de#personschema")).size());
          
         
         

@@ -9,11 +9,11 @@ import junit.framework.Assert;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.api.ResourceSchemaManagement;
+import de.lichtflut.rb.core.api.ResourceSchemaManager;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
-import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.core.spi.IRBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 
 /**
@@ -35,8 +35,8 @@ public class OSFPersistenceTest {
 	@Test
 	public void testStoringAndParsingOSF() {
 
-		INewRBServiceProvider provider = RBServiceProviderFactory.getDefaultServiceProvider();
-		ResourceSchemaManagement rManagement = provider.getResourceSchemaManagement();
+		IRBServiceProvider provider = RBServiceProviderFactory.getDefaultServiceProvider();
+		ResourceSchemaManager rManagement = provider.getResourceSchemaManagement();
 		//Set parsing format to OSF
 		rManagement.setFormat(RSFormat.OSF);
 		//Get ResourceSchemaTypes

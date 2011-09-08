@@ -5,21 +5,21 @@ package de.lichtflut.rb.mock;
 
 import org.arastreju.sge.ArastrejuGate;
 
-import de.lichtflut.rb.core.api.INewRBEntityManagement;
-import de.lichtflut.rb.core.api.ResourceSchemaManagement;
-import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.core.api.RBEntityManager;
+import de.lichtflut.rb.core.api.ResourceSchemaManager;
+import de.lichtflut.rb.core.spi.IRBServiceProvider;
 
 /**
- * Mock-Implementation of {@link INewRBServiceProvider}.
+ * Mock-Implementation of {@link IRBServiceProvider}.
  *
  * Created: Aug 30, 2011
  *
  * @author Ravi Knox
  */
-public class MockRBServiceProvider implements INewRBServiceProvider {
+public class MockRBServiceProvider implements IRBServiceProvider {
 
-	private ResourceSchemaManagement schemaManagement = null;
-	private INewRBEntityManagement typeManagement = null;
+	private ResourceSchemaManager schemaManagement = null;
+	private RBEntityManager typeManagement = null;
 
 	/**
 	 * Constructor.
@@ -41,7 +41,7 @@ public class MockRBServiceProvider implements INewRBServiceProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResourceSchemaManagement getResourceSchemaManagement() {
+	public ResourceSchemaManager getResourceSchemaManagement() {
 		return schemaManagement;
 	}
 
@@ -49,7 +49,7 @@ public class MockRBServiceProvider implements INewRBServiceProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public INewRBEntityManagement getRBEntityManagement() {
+	public RBEntityManager getRBEntityManagement() {
 		return typeManagement;
 	}
 

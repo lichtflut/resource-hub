@@ -4,7 +4,7 @@
 package de.lichtflut.rb.web.ck.components;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.core.spi.IRBServiceProvider;
 
 /**
  * This Panel represents an {@link IRBEntity}.
@@ -48,7 +48,7 @@ public class ResourceInfoPanel extends CKComponent {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public INewRBServiceProvider getServiceProvider() {return null;}
+	public IRBServiceProvider getServiceProvider() {return null;}
 
 	/**
 	 * {@inheritDoc}

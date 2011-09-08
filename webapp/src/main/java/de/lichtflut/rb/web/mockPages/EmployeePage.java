@@ -6,7 +6,7 @@ package de.lichtflut.rb.web.mockPages;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
 import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.core.spi.IRBServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -37,7 +37,7 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 				return null;
 			}
 			@Override
-			public INewRBServiceProvider getServiceProvider() {
+			public IRBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 		});
@@ -57,7 +57,7 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 				return null;
 			}
 			@Override
-			public INewRBServiceProvider getServiceProvider() {
+			public IRBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 		});

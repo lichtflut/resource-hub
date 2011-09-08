@@ -15,8 +15,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
 
-import de.lichtflut.rb.core.api.INewRBEntityManagement;
-import de.lichtflut.rb.core.api.RBEntityManagement.SearchContext;
+import de.lichtflut.rb.core.api.RBEntityManager;
+import de.lichtflut.rb.core.api.OldRBEntityManagement.SearchContext;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
@@ -168,7 +168,7 @@ public abstract class SearchBar extends CKComponent{
 					rSchemas = filter;
 				}
 				  @SuppressWarnings("unused")
-				final INewRBEntityManagement typeManagement =getServiceProvider().getRBEntityManagement();
+				final RBEntityManager typeManagement =getServiceProvider().getRBEntityManagement();
 				  final Collection<IRBEntity> instances = null;
 //				  TODO: FIX!!!
 //					  typeManagement.loadAllEntitiesForSchema(rSchemas,input,sContext);

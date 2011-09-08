@@ -23,7 +23,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.impl.RBField;
-import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.core.spi.IRBServiceProvider;
 import de.lichtflut.rb.web.ck.components.fields.CKFormRowItem;
 import de.lichtflut.rb.web.models.NewGenericResourceModel;
 
@@ -70,7 +70,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		for (IRBField field : entity.getAllFields()) {
 			view.add(new CKFormRowItem(view.newChildId(), field){
 				@Override
-				public INewRBServiceProvider getServiceProvider() {
+				public IRBServiceProvider getServiceProvider() {
 					return ResourceDetailPanel.this.getServiceProvider();
 				}
 				@Override

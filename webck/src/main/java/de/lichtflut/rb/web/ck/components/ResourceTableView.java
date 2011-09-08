@@ -19,7 +19,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.spi.INewRBServiceProvider;
+import de.lichtflut.rb.core.spi.IRBServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 
 /**
@@ -244,7 +244,7 @@ public abstract class ResourceTableView extends CKComponent {
 										}
 
 										@Override
-										public INewRBServiceProvider getServiceProvider() {
+										public IRBServiceProvider getServiceProvider() {
 											return  ResourceTableView.this.getServiceProvider();
 										}
 									});
@@ -274,7 +274,7 @@ public abstract class ResourceTableView extends CKComponent {
 							@Override
 							public CKComponent setViewMode(final ViewMode mode) {return null;}
 							@Override
-							public INewRBServiceProvider getServiceProvider() {
+							public IRBServiceProvider getServiceProvider() {
 								return ResourceTableView.this.getServiceProvider();
 							}
 						});
@@ -296,7 +296,7 @@ public abstract class ResourceTableView extends CKComponent {
 							@Override
 							protected void initComponent(final CKValueWrapperModel model) {}
 							@Override
-							public INewRBServiceProvider getServiceProvider() {return null;}
+							public IRBServiceProvider getServiceProvider() {return null;}
 						});
 					}
 				};
