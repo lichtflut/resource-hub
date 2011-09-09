@@ -23,7 +23,6 @@ import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
 import de.lichtflut.rb.core.spi.IRBServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
-import de.lichtflut.rb.web.ck.components.CKComponent.ViewMode;
 
 /**
  * <p>

@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.arastreju.sge.model.ElementaryDataType;
 
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.web.behaviors.DatePickerBehavior;
@@ -51,9 +52,14 @@ class CKTextField extends Panel {
 		container.setOutputMarkupId(true);
 		view = new RepeatingView("repeatingView");
 		if (values.isEmpty()) {
-			values.add("");
+			if(field.getDataType().equals(ElementaryDataType.STRING)){
+				values.add("");
+			}else if(field.getDataType().equals(ElementaryDataType.DATE)){
+				values.add(new Date());
+			}
 		}
 		while(index < values.size()){
+
 			view.add(createTextField(index++));
 		}
 		container.add(view);

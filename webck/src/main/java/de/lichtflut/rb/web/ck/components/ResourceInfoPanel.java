@@ -34,7 +34,11 @@ public class ResourceInfoPanel extends Panel {
 	 */
 	public ResourceInfoPanel(final String id, final IRBEntity entity) {
 		super(id);
-		add(new Label("label", entity.getLabel()));
+		String title = entity.getLabel();
+		if(title.equals("")){
+			title = "Create new " + entity.getType();
+		}
+		add(new Label("label", title));
 	}
 
 }

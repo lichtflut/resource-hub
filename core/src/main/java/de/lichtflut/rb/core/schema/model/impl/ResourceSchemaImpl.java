@@ -33,7 +33,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  *
  * @author Nils Bleisch
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "deprecation" })
 public final class ResourceSchemaImpl implements ResourceSchema {
 
 	//Instance members
