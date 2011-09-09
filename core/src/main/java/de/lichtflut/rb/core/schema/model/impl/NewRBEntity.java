@@ -46,17 +46,26 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	/**
 	 * Creates a new entity without schema.
-	 * @param type -
+	 * @param type - rdf:type
 	 */
 	public NewRBEntity(final ResourceID type) {
 		this(new SNResource(), type);
 	}
 
 	/**
+	 * Creates a new entity with a given schema.
+	 *
+	 * @param schema - The schema.
+	 */
+	public NewRBEntity(final ResourceSchema schema) {
+		this(new SNResource(), schema);
+	}
+
+	/**
 	 * Creates an entity based on given node without schema.
 	 *
 	 * @param node - The node.
-	 * @param type -
+	 * @param type - rdf:type
 	 */
 	public NewRBEntity(final ResourceNode node, final ResourceID type) {
 		super();
@@ -70,15 +79,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 				this.type.add(assoc.getObject().asResource().asClass());
 			}
 		}
-	}
-
-	/**
-	 * Creates a new entity with a given schema.
-	 *
-	 * @param schema - The schema.
-	 */
-	public NewRBEntity(final ResourceSchema schema) {
-		this(new SNResource(), schema);
+		initializeFields();
 	}
 
 	/**
@@ -130,6 +131,9 @@ public class NewRBEntity implements IRBEntity, Serializable {
 		}
 		// TODO: Remove from blacklist rdf(s):*
 		for (ResourceID predicate : predicates) {
+			System.out.println("PREDICATE: " + predicate);
+			System.out.println("VALUE: " + node
+				.getAssociationClients(predicate));
 			fields.add(new RBField(predicate, node
 				.getAssociationClients(predicate)));
 		}

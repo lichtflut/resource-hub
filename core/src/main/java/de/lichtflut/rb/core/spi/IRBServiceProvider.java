@@ -5,8 +5,8 @@ package de.lichtflut.rb.core.spi;
 
 import org.arastreju.sge.ArastrejuGate;
 
+import de.lichtflut.rb.core.api.ISchemaManagement;
 import de.lichtflut.rb.core.api.RBEntityManager;
-import de.lichtflut.rb.core.api.ResourceSchemaManager;
 
 /**
   * <p>
@@ -26,12 +26,12 @@ public interface IRBServiceProvider {
 	// -----------------------------------------------------
 
 	/**
-	 * {@link ResourceSchemaManager} provides the ability to generate, manipulate, maintain,
+	 * {@link ISchemaManagement} provides the ability to generate, manipulate, maintain,
 	 * persist and store an ResourceSchema through several I/O sources.
 	 * It's also interpreting the schema, checks for consistency and contains powerful error-processing mechanisms.
-	 * @return {@link ResourceSchemaManager}
+	 * @return {@link ISchemaManagement}
 	 */
-	ResourceSchemaManager getResourceSchemaManagement();
+	ISchemaManagement getResourceSchemaManagement();
 
 	// -----------------------------------------------------
 

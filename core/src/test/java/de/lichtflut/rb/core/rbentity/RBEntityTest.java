@@ -35,6 +35,7 @@ import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
  *
  * @author Nils Bleisch
  */
+@SuppressWarnings("deprecation")
 public final class RBEntityTest {
 
     /**
@@ -48,7 +49,7 @@ public final class RBEntityTest {
     /**
      * @param
      */
-    @Test
+	@Test
     public void testResourceTypeInstance() {
         // Generate an instance for a given schema
         RBEntity<Object> instance = createPersonSchema().generateRBEntity();
@@ -191,15 +192,15 @@ public final class RBEntityTest {
 
         ResourceSchema carSchema = createCarSchema(personSchema);
 
-        provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(
-                personSchema);
+//        provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(
+//                personSchema);
         RBEntity<Object> person0 = personSchema.generateRBEntity();
         Assert.assertNotNull(person0);
         RBEntity<Object> person1 = personSchema.generateRBEntity();
         Assert.assertNotNull(person1);
-
-        provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(
-                carSchema);
+//
+//        provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(
+//                carSchema);
         RBEntity<Object> car0 = carSchema.generateRBEntity();
 
         int ticket0 = -1;

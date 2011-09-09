@@ -32,7 +32,7 @@ public class EmployeesPage extends RBSuperPage {
 		ResourceTableView view =
 			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getRBEntityManagement().findAllByType(null)){
 			@Override
-			public INewRBServiceProvider getServiceProvider() {
+			public IRBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 			@Override

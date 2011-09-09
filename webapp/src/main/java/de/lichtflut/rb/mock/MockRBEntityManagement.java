@@ -57,7 +57,7 @@ public class MockRBEntityManagement implements RBEntityManager {
 	}
 
 	@Override
-	public IRBEntity store(final IRBEntity entity) {
+	public void store(final IRBEntity entity) {
 		if(dataPool.contains(entity)){
 			dataPool.remove(entity);
 			dataPool.add(entity);
@@ -65,7 +65,6 @@ public class MockRBEntityManagement implements RBEntityManager {
 		}else{
 			dataPool.add(entity);
 		}
-		return entity;
 	}
 
 	@Override

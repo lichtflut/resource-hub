@@ -15,12 +15,15 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
 import de.lichtflut.rb.core.spi.IRBServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
+import de.lichtflut.rb.web.ck.components.CKComponent.ViewMode;
 
 /**
  * <p>
@@ -393,13 +396,52 @@ public abstract class ResourceTableView extends CKComponent {
 		indexTableHeader(entites);
 		addHeader();
 		addRows(entites);
-		CKLink link = new CKLink("addEntity", "Add new Item", CKLinkType.CUSTOM_BEHAVIOR);
-		link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
-			@Override
-			public Object execute(final Object... objects) {
-				return null;
+		addNewEntityLinkPanel();
+	}
+
+	/**
+	 * Adds a {@link RepeatingView} to this {@link ResourceTableView} containing a
+	 * {@link CKLink} for each RDF:TYPE contained by this View.
+	 * With this Link a new {@link IRBEntity} can be created for that type
+	 */
+	private void addNewEntityLinkPanel() {
+		RepeatingView view = new RepeatingView("addEntity");
+		for(final ResourceID type : getAllTypes()){
+			CKLink link = new CKLink(view.newChildId(), "Add " + type.getName(), CKLinkType.CUSTOM_BEHAVIOR);
+			link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
+				@Override
+				public Object execute(final Object... objects) {
+					IRBEntity entity = new NewRBEntity(ResourceTableView.this.getServiceProvider()
+							.getResourceSchemaManagement().getResourceSchemaForResourceType(type));
+					ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID, entity) {
+						@Override
+						public CKComponent setViewMode(final ViewMode mode) {
+							return null;
+						}
+						@Override
+						public IRBServiceProvider getServiceProvider() {
+							return ResourceTableView.this.getServiceProvider();
+						}
+					});
+					return null;
+				}
+			});
+			view.add(link);
+		}
+		this.add(view);
+	}
+
+	/**
+	 * Extracts all types as {@link ResourceID}s from the {@link IRBEntity}s displayed by this {@link ResourceTableView}.
+	 * @return a list of all types contained by this table
+	 */
+	private List<ResourceID> getAllTypes() {
+		List<ResourceID> types = new ArrayList<ResourceID>();
+		for(IRBEntity e : entites){
+			if(!types.contains(e.getType())){
+				types.add(e.getType());
 			}
-		});
-		add(link);
+		}
+		return types;
 	}
 }

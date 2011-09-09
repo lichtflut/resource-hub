@@ -3,15 +3,8 @@
  */
 package de.lichtflut.rb.core.rbentity.persistence;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.nodes.SemanticNode;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.api.impl.RBEntityManagerImpl;
@@ -169,9 +162,6 @@ public final class RBEntityTest {
         m.store(e);
         System.out.println("type:"+m.find(e.getID()).getAllFields().size());
         System.out.println("id-->"+m.findAllByType(new SimpleResourceID("http://lichtflut.de#personschema")).size());
-         
-        
-        
         // System.out.println(MockNewRBEntityFactory.createNewRBEntity().getID());
     }
 

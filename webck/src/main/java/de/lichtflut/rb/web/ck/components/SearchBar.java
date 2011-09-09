@@ -36,6 +36,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  *
  * @author Nils Bleisch
  */
+@SuppressWarnings("deprecation")
 public abstract class SearchBar extends CKComponent{
 
 // TODO: integrate NewRBService

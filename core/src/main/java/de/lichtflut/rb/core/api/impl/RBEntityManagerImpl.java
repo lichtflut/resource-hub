@@ -14,7 +14,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.model.nodes.views.SNEntity;
+
 import de.lichtflut.rb.core.api.RBEntityManager;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
@@ -23,11 +23,12 @@ import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
 import de.lichtflut.rb.core.spi.IRBServiceProvider;
 
 /**
- * 
+ *
  * @author Raphael Esterle
- * 
+ *
  */
-
+//CHECKSTYLE:OFF
+//TODO: Raphael bitte fix Checkstyle errors....
 public class RBEntityManagerImpl implements RBEntityManager {
 
 	private final IRBServiceProvider provider;

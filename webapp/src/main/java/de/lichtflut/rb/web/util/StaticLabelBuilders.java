@@ -109,7 +109,10 @@ public final class StaticLabelBuilders implements Serializable{
 		for(ResourceID predicate : predicates) {
 			append(sb, entity, predicate);
 		}
-		return sb.substring(0, sb.length()-2);
+		if(sb.length() > 0){
+			return sb.substring(0, sb.length()-2);
+		}
+		return sb.toString();
 	}
 
 	/**
