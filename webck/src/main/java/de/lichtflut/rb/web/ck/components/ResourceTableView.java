@@ -3,7 +3,9 @@
  */
 package de.lichtflut.rb.web.ck.components;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -209,17 +212,7 @@ public abstract class ResourceTableView extends CKComponent {
 					isResource = true;
 				}
 			}
-			String output = "";
-			for (Object s : field.getFieldValues()) {
-				if (s == null) {
-					s = "";
-				}
-				output = output.concat(s.toString() + ", ");
-			}
-			// Cut of last ", "
-			if(output.length() > 0){
-				output = output.substring(0, output.length() - 2);
-			}
+
 			if (getBehavior(ADD_CUSTOM_ROW_ITEM) != null) {
 				item.add((Component) getBehavior(ADD_CUSTOM_ROW_ITEM).execute(
 						"data", e, field));
@@ -236,17 +229,14 @@ public abstract class ResourceTableView extends CKComponent {
 							CKLink link = new CKLink(view.newChildId(), entity.getLabel(),
 									CKLinkType.CUSTOM_BEHAVIOR);
 							link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
-
 								@Override
 								public Object execute(final Object... objects) {
 									ResourceTableView.this.replaceWith(
 											new ResourceDetailPanel(componentID, entity) {
-
 										@Override
 										public CKComponent setViewMode(final ViewMode mode) {
 											return null;
 										}
-
 										@Override
 										public IRBServiceProvider getServiceProvider() {
 											return  ResourceTableView.this.getServiceProvider();
@@ -262,7 +252,29 @@ public abstract class ResourceTableView extends CKComponent {
 					}
 					item.add(view);
 				} else {
-					item.add(new Label("data", output));
+					String output = "";
+					if(field.getDataType().equals(ElementaryDataType.DATE)){
+						for (Object o : field.getFieldValues()) {
+							Date date = (Date) o;
+							if(date != null){
+								output = output.concat(DateFormat.getDateInstance(DateFormat.SHORT)
+										.format(date));
+							}
+						}
+						item.add(new Label("data", output));
+					}else{
+						for (Object s : field.getFieldValues()) {
+							if (s == null) {
+								s = "";
+							}
+							output = output.concat(s.toString() + ", ");
+						}
+						// Cut of last ", "
+						if(output.length() > 0){
+							output = output.substring(0, output.length() - 2);
+						}
+						item.add(new Label("data", output));
+					}
 				}
 			}
 		} else if (item.getModelObject() instanceof String) {
