@@ -50,6 +50,9 @@ class CKTextField extends Panel {
 		container = new WebMarkupContainer("container");
 		container.setOutputMarkupId(true);
 		view = new RepeatingView("repeatingView");
+		if (values.isEmpty()) {
+			values.add("");
+		}
 		while(index < values.size()){
 			view.add(createTextField(index++));
 		}
