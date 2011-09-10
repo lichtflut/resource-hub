@@ -109,7 +109,10 @@ public final class StaticLabelBuilders implements Serializable{
 		for(ResourceID predicate : predicates) {
 			append(sb, entity, predicate);
 		}
-		return sb.substring(0, sb.length()-2);
+		if(sb.length() > 0){
+			return sb.substring(0, sb.length()-2);
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -121,9 +124,13 @@ public final class StaticLabelBuilders implements Serializable{
 	private static void append(final StringBuilder sb, final IRBEntity entity, final ResourceID predicate) {
 		final IRBField field = entity.getField(predicate.getQualifiedName().toURI());
 		for (Object value : field.getFieldValues()) {
-			sb.append(value);
+			if((field.isResourceReference()) && (value != null)){
+				IRBEntity e = (IRBEntity) value;
+				sb.append(e.getLabel());
+			}else{
+				sb.append(value);
+			}
 			sb.append(", ");
 		}
 	}
-
 }

@@ -65,7 +65,18 @@ public abstract class ResourcePicker extends CKComponent {
 				String popupInfo = "";
 				for(IRBField field : entity.getAllFields()){
 					if(field.getFieldValues().toString().contains(inputSnippet)){
-						popupInfo = field.getLabel() + ": " + field.getFieldValues();
+						popupInfo = field.getLabel() + ": ";
+						for (Object o : field.getFieldValues()) {
+							if(o != null){
+								if(field.isResourceReference()){
+									IRBEntity e = (IRBEntity) o;
+									popupInfo = popupInfo.concat(e.getLabel() + ", ");
+								}else{
+									popupInfo = popupInfo.concat(o.toString() + ", ");
+								}
+							}
+						}
+						popupInfo = popupInfo.substring(0, popupInfo.length()-2);
 						break;
 					}
 				}
@@ -85,11 +96,24 @@ public abstract class ResourcePicker extends CKComponent {
 			@Override
 			protected Iterator<IRBEntity> getChoices(final String input) {
 				List<IRBEntity> entityList = new ArrayList<IRBEntity>();
-				Iterator i = entites.iterator();
-				while(i.hasNext()){
-					IRBEntity s = (IRBEntity) i.next();
-					if(s.toString().contains(input)){
-						entityList.add(s);
+				for (IRBEntity e : entites) {
+					String s = "";
+					for (IRBField field : e.getAllFields()) {
+						System.out.println(field.getFieldValues() + " --");
+						if((field.isResourceReference()) && (!field.getFieldValues().isEmpty())){
+							for (Object o : field.getFieldValues()) {
+								IRBEntity e1 = (IRBEntity) o;
+								if(e1 != null){
+									s = s.concat(e1.getLabel().toLowerCase());
+								}
+							}
+						}else{
+							s = s.concat(field.getFieldValues().toString().toLowerCase());
+						}
+					}
+					System.out.println(s);
+					if(s.contains(input.toLowerCase())){
+						entityList.add(e);
 					}
 				}
 				inputSnippet = input;

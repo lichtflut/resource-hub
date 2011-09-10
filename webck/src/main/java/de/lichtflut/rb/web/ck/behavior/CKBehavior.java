@@ -14,6 +14,17 @@ import java.io.Serializable;
  */
 public interface CKBehavior extends Serializable {
 
+	CKBehavior VOID_BEHAVIOR = new CKBehavior() {
+		private static final long serialVersionUID = 1L;
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Object execute(final Object... objects) {
+			return null;
+		}
+	};
+
 	/**
 	 * TODO: DESCRIPTION.
 	 * @param objects -

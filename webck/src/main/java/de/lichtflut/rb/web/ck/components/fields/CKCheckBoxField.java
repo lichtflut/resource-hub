@@ -36,10 +36,9 @@ class CKCheckBoxField extends Panel {
 	public CKCheckBoxField(final String id, final IRBField field) {
 		super(id);
 		IModel<List<Boolean>> listModel = new ListModel(field.getFieldValues());
-		// setDefaultModel(listModel);
 
-		if (listModel.getObject().size() == 0) {
-			// Display at least one textfield.
+		// Display at least one textfield.
+		if (field.getFieldValues().isEmpty()) {
 			listModel.getObject().add(false);
 		}
 		add(createListView(listModel));

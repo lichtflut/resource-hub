@@ -3,166 +3,51 @@
  */
 package de.lichtflut.rb.mock;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.Collection;
+import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.api.ResourceSchemaManager;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.api.ISchemaManagement;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.parser.RSFormat;
-import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 
 /**
- * Mock-Implementation of {@link ResourceSchemaManager}.
+ * Mock-Implementation of {@link ISchemaManagement}.
  *
  * Created: Aug 30, 2011
  *
  * @author Ravi Knox
  */
-public class MockResourceSchemaManagement implements ResourceSchemaManager {
+public class MockResourceSchemaManagement implements ISchemaManagement {
 
 	private static final long serialVersionUID = 1L;
 
+	private List<ResourceSchema> schemas;
 	/**
 	 * Default Constructor.
 	 */
 	public MockResourceSchemaManagement() {
+		schemas = MockResourceSchemaFactory.getAllShemas();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setFormat(final RSFormat format) {
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RSFormat getFormat() {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void storeSchemaRepresentation(final String representation, final RSFormat format) {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String loadSchemaRepresenation(final RSFormat format) {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RSParsingResult generateAndResolveSchemaModelThrough(final InputStream is) {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RSParsingResult generateAndResolveSchemaModelThrough(final File file) {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RSParsingResult generateAndResolveSchemaModelThrough(final String s) {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RSParsingResult generateSchemaModelThrough(final InputStream is) {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RSParsingResult generateSchemaModelThrough(final File file) {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RSParsingResult generateSchemaModelThrough(final String s) {
-		return null;
-	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public ResourceSchema getResourceSchemaForResourceType(final ResourceID id) {
-		return null;
+		ResourceSchema rs = null;
+		for (ResourceSchema schema : schemas) {
+			if(schema.getDescribedResourceID() == id){
+				return schema;
+			}
+		}
+		return rs;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Collection<ResourceSchema> getAllResourceSchemas() {
-		return null;
-	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public Collection<PropertyDeclaration> getAllPropertyDeclarations() {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void storeOrOverrideResourceSchema(final ResourceSchema schema) {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void storeOrOverridePropertyDeclaration(
-			final PropertyDeclaration declaration) {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void storeOrOverrideResourceSchema(final Collection<ResourceSchema> schema) {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void storeOrOverridePropertyDeclaration(
-			final Collection<PropertyDeclaration> declarations) {
+	public List<ResourceSchema> getAllResourceSchemas() {
+		return schemas;
 	}
 
 }

@@ -27,7 +27,6 @@ import de.lichtflut.rb.core.spi.IRBServiceProvider;
  * @author Raphael Esterle
  *
  */
-
 public class RBEntityManagerImpl implements RBEntityManager {
 
 	private final IRBServiceProvider provider;

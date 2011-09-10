@@ -43,12 +43,13 @@ public interface IRBEntity {
 	 * @return the {@link ResourceID} of this RBEntity's type
 	 */
 	ResourceID getType();
-	
+
 	/**
-	 * 
+	 * Returns the {@link IRBEntity} as an {@link ResourceNode}.
+	 * @return the IRBEntity as an ResourceNode
 	 */
 	ResourceNode getNode();
-	
+
 	/**
 	 * Returns the {@link IRBField} for a Fieldname.
 	 * @param fieldname - Fieldname

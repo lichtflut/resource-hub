@@ -28,7 +28,25 @@ public class EmployeesPage extends RBSuperPage {
 	 * Constructor.
 	 */
 	public EmployeesPage() {
-		this(null);
+		super("");
+		ResourceTableView view =
+			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getRBEntityManagement().findAllByType(null)){
+			@Override
+			public IRBServiceProvider getServiceProvider() {
+				return getRBServiceProvider();
+			}
+			@Override
+			public CKComponent setViewMode(final ViewMode mode) {return null;}
+		};
+		view.addBehavior(ResourceTableView.SHOW_DETAILS, new CKBehavior() {
+
+			@Override
+			public Object execute(final Object... objects) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		});
+		add(view);
 	}
 
 	/**
@@ -48,29 +66,9 @@ public class EmployeesPage extends RBSuperPage {
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {return null;}
 		};
-		view.addBehavior(ResourceTableView.SHOW_DETAILS, new CKBehavior() {
-
-			@Override
-			public Object execute(final Object... objects) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		});
-//		view.addBehavior(ResourceTableView.UPDATE_ROW_ITEM, new CKBehavior() {
-//
-//			@Override
-//			public Object execute(final Object... objects) {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//		});
-//		view.addBehavior(ResourceTableView.DELETE_ROW_ITEM, new CKBehavior() {
-//
-//			@Override
-//			public Object execute(final Object... objects) {
-//				return null;
-//			}
-//		});
+		view.addBehavior(ResourceTableView.SHOW_DETAILS, CKBehavior.VOID_BEHAVIOR);
+		view.addBehavior(ResourceTableView.UPDATE_ROW_ITEM, CKBehavior.VOID_BEHAVIOR);
+		view.addBehavior(ResourceTableView.DELETE_ROW_ITEM, CKBehavior.VOID_BEHAVIOR);
 		add(view);
 	}
 

@@ -28,7 +28,7 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
  *
  * @author Nils Bleisch
  */
-public interface ResourceSchemaManager extends Serializable{
+public interface OldResourceSchemaManager extends Serializable{
 
 
 	/**

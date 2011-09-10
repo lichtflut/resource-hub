@@ -46,17 +46,30 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	/**
 	 * Creates a new entity without schema.
+<<<<<<< HEAD
 	 * @param type -
+=======
+	 * @param type - rdf:type
+>>>>>>> 7cf153d55197264c0e0c547b580f2980bb05874d
 	 */
 	public NewRBEntity(final ResourceID type) {
 		this(new SNResource(), type);
 	}
 
 	/**
+	 * Creates a new entity with a given schema.
+	 *
+	 * @param schema - The schema.
+	 */
+	public NewRBEntity(final ResourceSchema schema) {
+		this(new SNResource(), schema);
+	}
+
+	/**
 	 * Creates an entity based on given node without schema.
 	 *
 	 * @param node - The node.
-	 * @param type -
+	 * @param type - rdf:type
 	 */
 	public NewRBEntity(final ResourceNode node, final ResourceID type) {
 		super();
@@ -71,15 +84,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 			}
 		}
 		initializeFields();
-	}
 
-	/**
-	 * Creates a new entity with a given schema.
-	 *
-	 * @param schema - The schema.
-	 */
-	public NewRBEntity(final ResourceSchema schema) {
-		this(new SNResource(), schema);
 	}
 
 	/**
@@ -131,6 +136,9 @@ public class NewRBEntity implements IRBEntity, Serializable {
 		}
 		// TODO: Remove from blacklist rdf(s):*
 		for (ResourceID predicate : predicates) {
+			System.out.println("PREDICATE: " + predicate);
+			System.out.println("VALUE: " + node
+				.getAssociationClients(predicate));
 			fields.add(new RBField(predicate, node
 				.getAssociationClients(predicate)));
 		}
@@ -165,6 +173,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	@Override
 	public ResourceID getType() {
+//		node.asEntity().getMainClass();
 		// TODO Get type from node
 		return type.get(0);
 	}
@@ -219,9 +228,6 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 */
 	@Override
 	public String toString(){
-//		if(getLabel() != null || getLabel().equals("") || getLabel().equals(this.getID())){
-//			return getLabel();
-//		}
 		String s = getQualifiedName() + ", ";
 		for(IRBField field : getAllFields()){
 			if(field.isResourceReference()){
