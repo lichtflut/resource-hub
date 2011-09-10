@@ -42,7 +42,6 @@ public interface RBEntityManager extends Serializable {
     /**
      *
      * @param entity /
-     * @return
      *
      * Stores an Entity and returns the saved entity.
      */

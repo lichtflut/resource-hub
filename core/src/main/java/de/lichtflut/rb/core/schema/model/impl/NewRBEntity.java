@@ -46,8 +46,9 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	/**
 	 * Creates a new entity without schema.
+	 * @param type -
 	 */
-	public NewRBEntity(ResourceID type) {
+	public NewRBEntity(final ResourceID type) {
 		this(new SNResource(), type);
 	}
 
@@ -55,20 +56,21 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * Creates an entity based on given node without schema.
 	 *
 	 * @param node - The node.
+	 * @param type -
 	 */
-	public NewRBEntity(final ResourceNode node, ResourceID type) {
+	public NewRBEntity(final ResourceNode node, final ResourceID type) {
 		super();
 		this.node=node;
 		this.type = new ArrayList<ResourceID>();
 		this.schema = null;
 		if(node.getAssociations(RDF.TYPE).isEmpty()){
 			this.type.add(type);
-		}
-		else{
+		}else{
 			for (Association assoc : node.getAssociations(RDF.TYPE)) {
 				this.type.add(assoc.getObject().asResource().asClass());
 			}
 		}
+		initializeFields();
 	}
 
 	/**
@@ -156,8 +158,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	public String getLabel() {
 		if(null!=schema){
 			return schema.getLabelBuilder().build(this);
-		}
-		else{
+		}else{
 			return "";
 		}
 	}

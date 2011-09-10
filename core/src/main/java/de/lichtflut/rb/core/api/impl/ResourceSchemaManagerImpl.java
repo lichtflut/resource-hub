@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.slf4j.Logger;
@@ -30,6 +29,7 @@ import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
+import de.lichtflut.rb.core.spi.IRBServiceProvider;
 
 /**
  * Reference impl of {@link ResourceSchemaManager}.
@@ -45,7 +45,7 @@ public class ResourceSchemaManagerImpl implements ResourceSchemaManager {
 
 	// -------------MEMBER-FIELDS--------------------------
 
-	private ArastrejuGate gate = null;
+	private IRBServiceProvider provider = null;
 	private RBSchemaStore store = null;
 	private RSFormat format = null;
 
@@ -55,13 +55,11 @@ public class ResourceSchemaManagerImpl implements ResourceSchemaManager {
 
 	/**
 	 * Constructor.
-	 * @param gate -
+	 * @param provider -
 	 */
-	public ResourceSchemaManagerImpl(final ArastrejuGate gate){
-		//Trigger a NullPointerException
-		gate.toString();
-		this.gate = gate;
-		store = new RBSchemaStore(this.gate);
+	public ResourceSchemaManagerImpl(final IRBServiceProvider provider){
+		this.provider = provider;
+		store = new RBSchemaStore(provider.getArastejuGateInstance());
 		//Set SimpleRSF as default format and parsing unit
 		setFormat(RSFormat.SIMPLE_RSF);
 	}
