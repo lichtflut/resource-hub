@@ -12,7 +12,14 @@
 	<div class="ck-component generic-resource-detail-panel">
 		<div class="ck-header"></div>
 		<div class="ck-content">
-			<wicket:container wicket:id="container"></wicket:container>
+			<div wicket:id="infoPanel"></div>
+			<form>
+				<div wicket:id="details" class="resource-detail-panel read-only">
+					<div wicket:id="label" class="column label">[LABEL]</div>
+					<div wicket:id="valueList" class="column value">[VALUE_LIST]</div>
+				</div>
+			</form>
+			<div class="edit"><a wicket:id="editLink">[LINK]</a></div>
 		</div>
 		<div class="ck-footer"></div>
 	</div>

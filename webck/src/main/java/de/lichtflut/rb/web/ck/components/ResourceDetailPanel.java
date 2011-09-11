@@ -9,8 +9,12 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
@@ -24,6 +28,7 @@ import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.impl.RBField;
 import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.fields.CKFormRowItem;
 import de.lichtflut.rb.web.models.NewGenericResourceModel;
 
@@ -43,6 +48,8 @@ import de.lichtflut.rb.web.models.NewGenericResourceModel;
 public abstract class ResourceDetailPanel extends CKComponent  {
 
 	private IRBEntity entity;
+	private String componentID;
+	private boolean readOnly;
 
 	/**
 	 * Constructor.
@@ -50,49 +57,40 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 	 * @param entity - Instance of {@link IRBEntity}
 	 */
 	public ResourceDetailPanel(final String id, final IRBEntity entity) {
+		this(id, entity, true);
+	}
+
+	/**
+	 * Constructor.
+	 * @param id - wicket:id
+	 * @param entity - Instance of {@link IRBEntity}
+	 * @param readOnly - true if this form is readOnly, false if it should accept input.
+	 */
+	public ResourceDetailPanel(final String id, final IRBEntity entity, final boolean readOnly) {
 		super(id);
+		this.componentID = id;
 		this.entity = entity;
+		this.readOnly = readOnly;
 		buildComponent();
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
-		this.setOutputMarkupId(true);
-		this.add(new ResourceInfoPanel("infoPanel", entity));
-		this.add(new FeedbackPanel("feedbackPanel"));
-		Form form = new Form("form") {
-			@Override
-			protected void onSubmit() {
-				getServiceProvider().getRBEntityManagement().store(entity);
-			}
-		};
-		final RepeatingView view = new RepeatingView("fieldItem");
-		for (IRBField field : entity.getAllFields()) {
-			view.add(new CKFormRowItem(view.newChildId(), field){
+		if(readOnly){
+			this.add(new Readable("container"));
+		}else{
+			this.add(new Writeable("container"){
 				@Override
 				public IRBServiceProvider getServiceProvider() {
 					return ResourceDetailPanel.this.getServiceProvider();
 				}
+
 				@Override
-				public CKComponent setViewMode(final ViewMode view) {return null;}
+				public CKComponent setViewMode(final ViewMode mode) {
+					return null;
+				}
 			});
 		}
-		form.add(new AjaxButton("addKeyValue") {
-			@Override
-			protected void onSubmit(final AjaxRequestTarget target,final Form<?> form) {
-				view.add(new KeyValueField(view.newChildId(), entity));
-				form.add(view);
-				target.add(form);
-			}
-			@Override
-			protected void onError(final AjaxRequestTarget target,final  Form<?> form) {
-				onSubmit(target, form);
-			}
-		});
-		form.add(view);
-		this.add(form);
-
 	}
 
 	/**
@@ -163,6 +161,172 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 			values.add(new SNValue(ElementaryDataType.STRING, value));
 			IRBField field = new RBField(new SimpleResourceID(predicate), values);
 			entity.addField(field);
+		}
+	}
+
+	/**
+	 *
+	 * [TODO Insert description here.
+	 *
+	 * Created: Sep 11, 2011
+	 *
+	 * @author Ravi Knox
+	 */
+	class Readable extends Panel{
+
+		/**
+		 * Constructor.
+		 * @param id - wicket:id
+		 */
+		public Readable(final String id){
+			super(id);
+			this.add(new ResourceInfoPanel("infoPanel", entity));
+			ListView<IRBField> view = new ListView<IRBField>("details", entity.getAllFields()) {
+				@Override
+				protected void populateItem(final ListItem<IRBField> item) {
+					IRBField field = item.getModelObject();
+					RepeatingView valueList = new RepeatingView("valueList");
+					if (field.isResourceReference()) {
+						if (!field.getFieldValues().isEmpty()
+								|| field.getFieldValues() == null) {
+							for (Object o : field.getFieldValues()) {
+								final IRBEntity e = (IRBEntity) o;
+								if (o != null) {
+									CKLink link = new CKLink(
+											valueList.newChildId(),
+											e.getLabel(),
+											CKLinkType.CUSTOM_BEHAVIOR);
+									link.addBehavior(
+											CKLink.ON_LINK_CLICK_BEHAVIOR,
+											new CKBehavior() {
+												@Override
+												public Object execute(
+														final Object... objects) {
+													ResourceDetailPanel.this
+															.replaceWith(new ResourceDetailPanel(
+																	componentID,
+																	e) {
+																@Override
+																public CKComponent setViewMode(
+																		final ViewMode mode) {
+																	return null;
+																}
+
+																@Override
+																public IRBServiceProvider getServiceProvider() {
+																	return ResourceDetailPanel.this
+																			.getServiceProvider();
+																}
+															});
+													return null;
+												}
+											});
+									valueList.add(link);
+								} else {
+									valueList.add(new Label(valueList
+											.newChildId(), ""));
+								}
+							}
+						} else {
+							valueList
+									.add(new Label(valueList.newChildId(), ""));
+						}
+					} else {
+						String value = "";
+						for (Object o : field.getFieldValues()) {
+							value = value.concat(o.toString() + ", ");
+						}
+						if (value.length() > 0) {
+							value = value.substring(0, value.length() - 2);
+						}
+						valueList.add(new Label(valueList.newChildId(), value));
+					}
+					item.add(new Label("label", field.getLabel()));
+					item.add(valueList);
+				}
+			};
+			this.add(view);
+			Link<String> link = new Link<String>("editLink"){
+
+				@Override
+				public void onClick() {
+					ResourceDetailPanel.this.replaceWith(new ResourceDetailPanel(componentID, entity, false) {
+						@Override
+						public CKComponent setViewMode(final ViewMode mode) {
+							return null;
+						}
+						@Override
+						public IRBServiceProvider getServiceProvider() {
+							return ResourceDetailPanel.this.getServiceProvider();
+						}
+					});
+				}
+			};
+			this.add(link);
+		}
+	}
+	/**
+	 *
+	 * [TODO Insert description here.
+	 *
+	 * Created: Sep 11, 2011
+	 *
+	 * @author Ravi Knox
+	 */
+	abstract class Writeable extends CKComponent {
+
+		/**
+		 * Constructor.
+		 * @param id - wicket:id
+		 */
+		public Writeable(final String id) {
+			super(id);
+			buildComponent();
+		}
+
+		@Override
+		protected void initComponent(final CKValueWrapperModel model){
+			final RepeatingView view = new RepeatingView("fieldItem");
+			this.setOutputMarkupId(true);
+			this.add(new ResourceInfoPanel("infoPanel", entity));
+			this.add(new FeedbackPanel("feedbackPanel"));
+			@SuppressWarnings("rawtypes")
+			Form form = new Form("form") {
+				@Override
+				protected void onSubmit() {
+					getServiceProvider().getRBEntityManagement().store(entity);
+				}
+			};
+			for (IRBField field : entity.getAllFields()) {
+				view.add(new CKFormRowItem(view.newChildId(), field) {
+					@Override
+					public IRBServiceProvider getServiceProvider() {
+						return ResourceDetailPanel.this.getServiceProvider();
+					}
+
+					@Override
+					public CKComponent setViewMode(final ViewMode view) {
+						return null;
+					}
+				});
+			}
+			form.add(new AjaxButton("addKeyValue") {
+				@Override
+				protected void onSubmit(final AjaxRequestTarget target,
+						final Form<?> form) {
+					view.add(new KeyValueField(view.newChildId(), entity));
+					form.add(view);
+					target.add(form);
+				}
+
+				@Override
+				protected void onError(final AjaxRequestTarget target,
+						final Form<?> form) {
+					onSubmit(target, form);
+				}
+			});
+			form.add(view);
+			this.add(form);
 		}
 	}
 }
