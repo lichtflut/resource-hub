@@ -5,6 +5,7 @@ package de.lichtflut.rb.web.ck.components;
 
 import java.util.HashSet;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -44,12 +45,14 @@ import de.lichtflut.rb.web.models.NewGenericResourceModel;
  *
  * @author Ravi Knox
  */
-@SuppressWarnings("serial")
 public abstract class ResourceDetailPanel extends CKComponent  {
 
+	private static final long serialVersionUID = 2891070130452612280L;
 	private IRBEntity entity;
 	private String componentID;
 	private boolean readOnly;
+
+	// ---------- CONSTRUCTOR -------------------------------------
 
 	/**
 	 * Constructor.
@@ -74,6 +77,8 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		buildComponent();
 	}
 
+	// ------------------------------------------------------------
+
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 		if(readOnly){
@@ -93,6 +98,8 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		}
 	}
 
+	// ------------------------------------------------------------
+
 	/**
 	 * Helperclass.
 	 *
@@ -100,6 +107,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 	 *
 	 * @author Ravi Knox
 	 */
+	@SuppressWarnings("serial")
 	class KeyValueField extends Panel{
 
 		/**
@@ -174,63 +182,27 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 	 */
 	class Readable extends Panel{
 
+		private static final long serialVersionUID = 7498726777908211739L;
+
+
+		// ------------------------------------------------------------
+
 		/**
 		 * Constructor.
 		 * @param id - wicket:id
 		 */
+		@SuppressWarnings("serial")
 		public Readable(final String id){
 			super(id);
 			this.add(new ResourceInfoPanel("infoPanel", entity));
+
 			ListView<IRBField> view = new ListView<IRBField>("details", entity.getAllFields()) {
 				@Override
 				protected void populateItem(final ListItem<IRBField> item) {
 					IRBField field = item.getModelObject();
 					RepeatingView valueList = new RepeatingView("valueList");
 					if (field.isResourceReference()) {
-						if (!field.getFieldValues().isEmpty()
-								|| field.getFieldValues() == null) {
-							for (Object o : field.getFieldValues()) {
-								final IRBEntity e = (IRBEntity) o;
-								if (o != null) {
-									CKLink link = new CKLink(
-											valueList.newChildId(),
-											e.getLabel(),
-											CKLinkType.CUSTOM_BEHAVIOR);
-									link.addBehavior(
-											CKLink.ON_LINK_CLICK_BEHAVIOR,
-											new CKBehavior() {
-												@Override
-												public Object execute(
-														final Object... objects) {
-													ResourceDetailPanel.this
-															.replaceWith(new ResourceDetailPanel(
-																	componentID,
-																	e) {
-																@Override
-																public CKComponent setViewMode(
-																		final ViewMode mode) {
-																	return null;
-																}
-
-																@Override
-																public IRBServiceProvider getServiceProvider() {
-																	return ResourceDetailPanel.this
-																			.getServiceProvider();
-																}
-															});
-													return null;
-												}
-											});
-									valueList.add(link);
-								} else {
-									valueList.add(new Label(valueList
-											.newChildId(), ""));
-								}
-							}
-						} else {
-							valueList
-									.add(new Label(valueList.newChildId(), ""));
-						}
+						addResourceField(valueList, field);
 					} else {
 						String value = "";
 						for (Object o : field.getFieldValues()) {
@@ -245,7 +217,6 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 					item.add(valueList);
 				}
 			};
-			this.add(view);
 			Link<String> link = new Link<String>("editLink"){
 
 				@Override
@@ -262,7 +233,53 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 					});
 				}
 			};
+			this.add(view);
 			this.add(link);
+		}
+
+		/**
+		 * @param valueList -
+		 * @param field - instance of {@link IRBField}
+		 */
+		private void addResourceField(final RepeatingView valueList, final IRBField field) {
+			if(field.getFieldValues().isEmpty() || field.getFieldValues() == null){
+				valueList.add(new Label(valueList.newChildId(), ""));
+			}
+			for (Object o : field.getFieldValues()) {
+				if (o != null) {
+				final IRBEntity e = (IRBEntity) o;
+					valueList.add(createLinkForEntity(valueList, e));
+				} else {
+					valueList.add(new Label(valueList.newChildId(), ""));
+				}
+			}
+		}
+
+		/**
+		 * @param valueList -
+		 * @param e - {@link IRBEntity} for which a {@link CKLink} will be created
+		 * @return a {@link CKLink} for the given {@link IRBEntity}
+		 */
+		@SuppressWarnings("serial")
+		private CKLink createLinkForEntity(final RepeatingView valueList, final IRBEntity e) {
+			CKLink link = new CKLink(valueList.newChildId(), e.getLabel(), CKLinkType.CUSTOM_BEHAVIOR);
+			link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
+				@Override
+				public Object execute(final Object... objects) {
+					ResourceDetailPanel.this.replaceWith(new ResourceDetailPanel(componentID, e) {
+						@Override
+						public CKComponent setViewMode(final ViewMode mode) {
+							return null;
+						}
+						@Override
+						public IRBServiceProvider getServiceProvider() {
+							return ResourceDetailPanel.this.getServiceProvider();
+						}
+					});
+					return null;
+				}
+			});
+			return link;
 		}
 	}
 	/**
