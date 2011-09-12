@@ -306,13 +306,13 @@ public abstract class ResourceTableView extends CKComponent {
 				link = new Link("featureLink") {
 					@Override
 					public void onClick() {
-						ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID, e) {
+						ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID, e, false) {
 							@Override
 							public CKComponent setViewMode(final ViewMode mode) {return null;}
 							@Override
-							protected void initComponent(final CKValueWrapperModel model) {}
-							@Override
-							public IRBServiceProvider getServiceProvider() {return null;}
+							public IRBServiceProvider getServiceProvider(){
+								return ResourceTableView.this.getServiceProvider();
+							}
 						});
 					}
 				};
@@ -407,7 +407,7 @@ public abstract class ResourceTableView extends CKComponent {
 		indexTableHeader(entites);
 		addHeader();
 		addRows(entites);
-		addNewEntityLinkPanel();
+		addNewEntityLink();
 	}
 
 	/**
@@ -415,30 +415,37 @@ public abstract class ResourceTableView extends CKComponent {
 	 * {@link CKLink} for each RDF:TYPE contained by this View.
 	 * With this Link a new {@link IRBEntity} can be created for that type
 	 */
-	private void addNewEntityLinkPanel() {
-		RepeatingView view = new RepeatingView("addEntity");
-		for(final ResourceID type : getAllTypes()){
-			CKLink link = new CKLink(view.newChildId(), "Add " + type.getName(), CKLinkType.CUSTOM_BEHAVIOR);
-			link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
-				@Override
-				public Object execute(final Object... objects) {
-					IRBEntity entity = new NewRBEntity(ResourceTableView.this.getServiceProvider()
-							.getResourceSchemaManagement().getResourceSchemaForResourceType(type));
-					ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID, entity) {
-						@Override
-						public CKComponent setViewMode(final ViewMode mode) {
-							return null;
-						}
-						@Override
-						public IRBServiceProvider getServiceProvider() {
-							return ResourceTableView.this.getServiceProvider();
-						}
-					});
-					return null;
-				}
-			});
-			view.add(link);
-		}
+	private void addNewEntityLink() {
+		ListView<ResourceID> view = new ListView<ResourceID>("addEntity",getAllTypes()) {
+			@Override
+			protected void populateItem(final ListItem<ResourceID> item) {
+				final ResourceID type = item.getModelObject();
+				CKLink link = new CKLink("addEntityLink", "Add "+ type.getName(), CKLinkType.CUSTOM_BEHAVIOR);
+				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR,new CKBehavior() {
+					@Override
+					public Object execute(final Object... objects) {
+						IRBEntity entity = new NewRBEntity(
+							ResourceTableView.this.getServiceProvider()
+								.getResourceSchemaManagement()
+									.getResourceSchemaForResourceType(type));
+							ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID,
+								entity, false) {
+								@Override
+								public CKComponent setViewMode(final ViewMode model){
+									return null;
+								}
+								@Override
+								public IRBServiceProvider getServiceProvider() {
+									return ResourceTableView.this
+										.getServiceProvider();
+								}
+							});
+						return null;
+					}
+				});
+				item.add(link);
+			};
+		};
 		this.add(view);
 	}
 

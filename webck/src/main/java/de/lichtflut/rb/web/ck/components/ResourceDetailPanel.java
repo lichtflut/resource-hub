@@ -5,7 +5,6 @@ package de.lichtflut.rb.web.ck.components;
 
 import java.util.HashSet;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -74,11 +73,12 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		this.componentID = id;
 		this.entity = entity;
 		this.readOnly = readOnly;
-		buildComponent();
+		this.buildComponent();
 	}
 
 	// ------------------------------------------------------------
 
+	@SuppressWarnings("serial")
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 		if(readOnly){
@@ -89,7 +89,6 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 				public IRBServiceProvider getServiceProvider() {
 					return ResourceDetailPanel.this.getServiceProvider();
 				}
-
 				@Override
 				public CKComponent setViewMode(final ViewMode mode) {
 					return null;
@@ -292,6 +291,10 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 	 */
 	abstract class Writeable extends CKComponent {
 
+		private static final long serialVersionUID = 8741545512115763711L;
+
+		// ------------------------------------------------------------
+
 		/**
 		 * Constructor.
 		 * @param id - wicket:id
@@ -301,6 +304,9 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 			buildComponent();
 		}
 
+		// ------------------------------------------------------------
+
+		@SuppressWarnings("serial")
 		@Override
 		protected void initComponent(final CKValueWrapperModel model){
 			final RepeatingView view = new RepeatingView("fieldItem");
