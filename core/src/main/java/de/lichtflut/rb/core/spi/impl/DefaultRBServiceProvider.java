@@ -50,7 +50,11 @@ public class DefaultRBServiceProvider implements IRBServiceProvider {
         final ArastrejuProfile profile = config.getArastrejuConfiguration();
         logger.info("Initializing Arastreju with profile: " + profile);
         gate = Arastreju.getInstance(profile).rootContext();
+<<<<<<< HEAD
+        schemaManagement = new ResourceSchemaManagerImpl(this);
+=======
         schemaManagement = new ResourceSchemaManagement(gate);
+>>>>>>> 7cf153d55197264c0e0c547b580f2980bb05874d
         typeManagement = new RBEntityManagerImpl(this);
     }
 

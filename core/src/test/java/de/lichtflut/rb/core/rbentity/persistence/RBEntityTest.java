@@ -5,9 +5,13 @@ package de.lichtflut.rb.core.rbentity.persistence;
 
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
+<<<<<<< HEAD
+import org.junit.Assert;
+=======
+>>>>>>> 7cf153d55197264c0e0c547b580f2980bb05874d
 import org.junit.Test;
 
-import de.lichtflut.rb.core.api.impl.RBEntityManagerImpl;
+import de.lichtflut.rb.core.api.RBEntityManager;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
@@ -143,25 +147,50 @@ public final class RBEntityTest {
      */
     @Test
     public void testNewRBEntity() {
+    	// Create a shema
         ResourceSchema schema = createSchema();
+
+        // Create two entitys with given shema
         NewRBEntity e = new NewRBEntity(schema);
         NewRBEntity e1 = new NewRBEntity(schema);
-        RBEntityManagerImpl m = new RBEntityManagerImpl(
-        		RBServiceProviderFactory
-                .getDefaultServiceProvider());
+
+        // Get Entitymanager
+        RBEntityManager m = RBServiceProviderFactory.getDefaultServiceProvider().getRBEntityManagement();
+
+        // Add a Email to the entities
         e.getField("http://lichtflut.de#email").getFieldValues()
-                .add("mutter");
+                .add("mutter@fam.com");
+
+        // Store entity
         m.store(e);
+
+        // Add Field to entity
         e1.getField("http://lichtflut.de#email").getFieldValues()
-                .add("kind");
+                .add("kind@fam.com");
+
+        // Add a custom Field
         RBField newField = new RBField(new SimpleResourceID("http://lichtflut.de#whatever"), null);
-        newField.getFieldValues().add("hohä");
+        newField.getFieldValues().add("haha");
+        newField.getFieldValues().add("hoho");
+        newField.getFieldValues().add("muhahaha");
         e1.addField(newField);
-        e1.getField("http://lichtflut.de#kind").getFieldValues().add(e);
+
+        // Add entity as field
         e.getField("http://lichtflut.de#kind").getFieldValues().add(e1);
+
+        // store entities
         m.store(e);
+<<<<<<< HEAD
+        m.store(e1);
+
+        // Tests
+        Assert.assertTrue(m.find(e.getID()).getAllFields().size()==3);
+        Assert.assertTrue(m.findAllByType(new SimpleResourceID("http://lichtflut.de#personschema")).size()==2);
+
+=======
         System.out.println("type:"+m.find(e.getID()).getAllFields().size());
         System.out.println("id-->"+m.findAllByType(new SimpleResourceID("http://lichtflut.de#personschema")).size());
+>>>>>>> 7cf153d55197264c0e0c547b580f2980bb05874d
         // System.out.println(MockNewRBEntityFactory.createNewRBEntity().getID());
     }
 

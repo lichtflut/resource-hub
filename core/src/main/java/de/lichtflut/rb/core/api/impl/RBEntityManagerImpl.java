@@ -27,8 +27,6 @@ import de.lichtflut.rb.core.spi.IRBServiceProvider;
  * @author Raphael Esterle
  *
  */
-//CHECKSTYLE:OFF
-//TODO: Raphael bitte fix Checkstyle errors....
 public class RBEntityManagerImpl implements RBEntityManager {
 
 	private final IRBServiceProvider provider;
@@ -37,10 +35,8 @@ public class RBEntityManagerImpl implements RBEntityManager {
 	 * <p>
 	 * This is the standard constructor.
 	 * </p>
-	 * 
-	 * @param gate
-	 *            the ArastrejuGate instance which is necessary to store, update
-	 *            and resolve ResourceTypeInstances
+	 *
+	 * @param provider -
 	 */
 	public RBEntityManagerImpl(final IRBServiceProvider provider) {
 		this.provider = provider;
@@ -52,7 +48,7 @@ public class RBEntityManagerImpl implements RBEntityManager {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param resourceID
 	 *            /
 	 * @param schema
@@ -65,10 +61,15 @@ public class RBEntityManagerImpl implements RBEntityManager {
 				.startConversation();
 		ResourceNode node = mc.findResource(resourceID.getQualifiedName());
 		mc.close();
-		return new NewRBEntity(node);
+		return new NewRBEntity(node, node.asEntity().getMainClass());
 	}
 
-	public List<ResourceNode> findByType(ResourceID type) {
+	/**
+	 *
+	 * @param type -
+	 * @return -
+	 */
+	public List<ResourceNode> findByType(final ResourceID type) {
 		ModelingConversation mc = provider.getArastejuGateInstance()
 				.startConversation();
 		return mc.createQueryManager().findByType(type);
@@ -80,21 +81,20 @@ public class RBEntityManagerImpl implements RBEntityManager {
         ModelingConversation mc = provider.getArastejuGateInstance().startConversation();
 
         ResourceNode newNode = entity.getNode();
-        
+
         ResourceNode sNode = mc.findResource(entity.getQualifiedName());
-        
+
         if(null==sNode){
         	System.out.println(entity);
         	Association.create(newNode, RDF.TYPE, entity.getType());
         	sNode = newNode;
-        }
-        else{
+        }else{
         	for (IRBField field : entity.getAllFields()) {
         		ResourceID resourceID = new SimpleResourceID(field.getFieldName());
         		// Remove old Associations
         		for (Association assoc : sNode.getAssociations(resourceID)) {
 					sNode.remove(assoc);
-				};
+				}
 				// Create new Associations
 				for (Object val : field.getFieldValues()) {
 					SemanticNode node = new SNValue(field.getDataType(), val);
