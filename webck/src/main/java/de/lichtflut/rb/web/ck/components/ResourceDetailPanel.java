@@ -232,6 +232,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 					});
 				}
 			};
+			link.add(new Label("label", "Edit"));
 			this.add(view);
 			this.add(link);
 		}
