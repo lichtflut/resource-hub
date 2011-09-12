@@ -223,6 +223,7 @@ public abstract class ResourceTableView extends CKComponent {
 			} else {
 				if (isResource) {
 					RepeatingView view = new RepeatingView("data");
+					int resourceCount = 1;
 					for (final Object entityAttribute : field.getFieldValues()) {
 						final IRBEntity entity = (IRBEntity) entityAttribute;
 						if(entity != null){
@@ -246,6 +247,10 @@ public abstract class ResourceTableView extends CKComponent {
 								}
 							});
 							view.add(link);
+							if(resourceCount < field.getFieldValues().size()){
+								view.add(new Label(view.newChildId(), ", "));
+							}
+							resourceCount++;
 						}else{
 							view.add(new Label(view.newChildId(), ""));
 						}

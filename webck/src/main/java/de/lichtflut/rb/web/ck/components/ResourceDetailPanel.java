@@ -205,7 +205,11 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 					} else {
 						String value = "";
 						for (Object o : field.getFieldValues()) {
-							value = value.concat(o.toString() + ", ");
+							if(o != null){
+								value = value.concat(o.toString() + ", ");
+							}else{
+								value = value.concat("");
+							}
 						}
 						if (value.length() > 0) {
 							value = value.substring(0, value.length() - 2);
