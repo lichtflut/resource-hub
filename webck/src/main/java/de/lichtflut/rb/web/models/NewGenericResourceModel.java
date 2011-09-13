@@ -79,6 +79,7 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 	public void setObject(final T object) {
 		try {
 			values.set(index, object);
+			value = object;
 		} catch (Exception e){
 			throw new IllegalArgumentException(e);
 		}
