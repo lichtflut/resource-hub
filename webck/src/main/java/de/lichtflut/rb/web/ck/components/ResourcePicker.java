@@ -99,7 +99,6 @@ public abstract class ResourcePicker extends CKComponent {
 				for (IRBEntity e : entites) {
 					String s = "";
 					for (IRBField field : e.getAllFields()) {
-						System.out.println(field.getFieldValues() + " --");
 						if((field.isResourceReference()) && (!field.getFieldValues().isEmpty())){
 							for (Object o : field.getFieldValues()) {
 								IRBEntity e1 = (IRBEntity) o;
@@ -111,7 +110,6 @@ public abstract class ResourcePicker extends CKComponent {
 							s = s.concat(field.getFieldValues().toString().toLowerCase());
 						}
 					}
-					System.out.println(s);
 					if(s.contains(input.toLowerCase())){
 						entityList.add(e);
 					}

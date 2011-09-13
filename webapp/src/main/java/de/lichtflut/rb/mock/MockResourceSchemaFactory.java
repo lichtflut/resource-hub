@@ -43,7 +43,7 @@ public final class MockResourceSchemaFactory {
 	 */
 	private MockResourceSchemaFactory(){};
 
-	public static List<ResourceSchema> getAllShemas(){
+	static List<ResourceSchema> getAllShemas(){
 		List<ResourceSchema> list = new ArrayList<ResourceSchema>();
 		list.add(createAddressSchema());
 		list.add(createCitySchema());
@@ -57,7 +57,7 @@ public final class MockResourceSchemaFactory {
 	 *
 	 * @return schema
 	 */
-	public static ResourceSchema createPersonSchema() {
+	static ResourceSchema createPersonSchema() {
 
 		if(personSchema.getPropertyAssertions().size()  < 1){
 			
@@ -223,7 +223,7 @@ public final class MockResourceSchemaFactory {
 		p5.addConstraint(ConstraintFactory.buildConstraint(personSchema.getDescribedResourceID()));
 		PropertyAssertionImpl pa5 = new PropertyAssertionImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasCEO"), p5);
-		pa5.setCardinality(CardinalityBuilder.hasExcactlyOne());
+		pa5.setCardinality(CardinalityBuilder.hasAtLeastOneToMany());
 		organizationSchema.addPropertyAssertion(pa5);
 
 		PropertyDeclarationImpl p6 = new PropertyDeclarationImpl();
@@ -257,7 +257,7 @@ public final class MockResourceSchemaFactory {
 		p4.setElementaryDataType(ElementaryDataType.STRING);
 		PropertyAssertionImpl pa4 = new PropertyAssertionImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasDescription"), p4);
-		pa3.setCardinality(CardinalityBuilder.hasOptionalOne());
+		pa4.setCardinality(CardinalityBuilder.hasOptionalOne());
 		organizationSchema.addPropertyAssertion(pa4);
 
 		organizationSchema.setLabelBuilder(StaticLabelBuilders.forOrganization());

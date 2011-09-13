@@ -155,8 +155,6 @@ public final class MockNewRBEntityFactory {
 		list.add(muelheimerStr);
 		list.add(createPerson("Raphael", "Esterle", muelheimerStr, new Date(1991, 10, 20), "resterle@lichtflut.de", null));
 		list.add(createPerson("Ravi", "Knox", muelheimerStr, new Date(1985, 12, 23), "rknox@lichtflut.de", null));
-		list.add(createPerson(null,null, createAddress(null, null, createCity(null, null, null)),
-				null, null, null));
 		return list;
 	}
 
