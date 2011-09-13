@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.api.ISchemaManagement;
+import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
@@ -17,7 +17,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  *
  * @author Ravi Knox
  */
-public class MockResourceSchemaManagement implements ISchemaManagement {
+public class MockResourceSchemaManagement implements SchemaManager {
 
 	private static final long serialVersionUID = 1L;
 

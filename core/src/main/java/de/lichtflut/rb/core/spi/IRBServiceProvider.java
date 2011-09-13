@@ -5,8 +5,8 @@ package de.lichtflut.rb.core.spi;
 
 import org.arastreju.sge.ArastrejuGate;
 
-import de.lichtflut.rb.core.api.ISchemaManagement;
 import de.lichtflut.rb.core.api.RBEntityManager;
+import de.lichtflut.rb.core.api.SchemaManager;
 
 /**
   * <p>
@@ -31,7 +31,7 @@ public interface IRBServiceProvider {
 	 * It's also interpreting the schema, checks for consistency and contains powerful error-processing mechanisms.
 	 * @return {@link ISchemaManagement}
 	 */
-	ISchemaManagement getResourceSchemaManagement();
+	SchemaManager getResourceSchemaManagement();
 
 	// -----------------------------------------------------
 

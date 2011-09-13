@@ -10,10 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.api.ISchemaManagement;
+import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.api.RBEntityManager;
 import de.lichtflut.rb.core.api.impl.RBEntityManagerImpl;
-import de.lichtflut.rb.core.api.impl.ResourceSchemaManagement;
+import de.lichtflut.rb.core.api.impl.ResourceSchemaManagerImpl;
 import de.lichtflut.rb.core.spi.IRBServiceProvider;
 
 /**
@@ -30,7 +30,7 @@ public class DefaultRBServiceProvider implements IRBServiceProvider {
             .getLogger(DefaultRBServiceProvider.class);
 
     private ArastrejuGate gate = null;
-    private ISchemaManagement schemaManagement = null;
+    private SchemaManager schemaManager = null;
     private RBEntityManager typeManagement = null;
 
     // --CONSTRUCTOR----------------------------------------
@@ -50,11 +50,8 @@ public class DefaultRBServiceProvider implements IRBServiceProvider {
         final ArastrejuProfile profile = config.getArastrejuConfiguration();
         logger.info("Initializing Arastreju with profile: " + profile);
         gate = Arastreju.getInstance(profile).rootContext();
-<<<<<<< HEAD
-        schemaManagement = new ResourceSchemaManagerImpl(this);
-=======
-        schemaManagement = new ResourceSchemaManagement(gate);
->>>>>>> 7cf153d55197264c0e0c547b580f2980bb05874d
+        schemaManager = new ResourceSchemaManagerImpl(this);
+
         typeManagement = new RBEntityManagerImpl(this);
     }
 
@@ -64,8 +61,8 @@ public class DefaultRBServiceProvider implements IRBServiceProvider {
      *{@inheritDoc}
      */
     @Override
-    public ISchemaManagement getResourceSchemaManagement() {
-        return schemaManagement;
+    public SchemaManager getResourceSchemaManagement() {
+        return schemaManager;
     }
 
     // -----------------------------------------------------

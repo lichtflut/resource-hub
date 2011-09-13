@@ -37,7 +37,7 @@ import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 
 /**
- * Reference impl of {@link ISchemaManagement}.
+ * Reference impl of {@link SchemaManager}.
  * This impl will take the default context (rbschema#context)
  *
  * Created: Apr 19, 2011
