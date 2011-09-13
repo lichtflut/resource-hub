@@ -16,7 +16,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.api.ResourceSchemaManager;
+import de.lichtflut.rb.core.api.SchemaManageer;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -40,7 +40,7 @@ import de.lichtflut.rb.core.spi.IRBServiceProvider;
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public class ResourceSchemaManagerImpl implements ResourceSchemaManager {
+public class ResourceSchemaManagerImpl implements SchemaManageer {
 
 
 	// -------------MEMBER-FIELDS--------------------------
@@ -66,8 +66,9 @@ public class ResourceSchemaManagerImpl implements ResourceSchemaManager {
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public RSParsingResult generateSchemaModelThrough(final InputStream is){
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		AbstractRSParsingUnit pUnit = getFormat().getParsingUnit();
@@ -85,8 +86,9 @@ public class ResourceSchemaManagerImpl implements ResourceSchemaManager {
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public RSParsingResult generateSchemaModelThrough(final File file){
 		try {
 			return generateSchemaModelThrough(new FileInputStream(file));
@@ -100,16 +102,18 @@ public class ResourceSchemaManagerImpl implements ResourceSchemaManager {
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public RSParsingResult generateSchemaModelThrough(final String s){
 		return generateSchemaModelThrough(new ByteArrayInputStream(s.getBytes()));
 	}
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public RSParsingResult generateAndResolveSchemaModelThrough(final InputStream is){
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.merge(generateSchemaModelThrough(is));
@@ -196,8 +200,9 @@ public class ResourceSchemaManagerImpl implements ResourceSchemaManager {
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public RSParsingResult generateAndResolveSchemaModelThrough(final File f) {
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		try {
@@ -211,8 +216,9 @@ public class ResourceSchemaManagerImpl implements ResourceSchemaManager {
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public RSParsingResult generateAndResolveSchemaModelThrough(final String s) {
 		return generateAndResolveSchemaModelThrough(new ByteArrayInputStream(s.getBytes()));
 	}
@@ -239,8 +245,9 @@ public class ResourceSchemaManagerImpl implements ResourceSchemaManager {
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public ResourceSchema getResourceSchemaForResourceType(final ResourceID id) {
 		final SNResourceSchema schema = store.loadSchemaForResourceType(id,null);
 		if (schema == null) {
@@ -250,32 +257,36 @@ public class ResourceSchemaManagerImpl implements ResourceSchemaManager {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public void setFormat(final RSFormat format){
 		this.format = format;
 	}
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public RSFormat getFormat() {
 		return this.format;
 	}
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public void storeOrOverridePropertyDeclaration(final PropertyDeclaration declaration) {
 		if(declaration!=null){store.store(declaration,null);}
 	}
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public void storeOrOverridePropertyDeclaration(final Collection<PropertyDeclaration> declarations) {
 		for (PropertyDeclaration propertyDeclaration : declarations) {
 			storeOrOverridePropertyDeclaration(propertyDeclaration);
@@ -284,16 +295,18 @@ public class ResourceSchemaManagerImpl implements ResourceSchemaManager {
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public void storeOrOverrideResourceSchema(final ResourceSchema schema) {
 		if(schema!=null){ store.store(schema,null);}
 	}
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public void storeOrOverrideResourceSchema(final Collection<ResourceSchema> schemas) {
 		for (ResourceSchema schema : schemas) {
 			storeOrOverrideResourceSchema(schema);
@@ -302,32 +315,36 @@ public class ResourceSchemaManagerImpl implements ResourceSchemaManager {
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public Collection<PropertyDeclaration> getAllPropertyDeclarations() {
 		return this.store.loadAllPropertyDeclarations(null);
 	}
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public Collection<ResourceSchema> getAllResourceSchemas() {
 		return this.store.loadAllResourceSchemas(null);
 	}
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public String loadSchemaRepresenation(final RSFormat format) {
 		return this.store.loadSchemaRepresenation(format);
 	}
 
 	// -----------------------------------------------------
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 *
+	 */
 	public void storeSchemaRepresentation(final String representation, final RSFormat format) {
 		this.store.storeSchemaRepresentation(representation, format);
 	}

@@ -5,10 +5,8 @@ package de.lichtflut.rb.core.rbentity.persistence;
 
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
-<<<<<<< HEAD
+
 import org.junit.Assert;
-=======
->>>>>>> 7cf153d55197264c0e0c547b580f2980bb05874d
 import org.junit.Test;
 
 import de.lichtflut.rb.core.api.RBEntityManager;
@@ -180,17 +178,13 @@ public final class RBEntityTest {
 
         // store entities
         m.store(e);
-<<<<<<< HEAD
         m.store(e1);
 
         // Tests
         Assert.assertTrue(m.find(e.getID()).getAllFields().size()==3);
         Assert.assertTrue(m.findAllByType(new SimpleResourceID("http://lichtflut.de#personschema")).size()==2);
 
-=======
-        System.out.println("type:"+m.find(e.getID()).getAllFields().size());
-        System.out.println("id-->"+m.findAllByType(new SimpleResourceID("http://lichtflut.de#personschema")).size());
->>>>>>> 7cf153d55197264c0e0c547b580f2980bb05874d
+
         // System.out.println(MockNewRBEntityFactory.createNewRBEntity().getID());
     }
 

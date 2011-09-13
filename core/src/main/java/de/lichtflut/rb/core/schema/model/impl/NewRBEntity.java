@@ -46,11 +46,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	/**
 	 * Creates a new entity without schema.
-<<<<<<< HEAD
-	 * @param type -
-=======
 	 * @param type - rdf:type
->>>>>>> 7cf153d55197264c0e0c547b580f2980bb05874d
 	 */
 	public NewRBEntity(final ResourceID type) {
 		this(new SNResource(), type);
