@@ -21,6 +21,7 @@ import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.web.components.LoginPanelPage;
 import de.lichtflut.rb.web.mockPages.EmployeePage;
 import de.lichtflut.rb.web.mockPages.EmployeesPage;
+import de.lichtflut.rb.web.mockPages.FeaturedTablePage;
 import de.lichtflut.rb.web.resources.SharedResourceProvider;
 
 
@@ -140,6 +141,8 @@ public abstract class RBSuperPage extends WebPage {
 			showByTypes.addChild(new NavigationNodePanel(link));
 		}
 		menuLeft.addChild(showByTypes);
+		CKLink link = new CKLink("link", "Full Features Page", FeaturedTablePage.class, CKLinkType.WEB_PAGE_CLASS);
+		menuLeft.addChild(new NavigationNodePanel(link));
 		add(menuLeft);
 	}
 

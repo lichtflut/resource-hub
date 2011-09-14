@@ -20,6 +20,7 @@ import de.lichtflut.rb.core.spi.IRBServiceProvider;
  * Created: Jun 22, 2011
  *
  * @author Ravi Knox
+ * TODO: add ResourceLink ' CKLink(IRBEntity e){}; '
  */
 @SuppressWarnings({ "rawtypes", "serial" })
 public class CKLink extends CKComponent{

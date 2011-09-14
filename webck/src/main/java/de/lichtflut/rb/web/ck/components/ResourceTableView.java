@@ -177,6 +177,9 @@ public abstract class ResourceTableView extends CKComponent {
 				if (getBehavior(DELETE_ROW_ITEM) != null) {
 					fields.add(DELETE_ROW_ITEM);
 				}
+				if (getBehavior(ADD_CUSTOM_ROW_ITEM) != null) {
+					fields.add(ADD_CUSTOM_ROW_ITEM);
+				}
 				ListView<Object> data = new ListView<Object>("cell", fields) {
 					@Override
 					protected void populateItem(final ListItem item) {
@@ -213,10 +216,7 @@ public abstract class ResourceTableView extends CKComponent {
 				}
 			}
 
-			if (getBehavior(ADD_CUSTOM_ROW_ITEM) != null) {
-				item.add((Component) getBehavior(ADD_CUSTOM_ROW_ITEM).execute(
-						"data", e, field));
-			} else if ((getBehavior(RESOURCE_FIELD_BEHAVIOR) != null)
+			if ((getBehavior(RESOURCE_FIELD_BEHAVIOR) != null)
 					&& (field.isResourceReference())) {
 				item.add((Component) getBehavior(RESOURCE_FIELD_BEHAVIOR)
 						.execute("data", e, field));
@@ -340,6 +340,9 @@ public abstract class ResourceTableView extends CKComponent {
 					f = new Fragment("data", "customLink", this);
 					f.add((Component) getBehavior(s).execute("customComponent", e, ResourceTableView.this));
 				}
+			}else if (s.equals(ADD_CUSTOM_ROW_ITEM)) {
+				f = new Fragment("data", "customLink", this);
+				f.add((Component) getBehavior(s).execute("customComponent", e));
 			}
 			item.add(f);
 		}else if (item.getModelObject() == null) {
@@ -382,6 +385,9 @@ public abstract class ResourceTableView extends CKComponent {
 		if (getBehavior(DELETE_ROW_ITEM) != null) {
 			titles.add("Delete");
 		}
+		if (getBehavior(ADD_CUSTOM_ROW_ITEM) != null) {
+			titles.add("Other");
+		}
 		this.add(new ListView<String>("tableHeader", titles) {
 			@Override
 			protected void populateItem(final ListItem item) {
@@ -409,6 +415,7 @@ public abstract class ResourceTableView extends CKComponent {
 
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
+		this.setEscapeModelStrings(false);
 		indexTableHeader(entites);
 		addHeader();
 		addRows(entites);

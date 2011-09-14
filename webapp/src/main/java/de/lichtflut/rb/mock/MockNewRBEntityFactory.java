@@ -151,7 +151,7 @@ public final class MockNewRBEntityFactory {
 		
 		IRBEntity bergischGladbach51469 = createCity("51469", "Bergisch Gladbach", "Germany");
 		list.add(bergischGladbach51469);
-		IRBEntity muelheimerStr = createAddress("Mülheimer Straße", "216", bergischGladbach51469);
+		IRBEntity muelheimerStr = createAddress("Muelheimer Strasse", "216", bergischGladbach51469);
 		list.add(muelheimerStr);
 		list.add(createPerson("Raphael", "Esterle", muelheimerStr, new Date(1991, 10, 20), "resterle@lichtflut.de", null));
 		list.add(createPerson("Ravi", "Knox", muelheimerStr, new Date(1985, 12, 23), "rknox@lichtflut.de", null));
