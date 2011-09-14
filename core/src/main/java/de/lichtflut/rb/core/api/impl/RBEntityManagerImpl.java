@@ -15,7 +15,7 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import de.lichtflut.rb.core.api.RBEntityManager;
+import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -27,7 +27,7 @@ import de.lichtflut.rb.core.spi.IRBServiceProvider;
  * @author Raphael Esterle
  *
  */
-public class RBEntityManagerImpl implements RBEntityManager {
+public class RBEntityManagerImpl implements EntityManager {
 
 	private final IRBServiceProvider provider;
 
@@ -125,6 +125,7 @@ public class RBEntityManagerImpl implements RBEntityManager {
 			for (Association assoc : sEntity.getNode().getAssociations(
 					new SimpleResourceID(field.getFieldName()))) {
 				sEntity.getNode().remove(assoc);
+				System.out.println("del-"+assoc);
 			}
 		}
 	}

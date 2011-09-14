@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.spi;
 
 import org.arastreju.sge.ArastrejuGate;
 
-import de.lichtflut.rb.core.api.RBEntityManager;
+import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
 
 /**
@@ -36,11 +36,11 @@ public interface IRBServiceProvider {
 	// -----------------------------------------------------
 
 	/**
-	 * {@link RBEntityManager} provides the ability to manage,
+	 * {@link EntityManager} provides the ability to manage,
 	 * persist and store RB-Entities.
-	 * @return {@link RBEntityManager}
+	 * @return {@link EntityManager}
 	 */
-	RBEntityManager getRBEntityManagement();
+	EntityManager getRBEntityManagement();
 
 	// -----------------------------------------------------
 

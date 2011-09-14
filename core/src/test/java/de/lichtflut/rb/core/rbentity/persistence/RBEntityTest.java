@@ -3,13 +3,17 @@
  */
 package de.lichtflut.rb.core.rbentity.persistence;
 
+import java.io.File;
+
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.api.RBEntityManager;
+import de.lichtflut.rb.core.api.EntityManager;
+import de.lichtflut.rb.core.api.SchemaImporter;
+import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
@@ -18,6 +22,7 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.RBField;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 
 
@@ -153,7 +158,14 @@ public final class RBEntityTest {
         NewRBEntity e1 = new NewRBEntity(schema);
 
         // Get Entitymanager
-        RBEntityManager m = RBServiceProviderFactory.getDefaultServiceProvider().getRBEntityManagement();
+        EntityManager m = RBServiceProviderFactory.getDefaultServiceProvider().getRBEntityManagement();
+        SchemaManager sm = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
+
+        sm.storeOrOverrideResourceSchema(schema);
+        SchemaImporter si = sm.getImporter(RSFormat.OSF);
+        System.out.println(si.generateAndResolveSchemaModelThrough(
+        		getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL2.osf")));
+        System.out.println("**********"+sm.getAllResourceSchemas().size());
 
         // Add a Email to the entities
         e.getField("http://lichtflut.de#email").getFieldValues()
@@ -184,7 +196,8 @@ public final class RBEntityTest {
         Assert.assertTrue(m.find(e.getID()).getAllFields().size()==3);
         Assert.assertTrue(m.findAllByType(new SimpleResourceID("http://lichtflut.de#personschema")).size()==2);
 
-
+        m.delete(e);
+        System.out.println("-->"+m.find(e.getID()));
         // System.out.println(MockNewRBEntityFactory.createNewRBEntity().getID());
     }
 

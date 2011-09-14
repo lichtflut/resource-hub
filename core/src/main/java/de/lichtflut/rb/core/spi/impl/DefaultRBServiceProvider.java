@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.api.RBEntityManager;
+import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.impl.RBEntityManagerImpl;
-import de.lichtflut.rb.core.api.impl.ResourceSchemaManagerImpl;
+import de.lichtflut.rb.core.api.impl.SchemaManagerImpl;
 import de.lichtflut.rb.core.spi.IRBServiceProvider;
 
 /**
@@ -31,7 +31,7 @@ public class DefaultRBServiceProvider implements IRBServiceProvider {
 
     private ArastrejuGate gate = null;
     private SchemaManager schemaManager = null;
-    private RBEntityManager typeManagement = null;
+    private EntityManager typeManagement = null;
 
     // --CONSTRUCTOR----------------------------------------
 
@@ -50,7 +50,7 @@ public class DefaultRBServiceProvider implements IRBServiceProvider {
         final ArastrejuProfile profile = config.getArastrejuConfiguration();
         logger.info("Initializing Arastreju with profile: " + profile);
         gate = Arastreju.getInstance(profile).rootContext();
-        schemaManager = new ResourceSchemaManagerImpl(this);
+        schemaManager = new SchemaManagerImpl(this);
 
         typeManagement = new RBEntityManagerImpl(this);
     }
@@ -81,7 +81,7 @@ public class DefaultRBServiceProvider implements IRBServiceProvider {
      *{@inheritDoc}
      */
     @Override
-    public RBEntityManager getRBEntityManagement() {
+    public EntityManager getRBEntityManagement() {
         return typeManagement;
     }
 

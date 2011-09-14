@@ -8,19 +8,19 @@ import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.api.RBEntityManager;
+import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 
 /**
  * <p>
- * This class provides a static {@link RBEntityManager} for testing purposes.
+ * This class provides a static {@link EntityManager} for testing purposes.
  * </p>
  * Created: Aug 18, 2011
  *
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class MockRBEntityManagement implements RBEntityManager {
+public class MockRBEntityManagement implements EntityManager {
 
 	private List<IRBEntity> dataPool;
 

@@ -14,7 +14,7 @@ import de.lichtflut.rb.core.schema.model.IRBEntity;
  * @author Raphael Esterle
  *
  */
-public interface RBEntityManager extends Serializable {
+public interface EntityManager extends Serializable {
 
     /**
      *
