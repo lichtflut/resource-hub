@@ -136,7 +136,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	public String toString(){
 
 		StringBuffer sBuffer = new StringBuffer();
-		sBuffer.append("Described ResourceID " + getDescribedResourceID().getQualifiedName().toURI() + "\n");
+		sBuffer.append("Described ResourceID " + getDescribedType().getQualifiedName().toURI() + "\n");
 		sBuffer.append("Internal ResourceID "
 				 + ((getResourceID()==null) ? "null" : getResourceID().getQualifiedName().toURI()) + "\n");
 		for (PropertyAssertion property : getPropertyAssertions()) {
@@ -176,8 +176,8 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 		if(!(obj instanceof ResourceSchema)){
 			return false;
 		}
-		return getDescribedResourceID().getQualifiedName().toURI().equals(((ResourceSchema) obj)
-				.getDescribedResourceID().getQualifiedName().toURI());
+		return getDescribedType().getQualifiedName().toURI().equals(((ResourceSchema) obj)
+				.getDescribedType().getQualifiedName().toURI());
 	}
 
 
@@ -210,7 +210,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResourceID getDescribedResourceID() {
+	public ResourceID getDescribedType() {
 		return this.describedResource;
 	}
 
@@ -236,15 +236,6 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	}
 
 	// -----------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("deprecation")
-	@Override
-	public RBEntity<Object> generateRBEntity() {
-		return new RBEntityImpl(this);
-	}
 
 	/**
 	 * {@inheritDoc}

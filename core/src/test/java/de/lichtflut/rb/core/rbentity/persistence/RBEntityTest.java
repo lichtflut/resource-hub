@@ -224,7 +224,7 @@ public final class RBEntityTest {
 
         p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
         p4.addConstraint(ConstraintFactory.buildConstraint(schema
-                .getDescribedResourceID()));
+                .getDescribedType()));
 
         PropertyAssertionImpl pa1 = new PropertyAssertionImpl(
                 new SimpleResourceID("http://lichtflut.de#", "hatGeburtstag"),

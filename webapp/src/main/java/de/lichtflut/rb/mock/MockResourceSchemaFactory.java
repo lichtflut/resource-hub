@@ -82,7 +82,7 @@ public final class MockResourceSchemaFactory {
 		PropertyDeclarationImpl p8 = new PropertyDeclarationImpl();
 		p8.setName("http://lichtflut.de#Address");
 		p8.setElementaryDataType(ElementaryDataType.RESOURCE);
-		p8.addConstraint(ConstraintFactory.buildConstraint(addressSchema.getDescribedResourceID()));
+		p8.addConstraint(ConstraintFactory.buildConstraint(addressSchema.getDescribedType()));
 		PropertyAssertionImpl pa8 = new PropertyAssertionImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasAddress"), p8);
 		pa8.setCardinality(CardinalityBuilder.hasAtLeastOneToMany());
@@ -109,7 +109,7 @@ public final class MockResourceSchemaFactory {
 		PropertyDeclarationImpl p7 = new PropertyDeclarationImpl();
 		p7.setName("http://lichtflut.de#child");
 		p7.setElementaryDataType(ElementaryDataType.RESOURCE);
-		p7.addConstraint(ConstraintFactory.buildConstraint(personSchema.getDescribedResourceID()));	
+		p7.addConstraint(ConstraintFactory.buildConstraint(personSchema.getDescribedType()));	
 		PropertyAssertionImpl pa7 = new PropertyAssertionImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasChildren"), p7);
 		pa7.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
@@ -153,7 +153,7 @@ public final class MockResourceSchemaFactory {
 			new SimpleResourceID("http://lichtflut.de#", "hasCity"), p2);
 		pa2.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		addressSchema.addPropertyAssertion(pa2);
-		p2.addConstraint(ConstraintFactory.buildConstraint(citySchema.getDescribedResourceID()));
+		p2.addConstraint(ConstraintFactory.buildConstraint(citySchema.getDescribedType()));
 		
 		addressSchema.setLabelBuilder(StaticLabelBuilders.forAddress());
 		}
@@ -220,7 +220,7 @@ public final class MockResourceSchemaFactory {
 		PropertyDeclarationImpl p5 = new PropertyDeclarationImpl();
 		p5.setName("http://lichtflut.de#CEO");
 		p5.setElementaryDataType(ElementaryDataType.RESOURCE);
-		p5.addConstraint(ConstraintFactory.buildConstraint(personSchema.getDescribedResourceID()));
+		p5.addConstraint(ConstraintFactory.buildConstraint(personSchema.getDescribedType()));
 		PropertyAssertionImpl pa5 = new PropertyAssertionImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasCEO"), p5);
 		pa5.setCardinality(CardinalityBuilder.hasAtLeastOneToMany());
@@ -232,7 +232,7 @@ public final class MockResourceSchemaFactory {
 		PropertyAssertionImpl pa6 = new PropertyAssertionImpl(
 			new SimpleResourceID("http://lichtflut.de#", "hasLocation"), p6);
 		pa6.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		p6.addConstraint(ConstraintFactory.buildConstraint(addressSchema.getDescribedResourceID()));
+		p6.addConstraint(ConstraintFactory.buildConstraint(addressSchema.getDescribedType()));
 		organizationSchema.addPropertyAssertion(pa6);
 
 		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
@@ -249,7 +249,7 @@ public final class MockResourceSchemaFactory {
 		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasMember"), p3);
 		pa3.setCardinality(CardinalityBuilder.hasAtLeastOneToMany());
-		p3.addConstraint(ConstraintFactory.buildConstraint(personSchema.getDescribedResourceID()));
+		p3.addConstraint(ConstraintFactory.buildConstraint(personSchema.getDescribedType()));
 		organizationSchema.addPropertyAssertion(pa3);
 		
 		PropertyDeclarationImpl p4 = new PropertyDeclarationImpl();

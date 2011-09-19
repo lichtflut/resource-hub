@@ -38,7 +38,7 @@ public interface ResourceSchema extends ResourceSchemaType{
 	 * The ResourceID  of the described resource.
 	 *  @return The ID of the described resource.
 	 */
-	ResourceID getDescribedResourceID();
+	ResourceID getDescribedType();
 
 	/**
 	 * Get all the schema's {@link PropertyAssertion} as {@link Collection}.
@@ -69,14 +69,6 @@ public interface ResourceSchema extends ResourceSchemaType{
 	 * @return The label builder for this schema.
 	 */
 	LabelBuilder getLabelBuilder();
-
-	/**
-	 * generates an entity of the schema's described resource-type.
-	 * @return Entity  of the schema's described resource-type
-	 * @deprecated Should not be part of schema.
-	 */
-	@Deprecated
-	RBEntity<Object> generateRBEntity();
 
 	/**
 	 * Please make sure that equals is correct implemented to avoid some merging redundancy conflicts e.g.

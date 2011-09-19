@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
@@ -16,7 +17,7 @@ import org.arastreju.sge.naming.QualifiedName;
  *
  * @author Ravi Knox
  */
-public interface IRBEntity {
+public interface IRBEntity extends Serializable {
 
 	/**
 	 * Returns the {@link ResourceID} of this node/Entity.

@@ -91,7 +91,7 @@ public class RBSchemaStoreTest {
 
 
 		 //Test that schema can be found for the desrcibed resource (RT)
-		 ResourceID describedResourceID = schema.getDescribedResourceID();
+		 ResourceID describedResourceID = schema.getDescribedType();
 		 Assert.assertNotNull(store.loadSchemaForResourceType(describedResourceID,null));
 		 //Test that there is schema for a RT, that doesnt exists
 		 Assert.assertNull(store.loadSchemaForResourceType(new SimpleResourceID(new QualifiedName("test")),null));

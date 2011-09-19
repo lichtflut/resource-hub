@@ -16,7 +16,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
 
 import de.lichtflut.rb.core.api.EntityManager;
-import de.lichtflut.rb.core.api.OldRBEntityManagement.SearchContext;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 

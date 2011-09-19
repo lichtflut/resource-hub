@@ -134,7 +134,7 @@ public final class OSFEvaluator {
 		}else{
 			//If some global values will be overridden, this property must be a subproperty of X
 
-			String newIdentifierString = schema.getDescribedResourceID().getQualifiedName().toURI();
+			String newIdentifierString = schema.getDescribedType().getQualifiedName().toURI();
 			String oldIdentifierString = pDec.getIdentifierString();
 			if(!oldIdentifierString.contains(newIdentifierString)){
 				pDec.setIdentifier(newIdentifierString + "#" + pDec.getName());

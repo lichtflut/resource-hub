@@ -96,7 +96,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 		this.node = node;
 		this.schema = schema;
 		this.type=new ArrayList<ResourceID>();
-		this.type.add(schema.getDescribedResourceID());
+		this.type.add(schema.getDescribedType());
 		initializeFields();
 	}
 

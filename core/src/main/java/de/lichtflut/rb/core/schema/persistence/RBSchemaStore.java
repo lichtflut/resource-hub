@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
@@ -76,7 +77,7 @@ public class RBSchemaStore {
 		 *
 		 */
 		SNResourceSchema snSchema;
-		snSchema = this.loadSchemaForResourceType(schema.getDescribedResourceID(), context);
+		snSchema = this.loadSchemaForResourceType(schema.getDescribedType(), context);
 		if(snSchema==null){
 			if(schema.getResourceID()!=null){
 				snSchema = new SNResourceSchema(schema.getResourceID().asResource());
@@ -94,7 +95,7 @@ public class RBSchemaStore {
 		}
 
 		//TODO: Resolve from store
-		ResourceNode describedResource = schema.getDescribedResourceID().asResource();
+		ResourceNode describedResource = schema.getDescribedType().asResource();
 		snSchema.setDescribedClass(describedResource, context);
 
 		final ModelingConversation mc = gate.startConversation();
@@ -186,15 +187,18 @@ public class RBSchemaStore {
 	 * @param ctx -
 	 * @return {@link SNResourceSchema}
 	 */
-	public SNResourceSchema loadSchemaForResourceType(final ResourceID type,final Context ctx) {
-		@SuppressWarnings("unused")
-		Context context = setUpContext(ctx);
-		ModelingConversation mc = gate.startConversation();
+	public SNResourceSchema loadSchemaForResourceType(final ResourceID type, final Context ctx) {
+		final ModelingConversation mc = gate.startConversation();
 		ResourceNode resourceType = mc.findResource(type.getQualifiedName());
-		if(resourceType==null) {return null;}
-		SemanticNode schema = resourceType.getSingleAssociationClient(RBSchema.DESCRIBED_BY);
-		if(schema==null) {return null;}
-		return  new SNResourceSchema(schema.asResource());
+		if(resourceType==null) {
+			return null;
+		}
+		
+		SemanticNode schema = SNOPS.singleObject(resourceType, RBSchema.DESCRIBED_BY);
+		if(schema==null) {
+			return null;
+		}
+		return new SNResourceSchema(schema.asResource());
 	}
 
 	// -----------------------------------------------------

@@ -15,16 +15,12 @@ import java.util.List;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.naming.QualifiedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-import de.lichtflut.rb.core.api.OldRBEntityManagement;
+import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
 import de.lichtflut.rb.core.schema.parser.AbstractRSParsingUnit;
@@ -44,7 +40,8 @@ import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
  *
  * @author Nils Bleisch
  */
-public class ResourceSchemaManagement implements OldRBEntityManagement {
+@Deprecated
+public class OldResourceSchemaManagement {
 
 
 	// -------------MEMBER-FIELDS--------------------------
@@ -61,7 +58,7 @@ public class ResourceSchemaManagement implements OldRBEntityManagement {
 	 * Constructor.
 	 * @param gate -
 	 */
-	public ResourceSchemaManagement(final ArastrejuGate gate){
+	public OldResourceSchemaManagement(final ArastrejuGate gate){
 		//Trigger a NullPointerException
 		gate.toString();
 		this.gate = gate;
@@ -345,67 +342,5 @@ public class ResourceSchemaManagement implements OldRBEntityManagement {
 	public String loadSchemaRepresenation(final RSFormat format) {
 		return this.store.loadSchemaRepresenation(format);
 	}
-
-//	// -----------------------------------------------------
-	
-	/**
-	 * 
-	 */
-	public void storeSchemaRepresentation(final String representation, final RSFormat format) {
-		this.store.storeSchemaRepresentation(representation, format);
-	}
-
-	@Override
-	public boolean createOrUpdateEntity(RBEntity<Object> instance) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public RBEntity loadEntity(QualifiedName qn) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public RBEntity loadEntity(String nodeIdentifier) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public RBEntity loadEntity(ResourceNode node) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<RBEntity> loadAllEntitiesForSchema(
-			Collection<ResourceSchema> schemas) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<RBEntity> loadAllEntitiesForSchema(
-			Collection<ResourceSchema> schemas, String filter, SearchContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<RBEntity> loadAllEntitiesForSchema(ResourceSchema schema) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<RBEntity> loadAllEntitiesForSchema(ResourceSchema schema,
-			String filter, SearchContext ctx) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-//	// -----------------------------------------------------
 
 }

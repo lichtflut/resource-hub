@@ -31,7 +31,7 @@ public class RBMetaInfo implements IRBMetaInfo {
 	 */
 	@Override
 	public ResourceID getSchemaID() {
-		return schema.getDescribedResourceID();
+		return schema.getDescribedType();
 	}
 
 }
