@@ -5,7 +5,7 @@
 	import de.lichtflut.rb.core.schema.model.Cardinality;
 	import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 	import de.lichtflut.rb.core.schema.model.ResourceSchema;
-	import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+	import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
 	import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 	import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 	import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
@@ -86,7 +86,7 @@ public class ResourceSchemaParser extends Parser {
         }
 
     public static class dsl_return extends ParserRuleReturnScope {
-        public Set<ResourceSchemaType> types;
+        public Set<ResourceSchemaElement> types;
         CommonTree tree;
         public Object getTree() { return tree; }
     };
@@ -111,7 +111,7 @@ public class ResourceSchemaParser extends Parser {
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            retval.types = new HashSet<ResourceSchemaType>();
+            retval.types = new HashSet<ResourceSchemaElement>();
             // de/lichtflut/rb/core/schema/ResourceSchema.g:55:3: ( property | resource )+
             int cnt1=0;
             loop1:

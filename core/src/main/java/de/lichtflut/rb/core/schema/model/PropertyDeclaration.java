@@ -45,7 +45,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface PropertyDeclaration  extends ResourceSchemaType{
+public interface PropertyDeclaration  extends ResourceSchemaElement{
 
 	/**
 	 * TODO: Please continue this lists.

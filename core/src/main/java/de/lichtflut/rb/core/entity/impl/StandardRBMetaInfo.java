@@ -1,21 +1,21 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema.model.impl;
+package de.lichtflut.rb.core.entity.impl;
 
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.schema.model.IRBMetaInfo;
+import de.lichtflut.rb.core.entity.MetaInfo;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
- * Implementation of {@link IRBMetaInfo}.
+ * Implementation of {@link MetaInfo}.
  *
  * Created: Aug 30, 2011
  *
  * @author Ravi Knox
  */
-public class RBMetaInfo implements IRBMetaInfo {
+public class StandardRBMetaInfo implements MetaInfo {
 
 	private ResourceSchema schema;
 
@@ -23,7 +23,7 @@ public class RBMetaInfo implements IRBMetaInfo {
 	 * Constructor.
 	 * @param schema - {@link ResourceSchema} of the IRBEntity
 	 */
-	public RBMetaInfo(final ResourceSchema schema){
+	public StandardRBMetaInfo(final ResourceSchema schema){
 		this.schema = schema;
 	}
 	/**

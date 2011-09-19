@@ -23,7 +23,7 @@ package de.lichtflut.rb.core.schema.model;
  *
  * @author Oliver Tigges
  */
-public interface Cardinality extends ResourceSchemaType{
+public interface Cardinality extends ResourceSchemaElement{
 
 	/**
 	 * Returns if Attribute can have unlimited values.

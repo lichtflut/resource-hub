@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.schema.parser;
 
 import java.io.InputStream;
 import java.util.Collection;
-import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
 import de.lichtflut.rb.core.schema.parser.exception.RSMissingErrorReporterException;
 
 /**
@@ -59,7 +59,7 @@ public abstract class AbstractRSParsingUnit {
 	 *         tokenized and parsed.
 	 * @throws RSMissingErrorReporterException -
 	 */
-	public abstract Collection<ResourceSchemaType> parse(final String input)
+	public abstract Collection<ResourceSchemaElement> parse(final String input)
 			throws RSMissingErrorReporterException;
 
 	// -----------------------------------------------------
@@ -70,7 +70,7 @@ public abstract class AbstractRSParsingUnit {
 	 *         tokenized and parsed.
 	 *@throws RSMissingErrorReporterException -
 	 */
-	public abstract Collection<ResourceSchemaType> parse(final InputStream input)
+	public abstract Collection<ResourceSchemaElement> parse(final InputStream input)
 			throws RSMissingErrorReporterException;
 
 	// -----------------------------------------------------

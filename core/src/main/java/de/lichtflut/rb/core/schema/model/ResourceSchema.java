@@ -26,7 +26,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface ResourceSchema extends ResourceSchemaType{
+public interface ResourceSchema extends ResourceSchemaElement{
 
 	/**
 	 * The ResourceID  of this schema.

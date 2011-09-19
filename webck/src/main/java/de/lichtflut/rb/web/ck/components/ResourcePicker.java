@@ -15,8 +15,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.Response;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.web.models.ReferencedEntityModel;
 
 /**
@@ -30,7 +30,7 @@ public abstract class ResourcePicker extends CKComponent {
 
 	//TODO: REFACTOR
 	private static final long serialVersionUID = 1L;
-	private IModel<IRBEntity> entity;
+	private IModel<RBEntity> entity;
 	private String inputSnippet = "";
 	private ResourceID type;
 
@@ -41,7 +41,7 @@ public abstract class ResourcePicker extends CKComponent {
 	 * @param entity - The existing entity to be displayed.
 	 * @param type - {@link ResourceID} defining the RDF:TYPE of the ResourcePicker
 	 */
-	public ResourcePicker(final String id, final IModel<IRBEntity> entity,final ResourceID type) {
+	public ResourcePicker(final String id, final IModel<RBEntity> entity,final ResourceID type) {
 		super(id);
 		this.entity = entity;
 		this.type = type;
@@ -57,19 +57,19 @@ public abstract class ResourcePicker extends CKComponent {
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 		initModel(entity);
-		final List<IRBEntity> entites = getServiceProvider().getEntityManager().findAllByType(type);
-		IAutoCompleteRenderer<IRBEntity> inforenderer = new AbstractAutoCompleteRenderer<IRBEntity>() {
+		final List<RBEntity> entites = getServiceProvider().getEntityManager().findAllByType(type);
+		IAutoCompleteRenderer<RBEntity> inforenderer = new AbstractAutoCompleteRenderer<RBEntity>() {
 			@Override
-			protected void renderChoice(final IRBEntity entity, final Response response,
+			protected void renderChoice(final RBEntity entity, final Response response,
 					final String criteria) {
 				String popupInfo = "";
-				for(IRBField field : entity.getAllFields()){
+				for(RBField field : entity.getAllFields()){
 					if(field.getFieldValues().toString().contains(inputSnippet)){
 						popupInfo = field.getLabel() + ": ";
 						for (Object o : field.getFieldValues()) {
 							if(o != null){
 								if(field.isResourceReference()){
-									IRBEntity e = (IRBEntity) o;
+									RBEntity e = (RBEntity) o;
 									popupInfo = popupInfo.concat(e.getLabel() + ", ");
 								}else{
 									popupInfo = popupInfo.concat(o.toString() + ", ");
@@ -87,21 +87,21 @@ public abstract class ResourcePicker extends CKComponent {
 				response.write("</div>");
 			}
 			@Override
-			protected String getTextValue(final IRBEntity entity) {
+			protected String getTextValue(final RBEntity entity) {
 				return entity.getID().toString();
 			}
 		};
-		TextField<IRBEntity> autoTextfield = new AutoCompleteTextField<IRBEntity>("inputField",
-				(IModel<IRBEntity>) getDefaultModel(), inforenderer) {
+		TextField<RBEntity> autoTextfield = new AutoCompleteTextField<RBEntity>("inputField",
+				(IModel<RBEntity>) getDefaultModel(), inforenderer) {
 			@Override
-			protected Iterator<IRBEntity> getChoices(final String input) {
-				List<IRBEntity> entityList = new ArrayList<IRBEntity>();
-				for (IRBEntity e : entites) {
+			protected Iterator<RBEntity> getChoices(final String input) {
+				List<RBEntity> entityList = new ArrayList<RBEntity>();
+				for (RBEntity e : entites) {
 					String s = "";
-					for (IRBField field : e.getAllFields()) {
+					for (RBField field : e.getAllFields()) {
 						if((field.isResourceReference()) && (!field.getFieldValues().isEmpty())){
 							for (Object o : field.getFieldValues()) {
-								IRBEntity e1 = (IRBEntity) o;
+								RBEntity e1 = (RBEntity) o;
 								if(e1 != null){
 									s = s.concat(e1.getLabel().toLowerCase());
 								}
@@ -126,13 +126,13 @@ public abstract class ResourcePicker extends CKComponent {
 
 	/**
 	 * Initializes the Component's DefaultModel.
-	 * @param entity - instance of {@link IRBEntity}
+	 * @param entity - instance of {@link RBEntity}
 	 */
 	@SuppressWarnings("serial")
-	private void initModel(final IModel<IRBEntity> entity) {
+	private void initModel(final IModel<RBEntity> entity) {
 		setDefaultModel(new ReferencedEntityModel(entity) {
 			@Override
-			public IRBEntity resolve(final ResourceID id) {
+			public RBEntity resolve(final ResourceID id) {
 				return ResourcePicker.this.getServiceProvider().getEntityManager().find(id);
 			}
 		});

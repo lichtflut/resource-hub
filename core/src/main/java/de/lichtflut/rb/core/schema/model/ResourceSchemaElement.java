@@ -18,6 +18,6 @@ import java.io.Serializable;
  *
  * @author Nils Bleisch
  */
-public interface ResourceSchemaType extends Serializable {
+public interface ResourceSchemaElement extends Serializable {
 	//Null Interface
 }

@@ -20,16 +20,16 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 
 /**
  * <p>
- * This Panel displays a List of {@link IRBEntity}s with all their Fields.
+ * This Panel displays a List of {@link RBEntity}s with all their Fields.
  * Selected CKBehaviors cann be added to this Panel.
  *</p>
  * Created: Aug 18, 2011
@@ -54,7 +54,7 @@ public abstract class ResourceTableView extends CKComponent {
 	 * order:
 	 * <ol>
 	 * <li>{@link String}, wicket-id</li>
-	 * <li>{@link IRBEntity}, the RBEntity</li>
+	 * <li>{@link RBEntity}, the RBEntity</li>
 	 * <li>{@link CKComponent} this Component</li>
 	 * </ol>
 	 * </p>
@@ -74,7 +74,7 @@ public abstract class ResourceTableView extends CKComponent {
 	 * order:
 	 * <ol>
 	 * <li>{@link String}, wicket-id</li>
-	 * <li>{@link IRBEntity}, the RBEntity</li>
+	 * <li>{@link RBEntity}, the RBEntity</li>
 	 * <li>{@link CKComponent} this Component</li>
 	 * </ol>
 	 * </p>
@@ -94,7 +94,7 @@ public abstract class ResourceTableView extends CKComponent {
 	 * order:
 	 * <ol>
 	 * <li>{@link String}, wicket-id</li>
-	 * <li>{@link IRBEntity}, the RBEntity</li>
+	 * <li>{@link RBEntity}, the RBEntity</li>
 	 * <li>{@link CKComponent} this Component</li>
 	 * </ol>
 	 * </p>
@@ -112,8 +112,8 @@ public abstract class ResourceTableView extends CKComponent {
 	 * order:
 	 * <ol>
 	 * <li>{@link String}, wicket-id</li>
-	 * <li>{@link IRBEntity}, the RBEntity</li>
-	 * <li>{@link IRBField} instance of {@link IRBField}</li>
+	 * <li>{@link RBEntity}, the RBEntity</li>
+	 * <li>{@link RBField} instance of {@link RBField}</li>
 	 * </ol>
 	 * </p>
 	 */
@@ -132,24 +132,24 @@ public abstract class ResourceTableView extends CKComponent {
 	 * order:
 	 * <ol>
 	 * <li>{@link String}, wicket-id</li>
-	 * <li>{@link IRBEntity}, the RBEntity</li>
-	 * <li>{@link IRBField} instance of {@link IRBField}</li>
+	 * <li>{@link RBEntity}, the RBEntity</li>
+	 * <li>{@link RBField} instance of {@link RBField}</li>
 	 * </ol>
 	 * </p>
 	 */
 	public static final String ADD_CUSTOM_ROW_ITEM = "de.lichtflut.web.ck.custom_row_item.behavior";
 
 	private Map<String, String> tableHeader = new HashMap<String, String>();
-	private List<IRBEntity> entites = new ArrayList<IRBEntity>();
+	private List<RBEntity> entites = new ArrayList<RBEntity>();
 	private String componentID;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param id - wicket:id
-	 * @param entites - List of {@link IRBEntity}
+	 * @param entites - List of {@link RBEntity}
 	 */
-	public ResourceTableView(final String id, final List<IRBEntity> entites) {
+	public ResourceTableView(final String id, final List<RBEntity> entites) {
 		super(id);
 		this.entites = entites;
 		this.componentID = id;
@@ -161,11 +161,11 @@ public abstract class ResourceTableView extends CKComponent {
 	 *            -
 	 */
 	@SuppressWarnings("rawtypes")
-	private void addRows(final List<IRBEntity> entites) {
-		ListView<IRBEntity> view = new ListView<IRBEntity>("row", entites) {
+	private void addRows(final List<RBEntity> entites) {
+		ListView<RBEntity> view = new ListView<RBEntity>("row", entites) {
 			@Override
 			protected void populateItem(final ListItem item) {
-				final IRBEntity e = (IRBEntity) item.getModelObject();
+				final RBEntity e = (RBEntity) item.getModelObject();
 				List<Object> fields = sortFieldsForPresentation(e);
 				// Add CK-Behaviors if set.
 				if (getBehavior(SHOW_DETAILS) != null) {
@@ -195,20 +195,20 @@ public abstract class ResourceTableView extends CKComponent {
 
 	/**
 	 * Adds the content of each cell.
-	 * @param e - instance of {@link IRBEntity}. This is used only
+	 * @param e - instance of {@link RBEntity}. This is used only
 	 * 				for behaviors to provide additional information to the developer.
 	 * 				See CKBehavior for details.
 	 * @param item - {@link ListItem} to be displayed
 	 */
 	@SuppressWarnings("rawtypes")
-	private void addItem(final IRBEntity e, final ListItem item) {
+	private void addItem(final RBEntity e, final ListItem item) {
 		// If ListItem is instance of IRBField:
 		//		- display all fieldvalues.
 		// Else if ListItem is instance of String and equals to one of the
 		// above declared CKBehavior-keys:
 		//		- it will execute the behavior.
-		if (item.getModelObject() instanceof IRBField) {
-			IRBField field = (IRBField) item.getModelObject();
+		if (item.getModelObject() instanceof RBField) {
+			RBField field = (RBField) item.getModelObject();
 			boolean isResource = false;
 			for (Constraint c : field.getConstraints()) {
 				if (c.isResourceTypeConstraint()) {
@@ -225,7 +225,7 @@ public abstract class ResourceTableView extends CKComponent {
 					RepeatingView view = new RepeatingView("data");
 					int resourceCount = 1;
 					for (final Object entityAttribute : field.getFieldValues()) {
-						final IRBEntity entity = (IRBEntity) entityAttribute;
+						final RBEntity entity = (RBEntity) entityAttribute;
 						if(entity != null){
 							CKLink link = new CKLink(view.newChildId(), entity.getLabel(),
 									CKLinkType.CUSTOM_BEHAVIOR);
@@ -239,7 +239,7 @@ public abstract class ResourceTableView extends CKComponent {
 											return null;
 										}
 										@Override
-										public RBServiceProvider getServiceProvider() {
+										public ServiceProvider getServiceProvider() {
 											return  ResourceTableView.this.getServiceProvider();
 										}
 									});
@@ -295,7 +295,7 @@ public abstract class ResourceTableView extends CKComponent {
 							@Override
 							public CKComponent setViewMode(final ViewMode mode) {return null;}
 							@Override
-							public RBServiceProvider getServiceProvider() {
+							public ServiceProvider getServiceProvider() {
 								return ResourceTableView.this.getServiceProvider();
 							}
 						});
@@ -315,7 +315,7 @@ public abstract class ResourceTableView extends CKComponent {
 							@Override
 							public CKComponent setViewMode(final ViewMode mode) {return null;}
 							@Override
-							public RBServiceProvider getServiceProvider(){
+							public ServiceProvider getServiceProvider(){
 								return ResourceTableView.this.getServiceProvider();
 							}
 						});
@@ -354,13 +354,13 @@ public abstract class ResourceTableView extends CKComponent {
 	 * Sorts the IRBFields according to the table header.
 	 *
 	 * @param e
-	 *            - instance of {@link IRBEntity}
-	 * @return list of {@link IRBField}
+	 *            - instance of {@link RBEntity}
+	 * @return list of {@link RBField}
 	 */
-	private List<Object> sortFieldsForPresentation(final IRBEntity e) {
+	private List<Object> sortFieldsForPresentation(final RBEntity e) {
 		List<Object> fields = new ArrayList<Object>();
 		for (String s : tableHeader.keySet()) {
-			IRBField field = e.getField(s);
+			RBField field = e.getField(s);
 			fields.add(field);
 		}
 		return fields;
@@ -397,15 +397,15 @@ public abstract class ResourceTableView extends CKComponent {
 	}
 
 	/**
-	 * Indexes all the {@link IRBField} names.
+	 * Indexes all the {@link RBField} names.
 	 *
 	 * @param entites
 	 *            -
 	 */
-	private void indexTableHeader(final List<IRBEntity> entites) {
+	private void indexTableHeader(final List<RBEntity> entites) {
 		tableHeader.clear();
-		for (IRBEntity entity : entites) {
-			for (IRBField field : entity.getAllFields()) {
+		for (RBEntity entity : entites) {
+			for (RBField field : entity.getAllFields()) {
 				if (!tableHeader.containsKey(field.getFieldName())) {
 					tableHeader.put(field.getFieldName(), field.getLabel());
 				}
@@ -425,7 +425,7 @@ public abstract class ResourceTableView extends CKComponent {
 	/**
 	 * Adds a {@link RepeatingView} to this {@link ResourceTableView} containing a
 	 * {@link CKLink} for each RDF:TYPE contained by this View.
-	 * With this Link a new {@link IRBEntity} can be created for that type
+	 * With this Link a new {@link RBEntity} can be created for that type
 	 */
 	private void addNewEntityLink() {
 		ListView<ResourceID> view = new ListView<ResourceID>("addEntity",getAllTypes()) {
@@ -436,7 +436,7 @@ public abstract class ResourceTableView extends CKComponent {
 				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR,new CKBehavior() {
 					@Override
 					public Object execute(final Object... objects) {
-						IRBEntity entity = new NewRBEntity(
+						RBEntity entity = new RBEntityImpl(
 							ResourceTableView.this.getServiceProvider()
 								.getSchemaManager()
 									.getResourceSchemaForResourceType(type));
@@ -447,7 +447,7 @@ public abstract class ResourceTableView extends CKComponent {
 									return null;
 								}
 								@Override
-								public RBServiceProvider getServiceProvider() {
+								public ServiceProvider getServiceProvider() {
 									return ResourceTableView.this
 										.getServiceProvider();
 								}
@@ -462,12 +462,12 @@ public abstract class ResourceTableView extends CKComponent {
 	}
 
 	/**
-	 * Extracts all types as {@link ResourceID}s from the {@link IRBEntity}s displayed by this {@link ResourceTableView}.
+	 * Extracts all types as {@link ResourceID}s from the {@link RBEntity}s displayed by this {@link ResourceTableView}.
 	 * @return a list of all types contained by this table
 	 */
 	private List<ResourceID> getAllTypes() {
 		List<ResourceID> types = new ArrayList<ResourceID>();
-		for(IRBEntity e : entites){
+		for(RBEntity e : entites){
 			if(!types.contains(e.getType())){
 				types.add(e.getType());
 			}

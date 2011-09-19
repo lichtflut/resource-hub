@@ -7,16 +7,16 @@ import org.arastreju.sge.ArastrejuGate;
 
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
- * Mock-Implementation of {@link RBServiceProvider}.
+ * Mock-Implementation of {@link ServiceProvider}.
  *
  * Created: Aug 30, 2011
  *
  * @author Ravi Knox
  */
-public class MockRBServiceProvider implements RBServiceProvider {
+public class MockRBServiceProvider implements ServiceProvider {
 
 	private SchemaManager schemaManagement = null;
 	private EntityManager typeManagement = null;
@@ -33,7 +33,7 @@ public class MockRBServiceProvider implements RBServiceProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ArastrejuGate getArastejuGateInstance() {
+	public ArastrejuGate getArastejuGate() {
 		return null;
 	}
 

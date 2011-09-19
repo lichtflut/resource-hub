@@ -1,9 +1,11 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema.model;
+package de.lichtflut.rb.core.schema.custom;
 
 import org.arastreju.sge.model.ResourceID;
+
+import de.lichtflut.rb.core.schema.model.LabelBuilder;
 
 /**
  * <p>

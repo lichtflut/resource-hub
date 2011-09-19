@@ -7,7 +7,7 @@ import org.arastreju.sge.ArastrejuProfile;
 
 /**
  * <p>
- *  TODO: [DESCRIPTION].
+ *  Basic configuration class for an RB application.
  * </p>
  *
  * <p>

@@ -11,7 +11,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
 
-import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
 import de.lichtflut.rb.web.models.NewGenericResourceModel;
 /**
@@ -31,7 +31,7 @@ public class FieldSet extends Panel {
 	 * @param field -
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
-	public FieldSet(final String id, final IRBField field) {
+	public FieldSet(final String id, final RBField field) {
 		super(id);
 		setOutputMarkupId(true);
 		view = new RepeatingView("valueField");

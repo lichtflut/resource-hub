@@ -1,9 +1,11 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema.model;
+package de.lichtflut.rb.core.entity;
 
 import org.arastreju.sge.model.ResourceID;
+
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
  * [TODO Insert description here.
@@ -12,7 +14,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Ravi Knox
  */
-public interface IRBMetaInfo {
+public interface MetaInfo {
 
 	/**
 	 * Returns the {@link ResourceID} of this {@link ResourceSchema}.

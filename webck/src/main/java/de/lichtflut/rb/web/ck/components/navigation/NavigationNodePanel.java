@@ -12,7 +12,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 import de.lichtflut.rb.web.ck.components.CKLink;
 
@@ -158,7 +158,7 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 	}
 
 	@Override
-	public RBServiceProvider getServiceProvider() {
+	public ServiceProvider getServiceProvider() {
 		return null;
 	}
 

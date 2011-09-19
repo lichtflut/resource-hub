@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.schema.model.IRBEntity;
+import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
  * .
@@ -19,18 +19,18 @@ public interface EntityManager extends Serializable {
     /**
      *
      * @param resourceID /
-     * @return {@link IRBEntity}
+     * @return {@link RBEntity}
      *
      * Returns an Entity for a given ResourceID.
      */
-    IRBEntity find(ResourceID resourceID);
+    RBEntity find(ResourceID resourceID);
 
     /**
-     * Finds all {@link IRBEntity}s for a given type.
+     * Finds all {@link RBEntity}s for a given type.
      * @param type - id of the Resourcetype
-     * @return a list of {@link IRBEntity}
+     * @return a list of {@link RBEntity}
      */
-    List<IRBEntity> findAllByType(ResourceID type);
+    List<RBEntity> findAllByType(ResourceID type);
 
     /**
      * TODO: Move to appropriate Service
@@ -45,11 +45,11 @@ public interface EntityManager extends Serializable {
      *
      * Stores an Entity and returns the saved entity.
      */
-    void store(IRBEntity entity);
+    void store(RBEntity entity);
 
     /**
-     * Deletes an {@link IRBEntity}.
-     * @param entity - instance of {@link IRBEntity} which is to be deleted
+     * Deletes an {@link RBEntity}.
+     * @param entity - instance of {@link RBEntity} which is to be deleted
      */
-    void delete(IRBEntity entity);
+    void delete(RBEntity entity);
 }

@@ -16,11 +16,11 @@ import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.api.EntityManager;
-import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  *
@@ -29,7 +29,7 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
  */
 public class RBEntityManagerImpl implements EntityManager {
 
-	private final RBServiceProvider provider;
+	private final ServiceProvider provider;
 
 	/**
 	 * <p>
@@ -38,12 +38,12 @@ public class RBEntityManagerImpl implements EntityManager {
 	 *
 	 * @param provider -
 	 */
-	public RBEntityManagerImpl(final RBServiceProvider provider) {
+	public RBEntityManagerImpl(final ServiceProvider provider) {
 		this.provider = provider;
 	}
 
 	@Override
-	public NewRBEntity find(final ResourceID resourceID) {
+	public RBEntityImpl find(final ResourceID resourceID) {
 		return find(resourceID, null);
 	}
 
@@ -55,13 +55,13 @@ public class RBEntityManagerImpl implements EntityManager {
 	 *            /
 	 * @return /
 	 */
-	public NewRBEntity find(final ResourceID resourceID,
+	public RBEntityImpl find(final ResourceID resourceID,
 			final ResourceSchema schema) {
-		ModelingConversation mc = provider.getArastejuGateInstance()
+		ModelingConversation mc = provider.getArastejuGate()
 				.startConversation();
 		ResourceNode node = mc.findResource(resourceID.getQualifiedName());
 		mc.close();
-		return new NewRBEntity(node, node.asEntity().getMainClass());
+		return new RBEntityImpl(node, node.asEntity().getMainClass());
 	}
 
 	/**
@@ -70,15 +70,15 @@ public class RBEntityManagerImpl implements EntityManager {
 	 * @return -
 	 */
 	public List<ResourceNode> findByType(final ResourceID type) {
-		ModelingConversation mc = provider.getArastejuGateInstance()
+		ModelingConversation mc = provider.getArastejuGate()
 				.startConversation();
 		return mc.createQueryManager().findByType(type);
 	}
 
 	@Override
-    public void store(final IRBEntity entity) {
+    public void store(final RBEntity entity) {
 
-        ModelingConversation mc = provider.getArastejuGateInstance().startConversation();
+        ModelingConversation mc = provider.getArastejuGate().startConversation();
 
         ResourceNode newNode = entity.getNode();
 
@@ -89,7 +89,7 @@ public class RBEntityManagerImpl implements EntityManager {
         	Association.create(newNode, RDF.TYPE, entity.getType());
         	sNode = newNode;
         }else{
-        	for (IRBField field : entity.getAllFields()) {
+        	for (RBField field : entity.getAllFields()) {
         		ResourceID resourceID = new SimpleResourceID(field.getFieldName());
         		// Remove old Associations
         		for (Association assoc : sNode.getAssociations(resourceID)) {
@@ -100,7 +100,7 @@ public class RBEntityManagerImpl implements EntityManager {
 					SemanticNode node = new SNValue(field.getDataType(), val);
 					if(field.getDataType()==ElementaryDataType.RESOURCE){
 						try{
-							IRBEntity tempEntity = (IRBEntity) val;
+							RBEntity tempEntity = (RBEntity) val;
 							store(tempEntity);
 							node = new SNResource(tempEntity.getQualifiedName());
 						}catch(ClassCastException e){
@@ -118,9 +118,9 @@ public class RBEntityManagerImpl implements EntityManager {
     }
 
 	@Override
-	public void delete(final IRBEntity entity) {
-		NewRBEntity sEntity = find(entity.getID());
-		for (IRBField field : entity.getAllFields()) {
+	public void delete(final RBEntity entity) {
+		RBEntityImpl sEntity = find(entity.getID());
+		for (RBField field : entity.getAllFields()) {
 			ResourceID resourceID = new SimpleResourceID(field.getFieldName());
 			for (Association assoc : sEntity.getNode().getAssociations(
 					new SimpleResourceID(field.getFieldName()))) {
@@ -131,13 +131,13 @@ public class RBEntityManagerImpl implements EntityManager {
 	}
 
 	@Override
-	public List<IRBEntity> findAllByType(final ResourceID type) {
-		ArrayList entities = new ArrayList<IRBEntity>();
-		ModelingConversation mc = provider.getArastejuGateInstance()
+	public List<RBEntity> findAllByType(final ResourceID type) {
+		ArrayList entities = new ArrayList<RBEntity>();
+		ModelingConversation mc = provider.getArastejuGate()
 				.startConversation();
 		List<ResourceNode> nodes = mc.createQueryManager().findByType(type);
 		for (ResourceNode n : nodes) {
-			entities.add(new NewRBEntity(n, type));
+			entities.add(new RBEntityImpl(n, type));
 		}
 
 		return entities;

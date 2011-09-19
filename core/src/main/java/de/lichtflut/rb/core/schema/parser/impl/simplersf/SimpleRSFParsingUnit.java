@@ -12,7 +12,7 @@ import java.util.Set;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
-import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.AbstractRSParsingUnit;
@@ -47,7 +47,7 @@ public class SimpleRSFParsingUnit extends AbstractRSParsingUnit {
      * {@inheritDoc}
      */
     @Override
-	public Collection<ResourceSchemaType> parse(final String input)
+	public Collection<ResourceSchemaElement> parse(final String input)
 			throws RSMissingErrorReporterException {
 		if(errorReporter == null){ throw new RSMissingErrorReporterException("RSErrorReporter can not be null");}
 		return parseRSF(input);
@@ -58,7 +58,7 @@ public class SimpleRSFParsingUnit extends AbstractRSParsingUnit {
      * {@inheritDoc}
      */
     @Override
-	public Collection<ResourceSchemaType> parse(final InputStream input)
+	public Collection<ResourceSchemaElement> parse(final InputStream input)
 			throws RSMissingErrorReporterException {
 		if(errorReporter == null) {throw new RSMissingErrorReporterException("RSErrorReporter can not be null");}
 		try {
@@ -91,9 +91,9 @@ public class SimpleRSFParsingUnit extends AbstractRSParsingUnit {
     /**
      * Wrapes parser and lexer.
      * @param input -
-     * @return Set of {@link ResourceSchemaType}
+     * @return Set of {@link ResourceSchemaElement}
      */
-	private Set<ResourceSchemaType> parseRSF(final String input){
+	private Set<ResourceSchemaElement> parseRSF(final String input){
 		RSCaseControlStream stream = new RSCaseControlStream(input);
 		//Ignore Case, this is really important
 		stream.setCaseSensitive(false);

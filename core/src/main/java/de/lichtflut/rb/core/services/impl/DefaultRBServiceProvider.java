@@ -1,7 +1,7 @@
 /*
  * Copyright 2009 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.spi.impl;
+package de.lichtflut.rb.core.services.impl;
 
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
@@ -10,28 +10,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.api.EntityManager;
+import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.api.TypeManager;
 import de.lichtflut.rb.core.api.impl.RBEntityManagerImpl;
 import de.lichtflut.rb.core.api.impl.SchemaManagerImpl;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.api.impl.TypeManagerImpl;
+import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
- * Reference implementation of {@link RBServiceProvider}.
+ * Reference implementation of {@link ServiceProvider}.
  * TODO: The rootContext of ArastrejuGate is used, this should be changed
  *
  * Created: Apr 28, 2011
  *
  * @author Nils Bleisch
  */
-public class DefaultRBServiceProvider implements RBServiceProvider {
+public class DefaultRBServiceProvider implements ServiceProvider {
 
-    private final Logger logger = LoggerFactory
-            .getLogger(DefaultRBServiceProvider.class);
+    private final Logger logger = LoggerFactory.getLogger(DefaultRBServiceProvider.class);
 
-    private ArastrejuGate gate = null;
-    private SchemaManager schemaManager = null;
-    private EntityManager typeManagement = null;
+    private ArastrejuGate gate;
+    
+    private SchemaManager schemaManager;
+    private EntityManager entityManager;
+    private TypeManager typeManager;
 
     // --CONSTRUCTOR----------------------------------------
 
@@ -51,8 +54,8 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
         logger.info("Initializing Arastreju with profile: " + profile);
         gate = Arastreju.getInstance(profile).rootContext();
         schemaManager = new SchemaManagerImpl(this);
-
-        typeManagement = new RBEntityManagerImpl(this);
+        entityManager = new RBEntityManagerImpl(this);
+        typeManager = new TypeManagerImpl(this);
     }
 
     // -----------------------------------------------------
@@ -61,17 +64,7 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
      *{@inheritDoc}
      */
     @Override
-    public SchemaManager getSchemaManager() {
-        return schemaManager;
-    }
-
-    // -----------------------------------------------------
-
-    /**
-     *{@inheritDoc}
-     */
-    @Override
-    public ArastrejuGate getArastejuGateInstance() {
+    public ArastrejuGate getArastejuGate() {
         return gate;
     }
 
@@ -82,7 +75,24 @@ public class DefaultRBServiceProvider implements RBServiceProvider {
      */
     @Override
     public EntityManager getEntityManager() {
-        return typeManagement;
+        return entityManager;
     }
+    
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public SchemaManager getSchemaManager() {
+        return schemaManager;
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public TypeManager getTypeManager() {
+    	return typeManager;
+    }
+   
 
 }

@@ -7,8 +7,8 @@ import java.io.Serializable;
 
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.schema.model.LabelBuilder;
 import de.lichtflut.rb.web.metamodel.WSConstants;
 
@@ -38,7 +38,7 @@ public final class StaticLabelBuilders implements Serializable{
 	public static LabelBuilder forPerson() {
 		return new LabelBuilder() {
 			@Override
-			public String build(final IRBEntity entity) {
+			public String build(final RBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_FORENAME, WSConstants.HAS_SURNAME);
 			}
 		};
@@ -51,7 +51,7 @@ public final class StaticLabelBuilders implements Serializable{
 	public static LabelBuilder forOrganization() {
 		return new LabelBuilder() {
 			@Override
-			public String build(final IRBEntity entity) {
+			public String build(final RBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_ORGA_NAME);
 			}
 		};
@@ -64,7 +64,7 @@ public final class StaticLabelBuilders implements Serializable{
 	public static LabelBuilder forAddress() {
 		return new LabelBuilder() {
 			@Override
-			public String build(final IRBEntity entity) {
+			public String build(final RBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_STREET, WSConstants.HAS_HOUSNR, WSConstants.HAS_CITY);
 			}
 		};
@@ -77,7 +77,7 @@ public final class StaticLabelBuilders implements Serializable{
 	public static LabelBuilder forProject() {
 		return new LabelBuilder() {
 			@Override
-			public String build(final IRBEntity entity) {
+			public String build(final RBEntity entity) {
 				return entity.toString();
 			}
 		};
@@ -90,7 +90,7 @@ public final class StaticLabelBuilders implements Serializable{
 	public static LabelBuilder forCity() {
 		return new LabelBuilder() {
 			@Override
-			public String build(final IRBEntity entity) {
+			public String build(final RBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_ZIPCODE, WSConstants.HAS_CITY, WSConstants.HAS_COUNTRY);
 			}
 		};
@@ -104,7 +104,7 @@ public final class StaticLabelBuilders implements Serializable{
 	 * @param predicates -
 	 * @return -
 	 */
-	private static String getLabel(final IRBEntity entity, final ResourceID... predicates) {
+	private static String getLabel(final RBEntity entity, final ResourceID... predicates) {
 		final StringBuilder sb = new StringBuilder();
 		for(ResourceID predicate : predicates) {
 			append(sb, entity, predicate);
@@ -121,11 +121,11 @@ public final class StaticLabelBuilders implements Serializable{
 	 * @param entity -
 	 * @param predicate -
 	 */
-	private static void append(final StringBuilder sb, final IRBEntity entity, final ResourceID predicate) {
-		final IRBField field = entity.getField(predicate.getQualifiedName().toURI());
+	private static void append(final StringBuilder sb, final RBEntity entity, final ResourceID predicate) {
+		final RBField field = entity.getField(predicate.getQualifiedName().toURI());
 		for (Object value : field.getFieldValues()) {
 			if((field.isResourceReference()) && (value != null)){
-				IRBEntity e = (IRBEntity) value;
+				RBEntity e = (RBEntity) value;
 				sb.append(e.getLabel());
 			}else{
 				sb.append(value);

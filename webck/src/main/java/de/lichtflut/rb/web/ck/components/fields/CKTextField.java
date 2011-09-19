@@ -14,7 +14,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
 
-import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.web.behaviors.DatePickerBehavior;
 import de.lichtflut.rb.web.models.NewGenericResourceModel;
 
@@ -28,7 +28,7 @@ import de.lichtflut.rb.web.models.NewGenericResourceModel;
 @SuppressWarnings("serial")
 class CKTextField extends Panel {
 
-	private IRBField field;
+	private RBField field;
 	private WebMarkupContainer container;
 	private RepeatingView view;
 	private List<Object> values;
@@ -43,7 +43,7 @@ class CKTextField extends Panel {
 	 * @param field -
 	 */
 	@SuppressWarnings({ "rawtypes" })
-	public CKTextField(final String id, final IRBField field) {
+	public CKTextField(final String id, final RBField field) {
 		super(id);
 		this.field = field;
 		values = field.getFieldValues();
@@ -81,7 +81,7 @@ class CKTextField extends Panel {
 
 	/**
 	 * Creates a {@link TextField} with appropriate {@link NewGenericResourceModel} and value.
-	 * @param i - marking the occurence of the displayed value in {@link IRBField}
+	 * @param i - marking the occurence of the displayed value in {@link RBField}
 	 * @return - instance of {@link TextField}
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })

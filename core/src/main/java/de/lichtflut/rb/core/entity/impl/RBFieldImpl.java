@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema.model.impl;
+package de.lichtflut.rb.core.entity.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,10 +13,11 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 
 /**
  * Represents a resource type defined by a RBResourceSchema.
@@ -26,7 +27,7 @@ import de.lichtflut.rb.core.schema.model.PropertyAssertion;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class RBField implements IRBField, Serializable {
+public class RBFieldImpl implements RBField, Serializable {
 
 	private PropertyAssertion assertion;
 	private ResourceID predicate;
@@ -41,7 +42,7 @@ public class RBField implements IRBField, Serializable {
 	 * @param assertion - {@link PropertyAssertion}. <code>null</code> if assertion is not known to Schema
 	 * @param values - values of this field
 	 */
-	public RBField(final PropertyAssertion assertion, final Set<SemanticNode> values) {
+	public RBFieldImpl(final PropertyAssertion assertion, final Set<SemanticNode> values) {
 		if(assertion != null){
 			this.assertion = assertion;
 			this.isKnownToSchema = true;
@@ -57,7 +58,7 @@ public class RBField implements IRBField, Serializable {
 	 * @param predicate - the predicate
 	 * @param values - values of this field
 	 */
-	public RBField(final ResourceID predicate, final Set<SemanticNode> values) {
+	public RBFieldImpl(final ResourceID predicate, final Set<SemanticNode> values) {
 		this.predicate = predicate;
 		this.isKnownToSchema = false;
 		this.values = new ArrayList<Object>();

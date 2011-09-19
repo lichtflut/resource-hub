@@ -17,7 +17,7 @@ import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
 import de.lichtflut.rb.core.schema.parser.AbstractRSParsingUnit;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
@@ -25,7 +25,7 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  *.
@@ -33,7 +33,6 @@ import de.lichtflut.rb.core.spi.RBServiceProvider;
  *
  * @author Raphael Esterle
  */
-
 abstract class AbstractSchemaImporter implements SchemaImporter{
 
 	// -------------MEMBER-FIELDS--------------------------
@@ -50,9 +49,9 @@ abstract class AbstractSchemaImporter implements SchemaImporter{
 	 * Constructor.
 	 * @param provider -
 	 */
-	public AbstractSchemaImporter(final RBServiceProvider provider) {
+	public AbstractSchemaImporter(final ServiceProvider provider) {
 		//Trigger a NullPointerException
-		this.gate = provider.getArastejuGateInstance();
+		this.gate = provider.getArastejuGate();
 		store = new RBSchemaStore(this.gate);
 	}
 
@@ -70,7 +69,7 @@ abstract class AbstractSchemaImporter implements SchemaImporter{
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		AbstractRSParsingUnit pUnit = getFormat().getParsingUnit();
 		pUnit.setErrorReporter(new RSParsingResultErrorReporter(result));
-		Collection<ResourceSchemaType> resultTypes;
+		Collection<ResourceSchemaElement> resultTypes;
 		try {
 			resultTypes = pUnit.parse(is);
 			result.merge(convertToParsingResult(resultTypes));
@@ -222,16 +221,16 @@ abstract class AbstractSchemaImporter implements SchemaImporter{
 
 	/**
 	 * <p>
-	 * This method converts a {@link Collection} of {@link ResourceSchemaType} types to a {@link RSParsingResult}.
+	 * This method converts a {@link Collection} of {@link ResourceSchemaElement} types to a {@link RSParsingResult}.
 	 * </p>
 	 * @param types - the given type-collection
 	 * @return the parsing result
 	 */
-	private RSParsingResult convertToParsingResult(final Collection<ResourceSchemaType> types){
+	private RSParsingResult convertToParsingResult(final Collection<ResourceSchemaElement> types){
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.setErrorLevel(RSErrorLevel.INTERPRETER);
 		if(types==null){ return result;}
-		for (ResourceSchemaType type : types) {
+		for (ResourceSchemaElement type : types) {
 			if(type instanceof ResourceSchema){result.addResourceSchema((ResourceSchema) type);}
 			if(type instanceof PropertyDeclaration){result.addPropertyDeclaration((PropertyDeclaration) type);}
 		}

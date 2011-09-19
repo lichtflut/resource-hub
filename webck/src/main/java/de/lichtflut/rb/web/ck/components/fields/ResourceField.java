@@ -10,9 +10,9 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 import de.lichtflut.rb.web.ck.components.ResourcePicker;
 import de.lichtflut.rb.web.models.NewGenericResourceModel;
@@ -28,15 +28,15 @@ import de.lichtflut.rb.web.models.NewGenericResourceModel;
 @SuppressWarnings("serial")
 public abstract class ResourceField extends CKComponent {
 
-	private IRBField field;
+	private RBField field;
 	private RepeatingView view;
 	private int index = 0;
 	/**
 	 * Constrcutor.
 	 * @param id - wicket:id
-	 * @param field - {@link IRBField} to be displayed
+	 * @param field - {@link RBField} to be displayed
 	 */
-	public ResourceField(final String id,final IRBField field) {
+	public ResourceField(final String id,final RBField field) {
 		super(id);
 		this.field = field;
 		buildComponent();
@@ -68,7 +68,7 @@ public abstract class ResourceField extends CKComponent {
 
 	/**
 	 * Creates a {@link ResourcePicker} with appropriate {@link NewGenericResourceModel} and value.
-	 * @param i - marking the occurence of the displayed value in {@link IRBField}
+	 * @param i - marking the occurence of the displayed value in {@link RBField}
 	 * @return - instance of {@link ResourcePicker}
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -76,7 +76,7 @@ public abstract class ResourceField extends CKComponent {
 		ResourcePicker picker = new ResourcePicker(view.newChildId(), new NewGenericResourceModel(field, i),
 				extractTypeConstraint(field)){
 			@Override
-			public RBServiceProvider getServiceProvider() {
+			public ServiceProvider getServiceProvider() {
 				return ResourceField.this.getServiceProvider();
 			}
 			@Override
@@ -89,11 +89,11 @@ public abstract class ResourceField extends CKComponent {
 	}
 
 	/**
-	 * Extracts the resourceTypeConstraint of this {@link IRBField}.
+	 * Extracts the resourceTypeConstraint of this {@link RBField}.
 	 * @param field - IRBField
 	 * @return the resourceTypeConstraint as an {@link ResourceID}
 	 */
-	private ResourceID extractTypeConstraint(final IRBField field) {
+	private ResourceID extractTypeConstraint(final RBField field) {
 		if(field.getDataType().equals(ElementaryDataType.RESOURCE)){
 			for (Constraint c : field.getConstraints()) {
 				if(c.isResourceTypeConstraint()){

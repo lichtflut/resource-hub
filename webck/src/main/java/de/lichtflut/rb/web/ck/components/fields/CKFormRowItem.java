@@ -5,12 +5,12 @@ package de.lichtflut.rb.web.ck.components.fields;
 
 import org.apache.wicket.markup.html.basic.Label;
 
-import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 
 /**
- * A RBFieldPanel represents a {@link IRBField}.
+ * A RBFieldPanel represents a {@link RBField}.
  *
  * Created: Aug 16, 2011
  *
@@ -19,13 +19,13 @@ import de.lichtflut.rb.web.ck.components.CKComponent;
 @SuppressWarnings("serial")
 public abstract class CKFormRowItem extends CKComponent {
 
-	private IRBField field;
+	private RBField field;
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
-	 * @param field - instance of {@link IRBField}
+	 * @param field - instance of {@link RBField}
 	 */
-	public CKFormRowItem(final String id, final IRBField field) {
+	public CKFormRowItem(final String id, final RBField field) {
 		super(id);
 		this.field = field;
 		buildComponent();
@@ -50,7 +50,7 @@ public abstract class CKFormRowItem extends CKComponent {
 		case RESOURCE:
 			add(new ResourceField("field", field){
 				@Override
-				public RBServiceProvider getServiceProvider() {
+				public ServiceProvider getServiceProvider() {
 					return CKFormRowItem.this.getServiceProvider();
 				}
 				@Override

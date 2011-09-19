@@ -5,6 +5,8 @@ package de.lichtflut.rb.core.schema.model;
 
 import java.io.Serializable;
 
+import de.lichtflut.rb.core.entity.RBEntity;
+
 /**
  * <p>
  *  Builder for labels based on a resource's attributes.
@@ -25,7 +27,7 @@ public interface LabelBuilder extends Serializable{
 	 * @param entity The entity to be labeled.
 	 * @return The entitie's label.
 	 */
-	String build(IRBEntity entity);
+	String build(RBEntity entity);
 
 	/**
 	 *
@@ -34,7 +36,7 @@ public interface LabelBuilder extends Serializable{
 	@SuppressWarnings("serial")
 	public static class DefaultBuilder implements LabelBuilder, Serializable {
 		@Override
-		public String build(final IRBEntity entity) {
+		public String build(final RBEntity entity) {
 			return entity.toString();
 		}
 	}

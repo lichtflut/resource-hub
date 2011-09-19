@@ -13,7 +13,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 
-import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.entity.RBField;
 
 /**
  * This field displays a Boolean as a {@link CheckBox}.
@@ -30,10 +30,10 @@ class CKCheckBoxField extends Panel {
 	 * Constructor.
 	 *
 	 * @param id - wicket:id
-	 * @param field - instance of {@link IRBField}
+	 * @param field - instance of {@link RBField}
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public CKCheckBoxField(final String id, final IRBField field) {
+	public CKCheckBoxField(final String id, final RBField field) {
 		super(id);
 		IModel<List<Boolean>> listModel = new ListModel(field.getFieldValues());
 

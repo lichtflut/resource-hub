@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import de.lichtflut.rb.core.schema.model.IRBField;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
 
 /**
@@ -22,13 +22,13 @@ import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
 @SuppressWarnings("serial")
 public abstract class AddValueAjaxButton extends Panel {
 
-	private IRBField field;
+	private RBField field;
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
 	 * @param field -
 	 */
-	public AddValueAjaxButton(final String id, final IRBField field) {
+	public AddValueAjaxButton(final String id, final RBField field) {
 		super(id);
 		this.field = field;
 		setOutputMarkupId(true);

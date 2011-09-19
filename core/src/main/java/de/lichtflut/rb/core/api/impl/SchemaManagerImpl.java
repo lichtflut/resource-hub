@@ -7,18 +7,15 @@ import java.util.Collection;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
-import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * Reference impl of {@link ResourceSchemaManager}. This impl will take the
@@ -33,12 +30,10 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	// -------------MEMBER-FIELDS--------------------------
 
-	private RBServiceProvider provider = null;
+	private ServiceProvider provider = null;
 	private RBSchemaStore store = null;
 
-	// logger
-	private final Logger logger = LoggerFactory
-			.getLogger(RSParsingResultErrorReporter.class);
+	// -----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -46,9 +41,9 @@ public class SchemaManagerImpl implements SchemaManager {
 	 * @param provider
 	 *            -
 	 */
-	public SchemaManagerImpl(final RBServiceProvider provider) {
+	public SchemaManagerImpl(final ServiceProvider provider) {
 		this.provider = provider;
-		store = new RBSchemaStore(provider.getArastejuGateInstance());
+		store = new RBSchemaStore(provider.getArastejuGate());
 	}
 
 	@Override

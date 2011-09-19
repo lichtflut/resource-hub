@@ -9,7 +9,7 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -111,7 +111,7 @@ public final class CKBehaviorTest extends TestCase{
 		}
 
 		@Override
-		public RBServiceProvider getServiceProvider(){
+		public ServiceProvider getServiceProvider(){
 			return null;
 		}
 

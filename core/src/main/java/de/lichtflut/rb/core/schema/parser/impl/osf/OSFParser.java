@@ -8,7 +8,7 @@ package de.lichtflut.rb.core.schema.parser.impl.osf;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;

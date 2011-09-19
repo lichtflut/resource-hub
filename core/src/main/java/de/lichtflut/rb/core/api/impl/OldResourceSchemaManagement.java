@@ -22,7 +22,7 @@ import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
 import de.lichtflut.rb.core.schema.parser.AbstractRSParsingUnit;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
@@ -77,7 +77,7 @@ public class OldResourceSchemaManagement {
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		AbstractRSParsingUnit pUnit = getFormat().getParsingUnit();
 		pUnit.setErrorReporter(new RSParsingResultErrorReporter(result));
-		Collection<ResourceSchemaType> resultTypes;
+		Collection<ResourceSchemaElement> resultTypes;
 		try {
 			resultTypes = pUnit.parse(is);
 			result.merge(convertToParsingResult(resultTypes));
@@ -229,16 +229,16 @@ public class OldResourceSchemaManagement {
 
 	/**
 	 * <p>
-	 * This method converts a {@link Collection} of {@link ResourceSchemaType} types to a {@link RSParsingResult}.
+	 * This method converts a {@link Collection} of {@link ResourceSchemaElement} types to a {@link RSParsingResult}.
 	 * </p>
 	 * @param types - the given type-collection
 	 * @return the parsing result
 	 */
-	private RSParsingResult convertToParsingResult(final Collection<ResourceSchemaType> types){
+	private RSParsingResult convertToParsingResult(final Collection<ResourceSchemaElement> types){
 		RSParsingResultImpl result = new RSParsingResultImpl();
 		result.setErrorLevel(RSErrorLevel.INTERPRETER);
 		if(types==null){ return result;}
-		for (ResourceSchemaType type : types) {
+		for (ResourceSchemaElement type : types) {
 			if(type instanceof ResourceSchema){result.addResourceSchema((ResourceSchema) type);}
 			if(type instanceof PropertyDeclaration){result.addPropertyDeclaration((PropertyDeclaration) type);}
 		}

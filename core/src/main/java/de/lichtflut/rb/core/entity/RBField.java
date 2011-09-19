@@ -1,12 +1,15 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema.model;
+package de.lichtflut.rb.core.entity;
 
 import java.util.List;
 import java.util.Set;
 
 import org.arastreju.sge.model.ElementaryDataType;
+
+import de.lichtflut.rb.core.schema.model.Cardinality;
+import de.lichtflut.rb.core.schema.model.Constraint;
 
 
 /**
@@ -16,7 +19,7 @@ import org.arastreju.sge.model.ElementaryDataType;
  *
  * @author Ravi Knox
  */
-public interface IRBField{
+public interface RBField{
 
 	/**
 	 * Returns the (attribute / )name of this RBField.
@@ -71,7 +74,7 @@ public interface IRBField{
 	/**
 	 * Returns this field's constraint according to the RBSchema.
 	 * TODO: specify return type (Constraint / Pattern)?!
-	 * TODO: If reference type Resource = full quallified ResourceURI as constraint?!
+	 * TODO: If reference type Resource = full qualified ResourceURI as constraint?!
 	 * @return List of {@link Constraint}
 	 */
 	Set<Constraint> getConstraints();

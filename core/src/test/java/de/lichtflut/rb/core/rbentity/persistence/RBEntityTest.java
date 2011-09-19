@@ -3,27 +3,25 @@
  */
 package de.lichtflut.rb.core.rbentity.persistence;
 
-import java.io.File;
-
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
+import de.lichtflut.rb.core.entity.impl.RBFieldImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
-import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-import de.lichtflut.rb.core.schema.model.impl.RBField;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
-import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
+import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
 
 
 /**
@@ -154,12 +152,14 @@ public final class RBEntityTest {
         ResourceSchema schema = createSchema();
 
         // Create two entitys with given shema
-        NewRBEntity e = new NewRBEntity(schema);
-        NewRBEntity e1 = new NewRBEntity(schema);
+        RBEntityImpl e = new RBEntityImpl(schema);
+        RBEntityImpl e1 = new RBEntityImpl(schema);
 
+        ServiceProvider sp = new DefaultRBServiceProvider();
+        
         // Get Entitymanager
-        EntityManager m = RBServiceProviderFactory.getDefaultServiceProvider().getEntityManager();
-        SchemaManager sm = RBServiceProviderFactory.getDefaultServiceProvider().getSchemaManager();
+        EntityManager m = sp.getEntityManager();
+        SchemaManager sm = sp.getSchemaManager();
 
         sm.storeOrOverrideResourceSchema(schema);
         SchemaImporter si = sm.getImporter(RSFormat.OSF);
@@ -179,7 +179,7 @@ public final class RBEntityTest {
                 .add("kind@fam.com");
 
         // Add a custom Field
-        RBField newField = new RBField(new SimpleResourceID("http://lichtflut.de#whatever"), null);
+        RBFieldImpl newField = new RBFieldImpl(new SimpleResourceID("http://lichtflut.de#whatever"), null);
         newField.getFieldValues().add("haha");
         newField.getFieldValues().add("hoho");
         newField.getFieldValues().add("muhahaha");

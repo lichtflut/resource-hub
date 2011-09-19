@@ -24,10 +24,10 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.schema.model.impl.RBField;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.impl.RBFieldImpl;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.fields.CKFormRowItem;
 import de.lichtflut.rb.web.models.NewGenericResourceModel;
@@ -47,7 +47,7 @@ import de.lichtflut.rb.web.models.NewGenericResourceModel;
 public abstract class ResourceDetailPanel extends CKComponent  {
 
 	private static final long serialVersionUID = 2891070130452612280L;
-	private IRBEntity entity;
+	private RBEntity entity;
 	private String componentID;
 	private boolean readOnly;
 
@@ -56,19 +56,19 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
-	 * @param entity - Instance of {@link IRBEntity}
+	 * @param entity - Instance of {@link RBEntity}
 	 */
-	public ResourceDetailPanel(final String id, final IRBEntity entity) {
+	public ResourceDetailPanel(final String id, final RBEntity entity) {
 		this(id, entity, true);
 	}
 
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
-	 * @param entity - Instance of {@link IRBEntity}
+	 * @param entity - Instance of {@link RBEntity}
 	 * @param readOnly - true if this form is readOnly, false if it should accept input.
 	 */
-	public ResourceDetailPanel(final String id, final IRBEntity entity, final boolean readOnly) {
+	public ResourceDetailPanel(final String id, final RBEntity entity, final boolean readOnly) {
 		super(id);
 		this.componentID = id;
 		this.entity = entity;
@@ -86,7 +86,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		}else{
 			this.add(new Writeable("container"){
 				@Override
-				public RBServiceProvider getServiceProvider() {
+				public ServiceProvider getServiceProvider() {
 					return ResourceDetailPanel.this.getServiceProvider();
 				}
 				@Override
@@ -112,9 +112,9 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		/**
 		 * Constructor.
 		 * @param id - wicket:id
-		 * @param field - instance of {@link IRBField}
+		 * @param field - instance of {@link RBField}
 		 */
-		public KeyValueField(final String id, final IRBField field){
+		public KeyValueField(final String id, final RBField field){
 			super(id);
 			int index = (entity.getAllFields().size());
 			WebMarkupContainer container = new WebMarkupContainer("container");
@@ -127,9 +127,9 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		/**
 		 * Constructor.
 		 * @param id - wicket:id
-		 * @param entity - instance of {@link IRBField}
+		 * @param entity - instance of {@link RBField}
 		 */
-		public KeyValueField(final String id, final IRBEntity entity){
+		public KeyValueField(final String id, final RBEntity entity){
 			super(id);
 			WebMarkupContainer container = new WebMarkupContainer("container");
 			final TextField<String> predicate = new TextField<String>("key", Model.of(""));
@@ -159,14 +159,14 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		}
 
 		/**
-		 * Add an {@link IRBField} to the existing {@link IRBEntity}.
-		 * @param predicate - Predicate of the new {@link IRBField}
-		 * @param value - Value of the new {@link IRBField}
+		 * Add an {@link RBField} to the existing {@link RBEntity}.
+		 * @param predicate - Predicate of the new {@link RBField}
+		 * @param value - Value of the new {@link RBField}
 		 */
 		private void addRBField(final String predicate, final String value){
 			HashSet<SemanticNode> values = new HashSet<SemanticNode>();
 			values.add(new SNValue(ElementaryDataType.STRING, value));
-			IRBField field = new RBField(new SimpleResourceID(predicate), values);
+			RBField field = new RBFieldImpl(new SimpleResourceID(predicate), values);
 			entity.addField(field);
 		}
 	}
@@ -195,10 +195,10 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 			super(id);
 			this.add(new ResourceInfoPanel("infoPanel", entity));
 
-			ListView<IRBField> view = new ListView<IRBField>("details", entity.getAllFields()) {
+			ListView<RBField> view = new ListView<RBField>("details", entity.getAllFields()) {
 				@Override
-				protected void populateItem(final ListItem<IRBField> item) {
-					IRBField field = item.getModelObject();
+				protected void populateItem(final ListItem<RBField> item) {
+					RBField field = item.getModelObject();
 					RepeatingView valueList = new RepeatingView("valueList");
 					if (field.isResourceReference()) {
 						addResourceField(valueList, field);
@@ -230,7 +230,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 							return null;
 						}
 						@Override
-						public RBServiceProvider getServiceProvider() {
+						public ServiceProvider getServiceProvider() {
 							return ResourceDetailPanel.this.getServiceProvider();
 						}
 					});
@@ -243,15 +243,15 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 
 		/**
 		 * @param valueList -
-		 * @param field - instance of {@link IRBField}
+		 * @param field - instance of {@link RBField}
 		 */
-		private void addResourceField(final RepeatingView valueList, final IRBField field) {
+		private void addResourceField(final RepeatingView valueList, final RBField field) {
 			if(field.getFieldValues().isEmpty() || field.getFieldValues() == null){
 				valueList.add(new Label(valueList.newChildId(), ""));
 			}
 			for (Object o : field.getFieldValues()) {
 				if (o != null) {
-				final IRBEntity e = (IRBEntity) o;
+				final RBEntity e = (RBEntity) o;
 					valueList.add(createLinkForEntity(valueList, e));
 				} else {
 					valueList.add(new Label(valueList.newChildId(), ""));
@@ -261,11 +261,11 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 
 		/**
 		 * @param valueList -
-		 * @param e - {@link IRBEntity} for which a {@link CKLink} will be created
-		 * @return a {@link CKLink} for the given {@link IRBEntity}
+		 * @param e - {@link RBEntity} for which a {@link CKLink} will be created
+		 * @return a {@link CKLink} for the given {@link RBEntity}
 		 */
 		@SuppressWarnings("serial")
-		private CKLink createLinkForEntity(final RepeatingView valueList, final IRBEntity e) {
+		private CKLink createLinkForEntity(final RepeatingView valueList, final RBEntity e) {
 			CKLink link = new CKLink(valueList.newChildId(), e.getLabel(), CKLinkType.CUSTOM_BEHAVIOR);
 			link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
 				@Override
@@ -276,7 +276,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 							return null;
 						}
 						@Override
-						public RBServiceProvider getServiceProvider() {
+						public ServiceProvider getServiceProvider() {
 							return ResourceDetailPanel.this.getServiceProvider();
 						}
 					});
@@ -325,10 +325,10 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 					getServiceProvider().getEntityManager().store(entity);
 				}
 			};
-			for (IRBField field : entity.getAllFields()) {
+			for (RBField field : entity.getAllFields()) {
 				view.add(new CKFormRowItem(view.newChildId(), field) {
 					@Override
-					public RBServiceProvider getServiceProvider() {
+					public ServiceProvider getServiceProvider() {
 						return ResourceDetailPanel.this.getServiceProvider();
 					}
 

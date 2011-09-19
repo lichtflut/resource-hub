@@ -5,8 +5,8 @@ package de.lichtflut.rb.web.mockPages;
 
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
-import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -37,7 +37,7 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 				return null;
 			}
 			@Override
-			public RBServiceProvider getServiceProvider() {
+			public ServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 		});
@@ -45,9 +45,9 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 
 	/**
 	 * Contructor.
-	 * @param entity - instance of {@link IRBEntity}
+	 * @param entity - instance of {@link RBEntity}
 	 */
-	public EmployeePage(final IRBEntity entity) {
+	public EmployeePage(final RBEntity entity) {
 		super("Mockpage-Employee");
 		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
 		add(new ResourceDetailPanel("mockEmployee", entity){
@@ -57,7 +57,7 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 				return null;
 			}
 			@Override
-			public RBServiceProvider getServiceProvider() {
+			public ServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 		});

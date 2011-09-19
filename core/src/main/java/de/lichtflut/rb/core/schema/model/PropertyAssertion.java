@@ -21,7 +21,7 @@ import org.arastreju.sge.naming.QualifiedName;
  *
  * @author Oliver Tigges
  */
-public interface PropertyAssertion extends ResourceSchemaType {
+public interface PropertyAssertion extends ResourceSchemaElement {
 
 	/**
 	 * The descriptor of this property. Usually the resource identifier representing

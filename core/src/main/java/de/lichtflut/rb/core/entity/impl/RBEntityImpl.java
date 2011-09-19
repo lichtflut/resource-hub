@@ -1,14 +1,14 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema.model.impl;
+package de.lichtflut.rb.core.entity.impl;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
@@ -17,15 +17,15 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.schema.model.IRBMetaInfo;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.MetaInfo;
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
  * <p>
- * Implementation of {@link IRBEntity}.
+ * Implementation of {@link RBEntity}.
  * </p>
  *
  * <p>
@@ -35,12 +35,12 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  * @author Oliver Tigges
  */
 @SuppressWarnings("serial")
-public class NewRBEntity implements IRBEntity, Serializable {
+public class RBEntityImpl implements RBEntity {
 
 	private final ResourceNode node;
 	private final ResourceSchema schema;
 	private final List<ResourceID> type;
-	private List<IRBField> fields;
+	private List<RBField> fields;
 
 	// -----------------------------------------------------
 
@@ -48,7 +48,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * Creates a new entity without schema.
 	 * @param type - rdf:type
 	 */
-	public NewRBEntity(final ResourceID type) {
+	public RBEntityImpl(final ResourceID type) {
 		this(new SNResource(), type);
 	}
 
@@ -57,7 +57,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 *
 	 * @param schema - The schema.
 	 */
-	public NewRBEntity(final ResourceSchema schema) {
+	public RBEntityImpl(final ResourceSchema schema) {
 		this(new SNResource(), schema);
 	}
 
@@ -67,7 +67,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * @param node - The node.
 	 * @param type - rdf:type
 	 */
-	public NewRBEntity(final ResourceNode node, final ResourceID type) {
+	public RBEntityImpl(final ResourceNode node, final ResourceID type) {
 		super();
 		this.node=node;
 		this.type = new ArrayList<ResourceID>();
@@ -91,7 +91,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * @param schema
 	 *            The schema.
 	 */
-	public NewRBEntity(final ResourceNode node, final ResourceSchema schema) {
+	public RBEntityImpl(final ResourceNode node, final ResourceSchema schema) {
 		super();
 		this.node = node;
 		this.schema = schema;
@@ -104,7 +104,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 
 	/**
 	 * <p>
-	 * Initialized this {@link IRBEntity}s {@link IRBField}s
+	 * Initialized this {@link RBEntity}s {@link RBField}s
 	 * </p>
 	 * <p>
 	 * If a {@link ResourceSchema} extists it is taken into account, as well as
@@ -112,7 +112,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * in the Entity itself.
 	 * </p>
 	 * <p>
-	 * If no {@link ResourceSchema} exists, the {@link IRBField}s will be created
+	 * If no {@link ResourceSchema} exists, the {@link RBField}s will be created
 	 * according to the values present in the Entity itself.
 	 */
 	private void initializeFields() {
@@ -120,23 +120,20 @@ public class NewRBEntity implements IRBEntity, Serializable {
 		for(Association current : node.getAssociations()) {
 			predicates.add(current.getPredicate());
 		}
-		fields = new ArrayList<IRBField>();
+		fields = new ArrayList<RBField>();
 		if (schema != null) {
 		for (PropertyAssertion assertion : schema.getPropertyAssertions()) {
 			final ResourceID predicate = assertion
 				.getPropertyDeclaration().getIdentifier();
-			fields.add(new RBField(assertion, node
-				.getAssociationClients(predicate)));
+			fields.add(new RBFieldImpl(assertion, SNOPS.objects(node, predicate)));
 			predicates.remove(predicate);
 			}
 		}
 		// TODO: Remove from blacklist rdf(s):*
 		for (ResourceID predicate : predicates) {
 			System.out.println("PREDICATE: " + predicate);
-			System.out.println("VALUE: " + node
-				.getAssociationClients(predicate));
-			fields.add(new RBField(predicate, node
-				.getAssociationClients(predicate)));
+			System.out.println("VALUE: " + SNOPS.objects(node, predicate));
+			fields.add(new RBFieldImpl(predicate, SNOPS.objects(node, predicate)));
 		}
 	}
 
@@ -178,8 +175,8 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IRBField getField(final String fieldname) {
-		for (IRBField field : fields) {
+	public RBField getField(final String fieldname) {
+		for (RBField field : fields) {
 			if(field.getFieldName().equals(fieldname)){
 				return field;
 			}
@@ -191,7 +188,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<IRBField> getAllFields() {
+	public List<RBField> getAllFields() {
 		return fields;
 	}
 
@@ -199,7 +196,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean addField(final IRBField field) {
+	public boolean addField(final RBField field) {
 		return fields.add(field);
 	}
 
@@ -207,8 +204,8 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IRBMetaInfo getRBMetaInfo() {
-		return new RBMetaInfo(schema);
+	public MetaInfo getRBMetaInfo() {
+		return new StandardRBMetaInfo(schema);
 	}
 
 	/**
@@ -225,7 +222,7 @@ public class NewRBEntity implements IRBEntity, Serializable {
 	@Override
 	public String toString(){
 		String s = getQualifiedName() + ", ";
-		for(IRBField field : getAllFields()){
+		for(RBField field : getAllFields()){
 			if(field.isResourceReference()){
 				s += field.getLabel() + ": " + field.getConstraints() + ", ";
 			}else{

@@ -8,8 +8,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 
-import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
 
@@ -28,10 +28,10 @@ public class RepeaterPage extends WebPage implements IFeedbackContainerProvider 
 	 */
 	@SuppressWarnings("rawtypes")
 	public RepeaterPage(){
-		NewRBEntity entity = MockNewRBEntityFactory.createPerson();
+		RBEntityImpl entity = MockNewRBEntityFactory.createPerson();
 		add(new FeedbackPanel("feedbackPanel").setOutputMarkupPlaceholderTag(true));
 		RepeatingView view = new RepeatingView("container");
-		for (IRBField field : entity.getAllFields()) {
+		for (RBField field : entity.getAllFields()) {
 			view.add(new FieldSet(view.newChildId(), field));
 		}
 		Form form = new Form("form");

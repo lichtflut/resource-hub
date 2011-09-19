@@ -10,10 +10,10 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.IRBEntity;
-import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.spi.RBServiceProvider;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
@@ -41,7 +41,7 @@ public class FeaturedTablePage extends RBSuperPage {
 		ResourceTableView view =
 			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getEntityManager().findAllByType(type)){
 			@Override
-			public RBServiceProvider getServiceProvider() {
+			public ServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 			@Override
@@ -53,7 +53,7 @@ public class FeaturedTablePage extends RBSuperPage {
 		view.addBehavior(ResourceTableView.RESOURCE_FIELD_BEHAVIOR, new CKBehavior() {
 			@Override
 					public Object execute(final Object... objects) {
-						IRBField e = (IRBField) objects[2];
+						RBField e = (RBField) objects[2];
 						RepeatingView view = new RepeatingView(
 								(String) objects[0]);
 						Set<Constraint> list = e.getConstraints();
@@ -63,8 +63,8 @@ public class FeaturedTablePage extends RBSuperPage {
 								String url = "<iframe src='http://www.map-generator."
 									+"net/extmap.php?name=&amp;address=";
 								for (Object o : e.getFieldValues()) {
-									if(o instanceof IRBEntity){
-										o = ((IRBEntity) o).getLabel();
+									if(o instanceof RBEntity){
+										o = ((RBEntity) o).getLabel();
 										view.add(new Label(view.newChildId(), o.toString()));
 									}
 									String temp = o.toString();
@@ -83,7 +83,7 @@ public class FeaturedTablePage extends RBSuperPage {
 								List<Object> values = e.getFieldValues();
 								for (Object o : values) {
 								if(o != null){
-									IRBEntity e1 = (IRBEntity) o;
+									RBEntity e1 = (RBEntity) o;
 									view.add(new Label(view.newChildId(),
 											e1.getLabel()));
 								}else{
@@ -100,7 +100,7 @@ public class FeaturedTablePage extends RBSuperPage {
 			@Override
 			public Object execute(final Object... objects) {
 				String id = (String) objects[0];
-				IRBEntity e = (IRBEntity) objects[1];
+				RBEntity e = (RBEntity) objects[1];
 				CKLink link = new CKLink(id, "Search online",
 						"http://google.com/search?q=" + e.getLabel().replace(",", ""), CKLinkType.EXTERNAL_LINK);
 				return link;

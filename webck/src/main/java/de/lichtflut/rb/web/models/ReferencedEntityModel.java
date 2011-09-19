@@ -6,7 +6,7 @@ package de.lichtflut.rb.web.models;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.schema.model.IRBEntity;
+import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
  * [TODO Insert description here.
@@ -18,13 +18,13 @@ import de.lichtflut.rb.core.schema.model.IRBEntity;
 @SuppressWarnings("serial")
 public abstract class ReferencedEntityModel implements IModel<ResourceID> {
 
-	private IModel<IRBEntity> entity;
+	private IModel<RBEntity> entity;
 
 	/**
 	 * Default Constructor.
-	 * @param entity - instance of {@link IRBEntity}
+	 * @param entity - instance of {@link RBEntity}
 	 */
-	public ReferencedEntityModel(final IModel<IRBEntity> entity) {
+	public ReferencedEntityModel(final IModel<RBEntity> entity) {
 		this.entity = entity;
 	}
 
@@ -47,10 +47,10 @@ public abstract class ReferencedEntityModel implements IModel<ResourceID> {
 	}
 
 	/**
-	 * Resolves a {@link ResourceID} and returns an instance of {@link IRBEntity}.
+	 * Resolves a {@link ResourceID} and returns an instance of {@link RBEntity}.
 	 * @param id - {@link ResourceID}
-	 * @return {@link IRBEntity}
+	 * @return {@link RBEntity}
 	 */
-	public abstract IRBEntity resolve(final ResourceID id);
+	public abstract RBEntity resolve(final ResourceID id);
 
 }

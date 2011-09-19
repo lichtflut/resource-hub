@@ -7,7 +7,7 @@ package de.lichtflut.rb.core.schema.parser.impl.osf;
 
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
@@ -145,7 +145,7 @@ public class OSFTree extends TreeParser {
 
 
     public static class osl_return extends TreeRuleReturnScope {
-        public List<ResourceSchemaType> list;
+        public List<ResourceSchemaElement> list;
         CommonTree tree;
         public Object getTree() { return tree; }
     };
@@ -167,7 +167,7 @@ public class OSFTree extends TreeParser {
 
         CommonTree DESCRIPTIONS1_tree=null;
 
-         retval.list = new ArrayList<ResourceSchemaType>(); 
+         retval.list = new ArrayList<ResourceSchemaElement>(); 
         try {
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:90:2: ( ^( DESCRIPTIONS (d= description )* ) )
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:90:4: ^( DESCRIPTIONS (d= description )* )
@@ -242,7 +242,7 @@ public class OSFTree extends TreeParser {
     // $ANTLR end "osl"
 
     public static class description_return extends TreeRuleReturnScope {
-        public ResourceSchemaType type;
+        public ResourceSchemaElement type;
         CommonTree tree;
         public Object getTree() { return tree; }
     };

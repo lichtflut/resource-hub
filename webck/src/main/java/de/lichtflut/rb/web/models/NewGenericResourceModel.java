@@ -8,9 +8,9 @@ import java.util.List;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.ElementaryDataType;
 
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
 
 /**
  * [TODO Insert description here.
@@ -37,10 +37,10 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 	 * <p>
 	 * TODO: DESCRIPTION
 	 * </p>
-	 * @param field - instance of {@link IRBField}
-	 * @param index - index of the value in {@link IRBField}
+	 * @param field - instance of {@link RBField}
+	 * @param index - index of the value in {@link RBField}
 	 */
-	public NewGenericResourceModel(final IRBField field, final int index){
+	public NewGenericResourceModel(final RBField field, final int index){
 		this.index = index;
 		values = field.getFieldValues();
 		if(index >= values.size()){
@@ -50,7 +50,7 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 			if(field.getDataType().equals(ElementaryDataType.RESOURCE)){
 				for (Constraint c : field.getConstraints()) {
 					if(c.isResourceTypeConstraint()){
-						values.add(new NewRBEntity(c.getResourceTypeConstraint().asResource()));
+						values.add(new RBEntityImpl(c.getResourceTypeConstraint().asResource()));
 					}
 				}
 			}

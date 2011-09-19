@@ -9,7 +9,7 @@ import java.util.List;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.api.EntityManager;
-import de.lichtflut.rb.core.schema.model.IRBEntity;
+import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
  * <p>
@@ -22,19 +22,19 @@ import de.lichtflut.rb.core.schema.model.IRBEntity;
 @SuppressWarnings("serial")
 public class MockRBEntityManagement implements EntityManager {
 
-	private List<IRBEntity> dataPool;
+	private List<RBEntity> dataPool;
 
 	/**
 	 * Constructor.
 	 */
 	public MockRBEntityManagement(){
-		dataPool = new ArrayList<IRBEntity>();
+		dataPool = new ArrayList<RBEntity>();
 		 dataPool.addAll(MockNewRBEntityFactory.getAllEntities());
 	}
 
 	@Override
-	public IRBEntity find(final ResourceID resourceID) {
-		for (IRBEntity e : dataPool) {
+	public RBEntity find(final ResourceID resourceID) {
+		for (RBEntity e : dataPool) {
 			if(e.getID().equals(resourceID)){
 				return e;
 			}
@@ -43,10 +43,10 @@ public class MockRBEntityManagement implements EntityManager {
 	}
 
 	@Override
-	public List<IRBEntity> findAllByType(final ResourceID id) {
+	public List<RBEntity> findAllByType(final ResourceID id) {
 		if (id != null) {
-			List<IRBEntity> list = new ArrayList<IRBEntity>();
-			for (IRBEntity e : dataPool) {
+			List<RBEntity> list = new ArrayList<RBEntity>();
+			for (RBEntity e : dataPool) {
 				if (e.getType().equals(id)) {
 					list.add(e);
 				}
@@ -57,7 +57,7 @@ public class MockRBEntityManagement implements EntityManager {
 	}
 
 	@Override
-	public void store(final IRBEntity entity) {
+	public void store(final RBEntity entity) {
 		if(dataPool.contains(entity)){
 			dataPool.remove(entity);
 			dataPool.add(entity);
@@ -68,14 +68,14 @@ public class MockRBEntityManagement implements EntityManager {
 	}
 
 	@Override
-	public void delete(final IRBEntity entity) {
+	public void delete(final RBEntity entity) {
 		dataPool.remove(entity);
 	}
 
 	@Override
 	public List<ResourceID> findAllTypes() {
 		List<ResourceID> list = new ArrayList<ResourceID>();
-		for (IRBEntity e : dataPool) {
+		for (RBEntity e : dataPool) {
 			if(!list.contains(e.getType())){
 				list.add(e.getType());
 			}

@@ -15,7 +15,7 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
-import de.lichtflut.rb.core.schema.model.ResourceSchemaType;
+import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.AbstractRSParsingUnit;
@@ -52,7 +52,7 @@ public class OSFParsingUnit extends AbstractRSParsingUnit {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<ResourceSchemaType> parse(final String input)
+	public Collection<ResourceSchemaElement> parse(final String input)
 			throws RSMissingErrorReporterException {
 		if(errorReporter == null) {
 			throw new RSMissingErrorReporterException("RSErrorReporter can not be null");
@@ -65,7 +65,7 @@ public class OSFParsingUnit extends AbstractRSParsingUnit {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<ResourceSchemaType> parse(final InputStream input)
+	public Collection<ResourceSchemaElement> parse(final InputStream input)
 			throws RSMissingErrorReporterException {
 		if(errorReporter == null){
 			throw new RSMissingErrorReporterException("RSErrorReporter can not be null");
@@ -100,10 +100,10 @@ public class OSFParsingUnit extends AbstractRSParsingUnit {
 	 * Wraps parser and lexer. This is the entrypoint to parse a String
 	 * in order to get a schema.
 	 * @param input -
-	 * @return Collection of {@link ResourceSchemaType}
+	 * @return Collection of {@link ResourceSchemaElement}
 	 */
-	private Collection<ResourceSchemaType> parseOSF(final String input){
-		Collection<ResourceSchemaType> output = new LinkedList<ResourceSchemaType>();
+	private Collection<ResourceSchemaElement> parseOSF(final String input){
+		Collection<ResourceSchemaElement> output = new LinkedList<ResourceSchemaElement>();
 		RSCaseControlStream stream = new RSCaseControlStream(input);
 		//Ignore Case, this is really important
 		stream.setCaseSensitive(false);
