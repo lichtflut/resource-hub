@@ -158,8 +158,8 @@ public final class RBEntityTest {
         NewRBEntity e1 = new NewRBEntity(schema);
 
         // Get Entitymanager
-        EntityManager m = RBServiceProviderFactory.getDefaultServiceProvider().getRBEntityManagement();
-        SchemaManager sm = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
+        EntityManager m = RBServiceProviderFactory.getDefaultServiceProvider().getEntityManager();
+        SchemaManager sm = RBServiceProviderFactory.getDefaultServiceProvider().getSchemaManager();
 
         sm.storeOrOverrideResourceSchema(schema);
         SchemaImporter si = sm.getImporter(RSFormat.OSF);

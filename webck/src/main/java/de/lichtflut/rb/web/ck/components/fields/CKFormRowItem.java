@@ -6,7 +6,7 @@ package de.lichtflut.rb.web.ck.components.fields;
 import org.apache.wicket.markup.html.basic.Label;
 
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 
 /**
@@ -50,7 +50,7 @@ public abstract class CKFormRowItem extends CKComponent {
 		case RESOURCE:
 			add(new ResourceField("field", field){
 				@Override
-				public IRBServiceProvider getServiceProvider() {
+				public RBServiceProvider getServiceProvider() {
 					return CKFormRowItem.this.getServiceProvider();
 				}
 				@Override

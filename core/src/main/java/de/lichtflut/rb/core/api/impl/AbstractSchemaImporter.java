@@ -25,7 +25,7 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**
  *.
@@ -50,7 +50,7 @@ abstract class AbstractSchemaImporter implements SchemaImporter{
 	 * Constructor.
 	 * @param provider -
 	 */
-	public AbstractSchemaImporter(final IRBServiceProvider provider) {
+	public AbstractSchemaImporter(final RBServiceProvider provider) {
 		//Trigger a NullPointerException
 		this.gate = provider.getArastejuGateInstance();
 		store = new RBSchemaStore(this.gate);

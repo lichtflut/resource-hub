@@ -7,16 +7,16 @@ import org.arastreju.sge.ArastrejuGate;
 
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**
- * Mock-Implementation of {@link IRBServiceProvider}.
+ * Mock-Implementation of {@link RBServiceProvider}.
  *
  * Created: Aug 30, 2011
  *
  * @author Ravi Knox
  */
-public class MockRBServiceProvider implements IRBServiceProvider {
+public class MockRBServiceProvider implements RBServiceProvider {
 
 	private SchemaManager schemaManagement = null;
 	private EntityManager typeManagement = null;
@@ -41,7 +41,7 @@ public class MockRBServiceProvider implements IRBServiceProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SchemaManager getResourceSchemaManagement() {
+	public SchemaManager getSchemaManager() {
 		return schemaManagement;
 	}
 
@@ -49,7 +49,7 @@ public class MockRBServiceProvider implements IRBServiceProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public EntityManager getRBEntityManagement() {
+	public EntityManager getEntityManager() {
 		return typeManagement;
 	}
 

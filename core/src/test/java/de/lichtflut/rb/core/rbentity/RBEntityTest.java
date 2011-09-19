@@ -22,7 +22,7 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.core.spi.RBServiceProviderFactory;
 
 /**
@@ -183,7 +183,7 @@ public final class RBEntityTest {
     @Test
     public void testResourceType() {
 
-        IRBServiceProvider provider = RBServiceProviderFactory
+        RBServiceProvider provider = RBServiceProviderFactory
                 .getDefaultServiceProvider();
 
         boolean invalidValueExeptionThrown = false;

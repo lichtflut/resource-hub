@@ -15,7 +15,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 
 /**
@@ -174,9 +174,9 @@ public abstract class CKComponent extends Panel {
 	/**
 	 * Returns ServiceProvider.
 	 * This method musst be overridden.
-	 * @return An instance of {@link IRBServiceProvider}
+	 * @return An instance of {@link RBServiceProvider}
 	 */
-	public abstract IRBServiceProvider getServiceProvider();
+	public abstract RBServiceProvider getServiceProvider();
 
 	// -----------------------------------------------------
 

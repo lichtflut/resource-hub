@@ -164,12 +164,12 @@ public abstract class SearchBar extends CKComponent{
 					return new ArrayList<IRBEntity>().iterator();
 				}
 				if(filter==null || filter.isEmpty()){
-					rSchemas = getServiceProvider().getResourceSchemaManagement().getAllResourceSchemas();
+					rSchemas = getServiceProvider().getSchemaManager().getAllResourceSchemas();
 				}else{
 					rSchemas = filter;
 				}
 				  @SuppressWarnings("unused")
-				final EntityManager typeManagement =getServiceProvider().getRBEntityManagement();
+				final EntityManager typeManagement =getServiceProvider().getEntityManager();
 				  final Collection<IRBEntity> instances = null;
 //				  TODO: FIX!!!
 //					  typeManagement.loadAllEntitiesForSchema(rSchemas,input,sContext);

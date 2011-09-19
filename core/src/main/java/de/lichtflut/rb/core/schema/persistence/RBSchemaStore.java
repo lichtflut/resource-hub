@@ -19,9 +19,9 @@ import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.model.nodes.views.SNContext;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.query.QueryManager;
+
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -49,7 +49,6 @@ import de.lichtflut.rb.core.schema.parser.RSFormat;
 public class RBSchemaStore {
 
 	private final ArastrejuGate gate;
-
 
 	// -----------------------------------------------------
 
@@ -243,11 +242,12 @@ public class RBSchemaStore {
 	 * @return Context
 	 */
 	private Context setUpContext(final Context ctx) {
-		Context context = ctx;
-		if(context==null){
-			context = new SNContext(RBSchema.CONTEXT.asResource());
+		if(ctx == null){
+			return RBSchema.CONTEXT;
+		} else {
+			return ctx;
 		}
-		return context;
+		
 	}
 
 	// -- CONVERSION STUFF------------------------------------

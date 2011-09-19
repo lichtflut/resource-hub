@@ -17,7 +17,7 @@ import de.lichtflut.rb.core.api.SchemaManager;
  *
  * @author Ravi Knox
  */
-public interface IRBServiceProvider {
+public interface RBServiceProvider {
 	/**
 	 * @return an instance of {@link ArastrejuGate} which depends on the specific ServiceProvider
 	 */
@@ -31,7 +31,7 @@ public interface IRBServiceProvider {
 	 * It's also interpreting the schema, checks for consistency and contains powerful error-processing mechanisms.
 	 * @return {@link ISchemaManagement}
 	 */
-	SchemaManager getResourceSchemaManagement();
+	SchemaManager getSchemaManager();
 
 	// -----------------------------------------------------
 
@@ -40,7 +40,7 @@ public interface IRBServiceProvider {
 	 * persist and store RB-Entities.
 	 * @return {@link EntityManager}
 	 */
-	EntityManager getRBEntityManagement();
+	EntityManager getEntityManager();
 
 	// -----------------------------------------------------
 

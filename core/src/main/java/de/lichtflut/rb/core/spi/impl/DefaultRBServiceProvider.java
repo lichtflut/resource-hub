@@ -14,17 +14,17 @@ import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.impl.RBEntityManagerImpl;
 import de.lichtflut.rb.core.api.impl.SchemaManagerImpl;
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**
- * Reference implementation of {@link IRBServiceProvider}.
+ * Reference implementation of {@link RBServiceProvider}.
  * TODO: The rootContext of ArastrejuGate is used, this should be changed
  *
  * Created: Apr 28, 2011
  *
  * @author Nils Bleisch
  */
-public class DefaultRBServiceProvider implements IRBServiceProvider {
+public class DefaultRBServiceProvider implements RBServiceProvider {
 
     private final Logger logger = LoggerFactory
             .getLogger(DefaultRBServiceProvider.class);
@@ -61,7 +61,7 @@ public class DefaultRBServiceProvider implements IRBServiceProvider {
      *{@inheritDoc}
      */
     @Override
-    public SchemaManager getResourceSchemaManagement() {
+    public SchemaManager getSchemaManager() {
         return schemaManager;
     }
 
@@ -81,7 +81,7 @@ public class DefaultRBServiceProvider implements IRBServiceProvider {
      *{@inheritDoc}
      */
     @Override
-    public EntityManager getRBEntityManagement() {
+    public EntityManager getEntityManager() {
         return typeManagement;
     }
 

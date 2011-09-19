@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.schema;
 
+import org.arastreju.sge.context.Context;
+import org.arastreju.sge.context.SimpleContextID;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -29,8 +31,7 @@ public interface RBSchema {
 	/**
 	 * Represents the schema context. Each schema.based expression has to be applied to this context.
 	 */
-	ResourceID CONTEXT = new SimpleResourceID(NAMESPACE_URI, "context");
-
+	Context CONTEXT = new SimpleContextID(NAMESPACE_URI, "context");
 
 
 	// -- ROOT-NODE ---------------------------------------

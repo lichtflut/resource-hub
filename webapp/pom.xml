@@ -15,9 +15,7 @@
 	<description></description>
 	
 	<properties>
-		<wicket.version>1.5-RC5.1</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
-		<wiquery.version>1.5-M1</wiquery.version>
 	</properties>
 	
 	<dependencies>
@@ -109,13 +107,5 @@
 				</configuration>
 			</plugin>
 		</plugins>
-	</build>
-	<repositories>
-		<repository>
-			<id>wiquery repository</id>
-			<name>wiQuery repository</name>
-			<url>http://wiquery.googlecode.com/svn/repo/</url>
-			<layout>default</layout>
-		</repository>
-	</repositories>		
+	</build>	
 </project>

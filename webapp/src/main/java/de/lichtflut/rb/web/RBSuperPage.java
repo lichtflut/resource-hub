@@ -11,7 +11,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.mock.MockRBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
@@ -43,14 +43,14 @@ import de.lichtflut.rb.web.resources.SharedResourceProvider;
 @SuppressWarnings("serial")
 public abstract class RBSuperPage extends WebPage {
 
-	private static IRBServiceProvider provider = null;
+	private static RBServiceProvider provider = null;
 	private String title;
 
 	/**
 	 * Singleton pattern: There will be only one instance per runtime.
-	 * @return {@link IRBServiceProvider}
+	 * @return {@link RBServiceProvider}
 	 */
-	public static IRBServiceProvider  getRBServiceProvider(){
+	public static RBServiceProvider  getRBServiceProvider(){
 		if(provider==null) {
 			provider= new MockRBServiceProvider();
 		}
@@ -132,7 +132,7 @@ public abstract class RBSuperPage extends WebPage {
 		NavigationBar menuLeft = new NavigationBar("sidebarLeft");
 
 		NavigationNode showByTypes = new NavigationNodePanel(new CKLink("link", "Show Be Type", CKLinkType.CUSTOM_BEHAVIOR));
-		List<ResourceID> types = getRBServiceProvider().getRBEntityManagement().findAllTypes();
+		List<ResourceID> types = getRBServiceProvider().getEntityManager().findAllTypes();
 		for (ResourceID type : types) {
 			PageParameters param = new PageParameters();
 			param.add("type", type);

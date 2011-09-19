@@ -8,7 +8,7 @@ import org.apache.wicket.util.string.StringValue;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -30,9 +30,9 @@ public class EmployeesPage extends RBSuperPage {
 	public EmployeesPage() {
 		super("");
 		ResourceTableView view =
-			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getRBEntityManagement().findAllByType(null)){
+			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getEntityManager().findAllByType(null)){
 			@Override
-			public IRBServiceProvider getServiceProvider() {
+			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 			@Override
@@ -58,9 +58,9 @@ public class EmployeesPage extends RBSuperPage {
 		StringValue uri = params.get("type");
 		ResourceID type = new SimpleResourceID(uri.toString());
 		ResourceTableView view =
-			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getRBEntityManagement().findAllByType(type)){
+			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getEntityManager().findAllByType(type)){
 			@Override
-			public IRBServiceProvider getServiceProvider() {
+			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 			@Override

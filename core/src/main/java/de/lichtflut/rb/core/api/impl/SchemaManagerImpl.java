@@ -18,7 +18,7 @@ import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**
  * Reference impl of {@link ResourceSchemaManager}. This impl will take the
@@ -33,7 +33,7 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	// -------------MEMBER-FIELDS--------------------------
 
-	private IRBServiceProvider provider = null;
+	private RBServiceProvider provider = null;
 	private RBSchemaStore store = null;
 
 	// logger
@@ -46,7 +46,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	 * @param provider
 	 *            -
 	 */
-	public SchemaManagerImpl(final IRBServiceProvider provider) {
+	public SchemaManagerImpl(final RBServiceProvider provider) {
 		this.provider = provider;
 		store = new RBSchemaStore(provider.getArastejuGateInstance());
 	}

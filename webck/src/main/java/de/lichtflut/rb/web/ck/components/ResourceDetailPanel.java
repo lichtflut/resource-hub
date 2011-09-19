@@ -27,7 +27,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.impl.RBField;
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.fields.CKFormRowItem;
 import de.lichtflut.rb.web.models.NewGenericResourceModel;
@@ -86,7 +86,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		}else{
 			this.add(new Writeable("container"){
 				@Override
-				public IRBServiceProvider getServiceProvider() {
+				public RBServiceProvider getServiceProvider() {
 					return ResourceDetailPanel.this.getServiceProvider();
 				}
 				@Override
@@ -230,7 +230,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 							return null;
 						}
 						@Override
-						public IRBServiceProvider getServiceProvider() {
+						public RBServiceProvider getServiceProvider() {
 							return ResourceDetailPanel.this.getServiceProvider();
 						}
 					});
@@ -276,7 +276,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 							return null;
 						}
 						@Override
-						public IRBServiceProvider getServiceProvider() {
+						public RBServiceProvider getServiceProvider() {
 							return ResourceDetailPanel.this.getServiceProvider();
 						}
 					});
@@ -322,13 +322,13 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 			Form form = new Form("form") {
 				@Override
 				protected void onSubmit() {
-					getServiceProvider().getRBEntityManagement().store(entity);
+					getServiceProvider().getEntityManager().store(entity);
 				}
 			};
 			for (IRBField field : entity.getAllFields()) {
 				view.add(new CKFormRowItem(view.newChildId(), field) {
 					@Override
-					public IRBServiceProvider getServiceProvider() {
+					public RBServiceProvider getServiceProvider() {
 						return ResourceDetailPanel.this.getServiceProvider();
 					}
 

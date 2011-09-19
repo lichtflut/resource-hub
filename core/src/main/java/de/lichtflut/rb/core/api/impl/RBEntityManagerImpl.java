@@ -20,7 +20,7 @@ import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 /**
  *
@@ -29,7 +29,7 @@ import de.lichtflut.rb.core.spi.IRBServiceProvider;
  */
 public class RBEntityManagerImpl implements EntityManager {
 
-	private final IRBServiceProvider provider;
+	private final RBServiceProvider provider;
 
 	/**
 	 * <p>
@@ -38,7 +38,7 @@ public class RBEntityManagerImpl implements EntityManager {
 	 *
 	 * @param provider -
 	 */
-	public RBEntityManagerImpl(final IRBServiceProvider provider) {
+	public RBEntityManagerImpl(final RBServiceProvider provider) {
 		this.provider = provider;
 	}
 

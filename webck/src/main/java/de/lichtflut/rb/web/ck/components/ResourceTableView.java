@@ -24,7 +24,7 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
 import de.lichtflut.rb.core.schema.model.impl.NewRBEntity;
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 
 /**
@@ -239,7 +239,7 @@ public abstract class ResourceTableView extends CKComponent {
 											return null;
 										}
 										@Override
-										public IRBServiceProvider getServiceProvider() {
+										public RBServiceProvider getServiceProvider() {
 											return  ResourceTableView.this.getServiceProvider();
 										}
 									});
@@ -295,7 +295,7 @@ public abstract class ResourceTableView extends CKComponent {
 							@Override
 							public CKComponent setViewMode(final ViewMode mode) {return null;}
 							@Override
-							public IRBServiceProvider getServiceProvider() {
+							public RBServiceProvider getServiceProvider() {
 								return ResourceTableView.this.getServiceProvider();
 							}
 						});
@@ -315,7 +315,7 @@ public abstract class ResourceTableView extends CKComponent {
 							@Override
 							public CKComponent setViewMode(final ViewMode mode) {return null;}
 							@Override
-							public IRBServiceProvider getServiceProvider(){
+							public RBServiceProvider getServiceProvider(){
 								return ResourceTableView.this.getServiceProvider();
 							}
 						});
@@ -331,7 +331,7 @@ public abstract class ResourceTableView extends CKComponent {
 				link = new Link("featureLink") {
 					@Override
 					public void onClick() {
-						getServiceProvider().getRBEntityManagement().delete(e);
+						getServiceProvider().getEntityManager().delete(e);
 					}
 				};
 				link.add(new Label("label", "Delete"));
@@ -438,7 +438,7 @@ public abstract class ResourceTableView extends CKComponent {
 					public Object execute(final Object... objects) {
 						IRBEntity entity = new NewRBEntity(
 							ResourceTableView.this.getServiceProvider()
-								.getResourceSchemaManagement()
+								.getSchemaManager()
 									.getResourceSchemaForResourceType(type));
 							ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID,
 								entity, false) {
@@ -447,7 +447,7 @@ public abstract class ResourceTableView extends CKComponent {
 									return null;
 								}
 								@Override
-								public IRBServiceProvider getServiceProvider() {
+								public RBServiceProvider getServiceProvider() {
 									return ResourceTableView.this
 										.getServiceProvider();
 								}

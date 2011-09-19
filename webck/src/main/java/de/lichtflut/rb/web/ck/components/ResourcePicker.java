@@ -57,7 +57,7 @@ public abstract class ResourcePicker extends CKComponent {
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
 		initModel(entity);
-		final List<IRBEntity> entites = getServiceProvider().getRBEntityManagement().findAllByType(type);
+		final List<IRBEntity> entites = getServiceProvider().getEntityManager().findAllByType(type);
 		IAutoCompleteRenderer<IRBEntity> inforenderer = new AbstractAutoCompleteRenderer<IRBEntity>() {
 			@Override
 			protected void renderChoice(final IRBEntity entity, final Response response,
@@ -133,7 +133,7 @@ public abstract class ResourcePicker extends CKComponent {
 		setDefaultModel(new ReferencedEntityModel(entity) {
 			@Override
 			public IRBEntity resolve(final ResourceID id) {
-				return ResourcePicker.this.getServiceProvider().getRBEntityManagement().find(id);
+				return ResourcePicker.this.getServiceProvider().getEntityManager().find(id);
 			}
 		});
 	}

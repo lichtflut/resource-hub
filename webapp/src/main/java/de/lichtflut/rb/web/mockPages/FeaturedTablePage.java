@@ -13,7 +13,7 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.IRBEntity;
 import de.lichtflut.rb.core.schema.model.IRBField;
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
@@ -39,9 +39,9 @@ public class FeaturedTablePage extends RBSuperPage {
 		super("Full Featured Preview");
 		ResourceID type = MockNewRBEntityFactory.createPerson().getType();
 		ResourceTableView view =
-			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getRBEntityManagement().findAllByType(type)){
+			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getEntityManager().findAllByType(type)){
 			@Override
-			public IRBServiceProvider getServiceProvider() {
+			public RBServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 			@Override

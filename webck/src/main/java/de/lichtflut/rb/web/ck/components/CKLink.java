@@ -11,7 +11,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import de.lichtflut.rb.core.spi.IRBServiceProvider;
+import de.lichtflut.rb.core.spi.RBServiceProvider;
 
 
 /**
@@ -163,7 +163,7 @@ public class CKLink extends CKComponent{
 	}
 
 	@Override
-	public IRBServiceProvider getServiceProvider() {
+	public RBServiceProvider getServiceProvider() {
 		// Do nothing
 		return null;
 	}
