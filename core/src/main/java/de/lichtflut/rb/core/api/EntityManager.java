@@ -33,13 +33,6 @@ public interface EntityManager extends Serializable {
     List<RBEntity> findAllByType(ResourceID type);
 
     /**
-     * TODO: Move to appropriate Service
-     * Returns a list of all Types.
-     * @return -
-     */
-    List<ResourceID> findAllTypes();
-
-    /**
      *
      * @param entity /
      *

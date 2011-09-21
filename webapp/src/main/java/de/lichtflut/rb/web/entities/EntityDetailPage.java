@@ -1,14 +1,16 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.mockPages;
+package de.lichtflut.rb.web.entities;
 
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
+import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
-import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 import de.lichtflut.rb.web.ck.components.ResourceDetailPanel;
 import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
@@ -22,33 +24,43 @@ import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvider {
+public class EntityDetailPage extends EntitySamplesBasePage implements IFeedbackContainerProvider {
 
+	public static final String PARAM_RESOURCE_ID = "reosurce-id";
+	
+	// -----------------------------------------------------
+	
 	/**
 	 * Contructor.
 	 */
-	public EmployeePage() {
-		super("Mockpage-Employee");
-		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
-		add(new ResourceDetailPanel("mockEmployee", MockNewRBEntityFactory.createPerson()){
-			@Override
-			public CKComponent setViewMode(final ViewMode mode) {
-					this.setEnabled(false);
-				return null;
-			}
-			@Override
-			public ServiceProvider getServiceProvider() {
-				return getRBServiceProvider();
-			}
-		});
+	public EntityDetailPage() {
+		this(MockNewRBEntityFactory.createPerson());
+	}
+	
+	
+	/**
+	 * Constructor.
+	 * @param params
+	 */
+	public EntityDetailPage(final PageParameters params) {
+		super("Entity Details (Mock Mode)", params);
+		final StringValue value = params.get(PARAM_RESOURCE_ID);
+		final RBEntity entity = getRBServiceProvider().getEntityManager().find(new SimpleResourceID(value.toString()));
+		initView(entity);
 	}
 
 	/**
 	 * Contructor.
 	 * @param entity - instance of {@link RBEntity}
 	 */
-	public EmployeePage(final RBEntity entity) {
-		super("Mockpage-Employee");
+	public EntityDetailPage(final RBEntity entity) {
+		super("Entity Details (Mock Mode)");
+		initView(entity);
+	}
+	
+	// -----------------------------------------------------
+	
+	protected void initView(RBEntity entity) {
 		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
 		add(new ResourceDetailPanel("mockEmployee", entity){
 			@Override
@@ -62,6 +74,8 @@ public class EmployeePage extends RBSuperPage implements IFeedbackContainerProvi
 			}
 		});
 	}
+	
+	// -----------------------------------------------------
 
 	@Override
 	public FeedbackPanel getFeedbackContainer() {

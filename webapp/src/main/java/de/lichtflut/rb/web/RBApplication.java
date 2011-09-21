@@ -5,9 +5,10 @@ package de.lichtflut.rb.web;
 
 
 import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
-import de.lichtflut.rb.web.mockPages.EmployeePage;
-import de.lichtflut.rb.web.mockPages.EmployeesPage;
+import de.lichtflut.rb.web.entities.EntityDetailPage;
+import de.lichtflut.rb.web.entities.EntityOverviewPage;
 import de.lichtflut.rb.web.mockPages.RepeaterPage;
+import de.lichtflut.rb.web.types.TypeSystemPage;
 
 /**
  * Application object for your web application.
@@ -31,8 +32,9 @@ public class RBApplication extends AbstractResourceBrowserApplication {
         mountPage("/RSSchema", RSPage.class);
         mountPage("/SampleResourcePage", SampleResourcePage.class);
         mountPage("/r2", RepeaterPage.class);
-        mountPage("/view", EmployeesPage.class);
-        mountPage("/detail", EmployeePage.class);
+        mountPage("/entities", EntityOverviewPage.class);
+        mountPage("/entity-detail", EntityDetailPage.class);
+        mountPage("/typesystem", TypeSystemPage.class);
 
         getMarkupSettings().setStripWicketTags(true);
     }

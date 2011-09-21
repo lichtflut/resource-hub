@@ -3,7 +3,7 @@
  */
 package de.lichtflut.rb.core.api;
 
-import java.util.Set;
+import java.util.List;
 
 import org.arastreju.sge.model.nodes.views.SNClass;
 
@@ -20,6 +20,26 @@ import org.arastreju.sge.model.nodes.views.SNClass;
  */
 public interface TypeManager {
 	
-	Set<SNClass> findAll();
+	/**
+	 * Create a new rb:Type with given name.
+	 * @param namespace The namespace.
+	 * @param name The simple name.
+	 * @return The persistent class node.
+	 */
+	SNClass create(String namespace, String name);
+	
+	/**
+	 * Create a new rb:Type with given name.
+	 * @param namespace The namespace.
+	 * @param name The simple name.
+	 * @return The persistent class node.
+	 */
+	void remove(SNClass type);
+	
+	/**
+	 * Find all types.
+	 * @return A list with all sub classes of rb:Type.
+	 */
+	List<SNClass> findAll();
 
 }

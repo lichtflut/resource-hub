@@ -3,10 +3,20 @@
  */
 package de.lichtflut.rb.core.api.impl;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNClass;
+import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.query.QueryManager;
 
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.TypeManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
@@ -41,8 +51,41 @@ public class TypeManagerImpl implements TypeManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<SNClass> findAll() {
-		return provider.getArastejuGate().getTypeSystem().getAllClasses();
+	public List<SNClass> findAll() {
+		final List<SNClass> result = new ArrayList<SNClass>();
+		final QueryManager qm = newMC().createQueryManager();
+		final List<ResourceNode> nodes = qm.findByType(RB.TYPE);
+		for (ResourceNode current : nodes) {
+			result.add(current.asClass());
+		}
+		return result;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SNClass create(final String namespace, final String name) {
+		final SNClass type = new SNResource(new QualifiedName(namespace, name)).asClass();
+		SNOPS.associate(type, RDF.TYPE, RB.TYPE, RB.TYPE_SYSTEM_CONTEXT);
+		newMC().attach(type);
+		return type;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void remove(final SNClass type) {
+		throw new NotYetImplementedException();
+	}
+	
+	// -----------------------------------------------------
+	
+	private ModelingConversation newMC() {
+		return provider.getArastejuGate().startConversation();
+	}
+	
+	
 
 }

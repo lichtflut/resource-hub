@@ -3,13 +3,12 @@
  */
 package de.lichtflut.rb.web;
 
-import java.util.List;
-
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockRBServiceProvider;
@@ -19,9 +18,8 @@ import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationNode;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.web.components.LoginPanelPage;
-import de.lichtflut.rb.web.mockPages.EmployeePage;
-import de.lichtflut.rb.web.mockPages.EmployeesPage;
-import de.lichtflut.rb.web.mockPages.FeaturedTablePage;
+import de.lichtflut.rb.web.entities.EntityDetailPage;
+import de.lichtflut.rb.web.entities.EntityOverviewPage;
 import de.lichtflut.rb.web.resources.SharedResourceProvider;
 
 
@@ -59,7 +57,16 @@ public abstract class RBSuperPage extends WebPage {
 
 	// -----------------------------------------------------
 
-	//Constructors
+	/**
+	 * Default constructor.
+	 * @param title /
+	 */
+	public RBSuperPage(final String title){
+		super();
+		this.title = title;
+		init();
+	}
+	
 	/**
 	 * Takes PageParamertes as argument.
 	 * @param title /
@@ -67,18 +74,6 @@ public abstract class RBSuperPage extends WebPage {
 	 */
 	public RBSuperPage(final String title, final PageParameters params){
 		super(params);
-		this.title = title;
-		init();
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * Default constructor.
-	 * @param title /
-	 */
-	public RBSuperPage(final String title){
-		super();
 		this.title = title;
 		init();
 	}
@@ -120,41 +115,20 @@ public abstract class RBSuperPage extends WebPage {
 
 		// Mock NewRBEntity-Pages
 		NavigationNode mockPages = new NavigationNodePanel(new CKLink("link", "Mock-Pages", CKLinkType.CUSTOM_BEHAVIOR));
-		CKLink mockEmployee = new CKLink("link", "Employee", EmployeePage.class, CKLinkType.WEB_PAGE_CLASS);
+		CKLink mockEmployee = new CKLink("link", "Sample Entities", EntityDetailPage.class, CKLinkType.WEB_PAGE_CLASS);
 		mockPages.addChild(new NavigationNodePanel(mockEmployee));
-		CKLink mockView = new CKLink("link", "TableView", EmployeesPage.class, CKLinkType.WEB_PAGE_CLASS);
+		CKLink mockView = new CKLink("link", "TableView", EntityOverviewPage.class, CKLinkType.WEB_PAGE_CLASS);
 		mockPages.addChild(new NavigationNodePanel(mockView));
 		mainNavigation.addChild(mockPages);
 
 		add(mainNavigation);
 
-		// Add left sidebar
-		NavigationBar menuLeft = new NavigationBar("sidebarLeft");
-
-		NavigationNode showByTypes = new NavigationNodePanel(new CKLink("link", "Show Be Type", CKLinkType.CUSTOM_BEHAVIOR));
-		List<ResourceID> types = getRBServiceProvider().getEntityManager().findAllTypes();
-		for (ResourceID type : types) {
-			PageParameters param = new PageParameters();
-			param.add("type", type);
-			CKLink link = new CKLink("link", type.getName(),
-					EmployeesPage.class, param, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS);
-			showByTypes.addChild(new NavigationNodePanel(link));
-		}
-		menuLeft.addChild(showByTypes);
-		CKLink link = new CKLink("link", "Full Features Page", FeaturedTablePage.class, CKLinkType.WEB_PAGE_CLASS);
-		menuLeft.addChild(new NavigationNodePanel(link));
-		add(menuLeft);
+		add(createSideBar("sidebarLeft"));
+		
 	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * @return the session scoped serviceProvider which is injected via CDI
-	 */
-	//@Inject SessionBuilder builder;
-	//TODO: To fix
-	/*public RBServiceProvider getServiceProvider(){
-		return builder.getServiceProvider();
-	}*/
+	
+	protected Component createSideBar(final String id) {
+		return new WebMarkupContainer(id);
+	}
 
 }

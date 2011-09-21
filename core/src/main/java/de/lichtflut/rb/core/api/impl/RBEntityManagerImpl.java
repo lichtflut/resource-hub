@@ -25,11 +25,12 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 /**
  *
  * @author Raphael Esterle
- *
  */
 public class RBEntityManagerImpl implements EntityManager {
 
 	private final ServiceProvider provider;
+	
+	// -----------------------------------------------------
 
 	/**
 	 * <p>
@@ -41,24 +42,12 @@ public class RBEntityManagerImpl implements EntityManager {
 	public RBEntityManagerImpl(final ServiceProvider provider) {
 		this.provider = provider;
 	}
+	
+	// -----------------------------------------------------
 
 	@Override
 	public RBEntityImpl find(final ResourceID resourceID) {
-		return find(resourceID, null);
-	}
-
-	/**
-	 *
-	 * @param resourceID
-	 *            /
-	 * @param schema
-	 *            /
-	 * @return /
-	 */
-	public RBEntityImpl find(final ResourceID resourceID,
-			final ResourceSchema schema) {
-		ModelingConversation mc = provider.getArastejuGate()
-				.startConversation();
+		ModelingConversation mc = provider.getArastejuGate().startConversation();
 		ResourceNode node = mc.findResource(resourceID.getQualifiedName());
 		mc.close();
 		return new RBEntityImpl(node, node.asEntity().getMainClass());
@@ -132,20 +121,15 @@ public class RBEntityManagerImpl implements EntityManager {
 
 	@Override
 	public List<RBEntity> findAllByType(final ResourceID type) {
-		ArrayList entities = new ArrayList<RBEntity>();
-		ModelingConversation mc = provider.getArastejuGate()
-				.startConversation();
+		List<RBEntity> result = new ArrayList<RBEntity>();
+		ModelingConversation mc = provider.getArastejuGate().startConversation();
 		List<ResourceNode> nodes = mc.createQueryManager().findByType(type);
 		for (ResourceNode n : nodes) {
-			entities.add(new RBEntityImpl(n, type));
+			result.add(new RBEntityImpl(n, type));
 		}
 
-		return entities;
+		return result;
 	}
 
-	@Override
-	public List<ResourceID> findAllTypes() {
-		return null;
-	}
 
 }

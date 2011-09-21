@@ -3,10 +3,15 @@
  */
 package de.lichtflut.rb.mock;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.arastreju.sge.ArastrejuGate;
 
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.api.TypeManager;
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
@@ -18,15 +23,22 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  */
 public class MockRBServiceProvider implements ServiceProvider {
 
-	private SchemaManager schemaManagement = null;
-	private EntityManager typeManagement = null;
+	private SchemaManager schemaManager;
+	private EntityManager entityManager;
+	private TypeManager typeManager;
+	
+	private List<RBEntity> dataPool = new ArrayList<RBEntity>();
+
+	// -----------------------------------------------------
 
 	/**
 	 * Constructor.
 	 */
 	public MockRBServiceProvider() {
-        schemaManagement = new MockResourceSchemaManagement();
-        typeManagement = new MockRBEntityManagement();
+		dataPool.addAll(MockNewRBEntityFactory.getAllEntities());
+        schemaManager = new MockResourceSchemaManagement();
+        entityManager = new MockRBEntityManager(dataPool);
+        typeManager = new MockRBTypeManager(dataPool);
 	}
 
 	/**
@@ -42,7 +54,7 @@ public class MockRBServiceProvider implements ServiceProvider {
 	 */
 	@Override
 	public SchemaManager getSchemaManager() {
-		return schemaManagement;
+		return schemaManager;
 	}
 
 	/**
@@ -50,7 +62,15 @@ public class MockRBServiceProvider implements ServiceProvider {
 	 */
 	@Override
 	public EntityManager getEntityManager() {
-		return typeManagement;
+		return entityManager;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public TypeManager getTypeManager() {
+		return typeManager;
 	}
 
 }

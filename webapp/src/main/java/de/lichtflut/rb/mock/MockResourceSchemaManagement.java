@@ -27,13 +27,17 @@ public class MockResourceSchemaManagement implements SchemaManager {
 	private static final long serialVersionUID = 1L;
 
 	private List<ResourceSchema> schemas;
+	
+	// -----------------------------------------------------
+	
 	/**
 	 * Default Constructor.
 	 */
 	public MockResourceSchemaManagement() {
 		schemas = MockResourceSchemaFactory.getAllShemas();
 	}
-
+	
+	// -----------------------------------------------------
 
 	/**
 	 * {@inheritDoc}

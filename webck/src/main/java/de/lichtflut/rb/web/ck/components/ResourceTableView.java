@@ -19,6 +19,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -138,6 +139,8 @@ public abstract class ResourceTableView extends CKComponent {
 	 * </p>
 	 */
 	public static final String ADD_CUSTOM_ROW_ITEM = "de.lichtflut.web.ck.custom_row_item.behavior";
+	
+	// -----------------------------------------------------
 
 	private Map<String, String> tableHeader = new HashMap<String, String>();
 	private List<RBEntity> entites = new ArrayList<RBEntity>();
@@ -195,13 +198,13 @@ public abstract class ResourceTableView extends CKComponent {
 
 	/**
 	 * Adds the content of each cell.
-	 * @param e - instance of {@link RBEntity}. This is used only
+	 * @param entity - instance of {@link RBEntity}. This is used only
 	 * 				for behaviors to provide additional information to the developer.
 	 * 				See CKBehavior for details.
 	 * @param item - {@link ListItem} to be displayed
 	 */
 	@SuppressWarnings("rawtypes")
-	private void addItem(final RBEntity e, final ListItem item) {
+	private void addItem(final RBEntity entity, final ListItem item) {
 		// If ListItem is instance of IRBField:
 		//		- display all fieldvalues.
 		// Else if ListItem is instance of String and equals to one of the
@@ -219,30 +222,20 @@ public abstract class ResourceTableView extends CKComponent {
 			if ((getBehavior(RESOURCE_FIELD_BEHAVIOR) != null)
 					&& (field.isResourceReference())) {
 				item.add((Component) getBehavior(RESOURCE_FIELD_BEHAVIOR)
-						.execute("data", e, field));
+						.execute("data", entity, field));
 			} else {
 				if (isResource) {
 					RepeatingView view = new RepeatingView("data");
 					int resourceCount = 1;
 					for (final Object entityAttribute : field.getFieldValues()) {
-						final RBEntity entity = (RBEntity) entityAttribute;
-						if(entity != null){
-							CKLink link = new CKLink(view.newChildId(), entity.getLabel(),
+						final RBEntity currentEntity = (RBEntity) entityAttribute;
+						if(currentEntity != null){
+							CKLink link = new CKLink(view.newChildId(), currentEntity.getLabel(),
 									CKLinkType.CUSTOM_BEHAVIOR);
 							link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
 								@Override
 								public Object execute(final Object... objects) {
-									ResourceTableView.this.replaceWith(
-											new ResourceDetailPanel(componentID, entity) {
-										@Override
-										public CKComponent setViewMode(final ViewMode mode) {
-											return null;
-										}
-										@Override
-										public ServiceProvider getServiceProvider() {
-											return  ResourceTableView.this.getServiceProvider();
-										}
-									});
+									onShowDetails(currentEntity);
 									return null;
 								}
 							});
@@ -287,31 +280,24 @@ public abstract class ResourceTableView extends CKComponent {
 			Fragment f = new Fragment("data", "detailsLink", this);
 			Link link = null;
 			if (s.equals(SHOW_DETAILS)) {
-				if(getBehavior(s).execute("featureLink", e, ResourceTableView.this) == null){
+				if(getBehavior(s).execute("featureLink", entity, ResourceTableView.this) == null){
 				link = new Link("featureLink") {
 					@Override
 					public void onClick() {
-						ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID, e) {
-							@Override
-							public CKComponent setViewMode(final ViewMode mode) {return null;}
-							@Override
-							public ServiceProvider getServiceProvider() {
-								return ResourceTableView.this.getServiceProvider();
-							}
-						});
+						onShowDetails(entity);
 					}
 				};
 				link.add(new Label("label", "Details"));
 				f.add(link);
 				}else{
-					f.add((Component) getBehavior(s).execute("featureLink", e,ResourceTableView.this));
+					f.add((Component) getBehavior(s).execute("featureLink", entity,ResourceTableView.this));
 				}
 			}else if(s.equals(UPDATE_ROW_ITEM)){
-				if(getBehavior(s).execute("featureLink", e, ResourceTableView.this) == null){
+				if(getBehavior(s).execute("featureLink", entity, ResourceTableView.this) == null){
 				link = new Link("featureLink") {
 					@Override
 					public void onClick() {
-						ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID, e, false) {
+						ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID, entity, false) {
 							@Override
 							public CKComponent setViewMode(final ViewMode mode) {return null;}
 							@Override
@@ -324,31 +310,33 @@ public abstract class ResourceTableView extends CKComponent {
 				link.add(new Label("label", "Update"));
 				f.add(link);
 				}else{
-					f.add((Component) getBehavior(s).execute("details", e,ResourceTableView.this));
+					f.add((Component) getBehavior(s).execute("details", entity,ResourceTableView.this));
 				}
 			}else if(s.equals(DELETE_ROW_ITEM)){
-				if(getBehavior(s).execute("featureLink", e,ResourceTableView.this) == null){
+				if(getBehavior(s).execute("featureLink", entity,ResourceTableView.this) == null){
 				link = new Link("featureLink") {
 					@Override
 					public void onClick() {
-						getServiceProvider().getEntityManager().delete(e);
+						getServiceProvider().getEntityManager().delete(entity);
 					}
 				};
 				link.add(new Label("label", "Delete"));
 				f.add(link);
 				}else{
 					f = new Fragment("data", "customLink", this);
-					f.add((Component) getBehavior(s).execute("customComponent", e, ResourceTableView.this));
+					f.add((Component) getBehavior(s).execute("customComponent", entity, ResourceTableView.this));
 				}
 			}else if (s.equals(ADD_CUSTOM_ROW_ITEM)) {
 				f = new Fragment("data", "customLink", this);
-				f.add((Component) getBehavior(s).execute("customComponent", e));
+				f.add((Component) getBehavior(s).execute("customComponent", entity));
 			}
 			item.add(f);
 		}else if (item.getModelObject() == null) {
 				item.add(new Label("data", ""));
 		}
 	}
+	
+	protected abstract void onShowDetails(final RBEntity entity);
 
 	/**
 	 * Sorts the IRBFields according to the table header.

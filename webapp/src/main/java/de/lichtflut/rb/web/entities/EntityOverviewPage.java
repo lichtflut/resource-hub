@@ -1,15 +1,15 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.mockPages;
+package de.lichtflut.rb.web.entities;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKComponent;
 import de.lichtflut.rb.web.ck.components.ResourceTableView;
@@ -22,42 +22,30 @@ import de.lichtflut.rb.web.ck.components.ResourceTableView;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class EmployeesPage extends RBSuperPage {
+public class EntityOverviewPage extends EntitySamplesBasePage {
 
 	/**
 	 * Constructor.
 	 */
-	public EmployeesPage() {
-		super("");
-		ResourceTableView view =
-			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getEntityManager().findAllByType(null)){
-			@Override
-			public ServiceProvider getServiceProvider() {
-				return getRBServiceProvider();
-			}
-			@Override
-			public CKComponent setViewMode(final ViewMode mode) {return null;}
-		};
-		view.addBehavior(ResourceTableView.SHOW_DETAILS, new CKBehavior() {
-
-			@Override
-			public Object execute(final Object... objects) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		});
-		add(view);
+	public EntityOverviewPage() {
+		super("Default View (Mock Mode)");
+		initTable(null);
 	}
 
 	/**
 	 * Constructor.
 	 * @param params -
 	 */
-	public EmployeesPage(final PageParameters params) {
-		super("Mock-View");
+	public EntityOverviewPage(final PageParameters params) {
+		super("Sample Entities (Mock Mode)");
 		StringValue uri = params.get("type");
-		ResourceID type = new SimpleResourceID(uri.toString());
-		ResourceTableView view =
+		initTable(new SimpleResourceID(uri.toString()));
+	}
+	
+	// -----------------------------------------------------
+	
+	protected void initTable(final ResourceID type) {
+		final ResourceTableView view =
 			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getEntityManager().findAllByType(type)){
 			@Override
 			public ServiceProvider getServiceProvider() {
@@ -65,6 +53,13 @@ public class EmployeesPage extends RBSuperPage {
 			}
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {return null;}
+			
+			@Override
+			protected void onShowDetails(RBEntity entity) {
+				final PageParameters params = new PageParameters();
+				params.add(EntityDetailPage.PARAM_RESOURCE_ID, entity.getID());
+				setResponsePage(EntityDetailPage.class, params);
+			}
 		};
 		view.addBehavior(ResourceTableView.SHOW_DETAILS, CKBehavior.VOID_BEHAVIOR);
 		view.addBehavior(ResourceTableView.UPDATE_ROW_ITEM, CKBehavior.VOID_BEHAVIOR);

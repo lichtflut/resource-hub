@@ -31,7 +31,7 @@ public interface RBSchema {
 	/**
 	 * Represents the schema context. Each schema.based expression has to be applied to this context.
 	 */
-	Context CONTEXT = new SimpleContextID(NAMESPACE_URI, "context");
+	Context CONTEXT = new SimpleContextID(NAMESPACE_URI, "SchemaContext");
 
 
 	// -- ROOT-NODE ---------------------------------------
