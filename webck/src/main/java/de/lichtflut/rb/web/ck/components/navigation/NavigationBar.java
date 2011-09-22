@@ -9,7 +9,6 @@ import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
@@ -125,8 +124,6 @@ public class NavigationBar extends CKComponent implements NavigationNode {
 			}
 		};
 		add(itemView);
-		add(new WebMarkupContainer("ck-header"));
-		add(new WebMarkupContainer("ck-footer"));
 	}
 
 	@Override

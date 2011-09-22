@@ -46,7 +46,7 @@ public class MockResourceSchemaManagement implements SchemaManager {
 	public ResourceSchema getResourceSchemaForResourceType(final ResourceID id) {
 		ResourceSchema rs = null;
 		for (ResourceSchema schema : schemas) {
-			if(schema.getDescribedType() == id){
+			if(schema.getDescribedType().equals(id)){
 				return schema;
 			}
 		}

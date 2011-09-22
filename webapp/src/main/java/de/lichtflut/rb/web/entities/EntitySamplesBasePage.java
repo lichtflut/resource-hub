@@ -9,6 +9,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
+import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.mock.MockRBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
@@ -29,6 +31,21 @@ import de.lichtflut.rb.web.mockPages.FeaturedTablePage;
  * @author Oliver Tigges
  */
 public class EntitySamplesBasePage extends RBSuperPage {
+	
+	private static ServiceProvider provider = null;
+	
+	/**
+	 * Singleton pattern: There will be only one instance per runtime.
+	 * @return {@link ServiceProvider}
+	 */
+	public static ServiceProvider getRBServiceProvider(){
+		if(provider==null) {
+			provider= new MockRBServiceProvider();
+		}
+		return provider;
+	}
+	
+	// -----------------------------------------------------
 
 	/**
 	 * @param title

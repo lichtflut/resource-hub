@@ -1,11 +1,50 @@
-/*html{
-	font-family: Helvetica, Arial;
-	font-size: 10pt;
+
+/* PAGE LAYOUT */
+
+div#header-wrap {
+    clear: both;
+    float: none;
+    display:block;
+    min-height: 24px;
 }
 
-body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,table,th,td{
-    margin:0;padding:0;
+div#main-wrap {
+    clear: both;
+    float: none;
+    display:block;
+    min-height: 400px;
+    margin: 10px 2px;
 }
+
+div#sidebar-left {
+    float: left;
+    width: 250px;
+    padding-bottom: 30px;
+    padding-left: 50px;
+    padding-right: 20px;
+}
+
+div#sidebar-right {
+    float: right;
+    width: 230px;
+    padding-bottom: 30px;
+    padding-right: 50px;
+    padding-left: 20px;
+}
+
+div#main-area {
+}
+
+div#main {
+    clear: both;
+    float: none;
+    display:block;
+    min-height: 400px;
+    margin: 10px 2px;
+}
+
+
+/* LINKS */
 
 a {
 	font-family: Helvetica, Arial;
@@ -18,26 +57,82 @@ a:hover {
     text-decoration: underline;
 }
 
-div#firstlevelmenu {
-	clear: both;
-	float: none;
-	display:block;
-	min-height: 24px;
-}
+
+/* NAVIGATION */
 
 div.navigation-bar ul {
     list-style: none; 
+    background: white;
+    padding: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-div.navigation-bar.horizontal ul {
+div.navigation-bar.horizontal ul li {
     float: left; 
 }
 
 div.navigation-bar ul li {
-    padding: 2px 10px;
     border: 1px solid #BBB;
     width: 100px;   
     font-size:12pt;
     font-weight: bold;
-}*/
+    padding: 0;
+    margin:0;
+}
+
+div.navigation-bar ul li ul {
+    display:none;
+}
+
+div.navigation-bar ul li:hover ul {
+    display: block;
+    z-index: 1000;
+    position:absolute;
+    padding: 0;    
+}
+div.navigation-bar ul li:hover ul li {
+    float:none;
+}
+
+/* INPUT PANELS */
+
+div.form-field {
+	width:400px;
+}
+
+div.form-field label {
+	width:160px;
+	padding-right:5px;
+}
+
+
+/* OUTPUT PANELS */
+
+div.list-browser {
+	min-height: 120px;
+	min-width: 80px;
+	overflow: scroll;
+	border: 1px solid #BBB;
+}
+
+div.list-browser ul {
+	list-style: none;
+}
+
+/* RESOURCE PICKER */
+
+.resource-picker-input{
+    
+}
+
+.resource-picker-info{
+    text-align:right;
+    width:100%;
+}
+
+.resource-picker-value{
+    float:left;
+    color:red;  
+}
 

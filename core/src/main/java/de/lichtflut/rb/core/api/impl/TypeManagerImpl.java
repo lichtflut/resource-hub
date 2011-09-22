@@ -15,7 +15,6 @@ import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.QueryManager;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.TypeManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -65,8 +64,8 @@ public class TypeManagerImpl implements TypeManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SNClass create(final String namespace, final String name) {
-		final SNClass type = new SNResource(new QualifiedName(namespace, name)).asClass();
+	public SNClass create(final QualifiedName qn) {
+		final SNClass type = new SNResource(qn).asClass();
 		SNOPS.associate(type, RDF.TYPE, RB.TYPE, RB.TYPE_SYSTEM_CONTEXT);
 		newMC().attach(type);
 		return type;
@@ -77,7 +76,7 @@ public class TypeManagerImpl implements TypeManager {
 	 */
 	@Override
 	public void remove(final SNClass type) {
-		throw new NotYetImplementedException();
+		newMC().remove(type, true);
 	}
 	
 	// -----------------------------------------------------

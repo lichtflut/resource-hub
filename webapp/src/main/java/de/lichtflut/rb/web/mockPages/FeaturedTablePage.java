@@ -15,6 +15,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
+import de.lichtflut.rb.mock.MockRBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -32,6 +33,22 @@ import de.lichtflut.rb.web.ck.components.ResourceTableView;
 @SuppressWarnings("serial")
 public class FeaturedTablePage extends RBSuperPage {
 
+	
+	private static ServiceProvider provider = null;
+	
+	/**
+	 * Singleton pattern: There will be only one instance per runtime.
+	 * @return {@link ServiceProvider}
+	 */
+	public static ServiceProvider getRBServiceProvider(){
+		if(provider==null) {
+			provider= new MockRBServiceProvider();
+		}
+		return provider;
+	}
+	
+	// -----------------------------------------------------
+	
 	/**
 	 * @param title
 	 */
@@ -44,8 +61,10 @@ public class FeaturedTablePage extends RBSuperPage {
 			public ServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
-			@Override
 			public CKComponent setViewMode(final ViewMode mode) {return null;}
+
+			protected void onShowDetails(RBEntity entity) {
+			}
 		};
 		view.addBehavior(ResourceTableView.SHOW_DETAILS, CKBehavior.VOID_BEHAVIOR);
 		view.addBehavior(ResourceTableView.UPDATE_ROW_ITEM, CKBehavior.VOID_BEHAVIOR);

@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.api;
 import java.util.List;
 
 import org.arastreju.sge.model.nodes.views.SNClass;
+import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -22,11 +23,10 @@ public interface TypeManager {
 	
 	/**
 	 * Create a new rb:Type with given name.
-	 * @param namespace The namespace.
-	 * @param name The simple name.
+	 * @param qn The qualified name of the type.
 	 * @return The persistent class node.
 	 */
-	SNClass create(String namespace, String name);
+	SNClass create(QualifiedName qn);
 	
 	/**
 	 * Create a new rb:Type with given name.

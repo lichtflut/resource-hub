@@ -6,9 +6,14 @@ package de.lichtflut.rb.mock;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNClass;
+import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.TypeManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 
@@ -38,19 +43,21 @@ public class MockRBTypeManager implements TypeManager {
 	
 	// -----------------------------------------------------
 	
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.core.api.TypeManager#create(java.lang.String, java.lang.String)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
-	public SNClass create(String namespace, String name) {
-		throw new NotYetImplementedException();
+	public SNClass create(final QualifiedName qn) {
+		final SNClass type = new SNResource(qn).asClass();
+		SNOPS.associate(type, RDF.TYPE, RB.TYPE, RB.TYPE_SYSTEM_CONTEXT);
+		return type;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.core.api.TypeManager#remove(org.arastreju.sge.model.nodes.views.SNClass)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
-	public void remove(SNClass type) {
+	public void remove(final SNClass type) {
 		throw new NotYetImplementedException();
 	}
 

@@ -10,8 +10,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.mock.MockRBServiceProvider;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
 import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
@@ -21,8 +19,7 @@ import de.lichtflut.rb.web.components.LoginPanelPage;
 import de.lichtflut.rb.web.entities.EntityDetailPage;
 import de.lichtflut.rb.web.entities.EntityOverviewPage;
 import de.lichtflut.rb.web.resources.SharedResourceProvider;
-
-
+import de.lichtflut.rb.web.types.TypeSystemPage;
 
 /**
  * <p>
@@ -41,19 +38,8 @@ import de.lichtflut.rb.web.resources.SharedResourceProvider;
 @SuppressWarnings("serial")
 public abstract class RBSuperPage extends WebPage {
 
-	private static ServiceProvider provider = null;
-	private String title;
 
-	/**
-	 * Singleton pattern: There will be only one instance per runtime.
-	 * @return {@link ServiceProvider}
-	 */
-	public static ServiceProvider  getRBServiceProvider(){
-		if(provider==null) {
-			provider= new MockRBServiceProvider();
-		}
-		return provider;
-	}
+	private String title;
 
 	// -----------------------------------------------------
 
@@ -104,22 +90,26 @@ public abstract class RBSuperPage extends WebPage {
 		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
 		mainNavigation.addChild(new NavigationNodePanel(
 				new CKLink("link", "Home", RSPage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
-//		mainNavigation.addChild(new NavigationNodePanel(new CKLink("link", "Sample Resource Page",
-//				SampleResourcePage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
 
-		// Security-Stuff Link
-		NavigationNode securityStuff = new NavigationNodePanel(new CKLink("link", "Security-Related", CKLinkType.CUSTOM_BEHAVIOR));
-		CKLink login = new CKLink("link", "Login & Registration Modul", LoginPanelPage.class, CKLinkType.WEB_PAGE_CLASS);
-		securityStuff.addChild(new NavigationNodePanel(login));
-		mainNavigation.addChild(securityStuff);
-
-		// Mock NewRBEntity-Pages
-		NavigationNode mockPages = new NavigationNodePanel(new CKLink("link", "Mock-Pages", CKLinkType.CUSTOM_BEHAVIOR));
+		// Mock Entity Pages
+		NavigationNode mockPages = new NavigationNodePanel(new CKLink("link", "Entities", CKLinkType.CUSTOM_BEHAVIOR));
 		CKLink mockEmployee = new CKLink("link", "Sample Entities", EntityDetailPage.class, CKLinkType.WEB_PAGE_CLASS);
 		mockPages.addChild(new NavigationNodePanel(mockEmployee));
 		CKLink mockView = new CKLink("link", "TableView", EntityOverviewPage.class, CKLinkType.WEB_PAGE_CLASS);
 		mockPages.addChild(new NavigationNodePanel(mockView));
 		mainNavigation.addChild(mockPages);
+		
+		// Type System
+		final NavigationNode typeSystem = new NavigationNodePanel(
+				new CKLink("link", "Type-System", TypeSystemPage.class, CKLinkType.WEB_PAGE_CLASS));
+		mainNavigation.addChild(typeSystem);
+
+		
+		// Security-Stuff Link
+		NavigationNode securityStuff = new NavigationNodePanel(new CKLink("link", "Security-Related", CKLinkType.CUSTOM_BEHAVIOR));
+		CKLink login = new CKLink("link", "Login & Registration Modul", LoginPanelPage.class, CKLinkType.WEB_PAGE_CLASS);
+		securityStuff.addChild(new NavigationNodePanel(login));
+		mainNavigation.addChild(securityStuff);
 
 		add(mainNavigation);
 

@@ -16,10 +16,9 @@ import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.api.EntityManager;
-import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
@@ -97,7 +96,7 @@ public class RBEntityManagerImpl implements EntityManager {
 							continue;
 						}
 					}
-					SNOPS.replace(sNode, resourceID, node, null);
+					SNOPS.replace(sNode, resourceID, node);
 				}
             }
         }

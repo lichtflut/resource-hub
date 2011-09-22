@@ -5,36 +5,45 @@
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html
-	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd"
+	xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title>RBPrototype</title>
-    <link rel="stylesheet" type="text/css" href="css/websample.css" media="screen"/>
-    <wicket:head>
-    </wicket:head>
+<title>RBPrototype</title>
+<link rel="stylesheet" type="text/css" href="css/websample.css"
+	media="screen" />
+<wicket:head>
+</wicket:head>
 
 </head>
 <body>
-		<div id="header-wrap"><div id="header">
-		
-			<h1 id="logo-text">ResourceBrowser</h1>
-			<p id="intro"><span wicket:id="title"></span></p>
-		
-		
-			   <div id="nav" wicket:id="mainNavigation" class="navigation-bar horizontal"></div>
-			   <div id="header-image"></div> 
-			   
-		</div></div>
-		<!-- header ends here -->
-		<div id="content-outer">
-		<div id="sidebar-left" wicket:id="sidebarLeft"></div>
-			<div id="main">
-			<wicket:child />
-			</div>
-		</div>
+	<div id="header-wrap">
+		<div id="header">
 
-		<div id="footer-bottom">
-			&copy; Copyright 2011, lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+			<h1 id="logo-text">ResourceBrowser</h1>
+			<p id="intro">
+				<span wicket:id="title"></span>
+			</p>
+
+
+			<div id="nav" wicket:id="mainNavigation" class="navigation-bar horizontal"></div>
+			<div id="header-image"></div>
+
 		</div>
+	</div>
+	
+	<!-- header ends here -->
+	<div id="main-wrap">
+		<div id="sidebar-left" wicket:id="sidebarLeft"></div>
+		<div id="main-area">
+		  <div id="main">
+			 <wicket:child />
+		  </div>
+		</div>
+	</div>
+
+	<div id="footer-bottom">
+        &copy; Copyright 2011, lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+    </div>
 
 </body>
 </html>

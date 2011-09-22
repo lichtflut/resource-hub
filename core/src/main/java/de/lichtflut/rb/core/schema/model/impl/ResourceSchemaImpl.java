@@ -111,7 +111,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<PropertyAssertion> getPropertyAssertions() {
+	public List<PropertyAssertion> getPropertyAssertions() {
 		return this.propertyList;
 	}
 

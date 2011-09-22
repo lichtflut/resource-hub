@@ -1,0 +1,37 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+	<table>
+		<thead>
+		  <tr>
+		      <th><wicket:message key="header.property"></wicket:message></th>
+		      <th><wicket:message key="header.datatype"></wicket:message></th>
+		      <th><wicket:message key="header.min"></wicket:message></th>
+		      <th><wicket:message key="header.max"></wicket:message></th>
+		  </tr>
+		</thead>
+		<tbody>
+			<tr wicket:id="listView">
+				<td><wicket:container wicket:id="property"></wicket:container>
+				</td>
+				<td><wicket:container wicket:id="dataType"></wicket:container>
+				</td>
+				<td><wicket:container wicket:id="min"></wicket:container>
+				</td>
+				<td><wicket:container wicket:id="max"></wicket:container>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</wicket:panel>
+</html>
