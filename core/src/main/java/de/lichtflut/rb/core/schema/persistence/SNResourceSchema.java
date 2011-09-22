@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.associations.Association;
@@ -61,7 +62,7 @@ public class SNResourceSchema extends ResourceView {
 	 * @return The class node.
 	 */
 	public SNClass getDescribedClass() {
-		SemanticNode node = getSingleAssociationClient(RBSchema.DESCRIBES);
+		SemanticNode node = SNOPS.singleObject(this, RBSchema.DESCRIBES);
 		if (node != null){
 			return node.asResource().asClass();
 		} else {

@@ -359,9 +359,9 @@ public class RBSchemaStore {
 		try{
 			ModelingConversation mc = gate.startConversation();
 			ResourceNode rootNode = mc.findResource(RBSchema.ROOT_NODE.getQualifiedName());
-			if(rootNode.getSingleAssociationClient(RBSchema.HAS_RS_FORMAT).asValue().getStringValue()
+			if(SNOPS.singleObject(rootNode, RBSchema.HAS_RS_FORMAT).asValue().getStringValue()
 						.equals(format.toString())){
-				return rootNode.getSingleAssociationClient(RBSchema.HAS_SCHEMA_REPRESENTATION).asValue().getStringValue();
+				return SNOPS.singleObject(rootNode, RBSchema.HAS_SCHEMA_REPRESENTATION).asValue().getStringValue();
 			}
 		}catch(Exception any){
 			return null;

@@ -17,6 +17,7 @@ package de.lichtflut.rb.core.schema.persistence;
 
 import java.util.Set;
 
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
@@ -80,7 +81,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 	 * @return The property decl.
 	 */
 	public SNPropertyDeclaration getPropertyDeclaration() {
-		SemanticNode node = getSingleAssociationClient(RBSchema.HAS_PROPERTY_DECL);
+		SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_PROPERTY_DECL);
 		if (node != null){
 			return new SNPropertyDeclaration(node.asResource());
 		} else {
@@ -105,7 +106,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 	 * @return The property.
 	 */
 	public ResourceID getDescriptor() {
-		SemanticNode node = getSingleAssociationClient(RBSchema.HAS_DESCRIPTOR);
+		SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_DESCRIPTOR);
 		if (node != null){
 			return new SimpleResourceID(new QualifiedName(node.asValue().getStringValue()));
 		} else {
@@ -131,7 +132,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 	 * @return {@link SNScalar}
 	 */
 	public SNScalar getMinOccurs(){
-		SemanticNode minOccurs = getSingleAssociationClient(RBSchema.MIN_OCCURS);
+		SemanticNode minOccurs = SNOPS.singleObject(this, RBSchema.MIN_OCCURS);
 		if (minOccurs != null) {
 			return minOccurs.asValue().asScalar();
 		} else {
@@ -156,7 +157,7 @@ public class SNPropertyAssertion extends ResourceView implements Comparable<SNPr
 	 * @return {@link SNScalar}
 	 */
 	public SNScalar getMaxOccurs(){
-		SemanticNode maxOccurs = getSingleAssociationClient(RBSchema.MAX_OCCURS);
+		SemanticNode maxOccurs = SNOPS.singleObject(this, RBSchema.MAX_OCCURS);
 		if (maxOccurs != null) {
 			return maxOccurs.asValue().asScalar();
 		} else {

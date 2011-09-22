@@ -96,7 +96,7 @@ public class SemanticAttributeModel<T extends SemanticNode> implements IComponen
 			if (resource == null) {
 				return null;
 			}
-			return (T) resource.getSingleAssociationClient(predicate);
+			return (T) SNOPS.singleObject(resource, predicate);
 		}
 
 		@Override

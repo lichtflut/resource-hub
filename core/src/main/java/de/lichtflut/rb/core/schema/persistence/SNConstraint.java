@@ -17,6 +17,7 @@ package de.lichtflut.rb.core.schema.persistence;
 
 import java.util.Set;
 
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
@@ -105,7 +106,7 @@ public class SNConstraint extends ResourceView {
 	 * @return {@link SemanticNode}
 	 */
 	public SemanticNode getConstraintValue() {
-		return getSingleAssociationClient(RBSchema.HAS_CONSTRAINT_VALUE);
+		return SNOPS.singleObject(this, RBSchema.HAS_CONSTRAINT_VALUE);
 	}
 
 	// -----------------------------------------------------
@@ -127,7 +128,7 @@ public class SNConstraint extends ResourceView {
 	 * @return boolean true if constraint is of given type, false if not
 	 */
 	private boolean isOfType(final ResourceID type) {
-		final Set<SemanticNode> types = getAssociationClients(RDF.TYPE);
+		final Set<SemanticNode> types = SNOPS.objects(this, RDF.TYPE);
 		for (SemanticNode current : types) {
 			if (current.isResourceNode() &&	current.asResource().asClass().isSpecializationOf(type)) {
 				return true;

@@ -18,6 +18,7 @@ package de.lichtflut.rb.core.schema.persistence;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ElementaryDataType;
@@ -94,7 +95,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * @return {@link ElementaryDataType}
 	 */
 	public ElementaryDataType getDatatype() {
-		SemanticNode type = getSingleAssociationClient(RBSchema.HAS_DATATYPE);
+		SemanticNode type = SNOPS.singleObject(this, RBSchema.HAS_DATATYPE);
 		if (type != null) {
 			String name = type.asValue().asText().getStringValue();
 			return ElementaryDataType.valueOf(name);
