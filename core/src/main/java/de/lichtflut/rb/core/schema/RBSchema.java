@@ -47,18 +47,22 @@ public interface RBSchema {
 	 * Each ResourceSchema has to be a type of this.
 	 */
 	ResourceID RESOURCE_SCHEMA = new SimpleResourceID(NAMESPACE_URI, "ResourceSchema");
-	/**
-	 * Each PropertyAssertion has to be a type of this.
-	 */
-	ResourceID PROPERTY_ASSERT = new SimpleResourceID(NAMESPACE_URI, "PropertyAssertion");
+	
 	/**
 	 * Each PropertyDeclaration has to be a type of this.
 	 */
 	ResourceID PROPERTY_DECL = new SimpleResourceID(NAMESPACE_URI, "PropertyDeclaration");
+	
+	/**
+	 * Each PropertyDeclaration has to be a type of this.
+	 */
+	ResourceID PROPERTY_TYPE_DEF = new SimpleResourceID(NAMESPACE_URI, "PropertyTypeDefinition");
+	
 	/**
 	 * Each TypeConstraint has to be a type of this.
 	 */
 	ResourceID TYPE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "TypeConstraint");
+	
 	/**
 	 * Each LiteralConstraint has to be a type of this.
 	 */
@@ -70,39 +74,48 @@ public interface RBSchema {
 	 * Still unused.
 	 */
 	ResourceID HAS_SCHEMA = new SimpleResourceID(NAMESPACE_URI, "hasSchema");
+	
 	/**
 	 * A ResourceSchema describes a ResourceType.
 	 */
 	ResourceID DESCRIBES = new SimpleResourceID(NAMESPACE_URI, "describes");
+	
 	/**
 	 * A ResourceType is described by a ResourceSchema.
 	 */
 	ResourceID DESCRIBED_BY = new SimpleResourceID(NAMESPACE_URI, "describedBy");
-	/**
-	 * A ResourceSchema can be have several PropertyAssertions.
-	 */
-	ResourceID HAS_PROPERTY_ASSERT = new SimpleResourceID(NAMESPACE_URI, "hasPropertyAssertion");
+	
 	/**
 	 * A PropertyAssertion must have a PropertyDeclaration.
 	 */
 	ResourceID HAS_PROPERTY_DECL = new SimpleResourceID(NAMESPACE_URI, "hasPropertyDeclaration");
+	
+	/**
+	 * A PropertyAssertion must have a PropertyDeclaration.
+	 */
+	ResourceID HAS_PROPERTY_TYPE_DEF = new SimpleResourceID(NAMESPACE_URI, "hasPropertyTypeDefinition");
+	
 	/**
 	 * A PropertyAssertion can be have several Property-Descriptors to define the labels or sth. like that-
 	 * It's like a predicate
 	 */
 	ResourceID HAS_DESCRIPTOR = new SimpleResourceID(NAMESPACE_URI, "hasDescriptor");
+	
 	/**
 	 * Still unused.
 	 */
 	ResourceID HAS_IDENTIFIER = new SimpleResourceID(NAMESPACE_URI, "hasIdentifier");
+	
 	/**
 	 * A PropertyDeclaration can have an ElementaryDatatype if it's not a Resource-Reference.
 	 */
 	ResourceID HAS_DATATYPE = new SimpleResourceID(NAMESPACE_URI, "hasDatatype");
+	
 	/**
 	 * A SystemRoot can have Schema-Representations.
 	 */
 	ResourceID HAS_SCHEMA_REPRESENTATION = new SimpleResourceID(NAMESPACE_URI, "hasSchemaRepresentation");
+	
 	/**
 	 * A Schema-Representation must have a RS-Format.
 	 */

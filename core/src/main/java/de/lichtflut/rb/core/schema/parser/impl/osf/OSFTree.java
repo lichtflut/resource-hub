@@ -8,7 +8,7 @@ package de.lichtflut.rb.core.schema.parser.impl.osf;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
-import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
@@ -619,7 +619,7 @@ public class OSFTree extends TreeParser {
     // $ANTLR end "resource_dec"
 
     public static class assignment_dec_return extends TreeRuleReturnScope {
-        public PropertyAssertionImpl assertion;
+        public PropertyDeclarationImpl assertion;
         CommonTree tree;
         public Object getTree() { return tree; }
     };
@@ -649,7 +649,7 @@ public class OSFTree extends TreeParser {
 
          
         	TypeDefinitionImpl pDec = new TypeDefinitionImpl();
-        	retval.assertion = new PropertyAssertionImpl(null,pDec);
+        	retval.assertion = new PropertyDeclarationImpl(null,pDec);
         	
         try {
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:117:2: ( ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* ) )
@@ -681,9 +681,9 @@ public class OSFTree extends TreeParser {
             	retval.assertion.setPropertyIdentifier(s.result);
             	QualifiedName qName = retval.assertion.getQualifiedPropertyIdentifier();
                 if(!(qName.getSimpleName().startsWith("has"))){
-                      retval.assertion.setPropertyDescriptor(new SimpleResourceID(qName.getNamespace().getUri(),"has"+qName.getSimpleName()));
+                      retval.assertion.setPropertyType(new SimpleResourceID(qName.getNamespace().getUri(),"has"+qName.getSimpleName()));
                 }else{
-                	retval.assertion.setPropertyDescriptor(new SimpleResourceID(retval.assertion.getQualifiedPropertyIdentifier()));}
+                	retval.assertion.setPropertyType(new SimpleResourceID(retval.assertion.getQualifiedPropertyIdentifier()));}
                 
             _last = (CommonTree)input.LT(1);
             PROPERTY_ASSERTION9=(CommonTree)match(input,PROPERTY_ASSERTION,FOLLOW_PROPERTY_ASSERTION_in_assignment_dec227); 

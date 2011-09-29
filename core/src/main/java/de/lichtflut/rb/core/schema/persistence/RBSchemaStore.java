@@ -26,12 +26,12 @@ import org.arastreju.sge.query.QueryManager;
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.PropertyAssertion;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
-import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
@@ -89,7 +89,7 @@ public class RBSchemaStore {
 		//TODO: This is not the right way to do it. Some Assocaitons (PAssertion -> PDEc) will still stay there
 		//without any primary references
 		//Remove all old associations
-		Set<Association> assertions = snSchema.getAssociations(RBSchema.HAS_PROPERTY_ASSERT);
+		Set<Association> assertions = snSchema.getAssociations(RBSchema.HAS_PROPERTY_DECL);
 		for (Association assoc : assertions) {
 			snSchema.remove(assoc);
 		}
@@ -99,13 +99,13 @@ public class RBSchemaStore {
 		snSchema.setDescribedClass(describedResource, context);
 
 		final ModelingConversation mc = gate.startConversation();
-		for (PropertyAssertion assertion : schema.getPropertyAssertions()) {
-			final SNPropertyAssertion snAssertion = new SNPropertyAssertion();
+		for (PropertyDeclaration assertion : schema.getPropertyAssertions()) {
+			final SNPropertyDeclaration snAssertion = new SNPropertyDeclaration();
 			snAssertion.setMinOccurs(toScalar(assertion.getCardinality().getMinOccurs()), context);
 			snAssertion.setMaxOccurs(toScalar(assertion.getCardinality().getMaxOccurs()), context);
-			snAssertion.setDescriptor(assertion.getPropertyDescriptor(), context);
+			snAssertion.setDescriptor(assertion.getPropertyType(), context);
 			snSchema.addPropertyAssertion(snAssertion, context);
-			addDeclaration(snAssertion, assertion.getPropertyDeclaration(), context);
+			addDeclaration(snAssertion, assertion.getTypeDefinition(), context);
 		}
 		mc.attach(snSchema);
 
@@ -119,13 +119,13 @@ public class RBSchemaStore {
 	 * @param ctx -
 	 * @return Returns all property declarations
 	 */
-	public Collection<TypeDefinition> loadAllPropertyDeclarations(final Context ctx){
+	public Collection<TypeDefinition> loadAllPropertyTypeDefinitions(final Context ctx){
 		LinkedList<TypeDefinition> output = new LinkedList<TypeDefinition>();
 		QueryManager qManager = this.gate.startConversation().createQueryManager();
-		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.PROPERTY_DECL);
+		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.PROPERTY_TYPE_DEF);
 		for (Statement stmt : statements) {
 			if(stmt==null){continue;}
-			output.add(convertPropertyDeclaration(new SNPropertyDeclaration((ResourceNode) stmt.getSubject())));
+			output.add(convertPropertyDeclaration(new SNPropertyTypeDefinition((ResourceNode) stmt.getSubject())));
 		}
 		return output;
 	}
@@ -155,17 +155,17 @@ public class RBSchemaStore {
 	 * TODO: DESCRIPTION.
 	 * @param decl -
 	 * @param ctx -
-	 * @return {@link SNPropertyDeclaration}
+	 * @return {@link SNPropertyTypeDefinition}
 	 */
-	public SNPropertyDeclaration store(final TypeDefinition decl, final Context ctx){
+	public SNPropertyTypeDefinition store(final TypeDefinition decl, final Context ctx){
 		final ResourceNode existing = gate.startConversation().findResource(
 				decl.getID().getQualifiedName());
 
-		final SNPropertyDeclaration snDecl;
+		final SNPropertyTypeDefinition snDecl;
 		if (existing != null) {
-			snDecl = new SNPropertyDeclaration(existing);
+			snDecl = new SNPropertyTypeDefinition(existing);
 		} else {
-			snDecl = new SNPropertyDeclaration(ctx);
+			snDecl = new SNPropertyTypeDefinition(ctx);
 		}
 		convertPropertyDeclaration(decl, snDecl, ctx);
 
@@ -253,7 +253,7 @@ public class RBSchemaStore {
 	 * @param src -
 	 * @param target -
 	 */
-	protected void convertConstraints(final SNPropertyDeclaration src, final TypeDefinitionImpl target) {
+	protected void convertConstraints(final SNPropertyTypeDefinition src, final TypeDefinitionImpl target) {
 		for (SNConstraint snConst : src.getConstraints()){
 			if (snConst.isLiteralConstraint()){
 				final String value = snConst.getConstraintValue().asValue().getStringValue();
@@ -277,7 +277,7 @@ public class RBSchemaStore {
 	 * @param target -
 	 * @param ctx -
 	 */
-	protected void convertPropertyDeclaration(final TypeDefinition src, final SNPropertyDeclaration target, final Context ctx) {
+	protected void convertPropertyDeclaration(final TypeDefinition src, final SNPropertyTypeDefinition target, final Context ctx) {
 		target.setDatatype(src.getElementaryDataType(), ctx);
 		target.setIdentifier(src.getID(), ctx);
 		for (Constraint constraint: src.getConstraints()){
@@ -296,15 +296,15 @@ public class RBSchemaStore {
 		if(snSchema==null) {return null;}
 		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema);
 		schema.setDescribedResourceID(snSchema.getDescribedClass());
-		for (SNPropertyAssertion snAssertion : snSchema.getPropertyAssertions()){
+		for (SNPropertyDeclaration snAssertion : snSchema.getPropertyAssertions()){
 
 			// create Property Declaration
-			final SNPropertyDeclaration snDecl = snAssertion.getPropertyDeclaration();
+			final SNPropertyTypeDefinition snDecl = snAssertion.getPropertyDeclaration();
 			if(snDecl==null) {continue;}
 			final TypeDefinition decl = convertPropertyDeclaration(snDecl);
 
 			// create Property Assertion
-			final PropertyAssertionImpl pa = new PropertyAssertionImpl(snAssertion.getDescriptor(), decl);
+			final PropertyDeclarationImpl pa = new PropertyDeclarationImpl(snAssertion.getDescriptor(), decl);
 			int min = toInteger(snAssertion.getMinOccurs());
 			int max = toInteger(snAssertion.getMaxOccurs());
 			pa.setCardinality(CardinalityBuilder.getAbsoluteCardinality(max, min));
@@ -364,11 +364,11 @@ public class RBSchemaStore {
 	// -----------------------------------------------------
 
 	/**
-	 * Converts a {@link SNPropertyDeclaration} to {@link TypeDefinition}.
+	 * Converts a {@link SNPropertyTypeDefinition} to {@link TypeDefinition}.
 	 * @param snDecl -
 	 * @return {@link TypeDefinition}
 	 */
-	protected TypeDefinition convertPropertyDeclaration(final SNPropertyDeclaration snDecl){
+	protected TypeDefinition convertPropertyDeclaration(final SNPropertyTypeDefinition snDecl){
 
 		TypeDefinitionImpl pDec = new TypeDefinitionImpl();
 
@@ -385,7 +385,7 @@ public class RBSchemaStore {
 	 * @param decl -
 	 * @param ctx -
 	 */
-	protected void addDeclaration(final SNPropertyAssertion assertion, final TypeDefinition decl, final Context ctx) {
+	protected void addDeclaration(final SNPropertyDeclaration assertion, final TypeDefinition decl, final Context ctx) {
 		final ResourceNode existing = gate.startConversation().findResource((decl.getID().getQualifiedName()));
 
 		List<ResourceNode> found = gate.startConversation().createQueryManager().
@@ -393,11 +393,11 @@ public class RBSchemaStore {
 		found.size();
 
 		if (existing != null) {
-			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration(existing);
+			final SNPropertyTypeDefinition snDecl = new SNPropertyTypeDefinition(existing);
 			assertion.setPropertyDeclaration(snDecl, ctx);
 			convertPropertyDeclaration(decl, snDecl, ctx);
 		} else {
-			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration(ctx);
+			final SNPropertyTypeDefinition snDecl = new SNPropertyTypeDefinition(ctx);
 			snDecl.setName(decl.getName());
 			snDecl.setNamespace(decl.getID().getNamespace());
 			assertion.setPropertyDeclaration(snDecl, ctx);
@@ -413,7 +413,7 @@ public class RBSchemaStore {
 	 * @param constraint -
 	 * @param ctx -
 	 */
-	protected void addConstraint(final SNPropertyDeclaration decl, final Constraint constraint, final Context ctx) {
+	protected void addConstraint(final SNPropertyTypeDefinition decl, final Constraint constraint, final Context ctx) {
 		if (constraint.isLiteralConstraint()) {
 			decl.addLiteralConstraint(constraint.getLiteralConstraint(), ctx);
 		} else if (constraint.isResourceTypeConstraint()) {

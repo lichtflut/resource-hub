@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
-import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
@@ -63,7 +63,7 @@ public class RSParsingResultTest extends TestCase{
 		//Define and add ResourceSchema to pResult1
 		ResourceSchemaImpl rSchema = new ResourceSchemaImpl();
 		TypeDefinition pDec = new TypeDefinitionImpl("http://lichtflut.de#testProperty");
-		rSchema.addPropertyAssertion(new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de","hasTestProp"), pDec));
+		rSchema.addPropertyAssertion(new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de","hasTestProp"), pDec));
 		pResult1.addResourceSchema(new ResourceSchemaImpl());
 		assertTrue(pResult1.getResourceSchemasIgnoreErrors().size()==1);
 		assertTrue(pResult1.getPropertyDeclarationsIgnoreErrors().size()==0);

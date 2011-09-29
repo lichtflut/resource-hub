@@ -20,7 +20,7 @@ import org.arastreju.sge.naming.QualifiedName;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.MetaInfo;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.schema.model.PropertyAssertion;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
@@ -122,9 +122,9 @@ public class RBEntityImpl implements RBEntity {
 		}
 		fields = new ArrayList<RBField>();
 		if (schema != null) {
-		for (PropertyAssertion assertion : schema.getPropertyAssertions()) {
+		for (PropertyDeclaration assertion : schema.getPropertyAssertions()) {
 			final ResourceID predicate = assertion
-				.getPropertyDeclaration().getID();
+				.getTypeDefinition().getID();
 			fields.add(new RBFieldImpl(assertion, SNOPS.objects(node, predicate)));
 			predicates.remove(predicate);
 			}

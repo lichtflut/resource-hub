@@ -14,7 +14,7 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.VoidNamespace;
 
 import de.lichtflut.rb.core.schema.model.LabelBuilder;
-import de.lichtflut.rb.core.schema.model.PropertyAssertion;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
@@ -39,7 +39,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	private ResourceID internalResource;
 	private ResourceID describedResource;
 	//LinkedList is chosen because it's more flexible compared to an index-driven list
-	private final List<PropertyAssertion> propertyList = new LinkedList<PropertyAssertion>();
+	private final List<PropertyDeclaration> propertyList = new LinkedList<PropertyDeclaration>();
 
 	private LabelBuilder labelBuilder = LabelBuilder.DEFAULT;
 
@@ -111,7 +111,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<PropertyAssertion> getPropertyAssertions() {
+	public List<PropertyDeclaration> getPropertyAssertions() {
 		return this.propertyList;
 	}
 
@@ -138,7 +138,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 		sBuffer.append("Described ResourceID " + getDescribedType().getQualifiedName().toURI() + "\n");
 		sBuffer.append("Internal ResourceID "
 				 + ((getID()==null) ? "null" : getID().getQualifiedName().toURI()) + "\n");
-		for (PropertyAssertion property : getPropertyAssertions()) {
+		for (PropertyDeclaration property : getPropertyAssertions()) {
 			sBuffer.append("--p-r-o-p-e-r-t-y--\n" + property.toString() + "\n");
 		}
 		return sBuffer.toString();
@@ -150,7 +150,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addPropertyAssertion(final PropertyAssertion assertion) {
+	public void addPropertyAssertion(final PropertyDeclaration assertion) {
 		propertyList.add(assertion);
 	}
 
@@ -160,7 +160,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setPropertyAssertions(final Collection<PropertyAssertion> assertions) {
+	public void setPropertyAssertions(final Collection<PropertyDeclaration> assertions) {
 		this.propertyList.clear();
 		this.propertyList.addAll(assertions);
 	}
@@ -188,22 +188,6 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	}
 
 	// -----------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isResolved(){
-		for (PropertyAssertion assertion : this.propertyList){
-			if(!assertion.isResolved()){
-				return false;
-			}
-		}
-		return true;
-	}
-
-	// -----------------------------------------------------
-
 
 	/**
 	 * {@inheritDoc}

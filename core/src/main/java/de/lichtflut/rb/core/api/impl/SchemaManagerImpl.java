@@ -64,7 +64,7 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	@Override
 	public Collection<TypeDefinition> getAllPropertyDeclarations() {
-		return this.store.loadAllPropertyDeclarations(null);
+		return this.store.loadAllPropertyTypeDefinitions(null);
 	}
 
 	@Override

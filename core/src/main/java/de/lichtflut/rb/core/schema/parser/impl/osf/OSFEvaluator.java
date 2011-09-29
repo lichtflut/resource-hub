@@ -12,7 +12,7 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
-import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 
 /**
  * Evaluates type value params from a given PropertyDeclaration and report errors to an {@link OSFTree}.
@@ -81,14 +81,14 @@ public final class OSFEvaluator {
      * @param value -
      * @param tree -
      */
-	public static void evaluateLocalPropertyDec(final PropertyAssertionImpl assertion,final ResourceSchema schema, final String type,
+	public static void evaluateLocalPropertyDec(final PropertyDeclarationImpl assertion,final ResourceSchema schema, final String type,
 			final Object value, final OSFTree tree) {
-    	ResourceID descriptor = assertion.getPropertyDescriptor();
+    	ResourceID descriptor = assertion.getPropertyType();
 		if(!(descriptor.getQualifiedName().getSimpleName().startsWith("has"))){
-			assertion.setPropertyDescriptor(new SimpleResourceID(new QualifiedName(descriptor.getNamespace().getUri(),"has"
+			assertion.setPropertyType(new SimpleResourceID(new QualifiedName(descriptor.getNamespace().getUri(),"has"
 					+ descriptor.getQualifiedName().getSimpleName())));
 		}
-    	TypeDefinition pDec = assertion.getPropertyDeclaration();
+    	TypeDefinition pDec = assertion.getTypeDefinition();
     	String errorMessage = "Inner Property#" + pDec.getName()+ ": ";
 		String typeLower = type.toLowerCase();
 

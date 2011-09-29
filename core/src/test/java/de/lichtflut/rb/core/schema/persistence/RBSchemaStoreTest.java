@@ -21,7 +21,7 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
-import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 
@@ -64,7 +64,7 @@ public class RBSchemaStoreTest {
 	public void testStore() {
 		 final RBSchemaStore store = new RBSchemaStore(gate);
 
-		 Collection<TypeDefinition> pDecs = store.loadAllPropertyDeclarations(null);
+		 Collection<TypeDefinition> pDecs = store.loadAllPropertyTypeDefinitions(null);
 
 		 Assert.assertEquals(0, pDecs.size());
 
@@ -72,7 +72,7 @@ public class RBSchemaStoreTest {
 
 		 final SNResourceSchema snSchema = store.store(schema,null);
 
-		 pDecs = store.loadAllPropertyDeclarations(null);
+		 pDecs = store.loadAllPropertyTypeDefinitions(null);
 		 Assert.assertEquals(3, pDecs.size());
 
 		 Assert.assertNotNull(snSchema);
@@ -96,7 +96,7 @@ public class RBSchemaStoreTest {
 		 //Test that there is schema for a RT, that doesnt exists
 		 Assert.assertNull(store.loadSchemaForResourceType(new SimpleResourceID(new QualifiedName("test")),null));
 
-		 pDecs = store.loadAllPropertyDeclarations(null);
+		 pDecs = store.loadAllPropertyTypeDefinitions(null);
 
 		 Assert.assertEquals(3, pDecs.size());
 
@@ -121,9 +121,9 @@ public class RBSchemaStoreTest {
 		p3.setElementaryDataType(ElementaryDataType.INTEGER);
 
 		p2.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
-		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
-		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
-		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);
+		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
+		PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
+		PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(3));
 		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());

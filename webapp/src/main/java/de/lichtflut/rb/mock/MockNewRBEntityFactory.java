@@ -16,7 +16,7 @@ import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
-import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 
@@ -429,11 +429,11 @@ public final class MockNewRBEntityFactory {
 
 		p2.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
 
-		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(
+		PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasEmail"), p2);
-		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(
+		PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasAge"), p3);
-		PropertyAssertionImpl pa4 = new PropertyAssertionImpl(
+		PropertyDeclarationImpl pa4 = new PropertyDeclarationImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasChild"), p4);
 
 		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(5));

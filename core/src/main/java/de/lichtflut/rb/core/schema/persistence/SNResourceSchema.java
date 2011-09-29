@@ -38,6 +38,8 @@ public class SNResourceSchema extends ResourceView {
 	 * Generated serial number.
 	 */
 	private static final long serialVersionUID = -2376213727456721748L;
+	
+	// -----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -89,18 +91,18 @@ public class SNResourceSchema extends ResourceView {
 	 * @param pa -
 	 * @param ctx -
 	 */
-	public void addPropertyAssertion(final SNPropertyAssertion pa, final Context ctx){
-		Association.create(this, RBSchema.HAS_PROPERTY_ASSERT, pa, ctx);
+	public void addPropertyAssertion(final SNPropertyDeclaration pa, final Context ctx){
+		Association.create(this, RBSchema.HAS_PROPERTY_DECL, pa, ctx);
 	}
 
 	/**
 	 * Collects all PropertyAssertions defined by this Schema.
 	 * @return The list of all property assertions.
 	 */
-	public List<SNPropertyAssertion> getPropertyAssertions(){
-		Set<SNPropertyAssertion> result = new HashSet<SNPropertyAssertion>();
+	public List<SNPropertyDeclaration> getPropertyAssertions(){
+		Set<SNPropertyDeclaration> result = new HashSet<SNPropertyDeclaration>();
 		result.addAll(getDeclaredPropertyAssertions());
-		List<SNPropertyAssertion> list = new ArrayList<SNPropertyAssertion>(result);
+		List<SNPropertyDeclaration> list = new ArrayList<SNPropertyDeclaration>(result);
 		Collections.sort(list);
 		return list;
 	}
@@ -109,11 +111,11 @@ public class SNResourceSchema extends ResourceView {
 	 * Returns only the property declarations declared for this classifier, not the inherited.
 	 * @return The list of property declarations.
 	 */
-	public List<SNPropertyAssertion> getDeclaredPropertyAssertions(){
-		List<SNPropertyAssertion> result = new ArrayList<SNPropertyAssertion>();
-		Set<Association> assocs = getAssociations(RBSchema.HAS_PROPERTY_ASSERT);
+	public List<SNPropertyDeclaration> getDeclaredPropertyAssertions(){
+		List<SNPropertyDeclaration> result = new ArrayList<SNPropertyDeclaration>();
+		Set<Association> assocs = getAssociations(RBSchema.HAS_PROPERTY_DECL);
 		for (Association current : assocs) {
-			result.add(new SNPropertyAssertion(current.getObject().asResource()));
+			result.add(new SNPropertyDeclaration(current.getObject().asResource()));
 		}
 		Collections.sort(result);
 		return result;
@@ -124,8 +126,8 @@ public class SNResourceSchema extends ResourceView {
 	 * (org.arastreju.api.model.semantic.SNPropertyDeclaration)
 	 * @param decl -
 	 */
-	public void removePropertyAssertion(final SNPropertyAssertion decl) {
-		Set<Association> assocs = getAssociations(RBSchema.HAS_PROPERTY_ASSERT);
+	public void removePropertyAssertion(final SNPropertyDeclaration decl) {
+		Set<Association> assocs = getAssociations(RBSchema.HAS_PROPERTY_DECL);
 		Association toBeRemoved = null;
 		for (Association current : assocs) {
 			if (decl.equals(current.getObject())){
@@ -145,7 +147,7 @@ public class SNResourceSchema extends ResourceView {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("ResourceSchema[" + super.toString() + "]");
 		sb.append(" for " + getDescribedClass() + "\n");
-		for(SNPropertyAssertion pa : getPropertyAssertions()){
+		for(SNPropertyDeclaration pa : getPropertyAssertions()){
 			sb.append("\t" + pa + "\n");
 		}
 		return sb.toString();

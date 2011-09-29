@@ -13,12 +13,6 @@ import org.arastreju.sge.model.ResourceID;
 /**
  * <p>
  *  Schema for a resource type, e.g. a person, an organization or a project.
- *
- *  ===ATTENTION===
- *  There still exists one reference implementation ResourceSchemaImpl.
- *  It's recommended to use this implementation, cause this is up to date and implementing the whole spec.
- *  If you want to implement your own ResourceSchema class, please be absolutely sure that you're already
- *  knowing the whole facts.
  * </p>
  *
  * <p>
@@ -44,30 +38,24 @@ public interface ResourceSchema extends ResourceSchemaElement{
 	// -----------------------------------------------------
 
 	/**
-	 * Get all the schema's {@link PropertyAssertion} as list.
-	 * @return all schema {@link PropertyAssertion} as list.
+	 * Get all the schema's {@link PropertyDeclaration} as list.
+	 * @return all schema {@link PropertyDeclaration} as list.
 	 */
-	List<PropertyAssertion> getPropertyAssertions();
+	List<PropertyDeclaration> getPropertyAssertions();
 
 	/**
-	 * Set the {@link Collection} of {@link PropertyAssertion} to the ResourceSchema.
+	 * Set the {@link Collection} of {@link PropertyDeclaration} to the ResourceSchema.
 	 * @param assertions -
 	 */
-	void setPropertyAssertions(final Collection<PropertyAssertion> assertions);
+	void setPropertyAssertions(final Collection<PropertyDeclaration> assertions);
 
 	/**
-	 * Add a additional {@link PropertyAssertion} to the ResourceSchema.
+	 * Add a additional {@link PropertyDeclaration} to the ResourceSchema.
 	 * @param assertion -
 	 */
-	void addPropertyAssertion(final PropertyAssertion assertion);
+	void addPropertyAssertion(final PropertyDeclaration assertion);
 	
 	// -----------------------------------------------------
-
-	/**
-	 * Iterate over its {@link PropertyAssertion} and returns false if just one of them is not resolved.
-	 * @return true if all were resolved, false if not
- 	 */
-	boolean isResolved();
 
 	/**
 	 * The label builder can create dynamic labels for an entity belonging to this schema.

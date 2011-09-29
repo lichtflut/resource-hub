@@ -7,7 +7,7 @@
 	import de.lichtflut.rb.core.schema.model.ResourceSchema;
 	import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
 	import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
-	import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
+	import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 	import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 	import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 	import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
@@ -681,7 +681,7 @@ public class ResourceSchemaParser extends Parser {
             	    IDENT24_tree = (CommonTree)adaptor.create(IDENT24);
             	    adaptor.addChild(root_0, IDENT24_tree);
 
-            	    this.resource.addPropertyAssertion(new PropertyAssertionImpl(IDENT24.getText(),cardinality));
+            	    this.resource.addPropertyAssertion(new PropertyDeclarationImpl(IDENT24.getText(),cardinality));
 
             	    }
             	    break;

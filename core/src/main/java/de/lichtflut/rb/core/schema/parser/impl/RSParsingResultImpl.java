@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import de.lichtflut.rb.core.schema.model.PropertyAssertion;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
@@ -173,8 +173,8 @@ public class RSParsingResultImpl implements RSParsingResult{
 		Collection<TypeDefinition> output = new HashSet<TypeDefinition>();
 		//Get all propertyDecs assigned to the ResourceSchema
 		for (ResourceSchema rSchema : this.resourceSchemas) {
-			for (PropertyAssertion assertion : rSchema.getPropertyAssertions()) {
-				output.add(assertion.getPropertyDeclaration());
+			for (PropertyDeclaration assertion : rSchema.getPropertyAssertions()) {
+				output.add(assertion.getTypeDefinition());
 			}
 		}//End of outer for
 

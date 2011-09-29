@@ -16,7 +16,7 @@ import de.lichtflut.rb.core.entity.impl.RBFieldImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
-import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
@@ -226,14 +226,14 @@ public final class RBEntityTest {
         p4.addConstraint(ConstraintBuilder.buildConstraint(schema
                 .getDescribedType()));
 
-        PropertyAssertionImpl pa1 = new PropertyAssertionImpl(
+        PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(
                 new SimpleResourceID("http://lichtflut.de#", "hatGeburtstag"),
                 p1);
-        PropertyAssertionImpl pa2 = new PropertyAssertionImpl(
+        PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(
                 new SimpleResourceID("http://lichtflut.de#", "hatEmail"), p2);
-        PropertyAssertionImpl pa3 = new PropertyAssertionImpl(
+        PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(
                 new SimpleResourceID("http://lichtflut.de#", "hatAlter"), p3);
-        PropertyAssertionImpl pa4 = new PropertyAssertionImpl(
+        PropertyDeclarationImpl pa4 = new PropertyDeclarationImpl(
                 new SimpleResourceID("http://lichtflut.de#", "hatKind"), p4);
 
         pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());

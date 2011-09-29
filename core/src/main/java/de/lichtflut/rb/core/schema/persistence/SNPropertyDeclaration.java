@@ -15,19 +15,20 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
-import org.arastreju.sge.model.nodes.views.SNText;
+import org.arastreju.sge.model.nodes.views.SNScalar;
+import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.RBSchema;
@@ -35,31 +36,34 @@ import de.lichtflut.rb.core.schema.RBSchema;
 
 /**
  * <p>
- * Represents the declaration of a Property, which can be assigned to a Class.
+ * Represents the assertion of a Property Declaration to a Class.
  * <p>
  *
  * <p>
  * Consists of a property and constraints:
  * <ul>
- *  <li> identifier (URI)</li>
- *  <li> datatype</li>
- *  <li> constraints</li>
+ *  <li> descriptor</li>
+ *  <li> cardinality (minOccurs, maxOccurs)</li>
+ *  <li> Many-In-Time-Flag (nyi)</li>
  * </ul>
  *
  * 	Created: 20.01.2009
+ *
  * </p>
  *
  * @author Oliver Tigges
  */
-@SuppressWarnings("serial")
-public class SNPropertyDeclaration extends ResourceView {
+public class SNPropertyDeclaration extends ResourceView implements Comparable<SNPropertyDeclaration>{
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -7077840107709042193L;
 
 	/**
 	 * Constructor for a new property declaration node.
-	 * @param context -
 	 */
-	public SNPropertyDeclaration(final Context context) {
-		Association.create(this, RDF.TYPE, RBSchema.PROPERTY_DECL,context);
+	public SNPropertyDeclaration() {
 	}
 
 	/**
@@ -70,113 +74,140 @@ public class SNPropertyDeclaration extends ResourceView {
 		super(resource);
 	}
 
-	// -----------------------------------------------------
+	//-----------------------------------------------------
 
 	/**
-	 * Get the unique identifier.
-	 * @return {@link ResourceID}
+	 * Returns the Property Declaration.
+	 * @return The property decl.
 	 */
-	public ResourceID getIdentifier() {
-		return this.getResource();
-	}
-
-	/**
-	 * Sets identifier.
-	 * @param id -
-	 * @param context -
-	 */
-	public void setIdentifier(final ResourceID id, final Context context) {
-		this.setName(id.getName());
-		this.setNamespace(id.getNamespace());
-	}
-
-	/**
-	 * Returns the datatype.
-	 * @return {@link ElementaryDataType}
-	 */
-	public ElementaryDataType getDatatype() {
-		SemanticNode type = SNOPS.singleObject(this, RBSchema.HAS_DATATYPE);
-		if (type != null) {
-			String name = type.asValue().asText().getStringValue();
-			return ElementaryDataType.valueOf(name);
+	public SNPropertyTypeDefinition getPropertyDeclaration() {
+		SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_PROPERTY_TYPE_DEF);
+		if (node != null){
+			return new SNPropertyTypeDefinition(node.asResource());
 		} else {
 			return null;
 		}
 	}
 
 	/**
-	 * Sets the datatype.
-	 * @param type -
+	 * Set the Property Declaratio.
+	 * @param propertyDecl The property decl.
+	 * @param context The context.
+	 */
+	public void setPropertyDeclaration(final SNPropertyTypeDefinition propertyDecl, final Context context) {
+		if (!Infra.equals(getDescriptor(), propertyDecl)){
+			removeAssocs(RBSchema.HAS_PROPERTY_TYPE_DEF);
+			Association.create(this, RBSchema.HAS_PROPERTY_TYPE_DEF, propertyDecl, context);
+		}
+	}
+
+	/**
+	 * Returns the property declared by this property declaration.
+	 * @return The property.
+	 */
+	public ResourceID getDescriptor() {
+		SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_DESCRIPTOR);
+		if (node != null){
+			return new SimpleResourceID(new QualifiedName(node.asValue().getStringValue()));
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Set the property declared by this property declaration.
+	 * @param property The property.
+	 * @param context The context.
+	 */
+	public void setDescriptor(final ResourceID property, final Context context) {
+		if (!Infra.equals(getDescriptor(), property)){
+			SNValue pDescriptor = new SNValue(ElementaryDataType.URI,property.getQualifiedName().toURI());
+			removeAssocs(RBSchema.HAS_DESCRIPTOR);
+			Association.create(this, RBSchema.HAS_DESCRIPTOR, pDescriptor, context);
+		}
+	}
+
+	/**
+	 * Retiurns the min. occurences.
+	 * @return {@link SNScalar}
+	 */
+	public SNScalar getMinOccurs(){
+		SemanticNode minOccurs = SNOPS.singleObject(this, RBSchema.MIN_OCCURS);
+		if (minOccurs != null) {
+			return minOccurs.asValue().asScalar();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Sets the min. occurences
+	 * @param minOccurs -
 	 * @param context -
 	 */
-	public void setDatatype(final ElementaryDataType type, final Context context) {
-		if (!Infra.equals(getDatatype(), type)){
-			removeAssocs(RBSchema.HAS_DATATYPE);
-			Association.create(this, RBSchema.HAS_DATATYPE, new SNText(type.name()), context);
+	public void setMinOccurs(final SNScalar minOccurs, final Context context) {
+		if (!Infra.equals(getMinOccurs(), minOccurs)){
+			removeAssocs(RBSchema.MIN_OCCURS);
+			Association.create(this, RBSchema.MIN_OCCURS, minOccurs, context);
 		}
 	}
 
 	/**
-	 * Add a literal constraint to this Property Declaration.
-	 * @param constraint The literal constraint, e.g. a RegEX Pattern.
-	 * @param context The context.
-	 * @return The constraint node.
+	 * Retiurns the max. occurences.
+	 * @return {@link SNScalar}
 	 */
-	public SNConstraint addLiteralConstraint(final String constraint, final Context context) {
-		final SNConstraint constraintNode = new SNConstraint(constraint, context);
-		Association.create(this, RBSchema.HAS_LITERAL_CONSTRAINT, constraintNode, context);
-		return constraintNode;
-	}
-
-	/**
-	 * Add a type constraint to this Property Declaration.
-	 * @param constraint The type constraint.
-	 * @param context The context.
-	 * @return The constraint node.
-	 */
-	public SNConstraint addTypeConstraint(final ResourceID constraint, final Context context) {
-		final SNConstraint constraintNode = new SNConstraint(constraint, context);
-		Association.create(this, RBSchema.HAS_TYPE_CONSTRAINT, constraintNode, context);
-		return constraintNode;
-	}
-
-	/**
-	 * Get all constraints of this Property Declaration.
- 	 * @return The set of all constraints.
-	 */
-	public Set<SNConstraint> getConstraints() {
-		final Set<SNConstraint> result = new HashSet<SNConstraint>();
-		for (Association assoc: getAssociations()){
-			if (RBSchema.HAS_LITERAL_CONSTRAINT.equals(assoc.getPredicate())){
-				result.add(new SNConstraint(assoc.getObject().asResource()));
-			} else if (RBSchema.HAS_TYPE_CONSTRAINT.equals(assoc.getPredicate())){
-				result.add(new SNConstraint(assoc.getObject().asResource()));
-			} else if (RBSchema.HAS_CONSTRAINT.equals(assoc.getPredicate())){
-				result.add(new SNConstraint(assoc.getObject().asResource()));
-			}
+	public SNScalar getMaxOccurs(){
+		SemanticNode maxOccurs = SNOPS.singleObject(this, RBSchema.MAX_OCCURS);
+		if (maxOccurs != null) {
+			return maxOccurs.asValue().asScalar();
+		} else {
+			return null;
 		}
-		return result;
 	}
 
-	// -----------------------------------------------------
+	/**
+	 * Sets the max. occurences
+	 * @param minOccurs -
+	 * @param context -
+	 */
+	public void setMaxOccurs(final SNScalar minOccurs, final Context context) {
+		if (!Infra.equals(getMaxOccurs(), minOccurs)){
+			removeAssocs(RBSchema.MAX_OCCURS);
+			Association.create(this, RBSchema.MAX_OCCURS, minOccurs, context);
+		}
+	}
 
-	/* (non-Javadoc)
-	 * @see org.arastreju.sge.model.nodes.views.ResourceView#toString()
+	//-----------------------------------------------------
+
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder("PropertyDeclaration[" + super.toString() + "]");
-		if (getIdentifier() != null) {
-			sb.append(" " + getIdentifier());
+	public int compareTo(final SNPropertyDeclaration other) {
+		if (this.getDescriptor() == null){
+			return 1;
+		} else if (other.getDescriptor() == null){
+			return -1;
+		} else {
+			return Infra.compare(this.getDescriptor().getQualifiedName(), other.getDescriptor().getQualifiedName());
 		}
-		if (getDatatype() != null) {
-			sb.append(" " + getDatatype());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString(){
+		StringBuffer sb = new StringBuffer("PropertyAssertion[" + super.toString() + "] ");
+		if (getDescriptor() != null){
+			sb.append(getDescriptor().getQualifiedName().toURI());
 		}
-		sb.append(" " + getConstraints());
+		sb.append(" " + getMinOccurs() + ".." + getMaxOccurs());
+		sb.append("\n\t\t" + getPropertyDeclaration());
 		return sb.toString();
 	}
 
-	// -----------------------------------------------------
+	//-----------------------------------------------------
 
 	/**
 	 * Removes all associations with given predicate.

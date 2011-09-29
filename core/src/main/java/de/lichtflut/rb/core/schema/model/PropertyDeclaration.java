@@ -21,23 +21,35 @@ import org.arastreju.sge.naming.QualifiedName;
  *
  * @author Oliver Tigges
  */
-public interface PropertyAssertion extends ResourceSchemaElement {
+public interface PropertyDeclaration extends ResourceSchemaElement {
 
 	/**
-	 * The descriptor of this property. Usually the resource identifier representing
-	 * the descriptor will be of type rdf:Property. In a concrete RDF statement corresponding
-	 * to this PropertyAssertion this will be the predicate.
+	 * The property type. Usually this descriptor will be of type rdf:Property. 
+	 * In a concrete RDF statement corresponding to this PropertyAssertion this 
+	 * will be the predicate.
 	 * @return The resource identifier representing the descriptor.
 	 */
-	ResourceID getPropertyDescriptor();
+	ResourceID getPropertyType();
 
+	/**
+	 * Set the property.
+	 * @param property The property.
+	 */
+	void setPropertyType(ResourceID property); 
+	
 	// -----------------------------------------------------
 
 	/**
 	 * The concrete property of this assertion.
 	 * @return The property.
 	 */
-	TypeDefinition getPropertyDeclaration();
+	TypeDefinition getTypeDefinition();
+	
+	/**
+	 * Assign an implicit/private oder an standalone/public TypeDefinition.
+	 * @param def The type definition.
+	 */
+	void setTypeDefinition(TypeDefinition def);
 
 	// -----------------------------------------------------
 
@@ -56,20 +68,13 @@ public interface PropertyAssertion extends ResourceSchemaElement {
 	// -----------------------------------------------------
 
 	/**
-	 * Resolved means, if this assertion is already assigned to a known PropertyDeclaration.
-	 * @return boolean
-	 */
-	boolean isResolved();
-
-	// -----------------------------------------------------
-
-	/**
 	 * returns the QualifiedName of the PropertyIdentifier.
 	 * This is necessary to resolve this PropertyAssertion with a given PropertyDeclaration
 	 * If this assertion is still resolved, the PropertyIdentifier is not more needed
 	 * If the propertyIdentifier is not a valid URI, it's converted to the default void-namespace URI
 	 * @return {@link QualifiedName}
 	 */
+	@Deprecated
 	QualifiedName getQualifiedPropertyIdentifier();
 
 	// -----------------------------------------------------
@@ -82,5 +87,5 @@ public interface PropertyAssertion extends ResourceSchemaElement {
 	 * @return Set the constraints.
 	 */
 	Set<Constraint> getConstraints();
-
+	
 }

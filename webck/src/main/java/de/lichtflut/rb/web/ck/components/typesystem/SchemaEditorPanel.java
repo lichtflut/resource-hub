@@ -18,7 +18,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ElementaryDataType;
 
-import de.lichtflut.rb.core.schema.model.PropertyAssertion;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.web.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.web.ck.components.EnumDropDownChoice;
 import de.lichtflut.rb.web.models.ConditionalModel;
@@ -94,7 +94,7 @@ public class SchemaEditorPanel extends Panel {
 	
 	// -----------------------------------------------------
 	
-	protected String max(final PropertyAssertion pa) {
+	protected String max(final PropertyDeclaration pa) {
 		if (pa.getCardinality().isUnbound()) {
 			return "unbound";
 		} else {

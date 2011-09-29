@@ -11,7 +11,7 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.PropertyAssertion;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
@@ -50,7 +50,7 @@ public class PropertyRow implements Serializable {
 	
 	public static List<PropertyRow> toRowList(ResourceSchema schema) {
 		final List<PropertyRow> list = new ArrayList<PropertyRow>();
-		for (PropertyAssertion pa : schema.getPropertyAssertions()) {
+		for (PropertyDeclaration pa : schema.getPropertyAssertions()) {
 			list.add(new PropertyRow(pa));
 		}
 		return list;
@@ -67,9 +67,9 @@ public class PropertyRow implements Serializable {
 	/**
 	 * Constructor. 
 	 */
-	public PropertyRow(PropertyAssertion assertion) {
-		this.propertyDescriptor = assertion.getPropertyDescriptor();
-		this.dataType = assertion.getPropertyDeclaration().getElementaryDataType();
+	public PropertyRow(PropertyDeclaration assertion) {
+		this.propertyDescriptor = assertion.getPropertyType();
+		this.dataType = assertion.getTypeDefinition().getElementaryDataType();
 		this.min = assertion.getCardinality().getMinOccurs();
 		this.max = assertion.getCardinality().getMaxOccurs();
 		this.unbounded = assertion.getCardinality().isUnbound();
