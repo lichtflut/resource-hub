@@ -681,7 +681,7 @@ public class ResourceSchemaParser extends Parser {
             	    IDENT24_tree = (CommonTree)adaptor.create(IDENT24);
             	    adaptor.addChild(root_0, IDENT24_tree);
 
-            	    this.resource.addPropertyAssertion(new PropertyDeclarationImpl(IDENT24.getText(),cardinality));
+            	    this.resource.addPropertyDeclaration(new PropertyDeclarationImpl(IDENT24.getText(),cardinality));
 
             	    }
             	    break;

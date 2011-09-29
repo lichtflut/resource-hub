@@ -70,6 +70,25 @@ public interface TypeDefinition  extends ResourceSchemaElement{
 	String getName();
 	
 	// -----------------------------------------------------
+
+	/**
+	 * Check if this is a public/global or an private/implicit type definition.
+	 * return true if this is a public type.
+	 */
+	boolean isPublicTypeDef();
+	
+	/**
+	 * @return boolean true if defined datatype is elementary. 
+	 */
+	boolean isLiteralValue();
+
+	/**
+	 * Is true when property declaration contains resource references and no independent values.
+	 * @return true when property declaration contains independent, false if references resources
+	 */
+	boolean isResourceReference();
+	
+	// -----------------------------------------------------
 	
 	/**
 	 * Get the {@link ElementaryDataType}.
@@ -118,35 +137,6 @@ public interface TypeDefinition  extends ResourceSchemaElement{
 	 */
 	void setIdentifier(String identifierString);
 	
-	// -----------------------------------------------------
-
-	/**
-	 * Is true when property declaration contains independent values and no resource references.
-	 * @return  true when property declaration contains independent, false if references resources
-	 */
-	boolean isValue();
-
-	//------------------------------------------------------
-
-	/**
-	 * TODO: Definine method intent.
-	 * @return boolean -
-	 */
-	boolean isElementary();
-
-	/**
-	 * Is true when property declaration contains resource references and no independent values.
-	 * @return true when property declaration contains independent, false if references resources
-	 */
-	boolean isResourceReference();
-	
-
-	/**
-	 * TODO: Definine method intent.
-	 * @return boolean -
-	 */
-	boolean isCustom();
-
 	//------------------------------------------------------
 
 	/**

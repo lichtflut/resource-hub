@@ -58,7 +58,7 @@ public final class CardinalityBuilder{
 	 * @return a 1:N-Cardinality
 	 */
 	public static Cardinality hasAtLeastOneToMany(){
-		return getAbsoluteCardinality(-1,1);
+		return between(-1,1);
    }
 
 	// -----------------------------------------------------
@@ -68,7 +68,7 @@ public final class CardinalityBuilder{
 	 * @return a least:N-Cardinality
 	 */
 	public static Cardinality hasAtLeast(final int least){
-		return getAbsoluteCardinality(-1,Math.abs(least));
+		return between(-1, Math.abs(least));
    }
 
 	// -----------------------------------------------------
@@ -77,7 +77,7 @@ public final class CardinalityBuilder{
 	 * @return a 0:N-Cardinality
 	 */
 	public static Cardinality hasOptionalOneToMany(){
-       return new UnboundedCardinalityImpl();
+       return new SimpleCardinalityImpl();
 	}
 
 	// -----------------------------------------------------
@@ -87,7 +87,7 @@ public final class CardinalityBuilder{
 	 * @return a 1:max-Cardinality
 	 */
 	public static Cardinality hasAtLeastOneUpTo(final int max){
-	  return getAbsoluteCardinality(Math.abs(max),1);
+	  return between(Math.abs(max),1);
    }
 
 	// -----------------------------------------------------
@@ -97,7 +97,7 @@ public final class CardinalityBuilder{
 	 * @return a 0:max-Cardinality
 	 */
 	public static Cardinality hasOptionalOneUpTo(final int max){
-	  return getAbsoluteCardinality(Math.abs(max),0);
+	  return between(Math.abs(max),0);
 	}
 
 	// -----------------------------------------------------
@@ -107,7 +107,7 @@ public final class CardinalityBuilder{
 	 * @return a value:value-Cardinality
 	 */
 	public static Cardinality hasExactly(final int value){
-	     return getAbsoluteCardinality(Math.abs(value),Math.abs(value));
+	     return between(Math.abs(value),Math.abs(value));
 	}
 
 	// -----------------------------------------------------
@@ -118,8 +118,8 @@ public final class CardinalityBuilder{
 	 * @param min -
 	 * @return a min:max-Cardinality
 	 */
-    public static Cardinality getAbsoluteCardinality(final int max, final int min){
-    	return new UnboundedCardinalityImpl(max, min);
+    public static Cardinality between(final int max, final int min){
+    	return new SimpleCardinalityImpl(max, min);
     }
 
 
@@ -132,22 +132,17 @@ public final class CardinalityBuilder{
 
 
     /**
-     *
-     * ReferneceImplementation of an unbounded Cardinality.
-     * There is nothing more to say here.
-     *
-     * Created: Jun 16, 2011
-     *
-     * @author Nils Bleisch
+     * Default implementation of Cardinality.
+     * if max == -1 it will be handled as unbounded.
      */
-    private static final class UnboundedCardinalityImpl implements Cardinality{
+    private static final class SimpleCardinalityImpl implements Cardinality{
 
 		private static final long serialVersionUID = -8837248407635938888L;
 
 		/**
 		 * Default Constructor.
 		 */
-		public UnboundedCardinalityImpl(){
+		public SimpleCardinalityImpl(){
 			//Default constructor, do nothing
 		}
 
@@ -156,7 +151,7 @@ public final class CardinalityBuilder{
 		 * @param max - unbound could be set up with -1.
 		 * @param min - a negative value is interpreted as a positive one.
 		 */
-		public UnboundedCardinalityImpl(final int max,final int min){
+		public SimpleCardinalityImpl(final int max,final int min){
 			int minimum = min;
 			minimum = Math.abs(min);
 			if((max < min) && (max!=-1)){

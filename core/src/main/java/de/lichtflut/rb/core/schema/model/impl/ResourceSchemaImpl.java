@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -37,9 +36,9 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 
 	//Instance members
 	private ResourceID internalResource;
-	private ResourceID describedResource;
+	private ResourceID describedType;
 	//LinkedList is chosen because it's more flexible compared to an index-driven list
-	private final List<PropertyDeclaration> propertyList = new LinkedList<PropertyDeclaration>();
+	private final List<PropertyDeclaration> declarations = new LinkedList<PropertyDeclaration>();
 
 	private LabelBuilder labelBuilder = LabelBuilder.DEFAULT;
 
@@ -54,7 +53,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 */
 	public ResourceSchemaImpl() {
 		//Generates a SimpleResourceID instance with an random UUID for namespace and identifier each
-		this.describedResource = new SimpleResourceID(
+		this.describedType = new SimpleResourceID(
 				UUID.randomUUID().toString(),
 				UUID.randomUUID().toString());
 	}
@@ -86,7 +85,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 		if(!(QualifiedName.isUri(nsUri + name))){
 			throw new IllegalArgumentException("The identifier " + nsUri + name + " is not a valid URI");
 		}
-		this.describedResource = new SimpleResourceID(nsUri, name);
+		this.describedType = new SimpleResourceID(nsUri, name);
 	}
 
 	// -----------------------------------------------------
@@ -99,9 +98,9 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 */
 	public ResourceSchemaImpl(final String name){
 		if(!(QualifiedName.isUri(name))){
-			this.describedResource = new SimpleResourceID(new QualifiedName(VoidNamespace.getInstance(),name));
+			this.describedType = new SimpleResourceID(new QualifiedName(VoidNamespace.getInstance(),name));
 		}else{
-			this.describedResource = new SimpleResourceID(new QualifiedName(name));
+			this.describedType = new SimpleResourceID(new QualifiedName(name));
 		}
 	}
 
@@ -111,8 +110,8 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<PropertyDeclaration> getPropertyAssertions() {
-		return this.propertyList;
+	public List<PropertyDeclaration> getPropertyDeclarations() {
+		return this.declarations;
 	}
 
 	// -----------------------------------------------------
@@ -133,12 +132,11 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 */
 	@Override
 	public String toString(){
-
 		StringBuffer sBuffer = new StringBuffer();
 		sBuffer.append("Described ResourceID " + getDescribedType().getQualifiedName().toURI() + "\n");
 		sBuffer.append("Internal ResourceID "
 				 + ((getID()==null) ? "null" : getID().getQualifiedName().toURI()) + "\n");
-		for (PropertyDeclaration property : getPropertyAssertions()) {
+		for (PropertyDeclaration property : getPropertyDeclarations()) {
 			sBuffer.append("--p-r-o-p-e-r-t-y--\n" + property.toString() + "\n");
 		}
 		return sBuffer.toString();
@@ -150,19 +148,8 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addPropertyAssertion(final PropertyDeclaration assertion) {
-		propertyList.add(assertion);
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setPropertyAssertions(final Collection<PropertyDeclaration> assertions) {
-		this.propertyList.clear();
-		this.propertyList.addAll(assertions);
+	public void addPropertyDeclaration(final PropertyDeclaration decl) {
+		declarations.add(decl);
 	}
 
 	// -----------------------------------------------------
@@ -194,7 +181,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 */
 	@Override
 	public ResourceID getDescribedType() {
-		return this.describedResource;
+		return this.describedType;
 	}
 
 	// -----------------------------------------------------
@@ -206,8 +193,8 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * </p>
 	 * @param id - the ResourceId
 	 */
-	public void setDescribedResourceID(final ResourceID id) {
-		this.describedResource = id;
+	public void setDescribedType(final ResourceID id) {
+		this.describedType = id;
 	}
 
 	/**

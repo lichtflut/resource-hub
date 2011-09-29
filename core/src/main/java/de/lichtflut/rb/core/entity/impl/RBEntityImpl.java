@@ -122,7 +122,7 @@ public class RBEntityImpl implements RBEntity {
 		}
 		fields = new ArrayList<RBField>();
 		if (schema != null) {
-		for (PropertyDeclaration assertion : schema.getPropertyAssertions()) {
+		for (PropertyDeclaration assertion : schema.getPropertyDeclarations()) {
 			final ResourceID predicate = assertion
 				.getTypeDefinition().getID();
 			fields.add(new RBFieldImpl(assertion, SNOPS.objects(node, predicate)));

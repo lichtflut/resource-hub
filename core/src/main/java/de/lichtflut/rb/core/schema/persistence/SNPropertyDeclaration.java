@@ -18,6 +18,7 @@ package de.lichtflut.rb.core.schema.persistence;
 import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
@@ -56,11 +57,6 @@ import de.lichtflut.rb.core.schema.RBSchema;
 public class SNPropertyDeclaration extends ResourceView implements Comparable<SNPropertyDeclaration>{
 
 	/**
-	 *
-	 */
-	private static final long serialVersionUID = -7077840107709042193L;
-
-	/**
 	 * Constructor for a new property declaration node.
 	 */
 	public SNPropertyDeclaration() {
@@ -73,14 +69,29 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 	public SNPropertyDeclaration(final ResourceNode resource) {
 		super(resource);
 	}
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * @param singleObject
+	 */
+	private static SNPropertyDeclaration view(final ResourceNode node) {
+		if (node == null){
+			return null;
+		} else if (node instanceof SNPropertyDeclaration) {
+			return (SNPropertyDeclaration) node;
+		} else {
+			return new SNPropertyDeclaration(node);
+		}
+	}
 
 	//-----------------------------------------------------
 
 	/**
-	 * Returns the Property Declaration.
-	 * @return The property decl.
+	 * Get the TypeDefinition.
+	 * @return The TypeDefinition.
 	 */
-	public SNPropertyTypeDefinition getPropertyDeclaration() {
+	public SNPropertyTypeDefinition getTypeDefinition() {
 		SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_PROPERTY_TYPE_DEF);
 		if (node != null){
 			return new SNPropertyTypeDefinition(node.asResource());
@@ -90,14 +101,14 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 	}
 
 	/**
-	 * Set the Property Declaratio.
-	 * @param propertyDecl The property decl.
+	 * Set the TypeDefinition.
+	 * @param typeDef The TypeDefinition
 	 * @param context The context.
 	 */
-	public void setPropertyDeclaration(final SNPropertyTypeDefinition propertyDecl, final Context context) {
-		if (!Infra.equals(getDescriptor(), propertyDecl)){
+	public void setTypeDefinition(final SNPropertyTypeDefinition typeDef, final Context context) {
+		if (!Infra.equals(getTypeDefinition(), typeDef)){
 			removeAssocs(RBSchema.HAS_PROPERTY_TYPE_DEF);
-			Association.create(this, RBSchema.HAS_PROPERTY_TYPE_DEF, propertyDecl, context);
+			Association.create(this, RBSchema.HAS_PROPERTY_TYPE_DEF, typeDef, context);
 		}
 	}
 
@@ -105,7 +116,7 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 	 * Returns the property declared by this property declaration.
 	 * @return The property.
 	 */
-	public ResourceID getDescriptor() {
+	public ResourceID getPropertyDescriptor() {
 		SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_DESCRIPTOR);
 		if (node != null){
 			return new SimpleResourceID(new QualifiedName(node.asValue().getStringValue()));
@@ -120,7 +131,7 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 	 * @param context The context.
 	 */
 	public void setDescriptor(final ResourceID property, final Context context) {
-		if (!Infra.equals(getDescriptor(), property)){
+		if (!Infra.equals(getPropertyDescriptor(), property)){
 			SNValue pDescriptor = new SNValue(ElementaryDataType.URI,property.getQualifiedName().toURI());
 			removeAssocs(RBSchema.HAS_DESCRIPTOR);
 			Association.create(this, RBSchema.HAS_DESCRIPTOR, pDescriptor, context);
@@ -128,7 +139,7 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 	}
 
 	/**
-	 * Retiurns the min. occurences.
+	 * Returns the min. occurrences.
 	 * @return {@link SNScalar}
 	 */
 	public SNScalar getMinOccurs(){
@@ -141,7 +152,7 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 	}
 
 	/**
-	 * Sets the min. occurences
+	 * Sets the min. occurrences
 	 * @param minOccurs -
 	 * @param context -
 	 */
@@ -153,7 +164,7 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 	}
 
 	/**
-	 * Retiurns the max. occurences.
+	 * Returns the max. occurrences.
 	 * @return {@link SNScalar}
 	 */
 	public SNScalar getMaxOccurs(){
@@ -166,7 +177,7 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 	}
 
 	/**
-	 * Sets the max. occurences
+	 * Sets the max. occurrences
 	 * @param minOccurs -
 	 * @param context -
 	 */
@@ -176,7 +187,26 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 			Association.create(this, RBSchema.MAX_OCCURS, minOccurs, context);
 		}
 	}
+	
+	/**
+	 * Get the successor of this PropertyDeclaration in the ordered list.
+	 * @return The successor or null.
+	 */
+	public SNPropertyDeclaration getSuccessor() {
+		final SemanticNode successor = SNOPS.singleObject(this, Aras.IS_PREDECESSOR_OF);
+		return view(successor.asResource());
+	}
 
+	/**
+	 * Set the successor of this PropertyDeclaration in the ordered list.
+	 * @param successor The successor node.
+	 * @param contexts The contexts.
+	 * @return The successor or null.
+	 */
+	public void setSuccessor(final SNPropertyDeclaration successor, final Context... contexts) {
+		SNOPS.replace(this, Aras.IS_PREDECESSOR_OF, successor, contexts);
+	}
+	
 	//-----------------------------------------------------
 
 	/**
@@ -184,12 +214,12 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 	 */
 	@Override
 	public int compareTo(final SNPropertyDeclaration other) {
-		if (this.getDescriptor() == null){
+		if (this.getPropertyDescriptor() == null){
 			return 1;
-		} else if (other.getDescriptor() == null){
+		} else if (other.getPropertyDescriptor() == null){
 			return -1;
 		} else {
-			return Infra.compare(this.getDescriptor().getQualifiedName(), other.getDescriptor().getQualifiedName());
+			return Infra.compare(this.getPropertyDescriptor().getQualifiedName(), other.getPropertyDescriptor().getQualifiedName());
 		}
 	}
 
@@ -199,11 +229,11 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 	@Override
 	public String toString(){
 		StringBuffer sb = new StringBuffer("PropertyAssertion[" + super.toString() + "] ");
-		if (getDescriptor() != null){
-			sb.append(getDescriptor().getQualifiedName().toURI());
+		if (getPropertyDescriptor() != null){
+			sb.append(getPropertyDescriptor().getQualifiedName().toURI());
 		}
 		sb.append(" " + getMinOccurs() + ".." + getMaxOccurs());
-		sb.append("\n\t\t" + getPropertyDeclaration());
+		sb.append("\n\t\t" + getTypeDefinition());
 		return sb.toString();
 	}
 

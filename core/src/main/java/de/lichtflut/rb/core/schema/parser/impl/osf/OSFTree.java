@@ -588,7 +588,7 @@ public class OSFTree extends TreeParser {
             	    state._fsp--;
 
             	    adaptor.addChild(root_1, a.getTree());
-            	    retval.rSchema.addPropertyAssertion(a.assertion);
+            	    retval.rSchema.addPropertyDeclaration(a.assertion);
 
             	    }
             	    break;

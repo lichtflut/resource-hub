@@ -96,7 +96,7 @@ public final class OSFEvaluator {
 			Cardinality c;
 			if(value instanceof Integer){
 				c = assertion.getCardinality();
-				assertion.setCardinality(CardinalityBuilder.getAbsoluteCardinality((Integer) value,c.getMinOccurs()));
+				assertion.setCardinality(CardinalityBuilder.between((Integer) value,c.getMinOccurs()));
 			}else{
 				tree.emitErrorMessage(errorMessage + value.toString() + " is not a valid argument for " + type
 						+ " expecting a single numerical value");
@@ -105,7 +105,7 @@ public final class OSFEvaluator {
 			Cardinality c;
 			if(value instanceof Integer){
 				c = assertion.getCardinality();
-				assertion.setCardinality(CardinalityBuilder.getAbsoluteCardinality(c.getMaxOccurs(), (Integer) value));
+				assertion.setCardinality(CardinalityBuilder.between(c.getMaxOccurs(), (Integer) value));
 			}else{
 				tree.emitErrorMessage(errorMessage + value.toString() + " is not a valid argument for " + type
 						+ " expecting a single numerical value");
@@ -119,7 +119,7 @@ public final class OSFEvaluator {
 					return;
 				}
 				try{
-					assertion.setCardinality(CardinalityBuilder.getAbsoluteCardinality((Integer)values
+					assertion.setCardinality(CardinalityBuilder.between((Integer)values
 							.get(1),(Integer) values.get(0)));
 				}catch(Exception any) {
 					tree.emitErrorMessage(errorMessage + values.toString() + " is not a valid argument for " + type

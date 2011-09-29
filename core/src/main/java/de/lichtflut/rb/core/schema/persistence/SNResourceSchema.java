@@ -99,9 +99,9 @@ public class SNResourceSchema extends ResourceView {
 	 * Collects all PropertyAssertions defined by this Schema.
 	 * @return The list of all property assertions.
 	 */
-	public List<SNPropertyDeclaration> getPropertyAssertions(){
+	public List<SNPropertyDeclaration> getPropertyDeclarations(){
 		Set<SNPropertyDeclaration> result = new HashSet<SNPropertyDeclaration>();
-		result.addAll(getDeclaredPropertyAssertions());
+		result.addAll(getDeclaredPropertyDeclarations());
 		List<SNPropertyDeclaration> list = new ArrayList<SNPropertyDeclaration>(result);
 		Collections.sort(list);
 		return list;
@@ -111,7 +111,7 @@ public class SNResourceSchema extends ResourceView {
 	 * Returns only the property declarations declared for this classifier, not the inherited.
 	 * @return The list of property declarations.
 	 */
-	public List<SNPropertyDeclaration> getDeclaredPropertyAssertions(){
+	public List<SNPropertyDeclaration> getDeclaredPropertyDeclarations(){
 		List<SNPropertyDeclaration> result = new ArrayList<SNPropertyDeclaration>();
 		Set<Association> assocs = getAssociations(RBSchema.HAS_PROPERTY_DECL);
 		for (Association current : assocs) {
@@ -126,7 +126,7 @@ public class SNResourceSchema extends ResourceView {
 	 * (org.arastreju.api.model.semantic.SNPropertyDeclaration)
 	 * @param decl -
 	 */
-	public void removePropertyAssertion(final SNPropertyDeclaration decl) {
+	public void removePropertyDeclaration(final SNPropertyDeclaration decl) {
 		Set<Association> assocs = getAssociations(RBSchema.HAS_PROPERTY_DECL);
 		Association toBeRemoved = null;
 		for (Association current : assocs) {
@@ -147,7 +147,7 @@ public class SNResourceSchema extends ResourceView {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("ResourceSchema[" + super.toString() + "]");
 		sb.append(" for " + getDescribedClass() + "\n");
-		for(SNPropertyDeclaration pa : getPropertyAssertions()){
+		for(SNPropertyDeclaration pa : getPropertyDeclarations()){
 			sb.append("\t" + pa + "\n");
 		}
 		return sb.toString();

@@ -3,12 +3,9 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
-
-
 
 /**
  * <p>
@@ -41,19 +38,13 @@ public interface ResourceSchema extends ResourceSchemaElement{
 	 * Get all the schema's {@link PropertyDeclaration} as list.
 	 * @return all schema {@link PropertyDeclaration} as list.
 	 */
-	List<PropertyDeclaration> getPropertyAssertions();
-
-	/**
-	 * Set the {@link Collection} of {@link PropertyDeclaration} to the ResourceSchema.
-	 * @param assertions -
-	 */
-	void setPropertyAssertions(final Collection<PropertyDeclaration> assertions);
+	List<PropertyDeclaration> getPropertyDeclarations();
 
 	/**
 	 * Add a additional {@link PropertyDeclaration} to the ResourceSchema.
 	 * @param assertion -
 	 */
-	void addPropertyAssertion(final PropertyDeclaration assertion);
+	void addPropertyDeclaration(final PropertyDeclaration assertion);
 	
 	// -----------------------------------------------------
 

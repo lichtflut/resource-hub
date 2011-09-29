@@ -77,13 +77,13 @@ public class RBSchemaStoreTest {
 
 		 Assert.assertNotNull(snSchema);
 
-		 Assert.assertEquals(3, snSchema.getPropertyAssertions().size());
+		 Assert.assertEquals(3, snSchema.getPropertyDeclarations().size());
 
 		 ResourceSchema schema2 = store.convertResourceSchema(snSchema);
 
 		 Assert.assertNotNull(schema2);
 
-		 Assert.assertEquals(3, schema2.getPropertyAssertions().size());
+		 Assert.assertEquals(3, schema2.getPropertyDeclarations().size());
 
 
 		 Collection<ResourceSchema> schemas = store.loadAllResourceSchemas(null);
@@ -128,9 +128,9 @@ public class RBSchemaStoreTest {
 		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(3));
 		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
 
-		schema.addPropertyAssertion(pa1);
-		schema.addPropertyAssertion(pa2);
-		schema.addPropertyAssertion(pa3);
+		schema.addPropertyDeclaration(pa1);
+		schema.addPropertyDeclaration(pa2);
+		schema.addPropertyDeclaration(pa3);
 
 		return schema;
 	}

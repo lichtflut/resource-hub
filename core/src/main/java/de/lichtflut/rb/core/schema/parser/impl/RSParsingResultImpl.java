@@ -173,7 +173,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 		Collection<TypeDefinition> output = new HashSet<TypeDefinition>();
 		//Get all propertyDecs assigned to the ResourceSchema
 		for (ResourceSchema rSchema : this.resourceSchemas) {
-			for (PropertyDeclaration assertion : rSchema.getPropertyAssertions()) {
+			for (PropertyDeclaration assertion : rSchema.getPropertyDeclarations()) {
 				output.add(assertion.getTypeDefinition());
 			}
 		}//End of outer for

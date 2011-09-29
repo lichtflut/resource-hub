@@ -440,9 +440,9 @@ public final class MockNewRBEntityFactory {
 		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		pa4.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 
-		schema.addPropertyAssertion(pa2);
-		schema.addPropertyAssertion(pa3);
-		schema.addPropertyAssertion(pa4);
+		schema.addPropertyDeclaration(pa2);
+		schema.addPropertyDeclaration(pa3);
+		schema.addPropertyDeclaration(pa4);
 
 		return schema;
 	}

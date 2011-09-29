@@ -47,17 +47,26 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 	
 	private Set<Constraint> constraints = new HashSet<Constraint>();
 	
+	private ResourceID id;
+	
 	private String propertyIdentifier = null;
 
 	// -----------------------------------------------------
 	
 	/**
 	 * Constructor.
+	 * @param id The technical ID of this declaration.
+	 */
+	public PropertyDeclarationImpl(final ResourceID id) {
+		this.id = id;
+	}
+	
+	/**
+	 * Constructor.
 	 * @param propertyDescriptor -
 	 * @param typeDefinition -
 	 */
-	public PropertyDeclarationImpl(final ResourceID propertyDescriptor,
-			final TypeDefinition typeDefinition) {
+	public PropertyDeclarationImpl(final ResourceID propertyDescriptor,	final TypeDefinition typeDefinition) {
 		this.propertyDescriptor = propertyDescriptor;
 		this.typeDefinition = typeDefinition;
 		this.cardinality = CardinalityBuilder.hasOptionalOneToMany();
@@ -72,31 +81,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 		this.cardinality = c;
 		this.propertyIdentifier = propertyIdentifier;
 	}
-
-	/**
-	 * Constructor.
-	 * @param propertyIdentifier -
-	 */
-	public PropertyDeclarationImpl(final String propertyIdentifier){
-		this.propertyIdentifier = propertyIdentifier;
-	}
-
-	/**
-	 * Constructor.
-	 * @param propertyDescriptor -
-	 * @param property -
-	 * @param cardinality -
-	 * @param constraints -
-	 */
-	public PropertyDeclarationImpl(final ResourceID propertyDescriptor,
-			final TypeDefinition property, final Cardinality cardinality,
-			final Set<Constraint> constraints) {
-		this.propertyDescriptor = propertyDescriptor;
-		this.typeDefinition = property;
-		this.cardinality = cardinality;
-		this.constraints = constraints;
-	}
-
+	
 	// -----------------------------------------------------
 
 	/**
@@ -186,19 +171,14 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 	}
 
 	// -----------------------------------------------------
-
+	
 	/**
-	 * Sets the property identifier.
-	 * @param identifier -
+	 * @return the id
 	 */
-	public void setPropertyIdentifier(final String identifier) {
-		this.propertyIdentifier = identifier;
-		//TODO This must form a valid URI
-		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isQname(this.propertyIdentifier))){
-			this.propertyIdentifier =  new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier).toURI();
-		}
+	public ResourceID getId() {
+		return id;
 	}
-
+	
 	// -----------------------------------------------------
 
 	/**
@@ -215,6 +195,19 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 					this.propertyIdentifier);
 		} else {
 			return new QualifiedName(this.propertyIdentifier);
+		}
+	}
+	
+
+	/**
+	 * Sets the property identifier.
+	 * @param identifier -
+	 */
+	public void setPropertyIdentifier(final String identifier) {
+		this.propertyIdentifier = identifier;
+		//TODO This must form a valid URI
+		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isQname(this.propertyIdentifier))){
+			this.propertyIdentifier =  new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier).toURI();
 		}
 	}
 

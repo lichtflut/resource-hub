@@ -99,7 +99,7 @@ public class RBSchemaStore {
 		snSchema.setDescribedClass(describedResource, context);
 
 		final ModelingConversation mc = gate.startConversation();
-		for (PropertyDeclaration assertion : schema.getPropertyAssertions()) {
+		for (PropertyDeclaration assertion : schema.getPropertyDeclarations()) {
 			final SNPropertyDeclaration snAssertion = new SNPropertyDeclaration();
 			snAssertion.setMinOccurs(toScalar(assertion.getCardinality().getMinOccurs()), context);
 			snAssertion.setMaxOccurs(toScalar(assertion.getCardinality().getMaxOccurs()), context);
@@ -114,6 +114,23 @@ public class RBSchemaStore {
 
 	// -----------------------------------------------------
 
+
+	/**
+	 * Loads all defined and persisted ResourceSchema'S from System.
+	 * @param ctx -
+	 * @return Collection {@link ResourceSchema}
+	 */
+	public Collection<ResourceSchema> loadAllResourceSchemas(final Context ctx){
+		LinkedList<ResourceSchema> output = new LinkedList<ResourceSchema>();
+		QueryManager qManager = this.gate.startConversation().createQueryManager();
+		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.RESOURCE_SCHEMA);
+		for (Statement stmt : statements) {
+			if(stmt==null) {continue;}
+			output.add(convertResourceSchema(new SNResourceSchema((ResourceNode) stmt.getSubject())));
+		}
+		return output;
+	}
+	
 	/**
 	 * Loads all defined and persisted PropertyDeclarations from System.
 	 * @param ctx -
@@ -131,25 +148,6 @@ public class RBSchemaStore {
 	}
 
 	// -----------------------------------------------------
-
-	/**
-	 * Loads all defined and persisted ResourceSchema'S from System.
-	 * @param ctx -
-	 * @return Collection {@link ResourceSchema}
-	 */
-	public Collection<ResourceSchema> loadAllResourceSchemas(final Context ctx){
-		LinkedList<ResourceSchema> output = new LinkedList<ResourceSchema>();
-		QueryManager qManager = this.gate.startConversation().createQueryManager();
-		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.RESOURCE_SCHEMA);
-		for (Statement stmt : statements) {
-			if(stmt==null) {continue;}
-			output.add(convertResourceSchema(new SNResourceSchema((ResourceNode) stmt.getSubject())));
-		}
-		return output;
-	}
-
-	// -----------------------------------------------------
-
 
 	/**
 	 * TODO: DESCRIPTION.
@@ -295,20 +293,20 @@ public class RBSchemaStore {
 	public ResourceSchema convertResourceSchema(final SNResourceSchema snSchema) {
 		if(snSchema==null) {return null;}
 		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema);
-		schema.setDescribedResourceID(snSchema.getDescribedClass());
-		for (SNPropertyDeclaration snAssertion : snSchema.getPropertyAssertions()){
+		schema.setDescribedType(snSchema.getDescribedClass());
+		for (SNPropertyDeclaration snAssertion : snSchema.getPropertyDeclarations()){
 
 			// create Property Declaration
-			final SNPropertyTypeDefinition snDecl = snAssertion.getPropertyDeclaration();
+			final SNPropertyTypeDefinition snDecl = snAssertion.getTypeDefinition();
 			if(snDecl==null) {continue;}
 			final TypeDefinition decl = convertPropertyDeclaration(snDecl);
 
 			// create Property Assertion
-			final PropertyDeclarationImpl pa = new PropertyDeclarationImpl(snAssertion.getDescriptor(), decl);
+			final PropertyDeclarationImpl pa = new PropertyDeclarationImpl(snAssertion.getPropertyDescriptor(), decl);
 			int min = toInteger(snAssertion.getMinOccurs());
 			int max = toInteger(snAssertion.getMaxOccurs());
-			pa.setCardinality(CardinalityBuilder.getAbsoluteCardinality(max, min));
-			schema.addPropertyAssertion(pa);
+			pa.setCardinality(CardinalityBuilder.between(max, min));
+			schema.addPropertyDeclaration(pa);
 		}
 
 		return schema;
@@ -394,13 +392,13 @@ public class RBSchemaStore {
 
 		if (existing != null) {
 			final SNPropertyTypeDefinition snDecl = new SNPropertyTypeDefinition(existing);
-			assertion.setPropertyDeclaration(snDecl, ctx);
+			assertion.setTypeDefinition(snDecl, ctx);
 			convertPropertyDeclaration(decl, snDecl, ctx);
 		} else {
 			final SNPropertyTypeDefinition snDecl = new SNPropertyTypeDefinition(ctx);
 			snDecl.setName(decl.getName());
 			snDecl.setNamespace(decl.getID().getNamespace());
-			assertion.setPropertyDeclaration(snDecl, ctx);
+			assertion.setTypeDefinition(snDecl, ctx);
 			convertPropertyDeclaration(decl, snDecl, ctx);
 		}
 	}
