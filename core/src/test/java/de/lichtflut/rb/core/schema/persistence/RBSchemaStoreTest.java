@@ -17,12 +17,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
-import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 
 /**
@@ -64,7 +64,7 @@ public class RBSchemaStoreTest {
 	public void testStore() {
 		 final RBSchemaStore store = new RBSchemaStore(gate);
 
-		 Collection<PropertyDeclaration> pDecs = store.loadAllPropertyDeclarations(null);
+		 Collection<TypeDefinition> pDecs = store.loadAllPropertyDeclarations(null);
 
 		 Assert.assertEquals(0, pDecs.size());
 
@@ -109,9 +109,9 @@ public class RBSchemaStoreTest {
 	 */
 	private ResourceSchema createSchema() {
 		ResourceSchemaImpl schema = new ResourceSchemaImpl("http://lichtflut.de#","personschema");
-		PropertyDeclarationImpl p1 = new PropertyDeclarationImpl();
-		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
-		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
+		TypeDefinitionImpl p1 = new TypeDefinitionImpl();
+		TypeDefinitionImpl p2 = new TypeDefinitionImpl();
+		TypeDefinitionImpl p3 = new TypeDefinitionImpl();
 		p1.setName("http://lichtflut.de#geburtsdatum");
 		p2.setName("http://lichtflut.de#email");
 		p3.setName("http://lichtflut.de#alter");
@@ -120,7 +120,7 @@ public class RBSchemaStoreTest {
 		p2.setElementaryDataType(ElementaryDataType.STRING);
 		p3.setElementaryDataType(ElementaryDataType.INTEGER);
 
-		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
+		p2.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
 		PropertyAssertionImpl pa1 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
 		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
 		PropertyAssertionImpl pa3 = new PropertyAssertionImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);

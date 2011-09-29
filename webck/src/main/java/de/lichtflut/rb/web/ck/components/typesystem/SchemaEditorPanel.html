@@ -10,28 +10,43 @@
 </wicket:head>
 <wicket:panel>
 
-	<table>
-		<thead>
-		  <tr>
-		      <th><wicket:message key="header.property"></wicket:message></th>
-		      <th><wicket:message key="header.datatype"></wicket:message></th>
-		      <th><wicket:message key="header.min"></wicket:message></th>
-		      <th><wicket:message key="header.max"></wicket:message></th>
-		  </tr>
-		</thead>
-		<tbody>
-			<tr wicket:id="listView">
-				<td><wicket:container wicket:id="property"></wicket:container>
-				</td>
-				<td><wicket:container wicket:id="dataType"></wicket:container>
-				</td>
-				<td><wicket:container wicket:id="min"></wicket:container>
-				</td>
-				<td><wicket:container wicket:id="max"></wicket:container>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+	<form wicket:id="form">
+
+		<table>
+			<thead>
+				<tr>
+					<th><wicket:message key="header.property"></wicket:message>
+					</th>
+					<th><wicket:message key="header.datatype"></wicket:message>
+					</th>
+					<th><wicket:message key="header.min"></wicket:message>
+					</th>
+					<th colspan="2"><wicket:message key="header.max"></wicket:message>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr wicket:id="listView">
+					<td><input wicket:id="property" size="100"/></td>
+					<td><select wicket:id="dataType" ></select></td>
+					<td><input wicket:id="min" size="5"/></td>
+					<td>
+					   <wicket:message key="label.unbounded">[unbounded]</wicket:message>
+					   <input type="checkbox" wicket:id="unbounded"/>
+					</td>
+					<td>
+					   <input wicket:id="max" size="5" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div>
+			  <button wicket:id="save">
+			      <wicket:message key="button.save">[save]</wicket:message>
+			  </button>
+		</div>
+    
+	</form>
 
 </wicket:panel>
 </html>

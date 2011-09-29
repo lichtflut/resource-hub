@@ -27,12 +27,12 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
-import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 
@@ -79,8 +79,8 @@ public class RBSchemaStore {
 		SNResourceSchema snSchema;
 		snSchema = this.loadSchemaForResourceType(schema.getDescribedType(), context);
 		if(snSchema==null){
-			if(schema.getResourceID()!=null){
-				snSchema = new SNResourceSchema(schema.getResourceID().asResource());
+			if(schema.getID()!=null){
+				snSchema = new SNResourceSchema(schema.getID().asResource());
 			}else{
 				snSchema = new SNResourceSchema(context);
 			}
@@ -117,13 +117,10 @@ public class RBSchemaStore {
 	/**
 	 * Loads all defined and persisted PropertyDeclarations from System.
 	 * @param ctx -
-	 * @return Returns all propertydeclarations
+	 * @return Returns all property declarations
 	 */
-	public Collection<PropertyDeclaration> loadAllPropertyDeclarations(final Context ctx){
-		@SuppressWarnings("unused")
-		Context context = setUpContext(ctx);
-		//Load all properties from store
-		LinkedList<PropertyDeclaration> output = new LinkedList<PropertyDeclaration>();
+	public Collection<TypeDefinition> loadAllPropertyDeclarations(final Context ctx){
+		LinkedList<TypeDefinition> output = new LinkedList<TypeDefinition>();
 		QueryManager qManager = this.gate.startConversation().createQueryManager();
 		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.PROPERTY_DECL);
 		for (Statement stmt : statements) {
@@ -141,9 +138,6 @@ public class RBSchemaStore {
 	 * @return Collection {@link ResourceSchema}
 	 */
 	public Collection<ResourceSchema> loadAllResourceSchemas(final Context ctx){
-		@SuppressWarnings("unused")
-		Context context = setUpContext(ctx);
-		//Load all properties from store
 		LinkedList<ResourceSchema> output = new LinkedList<ResourceSchema>();
 		QueryManager qManager = this.gate.startConversation().createQueryManager();
 		Collection<Statement> statements = qManager.findIncomingStatements(RBSchema.RESOURCE_SCHEMA);
@@ -163,17 +157,17 @@ public class RBSchemaStore {
 	 * @param ctx -
 	 * @return {@link SNPropertyDeclaration}
 	 */
-	public SNPropertyDeclaration store(final PropertyDeclaration decl, final Context ctx){
-		Context context = setUpContext(ctx);
-		final ResourceNode existing = gate.startConversation().findResource(decl.getIdentifier().getQualifiedName());
+	public SNPropertyDeclaration store(final TypeDefinition decl, final Context ctx){
+		final ResourceNode existing = gate.startConversation().findResource(
+				decl.getID().getQualifiedName());
 
 		final SNPropertyDeclaration snDecl;
 		if (existing != null) {
 			snDecl = new SNPropertyDeclaration(existing);
 		} else {
-			snDecl = new SNPropertyDeclaration(context);
+			snDecl = new SNPropertyDeclaration(ctx);
 		}
-		convertPropertyDeclaration(decl, snDecl, context);
+		convertPropertyDeclaration(decl, snDecl, ctx);
 
 		gate.startConversation().attach(snDecl);
 		return snDecl;
@@ -210,8 +204,6 @@ public class RBSchemaStore {
 	 * @return {@link SNResourceSchema}
 	 */
 	public SNResourceSchema loadPropertyDeclaration(final ResourceID decl,final Context ctx) {
-		@SuppressWarnings("unused")
-		Context context = setUpContext(ctx);
 		throw new NotYetImplementedException();
 	}
 
@@ -261,15 +253,15 @@ public class RBSchemaStore {
 	 * @param src -
 	 * @param target -
 	 */
-	protected void convertConstraints(final SNPropertyDeclaration src, final PropertyDeclarationImpl target) {
+	protected void convertConstraints(final SNPropertyDeclaration src, final TypeDefinitionImpl target) {
 		for (SNConstraint snConst : src.getConstraints()){
 			if (snConst.isLiteralConstraint()){
 				final String value = snConst.getConstraintValue().asValue().getStringValue();
-				final Constraint constraint = ConstraintFactory.buildConstraint(value);
+				final Constraint constraint = ConstraintBuilder.buildConstraint(value);
 				target.addConstraint(constraint);
 			} else if (snConst.isTypeConstraint()) {
 				final ResourceID type = snConst.getConstraintValue().asResource();
-				final Constraint constraint = ConstraintFactory.buildConstraint(type);
+				final Constraint constraint = ConstraintBuilder.buildConstraint(type);
 				target.addConstraint(constraint);
 			} else {
 				throw new IllegalStateException();
@@ -285,9 +277,9 @@ public class RBSchemaStore {
 	 * @param target -
 	 * @param ctx -
 	 */
-	protected void convertPropertyDeclaration(final PropertyDeclaration src, final SNPropertyDeclaration target, final Context ctx) {
+	protected void convertPropertyDeclaration(final TypeDefinition src, final SNPropertyDeclaration target, final Context ctx) {
 		target.setDatatype(src.getElementaryDataType(), ctx);
-		target.setIdentifier(src.getIdentifier(), ctx);
+		target.setIdentifier(src.getID(), ctx);
 		for (Constraint constraint: src.getConstraints()){
 			addConstraint(target, constraint, ctx);
 		}
@@ -309,7 +301,7 @@ public class RBSchemaStore {
 			// create Property Declaration
 			final SNPropertyDeclaration snDecl = snAssertion.getPropertyDeclaration();
 			if(snDecl==null) {continue;}
-			final PropertyDeclaration decl = convertPropertyDeclaration(snDecl);
+			final TypeDefinition decl = convertPropertyDeclaration(snDecl);
 
 			// create Property Assertion
 			final PropertyAssertionImpl pa = new PropertyAssertionImpl(snAssertion.getDescriptor(), decl);
@@ -372,13 +364,13 @@ public class RBSchemaStore {
 	// -----------------------------------------------------
 
 	/**
-	 * Converts a {@link SNPropertyDeclaration} to {@link PropertyDeclaration}.
+	 * Converts a {@link SNPropertyDeclaration} to {@link TypeDefinition}.
 	 * @param snDecl -
-	 * @return {@link PropertyDeclaration}
+	 * @return {@link TypeDefinition}
 	 */
-	protected PropertyDeclaration convertPropertyDeclaration(final SNPropertyDeclaration snDecl){
+	protected TypeDefinition convertPropertyDeclaration(final SNPropertyDeclaration snDecl){
 
-		PropertyDeclarationImpl pDec = new PropertyDeclarationImpl();
+		TypeDefinitionImpl pDec = new TypeDefinitionImpl();
 
 		pDec.setIdentifier(snDecl.getQualifiedName().toURI());
 		pDec.setElementaryDataType(snDecl.getDatatype());
@@ -393,11 +385,11 @@ public class RBSchemaStore {
 	 * @param decl -
 	 * @param ctx -
 	 */
-	protected void addDeclaration(final SNPropertyAssertion assertion, final PropertyDeclaration decl, final Context ctx) {
-		final ResourceNode existing = gate.startConversation().findResource((decl.getIdentifier().getQualifiedName()));
+	protected void addDeclaration(final SNPropertyAssertion assertion, final TypeDefinition decl, final Context ctx) {
+		final ResourceNode existing = gate.startConversation().findResource((decl.getID().getQualifiedName()));
 
 		List<ResourceNode> found = gate.startConversation().createQueryManager().
-										findByTag(decl.getIdentifier().getQualifiedName().toURI());
+										findByTag(decl.getID().getQualifiedName().toURI());
 		found.size();
 
 		if (existing != null) {
@@ -407,7 +399,7 @@ public class RBSchemaStore {
 		} else {
 			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration(ctx);
 			snDecl.setName(decl.getName());
-			snDecl.setNamespace(decl.getIdentifier().getNamespace());
+			snDecl.setNamespace(decl.getID().getNamespace());
 			assertion.setPropertyDeclaration(snDecl, ctx);
 			convertPropertyDeclaration(decl, snDecl, ctx);
 		}

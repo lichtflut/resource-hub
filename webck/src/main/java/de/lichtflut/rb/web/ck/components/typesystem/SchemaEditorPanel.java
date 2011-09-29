@@ -5,9 +5,12 @@ package de.lichtflut.rb.web.ck.components.typesystem;
 
 import java.util.List;
 
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -16,9 +19,9 @@ import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ElementaryDataType;
 
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
+import de.lichtflut.rb.web.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.web.ck.components.EnumDropDownChoice;
+import de.lichtflut.rb.web.models.ConditionalModel;
 
 /**
  * <p>
@@ -36,36 +39,56 @@ public class SchemaEditorPanel extends Panel {
 	/**
 	 *  Constructor.
 	 */
-	public SchemaEditorPanel(final String id, final IModel<ResourceSchema> model) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public SchemaEditorPanel(final String id, final IModel<List<? extends PropertyRow>> model) {
 		super(id, model);
 		
 		setOutputMarkupPlaceholderTag(true);
 		setOutputMarkupId(true);
 		
-		final IModel<List<PropertyAssertion>> assertionsModel = 
-			new PropertyModel<List<PropertyAssertion>>(model, "propertyAssertions");
-		
-		add(new ListView<PropertyAssertion>("listView", assertionsModel) {
+		final Form<?> form = new Form("form");
+		form.setOutputMarkupId(true);
+		form.add(new ListView<PropertyRow>("listView", model) {
 			@Override
-			protected void populateItem(ListItem<PropertyAssertion> item) {
-				final PropertyAssertion assertion = item.getModelObject();
-				final PropertyDeclaration declaration = assertion.getPropertyDeclaration();
-				final ElementaryDataType dataType = declaration.getElementaryDataType();
+			protected void populateItem(ListItem<PropertyRow> item) {
+				final PropertyRow row = item.getModelObject();
 				
-				item.add(new Label("property", assertion.getPropertyDescriptor().toString()));
-				item.add(new Label("dataType", dataType.name()));
-				item.add(new Label("min", "" + assertion.getCardinality().getMinOccurs()));
-				item.add(new Label("max", max(assertion)));
+				item.add(new TextField("property", new PropertyModel(row, "propertyDescriptor")));
+
+				item.add(new EnumDropDownChoice<ElementaryDataType>("dataType", 
+						new PropertyModel(row, "dataType"),
+						ElementaryDataType.values()));
 				
-				item.add(new AjaxEventBehavior("onClick") {
+				item.add(new TextField("min", new PropertyModel(row, "min")));
+				
+				final PropertyModel unboundModel = new PropertyModel(row, "unbounded");
+				final TextField maxField = new TextField("max", new PropertyModel(row, "max"));
+				maxField.add(ConditionalBehavior.visibleIf(ConditionalModel.isFalse(unboundModel)));
+				maxField.setOutputMarkupId(true);
+				item.add(maxField);
+				
+				final CheckBox checkBox = new CheckBox("unbounded", unboundModel);
+				checkBox.add(new AjaxFormComponentUpdatingBehavior("onclick") {
 					@Override
-					protected void onEvent(AjaxRequestTarget target) {
-						target.add(SchemaEditorPanel.this);
-						assertion.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
+					protected void onUpdate(AjaxRequestTarget target) {
+						target.add(maxField);
 					}
 				});
+				item.add(checkBox);
 			}
 		});
+		
+		form.add(new AjaxFallbackButton("save", form) {
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			}
+			
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+			}
+		});
+		
+		add(form);
 		
 	}
 	
@@ -77,7 +100,6 @@ public class SchemaEditorPanel extends Panel {
 		} else {
 			return "" + pa.getCardinality().getMaxOccurs();
 		}
-		
 	}
 	
 }

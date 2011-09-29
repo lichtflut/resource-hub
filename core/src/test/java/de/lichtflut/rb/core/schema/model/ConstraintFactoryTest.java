@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import junit.framework.TestCase;
 
 
@@ -36,9 +36,9 @@ public class ConstraintFactoryTest extends TestCase{
 	@Test (expected=IllegalArgumentException.class)
 	public void testFactoryInCommon(){
 		//Let's proof that singleton pattern of CardinalityFactory is still working
-		ConstraintFactory factory = ConstraintFactory.getInstance();
+		ConstraintBuilder factory = ConstraintBuilder.getInstance();
 		assertSame("getInstance() should deliver allways the same instance",
-				factory,ConstraintFactory.getInstance());
+				factory,ConstraintBuilder.getInstance());
 		assertSame("getInstance() should deliver allways the same instance",
 				factory,factory.getInstance());
 
@@ -53,7 +53,7 @@ public class ConstraintFactoryTest extends TestCase{
 	 */
 	@SuppressWarnings("static-access")
    public void testNullPointerExceptionInBuildingConstraints(){
-		ConstraintFactory f = ConstraintFactory.getInstance();
+		ConstraintBuilder f = ConstraintBuilder.getInstance();
 		boolean exceptionIsOccured=false;
 		try{
 		  String[] a =null;
@@ -88,7 +88,7 @@ public class ConstraintFactoryTest extends TestCase{
  */
   @SuppressWarnings("static-access")
    public void testBuildPatternConstraint(){
-	   ConstraintFactory f = ConstraintFactory.getInstance();
+	   ConstraintBuilder f = ConstraintBuilder.getInstance();
 	   String[] patterns = new String[]{"Pattern1", "Pattern2", null};
 	   //check some constraints based on patterns-array
 
@@ -122,7 +122,7 @@ public class ConstraintFactoryTest extends TestCase{
    */
   @SuppressWarnings("static-access")
   public void testBuildResourceTypeConstraint(){
-	   ConstraintFactory f = ConstraintFactory.getInstance();
+	   ConstraintBuilder f = ConstraintBuilder.getInstance();
 	   ResourceID id = null;
 	   Constraint c = f.buildConstraint(id);
 	   assertNotNull(c);

@@ -121,7 +121,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResourceID getResourceID() {
+	public ResourceID getID() {
 		return this.internalResource;
 	}
 
@@ -137,7 +137,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 		StringBuffer sBuffer = new StringBuffer();
 		sBuffer.append("Described ResourceID " + getDescribedType().getQualifiedName().toURI() + "\n");
 		sBuffer.append("Internal ResourceID "
-				 + ((getResourceID()==null) ? "null" : getResourceID().getQualifiedName().toURI()) + "\n");
+				 + ((getID()==null) ? "null" : getID().getQualifiedName().toURI()) + "\n");
 		for (PropertyAssertion property : getPropertyAssertions()) {
 			sBuffer.append("--p-r-o-p-e-r-t-y--\n" + property.toString() + "\n");
 		}

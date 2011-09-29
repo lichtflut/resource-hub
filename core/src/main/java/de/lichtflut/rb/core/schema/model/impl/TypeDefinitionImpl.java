@@ -15,31 +15,10 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.VoidNamespace;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 
 /**
- *  Implementation of {@link PropertyDeclaration}.
- *
- *
- *
- *  Properties may either be literal properties (literals such as strings, numbers, dates)
- *  or resource references:
- *
- *  <ol>
- *   <li> literal </li>
- *    	<ol>
- *    	 <li> elementary (string, integer, decimal, date,...)
- *    	 <li> custom (user defined)
- *      </ol>
- *   <li> resource reference</li>
- *  </ol>
- *
- * This instance is inititalized with the following set of default values:
- * <ol>
- * <li>type = STRING</li>>
- * <li>constraints = an empty set </li>
- * </ol>
- *
+ *  Implementation of {@link TypeDefinition}.
  *
  * This implementation tries to give you a perfect way of freedom to decide how to construct and build an object of this class.
  * Therefore this Class has a whole big chunk of constructors and setter/getter-members. Check it out!
@@ -54,7 +33,7 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
  *
  * @author Nils Bleisch
  */
-public final class PropertyDeclarationImpl implements PropertyDeclaration{
+public final class TypeDefinitionImpl implements TypeDefinition{
 
 	private static final long serialVersionUID = -863599762328529038L;
 	//Instance members
@@ -69,42 +48,42 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	 * Constructor-Party!!!. Readability is not given, I know.
 	 * But this isn't really necessary because every possible constructor combination is realized here without any special behavior.
 	 */
-	public PropertyDeclarationImpl(){}
+	public TypeDefinitionImpl(){}
 	/**
 	 * Constructor.
 	 * @param identifierString -
 	 */
-	public PropertyDeclarationImpl(final String identifierString){setName(identifierString);}
+	public TypeDefinitionImpl(final String identifierString){setName(identifierString);}
 	/**
 	 * Constructor.
 	 * @param type -
 	 */
-	public PropertyDeclarationImpl(final ElementaryDataType type){setElementaryDataType(type);}
+	public TypeDefinitionImpl(final ElementaryDataType type){setElementaryDataType(type);}
 	/**
 	 * Constructor.
 	 * @param constraints -
 	 */
-	public PropertyDeclarationImpl(final Set<Constraint> constraints){setConstraints(constraints);}
+	public TypeDefinitionImpl(final Set<Constraint> constraints){setConstraints(constraints);}
 	/**
 	 * Constructor.
 	 * @param identifierString -
 	 * @param constraints -
 	 */
-	public PropertyDeclarationImpl(final String identifierString,final Set<Constraint>constraints){
+	public TypeDefinitionImpl(final String identifierString,final Set<Constraint>constraints){
 									setName(identifierString);setConstraints(constraints);}
 	/**
 	 * Constructor.
 	 * @param identifierString -
 	 * @param type -
 	 */
-	public PropertyDeclarationImpl(final String identifierString,final ElementaryDataType type){
+	public TypeDefinitionImpl(final String identifierString,final ElementaryDataType type){
 									setName(identifierString);setElementaryDataType(type);}
 	/**
 	 * Constructor.
 	 * @param constraints -
 	 * @param type -
 	 */
-	public PropertyDeclarationImpl(final Set<Constraint>constraints,final ElementaryDataType type){
+	public TypeDefinitionImpl(final Set<Constraint>constraints,final ElementaryDataType type){
 									setConstraints(constraints);setElementaryDataType(type);}
 	/**
 	 * Constructor.
@@ -112,7 +91,7 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	 * @param constraints -
 	 * @param type -
 	 */
-	public PropertyDeclarationImpl(final String identifierString,final Set<Constraint>constraints,final ElementaryDataType type){
+	public TypeDefinitionImpl(final String identifierString,final Set<Constraint>constraints,final ElementaryDataType type){
 						setName(identifierString);setConstraints(constraints);setElementaryDataType(type);}
 
 	// -----------------------------------------------------
@@ -157,7 +136,7 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResourceID getIdentifier() {
+	public ResourceID getID() {
 		return identifier;
 	}
 
@@ -189,10 +168,10 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	 */
 	@Override
 	public boolean equals(final Object obj){
-		if(!(obj instanceof PropertyDeclaration)){
+		if(!(obj instanceof TypeDefinition)){
 			return false;
 		}
-		return this.identifier.equals(((PropertyDeclaration) obj).getIdentifier());
+		return this.identifier.equals(((TypeDefinition) obj).getID());
 	}
 
 	/**
@@ -245,7 +224,7 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	 * @return the unqualified name of the internal resourceID
 	 */
 	public String getName(){
-		return getIdentifier().getName();
+		return getID().getName();
 	}
 
 	// ---------------------------------------------------
@@ -254,7 +233,7 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	 * @return the qualified name of the internal resourceID
 	 */
 	public String getIdentifierString(){
-		return getIdentifier().getQualifiedName().toURI();
+		return getID().getQualifiedName().toURI();
 	}
 
 	// ---------------------------------------------------
@@ -280,7 +259,6 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	 * @param identifierString -
 	 */
 	public void setName(final String identifierString){
-
 		if(!(QualifiedName.isUri(identifierString))){
 			this.identifier = new SimpleResourceID(VoidNamespace.getInstance(),identifierString);
 		}else{
@@ -294,7 +272,7 @@ public final class PropertyDeclarationImpl implements PropertyDeclaration{
 	 */
 	public String toString(){
 		StringBuffer sBuffer = new StringBuffer();
-		sBuffer.append("Identifier: " + (this.getIdentifierString()!=null ? getIdentifierString() : ""));
+		sBuffer.append("Identifier: " + getID());
 		sBuffer.append("\nDatatype: "+ getElementaryDataType().toString());
 		if(null!=constraints){
 			Iterator<Constraint> i = constraints.iterator();

@@ -5,11 +5,11 @@
  */
 package de.lichtflut.rb.core.schema.parser.impl.osf;
 
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
-import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 import org.arastreju.sge.model.SimpleResourceID;
@@ -373,7 +373,7 @@ public class OSFTree extends TreeParser {
     // $ANTLR end "description"
 
     public static class property_dec_return extends TreeRuleReturnScope {
-        public PropertyDeclaration pDec;
+        public TypeDefinition pDec;
         CommonTree tree;
         public Object getTree() { return tree; }
     };
@@ -401,7 +401,7 @@ public class OSFTree extends TreeParser {
         CommonTree STRING4_tree=null;
         CommonTree PROPERTY_ASSERTION5_tree=null;
 
-         retval.pDec = new PropertyDeclarationImpl();
+         retval.pDec = new TypeDefinitionImpl();
         try {
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:102:2: ( ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* ) )
             // de/lichtflut/rb/core/schema/parser/impl/osf/OSFTree.g:102:4: ^( STRING s= string PROPERTY_ASSERTION ( ^(p= p_assertion v= value ) )* )
@@ -648,7 +648,7 @@ public class OSFTree extends TreeParser {
         CommonTree PROPERTY_ASSERTION9_tree=null;
 
          
-        	PropertyDeclarationImpl pDec = new PropertyDeclarationImpl();
+        	TypeDefinitionImpl pDec = new TypeDefinitionImpl();
         	retval.assertion = new PropertyAssertionImpl(null,pDec);
         	
         try {

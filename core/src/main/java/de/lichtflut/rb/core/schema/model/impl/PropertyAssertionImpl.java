@@ -15,36 +15,32 @@ import org.arastreju.sge.naming.VoidNamespace;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyAssertion;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 
 /**
  * <p>
-	Implementation of {@link PropertyAssertion}.
+ *	Implementation of {@link PropertyAssertion}.
  * </p>
  *
  * <p>
- * This instance is initialized with the following set of default values:
- * <ol>
- * <li>Cardinality = (min=0, max=infinity)</li>
- * <li>Constraints = an empty set</li>
- * </ol>
- *
- *
+ *  This instance is initialized with the following set of default values:
+ * 	<ol>
+ * 	 <li>Cardinality = (min=0, max=infinity)</li>
+ * 	 <li>Constraints = an empty set</li>
+ *  </ol>
  * </p>
- *
  * <p>
  * 	Created Mar 16, 2011
  * </p>
  *
  * @author Raphael Esterle
  */
-
-public class PropertyAssertionImpl implements PropertyAssertion{
+public class PropertyAssertionImpl implements PropertyAssertion {
 
 	private static final long serialVersionUID = -322769574493912661L;
 	//Instance members
 	private ResourceID propertyDescriptor;
-	private PropertyDeclaration property;
+	private TypeDefinition property;
 	//Setting up the default cardinality
 	private Cardinality cardinality = CardinalityBuilder.hasOptionalOneToMany();
 	private Set<Constraint> constraints = new HashSet<Constraint>();
@@ -56,7 +52,7 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	 * @param property -
 	 */
 	public PropertyAssertionImpl(final ResourceID propertyDescriptor,
-			final PropertyDeclaration property) {
+			final TypeDefinition property) {
 		super();
 		this.propertyDescriptor = propertyDescriptor;
 		this.property = property;
@@ -89,7 +85,7 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	 * @param constraints -
 	 */
 	public PropertyAssertionImpl(final ResourceID propertyDescriptor,
-			final PropertyDeclaration property, final Cardinality cardinality,
+			final TypeDefinition property, final Cardinality cardinality,
 			final Set<Constraint> constraints) {
 		super();
 		this.propertyDescriptor = propertyDescriptor;
@@ -112,7 +108,7 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public PropertyDeclaration getPropertyDeclaration() {
+	public TypeDefinition getPropertyDeclaration() {
 		return property;
 	}
 
@@ -141,7 +137,7 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	@Override
 	public String toString() {
 		StringBuffer sBuffer = new StringBuffer();
-		sBuffer.append("propertyIdentifier: " +  this.getPropertyIdentifier());
+		sBuffer.append("propertyIdentifier: " +  this.getQualifiedPropertyIdentifier());
 		sBuffer.append("\npropertyDescriptor: " + ((propertyDescriptor!=null)
 					? propertyDescriptor.getQualifiedName().toURI() : ""));
 		sBuffer.append("\nproperty: " + ((propertyDescriptor!=null) ? property.toString() : ""));
@@ -174,7 +170,6 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	@Override
 	public void setCardinality(final Cardinality c) {
 		this.cardinality = c;
-
 	}
 
 	// -----------------------------------------------------
@@ -197,20 +192,6 @@ public class PropertyAssertionImpl implements PropertyAssertion{
 	 */
 	public void setPropertyDescriptor(final ResourceID propertyDescriptor){
 		this.propertyDescriptor = propertyDescriptor;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getPropertyIdentifier() {
-		if(this.propertyIdentifier==null){
-			return null;
-		}
-		if(!(QualifiedName.isUri(this.propertyIdentifier))){
-			return  new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier).toURI();
-		}
-		return this.propertyIdentifier;
 	}
 
 	// -----------------------------------------------------

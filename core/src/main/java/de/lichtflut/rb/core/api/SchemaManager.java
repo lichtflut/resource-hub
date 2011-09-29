@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 
@@ -43,7 +43,7 @@ public interface SchemaManager {
 	/**
 	 * @return all the system-known PropertyDeclarations
 	 */
-	Collection<PropertyDeclaration> getAllPropertyDeclarations();
+	Collection<TypeDefinition> getAllPropertyDeclarations();
 
 	// -----------------------------------------------------
 
@@ -56,9 +56,9 @@ public interface SchemaManager {
 	// -----------------------------------------------------
 	/**
 	 * Stores or overrides the given ResourceSchema with the given one.
-	 * @param declaration - the {@link PropertyDeclaration}
+	 * @param declaration - the {@link TypeDefinition}
 	 */
-	void storeOrOverridePropertyDeclaration(PropertyDeclaration declaration);
+	void storeOrOverridePropertyDeclaration(TypeDefinition declaration);
 
 	// -----------------------------------------------------
 
@@ -72,9 +72,9 @@ public interface SchemaManager {
 
 	/**
 	 * Stores or overrides the given PropertyDeclarations's.
-	 * @param declarations - the {@link Collection} of {@link PropertyDeclaration}'s
+	 * @param declarations - the {@link Collection} of {@link TypeDefinition}'s
 	 */
-	void storeOrOverridePropertyDeclaration(Collection<PropertyDeclaration> declarations);
+	void storeOrOverridePropertyDeclaration(Collection<TypeDefinition> declarations);
 
 	/**
 	 * @param format -

@@ -8,10 +8,10 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
 
 /**
@@ -35,7 +35,7 @@ public final class OSFEvaluator {
      * @param value -
      * @param tree -
      */
-	public static void evaluateGlobalPropertyDec(final PropertyDeclaration pDec, final String type, final Object value,
+	public static void evaluateGlobalPropertyDec(final TypeDefinition pDec, final String type, final Object value,
 				final OSFTree tree) {
 		String errorMessage = "Property#" + pDec.getName()+ ": ";
 		String typeLower = type.toLowerCase();
@@ -52,7 +52,7 @@ public final class OSFEvaluator {
 						tree.emitErrorMessage(errorMessage + value.toString() + " is not a valid resource URI for "
 								+ type + " expecting on of " + "xyz://namespace#resource_name");
 					}else{
-						pDec.addConstraint(ConstraintFactory.
+						pDec.addConstraint(ConstraintBuilder.
 								buildConstraint(new SimpleResourceID(new QualifiedName(resource))));
 					}
 					return;
@@ -62,7 +62,7 @@ public final class OSFEvaluator {
 			}
 		}else if(typeLower.contains("regex")){
 			if(value instanceof String){
-				pDec.addConstraint(ConstraintFactory.buildConstraint((String) value));
+				pDec.addConstraint(ConstraintBuilder.buildConstraint((String) value));
 			}else{
 				tree.emitErrorMessage(errorMessage + value.toString() + " is not a valid argument for "
 						+ type + " expecting a String");
@@ -88,7 +88,7 @@ public final class OSFEvaluator {
 			assertion.setPropertyDescriptor(new SimpleResourceID(new QualifiedName(descriptor.getNamespace().getUri(),"has"
 					+ descriptor.getQualifiedName().getSimpleName())));
 		}
-    	PropertyDeclaration pDec = assertion.getPropertyDeclaration();
+    	TypeDefinition pDec = assertion.getPropertyDeclaration();
     	String errorMessage = "Inner Property#" + pDec.getName()+ ": ";
 		String typeLower = type.toLowerCase();
 

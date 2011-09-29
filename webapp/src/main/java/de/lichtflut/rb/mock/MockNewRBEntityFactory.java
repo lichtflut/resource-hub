@@ -15,9 +15,9 @@ import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
-import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 
 /**
@@ -416,9 +416,9 @@ public final class MockNewRBEntityFactory {
 	private static ResourceSchema createOnlyStringSchema() {
 		ResourceSchemaImpl schema = new ResourceSchemaImpl(
 				"http://lichtflut.de#", "Stringschema");
-		PropertyDeclarationImpl p2 = new PropertyDeclarationImpl();
-		PropertyDeclarationImpl p3 = new PropertyDeclarationImpl();
-		PropertyDeclarationImpl p4 = new PropertyDeclarationImpl();
+		TypeDefinitionImpl p2 = new TypeDefinitionImpl();
+		TypeDefinitionImpl p3 = new TypeDefinitionImpl();
+		TypeDefinitionImpl p4 = new TypeDefinitionImpl();
 		p2.setName("http://lichtflut.de#email");
 		p3.setName("http://lichtflut.de#age");
 		p4.setName("http://lichtflut.de#children");
@@ -427,7 +427,7 @@ public final class MockNewRBEntityFactory {
 		p3.setElementaryDataType(ElementaryDataType.STRING);
 		p4.setElementaryDataType(ElementaryDataType.STRING);
 
-		p2.addConstraint(ConstraintFactory.buildConstraint(".*@.*"));
+		p2.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
 
 		PropertyAssertionImpl pa2 = new PropertyAssertionImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasEmail"), p2);

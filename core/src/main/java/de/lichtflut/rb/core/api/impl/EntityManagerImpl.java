@@ -25,7 +25,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Raphael Esterle
  */
-public class RBEntityManagerImpl implements EntityManager {
+public class EntityManagerImpl implements EntityManager {
 
 	private final ServiceProvider provider;
 	
@@ -38,7 +38,7 @@ public class RBEntityManagerImpl implements EntityManager {
 	 *
 	 * @param provider -
 	 */
-	public RBEntityManagerImpl(final ServiceProvider provider) {
+	public EntityManagerImpl(final ServiceProvider provider) {
 		this.provider = provider;
 	}
 	

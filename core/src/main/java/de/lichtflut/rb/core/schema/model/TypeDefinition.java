@@ -10,7 +10,7 @@ import org.arastreju.sge.model.ResourceID;
 
 /**
  * <p>
- *  Definition of the property of a {@link PropertyAssertion}.
+ *  Definition of the type of a property.
  * </p>
  *
  * <p>
@@ -29,15 +29,8 @@ import org.arastreju.sge.model.ResourceID;
  * </p>
  *
  * <p>
- * 	Each Property Declaration has a public URI and can be used isolated from Property Assertions.
+ * 	Each TypeDefinition has an unique ID and can be used isolated from Property Declarations.
  * </p>
- *
- *
- *  ===ATTENTION===
- *  There still exists one reference implementation {@link PropertyDeclarationImpl}.
- *  It's recommended to use this implementation  because this is already implementing the whole spec right.
- *  If you want to realize your own ResourceSchema-class, please be absolutely sure that you already know what you do.
- *
  *
  * <p>
  * 	Created Jan 27, 2011
@@ -45,13 +38,8 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface PropertyDeclaration  extends ResourceSchemaElement{
+public interface TypeDefinition  extends ResourceSchemaElement{
 
-	/**
-	 * TODO: Please continue this lists.
-	 *
-	 * TODO: Why are Resource and URI non_elementary_data_types?!
-	 */
 	ElementaryDataType[] ELEMENTATY_DATA_TYPES = new ElementaryDataType[]{
 			ElementaryDataType.BOOLEAN,
 			ElementaryDataType.INTEGER,
@@ -65,7 +53,24 @@ public interface PropertyDeclaration  extends ResourceSchemaElement{
 			ElementaryDataType.UNDEFINED,
 			ElementaryDataType.URI
 	};
+	
+	// -----------------------------------------------------
 
+	/**
+	 * Get the identifier of the property.
+	 * @return The identifier of the property.
+	 */
+	ResourceID getID();
+
+	/**
+	 * An unqualified readable name for this type definition.
+	 * Usefull if it is a pulic TypeDefinition.
+	 * @return The display name.
+	 */
+	String getName();
+	
+	// -----------------------------------------------------
+	
 	/**
 	 * Get the {@link ElementaryDataType}.
 	 * @return The elementary property.
@@ -78,30 +83,7 @@ public interface PropertyDeclaration  extends ResourceSchemaElement{
 	 */
 	void setElementaryDataType(ElementaryDataType type);
 
-	/**
-	 * Get the identifier of the property.
-	 * If the identifier is not a valid uri, it will be converted into the default URI, including the void-namespace
-	 * @return The identifier of the property.
-	 */
-	ResourceID getIdentifier();
-
-	/**
-	 * @return the unqualified name
-	 */
-	String getName();
-
-	/**
-	 * @return the qualified name
-	 */
-	String getIdentifierString();
-
-
-	/**
-	 * Set the name or identifier of this property.
-	 * Tries to generate an URI from the given String, if not, the default Namespace will be used
-	 * @param identifierString the name or identifier you wish to set,
-	 */
-	void setIdentifier(String identifierString);
+	// -----------------------------------------------------
 
 	/**
 	 * The context independent constraints for this property.
@@ -122,16 +104,21 @@ public interface PropertyDeclaration  extends ResourceSchemaElement{
 	void addConstraint(Constraint constraint);
 
 	// -----------------------------------------------------
+	
+	/**
+	 * @return the qualified name
+	 */
+	String getIdentifierString();
+
 
 	/**
-	 * Please make sure that equals is correct implemented to avoid some merging redundancy conflicts e.g.
-	 * @param obj -
-	 * @return true if equals, false if not
+	 * Set the name or identifier of this property.
+	 * Tries to generate an URI from the given String, if not, the default Namespace will be used
+	 * @param identifierString the name or identifier you wish to set,
 	 */
-	boolean equals(Object obj);
-
-
-	//------------------------------------------------------
+	void setIdentifier(String identifierString);
+	
+	// -----------------------------------------------------
 
 	/**
 	 * Is true when property declaration contains independent values and no resource references.
@@ -147,7 +134,12 @@ public interface PropertyDeclaration  extends ResourceSchemaElement{
 	 */
 	boolean isElementary();
 
-	//------------------------------------------------------
+	/**
+	 * Is true when property declaration contains resource references and no independent values.
+	 * @return true when property declaration contains independent, false if references resources
+	 */
+	boolean isResourceReference();
+	
 
 	/**
 	 * TODO: Definine method intent.
@@ -158,11 +150,13 @@ public interface PropertyDeclaration  extends ResourceSchemaElement{
 	//------------------------------------------------------
 
 	/**
-	 * Is true when property declaration contains resource references and no independent values.
-	 * @return true when property declaration contains independent, false if references resources
+	 * Please make sure that equals is correct implemented to avoid some merging redundancy conflicts e.g.
+	 * @param obj -
+	 * @return true if equals, false if not
 	 */
-	boolean isResourceReference();
+	boolean equals(Object obj);
 
+	
 	/**
 	 * Overriding only to match conventions while overriding 'equals()'.
 	 * @return int

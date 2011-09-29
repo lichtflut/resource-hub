@@ -11,7 +11,7 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 
@@ -64,7 +64,7 @@ public class MockResourceSchemaManagement implements SchemaManager {
 	 * @see de.lichtflut.rb.core.api.SchemaManager#getAllPropertyDeclarations()
 	 */
 	@Override
-	public Collection<PropertyDeclaration> getAllPropertyDeclarations() {
+	public Collection<TypeDefinition> getAllPropertyDeclarations() {
 		throw new NotYetImplementedException();
 	}
 
@@ -83,7 +83,7 @@ public class MockResourceSchemaManagement implements SchemaManager {
 	 */
 	@Override
 	public void storeOrOverridePropertyDeclaration(
-			PropertyDeclaration declaration) {
+			TypeDefinition declaration) {
 		throw new NotYetImplementedException();
 	}
 
@@ -101,7 +101,7 @@ public class MockResourceSchemaManagement implements SchemaManager {
 	 * @see de.lichtflut.rb.core.api.SchemaManager#storeOrOverridePropertyDeclaration(java.util.Collection)
 	 */
 	@Override
-	public void storeOrOverridePropertyDeclaration(Collection<PropertyDeclaration> declarations) {
+	public void storeOrOverridePropertyDeclaration(Collection<TypeDefinition> declarations) {
 		throw new NotYetImplementedException();
 	}
 

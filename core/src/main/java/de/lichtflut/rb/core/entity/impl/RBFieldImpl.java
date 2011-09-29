@@ -72,7 +72,7 @@ public class RBFieldImpl implements RBField, Serializable {
 	@Override
 	public String getFieldName() {
 		if(isKnownToSchema){
-		return assertion.getPropertyDeclaration().getIdentifierString();
+			return assertion.getPropertyDeclaration().getName();
 		}
 		return predicate.toString();
 	}

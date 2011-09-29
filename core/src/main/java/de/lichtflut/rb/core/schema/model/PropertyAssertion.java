@@ -37,7 +37,7 @@ public interface PropertyAssertion extends ResourceSchemaElement {
 	 * The concrete property of this assertion.
 	 * @return The property.
 	 */
-	PropertyDeclaration getPropertyDeclaration();
+	TypeDefinition getPropertyDeclaration();
 
 	// -----------------------------------------------------
 
@@ -46,8 +46,6 @@ public interface PropertyAssertion extends ResourceSchemaElement {
 	 * @return The cardinality.
 	 */
 	Cardinality getCardinality();
-
-	// -----------------------------------------------------
 
 	/**
 	 * Set cardinality of this property.
@@ -62,17 +60,6 @@ public interface PropertyAssertion extends ResourceSchemaElement {
 	 * @return boolean
 	 */
 	boolean isResolved();
-
-	// -----------------------------------------------------
-
-	/**
-	 * returns the String of the PropertyIdentifier as URI-Format.
-	 * This is necessary to resolve this PropertyAssertion with a given PropertyDeclaration
-	 * If this assertion is still resolved, the PropertyIdentifier is not more needed
-	 * If the propertyIdentifier is not a valid URI, it's converted to the default void-namespace URI
-	 * @return String
-	 */
-	String getPropertyIdentifier();
 
 	// -----------------------------------------------------
 

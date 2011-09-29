@@ -3,12 +3,12 @@
    */
     package de.lichtflut.rb.core.schema.parser.impl.simplersf;
 	import de.lichtflut.rb.core.schema.model.Cardinality;
-	import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+	import de.lichtflut.rb.core.schema.model.TypeDefinition;
 	import de.lichtflut.rb.core.schema.model.ResourceSchema;
 	import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
-	import de.lichtflut.rb.core.schema.model.impl.ConstraintFactory;
+	import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 	import de.lichtflut.rb.core.schema.model.impl.PropertyAssertionImpl;
-	import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+	import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 	import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 	import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 	import de.lichtflut.rb.core.schema.parser.impl.RSCardinalityEvaluator;
@@ -75,7 +75,7 @@ public class ResourceSchemaParser extends Parser {
     public String getGrammarFileName() { return "de/lichtflut/rb/core/schema/ResourceSchema.g"; }
 
 
-    	private PropertyDeclaration property = null;
+    	private TypeDefinition property = null;
     	private ResourceSchema resource = null;
     	private RSErrorReporter errorReporter = null;
         public void setErrorReporter(RSErrorReporter errorReporter) {
@@ -186,7 +186,7 @@ public class ResourceSchemaParser extends Parser {
     // $ANTLR end "dsl"
 
     public static class property_return extends ParserRuleReturnScope {
-        public PropertyDeclaration property;
+        public TypeDefinition property;
         CommonTree tree;
         public Object getTree() { return tree; }
     };
@@ -212,7 +212,7 @@ public class ResourceSchemaParser extends Parser {
         CommonTree BRACKET_OPEN5_tree=null;
         CommonTree BRACKET_CLOSED7_tree=null;
 
-        this.property = new PropertyDeclarationImpl();
+        this.property = new TypeDefinitionImpl();
         try {
             // de/lichtflut/rb/core/schema/ResourceSchema.g:68:3:
 //        	( PROPERTY_DEC IDENT BRACKET_OPEN ( propertyDeclaration )* BRACKET_CLOSED )
@@ -291,7 +291,7 @@ public class ResourceSchemaParser extends Parser {
     // $ANTLR end "property"
 
     public static class propertyDeclaration_return extends ParserRuleReturnScope {
-        public PropertyDeclaration property;
+        public TypeDefinition property;
         CommonTree tree;
         public Object getTree() { return tree; }
     };
@@ -527,7 +527,7 @@ public class ResourceSchemaParser extends Parser {
             IDENT16_tree = (CommonTree)adaptor.create(IDENT16);
             adaptor.addChild(root_0, IDENT16_tree);
 
-            this.property.addConstraint(ConstraintFactory.buildConstraint((IDENT16!=null?IDENT16.getText():null)));
+            this.property.addConstraint(ConstraintBuilder.buildConstraint((IDENT16!=null?IDENT16.getText():null)));
             char_literal17=(Token)match(input,19,FOLLOW_19_in_regexDeclaration269);
             char_literal17_tree = (CommonTree)adaptor.create(char_literal17);
             adaptor.addChild(root_0, char_literal17_tree);

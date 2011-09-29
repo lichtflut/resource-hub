@@ -13,7 +13,7 @@ import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.api.TypeManager;
-import de.lichtflut.rb.core.api.impl.RBEntityManagerImpl;
+import de.lichtflut.rb.core.api.impl.EntityManagerImpl;
 import de.lichtflut.rb.core.api.impl.SchemaManagerImpl;
 import de.lichtflut.rb.core.api.impl.TypeManagerImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -54,7 +54,7 @@ public class DefaultRBServiceProvider implements ServiceProvider {
         logger.info("Initializing Arastreju with profile: " + profile);
         gate = Arastreju.getInstance(profile).rootContext();
         schemaManager = new SchemaManagerImpl(this);
-        entityManager = new RBEntityManagerImpl(this);
+        entityManager = new EntityManagerImpl(this);
         typeManager = new TypeManagerImpl(this);
     }
 

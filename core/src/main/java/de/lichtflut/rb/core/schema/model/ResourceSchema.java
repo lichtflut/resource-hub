@@ -33,13 +33,15 @@ public interface ResourceSchema extends ResourceSchemaElement{
 	 * The ResourceID  of this schema.
 	 * @return This schema's ID.
 	 */
-	ResourceID getResourceID();
+	ResourceID getID();
 
 	/**
 	 * The ResourceID  of the described resource.
-	 *  @return The ID of the described resource.
+	 * @return The ID of the described resource.
 	 */
 	ResourceID getDescribedType();
+	
+	// -----------------------------------------------------
 
 	/**
 	 * Get all the schema's {@link PropertyAssertion} as list.
@@ -58,6 +60,8 @@ public interface ResourceSchema extends ResourceSchemaElement{
 	 * @param assertion -
 	 */
 	void addPropertyAssertion(final PropertyAssertion assertion);
+	
+	// -----------------------------------------------------
 
 	/**
 	 * Iterate over its {@link PropertyAssertion} and returns false if just one of them is not resolved.
@@ -70,6 +74,8 @@ public interface ResourceSchema extends ResourceSchemaElement{
 	 * @return The label builder for this schema.
 	 */
 	LabelBuilder getLabelBuilder();
+	
+	// -----------------------------------------------------
 
 	/**
 	 * Please make sure that equals is correct implemented to avoid some merging redundancy conflicts e.g.

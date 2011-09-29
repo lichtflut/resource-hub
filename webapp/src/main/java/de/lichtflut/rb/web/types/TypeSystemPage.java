@@ -19,6 +19,7 @@ import de.lichtflut.rb.mock.MockRBServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.modaldialog.ModalDialog;
 import de.lichtflut.rb.web.ck.components.typesystem.CreateTypePanel;
+import de.lichtflut.rb.web.ck.components.typesystem.PropertyRow;
 import de.lichtflut.rb.web.ck.components.typesystem.SchemaEditorPanel;
 import de.lichtflut.rb.web.ck.components.typesystem.TypeBrowserPanel;
 
@@ -70,7 +71,8 @@ public class TypeSystemPage extends RBSuperPage {
 			public void onTypeSelected(SNClass type, AjaxRequestTarget target) {
 				final ResourceSchema schema = getServiceProvider().getSchemaManager().
 					getResourceSchemaForResourceType(type);
-				final SchemaEditorPanel editor = new SchemaEditorPanel("schemaEditor", Model.of(schema));
+				final IModel<List<? extends PropertyRow>> model = Model.ofList(PropertyRow.toRowList(schema));
+				final SchemaEditorPanel editor = new SchemaEditorPanel("schemaEditor", model);
 				TypeSystemPage.this.replace(editor);
 				setResponsePage(TypeSystemPage.this);
 			}

@@ -10,7 +10,6 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
 
-
 /**
 * <p>
 *  Typical factory to generate some specific instances of {@link Constraint} through class members.
@@ -25,11 +24,9 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 * @author Nils Bleisch
 */
 
-public final class ConstraintFactory{
+public final class ConstraintBuilder{
 
-
-	//Let's instance of this class be a Singleton
-	private static final ConstraintFactory INSTANCE =  new ConstraintFactory();
+	private static final ConstraintBuilder INSTANCE =  new ConstraintBuilder();
 
 	// -----------------------------------------------------
 
@@ -37,14 +34,13 @@ public final class ConstraintFactory{
 	 * <p>
 	 * For future uses.
 	 * </p>
-	 * @return the singleton-instance of {@link ConstraintFactory}
+	 * @return the singleton-instance of {@link ConstraintBuilder}
 	 */
-	public static ConstraintFactory getInstance(){
+	public static ConstraintBuilder getInstance(){
 		return INSTANCE;
 	}
 
 	// -----------------------------------------------------
-
 
 	/**
 	 * Builds a Pattern-Constraint.
@@ -58,7 +54,6 @@ public final class ConstraintFactory{
 		 */
 		return buildConstraint(new String[]{literal});
 	}
-
 
 	/**
 	 * Builds a Resource-Constraint.
@@ -168,7 +163,7 @@ public final class ConstraintFactory{
     /**
      * Try to hide the constructor, to make this instance not directly accessible.
      */
-    private ConstraintFactory(){}
+    private ConstraintBuilder(){}
 
 
 }

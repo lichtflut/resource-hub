@@ -8,9 +8,10 @@ import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
@@ -62,7 +63,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	}
 
 	@Override
-	public Collection<PropertyDeclaration> getAllPropertyDeclarations() {
+	public Collection<TypeDefinition> getAllPropertyDeclarations() {
 		return this.store.loadAllPropertyDeclarations(null);
 	}
 
@@ -74,7 +75,7 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	@Override
 	public void storeOrOverridePropertyDeclaration(
-			final PropertyDeclaration declaration) {
+			final TypeDefinition declaration) {
 		if(declaration!=null){store.store(declaration,null);}
 
 	}
@@ -89,21 +90,15 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	@Override
 	public void storeOrOverridePropertyDeclaration(
-			final Collection<PropertyDeclaration> declarations) {
-		for (PropertyDeclaration propertyDeclaration : declarations) {
-			storeOrOverridePropertyDeclaration(propertyDeclaration);
+			final Collection<TypeDefinition> declarations) {
+		for (TypeDefinition typeDefinition : declarations) {
+			storeOrOverridePropertyDeclaration(typeDefinition);
 		}
 	}
 
 	@Override
 	public SchemaImporter getImporter(final RSFormat format) {
-		return new AbstractSchemaImporter(provider) {
-
-			@Override
-			RSFormat getFormat() {
-				return format;
-			}
-		};
+		throw new NotYetImplementedException();
 	}
 
 }
