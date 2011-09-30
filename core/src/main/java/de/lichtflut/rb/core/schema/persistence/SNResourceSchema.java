@@ -12,13 +12,14 @@ import java.util.Set;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
-import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.RBSchema;
 
 /**
@@ -42,19 +43,20 @@ public class SNResourceSchema extends ResourceView {
 	// -----------------------------------------------------
 
 	/**
+	 * Constructor for new Resource Schemas.
+	 * @param ctx The contexts.
+	 */
+	public SNResourceSchema(final Context... ctx) {
+		this(new SNResource(), ctx);
+	}
+	
+	/**
 	 * Constructor.
 	 * @param resource -
 	 */
-	public SNResourceSchema(final ResourceNode resource) {
+	public SNResourceSchema(final ResourceNode resource, final Context... ctx) {
 		super(resource);
-	}
-
-	/**
-	 * Constructor for new Resource Schemas.
-	 *  @param ctx -
-	 */
-	public SNResourceSchema(final Context ctx) {
-		Association.create(this, RDF.TYPE, RBSchema.RESOURCE_SCHEMA,ctx);
+		Association.create(this, RDF.TYPE, RBSchema.RESOURCE_SCHEMA, ctx);
 	}
 
 	// -----------------------------------------------------
@@ -63,7 +65,7 @@ public class SNResourceSchema extends ResourceView {
 	 * Returns the Class described by this schemas.
 	 * @return The class node.
 	 */
-	public SNClass getDescribedClass() {
+	public SNClass getDescribedType() {
 		SemanticNode node = SNOPS.singleObject(this, RBSchema.DESCRIBES);
 		if (node != null){
 			return node.asResource().asClass();
@@ -74,25 +76,20 @@ public class SNResourceSchema extends ResourceView {
 
 	/**
 	 * Set the Class described by this schema:.
-	 * @param clazz The class node.
-	 * @param context The context.
+	 * @param type The type node.
+	 * @param ctx The context.
 	 */
-	public void setDescribedClass(final ResourceNode clazz, final Context context) {
-		if (!Infra.equals(getDescribedClass(), clazz)){
-			removeAssociations(RBSchema.DESCRIBES);
-			removeAssociations(RBSchema.DESCRIBED_BY);
-			Association.create(this, RBSchema.DESCRIBES, clazz, context);
-			Association.create(clazz, RBSchema.DESCRIBED_BY, this, context);
-		}
+	public void setDescribedType(final ResourceID type, final Context... ctx) {
+		SNOPS.replace(this, RBSchema.DESCRIBES, type, ctx);
 	}
 
 	/**
 	 * Adds the given PropertyAssertion to this class.
-	 * @param pa -
-	 * @param ctx -
+	 * @param decl The declaration to be added.
+	 * @param ctx The context.
 	 */
-	public void addPropertyAssertion(final SNPropertyDeclaration pa, final Context ctx){
-		Association.create(this, RBSchema.HAS_PROPERTY_DECL, pa, ctx);
+	public void addPropertyDeclaration(final SNPropertyDeclaration decl, final Context ctx){
+		Association.create(this, RBSchema.HAS_PROPERTY_DECL, decl, ctx);
 	}
 
 	/**
@@ -146,7 +143,7 @@ public class SNResourceSchema extends ResourceView {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("ResourceSchema[" + super.toString() + "]");
-		sb.append(" for " + getDescribedClass() + "\n");
+		sb.append(" for " + getDescribedType() + "\n");
 		for(SNPropertyDeclaration pa : getPropertyDeclarations()){
 			sb.append("\t" + pa + "\n");
 		}

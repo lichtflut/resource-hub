@@ -112,6 +112,12 @@ public interface RBSchema {
 	ResourceID HAS_DATATYPE = new SimpleResourceID(NAMESPACE_URI, "hasDatatype");
 	
 	/**
+	 * Boolean expression if a Property Type Definition is public or private.
+	 */
+	ResourceID IS_PUBLIC_TYPE_DEF = new SimpleResourceID(NAMESPACE_URI, "isPublicTypeDefinition");
+	
+	
+	/**
 	 * A SystemRoot can have Schema-Representations.
 	 */
 	ResourceID HAS_SCHEMA_REPRESENTATION = new SimpleResourceID(NAMESPACE_URI, "hasSchemaRepresentation");

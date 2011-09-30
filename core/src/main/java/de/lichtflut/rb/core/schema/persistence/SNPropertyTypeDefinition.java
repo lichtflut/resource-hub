@@ -19,12 +19,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.model.nodes.views.SNText;
@@ -56,39 +58,23 @@ public class SNPropertyTypeDefinition extends ResourceView {
 
 	/**
 	 * Constructor for a new property declaration node.
-	 * @param context -
+	 * @param contexts The contexts for the statements.
 	 */
-	public SNPropertyTypeDefinition(final Context context) {
-		Association.create(this, RDF.TYPE, RBSchema.PROPERTY_TYPE_DEF,context);
+	public SNPropertyTypeDefinition(final Context... contexts) {
+		this(new SNResource(), contexts);
 	}
 
 	/**
 	 * Creates a view for given resource.
-	 * @param resource -
+	 * @param resource The resource node.
+	 * @param contexts The contexts for the statements.
 	 */
-	public SNPropertyTypeDefinition(final ResourceNode resource) {
+	public SNPropertyTypeDefinition(final ResourceNode resource, final Context... contexts) {
 		super(resource);
+		Association.create(this, RDF.TYPE, RBSchema.PROPERTY_TYPE_DEF, contexts);
 	}
 
 	// -----------------------------------------------------
-
-	/**
-	 * Get the unique identifier.
-	 * @return {@link ResourceID}
-	 */
-	public ResourceID getIdentifier() {
-		return this.getResource();
-	}
-
-	/**
-	 * Sets identifier.
-	 * @param id -
-	 * @param context -
-	 */
-	public void setIdentifier(final ResourceID id, final Context context) {
-		this.setName(id.getName());
-		this.setNamespace(id.getNamespace());
-	}
 
 	/**
 	 * Returns the datatype.
@@ -158,6 +144,31 @@ public class SNPropertyTypeDefinition extends ResourceView {
 		return result;
 	}
 
+	/**
+	 * Check if this is a public definition.
+	 * @return true if it is defined as public.
+	 */
+	public boolean isPublic() {
+		return Aras.TRUE.equals(SNOPS.singleObject(this, RBSchema.IS_PUBLIC_TYPE_DEF));
+	}
+	
+	/**
+	 * Make this Property Type Definition public.
+	 * @param contexts The contexts of this statement. 
+	 */
+	public void setPublic(final Context... contexts) {
+		SNOPS.replace(this, RBSchema.IS_PUBLIC_TYPE_DEF, Aras.TRUE, contexts);
+	}
+	
+	/**
+	 * Make this Property Type Definition public.
+	 * @param contexts The contexts of this statement. 
+	 */
+	public void setPrivate(final Context... contexts) {
+		SNOPS.replace(this, RBSchema.IS_PUBLIC_TYPE_DEF, Aras.FALSE, contexts);
+	}
+	
+	
 	// -----------------------------------------------------
 
 	/* (non-Javadoc)
@@ -166,9 +177,6 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("PropertyDeclaration[" + super.toString() + "]");
-		if (getIdentifier() != null) {
-			sb.append(" " + getIdentifier());
-		}
 		if (getDatatype() != null) {
 			sb.append(" " + getDatatype());
 		}

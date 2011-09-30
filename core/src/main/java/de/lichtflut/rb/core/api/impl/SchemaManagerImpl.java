@@ -11,8 +11,8 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 import de.lichtflut.rb.core.schema.persistence.RBSchemaStore;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
@@ -71,29 +71,6 @@ public class SchemaManagerImpl implements SchemaManager {
 	public void storeOrOverrideResourceSchema(final ResourceSchema schema) {
 		if(schema!=null){ store.store(schema,null);}
 
-	}
-
-	@Override
-	public void storeOrOverridePropertyDeclaration(
-			final TypeDefinition declaration) {
-		if(declaration!=null){store.store(declaration,null);}
-
-	}
-
-	@Override
-	public void storeOrOverrideResourceSchema(final Collection<ResourceSchema> schemas) {
-		for (ResourceSchema schema : schemas) {
-			storeOrOverrideResourceSchema(schema);
-		}
-
-	}
-
-	@Override
-	public void storeOrOverridePropertyDeclaration(
-			final Collection<TypeDefinition> declarations) {
-		for (TypeDefinition typeDefinition : declarations) {
-			storeOrOverridePropertyDeclaration(typeDefinition);
-		}
 	}
 
 	@Override

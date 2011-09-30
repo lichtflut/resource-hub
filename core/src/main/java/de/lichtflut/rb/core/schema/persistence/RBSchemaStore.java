@@ -96,7 +96,7 @@ public class RBSchemaStore {
 
 		//TODO: Resolve from store
 		ResourceNode describedResource = schema.getDescribedType().asResource();
-		snSchema.setDescribedClass(describedResource, context);
+		snSchema.setDescribedType(describedResource, context);
 
 		final ModelingConversation mc = gate.startConversation();
 		for (PropertyDeclaration assertion : schema.getPropertyDeclarations()) {
@@ -104,7 +104,7 @@ public class RBSchemaStore {
 			snAssertion.setMinOccurs(toScalar(assertion.getCardinality().getMinOccurs()), context);
 			snAssertion.setMaxOccurs(toScalar(assertion.getCardinality().getMaxOccurs()), context);
 			snAssertion.setDescriptor(assertion.getPropertyType(), context);
-			snSchema.addPropertyAssertion(snAssertion, context);
+			snSchema.addPropertyDeclaration(snAssertion, context);
 			addDeclaration(snAssertion, assertion.getTypeDefinition(), context);
 		}
 		mc.attach(snSchema);
@@ -277,7 +277,6 @@ public class RBSchemaStore {
 	 */
 	protected void convertPropertyDeclaration(final TypeDefinition src, final SNPropertyTypeDefinition target, final Context ctx) {
 		target.setDatatype(src.getElementaryDataType(), ctx);
-		target.setIdentifier(src.getID(), ctx);
 		for (Constraint constraint: src.getConstraints()){
 			addConstraint(target, constraint, ctx);
 		}
@@ -293,7 +292,7 @@ public class RBSchemaStore {
 	public ResourceSchema convertResourceSchema(final SNResourceSchema snSchema) {
 		if(snSchema==null) {return null;}
 		ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema);
-		schema.setDescribedType(snSchema.getDescribedClass());
+		schema.setDescribedType(snSchema.getDescribedType());
 		for (SNPropertyDeclaration snAssertion : snSchema.getPropertyDeclarations()){
 
 			// create Property Declaration

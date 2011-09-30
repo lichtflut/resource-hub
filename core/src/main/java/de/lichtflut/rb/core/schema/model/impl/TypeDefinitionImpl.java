@@ -43,105 +43,35 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	
 	private ResourceID identifier;
 	
-	private boolean isPublicType = true;
+	private boolean isPublicType = false;
 
 	// -----------------------------------------------------
-	// Constructor
+	
 	/**
-	 * Constructor-Party!!!. Readability is not given, I know. But this isn't
-	 * really necessary because every possible constructor combination is
-	 * realized here without any special behavior.
+	 * Default constructor. For non public type definitions without ID.
 	 */
 	public TypeDefinitionImpl() {
 	}
 
 	/**
 	 * Constructor.
+	 * @param id The unique technical ID.
+	 * @param isPublic Flag for public/private types.
+	 */
+	public TypeDefinitionImpl(final ResourceID id, final boolean isPublic) {
+		this.identifier = id;
+		this.isPublicType = isPublic;
+	}
+
+	/**
+	 * Constructor.
 	 * 
 	 * @param identifierString
 	 *            -
 	 */
+	@Deprecated
 	public TypeDefinitionImpl(final String identifierString) {
 		setName(identifierString);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param type
-	 *            -
-	 */
-	public TypeDefinitionImpl(final ElementaryDataType type) {
-		setElementaryDataType(type);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param constraints
-	 *            -
-	 */
-	public TypeDefinitionImpl(final Set<Constraint> constraints) {
-		setConstraints(constraints);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param identifierString
-	 *            -
-	 * @param constraints
-	 *            -
-	 */
-	public TypeDefinitionImpl(final String identifierString,
-			final Set<Constraint> constraints) {
-		setName(identifierString);
-		setConstraints(constraints);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param identifierString
-	 *            -
-	 * @param type
-	 *            -
-	 */
-	public TypeDefinitionImpl(final String identifierString,
-			final ElementaryDataType type) {
-		setName(identifierString);
-		setElementaryDataType(type);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param constraints
-	 *            -
-	 * @param type
-	 *            -
-	 */
-	public TypeDefinitionImpl(final Set<Constraint> constraints,
-			final ElementaryDataType type) {
-		setConstraints(constraints);
-		setElementaryDataType(type);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param identifierString
-	 *            -
-	 * @param constraints
-	 *            -
-	 * @param type
-	 *            -
-	 */
-	public TypeDefinitionImpl(final String identifierString,
-			final Set<Constraint> constraints, final ElementaryDataType type) {
-		setName(identifierString);
-		setConstraints(constraints);
-		setElementaryDataType(type);
 	}
 
 	// -----------------------------------------------------

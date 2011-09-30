@@ -54,27 +54,6 @@ public interface SchemaManager {
 	void storeOrOverrideResourceSchema(ResourceSchema schema);
 
 	// -----------------------------------------------------
-	/**
-	 * Stores or overrides the given ResourceSchema with the given one.
-	 * @param declaration - the {@link TypeDefinition}
-	 */
-	void storeOrOverridePropertyDeclaration(TypeDefinition declaration);
-
-	// -----------------------------------------------------
-
-	/**
-	 * Stores or overrides the given ResourceSchema's.
-	 * @param schemas - the {@link Collection} of {@link ResourceSchema}'s
-	 */
-	void storeOrOverrideResourceSchema(Collection<ResourceSchema> schemas);
-
-	// -----------------------------------------------------
-
-	/**
-	 * Stores or overrides the given PropertyDeclarations's.
-	 * @param declarations - the {@link Collection} of {@link TypeDefinition}'s
-	 */
-	void storeOrOverridePropertyDeclaration(Collection<TypeDefinition> declarations);
 
 	/**
 	 * @param format -
