@@ -9,7 +9,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.api.EntityManager;
-import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.entity.impl.RBFieldImpl;
@@ -17,9 +16,8 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.schema.parser.RSFormat;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
 
@@ -161,11 +159,8 @@ public final class RBEntityTest {
         EntityManager m = sp.getEntityManager();
         SchemaManager sm = sp.getSchemaManager();
 
-        sm.storeOrOverrideResourceSchema(schema);
-        SchemaImporter si = sm.getImporter(RSFormat.OSF);
-        System.out.println(si.generateAndResolveSchemaModelThrough(
-        		getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL2.osf")));
-        System.out.println("**********"+sm.getAllResourceSchemas().size());
+        sm.store(schema);
+        System.out.println("**********"+sm.findAllResourceSchemas().size());
 
         // Add a Email to the entities
         e.getField("http://lichtflut.de#email").getFieldValues()
@@ -206,8 +201,9 @@ public final class RBEntityTest {
      * @return shema
      */
     private ResourceSchema createSchema() {
-        ResourceSchemaImpl schema = new ResourceSchemaImpl(
-                "http://lichtflut.de#", "personschema");
+        ResourceSchemaImpl schema = new ResourceSchemaImpl().setDescribedType(
+    			new SimpleResourceID("http://lichtflut.de#", "personschema"));
+        
         TypeDefinitionImpl p1 = new TypeDefinitionImpl();
         TypeDefinitionImpl p2 = new TypeDefinitionImpl();
         TypeDefinitionImpl p3 = new TypeDefinitionImpl();

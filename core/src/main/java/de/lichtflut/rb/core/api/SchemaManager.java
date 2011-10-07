@@ -26,24 +26,24 @@ public interface SchemaManager {
 
 	/**
 	 * Returns a {@link ResourceSchema} for a given ResourceType.
-	 * @param id - the {@link ResourceID} of the ResourceType
-	 * @return the ResourceSchema for the given {@link ResourceID}
+	 * @param type The Resource Type
+	 * @return the Resource Schema for the given Type.
 	 */
-	ResourceSchema getResourceSchemaForResourceType(ResourceID id);
+	ResourceSchema findByType(ResourceID type);
 
 	// -----------------------------------------------------
 
 	/**
 	 * @return all the system-known ResourceSchemas
 	 */
-	Collection<ResourceSchema> getAllResourceSchemas();
+	Collection<ResourceSchema> findAllResourceSchemas();
 
 	// -----------------------------------------------------
 
 	/**
 	 * @return all the system-known PropertyDeclarations
 	 */
-	Collection<TypeDefinition> getAllPropertyDeclarations();
+	Collection<TypeDefinition> findAllTypeDefinitions();
 
 	// -----------------------------------------------------
 
@@ -51,7 +51,7 @@ public interface SchemaManager {
 	 * Stores or overrides the given ResourceSchema with the given one.
 	 * @param schema - the {@link ResourceSchema}
 	 */
-	void storeOrOverrideResourceSchema(ResourceSchema schema);
+	void store(ResourceSchema schema);
 
 	// -----------------------------------------------------
 

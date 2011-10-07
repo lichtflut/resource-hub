@@ -70,7 +70,7 @@ public class TypeSystemPage extends RBSuperPage {
 			@Override
 			public void onTypeSelected(SNClass type, AjaxRequestTarget target) {
 				final ResourceSchema schema = getServiceProvider().getSchemaManager().
-					getResourceSchemaForResourceType(type);
+					findByType(type);
 				final IModel<List<? extends PropertyRow>> model = Model.ofList(PropertyRow.toRowList(schema));
 				final SchemaEditorPanel editor = new SchemaEditorPanel("schemaEditor", model);
 				TypeSystemPage.this.replace(editor);

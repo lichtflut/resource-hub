@@ -30,14 +30,17 @@ import de.lichtflut.rb.web.util.StaticLabelBuilders;
 //CHECKSTYLE:OFF
 public final class MockResourceSchemaFactory {
 
-	private static final ResourceSchemaImpl addressSchema = new ResourceSchemaImpl(
-			"http://lichtflut.de#", "Address");
-	private static final ResourceSchemaImpl personSchema = new ResourceSchemaImpl(
-			"http://lichtflut.de#", "Person");
-	private static final ResourceSchemaImpl citySchema = new ResourceSchemaImpl(
-			"http://lichtflut.de#", "City");
-	private static final ResourceSchemaImpl organizationSchema = new ResourceSchemaImpl(
-			"http://lichtflut.de#", "Organization");
+	private static final ResourceSchemaImpl addressSchema = new ResourceSchemaImpl().setDescribedType(
+			new SimpleResourceID("http://lichtflut.de#", "Address"));
+	private static final ResourceSchemaImpl personSchema = new ResourceSchemaImpl().setDescribedType(
+			new SimpleResourceID("http://lichtflut.de#", "Person"));
+	private static final ResourceSchemaImpl citySchema = new ResourceSchemaImpl().setDescribedType(
+			new SimpleResourceID("http://lichtflut.de#", "City"));
+	private static final ResourceSchemaImpl organizationSchema = new ResourceSchemaImpl().setDescribedType(
+			new SimpleResourceID("http://lichtflut.de#", "Organization"));
+	
+	// -----------------------------------------------------
+	
 	/**
 	 * Constructor.
 	 */

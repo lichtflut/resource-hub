@@ -414,8 +414,7 @@ public final class MockNewRBEntityFactory {
 	 * @return schema -
 	 */
 	private static ResourceSchema createOnlyStringSchema() {
-		ResourceSchemaImpl schema = new ResourceSchemaImpl(
-				"http://lichtflut.de#", "Stringschema");
+		ResourceSchemaImpl schema = new ResourceSchemaImpl(new SimpleResourceID("http://lichtflut.de#", "Stringschema"));
 		TypeDefinitionImpl p2 = new TypeDefinitionImpl();
 		TypeDefinitionImpl p3 = new TypeDefinitionImpl();
 		TypeDefinitionImpl p4 = new TypeDefinitionImpl();

@@ -9,7 +9,6 @@ import java.util.UUID;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.VoidNamespace;
 
 import de.lichtflut.rb.core.schema.model.LabelBuilder;
@@ -34,13 +33,13 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 @SuppressWarnings({ "serial" })
 public final class ResourceSchemaImpl implements ResourceSchema {
 
-	//Instance members
-	private ResourceID internalResource;
-	private ResourceID describedType;
-	//LinkedList is chosen because it's more flexible compared to an index-driven list
+	private final ResourceID id;
+	
 	private final List<PropertyDeclaration> declarations = new LinkedList<PropertyDeclaration>();
 
 	private LabelBuilder labelBuilder = LabelBuilder.DEFAULT;
+	
+	private ResourceID describedType;
 
 	// -----------------------------------------------------
 
@@ -52,10 +51,8 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * </p>
 	 */
 	public ResourceSchemaImpl() {
-		//Generates a SimpleResourceID instance with an random UUID for namespace and identifier each
-		this.describedType = new SimpleResourceID(
-				UUID.randomUUID().toString(),
-				UUID.randomUUID().toString());
+		//Generates a SimpleResourceID instance with an random UUID.
+		this.id = new SimpleResourceID(VoidNamespace.getInstance(), UUID.randomUUID().toString());
 	}
 
 	// -----------------------------------------------------
@@ -68,50 +65,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * @param id - the internal ResourceID
 	 */
 	public ResourceSchemaImpl(final ResourceID id) {
-		this.internalResource = id;
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * <p>
-	 * Constructor takes as argument an namespace and a suffix as URI which will define the ResourceIdentifier.
-	 * Throws an IllegalArgumentException if the given parameters wont be a wellformed URI.
-	 * </p>
-	 * @param nsUri - the namespace
-	 * @param name - the suffix
-	 */
-	public ResourceSchemaImpl(final String nsUri, final String name) {
-		if(!(QualifiedName.isUri(nsUri + name))){
-			throw new IllegalArgumentException("The identifier " + nsUri + name + " is not a valid URI");
-		}
-		this.describedType = new SimpleResourceID(nsUri, name);
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * <p>
-	 * Constructor takes as argument an identifier which will define the ResourceIdentifier.
-	 * </p>
-	 * @param name - the identifier
-	 */
-	public ResourceSchemaImpl(final String name){
-		if(!(QualifiedName.isUri(name))){
-			this.describedType = new SimpleResourceID(new QualifiedName(VoidNamespace.getInstance(),name));
-		}else{
-			this.describedType = new SimpleResourceID(new QualifiedName(name));
-		}
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<PropertyDeclaration> getPropertyDeclarations() {
-		return this.declarations;
+		this.id = id;
 	}
 
 	// -----------------------------------------------------
@@ -121,7 +75,61 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 */
 	@Override
 	public ResourceID getID() {
-		return this.internalResource;
+		return this.id;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<PropertyDeclaration> getPropertyDeclarations() {
+		return this.declarations;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addPropertyDeclaration(final PropertyDeclaration decl) {
+		declarations.add(decl);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ResourceID getDescribedType() {
+		return this.describedType;
+	}
+
+	/**
+	 * <p>
+	 * Set up the describedResourceID, also known as ResourceType.
+	 * </p>
+	 * @param id - the ResourceId
+	 * @return This.
+	 */
+	public ResourceSchemaImpl setDescribedType(final ResourceID id) {
+		this.describedType = id;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public LabelBuilder getLabelBuilder() {
+		return labelBuilder;
+	}
+	
+	/**
+	 * Set the {@link LabelBuilder}.
+	 * @param labelBuilder the labelBuilder to set
+	 * @return This.
+	 */
+	public ResourceSchemaImpl setLabelBuilder(final LabelBuilder labelBuilder) {
+		this.labelBuilder = labelBuilder;
+		return this;
 	}
 
 	// -----------------------------------------------------
@@ -141,19 +149,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 		}
 		return sBuffer.toString();
 	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addPropertyDeclaration(final PropertyDeclaration decl) {
-		declarations.add(decl);
-	}
-
-	// -----------------------------------------------------
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -167,54 +163,9 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	}
 
 
-	// -----------------------------------------------------
-
 	@Override
 	public int hashCode(){
 		return super.hashCode();
 	}
 
-	// -----------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResourceID getDescribedType() {
-		return this.describedType;
-	}
-
-	// -----------------------------------------------------
-
-
-	/**
-	 * <p>
-	 * Set up the describedResourceID, also known as ResourceType.
-	 * </p>
-	 * @param id - the ResourceId
-	 */
-	public void setDescribedType(final ResourceID id) {
-		this.describedType = id;
-	}
-
-	/**
-	 * Set the {@link LabelBuilder}.
-	 * @param labelBuilder the labelBuilder to set
-	 */
-	public void setLabelBuilder(final LabelBuilder labelBuilder) {
-		this.labelBuilder = labelBuilder;
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public LabelBuilder getLabelBuilder() {
-		return labelBuilder;
-	}
-
-
-
-}//End of class ResourceSchemaImpl
+}

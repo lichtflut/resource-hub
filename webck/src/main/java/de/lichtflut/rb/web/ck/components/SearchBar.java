@@ -163,7 +163,7 @@ public abstract class SearchBar extends CKComponent{
 					return new ArrayList<RBEntity>().iterator();
 				}
 				if(filter==null || filter.isEmpty()){
-					rSchemas = getServiceProvider().getSchemaManager().getAllResourceSchemas();
+					rSchemas = getServiceProvider().getSchemaManager().findAllResourceSchemas();
 				}else{
 					rSchemas = filter;
 				}

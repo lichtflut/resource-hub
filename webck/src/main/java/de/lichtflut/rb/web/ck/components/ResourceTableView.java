@@ -427,7 +427,7 @@ public abstract class ResourceTableView extends CKComponent {
 						RBEntity entity = new RBEntityImpl(
 							ResourceTableView.this.getServiceProvider()
 								.getSchemaManager()
-									.getResourceSchemaForResourceType(type));
+									.findByType(type));
 							ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID,
 								entity, false) {
 								@Override

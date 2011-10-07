@@ -558,7 +558,7 @@ public class OSFTree extends TreeParser {
             state._fsp--;
 
             adaptor.addChild(root_1, s.getTree());
-            retval.rSchema = new ResourceSchemaImpl(s.result);
+            retval.rSchema = new ResourceSchemaImpl().setDescribedType(new SimpleResourceID(s.result));
             	this.resourceSchema = (ResourceSchemaImpl) retval.rSchema;
             _last = (CommonTree)input.LT(1);
             PROPERTY_DEC7=(CommonTree)match(input,PROPERTY_DEC,FOLLOW_PROPERTY_DEC_in_resource_dec187); 

@@ -88,7 +88,7 @@ public class SNResourceSchema extends ResourceView {
 	 * @param decl The declaration to be added.
 	 * @param ctx The context.
 	 */
-	public void addPropertyDeclaration(final SNPropertyDeclaration decl, final Context ctx){
+	public void addPropertyDeclaration(final SNPropertyDeclaration decl, final Context... ctx){
 		Association.create(this, RBSchema.HAS_PROPERTY_DECL, decl, ctx);
 	}
 
@@ -135,6 +135,16 @@ public class SNResourceSchema extends ResourceView {
 		revoke(toBeRemoved);
 	}
 
+	// -----------------------------------------------------
+	
+	public static SNResourceSchema view(final ResourceNode node) {
+		if (node instanceof SNResourceSchema) {
+			return (SNResourceSchema) node;
+		} else {
+			return new SNResourceSchema(node);
+		}
+	}
+	
 	// -----------------------------------------------------
 
 	/**

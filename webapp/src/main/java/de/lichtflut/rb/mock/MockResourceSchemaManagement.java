@@ -43,7 +43,7 @@ public class MockResourceSchemaManagement implements SchemaManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResourceSchema getResourceSchemaForResourceType(final ResourceID id) {
+	public ResourceSchema findByType(final ResourceID id) {
 		ResourceSchema rs = null;
 		for (ResourceSchema schema : schemas) {
 			if(schema.getDescribedType().equals(id)){
@@ -55,7 +55,7 @@ public class MockResourceSchemaManagement implements SchemaManager {
 
 
 	@Override
-	public List<ResourceSchema> getAllResourceSchemas() {
+	public List<ResourceSchema> findAllResourceSchemas() {
 		return schemas;
 	}
 
@@ -64,7 +64,7 @@ public class MockResourceSchemaManagement implements SchemaManager {
 	 * @see de.lichtflut.rb.core.api.SchemaManager#getAllPropertyDeclarations()
 	 */
 	@Override
-	public Collection<TypeDefinition> getAllPropertyDeclarations() {
+	public Collection<TypeDefinition> findAllTypeDefinitions() {
 		throw new NotYetImplementedException();
 	}
 
@@ -73,35 +73,7 @@ public class MockResourceSchemaManagement implements SchemaManager {
 	 * @see de.lichtflut.rb.core.api.SchemaManager#storeOrOverrideResourceSchema(de.lichtflut.rb.core.schema.model.ResourceSchema)
 	 */
 	@Override
-	public void storeOrOverrideResourceSchema(ResourceSchema schema) {
-		throw new NotYetImplementedException();
-	}
-
-
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.core.api.SchemaManager#storeOrOverridePropertyDeclaration(de.lichtflut.rb.core.schema.model.PropertyDeclaration)
-	 */
-	@Override
-	public void storeOrOverridePropertyDeclaration(
-			TypeDefinition declaration) {
-		throw new NotYetImplementedException();
-	}
-
-
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.core.api.SchemaManager#storeOrOverrideResourceSchema(java.util.Collection)
-	 */
-	@Override
-	public void storeOrOverrideResourceSchema(Collection<ResourceSchema> schemas) {
-		throw new NotYetImplementedException();
-	}
-
-
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.core.api.SchemaManager#storeOrOverridePropertyDeclaration(java.util.Collection)
-	 */
-	@Override
-	public void storeOrOverridePropertyDeclaration(Collection<TypeDefinition> declarations) {
+	public void store(ResourceSchema schema) {
 		throw new NotYetImplementedException();
 	}
 

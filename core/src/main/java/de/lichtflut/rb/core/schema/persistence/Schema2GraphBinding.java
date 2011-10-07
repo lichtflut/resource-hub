@@ -37,6 +37,26 @@ import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
  */
 public class Schema2GraphBinding {
 	
+	private TypeDefinitionResolver resolver = new VoidTypeDefResovler();
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * Default constructor.
+	 */
+	public Schema2GraphBinding() {
+	}
+	
+	/**
+	 * Constructor with special resolver.
+	 * @param resolver Resolver for persistent type definitions.
+	 */
+	public Schema2GraphBinding(final TypeDefinitionResolver resolver) {
+		this.resolver = resolver;
+	}
+	
+	// -----------------------------------------------------
+	
 	/**
 	 * Convert a schema node to a model element.
 	 * @param snSchema The schema node.
@@ -99,6 +119,7 @@ public class Schema2GraphBinding {
 				predecessor.setSuccessor(snDecl, RBSchema.CONTEXT);
 			}
 			predecessor = snDecl;
+			sn.addPropertyDeclaration(snDecl);
 		}
 		return sn;
 	}
@@ -111,7 +132,23 @@ public class Schema2GraphBinding {
 	public SNPropertyTypeDefinition toSemanticNode(final TypeDefinition typeDef) {
 		if(typeDef == null) {
 			return null;
+		} else if (typeDef.isPublicTypeDef()) {
+			final SNPropertyTypeDefinition resolved = resolver.resolve(typeDef);
+			if (resolved != null) {
+				return resolved;
+			}
 		}
+		return createSemanticNode(typeDef);	
+	}
+
+	// -----------------------------------------------------
+	
+	/**
+	 * Create a node corresponding to type definition.
+	 * @param typeDef The type definition.
+	 * @return The created node.
+	 */
+	protected SNPropertyTypeDefinition createSemanticNode(final TypeDefinition typeDef) {
 		final SNResource node = new SNResource(typeDef.getID().getQualifiedName());
 		final SNPropertyTypeDefinition sn = new SNPropertyTypeDefinition(node);
 		sn.setDatatype(typeDef.getElementaryDataType(), RBSchema.CONTEXT);
@@ -129,8 +166,6 @@ public class Schema2GraphBinding {
 		}
 		return sn;
 	}
-	
-	// -----------------------------------------------------
 	
 	protected Cardinality buildCardinality(final SNPropertyDeclaration snDecl) {
 		int min = snDecl.getMinOccurs().getIntegerValue().intValue();
@@ -176,6 +211,14 @@ public class Schema2GraphBinding {
 			return new SNScalar(-1);
 		} else {
 			return new SNScalar(cardinality.getMaxOccurs());	
+		}
+	}
+	
+	// -----------------------------------------------------
+	
+	private static final class VoidTypeDefResovler implements TypeDefinitionResolver {
+		public SNPropertyTypeDefinition resolve(TypeDefinition typeDef) {
+			return null;
 		}
 	}
 

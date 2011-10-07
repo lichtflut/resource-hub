@@ -14,6 +14,8 @@
 	import de.lichtflut.rb.core.schema.parser.impl.RSCardinalityEvaluator;
 	import de.lichtflut.rb.core.schema.parser.impl.RSEvaluator;
 	import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.SimpleResourceID;
+
 	import java.util.HashSet;
 	import java.util.Set;
 
@@ -593,7 +595,8 @@ public class ResourceSchemaParser extends Parser {
             IDENT19_tree = (CommonTree)adaptor.create(IDENT19);
             adaptor.addChild(root_0, IDENT19_tree);
 
-            this.resource = new ResourceSchemaImpl(IDENT19.getText()); retval.resource = this.resource;
+            this.resource = new ResourceSchemaImpl().setDescribedType(
+        			new SimpleResourceID(IDENT19.getText())); retval.resource = this.resource;
             BRACKET_OPEN20=(Token)match(input,BRACKET_OPEN,FOLLOW_BRACKET_OPEN_in_resource307);
             BRACKET_OPEN20_tree = (CommonTree)adaptor.create(BRACKET_OPEN20);
             adaptor.addChild(root_0, BRACKET_OPEN20_tree);
