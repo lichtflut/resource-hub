@@ -19,10 +19,9 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
 
-import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -142,7 +141,7 @@ public abstract class ResourceTableView extends CKComponent {
 	
 	// -----------------------------------------------------
 
-	private Map<String, String> tableHeader = new HashMap<String, String>();
+	private Map<ResourceID, String> tableHeader = new HashMap<ResourceID, String>();
 	private List<RBEntity> entites = new ArrayList<RBEntity>();
 	private String componentID;
 
@@ -227,7 +226,7 @@ public abstract class ResourceTableView extends CKComponent {
 				if (isResource) {
 					RepeatingView view = new RepeatingView("data");
 					int resourceCount = 1;
-					for (final Object entityAttribute : field.getFieldValues()) {
+					for (final Object entityAttribute : field.getValues()) {
 						final RBEntity currentEntity = (RBEntity) entityAttribute;
 						if(currentEntity != null){
 							CKLink link = new CKLink(view.newChildId(), currentEntity.getLabel(),
@@ -240,7 +239,7 @@ public abstract class ResourceTableView extends CKComponent {
 								}
 							});
 							view.add(link);
-							if(resourceCount < field.getFieldValues().size()){
+							if(resourceCount < field.getValues().size()){
 								view.add(new Label(view.newChildId(), ", "));
 							}
 							resourceCount++;
@@ -252,7 +251,7 @@ public abstract class ResourceTableView extends CKComponent {
 				} else {
 					String output = "";
 					if(field.getDataType().equals(ElementaryDataType.DATE)){
-						for (Object o : field.getFieldValues()) {
+						for (Object o : field.getValues()) {
 							Date date = (Date) o;
 							if(date != null){
 								output = output.concat(DateFormat.getDateInstance(DateFormat.SHORT)
@@ -261,7 +260,7 @@ public abstract class ResourceTableView extends CKComponent {
 						}
 						item.add(new Label("data", output));
 					}else{
-						for (Object s : field.getFieldValues()) {
+						for (Object s : field.getValues()) {
 							if (s == null) {
 								s = "";
 							}
@@ -347,8 +346,8 @@ public abstract class ResourceTableView extends CKComponent {
 	 */
 	private List<Object> sortFieldsForPresentation(final RBEntity e) {
 		List<Object> fields = new ArrayList<Object>();
-		for (String s : tableHeader.keySet()) {
-			RBField field = e.getField(s);
+		for (ResourceID predicate : tableHeader.keySet()) {
+			RBField field = e.getField(predicate);
 			fields.add(field);
 		}
 		return fields;
@@ -394,8 +393,8 @@ public abstract class ResourceTableView extends CKComponent {
 		tableHeader.clear();
 		for (RBEntity entity : entites) {
 			for (RBField field : entity.getAllFields()) {
-				if (!tableHeader.containsKey(field.getFieldName())) {
-					tableHeader.put(field.getFieldName(), field.getLabel());
+				if (!tableHeader.containsKey(field.getPredicate())) {
+					tableHeader.put(field.getPredicate(), field.getLabel());
 				}
 			}
 		}

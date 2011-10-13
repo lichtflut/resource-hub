@@ -157,7 +157,7 @@ public class RBEntityImpl implements RBEntity {
 
 	@Override
 	public String getLabel() {
-		if(null!=schema){
+		if(null != schema){
 			return schema.getLabelBuilder().build(this);
 		}else{
 			return "";
@@ -175,9 +175,9 @@ public class RBEntityImpl implements RBEntity {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RBField getField(final String fieldname) {
+	public RBField getField(final ResourceID predicate) {
 		for (RBField field : fields) {
-			if(field.getFieldName().equals(fieldname)){
+			if(field.getPredicate().equals(predicate)){
 				return field;
 			}
 		}
@@ -226,7 +226,7 @@ public class RBEntityImpl implements RBEntity {
 			if(field.isResourceReference()){
 				s += field.getLabel() + ": " + field.getConstraints() + ", ";
 			}else{
-				s += (field.getLabel() + ": " + field.getFieldValues() + ", ");
+				s += (field.getLabel() + ": " + field.getValues() + ", ");
 			}
 		}
 		return s;

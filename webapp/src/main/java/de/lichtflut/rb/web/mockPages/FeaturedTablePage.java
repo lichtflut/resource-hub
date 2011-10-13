@@ -81,7 +81,7 @@ public class FeaturedTablePage extends RBSuperPage {
 									==	MockNewRBEntityFactory.createAddress().getType()) {
 								String url = "<iframe src='http://www.map-generator."
 									+"net/extmap.php?name=&amp;address=";
-								for (Object o : e.getFieldValues()) {
+								for (Object o : e.getValues()) {
 									if(o instanceof RBEntity){
 										o = ((RBEntity) o).getLabel();
 										view.add(new Label(view.newChildId(), o.toString()));
@@ -99,7 +99,7 @@ public class FeaturedTablePage extends RBSuperPage {
 								label.setEscapeModelStrings(false);
 								view.add(label);
 							}else{
-								List<Object> values = e.getFieldValues();
+								List<Object> values = e.getValues();
 								for (Object o : values) {
 								if(o != null){
 									RBEntity e1 = (RBEntity) o;

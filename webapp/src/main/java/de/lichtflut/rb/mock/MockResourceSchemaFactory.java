@@ -15,6 +15,7 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.web.metamodel.WSConstants;
 import de.lichtflut.rb.web.util.StaticLabelBuilders;
 
 /**
@@ -64,57 +65,48 @@ public final class MockResourceSchemaFactory {
 
 		if(personSchema.getPropertyDeclarations().size()  < 1){
 			
-		TypeDefinitionImpl p1 = new TypeDefinitionImpl();
-		p1.setName("http://lichtflut.de#Firstname");
-		p1.setElementaryDataType(ElementaryDataType.STRING);
-		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasFirstName"),
-				p1);
+		TypeDefinitionImpl typeDef1 = new TypeDefinitionImpl();
+		typeDef1.setName("http://lichtflut.de#Firstname");
+		typeDef1.setElementaryDataType(ElementaryDataType.STRING);
+		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(WSConstants.HAS_FORENAME, typeDef1);
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		personSchema.addPropertyDeclaration(pa1);
 
-		TypeDefinitionImpl p3 = new TypeDefinitionImpl();
-		p3.setName("http://lichtflut.de#Lastname");
-		p3.setElementaryDataType(ElementaryDataType.STRING);
-		PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasLastname"),
-				p3);
+		TypeDefinitionImpl typeDef2 = new TypeDefinitionImpl();
+		typeDef2.setElementaryDataType(ElementaryDataType.STRING);
+		PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(WSConstants.HAS_SURNAME, typeDef2);
 		pa3.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 		personSchema.addPropertyDeclaration(pa3);
 
-		TypeDefinitionImpl p8 = new TypeDefinitionImpl();
-		p8.setName("http://lichtflut.de#Address");
-		p8.setElementaryDataType(ElementaryDataType.RESOURCE);
-		p8.addConstraint(ConstraintBuilder.buildConstraint(addressSchema.getDescribedType()));
+		TypeDefinitionImpl typeDef3 = new TypeDefinitionImpl();
+		typeDef3.setElementaryDataType(ElementaryDataType.RESOURCE);
+		typeDef3.addConstraint(ConstraintBuilder.buildConstraint(addressSchema.getDescribedType()));
 		PropertyDeclarationImpl pa8 = new PropertyDeclarationImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasAddress"), p8);
+				new SimpleResourceID("http://lichtflut.de#", "hasAddress"), typeDef3);
 		pa8.setCardinality(CardinalityBuilder.hasAtLeastOneToMany());
 		personSchema.addPropertyDeclaration(pa8);
 
-		TypeDefinitionImpl p4 = new TypeDefinitionImpl();
-		p4.setName("http://lichtflut.de#dateOfBirth");
-		p4.setElementaryDataType(ElementaryDataType.DATE);
+		TypeDefinitionImpl typeDef4 = new TypeDefinitionImpl();
+		typeDef4.setElementaryDataType(ElementaryDataType.DATE);
 		PropertyDeclarationImpl pa4 = new PropertyDeclarationImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasDateOfBirth"),
-				p4);
+				typeDef4);
 		pa4.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		personSchema.addPropertyDeclaration(pa4);
 		
-		TypeDefinitionImpl p5 = new TypeDefinitionImpl();
-		p5.setName("http://lichtflut.de#email");
-		p5.setElementaryDataType(ElementaryDataType.STRING);
-		p5.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
+		TypeDefinitionImpl typeDef5 = new TypeDefinitionImpl();
+		typeDef5.setElementaryDataType(ElementaryDataType.STRING);
+		typeDef5.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
 		PropertyDeclarationImpl pa5 = new PropertyDeclarationImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasEmail"), p5);
+				new SimpleResourceID("http://lichtflut.de#", "hasEmail"), typeDef5);
 		pa5.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 		personSchema.addPropertyDeclaration(pa5);
 		
-		TypeDefinitionImpl p7 = new TypeDefinitionImpl();
-		p7.setName("http://lichtflut.de#child");
-		p7.setElementaryDataType(ElementaryDataType.RESOURCE);
-		p7.addConstraint(ConstraintBuilder.buildConstraint(personSchema.getDescribedType()));	
+		TypeDefinitionImpl typeDef6 = new TypeDefinitionImpl();
+		typeDef6.setElementaryDataType(ElementaryDataType.RESOURCE);
+		typeDef6.addConstraint(ConstraintBuilder.buildConstraint(personSchema.getDescribedType()));	
 		PropertyDeclarationImpl pa7 = new PropertyDeclarationImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasChildren"), p7);
+				new SimpleResourceID("http://lichtflut.de#", "hasChildren"), typeDef6);
 		pa7.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 		personSchema.addPropertyDeclaration(pa7);
 
@@ -134,26 +126,20 @@ public final class MockResourceSchemaFactory {
 		if(addressSchema.getPropertyDeclarations().size() < 1){
 			
 		TypeDefinitionImpl p1 = new TypeDefinitionImpl();
-		p1.setName("http://lichtflut.de#Street");
 		p1.setElementaryDataType(ElementaryDataType.STRING);
-		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasStreet"), p1);
+		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(WSConstants.HAS_STREET, p1);
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		addressSchema.addPropertyDeclaration(pa1);
 
 		TypeDefinitionImpl p5 = new TypeDefinitionImpl();
-		p5.setName("http://lichtflut.de#HouseNr");
 		p5.setElementaryDataType(ElementaryDataType.STRING);
-		PropertyDeclarationImpl pa5 = new PropertyDeclarationImpl(
-				new SimpleResourceID("http://lichtflut.de#", "hasHouseNr"), p5);
+		PropertyDeclarationImpl pa5 = new PropertyDeclarationImpl(WSConstants.HAS_HOUSNR, p5);
 		pa5.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		addressSchema.addPropertyDeclaration(pa5);
 
 		TypeDefinitionImpl p2 = new TypeDefinitionImpl();
-		p2.setName("http://lichtflut.de#City");
 		p2.setElementaryDataType(ElementaryDataType.RESOURCE);
-		PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(
-			new SimpleResourceID("http://lichtflut.de#", "hasCity"), p2);
+		PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(WSConstants.HAS_CITY, p2);
 		pa2.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		addressSchema.addPropertyDeclaration(pa2);
 		p2.addConstraint(ConstraintBuilder.buildConstraint(citySchema.getDescribedType()));
@@ -174,27 +160,20 @@ public final class MockResourceSchemaFactory {
 		if (citySchema.getPropertyDeclarations().size() < 1) {
 
 			TypeDefinitionImpl p1 = new TypeDefinitionImpl();
-			p1.setName("http://lichtflut.de#Zipcode");
 			p1.setElementaryDataType(ElementaryDataType.STRING);
-			PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(
-					new SimpleResourceID("http://lichtflut.de#", "hasZipcode"), p1);
+			PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(WSConstants.HAS_ZIPCODE, p1);
 			pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
 			citySchema.addPropertyDeclaration(pa1);
 
 			TypeDefinitionImpl p2 = new TypeDefinitionImpl();
-			p2.setName("http://lichtflut.de#City");
 			p2.setElementaryDataType(ElementaryDataType.STRING);
-			PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(
-					new SimpleResourceID("http://lichtflut.de#", "hasCity"), p2);
+			PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(WSConstants.HAS_CITY, p2);
 			pa2.setCardinality(CardinalityBuilder.hasExcactlyOne());
 			citySchema.addPropertyDeclaration(pa2);
 
 			TypeDefinitionImpl p3 = new TypeDefinitionImpl();
-			p3.setName("http://lichtflut.de#Country");
 			p3.setElementaryDataType(ElementaryDataType.STRING);
-			PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(
-					new SimpleResourceID("http://lichtflut.de#", "hasCountry"),
-					p3);
+			PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(WSConstants.HAS_COUNTRY, p3);
 			pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
 			citySchema.addPropertyDeclaration(pa3);
 

@@ -23,26 +23,26 @@ public interface WSConstants {
 
 	// ---------- Person ------------------------------------------
 
-	ResourceID HAS_FORENAME = new SimpleResourceID(NAMESPACE_URI, "Firstname");
+	ResourceID HAS_FORENAME = new SimpleResourceID(NAMESPACE_URI, "hasFirstname");
 
-	ResourceID HAS_SURNAME = new SimpleResourceID(NAMESPACE_URI, "Lastname");
+	ResourceID HAS_SURNAME = new SimpleResourceID(NAMESPACE_URI, "hasLastname");
 
 	// ---------- Address -----------------------------------------
 
-	ResourceID HAS_HOUSNR = new SimpleResourceID(NAMESPACE_URI, "HouseNr");
+	ResourceID HAS_HOUSNR = new SimpleResourceID(NAMESPACE_URI, "hasHouseNr");
 
-	ResourceID HAS_STREET = new SimpleResourceID(NAMESPACE_URI, "Street");
+	ResourceID HAS_STREET = new SimpleResourceID(NAMESPACE_URI, "hasStreet");
 
 	// ---------- Country -----------------------------------------
 
 	ResourceID HAS_ZIPCODE = new SimpleResourceID(NAMESPACE_URI, "Zipcode");
 
-	ResourceID HAS_CITY = new SimpleResourceID(NAMESPACE_URI, "City");
+	ResourceID HAS_CITY = new SimpleResourceID(NAMESPACE_URI, "hasCity");
 
-	ResourceID HAS_COUNTRY = new SimpleResourceID(NAMESPACE_URI, "Country");
+	ResourceID HAS_COUNTRY = new SimpleResourceID(NAMESPACE_URI, "hasCountry");
 
 	// ---------- Organization ------------------------------------
 
-	ResourceID HAS_ORGA_NAME = new SimpleResourceID(NAMESPACE_URI, "Name");
+	ResourceID HAS_ORGA_NAME = new SimpleResourceID(NAMESPACE_URI, "hasName");
 
 }

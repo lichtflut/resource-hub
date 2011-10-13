@@ -63,7 +63,7 @@ public abstract class AddValueAjaxButton extends Panel {
 	 * @return True if Cardinality MAX > field.size
 	 */
 	private boolean checkVisibility() {
-		if((field.getCardinality().getMaxOccurs()) > (field.getFieldValues().size())){
+		if((field.getCardinality().getMaxOccurs()) > (field.getValues().size())){
 			return true;
 		}
 		return false;

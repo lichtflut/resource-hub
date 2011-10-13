@@ -46,7 +46,7 @@ class CKTextField extends Panel {
 	public CKTextField(final String id, final RBField field) {
 		super(id);
 		this.field = field;
-		values = field.getFieldValues();
+		values = field.getValues();
 		this.setOutputMarkupId(true);
 		container = new WebMarkupContainer("container");
 		container.setOutputMarkupId(true);

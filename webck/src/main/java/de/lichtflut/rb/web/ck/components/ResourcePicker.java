@@ -64,9 +64,9 @@ public abstract class ResourcePicker extends CKComponent {
 					final String criteria) {
 				String popupInfo = "";
 				for(RBField field : entity.getAllFields()){
-					if(field.getFieldValues().toString().contains(inputSnippet)){
+					if(field.getValues().toString().contains(inputSnippet)){
 						popupInfo = field.getLabel() + ": ";
-						for (Object o : field.getFieldValues()) {
+						for (Object o : field.getValues()) {
 							if(o != null){
 								if(field.isResourceReference()){
 									RBEntity e = (RBEntity) o;
@@ -99,15 +99,15 @@ public abstract class ResourcePicker extends CKComponent {
 				for (RBEntity e : entites) {
 					String s = "";
 					for (RBField field : e.getAllFields()) {
-						if((field.isResourceReference()) && (!field.getFieldValues().isEmpty())){
-							for (Object o : field.getFieldValues()) {
+						if((field.isResourceReference()) && (!field.getValues().isEmpty())){
+							for (Object o : field.getValues()) {
 								RBEntity e1 = (RBEntity) o;
 								if(e1 != null){
 									s = s.concat(e1.getLabel().toLowerCase());
 								}
 							}
 						}else{
-							s = s.concat(field.getFieldValues().toString().toLowerCase());
+							s = s.concat(field.getValues().toString().toLowerCase());
 						}
 					}
 					if(s.contains(input.toLowerCase())){

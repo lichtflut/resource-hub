@@ -35,10 +35,10 @@ class CKCheckBoxField extends Panel {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public CKCheckBoxField(final String id, final RBField field) {
 		super(id);
-		IModel<List<Boolean>> listModel = new ListModel(field.getFieldValues());
+		IModel<List<Boolean>> listModel = new ListModel(field.getValues());
 
 		// Display at least one textfield.
-		if (field.getFieldValues().isEmpty()) {
+		if (field.getValues().isEmpty()) {
 			listModel.getObject().add(false);
 		}
 		add(createListView(listModel));

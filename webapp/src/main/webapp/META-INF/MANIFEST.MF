@@ -11,7 +11,7 @@ Class-Path: aduna-commons-collections-2.7.0.jar aduna-commons-concurre
  el-1.3.jar neo4j-lucene-index-1.3.jar neo4j-udc-1.3.jar org.apache.se
  rvicemix.bundles.lucene-3.0.1_2.jar sesame-model-2.3.2.jar sesame-rio
  -api-2.3.2.jar sesame-rio-rdfxml-2.3.2.jar slf4j-api-1.6.1.jar slf4j-
- log4j12-1.6.1.jar stringtemplate-3.2.jar wicket-core-1.5-RC5.1.jar wi
- cket-extensions-1.5-RC5.1.jar wicket-request-1.5-RC5.1.jar wicket-uti
- l-1.5-RC5.1.jar wiquery-1.5-M1.jar
+ log4j12-1.6.1.jar stringtemplate-3.2.jar wicket-core-1.5.1.jar wicket
+ -extensions-1.5-RC5.1.jar wicket-request-1.5.1.jar wicket-util-1.5.1.
+ jar wiquery-1.5-M1.jar
 

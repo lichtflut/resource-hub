@@ -7,13 +7,18 @@ import java.util.List;
 import java.util.Set;
 
 import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 
 
 /**
- * An IRBField represents an edge of a RBEntity.
+ * <p>
+ * 	An RBField represents one value field (or association) of an RBEntity.
+ *  Each field consists basically of a predicate and one or more values. The predicate defines
+ *  the semantic of the field's value to the entity.
+ * </p>
  *
  * Created: Aug 8, 2011
  *
@@ -25,7 +30,7 @@ public interface RBField{
 	 * Returns the (attribute / )name of this RBField.
 	 * @return Name of this field
 	 */
-	String getFieldName();
+	ResourceID getPredicate();
 
 	/**
 	 * Returns the field's simple name.
@@ -38,13 +43,13 @@ public interface RBField{
 	 * This can be any type from String to Date, depending on the RBSchema.
 	 * @return Value of this field as a list
 	 */
-	List<Object> getFieldValues();
+	List<Object> getValues();
 
 	/**
 	 * Sets the value for this RBField.
-	 * @param fieldValue - this fields value as a list
+	 * @param values - this fields value as a list
 	 */
-	void setFieldValues(List<Object> fieldValue);
+	void setValues(List<Object> values);
 
 	/**
 	 * Returns the type of this filed according to the RBSchema.
@@ -59,7 +64,7 @@ public interface RBField{
 	Cardinality getCardinality();
 
 	/**
-	 * Returns wheather this field is known to the RBSchema.
+	 * Returns whether this field is known to the RBSchema.
 	 * If it is not known, it is a 'custom-' attribute which is always of type String.
 	 * @return True if yes, false if not.
 	 */

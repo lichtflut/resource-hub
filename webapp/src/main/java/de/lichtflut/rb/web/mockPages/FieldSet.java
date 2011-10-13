@@ -35,7 +35,7 @@ public class FieldSet extends Panel {
 		super(id);
 		setOutputMarkupId(true);
 		view = new RepeatingView("valueField");
-		for (Object o : field.getFieldValues()) {
+		for (Object o : field.getValues()) {
 			view.add(new TextField(view.newChildId(),new NewGenericResourceModel(field, 0), getClass(field.getDataType())));
 		}
 

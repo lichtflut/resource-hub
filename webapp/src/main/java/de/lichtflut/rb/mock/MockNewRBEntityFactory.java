@@ -84,7 +84,7 @@ public final class MockNewRBEntityFactory {
 		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createPersonSchema());
 		for (RBField field : entity.getAllFields()) {
 			if (counter < list.size()) {
-				field.setFieldValues(list.get(counter));
+				field.setValues(list.get(counter));
 			}
 			counter++;
 		}
@@ -112,7 +112,7 @@ public final class MockNewRBEntityFactory {
 		int counter = 0;
 		RBEntityImpl entity = new RBEntityImpl(createOnlyStringSchema());
 		for (RBField field : entity.getAllFields()) {
-			field.setFieldValues(list.get(counter));
+			field.setValues(list.get(counter));
 			counter++;
 		}
 		return entity;
@@ -176,7 +176,7 @@ public final class MockNewRBEntityFactory {
 		int counter = 0;
 		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createAddressSchema());
 		for (RBField field : entity.getAllFields()) {
-			field.setFieldValues(list.get(counter));
+			field.setValues(list.get(counter));
 			counter++;
 		}
 		return entity;
@@ -196,7 +196,7 @@ public final class MockNewRBEntityFactory {
 		int counter = 0;
 		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createCitySchema());
 		for (RBField field : entity.getAllFields()) {
-			field.setFieldValues(list.get(counter));
+			field.setValues(list.get(counter));
 			counter++;
 		}
 		return entity;
@@ -229,7 +229,7 @@ public final class MockNewRBEntityFactory {
 		int counter = 0;
 		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createOrganisationSchema());
 		for (RBField field : entity.getAllFields()) {
-			field.setFieldValues(list.get(counter));
+			field.setValues(list.get(counter));
 			counter++;
 		}
 		return entity;
@@ -263,7 +263,7 @@ public final class MockNewRBEntityFactory {
 		int counter = 0;
 		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createOrganisationSchema());
 		for (RBField field : entity.getAllFields()) {
-			field.setFieldValues(list.get(counter));
+			field.setValues(list.get(counter));
 			counter++;
 		}
 		return entity;
@@ -320,7 +320,7 @@ public final class MockNewRBEntityFactory {
 		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createPersonSchema());
 		for (RBField field : entity.getAllFields()) {
 			if (counter < list.size()) {
-				field.setFieldValues(list.get(counter));
+				field.setValues(list.get(counter));
 			}
 			counter++;
 		}
@@ -341,7 +341,7 @@ public final class MockNewRBEntityFactory {
 		int counter = 0;
 		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createAddressSchema());
 		for (RBField field : entity.getAllFields()) {
-			field.setFieldValues(list.get(counter));
+			field.setValues(list.get(counter));
 			counter++;
 		}
 		return entity;
@@ -361,7 +361,7 @@ public final class MockNewRBEntityFactory {
 		int counter = 0;
 		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createCitySchema());
 		for (RBField field : entity.getAllFields()) {
-			field.setFieldValues(list.get(counter));
+			field.setValues(list.get(counter));
 			counter++;
 		}
 		return entity;
@@ -400,7 +400,7 @@ public final class MockNewRBEntityFactory {
 		int counter = 0;
 		RBEntityImpl entity = new RBEntityImpl(schema);
 		for (RBField field : entity.getAllFields()) {
-			field.setFieldValues(list.get(counter));
+			field.setValues(list.get(counter));
 			counter++;
 		}
 		return entity;
@@ -418,9 +418,6 @@ public final class MockNewRBEntityFactory {
 		TypeDefinitionImpl p2 = new TypeDefinitionImpl();
 		TypeDefinitionImpl p3 = new TypeDefinitionImpl();
 		TypeDefinitionImpl p4 = new TypeDefinitionImpl();
-		p2.setName("http://lichtflut.de#email");
-		p3.setName("http://lichtflut.de#age");
-		p4.setName("http://lichtflut.de#children");
 
 		p2.setElementaryDataType(ElementaryDataType.STRING);
 		p3.setElementaryDataType(ElementaryDataType.STRING);

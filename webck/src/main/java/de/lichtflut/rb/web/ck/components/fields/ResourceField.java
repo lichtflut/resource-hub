@@ -46,10 +46,10 @@ public abstract class ResourceField extends CKComponent {
 	protected void initComponent(final CKValueWrapperModel model) {
 		WebMarkupContainer container = new WebMarkupContainer("container");
 		view = new RepeatingView("repeatingView");
-		while(index < field.getFieldValues().size()){
+		while(index < field.getValues().size()){
 			view.add(createResourcePicker(index++));
 		}
-		if(field.getFieldValues().size() <= 0){
+		if(field.getValues().size() <= 0){
 			view.add(createResourcePicker(index++));
 		}
 		container.add(view);

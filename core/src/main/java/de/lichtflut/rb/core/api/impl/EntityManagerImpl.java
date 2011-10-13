@@ -78,13 +78,13 @@ public class EntityManagerImpl implements EntityManager {
         	sNode = newNode;
         }else{
         	for (RBField field : entity.getAllFields()) {
-        		ResourceID resourceID = new SimpleResourceID(field.getFieldName());
+        		final ResourceID predicate = new SimpleResourceID(field.getPredicate());
         		// Remove old Associations
-        		for (Association assoc : sNode.getAssociations(resourceID)) {
+        		for (Association assoc : sNode.getAssociations(predicate)) {
 					sNode.remove(assoc);
 				}
 				// Create new Associations
-				for (Object val : field.getFieldValues()) {
+				for (Object val : field.getValues()) {
 					SemanticNode node = new SNValue(field.getDataType(), val);
 					if(field.getDataType()==ElementaryDataType.RESOURCE){
 						try{
@@ -96,7 +96,7 @@ public class EntityManagerImpl implements EntityManager {
 							continue;
 						}
 					}
-					SNOPS.replace(sNode, resourceID, node);
+					SNOPS.replace(sNode, predicate, node);
 				}
             }
         }
@@ -109,9 +109,8 @@ public class EntityManagerImpl implements EntityManager {
 	public void delete(final RBEntity entity) {
 		RBEntityImpl sEntity = find(entity.getID());
 		for (RBField field : entity.getAllFields()) {
-			ResourceID resourceID = new SimpleResourceID(field.getFieldName());
-			for (Association assoc : sEntity.getNode().getAssociations(
-					new SimpleResourceID(field.getFieldName()))) {
+			final ResourceID predicate = new SimpleResourceID(field.getPredicate());
+			for (Association assoc : sEntity.getNode().getAssociations(predicate)) {
 				sEntity.getNode().remove(assoc);
 				System.out.println("del-"+assoc);
 			}

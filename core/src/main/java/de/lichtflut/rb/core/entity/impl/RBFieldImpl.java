@@ -20,7 +20,9 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 
 /**
- * Represents a resource type defined by a RBResourceSchema.
+ * <p>
+ * Default implementation of {@link RBField}.
+ * </p> 
  *
  * Created: Aug 8, 2011
  *
@@ -29,9 +31,12 @@ import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 @SuppressWarnings("serial")
 public class RBFieldImpl implements RBField, Serializable {
 
-	private PropertyDeclaration assertion;
+	private PropertyDeclaration declaration;
+	
 	private ResourceID predicate;
+	
 	private List<Object> values;
+	
 	private boolean isKnownToSchema;
 
 	//------------------------------------------------------------
@@ -39,12 +44,12 @@ public class RBFieldImpl implements RBField, Serializable {
 
 	/**
 	 * Constructor.
-	 * @param assertion - {@link PropertyDeclaration}. <code>null</code> if assertion is not known to Schema
+	 * @param declaration - {@link PropertyDeclaration}. <code>null</code> if assertion is not known to Schema
 	 * @param values - values of this field
 	 */
-	public RBFieldImpl(final PropertyDeclaration assertion, final Set<SemanticNode> values) {
-		if(assertion != null){
-			this.assertion = assertion;
+	public RBFieldImpl(final PropertyDeclaration declaration, final Set<SemanticNode> values) {
+		if(declaration != null){
+			this.declaration = declaration;
 			this.isKnownToSchema = true;
 		}
 		this.values = new ArrayList<Object>();
@@ -70,36 +75,36 @@ public class RBFieldImpl implements RBField, Serializable {
 	//------------------------------------------------------------
 
 	@Override
-	public String getFieldName() {
+	public ResourceID getPredicate() {
 		if(isKnownToSchema){
-			return assertion.getTypeDefinition().getName();
+			return declaration.getPropertyType();
 		}
-		return predicate.toString();
+		return predicate;
 	}
 
 	@Override
 	public String getLabel() {
 		if (isKnownToSchema) {
-			return assertion.getTypeDefinition().getName();
+			return declaration.getPropertyType().getName();
 		} else {
 			return predicate.getName();
 		}
 	}
 
 	@Override
-	public List<Object> getFieldValues() {
+	public List<Object> getValues() {
 		return values;
 	}
 
 	@Override
-	public void setFieldValues(final List<Object> fieldValues) {
+	public void setValues(final List<Object> fieldValues) {
 		this.values = fieldValues;
 	}
 
 	@Override
 	public ElementaryDataType getDataType() {
-		if (assertion != null) {
-			return assertion.getTypeDefinition().getElementaryDataType();
+		if (declaration != null) {
+			return declaration.getTypeDefinition().getElementaryDataType();
 		} else {
 			return ElementaryDataType.STRING;
 		}
@@ -107,8 +112,8 @@ public class RBFieldImpl implements RBField, Serializable {
 
 	@Override
 	public Cardinality getCardinality() {
-		if (assertion != null) {
-			return assertion.getCardinality();
+		if (declaration != null) {
+			return declaration.getCardinality();
 		} else {
 			return CardinalityBuilder.hasOptionalOneToMany();
 		}
@@ -121,8 +126,8 @@ public class RBFieldImpl implements RBField, Serializable {
 
 	@Override
 	public boolean isResourceReference() {
-		if (assertion != null) {
-			return assertion.getTypeDefinition().isResourceReference();
+		if (declaration != null) {
+			return declaration.getTypeDefinition().isResourceReference();
 		} else {
 			return false;
 		}
@@ -130,8 +135,8 @@ public class RBFieldImpl implements RBField, Serializable {
 
 	@Override
 	public Set<Constraint> getConstraints() {
-		if (assertion != null) {
-			return assertion.getTypeDefinition().getConstraints();
+		if (declaration != null) {
+			return declaration.getTypeDefinition().getConstraints();
 		} else {
 			return Collections.emptySet();
 		}

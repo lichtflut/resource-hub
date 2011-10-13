@@ -204,7 +204,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 						addResourceField(valueList, field);
 					} else {
 						String value = "";
-						for (Object o : field.getFieldValues()) {
+						for (Object o : field.getValues()) {
 							if(o != null){
 								value = value.concat(o.toString() + ", ");
 							}else{
@@ -246,10 +246,10 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		 * @param field - instance of {@link RBField}
 		 */
 		private void addResourceField(final RepeatingView valueList, final RBField field) {
-			if(field.getFieldValues().isEmpty() || field.getFieldValues() == null){
+			if(field.getValues().isEmpty() || field.getValues() == null){
 				valueList.add(new Label(valueList.newChildId(), ""));
 			}
-			for (Object o : field.getFieldValues()) {
+			for (Object o : field.getValues()) {
 				if (o != null) {
 				final RBEntity e = (RBEntity) o;
 					valueList.add(createLinkForEntity(valueList, e));

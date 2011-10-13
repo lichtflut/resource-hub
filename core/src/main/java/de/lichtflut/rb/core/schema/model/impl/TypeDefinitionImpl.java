@@ -36,12 +36,12 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
 public final class TypeDefinitionImpl implements TypeDefinition{
 
 	private static final long serialVersionUID = -863599762328529038L;
+	
+	private ResourceID id;
 
 	private Set<Constraint> constraints = new HashSet<Constraint>();
 	
 	private ElementaryDataType type =  ElementaryDataType.STRING;
-	
-	private ResourceID identifier;
 	
 	private boolean isPublicType = false;
 
@@ -51,6 +51,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 * Default constructor. For non public type definitions without ID.
 	 */
 	public TypeDefinitionImpl() {
+		id = new SimpleResourceID();
 	}
 
 	/**
@@ -59,7 +60,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 * @param isPublic Flag for public/private types.
 	 */
 	public TypeDefinitionImpl(final ResourceID id, final boolean isPublic) {
-		this.identifier = id;
+		this.id = id;
 		this.isPublicType = isPublic;
 	}
 
@@ -81,7 +82,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 */
 	@Override
 	public ResourceID getID() {
-		return identifier;
+		return id;
 	}
 	
 	/**
@@ -188,9 +189,9 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 */
 	public void setName(final String identifierString){
 		if(!(QualifiedName.isUri(identifierString))){
-			this.identifier = new SimpleResourceID(VoidNamespace.getInstance(),identifierString);
+			this.id = new SimpleResourceID(VoidNamespace.getInstance(),identifierString);
 		}else{
-			this.identifier = new SimpleResourceID(new QualifiedName(identifierString));
+			this.id = new SimpleResourceID(new QualifiedName(identifierString));
 		}
 	}
 
@@ -242,7 +243,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 		if(!(obj instanceof TypeDefinition)){
 			return false;
 		}
-		return this.identifier.equals(((TypeDefinition) obj).getID());
+		return this.id.equals(((TypeDefinition) obj).getID());
 	}
 
 	/**

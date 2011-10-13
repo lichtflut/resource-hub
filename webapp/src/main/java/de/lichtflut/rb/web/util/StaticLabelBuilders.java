@@ -30,6 +30,8 @@ public final class StaticLabelBuilders implements Serializable{
 	 * Private Constructor.
 	 */
 	private StaticLabelBuilders(){}
+	
+	// -----------------------------------------------------
 
 	/**
 	 * Get the label builder for persons.
@@ -122,8 +124,12 @@ public final class StaticLabelBuilders implements Serializable{
 	 * @param predicate -
 	 */
 	private static void append(final StringBuilder sb, final RBEntity entity, final ResourceID predicate) {
-		final RBField field = entity.getField(predicate.getQualifiedName().toURI());
-		for (Object value : field.getFieldValues()) {
+		final RBField field = entity.getField(predicate);
+		if (field == null) {
+			sb.append("<" + predicate + "> ");
+			return;
+		}
+		for (Object value : field.getValues()) {
 			if((field.isResourceReference()) && (value != null)){
 				RBEntity e = (RBEntity) value;
 				sb.append(e.getLabel());

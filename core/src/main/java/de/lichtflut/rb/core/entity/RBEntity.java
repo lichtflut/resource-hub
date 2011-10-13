@@ -12,7 +12,9 @@ import org.arastreju.sge.naming.QualifiedName;
 
 
 /**
- * An IRBField represents one attribute of a RBEntity. This attribute can contain multiple values.
+ * <p>
+ * An RBField represents one attribute of a RBEntity. This attribute can contain multiple values.
+ * </p>
  *
  * Created: Aug 15, 2011
  *
@@ -53,11 +55,11 @@ public interface RBEntity extends Serializable {
 	ResourceNode getNode();
 
 	/**
-	 * Returns the {@link RBField} for a Fieldname.
-	 * @param fieldname - Fieldname
+	 * Returns the {@link RBField} for the predicate.
+	 * @param predicate The predicate of the field.
 	 * @return null if {@link RBField} is not found
 	 */
-	RBField getField(String fieldname);
+	RBField getField(ResourceID predicate);
 
 	/**
 	 * Returns all fields of the NewRBEntity.

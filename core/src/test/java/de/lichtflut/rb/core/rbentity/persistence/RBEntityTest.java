@@ -163,25 +163,25 @@ public final class RBEntityTest {
         System.out.println("**********"+sm.findAllResourceSchemas().size());
 
         // Add a Email to the entities
-        e.getField("http://lichtflut.de#email").getFieldValues()
+        e.getField(new SimpleResourceID("http://lichtflut.de#hatEmail")).getValues()
                 .add("mutter@fam.com");
 
         // Store entity
         m.store(e);
 
         // Add Field to entity
-        e1.getField("http://lichtflut.de#email").getFieldValues()
+        e1.getField(new SimpleResourceID("http://lichtflut.de#hatEmail")).getValues()
                 .add("kind@fam.com");
 
         // Add a custom Field
         RBFieldImpl newField = new RBFieldImpl(new SimpleResourceID("http://lichtflut.de#whatever"), null);
-        newField.getFieldValues().add("haha");
-        newField.getFieldValues().add("hoho");
-        newField.getFieldValues().add("muhahaha");
+        newField.getValues().add("haha");
+        newField.getValues().add("hoho");
+        newField.getValues().add("muhahaha");
         e1.addField(newField);
 
         // Add entity as field
-        e.getField("http://lichtflut.de#kind").getFieldValues().add(e1);
+        e.getField(new SimpleResourceID("http://lichtflut.de#hatKind")).getValues().add(e1);
 
         // store entities
         m.store(e);
@@ -208,10 +208,6 @@ public final class RBEntityTest {
         TypeDefinitionImpl p2 = new TypeDefinitionImpl();
         TypeDefinitionImpl p3 = new TypeDefinitionImpl();
         TypeDefinitionImpl p4 = new TypeDefinitionImpl();
-        p1.setName("http://lichtflut.de#geburtsdatum");
-        p2.setName("http://lichtflut.de#email");
-        p3.setName("http://lichtflut.de#alter");
-        p4.setName("http://lichtflut.de#kind");
 
         p1.setElementaryDataType(ElementaryDataType.STRING);
         p2.setElementaryDataType(ElementaryDataType.STRING);

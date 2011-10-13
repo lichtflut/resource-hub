@@ -42,7 +42,7 @@ public class NewGenericResourceModel<T> implements IModel<T> {
 	 */
 	public NewGenericResourceModel(final RBField field, final int index){
 		this.index = index;
-		values = field.getFieldValues();
+		values = field.getValues();
 		if(index >= values.size()){
 			if(field.getDataType().equals(ElementaryDataType.STRING)){
 				values.add("");
