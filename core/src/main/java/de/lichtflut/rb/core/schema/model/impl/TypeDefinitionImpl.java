@@ -222,16 +222,21 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 * @return String
 	 */
 	public String toString(){
-		StringBuffer sBuffer = new StringBuffer();
-		sBuffer.append("Identifier: " + getID());
-		sBuffer.append("\nDatatype: "+ getElementaryDataType().toString());
-		if(null!=constraints){
-			Iterator<Constraint> i = constraints.iterator();
+		final StringBuilder sb = new StringBuilder();
+		if (isPublicType){
+			sb.append("public TypeDefinition " + getID());
+		} else {
+			sb.append("private TypeDefinition");
+		}
+		sb.append(" " + getElementaryDataType());
+		if( null != constraints && !constraints.isEmpty()){
+			sb.append(" constraints: ");
+			final Iterator<Constraint> i = constraints.iterator();
 			while(i.hasNext()){
-				sBuffer.append("\n  - Constraint: "+i.next().toString());
+				sb.append(i.next().toString() + " ");
 			}
 		}
-		return sBuffer.toString();
+		return sb.toString();
 	}
 	
 	//------------------------------------------------------

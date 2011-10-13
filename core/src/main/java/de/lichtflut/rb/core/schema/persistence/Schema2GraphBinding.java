@@ -69,10 +69,11 @@ public class Schema2GraphBinding {
 		final ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema);
 		schema.setDescribedType(snSchema.getDescribedType());
 		for (SNPropertyDeclaration snDecl : snSchema.getPropertyDeclarations()){
-			final PropertyDeclarationImpl decl = new PropertyDeclarationImpl(SNOPS.id(snDecl));
+			final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
 			decl.setPropertyType(snDecl.getPropertyDescriptor());
 			decl.setCardinality(buildCardinality(snDecl));
 			decl.setTypeDefinition(toModelObject(snDecl.getTypeDefinition()));
+			schema.addPropertyDeclaration(decl);
 		}
 
 		return schema;

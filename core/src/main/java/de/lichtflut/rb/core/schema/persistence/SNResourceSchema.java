@@ -4,7 +4,7 @@
 package de.lichtflut.rb.core.schema.persistence;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -97,15 +97,18 @@ public class SNResourceSchema extends ResourceView {
 	 * @return The list of all property assertions.
 	 */
 	public List<SNPropertyDeclaration> getPropertyDeclarations(){
-		Set<SNPropertyDeclaration> result = new HashSet<SNPropertyDeclaration>();
-		result.addAll(getDeclaredPropertyDeclarations());
-		List<SNPropertyDeclaration> list = new ArrayList<SNPropertyDeclaration>(result);
-		Collections.sort(list);
-		return list;
+		final List<SNPropertyDeclaration> result = new ArrayList<SNPropertyDeclaration>();
+		
+		SNPropertyDeclaration current = findFirst(getDeclaredPropertyDeclarations());
+		while (current != null) {
+			result.add(current);
+			current = current.getSuccessor();
+		}
+		return result;
 	}
 
 	/**
-	 * Returns only the property declarations declared for this classifier, not the inherited.
+	 * Returns only the unsorted property declarations declared for this classifier, not the inherited.
 	 * @return The list of property declarations.
 	 */
 	public List<SNPropertyDeclaration> getDeclaredPropertyDeclarations(){
@@ -114,7 +117,6 @@ public class SNResourceSchema extends ResourceView {
 		for (Association current : assocs) {
 			result.add(new SNPropertyDeclaration(current.getObject().asResource()));
 		}
-		Collections.sort(result);
 		return result;
 	}
 
@@ -158,5 +160,43 @@ public class SNResourceSchema extends ResourceView {
 			sb.append("\t" + pa + "\n");
 		}
 		return sb.toString();
+	}
+	
+	// -----------------------------------------------------
+	
+	private SNPropertyDeclaration findFirst(final Collection<SNPropertyDeclaration> decls) {
+		if (decls.isEmpty()) {
+			return null;
+		}
+		ensureCorrectOrder(decls);
+		final Set<SNPropertyDeclaration> all = new HashSet<SNPropertyDeclaration>(decls);
+		final Set<SNPropertyDeclaration> successors = new HashSet<SNPropertyDeclaration>();
+		for (SNPropertyDeclaration current : all) {
+			final SNPropertyDeclaration successor = current.getSuccessor();
+			if (successors != successor) {
+				successors.add(successor);
+			}
+		}
+		all.removeAll(successors);
+		return all.iterator().next();
+	}
+	
+	private void ensureCorrectOrder(final Collection<SNPropertyDeclaration> decls) {
+		final Set<SNPropertyDeclaration> all = new HashSet<SNPropertyDeclaration>(decls);
+		final Set<SNPropertyDeclaration> successors = new HashSet<SNPropertyDeclaration>();
+		for (SNPropertyDeclaration current : all) {
+			final SNPropertyDeclaration successor = current.getSuccessor();
+			if (successors.contains(successor)) {
+				throw new IllegalStateException("Order of PropertyDeclarations has been corrupted!");
+			} else if (null != successor) {
+				successors.add(successor);
+			}
+		}
+		all.removeAll(successors);
+		if (all.isEmpty()) {
+			throw new IllegalStateException("Order of PropertyDeclarations has been corrupted! First element not found.");
+		} else if (all.size() > 1) {
+			throw new IllegalStateException("Order of PropertyDeclarations has been corrupted! More than one first found.");
+		}
 	}
 }

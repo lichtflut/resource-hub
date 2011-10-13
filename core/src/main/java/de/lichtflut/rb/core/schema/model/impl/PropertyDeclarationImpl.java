@@ -38,7 +38,7 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
 public class PropertyDeclarationImpl implements PropertyDeclaration {
 
 	private static final long serialVersionUID = -322769574493912661L;
-
+	
 	private ResourceID propertyDescriptor;
 	
 	private TypeDefinition typeDefinition;
@@ -47,18 +47,14 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 	
 	private Set<Constraint> constraints = new HashSet<Constraint>();
 	
-	private ResourceID id;
-	
-	private String propertyIdentifier = null;
+	private String oldIdentifier = null;
 
 	// -----------------------------------------------------
 	
 	/**
-	 * Constructor.
-	 * @param id The technical ID of this declaration.
+	 * Default Constructor.
 	 */
-	public PropertyDeclarationImpl(final ResourceID id) {
-		this.id = id;
+	public PropertyDeclarationImpl() {
 	}
 	
 	/**
@@ -79,7 +75,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 	 */
 	public PropertyDeclarationImpl(final String propertyIdentifier, final Cardinality c){
 		this.cardinality = c;
-		this.propertyIdentifier = propertyIdentifier;
+		this.oldIdentifier = propertyIdentifier;
 	}
 	
 	// -----------------------------------------------------
@@ -155,46 +151,37 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer sBuffer = new StringBuffer();
-		sBuffer.append("propertyIdentifier: " +  this.getQualifiedPropertyIdentifier());
-		sBuffer.append("\npropertyDescriptor: " + ((propertyDescriptor!=null)
+		final StringBuilder sb = new StringBuilder();
+		sb.append("PropertyDeclaration for " + ((propertyDescriptor!=null)
 					? propertyDescriptor.getQualifiedName().toURI() : ""));
-		sBuffer.append("\nproperty: " + ((propertyDescriptor!=null) ? typeDefinition.toString() : ""));
-		sBuffer.append("\ncardinality: "+ cardinality.toString());
+		sb.append("\ntype: " + typeDefinition);
+		sb.append("\ncardinality: "+ cardinality.toString());
 		if(null!=constraints){
 			Iterator<Constraint> i = constraints.iterator();
 			while(i.hasNext()){
-				sBuffer.append("\ncardinality: "+i.next().toString());
+				sb.append("\ncardinality: "+i.next().toString());
 			}
 		}
-		return sBuffer.toString();
+		return sb.toString();
 	}
 
 	// -----------------------------------------------------
 	
-	/**
-	 * @return the id
-	 */
-	public ResourceID getId() {
-		return id;
-	}
-	
-	// -----------------------------------------------------
-
 	/**
 	 * {@inheritDoc}
 	 */
+	@Deprecated
 	@Override
 	public QualifiedName getQualifiedPropertyIdentifier() {
-		if (this.propertyIdentifier == null) {
+		if (this.oldIdentifier == null) {
 			return null;
 		}
-		if (!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName
-				.isQname(this.propertyIdentifier))) {
+		if (!(QualifiedName.isUri(this.oldIdentifier) || QualifiedName
+				.isQname(this.oldIdentifier))) {
 			return new QualifiedName(VoidNamespace.getInstance(),
-					this.propertyIdentifier);
+					this.oldIdentifier);
 		} else {
-			return new QualifiedName(this.propertyIdentifier);
+			return new QualifiedName(this.oldIdentifier);
 		}
 	}
 	
@@ -204,10 +191,10 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 	 * @param identifier -
 	 */
 	public void setPropertyIdentifier(final String identifier) {
-		this.propertyIdentifier = identifier;
+		this.oldIdentifier = identifier;
 		//TODO This must form a valid URI
-		if(!(QualifiedName.isUri(this.propertyIdentifier) || QualifiedName.isQname(this.propertyIdentifier))){
-			this.propertyIdentifier =  new QualifiedName(VoidNamespace.getInstance(),this.propertyIdentifier).toURI();
+		if(!(QualifiedName.isUri(this.oldIdentifier) || QualifiedName.isQname(this.oldIdentifier))){
+			this.oldIdentifier =  new QualifiedName(VoidNamespace.getInstance(),this.oldIdentifier).toURI();
 		}
 	}
 

@@ -54,7 +54,7 @@ import de.lichtflut.rb.core.schema.RBSchema;
  *
  * @author Oliver Tigges
  */
-public class SNPropertyDeclaration extends ResourceView implements Comparable<SNPropertyDeclaration>{
+public class SNPropertyDeclaration extends ResourceView {
 
 	/**
 	 * Constructor for a new property declaration node.
@@ -194,7 +194,11 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 	 */
 	public SNPropertyDeclaration getSuccessor() {
 		final SemanticNode successor = SNOPS.singleObject(this, Aras.IS_PREDECESSOR_OF);
-		return view(successor.asResource());
+		if (successor != null) {
+			return view(successor.asResource());
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -208,20 +212,6 @@ public class SNPropertyDeclaration extends ResourceView implements Comparable<SN
 	}
 	
 	//-----------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int compareTo(final SNPropertyDeclaration other) {
-		if (this.getPropertyDescriptor() == null){
-			return 1;
-		} else if (other.getPropertyDescriptor() == null){
-			return -1;
-		} else {
-			return Infra.compare(this.getPropertyDescriptor().getQualifiedName(), other.getPropertyDescriptor().getQualifiedName());
-		}
-	}
 
 	/**
 	 * {@inheritDoc}

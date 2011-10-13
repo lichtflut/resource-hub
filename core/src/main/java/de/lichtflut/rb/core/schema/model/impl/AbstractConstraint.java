@@ -64,14 +64,13 @@ public abstract class AbstractConstraint implements Constraint{
 	}
 
 	/**
-	 * TODO: Fix toString().
-	 * Nature of Constraint is not the best to implement an universal flexible toString() method
-	 * @return String
+	 * {@inheritDoc}
 	 */
 	public String toString(){
-		String output = "Type of Constraint is: "  + (isLiteralConstraint()
-									? "Literal with " + getLiteralConstraint().toString()
-									: "Resource with " + getResourceTypeConstraint().toString());
-		return output;
+		if (isLiteralConstraint()) {
+			return "literal-constraint(" + getLiteralConstraint() + ")"; 
+		} else {
+			return "resource-constraint(" + getResourceTypeConstraint().getQualifiedName() + ")";
+		}
 	}
 }

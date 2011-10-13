@@ -140,14 +140,13 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 */
 	@Override
 	public String toString(){
-		StringBuffer sBuffer = new StringBuffer();
-		sBuffer.append("Described ResourceID " + getDescribedType().getQualifiedName().toURI() + "\n");
-		sBuffer.append("Internal ResourceID "
-				 + ((getID()==null) ? "null" : getID().getQualifiedName().toURI()) + "\n");
-		for (PropertyDeclaration property : getPropertyDeclarations()) {
-			sBuffer.append("--p-r-o-p-e-r-t-y--\n" + property.toString() + "\n");
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Resource Schema " + getID().getQualifiedName() + "\n");
+		sb.append("Described Type " + getDescribedType().getQualifiedName() + "\n");
+		for (PropertyDeclaration decl : getPropertyDeclarations()) {
+			sb.append(" + " + decl.toString() + "\n");
 		}
-		return sBuffer.toString();
+		return sb.toString();
 	}
 	
 	/**
