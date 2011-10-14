@@ -4,15 +4,15 @@
 package de.lichtflut.rb.mock;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.parser.RSFormat;
 
 /**
@@ -22,18 +22,18 @@ import de.lichtflut.rb.core.schema.parser.RSFormat;
  *
  * @author Ravi Knox
  */
-public class MockResourceSchemaManagement implements SchemaManager {
+public class MockSchemaManager implements SchemaManager {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<ResourceSchema> schemas;
+	private Set<ResourceSchema> schemas;
 	
 	// -----------------------------------------------------
 	
 	/**
 	 * Default Constructor.
 	 */
-	public MockResourceSchemaManagement() {
+	public MockSchemaManager() {
 		schemas = MockResourceSchemaFactory.getAllShemas();
 	}
 	
@@ -54,14 +54,17 @@ public class MockResourceSchemaManagement implements SchemaManager {
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public List<ResourceSchema> findAllResourceSchemas() {
+	public Collection<ResourceSchema> findAllResourceSchemas() {
 		return schemas;
 	}
 
 
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.core.api.SchemaManager#getAllPropertyDeclarations()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Collection<TypeDefinition> findAllTypeDefinitions() {
@@ -69,12 +72,12 @@ public class MockResourceSchemaManagement implements SchemaManager {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.core.api.SchemaManager#storeOrOverrideResourceSchema(de.lichtflut.rb.core.schema.model.ResourceSchema)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
-	public void store(ResourceSchema schema) {
-		throw new NotYetImplementedException();
+	public void store(final ResourceSchema schema) {
+		schemas.add(schema);
 	}
 
 

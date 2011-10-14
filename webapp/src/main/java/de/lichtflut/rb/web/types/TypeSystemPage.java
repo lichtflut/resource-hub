@@ -14,8 +14,9 @@ import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.mock.MockRBServiceProvider;
+import de.lichtflut.rb.mock.MockServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.modaldialog.ModalDialog;
 import de.lichtflut.rb.web.ck.components.typesystem.CreateTypePanel;
@@ -68,22 +69,35 @@ public class TypeSystemPage extends RBSuperPage {
 			}
 			
 			@Override
-			public void onTypeSelected(SNClass type, AjaxRequestTarget target) {
-				final ResourceSchema schema = getServiceProvider().getSchemaManager().
-					findByType(type);
-				final IModel<List<? extends PropertyRow>> model = Model.ofList(PropertyRow.toRowList(schema));
-				final SchemaEditorPanel editor = new SchemaEditorPanel("schemaEditor", model);
-				TypeSystemPage.this.replace(editor);
-				setResponsePage(TypeSystemPage.this);
+			public void onTypeSelected(final SNClass type, final AjaxRequestTarget target) {
+				displayEditor(type);
 			}
 		});
 	}
 	
 	// -----------------------------------------------------
 	
+	protected void displayEditor(final SNClass type) {
+		final ResourceSchema schema = getServiceProvider().getSchemaManager().
+		findByType(type);
+		final IModel<List<? extends PropertyRow>> model = Model.ofList(PropertyRow.toRowList(schema));
+		final SchemaEditorPanel editor = new SchemaEditorPanel("schemaEditor", model) {
+			@Override
+			public void onSave(final AjaxRequestTarget target) {
+//				final ResourceSchema schema = new ResourceSchemaImpl();
+//				getServiceProvider().getSchemaManager().store(schema);
+			}
+		};
+		TypeSystemPage.this.replace(editor);
+		// force redirect
+		setResponsePage(TypeSystemPage.this);
+	}
+	
+	// -----------------------------------------------------
+	
 	protected ServiceProvider getServiceProvider() {
 		//return new DefaultRBServiceProvider();
-		return new MockRBServiceProvider();
+		return MockServiceProvider.getDefaultInstance();
 	}
 	
 }

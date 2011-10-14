@@ -17,18 +17,17 @@
 				<tr>
 					<th><wicket:message key="header.property"></wicket:message>
 					</th>
-					<th><wicket:message key="header.datatype"></wicket:message>
-					</th>
 					<th><wicket:message key="header.min"></wicket:message>
 					</th>
 					<th colspan="2"><wicket:message key="header.max"></wicket:message>
 					</th>
+					<th><wicket:message key="header.datatype"></wicket:message>
+                    </th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr wicket:id="listView">
 					<td><input wicket:id="property" size="100"/></td>
-					<td><select wicket:id="dataType" ></select></td>
 					<td><input wicket:id="min" size="5"/></td>
 					<td>
 					   <wicket:message key="label.unbounded">[unbounded]</wicket:message>
@@ -37,6 +36,7 @@
 					<td>
 					   <input wicket:id="max" size="5" />
 					</td>
+					<td><select wicket:id="dataType" ></select></td>
 				</tr>
 			</tbody>
 		</table>

@@ -96,7 +96,7 @@ public final class OSFEvaluator {
 			Cardinality c;
 			if(value instanceof Integer){
 				c = assertion.getCardinality();
-				assertion.setCardinality(CardinalityBuilder.between((Integer) value,c.getMinOccurs()));
+				assertion.setCardinality(CardinalityBuilder.between(c.getMinOccurs(),(Integer) value));
 			}else{
 				tree.emitErrorMessage(errorMessage + value.toString() + " is not a valid argument for " + type
 						+ " expecting a single numerical value");
@@ -105,7 +105,7 @@ public final class OSFEvaluator {
 			Cardinality c;
 			if(value instanceof Integer){
 				c = assertion.getCardinality();
-				assertion.setCardinality(CardinalityBuilder.between(c.getMaxOccurs(), (Integer) value));
+				assertion.setCardinality(CardinalityBuilder.between((Integer) value, c.getMaxOccurs()));
 			}else{
 				tree.emitErrorMessage(errorMessage + value.toString() + " is not a valid argument for " + type
 						+ " expecting a single numerical value");
@@ -119,8 +119,8 @@ public final class OSFEvaluator {
 					return;
 				}
 				try{
-					assertion.setCardinality(CardinalityBuilder.between((Integer)values
-							.get(1),(Integer) values.get(0)));
+					assertion.setCardinality(CardinalityBuilder.between((Integer) values.get(0),(Integer)values
+									.get(1)));
 				}catch(Exception any) {
 					tree.emitErrorMessage(errorMessage + values.toString() + " is not a valid argument for " + type
 							+ " expecting an array of 2 numerical values");

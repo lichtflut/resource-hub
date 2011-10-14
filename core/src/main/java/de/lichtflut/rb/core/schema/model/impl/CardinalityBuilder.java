@@ -58,7 +58,7 @@ public final class CardinalityBuilder{
 	 * @return a 1:N-Cardinality
 	 */
 	public static Cardinality hasAtLeastOneToMany(){
-		return between(-1,1);
+		return between(1,-1);
    }
 
 	// -----------------------------------------------------
@@ -68,7 +68,7 @@ public final class CardinalityBuilder{
 	 * @return a least:N-Cardinality
 	 */
 	public static Cardinality hasAtLeast(final int least){
-		return between(-1, Math.abs(least));
+		return between(Math.abs(least), -1);
    }
 
 	// -----------------------------------------------------
@@ -87,7 +87,7 @@ public final class CardinalityBuilder{
 	 * @return a 1:max-Cardinality
 	 */
 	public static Cardinality hasAtLeastOneUpTo(final int max){
-	  return between(Math.abs(max),1);
+	  return between(1,Math.abs(max));
    }
 
 	// -----------------------------------------------------
@@ -97,7 +97,7 @@ public final class CardinalityBuilder{
 	 * @return a 0:max-Cardinality
 	 */
 	public static Cardinality hasOptionalOneUpTo(final int max){
-	  return between(Math.abs(max),0);
+	  return between(0,Math.abs(max));
 	}
 
 	// -----------------------------------------------------
@@ -114,12 +114,12 @@ public final class CardinalityBuilder{
 
 	/**
 	 * Throws an {@link IllegalArgumentException} if max < min.
-	 * @param max -
 	 * @param min -
+	 * @param max -
 	 * @return a min:max-Cardinality
 	 */
-    public static Cardinality between(final int max, final int min){
-    	return new SimpleCardinalityImpl(max, min);
+    public static Cardinality between(final int min, final int max){
+    	return new SimpleCardinalityImpl(min, max);
     }
 
 
@@ -148,10 +148,10 @@ public final class CardinalityBuilder{
 
 		/**
 		 * Max should be greater than Min, otherwise, an {@link IllegalArgumentException} will be raised.
-		 * @param max - unbound could be set up with -1.
 		 * @param min - a negative value is interpreted as a positive one.
+		 * @param max - unbound could be set up with -1.
 		 */
-		public SimpleCardinalityImpl(final int max,final int min){
+		public SimpleCardinalityImpl(final int min,final int max){
 			int minimum = min;
 			minimum = Math.abs(min);
 			if((max < min) && (max!=-1)){

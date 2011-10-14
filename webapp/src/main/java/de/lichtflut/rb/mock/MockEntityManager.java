@@ -21,7 +21,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class MockRBEntityManager implements EntityManager {
+public class MockEntityManager implements EntityManager {
 
 	private List<RBEntity> dataPool;
 
@@ -31,7 +31,7 @@ public class MockRBEntityManager implements EntityManager {
 	 * Constructor.
 	 * @param dataPool2 
 	 */
-	public MockRBEntityManager(final List<RBEntity> dataPool) {
+	public MockEntityManager(final List<RBEntity> dataPool) {
 		this.dataPool = dataPool;
 	}
 

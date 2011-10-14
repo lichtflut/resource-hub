@@ -21,26 +21,39 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Ravi Knox
  */
-public class MockRBServiceProvider implements ServiceProvider {
+public class MockServiceProvider implements ServiceProvider {
 
 	private SchemaManager schemaManager;
 	private EntityManager entityManager;
 	private TypeManager typeManager;
 	
 	private List<RBEntity> dataPool = new ArrayList<RBEntity>();
+	
+	private final static MockServiceProvider INSTANCE = new MockServiceProvider();
 
+	// -----------------------------------------------------
+	
+	/**
+	 * @return the default instance
+	 */
+	public static MockServiceProvider getDefaultInstance() {
+		return INSTANCE;
+	}
+	
 	// -----------------------------------------------------
 
 	/**
 	 * Constructor.
 	 */
-	public MockRBServiceProvider() {
+	public MockServiceProvider() {
 		dataPool.addAll(MockNewRBEntityFactory.getAllEntities());
-        schemaManager = new MockResourceSchemaManagement();
-        entityManager = new MockRBEntityManager(dataPool);
-        typeManager = new MockRBTypeManager(dataPool);
+        schemaManager = new MockSchemaManager();
+        entityManager = new MockEntityManager(dataPool);
+        typeManager = new MockTypeManager(dataPool);
 	}
 
+	// -----------------------------------------------------
+	
 	/**
 	 * {@inheritDoc}
 	 */

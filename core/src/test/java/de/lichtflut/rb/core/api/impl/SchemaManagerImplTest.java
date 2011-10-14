@@ -55,15 +55,11 @@ public class SchemaManagerImplTest {
 		final ResourceSchema original = createSchema();
 		manager.store(original);
 		
-		System.out.println("ORIGINAL:\n" + original);
-		
 		final ResourceSchema found = manager.findByType(SNOPS.id(personQN));
-		
-		System.out.println("FOUND:\n" + found);
 		
 		Assert.assertNotNull(found);
 		
-		//Assert.assertEquals(3, found.getPropertyDeclarations().size());
+		Assert.assertEquals(3, found.getPropertyDeclarations().size());
 		
 	}
 	

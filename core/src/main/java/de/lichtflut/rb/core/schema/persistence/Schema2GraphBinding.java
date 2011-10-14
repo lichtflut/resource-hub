@@ -172,7 +172,7 @@ public class Schema2GraphBinding {
 		int min = snDecl.getMinOccurs().getIntegerValue().intValue();
 		int max = snDecl.getMaxOccurs().getIntegerValue().intValue();
 		if (max > 0) {
-			return CardinalityBuilder.between(max, min);
+			return CardinalityBuilder.between(min, max);
 		} else {
 			return CardinalityBuilder.hasAtLeast(min);
 		}

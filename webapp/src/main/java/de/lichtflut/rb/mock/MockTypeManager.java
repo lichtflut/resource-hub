@@ -28,7 +28,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
  *
  * @author Oliver Tigges
  */
-public class MockRBTypeManager implements TypeManager {
+public class MockTypeManager implements TypeManager {
 
 	private List<RBEntity> dataPool;
 	
@@ -37,7 +37,7 @@ public class MockRBTypeManager implements TypeManager {
 	/**
 	 * @param dataPool
 	 */
-	public MockRBTypeManager(final List<RBEntity> dataPool) {
+	public MockTypeManager(final List<RBEntity> dataPool) {
 		this.dataPool = dataPool;
 	}
 	

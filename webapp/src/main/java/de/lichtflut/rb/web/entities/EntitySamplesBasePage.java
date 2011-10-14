@@ -10,7 +10,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.mock.MockRBServiceProvider;
+import de.lichtflut.rb.mock.MockServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.components.CKLink;
 import de.lichtflut.rb.web.ck.components.CKLinkType;
@@ -40,7 +40,7 @@ public class EntitySamplesBasePage extends RBSuperPage {
 	 */
 	public static ServiceProvider getRBServiceProvider(){
 		if(provider==null) {
-			provider= new MockRBServiceProvider();
+			provider= new MockServiceProvider();
 		}
 		return provider;
 	}

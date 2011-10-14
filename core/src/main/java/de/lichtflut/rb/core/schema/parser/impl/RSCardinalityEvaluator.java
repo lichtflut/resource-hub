@@ -59,7 +59,7 @@ public class RSCardinalityEvaluator implements RSEvaluator<Cardinality> {
 	public boolean evaluate(final Cardinality c) {
 		int max_c1 = c.getMaxOccurs(), max_c2 = cardinality.getMaxOccurs();
 		int min_c1 = c.getMinOccurs(), min_c2 = cardinality.getMinOccurs();
-		this.cardinality =  (CardinalityBuilder.between(Math.max(max_c1,max_c2), Math.min(min_c2, min_c1)));
+		this.cardinality =  (CardinalityBuilder.between(Math.min(min_c2, min_c1), Math.max(max_c1,max_c2)));
 		return true;
 	}
 }

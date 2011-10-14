@@ -5,7 +5,9 @@ package de.lichtflut.rb.web.ck.components.typesystem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
@@ -13,6 +15,12 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.ResourceTypeDefinition;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 
 /**
  * <p>
@@ -28,7 +36,9 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  */
 public class PropertyRow implements Serializable {
 	
-	private ResourceID propertyDescriptor;
+	private ResourceID propertyType;
+	
+	private TypeDefinition typeDefinition;
 	
 	private ElementaryDataType dataType;
 	
@@ -42,8 +52,6 @@ public class PropertyRow implements Serializable {
 	
 	private List<Constraint> literalConstraints;
 	
-	private boolean hasPublicPropertyDeclaration;
-	
 	private boolean isResourceReference;
 	
 	// -----------------------------------------------------
@@ -54,6 +62,25 @@ public class PropertyRow implements Serializable {
 			list.add(new PropertyRow(pa));
 		}
 		return list;
+	}
+	
+	public static PropertyDeclaration toPropertyDeclaration(final PropertyRow row) {
+		final PropertyDeclaration decl = new PropertyDeclarationImpl();
+		if (row.isUnbounded()) {
+			decl.setCardinality(CardinalityBuilder.hasAtLeast(row.min));	
+		} else {
+			decl.setCardinality(CardinalityBuilder.between(row.min, row.max));
+		}
+		decl.setPropertyType(row.propertyType);
+		if (row.isTypeDefinitionPublic()) {
+			decl.setTypeDefinition(row.typeDefinition);
+		} else {
+			final TypeDefinition typeDef = new TypeDefinitionImpl();
+			typeDef.setElementaryDataType(row.dataType);
+			typeDef.setConstraints(row.buildConstraints());
+			decl.setTypeDefinition(typeDef);
+		}
+		return decl;
 	}
 	
 	// -----------------------------------------------------
@@ -67,12 +94,13 @@ public class PropertyRow implements Serializable {
 	/**
 	 * Constructor. 
 	 */
-	public PropertyRow(PropertyDeclaration assertion) {
-		this.propertyDescriptor = assertion.getPropertyType();
-		this.dataType = assertion.getTypeDefinition().getElementaryDataType();
-		this.min = assertion.getCardinality().getMinOccurs();
-		this.max = assertion.getCardinality().getMaxOccurs();
-		this.unbounded = assertion.getCardinality().isUnbound();
+	public PropertyRow(final PropertyDeclaration decl) {
+		this.propertyType = decl.getPropertyType();
+		this.min = decl.getCardinality().getMinOccurs();
+		this.max = decl.getCardinality().getMaxOccurs();
+		this.unbounded = decl.getCardinality().isUnbound();
+		
+		setTypeDefinition(decl.getTypeDefinition());
 	}
 	
 	// -----------------------------------------------------
@@ -81,14 +109,14 @@ public class PropertyRow implements Serializable {
 	 * @return the propertyDescriptor
 	 */
 	public ResourceID getPropertyDescriptor() {
-		return propertyDescriptor;
+		return propertyType;
 	}
 
 	/**
 	 * @param propertyDescriptor the propertyDescriptor to set
 	 */
 	public void setPropertyDescriptor(ResourceID propertyDescriptor) {
-		this.propertyDescriptor = propertyDescriptor;
+		this.propertyType = propertyDescriptor;
 	}
 
 	/**
@@ -157,15 +185,15 @@ public class PropertyRow implements Serializable {
 	/**
 	 * @param literalConstraints the literalConstraints to set
 	 */
-	public void setLiteralConstraints(List<Constraint> literalConstraints) {
+	public void setLiteralConstraints(final List<Constraint> literalConstraints) {
 		this.literalConstraints = literalConstraints;
 	}
 
 	/**
-	 * @return the hasPublicPropertyDeclaration
+	 * @return true if the Type Definition is public, false if it is private.
 	 */
-	public boolean isHasPublicPropertyDeclaration() {
-		return hasPublicPropertyDeclaration;
+	public boolean isTypeDefinitionPublic() {
+		return typeDefinition.isPublicTypeDef();
 	}
 
 	/**
@@ -187,6 +215,30 @@ public class PropertyRow implements Serializable {
 	 */
 	public void setUnbounded(boolean unbounded) {
 		this.unbounded = unbounded;
+	}
+	
+	// -----------------------------------------------------
+	
+	public void setTypeDefinition(final TypeDefinition def) {
+		this.typeDefinition = def;
+		this.dataType = def.getElementaryDataType();
+		if (def.isResourceReference()) {
+			this.resourceConstraint = ResourceTypeDefinition.view(def).getResourceTypeConstraint();
+		} else {
+			this.literalConstraints = new ArrayList<Constraint>(def.getConstraints());
+		}
+	}
+	
+	// -----------------------------------------------------
+	
+	protected Set<Constraint> buildConstraints() {
+		final Set<Constraint> constraints = new HashSet<Constraint>();
+		if (isResourceReference) {
+			constraints.add(ConstraintBuilder.buildConstraint(resourceConstraint));
+		} else {
+			constraints.addAll(literalConstraints);
+		}
+		return constraints;
 	}
 	
 }

@@ -23,7 +23,7 @@ import junit.framework.TestCase;
  * @author Nils Bleisch
  *
  */
-public class ConstraintFactoryTest extends TestCase{
+public class ConstraintBuilderTest extends TestCase{
 	/**
 	 * <p>
 	 * This test makes some assertion about the general nature of ConstraintFactory.

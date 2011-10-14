@@ -15,7 +15,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
-import de.lichtflut.rb.mock.MockRBServiceProvider;
+import de.lichtflut.rb.mock.MockServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.web.ck.behavior.CKBehavior;
 import de.lichtflut.rb.web.ck.components.CKComponent;
@@ -42,7 +42,7 @@ public class FeaturedTablePage extends RBSuperPage {
 	 */
 	public static ServiceProvider getRBServiceProvider(){
 		if(provider==null) {
-			provider= new MockRBServiceProvider();
+			provider= new MockServiceProvider();
 		}
 		return provider;
 	}

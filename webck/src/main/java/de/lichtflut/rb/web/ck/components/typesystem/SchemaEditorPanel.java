@@ -25,7 +25,7 @@ import de.lichtflut.rb.web.models.ConditionalModel;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Panel for editing of a Resource Schema.
  * </p>
  *
  * <p>
@@ -34,7 +34,7 @@ import de.lichtflut.rb.web.models.ConditionalModel;
  *
  * @author Oliver Tigges
  */
-public class SchemaEditorPanel extends Panel {
+public abstract class SchemaEditorPanel extends Panel {
 	
 	/**
 	 *  Constructor.
@@ -55,10 +55,6 @@ public class SchemaEditorPanel extends Panel {
 				
 				item.add(new TextField("property", new PropertyModel(row, "propertyDescriptor")));
 
-				item.add(new EnumDropDownChoice<ElementaryDataType>("dataType", 
-						new PropertyModel(row, "dataType"),
-						ElementaryDataType.values()));
-				
 				item.add(new TextField("min", new PropertyModel(row, "min")));
 				
 				final PropertyModel unboundModel = new PropertyModel(row, "unbounded");
@@ -75,6 +71,16 @@ public class SchemaEditorPanel extends Panel {
 					}
 				});
 				item.add(checkBox);
+				
+				final EnumDropDownChoice<ElementaryDataType> dataTypeChoice = 
+					new EnumDropDownChoice<ElementaryDataType>("dataType", 
+						new PropertyModel(row, "dataType"),
+						ElementaryDataType.values());
+				
+				final boolean isPrivateTD = !row.isTypeDefinitionPublic();
+				dataTypeChoice.setEnabled(isPrivateTD);
+				item.add(dataTypeChoice);
+				
 			}
 		});
 		
@@ -91,6 +97,10 @@ public class SchemaEditorPanel extends Panel {
 		add(form);
 		
 	}
+	
+	// -----------------------------------------------------
+	
+	public abstract void onSave(final AjaxRequestTarget target);
 	
 	// -----------------------------------------------------
 	

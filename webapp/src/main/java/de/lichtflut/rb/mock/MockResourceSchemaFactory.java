@@ -3,8 +3,8 @@
  */
 package de.lichtflut.rb.mock;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
@@ -13,8 +13,8 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.web.metamodel.WSConstants;
 import de.lichtflut.rb.web.util.StaticLabelBuilders;
 
@@ -47,8 +47,8 @@ public final class MockResourceSchemaFactory {
 	 */
 	private MockResourceSchemaFactory(){};
 
-	static List<ResourceSchema> getAllShemas(){
-		List<ResourceSchema> list = new ArrayList<ResourceSchema>();
+	static Set<ResourceSchema> getAllShemas(){
+		Set<ResourceSchema> list = new HashSet<ResourceSchema>();
 		list.add(createAddressSchema());
 		list.add(createCitySchema());
 		list.add(createOrganisationSchema());

@@ -21,7 +21,7 @@ import junit.framework.TestCase;
  * @author Nils Bleisch
  *
  */
-public class CardinalityFactoryTest extends TestCase{
+public class CardinalityBuilderTest extends TestCase{
 	/**
 	 * <p>
 	 * This test makes some assertion about the general nature of CardinalityFactory.
@@ -46,7 +46,7 @@ public class CardinalityFactoryTest extends TestCase{
 		boolean exceptionIsOccured=false;
 		try{
 		  final Integer min = -3;
-		  factory.between(min, -1);
+		  factory.between(-1, min);
 		}catch(IllegalArgumentException exe){
 			exceptionIsOccured=true;
 		}

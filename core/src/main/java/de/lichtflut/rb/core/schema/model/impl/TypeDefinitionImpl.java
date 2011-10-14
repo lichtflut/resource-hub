@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -167,8 +168,8 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setConstraints(final Set<Constraint> constraints) {
-		this.constraints = constraints;
+	public void setConstraints(final Collection<Constraint> constraints) {
+		this.constraints = new HashSet<Constraint>(constraints);
 	}
 
 	// -----------------------------------------------------

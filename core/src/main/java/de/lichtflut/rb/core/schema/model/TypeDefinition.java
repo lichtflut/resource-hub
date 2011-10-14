@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.arastreju.sge.model.ElementaryDataType;
@@ -114,7 +115,7 @@ public interface TypeDefinition  extends ResourceSchemaElement{
 	 * The context independent constraints for this property.
 	 * @param constraints the constraints you like to set
 	 */
-	void setConstraints(Set<Constraint> constraints);
+	void setConstraints(Collection<Constraint> constraints);
 
 	/**
 	 * The context independent constraints for this property.
@@ -127,6 +128,7 @@ public interface TypeDefinition  extends ResourceSchemaElement{
 	/**
 	 * @return the qualified name
 	 */
+	@Deprecated
 	String getIdentifierString();
 
 
@@ -135,6 +137,7 @@ public interface TypeDefinition  extends ResourceSchemaElement{
 	 * Tries to generate an URI from the given String, if not, the default Namespace will be used
 	 * @param identifierString the name or identifier you wish to set,
 	 */
+	@Deprecated
 	void setIdentifier(String identifierString);
 	
 	//------------------------------------------------------
