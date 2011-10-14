@@ -12,12 +12,12 @@ import org.arastreju.sge.model.nodes.views.SNClass;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
-import de.lichtflut.rb.web.ck.components.CKLink;
-import de.lichtflut.rb.web.ck.components.CKLinkType;
-import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
-import de.lichtflut.rb.web.ck.components.navigation.NavigationNode;
-import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.web.mockPages.FeaturedTablePage;
+import de.lichtflut.rb.webck.components.CKLink;
+import de.lichtflut.rb.webck.components.CKLinkType;
+import de.lichtflut.rb.webck.components.navigation.NavigationBar;
+import de.lichtflut.rb.webck.components.navigation.NavigationNode;
+import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
 
 /**
  * <p>
@@ -40,7 +40,7 @@ public class EntitySamplesBasePage extends RBSuperPage {
 	 */
 	public static ServiceProvider getRBServiceProvider(){
 		if(provider==null) {
-			provider= new MockServiceProvider();
+			provider= MockServiceProvider.getDefaultInstance();
 		}
 		return provider;
 	}
@@ -71,7 +71,7 @@ public class EntitySamplesBasePage extends RBSuperPage {
 	protected Component createSideBar(String id) {
 		final NavigationBar menuLeft = new NavigationBar("sidebarLeft");
 
-		NavigationNode showByTypes = new NavigationNodePanel(new CKLink("link", "Show Be Type", CKLinkType.CUSTOM_BEHAVIOR));
+		NavigationNode showByTypes = new NavigationNodePanel(new CKLink("link", "Show By Type", CKLinkType.CUSTOM_BEHAVIOR));
 		Collection<SNClass> types = getRBServiceProvider().getTypeManager().findAll();
 		for (SNClass type : types) {
 			PageParameters param = new PageParameters();

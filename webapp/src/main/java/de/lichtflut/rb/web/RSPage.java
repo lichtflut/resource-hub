@@ -6,7 +6,7 @@ package de.lichtflut.rb.web;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
+import de.lichtflut.rb.webck.components.navigation.NavigationBar;
 
 /**
  * <p>

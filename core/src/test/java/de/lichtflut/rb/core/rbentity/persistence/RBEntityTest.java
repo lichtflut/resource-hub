@@ -201,8 +201,8 @@ public final class RBEntityTest {
      * @return shema
      */
     private ResourceSchema createSchema() {
-        ResourceSchemaImpl schema = new ResourceSchemaImpl().setDescribedType(
-    			new SimpleResourceID("http://lichtflut.de#", "personschema"));
+        ResourceSchemaImpl schema = new ResourceSchemaImpl(
+        		new SimpleResourceID("http://lichtflut.de#", "personschema"));
         
         TypeDefinitionImpl p1 = new TypeDefinitionImpl();
         TypeDefinitionImpl p2 = new TypeDefinitionImpl();

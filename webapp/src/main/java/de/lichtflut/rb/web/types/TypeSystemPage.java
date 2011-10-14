@@ -13,16 +13,17 @@ import org.apache.wicket.model.util.ListModel;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.naming.QualifiedName;
 
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
-import de.lichtflut.rb.web.ck.components.modaldialog.ModalDialog;
-import de.lichtflut.rb.web.ck.components.typesystem.CreateTypePanel;
-import de.lichtflut.rb.web.ck.components.typesystem.PropertyRow;
-import de.lichtflut.rb.web.ck.components.typesystem.SchemaEditorPanel;
-import de.lichtflut.rb.web.ck.components.typesystem.TypeBrowserPanel;
+import de.lichtflut.rb.webck.components.modaldialog.ModalDialog;
+import de.lichtflut.rb.webck.components.typesystem.CreateTypePanel;
+import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
+import de.lichtflut.rb.webck.components.typesystem.SchemaEditorPanel;
+import de.lichtflut.rb.webck.components.typesystem.TypeBrowserPanel;
 
 /**
  * <p>
@@ -78,14 +79,17 @@ public class TypeSystemPage extends RBSuperPage {
 	// -----------------------------------------------------
 	
 	protected void displayEditor(final SNClass type) {
-		final ResourceSchema schema = getServiceProvider().getSchemaManager().
-		findByType(type);
+		final ResourceSchema schema = getServiceProvider().getSchemaManager().findByType(type);
 		final IModel<List<? extends PropertyRow>> model = Model.ofList(PropertyRow.toRowList(schema));
 		final SchemaEditorPanel editor = new SchemaEditorPanel("schemaEditor", model) {
 			@Override
 			public void onSave(final AjaxRequestTarget target) {
-//				final ResourceSchema schema = new ResourceSchemaImpl();
-//				getServiceProvider().getSchemaManager().store(schema);
+				final ResourceSchema schema = new ResourceSchemaImpl(type);
+				for (PropertyRow row: model.getObject()) {
+					final PropertyDeclaration decl = PropertyRow.toPropertyDeclaration(row);
+					schema.addPropertyDeclaration(decl);	
+				}
+				getServiceProvider().getSchemaManager().store(schema);
 			}
 		};
 		TypeSystemPage.this.replace(editor);

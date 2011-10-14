@@ -10,10 +10,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
-import de.lichtflut.rb.web.ck.behavior.CKBehavior;
-import de.lichtflut.rb.web.ck.components.CKComponent;
 import de.lichtflut.rb.web.components.TestComponentsPage;
+import de.lichtflut.rb.webck.application.AbstractResourceBrowserApplication;
+import de.lichtflut.rb.webck.behavior.CKBehavior;
+import de.lichtflut.rb.webck.components.CKComponent;
 
 /**
  * Testcase to test the CKBehavior on a child class of {@link CKComponent}.

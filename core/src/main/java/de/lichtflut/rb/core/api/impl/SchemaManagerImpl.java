@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -56,21 +57,18 @@ public class SchemaManagerImpl implements SchemaManager {
 	
 	// -----------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public ResourceSchema findByType(final ResourceID type) {
-		final ModelingConversation mc = startConversation();
-		final List<ResourceNode> subjects = mc.createQueryManager().findSubjects(RBSchema.DESCRIBES, type);
-		mc.close();
-		if (subjects.isEmpty()) {
-			return null;
-		} else if (subjects.size() == 1) {
-			final SNResourceSchema schemaNode = SNResourceSchema.view(subjects.get(0));
-			return binding.toModelObject(schemaNode);
-		} else {
-			throw new IllegalStateException("Found more than one Schema for type " + type + ": " + subjects);
-		}
+		final SNResourceSchema schemaNode = findSchemaNodeByType(type);
+		return binding.toModelObject(schemaNode);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Collection<ResourceSchema> findAllResourceSchemas() {
 		final List<ResourceSchema> result = new ArrayList<ResourceSchema>();
@@ -82,6 +80,9 @@ public class SchemaManagerImpl implements SchemaManager {
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Collection<TypeDefinition> findAllTypeDefinitions() {
 		final List<TypeDefinition> result = new ArrayList<TypeDefinition>();
@@ -95,10 +96,14 @@ public class SchemaManagerImpl implements SchemaManager {
 	
 	// -----------------------------------------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void store(final ResourceSchema schema) {
+		Validate.isTrue(schema.getDescribedType() != null, "The type described by this schema is not defined.");
 		final ModelingConversation mc = startConversation();
-		final ResourceNode existing = mc.findResource(schema.getID().getQualifiedName());
+		final ResourceNode existing = findSchemaNodeByType(schema.getDescribedType());
 		if (existing != null) {
 			mc.remove(existing, true);
 		}
@@ -106,7 +111,9 @@ public class SchemaManagerImpl implements SchemaManager {
 		mc.attach(node);
 		mc.close();
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public SchemaImporter getImporter(final RSFormat format) {
 		throw new NotYetImplementedException();
@@ -120,6 +127,24 @@ public class SchemaManagerImpl implements SchemaManager {
 	
 	private QueryManager query() {
 		return provider.getArastejuGate().startConversation().createQueryManager();
+	}
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * Find the persistent node representing the schema of the given type.
+	 */
+	private SNResourceSchema findSchemaNodeByType(final ResourceID type) {
+		final ModelingConversation mc = startConversation();
+		final List<ResourceNode> subjects = mc.createQueryManager().findSubjects(RBSchema.DESCRIBES, type);
+		mc.close();
+		if (subjects.isEmpty()) {
+			return null;
+		} else if (subjects.size() == 1) {
+			return SNResourceSchema.view(subjects.get(0));
+		} else {
+			throw new IllegalStateException("Found more than one Schema for type " + type + ": " + subjects);
+		}
 	}
 	
 	// -----------------------------------------------------

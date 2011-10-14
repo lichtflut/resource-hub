@@ -18,7 +18,7 @@ import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.web.components.SampleResourcePanel;
-import de.lichtflut.rb.web.models.ResourceNodeModel;
+import de.lichtflut.rb.webck.models.ResourceNodeModel;
 
 /**
  * <p>

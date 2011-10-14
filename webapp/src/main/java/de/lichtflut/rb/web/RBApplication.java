@@ -4,11 +4,11 @@
 package de.lichtflut.rb.web;
 
 
-import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
 import de.lichtflut.rb.web.entities.EntityDetailPage;
 import de.lichtflut.rb.web.entities.EntityOverviewPage;
 import de.lichtflut.rb.web.mockPages.RepeaterPage;
 import de.lichtflut.rb.web.types.TypeSystemPage;
+import de.lichtflut.rb.webck.application.AbstractResourceBrowserApplication;
 
 /**
  * Application object for your web application.

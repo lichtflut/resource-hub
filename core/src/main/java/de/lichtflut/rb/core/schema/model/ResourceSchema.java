@@ -9,7 +9,7 @@ import org.arastreju.sge.model.ResourceID;
 
 /**
  * <p>
- *  Schema for a resource type, e.g. a person, an organization or a project.
+ *  Schema for a Resource Type, e.g. a person, an organization or a project.
  * </p>
  *
  * <p>
@@ -18,17 +18,11 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface ResourceSchema extends ResourceSchemaElement{
+public interface ResourceSchema extends ResourceSchemaElement {
 
 	/**
-	 * The ResourceID  of this schema.
-	 * @return This schema's ID.
-	 */
-	ResourceID getID();
-
-	/**
-	 * The ResourceID  of the described resource.
-	 * @return The ID of the described resource.
+	 * The ResourceID  of the Type described by this schema.
+	 * @return The ID of the described Resource Type.
 	 */
 	ResourceID getDescribedType();
 	
@@ -53,20 +47,5 @@ public interface ResourceSchema extends ResourceSchemaElement{
 	 * @return The label builder for this schema.
 	 */
 	LabelBuilder getLabelBuilder();
-	
-	// -----------------------------------------------------
-
-	/**
-	 * Please make sure that equals is correct implemented to avoid some merging redundancy conflicts e.g.
-	 * @param obj -
-	 * @return TODO
-	 */
-	boolean equals(Object obj);
-
-	/**
-	 * Overriding to match conventions while overriding 'equals()' method..
-	 * @return int
-	 */
-	int hashCode();
 
 }

@@ -66,8 +66,7 @@ public class Schema2GraphBinding {
 		if(snSchema == null) {
 			return null;
 		}
-		final ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema);
-		schema.setDescribedType(snSchema.getDescribedType());
+		final ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema.getDescribedType());
 		for (SNPropertyDeclaration snDecl : snSchema.getPropertyDeclarations()){
 			final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
 			decl.setPropertyType(snDecl.getPropertyDescriptor());
@@ -105,7 +104,7 @@ public class Schema2GraphBinding {
 		if(schema == null) {
 			return null;
 		}
-		final SNResource node = new SNResource(schema.getID().getQualifiedName());
+		final SNResource node = new SNResource();
 		final SNResourceSchema sn = new SNResourceSchema(node, RBSchema.CONTEXT);
 		sn.setDescribedType(schema.getDescribedType(), RBSchema.CONTEXT);
 		

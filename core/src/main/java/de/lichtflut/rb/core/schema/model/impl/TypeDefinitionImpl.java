@@ -15,6 +15,7 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.VoidNamespace;
 
+import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 
@@ -108,21 +109,14 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	}
 	
 	/**
-	 * Add a further constraint to the set of constraints. If the set of constraints is null,
-	 * setConsraints will be called inside off addConstraint with a new one element sized collection as param including the constraint.
-	 * @param constraint -
+	 * {@inheritDoc}
 	 */
 	public void addConstraint(final Constraint constraint) {
-		if(constraints!=null){
-				constraints.add(constraint);
-		}else{
-			Set<Constraint> constraints = new HashSet<Constraint>();
-			constraints.add(constraint);
-			setConstraints(constraints);
-		}
+		constraints.add(constraint);
 	}
 
 	// -----------------------------------------------------
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -230,7 +224,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 			sb.append("private TypeDefinition");
 		}
 		sb.append(" " + getElementaryDataType());
-		if( null != constraints && !constraints.isEmpty()){
+		if(!constraints.isEmpty()){
 			sb.append(" constraints: ");
 			final Iterator<Constraint> i = constraints.iterator();
 			while(i.hasNext()){
@@ -241,6 +235,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	}
 	
 	//------------------------------------------------------
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -249,7 +244,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 		if(!(obj instanceof TypeDefinition)){
 			return false;
 		}
-		return this.id.equals(((TypeDefinition) obj).getID());
+		return Infra.equals(this.id, ((TypeDefinition) obj).getID());
 	}
 
 	/**
@@ -257,7 +252,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 */
 	@Override
 	public int hashCode(){
-		return  super.hashCode();
+		return id.hashCode();
 	}
-
+	
 }

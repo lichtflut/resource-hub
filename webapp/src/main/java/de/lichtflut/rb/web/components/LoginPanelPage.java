@@ -5,7 +5,7 @@ package de.lichtflut.rb.web.components;
 
 import de.lichtflut.rb.core.security.impl.MockLoginService;
 import de.lichtflut.rb.web.RBSuperPage;
-import de.lichtflut.rb.web.components.login.LoginPanel;
+import de.lichtflut.rb.webck.components.login.LoginPanel;
 
 /**
  * [TODO Insert description here.

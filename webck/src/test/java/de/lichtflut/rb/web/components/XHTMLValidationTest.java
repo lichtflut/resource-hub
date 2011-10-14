@@ -8,7 +8,8 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.util.tester.WicketTester;
-import de.lichtflut.rb.web.application.AbstractResourceBrowserApplication;
+
+import de.lichtflut.rb.webck.application.AbstractResourceBrowserApplication;
 
 /**
  * <p>

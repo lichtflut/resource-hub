@@ -12,9 +12,9 @@ import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.web.SampleResourcePage;
-import de.lichtflut.rb.web.components.fields.SNTimeSpecField;
-import de.lichtflut.rb.web.components.fields.SNTextField;
-import de.lichtflut.rb.web.models.ResourceNodeModel;
+import de.lichtflut.rb.webck.components.fields.SNTextField;
+import de.lichtflut.rb.webck.components.fields.SNTimeSpecField;
+import de.lichtflut.rb.webck.models.ResourceNodeModel;
 
 /**
  * <p>

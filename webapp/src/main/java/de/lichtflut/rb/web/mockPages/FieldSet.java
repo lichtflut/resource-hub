@@ -12,8 +12,8 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
 
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
-import de.lichtflut.rb.web.models.NewGenericResourceModel;
+import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
+import de.lichtflut.rb.webck.models.NewGenericResourceModel;
 /**
  * [TODO Insert description here.
  *

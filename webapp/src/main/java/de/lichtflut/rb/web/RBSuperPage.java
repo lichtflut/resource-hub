@@ -10,16 +10,16 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import de.lichtflut.rb.web.ck.components.CKLink;
-import de.lichtflut.rb.web.ck.components.CKLinkType;
-import de.lichtflut.rb.web.ck.components.navigation.NavigationBar;
-import de.lichtflut.rb.web.ck.components.navigation.NavigationNode;
-import de.lichtflut.rb.web.ck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.web.components.LoginPanelPage;
 import de.lichtflut.rb.web.entities.EntityDetailPage;
 import de.lichtflut.rb.web.entities.EntityOverviewPage;
-import de.lichtflut.rb.web.resources.SharedResourceProvider;
 import de.lichtflut.rb.web.types.TypeSystemPage;
+import de.lichtflut.rb.webck.components.CKLink;
+import de.lichtflut.rb.webck.components.CKLinkType;
+import de.lichtflut.rb.webck.components.navigation.NavigationBar;
+import de.lichtflut.rb.webck.components.navigation.NavigationNode;
+import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
+import de.lichtflut.rb.webck.resources.SharedResourceProvider;
 
 /**
  * <p>

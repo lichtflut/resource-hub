@@ -5,11 +5,9 @@ package de.lichtflut.rb.core.schema.model.impl;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.naming.VoidNamespace;
 
 import de.lichtflut.rb.core.schema.model.LabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -33,8 +31,6 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 @SuppressWarnings({ "serial" })
 public final class ResourceSchemaImpl implements ResourceSchema {
 
-	private final ResourceID id;
-	
 	private final List<PropertyDeclaration> declarations = new LinkedList<PropertyDeclaration>();
 
 	private LabelBuilder labelBuilder = LabelBuilder.DEFAULT;
@@ -43,40 +39,45 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 
 	// -----------------------------------------------------
 
-	//Constructor stuff
-
 	/**
 	 * <p>
 	 * This is the default constructor.
 	 * </p>
 	 */
 	public ResourceSchemaImpl() {
-		//Generates a SimpleResourceID instance with an random UUID.
-		this.id = new SimpleResourceID(VoidNamespace.getInstance(), UUID.randomUUID().toString());
 	}
-
-	// -----------------------------------------------------
-
+	
 	/**
-	 * <p>
-	 * Constructor takes as argument the internal ResourceID of this schema
-	 * This is necessary to make some override operations, instead of persisting a new schema in store.
-	 * </p>
-	 * @param id - the internal ResourceID
+	 * Constructor.
+	 * @param @param describedType The Resource Type defined by this schema
 	 */
-	public ResourceSchemaImpl(final ResourceID id) {
-		this.id = id;
+	public ResourceSchemaImpl(final ResourceID describedType) {
+		this.describedType = new SimpleResourceID(describedType);
 	}
 
 	// -----------------------------------------------------
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResourceID getID() {
-		return this.id;
+	public ResourceID getDescribedType() {
+		return this.describedType;
 	}
+
+	/**
+	 * <p>
+	 * Set the Resource Type defined by this schema.
+	 * </p>
+	 * @param describedType the type
+	 * @return This.
+	 */
+	public ResourceSchemaImpl setDescribedType(final ResourceID describedType) {
+		this.describedType = describedType;
+		return this;
+	}
+	
+	// -----------------------------------------------------
 
 	/**
 	 * {@inheritDoc}
@@ -92,26 +93,6 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	@Override
 	public void addPropertyDeclaration(final PropertyDeclaration decl) {
 		declarations.add(decl);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResourceID getDescribedType() {
-		return this.describedType;
-	}
-
-	/**
-	 * <p>
-	 * Set up the describedResourceID, also known as ResourceType.
-	 * </p>
-	 * @param id - the ResourceId
-	 * @return This.
-	 */
-	public ResourceSchemaImpl setDescribedType(final ResourceID id) {
-		this.describedType = id;
-		return this;
 	}
 
 	/**
@@ -141,30 +122,11 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	@Override
 	public String toString(){
 		final StringBuilder sb = new StringBuilder();
-		sb.append("Resource Schema " + getID().getQualifiedName() + "\n");
-		sb.append("Described Type " + getDescribedType().getQualifiedName() + "\n");
+		sb.append("Resource Schema for Type " + getDescribedType().getQualifiedName() + "\n");
 		for (PropertyDeclaration decl : getPropertyDeclarations()) {
 			sb.append(" + " + decl.toString() + "\n");
 		}
 		return sb.toString();
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(final Object obj){
-		if(!(obj instanceof ResourceSchema)){
-			return false;
-		}
-		return getDescribedType().getQualifiedName().toURI().equals(((ResourceSchema) obj)
-				.getDescribedType().getQualifiedName().toURI());
-	}
-
-
-	@Override
-	public int hashCode(){
-		return super.hashCode();
-	}
-
 }

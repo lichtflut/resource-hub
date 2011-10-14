@@ -154,12 +154,12 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("PropertyDeclaration for " + ((propertyDescriptor!=null)
 					? propertyDescriptor.getQualifiedName().toURI() : ""));
-		sb.append("\ntype: " + typeDefinition);
-		sb.append("\ncardinality: "+ cardinality.toString());
+		sb.append(" " + cardinality.toString());
+		sb.append(", " + typeDefinition);
 		if(null!=constraints){
 			Iterator<Constraint> i = constraints.iterator();
 			while(i.hasNext()){
-				sb.append("\ncardinality: "+i.next().toString());
+				sb.append(" "+i.next().toString());
 			}
 		}
 		return sb.toString();

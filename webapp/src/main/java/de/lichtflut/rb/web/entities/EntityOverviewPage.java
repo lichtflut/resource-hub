@@ -10,9 +10,9 @@ import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.web.ck.behavior.CKBehavior;
-import de.lichtflut.rb.web.ck.components.CKComponent;
-import de.lichtflut.rb.web.ck.components.ResourceTableView;
+import de.lichtflut.rb.webck.behavior.CKBehavior;
+import de.lichtflut.rb.webck.components.CKComponent;
+import de.lichtflut.rb.webck.components.ResourceTableView;
 
 /**
  * SamplePage for {@link ResourceTableView}.

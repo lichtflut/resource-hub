@@ -11,7 +11,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
-import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
+import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
 
 /**
  * TestPage for Repeaters...

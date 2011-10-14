@@ -11,9 +11,9 @@ import org.arastreju.sge.model.SimpleResourceID;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
-import de.lichtflut.rb.web.ck.components.CKComponent;
-import de.lichtflut.rb.web.ck.components.ResourceDetailPanel;
-import de.lichtflut.rb.web.components.IFeedbackContainerProvider;
+import de.lichtflut.rb.webck.components.CKComponent;
+import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
+import de.lichtflut.rb.webck.components.ResourceDetailPanel;
 
 /**
  * <p>

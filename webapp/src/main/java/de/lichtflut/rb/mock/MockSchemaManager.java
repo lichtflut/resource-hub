@@ -4,7 +4,8 @@
 package de.lichtflut.rb.mock;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.arastreju.sge.model.ResourceID;
 
@@ -26,7 +27,7 @@ public class MockSchemaManager implements SchemaManager {
 
 	private static final long serialVersionUID = 1L;
 
-	private Set<ResourceSchema> schemas;
+	private Map<ResourceID, ResourceSchema> typeSchemaMap = new HashMap<ResourceID, ResourceSchema>();
 	
 	// -----------------------------------------------------
 	
@@ -34,7 +35,9 @@ public class MockSchemaManager implements SchemaManager {
 	 * Default Constructor.
 	 */
 	public MockSchemaManager() {
-		schemas = MockResourceSchemaFactory.getAllShemas();
+		for(ResourceSchema schema : MockResourceSchemaFactory.getAllShemas()) {
+			typeSchemaMap.put(schema.getDescribedType(), schema);
+		}
 	}
 	
 	// -----------------------------------------------------
@@ -43,14 +46,8 @@ public class MockSchemaManager implements SchemaManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResourceSchema findByType(final ResourceID id) {
-		ResourceSchema rs = null;
-		for (ResourceSchema schema : schemas) {
-			if(schema.getDescribedType().equals(id)){
-				return schema;
-			}
-		}
-		return rs;
+	public ResourceSchema findByType(final ResourceID type) {
+		return typeSchemaMap.get(type);
 	}
 
 
@@ -59,7 +56,7 @@ public class MockSchemaManager implements SchemaManager {
 	 */
 	@Override
 	public Collection<ResourceSchema> findAllResourceSchemas() {
-		return schemas;
+		return typeSchemaMap.values();
 	}
 
 
@@ -77,12 +74,11 @@ public class MockSchemaManager implements SchemaManager {
 	 */
 	@Override
 	public void store(final ResourceSchema schema) {
-		schemas.add(schema);
+		typeSchemaMap.put(schema.getDescribedType(), schema);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see de.lichtflut.rb.core.api.SchemaManager#getImporter(de.lichtflut.rb.core.schema.parser.RSFormat)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public SchemaImporter getImporter(RSFormat format) {

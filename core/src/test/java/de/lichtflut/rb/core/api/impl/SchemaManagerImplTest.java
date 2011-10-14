@@ -50,8 +50,6 @@ public class SchemaManagerImplTest {
 	@Test
 	public void testStoreAndRetrieve() {
 		final SchemaManager manager = new SchemaManagerImpl(serviceProvider);
-		
-		
 		final ResourceSchema original = createSchema();
 		manager.store(original);
 		
@@ -60,6 +58,30 @@ public class SchemaManagerImplTest {
 		Assert.assertNotNull(found);
 		
 		Assert.assertEquals(3, found.getPropertyDeclarations().size());
+	}
+	
+	@Test
+	public void testReplacing() {
+		final SchemaManager manager = new SchemaManagerImpl(serviceProvider);
+		final ResourceSchema original = createSchema();
+		manager.store(original);
+		
+		final ResourceSchema found = manager.findByType(SNOPS.id(personQN));
+		Assert.assertNotNull(found);
+		Assert.assertEquals(3, found.getPropertyDeclarations().size());
+		
+		final ResourceSchema other = new ResourceSchemaImpl(SNOPS.id(personQN));
+		manager.store(other);
+		
+		ResourceSchema retrieved = manager.findByType(SNOPS.id(personQN));
+		Assert.assertNotNull(retrieved);
+		Assert.assertEquals(0, retrieved.getPropertyDeclarations().size());
+		
+		manager.store(original);
+		
+		retrieved = manager.findByType(SNOPS.id(personQN));
+		Assert.assertNotNull(retrieved);
+		Assert.assertEquals(3, retrieved.getPropertyDeclarations().size());
 		
 	}
 	
@@ -69,7 +91,7 @@ public class SchemaManagerImplTest {
 	 * @return the created {@link ResourceSchema}
 	 */
 	private ResourceSchema createSchema() {
-		ResourceSchemaImpl schema = new ResourceSchemaImpl().setDescribedType(SNOPS.id(personQN));
+		ResourceSchemaImpl schema = new ResourceSchemaImpl(SNOPS.id(personQN));
 		
 		TypeDefinitionImpl p1 = new TypeDefinitionImpl();
 		TypeDefinitionImpl p2 = new TypeDefinitionImpl();

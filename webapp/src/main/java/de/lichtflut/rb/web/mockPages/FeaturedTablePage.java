@@ -17,11 +17,11 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.mock.MockServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
-import de.lichtflut.rb.web.ck.behavior.CKBehavior;
-import de.lichtflut.rb.web.ck.components.CKComponent;
-import de.lichtflut.rb.web.ck.components.CKLink;
-import de.lichtflut.rb.web.ck.components.CKLinkType;
-import de.lichtflut.rb.web.ck.components.ResourceTableView;
+import de.lichtflut.rb.webck.behavior.CKBehavior;
+import de.lichtflut.rb.webck.components.CKComponent;
+import de.lichtflut.rb.webck.components.CKLink;
+import de.lichtflut.rb.webck.components.CKLinkType;
+import de.lichtflut.rb.webck.components.ResourceTableView;
 
 /**
  * Sample Page of a {@link ResourceTableView} using its features.

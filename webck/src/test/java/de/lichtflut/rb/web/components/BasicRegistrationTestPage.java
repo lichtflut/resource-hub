@@ -7,7 +7,7 @@ import org.apache.wicket.markup.html.WebPage;
 
 import de.lichtflut.rb.core.security.IAuthenticationService;
 import de.lichtflut.rb.core.security.IUser;
-import de.lichtflut.rb.web.components.login.BasicRegistrationPanel;
+import de.lichtflut.rb.webck.components.login.BasicRegistrationPanel;
 
 /**
  * This page is used to test the {@link BasicRegistrationPanel}.

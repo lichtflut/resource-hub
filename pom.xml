@@ -79,7 +79,7 @@
 	<reporting>
 		<plugins>
 	    </plugins>
-	</reporting>	
+	</reporting>
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -92,15 +92,20 @@
 			<version>1.2.14</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-			<scope>test</scope>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>de.lichtflut</groupId>
 			<artifactId>lf.foundation.infra</artifactId>
 			<version>1.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<repositories>
@@ -152,9 +157,9 @@
 			<url>http://nexus.lichtflut.de/nexus/content/repositories/releases</url>
 		</repository>
 		<snapshotRepository>
-		    <id>lf-snapshots</id>
+			<id>lf-snapshots</id>
 			<name>lichtflut snapshot repository</name>
-		    <url>http://nexus.lichtflut.de/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>		
+			<url>http://nexus.lichtflut.de/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
 	</distributionManagement>
 </project>
