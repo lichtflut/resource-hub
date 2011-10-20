@@ -41,6 +41,8 @@ public class PropertyRow implements Serializable {
 	
 	private TypeDefinition typeDefinition;
 	
+	private String displayName;
+	
 	private ElementaryDataType dataType;
 	
 	private ResourceID resourceConstraint;
@@ -51,16 +53,18 @@ public class PropertyRow implements Serializable {
 	
 	private boolean unbounded;
 	
-	private List<Constraint> literalConstraints;
+	private List<String> literalConstraints;
 	
 	private boolean isResourceReference;
 	
 	// -----------------------------------------------------
 	
+	/**
+	 * Create rows corresponding to Property Declarations of given Resource Schema.
+	 * @param schema The Resource Schema.
+	 * @return The row list.
+	 */
 	public static List<PropertyRow> toRowList(final ResourceSchema schema) {
-		if (schema == null || schema.getPropertyDeclarations().isEmpty()) {
-			return Collections.emptyList();
-		}
 		final List<PropertyRow> list = new ArrayList<PropertyRow>();
 		for (PropertyDeclaration pa : schema.getPropertyDeclarations()) {
 			list.add(new PropertyRow(pa));
@@ -87,10 +91,29 @@ public class PropertyRow implements Serializable {
 		return decl;
 	}
 	
+	/**
+	 * Converts the given row to a new TypeDefinition.
+	 * @param row The row object to be converted.
+	 */
+	public static TypeDefinition toTypeDefinition(final PropertyRow row) {
+		final TypeDefinitionImpl def = new TypeDefinitionImpl(row.typeDefinition.getID(), row.isTypeDefinitionPublic());
+		def.setName(row.displayName);
+		if (row.isResourceReference) {
+			def.addConstraint(ConstraintBuilder.buildConstraint(row.resourceConstraint));
+		} else {
+			for (String constraint : row.literalConstraints) {
+				def.addConstraint(ConstraintBuilder.buildConstraint(constraint));
+			}
+		}
+		def.setElementaryDataType(row.dataType);
+		return def;
+	}
+	
 	// -----------------------------------------------------
 	
 	/**
-	 * Constructor. 
+	 * Constructor for a {@link PropertyDeclaration}
+	 * @param decl The declaration.
 	 */
 	public PropertyRow(final PropertyDeclaration decl) {
 		this.propertyType = decl.getPropertyType();
@@ -99,6 +122,25 @@ public class PropertyRow implements Serializable {
 		this.unbounded = decl.getCardinality().isUnbound();
 		
 		setTypeDefinition(decl.getTypeDefinition());
+	}
+	
+	/**
+	 * Constructor for a TypeDefintion.
+	 * @param def The type definition.
+	 */
+	public PropertyRow(final TypeDefinition def) {
+		setTypeDefinition(def);
+	}
+	
+	/**
+	 * Constructs a default,empty row.
+	 */
+	public PropertyRow() {
+		this.min = 0;
+		this.max = -1;
+		this.unbounded = true;
+		this.dataType = ElementaryDataType.STRING;
+		this.literalConstraints = new ArrayList<String>();
 	}
 	
 	// -----------------------------------------------------
@@ -115,6 +157,20 @@ public class PropertyRow implements Serializable {
 	 */
 	public void setPropertyDescriptor(ResourceID propertyDescriptor) {
 		this.propertyType = propertyDescriptor;
+	}
+	
+	/**
+	 * @return the displayName
+	 */
+	public String getDisplayName() {
+		return displayName;
+	}
+	
+	/**
+	 * @param displayName the displayName to set
+	 */
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 	/**
@@ -176,14 +232,14 @@ public class PropertyRow implements Serializable {
 	/**
 	 * @return the literalConstraints
 	 */
-	public List<Constraint> getLiteralConstraints() {
+	public List<String> getLiteralConstraints() {
 		return literalConstraints;
 	}
 
 	/**
 	 * @param literalConstraints the literalConstraints to set
 	 */
-	public void setLiteralConstraints(final List<Constraint> literalConstraints) {
+	public void setLiteralConstraints(final List<String> literalConstraints) {
 		this.literalConstraints = literalConstraints;
 	}
 
@@ -191,7 +247,7 @@ public class PropertyRow implements Serializable {
 	 * @return true if the Type Definition is public, false if it is private.
 	 */
 	public boolean isTypeDefinitionPublic() {
-		return typeDefinition.isPublicTypeDef();
+		return typeDefinition != null && typeDefinition.isPublicTypeDef();
 	}
 
 	/**
@@ -220,12 +276,16 @@ public class PropertyRow implements Serializable {
 	public void setTypeDefinition(final TypeDefinition def) {
 		this.typeDefinition = def;
 		this.dataType = def.getElementaryDataType();
+		this.displayName = def.getName();
 		this.isResourceReference = def.isResourceReference();
 		if (def.isResourceReference()) {
 			this.resourceConstraint = ResourceTypeDefinition.view(def).getResourceTypeConstraint();
 			this.literalConstraints = Collections.emptyList();
 		} else {
-			this.literalConstraints = new ArrayList<Constraint>(def.getConstraints());
+			this.literalConstraints = new ArrayList<String>();
+			for (Constraint constraint : def.getConstraints()) {
+				literalConstraints.add(constraint.getLiteralConstraint());
+			}
 		}
 	}
 	
@@ -236,9 +296,11 @@ public class PropertyRow implements Serializable {
 		if (isResourceReference && resourceConstraint != null) {
 			constraints.add(ConstraintBuilder.buildConstraint(resourceConstraint));
 		} else if (!isResourceReference && !literalConstraints.isEmpty()){
-			constraints.addAll(literalConstraints);
+			for (String constraint : literalConstraints) {
+				constraints.add(ConstraintBuilder.buildConstraint(constraint));
+			}
 		}
 		return constraints;
 	}
-	
+
 }

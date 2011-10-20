@@ -8,6 +8,7 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Assert;
 import org.junit.Test;
 
+import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
@@ -153,7 +154,7 @@ public final class RBEntityTest {
         RBEntityImpl e = new RBEntityImpl(schema);
         RBEntityImpl e1 = new RBEntityImpl(schema);
 
-        ServiceProvider sp = new DefaultRBServiceProvider();
+        ServiceProvider sp = new DefaultRBServiceProvider(new RBConfig());
         
         // Get Entitymanager
         EntityManager m = sp.getEntityManager();

@@ -57,7 +57,7 @@ public class ModalDialog extends Panel {
 		if (!CONTENT_ID.equals(content.getId())) {
 			throw new IllegalArgumentException("ID of modal dialog content component must be " + CONTENT_ID);
 		}
-		add(content);
+		addOrReplace(content);
 	}
 	
 	// -----------------------------------------------------

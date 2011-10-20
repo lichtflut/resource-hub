@@ -5,7 +5,7 @@ package de.lichtflut.rb.webck.components.modaldialog;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
  * <p>
@@ -19,20 +19,38 @@ import org.apache.wicket.markup.ComponentTag;
  * @author Oliver Tigges
  */
 public class ShowModalBehavior extends Behavior {
-
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void onComponentTag(Component component, ComponentTag tag) {
-		super.onComponentTag(component, tag);
-	}
+	
+	enum STATE {OPEN, CLOSED}
+	
+	private STATE state = STATE.CLOSED;
+	
+	// -----------------------------------------------------
 	
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void beforeRender(Component component) {
-		super.beforeRender(component);
+	public void renderHead(Component component, IHeaderResponse response) {
+		switch (state) {
+		case OPEN:
+			if (!component.isVisible()) {
+				response.renderOnDomReadyJavaScript("$('#" + component.getMarkupId() + "').dialog('close')");
+			}
+			break;
+		case CLOSED:
+			if (component.isVisible()) {
+				response.renderOnDomReadyJavaScript("$('#" + component.getMarkupId() + "')" +
+					".dialog({modal: true, width: 600, height:400})");
+			}
+			break;
+
+		default:
+			break;
+		}
+		if (component.isVisible()) {
+			state = STATE.OPEN;
+		} else {
+			state = STATE.CLOSED;
+		}
 	}
 }

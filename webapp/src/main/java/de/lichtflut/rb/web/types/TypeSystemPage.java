@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.web.types;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -10,20 +11,26 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.naming.QualifiedName;
 
+import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockServiceProvider;
 import de.lichtflut.rb.web.RBSuperPage;
 import de.lichtflut.rb.webck.components.modaldialog.ModalDialog;
-import de.lichtflut.rb.webck.components.typesystem.CreateTypePanel;
+import de.lichtflut.rb.webck.components.typesystem.CreateResourcePanel;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
+import de.lichtflut.rb.webck.components.typesystem.TypeDefBrowserPanel;
 import de.lichtflut.rb.webck.components.typesystem.SchemaEditorPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeBrowserPanel;
+import de.lichtflut.rb.webck.components.typesystem.TypeDefEditorPanel;
 
 /**
  * <p>
@@ -47,41 +54,62 @@ public class TypeSystemPage extends RBSuperPage {
 		final IModel<List<SNClass>> typeModel = new ListModel<SNClass>();
 		typeModel.setObject(getServiceProvider().getTypeManager().findAll());
 		
-		final ModalDialog dialog = new ModalDialog("createTypeDialog", Model.of("create type"));
-		
-		final CreateTypePanel ctp = new CreateTypePanel(ModalDialog.CONTENT_ID) {
-			@Override
-			public void onCreate(QualifiedName qn, AjaxRequestTarget target) {
-				dialog.close();
-				final SNClass newType = getServiceProvider().getTypeManager().create(qn);
-				typeModel.getObject().add(newType);
-				setResponsePage(TypeSystemPage.this);
-			}
-		};
-		dialog.setContent(ctp);
+		final ModalDialog dialog = new ModalDialog("dialog", Model.of("create type | create type def"));
 		add(dialog);
 		
-		add(new WebMarkupContainer("schemaEditor"));
+		add(new WebMarkupContainer("editor"));
 		
 		add(new TypeBrowserPanel("typeBrowser", typeModel) {
 			@Override
 			public void onCreateType(AjaxRequestTarget target) {
+				dialog.setContent(new CreateResourcePanel(ModalDialog.CONTENT_ID) {
+					public void onCreate(QualifiedName qn, AjaxRequestTarget target) {
+						dialog.close();
+						final SNClass newType = getServiceProvider().getTypeManager().create(qn);
+						typeModel.getObject().add(newType);
+						setResponsePage(TypeSystemPage.this);
+					}
+				});
 				dialog.show();
 			}
 			
 			@Override
 			public void onTypeSelected(final SNClass type, final AjaxRequestTarget target) {
-				displayEditor(type);
+				displaySchemaEditor(type);
+			}
+		});
+		
+		final IModel<List<TypeDefinition>> typeDefModel = new ListModel<TypeDefinition>();
+		typeDefModel.setObject(new ArrayList<TypeDefinition>(getServiceProvider().getSchemaManager().findAllTypeDefinitions()));
+		
+		add(new TypeDefBrowserPanel("propertyTypeDefBrowser", typeDefModel) {
+			@Override
+			public void onCreateTypeDef(AjaxRequestTarget target) {
+				dialog.setContent(new CreateResourcePanel(ModalDialog.CONTENT_ID) {
+					public void onCreate(QualifiedName qn, AjaxRequestTarget target) {
+						dialog.close();
+						final TypeDefinition typeDef = schemaManager().prepareTypeDefinition(qn, qn.getSimpleName());
+						schemaManager().store(typeDef);
+						typeDefModel.getObject().add(typeDef);
+						setResponsePage(TypeSystemPage.this);
+					}
+				});
+				dialog.show();
+			}
+			
+			@Override
+			public void onTypeDefSelected(final TypeDefinition def, final AjaxRequestTarget target) {
+				displayTypeDefEditor(def);
 			}
 		});
 	}
 	
 	// -----------------------------------------------------
 	
-	protected void displayEditor(final SNClass type) {
-		final ResourceSchema schema = getServiceProvider().getSchemaManager().findByType(type);
+	protected void displaySchemaEditor(final SNClass type) {
+		final ResourceSchema schema = getServiceProvider().getSchemaManager().findSchemaByType(type);
 		final IModel<List<? extends PropertyRow>> model = Model.ofList(PropertyRow.toRowList(schema));
-		final SchemaEditorPanel editor = new SchemaEditorPanel("schemaEditor", model) {
+		final SchemaEditorPanel editor = new SchemaEditorPanel("editor", model) {
 			@Override
 			public void onSave(final AjaxRequestTarget target) {
 				final ResourceSchema schema = new ResourceSchemaImpl(type);
@@ -97,11 +125,30 @@ public class TypeSystemPage extends RBSuperPage {
 		setResponsePage(TypeSystemPage.this);
 	}
 	
+	protected void displayTypeDefEditor(final TypeDefinition def) {
+		final TypeDefinition reloaded = getServiceProvider().getSchemaManager().findTypeDefinition(def.getID());
+		final IModel<PropertyRow> model = Model.of(new PropertyRow(reloaded));
+		final TypeDefEditorPanel editor = new TypeDefEditorPanel("editor", model) {
+			@Override
+			public void onSave(final AjaxRequestTarget target) {
+				final TypeDefinition definition = PropertyRow.toTypeDefinition(model.getObject());
+				getServiceProvider().getSchemaManager().store(definition);
+			}
+		};
+		TypeSystemPage.this.replace(editor);
+		// force redirect
+		setResponsePage(TypeSystemPage.this);
+	}
+	
 	// -----------------------------------------------------
 	
 	protected ServiceProvider getServiceProvider() {
 		//return new DefaultRBServiceProvider();
 		return MockServiceProvider.getDefaultInstance();
+	}
+	
+	protected SchemaManager schemaManager() {
+		return getServiceProvider().getSchemaManager();
 	}
 	
 }

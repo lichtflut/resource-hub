@@ -20,20 +20,24 @@ import org.arastreju.sge.model.SimpleResourceID;
 public interface WSConstants {
 
 	String NAMESPACE_URI = "http://lichtflut.de#";
+	
+	// ---------- Common ----------------------------------
+	
+	ResourceID HAS_EMAIL = new SimpleResourceID(NAMESPACE_URI, "hasEmail");
 
-	// ---------- Person ------------------------------------------
+	// ---------- Person ----------------------------------
 
 	ResourceID HAS_FORENAME = new SimpleResourceID(NAMESPACE_URI, "hasFirstname");
 
 	ResourceID HAS_SURNAME = new SimpleResourceID(NAMESPACE_URI, "hasLastname");
-
-	// ---------- Address -----------------------------------------
-
+	
+	// ---------- Address ---------------------------------
+	
 	ResourceID HAS_HOUSNR = new SimpleResourceID(NAMESPACE_URI, "hasHouseNr");
 
 	ResourceID HAS_STREET = new SimpleResourceID(NAMESPACE_URI, "hasStreet");
 
-	// ---------- Country -----------------------------------------
+	// ---------- Country ---------------------------------
 
 	ResourceID HAS_ZIPCODE = new SimpleResourceID(NAMESPACE_URI, "Zipcode");
 
@@ -41,7 +45,7 @@ public interface WSConstants {
 
 	ResourceID HAS_COUNTRY = new SimpleResourceID(NAMESPACE_URI, "hasCountry");
 
-	// ---------- Organization ------------------------------------
+	// ---------- Organization ----------------------------
 
 	ResourceID HAS_ORGA_NAME = new SimpleResourceID(NAMESPACE_URI, "hasName");
 

@@ -19,8 +19,10 @@ import de.lichtflut.rb.core.api.impl.TypeManagerImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
- * Reference implementation of {@link ServiceProvider}.
+ * <p>
+ * Default implementation of {@link ServiceProvider}.
  * TODO: The rootContext of ArastrejuGate is used, this should be changed
+ * </p>
  *
  * Created: Apr 28, 2011
  *
@@ -39,15 +41,8 @@ public class DefaultRBServiceProvider implements ServiceProvider {
     // --CONSTRUCTOR----------------------------------------
 
     /**
-     * Default constructor.
-     */
-    public DefaultRBServiceProvider() {
-        this(new RBConfig());
-    }
-
-    /**
-     * Default constructor.
-     * @param config -
+     * Constructor.
+     * @param config The RBConfig.
      */
     public DefaultRBServiceProvider(final RBConfig config) {
         final ArastrejuProfile profile = config.getArastrejuConfiguration();

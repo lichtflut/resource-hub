@@ -10,7 +10,9 @@ import java.util.List;
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.QueryManager;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
@@ -19,7 +21,8 @@ import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
-import de.lichtflut.rb.core.schema.parser.RSFormat;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.persistence.SNPropertyTypeDefinition;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 import de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding;
@@ -61,9 +64,28 @@ public class SchemaManagerImpl implements SchemaManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResourceSchema findByType(final ResourceID type) {
+	public ResourceSchema findSchemaByType(final ResourceID type) {
 		final SNResourceSchema schemaNode = findSchemaNodeByType(type);
-		return binding.toModelObject(schemaNode);
+		if (schemaNode != null) {
+			return binding.toModelObject(schemaNode);	
+		} else {
+			return new ResourceSchemaImpl().setDescribedType(type);
+		}
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public TypeDefinition findTypeDefinition(final ResourceID id) {
+		final ModelingConversation mc = startConversation();
+		final ResourceNode node = mc.findResource(id.getQualifiedName());
+		mc.close();
+		if (node != null) {
+			return binding.toModelObject(new SNPropertyTypeDefinition(node));
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -111,11 +133,38 @@ public class SchemaManagerImpl implements SchemaManager {
 		mc.attach(node);
 		mc.close();
 	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void store(final TypeDefinition definition) {
+		Validate.isTrue(definition.isPublicTypeDef(), "Only public type definition may be stopred explicitly.");
+		final ModelingConversation mc = startConversation();
+		final ResourceNode existing = mc.findResource(definition.getID().getQualifiedName());
+		if (existing != null) {
+			mc.remove(existing, true);
+		}
+		final SNPropertyTypeDefinition node = binding.toSemanticNode(definition);
+		mc.attach(node);
+		mc.close();
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public TypeDefinition prepareTypeDefinition(final QualifiedName qn, final String displayName) {
+		return new TypeDefinitionImpl(new SimpleResourceID(qn), true).setName(displayName);
+	}
+	
+	// -----------------------------------------------------
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SchemaImporter getImporter(final RSFormat format) {
+	public SchemaImporter getImporter(final String format) {
 		throw new NotYetImplementedException();
 	}
 

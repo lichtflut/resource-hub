@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.mock;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Ravi Knox
  */
-public class MockServiceProvider implements ServiceProvider {
+public class MockServiceProvider implements ServiceProvider, Serializable {
 
 	private SchemaManager schemaManager;
 	private EntityManager entityManager;
@@ -46,8 +47,8 @@ public class MockServiceProvider implements ServiceProvider {
 	 * Constructor.
 	 */
 	public MockServiceProvider() {
-		dataPool.addAll(MockNewRBEntityFactory.getAllEntities());
-        schemaManager = new MockSchemaManager();
+		dataPool.addAll(MockNewRBEntityFactory.createMockEntities());
+		schemaManager = new MockSchemaManager();
         entityManager = new MockEntityManager(dataPool);
         typeManager = new MockTypeManager(dataPool);
 	}

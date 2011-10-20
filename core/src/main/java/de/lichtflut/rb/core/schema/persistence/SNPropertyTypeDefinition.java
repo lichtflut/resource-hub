@@ -77,6 +77,22 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	// -----------------------------------------------------
 
 	/**
+	 * @return The display name.
+	 */
+	public String getDisplayName() {
+		return SNOPS.string(SNOPS.singleObject(this, RBSchema.HAS_NAME));
+	}
+	
+	/**
+	 * Set the display name.
+	 * @param name The name.
+	 * @param ctx The context.
+	 */
+	public void setDisplayName(final String name, final Context... ctx) {
+		SNOPS.replace(this, RBSchema.HAS_NAME, new SNText(name), ctx);
+	}
+	
+	/**
 	 * Returns the datatype.
 	 * @return {@link ElementaryDataType}
 	 */

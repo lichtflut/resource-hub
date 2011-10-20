@@ -1,6 +1,5 @@
 package de.lichtflut.rb.core.api;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
@@ -14,7 +13,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
  * @author Raphael Esterle
  *
  */
-public interface EntityManager extends Serializable {
+public interface EntityManager {
 
     /**
      *

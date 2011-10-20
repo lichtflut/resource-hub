@@ -7,18 +7,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.views.SNText;
 
-import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.web.metamodel.WSConstants;
 
 /**
  * <p>
@@ -41,10 +45,12 @@ public final class MockNewRBEntityFactory {
 
 	// ------------------------------------------------------------
 
-	public static List<RBEntity> getAllEntities(){
+	public static List<RBEntity> createMockEntities() {
 		List<RBEntity> list = new ArrayList<RBEntity>();
-		list.addAll(getListOfPersons());
-		list.addAll(getListOfOrganizations());
+		final ResourceSchema personSchema = MockResourceSchemaFactory.getInstance().getPersonSchema();
+		final ResourceSchema orgSchema = MockResourceSchemaFactory.getInstance().getOrganizationSchema();
+		list.addAll(getListOfPersons(personSchema));
+		list.addAll(getListOfOrganizations(orgSchema, personSchema));
 		list.add(createAddress());
 		return list;
 	}
@@ -60,36 +66,8 @@ public final class MockNewRBEntityFactory {
 	 */
 	@SuppressWarnings("deprecation")
 	public static RBEntityImpl createPerson() {
-		List<List<Object>> list = new ArrayList<List<Object>>();
-		List<Object> firstName = new ArrayList<Object>();
-		List<Object> lastName = new ArrayList<Object>();
-		List<Object> address = new ArrayList<Object>();
-		List<Object> emailList = new ArrayList<Object>();
-		List<Object> dateOfBirth = new ArrayList<Object>();
-		List<Object> childrenList = new ArrayList<Object>();
-		firstName.add("Ravi");
-		lastName.add("Knox");
-		address.add(createAddress());
-		dateOfBirth.add(new Date(1985, 12, 23));
-		emailList.add("max@moritz.de");
-		emailList.add("chef@koch.de");
-		childrenList.add(createChildlessComplexPerson(MockResourceSchemaFactory.createPersonSchema()));
-		list.add(firstName);
-		list.add(lastName);
-		list.add(address);
-		list.add(dateOfBirth);
-		list.add(emailList);
-		list.add(childrenList);
-		int counter = 0;
-		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createPersonSchema());
-		for (RBField field : entity.getAllFields()) {
-			if (counter < list.size()) {
-				field.setValues(list.get(counter));
-			}
-			counter++;
-		}
 		return createPerson("Oliver", "Tigges", createAddress("Lustheide", "50", createCity("51427", "Bergisch Gladbach", "Germany")),
-				new Date(1975, 8, 15), "otigges@lichtflut.de", null);
+				new Date(1975, 8, 15), "otigges@lichtflut.de", null, MockResourceSchemaFactory.getInstance().getPersonSchema());
 	}
 
 	/**
@@ -120,41 +98,42 @@ public final class MockNewRBEntityFactory {
 
 	/**
 	 * return a list of {@link RBEntity}.
+	 * @param personSchema 
 	 * @return -
 	 */
 	@SuppressWarnings("deprecation")
-	public static List<RBEntity> getListOfPersons(){
+	public static List<RBEntity> getListOfPersons(ResourceSchema schema){
 		List<RBEntity> list = new ArrayList<RBEntity>();
 		RBEntity bergischGladbach =  createCity("51427", "Bergisch Gladbach", "Germany");
 		RBEntity lustheide50 = createAddress("Lustheide", "50", bergischGladbach);
 		list.add(lustheide50);
 		list.add(bergischGladbach);
-		list.add(createPerson("Oliver", "Tigges", lustheide50, new Date(1975, 8, 15), "otigges@lichtflut.de", null));
+		list.add(createPerson("Oliver", "Tigges", lustheide50, new Date(1975, 8, 15), "otigges@lichtflut.de", null, schema));
 
 		RBEntity lustheide11 = createAddress("Lustheide", "11", bergischGladbach);
 		list.add(lustheide11);
-		list.add(createPerson("Alexander", "von Aesch", lustheide11, new Date(1972, 2, 12), "avaesch@lichtflut.de", null));
+		list.add(createPerson("Alexander", "von Aesch", lustheide11, new Date(1972, 2, 12), "avaesch@lichtflut.de", null, schema));
 		
 		RBEntity bergischGladbach51427 = createCity("51427", "Bergisch Gladbach", "Germany");
 		list.add(bergischGladbach51427);
 		RBEntity lustheide66 = createAddress("Lustheide", "66", bergischGladbach51427);
 		list.add(lustheide66);
-		list.add(createPerson("Nils", "Bleisch", lustheide66, new Date(1987, 1, 1), "nbleisch@lichtflut.de", null));
+		list.add(createPerson("Nils", "Bleisch", lustheide66, new Date(1987, 1, 1), "nbleisch@lichtflut.de", null, schema));
 		
 		RBEntity leverkusen = createCity("50435", "Leverkusen", "Germany");
 		list.add(leverkusen);
 		RBEntity bahnhofStr = createAddress("Bahnhofstrasse", "7", leverkusen);
 		list.add(bahnhofStr);
-		RBEntity benAderhold = createPerson("Ben", "Aderhold", bahnhofStr,	new Date(2011, 8, 15), null, null);
+		RBEntity benAderhold = createPerson("Ben", "Aderhold", bahnhofStr,	new Date(2011, 8, 15), null, null, schema);
 		list.add(benAderhold);
-		list.add(createPerson("Erik", "Aderhold", bahnhofStr, new Date(1974, 2, 26), "eaderhold@lichtflut.de", benAderhold));
+		list.add(createPerson("Erik", "Aderhold", bahnhofStr, new Date(1974, 2, 26), "eaderhold@lichtflut.de", benAderhold, schema));
 		
 		RBEntity bergischGladbach51469 = createCity("51469", "Bergisch Gladbach", "Germany");
 		list.add(bergischGladbach51469);
 		RBEntity muelheimerStr = createAddress("Muelheimer Strasse", "216", bergischGladbach51469);
 		list.add(muelheimerStr);
-		list.add(createPerson("Raphael", "Esterle", muelheimerStr, new Date(1991, 10, 20), "resterle@lichtflut.de", null));
-		list.add(createPerson("Ravi", "Knox", muelheimerStr, new Date(1985, 12, 23), "rknox@lichtflut.de", null));
+		list.add(createPerson("Raphael", "Esterle", muelheimerStr, new Date(1991, 10, 20), "resterle@lichtflut.de", null, schema));
+		list.add(createPerson("Ravi", "Knox", muelheimerStr, new Date(1985, 12, 23), "rknox@lichtflut.de", null, schema));
 		return list;
 	}
 
@@ -174,7 +153,7 @@ public final class MockNewRBEntityFactory {
 		list.add(houseNrList);
 		list.add(cityList);
 		int counter = 0;
-		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createAddressSchema());
+		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.getInstance().getAddressSchema());
 		for (RBField field : entity.getAllFields()) {
 			field.setValues(list.get(counter));
 			counter++;
@@ -194,7 +173,7 @@ public final class MockNewRBEntityFactory {
 		list.add(cityList);
 		list.add(countryList);
 		int counter = 0;
-		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createCitySchema());
+		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.getInstance().getCitySchema());
 		for (RBField field : entity.getAllFields()) {
 			field.setValues(list.get(counter));
 			counter++;
@@ -204,9 +183,16 @@ public final class MockNewRBEntityFactory {
 
 	/**
 	 * Return an Organization.
+	 * @param orgSchema 
+	 * @param string2 
+	 * @param object 
+	 * @param b 
+	 * @param rbEntity 
+	 * @param rbEntityImpl 
+	 * @param string 
 	 * @return -
 	 */
-	public static RBEntity createOrganization(){
+	public static RBEntity createOrganization(String string, RBEntityImpl rbEntityImpl, RBEntity rbEntity, boolean b, Object object, String string2, ResourceSchema schema){
 		List<List<Object>> list = new ArrayList<List<Object>>();
 		List<Object> nameList = new ArrayList<Object>();
 		List<Object> ceoList = new ArrayList<Object>();
@@ -227,7 +213,7 @@ public final class MockNewRBEntityFactory {
 		list.add(memberList);
 		list.add(descriptionList);
 		int counter = 0;
-		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createOrganisationSchema());
+		RBEntityImpl entity = new RBEntityImpl(schema);
 		for (RBField field : entity.getAllFields()) {
 			field.setValues(list.get(counter));
 			counter++;
@@ -261,7 +247,7 @@ public final class MockNewRBEntityFactory {
 		list.add(memberList);
 		list.add(descriptionList);
 		int counter = 0;
-		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createOrganisationSchema());
+		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.getInstance().getOrganizationSchema());
 		for (RBField field : entity.getAllFields()) {
 			field.setValues(list.get(counter));
 			counter++;
@@ -274,10 +260,11 @@ public final class MockNewRBEntityFactory {
 	 * @return -
 	 */
 	@SuppressWarnings("deprecation")
-	public static List<RBEntity> getListOfOrganizations(){
+	public static List<RBEntity> getListOfOrganizations(ResourceSchema orgSchema, ResourceSchema personSchema){
 		List<RBEntity> list = new ArrayList<RBEntity>();
-		list.add(createOrganization("Microsoft", createPerson("Bill", "Gates", createAddress(null, null, createCity(null, null, "United Stated of America")), new Date(28, 10, 1955), "bill@microsoft.com", null), createAddress(null, null, null), true, null, "Microsoft sells OSs"));
-		list.add(createOrganization());
+		list.add(createOrganization("Microsoft", 
+				createPerson("Bill", "Gates", createAddress(null, null, createCity(null, null, "United Stated of America")), new Date(28, 10, 1955), "bill@microsoft.com", null, personSchema), 
+				createAddress(null, null, null), true, null, "Microsoft sells OSs", orgSchema));
 		return list;
 	}
 
@@ -296,7 +283,13 @@ public final class MockNewRBEntityFactory {
 	 * @param resource -
 	 * @return Instance of {@link RBEntityImpl}
 	 */
-	private static RBEntityImpl createPerson(String firstname, String lastname, RBEntity address1,Date date,String email,RBEntity children) {
+	private static RBEntityImpl createPerson(String firstname, String lastname, RBEntity address1,Date date,String email,RBEntity children
+			, ResourceSchema schema) {
+		SNResource node = new SNResource();
+		
+		SNOPS.associate(node, WSConstants.HAS_FORENAME, new SNText(firstname));
+		SNOPS.associate(node, WSConstants.HAS_SURNAME, new SNText(lastname));
+		
 		List<List<Object>> list = new ArrayList<List<Object>>();
 		List<Object> firstName = new ArrayList<Object>();
 		List<Object> lastName = new ArrayList<Object>();
@@ -317,7 +310,7 @@ public final class MockNewRBEntityFactory {
 		list.add(emailList);
 		list.add(childrenList);
 		int counter = 0;
-		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createPersonSchema());
+		RBEntityImpl entity = new RBEntityImpl(node, schema);
 		for (RBField field : entity.getAllFields()) {
 			if (counter < list.size()) {
 				field.setValues(list.get(counter));
@@ -339,7 +332,7 @@ public final class MockNewRBEntityFactory {
 		list.add(houseNrList);
 		list.add(cityList);
 		int counter = 0;
-		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createAddressSchema());
+		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.getInstance().getAddressSchema());
 		for (RBField field : entity.getAllFields()) {
 			field.setValues(list.get(counter));
 			counter++;
@@ -359,22 +352,22 @@ public final class MockNewRBEntityFactory {
 		list.add(cityList);
 		list.add(countryList);
 		int counter = 0;
-		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.createCitySchema());
+		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.getInstance().getCitySchema());
 		for (RBField field : entity.getAllFields()) {
 			field.setValues(list.get(counter));
 			counter++;
 		}
 		return entity;
 	}
+	
 	/**
 	 * Creates a {@link RBEntityImpl} based on createComplexPerson but without
 	 * children.
 	 * @param schema -
 	 * @return NewRBEntity
 	 */
-	@SuppressWarnings("deprecation")
-	private static RBEntityImpl createChildlessComplexPerson(
-			final ResourceSchema schema) {
+	@SuppressWarnings({ "deprecation", "unused" })
+	private static RBEntityImpl createChildlessComplexPerson(final ResourceSchema schema) {
 		List<List<Object>> list = new ArrayList<List<Object>>();
 		List<Object> firstName = new ArrayList<Object>();
 		List<Object> lastName = new ArrayList<Object>();

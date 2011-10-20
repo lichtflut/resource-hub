@@ -12,8 +12,6 @@ import java.util.Set;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.naming.VoidNamespace;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -46,6 +44,8 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	private ElementaryDataType type =  ElementaryDataType.STRING;
 	
 	private boolean isPublicType = false;
+	
+	private String name;
 
 	// -----------------------------------------------------
 	
@@ -53,7 +53,8 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 * Default constructor. For non public type definitions without ID.
 	 */
 	public TypeDefinitionImpl() {
-		id = new SimpleResourceID();
+		this(new SimpleResourceID(), false);
+		
 	}
 
 	/**
@@ -63,6 +64,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 */
 	public TypeDefinitionImpl(final ResourceID id, final boolean isPublic) {
 		this.id = id;
+		this.name = id.getName();
 		this.isPublicType = isPublic;
 	}
 
@@ -74,6 +76,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 */
 	@Deprecated
 	public TypeDefinitionImpl(final String identifierString) {
+		this(new SimpleResourceID(), false);
 		setName(identifierString);
 	}
 
@@ -172,22 +175,15 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 * @return the unqualified name of the internal resourceID
 	 */
 	public String getName(){
-		return getID().getName();
+		return name;
 	}
 	
 	/**
-	 * <p>
-	 * Tries to generate an URI from the given String, if not, the default Namespace will be used.
-	 * This method is equivalent to {@link setName(String name)}
-	 * </p>
-	 * @param identifierString -
+	 * @param name The name.
 	 */
-	public void setName(final String identifierString){
-		if(!(QualifiedName.isUri(identifierString))){
-			this.id = new SimpleResourceID(VoidNamespace.getInstance(),identifierString);
-		}else{
-			this.id = new SimpleResourceID(new QualifiedName(identifierString));
-		}
+	public TypeDefinitionImpl setName(final String name){
+		this.name = name;
+		return this;
 	}
 
 	// ---------------------------------------------------

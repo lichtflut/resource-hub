@@ -12,6 +12,7 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
@@ -42,7 +43,7 @@ public class SchemaManagerImplTest {
 	
 	@Before
 	public void setUp() {
-		serviceProvider = new DefaultRBServiceProvider();
+		serviceProvider = new DefaultRBServiceProvider(new RBConfig());
 	}
 	
 	// -----------------------------------------------------
@@ -53,7 +54,7 @@ public class SchemaManagerImplTest {
 		final ResourceSchema original = createSchema();
 		manager.store(original);
 		
-		final ResourceSchema found = manager.findByType(SNOPS.id(personQN));
+		final ResourceSchema found = manager.findSchemaByType(SNOPS.id(personQN));
 		
 		Assert.assertNotNull(found);
 		
@@ -66,20 +67,20 @@ public class SchemaManagerImplTest {
 		final ResourceSchema original = createSchema();
 		manager.store(original);
 		
-		final ResourceSchema found = manager.findByType(SNOPS.id(personQN));
+		final ResourceSchema found = manager.findSchemaByType(SNOPS.id(personQN));
 		Assert.assertNotNull(found);
 		Assert.assertEquals(3, found.getPropertyDeclarations().size());
 		
 		final ResourceSchema other = new ResourceSchemaImpl(SNOPS.id(personQN));
 		manager.store(other);
 		
-		ResourceSchema retrieved = manager.findByType(SNOPS.id(personQN));
+		ResourceSchema retrieved = manager.findSchemaByType(SNOPS.id(personQN));
 		Assert.assertNotNull(retrieved);
 		Assert.assertEquals(0, retrieved.getPropertyDeclarations().size());
 		
 		manager.store(original);
 		
-		retrieved = manager.findByType(SNOPS.id(personQN));
+		retrieved = manager.findSchemaByType(SNOPS.id(personQN));
 		Assert.assertNotNull(retrieved);
 		Assert.assertEquals(3, retrieved.getPropertyDeclarations().size());
 		

@@ -22,7 +22,7 @@ import org.arastreju.sge.naming.QualifiedName;
 public interface TypeManager {
 	
 	/**
-	 * Create a new rb:Type with given name.
+	 * Create and persist a new rb:Type with given name.
 	 * @param qn The qualified name of the type.
 	 * @return The persistent class node.
 	 */

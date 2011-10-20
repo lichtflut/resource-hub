@@ -22,7 +22,7 @@ import de.lichtflut.rb.webck.components.ComponentFactory;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Panel for selecting/editing of a new Resource.
  * </p>
  *
  * <p>
@@ -31,10 +31,12 @@ import de.lichtflut.rb.webck.components.ComponentFactory;
  *
  * @author Oliver Tigges
  */
-public abstract class CreateTypePanel extends Panel {
+public abstract class CreateResourcePanel extends Panel {
 
 	private IModel<Namespace> nsModel;
 	private IModel<String> nameModel;
+	
+	// -----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -42,7 +44,7 @@ public abstract class CreateTypePanel extends Panel {
 	 * @param model
 	 */
 	@SuppressWarnings("rawtypes")
-	public CreateTypePanel(final String id) {
+	public CreateResourcePanel(final String id) {
 		super(id);
 		
 		final Form form = new Form("form"); 
@@ -81,5 +83,17 @@ public abstract class CreateTypePanel extends Panel {
 	// -----------------------------------------------------
 	
 	public abstract void onCreate(final QualifiedName qn, final AjaxRequestTarget target);
+	
+	// -----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+		nsModel.detach();
+		nameModel.detach();
+	}
 
 }

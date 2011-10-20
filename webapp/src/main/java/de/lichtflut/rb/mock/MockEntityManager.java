@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.mock;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 
 /**
  * <p>
@@ -21,15 +23,15 @@ import de.lichtflut.rb.core.entity.RBEntity;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class MockEntityManager implements EntityManager {
+public class MockEntityManager implements EntityManager, Serializable {
 
-	private List<RBEntity> dataPool;
+	private final List<RBEntity> dataPool;
 
 	// -----------------------------------------------------
 
 	/**
 	 * Constructor.
-	 * @param dataPool2 
+	 * @param dataPool
 	 */
 	public MockEntityManager(final List<RBEntity> dataPool) {
 		this.dataPool = dataPool;
@@ -41,6 +43,7 @@ public class MockEntityManager implements EntityManager {
 	public RBEntity find(final ResourceID resourceID) {
 		for (RBEntity e : dataPool) {
 			if (e.getID().equals(resourceID)) {
+				((RBEntityImpl) e).initializeFields();
 				return e;
 			}
 		}
@@ -48,11 +51,12 @@ public class MockEntityManager implements EntityManager {
 	}
 
 	@Override
-	public List<RBEntity> findAllByType(final ResourceID id) {
-		if (id != null) {
+	public List<RBEntity> findAllByType(final ResourceID type) {
+		if (type != null) {
 			List<RBEntity> list = new ArrayList<RBEntity>();
 			for (RBEntity e : dataPool) {
-				if (e.getType().equals(id)) {
+				if (e.getType().equals(type)) {
+					((RBEntityImpl) e).initializeFields();
 					list.add(e);
 				}
 			}

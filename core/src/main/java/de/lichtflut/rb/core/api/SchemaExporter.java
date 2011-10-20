@@ -1,17 +1,21 @@
 package de.lichtflut.rb.core.api;
 
-import java.util.Collection;
-
-import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
-import de.lichtflut.rb.core.schema.parser.RSParsingResult;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * 	 Created Sep. 14, 2011
+ * <p>
+ *  Exporter of Resource Schemas.
+ * </p>
  *
- * @author Raphael Esterle
+ * <p>
+ * 	Created Oct 20, 2011
+ * </p>
+ *
+ * @author Oliver Tigges
  */
 public interface SchemaExporter {
 	
-	RSParsingResult convertToParsingResult(final Collection<ResourceSchemaElement> types);
+	void exportAll(OutputStream out) throws IOException;
 	
 }

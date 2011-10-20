@@ -6,10 +6,10 @@ package de.lichtflut.rb.core.api;
 import java.util.Collection;
 
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.parser.RSFormat;
 
 /**
  * <p>
@@ -25,11 +25,18 @@ import de.lichtflut.rb.core.schema.parser.RSFormat;
 public interface SchemaManager {
 
 	/**
-	 * Returns a {@link ResourceSchema} for a given ResourceType.
+	 * Returns the {@link ResourceSchema} for the given ResourceType.
 	 * @param type The Resource Type
 	 * @return the Resource Schema for the given Type.
 	 */
-	ResourceSchema findByType(ResourceID type);
+	ResourceSchema findSchemaByType(ResourceID type);
+	
+	/**
+	 * Finds a Type Definition by it's ID.
+	 * @param id The IT
+	 * @return the TypeDefinition or null.
+	 */
+	TypeDefinition findTypeDefinition(ResourceID id);
 
 	// -----------------------------------------------------
 
@@ -48,10 +55,24 @@ public interface SchemaManager {
 	// -----------------------------------------------------
 
 	/**
-	 * Stores or overrides the given ResourceSchema with the given one.
+	 * Stores the given Resource Schema with the given one.
 	 * @param schema - the {@link ResourceSchema}
 	 */
 	void store(ResourceSchema schema);
+	
+	/**
+	 * Stores the given Type Definition.
+	 * @param definition The Type Definition.
+	 */
+	void store(TypeDefinition definition);
+	
+	/**
+	 * Prepare a transient Type Definition.
+	 * @param qn The qualified name.
+	 * @param displayName The display name.
+	 * @return The transient Type Definition.
+	 */
+	TypeDefinition prepareTypeDefinition(QualifiedName qn, String displayName);
 
 	// -----------------------------------------------------
 
@@ -59,6 +80,6 @@ public interface SchemaManager {
 	 * @param format -
 	 * @return -
 	 */
-	SchemaImporter getImporter(RSFormat format);
+	SchemaImporter getImporter(String format);
 
 }

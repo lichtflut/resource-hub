@@ -80,7 +80,6 @@ public class RBEntityImpl implements RBEntity {
 			}
 		}
 		initializeFields();
-
 	}
 
 	/**
@@ -115,24 +114,21 @@ public class RBEntityImpl implements RBEntity {
 	 * If no {@link ResourceSchema} exists, the {@link RBField}s will be created
 	 * according to the values present in the Entity itself.
 	 */
-	private void initializeFields() {
+	public void initializeFields() {
 		final Set<ResourceID> predicates = new HashSet<ResourceID>();
 		for(Association current : node.getAssociations()) {
 			predicates.add(current.getPredicate());
 		}
 		fields = new ArrayList<RBField>();
 		if (schema != null) {
-		for (PropertyDeclaration assertion : schema.getPropertyDeclarations()) {
-			final ResourceID predicate = assertion
-				.getTypeDefinition().getID();
-			fields.add(new RBFieldImpl(assertion, SNOPS.objects(node, predicate)));
-			predicates.remove(predicate);
+			for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+				final ResourceID predicate = decl.getPropertyType();
+				fields.add(new RBFieldImpl(decl, SNOPS.objects(node, predicate)));
+				predicates.remove(predicate);
 			}
 		}
 		// TODO: Remove from blacklist rdf(s):*
 		for (ResourceID predicate : predicates) {
-			System.out.println("PREDICATE: " + predicate);
-			System.out.println("VALUE: " + SNOPS.objects(node, predicate));
 			fields.add(new RBFieldImpl(predicate, SNOPS.objects(node, predicate)));
 		}
 	}

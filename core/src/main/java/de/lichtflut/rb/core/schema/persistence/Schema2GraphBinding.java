@@ -89,6 +89,7 @@ public class Schema2GraphBinding {
 		}
 		final TypeDefinitionImpl typeDef = new TypeDefinitionImpl(SNOPS.id(snTypeDef), snTypeDef.isPublic());
 		typeDef.setElementaryDataType(snTypeDef.getDatatype());
+		typeDef.setName(snTypeDef.getDisplayName());
 		typeDef.setConstraints(buildConstraints(snTypeDef.getConstraints()));
 		return typeDef;
 	}
@@ -152,6 +153,7 @@ public class Schema2GraphBinding {
 		final SNResource node = new SNResource(typeDef.getID().getQualifiedName());
 		final SNPropertyTypeDefinition sn = new SNPropertyTypeDefinition(node);
 		sn.setDatatype(typeDef.getElementaryDataType(), RBSchema.CONTEXT);
+		sn.setDisplayName(typeDef.getName(), RBSchema.CONTEXT);
 		if (typeDef.isPublicTypeDef()) {
 			sn.setPublic(RBSchema.CONTEXT);
 		} else {

@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.mock;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Mock version of type manager.
  * </p>
  *
  * <p>
@@ -28,7 +29,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
  *
  * @author Oliver Tigges
  */
-public class MockTypeManager implements TypeManager {
+public class MockTypeManager implements TypeManager, Serializable {
 
 	private List<RBEntity> dataPool;
 	

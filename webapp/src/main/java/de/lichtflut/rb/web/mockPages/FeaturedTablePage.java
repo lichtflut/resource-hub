@@ -33,18 +33,12 @@ import de.lichtflut.rb.webck.components.ResourceTableView;
 @SuppressWarnings("serial")
 public class FeaturedTablePage extends RBSuperPage {
 
-	
-	private static ServiceProvider provider = null;
-	
 	/**
 	 * Singleton pattern: There will be only one instance per runtime.
 	 * @return {@link ServiceProvider}
 	 */
 	public static ServiceProvider getRBServiceProvider(){
-		if(provider==null) {
-			provider= new MockServiceProvider();
-		}
-		return provider;
+		return MockServiceProvider.getDefaultInstance();
 	}
 	
 	// -----------------------------------------------------
