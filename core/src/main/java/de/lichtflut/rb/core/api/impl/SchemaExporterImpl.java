@@ -11,6 +11,7 @@ import de.lichtflut.rb.core.api.SchemaExporter;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.schema.parser.ResourceSchemaWriter;
 
 /**
  * <p>
@@ -23,17 +24,19 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
  *
  * @author Oliver Tigges
  */
-public abstract class AbstractSchemaExporter implements SchemaExporter {
+public class SchemaExporterImpl implements SchemaExporter {
 
 	private final SchemaManager manager;
+	private final ResourceSchemaWriter writer;
 
 	// -----------------------------------------------------
 	
 	/**
-	 * 
+	 * Constructor.
 	 */
-	public AbstractSchemaExporter(final SchemaManager manager) {
+	public SchemaExporterImpl(final SchemaManager manager, final ResourceSchemaWriter writer) {
 		this.manager = manager;
+		this.writer = writer;
 	}
 	
 	// -----------------------------------------------------
@@ -44,16 +47,10 @@ public abstract class AbstractSchemaExporter implements SchemaExporter {
 	@Override
 	public void exportAll(final OutputStream out) throws IOException {
 		final Collection<TypeDefinition> typeDefs = manager.findAllTypeDefinitions();
-		write(out, typeDefs.toArray(new TypeDefinition[typeDefs.size()]));
+		writer.write(out, typeDefs.toArray(new TypeDefinition[typeDefs.size()]));
 		
 		final Collection<ResourceSchema> schemas = manager.findAllResourceSchemas();
-		write(out, schemas.toArray(new ResourceSchema[schemas.size()]));
+		writer.write(out, schemas.toArray(new ResourceSchema[schemas.size()]));
 	}
 	
-	// -----------------------------------------------------
-	
-	protected abstract void write(final OutputStream out, final ResourceSchema... schemas) throws IOException;
-	
-	protected abstract void write(final OutputStream out, final TypeDefinition... typeDefinitions) throws IOException;
-
 }

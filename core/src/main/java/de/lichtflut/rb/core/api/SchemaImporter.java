@@ -1,5 +1,6 @@
 package de.lichtflut.rb.core.api;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -16,6 +17,6 @@ import java.io.InputStream;
  */
 public interface SchemaImporter {
 
-	void read(InputStream in);
+	void read(InputStream in) throws IOException;
 
 }

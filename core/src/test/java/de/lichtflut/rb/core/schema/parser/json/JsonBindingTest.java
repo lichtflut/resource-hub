@@ -1,8 +1,10 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.api.impl;
+package de.lichtflut.rb.core.schema.parser.json;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.arastreju.sge.model.ElementaryDataType;
@@ -17,10 +19,12 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
+import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Test Cases for JSon Ex/Importer.
  * </p>
  *
  * <p>
@@ -29,7 +33,7 @@ import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
  *
  * @author Oliver Tigges
  */
-public class JsonExporterTest {
+public class JsonBindingTest {
 	
 	private static final String NAMESPACE_URI = "http://lichtflut.de#";
 	
@@ -42,13 +46,38 @@ public class JsonExporterTest {
 	// -----------------------------------------------------
 	
 	@Test
-	public void testExport() throws IOException {
-		final JsonSchemaExporter exporter = new JsonSchemaExporter(null);
+	public void testSchemaExport() throws IOException {
+		final JsonSchemaWriter exporter = new JsonSchemaWriter();
 
 		final TypeDefinition emailTypeDef = createEmailTypeDef();
 		final ResourceSchema personSchema = createSchema(emailTypeDef);
 		
-		exporter.write(System.out, personSchema);
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		exporter.write(out, personSchema);
+		final byte[] bytes = out.toByteArray();
+		
+		System.out.println(new String(bytes));
+		
+		final JsonSchemaParser importer = new JsonSchemaParser(null);
+		importer.parse(new ByteArrayInputStream(bytes));
+	}
+	
+	@Test
+	public void testTypeDefExport() throws IOException {
+		final JsonSchemaWriter exporter = new JsonSchemaWriter();
+
+		final TypeDefinition emailTypeDef = createEmailTypeDef();
+		
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		exporter.write(out, emailTypeDef);
+		exporter.write(out, emailTypeDef);
+		exporter.write(out, emailTypeDef);
+		final byte[] bytes = out.toByteArray();
+		
+		System.out.println(new String(bytes));
+		
+		final JsonSchemaParser importer = new JsonSchemaParser(null);
+		importer.parse(new ByteArrayInputStream(bytes));
 	}
 
 	// -----------------------------------------------------
@@ -105,7 +134,9 @@ public class JsonExporterTest {
 	 * @return
 	 */
 	private TypeDefinition createEmailTypeDef() {
-		final TypeDefinitionImpl typeDef = new TypeDefinitionImpl(new SimpleResourceID(), true);
+		final ResourceID id = new SimpleResourceID(NAMESPACE_URI, "EmailAdressTypeDef");
+		final TypeDefinitionImpl typeDef = new TypeDefinitionImpl(id, true);
+		typeDef.setName("Email-Address");
 		typeDef.setElementaryDataType(ElementaryDataType.STRING);
 		typeDef.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
 		return typeDef;

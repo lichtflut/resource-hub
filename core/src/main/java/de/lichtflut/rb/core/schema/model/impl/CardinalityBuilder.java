@@ -240,9 +240,10 @@ public final class CardinalityBuilder{
 		// -----------------------------------------------------
 		@Override
 		public String toString(){
-			return ("Min: " + getMinOccurs()
-					+  ", Max: "
-					+ ((getMaxOccurs()==Integer.MAX_VALUE) ? "unlimited" : getMaxOccurs()));
+			return "[" + getMinOccurs() 
+					+  " .. "
+					+ (isUnbound() ? "unbound" : getMaxOccurs())
+					+ "]";
 		}
 
 	}//End of inner class CardinalityImpl

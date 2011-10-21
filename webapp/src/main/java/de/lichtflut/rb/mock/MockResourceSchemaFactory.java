@@ -248,7 +248,7 @@ public final class MockResourceSchemaFactory {
 	 * Creates a {@link ResourceSchema} with String, String {@link ElementaryDataType}s.
 	 * @return schema
 	 */
-	private ResourceSchema createOrganisationSchema(){
+	private ResourceSchema createOrganisationSchema() {
 		final ResourceSchemaImpl organizationSchema = new ResourceSchemaImpl();
 		organizationSchema.setDescribedType(ORGANIZATION);
 
