@@ -14,7 +14,7 @@ import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.CKComponent;
-import de.lichtflut.rb.webck.components.ResourcePicker;
+import de.lichtflut.rb.webck.components.OldResourcePicker;
 import de.lichtflut.rb.webck.models.NewGenericResourceModel;
 
 
@@ -31,8 +31,11 @@ public abstract class ResourceField extends CKComponent {
 	private RBField field;
 	private RepeatingView view;
 	private int index = 0;
+	
+	// -----------------------------------------------------
+	
 	/**
-	 * Constrcutor.
+	 * Constructor.
 	 * @param id - wicket:id
 	 * @param field - {@link RBField} to be displayed
 	 */
@@ -57,7 +60,7 @@ public abstract class ResourceField extends CKComponent {
 		add(new AddValueAjaxButton("button", field) {
 			@Override
 			public void addField(final AjaxRequestTarget target, final Form<?> form) {
-				ResourcePicker picker = createResourcePicker(index++);
+				OldResourcePicker picker = createResourcePicker(index++);
 				picker.setOutputMarkupId(true);
 				view.add(picker);
 				target.add(form);
@@ -67,13 +70,13 @@ public abstract class ResourceField extends CKComponent {
 	}
 
 	/**
-	 * Creates a {@link ResourcePicker} with appropriate {@link NewGenericResourceModel} and value.
+	 * Creates a {@link OldResourcePicker} with appropriate {@link NewGenericResourceModel} and value.
 	 * @param i - marking the occurence of the displayed value in {@link RBField}
-	 * @return - instance of {@link ResourcePicker}
+	 * @return - instance of {@link OldResourcePicker}
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private ResourcePicker createResourcePicker(final int i){
-		ResourcePicker picker = new ResourcePicker(view.newChildId(), new NewGenericResourceModel(field, i),
+	private OldResourcePicker createResourcePicker(final int i){
+		OldResourcePicker picker = new OldResourcePicker(view.newChildId(), new NewGenericResourceModel(field, i),
 				extractTypeConstraint(field)){
 			@Override
 			public ServiceProvider getServiceProvider() {

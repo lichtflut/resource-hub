@@ -9,7 +9,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.odlabs.wiquery.core.resources.CoreJavaScriptResourceReference;
 
+import de.lichtflut.rb.web.components.ComponentsCatalogPage;
 import de.lichtflut.rb.web.components.LoginPanelPage;
 import de.lichtflut.rb.web.entities.EntityDetailPage;
 import de.lichtflut.rb.web.entities.EntityOverviewPage;
@@ -19,14 +21,10 @@ import de.lichtflut.rb.webck.components.CKLinkType;
 import de.lichtflut.rb.webck.components.navigation.NavigationBar;
 import de.lichtflut.rb.webck.components.navigation.NavigationNode;
 import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
-import de.lichtflut.rb.webck.resources.SharedResourceProvider;
 
 /**
  * <p>
- * TODO: To comment
- *  Root/super-Page,
- *  including important/essential services and configuration-options via CDI.
- *  Each further page should be a subclass of this.
+ * 	Base page for WebSample pages.
  * </p>
  *
  * <p>
@@ -36,8 +34,7 @@ import de.lichtflut.rb.webck.resources.SharedResourceProvider;
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public abstract class RBSuperPage extends WebPage {
-
+public abstract class RBBasePage extends WebPage {
 
 	private String title;
 
@@ -47,7 +44,7 @@ public abstract class RBSuperPage extends WebPage {
 	 * Default constructor.
 	 * @param title /
 	 */
-	public RBSuperPage(final String title){
+	public RBBasePage(final String title){
 		super();
 		this.title = title;
 		init();
@@ -58,7 +55,7 @@ public abstract class RBSuperPage extends WebPage {
 	 * @param title /
 	 * @param params /
 	 */
-	public RBSuperPage(final String title, final PageParameters params){
+	public RBBasePage(final String title, final PageParameters params){
 		super(params);
 		this.title = title;
 		init();
@@ -72,15 +69,14 @@ public abstract class RBSuperPage extends WebPage {
 	@Override
 	public void renderHead(final IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(new SharedResourceProvider().getJQueryCore());
-		response.renderJavaScriptReference(new SharedResourceProvider().getJQueryUI());
+		response.renderJavaScriptReference(CoreJavaScriptResourceReference.get());
 	}
 
 	// -----------------------------------------------------
 
 
 	/**
-	 *
+	 * Initializer.
 	 */
 	public void init(){
 		Label titleLabel = new Label("title", title);
@@ -104,6 +100,10 @@ public abstract class RBSuperPage extends WebPage {
 				new CKLink("link", "Type-System", TypeSystemPage.class, CKLinkType.WEB_PAGE_CLASS));
 		mainNavigation.addChild(typeSystem);
 
+		// Type System
+		final NavigationNode compCat = new NavigationNodePanel(
+				new CKLink("link", "Catalog", ComponentsCatalogPage.class, CKLinkType.WEB_PAGE_CLASS));
+		mainNavigation.addChild(compCat);
 		
 		// Security-Stuff Link
 		NavigationNode securityStuff = new NavigationNodePanel(new CKLink("link", "Security-Related", CKLinkType.CUSTOM_BEHAVIOR));

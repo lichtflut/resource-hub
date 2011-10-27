@@ -26,7 +26,8 @@ import de.lichtflut.rb.webck.models.ReferencedEntityModel;
  *
  * @author Ravi Knox
  */
-public abstract class ResourcePicker extends CKComponent {
+@Deprecated
+public abstract class OldResourcePicker extends CKComponent {
 
 	//TODO: REFACTOR
 	private static final long serialVersionUID = 1L;
@@ -41,7 +42,7 @@ public abstract class ResourcePicker extends CKComponent {
 	 * @param entity - The existing entity to be displayed.
 	 * @param type - {@link ResourceID} defining the RDF:TYPE of the ResourcePicker
 	 */
-	public ResourcePicker(final String id, final IModel<RBEntity> entity,final ResourceID type) {
+	public OldResourcePicker(final String id, final IModel<RBEntity> entity,final ResourceID type) {
 		super(id);
 		this.entity = entity;
 		this.type = type;
@@ -133,7 +134,7 @@ public abstract class ResourcePicker extends CKComponent {
 		setDefaultModel(new ReferencedEntityModel(entity) {
 			@Override
 			public RBEntity resolve(final ResourceID id) {
-				return ResourcePicker.this.getServiceProvider().getEntityManager().find(id);
+				return OldResourcePicker.this.getServiceProvider().getEntityManager().find(id);
 			}
 		});
 	}

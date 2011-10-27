@@ -10,13 +10,13 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
-import de.lichtflut.rb.mock.MockServiceProvider;
-import de.lichtflut.rb.web.RBSuperPage;
+import de.lichtflut.rb.web.RBBasePage;
+import de.lichtflut.rb.web.util.ServiceProviderLocator;
 import de.lichtflut.rb.webck.behavior.CKBehavior;
 import de.lichtflut.rb.webck.components.CKComponent;
 import de.lichtflut.rb.webck.components.CKLink;
@@ -31,14 +31,14 @@ import de.lichtflut.rb.webck.components.ResourceTableView;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class FeaturedTablePage extends RBSuperPage {
+public class FeaturedTablePage extends RBBasePage {
 
 	/**
 	 * Singleton pattern: There will be only one instance per runtime.
 	 * @return {@link ServiceProvider}
 	 */
-	public static ServiceProvider getRBServiceProvider(){
-		return MockServiceProvider.getDefaultInstance();
+	public ServiceProvider getRBServiceProvider(){
+		return ServiceProviderLocator.get();
 	}
 	
 	// -----------------------------------------------------

@@ -40,16 +40,8 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	@Override
 	public void write(OutputStream out, ResourceSchema... schemas) throws IOException {
 		final JsonGenerator g = new JsonFactory().createJsonGenerator(out).useDefaultPrettyPrinter();
-		
 		g.writeStartObject();
-		g.writeArrayFieldStart(RESOURCE_SCHEMAS);
-		
-		for (ResourceSchema schema : schemas) {
-			g.writeStartObject();
-			writeSchema(g, schema);
-			g.writeEndObject();
-		}
-		g.writeEndArray();
+		write(g, schemas);
 		g.close(); 
 	}
 
@@ -60,6 +52,19 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	public void write(final OutputStream out, final TypeDefinition... typeDefinitions) throws IOException {
 		final JsonGenerator g = new JsonFactory().createJsonGenerator(out).useDefaultPrettyPrinter();
 		g.writeStartObject();
+		write(g, typeDefinitions);
+		g.close(); 
+	}
+	
+	// -----------------------------------------------------
+
+	/**
+	 * @param g The generator.
+	 * @param typeDefinitions
+	 * @throws IOException
+	 * @throws JsonGenerationException
+	 */
+	public void write(final JsonGenerator g, final TypeDefinition... typeDefinitions) throws IOException {
 		g.writeArrayFieldStart(PUBLIC_TYPE_DEFINITIONS);
 		for (TypeDefinition def : typeDefinitions) {
 			g.writeStartObject();
@@ -67,7 +72,23 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 			g.writeEndObject();
 		}
 		g.writeEndArray();
-		g.close(); 
+	}
+	
+	/**
+	 * @param g The generator.
+	 * @param schemas
+	 * @throws IOException
+	 * @throws JsonGenerationException
+	 */
+	protected void write(final JsonGenerator g, ResourceSchema... schemas)
+			throws IOException, JsonGenerationException {
+		g.writeArrayFieldStart(RESOURCE_SCHEMAS);
+		for (ResourceSchema schema : schemas) {
+			g.writeStartObject();
+			writeSchema(g, schema);
+			g.writeEndObject();
+		}
+		g.writeEndArray();
 	}
 	
 	// -----------------------------------------------------

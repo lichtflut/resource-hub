@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Behavior that will display a panel as modal dialog.
  * </p>
  *
  * <p>
@@ -30,7 +30,17 @@ public class ShowModalBehavior extends Behavior {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void renderHead(Component component, IHeaderResponse response) {
+	public void bind(final Component component) {
+		component.setOutputMarkupId(true);
+		component.setOutputMarkupPlaceholderTag(true);
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void renderHead(final Component component, final IHeaderResponse response) {
+		super.renderHead(component, response);
 		switch (state) {
 		case OPEN:
 			if (!component.isVisible()) {
@@ -53,4 +63,5 @@ public class ShowModalBehavior extends Behavior {
 			state = STATE.CLOSED;
 		}
 	}
+	
 }

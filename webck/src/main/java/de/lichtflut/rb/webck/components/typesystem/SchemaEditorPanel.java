@@ -22,6 +22,7 @@ import org.arastreju.sge.model.ElementaryDataType;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.components.EnumDropDownChoice;
+import de.lichtflut.rb.webck.components.fields.ResourcePickerField;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 
 /**
@@ -55,7 +56,7 @@ public abstract class SchemaEditorPanel extends Panel {
 			protected void populateItem(ListItem<PropertyRow> item) {
 				final PropertyRow row = item.getModelObject();
 				
-				item.add(new TextField("property", new PropertyModel(row, "propertyDescriptor"))
+				item.add(new ResourcePickerField("property", new PropertyModel(row, "propertyDescriptor"))
 					.setRequired(true));
 
 				item.add(new TextField("min", new PropertyModel(row, "min")));

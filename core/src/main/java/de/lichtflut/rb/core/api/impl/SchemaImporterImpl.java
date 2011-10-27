@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import de.lichtflut.rb.core.api.SchemaImporter;
+import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
 
@@ -24,13 +27,15 @@ import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
 public class SchemaImporterImpl implements SchemaImporter {
 
 	private final ResourceSchemaParser parser;
+	private final SchemaManager manager;
 	
 	// -----------------------------------------------------
 	
 	/**
 	 * @param parser
 	 */
-	public SchemaImporterImpl(final ResourceSchemaParser parser) {
+	public SchemaImporterImpl(final SchemaManager manager, final ResourceSchemaParser parser) {
+		this.manager = manager;
 		this.parser = parser;
 	}
 	
@@ -41,9 +46,13 @@ public class SchemaImporterImpl implements SchemaImporter {
 	 */
 	@Override
 	public void read(final InputStream in) throws IOException {
-		@SuppressWarnings("unused")
 		final ParsedElements elements = parser.parse(in);
-		// TODO store elements
+		for(TypeDefinition def : elements.getTypeDefs()) {
+			manager.store(def);
+		}
+		for(ResourceSchema schema : elements.getSchemas()) {
+			manager.store(schema);
+		}
 	}
 
 }

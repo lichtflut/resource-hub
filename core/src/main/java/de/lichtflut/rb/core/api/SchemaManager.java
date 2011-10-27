@@ -81,5 +81,12 @@ public interface SchemaManager {
 	 * @return -
 	 */
 	SchemaImporter getImporter(String format);
+	
+	/**
+	 * Obtain the exporter for the given format.
+	 * @param format A format.
+	 * @return The exporter.
+	 */
+	SchemaExporter getExporter(String format);
 
 }

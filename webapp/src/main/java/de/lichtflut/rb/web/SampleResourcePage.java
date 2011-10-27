@@ -32,7 +32,7 @@ import de.lichtflut.rb.webck.models.ResourceNodeModel;
  * @author Oliver Tigges
  */
 @SuppressWarnings("serial")
-public class SampleResourcePage extends RBSuperPage {
+public class SampleResourcePage extends RBBasePage {
 
 	public static final ResourceID HAS_BIRTHDATE = new SimpleResourceID("urn:lf:predicates:", "hasBirthdate");
 

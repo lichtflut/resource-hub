@@ -4,7 +4,7 @@
 package de.lichtflut.rb.web.components;
 
 import de.lichtflut.rb.core.security.impl.MockLoginService;
-import de.lichtflut.rb.web.RBSuperPage;
+import de.lichtflut.rb.web.RBBasePage;
 import de.lichtflut.rb.webck.components.login.LoginPanel;
 
 /**
@@ -15,7 +15,7 @@ import de.lichtflut.rb.webck.components.login.LoginPanel;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class LoginPanelPage extends RBSuperPage {
+public class LoginPanelPage extends RBBasePage {
 
 	/**
 	 * Constructor.

@@ -26,14 +26,25 @@
  		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>de.lichtflut.rb.web.RBApplication</param-value>
+			<param-value>de.lichtflut.rb.web.WebsampleApplication</param-value>
  		</init-param>
  	</filter>
 
- <filter-mapping>
-  <filter-name>wicket.lf.resource-browser</filter-name>
-	<url-pattern>/*</url-pattern>
- </filter-mapping>
+	<filter-mapping>
+		<filter-name>wicket.lf.resource-browser</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	
+	<servlet>
+	   <servlet-name>QueryServlet</servlet-name>
+	   <servlet-class>de.lichtflut.rb.web.servlets.WebsampleResourceQueryServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+	   <servlet-name>QueryServlet</servlet-name>
+	   <url-pattern>/internal/query</url-pattern>
+	</servlet-mapping>
 
 
 </web-app>

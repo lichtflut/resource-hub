@@ -9,13 +9,16 @@ import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.QueryManager;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.infra.exceptions.NotYetSupportedException;
+import de.lichtflut.rb.core.api.SchemaExporter;
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.RBSchema;
@@ -23,6 +26,8 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
+import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
 import de.lichtflut.rb.core.schema.persistence.SNPropertyTypeDefinition;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 import de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding;
@@ -111,7 +116,9 @@ public class SchemaManagerImpl implements SchemaManager {
 		final List<ResourceNode> nodes = query().findByType(RBSchema.PROPERTY_TYPE_DEF);
 		for (ResourceNode node : nodes) {
 			final TypeDefinition typeDef = binding.toModelObject(new SNPropertyTypeDefinition(node));
-			result.add(typeDef);
+			if (typeDef.isPublicTypeDef()) {
+				result.add(typeDef);
+			}
 		}
 		return result;
 	}
@@ -127,6 +134,9 @@ public class SchemaManagerImpl implements SchemaManager {
 		final ModelingConversation mc = startConversation();
 		final ResourceNode existing = findSchemaNodeByType(schema.getDescribedType());
 		if (existing != null) {
+			// remove DESCRIBES association in order to prevent the type to be deleted.
+			Association assoc = SNOPS.singleAssociation(existing, RBSchema.DESCRIBES);
+			existing.remove(assoc);
 			mc.remove(existing, true);
 		}
 		final SNResourceSchema node = binding.toSemanticNode(schema);
@@ -165,7 +175,23 @@ public class SchemaManagerImpl implements SchemaManager {
 	 */
 	@Override
 	public SchemaImporter getImporter(final String format) {
-		throw new NotYetImplementedException();
+		if ("JSON".equalsIgnoreCase(format.trim())) {
+			return new SchemaImporterImpl(this, new JsonSchemaParser());
+		} else {
+			throw new NotYetSupportedException("Unsupported format: " + format);
+		}
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SchemaExporter getExporter(final String format) {
+		if ("JSON".equalsIgnoreCase(format.trim())) {
+			return new SchemaExporterImpl(this, new JsonSchemaWriter());
+		} else {
+			throw new NotYetSupportedException("Unsupported format: " + format);
+		}
 	}
 
 	// -----------------------------------------------------

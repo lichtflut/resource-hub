@@ -20,7 +20,7 @@ import de.lichtflut.rb.webck.components.navigation.NavigationBar;
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public class RSPage extends RBSuperPage {
+public class RSPage extends RBBasePage {
 
 //	private final RepeatingView resourceList = new RepeatingView("resourcelist");
 	private WebMarkupContainer component;

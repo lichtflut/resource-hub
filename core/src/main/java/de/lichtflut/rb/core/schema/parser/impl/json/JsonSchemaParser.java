@@ -17,6 +17,7 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -30,7 +31,6 @@ import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.parser.IOConstants;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
-import de.lichtflut.rb.core.schema.persistence.TypeDefinitionResolver;
 
 /**
  * <p>
@@ -45,17 +45,10 @@ import de.lichtflut.rb.core.schema.persistence.TypeDefinitionResolver;
  */
 public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 
-	@SuppressWarnings("unused")
-	private final TypeDefinitionResolver resolver;
-	
-	// -----------------------------------------------------
-	
 	/**
 	 * Constructor.
-	 * @param resolver
 	 */
-	public JsonSchemaParser(final TypeDefinitionResolver resolver) {
-		this.resolver = resolver;
+	public JsonSchemaParser() {
 	}
 
 	// -----------------------------------------------------
@@ -65,20 +58,23 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	 */
 	@Override
 	public ParsedElements parse(InputStream in) throws IOException {
+		final ParsedElements result = new ParsedElements();
 		final JsonParser p = new JsonFactory().createJsonParser(in);
 		
 		while (p.nextToken() != null) {
 			if (RESOURCE_SCHEMAS.equals(p.getCurrentName())) {
 				assertStartArray(p);
 				while (p.nextToken() != JsonToken.END_ARRAY) {
-					ResourceSchema schema = readSchema(p);
+					final ResourceSchema schema = readSchema(p);
 					System.out.println(schema);
+					result.add(schema);
 				}
 			} else if (PUBLIC_TYPE_DEFINITIONS.equals(p.getCurrentName())) {
 				assertStartArray(p);
 				while (p.nextToken() != JsonToken.END_ARRAY) {
-					TypeDefinition typeDef = readPublicTypeDef(p);
+					final TypeDefinition typeDef = readPublicTypeDef(p);
 					System.out.println(typeDef);
+					result.add(typeDef);
 				}
 			} else {
  				System.err.println("unkonw token: " + p.getCurrentName() + " - " + p.getText());
@@ -86,7 +82,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		}
 		p.close();
 		
-		return new ParsedElements();
+		return result;
 	}
 
 	// -----------------------------------------------------
@@ -142,7 +138,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 			} else if (MAX.equals(field)) {
 				max = p.getIntValue();
 			} else if (TYPE_REFERENCE.equals(field)) {
-				
+				LoggerFactory.getLogger(JsonSchemaParser.class).warn("Ignorr public typeDef: " + p.getText());
 			} else if (TYPE_DEFINITION.equals(field)) {
 				decl.setTypeDefinition(readTypeDef(p));
 			}

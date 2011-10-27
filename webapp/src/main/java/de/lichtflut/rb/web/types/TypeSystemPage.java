@@ -11,7 +11,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
-import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.naming.QualifiedName;
 
@@ -20,16 +19,16 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.mock.MockServiceProvider;
-import de.lichtflut.rb.web.RBSuperPage;
+import de.lichtflut.rb.web.RBBasePage;
+import de.lichtflut.rb.web.util.ServiceProviderLocator;
 import de.lichtflut.rb.webck.components.modaldialog.ModalDialog;
 import de.lichtflut.rb.webck.components.typesystem.CreateResourcePanel;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
-import de.lichtflut.rb.webck.components.typesystem.TypeDefBrowserPanel;
 import de.lichtflut.rb.webck.components.typesystem.SchemaEditorPanel;
+import de.lichtflut.rb.webck.components.typesystem.SchemaIOPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeBrowserPanel;
+import de.lichtflut.rb.webck.components.typesystem.TypeDefBrowserPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeDefEditorPanel;
 
 /**
@@ -43,7 +42,7 @@ import de.lichtflut.rb.webck.components.typesystem.TypeDefEditorPanel;
  *
  * @author Oliver Tigges
  */
-public class TypeSystemPage extends RBSuperPage {
+public class TypeSystemPage extends RBBasePage {
 
 	/**
 	 * Constructor.
@@ -102,6 +101,12 @@ public class TypeSystemPage extends RBSuperPage {
 				displayTypeDefEditor(def);
 			}
 		});
+		
+		add(new SchemaIOPanel("schemaIO") {
+			protected SchemaManager getSchemaManager() {
+				return schemaManager();
+			}
+		});
 	}
 	
 	// -----------------------------------------------------
@@ -143,8 +148,7 @@ public class TypeSystemPage extends RBSuperPage {
 	// -----------------------------------------------------
 	
 	protected ServiceProvider getServiceProvider() {
-		//return new DefaultRBServiceProvider();
-		return MockServiceProvider.getDefaultInstance();
+		return ServiceProviderLocator.get();
 	}
 	
 	protected SchemaManager schemaManager() {

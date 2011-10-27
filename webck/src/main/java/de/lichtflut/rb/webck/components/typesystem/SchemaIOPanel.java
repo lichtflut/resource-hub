@@ -3,11 +3,32 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.request.resource.IResource;
+import org.odlabs.wiquery.ui.dialog.Dialog;
+import org.odlabs.wiquery.ui.dialog.DialogJavaScriptResourceReference;
+
+import de.lichtflut.rb.core.api.SchemaExporter;
+import de.lichtflut.rb.core.api.SchemaImporter;
+import de.lichtflut.rb.core.api.SchemaManager;
 
 /**
  * <p>
@@ -20,7 +41,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  *
  * @author Oliver Tigges
  */
-public class SchemaIOPanel extends Panel {
+public abstract class SchemaIOPanel extends Panel {
 	
 	/**
 	 * Constructor.
@@ -29,15 +50,136 @@ public class SchemaIOPanel extends Panel {
 	public SchemaIOPanel(final String id) {
 		super(id);
 		
-		final WebMarkupContainer exportDialog = new WebMarkupContainer("exportDialog");
-		
+		final Dialog exportDialog = createExportDialog();
 		add(exportDialog);
 		
-		final Link exportLink = new AjaxFallbackLink("export") {
+		final Link exportLink = new AjaxFallbackLink("exportLink") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
+				exportDialog.open(target);
 			}
 		};
+		add(exportLink);
+		
+		final Dialog importDialog = createImportDialog();
+		add(importDialog);
+		
+		final Link importLink = new AjaxFallbackLink("importLink") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				importDialog.open(target);
+			}
+		};
+		add(importLink);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void renderHead(final IHeaderResponse response) {
+		super.renderHead(response);
+		response.renderJavaScriptReference(DialogJavaScriptResourceReference.get());
+	}
+	
+	// -----------------------------------------------------
+	
+	protected abstract SchemaManager getSchemaManager();
+	
+	// -----------------------------------------------------
+	
+	@SuppressWarnings("rawtypes")
+	private Dialog createExportDialog() {
+		final Dialog dialog = new Dialog("exportDialog");
+		final Form form = new Form("form");
+		final IModel<String> format = new Model<String>("JSON");
+		final ResourceLink download = new ResourceLink("download", new SchemaExport(format));
+		download.setOutputMarkupId(true);
+		form.add(download);
+		form.add(new DropDownChoice<String>("format", format, getChoices()));
+		form.add(new AjaxButton("exportButton", form) {
+			@Override
+			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
+			}
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+				dialog.close(target);
+				target.appendJavaScript("alert($('#" + download.getMarkupId() + "'));$('#" + download.getMarkupId() + "').click()");
+			}
+		});
+		dialog.add(form); 
+		return dialog;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private Dialog createImportDialog() {
+		final Dialog dialog = new Dialog("importDialog");
+		final Form form = new Form("form");
+		final IModel<String> format = new Model<String>("JSON");
+		form.add(new DropDownChoice<String>("format", format, getChoices()));
+
+		final FileUploadField uploadField = new FileUploadField("file");
+		form.add(uploadField);
+		form.add(new AjaxButton("upload", form) {
+			@Override
+			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
+			}
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+				importUpload(uploadField.getFileUpload(), format);
+				dialog.close(target);
+			}
+		});
+		dialog.add(form); 
+		return dialog;
+	}
+	
+	private ListModel<String> getChoices() {
+		return new ListModel<String>(Arrays.asList(new String [] {"JSON", "RDF", "RSF"}));
+	}
+	
+	// -----------------------------------------------------
+	
+	private void importUpload(final FileUpload upload, final IModel<String> format) {
+		final SchemaImporter importer = getSchemaManager().getImporter(format.getObject());
+		try {
+			importer.read(upload.getInputStream());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		upload.closeStreams();
+	}
+	
+	
+	// -----------------------------------------------------
+	
+	class SchemaExport implements IResource {
+
+		private final IModel<String> format;
+
+		/**
+		 * @param format
+		 */
+		public SchemaExport(final IModel<String> format) {
+			this.format = format;
+		}
+
+		/** 
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void respond(final Attributes attributes) {
+			final SchemaExporter exporter = getSchemaManager().getExporter(format.getObject());
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			try {
+				exporter.exportAll(out);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			final Response response = attributes.getResponse();
+			response.write(out.toByteArray());
+		}
+		
 	}
 
 }

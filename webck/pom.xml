@@ -12,9 +12,9 @@
 	<name>RB Web Construction Kit</name>
 	<description/>
 	<properties>
-		<wicket.version>1.5.1</wicket.version>
+		<wicket.version>1.5.2</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
-		<wiquery.version>1.5-M1</wiquery.version>
+		<wiquery.version>1.5.1</wiquery.version>
 		<wicket-extensions.version>1.5-RC5.1</wicket-extensions.version>
 		<seam-wicket.version>3.1.0.Beta3</seam-wicket.version>
 	</properties>
@@ -36,9 +36,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.odlabs.wiquery</groupId>
-			<artifactId>wiquery</artifactId>
+			<artifactId>wiquery-core</artifactId>
 			<version>${wiquery.version}</version>
 		</dependency>
+		<dependency>
+		        <groupId>org.odlabs.wiquery</groupId>
+		        <artifactId>wiquery-jquery-ui</artifactId>
+		        <version>${wiquery.version}</version>
+		</dependency>
+		
 		<!--<dependency>
 			<groupId>org.jboss.seam.wicket</groupId>
 			<artifactId>seam-wicket</artifactId>

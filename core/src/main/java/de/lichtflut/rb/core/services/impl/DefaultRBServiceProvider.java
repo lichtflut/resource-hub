@@ -89,5 +89,4 @@ public class DefaultRBServiceProvider implements ServiceProvider {
     	return typeManager;
     }
    
-
 }

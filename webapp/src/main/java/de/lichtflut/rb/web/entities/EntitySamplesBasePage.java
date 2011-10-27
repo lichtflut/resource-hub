@@ -10,9 +10,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.mock.MockServiceProvider;
-import de.lichtflut.rb.web.RBSuperPage;
+import de.lichtflut.rb.web.RBBasePage;
 import de.lichtflut.rb.web.mockPages.FeaturedTablePage;
+import de.lichtflut.rb.web.util.ServiceProviderLocator;
 import de.lichtflut.rb.webck.components.CKLink;
 import de.lichtflut.rb.webck.components.CKLinkType;
 import de.lichtflut.rb.webck.components.navigation.NavigationBar;
@@ -30,19 +30,14 @@ import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
  *
  * @author Oliver Tigges
  */
-public class EntitySamplesBasePage extends RBSuperPage {
-	
-	private static ServiceProvider provider = null;
+public class EntitySamplesBasePage extends RBBasePage {
 	
 	/**
 	 * Singleton pattern: There will be only one instance per runtime.
 	 * @return {@link ServiceProvider}
 	 */
-	public static ServiceProvider getRBServiceProvider(){
-		if(provider==null) {
-			provider= MockServiceProvider.getDefaultInstance();
-		}
-		return provider;
+	public ServiceProvider getRBServiceProvider(){
+		return ServiceProviderLocator.get();
 	}
 	
 	// -----------------------------------------------------

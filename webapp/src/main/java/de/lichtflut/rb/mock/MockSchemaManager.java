@@ -12,13 +12,18 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.infra.exceptions.NotYetSupportedException;
+import de.lichtflut.rb.core.api.SchemaExporter;
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.api.impl.SchemaExporterImpl;
+import de.lichtflut.rb.core.api.impl.SchemaImporterImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
+import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
 
 /**
  * Mock-Implementation of {@link ISchemaManagement}.
@@ -113,12 +118,30 @@ public class MockSchemaManager implements SchemaManager, Serializable {
 		return new TypeDefinitionImpl(new SimpleResourceID(qn), true).setName(displayName);
 	}
 
+	// -----------------------------------------------------
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SchemaImporter getImporter(String format) {
-		throw new NotYetImplementedException();
+	public SchemaImporter getImporter(final String format) {
+		if ("JSON".equalsIgnoreCase(format.trim())) {
+			return new SchemaImporterImpl(this, new JsonSchemaParser());
+		} else {
+			throw new NotYetSupportedException("Unsupported format: " + format);
+		}
 	}
-
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SchemaExporter getExporter(final String format) {
+		if ("JSON".equalsIgnoreCase(format.trim())) {
+			return new SchemaExporterImpl(this, new JsonSchemaWriter());
+		} else {
+			throw new NotYetSupportedException("Unsupported format: " + format);
+		}
+	}
+	
 }

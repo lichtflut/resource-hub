@@ -58,7 +58,7 @@ public class JsonBindingTest {
 		
 		System.out.println(new String(bytes));
 		
-		final JsonSchemaParser importer = new JsonSchemaParser(null);
+		final JsonSchemaParser importer = new JsonSchemaParser();
 		importer.parse(new ByteArrayInputStream(bytes));
 	}
 	
@@ -76,7 +76,7 @@ public class JsonBindingTest {
 		
 		System.out.println(new String(bytes));
 		
-		final JsonSchemaParser importer = new JsonSchemaParser(null);
+		final JsonSchemaParser importer = new JsonSchemaParser();
 		importer.parse(new ByteArrayInputStream(bytes));
 	}
 
