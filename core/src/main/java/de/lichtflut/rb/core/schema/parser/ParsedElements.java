@@ -58,4 +58,14 @@ public class ParsedElements {
 		return typeDefs;
 	}
 	
+	// -----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return schemas.size() + " schema(s) and " + typeDefs.size() + " type definition(s)"; 
+	}
+	
 }

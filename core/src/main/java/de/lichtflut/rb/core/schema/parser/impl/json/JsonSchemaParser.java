@@ -17,8 +17,10 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.lichtflut.infra.logging.StopWatch;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -28,6 +30,7 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionReference;
 import de.lichtflut.rb.core.schema.parser.IOConstants;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
@@ -45,6 +48,10 @@ import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
  */
 public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 
+	private final Logger logger = LoggerFactory.getLogger(JsonSchemaParser.class);
+	
+	// -----------------------------------------------------
+	
 	/**
 	 * Constructor.
 	 */
@@ -57,7 +64,8 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ParsedElements parse(InputStream in) throws IOException {
+	public ParsedElements parse(final InputStream in) throws IOException {
+		final StopWatch sw = new StopWatch();
 		final ParsedElements result = new ParsedElements();
 		final JsonParser p = new JsonFactory().createJsonParser(in);
 		
@@ -66,22 +74,20 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				assertStartArray(p);
 				while (p.nextToken() != JsonToken.END_ARRAY) {
 					final ResourceSchema schema = readSchema(p);
-					System.out.println(schema);
 					result.add(schema);
 				}
 			} else if (PUBLIC_TYPE_DEFINITIONS.equals(p.getCurrentName())) {
 				assertStartArray(p);
 				while (p.nextToken() != JsonToken.END_ARRAY) {
 					final TypeDefinition typeDef = readPublicTypeDef(p);
-					System.out.println(typeDef);
 					result.add(typeDef);
 				}
 			} else {
- 				System.err.println("unkonw token: " + p.getCurrentName() + " - " + p.getText());
+ 				logger.warn("unkown token : " + p.getCurrentName() + " - " + p.getText());
 			}
 		}
 		p.close();
-		
+		logger.info("parsed {} in {} micros", new Object[] {result, sw.getTime()});
 		return result;
 	}
 
@@ -138,7 +144,8 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 			} else if (MAX.equals(field)) {
 				max = p.getIntValue();
 			} else if (TYPE_REFERENCE.equals(field)) {
-				LoggerFactory.getLogger(JsonSchemaParser.class).warn("Ignorr public typeDef: " + p.getText());
+				final ResourceID ref = new SimpleResourceID(p.getText());
+				decl.setTypeDefinition(new TypeDefinitionReference(ref));
 			} else if (TYPE_DEFINITION.equals(field)) {
 				decl.setTypeDefinition(readTypeDef(p));
 			}
@@ -179,7 +186,6 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		Validate.isTrue(p.getCurrentToken() == JsonToken.FIELD_NAME);
 		final String field = p.getCurrentName();
 		p.nextToken();
-		System.out.println("  " + field + " : " + p.getText());
 		return field;
 	}
 	

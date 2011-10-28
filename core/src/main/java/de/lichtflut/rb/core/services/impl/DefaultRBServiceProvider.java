@@ -6,8 +6,6 @@ package de.lichtflut.rb.core.services.impl;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ArastrejuProfile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.EntityManager;
@@ -30,8 +28,6 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  */
 public class DefaultRBServiceProvider implements ServiceProvider {
 
-    private final Logger logger = LoggerFactory.getLogger(DefaultRBServiceProvider.class);
-
     private ArastrejuGate gate;
     
     private SchemaManager schemaManager;
@@ -46,7 +42,6 @@ public class DefaultRBServiceProvider implements ServiceProvider {
      */
     public DefaultRBServiceProvider(final RBConfig config) {
         final ArastrejuProfile profile = config.getArastrejuConfiguration();
-        logger.info("Initializing Arastreju with profile: " + profile);
         gate = Arastreju.getInstance(profile).rootContext();
         schemaManager = new SchemaManagerImpl(this);
         entityManager = new EntityManagerImpl(this);

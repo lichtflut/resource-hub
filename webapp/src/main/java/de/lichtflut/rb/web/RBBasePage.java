@@ -15,6 +15,7 @@ import de.lichtflut.rb.web.components.ComponentsCatalogPage;
 import de.lichtflut.rb.web.components.LoginPanelPage;
 import de.lichtflut.rb.web.entities.EntityDetailPage;
 import de.lichtflut.rb.web.entities.EntityOverviewPage;
+import de.lichtflut.rb.web.infomanagement.InformationManagementPage;
 import de.lichtflut.rb.web.types.TypeSystemPage;
 import de.lichtflut.rb.webck.components.CKLink;
 import de.lichtflut.rb.webck.components.CKLinkType;
@@ -99,14 +100,19 @@ public abstract class RBBasePage extends WebPage {
 		final NavigationNode typeSystem = new NavigationNodePanel(
 				new CKLink("link", "Type-System", TypeSystemPage.class, CKLinkType.WEB_PAGE_CLASS));
 		mainNavigation.addChild(typeSystem);
+		
+		// Information Management 
+		final NavigationNode infoMgmt = new NavigationNodePanel(
+				new CKLink("link", "Info-Mgmt", InformationManagementPage.class, CKLinkType.WEB_PAGE_CLASS));
+		mainNavigation.addChild(infoMgmt);
 
-		// Type System
+		// Components Catalog
 		final NavigationNode compCat = new NavigationNodePanel(
 				new CKLink("link", "Catalog", ComponentsCatalogPage.class, CKLinkType.WEB_PAGE_CLASS));
 		mainNavigation.addChild(compCat);
 		
 		// Security-Stuff Link
-		NavigationNode securityStuff = new NavigationNodePanel(new CKLink("link", "Security-Related", CKLinkType.CUSTOM_BEHAVIOR));
+		NavigationNode securityStuff = new NavigationNodePanel(new CKLink("link", "Security", CKLinkType.CUSTOM_BEHAVIOR));
 		CKLink login = new CKLink("link", "Login & Registration Modul", LoginPanelPage.class, CKLinkType.WEB_PAGE_CLASS);
 		securityStuff.addChild(new NavigationNodePanel(login));
 		mainNavigation.addChild(securityStuff);

@@ -8,8 +8,10 @@ import java.io.InputStream;
 
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionReference;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
 
@@ -51,7 +53,33 @@ public class SchemaImporterImpl implements SchemaImporter {
 			manager.store(def);
 		}
 		for(ResourceSchema schema : elements.getSchemas()) {
-			manager.store(schema);
+			if (resolveTypeDefReferences(schema)) {
+				manager.store(schema);
+			}
+		}
+	}
+	
+	// -----------------------------------------------------
+
+	private boolean resolveTypeDefReferences(final ResourceSchema schema) {
+		boolean resolved = true;
+		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+			final TypeDefinition typeDef = decl.getTypeDefinition();
+			if (typeDef instanceof TypeDefinitionReference) {
+				final TypeDefinitionReference ref = (TypeDefinitionReference) typeDef;
+				resolved = resolved && resolveTypeDefReference(ref);
+			}
+		}
+		return resolved;
+	}
+	
+	private boolean resolveTypeDefReference(final TypeDefinitionReference ref) {
+		final TypeDefinition existing = manager.findTypeDefinition(ref.getID());
+		if (existing != null) {
+			ref.setDelegate(existing);
+			return true;
+		} else {
+			return false;
 		}
 	}
 

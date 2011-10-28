@@ -1,0 +1,34 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+    <a wicket:id="exportLink">Export</a>
+    
+    <a wicket:id="importLink">Import</a>
+
+	<div wicket:id="exportDialog">
+	   <form wicket:id="form">
+	       <select wicket:id="format"></select>
+	       <button wicket:id="exportButton"><wicket:message key="button.export"></wicket:message></button>
+	       <a wicket:id="download">.</a>
+	   </form>
+	</div>
+	
+	<div wicket:id="importDialog">
+	   <form wicket:id="form">
+           <select wicket:id="format"></select>
+           <input type="file" wicket:id="file" />
+           <button wicket:id="upload"><wicket:message key="button.upload"></wicket:message></button>
+       </form>
+	</div>
+
+</wicket:panel>
+</html>

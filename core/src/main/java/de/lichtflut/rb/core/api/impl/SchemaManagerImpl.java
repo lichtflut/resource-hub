@@ -6,22 +6,30 @@ package de.lichtflut.rb.core.api.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.persistence.TransactionControl;
 import org.arastreju.sge.query.QueryManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.SchemaExporter;
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
@@ -52,6 +60,8 @@ public class SchemaManagerImpl implements SchemaManager {
 	private ServiceProvider provider;
 	
 	private Schema2GraphBinding binding = new Schema2GraphBinding(new TypeDefResolverImpl());
+	
+	private Logger logger = LoggerFactory.getLogger(SchemaImporterImpl.class);
 
 	// -----------------------------------------------------
 
@@ -132,18 +142,24 @@ public class SchemaManagerImpl implements SchemaManager {
 	public void store(final ResourceSchema schema) {
 		Validate.isTrue(schema.getDescribedType() != null, "The type described by this schema is not defined.");
 		final ModelingConversation mc = startConversation();
-		final ResourceNode existing = findSchemaNodeByType(schema.getDescribedType());
-		if (existing != null) {
-			// remove DESCRIBES association in order to prevent the type to be deleted.
-			Association assoc = SNOPS.singleAssociation(existing, RBSchema.DESCRIBES);
-			existing.remove(assoc);
-			mc.remove(existing, true);
+		final TransactionControl tx = mc.getTransactionControl();
+		tx.begin();
+		try {
+			final ResourceNode existing = findSchemaNodeByType(schema.getDescribedType());
+			if (existing != null) {
+				removeSchema(mc, existing);
+			}
+			ensureReferencedResourcesExist(mc, schema);
+			final SNResourceSchema node = binding.toSemanticNode(schema);
+			mc.attach(node);
+			tx.commit();
+		} catch(Exception e) {
+			tx.rollback();
+			throw new RuntimeException(e);
 		}
-		final SNResourceSchema node = binding.toSemanticNode(schema);
-		mc.attach(node);
 		mc.close();
 	}
-	
+
 	/** 
 	 * {@inheritDoc}
 	 */
@@ -219,6 +235,40 @@ public class SchemaManagerImpl implements SchemaManager {
 			return SNResourceSchema.view(subjects.get(0));
 		} else {
 			throw new IllegalStateException("Found more than one Schema for type " + type + ": " + subjects);
+		}
+	}
+	
+	/**
+	 * Removes the schema graph.
+	 * @param mc The existing conversation.
+	 * @param existing The schema node.
+	 */
+	protected void removeSchema(final ModelingConversation mc, final ResourceNode schemaNode) {
+		// remove DESCRIBES association in order to prevent the type to be deleted.
+		Association assoc = SNOPS.singleAssociation(schemaNode, RBSchema.DESCRIBES);
+		schemaNode.remove(assoc);
+		mc.remove(schemaNode, true);
+	}
+	
+	/**
+	 * Checks if the resources referenced by this schema exist and have the correct settings:
+	 * <ul>
+	 * 	<li>Described Type</li>
+	 * 	<li>Properties of Property Declarations</li>
+	 * </ul>
+	 * @param type The type.
+	 */
+	private void ensureReferencedResourcesExist(final ModelingConversation mc, final ResourceSchema schema) {
+		// 1st: check described type
+		final ResourceNode attached = mc.resolve(schema.getDescribedType());
+		final Set<SemanticNode> clazzes = SNOPS.objects(attached, RDF.TYPE);
+		if (!clazzes.contains(RB.TYPE)) {
+			logger.info("Making {} an rb:type", attached);
+			SNOPS.associate(attached, RDF.TYPE, RB.TYPE);
+		}
+		// 2nd: check properties
+		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+			mc.resolve(decl.getPropertyType());
 		}
 	}
 	

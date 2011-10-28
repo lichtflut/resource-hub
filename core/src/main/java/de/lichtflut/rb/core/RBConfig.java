@@ -4,6 +4,8 @@
 package de.lichtflut.rb.core;
 
 import org.arastreju.sge.ArastrejuProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -17,7 +19,7 @@ import org.arastreju.sge.ArastrejuProfile;
  * @author Oliver Tigges
  */
 public class RBConfig implements RBConstants {
-
+	
 	/**
 	 * Profilename.
 	 */
@@ -26,6 +28,8 @@ public class RBConfig implements RBConstants {
 	 * Profile.
 	 */
 	private ArastrejuProfile profile;
+	
+	private final Logger logger = LoggerFactory.getLogger(RBConfig.class);
 
 	// -----------------------------------------------------
 
@@ -64,8 +68,10 @@ public class RBConfig implements RBConstants {
 	 */
 	private void initProfile(){
 		if (profileName == null) {
+			logger.info("Initialising Arastreju default profile");
 			profile = ArastrejuProfile.read();
 		} else {
+			logger.info("Initialising Arastreju profile with name " + profileName);
 			profile = ArastrejuProfile.read(profileName);
 		}
 		final String storeDir = System.getProperty(ARAS_STORE_DIRECTORY);
