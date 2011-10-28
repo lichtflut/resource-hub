@@ -10,8 +10,10 @@ import java.util.List;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.api.EntityManager;
+import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
  * <p>
@@ -26,15 +28,18 @@ import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 public class MockEntityManager implements EntityManager, Serializable {
 
 	private final List<RBEntity> dataPool;
+	private final SchemaManager schemaManager;
 
 	// -----------------------------------------------------
 
 	/**
 	 * Constructor.
 	 * @param dataPool
+	 * @param schemaManager 
 	 */
-	public MockEntityManager(final List<RBEntity> dataPool) {
+	public MockEntityManager(final List<RBEntity> dataPool, SchemaManager schemaManager) {
 		this.dataPool = dataPool;
+		this.schemaManager = schemaManager;
 	}
 
 	// -----------------------------------------------------
@@ -51,7 +56,7 @@ public class MockEntityManager implements EntityManager, Serializable {
 	}
 
 	@Override
-	public List<RBEntity> findAllByType(final ResourceID type) {
+	public List<RBEntity> findByType(final ResourceID type) {
 		if (type != null) {
 			List<RBEntity> list = new ArrayList<RBEntity>();
 			for (RBEntity e : dataPool) {
@@ -65,6 +70,17 @@ public class MockEntityManager implements EntityManager, Serializable {
 		return dataPool;
 	}
 
+	// -----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RBEntity create(final ResourceID type) {
+		final ResourceSchema schema = schemaManager.findSchemaForType(type);
+		return new RBEntityImpl(schema);
+	}
+	
 	@Override
 	public void store(final RBEntity entity) {
 		if (dataPool.contains(entity)) {

@@ -38,18 +38,7 @@ public interface RBField{
 	 */
 	String getLabel();
 
-	/**
-	 * Returns the value of this RBField.
-	 * This can be any type from String to Date, depending on the RBSchema.
-	 * @return Value of this field as a list
-	 */
-	List<Object> getValues();
-
-	/**
-	 * Sets the value for this RBField.
-	 * @param values - this fields value as a list
-	 */
-	void setValues(List<Object> values);
+	// -----------------------------------------------------
 
 	/**
 	 * Returns the type of this filed according to the RBSchema.
@@ -83,5 +72,42 @@ public interface RBField{
 	 * @return List of {@link Constraint}
 	 */
 	Set<Constraint> getConstraints();
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * Get's the amount of value slot's. 
+	 */
+	int getSlots();
+	
+	/**
+	 * Set a value in this field.
+	 * @param index The index, starting with 0.
+	 * @param value The value to set.
+	 */
+	void setValue(int index, Object value);
+	
+	/**
+	 * Get the value for given index.
+	 * @param index The index.
+	 * @return The object at this index or null.
+	 */
+	Object getValue(int index);
+	
+	/**
+	 * Returns the values of this RBField as unmodifiable list.
+	 * They can be of any type from String to Date, depending on the RBSchema.
+	 * The list may contain null values.
+	 * @return Value of this field as a list
+	 */
+	List<Object> getValues();
+	
+	/**
+	 * Sets the value for this RBField.
+	 * @param values - this fields value as a list
+	 */
+	@Deprecated
+	void setValues(List<Object> values);
+	
 
 }

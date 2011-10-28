@@ -29,7 +29,7 @@ public interface SchemaManager {
 	 * @param type The Resource Type
 	 * @return the Resource Schema for the given Type.
 	 */
-	ResourceSchema findSchemaByType(ResourceID type);
+	ResourceSchema findSchemaForType(ResourceID type);
 	
 	/**
 	 * Finds a Type Definition by it's ID.

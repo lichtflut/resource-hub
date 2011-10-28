@@ -123,7 +123,7 @@ public abstract class CKComponent extends Panel {
 		try{
 			initComponent(getModel());
 		}catch(Exception any){
-			getLogger().error("Something went wrong during initComponent", any);
+			throw new RuntimeException(any);
 		}
 		initStyle();
 	}

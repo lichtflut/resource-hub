@@ -5,7 +5,6 @@ package de.lichtflut.rb.webck.components;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +18,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.SNValue;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
@@ -227,9 +227,9 @@ public abstract class ResourceTableView extends CKComponent {
 					RepeatingView view = new RepeatingView("data");
 					int resourceCount = 1;
 					for (final Object entityAttribute : field.getValues()) {
-						final RBEntity currentEntity = (RBEntity) entityAttribute;
+						final ResourceID currentEntity = (ResourceID) entityAttribute;
 						if(currentEntity != null){
-							CKLink link = new CKLink(view.newChildId(), currentEntity.getLabel(),
+							CKLink link = new CKLink(view.newChildId(), currentEntity.getQualifiedName().toURI(),
 									CKLinkType.CUSTOM_BEHAVIOR);
 							link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
 								@Override
@@ -252,10 +252,10 @@ public abstract class ResourceTableView extends CKComponent {
 					String output = "";
 					if(field.getDataType().equals(ElementaryDataType.DATE)){
 						for (Object o : field.getValues()) {
-							Date date = (Date) o;
+							SNValue date = (SNValue) o;
 							if(date != null){
 								output = output.concat(DateFormat.getDateInstance(DateFormat.SHORT)
-										.format(date));
+										.format(date.getTimeValue()));
 							}
 						}
 						item.add(new Label("data", output));
@@ -283,7 +283,7 @@ public abstract class ResourceTableView extends CKComponent {
 				link = new Link("featureLink") {
 					@Override
 					public void onClick() {
-						onShowDetails(entity);
+						onShowDetails(entity.getID());
 					}
 				};
 				link.add(new Label("label", "Details"));
@@ -335,7 +335,7 @@ public abstract class ResourceTableView extends CKComponent {
 		}
 	}
 	
-	protected abstract void onShowDetails(final RBEntity entity);
+	protected abstract void onShowDetails(final ResourceID selected);
 
 	/**
 	 * Sorts the IRBFields according to the table header.
@@ -426,7 +426,7 @@ public abstract class ResourceTableView extends CKComponent {
 						RBEntity entity = new RBEntityImpl(
 							ResourceTableView.this.getServiceProvider()
 								.getSchemaManager()
-									.findSchemaByType(type));
+									.findSchemaForType(type));
 							ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID,
 								entity, false) {
 								@Override

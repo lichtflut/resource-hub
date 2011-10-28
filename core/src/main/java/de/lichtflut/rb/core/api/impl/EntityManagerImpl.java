@@ -1,29 +1,35 @@
 package de.lichtflut.rb.core.api.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
+ * <p>
+ *  Implementation of {@link EntityManager}.
+ * </p>
  *
- * @author Raphael Esterle
+ * <p>
+ * 	Created Oct 28, 2011
+ * </p>
+ *
+ * @author Oliver Tigges
  */
 public class EntityManagerImpl implements EntityManager {
 
@@ -32,11 +38,8 @@ public class EntityManagerImpl implements EntityManager {
 	// -----------------------------------------------------
 
 	/**
-	 * <p>
-	 * This is the standard constructor.
-	 * </p>
-	 *
-	 * @param provider -
+	 * Constructor.
+	 * @param provider The service provider.
 	 */
 	public EntityManagerImpl(final ServiceProvider provider) {
 		this.provider = provider;
@@ -44,90 +47,97 @@ public class EntityManagerImpl implements EntityManager {
 	
 	// -----------------------------------------------------
 
+	/** 
+	 * {@inheritDoc}
+	 */
 	@Override
 	public RBEntityImpl find(final ResourceID resourceID) {
-		ModelingConversation mc = provider.getArastejuGate().startConversation();
-		ResourceNode node = mc.findResource(resourceID.getQualifiedName());
+		final ModelingConversation mc = provider.getArastejuGate().startConversation();
+		final ResourceNode node = mc.findResource(resourceID.getQualifiedName());
 		mc.close();
-		return new RBEntityImpl(node, node.asEntity().getMainClass());
+		if (node == null) {
+			return null;
+		}
+		final ResourceID type = node.asEntity().getMainClass();
+		final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
+		return new RBEntityImpl(node, schema);
 	}
 
-	/**
-	 *
-	 * @param type -
-	 * @return -
+	/** 
+	 * {@inheritDoc}
 	 */
-	public List<ResourceNode> findByType(final ResourceID type) {
-		ModelingConversation mc = provider.getArastejuGate()
-				.startConversation();
-		return mc.createQueryManager().findByType(type);
-	}
-
 	@Override
-    public void store(final RBEntity entity) {
-
-        ModelingConversation mc = provider.getArastejuGate().startConversation();
-
-        ResourceNode newNode = entity.getNode();
-
-        ResourceNode sNode = mc.findResource(entity.getQualifiedName());
-
-        if(null==sNode){
-        	System.out.println(entity);
-        	Association.create(newNode, RDF.TYPE, entity.getType());
-        	sNode = newNode;
-        }else{
-        	for (RBField field : entity.getAllFields()) {
-        		final ResourceID predicate = new SimpleResourceID(field.getPredicate());
-        		// Remove old Associations
-        		for (Association assoc : sNode.getAssociations(predicate)) {
-					sNode.remove(assoc);
-				}
-				// Create new Associations
-				for (Object val : field.getValues()) {
-					SemanticNode node = new SNValue(field.getDataType(), val);
-					if(field.getDataType()==ElementaryDataType.RESOURCE){
-						try{
-							RBEntity tempEntity = (RBEntity) val;
-							store(tempEntity);
-							node = new SNResource(tempEntity.getQualifiedName());
-						}catch(ClassCastException e){
-							System.out.println(val+" is not a ressource!");
-							continue;
-						}
-					}
-					SNOPS.replace(sNode, predicate, node);
-				}
-            }
-        }
-
-    	System.out.println(newNode.getQualifiedName()+"*~"+sNode.getQualifiedName());
-        mc.attach(sNode);
-    }
-
-	@Override
-	public void delete(final RBEntity entity) {
-		RBEntityImpl sEntity = find(entity.getID());
-		for (RBField field : entity.getAllFields()) {
-			final ResourceID predicate = new SimpleResourceID(field.getPredicate());
-			for (Association assoc : sEntity.getNode().getAssociations(predicate)) {
-				sEntity.getNode().remove(assoc);
-				System.out.println("del-"+assoc);
-			}
-		}
-	}
-
-	@Override
-	public List<RBEntity> findAllByType(final ResourceID type) {
-		List<RBEntity> result = new ArrayList<RBEntity>();
-		ModelingConversation mc = provider.getArastejuGate().startConversation();
-		List<ResourceNode> nodes = mc.createQueryManager().findByType(type);
+	public List<RBEntity> findByType(final ResourceID type) {
+		final List<RBEntity> result = new ArrayList<RBEntity>();
+		final ModelingConversation mc = provider.getArastejuGate().startConversation();
+		final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
+		final List<ResourceNode> nodes = mc.createQueryManager().findByType(type);
 		for (ResourceNode n : nodes) {
-			result.add(new RBEntityImpl(n, type));
+			result.add(new RBEntityImpl(n, schema));
 		}
-
+		mc.close();
 		return result;
 	}
+	
+	// -----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RBEntity create(final ResourceID type) {
+		final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
+		return new RBEntityImpl(schema);
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+    public void store(final RBEntity entity) {
+		final ModelingConversation mc = startConversation();
+		final ResourceNode node = mc.resolve(entity.getID());
+		SNOPS.replace(node, RDF.TYPE, entity.getType());
+		for (RBField field :entity.getAllFields()) {
+			final Collection<SemanticNode> nodes = toSemanticNodes(field);
+			SNOPS.replace(node, field.getPredicate(), nodes);
+		}
+		mc.close();
+    }
 
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void delete(final RBEntity entity) {
+		throw new NotYetImplementedException();
+	}
+	
+	// -----------------------------------------------------
+	
+	private ModelingConversation startConversation() {
+		return provider.getArastejuGate().startConversation();
+	}
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * @param field The field to be translated.
+	 * @return A collection of semantic nodes.
+	 */
+	private Collection<SemanticNode> toSemanticNodes(final RBField field) {
+		final Collection<SemanticNode> result = new ArrayList<SemanticNode>();
+		for (Object value : field.getValues()) {
+			if (value == null) {
+				// ignore
+			} else if (field.isResourceReference()) {
+				final RBEntity ref = (RBEntity) value;
+				result.add(ref.getID());
+			} else {
+				result.add(new SNValue(field.getDataType(), value));
+			}
+		}
+		return result;
+	}
 
 }

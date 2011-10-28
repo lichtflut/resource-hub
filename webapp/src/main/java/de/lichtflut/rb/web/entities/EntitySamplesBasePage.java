@@ -21,7 +21,7 @@ import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Base page for pages with entities.
  * </p>
  *
  * <p>
@@ -36,7 +36,7 @@ public class EntitySamplesBasePage extends RBBasePage {
 	 * Singleton pattern: There will be only one instance per runtime.
 	 * @return {@link ServiceProvider}
 	 */
-	public ServiceProvider getRBServiceProvider(){
+	public ServiceProvider getServiceProvider(){
 		return ServiceProviderLocator.get();
 	}
 	
@@ -64,10 +64,10 @@ public class EntitySamplesBasePage extends RBBasePage {
 	 */
 	@Override
 	protected Component createSideBar(String id) {
-		final NavigationBar menuLeft = new NavigationBar("sidebarLeft");
+		final NavigationBar menuLeft = new NavigationBar(id);
 
-		NavigationNode showByTypes = new NavigationNodePanel(new CKLink("link", "Show By Type", CKLinkType.CUSTOM_BEHAVIOR));
-		Collection<SNClass> types = getRBServiceProvider().getTypeManager().findAll();
+		final NavigationNode showByTypes = new NavigationNodePanel(new CKLink("link", "Show By Type", CKLinkType.CUSTOM_BEHAVIOR));
+		final Collection<SNClass> types = getServiceProvider().getTypeManager().findAll();
 		for (SNClass type : types) {
 			PageParameters param = new PageParameters();
 			param.add("type", type);

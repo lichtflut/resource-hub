@@ -8,6 +8,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.arastreju.sge.model.SimpleResourceID;
 
+import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
@@ -26,7 +27,8 @@ import de.lichtflut.rb.webck.components.ResourceDetailPanel;
 @SuppressWarnings("serial")
 public class EntityDetailPage extends EntitySamplesBasePage implements IFeedbackContainerProvider {
 
-	public static final String PARAM_RESOURCE_ID = "reosurce-id";
+	public static final String PARAM_RESOURCE_ID = "rid";
+	public static final String PARAM_RESOURCE_Type = "type";
 	
 	// -----------------------------------------------------
 	
@@ -37,16 +39,22 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 		this(MockNewRBEntityFactory.createPerson());
 	}
 	
-	
 	/**
 	 * Constructor.
 	 * @param params
 	 */
 	public EntityDetailPage(final PageParameters params) {
-		super("Entity Details (Mock Mode)", params);
-		final StringValue value = params.get(PARAM_RESOURCE_ID);
-		final RBEntity entity = getRBServiceProvider().getEntityManager().find(new SimpleResourceID(value.toString()));
-		initView(entity);
+		super("Entity Details", params);
+		final StringValue idParam = params.get(PARAM_RESOURCE_ID);
+		final StringValue typeParam = params.get(PARAM_RESOURCE_Type);
+		final EntityManager em = getServiceProvider().getEntityManager();
+		if (!idParam.isEmpty()) {
+			final RBEntity entity = em.find(new SimpleResourceID(idParam.toString()));
+			initView(entity);
+		} else if (!typeParam.isEmpty()) {
+			final RBEntity entity = em.create(new SimpleResourceID(typeParam.toString()));
+			initView(entity);
+		}
 	}
 
 	/**
@@ -70,7 +78,7 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 			}
 			@Override
 			public ServiceProvider getServiceProvider() {
-				return getRBServiceProvider();
+				return EntityDetailPage.this.getServiceProvider();
 			}
 		});
 	}

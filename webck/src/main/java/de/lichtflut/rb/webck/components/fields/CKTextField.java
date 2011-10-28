@@ -4,7 +4,6 @@
 package de.lichtflut.rb.webck.components.fields;
 
 import java.util.Date;
-import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -12,11 +11,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
-import org.arastreju.sge.model.ElementaryDataType;
 
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.webck.behaviors.DatePickerBehavior;
-import de.lichtflut.rb.webck.models.NewGenericResourceModel;
+import de.lichtflut.rb.webck.models.RBFieldModel;
 
 /**
  * This field displays a String in a simple {@link TextField}.
@@ -31,8 +29,6 @@ class CKTextField extends Panel {
 	private RBField field;
 	private WebMarkupContainer container;
 	private RepeatingView view;
-	private List<Object> values;
-	private int index = 0;
 
 	// ------------------------------------------------------------
 
@@ -46,28 +42,19 @@ class CKTextField extends Panel {
 	public CKTextField(final String id, final RBField field) {
 		super(id);
 		this.field = field;
-		values = field.getValues();
 		this.setOutputMarkupId(true);
 		container = new WebMarkupContainer("container");
 		container.setOutputMarkupId(true);
 		view = new RepeatingView("repeatingView");
-		if (values.isEmpty()) {
-			if(field.getDataType().equals(ElementaryDataType.STRING)){
-				values.add("");
-			}else if(field.getDataType().equals(ElementaryDataType.DATE)){
-				values.add(new Date());
-			}
-		}
-		while(index < values.size()){
-
-			view.add(createTextField(index++));
+		for(int i=0; i < field.getSlots(); i++) {
+			view.add(createTextField(i));
 		}
 		container.add(view);
 		add(container);
 		add(new AddValueAjaxButton("button", field) {
 			@Override
 			public void addField(final AjaxRequestTarget target, final Form<?> form) {
-				TextField textField = createTextField(index++);
+				TextField textField = createTextField(field.getSlots());
 				textField.setOutputMarkupId(true);
 				view.add(textField);
 				target.add(form);
@@ -80,7 +67,7 @@ class CKTextField extends Panel {
 	// ------------------------------------------------------------
 
 	/**
-	 * Creates a {@link TextField} with appropriate {@link NewGenericResourceModel} and value.
+	 * Creates a {@link TextField} with appropriate {@link RBFieldModel} and value.
 	 * @param i - marking the occurence of the displayed value in {@link RBField}
 	 * @return - instance of {@link TextField}
 	 */
@@ -89,25 +76,18 @@ class CKTextField extends Panel {
 		TextField textField;
 		switch (field.getDataType()) {
 			case DATE:
-				if (!(values.get(i) instanceof Date)) {
-					throw new IllegalStateException("Not a date: " + values.get(i));
-				}
 				textField = new TextField(view.newChildId(),
-						new NewGenericResourceModel(field, i));
+						new RBFieldModel(field, i));
 				textField.add(new DatePickerBehavior());
 				textField.setType(Date.class);
 			break;
 			case INTEGER:
-				if (!(values.get(i) instanceof Integer)) {
-					throw new IllegalStateException("Not an integer: " + i);
-				}
-				textField = new TextField(view.newChildId(),
-						new NewGenericResourceModel(field, i));
+				textField = new TextField(view.newChildId(), new RBFieldModel(field, i));
 				textField.setType(Integer.class);
 				break;
 			default:
 				textField = new TextField(view.newChildId(),
-						new NewGenericResourceModel(field, i));
+						new RBFieldModel(field, i));
 				textField.setType(String.class);
 			break;
 		}

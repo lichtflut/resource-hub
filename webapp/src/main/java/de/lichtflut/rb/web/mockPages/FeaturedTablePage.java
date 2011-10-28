@@ -50,14 +50,14 @@ public class FeaturedTablePage extends RBBasePage {
 		super("Full Featured Preview");
 		ResourceID type = MockNewRBEntityFactory.createPerson().getType();
 		ResourceTableView view =
-			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getEntityManager().findAllByType(type)){
+			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getEntityManager().findByType(type)){
 			@Override
 			public ServiceProvider getServiceProvider() {
 				return getRBServiceProvider();
 			}
 			public CKComponent setViewMode(final ViewMode mode) {return null;}
 
-			protected void onShowDetails(RBEntity entity) {
+			protected void onShowDetails(ResourceID selected) {
 			}
 		};
 		view.addBehavior(ResourceTableView.SHOW_DETAILS, CKBehavior.VOID_BEHAVIOR);

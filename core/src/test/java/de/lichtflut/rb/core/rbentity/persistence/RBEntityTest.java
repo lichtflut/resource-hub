@@ -190,7 +190,7 @@ public final class RBEntityTest {
 
         // Tests
         Assert.assertTrue(m.find(e.getID()).getAllFields().size()==3);
-        Assert.assertTrue(m.findAllByType(new SimpleResourceID("http://lichtflut.de#personschema")).size()==2);
+        Assert.assertTrue(m.findByType(new SimpleResourceID("http://lichtflut.de#personschema")).size()==2);
 
         m.delete(e);
         System.out.println("-->"+m.find(e.getID()));

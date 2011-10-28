@@ -9,13 +9,12 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
+import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.CKComponent;
-import de.lichtflut.rb.webck.components.OldResourcePicker;
-import de.lichtflut.rb.webck.models.NewGenericResourceModel;
+import de.lichtflut.rb.webck.models.RBFieldModel;
 
 
 /**
@@ -30,7 +29,6 @@ public abstract class ResourceField extends CKComponent {
 
 	private RBField field;
 	private RepeatingView view;
-	private int index = 0;
 	
 	// -----------------------------------------------------
 	
@@ -49,18 +47,15 @@ public abstract class ResourceField extends CKComponent {
 	protected void initComponent(final CKValueWrapperModel model) {
 		WebMarkupContainer container = new WebMarkupContainer("container");
 		view = new RepeatingView("repeatingView");
-		while(index < field.getValues().size()){
-			view.add(createResourcePicker(index++));
-		}
-		if(field.getValues().size() <= 0){
-			view.add(createResourcePicker(index++));
+		for(int i=0; i < field.getSlots(); i++) {
+			view.add(createResourcePicker(i));
 		}
 		container.add(view);
 		add(container);
 		add(new AddValueAjaxButton("button", field) {
 			@Override
 			public void addField(final AjaxRequestTarget target, final Form<?> form) {
-				OldResourcePicker picker = createResourcePicker(index++);
+				ResourcePickerField picker = createResourcePicker(field.getSlots());
 				picker.setOutputMarkupId(true);
 				view.add(picker);
 				target.add(form);
@@ -70,25 +65,18 @@ public abstract class ResourceField extends CKComponent {
 	}
 
 	/**
-	 * Creates a {@link OldResourcePicker} with appropriate {@link NewGenericResourceModel} and value.
-	 * @param i - marking the occurence of the displayed value in {@link RBField}
-	 * @return - instance of {@link OldResourcePicker}
+	 * Creates a resource picker field with appropriate {@link RBFieldModel} and value.
+	 * @param i - marking the occurrence of the displayed value in {@link RBField}
+	 * @return - instance of resource picker
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private OldResourcePicker createResourcePicker(final int i){
-		OldResourcePicker picker = new OldResourcePicker(view.newChildId(), new NewGenericResourceModel(field, i),
-				extractTypeConstraint(field)){
-			@Override
-			public ServiceProvider getServiceProvider() {
-				return ResourceField.this.getServiceProvider();
-			}
-			@Override
-			public CKComponent setViewMode(final ViewMode mode) {
-				return null;
-			}
-		};
-		picker.setOutputMarkupId(true);
-		return picker;
+	private ResourcePickerField createResourcePicker(final int i) {
+		@SuppressWarnings("unused")
+		final ResourceID typeConstraint = extractTypeConstraint(field);
+		final RBFieldModel model = new RBFieldModel(field, i);
+		final AutocompleteSource src = ResourcePickerField.findByValues();
+		final ResourcePickerField rp = new ResourcePickerField(view.newChildId(), model, src);
+		return rp;
 	}
 
 	/**

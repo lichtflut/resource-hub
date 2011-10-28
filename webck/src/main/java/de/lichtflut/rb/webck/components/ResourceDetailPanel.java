@@ -30,7 +30,7 @@ import de.lichtflut.rb.core.entity.impl.RBFieldImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behavior.CKBehavior;
 import de.lichtflut.rb.webck.components.fields.CKFormRowItem;
-import de.lichtflut.rb.webck.models.NewGenericResourceModel;
+import de.lichtflut.rb.webck.models.RBFieldModel;
 
 /**
  * <p>
@@ -119,8 +119,8 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 			int index = (entity.getAllFields().size());
 			WebMarkupContainer container = new WebMarkupContainer("container");
 			index++;
-			container.add(new TextField<String>("key", new NewGenericResourceModel<String>(field, index)));
-			container.add(new TextField<String>("value", new NewGenericResourceModel<String>(field, index)));
+			container.add(new TextField<String>("key", new RBFieldModel<String>(field, index)));
+			container.add(new TextField<String>("value", new RBFieldModel<String>(field, index)));
 			add(container);
 		}
 

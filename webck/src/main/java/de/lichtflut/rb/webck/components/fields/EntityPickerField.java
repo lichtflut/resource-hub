@@ -3,8 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
-import java.util.Properties;
-
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
@@ -20,34 +18,21 @@ import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
  *
  * @author Oliver Tigges
  */
-public class ResourcePickerField extends DataPickerField<ResourceID> {
+public class EntityPickerField extends DataPickerField<ResourceID> {
 
 	/**
 	 * @param id
 	 * @param model
 	 * @param source
 	 */
-	public ResourcePickerField(final String id, final IModel<ResourceID> model) {
+	public EntityPickerField(final String id, final IModel<ResourceID> model) {
 		super(id, model, findByURI());
-	}
-	
-	/**
-	 * @param id
-	 * @param model
-	 * @param source
-	 */
-	public ResourcePickerField(final String id, final IModel<ResourceID> model, final AutocompleteSource src) {
-		super(id, model, src);
 	}
 
 	// -----------------------------------------------------
 	
 	public static AutocompleteSource findByURI() {
-		return new AutocompleteSource("internal/query/uri");
-	}
-	
-	public static AutocompleteSource findByValues() {
-		return new AutocompleteSource("internal/query/values");
+		return new AutocompleteSource("internal/query");
 	}
 	
 }

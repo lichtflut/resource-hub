@@ -49,7 +49,7 @@ public class MockServiceProvider implements ServiceProvider, Serializable {
 	public MockServiceProvider() {
 		dataPool.addAll(MockNewRBEntityFactory.createMockEntities());
 		schemaManager = new MockSchemaManager();
-        entityManager = new MockEntityManager(dataPool);
+        entityManager = new MockEntityManager(dataPool, schemaManager);
         typeManager = new MockTypeManager(dataPool);
 	}
 

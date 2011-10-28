@@ -43,7 +43,7 @@
 	
 	<servlet-mapping>
 	   <servlet-name>QueryServlet</servlet-name>
-	   <url-pattern>/internal/query</url-pattern>
+	   <url-pattern>/internal/query/*</url-pattern>
 	</servlet-mapping>
 
 

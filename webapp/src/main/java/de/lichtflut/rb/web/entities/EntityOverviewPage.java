@@ -3,12 +3,13 @@
  */
 package de.lichtflut.rb.web.entities;
 
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
-import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behavior.CKBehavior;
 import de.lichtflut.rb.webck.components.CKComponent;
@@ -44,20 +45,21 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 	
 	// -----------------------------------------------------
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void initTable(final ResourceID type) {
 		final ResourceTableView view =
-			new ResourceTableView("mockEmployeeView", getRBServiceProvider().getEntityManager().findAllByType(type)){
+			new ResourceTableView("mockEmployeeView", EntityOverviewPage.this.getServiceProvider().getEntityManager().findByType(type)){
 			@Override
 			public ServiceProvider getServiceProvider() {
-				return getRBServiceProvider();
+				return EntityOverviewPage.this.getServiceProvider();
 			}
 			@Override
 			public CKComponent setViewMode(final ViewMode mode) {return null;}
 			
 			@Override
-			protected void onShowDetails(RBEntity entity) {
+			protected void onShowDetails(ResourceID rid) {
 				final PageParameters params = new PageParameters();
-				params.add(EntityDetailPage.PARAM_RESOURCE_ID, entity.getID());
+				params.add(EntityDetailPage.PARAM_RESOURCE_ID, rid);
 				setResponsePage(EntityDetailPage.class, params);
 			}
 		};
@@ -65,6 +67,11 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 		view.addBehavior(ResourceTableView.UPDATE_ROW_ITEM, CKBehavior.VOID_BEHAVIOR);
 		view.addBehavior(ResourceTableView.DELETE_ROW_ITEM, CKBehavior.VOID_BEHAVIOR);
 		add(view);
+		
+		final PageParameters params = new PageParameters();
+		params.add("type", type.getQualifiedName().toURI());
+		final Link createLink = new BookmarkablePageLink("createLink", EntityDetailPage.class, params);
+		add(createLink);
 	}
 
 }

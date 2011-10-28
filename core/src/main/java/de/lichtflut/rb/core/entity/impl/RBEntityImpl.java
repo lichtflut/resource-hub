@@ -17,9 +17,9 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.MetaInfo;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
@@ -39,8 +39,10 @@ public class RBEntityImpl implements RBEntity {
 
 	private final ResourceNode node;
 	private final ResourceSchema schema;
-	private final List<ResourceID> type;
+	private final ResourceID type;
+	
 	private List<RBField> fields;
+	
 
 	// -----------------------------------------------------
 
@@ -70,15 +72,8 @@ public class RBEntityImpl implements RBEntity {
 	public RBEntityImpl(final ResourceNode node, final ResourceID type) {
 		super();
 		this.node=node;
-		this.type = new ArrayList<ResourceID>();
+		this.type = type;
 		this.schema = null;
-		if(node.getAssociations(RDF.TYPE).isEmpty()){
-			this.type.add(type);
-		}else{
-			for (Association assoc : node.getAssociations(RDF.TYPE)) {
-				this.type.add(assoc.getObject().asResource().asClass());
-			}
-		}
 		initializeFields();
 	}
 
@@ -94,8 +89,7 @@ public class RBEntityImpl implements RBEntity {
 		super();
 		this.node = node;
 		this.schema = schema;
-		this.type=new ArrayList<ResourceID>();
-		this.type.add(schema.getDescribedType());
+		this.type = schema.getDescribedType();
 		initializeFields();
 	}
 
@@ -128,6 +122,7 @@ public class RBEntityImpl implements RBEntity {
 			}
 		}
 		// TODO: Remove from blacklist rdf(s):*
+		predicates.remove(RDF.TYPE);
 		for (ResourceID predicate : predicates) {
 			fields.add(new RBFieldImpl(predicate, SNOPS.objects(node, predicate)));
 		}
@@ -162,9 +157,7 @@ public class RBEntityImpl implements RBEntity {
 
 	@Override
 	public ResourceID getType() {
-//		node.asEntity().getMainClass();
-		// TODO Get type from node
-		return type.get(0);
+		return type;
 	}
 
 	/**

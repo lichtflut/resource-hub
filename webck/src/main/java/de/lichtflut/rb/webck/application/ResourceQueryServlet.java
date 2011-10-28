@@ -21,7 +21,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
@@ -37,11 +37,22 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  */
 public abstract class ResourceQueryServlet extends HttpServlet {
 	
+	public final static String QUERY_URI = "/uri";
+	
+	public final static String QUERY_VALUES = "/values";
+	
 	public final static String AUTOCOMPLETE_PARAM = "term";
 	
 	public final static String QUERY_PARAM = "query";
 	
 	private Logger logger = LoggerFactory.getLogger(ResourceQueryServlet.class);
+	
+	// -----------------------------------------------------
+	
+	enum Mode {
+		URI,
+		VALUES
+	}
 	
 	// -----------------------------------------------------
 
@@ -51,10 +62,14 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	@Override
 	protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
 			throws ServletException, IOException {
+		
+		Mode mode = Mode.VALUES; 
+		if (QUERY_URI.equals(req.getPathInfo())) {
+			mode = Mode.URI;
+		}
+		
 		if (req.getParameterMap().containsKey(AUTOCOMPLETE_PARAM)) {
-			autocomplete(req.getParameter(AUTOCOMPLETE_PARAM), resp);
-		} else if (req.getParameterMap().containsKey(QUERY_PARAM)) {
-			throw new NotYetImplementedException();
+			autocomplete(req.getParameter(AUTOCOMPLETE_PARAM), resp, mode);
 		} else {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -69,17 +84,33 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	 * @throws JsonMappingException 
 	 * @throws JsonGenerationException 
 	 */
-	private void autocomplete(final String term, final HttpServletResponse resp) throws JsonGenerationException, JsonMappingException, IOException {
-		logger.info("query: " + term);
+	protected void autocomplete(final String term, final HttpServletResponse resp, final Mode mode)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		
+		logger.info("quering in mode {} : " + term, mode);
 		final List<JsonNode> jsons = new ArrayList<JsonNode>();
-		final QueryManager qm = getServiceProvider().getArastejuGate().startConversation().createQueryManager();
-		final List<ResourceNode> nodes = qm.findByURI(term + "*");
+		final List<ResourceNode> nodes = searchNodes(term, mode);
 		for (ResourceNode current : nodes) {
 			jsons.add(new JsonNode(current));
-			logger.info("matching: " + current.getAssociations());
 		}
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(resp.getOutputStream(), jsons);
+	}
+
+	/**
+	 * @param term
+	 * @return
+	 */
+	protected List<ResourceNode> searchNodes(final String term, final Mode mode) {
+		final QueryManager qm = getServiceProvider().getArastejuGate().startConversation().createQueryManager();
+		switch (mode){
+		case URI:
+			return qm.findByURI("*" + term + "*");
+		case VALUES:
+			return qm.findByTag("*" + term + "*");
+		default:
+			throw new NotYetSupportedException();
+		}
 	}
 	
 	// -----------------------------------------------------

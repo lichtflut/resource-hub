@@ -6,6 +6,7 @@ package de.lichtflut.rb.web.types;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
@@ -111,8 +112,18 @@ public class TypeSystemPage extends RBBasePage {
 	
 	// -----------------------------------------------------
 	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Component createSideBar(String id) {
+		return super.createSideBar(id);
+	}
+	
+	// -----------------------------------------------------
+	
 	protected void displaySchemaEditor(final SNClass type) {
-		final ResourceSchema schema = getServiceProvider().getSchemaManager().findSchemaByType(type);
+		final ResourceSchema schema = getServiceProvider().getSchemaManager().findSchemaForType(type);
 		final IModel<List<? extends PropertyRow>> model = Model.ofList(PropertyRow.toRowList(schema));
 		final SchemaEditorPanel editor = new SchemaEditorPanel("editor", model) {
 			@Override

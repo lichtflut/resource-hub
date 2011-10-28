@@ -30,17 +30,18 @@ import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
  */
 @SuppressWarnings("serial")
 public class RBFieldImpl implements RBField, Serializable {
+	
+	private final List<Object> values = new ArrayList<Object>();
 
-	private PropertyDeclaration declaration;
+	private final PropertyDeclaration declaration;
 	
-	private ResourceID predicate;
+	private final ResourceID predicate;
 	
-	private List<Object> values;
+	private final boolean isKnownToSchema;
 	
-	private boolean isKnownToSchema;
+	private int slots;
 
 	//------------------------------------------------------------
-
 
 	/**
 	 * Constructor.
@@ -48,14 +49,10 @@ public class RBFieldImpl implements RBField, Serializable {
 	 * @param values - values of this field
 	 */
 	public RBFieldImpl(final PropertyDeclaration declaration, final Set<SemanticNode> values) {
-		if(declaration != null){
-			this.declaration = declaration;
-			this.isKnownToSchema = true;
-		}
-		this.values = new ArrayList<Object>();
-		if(values != null){
-			this.values.addAll(values);
-		}
+		this.predicate = declaration.getPropertyType();
+		this.declaration = declaration;
+		this.isKnownToSchema = true;
+		initSlots(values); 
 	}
 
 	/**
@@ -65,11 +62,9 @@ public class RBFieldImpl implements RBField, Serializable {
 	 */
 	public RBFieldImpl(final ResourceID predicate, final Set<SemanticNode> values) {
 		this.predicate = predicate;
+		this.declaration = null;
 		this.isKnownToSchema = false;
-		this.values = new ArrayList<Object>();
-		if(values != null){
-			this.values.addAll(values);
-		}
+		initSlots(values); 
 	}
 
 	//------------------------------------------------------------
@@ -89,16 +84,6 @@ public class RBFieldImpl implements RBField, Serializable {
 		} else {
 			return predicate.getName();
 		}
-	}
-
-	@Override
-	public List<Object> getValues() {
-		return values;
-	}
-
-	@Override
-	public void setValues(final List<Object> fieldValues) {
-		this.values = fieldValues;
 	}
 
 	@Override
@@ -141,6 +126,52 @@ public class RBFieldImpl implements RBField, Serializable {
 			return Collections.emptySet();
 		}
 	}
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getSlots() {
+		return slots;
+	};
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object getValue(final int index) {
+		if (index >= slots) {
+			throw new IllegalArgumentException("Index out of bounds: " + index);
+		}
+		return values.get(index);
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setValue(final int index, final Object value) {
+		if (index > slots) {
+			throw new IllegalArgumentException("Index out of bounds: " + index);
+		} else if (index < slots) {
+			values.remove(index);	
+		} else {
+			slots++;
+		}
+		values.add(index, value);
+	}
+	
+	@Override
+	public List<Object> getValues() {
+		return Collections.unmodifiableList(values);
+	}
+
+	@Override
+	public void setValues(final List<Object> fieldValues) {
+		this.values.clear();
+		this.values.addAll(fieldValues);
+	}
 
 	// -----------------------------------------------------
 
@@ -151,6 +182,21 @@ public class RBFieldImpl implements RBField, Serializable {
 	@Override
 	public String toString(){
 		return this.getLabel();
+	}
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * @param givenValues
+	 */
+	protected void initSlots(final Set<SemanticNode> givenValues) {
+		if (givenValues.isEmpty()) {
+			this.values.add(null);
+			this.slots = 1;
+		} else {
+			this.values.addAll(givenValues);
+			this.slots = givenValues.size();	
+		}
 	}
 
 }

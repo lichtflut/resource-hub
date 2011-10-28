@@ -54,7 +54,7 @@ public class SchemaManagerImplTest {
 		final ResourceSchema original = createSchema();
 		manager.store(original);
 		
-		final ResourceSchema found = manager.findSchemaByType(SNOPS.id(personQN));
+		final ResourceSchema found = manager.findSchemaForType(SNOPS.id(personQN));
 		
 		Assert.assertNotNull(found);
 		
@@ -67,20 +67,20 @@ public class SchemaManagerImplTest {
 		final ResourceSchema original = createSchema();
 		manager.store(original);
 		
-		final ResourceSchema found = manager.findSchemaByType(SNOPS.id(personQN));
+		final ResourceSchema found = manager.findSchemaForType(SNOPS.id(personQN));
 		Assert.assertNotNull(found);
 		Assert.assertEquals(3, found.getPropertyDeclarations().size());
 		
 		final ResourceSchema other = new ResourceSchemaImpl(SNOPS.id(personQN));
 		manager.store(other);
 		
-		ResourceSchema retrieved = manager.findSchemaByType(SNOPS.id(personQN));
+		ResourceSchema retrieved = manager.findSchemaForType(SNOPS.id(personQN));
 		Assert.assertNotNull(retrieved);
 		Assert.assertEquals(0, retrieved.getPropertyDeclarations().size());
 		
 		manager.store(original);
 		
-		retrieved = manager.findSchemaByType(SNOPS.id(personQN));
+		retrieved = manager.findSchemaForType(SNOPS.id(personQN));
 		Assert.assertNotNull(retrieved);
 		Assert.assertEquals(3, retrieved.getPropertyDeclarations().size());
 		

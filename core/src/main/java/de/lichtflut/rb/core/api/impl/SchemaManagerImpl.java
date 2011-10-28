@@ -79,7 +79,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResourceSchema findSchemaByType(final ResourceID type) {
+	public ResourceSchema findSchemaForType(final ResourceID type) {
 		final SNResourceSchema schemaNode = findSchemaNodeByType(type);
 		if (schemaNode != null) {
 			return binding.toModelObject(schemaNode);	

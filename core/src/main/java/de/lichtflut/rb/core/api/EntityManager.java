@@ -26,16 +26,22 @@ public interface EntityManager {
 
     /**
      * Finds all {@link RBEntity}s for a given type.
-     * @param type - id of the Resourcetype
+     * @param type - id of the Resource Type
      * @return a list of {@link RBEntity}
      */
-    List<RBEntity> findAllByType(ResourceID type);
+    List<RBEntity> findByType(ResourceID type);
 
+    // -----------------------------------------------------
+    
     /**
-     *
-     * @param entity /
-     *
-     * Stores an Entity and returns the saved entity.
+     * Create and initialize a new {@link RBEntity} with given type. The entitiy will not
+     * be stored. 
+     */
+    RBEntity create(ResourceID type);
+    
+    /**
+     * Stores an Entity.
+     * @param entity The entity.
      */
     void store(RBEntity entity);
 

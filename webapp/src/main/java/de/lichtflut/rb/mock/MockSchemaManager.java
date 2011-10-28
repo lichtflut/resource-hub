@@ -60,7 +60,7 @@ public class MockSchemaManager implements SchemaManager, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResourceSchema findSchemaByType(final ResourceID type) {
+	public ResourceSchema findSchemaForType(final ResourceID type) {
 		if (typeSchemaMap.containsKey(type)) {
 			return typeSchemaMap.get(type);
 		} else {
