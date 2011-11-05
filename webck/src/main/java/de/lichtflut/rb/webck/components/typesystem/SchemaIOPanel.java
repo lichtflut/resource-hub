@@ -3,8 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -21,8 +23,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
-import org.apache.wicket.request.Response;
-import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceStreamResource;
+import org.apache.wicket.util.resource.AbstractResourceStream;
+import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogJavaScriptResourceReference;
 
@@ -93,7 +96,7 @@ public abstract class SchemaIOPanel extends Panel {
 		final Dialog dialog = new Dialog("exportDialog");
 		final Form form = new Form("form");
 		final IModel<String> format = new Model<String>("JSON");
-		final ResourceLink download = new ResourceLink("download", new SchemaExport(format));
+		final ResourceLink download = new ResourceLink("download", new ResourceStreamResource(new SchemaExport(format)));
 		download.setOutputMarkupId(true);
 		form.add(download);
 		form.add(new DropDownChoice<String>("format", format, getChoices()));
@@ -104,7 +107,9 @@ public abstract class SchemaIOPanel extends Panel {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				dialog.close(target);
-				target.appendJavaScript("alert($('#" + download.getMarkupId() + "'));$('#" + download.getMarkupId() + "').click()");
+				target.appendJavaScript("window.location.href='internal/query'");
+//				RequestCycle.get().scheduleRequestHandlerAfterCurrent(
+//						new ResourceStreamRequestHandler(new SchemaExport(format)));
 			}
 		});
 		dialog.add(form); 
@@ -153,9 +158,10 @@ public abstract class SchemaIOPanel extends Panel {
 	
 	// -----------------------------------------------------
 	
-	class SchemaExport implements IResource {
+	class SchemaExport extends AbstractResourceStream {
 
 		private final IModel<String> format;
+		private ByteArrayInputStream in;
 
 		/**
 		 * @param format
@@ -168,7 +174,8 @@ public abstract class SchemaIOPanel extends Panel {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void respond(final Attributes attributes) {
+		public InputStream getInputStream()
+				throws ResourceStreamNotFoundException {
 			final SchemaExporter exporter = getSchemaManager().getExporter(format.getObject());
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			try {
@@ -176,10 +183,20 @@ public abstract class SchemaIOPanel extends Panel {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			final Response response = attributes.getResponse();
-			response.write(out.toByteArray());
+			in = new ByteArrayInputStream(out.toByteArray());
+			return in;
 		}
 		
+		/** 
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void close() throws IOException {
+			if (in != null) {
+				in.close();
+			}
+		}
+
 	}
 
 }

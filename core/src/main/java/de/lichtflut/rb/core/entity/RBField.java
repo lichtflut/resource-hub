@@ -88,6 +88,12 @@ public interface RBField{
 	void setValue(int index, Object value);
 	
 	/**
+	 * Add a value to the end of the value list.
+	 * @param value THe value to add;
+	 */
+	void addValue(Object value);
+	
+	/**
 	 * Get the value for given index.
 	 * @param index The index.
 	 * @return The object at this index or null.

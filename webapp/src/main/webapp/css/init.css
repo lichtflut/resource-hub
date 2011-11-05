@@ -4,3 +4,24 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 	margin: 0;
 	padding: 0;
 }
+
+input,select,textarea {
+    color: #6A6969;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #d4d4d4 #ebebeb #ebebeb #d4d4d4;
+    padding:1px;
+    font: 11px 'Lucida Grande', Verdana, Helvetica, sans-serif;
+}
+
+input.button {
+    font: bold 12px Arial, Sans-serif;
+    height: 30px;
+    margin: 0;
+    padding: 2px 3px;
+    color: #fff;
+    background: #9CCF5F;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #B6DE8F #8DB836 #8DB836 #B6DE8F;
+}

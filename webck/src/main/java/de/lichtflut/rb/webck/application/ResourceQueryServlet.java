@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.application;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -68,7 +69,8 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 			mode = Mode.URI;
 		}
 		
-		if (req.getParameterMap().containsKey(AUTOCOMPLETE_PARAM)) {
+		final Map map = req.getParameterMap();
+		if (map.containsKey(AUTOCOMPLETE_PARAM)) {
 			autocomplete(req.getParameter(AUTOCOMPLETE_PARAM), resp, mode);
 		} else {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);

@@ -28,7 +28,6 @@ class CKTextField extends Panel {
 
 	private RBField field;
 	private WebMarkupContainer container;
-	private RepeatingView view;
 
 	// ------------------------------------------------------------
 
@@ -45,17 +44,18 @@ class CKTextField extends Panel {
 		this.setOutputMarkupId(true);
 		container = new WebMarkupContainer("container");
 		container.setOutputMarkupId(true);
-		view = new RepeatingView("repeatingView");
+		
+		final RepeatingView view = new RepeatingView("repeatingView");
 		for(int i=0; i < field.getSlots(); i++) {
-			view.add(createTextField(i));
+			view.add(createTextField(view.newChildId(), i));
 		}
 		container.add(view);
 		add(container);
 		add(new AddValueAjaxButton("button", field) {
 			@Override
 			public void addField(final AjaxRequestTarget target, final Form<?> form) {
-				TextField textField = createTextField(field.getSlots());
-				textField.setOutputMarkupId(true);
+				TextField textField = createTextField(view.newChildId(), field.getSlots());
+				field.addValue(null);
 				view.add(textField);
 				target.add(form);
 				target.focusComponent(textField);
@@ -68,29 +68,28 @@ class CKTextField extends Panel {
 
 	/**
 	 * Creates a {@link TextField} with appropriate {@link RBFieldModel} and value.
-	 * @param i - marking the occurence of the displayed value in {@link RBField}
+	 * @param id The textfields ID.
+	 * @param i - marking the occurrence of the displayed value in {@link RBField}
 	 * @return - instance of {@link TextField}
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private TextField createTextField(final int i) {
-		TextField textField;
+	private TextField createTextField(String id, final int i) {
+		final TextField textField;
 		switch (field.getDataType()) {
 			case DATE:
-				textField = new TextField(view.newChildId(),
-						new RBFieldModel(field, i));
+				textField = new TextField(id,new RBFieldModel(field, i));
 				textField.add(new DatePickerBehavior());
 				textField.setType(Date.class);
 			break;
 			case INTEGER:
-				textField = new TextField(view.newChildId(), new RBFieldModel(field, i));
+				textField = new TextField(id, new RBFieldModel(field, i));
 				textField.setType(Integer.class);
 				break;
 			default:
-				textField = new TextField(view.newChildId(),
-						new RBFieldModel(field, i));
+				textField = new TextField(id, new RBFieldModel(field, i));
 				textField.setType(String.class);
-			break;
 		}
+		textField.setOutputMarkupId(true);
 		return textField;
 	}
 }

@@ -186,7 +186,9 @@ public abstract class CKComponent extends Panel {
 	 * @param mode -
 	 * @return -
 	 */
-	public abstract CKComponent setViewMode(final ViewMode mode);
+	public CKComponent setViewMode(final ViewMode mode) {
+		return this;
+	}
 
 	// -----------------------------------------------------
 

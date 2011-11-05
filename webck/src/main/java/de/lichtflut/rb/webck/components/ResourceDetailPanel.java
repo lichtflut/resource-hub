@@ -331,11 +331,6 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 					public ServiceProvider getServiceProvider() {
 						return ResourceDetailPanel.this.getServiceProvider();
 					}
-
-					@Override
-					public CKComponent setViewMode(final ViewMode view) {
-						return null;
-					}
 				});
 			}
 			form.add(new AjaxButton("addKeyValue") {

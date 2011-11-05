@@ -110,7 +110,10 @@ public class EntityManagerImpl implements EntityManager {
 	 */
 	@Override
 	public void delete(final RBEntity entity) {
-		throw new NotYetImplementedException();
+		final ModelingConversation mc = startConversation();
+		final ResourceNode node = mc.resolve(entity.getID());
+		mc.remove(node, false);
+		mc.close();
 	}
 	
 	// -----------------------------------------------------

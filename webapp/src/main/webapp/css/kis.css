@@ -197,33 +197,6 @@ label {
 	color: #7BA857;
 }
 
-input,select,textarea {
-	margin: 5px 0;
-	padding: 5px;
-	color: #6A6969;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #d4d4d4 #ebebeb #ebebeb #d4d4d4;
-	font: 11px 'Lucida Grande', Verdana, Helvetica, sans-serif;
-}
-
-input:focus,select:focus,textarea:focus {
-	color: #7BA857;
-	background: #EFFAE6;
-}
-
-input.button {
-	font: bold 12px Arial, Sans-serif;
-	height: 30px;
-	margin: 0;
-	padding: 2px 3px;
-	color: #fff;
-	background: #9CCF5F;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #B6DE8F #8DB836 #8DB836 #B6DE8F;
-}
-
 /* ------------------------------------------
    LAYOUT
 ------------------------------------------- */

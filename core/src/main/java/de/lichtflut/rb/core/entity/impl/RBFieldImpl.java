@@ -162,6 +162,15 @@ public class RBFieldImpl implements RBField, Serializable {
 		values.add(index, value);
 	}
 	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addValue(final Object value) {
+		values.add(value);
+		slots++;
+	}
+	
 	@Override
 	public List<Object> getValues() {
 		return Collections.unmodifiableList(values);
@@ -190,7 +199,7 @@ public class RBFieldImpl implements RBField, Serializable {
 	 * @param givenValues
 	 */
 	protected void initSlots(final Set<SemanticNode> givenValues) {
-		if (givenValues.isEmpty()) {
+		if (givenValues == null || givenValues.isEmpty()) {
 			this.values.add(null);
 			this.slots = 1;
 		} else {

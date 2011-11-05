@@ -164,33 +164,32 @@ public final class RBEntityTest {
         System.out.println("**********"+sm.findAllResourceSchemas().size());
 
         // Add a Email to the entities
-        e.getField(new SimpleResourceID("http://lichtflut.de#hatEmail")).getValues()
-                .add("mutter@fam.com");
+        e.getField(new SimpleResourceID("http://lichtflut.de#hatEmail")).addValue("mutter@fam.com");
 
         // Store entity
         m.store(e);
 
         // Add Field to entity
-        e1.getField(new SimpleResourceID("http://lichtflut.de#hatEmail")).getValues()
-                .add("kind@fam.com");
+        e1.getField(new SimpleResourceID("http://lichtflut.de#hatEmail")).addValue("kind@fam.com");
 
         // Add a custom Field
         RBFieldImpl newField = new RBFieldImpl(new SimpleResourceID("http://lichtflut.de#whatever"), null);
-        newField.getValues().add("haha");
-        newField.getValues().add("hoho");
-        newField.getValues().add("muhahaha");
+        newField.addValue("haha");
+        newField.addValue("hoho");
+        newField.addValue("muhahaha");
         e1.addField(newField);
 
         // Add entity as field
-        e.getField(new SimpleResourceID("http://lichtflut.de#hatKind")).getValues().add(e1);
+        e.getField(new SimpleResourceID("http://lichtflut.de#hatKind")).addValue(e1);
 
         // store entities
         m.store(e);
         m.store(e1);
 
         // Tests
-        Assert.assertTrue(m.find(e.getID()).getAllFields().size()==3);
-        Assert.assertTrue(m.findByType(new SimpleResourceID("http://lichtflut.de#personschema")).size()==2);
+        System.out.println(m.find(e.getID()).getAllFields());
+        Assert.assertEquals(4, m.find(e.getID()).getAllFields().size());
+        Assert.assertEquals(2, m.findByType(new SimpleResourceID("http://lichtflut.de#personschema")).size());
 
         m.delete(e);
         System.out.println("-->"+m.find(e.getID()));

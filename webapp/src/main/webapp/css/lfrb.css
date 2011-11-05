@@ -116,13 +116,27 @@ div.navigation-bar ul li:hover ul li {
 
 /* INPUT PANELS */
 
-div.form-field {
-	width:400px;
+div.entity-field {
+    width: 480px;
+    height: 28px;
+    clear: both;
+    float: none;
+    text-align: left;
 }
 
-div.form-field label {
-	width:160px;
-	padding-right:5px;
+div.entity-field .field-label {
+    width:155px;
+    padding-right:5px;
+    float:left;
+}
+
+div.entity-field .field-values {
+    width:320px;
+    float:left;
+}
+
+div.entity-field .field-values input.resource-picker {
+    width:250px;
 }
 
 

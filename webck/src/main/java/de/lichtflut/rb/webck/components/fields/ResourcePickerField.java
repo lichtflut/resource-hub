@@ -3,8 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
-import java.util.Properties;
-
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
