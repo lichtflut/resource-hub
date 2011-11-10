@@ -15,7 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryManager;
+import org.arastreju.sge.query.QueryResult;
+import org.arastreju.sge.query.UriParam;
+import org.arastreju.sge.query.ValueParam;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -69,6 +73,7 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 			mode = Mode.URI;
 		}
 		
+		@SuppressWarnings("rawtypes")
 		final Map map = req.getParameterMap();
 		if (map.containsKey(AUTOCOMPLETE_PARAM)) {
 			autocomplete(req.getParameter(AUTOCOMPLETE_PARAM), resp, mode);
@@ -91,8 +96,7 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 		
 		logger.info("quering in mode {} : " + term, mode);
 		final List<JsonNode> jsons = new ArrayList<JsonNode>();
-		final List<ResourceNode> nodes = searchNodes(term, mode);
-		for (ResourceNode current : nodes) {
+		for (ResourceNode current : searchNodes(term, mode)) {
 			jsons.add(new JsonNode(current));
 		}
 		final ObjectMapper mapper = new ObjectMapper();
@@ -103,16 +107,20 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	 * @param term
 	 * @return
 	 */
-	protected List<ResourceNode> searchNodes(final String term, final Mode mode) {
+	protected QueryResult searchNodes(final String term, final Mode mode) {
 		final QueryManager qm = getServiceProvider().getArastejuGate().startConversation().createQueryManager();
+		final Query query = qm.buildQuery();
 		switch (mode){
 		case URI:
-			return qm.findByURI("*" + term + "*");
+			query.add(new UriParam("*" + term + "*"));
+			break;
 		case VALUES:
-			return qm.findByTag("*" + term + "*");
+			query.add(new ValueParam("*" + term + "*"));
+			break;
 		default:
 			throw new NotYetSupportedException();
 		}
+		return query.getResult();
 	}
 	
 	// -----------------------------------------------------

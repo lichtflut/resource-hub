@@ -19,7 +19,10 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.persistence.TransactionControl;
+import org.arastreju.sge.query.FieldParam;
+import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryManager;
+import org.arastreju.sge.query.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,8 +145,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	public void store(final ResourceSchema schema) {
 		Validate.isTrue(schema.getDescribedType() != null, "The type described by this schema is not defined.");
 		final ModelingConversation mc = startConversation();
-		final TransactionControl tx = mc.getTransactionControl();
-		tx.begin();
+		final TransactionControl tx = mc.beginTransaction();
 		try {
 			final ResourceNode existing = findSchemaNodeByType(schema.getDescribedType());
 			if (existing != null) {
@@ -227,14 +229,15 @@ public class SchemaManagerImpl implements SchemaManager {
 	 */
 	private SNResourceSchema findSchemaNodeByType(final ResourceID type) {
 		final ModelingConversation mc = startConversation();
-		final List<ResourceNode> subjects = mc.createQueryManager().findSubjects(RBSchema.DESCRIBES, type);
+		final Query query = mc.createQueryManager().buildQuery().add(new FieldParam(RBSchema.DESCRIBES, type));
+		final QueryResult result = query.getResult();
 		mc.close();
-		if (subjects.isEmpty()) {
+		if (result.isEmpty()) {
 			return null;
-		} else if (subjects.size() == 1) {
-			return SNResourceSchema.view(subjects.get(0));
+		} else if (result.size() == 1) {
+			return SNResourceSchema.view(result.iterator().next());
 		} else {
-			throw new IllegalStateException("Found more than one Schema for type " + type + ": " + subjects);
+			throw new IllegalStateException("Found more than one Schema for type " + type + ": " + result);
 		}
 	}
 	
