@@ -32,8 +32,8 @@ public class ResourceIDConverter implements IConverter<ResourceID> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String convertToString(final ResourceID value, final Locale locale) {
-		return value.toString();
+	public String convertToString(final ResourceID rid, final Locale locale) {
+		return rid.getQualifiedName().toURI();
 	}
 
 }

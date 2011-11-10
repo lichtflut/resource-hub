@@ -18,13 +18,13 @@ import de.lichtflut.rb.core.schema.model.LabelBuilder;
  *
  * @author Oliver Tigges
  */
-public abstract class LabelBuilderLocator {
+public interface LabelBuilderLocator {
 
 	/**
 	 * Locates the label builder for the given type.
 	 * @param type The resource type.
 	 * @return The corresponding label builder.
 	 */
-	public abstract LabelBuilder forType(final ResourceID type);
+	LabelBuilder forType(ResourceID type);
 
 }

@@ -32,6 +32,7 @@ import de.lichtflut.rb.core.api.SchemaExporter;
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.custom.LabelBuilderLocator;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
@@ -62,7 +63,7 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	private ServiceProvider provider;
 	
-	private Schema2GraphBinding binding = new Schema2GraphBinding(new TypeDefResolverImpl());
+	private Schema2GraphBinding binding;
 	
 	private Logger logger = LoggerFactory.getLogger(SchemaImporterImpl.class);
 
@@ -74,6 +75,12 @@ public class SchemaManagerImpl implements SchemaManager {
 	 */
 	public SchemaManagerImpl(final ServiceProvider provider) {
 		this.provider = provider;
+		try {
+			this.binding = new Schema2GraphBinding(new TypeDefResolverImpl(), 
+					 (LabelBuilderLocator) Class.forName("de.lichtflut.rb.mock.MockLabelBuilderLocator").newInstance());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	// -----------------------------------------------------
@@ -85,7 +92,8 @@ public class SchemaManagerImpl implements SchemaManager {
 	public ResourceSchema findSchemaForType(final ResourceID type) {
 		final SNResourceSchema schemaNode = findSchemaNodeByType(type);
 		if (schemaNode != null) {
-			return binding.toModelObject(schemaNode);	
+			final ResourceSchema schema = binding.toModelObject(schemaNode);
+			return schema;
 		} else {
 			return new ResourceSchemaImpl().setDescribedType(type);
 		}

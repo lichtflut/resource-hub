@@ -21,23 +21,25 @@ import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 public class ResourcePickerField extends DataPickerField<ResourceID> {
 
 	/**
-	 * @param id
-	 * @param model
-	 * @param source
+	 * Constructor.
+	 * @param id The component ID.
+	 * @param model The model.
 	 */
 	public ResourcePickerField(final String id, final IModel<ResourceID> model) {
-		super(id, model, findByURI());
+		this(id, model, findByURI());
 	}
 	
 	/**
-	 * @param id
-	 * @param model
-	 * @param source
+	 *Constructor.
+	 * @param id The component ID.
+	 * @param model The model.
+	 * @param source The source for auto completion.
 	 */
 	public ResourcePickerField(final String id, final IModel<ResourceID> model, final AutocompleteSource src) {
 		super(id, model, src);
+		setType(ResourceID.class);
 	}
-
+	
 	// -----------------------------------------------------
 	
 	public static AutocompleteSource findByURI() {

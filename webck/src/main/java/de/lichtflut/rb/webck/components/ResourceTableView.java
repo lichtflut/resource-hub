@@ -227,14 +227,14 @@ public abstract class ResourceTableView extends CKComponent {
 					RepeatingView view = new RepeatingView("data");
 					int resourceCount = 1;
 					for (final Object entityAttribute : field.getValues()) {
-						final ResourceID currentEntity = (ResourceID) entityAttribute;
+						final RBEntity currentEntity = (RBEntity) entityAttribute;
 						if(currentEntity != null){
 							CKLink link = new CKLink(view.newChildId(), currentEntity.getQualifiedName().toURI(),
 									CKLinkType.CUSTOM_BEHAVIOR);
 							link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR, new CKBehavior() {
 								@Override
 								public Object execute(final Object... objects) {
-									onShowDetails(currentEntity);
+									onShowDetails(currentEntity.getID());
 									return null;
 								}
 							});

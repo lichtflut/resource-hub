@@ -17,7 +17,7 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
-import de.lichtflut.rb.web.metamodel.WSConstants;
+import de.lichtflut.rb.web.WSConstants;
 import de.lichtflut.rb.web.util.StaticLabelBuilders;
 
 /**

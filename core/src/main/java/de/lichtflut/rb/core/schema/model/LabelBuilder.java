@@ -28,6 +28,12 @@ public interface LabelBuilder extends Serializable{
 	 * @return The entitie's label.
 	 */
 	String build(RBEntity entity);
+	
+	/**
+	 * Get the expression for building the label.
+	 * @return
+	 */
+	String getExpression();
 
 	/**
 	 *
@@ -38,6 +44,14 @@ public interface LabelBuilder extends Serializable{
 		@Override
 		public String build(final RBEntity entity) {
 			return entity.toString();
+		}
+		
+		/** 
+		 * {@inheritDoc}
+		 */
+		@Override
+		public String getExpression() {
+			return null;
 		}
 	}
 

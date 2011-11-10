@@ -47,5 +47,7 @@ public interface IOConstants {
 	public static final String PROPERTY_DECLARATION = "property-declaration";
 	
 	public static final String CONSTRAINTS = "constraints";
+	
+	public static final String LABEL_RULE = "label-rule";
 
 }

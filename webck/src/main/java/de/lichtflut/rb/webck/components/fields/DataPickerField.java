@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.fields;
 
 import java.io.Serializable;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
@@ -51,7 +52,8 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	public DataPickerField(final String id, final IModel<T> model, final IModel<String> displayModel, final AutocompleteSource source) {
 		super(id, model);
 		
-		final HiddenField<T> hidden = new HiddenField<T>("acValue", toHiddenModel(model));
+		final IModel<T> hiddenModel = toHiddenModel(model);
+		final HiddenField<T> hidden = new HiddenField<T>("acValue", hiddenModel);
 		hidden.setOutputMarkupId(true);
 		final String hiddenMarkupId = hidden.getMarkupId();
 		add(hidden);
@@ -62,15 +64,31 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		display.setSource(source);
 		display.setSelectEvent(new JsScopeUiEvent() {
 			protected void execute(final JsScopeContext ctx) {
-				ctx.append("$('#" +  hiddenMarkupId + "').attr('value', ui.item.id);");
-				ctx.append("$('#" +  displayMarkupID + "').attr('value', ui.item.label);");
+				ctx.append("if (ui.item) {");
+				ctx.append("  $('#" +  hiddenMarkupId + "').attr('value', ui.item.id);");
+				ctx.append("  $('#" +  displayMarkupID + "').attr('value', ui.item.label);");
+				ctx.append("} else { alert ('nothing selected')};");
 				ctx.append("return false;");
 			}
 		});
 		add(display);
+		
+		add(new AttributeModifier("title", hiddenModel));
 	}
 	
 	// -----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public FormComponent<T> setType(Class<?> type) {
+		final FormComponent<T> comp = getValueField();
+		if (comp != null) {
+			comp.setType(type);
+		}
+		return super.setType(type);
+	}
 	
 	/**
 	 * {@inheritDoc}
@@ -86,13 +104,18 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	/** 
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	protected void convertInput() {
-		final FormComponent<T> comp = (FormComponent<T>) get("acValue");
+		final FormComponent<T> comp = getValueField();
 		setConvertedInput(comp.getConvertedInput());
 	}
 	
+	@SuppressWarnings("unchecked")
+	protected FormComponent<T> getValueField() {
+		return (FormComponent<T>) get("acValue");
+	}
+
 	// -----------------------------------------------------
 	
 	/**

@@ -121,6 +121,10 @@ public interface RBSchema {
 	 */
 	ResourceID IS_PUBLIC_TYPE_DEF = new SimpleResourceID(NAMESPACE_URI, "isPublicTypeDefinition");
 	
+	/**
+	 * Text expression for building a label for an entity.
+	 */
+	ResourceID HAS_LABEL_EXPRESSION = new SimpleResourceID(NAMESPACE_URI, "hasLabelExpression");
 	
 	/**
 	 * A SystemRoot can have Schema-Representations.

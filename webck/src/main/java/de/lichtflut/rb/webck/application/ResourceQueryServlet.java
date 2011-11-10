@@ -6,15 +6,17 @@ package de.lichtflut.rb.webck.application;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.util.crypt.Base64;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.query.FieldParam;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryManager;
 import org.arastreju.sge.query.QueryResult;
@@ -27,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
@@ -46,7 +49,11 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	
 	public final static String QUERY_VALUES = "/values";
 	
+	public final static String QUERY_ENTITY = "/entity";
+	
 	public final static String AUTOCOMPLETE_PARAM = "term";
+	
+	public final static String TYPE_PARAM = "type";
 	
 	public final static String QUERY_PARAM = "query";
 	
@@ -55,8 +62,10 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	// -----------------------------------------------------
 	
 	enum Mode {
+		UNKNOWN,
 		URI,
-		VALUES
+		VALUES,
+		ENTITY
 	}
 	
 	// -----------------------------------------------------
@@ -68,18 +77,25 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		Mode mode = Mode.VALUES; 
-		if (QUERY_URI.equals(req.getPathInfo())) {
-			mode = Mode.URI;
-		}
+		final Mode mode = getMode(req);
+		final String term = req.getParameter(AUTOCOMPLETE_PARAM);
+		final String type = getTypeConstraint(req);
 		
-		@SuppressWarnings("rawtypes")
-		final Map map = req.getParameterMap();
-		if (map.containsKey(AUTOCOMPLETE_PARAM)) {
-			autocomplete(req.getParameter(AUTOCOMPLETE_PARAM), resp, mode);
-		} else {
+		if (Mode.UNKNOWN == mode || null == term) {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		} else {
+			logger.info("quering in mode {} : " + term, mode);
+			final QueryResult result = searchNodes(term, mode, type);
+			autocomplete(result, resp, mode);			
 		}
+	}
+
+	private String getTypeConstraint(final HttpServletRequest req) {
+		final String raw = req.getParameter(TYPE_PARAM);
+		if (raw == null) {
+			return null;
+		} 
+		return new String(Base64.decodeBase64(raw));
 	}
 
 	// -----------------------------------------------------
@@ -91,13 +107,19 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	 * @throws JsonMappingException 
 	 * @throws JsonGenerationException 
 	 */
-	protected void autocomplete(final String term, final HttpServletResponse resp, final Mode mode)
+	protected void autocomplete(final QueryResult result, final HttpServletResponse resp, final Mode mode)
 			throws JsonGenerationException, JsonMappingException, IOException {
 		
-		logger.info("quering in mode {} : " + term, mode);
 		final List<JsonNode> jsons = new ArrayList<JsonNode>();
-		for (ResourceNode current : searchNodes(term, mode)) {
-			jsons.add(new JsonNode(current));
+		for (ResourceNode current : result) {
+			if (Mode.ENTITY.equals(mode)) {
+				final RBEntity entity = getServiceProvider().getEntityManager().find(current);
+				if (entity != null) {
+					jsons.add(new JsonNode(entity.getID(), entity.getLabel()));
+				}
+			} else {
+				jsons.add(new JsonNode(current));
+			}
 		}
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(resp.getOutputStream(), jsons);
@@ -105,14 +127,23 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 
 	/**
 	 * @param term
+	 * @param type 
 	 * @return
 	 */
-	protected QueryResult searchNodes(final String term, final Mode mode) {
+	protected QueryResult searchNodes(final String term, final Mode mode, final String type) {
 		final QueryManager qm = getServiceProvider().getArastejuGate().startConversation().createQueryManager();
 		final Query query = qm.buildQuery();
 		switch (mode){
 		case URI:
 			query.add(new UriParam("*" + term + "*"));
+			break;
+		case ENTITY:
+			query.beginAnd();
+			query.add(new ValueParam("*" + term + "*"));
+			if (type != null) {
+				query.add(new FieldParam(RDF.TYPE, type));
+			}
+			query.end();
 			break;
 		case VALUES:
 			query.add(new ValueParam("*" + term + "*"));
@@ -120,7 +151,20 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 		default:
 			throw new NotYetSupportedException();
 		}
+		logger.info("Query: " + query);
 		return query.getResult();
+	}
+	
+	protected Mode getMode(final HttpServletRequest req) {
+		if (QUERY_URI.equals(req.getPathInfo())) {
+			return Mode.URI;
+		} else if (QUERY_VALUES.equals(req.getPathInfo())) {
+			return Mode.VALUES;
+		} else if (QUERY_ENTITY.equals(req.getPathInfo())) {
+			return Mode.ENTITY;
+		} else {
+			return Mode.UNKNOWN;
+		}
 	}
 	
 	// -----------------------------------------------------
@@ -134,9 +178,13 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 		String label;
 		String info;
 		
-		public JsonNode(ResourceID rid) {
+		public JsonNode(final ResourceID rid) {
+			this(rid, rid.getQualifiedName().toURI());
+		}
+		
+		public JsonNode(final ResourceID rid, final String label) {
 			this.id = rid.getQualifiedName().toURI();
-			this.label = rid.getQualifiedName().toURI();
+			this.label = label;
 			this.info = rid.getQualifiedName().toURI();
 		}
 		

@@ -10,7 +10,7 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.schema.model.LabelBuilder;
-import de.lichtflut.rb.web.metamodel.WSConstants;
+import de.lichtflut.rb.web.WSConstants;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import de.lichtflut.rb.web.metamodel.WSConstants;
  * @author Oliver Tigges
  */
 @SuppressWarnings("serial")
-public final class StaticLabelBuilders implements Serializable{
+public final class StaticLabelBuilders implements Serializable {
 
 	/**
 	 * Private Constructor.
@@ -43,6 +43,10 @@ public final class StaticLabelBuilders implements Serializable{
 			public String build(final RBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_FORENAME, WSConstants.HAS_SURNAME);
 			}
+			@Override
+			public String getExpression() {
+				return null;
+			}
 		};
 	}
 
@@ -55,6 +59,10 @@ public final class StaticLabelBuilders implements Serializable{
 			@Override
 			public String build(final RBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_ORGA_NAME);
+			}
+			@Override
+			public String getExpression() {
+				return null;
 			}
 		};
 	}
@@ -69,6 +77,10 @@ public final class StaticLabelBuilders implements Serializable{
 			public String build(final RBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_STREET, WSConstants.HAS_HOUSNR, WSConstants.HAS_CITY);
 			}
+			@Override
+			public String getExpression() {
+				return null;
+			}
 		};
 	}
 
@@ -82,6 +94,10 @@ public final class StaticLabelBuilders implements Serializable{
 			public String build(final RBEntity entity) {
 				return entity.toString();
 			}
+			@Override
+			public String getExpression() {
+				return null;
+			}
 		};
 	}
 
@@ -94,6 +110,10 @@ public final class StaticLabelBuilders implements Serializable{
 			@Override
 			public String build(final RBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_ZIPCODE, WSConstants.HAS_CITY, WSConstants.HAS_COUNTRY);
+			}
+			@Override
+			public String getExpression() {
+				return null;
 			}
 		};
 	}
@@ -131,12 +151,21 @@ public final class StaticLabelBuilders implements Serializable{
 		}
 		for (Object value : field.getValues()) {
 			if((field.isResourceReference()) && (value != null)){
-				RBEntity e = (RBEntity) value;
-				sb.append(e.getLabel());
+				sb.append(getResourceLabel(value));
 			}else{
 				sb.append(value);
 			}
 			sb.append(", ");
+		}
+	}
+	
+	private static String getResourceLabel(final Object ref) {
+		if (ref instanceof RBEntity) {
+			return ((RBEntity) ref).getLabel();
+		} else if (ref instanceof ResourceID) {
+			return ((ResourceID) ref).getQualifiedName().toURI();
+		} else {
+			throw new IllegalStateException("Unecpected class for resource reference: " + ref.getClass());
 		}
 	}
 }

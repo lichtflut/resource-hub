@@ -9,7 +9,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
-import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -54,7 +53,7 @@ public abstract class ResourceField extends CKComponent {
 		container.add(new AddValueAjaxButton("button", field) {
 			@Override
 			public void addField(final AjaxRequestTarget target, final Form<?> form) {
-				ResourcePickerField picker = createResourcePicker(field.getSlots());
+				EntityPickerField picker = createResourcePicker(field.getSlots());
 				picker.setOutputMarkupId(true);
 				view.add(picker);
 				target.add(form);
@@ -70,12 +69,10 @@ public abstract class ResourceField extends CKComponent {
 	 * @return - instance of resource picker
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private ResourcePickerField createResourcePicker(final int i) {
-		@SuppressWarnings("unused")
-		final ResourceID typeConstraint = extractTypeConstraint(field);
+	private EntityPickerField createResourcePicker(final int i) {
+		final ResourceID typeConstraint = getTypeConstraint(field);
 		final RBFieldModel model = new RBFieldModel(field, i);
-		final AutocompleteSource src = ResourcePickerField.findByValues();
-		final ResourcePickerField rp = new ResourcePickerField(view.newChildId(), model, src);
+		final EntityPickerField rp = new EntityPickerField(view.newChildId(), model, typeConstraint);
 		return rp;
 	}
 
@@ -84,7 +81,7 @@ public abstract class ResourceField extends CKComponent {
 	 * @param field - IRBField
 	 * @return the resourceTypeConstraint as an {@link ResourceID}
 	 */
-	private ResourceID extractTypeConstraint(final RBField field) {
+	private ResourceID getTypeConstraint(final RBField field) {
 		if(field.getDataType().equals(ElementaryDataType.RESOURCE)){
 			for (Constraint c : field.getConstraints()) {
 				if(c.isResourceTypeConstraint()){

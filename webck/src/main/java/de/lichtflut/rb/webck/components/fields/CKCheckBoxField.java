@@ -36,11 +36,6 @@ class CKCheckBoxField extends Panel {
 	public CKCheckBoxField(final String id, final RBField field) {
 		super(id);
 		IModel<List<Boolean>> listModel = new ListModel(field.getValues());
-
-		// Display at least one textfield.
-		if (field.getValues().isEmpty()) {
-			listModel.getObject().add(false);
-		}
 		add(createListView(listModel));
 	}
 
@@ -54,8 +49,7 @@ class CKCheckBoxField extends Panel {
 	 */
 	private ListView<Boolean> createListView(
 			final IModel<List<Boolean>> listModel) {
-		final ListView<Boolean> listView = new ListView<Boolean>("listView",
-				listModel) {
+		final ListView<Boolean> listView = new ListView<Boolean>("listView") {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
 			protected void populateItem(final ListItem<Boolean> item) {

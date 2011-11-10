@@ -19,6 +19,7 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.model.nodes.views.SNClass;
+import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.rb.core.schema.RBSchema;
 
@@ -75,12 +76,41 @@ public class SNResourceSchema extends ResourceView {
 	}
 
 	/**
-	 * Set the Class described by this schema:.
+	 * Set the Class described by this schema.
 	 * @param type The type node.
 	 * @param ctx The context.
 	 */
 	public void setDescribedType(final ResourceID type, final Context... ctx) {
 		SNOPS.replace(this, RBSchema.DESCRIBES, type, ctx);
+	}
+	
+	/**
+	 * @return true if there is a label expression.
+	 */
+	public boolean hasLabelExpression() {
+		return null != SNOPS.singleAssociation(this, RBSchema.HAS_LABEL_EXPRESSION);
+	}
+	
+	/**
+	 * Returns the textual expression for label building.
+	 * @return The class node.
+	 */
+	public SNText getLabelExpression() {
+		SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_LABEL_EXPRESSION);
+		if (node != null){
+			return node.asValue().asText();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Set the textual expression for label building.
+	 * @param expression The expression.
+	 * @param ctx The context.
+	 */
+	public void setLabelExpression(final SNText expression, final Context... ctx) {
+		SNOPS.replace(this, RBSchema.HAS_LABEL_EXPRESSION, expression, ctx);
 	}
 
 	/**

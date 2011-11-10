@@ -11,8 +11,10 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNScalar;
+import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.custom.LabelBuilderLocator;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -20,6 +22,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
@@ -38,21 +41,17 @@ import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 public class Schema2GraphBinding {
 	
 	private TypeDefinitionResolver resolver = new VoidTypeDefResovler();
+	private LabelBuilderLocator lbLocator;
 	
 	// -----------------------------------------------------
-	
-	/**
-	 * Default constructor.
-	 */
-	public Schema2GraphBinding() {
-	}
 	
 	/**
 	 * Constructor with special resolver.
 	 * @param resolver Resolver for persistent type definitions.
 	 */
-	public Schema2GraphBinding(final TypeDefinitionResolver resolver) {
+	public Schema2GraphBinding(final TypeDefinitionResolver resolver, final LabelBuilderLocator lbl) {
 		this.resolver = resolver;
+		this.lbLocator = lbl;
 	}
 	
 	// -----------------------------------------------------
@@ -73,6 +72,12 @@ public class Schema2GraphBinding {
 			decl.setCardinality(buildCardinality(snDecl));
 			decl.setTypeDefinition(toModelObject(snDecl.getTypeDefinition()));
 			schema.addPropertyDeclaration(decl);
+		}
+		if (snSchema.hasLabelExpression()) {
+			final String exp = snSchema.getLabelExpression().getStringValue();
+			schema.setLabelBuilder(new ExpressionBasedLabelBuilder(exp));
+		} else {
+			schema.setLabelBuilder(lbLocator.forType(schema.getDescribedType()));
 		}
 
 		return schema;
@@ -108,6 +113,9 @@ public class Schema2GraphBinding {
 		final SNResource node = new SNResource();
 		final SNResourceSchema sn = new SNResourceSchema(node, RBSchema.CONTEXT);
 		sn.setDescribedType(schema.getDescribedType(), RBSchema.CONTEXT);
+		if (schema.getLabelBuilder().getExpression() != null) {
+			sn.setLabelExpression(new SNText(schema.getLabelBuilder().getExpression()), RBSchema.CONTEXT);
+		}
 		
 		SNPropertyDeclaration predecessor = null;
 		for(PropertyDeclaration decl : schema.getPropertyDeclarations()) {

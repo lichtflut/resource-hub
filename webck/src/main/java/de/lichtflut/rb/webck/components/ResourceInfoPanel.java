@@ -35,7 +35,7 @@ public class ResourceInfoPanel extends Panel {
 	public ResourceInfoPanel(final String id, final RBEntity entity) {
 		super(id);
 		String title = entity.getLabel();
-		if(title.equals("")){
+		if("".equals(title)){
 			title = "Create new " + entity.getType();
 		}
 		add(new Label("label", title));

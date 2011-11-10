@@ -11,6 +11,8 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -32,6 +34,8 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  */
 public class EntityManagerImpl implements EntityManager {
 
+	private final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
+	
 	private final ServiceProvider provider;
 	
 	// -----------------------------------------------------
@@ -58,8 +62,12 @@ public class EntityManagerImpl implements EntityManager {
 			return null;
 		}
 		final ResourceID type = node.asEntity().getMainClass();
-		final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
-		return new RBEntityImpl(node, schema);
+		if (type == null) {
+			return resolveEntityReferences(new RBEntityImpl(node));
+		} else {
+			final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
+			return resolveEntityReferences(new RBEntityImpl(node, schema));	
+		}
 	}
 
 	/** 
@@ -72,7 +80,7 @@ public class EntityManagerImpl implements EntityManager {
 		final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
 		final List<ResourceNode> nodes = mc.createQueryManager().findByType(type);
 		for (ResourceNode n : nodes) {
-			result.add(new RBEntityImpl(n, schema));
+			result.add(resolveEntityReferences(new RBEntityImpl(n, schema)));
 		}
 		mc.close();
 		return result;
@@ -100,6 +108,9 @@ public class EntityManagerImpl implements EntityManager {
 		for (RBField field :entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.replace(node, field.getPredicate(), nodes);
+			if (field.isResourceReference()) {
+				resolveEntityReferences(field);
+			}
 		}
 		mc.close();
     }
@@ -130,16 +141,42 @@ public class EntityManagerImpl implements EntityManager {
 	private Collection<SemanticNode> toSemanticNodes(final RBField field) {
 		final Collection<SemanticNode> result = new ArrayList<SemanticNode>();
 		for (Object value : field.getValues()) {
+			logger.info(field.getPredicate() + " : " + value);
 			if (value == null) {
 				// ignore
 			} else if (field.isResourceReference()) {
-				final RBEntity ref = (RBEntity) value;
-				result.add(ref.getID());
+				final ResourceID ref = (ResourceID) value;
+				result.add(ref);
 			} else {
 				result.add(new SNValue(field.getDataType(), value));
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * @param field
+	 */
+	private RBEntityImpl resolveEntityReferences(final RBEntityImpl entity) {
+		for (RBField field : entity.getAllFields()) {
+			if (field.isResourceReference()) {
+				resolveEntityReferences(field);
+			}
+		}
+		return entity;
+	}
+	
+	/**
+	 * @param field
+	 */
+	private void resolveEntityReferences(final RBField field) {
+		for (int i = 0; i < field.getSlots(); i++) {
+			final Object current = field.getValue(i);
+			if (current != null && !(current instanceof RBEntity)) {
+				final ResourceID unresolved = (ResourceID) current;
+				field.setValue(i, find(unresolved));
+			}
+		}
 	}
 
 }
