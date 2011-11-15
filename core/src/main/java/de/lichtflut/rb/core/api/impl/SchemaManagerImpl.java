@@ -32,7 +32,6 @@ import de.lichtflut.rb.core.api.SchemaExporter;
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.RBSchema;
-import de.lichtflut.rb.core.schema.custom.LabelBuilderLocator;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
@@ -75,12 +74,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	 */
 	public SchemaManagerImpl(final ServiceProvider provider) {
 		this.provider = provider;
-		try {
-			this.binding = new Schema2GraphBinding(new TypeDefResolverImpl(), 
-					 (LabelBuilderLocator) Class.forName("de.lichtflut.rb.mock.MockLabelBuilderLocator").newInstance());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		this.binding = new Schema2GraphBinding(new TypeDefResolverImpl());
 	}
 	
 	// -----------------------------------------------------

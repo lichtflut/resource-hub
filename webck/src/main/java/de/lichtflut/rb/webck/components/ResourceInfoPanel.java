@@ -5,6 +5,8 @@ package de.lichtflut.rb.webck.components;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 
@@ -39,6 +41,15 @@ public class ResourceInfoPanel extends Panel {
 			title = "Create new " + entity.getType();
 		}
 		add(new Label("label", title));
+	}
+	
+	/**
+	 * @param id - wicket:id
+	 * @param entity - {@link RBEntity} which is to be displayed
+	 */
+	public ResourceInfoPanel(final String id, final IModel<RBEntity> model) {
+		super(id);
+		add(new Label("label", new PropertyModel(model, "label")));
 	}
 
 }

@@ -251,7 +251,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 			}
 			for (Object o : field.getValues()) {
 				if (o != null) {
-				final RBEntity e = (RBEntity) o;
+					final RBEntity e = (RBEntity) o;
 					valueList.add(createLinkForEntity(valueList, e));
 				} else {
 					valueList.add(new Label(valueList.newChildId(), ""));

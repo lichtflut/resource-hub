@@ -14,7 +14,6 @@ import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.rb.core.schema.RBSchema;
-import de.lichtflut.rb.core.schema.custom.LabelBuilderLocator;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -41,7 +40,6 @@ import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 public class Schema2GraphBinding {
 	
 	private TypeDefinitionResolver resolver = new VoidTypeDefResovler();
-	private LabelBuilderLocator lbLocator;
 	
 	// -----------------------------------------------------
 	
@@ -49,9 +47,8 @@ public class Schema2GraphBinding {
 	 * Constructor with special resolver.
 	 * @param resolver Resolver for persistent type definitions.
 	 */
-	public Schema2GraphBinding(final TypeDefinitionResolver resolver, final LabelBuilderLocator lbl) {
+	public Schema2GraphBinding(final TypeDefinitionResolver resolver) {
 		this.resolver = resolver;
-		this.lbLocator = lbl;
 	}
 	
 	// -----------------------------------------------------
@@ -76,8 +73,6 @@ public class Schema2GraphBinding {
 		if (snSchema.hasLabelExpression()) {
 			final String exp = snSchema.getLabelExpression().getStringValue();
 			schema.setLabelBuilder(new ExpressionBasedLabelBuilder(exp));
-		} else {
-			schema.setLabelBuilder(lbLocator.forType(schema.getDescribedType()));
 		}
 
 		return schema;

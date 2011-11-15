@@ -117,9 +117,12 @@ public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
 			}
 			boolean first = true;
 			for (Object value : field.getValues()) {
+				if (value == null) {
+					continue;
+				}
 				if((field.isResourceReference()) && (value != null)){
 					sb.append(getResourceLabel(value));
-				}else{
+				} else {
 					sb.append(value);
 				}
 				if (first) {

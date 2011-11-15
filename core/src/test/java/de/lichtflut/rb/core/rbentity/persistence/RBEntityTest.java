@@ -180,7 +180,7 @@ public final class RBEntityTest {
         e1.addField(newField);
 
         // Add entity as field
-        e.getField(new SimpleResourceID("http://lichtflut.de#hatKind")).addValue(e1);
+        e.getField(new SimpleResourceID("http://lichtflut.de#hatKind")).addValue(e1.getID());
 
         // store entities
         m.store(e);

@@ -39,11 +39,6 @@ public abstract class ResourceField extends CKComponent {
 	public ResourceField(final String id,final RBField field) {
 		super(id);
 		this.field = field;
-		buildComponent();
-	}
-
-	@Override
-	protected void initComponent(final CKValueWrapperModel model) {
 		WebMarkupContainer container = new WebMarkupContainer("container");
 		view = new RepeatingView("repeatingView");
 		for(int i=0; i < field.getSlots(); i++) {
@@ -61,6 +56,13 @@ public abstract class ResourceField extends CKComponent {
 			}
 		});
 		add(container);
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void initComponent(CKValueWrapperModel model) {
 	}
 
 	/**

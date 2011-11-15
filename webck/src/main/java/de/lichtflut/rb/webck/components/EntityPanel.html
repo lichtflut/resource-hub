@@ -1,0 +1,23 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+	<div class="entity-display">
+		<form wicket:id="form" class="generic-resource-detail-form">
+			<div wicket:id="infoPanel"></div>
+			<div class="feedback-panel" wicket:id="feedbackPanel"></div>
+			<div wicket:id="rows">
+				<div wicket:id="row" class="entity-field"></div>
+			</div>
+			<button type="button" wicket:id="save"><wicket:message key="button.save">[save]</wicket:message></button>
+		</form>
+	</div>
+</wicket:panel>
+</html>

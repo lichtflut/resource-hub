@@ -4,17 +4,19 @@
 package de.lichtflut.rb.web.entities;
 
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
-import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
-import de.lichtflut.rb.webck.components.CKComponent;
+import de.lichtflut.rb.webck.components.EntityPanel;
 import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
-import de.lichtflut.rb.webck.components.ResourceDetailPanel;
+import de.lichtflut.rb.webck.models.RBEntityModel;
 
 /**
  * <p>
@@ -47,13 +49,10 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 		super("Entity Details", params);
 		final StringValue idParam = params.get(PARAM_RESOURCE_ID);
 		final StringValue typeParam = params.get(PARAM_RESOURCE_Type);
-		final EntityManager em = getServiceProvider().getEntityManager();
 		if (!idParam.isEmpty()) {
-			final RBEntity entity = em.find(new SimpleResourceID(idParam.toString()));
-			initView(entity);
+			initView(modelFor(new SimpleResourceID(idParam.toString()), null));
 		} else if (!typeParam.isEmpty()) {
-			final RBEntity entity = em.create(new SimpleResourceID(typeParam.toString()));
-			initView(entity);
+			initView(modelFor(null, new SimpleResourceID(typeParam.toString())));
 		}
 	}
 
@@ -63,32 +62,35 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 	 */
 	public EntityDetailPage(final RBEntity entity) {
 		super("Entity Details (Mock Mode)");
-		initView(entity);
+		initView(Model.of(entity));
+	}
+	
+	@Override
+	public FeedbackPanel getFeedbackContainer() {
+		return (FeedbackPanel) get("feedback");
 	}
 	
 	// -----------------------------------------------------
 	
-	protected void initView(RBEntity entity) {
+	protected void initView(final IModel<RBEntity> model) {
 		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
-		add(new ResourceDetailPanel("mockEmployee", entity){
+		add(new EntityPanel("entity", model) {
 			@Override
-			public CKComponent setViewMode(final ViewMode mode) {
-				this.setEnabled(false);
-				return null;
-			}
-			@Override
-			public ServiceProvider getServiceProvider() {
-				return EntityDetailPage.this.getServiceProvider();
+			public void onSave() {
+				getServiceProvider().getEntityManager().store(model.getObject());
 			}
 		});
 	}
 	
 	// -----------------------------------------------------
 
-	@Override
-	public FeedbackPanel getFeedbackContainer() {
-		return (FeedbackPanel) get("feedback");
+	private IModel<RBEntity> modelFor(final ResourceID id, final ResourceID type) {
+		return new RBEntityModel(id, type) {
+			@Override
+			protected ServiceProvider getServiceProvider() {
+				return EntityDetailPage.this.getServiceProvider();
+			}
+		};
 	}
-
 
 }
