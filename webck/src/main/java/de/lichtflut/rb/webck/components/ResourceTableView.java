@@ -16,16 +16,17 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SNValue;
 
+import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behavior.CKBehavior;
+import de.lichtflut.rb.webck.components.editor.EntityPanel;
 
 /**
  * <p>
@@ -296,12 +297,10 @@ public abstract class ResourceTableView extends CKComponent {
 				link = new Link("featureLink") {
 					@Override
 					public void onClick() {
-						ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID, entity, false) {
+						ResourceTableView.this.replaceWith(new EntityPanel(componentID, Model.of(entity)) {
 							@Override
-							public CKComponent setViewMode(final ViewMode mode) {return null;}
-							@Override
-							public ServiceProvider getServiceProvider(){
-								return ResourceTableView.this.getServiceProvider();
+							public EntityManager getEntityManager() {
+								return getServiceProvider().getEntityManager();
 							}
 						});
 					}
@@ -406,59 +405,6 @@ public abstract class ResourceTableView extends CKComponent {
 		indexTableHeader(entites);
 		addHeader();
 		addRows(entites);
-		addNewEntityLink();
 	}
 
-	/**
-	 * Adds a {@link RepeatingView} to this {@link ResourceTableView} containing a
-	 * {@link CKLink} for each RDF:TYPE contained by this View.
-	 * With this Link a new {@link RBEntity} can be created for that type
-	 */
-	private void addNewEntityLink() {
-		ListView<ResourceID> view = new ListView<ResourceID>("addEntity",getAllTypes()) {
-			@Override
-			protected void populateItem(final ListItem<ResourceID> item) {
-				final ResourceID type = item.getModelObject();
-				CKLink link = new CKLink("addEntityLink", "Add "+ type.getName(), CKLinkType.CUSTOM_BEHAVIOR);
-				link.addBehavior(CKLink.ON_LINK_CLICK_BEHAVIOR,new CKBehavior() {
-					@Override
-					public Object execute(final Object... objects) {
-						RBEntity entity = new RBEntityImpl(
-							ResourceTableView.this.getServiceProvider()
-								.getSchemaManager()
-									.findSchemaForType(type));
-							ResourceTableView.this.replaceWith(new ResourceDetailPanel(componentID,
-								entity, false) {
-								@Override
-								public CKComponent setViewMode(final ViewMode model){
-									return null;
-								}
-								@Override
-								public ServiceProvider getServiceProvider() {
-									return ResourceTableView.this
-										.getServiceProvider();
-								}
-							});
-						return null;
-					}
-				});
-				item.add(link);
-			};
-		};
-		this.add(view);
-	}
-
-	/**
-	 * Extracts all types as {@link ResourceID}s from the {@link RBEntity}s displayed by this {@link ResourceTableView}.
-	 * @return a list of all types contained by this table
-	 */
-	private List<ResourceID> getAllTypes() {
-		List<ResourceID> types = new ArrayList<ResourceID>();
-		for(RBEntity e : entites){
-			if(!types.contains(e.getType())){
-				types.add(e.getType());
-			}
-		}
-		return types;
-	}
 }

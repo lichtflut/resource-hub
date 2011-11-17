@@ -3,22 +3,33 @@
  */
 package de.lichtflut.rb.web.entities;
 
+import org.apache.commons.lang3.Validate;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.webck.behavior.CKBehavior;
-import de.lichtflut.rb.webck.components.CKComponent;
 import de.lichtflut.rb.webck.components.ResourceTableView;
+import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
+import de.lichtflut.rb.webck.components.listview.EntityListPanel;
+import de.lichtflut.rb.webck.components.listview.ReferenceLink;
+import de.lichtflut.rb.webck.models.RBEntityListModel;
 
 /**
- * SamplePage for {@link ResourceTableView}.
+ * <p>
+ * 	SamplePage for {@link ResourceTableView}.
+ * </p>
  *
- * Created: Aug 18, 2011
+ * <p>
+ * 	Created: Aug 18, 2011
+ * </p>
  *
  * @author Ravi Knox
  */
@@ -27,19 +38,12 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 
 	/**
 	 * Constructor.
-	 */
-	public EntityOverviewPage() {
-		super("Default View (Mock Mode)");
-		initTable(null);
-	}
-
-	/**
-	 * Constructor.
 	 * @param params -
 	 */
 	public EntityOverviewPage(final PageParameters params) {
-		super("Sample Entities (Mock Mode)");
-		StringValue uri = params.get("type");
+		super("Entity Overview");
+		final StringValue uri = params.get("type");
+		Validate.notBlank(uri.toString(), "No type specified.");
 		initTable(new SimpleResourceID(uri.toString()));
 	}
 	
@@ -47,26 +51,33 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void initTable(final ResourceID type) {
-		final ResourceTableView view =
-			new ResourceTableView("mockEmployeeView", EntityOverviewPage.this.getServiceProvider().getEntityManager().findByType(type)){
-			@Override
-			public ServiceProvider getServiceProvider() {
+		final RBEntityListModel model = new RBEntityListModel(type) {
+			protected ServiceProvider getServiceProvider() {
 				return EntityOverviewPage.this.getServiceProvider();
 			}
-			@Override
-			public CKComponent setViewMode(final ViewMode mode) {return null;}
+		};
+		
+		final EntityListPanel list = new EntityListPanel("listView", model, ColumnConfiguration.defaultConfig()) {
 			
 			@Override
-			protected void onShowDetails(ResourceID rid) {
-				final PageParameters params = new PageParameters();
-				params.add(EntityDetailPage.PARAM_RESOURCE_ID, rid);
-				setResponsePage(EntityDetailPage.class, params);
+			protected Component createViewAction(final String componentId, final RBEntity entity) {
+				return new ReferenceLink(componentId, EntityDetailPage.class, entity.getID(), new ResourceModel("action.view"));
 			}
+			
+			@Override
+			protected Component createEditAction(final String componentId, final RBEntity entity) {
+				return new ReferenceLink(componentId, EntityDetailPage.class, entity.getID(), new ResourceModel("action.edit"));
+			}
+			
+			@Override
+			protected void onDelete(final RBEntity entity, final AjaxRequestTarget target) {
+				getServiceProvider().getEntityManager().delete(entity);
+				model.reset();
+				target.add(this);
+			}
+			
 		};
-		view.addBehavior(ResourceTableView.SHOW_DETAILS, CKBehavior.VOID_BEHAVIOR);
-		view.addBehavior(ResourceTableView.UPDATE_ROW_ITEM, CKBehavior.VOID_BEHAVIOR);
-		view.addBehavior(ResourceTableView.DELETE_ROW_ITEM, CKBehavior.VOID_BEHAVIOR);
-		add(view);
+		add(list);
 		
 		final PageParameters params = new PageParameters();
 		params.add("type", type.getQualifiedName().toURI());

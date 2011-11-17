@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components;
+package de.lichtflut.rb.webck.components.editor;
 
 import java.util.List;
 
@@ -15,8 +15,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
+import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.webck.components.ResourceInfoPanel;
 
 /**
  * <p>
@@ -63,7 +65,7 @@ public abstract class EntityPanel extends Panel {
 		form.add(new AjaxFallbackButton("save", form) {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				onSave();
+				getEntityManager().store(model.getObject());
 				target.add(form);
 			}
 			
@@ -76,6 +78,8 @@ public abstract class EntityPanel extends Panel {
 		add(form);
 	}
 	
-	public abstract void onSave();
+	// ----------------------------------------------------
+	
+	public abstract EntityManager getEntityManager();
 
 }

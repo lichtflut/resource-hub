@@ -10,6 +10,8 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.webck.conversion.RBEntityConverter;
 import de.lichtflut.rb.webck.conversion.ResourceIDConverter;
 import de.lichtflut.rb.webck.conversion.SNTextConverter;
 import de.lichtflut.rb.webck.conversion.SNTimeSpecConverter;
@@ -36,6 +38,7 @@ public abstract class AbstractResourceBrowserApplication extends WebApplication 
 		locator.set(SNText.class, new SNTextConverter());
 		locator.set(SNTimeSpec.class, new SNTimeSpecConverter());
 		locator.set(ResourceID.class, new ResourceIDConverter());
+		locator.set(RBEntity.class, new RBEntityConverter());
 		return locator;
 
 	}

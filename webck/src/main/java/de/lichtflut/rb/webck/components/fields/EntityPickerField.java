@@ -28,15 +28,6 @@ public class EntityPickerField extends DataPickerField<ResourceID> {
 	 * @param model
 	 * @param source
 	 */
-	public EntityPickerField(final String id, final IModel<ResourceID> model) {
-		this(id, model, null);
-	}
-	
-	/**
-	 * @param id
-	 * @param model
-	 * @param source
-	 */
 	public EntityPickerField(final String id, final IModel<ResourceID> model, final ResourceID type) {
 		super(id, model, toDisplayModel(model), findEntity(type));
 		setType(ResourceID.class);

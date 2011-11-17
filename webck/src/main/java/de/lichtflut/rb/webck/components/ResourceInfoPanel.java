@@ -49,7 +49,7 @@ public class ResourceInfoPanel extends Panel {
 	 */
 	public ResourceInfoPanel(final String id, final IModel<RBEntity> model) {
 		super(id);
-		add(new Label("label", new PropertyModel(model, "label")));
+		add(new Label("label", new PropertyModel<String>(model, "label")));
 	}
 
 }

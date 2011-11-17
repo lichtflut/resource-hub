@@ -17,6 +17,8 @@ import org.odlabs.wiquery.ui.autocomplete.AutocompleteJavaScriptResourceReferenc
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 
+import de.lichtflut.rb.core.entity.RBEntity;
+
 /**
  * <p>
  *  Component for picking of data.
@@ -153,11 +155,13 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 			public void detach() {
 			}
 
+			@SuppressWarnings("unchecked")
 			public T getObject() {
-				if (object != null) {
-					return object;
+				final T obj = object == null ? model.getObject() : object;
+				if (obj instanceof RBEntity) {
+					return (T) ((RBEntity)obj).getID();
 				} else {
-					return model.getObject();
+					return obj;
 				}
 			}
 

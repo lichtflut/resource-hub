@@ -53,8 +53,6 @@ public abstract class CKFormRowItem extends CKComponent {
 				public ServiceProvider getServiceProvider() {
 					return CKFormRowItem.this.getServiceProvider();
 				}
-				@Override
-				public CKComponent setViewMode(final ViewMode mode) {return null;}
 			});
 			break;
 		default:

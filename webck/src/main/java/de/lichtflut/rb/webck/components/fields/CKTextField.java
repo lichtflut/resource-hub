@@ -14,7 +14,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.webck.behaviors.DatePickerBehavior;
-import de.lichtflut.rb.webck.models.RBFieldModel;
+import de.lichtflut.rb.webck.models.RBFieldValueModel;
 
 /**
  * This field displays a String in a simple {@link TextField}.
@@ -67,7 +67,7 @@ class CKTextField extends Panel {
 	// ------------------------------------------------------------
 
 	/**
-	 * Creates a {@link TextField} with appropriate {@link RBFieldModel} and value.
+	 * Creates a {@link TextField} with appropriate {@link RBFieldValueModel} and value.
 	 * @param id The textfields ID.
 	 * @param i - marking the occurrence of the displayed value in {@link RBField}
 	 * @return - instance of {@link TextField}
@@ -77,16 +77,16 @@ class CKTextField extends Panel {
 		final TextField textField;
 		switch (field.getDataType()) {
 			case DATE:
-				textField = new TextField(id,new RBFieldModel(field, i));
+				textField = new TextField(id,new RBFieldValueModel(field, i));
 				textField.add(new DatePickerBehavior());
 				textField.setType(Date.class);
 			break;
 			case INTEGER:
-				textField = new TextField(id, new RBFieldModel(field, i));
+				textField = new TextField(id, new RBFieldValueModel(field, i));
 				textField.setType(Integer.class);
 				break;
 			default:
-				textField = new TextField(id, new RBFieldModel(field, i));
+				textField = new TextField(id, new RBFieldValueModel(field, i));
 				textField.setType(String.class);
 		}
 		textField.setOutputMarkupId(true);

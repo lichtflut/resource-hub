@@ -8,18 +8,20 @@ import org.apache.wicket.model.IModel;
 import de.lichtflut.rb.core.entity.RBField;
 
 /**
- * [TODO Insert description here.
  * <p>
- * This Model is not detachable.
- *</p>
- * Created: Aug 24, 2011
+ * 	Model representing one value of an RBField.
+ * </p>
+ * 
+ * <p>
+ * 	Created: Aug 24, 2011
+ * </p>
  *
  * @author Ravi Knox
  *
  * @param <T> -
  */
 @SuppressWarnings("serial")
-public class RBFieldModel<T> implements IModel<T> {
+public class RBFieldValueModel<T> implements IModel<T> {
 
 	private final RBField field;
 	
@@ -36,7 +38,7 @@ public class RBFieldModel<T> implements IModel<T> {
 	 * @param field - instance of {@link RBField}
 	 * @param index - index of the value in {@link RBField}
 	 */
-	public RBFieldModel(final RBField field, final int index){
+	public RBFieldValueModel(final RBField field, final int index){
 		this.field = field;
 		this.index = index;
 	}

@@ -115,11 +115,6 @@ public final class CKBehaviorTest extends TestCase{
 			return null;
 		}
 
-		@Override
-		public CKComponent setViewMode(final ViewMode mode){
-			return null;
-		}
-
 		/**
 		 * process the defined behaviors.
 		 */

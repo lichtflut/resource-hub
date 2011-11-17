@@ -132,10 +132,4 @@ public class NavigationBar extends CKComponent implements NavigationNode {
 		return null;
 	}
 
-	@Override
-	public CKComponent setViewMode(final ViewMode mode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

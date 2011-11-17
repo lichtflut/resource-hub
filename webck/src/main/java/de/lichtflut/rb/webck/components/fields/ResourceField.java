@@ -13,7 +13,7 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.webck.components.CKComponent;
-import de.lichtflut.rb.webck.models.RBFieldModel;
+import de.lichtflut.rb.webck.models.RBFieldValueModel;
 
 
 /**
@@ -66,14 +66,14 @@ public abstract class ResourceField extends CKComponent {
 	}
 
 	/**
-	 * Creates a resource picker field with appropriate {@link RBFieldModel} and value.
+	 * Creates a resource picker field with appropriate {@link RBFieldValueModel} and value.
 	 * @param i - marking the occurrence of the displayed value in {@link RBField}
 	 * @return - instance of resource picker
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private EntityPickerField createResourcePicker(final int i) {
 		final ResourceID typeConstraint = getTypeConstraint(field);
-		final RBFieldModel model = new RBFieldModel(field, i);
+		final RBFieldValueModel model = new RBFieldValueModel(field, i);
 		final EntityPickerField rp = new EntityPickerField(view.newChildId(), model, typeConstraint);
 		return rp;
 	}

@@ -162,11 +162,6 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 		return null;
 	}
 
-	@Override
-	public CKComponent setViewMode(final ViewMode mode) {
-		return null;
-	}
-
 	/**
 	 * Checks whether node is odd or even and sets the "class" attribute accordingly.
 	 * @param node - {@link NavigationNode}

@@ -23,7 +23,7 @@ import de.lichtflut.rb.core.entity.RBField;
  * @author Oliver Tigges
  */
 @SuppressWarnings("serial")
-public class RBFieldListModel implements IModel<List<RBFieldModel<?>>> {
+public class RBFieldValuesListModel implements IModel<List<RBFieldValueModel<?>>> {
 
 	private final IModel<RBField> model;
 	
@@ -35,7 +35,7 @@ public class RBFieldListModel implements IModel<List<RBFieldModel<?>>> {
 	 * </p>
 	 * @param model - model of {@link RBField}
 	 */
-	public RBFieldListModel(final IModel<RBField> model){
+	public RBFieldValuesListModel(final IModel<RBField> model){
 		this.model = model;
 	}
 	
@@ -45,14 +45,14 @@ public class RBFieldListModel implements IModel<List<RBFieldModel<?>>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<RBFieldModel<?>> getObject() {
+	public List<RBFieldValueModel<?>> getObject() {
 		if (model == null || model.getObject() == null) {
 			return null;
 		} 
 		final RBField rbField = model.getObject();
-		final List<RBFieldModel<?>> result = new ArrayList<RBFieldModel<?>>(rbField.getSlots());
+		final List<RBFieldValueModel<?>> result = new ArrayList<RBFieldValueModel<?>>(rbField.getSlots());
 		for (int i=0; i < rbField.getSlots(); i++) {
-			result.add(new RBFieldModel<Object>(rbField, i));
+			result.add(new RBFieldValueModel<Object>(rbField, i));
 		}
 		return result;
 	}
@@ -61,7 +61,7 @@ public class RBFieldListModel implements IModel<List<RBFieldModel<?>>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setObject(final List<RBFieldModel<?>> object) {
+	public void setObject(final List<RBFieldValueModel<?>> object) {
 		throw new UnsupportedOperationException("Value may not be set.");
 	}
 

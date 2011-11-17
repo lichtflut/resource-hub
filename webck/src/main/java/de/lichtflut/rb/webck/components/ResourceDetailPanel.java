@@ -30,7 +30,7 @@ import de.lichtflut.rb.core.entity.impl.RBFieldImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behavior.CKBehavior;
 import de.lichtflut.rb.webck.components.fields.CKFormRowItem;
-import de.lichtflut.rb.webck.models.RBFieldModel;
+import de.lichtflut.rb.webck.models.RBFieldValueModel;
 
 /**
  * <p>
@@ -89,10 +89,6 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 				public ServiceProvider getServiceProvider() {
 					return ResourceDetailPanel.this.getServiceProvider();
 				}
-				@Override
-				public CKComponent setViewMode(final ViewMode mode) {
-					return null;
-				}
 			});
 		}
 	}
@@ -119,8 +115,8 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 			int index = (entity.getAllFields().size());
 			WebMarkupContainer container = new WebMarkupContainer("container");
 			index++;
-			container.add(new TextField<String>("key", new RBFieldModel<String>(field, index)));
-			container.add(new TextField<String>("value", new RBFieldModel<String>(field, index)));
+			container.add(new TextField<String>("key", new RBFieldValueModel<String>(field, index)));
+			container.add(new TextField<String>("value", new RBFieldValueModel<String>(field, index)));
 			add(container);
 		}
 
@@ -226,10 +222,6 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 				public void onClick() {
 					ResourceDetailPanel.this.replaceWith(new ResourceDetailPanel(componentID, entity, false) {
 						@Override
-						public CKComponent setViewMode(final ViewMode mode) {
-							return null;
-						}
-						@Override
 						public ServiceProvider getServiceProvider() {
 							return ResourceDetailPanel.this.getServiceProvider();
 						}
@@ -271,10 +263,6 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 				@Override
 				public Object execute(final Object... objects) {
 					ResourceDetailPanel.this.replaceWith(new ResourceDetailPanel(componentID, e) {
-						@Override
-						public CKComponent setViewMode(final ViewMode mode) {
-							return null;
-						}
 						@Override
 						public ServiceProvider getServiceProvider() {
 							return ResourceDetailPanel.this.getServiceProvider();

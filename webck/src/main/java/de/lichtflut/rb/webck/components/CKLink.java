@@ -146,6 +146,8 @@ public class CKLink extends CKComponent{
 		}
 		buildComponent();
 	}
+	
+	// ----------------------------------------------------
 
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
@@ -168,9 +170,4 @@ public class CKLink extends CKComponent{
 		return null;
 	}
 
-	@Override
-	public CKComponent setViewMode(final ViewMode mode) {
-		// Do nothing
-		return null;
-	}
 }

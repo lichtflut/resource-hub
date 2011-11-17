@@ -101,9 +101,8 @@ public interface RBField{
 	Object getValue(int index);
 	
 	/**
-	 * Returns the values of this RBField as unmodifiable list.
+	 * Returns all non null values of this RBField as unmodifiable list.
 	 * They can be of any type from String to Date, depending on the RBSchema.
-	 * The list may contain null values.
 	 * @return Value of this field as a list
 	 */
 	List<Object> getValues();

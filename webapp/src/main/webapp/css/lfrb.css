@@ -62,6 +62,14 @@ div#main {
     margin: 10px 2px;
 }
 
+/* STRUCTURE */
+
+.ck-resource-panel{
+	background-color: #F5F5F5;
+    margin: 10px auto;
+    padding: 5px;
+}
+
 
 /* LINKS */
 
@@ -131,7 +139,11 @@ div.entity-field .field-label {
 }
 
 div.entity-field .field-values {
-    width:320px;
+    float:left;
+    margin: 0 5px 2px 0;
+}
+
+div.entity-field .field-operators {
     float:left;
 }
 
@@ -151,6 +163,12 @@ div.list-browser {
 
 div.list-browser ul {
 	list-style: none;
+}
+
+/* ENTITY LIST-VIEW */
+
+table.entity-list {
+	width:700px;
 }
 
 /* RESOURCE PICKER */

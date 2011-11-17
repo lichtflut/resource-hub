@@ -181,18 +181,6 @@ public abstract class CKComponent extends Panel {
 	// -----------------------------------------------------
 
 	/**
-	 * Sets the view mode for the component. This method must be overridden.
-	 * If the ViewMode is not supported, an {@link UnsupportedOperationException} is raised.
-	 * @param mode -
-	 * @return -
-	 */
-	public CKComponent setViewMode(final ViewMode mode) {
-		return this;
-	}
-
-	// -----------------------------------------------------
-
-	/**
 	 * Adds a behavior to a component.
 	 * @param key - Name of the behavior
 	 * @param behavior - Desired behavior

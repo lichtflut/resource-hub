@@ -120,15 +120,15 @@ public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
 				if (value == null) {
 					continue;
 				}
+				if (first) {
+					first = false;
+				} else {
+					sb.append(" ");
+				}
 				if((field.isResourceReference()) && (value != null)){
 					sb.append(getResourceLabel(value));
 				} else {
 					sb.append(value);
-				}
-				if (first) {
-					first = false;
-				} else {
-					sb.append(", ");
 				}
 			}
 		}

@@ -10,8 +10,13 @@
 </wicket:head>
 <wicket:panel>
     <div wicket:id="label" class="field-label">[Label]</div>
-    <div wicket:id="values" class="field-values">
-        <div wicket:id="valuefield"></div>
+    <div class="field-values">
+    	<wicket:container wicket:id="values">
+        	<div wicket:id="valuefield"></div>
+        </wicket:container>
+    </div>
+    <div class="field-operations">
+    	<a wicket:id="addValueLink"><span class="add-value-link">+</span></a>
     </div>
     
     <wicket:fragment wicket:id="textInput">

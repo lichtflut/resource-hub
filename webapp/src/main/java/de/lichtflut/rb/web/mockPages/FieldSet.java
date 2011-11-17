@@ -13,7 +13,7 @@ import org.arastreju.sge.model.ElementaryDataType;
 
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
-import de.lichtflut.rb.webck.models.RBFieldModel;
+import de.lichtflut.rb.webck.models.RBFieldValueModel;
 /**
  * [TODO Insert description here.
  *
@@ -36,7 +36,7 @@ public class FieldSet extends Panel {
 		setOutputMarkupId(true);
 		view = new RepeatingView("valueField");
 		for (Object o : field.getValues()) {
-			view.add(new TextField(view.newChildId(),new RBFieldModel(field, 0), getClass(field.getDataType())));
+			view.add(new TextField(view.newChildId(),new RBFieldValueModel(field, 0), getClass(field.getDataType())));
 		}
 
 		add(new Label("label", field.getLabel()));
@@ -45,7 +45,7 @@ public class FieldSet extends Panel {
 
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-				view.add(new TextField(view.newChildId(), new RBFieldModel(field, 0),
+				view.add(new TextField(view.newChildId(), new RBFieldValueModel(field, 0),
 						FieldSet.this.getClass(field.getDataType())));
 				target.add(FieldSet.this);
 			}

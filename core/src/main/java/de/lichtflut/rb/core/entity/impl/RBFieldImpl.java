@@ -173,7 +173,13 @@ public class RBFieldImpl implements RBField, Serializable {
 	
 	@Override
 	public List<Object> getValues() {
-		return Collections.unmodifiableList(values);
+		final List<Object> copy = new ArrayList<Object>(slots);
+		for (Object object : values) {
+			if (object != null) {
+				copy.add(object);
+			}
+		}
+		return copy;
 	}
 
 	@Override
@@ -190,7 +196,7 @@ public class RBFieldImpl implements RBField, Serializable {
 	 */
 	@Override
 	public String toString(){
-		return this.getLabel();
+		return values.toString();
 	}
 	
 	// -----------------------------------------------------
@@ -199,12 +205,27 @@ public class RBFieldImpl implements RBField, Serializable {
 	 * @param givenValues
 	 */
 	protected void initSlots(final Set<SemanticNode> givenValues) {
+		this.slots = givenValues.size();	
 		if (givenValues == null || givenValues.isEmpty()) {
 			this.values.add(null);
 			this.slots = 1;
+		} else if (isResourceReference()) {
+			addReferences(givenValues);
 		} else {
-			this.values.addAll(givenValues);
-			this.slots = givenValues.size();	
+			addValues(givenValues);
+		}
+	}
+	
+	protected void addReferences(final Set<SemanticNode> givenValues) {
+		for (SemanticNode sn : givenValues) {
+			// force exception if node is no resource.
+			this.values.add(sn.asResource());
+		}
+	}
+	
+	protected void addValues(final Set<SemanticNode> givenValues) {
+		for (SemanticNode sn : givenValues) {
+			this.values.add(sn.asValue().getValue());
 		}
 	}
 

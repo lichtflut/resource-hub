@@ -11,11 +11,12 @@ import org.apache.wicket.util.string.StringValue;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
+import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
-import de.lichtflut.rb.webck.components.EntityPanel;
 import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
+import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.models.RBEntityModel;
 
 /**
@@ -76,8 +77,8 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
 		add(new EntityPanel("entity", model) {
 			@Override
-			public void onSave() {
-				getServiceProvider().getEntityManager().store(model.getObject());
+			public EntityManager getEntityManager() {
+				return getServiceProvider().getEntityManager();
 			}
 		});
 	}
