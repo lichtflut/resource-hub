@@ -6,13 +6,11 @@ package de.lichtflut.rb.webck.application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.webck.conversion.RBEntityConverter;
-import de.lichtflut.rb.webck.conversion.ResourceIDConverter;
+import de.lichtflut.rb.core.entity.RBEntityReference;
+import de.lichtflut.rb.webck.conversion.RBEntityReferenceConverter;
 import de.lichtflut.rb.webck.conversion.SNTextConverter;
 import de.lichtflut.rb.webck.conversion.SNTimeSpecConverter;
 
@@ -37,8 +35,7 @@ public abstract class AbstractResourceBrowserApplication extends WebApplication 
 		final ConverterLocator locator = new ConverterLocator();
 		locator.set(SNText.class, new SNTextConverter());
 		locator.set(SNTimeSpec.class, new SNTimeSpecConverter());
-		locator.set(ResourceID.class, new ResourceIDConverter());
-		locator.set(RBEntity.class, new RBEntityConverter());
+		locator.set(RBEntityReference.class, new RBEntityReferenceConverter());
 		return locator;
 
 	}

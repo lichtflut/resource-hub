@@ -8,7 +8,7 @@ import org.apache.wicket.util.crypt.Base64;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 
-import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBEntityReference;
 
 /**
  * <p>
@@ -21,16 +21,16 @@ import de.lichtflut.rb.core.entity.RBEntity;
  *
  * @author Oliver Tigges
  */
-public class EntityPickerField extends DataPickerField<ResourceID> {
+public class EntityPickerField extends DataPickerField<RBEntityReference> {
 
 	/**
 	 * @param id
 	 * @param model
 	 * @param source
 	 */
-	public EntityPickerField(final String id, final IModel<ResourceID> model, final ResourceID type) {
+	public EntityPickerField(final String id, final IModel<RBEntityReference> model, final ResourceID type) {
 		super(id, model, toDisplayModel(model), findEntity(type));
-		setType(ResourceID.class);
+		setType(RBEntityReference.class);
 	}
 
 	// -----------------------------------------------------
@@ -45,28 +45,30 @@ public class EntityPickerField extends DataPickerField<ResourceID> {
 	}
 	
 	/**
-	 * @param model
-	 * @return
+	 * @param original
+	 * @return A corresponding display model.
 	 */
-	private static IModel<String> toDisplayModel(final IModel<?> model) {
+	private static IModel<String> toDisplayModel(final IModel<RBEntityReference> original) {
 		return new IModel<String>() {
+			
+			private String value;
 
 			public void detach() {
 			}
 
 			public String getObject() {
-				if (model.getObject() == null) {
-					return "";
-				} 
-				final Object obj = model.getObject();
-				if (obj instanceof RBEntity) {
-					return ((RBEntity) obj).getLabel();
-				} else {
-					return obj.toString();
+				if (value == null) {
+					if (original.getObject() != null) {
+						value = original.getObject().toString();
+					} else {
+						value = "";
+					}
 				}
+				return value;
 			}
 
-			public void setObject(String object) {
+			public void setObject(final String object) {
+				value = object;
 			}
 		};
 	}

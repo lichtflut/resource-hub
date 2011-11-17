@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.schema.model.LabelBuilder;
@@ -160,10 +161,13 @@ public final class StaticLabelBuilders implements Serializable {
 	}
 	
 	private static String getResourceLabel(final Object ref) {
-		if (ref instanceof RBEntity) {
-			return ((RBEntity) ref).getLabel();
-		} else if (ref instanceof ResourceID) {
-			return ((ResourceID) ref).getQualifiedName().toURI();
+		if (ref instanceof RBEntityReference) {
+			final RBEntityReference entityReference = (RBEntityReference) ref;
+			if (entityReference.isResolved()) {
+				return entityReference.getEntity().getLabel();
+			} else {
+				return entityReference.getQualifiedName().toURI();
+			}
 		} else {
 			throw new IllegalStateException("Unecpected class for resource reference: " + ref.getClass());
 		}

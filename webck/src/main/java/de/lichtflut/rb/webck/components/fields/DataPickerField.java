@@ -61,6 +61,7 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		add(hidden);
 		
 		final Autocomplete<String> display = new Autocomplete<String>("display", displayModel);
+		display.setType(String.class);
 		display.setOutputMarkupId(true);
 		final String displayMarkupID = display.getMarkupId();
 		display.setSource(source);
@@ -69,7 +70,7 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 				ctx.append("if (ui.item) {");
 				ctx.append("  $('#" +  hiddenMarkupId + "').attr('value', ui.item.id);");
 				ctx.append("  $('#" +  displayMarkupID + "').attr('value', ui.item.label);");
-				ctx.append("} else { alert ('nothing selected')};");
+				ctx.append("} else { alert ('internal error nothing selected')};");
 				ctx.append("return false;");
 			}
 		});
@@ -116,6 +117,11 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	@SuppressWarnings("unchecked")
 	protected FormComponent<T> getValueField() {
 		return (FormComponent<T>) get("acValue");
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected FormComponent<T> getDisplayField() {
+		return (FormComponent<T>) get("display");
 	}
 
 	// -----------------------------------------------------

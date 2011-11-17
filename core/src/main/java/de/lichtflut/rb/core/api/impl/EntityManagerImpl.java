@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -55,19 +56,7 @@ public class EntityManagerImpl implements EntityManager {
 	 */
 	@Override
 	public RBEntityImpl find(final ResourceID resourceID) {
-		final ModelingConversation mc = provider.getArastejuGate().startConversation();
-		final ResourceNode node = mc.findResource(resourceID.getQualifiedName());
-		mc.close();
-		if (node == null) {
-			return null;
-		}
-		final ResourceID type = node.asEntity().getMainClass();
-		if (type == null) {
-			return resolveEntityReferences(new RBEntityImpl(node));
-		} else {
-			final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
-			return resolveEntityReferences(new RBEntityImpl(node, schema));	
-		}
+		return find(resourceID, true);
 	}
 
 	/** 
@@ -134,6 +123,30 @@ public class EntityManagerImpl implements EntityManager {
 	
 	// -----------------------------------------------------
 	
+	/** 
+	 * {@inheritDoc}
+	 */
+	private RBEntityImpl find(final ResourceID resourceID, final boolean cascadeResolving) {
+		final ModelingConversation mc = provider.getArastejuGate().startConversation();
+		final ResourceNode node = mc.findResource(resourceID.getQualifiedName());
+		mc.close();
+		if (node == null) {
+			return null;
+		}
+		final ResourceID type = node.asEntity().getMainClass();
+		final RBEntityImpl entity;
+		if (type == null) {
+			entity = new RBEntityImpl(node);
+		} else {
+			final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
+			entity = new RBEntityImpl(node, schema);
+		}
+		if (cascadeResolving) {
+			resolveEntityReferences(entity);
+		}
+		return entity;
+	}
+	
 	/**
 	 * @param field The field to be translated.
 	 * @return A collection of semantic nodes.
@@ -170,11 +183,10 @@ public class EntityManagerImpl implements EntityManager {
 	 * @param field
 	 */
 	private void resolveEntityReferences(final RBField field) {
-		for (int i = 0; i < field.getSlots(); i++) {
-			final Object current = field.getValue(i);
-			if (current != null && !(current instanceof RBEntity)) {
-				final ResourceID unresolved = (ResourceID) current;
-				field.setValue(i, find(unresolved));
+		for (Object value : field.getValues()) {
+			final RBEntityReference current = (RBEntityReference) value;
+			if (current != null && !current.isResolved()) {
+				current.setEntity(find(current, false));
 			}
 		}
 	}

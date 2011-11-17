@@ -12,7 +12,7 @@ import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.util.convert.IConverter;
 
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
-import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 
 /**
@@ -42,7 +42,7 @@ public class RBFieldConverter implements IConverter<RBField> {
 		case INTEGER:
 			return join(field.getValues(), cl.getConverter(Number.class), locale, ", ");
 		case RESOURCE:
-			return join(field.getValues(), cl.getConverter(RBEntity.class), locale, ", ");
+			return join(field.getValues(), new RBEntityConverter(), locale, ", ");
 		case PROPER_NAME:
 		case STRING:
 		case TERM:
@@ -77,5 +77,23 @@ public class RBFieldConverter implements IConverter<RBField> {
 		return sb.toString();
 	}
 	
+	private static class RBEntityConverter implements IConverter<RBEntityReference> {
 
+		@Override
+		public RBEntityReference convertToObject(String value, Locale locale) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public String convertToString(RBEntityReference value, Locale locale) {
+			if (value.isResolved()) {
+				return value.getEntity().getLabel();	
+			} else {
+				return value.getQualifiedName().toURI();
+			}
+			
+		}
+		
+	}
+	
 }

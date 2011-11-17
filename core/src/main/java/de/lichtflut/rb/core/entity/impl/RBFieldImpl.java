@@ -13,6 +13,7 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
+import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -218,8 +219,7 @@ public class RBFieldImpl implements RBField, Serializable {
 	
 	protected void addReferences(final Set<SemanticNode> givenValues) {
 		for (SemanticNode sn : givenValues) {
-			// force exception if node is no resource.
-			this.values.add(sn.asResource());
+			this.values.add(new RBEntityReference(sn.asResource()));
 		}
 	}
 	

@@ -14,6 +14,7 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -201,10 +202,10 @@ public final class MockNewRBEntityFactory {
 		List<Object> memberList = new ArrayList<Object>();
 		List<Object> descriptionList = new ArrayList<Object>();
 		nameList.add("Lichtflut F & E GmbH");
-		ceoList.add(createPerson());
-		locationList.add(createAddress());
+		ceoList.add(new RBEntityReference(createPerson()));
+		locationList.add(new RBEntityReference(createAddress()));
 		independentList.add(true);
-		memberList.add(createPerson());
+		memberList.add(new RBEntityReference(createPerson()));
 		descriptionList.add("Wir betreiben Grundlagenforschung im Bereich der semantischen Informationsverarbeitung, helfen unseren Kunden bei der Erstellung von Meta-Modellen ihrer Unternehmen und entwickeln Produkte für ontologiebasierte Informationsverwaltung.");
 		list.add(nameList);
 		list.add(ceoList);
@@ -214,40 +215,6 @@ public final class MockNewRBEntityFactory {
 		list.add(descriptionList);
 		int counter = 0;
 		RBEntityImpl entity = new RBEntityImpl(schema);
-		for (RBField field : entity.getAllFields()) {
-			field.setValues(list.get(counter));
-			counter++;
-		}
-		return entity;
-	}
-
-	/**
-	 * Return an Organization.
-	 * @return -
-	 */
-	public static RBEntity createOrganization(String name, RBEntity ceo, RBEntity address, boolean independent,
-			List<RBEntity> member, String description){
-		List<List<Object>> list = new ArrayList<List<Object>>();
-		List<Object> nameList = new ArrayList<Object>();
-		List<Object> ceoList = new ArrayList<Object>();
-		List<Object> locationList = new ArrayList<Object>();
-		List<Object> independentList = new ArrayList<Object>();
-		List<Object> memberList = new ArrayList<Object>();
-		List<Object> descriptionList = new ArrayList<Object>();
-		nameList.add(name);
-		ceoList.add(ceo);
-		locationList.add(address);
-		independentList.add(independent);
-		memberList.addAll(memberList);
-		descriptionList.add(description);
-		list.add(nameList);
-		list.add(ceoList);
-		list.add(locationList);
-		list.add(independentList);
-		list.add(memberList);
-		list.add(descriptionList);
-		int counter = 0;
-		RBEntityImpl entity = new RBEntityImpl(MockResourceSchemaFactory.getInstance().getOrganizationSchema());
 		for (RBField field : entity.getAllFields()) {
 			field.setValues(list.get(counter));
 			counter++;
@@ -299,10 +266,14 @@ public final class MockNewRBEntityFactory {
 		List<Object> childrenList = new ArrayList<Object>();
 		firstName.add(firstname);
 		lastName.add(lastname);
-		address.add(address1);
+		address.add(new RBEntityReference(address1));
 		dateOfBirth.add(date);
 		emailList.add(email);
-		childrenList.add(children);
+		if (children != null) {
+			childrenList.add(new RBEntityReference(children));
+		} else {
+			childrenList.add(null);
+		}
 		list.add(firstName);
 		list.add(lastName);
 		list.add(address);
@@ -327,7 +298,7 @@ public final class MockNewRBEntityFactory {
 		List<Object> cityList = new ArrayList<Object>();
 		streetList.add(street);
 		houseNrList.add(houseNr);
-		cityList.add(city);
+		cityList.add(new RBEntityReference(city));
 		list.add(streetList);
 		list.add(houseNrList);
 		list.add(cityList);

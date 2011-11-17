@@ -211,10 +211,10 @@ public class RBEntityImpl implements RBEntity {
 	@Override
 	public String toString(){
 		String s = getQualifiedName() + ", ";
-		for(RBField field : getAllFields()){
-			if(field.isResourceReference()){
+		for(RBField field : getAllFields()) {
+			if(field.isResourceReference()) {
 				s += field.getLabel() + ": " + field.getConstraints() + ", ";
-			}else{
+			} else{
 				s += (field.getLabel() + ": " + field.getValues() + ", ");
 			}
 		}

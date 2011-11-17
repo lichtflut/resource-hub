@@ -63,13 +63,14 @@ public class EntityFieldRowPanel extends Panel {
 				addValueField(item, model.getObject().getDataType());
 			}
 		};
+		valueList.setReuseItems(true);
 		add(valueList);
 		
 		final AjaxSubmitLink link = new AjaxSubmitLink("addValueLink") {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				getField().addValue(null);
-				target.add(form);
+				target.add(EntityFieldRowPanel.this);
 			}
 			
 			@Override
