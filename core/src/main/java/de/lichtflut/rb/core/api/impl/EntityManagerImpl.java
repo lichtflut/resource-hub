@@ -8,6 +8,7 @@ import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -18,6 +19,7 @@ import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.ReferenceResolver;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -33,7 +35,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public class EntityManagerImpl implements EntityManager {
+public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 
 	private final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
 	
@@ -69,7 +71,8 @@ public class EntityManagerImpl implements EntityManager {
 		final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
 		final List<ResourceNode> nodes = mc.createQueryManager().findByType(type);
 		for (ResourceNode n : nodes) {
-			result.add(resolveEntityReferences(new RBEntityImpl(n, schema)));
+			RBEntityImpl entity = new RBEntityImpl(n, schema);
+			result.add(resolveEntityReferences(entity, true));
 		}
 		mc.close();
 		return result;
@@ -98,7 +101,7 @@ public class EntityManagerImpl implements EntityManager {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.replace(node, field.getPredicate(), nodes);
 			if (field.isResourceReference()) {
-				resolveEntityReferences(field);
+				resolveEntityReferences(field, true);
 			}
 		}
 		mc.close();
@@ -115,6 +118,15 @@ public class EntityManagerImpl implements EntityManager {
 		mc.close();
 	}
 	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void resolve(final RBEntityReference ref) {
+		final RBEntityImpl resolved = find(ref, false);
+		ref.setEntity(resolved);
+	}
+	
 	// -----------------------------------------------------
 	
 	private ModelingConversation startConversation() {
@@ -126,7 +138,7 @@ public class EntityManagerImpl implements EntityManager {
 	/** 
 	 * {@inheritDoc}
 	 */
-	private RBEntityImpl find(final ResourceID resourceID, final boolean cascadeResolving) {
+	private RBEntityImpl find(final ResourceID resourceID, final boolean cascadeEager) {
 		final ModelingConversation mc = provider.getArastejuGate().startConversation();
 		final ResourceNode node = mc.findResource(resourceID.getQualifiedName());
 		mc.close();
@@ -141,9 +153,7 @@ public class EntityManagerImpl implements EntityManager {
 			final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
 			entity = new RBEntityImpl(node, schema);
 		}
-		if (cascadeResolving) {
-			resolveEntityReferences(entity);
-		}
+		resolveEntityReferences(entity, cascadeEager);
 		return entity;
 	}
 	
@@ -159,7 +169,7 @@ public class EntityManagerImpl implements EntityManager {
 				// ignore
 			} else if (field.isResourceReference()) {
 				final ResourceID ref = (ResourceID) value;
-				result.add(ref);
+				result.add(new SimpleResourceID(ref));
 			} else {
 				result.add(new SNValue(field.getDataType(), value));
 			}
@@ -167,13 +177,15 @@ public class EntityManagerImpl implements EntityManager {
 		return result;
 	}
 	
+	// ----------------------------------------------------
+	
 	/**
 	 * @param field
 	 */
-	private RBEntityImpl resolveEntityReferences(final RBEntityImpl entity) {
+	private RBEntityImpl resolveEntityReferences(final RBEntityImpl entity, final boolean eager) {
 		for (RBField field : entity.getAllFields()) {
 			if (field.isResourceReference()) {
-				resolveEntityReferences(field);
+				resolveEntityReferences(field, eager);
 			}
 		}
 		return entity;
@@ -182,11 +194,12 @@ public class EntityManagerImpl implements EntityManager {
 	/**
 	 * @param field
 	 */
-	private void resolveEntityReferences(final RBField field) {
-		for (Object value : field.getValues()) {
-			final RBEntityReference current = (RBEntityReference) value;
-			if (current != null && !current.isResolved()) {
-				current.setEntity(find(current, false));
+	private void resolveEntityReferences(final RBField field, final boolean eager) {
+		for (RBEntityReference value : field.<RBEntityReference>getValues()) {
+			if (eager) {
+				value.setEntity(find(value, false));
+			} else {
+				value.setResolver(this);
 			}
 		}
 	}

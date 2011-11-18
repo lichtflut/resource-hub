@@ -127,6 +127,12 @@ public class EntityListPanel extends Panel {
 		return converter.convertToString(field, locale);
 	}
 	
+	protected Component createCell(final IModel<RBField> model) {
+		final RBField field = model.getObject();
+		final String rep = toString(field, RequestCycle.get().getRequest().getLocale());
+		return new Label("content", rep);
+	}
+	
 	// ----------------------------------------------------
 	
 	private ListView<RBEntity> createRows(final IModel<List<RBEntity>> model, final ColumnConfiguration config) {
@@ -143,9 +149,7 @@ public class EntityListPanel extends Panel {
 		final ListView<RBField> columns = new ListView<RBField>("cells", model) {
 			@Override
 			protected void populateItem(final ListItem<RBField> item) {
-				final RBField field = item.getModelObject();
-				final String rep = EntityListPanel.this.toString(field, RequestCycle.get().getRequest().getLocale());
-				item.add(new Label("content", rep));
+				item.add(createCell(item.getModel()));
 			}
 		}; 
 		return columns;

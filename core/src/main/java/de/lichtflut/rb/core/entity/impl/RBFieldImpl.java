@@ -57,7 +57,7 @@ public class RBFieldImpl implements RBField, Serializable {
 	}
 
 	/**
-	 * Constructor.
+	 * Constructor to be used when no property declaration exists.
 	 * @param predicate - the predicate
 	 * @param values - values of this field
 	 */

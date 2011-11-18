@@ -25,6 +25,7 @@ import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.webck.application.LinkProvider;
 import de.lichtflut.rb.webck.behavior.CKBehavior;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 
@@ -297,11 +298,16 @@ public abstract class ResourceTableView extends CKComponent {
 				link = new Link("featureLink") {
 					@Override
 					public void onClick() {
-						ResourceTableView.this.replaceWith(new EntityPanel(componentID, Model.of(entity)) {
+						ResourceTableView.this.replaceWith(new EntityPanel(componentID, Model.of(entity), Model.of(false)) {
 							@Override
 							public EntityManager getEntityManager() {
 								return getServiceProvider().getEntityManager();
 							}
+							@Override
+							public LinkProvider getLinkProvider() {
+								return null;
+							}
+							
 						});
 					}
 				};

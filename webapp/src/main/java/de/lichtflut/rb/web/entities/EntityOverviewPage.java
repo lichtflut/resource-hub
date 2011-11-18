@@ -66,7 +66,10 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 			
 			@Override
 			protected Component createEditAction(final String componentId, final RBEntity entity) {
-				return new ReferenceLink(componentId, EntityDetailPage.class, entity.getID(), new ResourceModel("action.edit"));
+				final PageParameters params = new PageParameters();
+				params.set(EntityDetailPage.PARAM_RESOURCE_ID, entity.getQualifiedName().toURI());
+				params.set(EntityDetailPage.PARAM_MODE, EntityDetailPage.MODE_EDIT);
+				return new ReferenceLink(componentId, EntityDetailPage.class, params, new ResourceModel("action.edit"));
 			}
 			
 			@Override

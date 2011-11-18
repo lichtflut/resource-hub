@@ -24,7 +24,10 @@ import org.arastreju.sge.naming.QualifiedName;
 public class RBEntityReference implements ResourceID {
 	
 	private final ResourceID id;
+	
 	private RBEntity entity;
+	
+	private transient ReferenceResolver resolver;
 	
 	// ----------------------------------------------------
 
@@ -34,6 +37,16 @@ public class RBEntityReference implements ResourceID {
 	 */
 	public RBEntityReference(final ResourceID id) {
 		this.id = id;
+	}
+	
+	/**
+	 * Constructor.
+	 * @param id The id.
+	 * @param resolver The resolver for the entity.
+	 */
+	public RBEntityReference(final ResourceID id, final ReferenceResolver resolver) {
+		this.id = id;
+		this.resolver = resolver;
 	}
 
 	/**
@@ -49,15 +62,22 @@ public class RBEntityReference implements ResourceID {
 	// ----------------------------------------------------
 	
 	public RBEntity getEntity() {
+		if (entity == null && resolver != null) {
+			resolver.resolve(this);
+		}
 		return entity;
 	}
 	
 	public boolean isResolved() {
-		return entity != null;
+		return getEntity() != null;
 	}
 	
 	public void setEntity(final RBEntity entity) {
 		this.entity = entity;
+	}
+	
+	public void setResolver(final ReferenceResolver resolver) {
+		this.resolver = resolver;
 	}
 	
 	// ----------------------------------------------------

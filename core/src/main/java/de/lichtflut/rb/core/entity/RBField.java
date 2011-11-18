@@ -24,7 +24,7 @@ import de.lichtflut.rb.core.schema.model.Constraint;
  *
  * @author Ravi Knox
  */
-public interface RBField{
+public interface RBField {
 
 	/**
 	 * Returns the (attribute / )name of this RBField.
@@ -105,7 +105,7 @@ public interface RBField{
 	 * They can be of any type from String to Date, depending on the RBSchema.
 	 * @return Value of this field as a list
 	 */
-	List<Object> getValues();
+	<T> List<T> getValues();
 	
 	/**
 	 * Sets the value for this RBField.
@@ -114,5 +114,4 @@ public interface RBField{
 	@Deprecated
 	void setValues(List<Object> values);
 	
-
 }

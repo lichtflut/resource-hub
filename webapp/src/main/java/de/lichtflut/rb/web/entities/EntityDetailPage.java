@@ -15,6 +15,8 @@ import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.mock.MockNewRBEntityFactory;
+import de.lichtflut.rb.web.WebsampleLinkProvider;
+import de.lichtflut.rb.webck.application.LinkProvider;
 import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.models.RBEntityModel;
@@ -31,7 +33,11 @@ import de.lichtflut.rb.webck.models.RBEntityModel;
 public class EntityDetailPage extends EntitySamplesBasePage implements IFeedbackContainerProvider {
 
 	public static final String PARAM_RESOURCE_ID = "rid";
-	public static final String PARAM_RESOURCE_Type = "type";
+	public static final String PARAM_RESOURCE_TYPE = "type";
+	public static final String PARAM_MODE = "mode";
+	
+	public static final String MODE_EDIT = "edit";
+	public static final String MODE_VIEW = "view";
 	
 	// -----------------------------------------------------
 	
@@ -49,11 +55,13 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 	public EntityDetailPage(final PageParameters params) {
 		super("Entity Details", params);
 		final StringValue idParam = params.get(PARAM_RESOURCE_ID);
-		final StringValue typeParam = params.get(PARAM_RESOURCE_Type);
+		final StringValue typeParam = params.get(PARAM_RESOURCE_TYPE);
+		final StringValue mode = params.get(PARAM_MODE);
+		final IModel<Boolean> readonly = toIsReadOnlyModel(mode);
 		if (!idParam.isEmpty()) {
-			initView(modelFor(new SimpleResourceID(idParam.toString()), null));
+			initView(modelFor(new SimpleResourceID(idParam.toString()), null), readonly);
 		} else if (!typeParam.isEmpty()) {
-			initView(modelFor(null, new SimpleResourceID(typeParam.toString())));
+			initView(modelFor(null, new SimpleResourceID(typeParam.toString())), readonly);
 		}
 	}
 
@@ -63,7 +71,7 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 	 */
 	public EntityDetailPage(final RBEntity entity) {
 		super("Entity Details (Mock Mode)");
-		initView(Model.of(entity));
+		initView(Model.of(entity), Model.of(false));
 	}
 	
 	@Override
@@ -73,12 +81,16 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 	
 	// -----------------------------------------------------
 	
-	protected void initView(final IModel<RBEntity> model) {
+	protected void initView(final IModel<RBEntity> model, final IModel<Boolean> readonly) {
 		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
-		add(new EntityPanel("entity", model) {
+		add(new EntityPanel("entity", model, readonly) {
 			@Override
 			public EntityManager getEntityManager() {
 				return getServiceProvider().getEntityManager();
+			}
+			@Override
+			public LinkProvider getLinkProvider() {
+				return new WebsampleLinkProvider();
 			}
 		});
 	}
@@ -93,5 +105,11 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 			}
 		};
 	}
+	
+	private IModel<Boolean> toIsReadOnlyModel(final StringValue mode) {
+		final boolean readonly = mode.isEmpty() || !MODE_EDIT.equals(mode.toString());
+		return new Model<Boolean>(readonly);
+	}
+
 
 }

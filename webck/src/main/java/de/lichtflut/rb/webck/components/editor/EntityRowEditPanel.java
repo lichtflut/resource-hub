@@ -24,6 +24,7 @@ import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.webck.application.LinkProvider;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.models.RBFieldValueModel;
 import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
@@ -35,6 +36,7 @@ import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
  *  	<li> a label </li>
  *  	<li> one or more values </li>
  *  </ul>
+ *  for editing.
  * </p>
  *
  * <p>
@@ -44,13 +46,14 @@ import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
  * @author Oliver Tigges
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class EntityFieldRowPanel extends Panel {
+public abstract class EntityRowEditPanel extends Panel {
 
 	/**
-	 * @param id
-	 * @param model
+	 * Constructor.
+	 * @param id The ID.
+	 * @param model The model.
 	 */
-	public EntityFieldRowPanel(final String id, final IModel<RBField> model) {
+	public EntityRowEditPanel(final String id, final IModel<RBField> model) {
 		super(id, model);
 		
 		setOutputMarkupId(true);
@@ -70,7 +73,7 @@ public class EntityFieldRowPanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				getField().addValue(null);
-				target.add(EntityFieldRowPanel.this);
+				target.add(EntityRowEditPanel.this);
 			}
 			
 			@Override
@@ -81,6 +84,10 @@ public class EntityFieldRowPanel extends Panel {
 		
 		add(link);
 	}
+	
+	// ----------------------------------------------------
+	
+	public abstract LinkProvider getLinkProvider();
 	
 	// ----------------------------------------------------
 	

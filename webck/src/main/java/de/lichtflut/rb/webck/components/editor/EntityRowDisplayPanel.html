@@ -1,0 +1,34 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+    <div wicket:id="label" class="field-label">[Label]</div>
+    <div class="field-values">
+    	<wicket:container wicket:id="values">
+        	<div wicket:id="valuefield"></div>
+        </wicket:container>
+    </div>
+    
+    <wicket:fragment wicket:id="textOutput">
+        <span wicket:id="valuefield">[output]</span>
+    </wicket:fragment>
+    
+    <wicket:fragment wicket:id="referenceLink">
+        <a href="#" wicket:id="link">
+    		<wicket:container wicket:id="label">[link label]</wicket:container>
+    	</a>
+    </wicket:fragment>
+    
+    <wicket:fragment wicket:id="checkbox">
+        <input type="checkbox" wicket:id="valuefield" />
+    </wicket:fragment>
+    
+</wicket:panel>
+</html>
