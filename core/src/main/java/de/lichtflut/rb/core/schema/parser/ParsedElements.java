@@ -6,6 +6,8 @@ package de.lichtflut.rb.core.schema.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.arastreju.sge.model.Statement;
+
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 
@@ -22,9 +24,11 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
  */
 public class ParsedElements {
 	
-	private List<ResourceSchema> schemas = new ArrayList<ResourceSchema>();
+	private final List<ResourceSchema> schemas = new ArrayList<ResourceSchema>();
 	
-	private List<TypeDefinition> typeDefs = new ArrayList<TypeDefinition>();
+	private final List<TypeDefinition> typeDefs = new ArrayList<TypeDefinition>();
+	
+	private final List<Statement> statements = new ArrayList<Statement>();
 	
 	// -----------------------------------------------------
 
@@ -40,6 +44,13 @@ public class ParsedElements {
 	 */
 	public void add(final TypeDefinition typeDef) {
 		this.typeDefs.add(typeDef);
+	}
+	
+	/**
+	 * @param statement
+	 */
+	public void add(final Statement statement) {
+		this.statements.add(statement);
 	}
 	
 	// -----------------------------------------------------
@@ -58,6 +69,13 @@ public class ParsedElements {
 		return typeDefs;
 	}
 	
+	/**
+	 * @return additional statements.
+	 */
+	public List<Statement> getStatements() {
+		return statements;
+	}
+	
 	// -----------------------------------------------------
 	
 	/** 
@@ -65,7 +83,9 @@ public class ParsedElements {
 	 */
 	@Override
 	public String toString() {
-		return schemas.size() + " schema(s) and " + typeDefs.size() + " type definition(s)"; 
+		return schemas.size() + " schema(s) and " 
+				+ typeDefs.size() + " type definition(s) with "
+				+ statements.size() + " additional statement(s)"; 
 	}
 	
 }

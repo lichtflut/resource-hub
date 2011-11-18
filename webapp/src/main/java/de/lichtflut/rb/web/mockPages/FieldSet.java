@@ -1,6 +1,7 @@
 package de.lichtflut.rb.web.mockPages;
 
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -39,7 +40,7 @@ public class FieldSet extends Panel {
 			view.add(new TextField(view.newChildId(),new RBFieldValueModel(field, 0), getClass(field.getDataType())));
 		}
 
-		add(new Label("label", field.getLabel()));
+		add(new Label("label", field.getLabel(Locale.getDefault())));
 		add(view);
 		add(new AjaxButton("more") {
 

@@ -14,13 +14,13 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ElementaryDataType;
 
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.webck.application.LinkProvider;
 import de.lichtflut.rb.webck.components.links.CrossLink;
+import de.lichtflut.rb.webck.models.FieldLabelModel;
 import de.lichtflut.rb.webck.models.RBFieldValueModel;
 import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
 
@@ -52,7 +52,7 @@ public abstract class EntityRowDisplayPanel extends Panel {
 		super(id, model);
 		
 		setOutputMarkupId(true);
-		add(new Label("label", new PropertyModel<String>(model, "label")));
+		add(new Label("label", new FieldLabelModel(model)));
 		
 		final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
 		final ListView<RBFieldValueModel> valueList = new ListView<RBFieldValueModel>("values", listModel) {
@@ -104,6 +104,8 @@ public abstract class EntityRowDisplayPanel extends Panel {
 			final CrossLink link = new CrossLink("link", getLinkProvider().browseToResource(ref));
 			link.add(new Label("label", Model.of(ref.toString())));
 			item.add(new Fragment("valuefield", "referenceLink", this).add(link));
+		} else {
+			addTextOutput(item, RBEntityReference.class);
 		}
 	}
 	

@@ -67,14 +67,12 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 	@Override
 	public List<RBEntity> findByType(final ResourceID type) {
 		final List<RBEntity> result = new ArrayList<RBEntity>();
-		final ModelingConversation mc = provider.getArastejuGate().startConversation();
 		final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
-		final List<ResourceNode> nodes = mc.createQueryManager().findByType(type);
+		final List<ResourceNode> nodes = provider.getArastejuGate().createQueryManager().findByType(type);
 		for (ResourceNode n : nodes) {
 			RBEntityImpl entity = new RBEntityImpl(n, schema);
 			result.add(resolveEntityReferences(entity, true));
 		}
-		mc.close();
 		return result;
 	}
 	

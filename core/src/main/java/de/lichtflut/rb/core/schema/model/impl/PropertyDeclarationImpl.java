@@ -84,7 +84,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ResourceID getPropertyType() {
+	public ResourceID getPropertyDescriptor() {
 		return propertyDescriptor;
 	}
 	
@@ -93,7 +93,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 	 * @param propertyDescriptor -
 	 */
 	@Override
-	public void setPropertyType(final ResourceID propertyDescriptor){
+	public void setPropertyDescriptor(final ResourceID propertyDescriptor){
 		this.propertyDescriptor = propertyDescriptor;
 	}
 

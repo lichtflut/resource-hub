@@ -52,8 +52,7 @@ public class TypeManagerImpl implements TypeManager {
 	@Override
 	public List<SNClass> findAll() {
 		final List<SNClass> result = new ArrayList<SNClass>();
-		final QueryManager qm = newMC().createQueryManager();
-		final List<ResourceNode> nodes = qm.findByType(RB.TYPE);
+		final List<ResourceNode> nodes = query().findByType(RB.TYPE);
 		for (ResourceNode current : nodes) {
 			result.add(current.asClass());
 		}
@@ -85,6 +84,8 @@ public class TypeManagerImpl implements TypeManager {
 		return provider.getArastejuGate().startConversation();
 	}
 	
-	
+	private QueryManager query() {
+		return provider.getArastejuGate().createQueryManager();
+	}
 
 }

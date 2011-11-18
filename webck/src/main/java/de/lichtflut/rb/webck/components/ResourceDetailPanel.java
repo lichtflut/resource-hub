@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.components;
 
 import java.util.HashSet;
+import java.util.Locale;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -24,9 +25,9 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.impl.RBFieldImpl;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.impl.UndeclaredRBField;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behavior.CKBehavior;
 import de.lichtflut.rb.webck.components.fields.CKFormRowItem;
@@ -162,7 +163,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 		private void addRBField(final String predicate, final String value){
 			HashSet<SemanticNode> values = new HashSet<SemanticNode>();
 			values.add(new SNValue(ElementaryDataType.STRING, value));
-			RBField field = new RBFieldImpl(new SimpleResourceID(predicate), values);
+			RBField field = new UndeclaredRBField(new SimpleResourceID(predicate), values);
 			entity.addField(field);
 		}
 	}
@@ -212,7 +213,7 @@ public abstract class ResourceDetailPanel extends CKComponent  {
 						}
 						valueList.add(new Label(valueList.newChildId(), value));
 					}
-					item.add(new Label("label", field.getLabel()));
+					item.add(new Label("label", field.getLabel(Locale.getDefault())));
 					item.add(valueList);
 				}
 			};

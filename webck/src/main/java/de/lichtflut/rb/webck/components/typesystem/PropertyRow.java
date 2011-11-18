@@ -79,7 +79,7 @@ public class PropertyRow implements Serializable {
 		} else {
 			decl.setCardinality(CardinalityBuilder.between(row.min, row.max));
 		}
-		decl.setPropertyType(row.propertyType);
+		decl.setPropertyDescriptor(row.propertyType);
 		if (row.isTypeDefinitionPublic()) {
 			decl.setTypeDefinition(row.typeDefinition);
 		} else {
@@ -116,7 +116,7 @@ public class PropertyRow implements Serializable {
 	 * @param decl The declaration.
 	 */
 	public PropertyRow(final PropertyDeclaration decl) {
-		this.propertyType = decl.getPropertyType();
+		this.propertyType = decl.getPropertyDescriptor();
 		this.min = decl.getCardinality().getMinOccurs();
 		this.max = decl.getCardinality().getMaxOccurs();
 		this.unbounded = decl.getCardinality().isUnbound();

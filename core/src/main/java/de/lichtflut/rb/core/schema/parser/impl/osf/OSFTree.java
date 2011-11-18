@@ -681,9 +681,9 @@ public class OSFTree extends TreeParser {
             	retval.assertion.setPropertyIdentifier(s.result);
             	QualifiedName qName = retval.assertion.getQualifiedPropertyIdentifier();
                 if(!(qName.getSimpleName().startsWith("has"))){
-                      retval.assertion.setPropertyType(new SimpleResourceID(qName.getNamespace().getUri(),"has"+qName.getSimpleName()));
+                      retval.assertion.setPropertyDescriptor(new SimpleResourceID(qName.getNamespace().getUri(),"has"+qName.getSimpleName()));
                 }else{
-                	retval.assertion.setPropertyType(new SimpleResourceID(retval.assertion.getQualifiedPropertyIdentifier()));}
+                	retval.assertion.setPropertyDescriptor(new SimpleResourceID(retval.assertion.getQualifiedPropertyIdentifier()));}
                 
             _last = (CommonTree)input.LT(1);
             PROPERTY_ASSERTION9=(CommonTree)match(input,PROPERTY_ASSERTION,FOLLOW_PROPERTY_ASSERTION_in_assignment_dec227); 

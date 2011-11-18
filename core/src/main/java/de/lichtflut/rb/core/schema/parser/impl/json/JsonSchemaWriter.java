@@ -10,10 +10,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonGenerator;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -96,9 +100,14 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	private void writeSchema(final JsonGenerator g, ResourceSchema schema) throws IOException {
 		g.writeStringField(FOR_TYPE, schema.getDescribedType().getQualifiedName().toURI());
 		for(PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+			final ResourceID propertyDescriptor = decl.getPropertyDescriptor();
+			final String fieldLabel = getFieldLabel(propertyDescriptor);
 			g.writeObjectFieldStart(PROPERTY_DECLARATION);
-			g.writeStringField(PROPERTY_TYPE, uri(decl.getPropertyType()));
+			g.writeStringField(PROPERTY_TYPE, uri(propertyDescriptor));
 			g.writeNumberField(MIN, decl.getCardinality().getMinOccurs());
+			if (fieldLabel != null) {
+				g.writeStringField(FIELD_LABEL, fieldLabel);
+			}
 			if (!decl.getCardinality().isUnbound()) {
 				g.writeNumberField(MAX, decl.getCardinality().getMaxOccurs());
 			}
@@ -141,6 +150,17 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 			}
 		}
 		g.writeEndObject();
+	}
+	
+	// ----------------------------------------------------
+	
+	private String getFieldLabel(final ResourceID property) {
+		final SemanticNode label = SNOPS.fetchObject(property.asResource(), RB.HAS_FIELD_LABEL);
+		if (label != null && label.isValueNode()) {
+			return label.asValue().getStringValue();
+		} else {
+			return null;
+		}
 	}
 
 }

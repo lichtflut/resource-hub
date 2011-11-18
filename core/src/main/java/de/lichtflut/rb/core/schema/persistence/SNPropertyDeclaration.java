@@ -20,16 +20,13 @@ import java.util.Set;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.context.Context;
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
+import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.model.nodes.views.SNScalar;
-import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.RBSchema;
@@ -116,10 +113,13 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * Returns the property declared by this property declaration.
 	 * @return The property.
 	 */
-	public ResourceID getPropertyDescriptor() {
+	public SNProperty getPropertyDescriptor() {
 		SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_DESCRIPTOR);
-		if (node != null){
-			return new SimpleResourceID(new QualifiedName(node.asValue().getStringValue()));
+		if (node != null && node.isResourceNode()){
+			final SNProperty property = node.asResource().asProperty();
+			// trigger association loading to get label of property. 
+			property.getAssociations();
+			return property;
 		} else {
 			return null;
 		}
@@ -130,11 +130,10 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * @param property The property.
 	 * @param context The context.
 	 */
-	public void setDescriptor(final ResourceID property, final Context context) {
+	public void setPropertyDescriptor(final ResourceID property, final Context context) {
 		if (!Infra.equals(getPropertyDescriptor(), property)){
-			SNValue pDescriptor = new SNValue(ElementaryDataType.URI,property.getQualifiedName().toURI());
 			removeAssocs(RBSchema.HAS_DESCRIPTOR);
-			Association.create(this, RBSchema.HAS_DESCRIPTOR, pDescriptor, context);
+			Association.create(this, RBSchema.HAS_DESCRIPTOR, property, context);
 		}
 	}
 

@@ -27,7 +27,7 @@ public interface RB {
 	Context TYPE_SYSTEM_CONTEXT = new SimpleContextID(NAMESPACE_URI, "TypeSystemContext");
 
 	/**
-	 * Sub class of rdf:Class/owl:Class. Classes that are resource browser types
+	 * Sub class of rdf:Class/owl:Class. Classes that are resource browser types.
 	 * can be marked as such by being of rdf:type rb:Type.
 	 */
 	ResourceID TYPE = new SimpleResourceID(NAMESPACE_URI, "Type");
@@ -41,5 +41,11 @@ public interface RB {
 	 * Each RBEntity may have a short literal description.
 	 */
 	ResourceID HAS_SHORT_DESC = new SimpleResourceID(NAMESPACE_URI, "hasShortDescription");
+	
+	/**
+	 * Each RBEntity may have a primary image URL/ID.
+	 */
+	ResourceID HAS_FIELD_LABEL = new SimpleResourceID(NAMESPACE_URI, "hasFieldLabel");
+
 
 }

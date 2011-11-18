@@ -65,7 +65,7 @@ public class Schema2GraphBinding {
 		final ResourceSchemaImpl schema = new ResourceSchemaImpl(snSchema.getDescribedType());
 		for (SNPropertyDeclaration snDecl : snSchema.getPropertyDeclarations()){
 			final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
-			decl.setPropertyType(snDecl.getPropertyDescriptor());
+			decl.setPropertyDescriptor(snDecl.getPropertyDescriptor());
 			decl.setCardinality(buildCardinality(snDecl));
 			decl.setTypeDefinition(toModelObject(snDecl.getTypeDefinition()));
 			schema.addPropertyDeclaration(decl);
@@ -115,7 +115,7 @@ public class Schema2GraphBinding {
 		SNPropertyDeclaration predecessor = null;
 		for(PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration();
-			snDecl.setDescriptor(decl.getPropertyType(), RBSchema.CONTEXT);
+			snDecl.setPropertyDescriptor(decl.getPropertyDescriptor(), RBSchema.CONTEXT);
 			snDecl.setMinOccurs(minAsScalar(decl.getCardinality()), RBSchema.CONTEXT);
 			snDecl.setMaxOccurs(maxAsScalar(decl.getCardinality()), RBSchema.CONTEXT);
 			snDecl.setTypeDefinition(toSemanticNode(decl.getTypeDefinition()), RBSchema.CONTEXT);

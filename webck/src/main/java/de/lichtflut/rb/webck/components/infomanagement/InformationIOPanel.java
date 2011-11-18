@@ -173,12 +173,11 @@ public abstract class InformationIOPanel extends Panel {
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			try {
 				final ServiceProvider sp = getServiceProvider();
-				final ModelingConversation mc = sp.getArastejuGate().startConversation();
 				final List<SNClass> types = sp.getTypeManager().findAll();
 				
 				final SemanticGraph graph = new DefaultSemanticGraph();
 				for (SNClass type : types) {
-					final List<ResourceNode> entities = mc.createQueryManager().findByType(type);
+					final List<ResourceNode> entities = sp.getArastejuGate().createQueryManager().findByType(type);
 					for (ResourceNode entity : entities) {
 						graph.merge(new DefaultSemanticGraph(entity));
 					}

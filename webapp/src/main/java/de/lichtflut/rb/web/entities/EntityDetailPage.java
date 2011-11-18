@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.web.entities;
 
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -14,7 +15,6 @@ import org.arastreju.sge.model.SimpleResourceID;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.mock.MockNewRBEntityFactory;
 import de.lichtflut.rb.web.WebsampleLinkProvider;
 import de.lichtflut.rb.webck.application.LinkProvider;
 import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
@@ -23,9 +23,12 @@ import de.lichtflut.rb.webck.models.RBEntityModel;
 
 /**
  * <p>
- * This webpage displays an example Resource in an Editor.
+ * 	This webpage displays an example Resource in an Editor.
  * </p>
- * Created: Aug 16, 2011
+ * 
+ * <p>
+ * 	Created: Aug 16, 2011
+ * </p>
  *
  * @author Ravi Knox
  */
@@ -39,14 +42,7 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 	public static final String MODE_EDIT = "edit";
 	public static final String MODE_VIEW = "view";
 	
-	// -----------------------------------------------------
-	
-	/**
-	 * Contructor.
-	 */
-	public EntityDetailPage() {
-		this(MockNewRBEntityFactory.createPerson());
-	}
+	// ----------------------------------------------------
 	
 	/**
 	 * Constructor.
@@ -54,6 +50,9 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 	 */
 	public EntityDetailPage(final PageParameters params) {
 		super("Entity Details", params);
+		
+		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
+		
 		final StringValue idParam = params.get(PARAM_RESOURCE_ID);
 		final StringValue typeParam = params.get(PARAM_RESOURCE_TYPE);
 		final StringValue mode = params.get(PARAM_MODE);
@@ -62,17 +61,12 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 			initView(modelFor(new SimpleResourceID(idParam.toString()), null), readonly);
 		} else if (!typeParam.isEmpty()) {
 			initView(modelFor(null, new SimpleResourceID(typeParam.toString())), readonly);
+		} else {
+			add(new WebMarkupContainer("entity").setVisible(false));
 		}
 	}
 
-	/**
-	 * Contructor.
-	 * @param entity - instance of {@link RBEntity}
-	 */
-	public EntityDetailPage(final RBEntity entity) {
-		super("Entity Details (Mock Mode)");
-		initView(Model.of(entity), Model.of(false));
-	}
+	// ----------------------------------------------------
 	
 	@Override
 	public FeedbackPanel getFeedbackContainer() {
@@ -82,7 +76,6 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 	// -----------------------------------------------------
 	
 	protected void initView(final IModel<RBEntity> model, final IModel<Boolean> readonly) {
-		add(new FeedbackPanel("feedback").setOutputMarkupPlaceholderTag(true));
 		add(new EntityPanel("entity", model, readonly) {
 			@Override
 			public EntityManager getEntityManager() {

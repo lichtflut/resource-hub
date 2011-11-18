@@ -11,8 +11,9 @@ import org.junit.Test;
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.entity.impl.AbstractRBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
-import de.lichtflut.rb.core.entity.impl.RBFieldImpl;
+import de.lichtflut.rb.core.entity.impl.UndeclaredRBField;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
@@ -173,7 +174,7 @@ public final class RBEntityTest {
         e1.getField(new SimpleResourceID("http://lichtflut.de#hatEmail")).addValue("kind@fam.com");
 
         // Add a custom Field
-        RBFieldImpl newField = new RBFieldImpl(new SimpleResourceID("http://lichtflut.de#whatever"), null);
+        AbstractRBField newField = new UndeclaredRBField(new SimpleResourceID("http://lichtflut.de#whatever"), null);
         newField.addValue("haha");
         newField.addValue("hoho");
         newField.addValue("muhahaha");

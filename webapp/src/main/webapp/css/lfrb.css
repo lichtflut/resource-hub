@@ -31,10 +31,11 @@ div#sidebar-left {
     float: left;
     width: 220px;
     text-align: left;
+    padding:50px 0 0 20px;
 }
 
 div#sidebar-left ul {
-    padding-top: 80px;
+    padding-top: 10px;
 }
 
 div#sidebar-left li {
@@ -86,12 +87,15 @@ a:hover {
 
 /* NAVIGATION */
 
+div.navigation-bar {
+    padding: 0;
+    margin: 0 auto 0 auto;
+}
+
 div.navigation-bar ul {
     list-style: none; 
     background: white;
     padding: 0;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 div.navigation-bar.horizontal ul li {
@@ -100,10 +104,11 @@ div.navigation-bar.horizontal ul li {
 
 div.navigation-bar ul li {
     border: 1px solid #BBB;
-    width: 100px;   
-    font-size:12pt;
+    background: #FFD;
+    width: 110px;   
+    font-size:11pt;
     font-weight: bold;
-    padding: 0;
+    padding: 2px 5px;
     margin:0;
 }
 
@@ -115,10 +120,12 @@ div.navigation-bar ul li:hover ul {
     display: block;
     z-index: 1000;
     position:absolute;
-    padding: 0;    
+    margin: 0 0 0 5px;
 }
 div.navigation-bar ul li:hover ul li {
     float:none;
+    width: 200px;
+    background: #EEC;
 }
 
 /* INPUT PANELS */

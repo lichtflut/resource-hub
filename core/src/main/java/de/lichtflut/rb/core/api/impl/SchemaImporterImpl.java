@@ -6,6 +6,9 @@ package de.lichtflut.rb.core.api.impl;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.model.Statement;
+
 import de.lichtflut.rb.core.api.SchemaImporter;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -14,10 +17,11 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionReference;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
+import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Implementation of {@link SchemaImporter}.
  * </p>
  *
  * <p>
@@ -30,14 +34,17 @@ public class SchemaImporterImpl implements SchemaImporter {
 
 	private final ResourceSchemaParser parser;
 	private final SchemaManager manager;
+	private final ServiceProvider provider;
 	
 	// -----------------------------------------------------
 	
 	/**
-	 * @param parser
+	 * @param provider The service provider.
+	 * @param parser The parser.
 	 */
-	public SchemaImporterImpl(final SchemaManager manager, final ResourceSchemaParser parser) {
-		this.manager = manager;
+	public SchemaImporterImpl(final ServiceProvider provider, final ResourceSchemaParser parser) {
+		this.provider = provider;
+		this.manager = provider.getSchemaManager();
 		this.parser = parser;
 	}
 	
@@ -56,6 +63,10 @@ public class SchemaImporterImpl implements SchemaImporter {
 			if (resolveTypeDefReferences(schema)) {
 				manager.store(schema);
 			}
+		}
+		final ModelingConversation mc = provider.getArastejuGate().startConversation();
+		for(Statement stmt : elements.getStatements()) {
+			mc.addStatement(stmt);
 		}
 	}
 	

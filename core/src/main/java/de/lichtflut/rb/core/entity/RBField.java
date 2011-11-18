@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.entity;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.arastreju.sge.model.ElementaryDataType;
@@ -33,10 +34,11 @@ public interface RBField {
 	ResourceID getPredicate();
 
 	/**
-	 * Returns the field's simple name.
-	 * @return Simple name of this field
+	 * Returns the field's display label.
+	 * @param locale TODO
+	 * @return The label of the field.
 	 */
-	String getLabel();
+	String getLabel(Locale locale);
 
 	// -----------------------------------------------------
 

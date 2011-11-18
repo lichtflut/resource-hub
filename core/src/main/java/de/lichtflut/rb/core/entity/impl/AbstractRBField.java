@@ -5,20 +5,19 @@ package de.lichtflut.rb.core.entity.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
-import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNProperty;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Cardinality;
-import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 
 /**
  * <p>
@@ -30,106 +29,42 @@ import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
  * @author Ravi Knox
  */
 @SuppressWarnings("serial")
-public class RBFieldImpl implements RBField, Serializable {
+public abstract class AbstractRBField implements RBField, Serializable {
 	
 	private final List<Object> values = new ArrayList<Object>();
 
-	private final PropertyDeclaration declaration;
-	
-	private final ResourceID predicate;
-	
-	private final boolean isKnownToSchema;
-	
 	private int slots;
 
 	//------------------------------------------------------------
 
 	/**
 	 * Constructor.
-	 * @param declaration - {@link PropertyDeclaration}. <code>null</code> if assertion is not known to Schema
 	 * @param values - values of this field
 	 */
-	public RBFieldImpl(final PropertyDeclaration declaration, final Set<SemanticNode> values) {
-		this.predicate = declaration.getPropertyType();
-		this.declaration = declaration;
-		this.isKnownToSchema = true;
-		initSlots(values); 
-	}
-
-	/**
-	 * Constructor to be used when no property declaration exists.
-	 * @param predicate - the predicate
-	 * @param values - values of this field
-	 */
-	public RBFieldImpl(final ResourceID predicate, final Set<SemanticNode> values) {
-		this.predicate = predicate;
-		this.declaration = null;
-		this.isKnownToSchema = false;
-		initSlots(values); 
+	public AbstractRBField(final Set<SemanticNode> values, boolean isResourceReference) {
+		initSlots(values, isResourceReference); 
 	}
 
 	//------------------------------------------------------------
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public ResourceID getPredicate() {
-		if(isKnownToSchema){
-			return declaration.getPropertyType();
+	public String getLabel(final Locale locale) {
+		final SNProperty property = getPredicate().asResource().asProperty();
+		String label = getLabel(property, RB.HAS_FIELD_LABEL, locale);
+		if (label == null) {
+			label = getLabel(property, RDFS.LABEL, locale);
 		}
-		return predicate;
-	}
-
-	@Override
-	public String getLabel() {
-		if (isKnownToSchema) {
-			return declaration.getPropertyType().getName();
-		} else {
-			return predicate.getName();
+		if (label == null) {
+			label = property.getName();
 		}
-	}
-
-	@Override
-	public ElementaryDataType getDataType() {
-		if (declaration != null) {
-			return declaration.getTypeDefinition().getElementaryDataType();
-		} else {
-			return ElementaryDataType.STRING;
-		}
-	}
-
-	@Override
-	public Cardinality getCardinality() {
-		if (declaration != null) {
-			return declaration.getCardinality();
-		} else {
-			return CardinalityBuilder.hasOptionalOneToMany();
-		}
-	}
-
-	@Override
-	public boolean isKnownToSchema() {
-		return isKnownToSchema;
-	}
-
-	@Override
-	public boolean isResourceReference() {
-		if (declaration != null) {
-			return declaration.getTypeDefinition().isResourceReference();
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public Set<Constraint> getConstraints() {
-		if (declaration != null) {
-			return declaration.getTypeDefinition().getConstraints();
-		} else {
-			return Collections.emptySet();
-		}
+		return label;
 	}
 	
-	// -----------------------------------------------------
-	
+	// ----------------------------------------------------
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -204,13 +139,14 @@ public class RBFieldImpl implements RBField, Serializable {
 	
 	/**
 	 * @param givenValues
+	 * @param isResourceReference 
 	 */
-	protected void initSlots(final Set<SemanticNode> givenValues) {
+	protected void initSlots(final Set<SemanticNode> givenValues, boolean isResourceReference) {
 		this.slots = givenValues.size();	
 		if (givenValues == null || givenValues.isEmpty()) {
 			this.values.add(null);
 			this.slots = 1;
-		} else if (isResourceReference()) {
+		} else if (isResourceReference) {
 			addReferences(givenValues);
 		} else {
 			addValues(givenValues);
@@ -228,5 +164,16 @@ public class RBFieldImpl implements RBField, Serializable {
 			this.values.add(sn.asValue().getValue());
 		}
 	}
-
+	
+	// ----------------------------------------------------
+	
+	private String getLabel(final SNProperty property, final ResourceID predicate, final Locale locale) {
+		final SemanticNode label = SNOPS.fetchObject(property, RB.HAS_FIELD_LABEL);
+		if (label != null && label.isValueNode()) {
+			return label.asValue().getStringValue();
+		} else {
+			return null;
+		}
+	}
+	
 }

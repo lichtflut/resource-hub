@@ -11,9 +11,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
+import org.arastreju.sge.model.DetachedStatement;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.views.SNText;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
@@ -21,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.logging.StopWatch;
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -74,13 +77,13 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 			if (RESOURCE_SCHEMAS.equals(p.getCurrentName())) {
 				assertStartArray(p);
 				while (p.nextToken() != JsonToken.END_ARRAY) {
-					final ResourceSchema schema = readSchema(p);
+					final ResourceSchema schema = readSchema(p, result);
 					result.add(schema);
 				}
 			} else if (PUBLIC_TYPE_DEFINITIONS.equals(p.getCurrentName())) {
 				assertStartArray(p);
 				while (p.nextToken() != JsonToken.END_ARRAY) {
-					final TypeDefinition typeDef = readPublicTypeDef(p);
+					final TypeDefinition typeDef = readPublicTypeDef(p, result);
 					result.add(typeDef);
 				}
 			} else {
@@ -91,17 +94,17 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		logger.info("parsed {} in {} micros", new Object[] {result, sw.getTime()});
 		return result;
 	}
-
-	// -----------------------------------------------------
 	
-	private ResourceSchema readSchema(final JsonParser p) throws IOException {
+	// ----------------------------------------------------
+	
+	private ResourceSchema readSchema(final JsonParser p, final ParsedElements result) throws IOException {
 		final ResourceSchemaImpl schema = new ResourceSchemaImpl();
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (FOR_TYPE.equals(field)) {
 				schema.setDescribedType(new SimpleResourceID(p.getText()));
 			} else if (PROPERTY_DECLARATION.equals(field)) {
-				final PropertyDeclaration decl = readDecl(p);
+				final PropertyDeclaration decl = readPropertyDecl(p, result);
 				schema.addPropertyDeclaration(decl);
 			} else if (LABEL_RULE.equals(field)) {
 				final String rule = p.getText();
@@ -111,7 +114,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		return schema;
 	}
 	
-	private TypeDefinition readPublicTypeDef(final JsonParser p) throws IOException {
+	private TypeDefinition readPublicTypeDef(final JsonParser p, final ParsedElements result) throws IOException {
 		ResourceID id = new SimpleResourceID();
 		String name = id.getName();
 		ElementaryDataType datatype = ElementaryDataType.STRING;
@@ -135,14 +138,15 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		return def;
 	}
 	
-	private PropertyDeclaration readDecl(final JsonParser p) throws IOException{
+	private PropertyDeclaration readPropertyDecl(final JsonParser p, final ParsedElements result) throws IOException{
 		final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
 		int min = 0;
 		int max = -1;
+		String fieldLabel = null;
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (PROPERTY_TYPE.equals(field)) {
-				decl.setPropertyType(new SimpleResourceID(p.getText()));
+				decl.setPropertyDescriptor(new SimpleResourceID(p.getText()));
 			} else if (MIN.equals(field)) {
 				min = p.getIntValue();
 			} else if (MAX.equals(field)) {
@@ -152,7 +156,12 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				decl.setTypeDefinition(new TypeDefinitionReference(ref));
 			} else if (TYPE_DEFINITION.equals(field)) {
 				decl.setTypeDefinition(readTypeDef(p));
+			} else if (FIELD_LABEL.equals(field)) {
+				fieldLabel = p.getText();
 			}
+		}
+		if (fieldLabel != null) {
+			result.add(new DetachedStatement(decl.getPropertyDescriptor(), RB.HAS_FIELD_LABEL, new SNText(fieldLabel)));
 		}
 		decl.setCardinality(CardinalityBuilder.between(min, max));
 		return decl;

@@ -131,7 +131,7 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	 * @return
 	 */
 	protected QueryResult searchNodes(final String term, final Mode mode, final String type) {
-		final QueryManager qm = getServiceProvider().getArastejuGate().startConversation().createQueryManager();
+		final QueryManager qm = getServiceProvider().getArastejuGate().createQueryManager();
 		final Query query = qm.buildQuery();
 		switch (mode){
 		case URI:

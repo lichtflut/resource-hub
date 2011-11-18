@@ -1,4 +1,7 @@
 package de.lichtflut.rb.webck.components;
+
+import de.lichtflut.rb.webck.behavior.CKBehavior;
+
 /**
  * This enum describes the Type of CKLinks and how to perform incoming actions like "onClick".
  *

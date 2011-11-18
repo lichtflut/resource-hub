@@ -54,7 +54,6 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 */
 	public TypeDefinitionImpl() {
 		this(new SimpleResourceID(), false);
-		
 	}
 
 	/**

@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
+import java.util.Locale;
+
 import org.apache.wicket.markup.html.basic.Label;
 
 import de.lichtflut.rb.core.entity.RBField;
@@ -37,10 +39,10 @@ public abstract class CKFormRowItem extends CKComponent {
 		this.setOutputMarkupId(true);
 		// Check if minOccur is one. If yes append '*'
 		if(field.getCardinality().getMinOccurs() == 1){
-			Label label = new Label("label", field.getLabel() + " <span class=\"required\">*</span>");
+			Label label = new Label("label", field.getLabel(Locale.getDefault()) + " <span class=\"required\">*</span>");
 			add(label.setEscapeModelStrings(false));
 		}else{
-			add(new Label("label", field.getLabel()));
+			add(new Label("label", field.getLabel(Locale.getDefault())));
 		}
 		// Add appropriate Input-Field
 		switch(field.getDataType()){

@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.Component;
@@ -399,7 +400,7 @@ public abstract class ResourceTableView extends CKComponent {
 		for (RBEntity entity : entites) {
 			for (RBField field : entity.getAllFields()) {
 				if (!tableHeader.containsKey(field.getPredicate())) {
-					tableHeader.put(field.getPredicate(), field.getLabel());
+					tableHeader.put(field.getPredicate(), field.getLabel(Locale.getDefault()));
 				}
 			}
 		}

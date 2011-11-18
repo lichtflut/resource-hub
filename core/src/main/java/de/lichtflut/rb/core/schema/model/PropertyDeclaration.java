@@ -29,13 +29,13 @@ public interface PropertyDeclaration extends ResourceSchemaElement {
 	 * will be the predicate.
 	 * @return The resource identifier representing the descriptor.
 	 */
-	ResourceID getPropertyType();
+	ResourceID getPropertyDescriptor();
 
 	/**
 	 * Set the property.
 	 * @param property The property.
 	 */
-	void setPropertyType(ResourceID property); 
+	void setPropertyDescriptor(ResourceID property); 
 	
 	// -----------------------------------------------------
 

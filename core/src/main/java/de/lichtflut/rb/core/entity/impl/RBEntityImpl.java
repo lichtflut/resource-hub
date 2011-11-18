@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.entity.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
@@ -116,15 +117,15 @@ public class RBEntityImpl implements RBEntity {
 		fields = new ArrayList<RBField>();
 		if (schema != null) {
 			for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
-				final ResourceID predicate = decl.getPropertyType();
-				fields.add(new RBFieldImpl(decl, SNOPS.objects(node, predicate)));
+				final ResourceID predicate = decl.getPropertyDescriptor();
+				fields.add(new DeclaredRBField(decl, SNOPS.objects(node, predicate)));
 				predicates.remove(predicate);
 			}
 		}
 		// TODO: Remove from blacklist rdf(s):*
 		predicates.remove(RDF.TYPE);
 		for (ResourceID predicate : predicates) {
-			fields.add(new RBFieldImpl(predicate, SNOPS.objects(node, predicate)));
+			fields.add(new UndeclaredRBField(predicate, SNOPS.objects(node, predicate)));
 		}
 	}
 
@@ -213,9 +214,9 @@ public class RBEntityImpl implements RBEntity {
 		String s = getQualifiedName() + ", ";
 		for(RBField field : getAllFields()) {
 			if(field.isResourceReference()) {
-				s += field.getLabel() + ": " + field.getConstraints() + ", ";
+				s += field.getLabel(Locale.getDefault()) + ": " + field.getConstraints() + ", ";
 			} else{
-				s += (field.getLabel() + ": " + field.getValues() + ", ");
+				s += (field.getLabel(Locale.getDefault()) + ": " + field.getValues() + ", ");
 			}
 		}
 		return s;

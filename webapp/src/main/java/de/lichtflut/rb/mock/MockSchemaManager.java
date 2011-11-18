@@ -126,7 +126,7 @@ public class MockSchemaManager implements SchemaManager, Serializable {
 	@Override
 	public SchemaImporter getImporter(final String format) {
 		if ("JSON".equalsIgnoreCase(format.trim())) {
-			return new SchemaImporterImpl(this, new JsonSchemaParser());
+			return new SchemaImporterImpl(MockServiceProvider.getDefaultInstance(), new JsonSchemaParser());
 		} else {
 			throw new NotYetSupportedException("Unsupported format: " + format);
 		}

@@ -17,6 +17,7 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.arastreju.sge.query.FieldParam;
@@ -196,7 +197,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	@Override
 	public SchemaImporter getImporter(final String format) {
 		if ("JSON".equalsIgnoreCase(format.trim())) {
-			return new SchemaImporterImpl(this, new JsonSchemaParser());
+			return new SchemaImporterImpl(provider, new JsonSchemaParser());
 		} else {
 			throw new NotYetSupportedException("Unsupported format: " + format);
 		}
@@ -221,7 +222,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	}
 	
 	private QueryManager query() {
-		return provider.getArastejuGate().startConversation().createQueryManager();
+		return provider.getArastejuGate().createQueryManager();
 	}
 	
 	// -----------------------------------------------------
@@ -231,7 +232,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	 */
 	private SNResourceSchema findSchemaNodeByType(final ResourceID type) {
 		final ModelingConversation mc = startConversation();
-		final Query query = mc.createQueryManager().buildQuery().add(new FieldParam(RBSchema.DESCRIBES, type));
+		final Query query = query().buildQuery().add(new FieldParam(RBSchema.DESCRIBES, type));
 		final QueryResult result = query.getResult();
 		mc.close();
 		if (result.isEmpty()) {
@@ -268,12 +269,16 @@ public class SchemaManagerImpl implements SchemaManager {
 		final ResourceNode attached = mc.resolve(schema.getDescribedType());
 		final Set<SemanticNode> clazzes = SNOPS.objects(attached, RDF.TYPE);
 		if (!clazzes.contains(RB.TYPE)) {
-			logger.info("Making {} an rb:type", attached);
+			logger.info("Making {} an rb:Type", attached);
 			SNOPS.associate(attached, RDF.TYPE, RB.TYPE);
 		}
 		// 2nd: check properties
 		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
-			mc.resolve(decl.getPropertyType());
+			final SNProperty property = mc.resolve(decl.getPropertyDescriptor()).asResource().asProperty();
+			if (!property.isSubPropertyOf(RDF.PROPERTY)) {
+				logger.info("Making {} an rdf:Property", property);
+				SNOPS.associate(property, RDF.TYPE, RDF.PROPERTY);
+			}
 		}
 	}
 	

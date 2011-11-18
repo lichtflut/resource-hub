@@ -17,7 +17,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
@@ -26,6 +25,7 @@ import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.webck.application.LinkProvider;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.models.FieldLabelModel;
 import de.lichtflut.rb.webck.models.RBFieldValueModel;
 import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
 
@@ -57,7 +57,7 @@ public abstract class EntityRowEditPanel extends Panel {
 		super(id, model);
 		
 		setOutputMarkupId(true);
-		add(new Label("label", new PropertyModel<String>(model, "label")));
+		add(new Label("label", new FieldLabelModel(model)));
 		
 		final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
 		final ListView<RBFieldValueModel> valueList = new ListView<RBFieldValueModel>("values", listModel) {

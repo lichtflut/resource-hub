@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.schema.parser;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Common constants for parsers / generators of all formats.
  * </p>
  *
  * <p>
@@ -15,6 +15,14 @@ package de.lichtflut.rb.core.schema.parser;
  * @author Oliver Tigges
  */
 public interface IOConstants {
+	
+	public static final String NAMESPACES = "namespaces";
+	
+	public static final String PREFIX = "prefix";
+	
+	public static final String NAMESPACE = "namespace";
+	
+	// ----------------------------------------------------
 	
 	public static final String RESOURCE_SCHEMAS = "resource-schemas";
 	
@@ -43,6 +51,8 @@ public interface IOConstants {
 	public static final String TYPE_REFERENCE = "type-reference";
 
 	public static final String PROPERTY_TYPE = "property-type";
+	
+	public static final String FIELD_LABEL = "field-label";
 
 	public static final String PROPERTY_DECLARATION = "property-declaration";
 	

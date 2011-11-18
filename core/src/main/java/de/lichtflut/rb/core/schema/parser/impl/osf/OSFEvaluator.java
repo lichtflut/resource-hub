@@ -83,9 +83,9 @@ public final class OSFEvaluator {
      */
 	public static void evaluateLocalPropertyDec(final PropertyDeclarationImpl assertion,final ResourceSchema schema, final String type,
 			final Object value, final OSFTree tree) {
-    	ResourceID descriptor = assertion.getPropertyType();
+    	ResourceID descriptor = assertion.getPropertyDescriptor();
 		if(!(descriptor.getQualifiedName().getSimpleName().startsWith("has"))){
-			assertion.setPropertyType(new SimpleResourceID(new QualifiedName(descriptor.getNamespace().getUri(),"has"
+			assertion.setPropertyDescriptor(new SimpleResourceID(new QualifiedName(descriptor.getNamespace().getUri(),"has"
 					+ descriptor.getQualifiedName().getSimpleName())));
 		}
     	TypeDefinition pDec = assertion.getTypeDefinition();
