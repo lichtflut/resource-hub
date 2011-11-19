@@ -3,14 +3,18 @@
  */
 package de.lichtflut.rb.core.rbentity.persistence;
 
+import java.util.Collections;
+
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.junit.Assert;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.impl.AbstractRBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.entity.impl.UndeclaredRBField;
@@ -152,8 +156,8 @@ public final class RBEntityTest {
         ResourceSchema schema = createSchema();
 
         // Create two entitys with given shema
-        RBEntityImpl e = new RBEntityImpl(schema);
         RBEntityImpl e1 = new RBEntityImpl(schema);
+        RBEntityImpl e2 = new RBEntityImpl(schema);
 
         ServiceProvider sp = new DefaultRBServiceProvider(new RBConfig());
         
@@ -165,35 +169,38 @@ public final class RBEntityTest {
         System.out.println("**********"+sm.findAllResourceSchemas().size());
 
         // Add a Email to the entities
-        e.getField(new SimpleResourceID("http://lichtflut.de#hatEmail")).addValue("mutter@fam.com");
+        e1.getField(new SimpleResourceID("http://lichtflut.de#hatEmail")).addValue("mutter@fam.com");
 
         // Store entity
-        m.store(e);
+        m.store(e1);
 
         // Add Field to entity
-        e1.getField(new SimpleResourceID("http://lichtflut.de#hatEmail")).addValue("kind@fam.com");
+        e2.getField(new SimpleResourceID("http://lichtflut.de#hatEmail")).addValue("kind@fam.com");
 
         // Add a custom Field
-        AbstractRBField newField = new UndeclaredRBField(new SimpleResourceID("http://lichtflut.de#whatever"), null);
+        AbstractRBField newField = new UndeclaredRBField(
+        		new SimpleResourceID("http://lichtflut.de#whatever"), 
+        		Collections.<SemanticNode>emptySet());
         newField.addValue("haha");
         newField.addValue("hoho");
         newField.addValue("muhahaha");
-        e1.addField(newField);
+        e2.addField(newField);
 
         // Add entity as field
-        e.getField(new SimpleResourceID("http://lichtflut.de#hatKind")).addValue(e1.getID());
+        e1.getField(new SimpleResourceID("http://lichtflut.de#hatKind"))
+        	.addValue(new RBEntityReference(e2));
 
         // store entities
-        m.store(e);
         m.store(e1);
+        m.store(e2);
 
         // Tests
-        System.out.println(m.find(e.getID()).getAllFields());
-        Assert.assertEquals(4, m.find(e.getID()).getAllFields().size());
+        System.out.println(m.find(e1.getID()).getAllFields());
+        Assert.assertEquals(4, m.find(e1.getID()).getAllFields().size());
         Assert.assertEquals(2, m.findByType(new SimpleResourceID("http://lichtflut.de#personschema")).size());
 
-        m.delete(e);
-        System.out.println("-->"+m.find(e.getID()));
+        m.delete(e1);
+        System.out.println("-->"+m.find(e1.getID()));
         // System.out.println(MockNewRBEntityFactory.createNewRBEntity().getID());
     }
 
