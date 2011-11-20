@@ -15,6 +15,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.ResourceTableView;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
@@ -57,7 +58,11 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 			}
 		};
 		
-		final EntityListPanel list = new EntityListPanel("listView", model, ColumnConfiguration.defaultConfig()) {
+		final ResourceSchema schema = getServiceProvider().getSchemaManager().findSchemaForType(type);
+		final ColumnConfiguration config = ColumnConfiguration.defaultConfig();
+		config.addColumnsFromSchema(schema);
+		
+		final EntityListPanel list = new EntityListPanel("listView", model, config) {
 			
 			@Override
 			protected Component createViewAction(final String componentId, final RBEntity entity) {

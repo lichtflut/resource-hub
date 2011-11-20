@@ -9,15 +9,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.RDFS;
-import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 
-import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.FieldLabelBuilder;
 
 /**
  * <p>
@@ -53,14 +50,7 @@ public abstract class AbstractRBField implements RBField, Serializable {
 	@Override
 	public String getLabel(final Locale locale) {
 		final SNProperty property = getPredicate().asResource().asProperty();
-		String label = getLabel(property, RB.HAS_FIELD_LABEL, locale);
-		if (label == null) {
-			label = getLabel(property, RDFS.LABEL, locale);
-		}
-		if (label == null) {
-			label = property.getName();
-		}
-		return label;
+		return FieldLabelBuilder.getInstance().getLabel(property, locale);
 	}
 	
 	// ----------------------------------------------------
@@ -162,17 +152,6 @@ public abstract class AbstractRBField implements RBField, Serializable {
 	protected void addValues(final Set<SemanticNode> givenValues) {
 		for (SemanticNode sn : givenValues) {
 			this.values.add(sn.asValue().getValue());
-		}
-	}
-	
-	// ----------------------------------------------------
-	
-	private String getLabel(final SNProperty property, final ResourceID predicate, final Locale locale) {
-		final SemanticNode label = SNOPS.fetchObject(property, RB.HAS_FIELD_LABEL);
-		if (label != null && label.isValueNode()) {
-			return label.asValue().getStringValue();
-		} else {
-			return null;
 		}
 	}
 	

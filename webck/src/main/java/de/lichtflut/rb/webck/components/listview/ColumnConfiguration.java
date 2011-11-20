@@ -6,6 +6,17 @@ package de.lichtflut.rb.webck.components.listview;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.arastreju.sge.model.ResourceID;
+
+import de.lichtflut.rb.core.schema.FieldLabelBuilder;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.webck.components.listview.ColumnHeader.ColumnType;
 
 /**
  * <p>
@@ -21,6 +32,10 @@ import java.util.List;
 public class ColumnConfiguration implements Serializable {
 	
 	private final List<String> actions = new ArrayList<String>();
+	
+	private final List<PropertyDeclaration> decls = new ArrayList<PropertyDeclaration>();
+	
+	private final List<ResourceID> predicates = new ArrayList<ResourceID>();
 	
 	// ----------------------------------------------------
 	
@@ -46,13 +61,38 @@ public class ColumnConfiguration implements Serializable {
 	
 	// ----------------------------------------------------
 	
+	public String[] getActions() {
+		return actions.toArray(new String[actions.size()]);
+	}
+	
+	public IModel<List<ColumnHeader>> getHeaderModel() {
+		final Locale locale = RequestCycle.get().getRequest().getLocale();
+		final FieldLabelBuilder lb = FieldLabelBuilder.getInstance();
+		final List<ColumnHeader> headers = new ArrayList<ColumnHeader>();
+		for (PropertyDeclaration decl : decls) {
+			final String label = lb.getLabel(decl.getPropertyDescriptor().asResource().asProperty(), locale);
+			headers.add(new SimpleColumnHeader(label, decl.getPropertyDescriptor(), ColumnType.DATA));
+		}
+		for (ResourceID predicate : predicates) {
+			final String label = lb.getLabel(predicate.asResource().asProperty(), locale);
+			headers.add(new SimpleColumnHeader(label, predicate, ColumnType.DATA));
+		}
+		for (@SuppressWarnings("unused") String action : getActions()) {
+			headers.add(new SimpleColumnHeader("", null, ColumnType.ACTION));
+		}
+		return new ListModel<ColumnHeader>(headers);
+	}
+	
+	// ----------------------------------------------------
+	
 	public ColumnConfiguration addCustomAction(final String action) {
 		this.actions.add(action);
 		return this;
 	}
 	
-	public String[] getActions() {
-		return actions.toArray(new String[actions.size()]);
+	public ColumnConfiguration addColumnsFromSchema(final ResourceSchema schema) {
+		decls.addAll(schema.getPropertyDeclarations());
+		return this;
 	}
 
 }

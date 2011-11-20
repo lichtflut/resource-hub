@@ -17,7 +17,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 import scala.actors.threadpool.Arrays;
-
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.webck.conversion.RBFieldConverter;
@@ -44,16 +43,18 @@ public class EntityListPanel extends Panel {
 
 	/**
 	 * Constructor.
-	 * @param id
-	 * @param model
+	 * @param id The ID.
+	 * @param model The model providing the data to display..
+	 * @param config The configuration of the table and it's columns.
 	 */
 	public EntityListPanel(final String id, final IModel<List<RBEntity>> model, final ColumnConfiguration config) {
 		super(id, model);
 		
 		setOutputMarkupId(true);
 		
-		final ListView<RBEntity> rows = createRows(model, config); 
-		add(rows);
+		add(createRows(model, config));
+		
+		add(createHeaders(config));
 	}
 
 	// -- ACTION EVENTS -----------------------------------
@@ -134,6 +135,16 @@ public class EntityListPanel extends Panel {
 	}
 	
 	// ----------------------------------------------------
+	
+	private ListView<ColumnHeader> createHeaders(final ColumnConfiguration config) {
+		return new ListView<ColumnHeader>("headers", config.getHeaderModel()) {
+			@Override
+			protected void populateItem(final ListItem<ColumnHeader> item) {
+				final ColumnHeader header = item.getModelObject();
+				item.add(new Label("header", header.getLabel()));
+			}
+		};
+	}
 	
 	private ListView<RBEntity> createRows(final IModel<List<RBEntity>> model, final ColumnConfiguration config) {
 		return new ListView<RBEntity>("rows", model) {

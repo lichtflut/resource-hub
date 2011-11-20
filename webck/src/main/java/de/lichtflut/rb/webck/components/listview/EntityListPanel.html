@@ -11,6 +11,11 @@
 <wicket:panel>
 	<div class="ck-resource-panel">
 		<table class="entity-list">
+			<tr>
+				<th wicket:id="headers" class="entity-list-header">
+					<wicket:container wicket:id="header">[header]</wicket:container>
+				</th>
+			</tr>
 			<tr wicket:id="rows" class="entity-list-row">
 				<td wicket:id="cells" class="entity-list-cell">
 					<wicket:container wicket:id="content">[content]</wicket:container>
