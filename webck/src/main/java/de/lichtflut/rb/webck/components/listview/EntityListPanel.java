@@ -44,15 +44,15 @@ public class EntityListPanel extends Panel {
 	/**
 	 * Constructor.
 	 * @param id The ID.
-	 * @param model The model providing the data to display..
+	 * @param dataModel The model providing the data to display..
 	 * @param config The configuration of the table and it's columns.
 	 */
-	public EntityListPanel(final String id, final IModel<List<RBEntity>> model, final ColumnConfiguration config) {
-		super(id, model);
+	public EntityListPanel(final String id, final IModel<List<RBEntity>> dataModel, final ColumnConfiguration config) {
+		super(id, dataModel);
 		
 		setOutputMarkupId(true);
 		
-		add(createRows(model, config));
+		add(createRows(dataModel, config));
 		
 		add(createHeaders(config));
 	}

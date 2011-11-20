@@ -131,16 +131,15 @@ div.navigation-bar ul li:hover ul li {
 /* INPUT PANELS */
 
 div.entity-field {
-    width: 480px;
-    height: 28px;
+    width: 580px;
     clear: both;
     float: none;
     text-align: left;
 }
 
 div.entity-field .field-label {
-    width:155px;
-    padding-right:5px;
+    width:145px;
+    padding: 2px 5px 0 0;
     float:left;
 }
 
@@ -149,12 +148,16 @@ div.entity-field .field-values {
     margin: 0 5px 2px 0;
 }
 
-div.entity-field .field-operators {
-    float:left;
+div.entity-field .field-values input {
+	width:230px;
+}
+
+div.entity-field .field-operations {
+    float: right;
 }
 
 div.entity-field .field-values input.resource-picker {
-    width:250px;
+    width:370px;
 }
 
 

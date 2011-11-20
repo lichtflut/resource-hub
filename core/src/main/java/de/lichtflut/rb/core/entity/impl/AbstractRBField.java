@@ -97,6 +97,22 @@ public abstract class AbstractRBField implements RBField, Serializable {
 		slots++;
 	}
 	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeSlot(int index) {
+		if (slots > 1) {
+			values.remove(index);	
+			slots--;
+		} else {
+			setValue(index, null);
+		}
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<Object> getValues() {
 		final List<Object> copy = new ArrayList<Object>(slots);
@@ -108,6 +124,9 @@ public abstract class AbstractRBField implements RBField, Serializable {
 		return copy;
 	}
 
+	/** 
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setValues(final List<Object> fieldValues) {
 		this.values.clear();
@@ -145,13 +164,21 @@ public abstract class AbstractRBField implements RBField, Serializable {
 	
 	protected void addReferences(final Set<SemanticNode> givenValues) {
 		for (SemanticNode sn : givenValues) {
-			this.values.add(new RBEntityReference(sn.asResource()));
+			if (sn.isResourceNode()) {
+				this.values.add(new RBEntityReference(sn.asResource()));	
+			} else {
+				this.values.add(null);
+			}
 		}
 	}
 	
 	protected void addValues(final Set<SemanticNode> givenValues) {
 		for (SemanticNode sn : givenValues) {
-			this.values.add(sn.asValue().getValue());
+			if (sn.isValueNode()) {
+				this.values.add(sn.asValue().getValue());
+			} else {
+				this.values.add(sn.asResource().getQualifiedName().toURI());
+			}
 		}
 	}
 	

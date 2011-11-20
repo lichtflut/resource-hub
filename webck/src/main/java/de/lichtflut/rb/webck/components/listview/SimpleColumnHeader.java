@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.listview;
 
+import java.io.Serializable;
+
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.ResourceID;
@@ -18,7 +20,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public class SimpleColumnHeader implements ColumnHeader {
+public class SimpleColumnHeader implements ColumnHeader, Serializable {
 
 	private final IModel<String> label;
 	

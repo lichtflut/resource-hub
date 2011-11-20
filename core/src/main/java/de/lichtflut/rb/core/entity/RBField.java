@@ -90,6 +90,12 @@ public interface RBField {
 	void setValue(int index, Object value);
 	
 	/**
+	 * Remove a slot with it's value.
+	 * @param index The index, starting with 0.
+	 */
+	void removeSlot(int index);
+	
+	/**
 	 * Add a value to the end of the value list.
 	 * @param value THe value to add;
 	 */

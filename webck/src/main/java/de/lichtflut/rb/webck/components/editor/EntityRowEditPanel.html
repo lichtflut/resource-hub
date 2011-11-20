@@ -12,7 +12,10 @@
     <div wicket:id="label" class="field-label">[Label]</div>
     <div class="field-values">
     	<wicket:container wicket:id="values">
-        	<div wicket:id="valuefield"></div>
+        	<div>
+        		<wicket:container wicket:id="valuefield"></wicket:container>
+        		<a wicket:id="removeLink"><span class="remove-value-link">-</span></a>
+        	</div>
         </wicket:container>
     </div>
     <div class="field-operations">

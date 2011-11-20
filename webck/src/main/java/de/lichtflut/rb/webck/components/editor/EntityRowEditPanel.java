@@ -11,6 +11,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -21,6 +22,7 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.webck.application.LinkProvider;
@@ -64,6 +66,7 @@ public abstract class EntityRowEditPanel extends Panel {
 			@Override
 			protected void populateItem(final ListItem<RBFieldValueModel> item) {
 				addValueField(item, model.getObject().getDataType());
+				item.add(createRemoveLink(item.getIndex()));
 			}
 		};
 		valueList.setReuseItems(true);
@@ -94,33 +97,50 @@ public abstract class EntityRowEditPanel extends Panel {
 	/**
 	 * @param item
 	 * @param dataType
+	 * @return 
 	 */
-	protected void addValueField(final ListItem<RBFieldValueModel> item, final ElementaryDataType dataType) {
+	protected FormComponent<?> addValueField(final ListItem<RBFieldValueModel> item, final ElementaryDataType dataType) {
 		switch(dataType) {
 		case BOOLEAN:
-			addBooleanField(item);
-			break;
+			return addBooleanField(item);
 		case RESOURCE:
-			addResourceField(item);
-			break;
+			return addResourceField(item);
 		case DATE:
-			addDateField(item);
-			break;
+			return addDateField(item);
 		case INTEGER:
-			addTextField(item, Integer.class);
-			break;
+			return addTextField(item, Integer.class);
 		case DECIMAL:
-			addTextField(item, BigDecimal.class);
-			break;
+			return addTextField(item, BigDecimal.class);
 		case STRING:
-			addTextField(item, String.class);
-			break;
+			return addTextField(item, String.class);
+		default:
+			throw new NotYetImplementedException("Datatype: " + dataType);
 		}
 	}
 	
-	private void addResourceField(final ListItem<RBFieldValueModel> item) {
+	protected AjaxSubmitLink createRemoveLink(final int index) {
+		final AjaxSubmitLink link = new AjaxSubmitLink("removeLink") {
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				getField().removeSlot(index);
+				target.add(EntityRowEditPanel.this);
+			}
+			
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				target.add(EntityRowEditPanel.this);
+			}
+		};
+		return link;
+	}
+	
+	// ----------------------------------------------------
+	
+	private EntityPickerField addResourceField(final ListItem<RBFieldValueModel> item) {
 		final ResourceID typeConstraint = getTypeConstraint(getField());
-		item.add(new EntityPickerField("valuefield", item.getModelObject(), typeConstraint));
+		final EntityPickerField field = new EntityPickerField("valuefield", item.getModelObject(), typeConstraint);
+		item.add(field);
+		return field;
 	}
 	
 	private TextField addTextField(final ListItem<RBFieldValueModel> item, Class<?> type) {
@@ -136,10 +156,13 @@ public abstract class EntityRowEditPanel extends Panel {
 		return field;
 	}
 	
-	private void addBooleanField(ListItem<RBFieldValueModel> item) {
+	private CheckBox addBooleanField(ListItem<RBFieldValueModel> item) {
 		final CheckBox cb = new CheckBox("valuefield", item.getModelObject());
 		item.add(new Fragment("valuefield", "checkbox", this).add(cb));
+		return cb;
 	}
+	
+	// ----------------------------------------------------
 	
 	/**
 	 * Extracts the resourceTypeConstraint of this {@link RBField}.
@@ -157,11 +180,8 @@ public abstract class EntityRowEditPanel extends Panel {
 		return null;
 	}
 	
-	
-	// ----------------------------------------------------
-	
 	private RBField getField() {
 		return (RBField) getDefaultModelObject();
 	}
-
+	
 }

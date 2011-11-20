@@ -13,9 +13,9 @@
 		<form wicket:id="form" class="generic-resource-detail-form">
 			<div wicket:id="infoPanel"></div>
 			<div class="feedback-panel" wicket:id="feedbackPanel"></div>
-			<div wicket:id="rows">
+			<wicket:container wicket:id="rows">
 				<div wicket:id="row" class="entity-field"></div>
-			</div>
+			</wicket:container>
 			<button type="button" wicket:id="cancel"><wicket:message key="button.cancel">[cancel]</wicket:message></button>
 			<button type="button" wicket:id="save"><wicket:message key="button.save">[save]</wicket:message></button>
 			<button type="button" wicket:id="edit"><wicket:message key="button.edit">[edit]</wicket:message></button>
