@@ -4,13 +4,13 @@
 	<groupId>de.lichtflut</groupId>
 	<artifactId>lf.resource-browser</artifactId>
 	<name>Resource Browser</name>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.2-SNAPSHOT</version>
 	<description>lichtflut Resource Browser Project</description>
 	<packaging>pom</packaging>
 	<modules>
 		<module>core</module>
 		<module>webck</module>
-		<module>webapp</module>
+		<module>websample</module>
 	</modules>
 	<build>
 		<pluginManagement>
