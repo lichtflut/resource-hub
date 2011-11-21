@@ -15,6 +15,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
@@ -143,7 +144,7 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 		if (node == null) {
 			return null;
 		}
-		final ResourceID type = node.asEntity().getMainClass();
+		final ResourceID type = SNOPS.singleObject(node, RB.TYPE).asResource();
 		final RBEntityImpl entity;
 		if (type == null) {
 			entity = new RBEntityImpl(node);
