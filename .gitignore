@@ -7,7 +7,7 @@ target
 *.ipr
 *.iws
 *.tmprojtest
-pom-conf.tmproj
+rb_poms.tmproj
 core/bin
 webapp/bin
 webck/bin

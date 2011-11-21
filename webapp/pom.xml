@@ -23,14 +23,14 @@
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
 			<artifactId>lf.resource-browser.core</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
 			<artifactId>lf.resource-browser.webck</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 			<optional>false</optional>
 		</dependency>
@@ -97,7 +97,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.6</version>
 				<configuration>
 				 	<configLocation>../rb-prototype-checkstyle.xml</configLocation>
 					<propertyExpansion>basedir=${basedir}</propertyExpansion>

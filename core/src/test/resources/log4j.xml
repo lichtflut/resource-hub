@@ -30,10 +30,10 @@
 		<level value="info" />
 	</logger>
 	
-	<logger name="de.lichtflut.glasnost">
-        <level value="debug" />
+	<logger name="de.lichtflut.rb.core">
+        <level value="info" />
     </logger>
-    
+	
     <logger name="org.apache.wicket">
         <level value="warn" />
     </logger>
@@ -43,7 +43,7 @@
     </logger>
 
 	<root>
-		<priority value="debug" />
+		<priority value="info" />
 		<appender-ref ref="console" />
 	</root>
 

@@ -86,12 +86,15 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 					final TypeDefinition typeDef = readPublicTypeDef(p, result);
 					result.add(typeDef);
 				}
+			} else if (p.getCurrentToken() == JsonToken.END_OBJECT ||
+					p.getCurrentToken() == JsonToken.START_OBJECT) {
+				// ignore
 			} else {
  				logger.warn("unkown token : " + p.getCurrentName() + " - " + p.getText());
 			}
 		}
 		p.close();
-		logger.info("parsed {} in {} micros", new Object[] {result, sw.getTime()});
+		logger.debug("parsed {} in {} micros", new Object[] {result, sw.getTime()});
 		return result;
 	}
 	

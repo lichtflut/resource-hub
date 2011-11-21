@@ -56,8 +56,6 @@ public class JsonBindingTest {
 		exporter.write(out, personSchema);
 		final byte[] bytes = out.toByteArray();
 		
-		System.out.println(new String(bytes));
-		
 		final JsonSchemaParser importer = new JsonSchemaParser();
 		importer.parse(new ByteArrayInputStream(bytes));
 	}
@@ -73,8 +71,6 @@ public class JsonBindingTest {
 		exporter.write(out, emailTypeDef);
 		exporter.write(out, emailTypeDef);
 		final byte[] bytes = out.toByteArray();
-		
-		System.out.println(new String(bytes));
 		
 		final JsonSchemaParser importer = new JsonSchemaParser();
 		importer.parse(new ByteArrayInputStream(bytes));
