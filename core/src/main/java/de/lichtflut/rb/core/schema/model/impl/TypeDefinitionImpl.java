@@ -63,7 +63,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 */
 	public TypeDefinitionImpl(final ResourceID id, final boolean isPublic) {
 		this.id = id;
-		this.name = id.getName();
+		this.name = id.getQualifiedName().getSimpleName();
 		this.isPublicType = isPublic;
 	}
 

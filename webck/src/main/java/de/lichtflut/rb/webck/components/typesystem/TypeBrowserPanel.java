@@ -49,7 +49,7 @@ public abstract class TypeBrowserPanel extends Panel {
 						}	
 				};
 				item.add(link);
-				link.add(new Label("type", type.getName()));
+				link.add(new Label("type", type.getQualifiedName().getSimpleName()));
 				link.add(new AttributeAppender("title", type.getQualifiedName().toURI()));
 			}
 		});

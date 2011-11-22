@@ -67,14 +67,13 @@ public class ColumnConfiguration implements Serializable {
 	
 	public IModel<List<ColumnHeader>> getHeaderModel() {
 		final Locale locale = RequestCycle.get().getRequest().getLocale();
-		final FieldLabelBuilder lb = FieldLabelBuilder.getInstance();
 		final List<ColumnHeader> headers = new ArrayList<ColumnHeader>();
 		for (PropertyDeclaration decl : decls) {
-			final String label = lb.getLabel(decl.getPropertyDescriptor().asResource().asProperty(), locale);
+			final String label = decl.getFieldLabelDefinition().getLabel(locale);
 			headers.add(new SimpleColumnHeader(label, decl.getPropertyDescriptor(), ColumnType.DATA));
 		}
 		for (ResourceID predicate : predicates) {
-			final String label = lb.getLabel(predicate.asResource().asProperty(), locale);
+			final String label = FieldLabelBuilder.getInstance().getLabel(predicate, locale);
 			headers.add(new SimpleColumnHeader(label, predicate, ColumnType.DATA));
 		}
 		for (@SuppressWarnings("unused") String action : getActions()) {

@@ -7,18 +7,17 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.util.convert.IConverter;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
-import de.lichtflut.rb.core.entity.RBEntityReference;
-
 /**
- * Converter for {@link RBEntityReference}s.
+ * Converter for {@link ResourceID}s.
  *
  * Created: Aug 25, 2011
  *
  * @author Ravi Knox
  */
-public class RBEntityReferenceConverter implements IConverter<RBEntityReference> {
+public class ResourceIDConverter implements IConverter<ResourceID> {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -26,18 +25,18 @@ public class RBEntityReferenceConverter implements IConverter<RBEntityReference>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RBEntityReference convertToObject(final String value, final Locale locale) {
+	public ResourceID convertToObject(final String value, final Locale locale) {
 		if (StringUtils.isBlank(value)) {
 			return null;
 		}
-		return new RBEntityReference(new SimpleResourceID(value));
+		return new SimpleResourceID(value);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String convertToString(final RBEntityReference ref, final Locale locale) {
+	public String convertToString(final ResourceID ref, final Locale locale) {
 		return ref.getQualifiedName().toURI();
 	}
 

@@ -9,16 +9,14 @@ import static org.arastreju.sge.SNOPS.uri;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.Locale;
 
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.SemanticNode;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonGenerator;
 
-import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
@@ -99,15 +97,14 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	
 	private void writeSchema(final JsonGenerator g, ResourceSchema schema) throws IOException {
 		g.writeStringField(FOR_TYPE, schema.getDescribedType().getQualifiedName().toURI());
+		if (schema.getLabelBuilder().getExpression() != null) {
+			g.writeStringField(LABEL_RULE, schema.getLabelBuilder().getExpression());	
+		}
 		for(PropertyDeclaration decl : schema.getPropertyDeclarations()) {
-			final ResourceID propertyDescriptor = decl.getPropertyDescriptor();
-			final String fieldLabel = getFieldLabel(propertyDescriptor);
 			g.writeObjectFieldStart(PROPERTY_DECLARATION);
-			g.writeStringField(PROPERTY_TYPE, uri(propertyDescriptor));
+			g.writeStringField(PROPERTY_TYPE, uri(decl.getPropertyDescriptor()));
 			g.writeNumberField(MIN, decl.getCardinality().getMinOccurs());
-			if (fieldLabel != null) {
-				g.writeStringField(FIELD_LABEL, fieldLabel);
-			}
+			writeFieldLabelDef(g, decl.getFieldLabelDefinition());
 			if (!decl.getCardinality().isUnbound()) {
 				g.writeNumberField(MAX, decl.getCardinality().getMaxOccurs());
 			}
@@ -140,6 +137,17 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 		g.writeEndObject();
 	}
 	
+	private void writeFieldLabelDef(final JsonGenerator g, final FieldLabelDefinition def) throws JsonGenerationException, IOException {
+		g.writeObjectFieldStart(FIELD_LABEL);
+		if (def.getDefaultLabel() != null) {
+			g.writeStringField(DEFAULT, def.getDefaultLabel());
+		}
+		for(Locale locale : def.getSupportedLocales()) {
+			g.writeStringField(locale.toString(), def.getLabel(locale));
+		}
+		g.writeEndObject();
+	}
+	
 	private void writeConstraints(final JsonGenerator g, final Collection<Constraint> constraints) throws JsonGenerationException, IOException {
 		g.writeObjectFieldStart(CONSTRAINTS);
 		for (Constraint constraint : constraints) {
@@ -152,15 +160,4 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 		g.writeEndObject();
 	}
 	
-	// ----------------------------------------------------
-	
-	private String getFieldLabel(final ResourceID property) {
-		final SemanticNode label = SNOPS.fetchObject(property.asResource(), RB.HAS_FIELD_LABEL);
-		if (label != null && label.isValueNode()) {
-			return label.asValue().getStringValue();
-		} else {
-			return null;
-		}
-	}
-
 }

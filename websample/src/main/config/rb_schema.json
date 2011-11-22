@@ -9,75 +9,25 @@
   } ]
 }{
   "resource-schemas" : [ {
-    "for-type" : "http://lichtflut.de#Organization",
-	"label-rule" : "<firma> http://lichtflut.de#hasName <von> http://lichtflut.de#hasCEO",
+    "for-type" : "http://lichtflut.de#City",
+	"label-rule" : "http://lichtflut.de#hasName <(> http://lichtflut.de#hasCountry <)>",
     "property-declaration" : {
       "property-type" : "http://lichtflut.de#hasName",
-      "field-label" : "Name",
       "min" : 1,
+      "field-label" : {
+        "default" : "Name"
+      },
       "max" : 1,
       "type-definition" : {
         "datatype" : "string"
       }
     },
     "property-declaration" : {
-      "property-type" : "http://lichtflut.de#hasGeneralManager",
+      "property-type" : "http://lichtflut.de#hasCountry",
       "min" : 1,
-      "field-label" : "General Manager / CEO",
-      "type-definition" : {
-        "datatype" : "resource",
-        "constraints" : {
-          "resource-type" : "http://lichtflut.de#Person"
-        }
-      }
-    },
-	"property-declaration" : {
-      "property-type" : "http://lichtflut.de#hasDomicile",
-      "min" : 1,
-      "max" : 1,
-      "field-label" : "Domicile",
-      "type-definition" : {
-        "datatype" : "resource",
-        "constraints" : {
-          "resource-type" : "http://lichtflut.de#City"
-        }
-      }
-    },
-    "property-declaration" : {
-      "property-type" : "http://lichtflut.de#hasAddress",
-      "min" : 1,
-      "max" : -1,
-      "field-label" : "Address",
-      "type-definition" : {
-        "datatype" : "resource",
-        "constraints" : {
-          "resource-type" : "http://lichtflut.de#Address"
-        }
-      }
-    },
-    "property-declaration" : {
-      "property-type" : "http://lichtflut.de#isIndependent",
-      "min" : 1,
-      "max" : 1,
-	  "field-label" : "Is independent",
-      "type-definition" : {
-        "datatype" : "boolean"
-      }
-    },
-    "property-declaration" : {
-      "property-type" : "http://lichtflut.de#hasEmployees",
-	  "field-label" : "Has employees",
-      "min" : 1,
-      "type-definition" : {
-        "datatype" : "resource",
-        "constraints" : {
-          "resource-type" : "http://lichtflut.de#Person"
-        }
-      }
-    },
-    "property-declaration" : {
-      "property-type" : "http://lichtflut.de#hasDescription",
-      "min" : 0,
+      "field-label" : {
+        "default" : "Country"
+      },
       "max" : 1,
       "type-definition" : {
         "datatype" : "string"
@@ -88,8 +38,10 @@
 	"label-rule" : "http://lichtflut.de#hasFirstname http://lichtflut.de#hasLastname",
     "property-declaration" : {
       "property-type" : "http://lichtflut.de#hasFirstname",
-      "field-label" : "First name",
       "min" : 1,
+      "field-label" : {
+        "default" : "First name"
+      },
       "max" : 1,
       "type-definition" : {
         "datatype" : "string"
@@ -97,16 +49,20 @@
     },
     "property-declaration" : {
       "property-type" : "http://lichtflut.de#hasLastname",
-	  "field-label" : "Last name",
       "min" : 0,
+      "field-label" : {
+        "default" : "Last name"
+      },
       "type-definition" : {
         "datatype" : "string"
       }
     },
     "property-declaration" : {
       "property-type" : "http://lichtflut.de#hasAddress",
-	  "field-label" : "Address",
       "min" : 1,
+      "field-label" : {
+        "default" : "Address"
+      },
       "type-definition" : {
         "datatype" : "resource",
         "constraints" : {
@@ -116,8 +72,10 @@
     },
     "property-declaration" : {
       "property-type" : "http://lichtflut.de#hasDateOfBirth",
-      "field-label" : "Birthdate",
       "min" : 1,
+      "field-label" : {
+        "default" : "Birthdate"
+      },
       "max" : 1,
       "type-definition" : {
         "datatype" : "date"
@@ -125,8 +83,10 @@
     },
     "property-declaration" : {
       "property-type" : "http://lichtflut.de#hasPlaceOfBirth",
-      "field-label" : "Birthplace",
       "min" : 0,
+      "field-label" : {
+        "default" : "Birthplace"
+      },
       "max" : 1,
       "type-definition" : {
         "datatype" : "resource",
@@ -137,14 +97,18 @@
     },
     "property-declaration" : {
       "property-type" : "http://lichtflut.de#hasEmail",
-	  "field-label" : "E-Mail",
       "min" : 0,
+      "field-label" : {
+        "default" : "E-Mail"
+      },
       "type-reference" : "http://lichtflut.de/public-type-defs#EmailTypeDef"
     },
     "property-declaration" : {
       "property-type" : "http://lichtflut.de#hasChildren",
-      "field-label" : "Children",
       "min" : 0,
+      "field-label" : {
+        "default" : "Children"
+      },
       "type-definition" : {
         "datatype" : "resource",
         "constraints" : {
@@ -154,20 +118,24 @@
     }
   }, {
     "for-type" : "http://lichtflut.de#Address",
-	"label-rule" : "http://lichtflut.de#hasStreet http://lichtflut.de#hasHouseNr <,> http://lichtflut.de#hasCity",
+	"label-rule" : "http://lichtflut.de#hasStreet http://lichtflut.de#hasHouseNo <,> http://lichtflut.de#hasCity",
     "property-declaration" : {
       "property-type" : "http://lichtflut.de#hasStreet",
-      "field-label" : "Street",
       "min" : 1,
+      "field-label" : {
+        "default" : "Street"
+      },
       "max" : 1,
       "type-definition" : {
         "datatype" : "string"
       }
     },
     "property-declaration" : {
-      "property-type" : "http://lichtflut.de#hasHouseNr",
-      "field-label" : "House No.",
+      "property-type" : "http://lichtflut.de#hasHouseNo",
       "min" : 1,
+      "field-label" : {
+        "default" : "House No."
+      },
       "max" : 1,
       "type-definition" : {
         "datatype" : "string"
@@ -175,8 +143,10 @@
     },
     "property-declaration" : {
       "property-type" : "http://lichtflut.de#Zipcode",
-	  "field-label" : "ZIP code",
       "min" : 1,
+      "field-label" : {
+        "default" : "ZIP code"
+      },
       "max" : 1,
       "type-definition" : {
         "datatype" : "string"
@@ -184,8 +154,10 @@
     },
     "property-declaration" : {
       "property-type" : "http://lichtflut.de#hasCity",
-      "field-label" : "City",
       "min" : 1,
+      "field-label" : {
+        "default" : "City"
+      },
       "max" : 1,
       "type-definition" : {
         "datatype" : "resource",
@@ -195,58 +167,131 @@
       }
     }
   }, {
-    "for-type" : "http://lichtflut.de#City",
-	"label-rule" : "http://lichtflut.de#hasName <,> http://lichtflut.de#hasCountry",
+    "for-type" : "http://lichtflut.de#Organization",
+	"label-rule" : "<firma> http://lichtflut.de#hasName <von> http://lichtflut.de#hasGeneralManager",
     "property-declaration" : {
       "property-type" : "http://lichtflut.de#hasName",
-      "field-label" : "City Name",
       "min" : 1,
+      "field-label" : {
+        "default" : "Name"
+      },
       "max" : 1,
       "type-definition" : {
         "datatype" : "string"
       }
     },
     "property-declaration" : {
-      "property-type" : "http://lichtflut.de#hasCountry",
-	  "field-label" : "Country",
+      "property-type" : "http://lichtflut.de#hasGeneralManager",
       "min" : 1,
+      "field-label" : {
+        "default" : "General Manager / CEO"
+      },
+      "type-definition" : {
+        "datatype" : "resource",
+        "constraints" : {
+          "resource-type" : "http://lichtflut.de#Person"
+        }
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "http://lichtflut.de#hasDomicile",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Domicile"
+      },
+      "max" : 1,
+      "type-definition" : {
+        "datatype" : "resource",
+        "constraints" : {
+          "resource-type" : "http://lichtflut.de#City"
+        }
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "http://lichtflut.de#hasAddress",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Address"
+      },
+      "type-definition" : {
+        "datatype" : "resource",
+        "constraints" : {
+          "resource-type" : "http://lichtflut.de#Address"
+        }
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "http://lichtflut.de#isIndependent",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Is independent"
+      },
+      "max" : 1,
+      "type-definition" : {
+        "datatype" : "boolean"
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "http://lichtflut.de#hasEmployees",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Has employees"
+      },
+      "type-definition" : {
+        "datatype" : "resource",
+        "constraints" : {
+          "resource-type" : "http://lichtflut.de#Person"
+        }
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "http://lichtflut.de#hasDescription",
+      "min" : 0,
+      "field-label" : {
+        "default" : "hasDescription"
+      },
       "max" : 1,
       "type-definition" : {
         "datatype" : "string"
       }
     }
-  }	, {
-	    "for-type" : "http://lichtflut.de#Project",
-		"label-rule" : "http://lichtflut.de#hasTitle <(> http://lichtflut.de#hasID <)>",
-		"property-declaration" : {
-	      "property-type" : "http://lichtflut.de#hasID",
-	      "field-label" : "ID",
-	      "min" : 1,
-	      "max" : 1,
-	      "type-definition" : {
-	        "datatype" : "string"
-	      }
-	    },
-	    "property-declaration" : {
-	      "property-type" : "http://lichtflut.de#hasTitle",
-	      "field-label" : "Name",
-	      "min" : 1,
-	      "max" : 1,
-	      "type-definition" : {
-	        "datatype" : "string"
-	      }
-	    },
-	    "property-declaration" : {
-	      "property-type" : "http://lichtflut.de#hasLead",
-		  "field-label" : "Project lead",
-	      "min" : 0,
-	      "max" : -1,
-	      "type-definition" : {
-	        "datatype" : "resource",
-	        "constraints" : {
-	          "resource-type" : "http://lichtflut.de#Person"
-	        }
-	      }
-	    }
-	  } ]
+  }, {
+    "for-type" : "http://lichtflut.de#Project",
+	"label-rule" : "http://lichtflut.de#hasTitle <(> http://lichtflut.de#hasID <)>",
+    "property-declaration" : {
+      "property-type" : "http://lichtflut.de#hasID",
+      "min" : 1,
+      "field-label" : {
+        "default" : "ID"
+      },
+      "max" : 1,
+      "type-definition" : {
+        "datatype" : "string"
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "http://lichtflut.de#hasTitle",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Name"
+      },
+      "max" : 1,
+      "type-definition" : {
+        "datatype" : "string"
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "http://lichtflut.de#hasLead",
+      "min" : 0,
+      "field-label" : {
+        "default" : "Project lead"
+      },
+      "type-definition" : {
+        "datatype" : "resource",
+        "constraints" : {
+          "resource-type" : "http://lichtflut.de#Person"
+        }
+      }
+    }
+  } ]
 }

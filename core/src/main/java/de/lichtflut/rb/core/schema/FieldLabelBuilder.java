@@ -9,7 +9,6 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.model.nodes.views.SNProperty;
 
 import de.lichtflut.rb.core.RB;
 
@@ -36,21 +35,24 @@ public class FieldLabelBuilder {
 	
 	// ----------------------------------------------------
 
-	public String getLabel(final SNProperty property, final Locale locale) {
-		String label = getLabel(property, RB.HAS_FIELD_LABEL, locale);
+	public String getLabel(final ResourceID predicate, final Locale locale) {
+		String label = getLabel(predicate, RB.HAS_FIELD_LABEL, locale);
 		if (label == null) {
-			label = getLabel(property, RDFS.LABEL, locale);
+			label = getLabel(predicate, RDFS.LABEL, locale);
 		}
 		if (label == null) {
-			label = property.getName();
+			label = predicate.getQualifiedName().getSimpleName();
 		}
 		return label;
 	}
 	
 	// ----------------------------------------------------
 	
-	private String getLabel(final SNProperty property, final ResourceID predicate, final Locale locale) {
-		final SemanticNode label = SNOPS.fetchObject(property, RB.HAS_FIELD_LABEL);
+	private String getLabel(final ResourceID src, final ResourceID predicate, final Locale locale) {
+		if (predicate == null) {
+			return null;
+		}
+		final SemanticNode label = SNOPS.fetchObject(src.asResource(), predicate);
 		if (label != null && label.isValueNode()) {
 			return label.asValue().getStringValue();
 		} else {

@@ -58,6 +58,8 @@ public abstract class SchemaEditorPanel extends Panel {
 				
 				item.add(new ResourcePickerField("property", new PropertyModel(row, "propertyDescriptor"))
 					.setRequired(true));
+				
+				item.add(new TextField<String>("fieldLabel", new PropertyModel(row, "defaultLabel")));
 
 				item.add(new TextField("min", new PropertyModel(row, "min")));
 				

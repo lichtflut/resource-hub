@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.entity.impl;
 
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
@@ -44,6 +45,11 @@ public class DeclaredRBField extends AbstractRBField {
 
 	//------------------------------------------------------------
 
+	@Override
+	public String getLabel(Locale locale) {
+		return declaration.getFieldLabelDefinition().getLabel(locale);
+	}
+	
 	@Override
 	public ResourceID getPredicate() {
 		return declaration.getPropertyDescriptor();

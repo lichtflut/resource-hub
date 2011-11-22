@@ -9,19 +9,23 @@ import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNText;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
+import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
@@ -68,6 +72,8 @@ public class Schema2GraphBinding {
 			decl.setPropertyDescriptor(snDecl.getPropertyDescriptor());
 			decl.setCardinality(buildCardinality(snDecl));
 			decl.setTypeDefinition(toModelObject(snDecl.getTypeDefinition()));
+			decl.setFieldLabelDefinition(createFieldLabelDef(snDecl));
+			
 			schema.addPropertyDeclaration(decl);
 		}
 		if (snSchema.hasLabelExpression()) {
@@ -119,6 +125,7 @@ public class Schema2GraphBinding {
 			snDecl.setMinOccurs(minAsScalar(decl.getCardinality()), RBSchema.CONTEXT);
 			snDecl.setMaxOccurs(maxAsScalar(decl.getCardinality()), RBSchema.CONTEXT);
 			snDecl.setTypeDefinition(toSemanticNode(decl.getTypeDefinition()), RBSchema.CONTEXT);
+			setFieldLabels(snDecl, decl.getFieldLabelDefinition());
 			if (null != predecessor) {
 				predecessor.setSuccessor(snDecl, RBSchema.CONTEXT);
 			}
@@ -217,6 +224,23 @@ public class Schema2GraphBinding {
 		} else {
 			return new SNScalar(cardinality.getMaxOccurs());	
 		}
+	}
+	
+	protected FieldLabelDefinition createFieldLabelDef(final SNPropertyDeclaration snDecl) {
+		final FieldLabelDefinition def = new FieldLabelDefinitionImpl();
+		final Set<Association> assocs = snDecl.getAssociations(RB.HAS_FIELD_LABEL);
+		for (Association current : assocs) {
+			// TODO: Evaluate context to locale
+			def.setDefaultLabel(current.getObject().asValue().getStringValue());
+		}
+		return def;
+	}
+	
+	protected void setFieldLabels(final SNPropertyDeclaration snDecl, final FieldLabelDefinition def) {
+		if (def != null && def.getDefaultLabel() != null) {
+			SNOPS.associate(snDecl, RB.HAS_FIELD_LABEL, new SNText(def.getDefaultLabel()));
+		}
+		// TODO: set i18n labels.
 	}
 	
 	// -----------------------------------------------------

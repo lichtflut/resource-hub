@@ -9,13 +9,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang3.Validate;
-import org.arastreju.sge.model.DetachedStatement;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.nodes.views.SNText;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
@@ -23,14 +22,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.logging.StopWatch;
-import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
+import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
@@ -119,7 +119,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	
 	private TypeDefinition readPublicTypeDef(final JsonParser p, final ParsedElements result) throws IOException {
 		ResourceID id = new SimpleResourceID();
-		String name = id.getName();
+		String name = id.getQualifiedName().getSimpleName();
 		ElementaryDataType datatype = ElementaryDataType.STRING;
 		Collection<Constraint> constraints = Collections.emptySet();
 		while (p.nextToken() != JsonToken.END_OBJECT) {
@@ -145,7 +145,6 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
 		int min = 0;
 		int max = -1;
-		String fieldLabel = null;
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (PROPERTY_TYPE.equals(field)) {
@@ -160,11 +159,8 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 			} else if (TYPE_DEFINITION.equals(field)) {
 				decl.setTypeDefinition(readTypeDef(p));
 			} else if (FIELD_LABEL.equals(field)) {
-				fieldLabel = p.getText();
+				decl.setFieldLabelDefinition(readFieldLabel(p));
 			}
-		}
-		if (fieldLabel != null) {
-			result.add(new DetachedStatement(decl.getPropertyDescriptor(), RB.HAS_FIELD_LABEL, new SNText(fieldLabel)));
 		}
 		decl.setCardinality(CardinalityBuilder.between(min, max));
 		return decl;
@@ -178,6 +174,19 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				def.setElementaryDataType(ElementaryDataType.valueOf(p.getText().toUpperCase()));
 			} else if (CONSTRAINTS.equals(field)) {
 				def.setConstraints(readConstraints(p));
+			}
+		}
+		return def;
+	}
+	
+	private FieldLabelDefinition readFieldLabel(final JsonParser p) throws IOException {
+		final FieldLabelDefinitionImpl def = new FieldLabelDefinitionImpl();
+		while (p.nextToken() != JsonToken.END_OBJECT) {
+			final String field = nextField(p);
+			if (DEFAULT.equals(field)) {
+				def.setDefaultLabel(p.getText());
+			} else {
+				def.setLabel(new Locale(field),p.getText());
 			}
 		}
 		return def;

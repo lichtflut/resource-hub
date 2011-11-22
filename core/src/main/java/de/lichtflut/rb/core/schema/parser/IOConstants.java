@@ -24,6 +24,12 @@ public interface IOConstants {
 	
 	// ----------------------------------------------------
 	
+	public static final String ID = "id";
+	
+	public static final String DEFAULT = "default";
+	
+	// ----------------------------------------------------
+	
 	public static final String RESOURCE_SCHEMAS = "resource-schemas";
 	
 	public static final String SCHEMA = "schema";
@@ -37,8 +43,6 @@ public interface IOConstants {
 	public static final String NAME = "name";
 
 	public static final String RESOURCE_TYPE = "resource-type";
-
-	public static final String ID = "id";
 
 	public static final String TYPE_DEFINITION = "type-definition";
 

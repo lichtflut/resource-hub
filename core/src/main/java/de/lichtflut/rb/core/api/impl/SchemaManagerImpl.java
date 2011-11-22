@@ -19,7 +19,6 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.persistence.TransactionControl;
 import org.arastreju.sge.query.FieldParam;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryManager;
@@ -148,20 +147,13 @@ public class SchemaManagerImpl implements SchemaManager {
 	public void store(final ResourceSchema schema) {
 		Validate.isTrue(schema.getDescribedType() != null, "The type described by this schema is not defined.");
 		final ModelingConversation mc = startConversation();
-		final TransactionControl tx = mc.beginTransaction();
-		try {
-			final ResourceNode existing = findSchemaNodeByType(schema.getDescribedType());
-			if (existing != null) {
-				removeSchema(mc, existing);
-			}
-			ensureReferencedResourcesExist(mc, schema);
-			final SNResourceSchema node = binding.toSemanticNode(schema);
-			mc.attach(node);
-			tx.commit();
-		} catch(Exception e) {
-			tx.rollback();
-			throw new RuntimeException(e);
+		final ResourceNode existing = findSchemaNodeByType(schema.getDescribedType());
+		if (existing != null) {
+			removeSchema(mc, existing);
 		}
+		ensureReferencedResourcesExist(mc, schema);
+		final SNResourceSchema node = binding.toSemanticNode(schema);
+		mc.attach(node);
 		mc.close();
 	}
 
@@ -253,7 +245,7 @@ public class SchemaManagerImpl implements SchemaManager {
 		// remove DESCRIBES association in order to prevent the type to be deleted.
 		Association assoc = SNOPS.singleAssociation(schemaNode, RBSchema.DESCRIBES);
 		schemaNode.remove(assoc);
-		mc.remove(schemaNode, true);
+		mc.remove(schemaNode, false);
 	}
 	
 	/**

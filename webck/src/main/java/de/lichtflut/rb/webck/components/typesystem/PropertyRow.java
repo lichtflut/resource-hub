@@ -14,12 +14,14 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeDefinition;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 
@@ -42,6 +44,8 @@ public class PropertyRow implements Serializable {
 	private TypeDefinition typeDefinition;
 	
 	private String displayName;
+	
+	private FieldLabelDefinition fieldLabel;
 	
 	private ElementaryDataType dataType;
 	
@@ -74,12 +78,13 @@ public class PropertyRow implements Serializable {
 	
 	public static PropertyDeclaration toPropertyDeclaration(final PropertyRow row) {
 		final PropertyDeclaration decl = new PropertyDeclarationImpl();
+		decl.setPropertyDescriptor(row.propertyType);
+		decl.setFieldLabelDefinition(row.fieldLabel);
 		if (row.isUnbounded()) {
 			decl.setCardinality(CardinalityBuilder.hasAtLeast(row.min));	
 		} else {
 			decl.setCardinality(CardinalityBuilder.between(row.min, row.max));
 		}
-		decl.setPropertyDescriptor(row.propertyType);
 		if (row.isTypeDefinitionPublic()) {
 			decl.setTypeDefinition(row.typeDefinition);
 		} else {
@@ -120,6 +125,7 @@ public class PropertyRow implements Serializable {
 		this.min = decl.getCardinality().getMinOccurs();
 		this.max = decl.getCardinality().getMaxOccurs();
 		this.unbounded = decl.getCardinality().isUnbound();
+		this.fieldLabel = decl.getFieldLabelDefinition();
 		
 		setTypeDefinition(decl.getTypeDefinition());
 	}
@@ -137,10 +143,11 @@ public class PropertyRow implements Serializable {
 	 */
 	public PropertyRow() {
 		this.min = 0;
-		this.max = -1;
+		this.max = 1;
 		this.unbounded = true;
 		this.dataType = ElementaryDataType.STRING;
 		this.literalConstraints = new ArrayList<String>();
+		this.fieldLabel = new FieldLabelDefinitionImpl();
 	}
 	
 	// -----------------------------------------------------
@@ -157,6 +164,14 @@ public class PropertyRow implements Serializable {
 	 */
 	public void setPropertyDescriptor(ResourceID propertyDescriptor) {
 		this.propertyType = propertyDescriptor;
+	}
+	
+	public String getDefaultLabel() {
+		return fieldLabel.getDefaultLabel();
+	}
+	
+	public void setDefaultLabel(String label) {
+		this.fieldLabel.setDefaultLabel(label);
 	}
 	
 	/**

@@ -26,7 +26,6 @@ import org.arastreju.sge.model.ResourceID;
  *      </ol>
  *   <li> resource reference</li>
  *  </ol>
- *
  * </p>
  *
  * <p>
@@ -65,7 +64,7 @@ public interface TypeDefinition  extends ResourceSchemaElement{
 
 	/**
 	 * An unqualified readable name for this type definition.
-	 * Usefull if it is a pulic TypeDefinition.
+	 * Useful if it is a public TypeDefinition.
 	 * @return The display name.
 	 */
 	String getName();

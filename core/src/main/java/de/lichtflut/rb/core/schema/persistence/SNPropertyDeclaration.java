@@ -15,17 +15,13 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import java.util.Set;
-
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
-import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 
 import de.lichtflut.infra.Infra;
@@ -104,8 +100,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	 */
 	public void setTypeDefinition(final SNPropertyTypeDefinition typeDef, final Context context) {
 		if (!Infra.equals(getTypeDefinition(), typeDef)){
-			removeAssocs(RBSchema.HAS_PROPERTY_TYPE_DEF);
-			Association.create(this, RBSchema.HAS_PROPERTY_TYPE_DEF, typeDef, context);
+			SNOPS.replace(this, RBSchema.HAS_PROPERTY_TYPE_DEF, typeDef, context);
 		}
 	}
 
@@ -113,13 +108,10 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * Returns the property declared by this property declaration.
 	 * @return The property.
 	 */
-	public SNProperty getPropertyDescriptor() {
-		SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_DESCRIPTOR);
-		if (node != null && node.isResourceNode()){
-			final SNProperty property = node.asResource().asProperty();
-			// trigger association loading to get label of property. 
-			property.getAssociations();
-			return property;
+	public ResourceID getPropertyDescriptor() {
+		final SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_DESCRIPTOR);
+		if (node != null) {
+			return node.asResource();
 		} else {
 			return null;
 		}
@@ -132,8 +124,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	 */
 	public void setPropertyDescriptor(final ResourceID property, final Context context) {
 		if (!Infra.equals(getPropertyDescriptor(), property)){
-			removeAssocs(RBSchema.HAS_DESCRIPTOR);
-			Association.create(this, RBSchema.HAS_DESCRIPTOR, property, context);
+			SNOPS.replace(this, RBSchema.HAS_DESCRIPTOR, property, context);
 		}
 	}
 
@@ -157,8 +148,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	 */
 	public void setMinOccurs(final SNScalar minOccurs, final Context context) {
 		if (!Infra.equals(getMinOccurs(), minOccurs)){
-			removeAssocs(RBSchema.MIN_OCCURS);
-			Association.create(this, RBSchema.MIN_OCCURS, minOccurs, context);
+			SNOPS.replace(this, RBSchema.MIN_OCCURS, minOccurs, context);
 		}
 	}
 
@@ -177,15 +167,16 @@ public class SNPropertyDeclaration extends ResourceView {
 
 	/**
 	 * Sets the max. occurrences
-	 * @param minOccurs -
+	 * @param maxOccurs -
 	 * @param context -
 	 */
-	public void setMaxOccurs(final SNScalar minOccurs, final Context context) {
-		if (!Infra.equals(getMaxOccurs(), minOccurs)){
-			removeAssocs(RBSchema.MAX_OCCURS);
-			Association.create(this, RBSchema.MAX_OCCURS, minOccurs, context);
+	public void setMaxOccurs(final SNScalar maxOccurs, final Context context) {
+		if (!Infra.equals(getMaxOccurs(), maxOccurs)){
+			SNOPS.replace(this, RBSchema.MAX_OCCURS, maxOccurs, context);
 		}
 	}
+	
+	// -- ORDER -------------------------------------------
 	
 	/**
 	 * Get the successor of this PropertyDeclaration in the ordered list.
@@ -226,16 +217,4 @@ public class SNPropertyDeclaration extends ResourceView {
 		return sb.toString();
 	}
 
-	//-----------------------------------------------------
-
-	/**
-	 * Removes all associations with given predicate.
-	 * @param predicate The predicate.
-	 */
-	protected void removeAssocs(final ResourceID predicate){
-		Set<Association> assocs = getAssociations(predicate);
-		for (Association assoc : assocs) {
-			revoke(assoc);
-		}
-	}
 }

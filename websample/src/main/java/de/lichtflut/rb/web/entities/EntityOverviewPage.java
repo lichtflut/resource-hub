@@ -88,7 +88,8 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 		add(list);
 		
 		final PageParameters params = new PageParameters();
-		params.add("type", type.getQualifiedName().toURI());
+		params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, type.getQualifiedName().toURI());
+		params.set(EntityDetailPage.PARAM_MODE, EntityDetailPage.MODE_EDIT);
 		final Link createLink = new BookmarkablePageLink("createLink", EntityDetailPage.class, params);
 		add(createLink);
 	}

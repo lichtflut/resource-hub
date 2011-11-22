@@ -14,6 +14,7 @@ import org.arastreju.sge.naming.VoidNamespace;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 
@@ -42,6 +43,8 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 	private ResourceID propertyDescriptor;
 	
 	private TypeDefinition typeDefinition;
+	
+	private FieldLabelDefinition labelDefinition;
 	
 	private Cardinality cardinality = CardinalityBuilder.hasOptionalOneToMany();
 	
@@ -145,6 +148,24 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 		output.addAll(this.constraints);
 		return output;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public FieldLabelDefinition getFieldLabelDefinition() {
+		return labelDefinition;
+	};
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setFieldLabelDefinition(FieldLabelDefinition def) {
+		this.labelDefinition = def;
+	}
+	
+	// ----------------------------------------------------
 
 	/**
 	 * {@inheritDoc}
@@ -165,7 +186,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 		return sb.toString();
 	}
 
-	// -----------------------------------------------------
+	// ----------------------------------------------------
 	
 	/**
 	 * {@inheritDoc}

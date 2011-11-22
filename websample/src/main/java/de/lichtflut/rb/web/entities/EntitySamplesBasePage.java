@@ -71,7 +71,7 @@ public class EntitySamplesBasePage extends RBBasePage {
 		for (SNClass type : types) {
 			PageParameters param = new PageParameters();
 			param.add("type", type);
-			CKLink link = new CKLink("link", type.getName(),
+			CKLink link = new CKLink("link", type.getQualifiedName().getSimpleName(),
 					EntityOverviewPage.class, param, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS);
 			showByTypes.addChild(new NavigationNodePanel(link));
 		}

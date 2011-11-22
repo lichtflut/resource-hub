@@ -44,6 +44,8 @@ public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
 			elements[i] = toElement(current);
 		}
 	}
+	
+	// ----------------------------------------------------
 
 	/** 
 	 * {@inheritDoc}

@@ -6,15 +6,12 @@ package de.lichtflut.rb.core.entity.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.model.nodes.views.SNProperty;
 
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.FieldLabelBuilder;
 
 /**
  * <p>
@@ -44,17 +41,6 @@ public abstract class AbstractRBField implements RBField, Serializable {
 
 	//------------------------------------------------------------
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getLabel(final Locale locale) {
-		final SNProperty property = getPredicate().asResource().asProperty();
-		return FieldLabelBuilder.getInstance().getLabel(property, locale);
-	}
-	
-	// ----------------------------------------------------
-
 	/**
 	 * {@inheritDoc}
 	 */

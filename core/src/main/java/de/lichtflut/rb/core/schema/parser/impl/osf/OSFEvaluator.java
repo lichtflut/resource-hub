@@ -85,7 +85,7 @@ public final class OSFEvaluator {
 			final Object value, final OSFTree tree) {
     	ResourceID descriptor = assertion.getPropertyDescriptor();
 		if(!(descriptor.getQualifiedName().getSimpleName().startsWith("has"))){
-			assertion.setPropertyDescriptor(new SimpleResourceID(new QualifiedName(descriptor.getNamespace().getUri(),"has"
+			assertion.setPropertyDescriptor(new SimpleResourceID(new QualifiedName(descriptor.getQualifiedName().getNamespace().getUri(),"has"
 					+ descriptor.getQualifiedName().getSimpleName())));
 		}
     	TypeDefinition pDec = assertion.getTypeDefinition();

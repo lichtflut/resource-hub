@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.entity.impl;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Set;
 
 import org.arastreju.sge.model.ElementaryDataType;
@@ -11,6 +12,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.FieldLabelBuilder;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
@@ -47,6 +49,11 @@ public class UndeclaredRBField extends AbstractRBField {
 	public ResourceID getPredicate() {
 		return predicate;
 	}
+	
+	@Override
+	public String getLabel(Locale locale) {
+		return FieldLabelBuilder.getInstance().getLabel(predicate, locale);
+	};
 
 	@Override
 	public ElementaryDataType getDataType() {

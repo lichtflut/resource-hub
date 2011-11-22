@@ -66,7 +66,19 @@ public interface PropertyDeclaration extends ResourceSchemaElement {
 	void setCardinality(Cardinality c);
 
 	// -----------------------------------------------------
+	
+	/**
+	 * Get the definition for the label.
+	 * @return The definition.
+	 */
+	FieldLabelDefinition getFieldLabelDefinition();
 
+	/**
+	 * Set the label definition for this declaration.
+	 * @param def The definition.
+	 */
+	void setFieldLabelDefinition(FieldLabelDefinition def);
+	
 	/**
 	 * returns the QualifiedName of the PropertyIdentifier.
 	 * This is necessary to resolve this PropertyAssertion with a given PropertyDeclaration

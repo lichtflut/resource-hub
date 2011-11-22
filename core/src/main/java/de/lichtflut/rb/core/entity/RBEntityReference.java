@@ -6,7 +6,6 @@ package de.lichtflut.rb.core.entity;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.ValueNode;
-import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.QualifiedName;
 
 /**
@@ -82,20 +81,8 @@ public class RBEntityReference implements ResourceID {
 	
 	// ----------------------------------------------------
 
-	public boolean isAttached() {
-		return id.isAttached();
-	}
-
-	public String getName() {
-		return id.getName();
-	}
-
 	public boolean isValueNode() {
 		return id.isValueNode();
-	}
-
-	public Namespace getNamespace() {
-		return id.getNamespace();
 	}
 
 	public boolean isResourceNode() {
