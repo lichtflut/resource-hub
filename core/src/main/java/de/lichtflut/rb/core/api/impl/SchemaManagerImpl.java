@@ -14,7 +14,6 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNProperty;
@@ -39,6 +38,7 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
+import de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration;
 import de.lichtflut.rb.core.schema.persistence.SNPropertyTypeDefinition;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 import de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding;
@@ -147,7 +147,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	public void store(final ResourceSchema schema) {
 		Validate.isTrue(schema.getDescribedType() != null, "The type described by this schema is not defined.");
 		final ModelingConversation mc = startConversation();
-		final ResourceNode existing = findSchemaNodeByType(schema.getDescribedType());
+		final SNResourceSchema existing = findSchemaNodeByType(schema.getDescribedType());
 		if (existing != null) {
 			removeSchema(mc, existing);
 		}
@@ -241,10 +241,10 @@ public class SchemaManagerImpl implements SchemaManager {
 	 * @param mc The existing conversation.
 	 * @param existing The schema node.
 	 */
-	protected void removeSchema(final ModelingConversation mc, final ResourceNode schemaNode) {
-		// remove DESCRIBES association in order to prevent the type to be deleted.
-		Association assoc = SNOPS.singleAssociation(schemaNode, RBSchema.DESCRIBES);
-		schemaNode.remove(assoc);
+	protected void removeSchema(final ModelingConversation mc, final SNResourceSchema schemaNode) {
+		for(SNPropertyDeclaration decl : schemaNode.getPropertyDeclarations()) {
+			mc.remove(decl, false);
+		}
 		mc.remove(schemaNode, false);
 	}
 	
