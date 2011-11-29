@@ -21,6 +21,7 @@ import de.lichtflut.rb.core.entity.impl.UndeclaredRBField;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
@@ -240,6 +241,11 @@ public final class RBEntityTest {
         pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
         pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
         pa4.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
+        
+        pa1.setFieldLabelDefinition(new FieldLabelDefinitionImpl("hatGeburtstag"));
+        pa2.setFieldLabelDefinition(new FieldLabelDefinitionImpl("hatEmail"));
+        pa3.setFieldLabelDefinition(new FieldLabelDefinitionImpl("hatAlter"));
+        pa4.setFieldLabelDefinition(new FieldLabelDefinitionImpl("hatKind"));
 
         schema.addPropertyDeclaration(pa1);
         schema.addPropertyDeclaration(pa2);

@@ -164,7 +164,7 @@ public class SNResourceSchema extends ResourceView {
 				break;
 			}
 		}
-		revoke(toBeRemoved);
+		remove(toBeRemoved);
 	}
 
 	// -----------------------------------------------------

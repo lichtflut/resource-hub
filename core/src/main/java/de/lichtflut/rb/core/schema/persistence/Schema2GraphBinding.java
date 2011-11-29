@@ -227,7 +227,8 @@ public class Schema2GraphBinding {
 	}
 	
 	protected FieldLabelDefinition createFieldLabelDef(final SNPropertyDeclaration snDecl) {
-		final FieldLabelDefinition def = new FieldLabelDefinitionImpl();
+		final String defaultName = snDecl.getPropertyDescriptor().getQualifiedName().getSimpleName();
+		final FieldLabelDefinition def = new FieldLabelDefinitionImpl(defaultName);
 		final Set<Association> assocs = snDecl.getAssociations(RB.HAS_FIELD_LABEL);
 		for (Association current : assocs) {
 			// TODO: Evaluate context to locale

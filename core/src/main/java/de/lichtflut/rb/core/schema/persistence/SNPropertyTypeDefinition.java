@@ -209,7 +209,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	protected void removeAssocs(final ResourceID predicate){
 		Set<Association> assocs = getAssociations(predicate);
 		for (Association assoc : assocs) {
-			revoke(assoc);
+			remove(assoc);
 		}
 	}
 }

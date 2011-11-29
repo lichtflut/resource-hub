@@ -69,6 +69,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration {
 		this.propertyDescriptor = propertyDescriptor;
 		this.typeDefinition = typeDefinition;
 		this.cardinality = CardinalityBuilder.hasOptionalOneToMany();
+		this.labelDefinition = new FieldLabelDefinitionImpl(propertyDescriptor);
 	}
 
 	/**

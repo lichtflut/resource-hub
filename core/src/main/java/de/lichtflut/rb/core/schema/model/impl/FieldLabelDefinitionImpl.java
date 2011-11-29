@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.arastreju.sge.model.ResourceID;
+
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 
 /**
@@ -27,6 +29,29 @@ public class FieldLabelDefinitionImpl implements FieldLabelDefinition {
 
 	private final Map<Locale, String> map = new HashMap<Locale, String>(); 
 	
+	// ----------------------------------------------------
+
+	/**
+	 * Default constructor.
+	 */
+	public FieldLabelDefinitionImpl() { }
+	
+	/**
+	 * Constructor with default label.
+	 * @param defaultLabel The default label.
+	 */
+	public FieldLabelDefinitionImpl(final String defaultLabel) {
+		this.defaultLabel = defaultLabel;
+	}
+	
+	/**
+	 * Constructor which will use the descriptors simple name as default label.
+	 * @param propertyDescriptor The property descriptor.
+	 */
+	public FieldLabelDefinitionImpl(final ResourceID propertyDescriptor) {
+		this(propertyDescriptor.getQualifiedName().getSimpleName());
+	}
+
 	// ----------------------------------------------------
 	
 	/** 

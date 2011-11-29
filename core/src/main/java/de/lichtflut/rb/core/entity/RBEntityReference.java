@@ -97,10 +97,6 @@ public class RBEntityReference implements ResourceID {
 		return id.asResource();
 	}
 
-	public boolean references(ResourceID ref) {
-		return id.references(ref);
-	}
-
 	public ValueNode asValue() {
 		return id.asValue();
 	}
