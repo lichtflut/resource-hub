@@ -32,7 +32,17 @@ public class ReferenceLink extends LabeledLink {
 	// ----------------------------------------------------
 
 	/**
-	 * Creates a bookmarkable link with given label and params.;
+	 * Creates a bookmarkable link with given label.
+	 * @param id The ID.
+	 * @param pageClass The class of the target page.
+	 * @param label The link's label.
+	 */
+	public ReferenceLink(final String id, final Class<? extends Page> pageClass, final IModel<String> label) {
+		this(id, pageClass, new PageParameters(), label);
+	}
+	
+	/**
+	 * Creates a bookmarkable link with given label and params.
 	 * @param id The ID.
 	 * @param pageClass The class of the target page.
 	 * @param params The page parameters.
@@ -44,8 +54,7 @@ public class ReferenceLink extends LabeledLink {
 	}
 	
 	/**
-	 * Creates a bookmarkable link with given label, that will contain the resource's URI as param 'rid';
-	 * @param id The ID.
+	 * Creates a bookmarkable link with given label, that will contain the resource's URI as param 'rid'.
 	 * @param pageClass The class of the target page.
 	 * @param ref The referenced ResourceID.
 	 * @param label The link's label.

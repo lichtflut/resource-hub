@@ -9,11 +9,9 @@ import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.webck.components.CKComponent;
 import de.lichtflut.rb.webck.components.CKLink;
 
 /**
@@ -28,12 +26,14 @@ import de.lichtflut.rb.webck.components.CKLink;
  * @author Oliver Tigges
  */
 @SuppressWarnings("serial")
-public class NavigationNodePanel extends CKComponent implements NavigationNode {
+public class NavigationNodePanel extends Panel implements NavigationNode {
 
-	private CKLink link;
-	private final List<NavigationNode> children = new ArrayList<NavigationNode>();
 	private static final Behavior CSS_CLASS_EVEN =  new AttributeAppender("class", Model.of("even"), " ");
+	
 	private static final Behavior CSS_CLASS_ODD =  new AttributeAppender("class", Model.of("odd"), " ");
+	
+	private final List<NavigationNode> children = new ArrayList<NavigationNode>();
+	
 	// -----------------------------------------------------
 
 	/**
@@ -41,7 +41,7 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 	 *
 	 * @param link - The link (must have component ID 'link')
 	 */
-	public NavigationNodePanel(final CKLink link) {
+	public NavigationNodePanel(final Component link) {
 		this("node",link);
 	}
 
@@ -50,12 +50,12 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 	 * @param id - wicket:id
 	 * @param link - {@link CKLink}
 	 */
-	protected NavigationNodePanel(final String id, final CKLink link) {
+	protected NavigationNodePanel(final String id, final Component link) {
 		super(id);
-		this.link = link;
-		this.buildComponent();
+		add(link);
+		add(new NavigationBar("child"));
 	}
-
+	
 	// -----------------------------------------------------
 
 	/**
@@ -116,51 +116,13 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 	 */
 	@Override
 	public NavigationNode addChild(final NavigationNode node) {
-		children.add(node);
-		this.buildComponent();
+		addOddOrEvenAttribute(node);
+		final NavigationBar childBar = (NavigationBar) get("child");
+		childBar.addChild(node);
 		return node;
 	}
 
-	/**
-	 * Checks if {@link NavigationNodePanel} is even or odd numbered.
-	 * @param node - {@link NavigationNodePanel}
-	 * @return boolean - true if node is even, false if not
-	 */
-	public boolean isEven(final NavigationNode node){
-		int index = children.indexOf(node);
-		// Adding +1 coz indexOf starts with zero
-		if(((index + 1) % 2) == 1){
-			return false;
-		}
-			return true;
-
-	}
-
-	@Override
-	protected void initComponent(final CKValueWrapperModel model) {
-		add(link);
-		if (hasChildren()) {
-			final NavigationBar subLevelMenu = new NavigationBar("child");
-			for(NavigationNode node : children){
-				addOddOrEvenAttribute(node);
-				subLevelMenu.addChild(node);
-			}
-			subLevelMenu.setRenderBodyOnly(true);
-			this.add(subLevelMenu);
-		} else {
-			final WebMarkupContainer childContainer = new WebMarkupContainer(
-					"child");
-			childContainer.setRenderBodyOnly(true);
-			this.add(childContainer);
-		}
-		add(new WebMarkupContainer("ck-header"));
-		add(new WebMarkupContainer("ck-footer"));
-	}
-
-	@Override
-	public ServiceProvider getServiceProvider() {
-		return null;
-	}
+	// ----------------------------------------------------
 
 	/**
 	 * Checks whether node is odd or even and sets the "class" attribute accordingly.
@@ -184,5 +146,20 @@ public class NavigationNodePanel extends CKComponent implements NavigationNode {
 			node.getComponent().add(CSS_CLASS_ODD);
 		}
 		return node;
+	}
+	
+	/**
+	 * Checks if {@link NavigationNodePanel} is even or odd numbered.
+	 * @param node - {@link NavigationNodePanel}
+	 * @return boolean - true if node is even, false if not
+	 */
+	private boolean isEven(final NavigationNode node){
+		int index = children.indexOf(node);
+		// Adding +1 coz indexOf starts with zero
+		if(((index + 1) % 2) == 1){
+			return false;
+		}
+			return true;
+
 	}
 }

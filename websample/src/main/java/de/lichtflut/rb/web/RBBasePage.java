@@ -13,7 +13,6 @@ import org.odlabs.wiquery.core.resources.CoreJavaScriptResourceReference;
 
 import de.lichtflut.rb.web.components.ComponentsCatalogPage;
 import de.lichtflut.rb.web.components.LoginPanelPage;
-import de.lichtflut.rb.web.entities.EntityDetailPage;
 import de.lichtflut.rb.web.entities.EntityOverviewPage;
 import de.lichtflut.rb.web.infomanagement.InformationManagementPage;
 import de.lichtflut.rb.web.types.TypeSystemPage;
@@ -88,13 +87,10 @@ public abstract class RBBasePage extends WebPage {
 		mainNavigation.addChild(new NavigationNodePanel(
 				new CKLink("link", "Home", RSPage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
 
-		// Mock Entity Pages
-		NavigationNode mockPages = new NavigationNodePanel(new CKLink("link", "Entities", CKLinkType.CUSTOM_BEHAVIOR));
-		CKLink mockEmployee = new CKLink("link", "Sample Entities", EntityDetailPage.class, CKLinkType.WEB_PAGE_CLASS);
-		mockPages.addChild(new NavigationNodePanel(mockEmployee));
-		CKLink mockView = new CKLink("link", "TableView", EntityOverviewPage.class, CKLinkType.WEB_PAGE_CLASS);
-		mockPages.addChild(new NavigationNodePanel(mockView));
-		mainNavigation.addChild(mockPages);
+		// Entity Pages
+		NavigationNode entityPages = new NavigationNodePanel(
+				new CKLink("link", "Entities", EntityOverviewPage.class, CKLinkType.WEB_PAGE_CLASS));
+		mainNavigation.addChild(entityPages);
 		
 		// Type System
 		final NavigationNode typeSystem = new NavigationNodePanel(

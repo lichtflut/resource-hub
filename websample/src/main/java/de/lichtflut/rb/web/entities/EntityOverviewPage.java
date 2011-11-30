@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.web.entities;
 
-import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -41,17 +40,11 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 	 * Constructor.
 	 * @param params -
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public EntityOverviewPage(final PageParameters params) {
 		super("Entity Overview");
-		final StringValue uri = params.get("type");
-		Validate.notBlank(uri.toString(), "No type specified.");
-		initTable(new SimpleResourceID(uri.toString()));
-	}
-	
-	// -----------------------------------------------------
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected void initTable(final ResourceID type) {
+		
+		final ResourceID type = getResourceID(params);
 		final RBEntityListModel model = new RBEntityListModel(type) {
 			protected ServiceProvider getServiceProvider() {
 				return EntityOverviewPage.this.getServiceProvider();
@@ -87,11 +80,22 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 		};
 		add(list);
 		
-		final PageParameters params = new PageParameters();
-		params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, type.getQualifiedName().toURI());
-		params.set(EntityDetailPage.PARAM_MODE, EntityDetailPage.MODE_EDIT);
-		final Link createLink = new BookmarkablePageLink("createLink", EntityDetailPage.class, params);
+		final PageParameters linkParams = new PageParameters();
+		linkParams.add(EntityDetailPage.PARAM_RESOURCE_TYPE, type.getQualifiedName().toURI());
+		linkParams.set(EntityDetailPage.PARAM_MODE, EntityDetailPage.MODE_EDIT);
+		final Link createLink = new BookmarkablePageLink("createLink", EntityDetailPage.class, linkParams);
 		add(createLink);
+	}
+	
+	// ----------------------------------------------------
+	
+	private ResourceID getResourceID(final PageParameters params) {
+		final StringValue uri = params.get("type");
+		if (uri.isEmpty()) {
+			return new SimpleResourceID();
+		} else {
+			return new SimpleResourceID(uri.toString());
+		}
 	}
 
 }

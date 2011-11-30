@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.components.fields;
 
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.crypt.Base64;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
@@ -36,7 +37,8 @@ public class EntityPickerField extends DataPickerField<RBEntityReference> {
 	// -----------------------------------------------------
 	
 	public static AutocompleteSource findEntity(final ResourceID type) {
-		final StringBuilder sb = new StringBuilder("internal/query/entity");
+		final String ctx = RequestCycle.get().getRequest().getContextPath();
+		final StringBuilder sb = new StringBuilder(ctx + "/internal/query/entity");
 		if (type != null) {
 			sb.append("?type=");
 			sb.append(Base64.encodeBase64URLSafeString(type.getQualifiedName().toURI().getBytes()));

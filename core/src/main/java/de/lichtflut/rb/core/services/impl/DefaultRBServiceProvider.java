@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.services.impl;
 

@@ -24,6 +24,7 @@ public class RBConfig implements RBConstants {
 	 * Profilename.
 	 */
 	private final String profileName;
+	
 	/**
 	 * Profile.
 	 */
@@ -47,7 +48,7 @@ public class RBConfig implements RBConstants {
 	public RBConfig(final String arastrejuProfile) {
 		this.profileName = arastrejuProfile;
 	}
-
+	
 	// -----------------------------------------------------
 
 
@@ -74,10 +75,22 @@ public class RBConfig implements RBConstants {
 			logger.info("Initialising Arastreju profile with name " + profileName);
 			profile = ArastrejuProfile.read(profileName);
 		}
-		final String storeDir = System.getProperty(ARAS_STORE_DIRECTORY);
-		if (storeDir != null) {
-			profile.setProperty(ARAS_STORE_DIRECTORY, storeDir);
+		final String workDir = getWorkDirecotry();
+		if (workDir != null) {
+			profile.setProperty(ArastrejuProfile.ARAS_STORE_DIRECTORY, workDir);
 		}
+	}
+	
+	private String getWorkDirecotry() {
+		// 1st: check profile specific work directory
+		if (profileName != null) {
+			final String workDir = System.getProperty(DOMAIN_WORK_DIRECTORY + "." + profileName);
+			if (workDir != null) {
+				return workDir;
+			}
+		}
+		// 2nd: check global work directory
+		return System.getProperty(DOMAIN_WORK_DIRECTORY);
 	}
 
 }

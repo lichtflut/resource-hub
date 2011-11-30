@@ -34,6 +34,7 @@ public class ResourceInfoPanel extends Panel {
 	 * @param id - wicket:id
 	 * @param entity - {@link RBEntity} which is to be displayed
 	 */
+	@Deprecated
 	public ResourceInfoPanel(final String id, final RBEntity entity) {
 		super(id);
 		String title = entity.getLabel();

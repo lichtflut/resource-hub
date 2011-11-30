@@ -12,10 +12,10 @@
 	<name>RB Web Construction Kit</name>
 	<description/>
 	<properties>
-		<wicket.version>1.5.2</wicket.version>
+		<wicket.version>1.5.3</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
-		<wiquery.version>1.5.1</wiquery.version>
-		<wicket-extensions.version>1.5-RC5.1</wicket-extensions.version>
+		<wiquery.version>1.5.3</wiquery.version>
+		<wicket-extensions.version>1.5.3</wicket-extensions.version>
 		<seam-wicket.version>3.1.0.Beta3</seam-wicket.version>
 	</properties>
 	<dependencies>

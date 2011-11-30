@@ -12,7 +12,7 @@ Class-Path: aduna-commons-collections-2.7.0.jar aduna-commons-concurre
  l-1.5.jar neo4j-lucene-index-1.5.jar neo4j-udc-1.5.jar scala-library-
  2.9.0-1.jar sesame-model-2.3.2.jar sesame-rio-api-2.3.2.jar sesame-ri
  o-rdfxml-2.3.2.jar slf4j-api-1.6.1.jar slf4j-log4j12-1.6.1.jar string
- template-3.2.jar wicket-core-1.5.2.jar wicket-extensions-1.5-RC5.1.ja
- r wicket-request-1.5.2.jar wicket-util-1.5.2.jar wiquery-core-1.5.1.j
- ar wiquery-jquery-ui-1.5.1.jar
+ template-3.2.jar wicket-core-1.5.3.jar wicket-extensions-1.5.3.jar wi
+ cket-request-1.5.3.jar wicket-util-1.5.3.jar wiquery-core-1.5.3.jar w
+ iquery-jquery-ui-1.5.3.jar
 

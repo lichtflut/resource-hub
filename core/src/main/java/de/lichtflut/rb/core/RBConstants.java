@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.core;
 
-import org.arastreju.sge.ArastrejuProfile;
 
 /**
  * <p>
@@ -21,6 +20,6 @@ public interface RBConstants {
 	/**
 	 * Arastreju store directory.
 	 */
-	String ARAS_STORE_DIRECTORY = ArastrejuProfile.ARAS_STORE_DIRECTORY;
+	String DOMAIN_WORK_DIRECTORY = "de.lichtflut.rb.workdir";
 
 }

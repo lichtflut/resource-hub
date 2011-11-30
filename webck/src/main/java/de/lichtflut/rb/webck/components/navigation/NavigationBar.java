@@ -42,7 +42,6 @@ public class NavigationBar extends CKComponent implements NavigationNode {
 	public NavigationBar(final String id) {
 		super(id);
 		buildComponent();
-
 	}
 
 	// -----------------------------------------------------
@@ -111,8 +110,7 @@ public class NavigationBar extends CKComponent implements NavigationNode {
 			private boolean isEven = false;
 			@Override
 			protected void populateItem(final ListItem<NavigationNode> item) {
-				Component comp = item.getModelObject().getComponent();
-				((CKComponent) comp).buildComponent();
+				final Component comp = item.getModelObject().getComponent();
 				if(isEven){
 					comp.add(CSS_CLASS_EVEN);
 					isEven = false;

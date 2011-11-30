@@ -18,19 +18,19 @@ import de.lichtflut.rb.webck.conversion.SNTimeSpecConverter;
 
 /**
  * <p>
- *  Base Application class for all Resource Browser applications.
+ * 	Base Application class for all Resource Browser applications.
  * </p>
- *
+ * 
  * <p>
  * 	Created May 12, 2011
  * </p>
- *
+ * 
  * @author Oliver Tigges
  */
 public abstract class AbstractResourceBrowserApplication extends WebApplication {
 
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.Application#newConverterLocator()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected IConverterLocator newConverterLocator() {
@@ -40,7 +40,6 @@ public abstract class AbstractResourceBrowserApplication extends WebApplication 
 		locator.set(ResourceID.class, new ResourceIDConverter());
 		locator.set(RBEntityReference.class, new RBEntityReferenceConverter());
 		return locator;
-
 	}
-
+	
 }
