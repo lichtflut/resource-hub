@@ -186,7 +186,7 @@ public class SNResourceSchema extends ResourceView {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("ResourceSchema[" + super.toString() + "]");
 		sb.append(" for " + getDescribedType() + "\n");
-		for(SNPropertyDeclaration pa : getPropertyDeclarations()){
+		for(SNPropertyDeclaration pa : getDeclaredPropertyDeclarations()){
 			sb.append("\t" + pa + "\n");
 		}
 		return sb.toString();
@@ -226,7 +226,7 @@ public class SNResourceSchema extends ResourceView {
 		if (all.isEmpty()) {
 			throw new IllegalStateException("Order of PropertyDeclarations has been corrupted! First element not found.");
 		} else if (all.size() > 1) {
-			throw new IllegalStateException("Order of PropertyDeclarations has been corrupted! More than one first found.");
+			throw new IllegalStateException("Order of PropertyDeclarations has been corrupted! More than one first found: " + all);
 		}
 	}
 }

@@ -208,7 +208,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	 */
 	@Override
 	public String toString(){
-		StringBuffer sb = new StringBuffer("PropertyAssertion[" + super.toString() + "] ");
+		StringBuffer sb = new StringBuffer("PropertyDecl[" + super.toString() + "] ");
 		if (getPropertyDescriptor() != null){
 			sb.append(getPropertyDescriptor().getQualifiedName().toURI());
 		}

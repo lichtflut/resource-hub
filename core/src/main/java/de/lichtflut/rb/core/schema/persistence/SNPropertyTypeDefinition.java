@@ -192,7 +192,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 */
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("PropertyDeclaration[" + super.toString() + "]");
+		final StringBuilder sb = new StringBuilder("TypeDef[" + super.toString() + "]");
 		if (getDatatype() != null) {
 			sb.append(" " + getDatatype());
 		}

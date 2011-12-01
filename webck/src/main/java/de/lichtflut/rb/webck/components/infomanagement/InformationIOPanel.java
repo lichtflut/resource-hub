@@ -24,7 +24,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.IResource;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.io.OntologyIOException;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
@@ -148,6 +147,15 @@ public abstract class InformationIOPanel extends Panel {
 	// -----------------------------------------------------
 	
 	private void importUpload(final FileUpload upload, final IModel<String> format) {
+		final SemanticGraphIO io = new RdfXmlBinding();
+		try {
+			final SemanticGraph graph = io.read(upload.getInputStream());
+			getServiceProvider().getArastejuGate().startConversation().attach(graph);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (OntologyIOException e) {
+			throw new RuntimeException(e);
+		}
 		upload.closeStreams();
 	}
 	
