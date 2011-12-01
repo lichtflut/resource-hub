@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.components.editor;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -18,6 +19,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
@@ -84,7 +86,7 @@ public abstract class EntityRowEditPanel extends Panel {
 				target.add(form);
 			}
 		};
-		
+		link.add(new AttributeModifier("title", new ResourceModel("link.title.add-field-value")));
 		add(link);
 	}
 	
@@ -131,6 +133,7 @@ public abstract class EntityRowEditPanel extends Panel {
 				target.add(EntityRowEditPanel.this);
 			}
 		};
+		link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));
 		return link;
 	}
 	
