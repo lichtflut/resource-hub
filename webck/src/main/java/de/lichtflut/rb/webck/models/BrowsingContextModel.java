@@ -47,4 +47,19 @@ public class BrowsingContextModel {
 		};
 	}
 	
+	public static ConditionalModel<Boolean> isInSubReferencingMode() {
+		return new ConditionalModel<Boolean>() {
+			@Override
+			public boolean isFulfilled() {
+				return getObject();
+			}
+			
+			@Override
+			public Boolean getObject() {
+				final BrowsingHistory history = RBWebSession.get().getHistory();
+				return history.hasPredecessors() && history.isEditing();
+			}
+		};
+	}
+	
 }

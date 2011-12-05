@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.components.editor;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonIf;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
@@ -37,7 +38,7 @@ public abstract class BrowsingButtonBar extends Panel {
 		add(createSaveButton(model, form));
 		add(createCancelButton(model, form));
 		
-		add(visibleIf(BrowsingContextModel.hasPredecessors()));
+		add(visibleIf(BrowsingContextModel.isInSubReferencingMode()));
 	}
 	
 	// ----------------------------------------------------
@@ -60,6 +61,7 @@ public abstract class BrowsingButtonBar extends Panel {
 				target.add(form);
 			}
 		};
+		save.add(defaultButtonIf(BrowsingContextModel.isInSubReferencingMode()));
 		return save;
 	}
 	

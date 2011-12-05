@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.components.editor;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -46,11 +47,15 @@ public abstract class LocalButtonBar extends Panel {
 		add(createCancelButton(model, form));
 		add(createEditButton(model, form));
 		
+		add(visibleIf(not(BrowsingContextModel.isInSubReferencingMode())));
+		
 	}
 	
 	// ----------------------------------------------------
 	
 	public abstract EntityManager getEntityManager();
+	
+	public abstract void updateView();
 	
 	// -- BUTTONS -----------------------------------------
 	
@@ -60,7 +65,7 @@ public abstract class LocalButtonBar extends Panel {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				getEntityManager().store(model.getObject());
 				RBWebSession.get().getHistory().finishEditing();
-				target.add(form);
+				updateView();
 			}
 			
 			@Override
@@ -69,6 +74,7 @@ public abstract class LocalButtonBar extends Panel {
 			}
 		};
 		save.add(visibleIf(editMode));
+		save.add(defaultButtonIf(editMode));
 		return save;
 	}
 	
@@ -77,7 +83,7 @@ public abstract class LocalButtonBar extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				RBWebSession.get().getHistory().finishEditing();
-				target.add(form);
+				updateView();
 			}
 			
 			@Override
@@ -85,7 +91,6 @@ public abstract class LocalButtonBar extends Panel {
 				target.add(form);
 			}
 		};
-		cancel.setDefaultFormProcessing(false);
 		cancel.add(visibleIf(editMode));
 		return cancel;
 	}

@@ -29,9 +29,6 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.webck.application.RBWebSession;
-import de.lichtflut.rb.webck.common.Action;
-import de.lichtflut.rb.webck.common.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.models.FieldLabelModel;
 import de.lichtflut.rb.webck.models.RBFieldValueModel;
@@ -143,10 +140,7 @@ public class EntityRowEditPanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				final EntityHandle handle = EntityHandle.forType(getTypeConstraint());
-				final Action action = new EntityAttributeApplyAction(getField().getPredicate());
-				RBWebSession.get().getHistory().createReferencedEntity(handle, action);
-				
-				target.add((Component)EntityRowEditPanel.this.findParent(IBrowsingHandler.class));
+				findParent(IBrowsingHandler.class).createSubEntity(handle, getField().getPredicate());
 			}
 			
 			@Override

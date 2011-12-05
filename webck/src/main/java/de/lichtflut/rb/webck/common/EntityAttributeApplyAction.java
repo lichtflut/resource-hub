@@ -49,14 +49,13 @@ public class EntityAttributeApplyAction implements Action<Object> {
 	* {@inheritDoc}
 	*/
 	@Override
-	public void execute(RBEntity target) {
+	public void execute(final RBEntity target) {
 		final RBField field = target.getField(predicate);
 		if (field.getValues().isEmpty()) {
 			field.setValue(0, value);
 		} else {
 			field.addValue(value);
 		}
-		
 	}
 	
 	/** 

@@ -3,10 +3,10 @@
  */
 package de.lichtflut.rb.webck.components;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.arastreju.sge.model.ResourceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +16,8 @@ import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.BrowsingHistory;
 import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.common.Action;
+import de.lichtflut.rb.webck.common.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.components.editor.BrowsingButtonBar;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
@@ -85,7 +87,21 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		if (editable) {
 			history().beginEditing();
 		}
-		addToTarget(this);
+		addToAjax();
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void createSubEntity(EntityHandle handle, ResourceID predicate) {
+		// store current entity
+		getServiceProvider().getEntityManager().store(model.getObject());
+		
+		// navigate to sub entity
+		final Action action = new EntityAttributeApplyAction(predicate);
+		RBWebSession.get().getHistory().createReferencedEntity(handle, action);
+		addToAjax();
 	}
 	
 	// ----------------------------------------------------
@@ -96,6 +112,11 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 			public EntityManager getEntityManager() {
 				return getServiceProvider().getEntityManager();
 			}
+			
+			@Override
+			public void updateView() {
+				addToAjax();
+			}
 		};
 	}
 	
@@ -105,13 +126,13 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 			public void onSave() {
 				getServiceProvider().getEntityManager().store(model.getObject());
 				history().applyReferencedEntity(new RBEntityReference(model.getObject()));
-				addToTarget(ResourceBrowsingPanel.this);
+				addToAjax();
 			}
 			
 			@Override
 			public void onCancel() {
 				history().back();
-				addToTarget(ResourceBrowsingPanel.this);
+				addToAjax();
 			}
 		};
 	}
@@ -136,9 +157,9 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		return RBWebSession.get().getHistory();
 	}
 	
-	private void addToTarget(final Component component) {
+	private void addToAjax() {
 		if (AjaxRequestTarget.get() != null) {
-			AjaxRequestTarget.get().add(component);
+			AjaxRequestTarget.get().add(this);
 		}
 	}
 

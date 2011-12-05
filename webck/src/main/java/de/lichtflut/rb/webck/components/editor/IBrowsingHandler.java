@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.editor;
 
+import org.arastreju.sge.model.ResourceID;
+
 import de.lichtflut.rb.core.entity.EntityHandle;
 
 /**
@@ -21,5 +23,7 @@ public interface IBrowsingHandler {
 	CharSequence getUrlToResource(EntityHandle handle);
 	
 	void browseTo(EntityHandle handle, boolean editable);
+	
+	void createSubEntity(EntityHandle handle, ResourceID predicate);
 
 }
