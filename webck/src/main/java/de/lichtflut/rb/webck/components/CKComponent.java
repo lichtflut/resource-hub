@@ -181,20 +181,6 @@ public abstract class CKComponent extends Panel {
 	// -----------------------------------------------------
 
 	/**
-	 * Adds a behavior to a component.
-	 * @param key - Name of the behavior
-	 * @param behavior - Desired behavior
-	 * @return {@link CKComponent}
-	 */
-	public final CKComponent addBehavior(final String key,final CKBehavior behavior){
-		behaviorRegistry.put(key, behavior);
-		buildComponent();
-		return this;
-	}
-
-	// -----------------------------------------------------
-
-	/**
 	 * Returns the behavior for the passed Key.
 	 * @param key - Name of the behavior
 	 * @return {@link CKBehavior}

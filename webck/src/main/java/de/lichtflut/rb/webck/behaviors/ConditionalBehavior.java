@@ -76,5 +76,15 @@ public abstract class ConditionalBehavior<T> extends Behavior {
 		};
 	}
 	
+	@SuppressWarnings("rawtypes")
+	public static ConditionalBehavior enableIf(final ConditionalModel model) {
+		return new ConditionalBehavior() {
+			@Override
+			protected void apply() {
+				getComponent().setEnabled(model.isFulfilled());
+			}
+		};
+	}
+	
 
 }

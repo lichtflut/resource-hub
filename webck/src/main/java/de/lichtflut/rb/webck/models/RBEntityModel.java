@@ -4,14 +4,15 @@
 package de.lichtflut.rb.webck.models;
 
 import org.apache.wicket.model.IModel;
-import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.common.Action;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Model for an {@link RBEntity}.
  * </p>
  *
  * <p>
@@ -22,22 +23,27 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  */
 public abstract class RBEntityModel implements IModel<RBEntity> {
 
-	private ResourceID type;
-	
-	private ResourceID id;
+	private EntityHandle handle;
 	
 	private RBEntity entity;
+	
+	private Action<?>[] initializers;
 	
 	// -----------------------------------------------------
 	
 	/**
-	 * @param id The id of the entity to load.
+	 * Default constructor.
 	 */
-	public RBEntityModel(final ResourceID id, final ResourceID type) {
-		this.id = id;
-		this.type = type;
+	public RBEntityModel() {
 	}
-
+	
+	/**
+	 * @param handle The handle of the entity to load.
+	 */
+	public RBEntityModel(final EntityHandle handle) {
+		this.handle = handle;
+	}
+	
 	// -----------------------------------------------------
 	
 	/** 
@@ -62,26 +68,62 @@ public abstract class RBEntityModel implements IModel<RBEntity> {
 	/** 
 	 * {@inheritDoc}
 	 */
-	protected RBEntity load() {
-		final RBEntity loaded;
-		if (id == null) {
-			loaded = getServiceProvider().getEntityManager().create(type);
-			this.id = loaded.getID();
-		} else {
-			loaded = getServiceProvider().getEntityManager().find(id);
-		}
-		return loaded;
-	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void detach() {
+	}
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Reset the model in order to reload.
+	 */
+	public void reset() {
+		entity = null;
+	}
+	
+	/**
+	 * Reset the model in order to reload.
+	 */
+	public void reset(final EntityHandle handle, Action<?>... initializers) {
+		this.handle = handle; 
+		this.entity = null;
+		this.initializers = initializers;
 	}
 	
 	// -----------------------------------------------------
 	
 	protected abstract ServiceProvider getServiceProvider();
+
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	protected RBEntity load() {
+		if (handle.hasId()) {
+			final RBEntity loaded = getServiceProvider().getEntityManager().find(handle.getId());
+			initialize(loaded);
+			return loaded;
+		} else if (handle.hasType()){
+			final RBEntity loaded = getServiceProvider().getEntityManager().create(handle.getType());
+			handle.setId(loaded.getID());
+			initialize(loaded);
+			return loaded;
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * @param loaded
+	 */
+	private void initialize(RBEntity entity) {
+		if (initializers == null) {
+			return;
+		}
+		for (Action<?> action : initializers) {
+			action.execute(entity);
+		}
+	}
 
 }

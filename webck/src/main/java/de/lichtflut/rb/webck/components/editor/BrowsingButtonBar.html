@@ -9,7 +9,11 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
-	<div wicket:id="label" class="field-label">[Label]</div>
-	<div wicket:id="field" class="field-values">[ValueField]</div>
+
+	<div class="button-bar">
+		<button type="button" wicket:id="cancel"><wicket:message key="button.cancel">[cancel]</wicket:message></button>
+		<button type="button" wicket:id="save"><wicket:message key="button.save">[save]</wicket:message></button>
+	</div>
+
 </wicket:panel>
 </html>

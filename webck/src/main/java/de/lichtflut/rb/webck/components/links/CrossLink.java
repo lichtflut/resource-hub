@@ -7,7 +7,7 @@ import org.apache.wicket.markup.html.link.Link;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  A simple link pointing to a URL.
  * </p>
  *
  * <p>

@@ -12,7 +12,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.webck.components.LabeledLink;
+import de.lichtflut.rb.webck.components.links.LabeledLink;
 
 /**
  * <p>

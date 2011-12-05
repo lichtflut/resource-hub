@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components;
+package de.lichtflut.rb.webck.components.links;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.markup.html.basic.Label;

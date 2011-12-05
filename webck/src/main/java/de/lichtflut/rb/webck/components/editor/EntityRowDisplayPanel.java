@@ -16,9 +16,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.ElementaryDataType;
 
+import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.webck.application.LinkProvider;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.FieldLabelModel;
 import de.lichtflut.rb.webck.models.RBFieldValueModel;
@@ -41,7 +41,7 @@ import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
  * @author Oliver Tigges
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public abstract class EntityRowDisplayPanel extends Panel {
+public class EntityRowDisplayPanel extends Panel {
 
 	/**
 	 * Constructor.
@@ -64,10 +64,6 @@ public abstract class EntityRowDisplayPanel extends Panel {
 		valueList.setReuseItems(true);
 		add(valueList);
 	}
-	
-	// ----------------------------------------------------
-	
-	public abstract LinkProvider getLinkProvider();
 	
 	// ----------------------------------------------------
 	
@@ -101,12 +97,23 @@ public abstract class EntityRowDisplayPanel extends Panel {
 	private void addResourceField(final ListItem<RBFieldValueModel> item) {
 		final RBEntityReference ref = (RBEntityReference) item.getModelObject().getObject();
 		if (ref != null) {
-			final CrossLink link = new CrossLink("link", getLinkProvider().browseToResource(ref));
+			final CrossLink link = new CrossLink("link", getUrlTo(ref));
 			link.add(new Label("label", Model.of(ref.toString())));
 			item.add(new Fragment("valuefield", "referenceLink", this).add(link));
 		} else {
 			addTextOutput(item, RBEntityReference.class);
 		}
+	}
+
+	protected CharSequence getUrlTo(final RBEntityReference ref) {
+		final IBrowsingHandler handler = findParent(IBrowsingHandler.class);
+		if (handler == null) {
+			throw new IllegalStateException(getClass().getSimpleName() 
+					+ " must be placed placed in a component/page that implements " 
+					+ IBrowsingHandler.class);
+		}
+		final CharSequence url = handler.getUrlToResource(EntityHandle.forID(ref));
+		return url;
 	}
 	
 	private Label addTextOutput(final ListItem<RBFieldValueModel> item, Class<?> type) {

@@ -16,7 +16,6 @@ import org.arastreju.sge.model.SimpleResourceID;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.webck.components.ResourceTableView;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
 import de.lichtflut.rb.webck.components.listview.EntityListPanel;
 import de.lichtflut.rb.webck.components.listview.ReferenceLink;
@@ -24,7 +23,7 @@ import de.lichtflut.rb.webck.models.RBEntityListModel;
 
 /**
  * <p>
- * 	SamplePage for {@link ResourceTableView}.
+ * 	SamplePage for an overview of entities.
  * </p>
  *
  * <p>

@@ -9,7 +9,6 @@ import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.web.components.ComponentsCatalogPage;
 import de.lichtflut.rb.web.entities.EntityDetailPage;
 import de.lichtflut.rb.web.entities.EntityOverviewPage;
-import de.lichtflut.rb.web.mockPages.RepeaterPage;
 import de.lichtflut.rb.web.types.TypeSystemPage;
 import de.lichtflut.rb.webck.application.AbstractResourceBrowserApplication;
 
@@ -37,8 +36,8 @@ public class WebsampleApplication extends AbstractResourceBrowserApplication {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<RSPage> getHomePage() {
-		return RSPage.class;
+	public Class<EntityOverviewPage> getHomePage() {
+		return EntityOverviewPage.class;
 	}
 
 	/**
@@ -48,8 +47,6 @@ public class WebsampleApplication extends AbstractResourceBrowserApplication {
 	protected void init() {
 		super.init();
 		mountPage("/RSSchema", RSPage.class);
-		mountPage("/SampleResourcePage", SampleResourcePage.class);
-		mountPage("/r2", RepeaterPage.class);
 		mountPage("/entities", EntityOverviewPage.class);
 		mountPage("/entity-detail", EntityDetailPage.class);
 		mountPage("/typesystem", TypeSystemPage.class);

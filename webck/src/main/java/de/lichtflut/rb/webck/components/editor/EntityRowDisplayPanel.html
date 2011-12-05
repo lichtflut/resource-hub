@@ -10,9 +10,11 @@
 </wicket:head>
 <wicket:panel>
     <div wicket:id="label" class="field-label">[Label]</div>
-   	<wicket:container wicket:id="values">
-       	<div wicket:id="valuefield" class="field-values"></div>
-    </wicket:container>
+   	<div class="field-values">
+   		<wicket:container wicket:id="values">
+       		<wicket:container wicket:id="valuefield" ></wicket:container>
+       	</wicket:container>
+    </div>
     
     <wicket:fragment wicket:id="textOutput">
         <span wicket:id="valuefield">[output]</span>

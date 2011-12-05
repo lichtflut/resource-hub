@@ -105,7 +105,6 @@ public class NavigationBar extends CKComponent implements NavigationNode {
 
 	@Override
 	protected void initComponent(final CKValueWrapperModel model) {
-
 		final ListView<NavigationNode> itemView = new ListView<NavigationNode>("nodeList", children) {
 			private boolean isEven = false;
 			@Override

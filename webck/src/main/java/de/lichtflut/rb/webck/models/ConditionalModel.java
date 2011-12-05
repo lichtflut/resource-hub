@@ -39,6 +39,13 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		this.target = value;
 	}
 	
+	/**
+	 * Constructor.
+	 */
+	public ConditionalModel() {
+		this.target = null;
+	}
+	
 	// -----------------------------------------------------
 	
 	/**
@@ -62,6 +69,15 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			@Override
 			public boolean isFulfilled() {
 				return Boolean.FALSE.equals(getObject());
+			}
+		};
+	}
+	
+	public static ConditionalModel<?> not(final ConditionalModel<?> model) {
+		return new ConditionalModel<Boolean>(model) {
+			@Override
+			public boolean isFulfilled() {
+				return !model.isFulfilled();
 			}
 		};
 	}

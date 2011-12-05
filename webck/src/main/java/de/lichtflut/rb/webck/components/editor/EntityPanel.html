@@ -10,25 +10,14 @@
 </wicket:head>
 <wicket:panel>
 
-	<div class="entity-display">
-		<form wicket:id="form" class="generic-resource-detail-form">
+	<wicket:container wicket:id="infoPanel"></wicket:container>
+	<div wicket:id="feedbackPanel" class="feedback-panel"></div>
 
-			<wicket:container wicket:id="infoPanel"></wicket:container>
-			<div wicket:id="feedbackPanel" class="feedback-panel"></div>
-
-			<div class="entity-display-fields">
-				<wicket:container wicket:id="rows">
-					<div wicket:id="row" class="entity-field"></div>
-				</wicket:container>
-			</div>
-
-			<div class="button-bar">
-				<button type="button" wicket:id="cancel"><wicket:message key="button.cancel">[cancel]</wicket:message></button>
-				<button type="button" wicket:id="save"><wicket:message key="button.save">[save]</wicket:message></button>
-				<button type="button" wicket:id="edit"><wicket:message key="button.edit">[edit]</wicket:message></button>
-			</div>
-
-		</form>
+	<div class="entity-display-fields">
+		<wicket:container wicket:id="rows">
+			<div wicket:id="row" class="entity-field"></div>
+		</wicket:container>
 	</div>
+
 </wicket:panel>
 </html>

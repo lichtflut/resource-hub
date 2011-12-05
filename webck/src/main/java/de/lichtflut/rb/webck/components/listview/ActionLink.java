@@ -10,7 +10,7 @@ import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 
-import de.lichtflut.rb.webck.components.LabeledLink;
+import de.lichtflut.rb.webck.components.links.LabeledLink;
 
 /**
  * <p>

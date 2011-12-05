@@ -3,23 +3,19 @@
  */
 package de.lichtflut.rb.web.entities;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
-import de.lichtflut.rb.core.api.EntityManager;
-import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.web.WebsampleLinkProvider;
-import de.lichtflut.rb.webck.application.LinkProvider;
 import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
-import de.lichtflut.rb.webck.components.editor.EntityPanel;
-import de.lichtflut.rb.webck.models.RBEntityModel;
+import de.lichtflut.rb.webck.components.ResourceBrowsingPanel;
 
 /**
  * <p>
@@ -31,6 +27,7 @@ import de.lichtflut.rb.webck.models.RBEntityModel;
  * </p>
  *
  * @author Ravi Knox
+ * @author Oliver Tigges
  */
 @SuppressWarnings("serial")
 public class EntityDetailPage extends EntitySamplesBasePage implements IFeedbackContainerProvider {
@@ -56,13 +53,19 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 		final StringValue idParam = params.get(PARAM_RESOURCE_ID);
 		final StringValue typeParam = params.get(PARAM_RESOURCE_TYPE);
 		final StringValue mode = params.get(PARAM_MODE);
-		final IModel<Boolean> readonly = toIsReadOnlyModel(mode);
+		
+		final boolean readonly = mode.isEmpty() || !MODE_EDIT.equals(mode.toString());
+
 		if (!idParam.isEmpty()) {
-			initView(modelFor(new SimpleResourceID(idParam.toString()), null), readonly);
+			final ResourceID id = new SimpleResourceID(idParam.toString());
+			final EntityHandle handle = EntityHandle.forID(id);
+			initBrowser(handle, readonly);
 		} else if (!typeParam.isEmpty()) {
-			initView(modelFor(null, new SimpleResourceID(typeParam.toString())), readonly);
+			final ResourceID type = new SimpleResourceID(typeParam.toString());
+			final EntityHandle handle = EntityHandle.forType(type);
+			initBrowser(handle, readonly);
 		} else {
-			add(new WebMarkupContainer("entity").setVisible(false));
+			add(new WebMarkupContainer("rb").setVisible(false));
 		}
 	}
 
@@ -73,36 +76,38 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 		return (FeedbackPanel) get("feedback");
 	}
 	
-	// -----------------------------------------------------
+	// ----------------------------------------------------
 	
-	protected void initView(final IModel<RBEntity> model, final IModel<Boolean> readonly) {
-		add(new EntityPanel("entity", model, readonly) {
-			@Override
-			public EntityManager getEntityManager() {
-				return getServiceProvider().getEntityManager();
-			}
-			@Override
-			public LinkProvider getLinkProvider() {
-				return new WebsampleLinkProvider();
-			}
-		});
+	protected Component initBrowser(final EntityHandle handle, final boolean readonly) {
+		final Browser browser = new Browser("rb");
+		browser.browseTo(handle, !readonly);
+		add(browser);
+		return browser;
 	}
 	
 	// -----------------------------------------------------
 
-	private IModel<RBEntity> modelFor(final ResourceID id, final ResourceID type) {
-		return new RBEntityModel(id, type) {
-			@Override
-			protected ServiceProvider getServiceProvider() {
-				return EntityDetailPage.this.getServiceProvider();
-			}
-		};
-	}
-	
-	private IModel<Boolean> toIsReadOnlyModel(final StringValue mode) {
-		final boolean readonly = mode.isEmpty() || !MODE_EDIT.equals(mode.toString());
-		return new Model<Boolean>(readonly);
-	}
+	class Browser extends ResourceBrowsingPanel {
+		
+		public Browser(final String id) {
+			super(id);
+		}
 
+		@Override
+		public CharSequence getUrlToResource(EntityHandle handle) {
+			final PageParameters params = new PageParameters();
+			if (handle.hasId()) {
+				params.add(EntityDetailPage.PARAM_RESOURCE_ID, handle.getId().getQualifiedName().toURI());
+			} else {
+				params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, handle.getType().getQualifiedName().toURI());
+			}
+			return RequestCycle.get().urlFor(EntityDetailPage.class, params);
+		}
+
+		@Override
+		public ServiceProvider getServiceProvider() {
+			return EntityDetailPage.this.getServiceProvider();
+		}
+	}
 
 }

@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -25,9 +26,12 @@ import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.webck.application.LinkProvider;
+import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.common.Action;
+import de.lichtflut.rb.webck.common.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.models.FieldLabelModel;
 import de.lichtflut.rb.webck.models.RBFieldValueModel;
@@ -50,7 +54,7 @@ import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
  * @author Oliver Tigges
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public abstract class EntityRowEditPanel extends Panel {
+public class EntityRowEditPanel extends Panel {
 
 	/**
 	 * Constructor.
@@ -69,6 +73,7 @@ public abstract class EntityRowEditPanel extends Panel {
 			protected void populateItem(final ListItem<RBFieldValueModel> item) {
 				addValueField(item, model.getObject().getDataType());
 				item.add(createRemoveLink(item.getIndex()));
+				item.add(createCreateLink(item.getIndex()));
 			}
 		};
 		valueList.setReuseItems(true);
@@ -89,10 +94,6 @@ public abstract class EntityRowEditPanel extends Panel {
 		link.add(new AttributeModifier("title", new ResourceModel("link.title.add-field-value")));
 		add(link);
 	}
-	
-	// ----------------------------------------------------
-	
-	public abstract LinkProvider getLinkProvider();
 	
 	// ----------------------------------------------------
 	
@@ -137,10 +138,36 @@ public abstract class EntityRowEditPanel extends Panel {
 		return link;
 	}
 	
+	protected Component createCreateLink(final int index) {
+		final AjaxSubmitLink link = new AjaxSubmitLink("createLink") {
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				final EntityHandle handle = EntityHandle.forType(getTypeConstraint());
+				final Action action = new EntityAttributeApplyAction(getField().getPredicate());
+				RBWebSession.get().getHistory().createReferencedEntity(handle, action);
+				
+				target.add((Component)EntityRowEditPanel.this.findParent(IBrowsingHandler.class));
+			}
+			
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				target.add(EntityRowEditPanel.this);
+			}
+		};
+		
+		if (getField().isResourceReference()){
+			link.add(new AttributeModifier("title", new ResourceModel("link.title.create-field-value")));	
+		} else {
+			link.setVisible(false);
+		}
+		return link;
+
+	}
+	
 	// ----------------------------------------------------
 	
 	private EntityPickerField addResourceField(final ListItem<RBFieldValueModel> item) {
-		final ResourceID typeConstraint = getTypeConstraint(getField());
+		final ResourceID typeConstraint = getTypeConstraint();
 		final EntityPickerField field = new EntityPickerField("valuefield", item.getModelObject(), typeConstraint);
 		item.add(field);
 		return field;
@@ -172,7 +199,8 @@ public abstract class EntityRowEditPanel extends Panel {
 	 * @param field - IRBField
 	 * @return the resourceTypeConstraint as an {@link ResourceID}
 	 */
-	private ResourceID getTypeConstraint(final RBField field) {
+	private ResourceID getTypeConstraint() {
+		final RBField field = getField();
 		if(field.getDataType().equals(ElementaryDataType.RESOURCE)){
 			for (Constraint c : field.getConstraints()) {
 				if(c.isResourceTypeConstraint()){

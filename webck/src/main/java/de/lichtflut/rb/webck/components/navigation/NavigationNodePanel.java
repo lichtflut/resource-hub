@@ -12,8 +12,6 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
-import de.lichtflut.rb.webck.components.CKLink;
-
 /**
  * <p>
  * Simple NavigationNode implementations which is the 'Component' itself.
@@ -48,7 +46,7 @@ public class NavigationNodePanel extends Panel implements NavigationNode {
 	/**
 	 * This constructor is private since the wicket:id is always "node".
 	 * @param id - wicket:id
-	 * @param link - {@link CKLink}
+	 * @param link Any link.
 	 */
 	protected NavigationNodePanel(final String id, final Component link) {
 		super(id);

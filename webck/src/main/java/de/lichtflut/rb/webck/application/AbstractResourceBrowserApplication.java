@@ -3,9 +3,13 @@
  */
 package de.lichtflut.rb.webck.application;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
+import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
@@ -42,4 +46,12 @@ public abstract class AbstractResourceBrowserApplication extends WebApplication 
 		return locator;
 	}
 	
+	@Override
+	public Session newSession(Request request, Response response) {
+		return new RBWebSession(request);
+	}
+	
+	public static AbstractResourceBrowserApplication get() {
+		return (AbstractResourceBrowserApplication) Application.get();
+	}
 }
