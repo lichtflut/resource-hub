@@ -13,7 +13,6 @@ import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.LabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
@@ -119,8 +118,6 @@ public class OutputElements {
 			register(decl.getPropertyDescriptor());
 			register(decl.getTypeDefinition());
 		}
-		LabelBuilder labelBuilder = schema.getLabelBuilder();
-		
 	}
 	
 	private void register(final TypeDefinition def) {
