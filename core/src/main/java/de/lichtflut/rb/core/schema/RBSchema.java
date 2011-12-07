@@ -24,7 +24,7 @@ import org.arastreju.sge.naming.QualifiedName;
  */
 public interface RBSchema {
 
-	String NAMESPACE_URI = "http://lichtflut.de/rbschema#";
+	String NAMESPACE_URI = "http://rb.lichtflut.de/schema#";
 
 	// -- CONTEXT -----------------------------------------
 

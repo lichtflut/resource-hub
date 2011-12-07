@@ -65,7 +65,7 @@ public class EntityRowEditPanel extends Panel {
 		add(new Label("label", new FieldLabelModel(model)));
 		
 		final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
-		final ListView<RBFieldValueModel> valueList = new ListView<RBFieldValueModel>("values", listModel) {
+		final ListView<RBFieldValueModel> view = new ListView<RBFieldValueModel>("values", listModel) {
 			@Override
 			protected void populateItem(final ListItem<RBFieldValueModel> item) {
 				addValueField(item, model.getObject().getDataType());
@@ -73,8 +73,8 @@ public class EntityRowEditPanel extends Panel {
 				item.add(createCreateLink(item.getIndex()));
 			}
 		};
-		valueList.setReuseItems(true);
-		add(valueList);
+		view.setReuseItems(true);
+		add(view);
 		
 		final AjaxSubmitLink link = new AjaxSubmitLink("addValueLink") {
 			@Override

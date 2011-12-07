@@ -8,13 +8,17 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.naming.NamespaceHandle;
+import org.arastreju.sge.naming.QualifiedName;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
@@ -54,6 +58,12 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 
 	private final Logger logger = LoggerFactory.getLogger(JsonSchemaParser.class);
 	
+	private final Map<String, NamespaceHandle> nsMap = new HashMap<String, NamespaceHandle>();
+	
+	private final ParsedElements result = new ParsedElements();
+	
+	private boolean closed; 
+	
 	// -----------------------------------------------------
 	
 	/**
@@ -69,8 +79,12 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	 */
 	@Override
 	public ParsedElements parse(final InputStream in) throws IOException {
+		if (closed) {
+			throw new IllegalStateException("Parser already closed.");
+		} else {
+			closed = true;
+		}
 		final StopWatch sw = new StopWatch();
-		final ParsedElements result = new ParsedElements();
 		final JsonParser p = new JsonFactory().createJsonParser(in);
 		
 		while (p.nextToken() != null) {
@@ -85,6 +99,11 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				while (p.nextToken() != JsonToken.END_ARRAY) {
 					final TypeDefinition typeDef = readPublicTypeDef(p, result);
 					result.add(typeDef);
+				}
+			} else if (NAMESPACE_DECLS.equals(p.getCurrentName())) {
+				assertStartArray(p);
+				while (p.nextToken() != JsonToken.END_ARRAY) {
+					readNamespaces(p);
 				}
 			} else if (p.getCurrentToken() == JsonToken.END_OBJECT ||
 					p.getCurrentToken() == JsonToken.START_OBJECT) {
@@ -105,13 +124,13 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (FOR_TYPE.equals(field)) {
-				schema.setDescribedType(new SimpleResourceID(p.getText()));
+				schema.setDescribedType(toResourceID(p.getText()));
 			} else if (PROPERTY_DECLARATION.equals(field)) {
 				final PropertyDeclaration decl = readPropertyDecl(p, result);
 				schema.addPropertyDeclaration(decl);
 			} else if (LABEL_RULE.equals(field)) {
 				final String rule = p.getText();
-				schema.setLabelBuilder(new ExpressionBasedLabelBuilder(rule));
+				schema.setLabelBuilder(new ExpressionBasedLabelBuilder(rule, nsMap));
 			}
 		}
 		return schema;
@@ -125,7 +144,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (ID.equals(field)) {
-				id = new SimpleResourceID(p.getText());
+				id = toResourceID(p.getText());
 			} else if (NAME.equals(field)) {
 				name = p.getText();
 			} else if (DATATYPE.equals(field)) {
@@ -141,20 +160,38 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		return def;
 	}
 	
-	private PropertyDeclaration readPropertyDecl(final JsonParser p, final ParsedElements result) throws IOException{
+	private void readNamespaces(final JsonParser p) throws IOException {
+		String uri = null;
+		String prefix = null;
+		while (p.nextToken() != JsonToken.END_OBJECT) {
+			final String field = nextField(p);
+			if (NAMESPACE.equals(field)) {
+				uri = p.getText();
+			} else if (PREFIX.equals(field)) {
+				prefix = p.getText();
+			}
+		}
+		if (uri != null && prefix != null) {
+			register(new NamespaceHandle(uri, prefix));
+		} else {
+			throw new IllegalStateException("Invalid namespace: uri=" + uri + " prefix=" + prefix);
+		}
+	}
+	
+	private PropertyDeclaration readPropertyDecl(final JsonParser p, final ParsedElements result) throws IOException {
 		final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
 		int min = 0;
 		int max = -1;
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (PROPERTY_TYPE.equals(field)) {
-				decl.setPropertyDescriptor(new SimpleResourceID(p.getText()));
+				decl.setPropertyDescriptor(toResourceID(p.getText()));
 			} else if (MIN.equals(field)) {
 				min = p.getIntValue();
 			} else if (MAX.equals(field)) {
 				max = p.getIntValue();
 			} else if (TYPE_REFERENCE.equals(field)) {
-				final ResourceID ref = new SimpleResourceID(p.getText());
+				final ResourceID ref = toResourceID(p.getText());
 				decl.setTypeDefinition(new TypeDefinitionReference(ref));
 			} else if (TYPE_DEFINITION.equals(field)) {
 				decl.setTypeDefinition(readTypeDef(p));
@@ -199,7 +236,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 			if (LITERAL.equals(field)) {
 				result.add(ConstraintBuilder.buildConstraint(p.getText()));
 			} else if (RESOURCE_TYPE.equals(field)){
-				result.add(ConstraintBuilder.buildConstraint(new SimpleResourceID(p.getText())));
+				result.add(ConstraintBuilder.buildConstraint(toResourceID(p.getText())));
 			}
 		}
 		return result;
@@ -216,6 +253,41 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	
 	private void assertStartArray(final JsonParser p) throws IOException {
 		Validate.isTrue(p.nextToken() == JsonToken.START_ARRAY);
+	}
+	
+	// ----------------------------------------------------
+	
+	public ResourceID toResourceID(final String name) {
+		if (QualifiedName.isUri(name)) {
+			logger.debug("found uri " + name);
+			return new SimpleResourceID(name); 
+		} 
+		final String prefix = QualifiedName.getPrefix(name);
+		final String simpleName = QualifiedName.getSimpleName(name);
+		if (nsMap.containsKey(prefix)) {
+			logger.debug("found registered prefix " + nsMap.get(prefix));
+			return new SimpleResourceID(nsMap.get(prefix), simpleName);
+		} else {
+			final NamespaceHandle handle = new NamespaceHandle(null, prefix);
+			nsMap.put(prefix, handle);
+			logger.debug("found unknown prefix " + prefix);
+			return new SimpleResourceID(handle, simpleName);	
+		}
+	}
+	
+	// -- NAMESPACES --------------------------------------
+	
+	/**
+	 * @param namespaceHandle
+	 */
+	private void register(final NamespaceHandle namespace) {
+		logger.debug("registered namespace: " + namespace);
+		final NamespaceHandle registered = nsMap.get(namespace.getPrefix());
+		if (registered != null) {
+			registered.setUri(namespace.getUri());
+		} else {
+			nsMap.put(namespace.getPrefix(), namespace);
+		}
 	}
 
 }

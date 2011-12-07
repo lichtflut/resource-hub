@@ -47,10 +47,10 @@ public class EntityPickerField extends DataPickerField<RBEntityReference> {
 	}
 	
 	/**
-	 * @param original
+	 * @param originalModel
 	 * @return A corresponding display model.
 	 */
-	private static IModel<String> toDisplayModel(final IModel<RBEntityReference> original) {
+	private static IModel<String> toDisplayModel(final IModel<RBEntityReference> originalModel) {
 		return new IModel<String>() {
 			
 			private String value;
@@ -59,13 +59,13 @@ public class EntityPickerField extends DataPickerField<RBEntityReference> {
 			}
 
 			public String getObject() {
-				if (value == null) {
-					if (original.getObject() != null) {
-						value = original.getObject().toString();
-					} else {
-						value = "";
-					}
-				}
+				final RBEntityReference orig = originalModel.getObject();
+				if (orig == null) {
+					value = null;
+					return "";
+				} else if (value == null) {
+					value = originalModel.getObject().toString();
+				} 
 				return value;
 			}
 

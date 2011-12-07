@@ -21,7 +21,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public abstract class RBEntityListModel extends LoadableModel<List<RBEntity>> {
+public abstract class RBEntityListModel extends AbstractLoadableModel<List<RBEntity>> {
 
 	private ResourceID type;
 	
@@ -39,7 +39,7 @@ public abstract class RBEntityListModel extends LoadableModel<List<RBEntity>> {
 	/** 
 	 * {@inheritDoc}
 	 */
-	protected List<RBEntity> load() {
+	public List<RBEntity> load() {
 		return getServiceProvider().getEntityManager().findByType(type);
 	}
 	

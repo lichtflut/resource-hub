@@ -4,9 +4,14 @@
 package de.lichtflut.rb.core.schema.model.impl;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Map;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.naming.Namespace;
+import org.arastreju.sge.naming.NamespaceHandle;
+import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
@@ -26,9 +31,9 @@ import de.lichtflut.rb.core.schema.model.LabelBuilder;
  */
 public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
 
-	private final String expression;
-	
 	private final Element[] elements;
+
+	private final Map<String, NamespaceHandle> namespaces;
 	
 	// -----------------------------------------------------
 	
@@ -36,7 +41,14 @@ public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
 	 * @param expression
 	 */
 	public ExpressionBasedLabelBuilder(final String expression) {
-		this.expression = expression;
+		this(expression, Collections.<String, NamespaceHandle>emptyMap());
+	}
+	
+	/**
+	 * @param expression
+	 */
+	public ExpressionBasedLabelBuilder(final String expression, final Map<String, NamespaceHandle> namespaces) {
+		this.namespaces = namespaces;
 		final String[] tokens = expression.split("\\s+");
 		this.elements = new Element[tokens.length];
 		for (int i = 0; i < tokens.length; i++) {
@@ -65,7 +77,12 @@ public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
 	 */
 	@Override
 	public String getExpression() {
-		return expression;
+		final StringBuilder sb = new StringBuilder();
+		for (Element el : elements) {
+			sb.append(el);
+			sb.append(" ");
+		}
+		return sb.toString().trim();
 	}
 	
 	// -----------------------------------------------------
@@ -78,10 +95,29 @@ public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
 				return new LiteralElement(current.substring(1, current.length() -1)); 
 			}
 		} else {
-			return new FieldElement(new SimpleResourceID(current));
+			return toFieldElement(current);
+			
 		}
 	}
 	
+	/**
+	 * @param current
+	 * @return
+	 */
+	private Element toFieldElement(final String name) {
+		if (QualifiedName.isUri(name)) {
+			return new FieldElement(new SimpleResourceID(name));
+		}
+		final String prefix = QualifiedName.getPrefix(name);
+		final String simpleName = QualifiedName.getSimpleName(name);
+		if (namespaces.containsKey(prefix)) {
+			final Namespace namespace = namespaces.get(prefix);
+			return new FieldElement(new SimpleResourceID(namespace, simpleName));
+		} else {
+			throw new IllegalStateException("Could not resolve URI for " + name);
+		}
+	}
+
 	// -- ELEMENT TYPES -----------------------------------
 	
 	interface Element extends Serializable {
@@ -99,6 +135,14 @@ public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
 		@Override
 		public void append(RBEntity entity, StringBuilder sb) {
 			sb.append(value);
+		}
+		
+		/** 
+		* {@inheritDoc}
+		*/
+		@Override
+		public String toString() {
+			return "<" + value + ">";
 		}
 		
 	}
@@ -134,6 +178,10 @@ public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
 					sb.append(value);
 				}
 			}
+		}
+		
+		public String toString() {
+			return predicate.getQualifiedName().toURI();
 		}
 		
 	}

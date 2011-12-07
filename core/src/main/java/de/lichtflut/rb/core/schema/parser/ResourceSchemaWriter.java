@@ -6,9 +6,6 @@ package de.lichtflut.rb.core.schema.parser;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
-
 /**
  * <p>
  *  Base interface for writers of Resource Schemas in different formats.
@@ -22,8 +19,6 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
  */
 public interface ResourceSchemaWriter {
 
-	void write(final OutputStream out, final ResourceSchema... schemas) throws IOException;
-	
-	void write(final OutputStream out, final TypeDefinition... typeDefinitions) throws IOException;
+	void write(final OutputStream out, final OutputElements elements) throws IOException;
 	
 }

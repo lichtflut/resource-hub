@@ -52,7 +52,7 @@ public abstract class CreateResourcePanel extends Panel {
 		form.add(new FeedbackPanel("feedback"));
 		
 		final List<Namespace> nsList = new ArrayList<Namespace>();
-		nsList.add(new SimpleNamespace(RB.NAMESPACE_URI));
+		nsList.add(new SimpleNamespace(RB.SYS_NAMESPACE_URI));
 		
 		nsModel = new Model<Namespace>();
 		nameModel = new Model<String>();

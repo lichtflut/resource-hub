@@ -19,7 +19,7 @@ import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 
 /**
  * <p>
- * Default implementation of {@link RBField}.
+ *  A field not declared by a schema's property delcaration.
  * </p> 
  *
  * Created: Aug 8, 2011

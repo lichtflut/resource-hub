@@ -16,7 +16,7 @@ package de.lichtflut.rb.core.schema.parser;
  */
 public interface IOConstants {
 	
-	public static final String NAMESPACES = "namespaces";
+	public static final String NAMESPACE_DECLS = "namespace-declarations";
 	
 	public static final String PREFIX = "prefix";
 	

@@ -3,6 +3,21 @@
  */
 package de.lichtflut.rb.core.schema.parser;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+
+import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.api.SchemaImporter;
+import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
+
 /**
  * <p>
  *  Some tests to proof and specify the ResourceSchemaParser.
@@ -16,60 +31,34 @@ package de.lichtflut.rb.core.schema.parser;
  *
  */
 public class ResourceSchemaParserTest {
-//	/**
-//	 *
-//	 * @throws IOException for
-//	 * @throws RecognitionException when something went wrong during parsing
-//	 */
-//	@Test
-//	public final void testParsingAndConstructingModelFromTestSimpleRSFFile1() throws IOException, RecognitionException{
-//		OldResourceSchemaManager rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
-//
-//		//Get ResourceSchemaTypes
-//		RSParsingResult result = rManagement.generateSchemaModelThrough(
-//				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL1.rsf"));
-//		Assert.assertFalse(result.isErrorOccured());
-//	}
-//
-//	//---------------------------------------------------------------------------
-//
-//	/**
-//	 *
-//	 * @throws IOException when the specified file does not exists
-//	 * @throws RecognitionException when something went wrong during parsing
-//	 */
-//	@Test
-//	public final void testParsingAndConstructingModelFromTestOSFFile2() throws IOException, RecognitionException{
-//		OldResourceSchemaManager rManagement = RBServiceProviderFactory.getDefaultServiceProvider().getResourceSchemaManagement();
-//		//Set parsing format to OSF
-//		rManagement.setFormat(RSFormat.OSF);
-//		//Get ResourceSchemaTypes
-//		RSParsingResult result = rManagement.generateAndResolveSchemaModelThrough(
-//				getClass().getClassLoader().getResourceAsStream("ResourceSchemaDSL2.osf"));
-//		Assert.assertFalse(result.isErrorOccured());
-//		boolean pAssertion=false;
-//		for (ResourceSchema rs : result.getResourceSchemas()) {
-//
-//			//--Search for a given property which must should exists on http://lichtflut.de#testResource2"
-//			//-----------------------------
-//			if(rs.getDescribedResourceID().getQualifiedName().toURI().equals("http://lichtflut.de#testResource2")){
-//				Collection<PropertyAssertion> assertions = rs.getPropertyAssertions();
-//				for (PropertyAssertion propertyAssertion : assertions) {
-//					if(propertyAssertion.getPropertyDeclaration().getIdentifier().getQualifiedName().toURI().equals(
-//							"http://lichtflut.de#Date")){
-//						Assert.assertTrue(propertyAssertion.getPropertyDeclaration().getElementaryDataType()
-//								== ElementaryDataType.DATE);
-//						pAssertion=true;
-//					}
-//				}
-//			}
-//			//-----------------------------
-//
-//		}
-//		//Check if the "http://lichtflut.de#Data"-Properties type of "http://lichtflut.de#testResource2" is Date
-//		Assert.assertTrue(pAssertion);
-//		final int size = 6;
-//		Assert.assertTrue(result.getPropertyDeclarations().size() == size);
-//	}
+
+	private DefaultRBServiceProvider serviceProvider;
+
+	// -----------------------------------------------------
+	
+	@Before
+	public void setUp() {
+		serviceProvider = new DefaultRBServiceProvider(new RBConfig());
+	}
+	
+	// ----------------------------------------------------
+	
+	@Test
+	public void testJsonImport() throws IOException {
+		final InputStream in = 
+				getClass().getClassLoader().getResourceAsStream("test-schema.json");
+		
+		final SchemaManager manager = serviceProvider.getSchemaManager();
+		final SchemaImporter importer = manager.getImporter("json");
+		importer.read(in);
+		
+		Collection<ResourceSchema> schemas = manager.findAllResourceSchemas();
+		System.out.println(schemas);
+		
+		Assert.assertEquals(5, manager.findAllResourceSchemas().size());
+		
+		Assert.assertEquals(1, manager.findAllTypeDefinitions().size());
+	}
+	
 
 }

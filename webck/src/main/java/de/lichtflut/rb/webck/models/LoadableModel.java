@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.models;
 
@@ -7,50 +7,22 @@ import org.apache.wicket.model.IModel;
 
 /**
  * <p>
- *  Model that loads it data and holds it until explicitly reseted.
+ *  [DESCRIPTION]
  * </p>
  *
  * <p>
- * 	Created Nov 17, 2011
+ * 	Created Dec 6, 2011
  * </p>
  *
  * @author Oliver Tigges
  */
-public abstract class LoadableModel<T> implements IModel<T> {
-	
-	private T loaded;
-	
-	// ----------------------------------------------------
-	
+public interface LoadableModel<T> extends IModel<T>{
+
 	/**
 	 * Resets the model.
 	 */
-	public void reset() {
-		loaded = null;
-	}
+	void reset();
 	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public T getObject() {
-		if (loaded == null) {
-			loaded = load();
-		}
-		return loaded;
-	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setObject(final T loaded) {
-		this.loaded = loaded;
-	}
-	
-	// ----------------------------------------------------
+	T load(); 
 
-	protected abstract T load(); 
-	
-	
 }

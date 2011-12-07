@@ -16,6 +16,7 @@ import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.BrowsingHistory;
 import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.behaviors.SlideTransitionBehavior;
 import de.lichtflut.rb.webck.common.Action;
 import de.lichtflut.rb.webck.common.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.components.editor.BrowsingButtonBar;
@@ -69,6 +70,8 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		add(form);
 		
 		setOutputMarkupId(true);
+		
+		add(new SlideTransitionBehavior());
 	}
 	
 	// ----------------------------------------------------
@@ -158,8 +161,9 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	}
 	
 	private void addToAjax() {
-		if (AjaxRequestTarget.get() != null) {
-			AjaxRequestTarget.get().add(this);
+		final AjaxRequestTarget target = AjaxRequestTarget.get();
+		if (target != null) {
+			target.add(this);
 		}
 	}
 

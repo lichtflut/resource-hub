@@ -6,22 +6,21 @@ package de.lichtflut.rb.webck.application;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.wicket.util.crypt.Base64;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.query.FieldParam;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryManager;
 import org.arastreju.sge.query.QueryResult;
-import org.arastreju.sge.query.UriParam;
-import org.arastreju.sge.query.ValueParam;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -34,7 +33,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Query Servlet.
  * </p>
  *
  * <p>
@@ -57,6 +56,8 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	
 	public final static String QUERY_PARAM = "query";
 	
+	private static final Pattern ESCAPE_CHARS = Pattern.compile("[\\\\+\\-\\!\\(\\)\\:\\^\\]\\{\\}\\~\\*\\?]");
+	
 	private Logger logger = LoggerFactory.getLogger(ResourceQueryServlet.class);
 	
 	// -----------------------------------------------------
@@ -77,6 +78,9 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
 			throws ServletException, IOException {
 		
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+		
 		final Mode mode = getMode(req);
 		final String term = req.getParameter(AUTOCOMPLETE_PARAM);
 		final String type = getTypeConstraint(req);
@@ -85,7 +89,7 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		} else {
 			logger.info("quering in mode {} : " + term, mode);
-			final QueryResult result = searchNodes(term, mode, type);
+			final QueryResult result = searchNodes(term.trim().toLowerCase(), mode, type);
 			autocomplete(result, resp, mode);			
 		}
 	}
@@ -126,27 +130,26 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	}
 
 	/**
-	 * @param term
-	 * @param type 
-	 * @return
+	 * Search nodes with given term.
+	 * @param term The term.
+	 * @param type An optional rdf:type criteria. 
+	 * @return The query result.
 	 */
 	protected QueryResult searchNodes(final String term, final Mode mode, final String type) {
 		final QueryManager qm = getServiceProvider().getArastejuGate().createQueryManager();
 		final Query query = qm.buildQuery();
 		switch (mode){
 		case URI:
-			query.add(new UriParam("*" + term + "*"));
+			query.addURI(prepareTerm(term));
 			break;
 		case ENTITY:
+		case VALUES:
 			query.beginAnd();
-			query.add(new ValueParam("*" + term + "*"));
+			addValues(query, term.split("\\s+"));
 			if (type != null) {
-				query.add(new FieldParam(RDF.TYPE, type));
+				query.addField(RDF.TYPE, type);
 			}
 			query.end();
-			break;
-		case VALUES:
-			query.add(new ValueParam("*" + term + "*"));
 			break;
 		default:
 			throw new NotYetSupportedException();
@@ -165,6 +168,25 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 		} else {
 			return Mode.UNKNOWN;
 		}
+	}
+	
+	protected void addValues(final Query query, final String... values) {
+		Validate.notEmpty(values);
+		for (String val : values) {
+			query.addValue(prepareTerm(val));
+		}
+	}
+	
+	protected String prepareTerm(final String orig) {
+		final StringBuilder sb = new StringBuilder(128);
+		if (!orig.startsWith("*")) {
+			sb.append("*");
+		}
+		sb.append(ESCAPE_CHARS.matcher(orig).replaceAll("\\\\$0"));
+		if (!orig.endsWith("*")) {
+			sb.append("*");
+		}
+		return sb.toString();
 	}
 	
 	// -----------------------------------------------------

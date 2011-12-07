@@ -60,9 +60,8 @@ public class SchemaImporterImpl implements SchemaImporter {
 			manager.store(def);
 		}
 		for(ResourceSchema schema : elements.getSchemas()) {
-			if (resolveTypeDefReferences(schema)) {
-				manager.store(schema);
-			}
+			resolveTypeDefReferences(schema);
+			manager.store(schema);
 		}
 		final ModelingConversation mc = provider.getArastejuGate().startConversation();
 		for(Statement stmt : elements.getStatements()) {
@@ -72,16 +71,16 @@ public class SchemaImporterImpl implements SchemaImporter {
 	
 	// -----------------------------------------------------
 
-	private boolean resolveTypeDefReferences(final ResourceSchema schema) {
-		boolean resolved = true;
+	private void resolveTypeDefReferences(final ResourceSchema schema) {
 		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 			final TypeDefinition typeDef = decl.getTypeDefinition();
 			if (typeDef instanceof TypeDefinitionReference) {
 				final TypeDefinitionReference ref = (TypeDefinitionReference) typeDef;
-				resolved = resolved && resolveTypeDefReference(ref);
+				if (!resolveTypeDefReference(ref)) {
+					throw new IllegalStateException("Could not resolve type def " + ref);
+				}
 			}
 		}
-		return resolved;
 	}
 	
 	private boolean resolveTypeDefReference(final TypeDefinitionReference ref) {

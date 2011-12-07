@@ -6,6 +6,10 @@ package de.lichtflut.rb.core.schema.parser.json;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+
+import junit.framework.Assert;
 
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
@@ -19,6 +23,8 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.core.schema.parser.OutputElements;
+import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
 
@@ -52,9 +58,14 @@ public class JsonBindingTest {
 		final TypeDefinition emailTypeDef = createEmailTypeDef();
 		final ResourceSchema personSchema = createSchema(emailTypeDef);
 		
+		final OutputElements elements = new OutputElements();
+		elements.addSchemas(Collections.singletonList(personSchema));
+		
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		exporter.write(out, personSchema);
+		exporter.write(out, elements);
 		final byte[] bytes = out.toByteArray();
+		
+		System.out.println(new String(bytes));
 		
 		final JsonSchemaParser importer = new JsonSchemaParser();
 		importer.parse(new ByteArrayInputStream(bytes));
@@ -67,13 +78,27 @@ public class JsonBindingTest {
 		final TypeDefinition emailTypeDef = createEmailTypeDef();
 		
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		exporter.write(out, emailTypeDef);
-		exporter.write(out, emailTypeDef);
-		exporter.write(out, emailTypeDef);
+		
+		final OutputElements elements = new OutputElements();
+		elements.addTypeDefs(Collections.singletonList(emailTypeDef));
+		
+		exporter.write(out, elements);
+		exporter.write(out, elements);
+		exporter.write(out, elements);
+		
 		final byte[] bytes = out.toByteArray();
 		
 		final JsonSchemaParser importer = new JsonSchemaParser();
 		importer.parse(new ByteArrayInputStream(bytes));
+	}
+	
+	@Test
+	public void testSchemaImport() throws IOException {
+		final InputStream in = 
+				getClass().getClassLoader().getResourceAsStream("test-schema.json");
+		final JsonSchemaParser parser = new JsonSchemaParser();
+		final ParsedElements result = parser.parse(in);
+		Assert.assertEquals(5, result.getSchemas().size());
 	}
 
 	// -----------------------------------------------------

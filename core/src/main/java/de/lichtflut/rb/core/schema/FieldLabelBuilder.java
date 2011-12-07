@@ -14,7 +14,7 @@ import de.lichtflut.rb.core.RB;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Builds localized labels for resources.
  * </p>
  *
  * <p>

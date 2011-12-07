@@ -5,12 +5,10 @@ package de.lichtflut.rb.core.api.impl;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collection;
 
 import de.lichtflut.rb.core.api.SchemaExporter;
 import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.schema.parser.OutputElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaWriter;
 
 /**
@@ -46,11 +44,10 @@ public class SchemaExporterImpl implements SchemaExporter {
 	 */
 	@Override
 	public void exportAll(final OutputStream out) throws IOException {
-		final Collection<TypeDefinition> typeDefs = manager.findAllTypeDefinitions();
-		writer.write(out, typeDefs.toArray(new TypeDefinition[typeDefs.size()]));
-		
-		final Collection<ResourceSchema> schemas = manager.findAllResourceSchemas();
-		writer.write(out, schemas.toArray(new ResourceSchema[schemas.size()]));
+		final OutputElements elements = new OutputElements();
+		elements.addTypeDefs(manager.findAllTypeDefinitions());
+		elements.addSchemas(manager.findAllResourceSchemas());
+		writer.write(out, elements);
 	}
 	
 }

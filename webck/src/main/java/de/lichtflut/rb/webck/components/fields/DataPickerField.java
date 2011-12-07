@@ -65,13 +65,26 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		display.setOutputMarkupId(true);
 		final String displayMarkupID = display.getMarkupId();
 		display.setSource(source);
+		display.setSearchEvent(new JsScopeUiEvent() {
+			protected void execute(final JsScopeContext ctx) {
+				ctx.append("$('#" +  displayMarkupID + "').removeClass('status-error').addClass('status-warning');");
+			}
+		});
 		display.setSelectEvent(new JsScopeUiEvent() {
 			protected void execute(final JsScopeContext ctx) {
 				ctx.append("if (ui.item) {");
 				ctx.append("  $('#" +  hiddenMarkupId + "').attr('value', ui.item.id);");
-				ctx.append("  $('#" +  displayMarkupID + "').attr('value', ui.item.label);");
+				ctx.append("  $('#" +  displayMarkupID + "').attr('value', ui.item.label)" +
+						".removeClass('status-error').removeClass('status-warning');");
 				ctx.append("} else { alert ('internal error nothing selected')};");
 				ctx.append("return false;");
+			}
+		});
+		display.setChangeEvent(new JsScopeUiEvent() {
+			protected void execute(final JsScopeContext ctx) {
+				ctx.append("if ($('#" +  displayMarkupID + "').hasClass('status-warning')) { " +
+					       "    $('#" +  displayMarkupID + "').addClass('status-error');" +
+						   "} ");
 			}
 		});
 		add(display);
@@ -150,10 +163,10 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	}
 	
 	/**
-	 * @param model
+	 * @param originalModel
 	 * @return
 	 */
-	private static <T> IModel<T> toHiddenModel(final IModel<T> model) {
+	private static <T> IModel<T> toHiddenModel(final IModel<T> originalModel) {
 		return new IModel<T>() {
 			
 			private T object;
@@ -163,7 +176,12 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 
 			@SuppressWarnings("unchecked")
 			public T getObject() {
-				final T obj = object == null ? model.getObject() : object;
+				final T original = originalModel.getObject();
+				if (original == null) {
+					// original has been reseted.
+					object = null;
+				}
+				final T obj = object == null ? original : object;
 				if (obj instanceof RBEntity) {
 					return (T) ((RBEntity)obj).getID();
 				} else {

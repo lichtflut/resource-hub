@@ -9,8 +9,10 @@ import static org.arastreju.sge.SNOPS.uri;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
+import org.arastreju.sge.io.NamespaceMap;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonGenerator;
@@ -21,6 +23,7 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.parser.IOConstants;
+import de.lichtflut.rb.core.schema.parser.OutputElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaWriter;
 
 /**
@@ -36,25 +39,17 @@ import de.lichtflut.rb.core.schema.parser.ResourceSchemaWriter;
  */
 public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 
-	/** 
+	
+    /** 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void write(OutputStream out, ResourceSchema... schemas) throws IOException {
+	public void write(final OutputStream out, final OutputElements elements) throws IOException {
 		final JsonGenerator g = new JsonFactory().createJsonGenerator(out).useDefaultPrettyPrinter();
 		g.writeStartObject();
-		write(g, schemas);
-		g.close(); 
-	}
-
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void write(final OutputStream out, final TypeDefinition... typeDefinitions) throws IOException {
-		final JsonGenerator g = new JsonFactory().createJsonGenerator(out).useDefaultPrettyPrinter();
-		g.writeStartObject();
-		write(g, typeDefinitions);
+		write(g, elements.getNamespaceMap());
+		writeSchemas(g, elements.getSchemas());
+		writeTypeDefs(g, elements.getTypeDefs());
 		g.close(); 
 	}
 	
@@ -62,11 +57,28 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 
 	/**
 	 * @param g The generator.
+	 * @param schemas
+	 * @throws IOException
+	 * @throws JsonGenerationException
+	 */
+	protected void writeSchemas(final JsonGenerator g, final List<ResourceSchema> schemas)
+			throws IOException, JsonGenerationException {
+		g.writeArrayFieldStart(RESOURCE_SCHEMAS);
+		for (ResourceSchema schema : schemas) {
+			g.writeStartObject();
+			writeSchema(g, schema);
+			g.writeEndObject();
+		}
+		g.writeEndArray();
+	}
+	
+	/**
+	 * @param g The generator.
 	 * @param typeDefinitions
 	 * @throws IOException
 	 * @throws JsonGenerationException
 	 */
-	public void write(final JsonGenerator g, final TypeDefinition... typeDefinitions) throws IOException {
+	public void writeTypeDefs(final JsonGenerator g,  final List<TypeDefinition> typeDefinitions) throws IOException {
 		g.writeArrayFieldStart(PUBLIC_TYPE_DEFINITIONS);
 		for (TypeDefinition def : typeDefinitions) {
 			g.writeStartObject();
@@ -78,16 +90,16 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	
 	/**
 	 * @param g The generator.
-	 * @param schemas
+	 * @param map The namespace map.
 	 * @throws IOException
 	 * @throws JsonGenerationException
 	 */
-	protected void write(final JsonGenerator g, ResourceSchema... schemas)
-			throws IOException, JsonGenerationException {
-		g.writeArrayFieldStart(RESOURCE_SCHEMAS);
-		for (ResourceSchema schema : schemas) {
+	public void write(final JsonGenerator g, final NamespaceMap map) throws IOException {
+		g.writeArrayFieldStart(NAMESPACE_DECLS);
+		for (String prefix : map.getPrefixes()) {
 			g.writeStartObject();
-			writeSchema(g, schema);
+			g.writeStringField(NAMESPACE, map.getNamespace(prefix).getUri());
+			g.writeStringField(PREFIX, prefix);
 			g.writeEndObject();
 		}
 		g.writeEndArray();
