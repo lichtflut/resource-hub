@@ -31,9 +31,9 @@ public class BrowsingHistory implements Serializable {
 	
 	private final Logger logger = LoggerFactory.getLogger(BrowsingHistory.class);
 	
-	private Deque<EntityHandle> viewHistory = new LinkedBlockingDeque<EntityHandle>(20);
+	private Deque<EntityHandle> viewHistory = new LinkedBlockingDeque<EntityHandle>(50);
 	
-	private Deque<EditAction> editHistory = new LinkedBlockingDeque<EditAction>(20);
+	private Deque<EditAction> editHistory = new LinkedBlockingDeque<EditAction>(50);
 	
 	// ----------------------------------------------------
 	
@@ -72,20 +72,20 @@ public class BrowsingHistory implements Serializable {
 	public void browseTo(EntityHandle handle) {
 		editHistory.clear();
 		viewHistory.push(handle);
-		logger.info("Browsing to " + handle + "  ----  " + this);
+		logger.debug("Browsing to " + handle + "  ----  " + this);
 	}
 	
 	public void beginEditing() {
 		Validate.isTrue(!viewHistory.isEmpty());
 		editHistory.push(new EditAction(viewHistory.peek()));
-		logger.info("Starting Editing " + this);
+		logger.debug("Starting Editing " + this);
 	}
 	
 	public void createReferencedEntity(EntityHandle handle, Action<?>... actions) {
 		Validate.isTrue(!editHistory.isEmpty(), "Not yet in edit mode.");
 		editHistory.peek().actions = actions;
 		editHistory.push(new EditAction(handle));
-		logger.info("Creating sub reference " + this);
+		logger.debug("Creating sub reference " + this);
 	}
 	
 	// --- STEP BACK --------------------------------------
@@ -96,13 +96,13 @@ public class BrowsingHistory implements Serializable {
 		} else {
 			editHistory.pop();
 		}
-		logger.info("Creating sub reference " + getCurrentEntity() + " ----- " + this);
+		logger.debug("Creating sub reference " + getCurrentEntity() + " ----- " + this);
 	}
 	
 	public void finishEditing() {
 		Validate.isTrue(!editHistory.isEmpty(), "Cancelling not possible if edit stack is empty");
 		editHistory.pop();
-		logger.info("Cancel " + this);
+		logger.debug("Cancel " + this);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -113,7 +113,7 @@ public class BrowsingHistory implements Serializable {
 		for (Action<Object> action : actions) {
 			action.setValue(ref);
 		}
-		logger.info("applying referenced " +  ref + " ----- " + this);
+		logger.debug("applying referenced " +  ref + " ----- " + this);
 	}
 	
 	// ----------------------------------------------------

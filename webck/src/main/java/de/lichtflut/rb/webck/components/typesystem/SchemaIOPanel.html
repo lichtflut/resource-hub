@@ -10,24 +10,41 @@
 </wicket:head>
 <wicket:panel>
 
-    <a wicket:id="exportLink">Export</a>
-    
-    <a wicket:id="importLink">Import</a>
+	<a wicket:id="exportLink">Export</a>
+
+	<a wicket:id="importLink">Import</a>
 
 	<div wicket:id="exportDialog">
-	   <form wicket:id="form">
-	       <select wicket:id="format"></select>
-	       <button wicket:id="exportButton"><wicket:message key="button.export"></wicket:message></button>
-	       <a wicket:id="download">.</a>
-	   </form>
+		<form wicket:id="form">
+			<div class="form-field">
+				<label>Format</label>
+				<select wicket:id="format"></select>
+			</div>
+			<div class="button-bar">
+				<button wicket:id="exportButton" class="default-button">
+					<wicket:message key="button.export"></wicket:message>
+				</button>
+			</div>	
+			<a wicket:id="download">.</a>
+		</form>
 	</div>
-	
+
 	<div wicket:id="importDialog">
-	   <form wicket:id="form">
-           <select wicket:id="format"></select>
-           <input type="file" wicket:id="file" />
-           <button wicket:id="upload"><wicket:message key="button.upload"></wicket:message></button>
-       </form>
+		<form wicket:id="form">
+			<div class="form-field">
+				<label>Format</label>
+				<select wicket:id="format"></select>
+			</div>
+			<div class="form-field">
+				<label>File</label>
+				<input type="file" wicket:id="file" />
+			</div>
+			<div class="button-bar">
+				<button wicket:id="upload" class="default-button">
+					<wicket:message key="button.upload"></wicket:message>
+				</button>
+			</div>
+		</form>
 	</div>
 
 </wicket:panel>

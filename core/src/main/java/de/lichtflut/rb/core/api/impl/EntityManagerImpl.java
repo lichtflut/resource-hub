@@ -94,7 +94,7 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
     public void store(final RBEntity entity) {
 		final ModelingConversation mc = startConversation();
 		final ResourceNode node = mc.resolve(entity.getID());
-		SNOPS.replace(node, RDF.TYPE, entity.getType());
+		SNOPS.assure(node, RDF.TYPE, entity.getType());
 		for (RBField field :entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.replace(node, field.getPredicate(), nodes);

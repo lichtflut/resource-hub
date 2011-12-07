@@ -84,7 +84,7 @@ public class ModalDialog extends Panel {
 		switch(action) {
 		case OPEN:
 			response.renderOnDomReadyJavaScript("$('#" + getMarkupId() + "')" +
-					".dialog({modal: true, width: 500, height:250})");
+					".dialog({modal: true, width: 600, height:250})");
 			break;
 		case CLOSE:
 			response.renderOnDomReadyJavaScript("$('#" + getMarkupId() + "').dialog('close')");
