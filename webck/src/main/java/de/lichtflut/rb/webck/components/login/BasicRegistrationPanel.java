@@ -13,7 +13,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 
 import de.lichtflut.rb.core.security.IAuthenticationService;
-import de.lichtflut.rb.core.security.impl.User;
+import de.lichtflut.rb.core.security.LoginData;
 
 /**
  * This component provides a basic login component.
@@ -33,7 +33,7 @@ public class BasicRegistrationPanel extends Panel {
 	public BasicRegistrationPanel(final String id, final IAuthenticationService service) {
 		super(id);
 		setOutputMarkupId(true);
-		final User user = new User();
+		final LoginData user = new LoginData();
 		add(new FeedbackPanel("feedbackPanel"));
 		Form form = new Form("form", new CompoundPropertyModel(user));
 		form.add(new TextField("name").setRequired(true));

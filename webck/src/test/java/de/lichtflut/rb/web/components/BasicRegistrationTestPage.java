@@ -6,7 +6,7 @@ package de.lichtflut.rb.web.components;
 import org.apache.wicket.markup.html.WebPage;
 
 import de.lichtflut.rb.core.security.IAuthenticationService;
-import de.lichtflut.rb.core.security.IUser;
+import de.lichtflut.rb.core.security.LoginData;
 import de.lichtflut.rb.webck.components.login.BasicRegistrationPanel;
 
 /**
@@ -25,7 +25,7 @@ public class BasicRegistrationTestPage extends WebPage{
 	public BasicRegistrationTestPage(){
 		this.add(new BasicRegistrationPanel("registration", new IAuthenticationService() {
 			@Override
-			public boolean registerNewUser(final IUser user) {
+			public boolean registerNewUser(final LoginData user) {
 				// TODO Auto-generated method stub
 				return false;
 			}

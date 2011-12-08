@@ -6,11 +6,12 @@ package de.lichtflut.rb.webck.application;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
+import org.arastreju.sge.security.User;
 
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  WebSession extension.
  * </p>
  *
  * <p>
@@ -23,6 +24,8 @@ public class RBWebSession extends WebSession {
 	
 	private final BrowsingHistory history = new BrowsingHistory();
 	
+	private User user; 
+	
 	// ----------------------------------------------------
 
 	public RBWebSession(final Request request) {
@@ -31,12 +34,33 @@ public class RBWebSession extends WebSession {
 	
 	// ----------------------------------------------------
 	
+
+	public static RBWebSession get() {
+		return (RBWebSession)Session.get();
+	}
+	
+	// ----------------------------------------------------
+	
 	public BrowsingHistory getHistory() {
 		return history;
 	}
 	
-	public static RBWebSession get() {
-		return (RBWebSession)Session.get();
+	public boolean isAuthenticated() {
+		return user != null;
 	}
-
+	
+	/**
+	 * @return this session's user.
+	 */
+	public User getUser() {
+		return user;
+	}
+	
+	/**
+	 * @param user The logged in user.
+	 */
+	public void setUser(final User user) {
+		this.user = user;
+	}
+	
 }

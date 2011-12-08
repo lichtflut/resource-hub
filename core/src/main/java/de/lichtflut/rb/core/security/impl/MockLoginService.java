@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.lichtflut.rb.core.security.IAuthenticationService;
-import de.lichtflut.rb.core.security.IUser;
+import de.lichtflut.rb.core.security.LoginData;
 
 /**
  * <p>
@@ -24,13 +24,13 @@ import de.lichtflut.rb.core.security.IUser;
  */
 public class MockLoginService implements IAuthenticationService {
 
-	private List<User> authenticatedUser = new ArrayList<User>();
+	private List<LoginData> authenticatedUser = new ArrayList<LoginData>();
 	/**
 	 * Default Constructor.
 	 */
 	public MockLoginService() {
-		User user = new User();
-		user.setName("test");
+		LoginData user = new LoginData();
+		user.setId("test");
 		user.setPassword("test");
 		authenticatedUser.add(user);
 	}
@@ -40,8 +40,8 @@ public class MockLoginService implements IAuthenticationService {
 	 */
 	@Override
 	public boolean authenticateUser(final String username, final String password) {
-		for (User user : authenticatedUser) {
-			if(user.getName().equals(username) && user.getPassword().equals(password)){
+		for (LoginData user : authenticatedUser) {
+			if(user.getId().equals(username) && user.getPassword().equals(password)){
 				return true;
 			}
 		}
@@ -59,8 +59,8 @@ public class MockLoginService implements IAuthenticationService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean registerNewUser(final IUser user) {
-		return authenticatedUser.add((User) user);
+	public boolean registerNewUser(final LoginData user) {
+		return authenticatedUser.add((LoginData) user);
 	}
 
 }

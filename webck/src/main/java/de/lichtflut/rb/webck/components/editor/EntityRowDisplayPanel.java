@@ -19,7 +19,9 @@ import org.arastreju.sge.model.ElementaryDataType;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.components.links.CrossLink;
+import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.FieldLabelModel;
 import de.lichtflut.rb.webck.models.RBFieldValueModel;
 import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
@@ -63,6 +65,7 @@ public class EntityRowDisplayPanel extends Panel {
 		};
 		valueList.setReuseItems(true);
 		add(valueList);
+		add(ConditionalBehavior.visibleIf(new NotEmptyCondition(model)));
 	}
 	
 	// ----------------------------------------------------
@@ -126,6 +129,27 @@ public class EntityRowDisplayPanel extends Panel {
 		final CheckBox cb = new CheckBox("valuefield", item.getModelObject());
 		cb.setEnabled(false);
 		item.add(new Fragment("valuefield", "checkbox", this).add(cb));
+	}
+	
+	// ----------------------------------------------------
+	
+	private class NotEmptyCondition extends ConditionalModel<RBField> {
+
+		/**
+		 * @param model
+		 */
+		public NotEmptyCondition(IModel<RBField> model) {
+			super(model);
+		}
+
+		/** 
+		* {@inheritDoc}
+		*/
+		@Override
+		public boolean isFulfilled() {
+			return !getObject().getValues().isEmpty();
+		}
+		
 	}
 	
 }

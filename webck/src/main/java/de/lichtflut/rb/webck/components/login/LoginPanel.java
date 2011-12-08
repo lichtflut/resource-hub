@@ -14,7 +14,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 
 import de.lichtflut.rb.core.security.IAuthenticationService;
-import de.lichtflut.rb.core.security.impl.User;
+import de.lichtflut.rb.core.security.LoginData;
 
 /**
  * This component provides a basic login panel.
@@ -35,14 +35,14 @@ public class LoginPanel extends Panel {
 	public LoginPanel(final String id, final IAuthenticationService service){
 		super(id);
 		setOutputMarkupId(true);
-		final User user = new User();
+		final LoginData user = new LoginData();
 		Form form = new Form("form", new CompoundPropertyModel(user));
 		form.add(new TextField("name"));
 		form.add(new PasswordTextField("password"));
 		form.add(new AjaxButton("submitButton") {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-				if(service.authenticateUser(user.getName(), user.getPassword())){
+				if(service.authenticateUser(user.getId(), user.getPassword())){
 					target.add(LoginPanel.this.replaceWith(new LogoutPanel(id, service)));
 				}
 			}

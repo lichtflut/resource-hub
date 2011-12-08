@@ -31,5 +31,5 @@ public interface IAuthenticationService {
 	 * @param user - new User
 	 * @return true if {@link IUser} was registered sucessful, false if not
 	 */
-	boolean registerNewUser(IUser user);
+	boolean registerNewUser(LoginData user);
 }
