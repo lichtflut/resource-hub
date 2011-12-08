@@ -37,7 +37,7 @@ public class LoginTest extends TestCase {
 
 		//assert all components were rendered
 		tester.assertContains("wicket:id=\"login\"");
-		tester.assertContains("wicket:id=\"name\"");
+		tester.assertContains("wicket:id=\"id\"");
 		tester.assertContains("wicket:id=\"password\"");
 		tester.assertContains("wicket:id=\"submitButton\"");
 		tester.assertContains("wicket:id=\"registerLink\"");

@@ -36,8 +36,7 @@ public class BasicRegistrationPanel extends Panel {
 		final LoginData user = new LoginData();
 		add(new FeedbackPanel("feedbackPanel"));
 		Form form = new Form("form", new CompoundPropertyModel(user));
-		form.add(new TextField("name").setRequired(true));
-		form.add(new TextField("email").setRequired(true));
+		form.add(new TextField("id").setRequired(true));
 		form.add(new PasswordTextField("password").setRequired(true));
 		form.add(new AjaxButton("submitButton"){
 

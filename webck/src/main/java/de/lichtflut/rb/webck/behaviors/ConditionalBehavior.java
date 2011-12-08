@@ -93,8 +93,10 @@ public abstract class ConditionalBehavior<T> extends Behavior {
 		return new ConditionalBehavior() {
 			@Override
 			protected void apply() {
-				final Form<?> form = getComponent().findParent(Form.class);
-				form.setDefaultButton((IFormSubmittingComponent) getComponent());
+				if (getComponent().isVisible()) {
+					final Form<?> form = getComponent().findParent(Form.class);
+					form.setDefaultButton((IFormSubmittingComponent) getComponent());
+				}
 			}
 		};
 	}

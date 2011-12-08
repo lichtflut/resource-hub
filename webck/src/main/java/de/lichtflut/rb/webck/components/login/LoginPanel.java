@@ -37,7 +37,7 @@ public class LoginPanel extends Panel {
 		setOutputMarkupId(true);
 		final LoginData user = new LoginData();
 		Form form = new Form("form", new CompoundPropertyModel(user));
-		form.add(new TextField("name"));
+		form.add(new TextField("id"));
 		form.add(new PasswordTextField("password"));
 		form.add(new AjaxButton("submitButton") {
 			@Override

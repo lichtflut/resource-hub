@@ -8,6 +8,8 @@ import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 
+import de.lichtflut.infra.Infra;
+
 /**
  * <p>
  *  [DESCRIPTION]
@@ -73,11 +75,38 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 	
+	public static ConditionalModel<?> isNull(final IModel<?> model) {
+		return new ConditionalModel<Object>(model) {
+			@Override
+			public boolean isFulfilled() {
+				return getObject() == null;
+			}
+		};
+	}
+	
 	public static ConditionalModel<?> not(final ConditionalModel<?> model) {
 		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
 				return !model.isFulfilled();
+			}
+		};
+	}
+	
+	public static <T> ConditionalModel<T> areEqual(final IModel<T> model, final IModel<T> other) {
+		return new ConditionalModel<T>(model) {
+			@Override
+			public boolean isFulfilled() {
+				return Infra.equals(model.getObject(), other.getObject());
+			}
+		};
+	}
+	
+	public static <T> ConditionalModel<T> areEqual(final IModel<T> model, final Object other) {
+		return new ConditionalModel<T>(model) {
+			@Override
+			public boolean isFulfilled() {
+				return Infra.equals(model.getObject(), other);
 			}
 		};
 	}

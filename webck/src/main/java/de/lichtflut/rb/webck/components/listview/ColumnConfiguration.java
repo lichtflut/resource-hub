@@ -5,8 +5,10 @@ package de.lichtflut.rb.webck.components.listview;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
@@ -65,6 +67,20 @@ public class ColumnConfiguration implements Serializable {
 		return actions.toArray(new String[actions.size()]);
 	}
 	
+	/**
+	 * @return the predicates
+	 */
+	public Set<ResourceID> getPredicatesToDisplay() {
+		final Set<ResourceID> result = new HashSet<ResourceID>();
+		for (PropertyDeclaration decl : decls) {
+			result.add(decl.getPropertyDescriptor());
+		}
+		result.addAll(predicates);
+		return result;
+	}
+	
+	// ----------------------------------------------------
+	
 	public IModel<List<ColumnHeader>> getHeaderModel() {
 		final Locale locale = RequestCycle.get().getRequest().getLocale();
 		final List<ColumnHeader> headers = new ArrayList<ColumnHeader>();
@@ -91,6 +107,11 @@ public class ColumnConfiguration implements Serializable {
 	
 	public ColumnConfiguration addColumnsFromSchema(final ResourceSchema schema) {
 		decls.addAll(schema.getPropertyDeclarations());
+		return this;
+	}
+	
+	public ColumnConfiguration addColumnByPredicate(final ResourceID predicate) {
+		predicates.add(predicate);
 		return this;
 	}
 

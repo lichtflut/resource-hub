@@ -14,7 +14,7 @@ import org.apache.wicket.util.tester.WicketTester;
  *
  * @author Ravi Knox
  */
-public class BasicRegistrationTest extends TestCase{
+public class BasicRegistrationTest extends TestCase {
 	private WicketTester tester;
 
 	@Override
@@ -37,8 +37,7 @@ public class BasicRegistrationTest extends TestCase{
 
 		//assert all components were rendered
 		tester.assertContains("wicket:id=\"registration\"");
-		tester.assertContains("wicket:id=\"name\"");
-		tester.assertContains("wicket:id=\"email\"");
+		tester.assertContains("wicket:id=\"id\"");
 		tester.assertContains("wicket:id=\"password\"");
 
 		String body = tester.getLastResponse().getDocument();

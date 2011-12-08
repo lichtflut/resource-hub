@@ -34,7 +34,6 @@ public class RBWebSession extends WebSession {
 	
 	// ----------------------------------------------------
 	
-
 	public static RBWebSession get() {
 		return (RBWebSession)Session.get();
 	}

@@ -52,9 +52,9 @@ public class EntityListPanel extends Panel {
 		
 		setOutputMarkupId(true);
 		
-		add(createRows(dataModel, config));
-		
 		add(createHeaders(config));
+		
+		add(createRows(dataModel, config));
 	}
 
 	// -- ACTION EVENTS -----------------------------------
@@ -150,7 +150,7 @@ public class EntityListPanel extends Panel {
 		return new ListView<RBEntity>("rows", model) {
 			@Override
 			protected void populateItem(final ListItem<RBEntity> item) {
-				item.add(createCells(new RBFieldsListModel(item.getModel())));
+				item.add(createCells(new RBFieldsListModel(item.getModel(), config)));
 				item.add(createActions(item.getModelObject(), config.getActions()));
 			}
 		};
