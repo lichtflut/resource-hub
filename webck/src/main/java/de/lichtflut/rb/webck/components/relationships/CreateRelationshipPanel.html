@@ -1,0 +1,40 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+	<div class="input-panel">
+
+		<form wicket:id="form">
+
+			<div wicket:id="feedback"></div>
+
+			<div class="form-field">
+				<label for="entityPicker"><wicket:message key="label.entity">[entity]</wicket:message></label>
+				<wicket:container wicket:id="entityPicker"></wicket:container>
+				<button type="button" wicket:id="select" class="default-button">
+					<wicket:message key="button.select">[select]</wicket:message>
+				</button>
+			</div>
+			
+			<div class="form-field">
+				<label for="predicatePicker"><wicket:message key="label.predicate">[predicate]</wicket:message></label>
+				<wicket:container wicket:id="predicatePicker"></wicket:container>
+				<button type="button" wicket:id="create" class="default-button">
+					<wicket:message key="button.create">[create]</wicket:message>
+				</button>
+			</div>
+
+		</form>
+
+	</div> 
+	
+</wicket:panel>
+</html>

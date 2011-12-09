@@ -14,7 +14,7 @@ import de.lichtflut.rb.webck.components.links.LabeledLink;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Action link.
  * </p>
  *
  * <p>

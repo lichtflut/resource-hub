@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema;
+package de.lichtflut.rb.core.common;
 
 import java.util.Locale;
 
@@ -23,25 +23,30 @@ import de.lichtflut.rb.core.RB;
  *
  * @author Oliver Tigges
  */
-public class FieldLabelBuilder {
+public class ResourceLabelBuilder {
 	
-	private static final FieldLabelBuilder DEFAULT_INSTANCE = new FieldLabelBuilder();
+	private static final ResourceLabelBuilder DEFAULT_INSTANCE = new ResourceLabelBuilder();
 	
 	// ----------------------------------------------------
 
-	public static FieldLabelBuilder getInstance() {
+	public static ResourceLabelBuilder getInstance() {
 		return DEFAULT_INSTANCE;
 	}
 	
 	// ----------------------------------------------------
 
-	public String getLabel(final ResourceID predicate, final Locale locale) {
-		String label = getLabel(predicate, RB.HAS_FIELD_LABEL, locale);
-		if (label == null) {
-			label = getLabel(predicate, RDFS.LABEL, locale);
+	public String getFieldLabel(final ResourceID predicate, final Locale locale) {
+		final String label = getLabel(predicate, RB.HAS_FIELD_LABEL, locale);
+		if (label != null) {
+			return label;
 		}
+		return getLabel(predicate, locale);
+	}
+	
+	public String getLabel(final ResourceID resource, final Locale locale) {
+		String label = getLabel(resource, RDFS.LABEL, locale);
 		if (label == null) {
-			label = predicate.getQualifiedName().getSimpleName();
+			label = resource.getQualifiedName().getSimpleName();
 		}
 		return label;
 	}

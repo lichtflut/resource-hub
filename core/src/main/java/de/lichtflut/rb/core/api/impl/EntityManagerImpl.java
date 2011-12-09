@@ -7,14 +7,17 @@ import java.util.List;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
@@ -94,7 +97,9 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
     public void store(final RBEntity entity) {
 		final ModelingConversation mc = startConversation();
 		final ResourceNode node = mc.resolve(entity.getID());
-		SNOPS.assure(node, RDF.TYPE, entity.getType());
+		SNOPS.associate(node, RDF.TYPE, entity.getType());
+		//SNOPS.associate(node, RDF.TYPE, RB.ENTITY);
+		SNOPS.assure(node, RDFS.LABEL, new SNText(entity.getLabel()));
 		for (RBField field :entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.replace(node, field.getPredicate(), nodes);

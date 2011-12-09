@@ -22,8 +22,6 @@ public interface IBrowsingHandler {
 	
 	CharSequence getUrlToResource(EntityHandle handle);
 	
-	void browseTo(EntityHandle handle, boolean editable);
-	
 	void createSubEntity(EntityHandle handle, ResourceID predicate);
 
 }

@@ -39,115 +39,6 @@ import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
  */
 public final class RBEntityTest {
 
-//    /**
-//     * Test to persist and find entities.
-//     */
-//    @SuppressWarnings("rawtypes")
-//    @Test
-//    public void testPersistAndFindRBEntities() {
-//        RBServiceProvider provider = RBServiceProviderFactory
-//                .getDefaultServiceProvider();
-//
-//        ResourceSchema schema = createSchema();
-//        // Store the schema
-//        provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(
-//                schema);
-//
-//        // Build an instance
-//        RBEntity<Object> instance = schema.generateRBEntity();
-//        Assert.assertNotNull(instance);
-//
-//        try {
-//            instance.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
-//            instance.addValueFor("http://lichtflut.de#hatEmail",
-//                    "test1@test.com");
-//            instance.addValueFor("http://lichtflut.de#hatAlter", "24");
-//            instance.addValueFor("http://lichtflut.de#hatOhren", "zwei");
-//
-//        } catch (Exception any) {
-//            any.printStackTrace();
-//        }
-//        // Try to create this
-//        Assert.assertTrue(provider.getRBEntityManagement()
-//                .createOrUpdateEntity(instance));
-//        RBEntityManagementImpl rbManagement = (RBEntityManagementImpl) provider
-//                .getRBEntityManagement();
-//        Collection<RBEntity> instances = rbManagement
-//                .loadAllEntitiesForSchema(schema);
-//
-//        Assert.assertTrue(instances.size() == 1);
-//        for (RBEntity i : instances) {
-//            Assert.assertTrue(i.getValuesFor(
-//                    "http://lichtflut.de#hatGeburtstag").contains("test1"));
-//            Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatEmail")
-//                    .contains("test1@test.com"));
-//            Assert.assertTrue(i.getValuesFor("http://lichtflut.de#hatAlter")
-//                    .contains("24"));
-//            // Assert.assertTrue(i.getValuesFor(null).contains("zwei"));
-//        }
-//    }
-//
-//    /**
-//     * Test to persist and find the specific entity.
-//     */
-//    @SuppressWarnings("rawtypes")
-//    @Test
-//    public void testPersistAndFindASpecificEntity() {
-//        RBServiceProvider provider = RBServiceProviderFactory
-//                .getDefaultServiceProvider();
-//
-//        ResourceSchema schema = createSchema();
-//        // Store the schema
-//        provider.getResourceSchemaManagement().storeOrOverrideResourceSchema(
-//                schema);
-//        // Build an instance
-//        RBEntity<Object> p0 = schema.generateRBEntity();
-//        Assert.assertNotNull(p0);
-//        RBEntity<Object> p1 = schema.generateRBEntity();
-//        Assert.assertNotNull(p1);
-//        try {
-//
-//            p0.addValueFor("http://lichtflut.de#hatGeburtstag", "test2");
-//            p0.addValueFor("http://lichtflut.de#hatEmail", "hans@test.com");
-//            p0.addValueFor("http://lichtflut.de#hatAlter", "2");
-//
-//            provider.getRBEntityManagement().createOrUpdateEntity(p0);
-//
-//            p1.addValueFor("http://lichtflut.de#hatGeburtstag", "test1");
-//            p1.addValueFor("http://lichtflut.de#hatEmail", "test1@test.com");
-//            p1.addValueFor("http://lichtflut.de#hatAlter", "24");
-//            // p1.addValueFor("http://lichtflut.de#hatKind", p0);
-//
-//        } catch (Exception any) {
-//            any.printStackTrace();
-//        }
-//
-//        Assert.assertTrue(provider.getRBEntityManagement()
-//                .createOrUpdateEntity(p0));
-//        Assert.assertTrue(provider.getRBEntityManagement()
-//                .createOrUpdateEntity(p1));
-//        Collection<RBEntity> instances = provider.getRBEntityManagement()
-//                .loadAllEntitiesForSchema(schema);
-//        // Assert.assertTrue(instances.size()==2);
-//        RBEntity entity = new ArrayList<RBEntity>(instances).get(0);
-//        // Made some proofs
-//
-//        Assert.assertEquals(
-//                provider.getRBEntityManagement().loadEntity(entity), entity);
-//        Assert.assertEquals(
-//                provider.getRBEntityManagement().loadEntity(
-//                        entity.getQualifiedName()), entity);
-//        Assert.assertEquals(
-//                provider.getRBEntityManagement().loadEntity(
-//                        entity.getQualifiedName().toURI()), entity);
-//        // Add a hash on the entities identifier to generate an identifier which
-//        // shouldnt exists.
-//        // Now try to assert that loadRBEntity should return null for those
-//        // identifiers
-//        Assert.assertNull(provider.getRBEntityManagement().loadEntity(
-//                entity.getQualifiedName().toURI() + "#"));
-//    }
-//
     /**
      *
      */
@@ -198,7 +89,7 @@ public final class RBEntityTest {
         // Tests
         System.out.println(m.find(e1.getID()).getAllFields());
         Assert.assertEquals(4, m.find(e1.getID()).getAllFields().size());
-        Assert.assertEquals(2, m.findByType(new SimpleResourceID("http://lichtflut.de#personschema")).size());
+        Assert.assertEquals(2, m.findByType(new SimpleResourceID("http://lf.de#", "Person")).size());
 
         m.delete(e1);
         System.out.println("-->"+m.find(e1.getID()));
@@ -211,7 +102,7 @@ public final class RBEntityTest {
      */
     private ResourceSchema createSchema() {
         ResourceSchemaImpl schema = new ResourceSchemaImpl(
-        		new SimpleResourceID("http://lichtflut.de#", "personschema"));
+        		new SimpleResourceID("http://lf.de#", "Person"));
         
         TypeDefinitionImpl p1 = new TypeDefinitionImpl();
         TypeDefinitionImpl p2 = new TypeDefinitionImpl();

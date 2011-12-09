@@ -11,8 +11,7 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.FieldLabelBuilder;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
@@ -52,7 +51,7 @@ public class UndeclaredRBField extends AbstractRBField {
 	
 	@Override
 	public String getLabel(Locale locale) {
-		return FieldLabelBuilder.getInstance().getLabel(predicate, locale);
+		return ResourceLabelBuilder.getInstance().getFieldLabel(predicate, locale);
 	};
 
 	@Override

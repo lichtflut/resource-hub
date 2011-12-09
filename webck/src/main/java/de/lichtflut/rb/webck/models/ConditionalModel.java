@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.webck.models;
 
+import java.util.Collection;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
@@ -80,6 +82,17 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			@Override
 			public boolean isFulfilled() {
 				return getObject() == null;
+			}
+		};
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static ConditionalModel<?> isEmpty(final IModel<? extends Collection<?>> model) {
+		return new ConditionalModel(model) {
+			@Override
+			public boolean isFulfilled() {
+				Collection collection = (Collection) getObject();
+				return collection == null || collection.isEmpty();
 			}
 		};
 	}

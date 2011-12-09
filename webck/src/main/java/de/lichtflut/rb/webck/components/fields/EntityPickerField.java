@@ -27,7 +27,15 @@ public class EntityPickerField extends DataPickerField<RBEntityReference> {
 	/**
 	 * @param id
 	 * @param model
-	 * @param source
+	 */
+	public EntityPickerField(final String id, final IModel<RBEntityReference> model) {
+		this(id, model, null);
+	}
+	
+	/**
+	 * @param id
+	 * @param model
+	 * @param type
 	 */
 	public EntityPickerField(final String id, final IModel<RBEntityReference> model, final ResourceID type) {
 		super(id, model, toDisplayModel(model), findEntity(type));

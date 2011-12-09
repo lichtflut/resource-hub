@@ -79,8 +79,7 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 	// ----------------------------------------------------
 	
 	protected Component initBrowser(final EntityHandle handle, final boolean readonly) {
-		final Browser browser = new Browser("rb");
-		browser.browseTo(handle, !readonly);
+		final Browser browser = new Browser("rb", handle, !readonly);
 		add(browser);
 		return browser;
 	}
@@ -89,8 +88,8 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 
 	class Browser extends ResourceBrowsingPanel {
 		
-		public Browser(final String id) {
-			super(id);
+		public Browser(final String id, EntityHandle handle, boolean editable) {
+			super(id, handle, editable);
 		}
 
 		@Override

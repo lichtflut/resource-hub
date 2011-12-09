@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.entity;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Resolver for {@link RBEntityReference}
  * </p>
  *
  * <p>

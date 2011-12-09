@@ -57,6 +57,13 @@ public interface RB {
 	ResourceID TYPE = new SimpleResourceID(SYS_NAMESPACE_URI, "Type");
 	
 	/**
+	 * rb:Entities are instances of rb:Type.
+	 */
+	ResourceID ENTITY = new SimpleResourceID(SYS_NAMESPACE_URI, "Entity");
+	
+	// -- PROPERTIES --------------------------------------
+	
+	/**
 	 * Each RBEntity may have a primary image URL/ID.
 	 */
 	ResourceID HAS_IMAGE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasImage");

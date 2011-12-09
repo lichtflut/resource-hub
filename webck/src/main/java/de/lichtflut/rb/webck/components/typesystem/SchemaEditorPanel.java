@@ -5,9 +5,11 @@ package de.lichtflut.rb.webck.components.typesystem;
 
 import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -18,6 +20,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.ResourceID;
+import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
@@ -56,8 +60,9 @@ public abstract class SchemaEditorPanel extends Panel {
 			protected void populateItem(ListItem<PropertyRow> item) {
 				final PropertyRow row = item.getModelObject();
 				
-				item.add(new ResourcePickerField("property", new PropertyModel(row, "propertyDescriptor"))
-					.setRequired(true));
+				final IModel<ResourceID> property = new PropertyModel<ResourceID>(row, "propertyDescriptor");
+				item.add(new ResourcePickerField("property", property).setRequired(true));
+				item.add(createCreateLink(property));
 				
 				item.add(new TextField<String>("fieldLabel", new PropertyModel(row, "defaultLabel")));
 
@@ -124,11 +129,31 @@ public abstract class SchemaEditorPanel extends Panel {
 		
 	}
 	
+	// ----------------------------------------------------
+	
+	protected Component createCreateLink(final IModel<ResourceID> targetModel) {
+		final AjaxSubmitLink link = new AjaxSubmitLink("createLink") {
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			}
+			
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				target.add(form);
+			}
+		};
+		return link;
+	}
+	
 	// -----------------------------------------------------
 	
 	public abstract void onSave(final AjaxRequestTarget target);
 	
 	// -----------------------------------------------------
+	
+	protected Dialog newCreateResourceDialog() {
+		return null;
+	}
 	
 	protected String max(final PropertyDeclaration pa) {
 		if (pa.getCardinality().isUnbound()) {

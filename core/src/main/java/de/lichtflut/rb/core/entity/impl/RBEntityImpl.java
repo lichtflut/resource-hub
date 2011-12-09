@@ -16,6 +16,7 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.entity.MetaInfo;
@@ -43,7 +44,6 @@ public class RBEntityImpl implements RBEntity {
 	private final ResourceID type;
 	
 	private List<RBField> fields;
-	
 
 	// -----------------------------------------------------
 
@@ -108,6 +108,7 @@ public class RBEntityImpl implements RBEntity {
 	 * <p>
 	 * If no {@link ResourceSchema} exists, the {@link RBField}s will be created
 	 * according to the values present in the Entity itself.
+	 * TODO: Make protected id no longer needed by MockEntityManager
 	 */
 	public void initializeFields() {
 		final Set<ResourceID> predicates = new HashSet<ResourceID>();
@@ -125,7 +126,10 @@ public class RBEntityImpl implements RBEntity {
 		// TODO: Remove from blacklist rdf(s):*
 		predicates.remove(RDF.TYPE);
 		for (ResourceID predicate : predicates) {
-			fields.add(new UndeclaredRBField(predicate, SNOPS.objects(node, predicate)));
+			final Set<SemanticNode> nodes = filterValues(SNOPS.objects(node, predicate));
+			if (!nodes.isEmpty()) {
+				fields.add(new UndeclaredRBField(predicate, SNOPS.objects(node, predicate)));
+			}
 		}
 	}
 
@@ -205,7 +209,9 @@ public class RBEntityImpl implements RBEntity {
 	public ResourceNode getNode(){
 		return node;
 	}
-
+	
+	// ----------------------------------------------------
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -221,5 +227,22 @@ public class RBEntityImpl implements RBEntity {
 		}
 		return s;
 	}
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * @param objects
+	 * @return
+	 */
+	private Set<SemanticNode> filterValues(Set<SemanticNode> objects) {
+		final Set<SemanticNode> filtered = new HashSet<SemanticNode>();
+		for (SemanticNode node : filtered) {
+			if (node.isValueNode()) {
+				filtered.add(node);
+			}
+		}
+		return filtered;
+	}
+
 
 }

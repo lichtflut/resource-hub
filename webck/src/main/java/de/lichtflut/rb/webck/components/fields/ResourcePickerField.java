@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.fields;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.util.crypt.Base64;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 
@@ -31,6 +32,15 @@ public class ResourcePickerField extends DataPickerField<ResourceID> {
 	}
 	
 	/**
+	 * Constructor.
+	 * @param id The component ID.
+	 * @param model The model.
+	 */
+	public ResourcePickerField(final String id, final IModel<ResourceID> model, final ResourceID type) {
+		this(id, model, findByType(type));
+	}
+	
+	/**
 	 *Constructor.
 	 * @param id The component ID.
 	 * @param model The model.
@@ -51,6 +61,16 @@ public class ResourcePickerField extends DataPickerField<ResourceID> {
 	public static AutocompleteSource findByValues() {
 		final String ctx = RequestCycle.get().getRequest().getContextPath();
 		return new AutocompleteSource(ctx +"internal/query/values");
+	}
+	
+	public static AutocompleteSource findByType(final ResourceID type) {
+		final String ctx = RequestCycle.get().getRequest().getContextPath();
+		final StringBuilder sb = new StringBuilder(ctx + "/internal/query/values");
+		if (type != null) {
+			sb.append("?type=");
+			sb.append(Base64.encodeBase64URLSafeString(type.getQualifiedName().toURI().getBytes()));
+		}
+		return new AutocompleteSource(sb.toString());
 	}
 	
 }

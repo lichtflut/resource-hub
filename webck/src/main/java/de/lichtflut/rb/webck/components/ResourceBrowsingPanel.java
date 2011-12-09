@@ -3,7 +3,9 @@
  */
 package de.lichtflut.rb.webck.components;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.arastreju.sge.model.ResourceID;
@@ -25,6 +27,8 @@ import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.editor.LocalButtonBar;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
 import de.lichtflut.rb.webck.models.RBEntityModel;
+import de.lichtflut.rb.webck.models.RBEntityStatementsModel;
+import de.lichtflut.rb.webck.models.StatementsModel;
 
 /**
  * <p>
@@ -49,8 +53,13 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	/**
 	 * @param id
 	 */
-	public ResourceBrowsingPanel(final String id) {
+	public ResourceBrowsingPanel(final String id, EntityHandle handle, boolean editable) {
 		super(id);
+		
+		history().browseTo(handle);
+		if (editable) {
+			history().beginEditing();
+		}
 		
 		model = new RBEntityModel() {
 			@Override
@@ -66,6 +75,9 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		
 		form.add(createLocalBar(form));
 		form.add(createBrowsingBar(form));
+		
+		final StatementsModel statmentsModel = new RBEntityStatementsModel(model);
+		form.add(createRelationshipView("relationships", statmentsModel));
 		
 		add(form);
 		
@@ -85,17 +97,6 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	/** 
 	* {@inheritDoc}
 	*/
-	public void browseTo(EntityHandle handle, boolean editable) {
-		history().browseTo(handle);
-		if (editable) {
-			history().beginEditing();
-		}
-		addToAjax();
-	}
-	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void createSubEntity(EntityHandle handle, ResourceID predicate) {
 		// store current entity
@@ -108,6 +109,10 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	}
 	
 	// ----------------------------------------------------
+	
+	protected Component createRelationshipView(String id, StatementsModel model) {
+		return new WebMarkupContainer(id);
+	}
 	
 	protected LocalButtonBar createLocalBar(Form form) {
 		return new LocalButtonBar("localButtonBar", model, form) {

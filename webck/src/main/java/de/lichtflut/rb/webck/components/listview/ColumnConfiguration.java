@@ -15,7 +15,7 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.schema.FieldLabelBuilder;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.webck.components.listview.ColumnHeader.ColumnType;
@@ -89,7 +89,7 @@ public class ColumnConfiguration implements Serializable {
 			headers.add(new SimpleColumnHeader(label, decl.getPropertyDescriptor(), ColumnType.DATA));
 		}
 		for (ResourceID predicate : predicates) {
-			final String label = FieldLabelBuilder.getInstance().getLabel(predicate, locale);
+			final String label = ResourceLabelBuilder.getInstance().getFieldLabel(predicate, locale);
 			headers.add(new SimpleColumnHeader(label, predicate, ColumnType.DATA));
 		}
 		for (@SuppressWarnings("unused") String action : getActions()) {
