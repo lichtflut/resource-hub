@@ -11,6 +11,10 @@
 <wicket:panel>
 
 	<div class="input-panel">
+	
+		<div>
+			<h4><wicket:message key="label.create-relationship">[title]</wicket:message></h4>
+		</div>
 
 		<form wicket:id="form">
 
@@ -24,13 +28,20 @@
 				</button>
 			</div>
 			
-			<div class="form-field">
-				<label for="predicatePicker"><wicket:message key="label.predicate">[predicate]</wicket:message></label>
-				<wicket:container wicket:id="predicatePicker"></wicket:container>
-				<button type="button" wicket:id="create" class="default-button">
-					<wicket:message key="button.create">[create]</wicket:message>
-				</button>
-			</div>
+			<wicket:enclosure child="predicatePicker">
+			
+				<div class="form-field">
+					<label for="predicatePicker"><wicket:message key="label.predicate">[predicate]</wicket:message></label>
+					<wicket:container wicket:id="predicatePicker"></wicket:container>
+					<button type="button" wicket:id="cancel">
+						<wicket:message key="button.cancel">[cancel]</wicket:message>
+					</button>
+					<button type="button" wicket:id="create" class="default-button">
+						<wicket:message key="button.create">[create]</wicket:message>
+					</button>
+				</div>
+			
+			</wicket:enclosure>
 
 		</form>
 

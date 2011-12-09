@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.persistence.ResourceResolver;
 
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
@@ -85,6 +86,14 @@ public class MockServiceProvider implements ServiceProvider, Serializable {
 	@Override
 	public TypeManager getTypeManager() {
 		return typeManager;
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public ResourceResolver getResourceResolver() {
+		return null;
 	}
 
 }

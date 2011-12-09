@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.services.impl;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ArastrejuProfile;
+import org.arastreju.sge.persistence.ResourceResolver;
 
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.EntityManager;
@@ -82,6 +83,16 @@ public class DefaultRBServiceProvider implements ServiceProvider {
     @Override
     public TypeManager getTypeManager() {
     	return typeManager;
+    }
+    
+    // ----------------------------------------------------
+    
+    /** 
+    * {@inheritDoc}
+    */
+    @Override
+    public ResourceResolver getResourceResolver() {
+    	return null;
     }
    
 }

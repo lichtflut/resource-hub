@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.services;
 
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.persistence.ResourceResolver;
 
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
@@ -46,7 +47,13 @@ public interface ServiceProvider {
 	 * @return The type manager.
 	 */
 	TypeManager getTypeManager();
-
 	
+	// ----------------------------------------------------
+
+	/**
+	 * Obtain a resolver for ResourceIDs 
+	 * @return A resource resolver.
+	 */
+	ResourceResolver getResourceResolver();
 	
 }
