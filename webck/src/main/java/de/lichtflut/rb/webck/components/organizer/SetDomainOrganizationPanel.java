@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.orginizer;
+package de.lichtflut.rb.webck.components.organizer;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.and;
@@ -19,12 +19,13 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
-import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.api.DomainOrganizer;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.webck.components.buttons.RBStandardButton;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.models.LoadableModel;
 import de.lichtflut.rb.webck.models.ResourceLabelModel;
 
 /**
@@ -40,7 +41,7 @@ import de.lichtflut.rb.webck.models.ResourceLabelModel;
  */
 public abstract class SetDomainOrganizationPanel extends Panel {
 
-	private final IModel<RBEntityReference> model;
+	private final LoadableModel<RBEntityReference> model;
 	
 	private final IModel<Boolean> readonly;
 	
@@ -51,7 +52,7 @@ public abstract class SetDomainOrganizationPanel extends Panel {
 	 * @param model
 	 */
 	@SuppressWarnings("rawtypes")
-	public SetDomainOrganizationPanel(String id, IModel<RBEntityReference> model) {
+	public SetDomainOrganizationPanel(String id, LoadableModel<RBEntityReference> model) {
 		super(id);
 		this.model = model;
 		this.readonly = Model.of(true);
@@ -84,9 +85,7 @@ public abstract class SetDomainOrganizationPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	public abstract void onOrganizationSet(ResourceID orgID);
-	
-	public abstract void onResetOrganisation(ResourceID orgID);
+	public abstract DomainOrganizer getOrganizer();
 	
 	// ----------------------------------------------------
 	
@@ -114,8 +113,9 @@ public abstract class SetDomainOrganizationPanel extends Panel {
 		return new RBStandardButton("save") {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				onOrganizationSet(model.getObject().getId());
+				getOrganizer().setDomainOrganization(model.getObject());
 				readonly.setObject(true);
+				model.reset();
 				target.add(SetDomainOrganizationPanel.this);
 			}
 		}.add(visibleIf(isFalse(readonly)));
@@ -126,14 +126,14 @@ public abstract class SetDomainOrganizationPanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				readonly.setObject(true);
-				onResetOrganisation(model.getObject().getId());
+				model.reset();
 				target.add(SetDomainOrganizationPanel.this);
 			}
 		}.add(visibleIf(isFalse(readonly)));
 	}
 	
 	// ----------------------------------------------------
-	
+
 	/** 
 	* {@inheritDoc}
 	*/

@@ -13,8 +13,10 @@ import org.apache.wicket.request.Response;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
+import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.entity.RBEntityReference;
+import de.lichtflut.rb.webck.conversion.QualifiedNameConverter;
 import de.lichtflut.rb.webck.conversion.RBEntityReferenceConverter;
 import de.lichtflut.rb.webck.conversion.ResourceIDConverter;
 import de.lichtflut.rb.webck.conversion.SNTextConverter;
@@ -42,6 +44,7 @@ public abstract class AbstractResourceBrowserApplication extends WebApplication 
 		locator.set(SNText.class, new SNTextConverter());
 		locator.set(SNTimeSpec.class, new SNTimeSpecConverter());
 		locator.set(ResourceID.class, new ResourceIDConverter());
+		locator.set(QualifiedName.class, new QualifiedNameConverter());
 		locator.set(RBEntityReference.class, new RBEntityReferenceConverter());
 		return locator;
 	}

@@ -9,6 +9,9 @@ import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.naming.Namespace;
 
+import de.lichtflut.rb.core.organizer.ContextDeclaration;
+import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
+
 /**
  * <p>
  *  Organization service for a domain.
@@ -25,15 +28,26 @@ public interface DomainOrganizer {
 	void setDomainOrganization(final ResourceID organization);
 	
 	ResourceID getDomainOrganization();
+	
+	// ----------------------------------------------------
 
 	/**
 	 * @return
 	 */
 	List<Namespace> getNamespaces();
+	
+	void registerNamespace(NamespaceDeclaration namespace);
 
+	// ----------------------------------------------------
+	
 	/**
 	 * @return
 	 */
 	List<Context> getContexts();
+
+	/**
+	 * @param object
+	 */
+	void registerContext(ContextDeclaration object);
 
 }

@@ -3,7 +3,8 @@
  */
 package de.lichtflut.rb.core.api.impl;
 
-import static org.arastreju.sge.SNOPS.*;
+import static org.arastreju.sge.SNOPS.assure;
+import static org.arastreju.sge.SNOPS.singleAssociation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.DomainOrganizer;
+import de.lichtflut.rb.core.organizer.ContextDeclaration;
+import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
@@ -85,14 +88,8 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 		return query.getSingleNode();
 	}
 	
-	/** 
-	* {@inheritDoc}
-	*/
-	@Override
-	public List<Context> getContexts() {
-		return new ArrayList<Context>(arasOrganizer().getContexts());
-	}
-
+	// ----------------------------------------------------
+	
 	/** 
 	* {@inheritDoc}
 	*/
@@ -101,6 +98,31 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 		return new ArrayList<Namespace>(arasOrganizer().getNamespaces());
 	}
 	
+	/** 
+	* {@inheritDoc}
+	*/
+	public void registerNamespace(NamespaceDeclaration decl) {
+		arasOrganizer().registerNamespace(decl.getUri(), decl.getPrefix());
+	};
+	
+	// ----------------------------------------------------
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public List<Context> getContexts() {
+		return new ArrayList<Context>(arasOrganizer().getContexts());
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void registerContext(ContextDeclaration decl) {
+		arasOrganizer().registerContext(decl.getQualifiedName());
+	}
+
 	// ----------------------------------------------------
 	
 	protected Organizer arasOrganizer() {

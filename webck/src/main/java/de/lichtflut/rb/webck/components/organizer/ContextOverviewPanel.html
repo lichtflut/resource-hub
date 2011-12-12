@@ -1,0 +1,36 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+		<h4><wicket:message key="header.contexts">[contexts]</wicket:message></h4>
+		<table class="entity-list long">
+			<tr>
+				<th class="entity-list-header">
+					<wicket:message key="header.context.uri">[uri]</wicket:message>
+				</th>
+				<th class="entity-list-header">
+					<wicket:message key="header.context.description">[description]</wicket:message>
+				</th>
+			</tr>
+			<tr wicket:id="view" class="entity-list-row">
+				<td class="entity-list-cell">
+					<wicket:container wicket:id="uri">[uri]</wicket:container></td>
+				<td class="entity-list-cell">
+					-
+				</td>
+			</tr>
+		</table>
+		<a wicket:id="createContext">
+			<wicket:message key="link.create-context">[ctx]</wicket:message>
+		</a>
+
+</wicket:panel>
+</html>

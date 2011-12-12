@@ -67,13 +67,13 @@ public abstract class CreateResourcePanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				onCreate(new QualifiedName(nsModel.getObject(), nameModel.getObject()), target);
-				nsModel.setObject(null);
-				nameModel.setObject(null);
+				resetModel();
 			}
 			
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				target.add(form);
+				resetModel();
 			}
 		});
 		
@@ -94,6 +94,11 @@ public abstract class CreateResourcePanel extends Panel {
 		super.onDetach();
 		nsModel.detach();
 		nameModel.detach();
+	}
+	
+	protected void resetModel() {
+		nsModel.setObject(null);
+		nameModel.setObject(null);
 	}
 
 }

@@ -48,6 +48,13 @@ public abstract class AbstractLoadableModel<T> implements LoadableModel<T> {
 		this.loaded = loaded;
 	}
 	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void detach() {
+	}
+	
 	// ----------------------------------------------------
 
 	public abstract T load(); 

@@ -21,6 +21,7 @@ import org.apache.wicket.model.IModel;
  *
  * @author Oliver Tigges
  */
+@Deprecated
 public class ModalDialog extends Panel {
 	
 	public static final String CONTENT_ID = "content";

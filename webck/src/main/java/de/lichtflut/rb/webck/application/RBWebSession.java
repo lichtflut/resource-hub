@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.application;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
+import org.arastreju.sge.eh.ArastrejuRuntimeException;
 import org.arastreju.sge.security.User;
 
 
@@ -45,7 +46,16 @@ public class RBWebSession extends WebSession {
 	}
 	
 	public boolean isAuthenticated() {
-		return user != null;
+		try {
+			if (user != null) {
+				// trigger fetching of associations to check if object is still alive
+				user.getAssociatedResource().getAssociations();
+				return true;
+			}
+		} catch (ArastrejuRuntimeException e) {
+			invalidate();
+		}
+		return false;
 	}
 	
 	/**

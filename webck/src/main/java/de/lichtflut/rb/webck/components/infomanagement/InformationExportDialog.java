@@ -112,7 +112,6 @@ public abstract class InformationExportDialog extends Dialog implements IResourc
 		return new PanelMarkupSourcingStrategy(false);
 	}
 	
-	
 	protected ListModel<String> getChoices() {
 		return new ListModel<String>(Arrays.asList(new String [] {"RDF-XML", "JSON", "N3"}));
 	}
