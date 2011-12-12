@@ -7,7 +7,8 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Implementations of this interface may add information to the model at startup, 
+ *  that needs to be present a priori. 
  * </p>
  *
  * <p>

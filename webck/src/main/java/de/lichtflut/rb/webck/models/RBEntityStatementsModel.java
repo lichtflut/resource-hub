@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.wicket.model.IModel;
@@ -43,6 +44,9 @@ public class RBEntityStatementsModel implements StatementsModel {
 	 */
 	@Override
 	public List<? extends Statement> getObject() {
+		if (model.getObject() == null || model.getObject().getNode() == null) {
+			return Collections.emptyList();
+		}
 		final ResourceNode node = model.getObject().getNode();
 		return new ArrayList<Statement>(node.getAssociations());
 	}

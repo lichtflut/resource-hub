@@ -17,7 +17,6 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
@@ -73,6 +72,7 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 		final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
 		final List<ResourceNode> nodes = provider.getArastejuGate().createQueryManager().findByType(type);
 		for (ResourceNode n : nodes) {
+			n.getAssociations();
 			RBEntityImpl entity = new RBEntityImpl(n, schema);
 			result.add(resolveEntityReferences(entity, true));
 		}

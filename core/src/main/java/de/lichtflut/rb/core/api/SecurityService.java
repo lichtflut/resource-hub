@@ -35,5 +35,5 @@ public interface SecurityService {
 	 * @return
 	 */
 	User login(LoginData loginData);
-
+	
 }
