@@ -23,6 +23,8 @@ public interface RB {
 	
 	String CTX_NAMESPACE_URI = "http://rb.lichtflut.de/contexts#";
 	
+	String COMMON_NAMESPACE_URI = "http://rb.lichtflut.de/common#";
+	
 	// -- CONTEXTS ----------------------------------------
 	
 	/**
@@ -61,6 +63,12 @@ public interface RB {
 	 */
 	ResourceID ENTITY = new SimpleResourceID(SYS_NAMESPACE_URI, "Entity");
 	
+	ResourceID PERSON = new SimpleResourceID(COMMON_NAMESPACE_URI, "Person");
+	
+	ResourceID ORGANIZATION = new SimpleResourceID(COMMON_NAMESPACE_URI, "Organization");
+	
+	ResourceID PROJECT = new SimpleResourceID(COMMON_NAMESPACE_URI, "Project");
+	
 	// -- PROPERTIES --------------------------------------
 	
 	/**
@@ -77,6 +85,10 @@ public interface RB {
 	 * Each RBEntity may have a primary image URL/ID.
 	 */
 	ResourceID HAS_FIELD_LABEL = new SimpleResourceID(SYS_NAMESPACE_URI, "hasFieldLabel");
-
+	
+	/**
+	 * Boolean value indicating of an organization is the domain's owning one.
+	 */
+	ResourceID IS_DOMAIN_ORGANIZATION = new SimpleResourceID(SYS_NAMESPACE_URI, "isDomainOrganization");
 
 }

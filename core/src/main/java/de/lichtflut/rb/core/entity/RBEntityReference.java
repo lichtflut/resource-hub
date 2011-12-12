@@ -3,10 +3,14 @@
  */
 package de.lichtflut.rb.core.entity;
 
+import java.util.Locale;
+
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.ValueNode;
 import org.arastreju.sge.naming.QualifiedName;
+
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 
 /**
  * <p>
@@ -80,6 +84,10 @@ public class RBEntityReference implements ResourceID {
 	}
 	
 	// ----------------------------------------------------
+	
+	public ResourceID getId() {
+		return id;
+	}
 
 	public boolean isValueNode() {
 		return id.isValueNode();
@@ -108,7 +116,7 @@ public class RBEntityReference implements ResourceID {
 		if (isResolved()) {
 			return entity.getLabel();
 		} else {
-			return id.getQualifiedName().toURI();
+			return ResourceLabelBuilder.getInstance().getLabel(id, Locale.getDefault());
 		}
 	}
 	

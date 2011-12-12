@@ -106,6 +106,19 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 	
+	public static ConditionalModel<?> and(final ConditionalModel<?>... model) {
+		return new ConditionalModel<Boolean>(model) {
+			@Override
+			public boolean isFulfilled() {
+				boolean fulfilled = true;
+				for (ConditionalModel<?> current : model) {
+					fulfilled &= current.isFulfilled();
+				}
+				return fulfilled;
+			}
+		};
+	}
+	
 	public static <T> ConditionalModel<T> areEqual(final IModel<T> model, final IModel<T> other) {
 		return new ConditionalModel<T>(model) {
 			@Override

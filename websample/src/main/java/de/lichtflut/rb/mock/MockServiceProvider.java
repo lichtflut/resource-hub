@@ -10,8 +10,10 @@ import java.util.List;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.persistence.ResourceResolver;
 
+import de.lichtflut.rb.core.api.DomainOrganizer;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.api.SecurityService;
 import de.lichtflut.rb.core.api.TypeManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -93,6 +95,22 @@ public class MockServiceProvider implements ServiceProvider, Serializable {
 	*/
 	@Override
 	public ResourceResolver getResourceResolver() {
+		return null;
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public DomainOrganizer getDomainOrganizer() {
+		return null;
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public SecurityService getSecurityService() {
 		return null;
 	}
 

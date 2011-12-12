@@ -1,0 +1,55 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+	<div class="input-panel">
+
+		<form wicket:id="form">
+
+			<div wicket:id="feedback"></div>
+
+			<div class="form-field">
+			
+				<p wicket:id="noOrgInfo">[no org set info]</p>
+			
+				<wicket:enclosure>
+					<wicket:message key="label.org">[org]</wicket:message>
+					<span wicket:id="readonly">[readonly value]</span>
+				</wicket:enclosure>
+				
+				<wicket:enclosure>
+					<div class="form-field">
+						<label for="entityPicker"><wicket:message key="label.org">[org]</wicket:message></label>
+						<div wicket:id="entityPicker" class="entity-picker"></div>
+					</div>
+				</wicket:enclosure>
+			</div>
+			
+			<div class="button-bar">
+				<button type="button" wicket:id="cancel">
+					<wicket:message key="button.cancel">[cancel]</wicket:message>
+				</button>
+				<button type="button" wicket:id="save" class="default-button">
+					<wicket:message key="button.save">[save]</wicket:message>
+				</button>
+				<button type="button" wicket:id="set">
+					<wicket:message key="button.set">[set]</wicket:message>
+				</button>
+				<button type="button" wicket:id="change">
+					<wicket:message key="button.change">[change]</wicket:message>
+				</button>
+			</div>
+		</form>
+
+	</div>
+	
+</wicket:panel>
+</html>

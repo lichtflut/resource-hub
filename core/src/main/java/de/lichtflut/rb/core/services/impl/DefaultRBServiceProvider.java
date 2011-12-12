@@ -9,9 +9,12 @@ import org.arastreju.sge.ArastrejuProfile;
 import org.arastreju.sge.persistence.ResourceResolver;
 
 import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.api.DomainOrganizer;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.api.SecurityService;
 import de.lichtflut.rb.core.api.TypeManager;
+import de.lichtflut.rb.core.api.impl.DomainOrganizerImpl;
 import de.lichtflut.rb.core.api.impl.EntityManagerImpl;
 import de.lichtflut.rb.core.api.impl.SchemaManagerImpl;
 import de.lichtflut.rb.core.api.impl.TypeManagerImpl;
@@ -34,6 +37,8 @@ public class DefaultRBServiceProvider implements ServiceProvider {
     private SchemaManager schemaManager;
     private EntityManager entityManager;
     private TypeManager typeManager;
+    private SecurityService service;
+    private DomainOrganizer organizer;
 
     // --CONSTRUCTOR----------------------------------------
 
@@ -47,6 +52,7 @@ public class DefaultRBServiceProvider implements ServiceProvider {
         schemaManager = new SchemaManagerImpl(this);
         entityManager = new EntityManagerImpl(this);
         typeManager = new TypeManagerImpl(this);
+        organizer = new DomainOrganizerImpl(this);
     }
 
     // -----------------------------------------------------
@@ -83,6 +89,22 @@ public class DefaultRBServiceProvider implements ServiceProvider {
     @Override
     public TypeManager getTypeManager() {
     	return typeManager;
+    }
+    
+    /** 
+    * {@inheritDoc}
+    */
+    @Override
+    public DomainOrganizer getDomainOrganizer() {
+    	return organizer;
+    }
+    
+    /** 
+    * {@inheritDoc}
+    */
+    @Override
+    public SecurityService getSecurityService() {
+    	return service;
     }
     
     // ----------------------------------------------------
