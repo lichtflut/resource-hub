@@ -3,15 +3,13 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
-import java.util.List;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -21,13 +19,18 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
-import org.odlabs.wiquery.ui.dialog.Dialog;
 
+import de.lichtflut.rb.core.schema.model.LabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.components.EnumDropDownChoice;
 import de.lichtflut.rb.webck.components.fields.ResourcePickerField;
+import de.lichtflut.rb.webck.components.form.RBDefaultButton;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.PropertyRowListModel;
 
 /**
  * <p>
@@ -46,8 +49,10 @@ public abstract class SchemaEditorPanel extends Panel {
 	 *  Constructor.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public SchemaEditorPanel(final String id, final IModel<List<? extends PropertyRow>> model) {
-		super(id, model);
+	public SchemaEditorPanel(final String id, final IModel<ResourceSchema> model) {
+		super(id);
+		
+		final PropertyRowListModel rowModel = new PropertyRowListModel(model);
 		
 		setOutputMarkupPlaceholderTag(true);
 		setOutputMarkupId(true);
@@ -55,7 +60,45 @@ public abstract class SchemaEditorPanel extends Panel {
 		final Form<?> form = new Form("form");
 		form.setOutputMarkupId(true);
 		form.add(new FeedbackPanel("feedback"));
-		form.add(new ListView<PropertyRow>("listView", model) {
+		
+		final TextArea<LabelBuilder> labelExpression = 
+				new TextArea<LabelBuilder>("labelExpression", new PropertyModel(model, "labelBuilder"));
+		labelExpression.setType(LabelBuilder.class);
+		form.add(labelExpression);
+		
+		form.add(createRows(rowModel));
+		
+		form.add(new RBStandardButton("addRow") {
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				rowModel.getObject().add(new PropertyRow());
+				target.add(SchemaEditorPanel.this);
+			}
+		});
+		
+		form.add(new RBDefaultButton("save") {
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				final ResourceSchema original = model.getObject();
+				final ResourceSchemaImpl schema = new ResourceSchemaImpl(original.getDescribedType());
+				schema.setLabelBuilder(original.getLabelBuilder());
+				for (PropertyRow row: rowModel.getObject()) {
+					final PropertyDeclaration decl = PropertyRow.toPropertyDeclaration(row);
+					schema.addPropertyDeclaration(decl);	
+				}
+				onSave(target, schema);
+			}
+		});
+		
+		add(form);
+		
+	}
+
+	// ----------------------------------------------------
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected ListView<PropertyRow> createRows(final PropertyRowListModel rowModel) {
+		return new ListView<PropertyRow>("listView", rowModel) {
 			@Override
 			protected void populateItem(ListItem<PropertyRow> item) {
 				final PropertyRow row = item.getModelObject();
@@ -97,39 +140,8 @@ public abstract class SchemaEditorPanel extends Panel {
 			
 				item.add(new ConstraintsEditorPanel("constraints", item.getModel()));
 			}
-		});
-		
-		form.add(new AjaxFallbackButton("addRow", form) {
-			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				List list = model.getObject();
-				list.add(new PropertyRow());
-				target.add(SchemaEditorPanel.this);
-			}
-			
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				target.add(SchemaEditorPanel.this);
-			}
-		});
-		
-		form.add(new AjaxFallbackButton("save", form) {
-			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				onSave(target);
-			}
-			
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				target.add(SchemaEditorPanel.this);
-			}
-		});
-		
-		add(form);
-		
+		};
 	}
-	
-	// ----------------------------------------------------
 	
 	protected Component createCreateLink(final IModel<ResourceID> targetModel) {
 		final AjaxSubmitLink link = new AjaxSubmitLink("createLink") {
@@ -142,18 +154,14 @@ public abstract class SchemaEditorPanel extends Panel {
 				target.add(form);
 			}
 		};
-		return link;
+		return link.setVisible(false);
 	}
 	
 	// -----------------------------------------------------
 	
-	public abstract void onSave(final AjaxRequestTarget target);
+	public abstract void onSave(final AjaxRequestTarget target, final ResourceSchema schema);
 	
 	// -----------------------------------------------------
-	
-	protected Dialog newCreateResourceDialog() {
-		return null;
-	}
 	
 	protected String max(final PropertyDeclaration pa) {
 		if (pa.getCardinality().isUnbound()) {

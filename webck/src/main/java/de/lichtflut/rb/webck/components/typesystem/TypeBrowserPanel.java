@@ -8,17 +8,21 @@ import java.util.List;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.nodes.views.SNClass;
+
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.LoadableModel;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Browser panel for rb:Types.
  * </p>
  *
  * <p>
@@ -29,16 +33,20 @@ import org.arastreju.sge.model.nodes.views.SNClass;
  */
 public abstract class TypeBrowserPanel extends Panel {
 
+	private final LoadableModel<List<SNClass>> model;
+	
 	/**
 	 * @param id
 	 */
 	@SuppressWarnings("rawtypes")
-	public TypeBrowserPanel(final String id, final IModel<List<SNClass>> typesModel) {
+	public TypeBrowserPanel(final String id, final LoadableModel<List<SNClass>> model) {
 		super(id);
+		
+		this.model = model;
 		
 		setOutputMarkupId(true);
 		
-		add(new ListView<SNClass>("listview", typesModel) {
+		add(new ListView<SNClass>("listview", model) {
 			@Override
 			protected void populateItem(final ListItem<SNClass> item) {
 				final SNClass type = item.getModelObject();
@@ -61,6 +69,29 @@ public abstract class TypeBrowserPanel extends Panel {
 				onCreateType(target);
 			}
 		});
+	}
+	
+	// ----------------------------------------------------
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void onEvent(final IEvent<?> event) {
+		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
+		if (mce.isAbout(ModelChangeEvent.TYPE)) {
+			model.reset();
+			RBAjaxTarget.add(this);
+		} 
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+		model.detach();
 	}
 	
 	// -- CALLBACKS ---------------------------------------

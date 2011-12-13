@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.api;
 import java.util.List;
 
 import org.arastreju.sge.model.nodes.views.SNClass;
+import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
 
 /**
@@ -26,20 +27,41 @@ public interface TypeManager {
 	 * @param qn The qualified name of the type.
 	 * @return The persistent class node.
 	 */
-	SNClass create(QualifiedName qn);
+	SNClass createType(QualifiedName qn);
 	
 	/**
 	 * Create a new rb:Type with given name.
 	 * @param namespace The namespace.
 	 * @param name The simple name.
-	 * @return The persistent class node.
 	 */
-	void remove(SNClass type);
+	void removeType(SNClass type);
 	
 	/**
 	 * Find all types.
 	 * @return A list with all sub classes of rb:Type.
 	 */
-	List<SNClass> findAll();
+	List<SNClass> findAllTypes();
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Create and persist a new rdf:Property with given name.
+	 * @param qn The qualified name of the type.
+	 * @return The persistent property node.
+	 */
+	SNProperty createProperty(QualifiedName qn);
+	
+	/**
+	 * Create a new rdf:Property with given name.
+	 * @param namespace The namespace.
+	 * @param name The simple name.
+	 */
+	void removeProperty(SNProperty property);
+	
+	/**
+	 * Find all types.
+	 * @return A list with all rdf:Properties.
+	 */
+	List<SNProperty> findAllProperties();
 
 }

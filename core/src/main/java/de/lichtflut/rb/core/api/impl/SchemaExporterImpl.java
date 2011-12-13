@@ -45,7 +45,7 @@ public class SchemaExporterImpl implements SchemaExporter {
 	@Override
 	public void exportAll(final OutputStream out) throws IOException {
 		final OutputElements elements = new OutputElements();
-		elements.addTypeDefs(manager.findAllTypeDefinitions());
+		elements.addTypeDefs(manager.findPublicTypeDefinitions());
 		elements.addSchemas(manager.findAllResourceSchemas());
 		writer.write(out, elements);
 	}

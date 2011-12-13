@@ -17,8 +17,8 @@ import org.apache.wicket.validation.validator.UrlValidator;
 import de.lichtflut.rb.core.api.DomainOrganizer;
 import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
-import de.lichtflut.rb.webck.components.buttons.RBCancelButton;
-import de.lichtflut.rb.webck.components.buttons.RBStandardButton;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
@@ -68,7 +68,7 @@ public abstract class CreateNamespacePanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				getOrganizer().registerNamespace(model.getObject());
-				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.NAMESPACE_CREATED));
+				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.NAMESPACE));
 				onSuccess(target, model.getObject());
 				resetModel();
 			}

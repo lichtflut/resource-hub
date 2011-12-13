@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.infomanagement;
+package de.lichtflut.rb.webck.components.dialogs;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,8 +15,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
-import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
@@ -35,7 +33,6 @@ import org.arastreju.sge.model.DefaultSemanticGraph;
 import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
-import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 
@@ -50,7 +47,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public abstract class InformationExportDialog extends Dialog implements IResourceListener {
+public abstract class InformationExportDialog extends AbstractRBDialog implements IResourceListener {
 
 	private ResourceStreamResource resource;
 	
@@ -104,13 +101,7 @@ public abstract class InformationExportDialog extends Dialog implements IResourc
 	
 	protected abstract ServiceProvider getServiceProvider();
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected IMarkupSourcingStrategy newMarkupSourcingStrategy() {
-		return new PanelMarkupSourcingStrategy(false);
-	}
+	// ----------------------------------------------------
 	
 	protected ListModel<String> getChoices() {
 		return new ListModel<String>(Arrays.asList(new String [] {"RDF-XML", "JSON", "N3"}));
@@ -149,7 +140,7 @@ public abstract class InformationExportDialog extends Dialog implements IResourc
 			final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			try {
 				final ServiceProvider sp = getServiceProvider();
-				final List<SNClass> types = sp.getTypeManager().findAll();
+				final List<SNClass> types = sp.getTypeManager().findAllTypes();
 				
 				final SemanticGraph graph = new DefaultSemanticGraph();
 				for (SNClass type : types) {

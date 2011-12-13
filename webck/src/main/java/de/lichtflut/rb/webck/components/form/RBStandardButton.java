@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.buttons;
+package de.lichtflut.rb.webck.components.form;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.form.Form;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Standard button
  * </p>
  *
  * <p>

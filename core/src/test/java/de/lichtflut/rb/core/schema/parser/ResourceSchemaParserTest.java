@@ -57,7 +57,7 @@ public class ResourceSchemaParserTest {
 		
 		Assert.assertEquals(5, manager.findAllResourceSchemas().size());
 		
-		Assert.assertEquals(1, manager.findAllTypeDefinitions().size());
+		Assert.assertEquals(1, manager.findPublicTypeDefinitions().size());
 	}
 	
 

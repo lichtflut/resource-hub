@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -15,9 +14,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.naming.SimpleNamespace;
 
-import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.components.ComponentFactory;
 
 /**
@@ -51,31 +50,26 @@ public abstract class CreateResourcePanel extends Panel {
 		form.setOutputMarkupId(true);
 		form.add(new FeedbackPanel("feedback"));
 		
-		final List<Namespace> nsList = new ArrayList<Namespace>();
-		nsList.add(new SimpleNamespace(RB.SYS_NAMESPACE_URI));
-		
 		nsModel = new Model<Namespace>();
 		nameModel = new Model<String>();
 		
-		ComponentFactory.addDropDownChoice("nsChoice", form, nsModel, nsList)
+		ComponentFactory.addDropDownChoice("nsChoice", form, nsModel, getAvailableNamespaces())
 			.setRequired(true);
 		ComponentFactory.addTextField("name", nameModel, form)
 			.setRequired(true);
 		
 		form.add(new AjaxFallbackButton("save", form) {
-			
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				onCreate(new QualifiedName(nsModel.getObject(), nameModel.getObject()), target);
 				resetModel();
 			}
-			
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				target.add(form);
 				resetModel();
 			}
-		});
+		}.add(new DefaultButtonBehavior()));
 		
 		add(form);
 	}
@@ -83,6 +77,8 @@ public abstract class CreateResourcePanel extends Panel {
 	// -----------------------------------------------------
 	
 	public abstract void onCreate(final QualifiedName qn, final AjaxRequestTarget target);
+	
+	public abstract ServiceProvider getServiceProvider();
 	
 	// -----------------------------------------------------
 	
@@ -99,6 +95,10 @@ public abstract class CreateResourcePanel extends Panel {
 	protected void resetModel() {
 		nsModel.setObject(null);
 		nameModel.setObject(null);
+	}
+	
+	protected List<Namespace> getAvailableNamespaces() {
+		return getServiceProvider().getDomainOrganizer().getNamespaces();
 	}
 
 }

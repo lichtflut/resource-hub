@@ -142,12 +142,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 */
 	@Override
 	public boolean isLiteralValue() {
-		for (ElementaryDataType elementaryDataType :  ELEMENTATY_DATA_TYPES) {
-			if(this.type == elementaryDataType){
-				return true;
-			}
-		}
-		return false;
+		return !isResourceReference();
 	}
 
 	/**

@@ -3,23 +3,17 @@
  */
 package de.lichtflut.rb.web.types;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.util.ListModel;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
-import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.web.RBBasePage;
 import de.lichtflut.rb.web.util.ServiceProviderLocator;
@@ -31,6 +25,8 @@ import de.lichtflut.rb.webck.components.typesystem.SchemaIOPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeBrowserPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeDefBrowserPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeDefEditorPanel;
+import de.lichtflut.rb.webck.models.PublicTypeDefListModel;
+import de.lichtflut.rb.webck.models.RBTypeListModel;
 
 /**
  * <p>
@@ -51,23 +47,23 @@ public class TypeSystemPage extends RBBasePage {
 	public TypeSystemPage() {
 		super("Type System");
 		
-		final IModel<List<SNClass>> typeModel = new ListModel<SNClass>();
-		typeModel.setObject(getServiceProvider().getTypeManager().findAll());
-		
 		final ModalDialog dialog = new ModalDialog("dialog", Model.of("create type | create type def"));
 		add(dialog);
 		
 		add(new WebMarkupContainer("editor"));
 		
-		add(new TypeBrowserPanel("typeBrowser", typeModel) {
+		add(new TypeBrowserPanel("typeBrowser", initTypeListModel()) {
 			@Override
 			public void onCreateType(AjaxRequestTarget target) {
 				dialog.setContent(new CreateResourcePanel(ModalDialog.CONTENT_ID) {
 					public void onCreate(QualifiedName qn, AjaxRequestTarget target) {
 						dialog.close();
-						final SNClass newType = getServiceProvider().getTypeManager().create(qn);
-						typeModel.getObject().add(newType);
+						final SNClass newType = getServiceProvider().getTypeManager().createType(qn);
 						setResponsePage(TypeSystemPage.this);
+					}
+					@Override
+					public ServiceProvider getServiceProvider() {
+						return TypeSystemPage.this.getServiceProvider();
 					}
 				});
 				dialog.show();
@@ -79,19 +75,18 @@ public class TypeSystemPage extends RBBasePage {
 			}
 		});
 		
-		final IModel<List<TypeDefinition>> typeDefModel = new ListModel<TypeDefinition>();
-		typeDefModel.setObject(new ArrayList<TypeDefinition>(getServiceProvider().getSchemaManager().findAllTypeDefinitions()));
-		
-		add(new TypeDefBrowserPanel("propertyTypeDefBrowser", typeDefModel) {
+		add(new TypeDefBrowserPanel("propertyTypeDefBrowser", initPublicTypeDefListModel()) {
 			@Override
 			public void onCreateTypeDef(AjaxRequestTarget target) {
 				dialog.setContent(new CreateResourcePanel(ModalDialog.CONTENT_ID) {
 					public void onCreate(QualifiedName qn, AjaxRequestTarget target) {
 						dialog.close();
 						final TypeDefinition typeDef = schemaManager().prepareTypeDefinition(qn, qn.getSimpleName());
-						schemaManager().store(typeDef);
-						typeDefModel.getObject().add(typeDef);
 						setResponsePage(TypeSystemPage.this);
+					}
+					@Override
+					public ServiceProvider getServiceProvider() {
+						return TypeSystemPage.this.getServiceProvider();
 					}
 				});
 				dialog.show();
@@ -124,15 +119,9 @@ public class TypeSystemPage extends RBBasePage {
 	
 	protected void displaySchemaEditor(final SNClass type) {
 		final ResourceSchema schema = getServiceProvider().getSchemaManager().findSchemaForType(type);
-		final IModel<List<? extends PropertyRow>> model = Model.ofList(PropertyRow.toRowList(schema));
-		final SchemaEditorPanel editor = new SchemaEditorPanel("editor", model) {
+		final SchemaEditorPanel editor = new SchemaEditorPanel("editor", Model.of(schema)) {
 			@Override
-			public void onSave(final AjaxRequestTarget target) {
-				final ResourceSchema schema = new ResourceSchemaImpl(type);
-				for (PropertyRow row: model.getObject()) {
-					final PropertyDeclaration decl = PropertyRow.toPropertyDeclaration(row);
-					schema.addPropertyDeclaration(decl);	
-				}
+			public void onSave(final AjaxRequestTarget target, final ResourceSchema schema) {
 				getServiceProvider().getSchemaManager().store(schema);
 			}
 		};
@@ -154,6 +143,24 @@ public class TypeSystemPage extends RBBasePage {
 		TypeSystemPage.this.replace(editor);
 		// force redirect
 		setResponsePage(TypeSystemPage.this);
+	}
+	
+	protected RBTypeListModel initTypeListModel() {
+		return new RBTypeListModel() {
+			@Override
+			protected ServiceProvider getServiceProvider() {
+				return TypeSystemPage.this.getServiceProvider();
+			}
+		};
+	}
+	
+	protected PublicTypeDefListModel initPublicTypeDefListModel() {
+		return new PublicTypeDefListModel() {
+			@Override
+			protected ServiceProvider getServiceProvider() {
+				return TypeSystemPage.this.getServiceProvider();
+			}
+		};
 	}
 	
 	// -----------------------------------------------------

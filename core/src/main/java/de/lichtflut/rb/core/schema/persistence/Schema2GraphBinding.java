@@ -13,6 +13,8 @@ import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNText;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.schema.RBSchema;
@@ -26,6 +28,7 @@ import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
+import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
@@ -42,6 +45,8 @@ import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
  * @author Oliver Tigges
  */
 public class Schema2GraphBinding {
+	
+	private final Logger logger = LoggerFactory.getLogger(Schema2GraphBinding.class);
 	
 	private TypeDefinitionResolver resolver = new VoidTypeDefResovler();
 	
@@ -78,7 +83,12 @@ public class Schema2GraphBinding {
 		}
 		if (snSchema.hasLabelExpression()) {
 			final String exp = snSchema.getLabelExpression().getStringValue();
-			schema.setLabelBuilder(new ExpressionBasedLabelBuilder(exp));
+			try {
+				schema.setLabelBuilder(new ExpressionBasedLabelBuilder(exp));
+			} catch (LabelExpressionParseException e) {
+				logger.error("label expression for {} could not be parsed: '{}'", 
+						snSchema.getDescribedType(), exp);
+			}
 		}
 
 		return schema;

@@ -89,7 +89,7 @@ public class MockSchemaManager implements SchemaManager, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<TypeDefinition> findAllTypeDefinitions() {
+	public Collection<TypeDefinition> findPublicTypeDefinitions() {
 		return idTypeDefMap.values();
 	}
 

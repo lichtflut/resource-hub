@@ -27,6 +27,7 @@ import org.odlabs.wiquery.ui.dialog.Dialog;
 import org.odlabs.wiquery.ui.dialog.DialogJavaScriptResourceReference;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.components.dialogs.InformationExportDialog;
 
 /**
  * <p>
@@ -99,6 +100,7 @@ public abstract class InformationIOPanel extends Panel {
 		form.add(new DropDownChoice<String>("format", format, getChoices()));
 
 		final FileUploadField uploadField = new FileUploadField("file");
+		uploadField.setRequired(true);
 		form.add(uploadField);
 		form.add(new AjaxButton("upload", form) {
 			@Override

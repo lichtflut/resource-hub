@@ -40,14 +40,15 @@ public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
 	/**
 	 * @param expression
 	 */
-	public ExpressionBasedLabelBuilder(final String expression) {
+	public ExpressionBasedLabelBuilder(final String expression) throws LabelExpressionParseException {
 		this(expression, Collections.<String, NamespaceHandle>emptyMap());
 	}
 	
 	/**
 	 * @param expression
 	 */
-	public ExpressionBasedLabelBuilder(final String expression, final Map<String, NamespaceHandle> namespaces) {
+	public ExpressionBasedLabelBuilder(final String expression, final Map<String, NamespaceHandle> namespaces) 
+			throws LabelExpressionParseException {
 		this.namespaces = namespaces;
 		final String[] tokens = expression.split("\\s+");
 		this.elements = new Element[tokens.length];
@@ -85,12 +86,20 @@ public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
 		return sb.toString().trim();
 	}
 	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public String toString() {
+		return getExpression();
+	}
+	
 	// -----------------------------------------------------
 	
-	private Element toElement(final String current) {
+	private Element toElement(final String current) throws LabelExpressionParseException {
 		if (current.startsWith("<")) {
 			if (!current.endsWith(">")) {
-				throw new IllegalArgumentException("Invalid token: " + current);
+				throw new LabelExpressionParseException("Invalid token: " + current);
 			} else {
 				return new LiteralElement(current.substring(1, current.length() -1)); 
 			}
@@ -104,17 +113,20 @@ public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
 	 * @param current
 	 * @return
 	 */
-	private Element toFieldElement(final String name) {
+	private Element toFieldElement(final String name) throws LabelExpressionParseException {
 		if (QualifiedName.isUri(name)) {
 			return new FieldElement(new SimpleResourceID(name));
-		}
-		final String prefix = QualifiedName.getPrefix(name);
-		final String simpleName = QualifiedName.getSimpleName(name);
-		if (namespaces.containsKey(prefix)) {
-			final Namespace namespace = namespaces.get(prefix);
-			return new FieldElement(new SimpleResourceID(namespace, simpleName));
+		} else if (QualifiedName.isQname(name)) {
+			final String prefix = QualifiedName.getPrefix(name);
+			final String simpleName = QualifiedName.getSimpleName(name);
+			if (namespaces.containsKey(prefix)) {
+				final Namespace namespace = namespaces.get(prefix);
+				return new FieldElement(new SimpleResourceID(namespace, simpleName));
+			} else {
+				throw new LabelExpressionParseException("Could not resolve URI for " + name);
+			}
 		} else {
-			throw new IllegalStateException("Could not resolve URI for " + name);
+			throw new LabelExpressionParseException("Field is neither URI nor QName: '" + name + "'");
 		}
 	}
 

@@ -49,10 +49,11 @@ public class RBWebSession extends WebSession {
 		try {
 			if (user != null) {
 				// trigger fetching of associations to check if object is still alive
-				user.getAssociatedResource().getAssociations();
+				user.getName();
 				return true;
 			}
 		} catch (ArastrejuRuntimeException e) {
+			user = null;
 			invalidate();
 		}
 		return false;

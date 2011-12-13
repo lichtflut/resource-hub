@@ -21,23 +21,25 @@ import de.lichtflut.infra.Infra;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class ModelChangeEvent<T> {
 	
-	public static final String NAMESPACE_CREATED = "created.namespace";
+	public static final String NAMESPACE = "namespace";
 	
-	public static final String CONTEXT_CREATED = "created.context";
+	public static final String CONTEXT = "context";
 	
-	public static final String USER_CREATED = "creted.user";
+	public static final String USER = "user";
 	
-	public static final String TYPE_SELECTED = "selected.type";
+	public static final String TYPE = "type";
 	
-	public static final String PUBLIC_TYPE_DEFINITION_SELECTED = "selected.public-type-definition";
+	public static final String PROPERTY = "property";
 	
-	private static final ModelChangeEvent EMPTY = new ModelChangeEvent(null);
+	public static final String PUBLIC_TYPE_DEFINITION = "public-type-def";
+	
+	private static final ModelChangeEvent EMPTY = new ModelChangeEvent(new String[0]);
 	
 	// ----------------------------------------------------
 	
 	private final T payload;
 	
-	private final String type;
+	private final String[] types;
 	
 	// ----------------------------------------------------
 	
@@ -56,17 +58,17 @@ public class ModelChangeEvent<T> {
 	 * @param payload
 	 * @param type
 	 */
-	public ModelChangeEvent(final String type, final T payload) {
+	public ModelChangeEvent(final T payload, final String... types) {
 		this.payload = payload;
-		this.type = type;
+		this.types = types;
 	}
 	
 	/**
 	 * @param payload
 	 * @param type
 	 */
-	public ModelChangeEvent(final String type) {
-		this(type, null);
+	public ModelChangeEvent(final String... types) {
+		this(null, types);
 	}
 	
 	// ----------------------------------------------------
@@ -81,12 +83,17 @@ public class ModelChangeEvent<T> {
 	/**
 	 * @return the type
 	 */
-	public String getType() {
-		return type;
+	public String[] getTypes() {
+		return types;
 	}
 	
 	public boolean isAbout(final String type) {
-		return Infra.equals(this.type, type);
+		for (String current : types) {
+			if (Infra.equals(current, type)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
