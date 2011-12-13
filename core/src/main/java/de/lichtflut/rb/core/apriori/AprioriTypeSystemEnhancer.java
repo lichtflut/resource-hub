@@ -45,7 +45,7 @@ public abstract class AprioriTypeSystemEnhancer implements AprioriModeller {
 	// -----------------------------------------------------
 	
 	protected final void addType(TypeManager manager, ResourceID typeID) {
-		SNClass type = manager.create(typeID.getQualifiedName());
+		SNClass type = manager.createType(typeID.getQualifiedName());
 		postprocess(type);
 	}
 	

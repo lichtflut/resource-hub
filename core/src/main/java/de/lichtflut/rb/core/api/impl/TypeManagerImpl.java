@@ -12,6 +12,7 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNClass;
+import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.QueryManager;
 
@@ -50,7 +51,7 @@ public class TypeManagerImpl implements TypeManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<SNClass> findAll() {
+	public List<SNClass> findAllTypes() {
 		final List<SNClass> result = new ArrayList<SNClass>();
 		final List<ResourceNode> nodes = query().findByType(RB.TYPE);
 		for (ResourceNode current : nodes) {
@@ -63,7 +64,7 @@ public class TypeManagerImpl implements TypeManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SNClass create(final QualifiedName qn) {
+	public SNClass createType(final QualifiedName qn) {
 		final SNClass type = new SNResource(qn).asClass();
 		SNOPS.associate(type, RDF.TYPE, RB.TYPE, RB.TYPE_SYSTEM_CONTEXT);
 		newMC().attach(type);
@@ -74,8 +75,42 @@ public class TypeManagerImpl implements TypeManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void remove(final SNClass type) {
-		newMC().remove(type, true);
+	public void removeType(final SNClass type) {
+		newMC().remove(type, false);
+	}
+	
+	// ----------------------------------------------------
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public SNProperty createProperty(QualifiedName qn) {
+		final SNProperty property = new SNProperty(qn).asProperty();
+		SNOPS.associate(property, RDF.TYPE, RDF.PROPERTY, RB.TYPE_SYSTEM_CONTEXT);
+		newMC().attach(property);
+		return property;
+	}
+
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void removeProperty(SNProperty property) {
+		newMC().remove(property, false);
+	}
+
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public List<SNProperty> findAllProperties() {
+		final List<SNProperty> result = new ArrayList<SNProperty>();
+		final List<ResourceNode> nodes = query().findByType(RDF.PROPERTY);
+		for (ResourceNode current : nodes) {
+			result.add(current.asProperty());
+		}
+		return result;
 	}
 	
 	// -----------------------------------------------------

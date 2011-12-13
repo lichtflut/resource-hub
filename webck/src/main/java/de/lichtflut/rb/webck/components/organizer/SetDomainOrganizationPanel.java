@@ -23,8 +23,8 @@ import org.apache.wicket.model.ResourceModel;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.DomainOrganizer;
 import de.lichtflut.rb.core.entity.RBEntityReference;
-import de.lichtflut.rb.webck.components.buttons.RBStandardButton;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.LoadableModel;
 import de.lichtflut.rb.webck.models.ResourceLabelModel;
 

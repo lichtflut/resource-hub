@@ -4,7 +4,9 @@
 package de.lichtflut.rb.core.schema.model;
 
 import java.io.Serializable;
+import java.util.Locale;
 
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
@@ -34,16 +36,17 @@ public interface LabelBuilder extends Serializable{
 	 * @return
 	 */
 	String getExpression();
+	
+	// ----------------------------------------------------
 
 	/**
-	 *
-	 * [TODO Insert description here.
+	 * A default implementation of this interface.
 	 */
 	@SuppressWarnings("serial")
 	public static class DefaultBuilder implements LabelBuilder, Serializable {
 		@Override
 		public String build(final RBEntity entity) {
-			return entity.toString();
+			return ResourceLabelBuilder.getInstance().getLabel(entity.getNode(), Locale.getDefault());
 		}
 		
 		/** 
@@ -52,6 +55,14 @@ public interface LabelBuilder extends Serializable{
 		@Override
 		public String getExpression() {
 			return null;
+		}
+		
+		/** 
+		* {@inheritDoc}
+		*/
+		@Override
+		public String toString() {
+			return "";
 		}
 	}
 

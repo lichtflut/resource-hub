@@ -20,8 +20,8 @@ import org.apache.wicket.model.ResourceModel;
 import de.lichtflut.rb.core.api.DomainOrganizer;
 import de.lichtflut.rb.core.organizer.ContextDeclaration;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
-import de.lichtflut.rb.webck.components.buttons.RBCancelButton;
-import de.lichtflut.rb.webck.components.buttons.RBStandardButton;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
@@ -75,7 +75,7 @@ public abstract class CreateContextPanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				getOrganizer().registerContext(model.getObject());
-				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.NAMESPACE_CREATED));
+				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.NAMESPACE));
 				onSuccess(target);
 				resetModel();
 			}

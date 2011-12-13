@@ -67,7 +67,7 @@ public class EntitySamplesBasePage extends RBBasePage {
 		final NavigationBar menuLeft = new NavigationBar(id);
 
 		final NavigationNode parent = new NavigationNodePanel(new Label("link", "Entities by Type"));
-		final Collection<SNClass> types = getServiceProvider().getTypeManager().findAll();
+		final Collection<SNClass> types = getServiceProvider().getTypeManager().findAllTypes();
 		for (SNClass type : types) {
 			PageParameters param = new PageParameters();
 			param.add("type", type);

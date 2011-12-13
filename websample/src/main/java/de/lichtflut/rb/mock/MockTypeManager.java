@@ -11,6 +11,7 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNClass;
+import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
@@ -48,7 +49,7 @@ public class MockTypeManager implements TypeManager, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SNClass create(final QualifiedName qn) {
+	public SNClass createType(final QualifiedName qn) {
 		final SNClass type = new SNResource(qn).asClass();
 		SNOPS.associate(type, RDF.TYPE, RB.TYPE, RB.TYPE_SYSTEM_CONTEXT);
 		return type;
@@ -58,7 +59,7 @@ public class MockTypeManager implements TypeManager, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void remove(final SNClass type) {
+	public void removeType(final SNClass type) {
 		throw new NotYetImplementedException();
 	}
 
@@ -66,7 +67,7 @@ public class MockTypeManager implements TypeManager, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<SNClass> findAll() {
+	public List<SNClass> findAllTypes() {
 		List<SNClass> result = new ArrayList<SNClass>();
 		for (RBEntity e : dataPool) {
 			if(!result.contains(e.getType())){
@@ -76,4 +77,30 @@ public class MockTypeManager implements TypeManager, Serializable {
 		return result;
 	}
 
+	// ----------------------------------------------------
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public SNProperty createProperty(QualifiedName qn) {
+		throw new NotYetImplementedException();
+	}
+
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void removeProperty(SNProperty property) {
+		throw new NotYetImplementedException();
+	}
+
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public List<SNProperty> findAllProperties() {
+		throw new NotYetImplementedException();
+	}
+	
 }

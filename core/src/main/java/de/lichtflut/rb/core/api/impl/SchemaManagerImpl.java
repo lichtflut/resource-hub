@@ -126,7 +126,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<TypeDefinition> findAllTypeDefinitions() {
+	public Collection<TypeDefinition> findPublicTypeDefinitions() {
 		final List<TypeDefinition> result = new ArrayList<TypeDefinition>();
 		final List<ResourceNode> nodes = query().findByType(RBSchema.PROPERTY_TYPE_DEF);
 		for (ResourceNode node : nodes) {
@@ -178,7 +178,10 @@ public class SchemaManagerImpl implements SchemaManager {
 	 */
 	@Override
 	public TypeDefinition prepareTypeDefinition(final QualifiedName qn, final String displayName) {
-		return new TypeDefinitionImpl(new SimpleResourceID(qn), true).setName(displayName);
+		final TypeDefinitionImpl typeDef = new TypeDefinitionImpl(new SimpleResourceID(qn), true);
+		typeDef.setName(displayName);
+		store(typeDef);
+		return typeDef;
 	}
 	
 	// -----------------------------------------------------

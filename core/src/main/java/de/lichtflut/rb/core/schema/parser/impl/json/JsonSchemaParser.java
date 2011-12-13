@@ -35,6 +35,7 @@ import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
+import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
@@ -130,7 +131,11 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				schema.addPropertyDeclaration(decl);
 			} else if (LABEL_RULE.equals(field)) {
 				final String rule = p.getText();
-				schema.setLabelBuilder(new ExpressionBasedLabelBuilder(rule, nsMap));
+				try {
+					schema.setLabelBuilder(new ExpressionBasedLabelBuilder(rule, nsMap));
+				} catch (LabelExpressionParseException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		}
 		return schema;

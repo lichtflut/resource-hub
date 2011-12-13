@@ -40,22 +40,6 @@ import org.arastreju.sge.model.ResourceID;
  */
 public interface TypeDefinition  extends ResourceSchemaElement{
 
-	ElementaryDataType[] ELEMENTATY_DATA_TYPES = new ElementaryDataType[]{
-			ElementaryDataType.BOOLEAN,
-			ElementaryDataType.INTEGER,
-			ElementaryDataType.DECIMAL,
-			ElementaryDataType.STRING,
-			ElementaryDataType.DATE,
-	};
-
-	ElementaryDataType[] NON_ELEMENTATY_DATA_TYPES = new ElementaryDataType[]{
-			ElementaryDataType.RESOURCE,
-			ElementaryDataType.UNDEFINED,
-			ElementaryDataType.URI
-	};
-	
-	// -----------------------------------------------------
-
 	/**
 	 * Get the identifier of the property.
 	 * @return The identifier of the property.

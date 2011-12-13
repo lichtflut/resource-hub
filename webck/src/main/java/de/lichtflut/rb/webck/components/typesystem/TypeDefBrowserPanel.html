@@ -9,16 +9,20 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
-	<div class="list-browser">
-		<ul wicket:id="listview">
-		  <li>
-		      <a wicket:id="link">
-		          <wicket:container wicket:id="typeDef">[type def]</wicket:container>
-		      </a>
-		  </li>
-		</ul>
+
+	<div class="section">
+		<h4>Public Type Definitions</h4>
+		<div class="list-browser">
+			<ul wicket:id="listview">
+			  <li>
+			      <a wicket:id="link">
+			          <wicket:container wicket:id="typeDef">[type def]</wicket:container>
+			      </a>
+			  </li>
+			</ul>
+		</div>
+		<a wicket:id="createTypeDef">+ Create Public Type Definition</a>
 	</div>
-	<a wicket:id="createTypeDef">+ Create Property Type Definition</a>
 
 </wicket:panel>
 </html>

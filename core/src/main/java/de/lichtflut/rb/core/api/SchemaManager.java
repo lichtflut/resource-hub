@@ -41,16 +41,16 @@ public interface SchemaManager {
 	// -----------------------------------------------------
 
 	/**
-	 * @return all the system-known ResourceSchemas
+	 * @return all registered resource schemas.
 	 */
 	Collection<ResourceSchema> findAllResourceSchemas();
 
 	// -----------------------------------------------------
 
 	/**
-	 * @return all the system-known PropertyDeclarations
+	 * @return all public {@link TypeDefinition}s.
 	 */
-	Collection<TypeDefinition> findAllTypeDefinitions();
+	Collection<TypeDefinition> findPublicTypeDefinitions();
 
 	// -----------------------------------------------------
 
