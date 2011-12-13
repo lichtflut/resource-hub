@@ -3,11 +3,13 @@ package de.lichtflut.rb.core.api.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
+import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -17,12 +19,14 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.ReferenceResolver;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
@@ -98,7 +102,7 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 		final ModelingConversation mc = startConversation();
 		final ResourceNode node = mc.resolve(entity.getID());
 		SNOPS.associate(node, RDF.TYPE, entity.getType());
-		//SNOPS.associate(node, RDF.TYPE, RB.ENTITY);
+		SNOPS.associate(node, RDF.TYPE, RB.ENTITY);
 		SNOPS.assure(node, RDFS.LABEL, new SNText(entity.getLabel()));
 		for (RBField field :entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
@@ -148,7 +152,7 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 		if (node == null) {
 			return null;
 		}
-		final SemanticNode type = SNOPS.singleObject(node, RDF.TYPE);
+		final SemanticNode type = detectType(node);
 		final RBEntityImpl entity;
 		if (type == null) {
 			entity = new RBEntityImpl(node);
@@ -174,7 +178,8 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 				final ResourceID ref = (ResourceID) value;
 				result.add(new SimpleResourceID(ref));
 			} else {
-				result.add(new SNValue(field.getDataType(), value));
+				final ElementaryDataType datatype = Datatype.getCorrespondingArastrejuType(field.getDataType());
+				result.add(new SNValue(datatype, value));
 			}
 		}
 		return result;
@@ -205,6 +210,21 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 				value.setResolver(this);
 			}
 		}
+	}
+	
+	/**
+	 * @param node
+	 * @return
+	 */
+	private SemanticNode detectType(ResourceNode node) {
+		Set<SemanticNode> objects = SNOPS.objects(node, RDF.TYPE);
+		for (SemanticNode sn : objects) {
+			if (RB.ENTITY.equals(sn)) {
+				continue;
+			} 
+			return sn;
+		}
+		return null;
 	}
 
 }

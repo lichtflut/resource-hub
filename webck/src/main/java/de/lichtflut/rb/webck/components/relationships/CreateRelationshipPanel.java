@@ -16,11 +16,15 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.fields.ResourcePickerField;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
 
 /**
  * <p>
@@ -52,24 +56,17 @@ public abstract class CreateRelationshipPanel extends Panel {
 		final Form form = new Form("form");
 		form.add(new FeedbackPanel("feedback"));
 		
-		final EntityPickerField entityPicker = new EntityPickerField("entityPicker", entityModel);
+		final EntityPickerField entityPicker = new EntityPickerField("entityPicker", entityModel, RB.ENTITY);
 		entityPicker.add(enableIf(isNull(entityModel)));
 		form.add(entityPicker);
 		
-		//final ResourcePickerField predicatePicker = new ResourcePickerField("predicatePicker", predicateModel, RDF.PROPERTY);
-		final ResourcePickerField predicatePicker = new ResourcePickerField("predicatePicker", predicateModel);
+		final ResourcePickerField predicatePicker = new ResourcePickerField("predicatePicker", predicateModel, RDF.PROPERTY);
 		predicatePicker.add(visibleIf(not(isNull(entityModel))));
 		form.add(predicatePicker);
 		
-		final AjaxButton selectButton = new AjaxButton("select") {
-			
+		final AjaxButton selectButton = new RBStandardButton("select") {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				target.add(form);
-			}
-			
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				target.add(form);
 			}
 		};
@@ -77,7 +74,7 @@ public abstract class CreateRelationshipPanel extends Panel {
 		selectButton.add(visibleIf(isNull(entityModel)));
 		form.add(selectButton);
 		
-		final AjaxButton createButton = new AjaxButton("create") {
+		final AjaxButton createButton = new RBStandardButton("create") {
 			
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -85,29 +82,18 @@ public abstract class CreateRelationshipPanel extends Panel {
 				resetModels();
 				target.add(form);
 			}
-			
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				target.add(form);
-			}
 		};
 		createButton.add(defaultButtonIf(not(isNull(entityModel))));
 		form.add(createButton);
 		
-		final AjaxButton cancelButton = new AjaxButton("cancel") {
+		final AjaxButton cancelButton = new RBCancelButton("cancel") {
 			
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				resetModels();
 				target.add(form);
 			}
-			
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				target.add(form);
-			}
 		};
-		cancelButton.setDefaultFormProcessing(false);
 		form.add(cancelButton);
 		
 		add(form);

@@ -6,10 +6,10 @@ package de.lichtflut.rb.core.schema.model.impl;
 import java.util.Collection;
 import java.util.Set;
 
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 
 /**
@@ -106,7 +106,7 @@ public class TypeDefinitionReference implements TypeDefinition {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ElementaryDataType getElementaryDataType() {
+	public Datatype getElementaryDataType() {
 		assertResolved();
 		return delegate.getElementaryDataType();
 	}
@@ -115,7 +115,7 @@ public class TypeDefinitionReference implements TypeDefinition {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setElementaryDataType(final ElementaryDataType type) {
+	public void setElementaryDataType(final Datatype type) {
 		assertResolved();
 		delegate.setElementaryDataType(type);
 	}

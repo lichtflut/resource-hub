@@ -43,11 +43,8 @@ public class RBFieldConverter implements IConverter<RBField> {
 			return join(field.getValues(), cl.getConverter(Number.class), locale, ", ");
 		case RESOURCE:
 			return join(field.getValues(), new RBEntityConverter(), locale, ", ");
-		case PROPER_NAME:
 		case STRING:
-		case TERM:
-		case UNDEFINED:
-		case URI:
+		case TEXT:
 			return join(field.getValues(), cl.getConverter(String.class), locale, ", ");
 			
 		default:

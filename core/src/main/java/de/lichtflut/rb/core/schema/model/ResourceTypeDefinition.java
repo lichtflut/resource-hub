@@ -6,7 +6,6 @@ package de.lichtflut.rb.core.schema.model;
 import java.util.Collection;
 import java.util.Set;
 
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
 /**
@@ -101,7 +100,7 @@ public class ResourceTypeDefinition implements TypeDefinition {
 	 * @return
 	 * @see de.lichtflut.rb.core.schema.model.TypeDefinition#getElementaryDataType()
 	 */
-	public ElementaryDataType getElementaryDataType() {
+	public Datatype getElementaryDataType() {
 		return def.getElementaryDataType();
 	}
 
@@ -109,7 +108,7 @@ public class ResourceTypeDefinition implements TypeDefinition {
 	 * @param type
 	 * @see de.lichtflut.rb.core.schema.model.TypeDefinition#setElementaryDataType(org.arastreju.sge.model.ElementaryDataType)
 	 */
-	public void setElementaryDataType(ElementaryDataType type) {
+	public void setElementaryDataType(Datatype type) {
 		def.setElementaryDataType(type);
 	}
 

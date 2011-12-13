@@ -14,7 +14,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.Validate;
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.NamespaceHandle;
@@ -27,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.logging.StopWatch;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -144,7 +144,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	private TypeDefinition readPublicTypeDef(final JsonParser p, final ParsedElements result) throws IOException {
 		ResourceID id = new SimpleResourceID();
 		String name = id.getQualifiedName().getSimpleName();
-		ElementaryDataType datatype = ElementaryDataType.STRING;
+		Datatype datatype = Datatype.STRING;
 		Collection<Constraint> constraints = Collections.emptySet();
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
@@ -153,7 +153,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 			} else if (NAME.equals(field)) {
 				name = p.getText();
 			} else if (DATATYPE.equals(field)) {
-				 datatype = ElementaryDataType.valueOf(p.getText().toUpperCase());
+				 datatype = Datatype.valueOf(p.getText().toUpperCase());
 			} else if (CONSTRAINTS.equals(field)) {
 				constraints = readConstraints(p);
 			}
@@ -213,7 +213,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (DATATYPE.equals(field)) {
-				def.setElementaryDataType(ElementaryDataType.valueOf(p.getText().toUpperCase()));
+				def.setElementaryDataType(Datatype.valueOf(p.getText().toUpperCase()));
 			} else if (CONSTRAINTS.equals(field)) {
 				def.setConstraints(readConstraints(p));
 			}

@@ -5,11 +5,15 @@ package de.lichtflut.rb.webck.models;
 
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.arastreju.sge.model.ResourceID;
+
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.core.entity.RBEntityReference;
 
 /**
  * <p>
- *  Model for obtaining the URI of an {@link ResourceID}.
+ *  Model for obtaining the locale specific label of an {@link ResourceID}.
  * </p>
  *
  * <p>
@@ -36,7 +40,13 @@ public class ResourceLabelModel extends AbstractReadOnlyModel<String> {
 	
 	@Override
 	public String getObject() {
-		return model.getObject().getQualifiedName().toURI();
+		final ResourceID id = model.getObject();
+		if (id instanceof RBEntityReference) {
+			return ((RBEntityReference)id ).toString();
+		} else {
+			return ResourceLabelBuilder.getInstance().getLabel(model.getObject(), 
+				RequestCycle.get().getRequest().getLocale());
+		}
 	}
 
 	

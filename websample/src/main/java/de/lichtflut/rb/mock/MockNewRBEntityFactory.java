@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNText;
@@ -17,6 +16,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
@@ -60,7 +60,7 @@ public final class MockNewRBEntityFactory {
 	 * Creates a {@link RBEntityImpl} with appropriate values.
 	 * </p>
 	 * <p>
-	 * {@link ElementaryDataType}: Date, String, Integer, Resource
+	 * {@link Datatype}: Date, String, Integer, Resource
 	 * </p>
 	 *
 	 * @return Instance of {@link RBEntityImpl}
@@ -242,7 +242,7 @@ public final class MockNewRBEntityFactory {
 	 * Creates a {@link RBEntityImpl} with appropriate values.
 	 * </p>
 	 * <p>
-	 * {@link ElementaryDataType}: Date, String, Integer, Resource
+	 * {@link Datatype}: Date, String, Integer, Resource
 	 * </p>
 	 * @param date -
 	 * @param email -
@@ -383,9 +383,9 @@ public final class MockNewRBEntityFactory {
 		TypeDefinitionImpl p3 = new TypeDefinitionImpl();
 		TypeDefinitionImpl p4 = new TypeDefinitionImpl();
 
-		p2.setElementaryDataType(ElementaryDataType.STRING);
-		p3.setElementaryDataType(ElementaryDataType.STRING);
-		p4.setElementaryDataType(ElementaryDataType.STRING);
+		p2.setElementaryDataType(Datatype.STRING);
+		p3.setElementaryDataType(Datatype.STRING);
+		p4.setElementaryDataType(Datatype.STRING);
 
 		p2.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
 

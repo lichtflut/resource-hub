@@ -8,8 +8,9 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
@@ -41,11 +42,11 @@ public final class OSFEvaluator {
 		String typeLower = type.toLowerCase();
 		if(typeLower.contains("type")){
 			if(value instanceof ElementaryDataType){
-				pDec.setElementaryDataType((ElementaryDataType) value);
+				pDec.setElementaryDataType((Datatype) value);
 			}else{
 				if(value instanceof String){
 					//This might be a resource
-					pDec.setElementaryDataType(ElementaryDataType.RESOURCE);
+					pDec.setElementaryDataType(Datatype.RESOURCE);
 					//Check if the string can be a valid resource reference
 					String resource = value.toString();
 					if(!(QualifiedName.isQname(resource) || QualifiedName.isUri(resource))){

@@ -14,11 +14,11 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.arastreju.sge.model.ElementaryDataType;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.ConditionalModel;
@@ -74,7 +74,7 @@ public class EntityRowDisplayPanel extends Panel {
 	 * @param item
 	 * @param dataType
 	 */
-	protected void addValueField(final ListItem<RBFieldValueModel> item, final ElementaryDataType dataType) {
+	protected void addValueField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
 		switch(dataType) {
 		case BOOLEAN:
 			addBooleanField(item);
@@ -92,6 +92,7 @@ public class EntityRowDisplayPanel extends Panel {
 			addTextOutput(item, BigDecimal.class);
 			break;
 		case STRING:
+		case TEXT:
 			addTextOutput(item, String.class);
 			break;
 		}

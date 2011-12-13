@@ -17,9 +17,9 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.LabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -129,10 +129,10 @@ public abstract class SchemaEditorPanel extends Panel {
 				});
 				item.add(checkBox);
 				
-				final EnumDropDownChoice<ElementaryDataType> dataTypeChoice = 
-					new EnumDropDownChoice<ElementaryDataType>("dataType", 
+				final EnumDropDownChoice<Datatype> dataTypeChoice = 
+					new EnumDropDownChoice<Datatype>("dataType", 
 						new PropertyModel(row, "dataType"),
-						ElementaryDataType.values());
+						Datatype.values());
 				
 				final boolean isPrivateTD = !row.isTypeDefinitionPublic();
 				dataTypeChoice.setEnabled(isPrivateTD);

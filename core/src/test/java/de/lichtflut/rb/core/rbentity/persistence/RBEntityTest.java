@@ -5,7 +5,6 @@ package de.lichtflut.rb.core.rbentity.persistence;
 
 import java.util.Collections;
 
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.junit.Assert;
@@ -18,6 +17,7 @@ import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.impl.AbstractRBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.entity.impl.UndeclaredRBField;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
@@ -109,10 +109,10 @@ public final class RBEntityTest {
         TypeDefinitionImpl p3 = new TypeDefinitionImpl();
         TypeDefinitionImpl p4 = new TypeDefinitionImpl();
 
-        p1.setElementaryDataType(ElementaryDataType.STRING);
-        p2.setElementaryDataType(ElementaryDataType.STRING);
-        p3.setElementaryDataType(ElementaryDataType.INTEGER);
-        p4.setElementaryDataType(ElementaryDataType.RESOURCE);
+        p1.setElementaryDataType(Datatype.STRING);
+        p2.setElementaryDataType(Datatype.STRING);
+        p3.setElementaryDataType(Datatype.INTEGER);
+        p4.setElementaryDataType(Datatype.RESOURCE);
 
         p2.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
         p4.addConstraint(ConstraintBuilder.buildConstraint(schema

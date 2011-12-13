@@ -75,16 +75,16 @@ public interface TypeDefinition  extends ResourceSchemaElement{
 	// -----------------------------------------------------
 	
 	/**
-	 * Get the {@link ElementaryDataType}.
+	 * Get the {@link Datatype}.
 	 * @return The elementary property.
 	 */
-	ElementaryDataType getElementaryDataType();
+	Datatype getElementaryDataType();
 
 	/**
-	 * Set the {@link ElementaryDataType}.
+	 * Set the {@link Datatype}.
 	 * @param type -
 	 */
-	void setElementaryDataType(ElementaryDataType type);
+	void setElementaryDataType(Datatype type);
 
 	// -----------------------------------------------------
 

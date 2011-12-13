@@ -6,7 +6,6 @@ package de.lichtflut.rb.core.api.impl;
 import junit.framework.Assert;
 
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 import org.junit.Before;
@@ -14,6 +13,7 @@ import org.junit.Test;
 
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
@@ -101,9 +101,9 @@ public class SchemaManagerImplTest {
 		p2.setName("http://lichtflut.de#email");
 		p3.setName("http://lichtflut.de#alter");
 
-		p1.setElementaryDataType(ElementaryDataType.DATE);
-		p2.setElementaryDataType(ElementaryDataType.STRING);
-		p3.setElementaryDataType(ElementaryDataType.INTEGER);
+		p1.setElementaryDataType(Datatype.DATE);
+		p2.setElementaryDataType(Datatype.STRING);
+		p3.setElementaryDataType(Datatype.INTEGER);
 
 		p2.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
 		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
