@@ -13,7 +13,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
@@ -22,6 +21,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.components.listview.ActionLink;
+import de.lichtflut.rb.webck.models.LoadableModel;
 
 /**
  * <p>
@@ -40,7 +40,7 @@ public abstract class RelationshipListPanel extends Panel {
 	 * @param id
 	 * @param model
 	 */
-	public RelationshipListPanel(final String id, final IModel<List<? extends Statement>> model) {
+	public RelationshipListPanel(final String id, final LoadableModel<List<? extends Statement>> model) {
 		super(id, model);
 		
 		final ListView<Statement> listView = new ListView<Statement>("rows", model) {
@@ -59,9 +59,15 @@ public abstract class RelationshipListPanel extends Panel {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 						onRelationshipRemoved(item.getModelObject());
+						onStatmentModelChanged();
 					}
 				});
 			}
+			
+			private void onStatmentModelChanged() {
+				removeAll();
+			}
+			
 		};
 		
 		add(listView);
@@ -79,7 +85,9 @@ public abstract class RelationshipListPanel extends Panel {
 	// ----------------------------------------------------
 	
 	protected String getLabelForEntity(final SemanticNode node) {
-		if (node.isResourceNode()) {
+		if (node == null) {
+			return "<null>";
+		} else if (node.isResourceNode()) {
 			return ResourceLabelBuilder.getInstance().getLabel(node.asResource(), getLocale());
 		} else {
 			return node.toString();	

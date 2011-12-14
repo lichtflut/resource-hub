@@ -3,9 +3,11 @@
  */
 package de.lichtflut.rb.webck.events;
 
-import org.apache.wicket.event.IEvent;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-import de.lichtflut.infra.Infra;
+import org.apache.wicket.event.IEvent;
 
 /**
  * <p>
@@ -43,7 +45,7 @@ public class ModelChangeEvent<T> {
 	
 	private final T payload;
 	
-	private final String[] types;
+	private final Set<String> types = new HashSet<String>();
 	
 	// ----------------------------------------------------
 	
@@ -60,11 +62,13 @@ public class ModelChangeEvent<T> {
 	
 	/**
 	 * @param payload
-	 * @param type
+	 * @param types
 	 */
 	public ModelChangeEvent(final T payload, final String... types) {
 		this.payload = payload;
-		this.types = types;
+		for (String current : types) {
+			this.types.add(current);	
+		}
 	}
 	
 	/**
@@ -87,13 +91,13 @@ public class ModelChangeEvent<T> {
 	/**
 	 * @return the type
 	 */
-	public String[] getTypes() {
+	public Collection<String> getTypes() {
 		return types;
 	}
 	
-	public boolean isAbout(final String type) {
-		for (String current : types) {
-			if (Infra.equals(current, type)) {
+	public boolean isAbout(final String... evtTypes) {
+		for (String current : evtTypes) {
+			if (types.contains(current)) {
 				return true;
 			}
 		}

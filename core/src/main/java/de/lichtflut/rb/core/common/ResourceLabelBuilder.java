@@ -45,7 +45,7 @@ public class ResourceLabelBuilder {
 	
 	public String getLabel(final ResourceID resource, final Locale locale) {
 		String label = getLabel(resource, RDFS.LABEL, locale);
-		if (label == null) {
+		if (label == null && resource != null) {
 			label = resource.getQualifiedName().getSimpleName();
 		}
 		return label;

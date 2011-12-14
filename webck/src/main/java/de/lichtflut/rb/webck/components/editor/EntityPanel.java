@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.editor;
 
 import java.util.List;
 
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -13,7 +14,9 @@ import org.apache.wicket.model.IModel;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.ResourceInfoPanel;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.RBFieldsListModel;
 
 /**
@@ -55,8 +58,6 @@ public class EntityPanel extends Panel {
 	public boolean isEditable() {
 		return editable.getObject();
 	}
-	
-	// ----------------------------------------------------
 	
 	protected ListView<RBField> createRows(final IModel<List<RBField>> listModel) {
 		final ListView<RBField> view = new ListView<RBField>("rows", listModel) {

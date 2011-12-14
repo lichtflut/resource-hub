@@ -3,6 +3,9 @@
  */
 package de.lichtflut.rb.webck.models;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -20,6 +23,8 @@ import de.lichtflut.rb.webck.common.Action;
  * @author Oliver Tigges
  */
 public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
+	
+	private final Logger logger = LoggerFactory.getLogger(RBEntityModel.class);
 
 	private EntityHandle handle;
 	
@@ -48,16 +53,18 @@ public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 	@Override
 	public RBEntity load() {
 		if (handle.hasId()) {
+			logger.info("Loading RB Entity: " + handle.getId());
 			final RBEntity loaded = getServiceProvider().getEntityManager().find(handle.getId());
 			initialize(loaded);
 			return loaded;
 		} else if (handle.hasType()){
+			logger.info("Creating new RB Entity");
 			final RBEntity loaded = getServiceProvider().getEntityManager().create(handle.getType());
 			handle.setId(loaded.getID());
 			initialize(loaded);
 			return loaded;
 		} else {
-			return null;
+			throw new IllegalStateException("Cannot initialize RB Entity Model.");
 		}
 	}
 	
@@ -70,6 +77,15 @@ public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 		reset();
 		this.handle = handle; 
 		this.initializers = initializers;
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void reset() {
+		logger.info("RB Entity Model is reseted");
+		super.reset();
 	}
 	
 	// -----------------------------------------------------

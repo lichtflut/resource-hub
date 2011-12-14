@@ -5,11 +5,17 @@ package de.lichtflut.rb.webck.models;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
@@ -26,6 +32,15 @@ import de.lichtflut.rb.core.entity.RBEntity;
 public class RBEntityStatementsModel extends AbstractLoadableModel<List<? extends Statement>> implements StatementsModel {
 
 	private final LoadableModel<RBEntity> model;
+	
+	private final static Set<ResourceID> BLACKLIST = new HashSet<ResourceID>() {{
+		add(RDF.TYPE);
+		add(RDFS.SUB_CLASS_OF);
+		add(RDFS.LABEL);
+		add(RB.HAS_FIELD_LABEL);
+		add(RB.HAS_IMAGE);
+		add(RB.HAS_SHORT_DESC);
+	}};
 	
 	// ----------------------------------------------------
 
@@ -47,19 +62,16 @@ public class RBEntityStatementsModel extends AbstractLoadableModel<List<? extend
 			return Collections.emptyList();
 		}
 		final ResourceNode node = model.getObject().getNode();
-		return new ArrayList<Statement>(node.getAssociations());
+		final List<Statement> stmts = new ArrayList<Statement>();
+		for (Statement current : node.getAssociations()) {
+			if (!BLACKLIST.contains(current.getPredicate())) {
+				stmts.add(current);
+			}
+		}
+		return stmts;
 	}
 
 	// ----------------------------------------------------
-	
-	/** 
-	* {@inheritDoc}
-	*/
-	@Override
-	public void reset() {
-		super.reset();
-		model.reset();
-	}
 	
 	/** 
 	 * {@inheritDoc}
@@ -67,8 +79,7 @@ public class RBEntityStatementsModel extends AbstractLoadableModel<List<? extend
 	@Override
 	public void detach() {
 		model.detach();
-		// reset this model but don't cascade reset!
-		super.reset();
+		reset();
 	}
 
 }

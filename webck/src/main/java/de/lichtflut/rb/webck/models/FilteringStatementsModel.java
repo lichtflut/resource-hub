@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
-import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>
@@ -46,37 +46,64 @@ public abstract class FilteringStatementsModel
 		return filter(target.getObject());
 	}
 	
-	protected abstract List<Statement> filter(List<? extends Statement> List);
-	
 	/** 
 	* {@inheritDoc}
 	*/
 	@Override
-	public void reset() {
-		target.reset();
-		super.reset();
+	public void detach() {
+		super.detach();
+		reset();
 	}
 	
 	// ----------------------------------------------------
 	
-	protected List<Statement> filterByObjectType(List<? extends Statement> statements, ResourceID type) {
+	protected abstract List<Statement> filter(List<? extends Statement> List);
+	
+	// ----------------------------------------------------
+	
+	protected List<Statement> includeObjectType(List<? extends Statement> statements, ResourceID... type) {
 		final List<Statement> result = new ArrayList<Statement>();
 		for (Statement stmt : statements) {
-			if (isObjectOfType(stmt, type)) {
+			if (stmt.getObject().isValueNode()) {
+				continue;
+			}
+			if (isOfType(stmt.getObject().asResource(), type)) {
 				result.add(stmt);
 			}
 		}
 		return result;
 	}
 	
-	protected boolean isObjectOfType(Statement stmt, ResourceID type) {
-		final SemanticNode node = stmt.getObject();
-		if (node.isResourceNode()) {
-			return node.asResource().asEntity().isInstanceOf(type);
-		} else {
-			return false;
+	protected List<Statement> excludeObjectType(List<? extends Statement> statements, ResourceID... type) {
+		final List<Statement> result = new ArrayList<Statement>();
+		for (Statement stmt : statements) {
+			if (stmt.getObject().isValueNode()) {
+				continue;
+			}
+			if (!isOfType(stmt.getObject().asResource(), type)) {
+				result.add(stmt);
+			}
 		}
+		return result;
 	}
 	
-
+	protected List<Statement> excludePredicates(List<? extends Statement> statements, ResourceID... predicates) {
+		final List<Statement> result = new ArrayList<Statement>();
+		for (Statement stmt : statements) {
+			if (!isOfType(stmt.getPredicate().asResource(), predicates)) {
+				result.add(stmt);
+			}
+		}
+		return result;
+	}
+	
+	protected boolean isOfType(ResourceNode node, ResourceID... types) {
+		for (ResourceID current : types) {
+			if(node.asEntity().isInstanceOf(current)) {
+				return true;	
+			}
+		}
+		return false;
+	}
+	
 }
