@@ -61,7 +61,6 @@
 						<wtpmanifest>true</wtpmanifest>
 						<wtpapplicationxml>true</wtpapplicationxml>
 						<wtpversion>2.0</wtpversion>
-						<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
 						<downloadSources>true</downloadSources>
 						<downloadJavaDoc>true</downloadJavaDoc>
 					</configuration>
