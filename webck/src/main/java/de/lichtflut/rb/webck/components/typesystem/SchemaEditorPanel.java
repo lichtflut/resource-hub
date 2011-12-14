@@ -20,7 +20,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.LabelBuilder;
+import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
@@ -61,9 +61,9 @@ public abstract class SchemaEditorPanel extends Panel {
 		form.setOutputMarkupId(true);
 		form.add(new FeedbackPanel("feedback"));
 		
-		final TextArea<LabelBuilder> labelExpression = 
-				new TextArea<LabelBuilder>("labelExpression", new PropertyModel(model, "labelBuilder"));
-		labelExpression.setType(LabelBuilder.class);
+		final TextArea<EntityLabelBuilder> labelExpression = 
+				new TextArea<EntityLabelBuilder>("labelExpression", new PropertyModel(model, "labelBuilder"));
+		labelExpression.setType(EntityLabelBuilder.class);
 		form.add(labelExpression);
 		
 		form.add(createRows(rowModel));

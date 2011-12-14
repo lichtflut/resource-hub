@@ -13,23 +13,26 @@
 	<table class="entity-list short">
 		<tr>
 			<th class="entity-list-header">
-				<wicket:message key="header.entity">[entity]</wicket:message>
-			</th>
-			<th class="entity-list-header">
 				<wicket:message key="header.role">[role]</wicket:message>
 			</th>
 			<th class="entity-list-header">
+				<wicket:message key="header.entity">[entity]</wicket:message>
+			</th>
+			<th class="entity-list-header" colspan="2">
 			</th>
 		</tr>
 		<tr wicket:id="rows" class="entity-list-row">
 			<td class="entity-list-cell">
-				<wicket:container wicket:id="entity">[entity]</wicket:container>
+				<wicket:container wicket:id="role">[role]</wicket:container>
 			</td>
 			<td class="entity-list-cell">
-				<wicket:container wicket:id="role">[role]</wicket:container>
+				<wicket:container wicket:id="entity">[entity]</wicket:container>
 			</td>
 			<td class="entity-list-action">
 				<a wicket:id="viewLink">[view]</a>
+			</td>
+			<td class="entity-list-action">
+				<a wicket:id="removeLink">[remove]</a>
 			</td>
 		</tr>
 	</table>

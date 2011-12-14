@@ -6,7 +6,6 @@ package de.lichtflut.rb.webck.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -23,7 +22,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
  * @author Oliver Tigges
  */
 public abstract class FilteringStatementsModel 
-		extends AbstractReadOnlyModel<List<? extends Statement>> 
+		extends AbstractLoadableModel<List<? extends Statement>> 
 		implements StatementsModel {
 	
 	private final StatementsModel target;
@@ -43,11 +42,20 @@ public abstract class FilteringStatementsModel
 	* {@inheritDoc}
 	*/
 	@Override
-	public List<Statement> getObject() {
+	public List<? extends Statement> load() {
 		return filter(target.getObject());
 	}
 	
 	protected abstract List<Statement> filter(List<? extends Statement> List);
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void reset() {
+		target.reset();
+		super.reset();
+	}
 	
 	// ----------------------------------------------------
 	

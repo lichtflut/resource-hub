@@ -9,12 +9,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.AbstractConverter;
 
-import de.lichtflut.rb.core.schema.model.LabelBuilder;
+import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 
 /**
  * <p>
- *  Converter for {@link LabelBuilder}
+ *  Converter for {@link EntityLabelBuilder}
  * </p>
  *
  * <p>
@@ -23,15 +23,15 @@ import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
  *
  * @author Oliver Tigges
  */
-public class LabelBuilderConverter extends AbstractConverter<LabelBuilder> implements IConverter<LabelBuilder> {
+public class LabelBuilderConverter extends AbstractConverter<EntityLabelBuilder> implements IConverter<EntityLabelBuilder> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public LabelBuilder convertToObject(final String value, final Locale locale) {
+	public EntityLabelBuilder convertToObject(final String value, final Locale locale) {
 		if (StringUtils.isBlank(value)) {
-			return LabelBuilder.DEFAULT;
+			return EntityLabelBuilder.DEFAULT;
 		}
 		try {
 			return new ExpressionBasedLabelBuilder(value);
@@ -44,7 +44,7 @@ public class LabelBuilderConverter extends AbstractConverter<LabelBuilder> imple
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String convertToString(final LabelBuilder builder, final Locale locale) {
+	public String convertToString(final EntityLabelBuilder builder, final Locale locale) {
 		return builder.getExpression();
 	}
 
@@ -52,8 +52,8 @@ public class LabelBuilderConverter extends AbstractConverter<LabelBuilder> imple
 	* {@inheritDoc}
 	*/
 	@Override
-	protected Class<LabelBuilder> getTargetType() {
-		return LabelBuilder.class;
+	protected Class<EntityLabelBuilder> getTargetType() {
+		return EntityLabelBuilder.class;
 	}
 
 }

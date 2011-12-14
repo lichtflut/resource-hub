@@ -47,12 +47,18 @@ public abstract class RelationshipListPanel extends Panel {
 			@Override
 			protected void populateItem(final ListItem<Statement> item) {
 				final Statement stmt = item.getModelObject();
-				item.add(new Label("entity", getLabelForEntity(stmt.getObject())));
 				item.add(new Label("role", getLabelForPredicate(stmt.getPredicate())));
+				item.add(new Label("entity", getLabelForEntity(stmt.getObject())));
 				item.add(new ActionLink("viewLink", new ResourceModel("action.view")){
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 						onRelationshipSelected(item.getModelObject());
+					}
+				});
+				item.add(new ActionLink("removeLink", new ResourceModel("action.remove")){
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						onRelationshipRemoved(item.getModelObject());
 					}
 				});
 			}
@@ -67,6 +73,8 @@ public abstract class RelationshipListPanel extends Panel {
 	// ----------------------------------------------------
 	
 	public abstract void onRelationshipSelected(Statement stmt);
+	
+	public abstract void onRelationshipRemoved(Statement stmt); 
 	
 	// ----------------------------------------------------
 	

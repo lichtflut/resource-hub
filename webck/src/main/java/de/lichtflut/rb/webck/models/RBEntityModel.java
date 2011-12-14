@@ -3,8 +3,6 @@
  */
 package de.lichtflut.rb.webck.models;
 
-import org.apache.wicket.model.IModel;
-
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -21,11 +19,9 @@ import de.lichtflut.rb.webck.common.Action;
  *
  * @author Oliver Tigges
  */
-public abstract class RBEntityModel implements IModel<RBEntity> {
+public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 
 	private EntityHandle handle;
-	
-	private RBEntity entity;
 	
 	private Action<?>[] initializers;
 	
@@ -44,62 +40,13 @@ public abstract class RBEntityModel implements IModel<RBEntity> {
 		this.handle = handle;
 	}
 	
-	// -----------------------------------------------------
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RBEntity getObject() {
-		if (entity == null) {
-			entity = load();
-		}
-		return entity;
-	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setObject(final RBEntity object) {
-		this.entity = object;
-	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void detach() {
-	}
-	
-	// ----------------------------------------------------
-	
-	/**
-	 * Reset the model in order to reload.
-	 */
-	public void reset() {
-		entity = null;
-	}
-	
-	/**
-	 * Reset the model in order to reload.
-	 */
-	public void reset(final EntityHandle handle, Action<?>... initializers) {
-		this.handle = handle; 
-		this.entity = null;
-		this.initializers = initializers;
-	}
-	
-	// -----------------------------------------------------
-	
-	protected abstract ServiceProvider getServiceProvider();
-
 	// ----------------------------------------------------
 	
 	/** 
 	 * {@inheritDoc}
 	 */
-	protected RBEntity load() {
+	@Override
+	public RBEntity load() {
 		if (handle.hasId()) {
 			final RBEntity loaded = getServiceProvider().getEntityManager().find(handle.getId());
 			initialize(loaded);
@@ -113,6 +60,23 @@ public abstract class RBEntityModel implements IModel<RBEntity> {
 			return null;
 		}
 	}
+	
+	// -----------------------------------------------------
+	
+	/**
+	 * Reset the model in order to reload.
+	 */
+	public void reset(final EntityHandle handle, Action<?>... initializers) {
+		reset();
+		this.handle = handle; 
+		this.initializers = initializers;
+	}
+	
+	// -----------------------------------------------------
+	
+	protected abstract ServiceProvider getServiceProvider();
+
+	// ----------------------------------------------------
 	
 	/**
 	 * @param loaded

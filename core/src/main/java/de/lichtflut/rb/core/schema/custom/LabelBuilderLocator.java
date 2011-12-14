@@ -5,11 +5,11 @@ package de.lichtflut.rb.core.schema.custom;
 
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.schema.model.LabelBuilder;
+import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 
 /**
  * <p>
- *  Locator for {@link LabelBuilder}s.
+ *  Locator for {@link EntityLabelBuilder}s.
  * </p>
  *
  * <p>
@@ -25,6 +25,6 @@ public interface LabelBuilderLocator {
 	 * @param type The resource type.
 	 * @return The corresponding label builder.
 	 */
-	LabelBuilder forType(ResourceID type);
+	EntityLabelBuilder forType(ResourceID type);
 
 }

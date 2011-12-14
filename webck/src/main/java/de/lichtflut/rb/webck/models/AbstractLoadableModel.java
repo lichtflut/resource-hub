@@ -33,7 +33,7 @@ public abstract class AbstractLoadableModel<T> implements LoadableModel<T> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public T getObject() {
+	public final T getObject() {
 		if (loaded == null) {
 			loaded = load();
 		}

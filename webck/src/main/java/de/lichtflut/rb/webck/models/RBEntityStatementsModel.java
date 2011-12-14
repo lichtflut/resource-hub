@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
@@ -15,7 +14,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Model providing an Entitie's statments.
  * </p>
  *
  * <p>
@@ -24,26 +23,26 @@ import de.lichtflut.rb.core.entity.RBEntity;
  *
  * @author Oliver Tigges
  */
-public class RBEntityStatementsModel implements StatementsModel {
+public class RBEntityStatementsModel extends AbstractLoadableModel<List<? extends Statement>> implements StatementsModel {
 
-	private final IModel<RBEntity> model;
+	private final LoadableModel<RBEntity> model;
 	
 	// ----------------------------------------------------
 
 	/**
 	 * @param model
 	 */
-	public RBEntityStatementsModel(final IModel<RBEntity> model) {
+	public RBEntityStatementsModel(final LoadableModel<RBEntity> model) {
 		this.model = model;
 	}
 	
 	// ----------------------------------------------------
 
 	/** 
-	 * {@inheritDoc}
-	 */
+	* {@inheritDoc}
+	*/
 	@Override
-	public List<? extends Statement> getObject() {
+	public List<? extends Statement> load() {
 		if (model.getObject() == null || model.getObject().getNode() == null) {
 			return Collections.emptyList();
 		}
@@ -51,15 +50,16 @@ public class RBEntityStatementsModel implements StatementsModel {
 		return new ArrayList<Statement>(node.getAssociations());
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setObject(List<? extends Statement> object) {
-		throw new UnsupportedOperationException();
-	}
-
 	// ----------------------------------------------------
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void reset() {
+		super.reset();
+		model.reset();
+	}
 	
 	/** 
 	 * {@inheritDoc}
@@ -67,6 +67,7 @@ public class RBEntityStatementsModel implements StatementsModel {
 	@Override
 	public void detach() {
 		model.detach();
+		reset();
 	}
 
 }

@@ -5,12 +5,11 @@ package de.lichtflut.rb.webck.models;
 
 import java.util.List;
 
-import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.Statement;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Model containing statments.
  * </p>
  *
  * <p>
@@ -19,6 +18,6 @@ import org.arastreju.sge.model.Statement;
  *
  * @author Oliver Tigges
  */
-public interface StatementsModel extends IModel<List<? extends Statement>> {
+public interface StatementsModel extends LoadableModel<List<? extends Statement>> {
 
 }

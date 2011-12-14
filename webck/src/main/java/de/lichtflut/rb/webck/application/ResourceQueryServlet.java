@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
@@ -50,13 +51,15 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	
 	public final static String QUERY_ENTITY = "/entity";
 	
+	public final static String QUERY_PROPERTY = "/property";
+	
 	public final static String AUTOCOMPLETE_PARAM = "term";
 	
 	public final static String TYPE_PARAM = "type";
 	
 	public final static String QUERY_PARAM = "query";
 	
-	private static final Pattern ESCAPE_CHARS = Pattern.compile("[\\\\+\\-\\!\\(\\)\\:\\^\\]\\{\\}\\~\\*\\?]");
+	private static final Pattern ESCAPE_CHARS = Pattern.compile("[\\\\+\\-\\!\\(\\)\\:\\^\\]\\{\\}\\~\\*\\?\\s]");
 	
 	private Logger logger = LoggerFactory.getLogger(ResourceQueryServlet.class);
 	
@@ -66,7 +69,8 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 		UNKNOWN,
 		URI,
 		VALUES,
-		ENTITY
+		ENTITY,
+		PROPERTY,
 	}
 	
 	// -----------------------------------------------------
@@ -115,6 +119,7 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 			throws JsonGenerationException, JsonMappingException, IOException {
 		
 		final List<JsonNode> jsons = new ArrayList<JsonNode>();
+		int counter = 0;
 		for (ResourceNode current : result) {
 			if (Mode.ENTITY.equals(mode)) {
 				final RBEntity entity = getServiceProvider().getEntityManager().find(current);
@@ -122,7 +127,12 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 					jsons.add(new JsonNode(entity.getID(), entity.getLabel()));
 				}
 			} else {
-				jsons.add(new JsonNode(current));
+				final String label = ResourceLabelBuilder.getInstance().getLabel(current, resp.getLocale());
+				jsons.add(new JsonNode(current, label));
+			}
+			counter++;
+			if (counter > 20) {
+				break;
 			}
 		}
 		final ObjectMapper mapper = new ObjectMapper();
@@ -151,6 +161,15 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 			}
 			query.end();
 			break;
+		case PROPERTY:
+			query.beginAnd();
+			query.beginOr();
+			addValues(query, term.split("\\s+"));
+			query.addURI(prepareTerm(term, 0.5f));
+			query.end();
+			query.addField(RDF.TYPE, RDF.PROPERTY);
+			query.end();
+			break;
 		default:
 			throw new NotYetSupportedException();
 		}
@@ -165,6 +184,8 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 			return Mode.VALUES;
 		} else if (QUERY_ENTITY.equals(req.getPathInfo())) {
 			return Mode.ENTITY;
+		} else if (QUERY_PROPERTY.equals(req.getPathInfo())) {
+			return Mode.PROPERTY;
 		} else {
 			return Mode.UNKNOWN;
 		}
@@ -175,6 +196,10 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 		for (String val : values) {
 			query.addValue(prepareTerm(val));
 		}
+	}
+	
+	protected String prepareTerm(final String orig, float boost) {
+		return prepareTerm(orig) + "^" + boost;
 	}
 	
 	protected String prepareTerm(final String orig) {

@@ -266,7 +266,9 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		if (QualifiedName.isUri(name)) {
 			logger.debug("found uri " + name);
 			return new SimpleResourceID(name); 
-		} 
+		} else if (!QualifiedName.isQname(name)) {
+			throw new IllegalArgumentException("Name is neither URI nor QName: " + name);
+		}
 		final String prefix = QualifiedName.getPrefix(name);
 		final String simpleName = QualifiedName.getSimpleName(name);
 		if (nsMap.containsKey(prefix)) {

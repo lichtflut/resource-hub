@@ -16,13 +16,12 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
-import de.lichtflut.rb.webck.components.fields.ResourcePickerField;
+import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 
@@ -60,13 +59,15 @@ public abstract class CreateRelationshipPanel extends Panel {
 		entityPicker.add(enableIf(isNull(entityModel)));
 		form.add(entityPicker);
 		
-		final ResourcePickerField predicatePicker = new ResourcePickerField("predicatePicker", predicateModel, RDF.PROPERTY);
+		final PropertyPickerField predicatePicker = new PropertyPickerField("predicatePicker", predicateModel);
 		predicatePicker.add(visibleIf(not(isNull(entityModel))));
+		predicatePicker.setRequired(true);
 		form.add(predicatePicker);
 		
 		final AjaxButton selectButton = new RBStandardButton("select") {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				target.focusComponent(predicatePicker.getDisplayComponent());
 				target.add(form);
 			}
 		};
@@ -99,6 +100,8 @@ public abstract class CreateRelationshipPanel extends Panel {
 		add(form);
 		
 	}
+	
+	// ----------------------------------------------------
 	
 	/**
 	 * @param object

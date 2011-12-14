@@ -10,12 +10,12 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.schema.model.LabelBuilder;
+import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 import de.lichtflut.rb.web.WSConstants;
 
 /**
  * <p>
- *  Collection of static {@link LabelBuilder}s.
+ *  Collection of static {@link EntityLabelBuilder}s.
  * </p>
  *
  * <p>
@@ -38,8 +38,8 @@ public final class StaticLabelBuilders implements Serializable {
 	 * Get the label builder for persons.
 	 * @return The person label builder.
 	 */
-	public static LabelBuilder forPerson() {
-		return new LabelBuilder() {
+	public static EntityLabelBuilder forPerson() {
+		return new EntityLabelBuilder() {
 			@Override
 			public String build(final RBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_FORENAME, WSConstants.HAS_SURNAME);
@@ -55,8 +55,8 @@ public final class StaticLabelBuilders implements Serializable {
 	 * Get the label builder for organizations.
 	 * @return The organization label builder.
 	 */
-	public static LabelBuilder forOrganization() {
-		return new LabelBuilder() {
+	public static EntityLabelBuilder forOrganization() {
+		return new EntityLabelBuilder() {
 			@Override
 			public String build(final RBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_ORGA_NAME);
@@ -72,8 +72,8 @@ public final class StaticLabelBuilders implements Serializable {
 	 * Get the label builder for addresses.
 	 * @return The address label builder.
 	 */
-	public static LabelBuilder forAddress() {
-		return new LabelBuilder() {
+	public static EntityLabelBuilder forAddress() {
+		return new EntityLabelBuilder() {
 			@Override
 			public String build(final RBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_STREET, WSConstants.HAS_HOUSNR, WSConstants.HAS_CITY);
@@ -89,8 +89,8 @@ public final class StaticLabelBuilders implements Serializable {
 	 * Get the label builder for projects.
 	 * @return The project label builder.
 	 */
-	public static LabelBuilder forProject() {
-		return new LabelBuilder() {
+	public static EntityLabelBuilder forProject() {
+		return new EntityLabelBuilder() {
 			@Override
 			public String build(final RBEntity entity) {
 				return entity.toString();
@@ -106,8 +106,8 @@ public final class StaticLabelBuilders implements Serializable {
 	 * Get the label builder for cities.
 	 * @return The city label builder.
 	 */
-	public static LabelBuilder forCity() {
-		return new LabelBuilder() {
+	public static EntityLabelBuilder forCity() {
+		return new EntityLabelBuilder() {
 			@Override
 			public String build(final RBEntity entity) {
 				return getLabel(entity, WSConstants.HAS_ZIPCODE, WSConstants.HAS_CITY, WSConstants.HAS_COUNTRY);

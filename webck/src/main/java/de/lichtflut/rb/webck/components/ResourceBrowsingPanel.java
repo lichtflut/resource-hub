@@ -85,7 +85,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		form.add(new CreateRelationshipPanel("relationCreator") {
 			@Override
 			protected void createRelationshipTo(RBEntityReference object, ResourceID predicate) {
-				ResourceNode subject = model.getObject().getNode();
+				final ResourceNode subject = model.getObject().getNode();
 				SNOPS.associate(subject, predicate, object);
 				getServiceProvider().getEntityManager().store(model.getObject());
 				addToAjax();

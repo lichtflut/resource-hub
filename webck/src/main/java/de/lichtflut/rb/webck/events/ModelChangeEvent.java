@@ -33,6 +33,10 @@ public class ModelChangeEvent<T> {
 	
 	public static final String PUBLIC_TYPE_DEFINITION = "public-type-def";
 	
+	public static final String ENTITY = "entity";
+	
+	public static final String RELATIONSHIP = "relationship";
+	
 	private static final ModelChangeEvent EMPTY = new ModelChangeEvent(new String[0]);
 	
 	// ----------------------------------------------------

@@ -82,6 +82,9 @@ public abstract class InformationExportDialog extends AbstractRBDialog implement
 		});
 		
 		add(form); 
+		
+		setModal(true);
+		setWidth(600);
 	}
 	
 	// -- IResourceListener -------------------------------
