@@ -67,7 +67,8 @@ public class RBEntityStatementsModel extends AbstractLoadableModel<List<? extend
 	@Override
 	public void detach() {
 		model.detach();
-		reset();
+		// reset this model but don't cascade reset!
+		super.reset();
 	}
 
 }
