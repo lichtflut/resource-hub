@@ -103,7 +103,6 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 		final ResourceNode node = mc.resolve(entity.getID());
 		SNOPS.associate(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, RB.ENTITY);
-		SNOPS.assure(node, RDFS.LABEL, new SNText(entity.getLabel()));
 		for (RBField field :entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.replace(node, field.getPredicate(), nodes);
@@ -111,6 +110,8 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 				resolveEntityReferences(field, true);
 			}
 		}
+		// Set label after all entity references have been resolved
+		SNOPS.assure(node, RDFS.LABEL, new SNText(entity.getLabel()));
 		mc.close();
     }
 
