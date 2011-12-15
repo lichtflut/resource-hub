@@ -88,6 +88,7 @@ public abstract class SchemaEditorPanel extends Panel {
 				}
 				onSave(target, schema);
 				info("Schema saved succesfully.");
+				target.add(form);
 			}
 		});
 		
