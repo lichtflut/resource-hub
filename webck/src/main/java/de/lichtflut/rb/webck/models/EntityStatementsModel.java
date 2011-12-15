@@ -47,6 +47,4 @@ public class EntityStatementsModel extends AbstractDerivedListModel<Statement, R
 		return new RelationshipAccess(source).getStatements(filter);
 	}
 
-	
-
 }

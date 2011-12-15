@@ -118,9 +118,9 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void delete(final RBEntity entity) {
+	public void delete(final ResourceID entityID) {
 		final ModelingConversation mc = startConversation();
-		final ResourceNode node = mc.resolve(entity.getID());
+		final ResourceNode node = mc.resolve(entityID);
 		mc.remove(node, false);
 		mc.close();
 	}

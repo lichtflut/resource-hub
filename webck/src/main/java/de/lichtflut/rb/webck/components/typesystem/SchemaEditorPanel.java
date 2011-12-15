@@ -87,6 +87,7 @@ public abstract class SchemaEditorPanel extends Panel {
 					schema.addPropertyDeclaration(decl);	
 				}
 				onSave(target, schema);
+				info("Schema saved succesfully.");
 			}
 		});
 		

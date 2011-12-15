@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -92,9 +93,12 @@ public class MockEntityManager implements EntityManager, Serializable {
 		}
 	}
 
+	/** 
+	* {@inheritDoc}
+	*/
 	@Override
-	public void delete(final RBEntity entity) {
-		dataPool.remove(entity);
+	public void delete(ResourceID entityID) {
+		throw new NotYetSupportedException();
 	}
 
 }

@@ -91,7 +91,7 @@ public final class RBEntityTest {
         Assert.assertEquals(4, m.find(e1.getID()).getAllFields().size());
         Assert.assertEquals(2, m.findByType(new SimpleResourceID("http://lf.de#", "Person")).size());
 
-        m.delete(e1);
+        m.delete(e1.getID());
         System.out.println("-->"+m.find(e1.getID()));
         // System.out.println(MockNewRBEntityFactory.createNewRBEntity().getID());
     }

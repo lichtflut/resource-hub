@@ -47,7 +47,7 @@ public interface EntityManager {
 
     /**
      * Deletes an {@link RBEntity}.
-     * @param entity - instance of {@link RBEntity} which is to be deleted
+     * @param entityID - The ID of the entity to be deleted
      */
-    void delete(RBEntity entity);
+    void delete(ResourceID entityID);
 }

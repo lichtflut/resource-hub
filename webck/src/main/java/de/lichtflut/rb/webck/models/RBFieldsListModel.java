@@ -4,8 +4,8 @@
 package de.lichtflut.rb.webck.models;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.ResourceID;
@@ -92,10 +92,11 @@ public class RBFieldsListModel implements IModel<List<RBField>> {
 	
 	private List<RBField> fetchConfiguredFields(final List<RBField> allFields) {
 		final List<RBField> result = new ArrayList<RBField>();
-		final Set<ResourceID> predicates = config.getPredicatesToDisplay();
+		final Collection<ResourceID> predicates = config.getPredicatesToDisplay();
 		for (RBField field : allFields) {
 			if (predicates.contains(field.getPredicate())) {
 				result.add(field);
+				predicates.remove(field.getPredicate());
 			}
 		}
 		return result;

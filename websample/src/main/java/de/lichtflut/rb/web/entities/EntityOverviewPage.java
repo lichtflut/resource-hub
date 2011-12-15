@@ -71,7 +71,7 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 			
 			@Override
 			protected void onDelete(final RBEntity entity, final AjaxRequestTarget target) {
-				getServiceProvider().getEntityManager().delete(entity);
+				getServiceProvider().getEntityManager().delete(entity.getID());
 				model.reset();
 				target.add(this);
 			}

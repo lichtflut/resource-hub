@@ -69,7 +69,7 @@ public interface RB {
 	
 	ResourceID PROJECT = new SimpleResourceID(COMMON_NAMESPACE_URI, "Project");
 	
-	// -- PROPERTIES --------------------------------------
+	// -- SYSTEM PROPERTIES -------------------------------
 	
 	/**
 	 * Each RBEntity may have a primary image URL/ID.
@@ -90,5 +90,28 @@ public interface RB {
 	 * Boolean value indicating of an organization is the domain's owning one.
 	 */
 	ResourceID IS_DOMAIN_ORGANIZATION = new SimpleResourceID(SYS_NAMESPACE_URI, "isDomainOrganization");
+	
+	
+	// -- COMMON PROPERTIES --------------------------------------
 
+	/**
+	 * First name of a person.
+	 */
+	ResourceID HAS_FIRST_NAME = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasFirstname");
+	
+	/**
+	 * Last name of a person.
+	 */
+	ResourceID HAS_LAST_NAME = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasLastname");
+	
+	/**
+	 * Has email.
+	 */
+	ResourceID HAS_EMAIL = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasEmail");
+	
+	/**
+	 * Is employed by.
+	 */
+	ResourceID IS_EMPLOYED_BY = new SimpleResourceID(COMMON_NAMESPACE_URI, "isEmployedBy");
+	
 }

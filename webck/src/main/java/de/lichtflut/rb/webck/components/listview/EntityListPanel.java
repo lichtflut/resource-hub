@@ -19,7 +19,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.webck.conversion.RBFieldConverter;
+import de.lichtflut.rb.webck.conversion.RBFieldRenderer;
 import de.lichtflut.rb.webck.models.RBFieldsListModel;
 
 /**
@@ -37,24 +37,24 @@ public class EntityListPanel extends Panel {
 	
 	private static final String ACTION = "action";
 	
-	private final RBFieldConverter converter = new RBFieldConverter();
+	private final RBFieldRenderer renderer = new RBFieldRenderer();
 	
 	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
 	 * @param id The ID.
-	 * @param dataModel The model providing the data to display..
+	 * @param model The model providing the data to display..
 	 * @param config The configuration of the table and it's columns.
 	 */
-	public EntityListPanel(final String id, final IModel<List<RBEntity>> dataModel, final ColumnConfiguration config) {
-		super(id, dataModel);
+	public EntityListPanel(final String id, final IModel<List<RBEntity>> model, final ColumnConfiguration config) {
+		super(id, model);
 		
 		setOutputMarkupId(true);
 		
 		add(createHeaders(config));
 		
-		add(createRows(dataModel, config));
+		add(createRows(model, config));
 	}
 
 	// -- ACTION EVENTS -----------------------------------
@@ -125,7 +125,7 @@ public class EntityListPanel extends Panel {
 	// -- OUTPUT ------------------------------------------
 	
 	protected String toString(final RBField field, final Locale locale) {
-		return converter.convertToString(field, locale);
+		return renderer.render(field, locale);
 	}
 	
 	protected Component createCell(final IModel<RBField> model) {
@@ -156,7 +156,7 @@ public class EntityListPanel extends Panel {
 		};
 	}
 	
-	private ListView<RBField> createCells(final RBFieldsListModel model) {
+	private ListView<RBField> createCells(final IModel<List<RBField>> model) {
 		final ListView<RBField> columns = new ListView<RBField>("cells", model) {
 			@Override
 			protected void populateItem(final ListItem<RBField> item) {

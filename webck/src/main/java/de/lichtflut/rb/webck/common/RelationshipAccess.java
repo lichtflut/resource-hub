@@ -84,8 +84,11 @@ public class RelationshipAccess implements Serializable {
 	// ----------------------------------------------------
 	
 	protected List<Statement> filter(RelationshipFilter filter) {
-		final List<Statement> result = new ArrayList<Statement>();
 		final RBEntity entity = source.getObject();
+		if (entity == null) {
+			return Collections.emptyList();
+		}
+		final List<Statement> result = new ArrayList<Statement>();
 		final Set<ResourceID> declared = getDeclaredPredicates(entity);
 		final ResourceNode node = entity.getNode();
 
