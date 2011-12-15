@@ -13,6 +13,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.EntityHandle;
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.BrowsingHistory;
@@ -37,8 +39,6 @@ import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
 import de.lichtflut.rb.webck.models.RBEntityModel;
-import de.lichtflut.rb.webck.models.RBEntityStatementsModel;
-import de.lichtflut.rb.webck.models.StatementsModel;
 
 /**
  * <p>
@@ -97,8 +97,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 			}
 		}.add(visibleIf(not(BrowsingContextModel.isInEditMode()))));
 		
-		final StatementsModel statmentsModel = new RBEntityStatementsModel(model);
-		form.add(createRelationshipView("relationships", statmentsModel));
+		form.add(createRelationshipView("relationships", model));
 		
 		add(form);
 		
@@ -131,7 +130,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	
 	// ----------------------------------------------------
 	
-	protected Component createRelationshipView(String id, StatementsModel model) {
+	protected Component createRelationshipView(String id, IModel<RBEntity> model) {
 		return new WebMarkupContainer(id);
 	}
 	

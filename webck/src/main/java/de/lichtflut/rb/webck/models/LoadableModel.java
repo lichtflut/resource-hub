@@ -7,7 +7,7 @@ import org.apache.wicket.model.IModel;
 
 /**
  * <p>
- *  Loadable resettable model.
+ *  Loadable resetable model.
  * </p>
  *
  * <p>

@@ -10,7 +10,27 @@
 </wicket:head>
 <wicket:panel>
 
-	<h4><span wicket:id="propertyUri">[URI]</span></h4>
+	<h4>
+		<span wicket:id="propertyUri">[URI]</span>
+		<wicket:enclosure>
+			(default label: <span wicket:id="propertyLabel">[Label]</span>)
+		</wicket:enclosure>
+	</h4>
+	
+	<wicket:enclosure child="inverseProps">
+		<wicket:message key="label.super-properties">[superProps]</wicket:message>
+		<ul wicket:id="superProps">
+			<li wicket:id="property"></li>
+		</ul>
+	</wicket:enclosure>
+	
+	<wicket:enclosure child="inverseProps">
+		<wicket:message key="label.inverse-properties">[inverseProps]</wicket:message>
+		<ul wicket:id="inverseProps">
+			<li wicket:id="property"></li>
+		</ul>
+	</wicket:enclosure>
+	
 	<div class="input-panel">
 		<form wicket:id="form">
 			<div wicket:id="feedback"></div>
