@@ -8,7 +8,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.List;
 
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -29,12 +28,7 @@ import org.arastreju.sge.io.JsonBinding;
 import org.arastreju.sge.io.N3Binding;
 import org.arastreju.sge.io.OntologyIOException;
 import org.arastreju.sge.io.RdfXmlBinding;
-import org.arastreju.sge.model.DefaultSemanticGraph;
 import org.arastreju.sge.model.SemanticGraph;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.views.SNClass;
-
-import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
@@ -96,13 +90,13 @@ public abstract class InformationExportDialog extends AbstractRBDialog implement
 	public void onResourceRequested() {
 		final RequestCycle cycle = RequestCycle.get();
 		final Attributes a = new Attributes(cycle.getRequest(), cycle.getResponse(), null);
-		resource.setFileName("export-" + System.currentTimeMillis() + "." + format.getObject().toLowerCase());
+		resource.setFileName(getFilename());
 		resource.respond(a);
 	}
 	
 	// ----------------------------------------------------
 	
-	protected abstract ServiceProvider getServiceProvider();
+	protected abstract SemanticGraph getExportGraph();
 	
 	// ----------------------------------------------------
 	
@@ -118,6 +112,19 @@ public abstract class InformationExportDialog extends AbstractRBDialog implement
 		 final ResourceStreamResource resource = new ResourceStreamResource(new ContentStream(format));
 		 resource.setContentDisposition(ContentDisposition.ATTACHMENT);
 		 return resource;
+	}
+	
+	private String getFilename() {
+		final StringBuilder sb = new StringBuilder(128);
+		sb.append("export-");
+		sb.append(System.currentTimeMillis());
+		sb.append(".");
+		if ("RDF-XML".equals(format.getObject())) {
+			sb.append("rdf.xml");
+		} else {
+			sb.append(format.getObject().toLowerCase());
+		}
+		return sb.toString();
 	}
 	
 	// ----------------------------------------------------
@@ -142,16 +149,9 @@ public abstract class InformationExportDialog extends AbstractRBDialog implement
 		public InputStream getInputStream() throws ResourceStreamNotFoundException {
 			final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			try {
-				final ServiceProvider sp = getServiceProvider();
-				final List<SNClass> types = sp.getTypeManager().findAllTypes();
 				
-				final SemanticGraph graph = new DefaultSemanticGraph();
-				for (SNClass type : types) {
-					final List<ResourceNode> entities = sp.getArastejuGate().createQueryManager().findByType(type);
-					for (ResourceNode entity : entities) {
-						graph.merge(new DefaultSemanticGraph(entity));
-					}
-				}
+				SemanticGraph graph = getExportGraph();
+				
 				if ("RDF-XML".equalsIgnoreCase(format.getObject())){
 					new RdfXmlBinding().write(graph, buffer);
 				} else if ("JSON".equals(format.getObject())) {
