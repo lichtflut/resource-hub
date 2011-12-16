@@ -40,20 +40,30 @@ import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
 public class Schema2GraphTest {
 	
 	@Test
-	public void testTest(){
+	public void testToSemanticNode(){
 		ResourceSchema schema = createSchema();
 		Assert.assertNotNull(schema);
 		
-		Schema2GraphBinding b = new Schema2GraphBinding(null);
+		Schema2GraphBinding b = createSchema2GraphBinding();
 		
 		SNResourceSchema snr = b.toSemanticNode(schema);
 		
 		Assert.assertNotNull(snr);
 		Assert.assertTrue(snr.getDescribedType().equals(schema.getDescribedType()));
 		Assert.assertTrue(snr.getPropertyDeclarations().size()==schema.getPropertyDeclarations().size());
+	}
+	
+	@Test
+	public void testTest(){
+		
+		Schema2GraphBinding b = createSchema2GraphBinding();
+		//Schema2GraphBinding.this.toModelObject();
 		
 	}
 	
+	private Schema2GraphBinding createSchema2GraphBinding(){
+		return new Schema2GraphBinding(null);
+	}
 	
 	private ResourceSchema createSchema() {
         ResourceSchemaImpl schema = new ResourceSchemaImpl(
