@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -42,7 +41,7 @@ import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
  *
  * @author Oliver Tigges
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings("rawtypes")
 public class EntityRowDisplayPanel extends Panel {
 
 	/**
@@ -127,9 +126,12 @@ public class EntityRowDisplayPanel extends Panel {
 	}
 	
 	private void addBooleanField(ListItem<RBFieldValueModel> item) {
-		final CheckBox cb = new CheckBox("valuefield", item.getModelObject());
-		cb.setEnabled(false);
-		item.add(new Fragment("valuefield", "checkbox", this).add(cb));
+		String label = "no";
+		if (Boolean.TRUE.equals(item.getModelObject().getObject())) {
+			label = "yes";
+		}
+		final Label field = new Label("valuefield", label);
+		item.add(new Fragment("valuefield", "textOutput", this).add(field));
 	}
 	
 	// ----------------------------------------------------
