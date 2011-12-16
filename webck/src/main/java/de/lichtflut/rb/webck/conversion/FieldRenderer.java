@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.webck.conversion;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Locale;
  *
  * @author Oliver Tigges
  */
-public interface FieldRenderer<T> {
+public interface FieldRenderer<T> extends Serializable {
 	
 	String render(T object, Locale locale);
 

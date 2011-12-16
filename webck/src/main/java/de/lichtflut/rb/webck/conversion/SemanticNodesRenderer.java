@@ -67,6 +67,11 @@ public class SemanticNodesRenderer implements FieldRenderer<Collection<SemanticN
 		case INTEGER:
 			return cl.getConverter(BigInteger.class).convertToString(value.getIntegerValue(), locale);
 		case BOOLEAN:
+			if (Boolean.TRUE.equals(value.getBooleanValue())) {
+				return "yes";
+			} else {
+				return "no";
+			}
 		case STRING:
 			return value.getStringValue();
 		default:

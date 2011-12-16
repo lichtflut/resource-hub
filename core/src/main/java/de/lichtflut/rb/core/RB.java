@@ -67,7 +67,11 @@ public interface RB {
 	
 	ResourceID ORGANIZATION = new SimpleResourceID(COMMON_NAMESPACE_URI, "Organization");
 	
+	ResourceID SYSTEM = new SimpleResourceID(COMMON_NAMESPACE_URI, "System");
+	
 	ResourceID PROJECT = new SimpleResourceID(COMMON_NAMESPACE_URI, "Project");
+	
+	ResourceID BUSINESS_PROCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "BusinessProcess");
 	
 	// -- SYSTEM PROPERTIES -------------------------------
 	
@@ -93,6 +97,21 @@ public interface RB {
 	
 	
 	// -- COMMON PROPERTIES --------------------------------------
+	
+	/**
+	 * Superordinate units.
+	 */
+	ResourceID HAS_SUPERORDINATE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasSuperordinate");
+	
+	/**
+	 * Subordinate units.
+	 */
+	ResourceID HAS_SUBORDINATE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasSubordinate");
+	
+	/**
+	 * General name of something (e.g. an organization).
+	 */
+	ResourceID HAS_NAME = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasName");
 
 	/**
 	 * First name of a person.
@@ -113,5 +132,25 @@ public interface RB {
 	 * Is employed by.
 	 */
 	ResourceID IS_EMPLOYED_BY = new SimpleResourceID(COMMON_NAMESPACE_URI, "isEmployedBy");
+	
+	/**
+	 * Has general manager (of company).
+	 */
+	ResourceID HAS_GENERAL_MANAGER = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasGeneralManager");
+	
+	/**
+	 * An organizations domicile.
+	 */
+	ResourceID HAS_DOMICILE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasDomicile");
+	
+	/**
+	 * The address.
+	 */
+	ResourceID HAS_ADDRESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasAddress");
+	
+	/**
+	 * Is non-profit organization.
+	 */
+	ResourceID IS_NPO = new SimpleResourceID(COMMON_NAMESPACE_URI, "isNPO");
 	
 }
