@@ -12,14 +12,14 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
-import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
-import de.lichtflut.rb.webck.components.listview.EntityListPanel;
 import de.lichtflut.rb.webck.components.listview.ReferenceLink;
-import de.lichtflut.rb.webck.models.RBEntityListModel;
+import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
+import de.lichtflut.rb.webck.models.ResourceListModel;
 
 /**
  * <p>
@@ -44,7 +44,8 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 		super("Entity Overview");
 		
 		final ResourceID type = getResourceID(params);
-		final RBEntityListModel model = new RBEntityListModel(type) {
+		final ResourceListModel model = new ResourceListModel(type) {
+			@Override
 			protected ServiceProvider getServiceProvider() {
 				return EntityOverviewPage.this.getServiceProvider();
 			}
@@ -54,15 +55,15 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 		final ColumnConfiguration config = ColumnConfiguration.defaultConfig();
 		config.addColumnsFromSchema(schema);
 		
-		final EntityListPanel list = new EntityListPanel("listView", model, config) {
+		final ResourceListPanel list = new ResourceListPanel("listView", model, config) {
 			
 			@Override
-			protected Component createViewAction(final String componentId, final RBEntity entity) {
-				return new ReferenceLink(componentId, EntityDetailPage.class, entity.getID(), new ResourceModel("action.view"));
+			protected Component createViewAction(final String componentId, final ResourceNode entity) {
+				return new ReferenceLink(componentId, EntityDetailPage.class, entity, new ResourceModel("action.view"));
 			}
 			
 			@Override
-			protected Component createEditAction(final String componentId, final RBEntity entity) {
+			protected Component createEditAction(final String componentId, final ResourceNode entity) {
 				final PageParameters params = new PageParameters();
 				params.set(EntityDetailPage.PARAM_RESOURCE_ID, entity.getQualifiedName().toURI());
 				params.set(EntityDetailPage.PARAM_MODE, EntityDetailPage.MODE_EDIT);
@@ -70,8 +71,8 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 			}
 			
 			@Override
-			protected void onDelete(final RBEntity entity, final AjaxRequestTarget target) {
-				getServiceProvider().getEntityManager().delete(entity.getID());
+			protected void onDelete(final ResourceNode entity, final AjaxRequestTarget target) {
+				getServiceProvider().getEntityManager().delete(entity);
 				model.reset();
 				target.add(this);
 			}

@@ -27,7 +27,6 @@ import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.BrowsingHistory;
 import de.lichtflut.rb.webck.application.RBWebSession;
-import de.lichtflut.rb.webck.behaviors.SlideTransitionBehavior;
 import de.lichtflut.rb.webck.common.Action;
 import de.lichtflut.rb.webck.common.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -103,7 +102,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		
 		setOutputMarkupId(true);
 		
-		add(new SlideTransitionBehavior());
+		//add(new SlideTransitionBehavior());
 	}
 	
 	// ----------------------------------------------------

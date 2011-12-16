@@ -51,13 +51,13 @@ public class PropertyRow implements Serializable {
 	
 	private ResourceID resourceConstraint;
 	
+	private List<String> literalConstraints;
+	
 	private int min;
 	
 	private int max;
 	
 	private boolean unbounded;
-	
-	private List<String> literalConstraints;
 	
 	private boolean isResourceReference;
 	

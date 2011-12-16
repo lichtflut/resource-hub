@@ -26,7 +26,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.components.EnumDropDownChoice;
-import de.lichtflut.rb.webck.components.fields.ResourcePickerField;
+import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.ConditionalModel;
@@ -106,7 +106,7 @@ public abstract class SchemaEditorPanel extends Panel {
 				final PropertyRow row = item.getModelObject();
 				
 				final IModel<ResourceID> property = new PropertyModel<ResourceID>(row, "propertyDescriptor");
-				item.add(new ResourcePickerField("property", property).setRequired(true));
+				item.add(new PropertyPickerField("property", property).setRequired(true));
 				item.add(createCreateLink(property));
 				
 				item.add(new TextField<String>("fieldLabel", new PropertyModel(row, "defaultLabel")));

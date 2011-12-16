@@ -50,9 +50,14 @@ public interface ServiceProvider {
 	 */
 	TypeManager getTypeManager();
 	
-	
+	/**
+	 * @return The security service.
+	 */
 	SecurityService getSecurityService();
 	
+	/**
+	 * @return The orgainzer for this domain.
+	 */
 	DomainOrganizer getDomainOrganizer();
 	
 	// ----------------------------------------------------

@@ -89,8 +89,21 @@ public class ColumnConfiguration implements Serializable {
 		return new ListModel<ColumnHeader>(headers);
 	}
 	
+	public String getLabel(ResourceID predicate, Locale locale) {
+		if (declMap.containsKey(predicate)) {
+			return declMap.get(predicate).getFieldLabelDefinition().getLabel(locale);
+		} else {
+			return ResourceLabelBuilder.getInstance().getFieldLabel(predicate, locale);
+		}
+	}
+
 	// ----------------------------------------------------
 	
+	/**
+	 * Add a custom actin.
+	 * @param action The action name.
+	 * @return This.
+	 */
 	public ColumnConfiguration addCustomAction(final String action) {
 		this.actions.add(action);
 		return this;
@@ -122,17 +135,14 @@ public class ColumnConfiguration implements Serializable {
 		return this;
 	}
 	
+	/**
+	 * Add a column for a predicate.
+	 * @param predicate The predicate.
+	 * @return This.
+	 */
 	public ColumnConfiguration addColumnByPredicate(final ResourceID predicate) {
 		predicates.add(predicate);
 		return this;
-	}
-
-	public String getLabel(ResourceID predicate, Locale locale) {
-		if (declMap.containsKey(predicate)) {
-			return declMap.get(predicate).getFieldLabelDefinition().getLabel(locale);
-		} else {
-			return ResourceLabelBuilder.getInstance().getFieldLabel(predicate, locale);
-		}
 	}
 	
 }

@@ -28,8 +28,6 @@ import de.lichtflut.rb.webck.models.UndeclaredFieldsListModel;
  *  Displays a list of {@link ResourceNode}s.
  * </p>
  * 
- * <p>TODO: Recombine with {@link EntityListPanel}.
- *
  * <p>
  * 	Created Dec 15, 2011
  * </p>

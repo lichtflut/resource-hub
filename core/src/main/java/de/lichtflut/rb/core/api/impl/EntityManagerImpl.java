@@ -153,10 +153,10 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 		if (node == null) {
 			return null;
 		}
-		final SemanticNode type = detectType(node);
+		final ResourceID type = detectType(node);
 		final RBEntityImpl entity;
 		if (type == null) {
-			entity = new RBEntityImpl(node);
+			entity = new RBEntityImpl(node, (ResourceID) null);
 		} else {
 			final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type.asResource());
 			entity = new RBEntityImpl(node, schema);
@@ -214,16 +214,16 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 	}
 	
 	/**
-	 * @param node
-	 * @return
+	 * @param node the node.
+	 * @return The detected type.
 	 */
-	private SemanticNode detectType(ResourceNode node) {
-		Set<SemanticNode> objects = SNOPS.objects(node, RDF.TYPE);
+	private ResourceID detectType(ResourceNode node) {
+		final Set<SemanticNode> objects = SNOPS.objects(node, RDF.TYPE);
 		for (SemanticNode sn : objects) {
 			if (RB.ENTITY.equals(sn)) {
 				continue;
 			} 
-			return sn;
+			return sn.asResource();
 		}
 		return null;
 	}

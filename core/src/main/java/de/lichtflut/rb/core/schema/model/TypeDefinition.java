@@ -6,7 +6,6 @@ package de.lichtflut.rb.core.schema.model;
 import java.util.Collection;
 import java.util.Set;
 
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
 /**

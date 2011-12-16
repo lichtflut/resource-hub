@@ -114,7 +114,7 @@ public class DefaultRBServiceProvider implements ServiceProvider {
     */
     @Override
     public ResourceResolver getResourceResolver() {
-    	return null;
+    	return gate.startConversation();
     }
    
 }
