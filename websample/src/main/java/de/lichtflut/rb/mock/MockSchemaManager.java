@@ -103,6 +103,14 @@ public class MockSchemaManager implements SchemaManager, Serializable {
 	}
 	
 	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void removeSchemaForType(ResourceID type) {
+		throw new NotYetSupportedException();
+	}
+	
+	/** 
 	 * {@inheritDoc}
 	 */
 	@Override

@@ -7,6 +7,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -24,11 +25,13 @@ import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.components.EnumDropDownChoice;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.PropertyRowListModel;
 
@@ -86,9 +89,22 @@ public abstract class SchemaEditorPanel extends Panel {
 					final PropertyDeclaration decl = PropertyRow.toPropertyDeclaration(row);
 					schema.addPropertyDeclaration(decl);	
 				}
-				onSave(target, schema);
+				getServiceProvider().getSchemaManager().store(schema);
+				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
 				info("Schema saved succesfully.");
 				target.add(form);
+			}
+		});
+		
+		form.add(new RBStandardButton("delete") {
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				final ResourceSchema original = model.getObject();
+				getServiceProvider().getTypeManager().removeType(original.getDescribedType());
+				info("Schema deleted.");
+				SchemaEditorPanel.this.setVisible(false);
+				target.add(SchemaEditorPanel.this);
+				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
 			}
 		});
 		
@@ -161,9 +177,9 @@ public abstract class SchemaEditorPanel extends Panel {
 	
 	// -----------------------------------------------------
 	
-	public abstract void onSave(final AjaxRequestTarget target, final ResourceSchema schema);
+	protected abstract ServiceProvider getServiceProvider();
 	
-	// -----------------------------------------------------
+	// ----------------------------------------------------
 	
 	protected String max(final PropertyDeclaration pa) {
 		if (pa.getCardinality().isUnbound()) {

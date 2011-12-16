@@ -55,10 +55,16 @@ public interface SchemaManager {
 	// -----------------------------------------------------
 
 	/**
-	 * Stores the given Resource Schema with the given one.
+	 * Stores the given Resource Schema.
 	 * @param schema - the {@link ResourceSchema}
 	 */
 	void store(ResourceSchema schema);
+	
+	/**
+	 * Remove the given Resource Schema.
+	 * @param schema - the {@link ResourceSchema}
+	 */
+	void removeSchemaForType(ResourceID type);
 	
 	/**
 	 * Stores the given Type Definition.

@@ -121,8 +121,8 @@ public class TypeSystemPage extends RBBasePage {
 		final ResourceSchema schema = getServiceProvider().getSchemaManager().findSchemaForType(type);
 		final SchemaEditorPanel editor = new SchemaEditorPanel("editor", Model.of(schema)) {
 			@Override
-			public void onSave(final AjaxRequestTarget target, final ResourceSchema schema) {
-				getServiceProvider().getSchemaManager().store(schema);
+			protected ServiceProvider getServiceProvider() {
+				return TypeSystemPage.this.getServiceProvider();
 			}
 		};
 		TypeSystemPage.this.replace(editor);

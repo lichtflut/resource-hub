@@ -3,8 +3,10 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
@@ -30,6 +32,8 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  */
 @SuppressWarnings({ "serial" })
 public final class ResourceSchemaImpl implements ResourceSchema {
+	
+	private final Set<ResourceID> propertyDescriptors = new HashSet<ResourceID>();
 
 	private final List<PropertyDeclaration> declarations = new LinkedList<PropertyDeclaration>();
 
@@ -92,7 +96,11 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 */
 	@Override
 	public void addPropertyDeclaration(final PropertyDeclaration decl) {
+		if (propertyDescriptors.contains(decl.getPropertyDescriptor())) {
+			throw new IllegalArgumentException("Schema has already declaration for " + decl.getPropertyDescriptor());
+		}
 		declarations.add(decl);
+		propertyDescriptors.add(decl.getPropertyDescriptor());
 	}
 
 	/**

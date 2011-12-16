@@ -30,8 +30,12 @@ import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.*;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import static de.lichtflut.rb.webck.models.ConditionalModel.*;
+import de.lichtflut.rb.webck.models.FieldCardinalityModel;
 import de.lichtflut.rb.webck.models.FieldLabelModel;
+import de.lichtflut.rb.webck.models.FieldSizeModel;
 import de.lichtflut.rb.webck.models.RBFieldValueModel;
 import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
 
@@ -90,6 +94,7 @@ public class EntityRowEditPanel extends Panel {
 			}
 		};
 		link.add(new AttributeModifier("title", new ResourceModel("link.title.add-field-value")));
+		link.add(visibleIf(lessThan(new FieldSizeModel(model), new FieldCardinalityModel(model))));
 		add(link);
 	}
 	

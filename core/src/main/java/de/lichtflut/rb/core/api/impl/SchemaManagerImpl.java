@@ -156,6 +156,18 @@ public class SchemaManagerImpl implements SchemaManager {
 		mc.attach(node);
 		mc.close();
 	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void removeSchemaForType(final ResourceID type) {
+		final ModelingConversation mc = startConversation();
+		final SNResourceSchema existing = findSchemaNodeByType(type);
+		if (existing != null) {
+			removeSchema(mc, existing);
+		}
+	}
 
 	/** 
 	 * {@inheritDoc}

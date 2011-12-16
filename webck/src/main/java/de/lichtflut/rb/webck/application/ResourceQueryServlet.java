@@ -31,6 +31,7 @@ import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.common.TermSearcher.Mode;
 
 /**
  * <p>
@@ -65,16 +66,6 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	
 	// -----------------------------------------------------
 	
-	enum Mode {
-		UNKNOWN,
-		URI,
-		VALUES,
-		ENTITY,
-		PROPERTY,
-	}
-	
-	// -----------------------------------------------------
-
 	/** 
 	 * {@inheritDoc}
 	 */

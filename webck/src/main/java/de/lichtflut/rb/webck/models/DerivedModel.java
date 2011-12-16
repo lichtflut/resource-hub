@@ -3,11 +3,12 @@
  */
 package de.lichtflut.rb.webck.models;
 
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Model derived from another model.
  * </p>
  *
  * <p>
@@ -16,45 +17,44 @@ import org.apache.wicket.model.IModel;
  *
  * @author Oliver Tigges
  */
-public class DerivedModel<T> implements IModel<T> {
+public abstract class DerivedModel<T, M> extends AbstractReadOnlyModel<T> {
 
-	private final IModel<T> original;
+	private final IModel<M> originalModel;
 	
-	private T value;
+	private final M original;
 	
 	// ----------------------------------------------------
 	
 	/**
 	 * @param original
 	 */
-	public DerivedModel(IModel<T> original) {
+	public DerivedModel(IModel<M> original) {
+		this.originalModel = original;
+		this.original = null;
+	}
+	
+	/**
+	 * @param original
+	 */
+	public DerivedModel(M original) {
 		this.original = original;
+		this.originalModel = null;
 	}
 	
 	// ----------------------------------------------------
 
 	public T getObject() {
-		if (value == null) {
-			value = derive(original);
+		if (original != null) {
+			return derive(original);
+		} else if (originalModel != null) {
+			return derive(originalModel.getObject());
+		} else {
+			return null;
 		}
-		return value;
 	}
 
-	public void setObject(T value) {
-		this.value = value;
-	}
-	
-	public void detach() {
-	}
-	
-	public void reset() {
-		value = null;
-	}
-	
 	// ----------------------------------------------------
 	
-	protected T derive(IModel<T> original) {
-		return original.getObject();
-	}
+	protected abstract T derive(M original);
 	
 }
