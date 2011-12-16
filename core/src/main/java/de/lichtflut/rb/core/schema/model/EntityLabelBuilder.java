@@ -11,7 +11,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
  * <p>
- *  Builder for labels based on a resource's attributes.
+ *  Builder for labels based on an entitie's attributes.
  * </p>
  *
  * <p>
@@ -20,9 +20,9 @@ import de.lichtflut.rb.core.entity.RBEntity;
  *
  * @author Oliver Tigges
  */
-public interface LabelBuilder extends Serializable{
+public interface EntityLabelBuilder extends Serializable{
 
-	LabelBuilder DEFAULT = new DefaultBuilder();
+	EntityLabelBuilder DEFAULT = new DefaultBuilder();
 
 	/**
 	 * Builds a label for the given entity.
@@ -43,7 +43,7 @@ public interface LabelBuilder extends Serializable{
 	 * A default implementation of this interface.
 	 */
 	@SuppressWarnings("serial")
-	public static class DefaultBuilder implements LabelBuilder, Serializable {
+	public static class DefaultBuilder implements EntityLabelBuilder, Serializable {
 		@Override
 		public String build(final RBEntity entity) {
 			return ResourceLabelBuilder.getInstance().getLabel(entity.getNode(), Locale.getDefault());

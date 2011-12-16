@@ -6,14 +6,10 @@ package de.lichtflut.rb.core.schema.persistence;
 
 import junit.framework.Assert;
 
-import org.apache.lucene.util.NumericUtils.IntRangeBuilder;
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.associations.Association;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
@@ -21,9 +17,6 @@ import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
-import de.lichtflut.rb.core.security.impl.MockLoginService;
-import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
 
 /**
  * <p>
@@ -36,7 +29,6 @@ import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
  *
  * @author Raphael Esterle
  */
-
 public class Schema2GraphTest {
 	
 	@Test
@@ -74,10 +66,10 @@ public class Schema2GraphTest {
         TypeDefinitionImpl p3 = new TypeDefinitionImpl();
         TypeDefinitionImpl p4 = new TypeDefinitionImpl();
 
-        p1.setElementaryDataType(ElementaryDataType.STRING);
-        p2.setElementaryDataType(ElementaryDataType.STRING);
-        p3.setElementaryDataType(ElementaryDataType.INTEGER);
-        p4.setElementaryDataType(ElementaryDataType.RESOURCE);
+        p1.setElementaryDataType(Datatype.STRING);
+        p2.setElementaryDataType(Datatype.STRING);
+        p3.setElementaryDataType(Datatype.INTEGER);
+        p4.setElementaryDataType(Datatype.RESOURCE);
 
         p2.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
         p4.addConstraint(ConstraintBuilder.buildConstraint(schema

@@ -3,7 +3,8 @@
  */
 package de.lichtflut.rb.webck.models;
 
-import org.apache.wicket.model.IModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -21,11 +22,11 @@ import de.lichtflut.rb.webck.common.Action;
  *
  * @author Oliver Tigges
  */
-public abstract class RBEntityModel implements IModel<RBEntity> {
+public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
+	
+	private final Logger logger = LoggerFactory.getLogger(RBEntityModel.class);
 
 	private EntityHandle handle;
-	
-	private RBEntity entity;
 	
 	private Action<?>[] initializers;
 	
@@ -44,50 +45,47 @@ public abstract class RBEntityModel implements IModel<RBEntity> {
 		this.handle = handle;
 	}
 	
-	// -----------------------------------------------------
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RBEntity getObject() {
-		if (entity == null) {
-			entity = load();
-		}
-		return entity;
-	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setObject(final RBEntity object) {
-		this.entity = object;
-	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void detach() {
-	}
-	
 	// ----------------------------------------------------
 	
-	/**
-	 * Reset the model in order to reload.
+	/** 
+	 * {@inheritDoc}
 	 */
-	public void reset() {
-		entity = null;
+	@Override
+	public RBEntity load() {
+		if (handle.hasId()) {
+			logger.info("Loading RB Entity: " + handle.getId());
+			final RBEntity loaded = getServiceProvider().getEntityManager().find(handle.getId());
+			initialize(loaded);
+			return loaded;
+		} else if (handle.hasType()){
+			logger.info("Creating new RB Entity");
+			final RBEntity loaded = getServiceProvider().getEntityManager().create(handle.getType());
+			handle.setId(loaded.getID());
+			initialize(loaded);
+			return loaded;
+		} else {
+			throw new IllegalStateException("Cannot initialize RB Entity Model.");
+		}
 	}
+	
+	// -----------------------------------------------------
 	
 	/**
 	 * Reset the model in order to reload.
 	 */
 	public void reset(final EntityHandle handle, Action<?>... initializers) {
+		reset();
 		this.handle = handle; 
-		this.entity = null;
 		this.initializers = initializers;
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void reset() {
+		logger.info("RB Entity Model is reseted");
+		super.reset();
 	}
 	
 	// -----------------------------------------------------
@@ -95,24 +93,6 @@ public abstract class RBEntityModel implements IModel<RBEntity> {
 	protected abstract ServiceProvider getServiceProvider();
 
 	// ----------------------------------------------------
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	protected RBEntity load() {
-		if (handle.hasId()) {
-			final RBEntity loaded = getServiceProvider().getEntityManager().find(handle.getId());
-			initialize(loaded);
-			return loaded;
-		} else if (handle.hasType()){
-			final RBEntity loaded = getServiceProvider().getEntityManager().create(handle.getType());
-			handle.setId(loaded.getID());
-			initialize(loaded);
-			return loaded;
-		} else {
-			return null;
-		}
-	}
 	
 	/**
 	 * @param loaded

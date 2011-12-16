@@ -12,6 +12,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.validator.AbstractValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
 
 import de.lichtflut.rb.core.api.DomainOrganizer;
@@ -59,6 +61,15 @@ public abstract class CreateNamespacePanel extends Panel {
 		
 		addTextField("uri", new PropertyModel(model, "uri"), form)
 			.add(new UrlValidator())
+			.add(new AbstractValidator<String>(){
+				@Override
+				protected void onValidate(IValidatable<String> validatable) {
+					final String value = validatable.getValue();
+					if (!value.endsWith("/") && !value.endsWith("#")) {
+						error(validatable, "error.no-suffix");
+					}
+				}
+			})
 			.setRequired(true);
 		
 		addTextField("prefix", new PropertyModel(model, "prefix"), form)

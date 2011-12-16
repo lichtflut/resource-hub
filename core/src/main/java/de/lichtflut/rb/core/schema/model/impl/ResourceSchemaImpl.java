@@ -9,7 +9,7 @@ import java.util.List;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
-import de.lichtflut.rb.core.schema.model.LabelBuilder;
+import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
@@ -33,7 +33,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 
 	private final List<PropertyDeclaration> declarations = new LinkedList<PropertyDeclaration>();
 
-	private LabelBuilder labelBuilder = LabelBuilder.DEFAULT;
+	private EntityLabelBuilder labelBuilder = EntityLabelBuilder.DEFAULT;
 	
 	private ResourceID describedType;
 
@@ -99,16 +99,16 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public LabelBuilder getLabelBuilder() {
+	public EntityLabelBuilder getLabelBuilder() {
 		return labelBuilder;
 	}
 	
 	/**
-	 * Set the {@link LabelBuilder}.
+	 * Set the {@link EntityLabelBuilder}.
 	 * @param labelBuilder the labelBuilder to set
 	 * @return This.
 	 */
-	public ResourceSchemaImpl setLabelBuilder(final LabelBuilder labelBuilder) {
+	public ResourceSchemaImpl setLabelBuilder(final EntityLabelBuilder labelBuilder) {
 		this.labelBuilder = labelBuilder;
 		return this;
 	}

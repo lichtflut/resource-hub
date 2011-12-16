@@ -10,8 +10,8 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.arastreju.sge.model.ElementaryDataType;
 
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.components.EnumDropDownChoice;
 
 /**
@@ -45,10 +45,10 @@ public abstract class TypeDefEditorPanel extends Panel {
 			new TextField<String>("name", new PropertyModel<String>(model, "displayName"));
 		form.add(nameField);
 		
-		final EnumDropDownChoice<ElementaryDataType> dataTypeChoice = 
-			new EnumDropDownChoice<ElementaryDataType>("dataType", 
+		final EnumDropDownChoice<Datatype> dataTypeChoice = 
+			new EnumDropDownChoice<Datatype>("dataType", 
 				new PropertyModel(model, "dataType"),
-				ElementaryDataType.values());
+				Datatype.values());
 		form.add(dataTypeChoice);
 		
 		form.add(new ConstraintsEditorPanel("constraints", model));

@@ -43,13 +43,6 @@ public abstract class RBEntityListModel extends AbstractLoadableModel<List<RBEnt
 		return getServiceProvider().getEntityManager().findByType(type);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void detach() {
-	}
-	
 	// -----------------------------------------------------
 	
 	protected abstract ServiceProvider getServiceProvider();

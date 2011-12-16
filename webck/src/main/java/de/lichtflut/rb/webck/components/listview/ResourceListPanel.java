@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.webck.components.listview;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,30 +15,30 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.request.cycle.RequestCycle;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
 
 import scala.actors.threadpool.Arrays;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.webck.conversion.RBFieldConverter;
-import de.lichtflut.rb.webck.models.RBFieldsListModel;
+import de.lichtflut.rb.core.entity.ResourceField;
+import de.lichtflut.rb.webck.conversion.SemanticNodesRenderer;
+import de.lichtflut.rb.webck.models.UndeclaredFieldsListModel;
 
 /**
  * <p>
- *  List of RBEntities.
+ *  Displays a list of {@link ResourceNode}s.
  * </p>
- *
+ * 
  * <p>
- * 	Created Nov 17, 2011
+ * 	Created Dec 15, 2011
  * </p>
  *
  * @author Oliver Tigges
  */
-public class EntityListPanel extends Panel {
+public class ResourceListPanel extends Panel {
 	
 	private static final String ACTION = "action";
 	
-	private final RBFieldConverter converter = new RBFieldConverter();
+	private final SemanticNodesRenderer renderer = new SemanticNodesRenderer();
 	
 	// ----------------------------------------------------
 
@@ -47,7 +48,7 @@ public class EntityListPanel extends Panel {
 	 * @param dataModel The model providing the data to display..
 	 * @param config The configuration of the table and it's columns.
 	 */
-	public EntityListPanel(final String id, final IModel<List<RBEntity>> dataModel, final ColumnConfiguration config) {
+	public ResourceListPanel(final String id, final IModel<List<ResourceNode>> dataModel, final ColumnConfiguration config) {
 		super(id, dataModel);
 		
 		setOutputMarkupId(true);
@@ -64,21 +65,21 @@ public class EntityListPanel extends Panel {
 	 * @param entity The entity.
 	 * @param target The ajax request target.
 	 */
-	protected void onDelete(final RBEntity entity, final AjaxRequestTarget target) {}
+	protected void onDelete(final ResourceNode entity, final AjaxRequestTarget target) {}
 	
 	/**
 	 * Handler for delete.
 	 * @param entity The entity.
 	 * @param target The ajax request target.
 	 */
-	protected void onView(final RBEntity entity, final AjaxRequestTarget target) {}
+	protected void onView(final ResourceNode entity, final AjaxRequestTarget target) {}
 	
 	/**
 	 * Handler for delete.
 	 * @param entity The entity.
 	 * @param target The ajax request target.
 	 */
-	protected void onEdit(final RBEntity entity, final AjaxRequestTarget target) {}
+	protected void onEdit(final ResourceNode entity, final AjaxRequestTarget target) {}
 	
 	/**
 	 * Handler for delete.
@@ -86,11 +87,11 @@ public class EntityListPanel extends Panel {
 	 * @param target The ajax request target.
 	 * @param action The custom action.
 	 */
-	protected void onAction(final RBEntity entity, final AjaxRequestTarget target, final String action) {}
+	protected void onAction(final ResourceNode entity, final AjaxRequestTarget target, final String action) {}
 	
 	// ----------------------------------------------------
 	
-	protected Component createViewAction(final String componentId, final RBEntity entity) {
+	protected Component createViewAction(final String componentId, final ResourceNode entity) {
 		return new ActionLink(componentId, new ResourceModel("action.view")) {
 			public void onClick(final AjaxRequestTarget target) {
 				onView(entity, target);
@@ -98,7 +99,7 @@ public class EntityListPanel extends Panel {
 		}; 	
 	}
 	
-	protected Component createEditAction(final String componentId, final RBEntity entity) {
+	protected Component createEditAction(final String componentId, final ResourceNode entity) {
 		return new ActionLink(componentId, new ResourceModel("action.edit")) {
 			public void onClick(final AjaxRequestTarget target) {
 				onEdit(entity, target);
@@ -106,7 +107,7 @@ public class EntityListPanel extends Panel {
 		}; 
 	}	
 	
-	protected Component createDeleteAction(final String componentId, final RBEntity entity) {
+	protected Component createDeleteAction(final String componentId, final ResourceNode entity) {
 		return new ActionLink(componentId, new ResourceModel("action.delete")) {
 			public void onClick(final AjaxRequestTarget target) {
 				onDelete(entity, target);
@@ -114,7 +115,7 @@ public class EntityListPanel extends Panel {
 		}; 	
 	}
 	
-	protected Component createCustomAction(final String componentId, final RBEntity entity, final String action) {
+	protected Component createCustomAction(final String componentId, final ResourceNode entity, final String action) {
 		return new ActionLink(componentId, new ResourceModel("action.custom-" + action)) {
 			public void onClick(final AjaxRequestTarget target) {
 				onAction(entity, target, action);
@@ -124,13 +125,12 @@ public class EntityListPanel extends Panel {
 	
 	// -- OUTPUT ------------------------------------------
 	
-	protected String toString(final RBField field, final Locale locale) {
-		return converter.convertToString(field, locale);
+	protected String toString(final Collection<SemanticNode> nodes, final Locale locale) {
+		return renderer.render(nodes, locale);
 	}
 	
-	protected Component createCell(final IModel<RBField> model) {
-		final RBField field = model.getObject();
-		final String rep = toString(field, RequestCycle.get().getRequest().getLocale());
+	protected Component createCell(final IModel<ResourceField> model) {
+		final String rep = toString(model.getObject().getValues(), getLocale());
 		return new Label("content", rep);
 	}
 	
@@ -146,20 +146,20 @@ public class EntityListPanel extends Panel {
 		};
 	}
 	
-	private ListView<RBEntity> createRows(final IModel<List<RBEntity>> model, final ColumnConfiguration config) {
-		return new ListView<RBEntity>("rows", model) {
+	private ListView<ResourceNode> createRows(final IModel<List<ResourceNode>> model, final ColumnConfiguration config) {
+		return new ListView<ResourceNode>("rows", model) {
 			@Override
-			protected void populateItem(final ListItem<RBEntity> item) {
-				item.add(createCells(new RBFieldsListModel(item.getModel(), config)));
+			protected void populateItem(final ListItem<ResourceNode> item) {
+				item.add(createCells(new UndeclaredFieldsListModel(item.getModel(), config)));
 				item.add(createActions(item.getModelObject(), config.getActions()));
 			}
 		};
 	}
 	
-	private ListView<RBField> createCells(final RBFieldsListModel model) {
-		final ListView<RBField> columns = new ListView<RBField>("cells", model) {
+	private ListView<ResourceField> createCells(final IModel<List<ResourceField>> model) {
+		final ListView<ResourceField> columns = new ListView<ResourceField>("cells", model) {
 			@Override
-			protected void populateItem(final ListItem<RBField> item) {
+			protected void populateItem(final ListItem<ResourceField> item) {
 				item.add(createCell(item.getModel()));
 			}
 		}; 
@@ -167,7 +167,7 @@ public class EntityListPanel extends Panel {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Component createActions(final RBEntity entity, final String... actions) {
+	private Component createActions(final ResourceNode entity, final String... actions) {
 		final ListView<String> columns = new ListView<String>("actions", Arrays.asList(actions)) {
 			@Override
 			protected void populateItem(final ListItem<String> item) {

@@ -5,10 +5,10 @@ package de.lichtflut.rb.webck.components.listview;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
+import java.util.Map;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
@@ -22,7 +22,7 @@ import de.lichtflut.rb.webck.components.listview.ColumnHeader.ColumnType;
 
 /**
  * <p>
- *  Configuration of a column of a {@link EntityListPanel}.
+ *  Configuration of a column of a entity or resource lists.
  * </p>
  *
  * <p>
@@ -35,9 +35,9 @@ public class ColumnConfiguration implements Serializable {
 	
 	private final List<String> actions = new ArrayList<String>();
 	
-	private final List<PropertyDeclaration> decls = new ArrayList<PropertyDeclaration>();
-	
 	private final List<ResourceID> predicates = new ArrayList<ResourceID>();
+	
+	private final Map<ResourceID, PropertyDeclaration> declMap = new HashMap<ResourceID, PropertyDeclaration>();
 	
 	// ----------------------------------------------------
 	
@@ -70,13 +70,8 @@ public class ColumnConfiguration implements Serializable {
 	/**
 	 * @return the predicates
 	 */
-	public Set<ResourceID> getPredicatesToDisplay() {
-		final Set<ResourceID> result = new HashSet<ResourceID>();
-		for (PropertyDeclaration decl : decls) {
-			result.add(decl.getPropertyDescriptor());
-		}
-		result.addAll(predicates);
-		return result;
+	public List<ResourceID> getPredicatesToDisplay() {
+		return predicates;
 	}
 	
 	// ----------------------------------------------------
@@ -84,12 +79,8 @@ public class ColumnConfiguration implements Serializable {
 	public IModel<List<ColumnHeader>> getHeaderModel() {
 		final Locale locale = RequestCycle.get().getRequest().getLocale();
 		final List<ColumnHeader> headers = new ArrayList<ColumnHeader>();
-		for (PropertyDeclaration decl : decls) {
-			final String label = decl.getFieldLabelDefinition().getLabel(locale);
-			headers.add(new SimpleColumnHeader(label, decl.getPropertyDescriptor(), ColumnType.DATA));
-		}
 		for (ResourceID predicate : predicates) {
-			final String label = ResourceLabelBuilder.getInstance().getFieldLabel(predicate, locale);
+			final String label = getLabel(predicate, locale);
 			headers.add(new SimpleColumnHeader(label, predicate, ColumnType.DATA));
 		}
 		for (@SuppressWarnings("unused") String action : getActions()) {
@@ -98,21 +89,60 @@ public class ColumnConfiguration implements Serializable {
 		return new ListModel<ColumnHeader>(headers);
 	}
 	
+	public String getLabel(ResourceID predicate, Locale locale) {
+		if (declMap.containsKey(predicate)) {
+			return declMap.get(predicate).getFieldLabelDefinition().getLabel(locale);
+		} else {
+			return ResourceLabelBuilder.getInstance().getFieldLabel(predicate, locale);
+		}
+	}
+
 	// ----------------------------------------------------
 	
+	/**
+	 * Add a custom actin.
+	 * @param action The action name.
+	 * @return This.
+	 */
 	public ColumnConfiguration addCustomAction(final String action) {
 		this.actions.add(action);
 		return this;
 	}
 	
+	/**
+	 * Add all PropertyDeclarationsn from schema to column config.
+	 * @param schema The Schema.
+	 * @return This.
+	 */
 	public ColumnConfiguration addColumnsFromSchema(final ResourceSchema schema) {
-		decls.addAll(schema.getPropertyDeclarations());
+		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+			predicates.add(decl.getPropertyDescriptor());
+			declMap.put(decl.getPropertyDescriptor(), decl);
+		}
 		return this;
 	}
 	
+	/**
+	 * Just fetch the label definition from the schema, but don't add all
+	 * PropertyDeclarations.
+	 * @param schema The Schema.
+	 * @return This.
+	 */
+	public ColumnConfiguration fetchFieldLabels(final ResourceSchema schema) {
+		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+			declMap.put(decl.getPropertyDescriptor(), decl);
+		}
+		return this;
+	}
+	
+	/**
+	 * Add a column for a predicate.
+	 * @param predicate The predicate.
+	 * @return This.
+	 */
 	public ColumnConfiguration addColumnByPredicate(final ResourceID predicate) {
 		predicates.add(predicate);
 		return this;
 	}
-
+	
 }

@@ -9,12 +9,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 
 /**
@@ -41,7 +41,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 
 	private Set<Constraint> constraints = new HashSet<Constraint>();
 	
-	private ElementaryDataType type =  ElementaryDataType.STRING;
+	private Datatype type =  Datatype.STRING;
 	
 	private boolean isPublicType = false;
 	
@@ -123,7 +123,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ElementaryDataType getElementaryDataType() {
+	public Datatype getElementaryDataType() {
 		return type;
 	}
 	
@@ -131,7 +131,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setElementaryDataType(final ElementaryDataType type) {
+	public void setElementaryDataType(final Datatype type) {
 		this.type = type;
 	}
 
@@ -150,7 +150,7 @@ public final class TypeDefinitionImpl implements TypeDefinition{
 	 */
 	@Override
 	public boolean isResourceReference() {
-		return this.type == ElementaryDataType.RESOURCE;
+		return this.type == Datatype.RESOURCE;
 	}
 
 	// -----------------------------------------------------

@@ -6,7 +6,6 @@ package de.lichtflut.rb.core.schema.model;
 import java.util.Collection;
 import java.util.Set;
 
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
 /**
@@ -75,16 +74,16 @@ public interface TypeDefinition  extends ResourceSchemaElement{
 	// -----------------------------------------------------
 	
 	/**
-	 * Get the {@link ElementaryDataType}.
+	 * Get the {@link Datatype}.
 	 * @return The elementary property.
 	 */
-	ElementaryDataType getElementaryDataType();
+	Datatype getElementaryDataType();
 
 	/**
-	 * Set the {@link ElementaryDataType}.
+	 * Set the {@link Datatype}.
 	 * @param type -
 	 */
-	void setElementaryDataType(ElementaryDataType type);
+	void setElementaryDataType(Datatype type);
 
 	// -----------------------------------------------------
 

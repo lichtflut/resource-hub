@@ -7,11 +7,17 @@ import static org.arastreju.sge.SNOPS.assure;
 import static org.arastreju.sge.SNOPS.singleObject;
 import static org.arastreju.sge.SNOPS.string;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -26,8 +32,10 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.models.AbstractDerivedListModel;
 import de.lichtflut.rb.webck.models.AbstractLoadableModel;
 import de.lichtflut.rb.webck.models.ResourceLabelModel;
+import de.lichtflut.rb.webck.models.ResourceUriModel;
 
 /**
  * <p>
@@ -52,7 +60,8 @@ public abstract class SNPropertyEditorPanel extends Panel {
 		setOutputMarkupPlaceholderTag(true);
 		setOutputMarkupId(true);
 		
-		add(new Label("propertyUri", new ResourceLabelModel(model)));
+		add(new Label("propertyUri", new ResourceUriModel(model)));
+		add(new Label("propertyLabel", new ResourceLabelModel(model)));
 		
 		final Form<?> form = new Form("form");
 		form.setOutputMarkupId(true);
@@ -83,6 +92,23 @@ public abstract class SNPropertyEditorPanel extends Panel {
 			}
 		});
 		
+		final ListView<SNProperty> superProps = new ListView<SNProperty>("superProps", superPropertyModel(model)) {
+			@Override
+			protected void populateItem(ListItem<SNProperty> item) {
+				item.add(new Label("property", item.getModelObject().getQualifiedName().getSimpleName()));
+			}
+		};
+		add(superProps);
+		
+		
+		final ListView<SNProperty> inverseProps = new ListView<SNProperty>("inverseProps", inversePropertyModel(model)) {
+			@Override
+			protected void populateItem(ListItem<SNProperty> item) {
+				item.add(new Label("property", item.getModelObject().getQualifiedName().getSimpleName()));
+			}
+		};
+		add(inverseProps);
+		
 		add(form);
 	}
 	
@@ -105,5 +131,28 @@ public abstract class SNPropertyEditorPanel extends Panel {
 	ModelingConversation newMC() {
 		return getServiceProvider().getArastejuGate().startConversation();
 	}
+	
+	// ----------------------------------------------------
+	
+	private IModel<List<SNProperty>> superPropertyModel(IModel<SNProperty> src) {
+		return new AbstractDerivedListModel<SNProperty, SNProperty>(src) {
+			@Override
+			public List<SNProperty> derive(IModel<SNProperty> source) {
+				final Set<SNProperty> all = source.getObject().getSuperProperties();
+				all.remove(source.getObject());
+				return new ArrayList<SNProperty>(all);
+			}
+		};
+	}
+	
+	private IModel<List<SNProperty>> inversePropertyModel(IModel<SNProperty> src) {
+		return new AbstractDerivedListModel<SNProperty, SNProperty>(src) {
+			@Override
+			public List<SNProperty> derive(IModel<SNProperty> source) {
+				return new ArrayList<SNProperty>(source.getObject().getInverseProperties());
+			}
+		};
+	}
+	
 	
 }

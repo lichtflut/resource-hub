@@ -1,0 +1,58 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+	    <div class="section">
+	    	<h2>Type System - View, Edit, Create</h2>
+	    </div>
+	    
+	    <div class="section" style="max-width: 600px">
+
+			<p>In diesem Bereich kann das interne "Type System" von Glasnost eingesehen
+			 und angepasst werden. Es besteht im wesentlichen aus drei Elementen.</p>
+			 
+		</div>
+			 
+		<div class="section" style="max-width: 600px">
+
+			<ol>
+				<li>
+					<p>
+						<h4>Typen (mit ihrem Schema):</h4>
+						Diese klassifizieren und typisieren die Entitäten, die in Glasnost verwalter werden können.
+						Jede Entität hat (mindestens) einen Typ. Zu jedem Typ kann ein Schema definiert werden, das
+						vorgibt, welche Attribute und Relationen Entitäen dieses Typs i.d.R. haben. Ein Schema 
+						besteht aus einer Liste an Property Deklarationen.
+					</p> 
+				</li>
+				<li>
+					<p>
+						<h4>Properties:</h4>
+						Durch diese "Eigenschafts-Typen" wird die Bedeutung eines Attributs oder einer Relation
+						festgelegt. Einer Entität wird nicht einfach ein Wert oder eine Relation zu einer anderen
+						Entität zugeordnet, sondern diese Zuweisung wird durch eine Property charakterisiert.
+					</p> 
+				</li>
+				<li>
+					<p>
+						<h4>Public Type Definitions:</h4>
+						Jede Property Deklaration hat eine Typ-Definition. Hier wird festgelegt, um  
+						welchen Datentypen es geht (Ganzzahl, Zeichenkette, Resourcen-Referenz) und welche
+						Constraints dafür gelten. Es ist auch möglich Allgemeine Typ Definitionen zu erstellen,
+						die aus mehreren Property Deklarationen wiederverwendet werden können.
+					</p> 
+				</li>
+			</ol>			
+			
+		</div>
+
+</wicket:panel>
+</html>

@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -21,7 +22,6 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
@@ -29,6 +29,7 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.models.FieldLabelModel;
 import de.lichtflut.rb.webck.models.RBFieldValueModel;
@@ -99,7 +100,7 @@ public class EntityRowEditPanel extends Panel {
 	 * @param dataType
 	 * @return 
 	 */
-	protected FormComponent<?> addValueField(final ListItem<RBFieldValueModel> item, final ElementaryDataType dataType) {
+	protected FormComponent<?> addValueField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
 		switch(dataType) {
 		case BOOLEAN:
 			return addBooleanField(item);
@@ -113,6 +114,8 @@ public class EntityRowEditPanel extends Panel {
 			return addTextField(item, BigDecimal.class);
 		case STRING:
 			return addTextField(item, String.class);
+		case TEXT:
+			return addTextArea(item);
 		default:
 			throw new NotYetImplementedException("Datatype: " + dataType);
 		}
@@ -174,6 +177,13 @@ public class EntityRowEditPanel extends Panel {
 		return field;
 	}
 	
+	private FormComponent<?> addTextArea(final ListItem<RBFieldValueModel> item) {
+		final TextArea<String> field = new TextArea<String>("valuefield", item.getModelObject());
+		field.setType(String.class);
+		item.add(new Fragment("valuefield", "textArea", this).add(field));
+		return field;
+	}
+	
 	private TextField addDateField(final ListItem<RBFieldValueModel> item) {
 		final DatePicker<Date> field = new DatePicker<Date>("valuefield", item.getModelObject(), Date.class);
 		item.add(new Fragment("valuefield", "textInput", this).add(field));
@@ -195,7 +205,7 @@ public class EntityRowEditPanel extends Panel {
 	 */
 	private ResourceID getTypeConstraint() {
 		final RBField field = getField();
-		if(field.getDataType().equals(ElementaryDataType.RESOURCE)){
+		if(field.getDataType().equals(Datatype.RESOURCE)){
 			for (Constraint c : field.getConstraints()) {
 				if(c.isResourceTypeConstraint()){
 					return c.getResourceTypeConstraint().asResource();

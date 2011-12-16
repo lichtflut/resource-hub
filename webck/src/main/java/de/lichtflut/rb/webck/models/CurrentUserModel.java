@@ -46,6 +46,15 @@ public class CurrentUserModel extends AbstractReadOnlyModel<User> {
 		};
 	}
 	
+	public static ConditionalModel<User> isDomainAdmin() {
+		return new ConditionalModel<User>(new CurrentUserModel()) {
+			@Override
+			public boolean isFulfilled() {
+				return getObject() != null;
+			}
+		};
+	}
+	
 	// ----------------------------------------------------
 	
 	/** 

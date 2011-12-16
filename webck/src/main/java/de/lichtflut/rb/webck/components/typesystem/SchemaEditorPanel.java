@@ -17,16 +17,16 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.schema.model.LabelBuilder;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.components.EnumDropDownChoice;
-import de.lichtflut.rb.webck.components.fields.ResourcePickerField;
+import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.ConditionalModel;
@@ -61,9 +61,9 @@ public abstract class SchemaEditorPanel extends Panel {
 		form.setOutputMarkupId(true);
 		form.add(new FeedbackPanel("feedback"));
 		
-		final TextArea<LabelBuilder> labelExpression = 
-				new TextArea<LabelBuilder>("labelExpression", new PropertyModel(model, "labelBuilder"));
-		labelExpression.setType(LabelBuilder.class);
+		final TextArea<EntityLabelBuilder> labelExpression = 
+				new TextArea<EntityLabelBuilder>("labelExpression", new PropertyModel(model, "labelBuilder"));
+		labelExpression.setType(EntityLabelBuilder.class);
 		form.add(labelExpression);
 		
 		form.add(createRows(rowModel));
@@ -87,6 +87,8 @@ public abstract class SchemaEditorPanel extends Panel {
 					schema.addPropertyDeclaration(decl);	
 				}
 				onSave(target, schema);
+				info("Schema saved succesfully.");
+				target.add(form);
 			}
 		});
 		
@@ -104,7 +106,7 @@ public abstract class SchemaEditorPanel extends Panel {
 				final PropertyRow row = item.getModelObject();
 				
 				final IModel<ResourceID> property = new PropertyModel<ResourceID>(row, "propertyDescriptor");
-				item.add(new ResourcePickerField("property", property).setRequired(true));
+				item.add(new PropertyPickerField("property", property).setRequired(true));
 				item.add(createCreateLink(property));
 				
 				item.add(new TextField<String>("fieldLabel", new PropertyModel(row, "defaultLabel")));
@@ -129,10 +131,10 @@ public abstract class SchemaEditorPanel extends Panel {
 				});
 				item.add(checkBox);
 				
-				final EnumDropDownChoice<ElementaryDataType> dataTypeChoice = 
-					new EnumDropDownChoice<ElementaryDataType>("dataType", 
+				final EnumDropDownChoice<Datatype> dataTypeChoice = 
+					new EnumDropDownChoice<Datatype>("dataType", 
 						new PropertyModel(row, "dataType"),
-						ElementaryDataType.values());
+						Datatype.values());
 				
 				final boolean isPrivateTD = !row.isTypeDefinitionPublic();
 				dataTypeChoice.setEnabled(isPrivateTD);

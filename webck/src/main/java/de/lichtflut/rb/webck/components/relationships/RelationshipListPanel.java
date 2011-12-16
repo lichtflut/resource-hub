@@ -40,22 +40,34 @@ public abstract class RelationshipListPanel extends Panel {
 	 * @param id
 	 * @param model
 	 */
-	public RelationshipListPanel(final String id, final IModel<List<? extends Statement>> model) {
+	public RelationshipListPanel(final String id, final IModel<List<Statement>> model) {
 		super(id, model);
 		
 		final ListView<Statement> listView = new ListView<Statement>("rows", model) {
 			@Override
 			protected void populateItem(final ListItem<Statement> item) {
 				final Statement stmt = item.getModelObject();
-				item.add(new Label("entity", getLabelForEntity(stmt.getObject())));
 				item.add(new Label("role", getLabelForPredicate(stmt.getPredicate())));
+				item.add(new Label("entity", getLabelForEntity(stmt.getObject())));
 				item.add(new ActionLink("viewLink", new ResourceModel("action.view")){
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 						onRelationshipSelected(item.getModelObject());
 					}
 				});
+				item.add(new ActionLink("removeLink", new ResourceModel("action.remove")){
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						onRelationshipRemoved(item.getModelObject());
+						onStatmentModelChanged();
+					}
+				});
 			}
+			
+			private void onStatmentModelChanged() {
+				removeAll();
+			}
+			
 		};
 		
 		add(listView);
@@ -68,10 +80,14 @@ public abstract class RelationshipListPanel extends Panel {
 	
 	public abstract void onRelationshipSelected(Statement stmt);
 	
+	public abstract void onRelationshipRemoved(Statement stmt); 
+	
 	// ----------------------------------------------------
 	
 	protected String getLabelForEntity(final SemanticNode node) {
-		if (node.isResourceNode()) {
+		if (node == null) {
+			return "<null>";
+		} else if (node.isResourceNode()) {
 			return ResourceLabelBuilder.getInstance().getLabel(node.asResource(), getLocale());
 		} else {
 			return node.toString();	

@@ -6,7 +6,7 @@ package de.lichtflut.rb.mock;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.custom.LabelBuilderLocator;
-import de.lichtflut.rb.core.schema.model.LabelBuilder;
+import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 import de.lichtflut.rb.web.util.StaticLabelBuilders;
 
 /**
@@ -26,7 +26,7 @@ public class MockLabelBuilderLocator implements LabelBuilderLocator {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public LabelBuilder forType(final ResourceID type) {
+	public EntityLabelBuilder forType(final ResourceID type) {
 		if (MockResourceSchemaFactory.ADRESS.equals(type)){
 			return StaticLabelBuilders.forAddress();
 		} else if (MockResourceSchemaFactory.CITY.equals(type)){
@@ -36,7 +36,7 @@ public class MockLabelBuilderLocator implements LabelBuilderLocator {
 		} else if (MockResourceSchemaFactory.PERSON.equals(type)){
 				return StaticLabelBuilders.forPerson();
 		} else {
-			return LabelBuilder.DEFAULT;
+			return EntityLabelBuilder.DEFAULT;
 		}
 	}
 }

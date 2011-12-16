@@ -56,8 +56,6 @@ public class EntityPanel extends Panel {
 		return editable.getObject();
 	}
 	
-	// ----------------------------------------------------
-	
 	protected ListView<RBField> createRows(final IModel<List<RBField>> listModel) {
 		final ListView<RBField> view = new ListView<RBField>("rows", listModel) {
 			@Override

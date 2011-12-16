@@ -7,13 +7,13 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 
 /**
@@ -56,7 +56,7 @@ public class DeclaredRBField extends AbstractRBField {
 	}
 	
 	@Override
-	public ElementaryDataType getDataType() {
+	public Datatype getDataType() {
 		return declaration.getTypeDefinition().getElementaryDataType();
 	}
 

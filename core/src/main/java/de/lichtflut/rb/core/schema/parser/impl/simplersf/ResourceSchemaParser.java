@@ -2,28 +2,35 @@
     * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
    */
     package de.lichtflut.rb.core.schema.parser.impl.simplersf;
-	import de.lichtflut.rb.core.schema.model.Cardinality;
-	import de.lichtflut.rb.core.schema.model.TypeDefinition;
-	import de.lichtflut.rb.core.schema.model.ResourceSchema;
-	import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
-	import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
-	import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-	import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
-	import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-	import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
-	import de.lichtflut.rb.core.schema.parser.impl.RSCardinalityEvaluator;
-	import de.lichtflut.rb.core.schema.parser.impl.RSEvaluator;
-	import org.arastreju.sge.model.ElementaryDataType;
+	import java.util.HashSet;
+import java.util.Set;
+
+import org.antlr.runtime.BitSet;
+import org.antlr.runtime.EarlyExitException;
+import org.antlr.runtime.NoViableAltException;
+import org.antlr.runtime.Parser;
+import org.antlr.runtime.ParserRuleReturnScope;
+import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.RecognizerSharedState;
+import org.antlr.runtime.Token;
+import org.antlr.runtime.TokenStream;
+import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.CommonTreeAdaptor;
+import org.antlr.runtime.tree.TreeAdaptor;
 import org.arastreju.sge.model.SimpleResourceID;
 
-	import java.util.HashSet;
-	import java.util.Set;
-
-
-import org.antlr.runtime.*;
-
-
-import org.antlr.runtime.tree.*;
+import de.lichtflut.rb.core.schema.model.Cardinality;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
+import de.lichtflut.rb.core.schema.parser.impl.RSCardinalityEvaluator;
+import de.lichtflut.rb.core.schema.parser.impl.RSEvaluator;
 
 public class ResourceSchemaParser extends Parser {
     public static final String[] tokenNames = new String[] {
@@ -918,7 +925,7 @@ public class ResourceSchemaParser extends Parser {
     // $ANTLR end "cardinalityDeclaration"
 
     public static class datatype_return extends ParserRuleReturnScope {
-        public ElementaryDataType type;
+        public Datatype type;
         CommonTree tree;
         public Object getTree() { return tree; }
     };
@@ -978,7 +985,7 @@ public class ResourceSchemaParser extends Parser {
                     NUMERIC30_tree = (CommonTree)adaptor.create(NUMERIC30);
                     adaptor.addChild(root_0, NUMERIC30_tree);
 
-                    retval.type = ElementaryDataType.INTEGER;
+                    retval.type = Datatype.INTEGER;
 
                     }
                     break;
@@ -989,7 +996,7 @@ public class ResourceSchemaParser extends Parser {
                     TEXT31_tree = (CommonTree)adaptor.create(TEXT31);
                     adaptor.addChild(root_0, TEXT31_tree);
 
-                    retval.type = ElementaryDataType.STRING;
+                    retval.type = Datatype.STRING;
 
                     }
                     break;
@@ -1000,7 +1007,7 @@ public class ResourceSchemaParser extends Parser {
                     LOGICAL32_tree = (CommonTree)adaptor.create(LOGICAL32);
                     adaptor.addChild(root_0, LOGICAL32_tree);
 
-                    retval.type = ElementaryDataType.BOOLEAN;
+                    retval.type = Datatype.BOOLEAN;
 
                     }
                     break;

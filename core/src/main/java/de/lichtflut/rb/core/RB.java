@@ -67,9 +67,13 @@ public interface RB {
 	
 	ResourceID ORGANIZATION = new SimpleResourceID(COMMON_NAMESPACE_URI, "Organization");
 	
+	ResourceID SYSTEM = new SimpleResourceID(COMMON_NAMESPACE_URI, "System");
+	
 	ResourceID PROJECT = new SimpleResourceID(COMMON_NAMESPACE_URI, "Project");
 	
-	// -- PROPERTIES --------------------------------------
+	ResourceID BUSINESS_PROCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "BusinessProcess");
+	
+	// -- SYSTEM PROPERTIES -------------------------------
 	
 	/**
 	 * Each RBEntity may have a primary image URL/ID.
@@ -90,5 +94,63 @@ public interface RB {
 	 * Boolean value indicating of an organization is the domain's owning one.
 	 */
 	ResourceID IS_DOMAIN_ORGANIZATION = new SimpleResourceID(SYS_NAMESPACE_URI, "isDomainOrganization");
+	
+	
+	// -- COMMON PROPERTIES --------------------------------------
+	
+	/**
+	 * Superordinate units.
+	 */
+	ResourceID HAS_SUPERORDINATE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasSuperordinate");
+	
+	/**
+	 * Subordinate units.
+	 */
+	ResourceID HAS_SUBORDINATE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasSubordinate");
+	
+	/**
+	 * General name of something (e.g. an organization).
+	 */
+	ResourceID HAS_NAME = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasName");
 
+	/**
+	 * First name of a person.
+	 */
+	ResourceID HAS_FIRST_NAME = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasFirstname");
+	
+	/**
+	 * Last name of a person.
+	 */
+	ResourceID HAS_LAST_NAME = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasLastname");
+	
+	/**
+	 * Has email.
+	 */
+	ResourceID HAS_EMAIL = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasEmail");
+	
+	/**
+	 * Is employed by.
+	 */
+	ResourceID IS_EMPLOYED_BY = new SimpleResourceID(COMMON_NAMESPACE_URI, "isEmployedBy");
+	
+	/**
+	 * Has general manager (of company).
+	 */
+	ResourceID HAS_GENERAL_MANAGER = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasGeneralManager");
+	
+	/**
+	 * An organizations domicile.
+	 */
+	ResourceID HAS_DOMICILE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasDomicile");
+	
+	/**
+	 * The address.
+	 */
+	ResourceID HAS_ADDRESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasAddress");
+	
+	/**
+	 * Is non-profit organization.
+	 */
+	ResourceID IS_NPO = new SimpleResourceID(COMMON_NAMESPACE_URI, "isNPO");
+	
 }

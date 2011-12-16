@@ -46,6 +46,6 @@ public interface ResourceSchema extends ResourceSchemaElement {
 	 * The label builder can create dynamic labels for an entity belonging to this schema.
 	 * @return The label builder for this schema.
 	 */
-	LabelBuilder getLabelBuilder();
+	EntityLabelBuilder getLabelBuilder();
 
 }

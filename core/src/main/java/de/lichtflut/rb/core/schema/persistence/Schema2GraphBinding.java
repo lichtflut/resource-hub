@@ -124,7 +124,7 @@ public class Schema2GraphBinding {
 		final SNResource node = new SNResource();
 		final SNResourceSchema sn = new SNResourceSchema(node, RBSchema.CONTEXT);
 		sn.setDescribedType(schema.getDescribedType(), RBSchema.CONTEXT);
-		if (schema.getLabelBuilder().getExpression() != null) {
+		if (schema.getLabelBuilder() != null && schema.getLabelBuilder().getExpression() != null) {
 			sn.setLabelExpression(new SNText(schema.getLabelBuilder().getExpression()), RBSchema.CONTEXT);
 		}
 		

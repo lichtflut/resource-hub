@@ -22,7 +22,6 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -33,6 +32,7 @@ import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.Datatype;
 
 
 /**
@@ -94,13 +94,13 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	
 	/**
 	 * Returns the datatype.
-	 * @return {@link ElementaryDataType}
+	 * @return {@link Datatype}
 	 */
-	public ElementaryDataType getDatatype() {
+	public Datatype getDatatype() {
 		SemanticNode type = SNOPS.singleObject(this, RBSchema.HAS_DATATYPE);
 		if (type != null) {
 			String name = type.asValue().asText().getStringValue();
-			return ElementaryDataType.valueOf(name);
+			return Datatype.valueOf(name);
 		} else {
 			return null;
 		}
@@ -111,7 +111,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 * @param type -
 	 * @param context -
 	 */
-	public void setDatatype(final ElementaryDataType type, final Context context) {
+	public void setDatatype(final Datatype type, final Context context) {
 		if (!Infra.equals(getDatatype(), type)){
 			removeAssocs(RBSchema.HAS_DATATYPE);
 			Association.create(this, RBSchema.HAS_DATATYPE, new SNText(type.name()), context);

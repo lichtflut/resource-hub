@@ -3,12 +3,13 @@
  */
 package de.lichtflut.rb.webck.components.editor;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonIf;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -16,6 +17,7 @@ import org.apache.wicket.model.IModel;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 
@@ -65,7 +67,7 @@ public abstract class LocalButtonBar extends Panel {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				getEntityManager().store(model.getObject());
 				RBWebSession.get().getHistory().finishEditing();
-				updateView();
+				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 			}
 			
 			@Override
@@ -83,7 +85,7 @@ public abstract class LocalButtonBar extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				RBWebSession.get().getHistory().finishEditing();
-				updateView();
+				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 			}
 			
 			@Override

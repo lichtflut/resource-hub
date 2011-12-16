@@ -45,7 +45,7 @@ public class ResourceLabelBuilder {
 	
 	public String getLabel(final ResourceID resource, final Locale locale) {
 		String label = getLabel(resource, RDFS.LABEL, locale);
-		if (label == null) {
+		if (label == null && resource != null) {
 			label = resource.getQualifiedName().getSimpleName();
 		}
 		return label;
@@ -54,7 +54,7 @@ public class ResourceLabelBuilder {
 	// ----------------------------------------------------
 	
 	private String getLabel(final ResourceID src, final ResourceID predicate, final Locale locale) {
-		if (predicate == null) {
+		if (predicate == null || src == null) {
 			return null;
 		}
 		final SemanticNode label = SNOPS.fetchObject(src.asResource(), predicate);

@@ -8,7 +8,7 @@ import org.arastreju.sge.model.ResourceID;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Representation of a table's column header.
  * </p>
  *
  * <p>

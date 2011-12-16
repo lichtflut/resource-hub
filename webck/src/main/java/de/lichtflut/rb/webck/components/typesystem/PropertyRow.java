@@ -10,10 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -47,17 +47,17 @@ public class PropertyRow implements Serializable {
 	
 	private FieldLabelDefinition fieldLabel;
 	
-	private ElementaryDataType dataType;
+	private Datatype dataType;
 	
 	private ResourceID resourceConstraint;
+	
+	private List<String> literalConstraints;
 	
 	private int min;
 	
 	private int max;
 	
 	private boolean unbounded;
-	
-	private List<String> literalConstraints;
 	
 	private boolean isResourceReference;
 	
@@ -145,7 +145,7 @@ public class PropertyRow implements Serializable {
 		this.min = 0;
 		this.max = 1;
 		this.unbounded = true;
-		this.dataType = ElementaryDataType.STRING;
+		this.dataType = Datatype.STRING;
 		this.literalConstraints = new ArrayList<String>();
 		this.fieldLabel = new FieldLabelDefinitionImpl();
 	}
@@ -191,14 +191,14 @@ public class PropertyRow implements Serializable {
 	/**
 	 * @return the dataType
 	 */
-	public ElementaryDataType getDataType() {
+	public Datatype getDataType() {
 		return dataType;
 	}
 
 	/**
 	 * @param dataType the dataType to set
 	 */
-	public void setDataType(ElementaryDataType dataType) {
+	public void setDataType(Datatype dataType) {
 		this.dataType = dataType;
 	}
 

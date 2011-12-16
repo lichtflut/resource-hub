@@ -31,7 +31,9 @@ public class BrowsingHistory implements Serializable {
 	
 	private final Logger logger = LoggerFactory.getLogger(BrowsingHistory.class);
 	
-	private Deque<EntityHandle> viewHistory = new LinkedBlockingDeque<EntityHandle>(50);
+	
+	
+	private Deque<EntityHandle> viewHistory = new LinkedBlockingDeque<EntityHandle>();
 	
 	private Deque<EditAction> editHistory = new LinkedBlockingDeque<EditAction>(50);
 	

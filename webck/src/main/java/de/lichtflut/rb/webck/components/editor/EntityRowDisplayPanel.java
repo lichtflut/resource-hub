@@ -7,18 +7,17 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.arastreju.sge.model.ElementaryDataType;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.ConditionalModel;
@@ -42,7 +41,7 @@ import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
  *
  * @author Oliver Tigges
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings("rawtypes")
 public class EntityRowDisplayPanel extends Panel {
 
 	/**
@@ -74,7 +73,7 @@ public class EntityRowDisplayPanel extends Panel {
 	 * @param item
 	 * @param dataType
 	 */
-	protected void addValueField(final ListItem<RBFieldValueModel> item, final ElementaryDataType dataType) {
+	protected void addValueField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
 		switch(dataType) {
 		case BOOLEAN:
 			addBooleanField(item);
@@ -92,6 +91,7 @@ public class EntityRowDisplayPanel extends Panel {
 			addTextOutput(item, BigDecimal.class);
 			break;
 		case STRING:
+		case TEXT:
 			addTextOutput(item, String.class);
 			break;
 		}
@@ -126,9 +126,12 @@ public class EntityRowDisplayPanel extends Panel {
 	}
 	
 	private void addBooleanField(ListItem<RBFieldValueModel> item) {
-		final CheckBox cb = new CheckBox("valuefield", item.getModelObject());
-		cb.setEnabled(false);
-		item.add(new Fragment("valuefield", "checkbox", this).add(cb));
+		String label = "no";
+		if (Boolean.TRUE.equals(item.getModelObject().getObject())) {
+			label = "yes";
+		}
+		final Label field = new Label("valuefield", label);
+		item.add(new Fragment("valuefield", "textOutput", this).add(field));
 	}
 	
 	// ----------------------------------------------------

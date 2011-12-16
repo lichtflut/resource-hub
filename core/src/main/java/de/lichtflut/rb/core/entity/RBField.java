@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 
 
 /**
@@ -44,9 +44,9 @@ public interface RBField {
 
 	/**
 	 * Returns the type of this filed according to the RBSchema.
-	 * @return This field's {@link ElementaryDataType}
+	 * @return This field's {@link Datatype}
 	 */
-	ElementaryDataType getDataType();
+	Datatype getDataType();
 
 	/**
 	 * Returns the {@link Cardinality} for this field.

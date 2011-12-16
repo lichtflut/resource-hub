@@ -16,7 +16,7 @@ import org.arastreju.sge.naming.QualifiedName;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.LabelBuilder;
+import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 
 /**
  * <p>
@@ -29,7 +29,7 @@ import de.lichtflut.rb.core.schema.model.LabelBuilder;
  *
  * @author Oliver Tigges
  */
-public class ExpressionBasedLabelBuilder implements LabelBuilder, Serializable {
+public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializable {
 
 	private final Element[] elements;
 

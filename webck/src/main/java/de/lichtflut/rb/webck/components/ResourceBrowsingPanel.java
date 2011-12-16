@@ -8,9 +8,12 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -19,22 +22,22 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.EntityHandle;
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.BrowsingHistory;
 import de.lichtflut.rb.webck.application.RBWebSession;
-import de.lichtflut.rb.webck.behaviors.SlideTransitionBehavior;
 import de.lichtflut.rb.webck.common.Action;
 import de.lichtflut.rb.webck.common.EntityAttributeApplyAction;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.editor.BrowsingButtonBar;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.editor.LocalButtonBar;
 import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
 import de.lichtflut.rb.webck.models.RBEntityModel;
-import de.lichtflut.rb.webck.models.RBEntityStatementsModel;
-import de.lichtflut.rb.webck.models.StatementsModel;
 
 /**
  * <p>
@@ -85,21 +88,21 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		form.add(new CreateRelationshipPanel("relationCreator") {
 			@Override
 			protected void createRelationshipTo(RBEntityReference object, ResourceID predicate) {
-				ResourceNode subject = model.getObject().getNode();
+				final ResourceNode subject = model.getObject().getNode();
 				SNOPS.associate(subject, predicate, object);
 				getServiceProvider().getEntityManager().store(model.getObject());
-				addToAjax();
+				model.reset();
+				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
 			}
 		}.add(visibleIf(not(BrowsingContextModel.isInEditMode()))));
 		
-		final StatementsModel statmentsModel = new RBEntityStatementsModel(model);
-		form.add(createRelationshipView("relationships", statmentsModel));
+		form.add(createRelationshipView("relationships", model));
 		
 		add(form);
 		
 		setOutputMarkupId(true);
 		
-		add(new SlideTransitionBehavior());
+		//add(new SlideTransitionBehavior());
 	}
 	
 	// ----------------------------------------------------
@@ -126,7 +129,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	
 	// ----------------------------------------------------
 	
-	protected Component createRelationshipView(String id, StatementsModel model) {
+	protected Component createRelationshipView(String id, IModel<RBEntity> model) {
 		return new WebMarkupContainer(id);
 	}
 	
@@ -139,7 +142,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 			
 			@Override
 			public void updateView() {
-				addToAjax();
+				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 			}
 		};
 	}
@@ -159,6 +162,19 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 				addToAjax();
 			}
 		};
+	}
+	
+	// ----------------------------------------------------
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void onEvent(final IEvent<?> event) {
+		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
+		if (mce.isAbout(ModelChangeEvent.RELATIONSHIP, ModelChangeEvent.ENTITY)) {
+			RBAjaxTarget.add(this);
+		}
 	}
 	
 	// -- WICKET LIFECYLCE --------------------------------

@@ -17,7 +17,7 @@ import de.lichtflut.rb.core.entity.RBField;
 
 /**
  * <p>
- *  Converter for RBField. 
+ *  Renderer for RBField. 
  * </p>
  *
  * <p>
@@ -26,10 +26,9 @@ import de.lichtflut.rb.core.entity.RBField;
  *
  * @author Oliver Tigges
  */
-public class RBFieldConverter implements IConverter<RBField> {
+public class RBFieldRenderer implements FieldRenderer<RBField> {
 
-	@Override
-	public String convertToString(final RBField field, final Locale locale) {
+	public String render(final RBField field, final Locale locale) {
 		final IConverterLocator cl = Application.get().getConverterLocator();
 		switch (field.getDataType()) {
 		case BOOLEAN:
@@ -43,21 +42,13 @@ public class RBFieldConverter implements IConverter<RBField> {
 			return join(field.getValues(), cl.getConverter(Number.class), locale, ", ");
 		case RESOURCE:
 			return join(field.getValues(), new RBEntityConverter(), locale, ", ");
-		case PROPER_NAME:
 		case STRING:
-		case TERM:
-		case UNDEFINED:
-		case URI:
+		case TEXT:
 			return join(field.getValues(), cl.getConverter(String.class), locale, ", ");
 			
 		default:
 			throw new NotYetSupportedException("No converter for :" + field.getDataType());
 		}
-	}
-	
-	@Override
-	public RBField convertToObject(String value, Locale locale) {
-		throw new UnsupportedOperationException();
 	}
 	
 	// ----------------------------------------------------
