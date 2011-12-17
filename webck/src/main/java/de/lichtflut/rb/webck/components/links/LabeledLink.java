@@ -9,6 +9,9 @@ import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
+import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.behaviors.TitleModifier;
+
 /**
  * <p>
  *  [DESCRIPTION]
@@ -47,6 +50,18 @@ public class LabeledLink extends Panel {
 	 */
 	protected LabeledLink(final String id) {
 		super(id);
+	}
+	
+	// ----------------------------------------------------
+	
+	public LabeledLink setLinkCssClass(String cssClass) {
+		get(LINK_ID).add(CssModifier.setClass(cssClass));
+		return this;
+	}
+	
+	public LabeledLink setLinkTitle(IModel<String> title) {
+		get(LINK_ID).add(TitleModifier.title(title));
+		return this;
 	}
 
 }

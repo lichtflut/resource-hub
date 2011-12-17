@@ -10,6 +10,7 @@ import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 
+import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.components.links.LabeledLink;
 
 /**
@@ -40,6 +41,7 @@ public abstract class ActionLink extends LabeledLink implements IAjaxLink {
 			}
 		};
 		link.add(new Label(LABEL_ID, label));
+		link.add(TitleModifier.title(label));
 		add(link);
 	}
 	

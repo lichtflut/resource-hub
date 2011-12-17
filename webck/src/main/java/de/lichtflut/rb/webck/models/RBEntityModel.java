@@ -79,15 +79,6 @@ public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 		this.initializers = initializers;
 	}
 	
-	/** 
-	* {@inheritDoc}
-	*/
-	@Override
-	public void reset() {
-		logger.info("RB Entity Model is reseted");
-		super.reset();
-	}
-	
 	// -----------------------------------------------------
 	
 	protected abstract ServiceProvider getServiceProvider();
