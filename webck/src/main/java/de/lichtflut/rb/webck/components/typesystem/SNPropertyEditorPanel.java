@@ -33,7 +33,7 @@ import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.AbstractDerivedListModel;
-import de.lichtflut.rb.webck.models.AbstractLoadableModel;
+import de.lichtflut.rb.webck.models.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.ResourceLabelModel;
 import de.lichtflut.rb.webck.models.ResourceUriModel;
 
@@ -67,7 +67,7 @@ public abstract class SNPropertyEditorPanel extends Panel {
 		form.setOutputMarkupId(true);
 		form.add(new FeedbackPanel("feedback"));
 		
-		final IModel<String> nameModel = new AbstractLoadableModel<String>() {
+		final IModel<String> nameModel = new AbstractLoadableDetachableModel<String>() {
 			@Override
 			public String load() {
 				return string(singleObject(model.getObject(), RB.HAS_FIELD_LABEL));

@@ -9,6 +9,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.webck.components.common.ImageReference;
+import de.lichtflut.rb.webck.models.EntityImageUrlModel;
 
 /**
  * This Panel represents an {@link RBEntity}.
@@ -28,22 +30,6 @@ import de.lichtflut.rb.core.entity.RBEntity;
  */
 public class ResourceInfoPanel extends Panel {
 
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * @param id - wicket:id
-	 * @param entity - {@link RBEntity} which is to be displayed
-	 */
-	@Deprecated
-	public ResourceInfoPanel(final String id, final RBEntity entity) {
-		super(id);
-		String title = entity.getLabel();
-		if("".equals(title)){
-			title = "Create new " + entity.getType();
-		}
-		add(new Label("label", title));
-	}
-	
 	/**
 	 * @param id - wicket:id
 	 * @param entity - {@link RBEntity} which is to be displayed
@@ -51,6 +37,7 @@ public class ResourceInfoPanel extends Panel {
 	public ResourceInfoPanel(final String id, final IModel<RBEntity> model) {
 		super(id);
 		add(new Label("label", new PropertyModel<String>(model, "label")));
+		add(new ImageReference("image", new EntityImageUrlModel(model)));
 	}
 
 }

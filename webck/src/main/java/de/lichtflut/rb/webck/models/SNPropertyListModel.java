@@ -22,7 +22,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public abstract class SNPropertyListModel extends AbstractLoadableModel<List<SNProperty>> {
+public abstract class SNPropertyListModel extends AbstractLoadableDetachableModel<List<SNProperty>> {
 
 	/** 
 	 * {@inheritDoc}

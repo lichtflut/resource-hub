@@ -21,7 +21,7 @@ import org.arastreju.sge.query.Query;
  *
  * @author Oliver Tigges
  */
-public class QueryResultModel extends AbstractLoadableModel<List<ResourceNode>> {
+public class QueryResultModel extends AbstractLoadableDetachableModel<List<ResourceNode>> {
 
 	final IModel<Query> queryModel;
 	

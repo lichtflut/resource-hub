@@ -6,7 +6,7 @@ package de.lichtflut.rb.webck.models;
 
 /**
  * <p>
- *  Model that loads it data and holds it until detach phase or explicitly reseted.
+ *  Model that loads it data and holds it until explicitly reseted.
  * </p>
  *
  * <p>
@@ -53,7 +53,6 @@ public abstract class AbstractLoadableModel<T> implements LoadableModel<T> {
 	*/
 	@Override
 	public void detach() {
-		reset();
 	}
 	
 	// ----------------------------------------------------

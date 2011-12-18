@@ -21,7 +21,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public abstract class RBEntityListModel extends AbstractLoadableModel<List<RBEntity>> {
+public abstract class RBEntityListModel extends AbstractLoadableDetachableModel<List<RBEntity>> {
 
 	private ResourceID type;
 	
