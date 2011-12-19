@@ -34,6 +34,34 @@ public class BrowsingContextModel {
 		};
 	}
 	
+	public static ConditionalModel<Boolean> isInViewMode() {
+		return new ConditionalModel<Boolean>() {
+			@Override
+			public boolean isFulfilled() {
+				return getObject();
+			}
+			
+			@Override
+			public Boolean getObject() {
+				return BrowsingState.VIEW.equals(RBWebSession.get().getHistory().getState());
+			}
+		};
+	}
+	
+	public static ConditionalModel<Boolean> isInClassifyMode() {
+		return new ConditionalModel<Boolean>() {
+			@Override
+			public boolean isFulfilled() {
+				return getObject();
+			}
+			
+			@Override
+			public Boolean getObject() {
+				return BrowsingState.CLASSIFY.equals(RBWebSession.get().getHistory().getState());
+			}
+		};
+	}
+	
 	public static ConditionalModel<Boolean> hasPredecessors() {
 		return new ConditionalModel<Boolean>() {
 			@Override
@@ -58,7 +86,7 @@ public class BrowsingContextModel {
 			@Override
 			public Boolean getObject() {
 				final BrowsingHistory history = RBWebSession.get().getHistory();
-				return history.hasPredecessors() && BrowsingState.EDIT.equals(history.getState());
+				return history.hasPredecessors() && !BrowsingState.VIEW.equals(history.getState());
 			}
 		};
 	}

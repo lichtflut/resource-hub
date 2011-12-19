@@ -85,9 +85,13 @@ public class BrowsingHistory implements Serializable {
 		logger.debug("Starting Editing " + this);
 	}
 	
-	public void beginClassify() {
+	public void beginClassifying() {
 		Validate.isTrue(!viewHistory.isEmpty());
-		editHistory.push(new EditAction(viewHistory.peek()));
+		if (editHistory.isEmpty()) {
+			editHistory.push(new EditAction(viewHistory.peek()));
+		} else {
+			editHistory.push(new EditAction(editHistory.peek().handle));
+		}
 		state = BrowsingState.CLASSIFY;
 		logger.debug("Starting Classify " + this);
 	}

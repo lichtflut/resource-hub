@@ -8,7 +8,9 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
- * [TODO Insert description here.
+ * <p>
+ * 	Meta information about an {@link RBEntity}.
+ * </p>
  *
  * Created: Aug 8, 2011
  *
@@ -21,4 +23,17 @@ public interface MetaInfo {
 	 * @return {@link ResourceID} of this {@link ResourceSchema}
 	 */
 	ResourceID getSchemaID();
+
+	/**
+	 * Check if a schema is defined for the entity.
+	 * @return true if a schema is defined.
+	 */
+	boolean isSchemaDefined();
+	
+
+	/**
+	 * Check if a schema has at least one property declaration.
+	 * @return true if a schema is defined.
+	 */
+	boolean hasPropertyDeclarations();
 }

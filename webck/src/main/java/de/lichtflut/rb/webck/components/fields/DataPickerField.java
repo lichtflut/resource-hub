@@ -99,6 +99,13 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		return get("display");
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public DataPickerField setSource(AutocompleteSource source) {
+		final Autocomplete<String> display = (Autocomplete<String>) getDisplayComponent();
+		display.setSource(source);
+		return this;
+	}
+	
 	// ----------------------------------------------------
 	
 	/** 
@@ -127,7 +134,6 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	/** 
 	 * {@inheritDoc}
 	 */
-	
 	@Override
 	protected void convertInput() {
 		final FormComponent<T> comp = getValueField();

@@ -95,4 +95,11 @@ public interface SchemaManager {
 	 */
 	SchemaExporter getExporter(String format);
 
+	/**
+	 * Check if a schema is defined for the given type.
+	 * @param type The type.
+	 * @return true if a schema is defined.
+	 */
+	boolean isSchemaDefinedFor(ResourceID type);
+
 }

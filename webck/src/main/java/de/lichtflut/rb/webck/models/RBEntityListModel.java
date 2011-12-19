@@ -9,6 +9,7 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
  * <p>

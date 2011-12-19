@@ -18,7 +18,7 @@ import org.arastreju.sge.model.nodes.views.SNClass;
 
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.LoadableModel;
+import de.lichtflut.rb.webck.models.basic.LoadableModel;
 
 /**
  * <p>

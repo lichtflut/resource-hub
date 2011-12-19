@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.models;
+package de.lichtflut.rb.webck.models.basic;
 
 
 /**

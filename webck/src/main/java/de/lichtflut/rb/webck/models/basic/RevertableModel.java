@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.models;
+package de.lichtflut.rb.webck.models.basic;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.wicket.model.IModel;

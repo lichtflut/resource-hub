@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -31,6 +32,7 @@ import de.lichtflut.rb.webck.common.Action;
 import de.lichtflut.rb.webck.common.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.editor.BrowsingButtonBar;
+import de.lichtflut.rb.webck.components.editor.ClassifyEntityPanel;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.editor.LocalButtonBar;
@@ -80,10 +82,15 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		final Form form = new Form("form");
 		form.setOutputMarkupId(true);
 		
-		form.add(new EntityPanel("entity", model, BrowsingContextModel.isInEditMode()));
+		form.add(new EntityPanel("entity", model)
+			.add(visibleIf(not(BrowsingContextModel.isInClassifyMode()))));
+		
+		final IModel<ResourceID> typeModel = new Model<ResourceID>();
+		form.add(new ClassifyEntityPanel("classifier", model, typeModel)
+			.add(visibleIf(BrowsingContextModel.isInClassifyMode())));
 		
 		form.add(createLocalBar(form));
-		form.add(createBrowsingBar(form));
+		form.add(createBrowsingBar(form, typeModel));
 		
 		form.add(new CreateRelationshipPanel("relationCreator") {
 			@Override
@@ -94,7 +101,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 				model.reset();
 				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
 			}
-		}.add(visibleIf(not(BrowsingContextModel.isInEditMode()))));
+		}.add(visibleIf(BrowsingContextModel.isInViewMode())));
 		
 		form.add(createRelationshipView("relationships", model));
 		
@@ -123,7 +130,10 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		
 		// navigate to sub entity
 		final Action action = new EntityAttributeApplyAction(predicate);
-		RBWebSession.get().getHistory().createReferencedEntity(handle, action);
+		history().createReferencedEntity(handle, action);
+		if (!getServiceProvider().getSchemaManager().isSchemaDefinedFor(handle.getType())) {
+			history().beginClassifying();
+		}
 		addToAjax();
 	}
 	
@@ -139,20 +149,22 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 			public EntityManager getEntityManager() {
 				return getServiceProvider().getEntityManager();
 			}
-			
-			@Override
-			public void updateView() {
-				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
-			}
 		};
 	}
 	
-	protected BrowsingButtonBar createBrowsingBar(Form form) {
+	protected BrowsingButtonBar createBrowsingBar(Form form, final IModel<ResourceID> typeModel) {
 		return new BrowsingButtonBar("browsingButtonBar", model, form) {
 			@Override
 			public void onSave() {
 				getServiceProvider().getEntityManager().store(model.getObject());
 				history().applyReferencedEntity(new RBEntityReference(model.getObject()));
+				addToAjax();
+			}
+			
+			@Override
+			public void onClassify() {
+				getServiceProvider().getEntityManager().changeType(model.getObject(), typeModel.getObject());
+				history().back();
 				addToAjax();
 			}
 			

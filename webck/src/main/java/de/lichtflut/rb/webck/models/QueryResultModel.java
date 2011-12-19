@@ -10,6 +10,8 @@ import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+
 /**
  * <p>
  *  Model loading and providing search results.

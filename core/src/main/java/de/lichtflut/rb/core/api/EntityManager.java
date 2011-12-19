@@ -50,4 +50,11 @@ public interface EntityManager {
      * @param entityID - The ID of the entity to be deleted
      */
     void delete(ResourceID entityID);
+
+	/**
+	 * Change the type of an entity.
+	 * @param entity The entity.
+	 * @param type The new type.
+	 */
+	void changeType(RBEntity entity, ResourceID type);
 }

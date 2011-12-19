@@ -13,6 +13,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.entity.ResourceField;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
+import de.lichtflut.rb.webck.models.basic.AbstractDerivedListModel;
 
 /**
  * <p>

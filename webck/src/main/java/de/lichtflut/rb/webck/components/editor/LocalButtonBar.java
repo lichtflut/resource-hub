@@ -35,7 +35,7 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
 @SuppressWarnings("rawtypes")
 public abstract class LocalButtonBar extends Panel {
 
-	private final ConditionalModel editMode = BrowsingContextModel.isInEditMode();
+	private final ConditionalModel viewMode = BrowsingContextModel.isInViewMode();
 	
 	// ----------------------------------------------------
 	
@@ -57,8 +57,6 @@ public abstract class LocalButtonBar extends Panel {
 	
 	public abstract EntityManager getEntityManager();
 	
-	public abstract void updateView();
-	
 	// -- BUTTONS -----------------------------------------
 	
 	protected AjaxFallbackButton createSaveButton(final IModel<RBEntity> model, final Form form) {
@@ -75,8 +73,8 @@ public abstract class LocalButtonBar extends Panel {
 				target.add(form);
 			}
 		};
-		save.add(visibleIf(editMode));
-		save.add(defaultButtonIf(editMode));
+		save.add(visibleIf(not(viewMode)));
+		save.add(defaultButtonIf(not(viewMode)));
 		return save;
 	}
 	
@@ -93,7 +91,7 @@ public abstract class LocalButtonBar extends Panel {
 				target.add(form);
 			}
 		};
-		cancel.add(visibleIf(editMode));
+		cancel.add(visibleIf(not(viewMode)));
 		return cancel;
 	}
 	
@@ -110,10 +108,8 @@ public abstract class LocalButtonBar extends Panel {
 				target.add(form);
 			}
 		};
-		edit.add(visibleIf(not(editMode)));
+		edit.add(visibleIf(not(not(viewMode))));
 		return edit;
 	}
-	
-	// ----------------------------------------------------
 	
 }

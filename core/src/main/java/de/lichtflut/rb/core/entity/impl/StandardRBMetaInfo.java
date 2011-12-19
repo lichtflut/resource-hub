@@ -18,6 +18,8 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 public class StandardRBMetaInfo implements MetaInfo {
 
 	private ResourceSchema schema;
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -26,12 +28,34 @@ public class StandardRBMetaInfo implements MetaInfo {
 	public StandardRBMetaInfo(final ResourceSchema schema){
 		this.schema = schema;
 	}
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * @return
+	 */
+	public boolean isSchemaDefined() {
+		return schema != null;
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public boolean hasPropertyDeclarations() {
+		return isSchemaDefined() && !schema.getPropertyDeclarations().isEmpty();
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public ResourceID getSchemaID() {
-		return schema.getDescribedType();
+		if (isSchemaDefined()) {
+			return schema.getDescribedType();
+		} else {
+			return null;
+		}
 	}
 
 }

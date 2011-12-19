@@ -92,6 +92,14 @@ public class MockEntityManager implements EntityManager, Serializable {
 			dataPool.add(entity);
 		}
 	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void changeType(RBEntity entity, ResourceID type) {
+		throw new NotYetSupportedException();
+	}
 
 	/** 
 	* {@inheritDoc}

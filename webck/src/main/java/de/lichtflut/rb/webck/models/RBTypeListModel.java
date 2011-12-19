@@ -10,6 +10,7 @@ import java.util.List;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
  * <p>

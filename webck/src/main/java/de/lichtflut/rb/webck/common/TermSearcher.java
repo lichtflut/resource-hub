@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryManager;
 
@@ -14,7 +15,7 @@ import de.lichtflut.infra.exceptions.NotYetSupportedException;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  General term searcher.
  * </p>
  *
  * <p>
@@ -31,6 +32,7 @@ public class TermSearcher {
 		VALUES,
 		ENTITY,
 		PROPERTY,
+		SUB_CLASS
 	}
 	
 	private static final Pattern ESCAPE_CHARS = Pattern.compile("[\\\\+\\-\\!\\(\\)\\:\\^\\]\\{\\}\\~\\*\\?\\s]");
@@ -65,6 +67,18 @@ public class TermSearcher {
 			query.addURI(prepareTerm(term, 0.5f));
 			query.end();
 			query.addField(RDF.TYPE, RDF.PROPERTY);
+			query.end();
+			break;
+		case SUB_CLASS:
+			query.beginAnd();
+			query.beginOr();
+			addValues(query, term.split("\\s+"));
+			query.addURI(prepareTerm(term, 0.5f));
+			query.end();
+			query.addField(RDF.TYPE, RDFS.CLASS);
+			if (type != null) {
+				query.addField(RDFS.SUB_CLASS_OF, type);
+			}
 			query.end();
 			break;
 		default:

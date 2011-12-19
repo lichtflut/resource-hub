@@ -114,6 +114,18 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 		SNOPS.assure(node, RDFS.LABEL, new SNText(entity.getLabel()));
 		mc.close();
     }
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void changeType(RBEntity entity, ResourceID type) {
+		final ModelingConversation mc = startConversation();
+		final ResourceNode node = mc.resolve(entity.getID());
+		SNOPS.remove(node, RDF.TYPE, entity.getType());
+		SNOPS.associate(node, RDF.TYPE, type);
+		mc.close();
+	}
 
 	/** 
 	 * {@inheritDoc}

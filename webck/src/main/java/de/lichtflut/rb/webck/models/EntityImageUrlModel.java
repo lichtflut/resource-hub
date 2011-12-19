@@ -12,6 +12,7 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.webck.models.basic.AbstractDerivedModel;
 
 /**
  * <p>

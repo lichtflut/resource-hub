@@ -125,6 +125,14 @@ public class MockSchemaManager implements SchemaManager, Serializable {
 	public TypeDefinition prepareTypeDefinition(final QualifiedName qn, final String displayName) {
 		return new TypeDefinitionImpl(new SimpleResourceID(qn), true).setName(displayName);
 	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public boolean isSchemaDefinedFor(ResourceID type) {
+		throw new NotYetSupportedException();
+	}
 
 	// -----------------------------------------------------
 	

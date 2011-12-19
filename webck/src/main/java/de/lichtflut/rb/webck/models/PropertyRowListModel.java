@@ -9,6 +9,7 @@ import org.apache.wicket.model.IModel;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 
 /**
  * <p>

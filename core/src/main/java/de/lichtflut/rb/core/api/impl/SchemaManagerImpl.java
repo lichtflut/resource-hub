@@ -94,6 +94,14 @@ public class SchemaManagerImpl implements SchemaManager {
 	}
 	
 	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public boolean isSchemaDefinedFor(ResourceID type) {
+		return findSchemaNodeByType(type) != null;
+	}
+	
+	/** 
 	 * {@inheritDoc}
 	 */
 	@Override

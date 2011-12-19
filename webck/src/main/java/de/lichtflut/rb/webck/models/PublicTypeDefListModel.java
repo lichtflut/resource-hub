@@ -8,6 +8,7 @@ import java.util.List;
 
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
  * <p>
