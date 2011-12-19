@@ -139,7 +139,11 @@ public class EntityRowEditPanel extends Panel {
 				target.add(EntityRowEditPanel.this);
 			}
 		};
-		link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));
+		if (!Datatype.BOOLEAN.equals(getField().getDataType())) {
+			link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));	
+		} else {
+			link.setVisible(false);
+		}
 		return link;
 	}
 	
@@ -156,7 +160,6 @@ public class EntityRowEditPanel extends Panel {
 				target.add(EntityRowEditPanel.this);
 			}
 		};
-		
 		if (getField().isResourceReference()){
 			link.add(new AttributeModifier("title", new ResourceModel("link.title.create-field-value")));	
 		} else {

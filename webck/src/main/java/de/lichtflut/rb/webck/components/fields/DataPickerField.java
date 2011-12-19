@@ -6,7 +6,6 @@ package de.lichtflut.rb.webck.components.fields;
 import java.io.Serializable;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
@@ -95,14 +94,14 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	
 	// -----------------------------------------------------
 	
-	public Component getDisplayComponent() {
-		return get("display");
+	@SuppressWarnings("rawtypes")
+	public Autocomplete getDisplayComponent() {
+		return (Autocomplete) get("display");
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	public DataPickerField setSource(AutocompleteSource source) {
-		final Autocomplete<String> display = (Autocomplete<String>) getDisplayComponent();
-		display.setSource(source);
+		getDisplayComponent().setSource(source);
 		return this;
 	}
 	

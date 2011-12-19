@@ -165,6 +165,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 			public void onClassify() {
 				getServiceProvider().getEntityManager().changeType(model.getObject(), typeModel.getObject());
 				history().back();
+				history().back();
 				addToAjax();
 			}
 			
