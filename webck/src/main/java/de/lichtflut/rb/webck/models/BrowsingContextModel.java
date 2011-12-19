@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.models;
 
 import de.lichtflut.rb.webck.application.BrowsingHistory;
+import de.lichtflut.rb.webck.application.BrowsingState;
 import de.lichtflut.rb.webck.application.RBWebSession;
 
 /**
@@ -28,7 +29,7 @@ public class BrowsingContextModel {
 			
 			@Override
 			public Boolean getObject() {
-				return RBWebSession.get().getHistory().isEditing();
+				return BrowsingState.EDIT.equals(RBWebSession.get().getHistory().getState());
 			}
 		};
 	}
@@ -57,7 +58,7 @@ public class BrowsingContextModel {
 			@Override
 			public Boolean getObject() {
 				final BrowsingHistory history = RBWebSession.get().getHistory();
-				return history.hasPredecessors() && history.isEditing();
+				return history.hasPredecessors() && BrowsingState.EDIT.equals(history.getState());
 			}
 		};
 	}

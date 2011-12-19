@@ -31,11 +31,11 @@ public class BrowsingHistory implements Serializable {
 	
 	private final Logger logger = LoggerFactory.getLogger(BrowsingHistory.class);
 	
-	
-	
-	private Deque<EntityHandle> viewHistory = new LinkedBlockingDeque<EntityHandle>();
+	private Deque<EntityHandle> viewHistory = new LinkedBlockingDeque<EntityHandle>(1000);
 	
 	private Deque<EditAction> editHistory = new LinkedBlockingDeque<EditAction>(50);
+	
+	private BrowsingState state;
 	
 	// ----------------------------------------------------
 	
@@ -57,8 +57,8 @@ public class BrowsingHistory implements Serializable {
 		}
 	}
 	
-	public boolean isEditing() {
-		return !editHistory.isEmpty();
+	public BrowsingState getState() {
+		return state;
 	}
 	
 	public boolean hasPredecessors() {
@@ -74,19 +74,29 @@ public class BrowsingHistory implements Serializable {
 	public void browseTo(EntityHandle handle) {
 		editHistory.clear();
 		viewHistory.push(handle);
+		state = BrowsingState.VIEW;
 		logger.debug("Browsing to " + handle + "  ----  " + this);
 	}
 	
 	public void beginEditing() {
 		Validate.isTrue(!viewHistory.isEmpty());
 		editHistory.push(new EditAction(viewHistory.peek()));
+		state = BrowsingState.EDIT;
 		logger.debug("Starting Editing " + this);
+	}
+	
+	public void beginClassify() {
+		Validate.isTrue(!viewHistory.isEmpty());
+		editHistory.push(new EditAction(viewHistory.peek()));
+		state = BrowsingState.CLASSIFY;
+		logger.debug("Starting Classify " + this);
 	}
 	
 	public void createReferencedEntity(EntityHandle handle, Action<?>... actions) {
 		Validate.isTrue(!editHistory.isEmpty(), "Not yet in edit mode.");
 		editHistory.peek().actions = actions;
 		editHistory.push(new EditAction(handle));
+		state = BrowsingState.CREATE;
 		logger.debug("Creating sub reference " + this);
 	}
 	
@@ -98,12 +108,14 @@ public class BrowsingHistory implements Serializable {
 		} else {
 			editHistory.pop();
 		}
+		checkState();
 		logger.debug("Creating sub reference " + getCurrentEntity() + " ----- " + this);
 	}
 	
 	public void finishEditing() {
 		Validate.isTrue(!editHistory.isEmpty(), "Cancelling not possible if edit stack is empty");
 		editHistory.pop();
+		checkState();
 		logger.debug("Cancel " + this);
 	}
 	
@@ -115,6 +127,7 @@ public class BrowsingHistory implements Serializable {
 		for (Action<Object> action : actions) {
 			action.setValue(ref);
 		}
+		checkState();
 		logger.debug("applying referenced " +  ref + " ----- " + this);
 	}
 	
@@ -126,6 +139,16 @@ public class BrowsingHistory implements Serializable {
 		sb.append("  view stack: " + viewHistory + "\n");
 		sb.append("  edit stack: " + editHistory);
 		return sb.toString();
+	}
+	
+	// ----------------------------------------------------
+	
+	private void checkState() {
+		if (editHistory.isEmpty()) {
+			state = BrowsingState.VIEW;
+		} else {
+			state = BrowsingState.EDIT;
+		}
 	}
 	
 	// ----------------------------------------------------

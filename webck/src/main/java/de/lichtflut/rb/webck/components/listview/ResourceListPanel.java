@@ -112,7 +112,7 @@ public class ResourceListPanel extends Panel {
 			public void onClick(final AjaxRequestTarget target) {
 				onDelete(entity, target);
 			}
-		}.setLinkCssClass("action-delete");
+		}.needsConfirmation(new ResourceModel("global.message.delete-confirmation")).setLinkCssClass("action-delete");
 	}
 	
 	protected Component createCustomAction(final String componentId, final ResourceNode entity, final String action) {

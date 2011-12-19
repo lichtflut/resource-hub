@@ -73,7 +73,7 @@ public abstract class SchemaEditorPanel extends Panel {
 		
 		form.add(new RBStandardButton("addRow") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				rowModel.getObject().add(new PropertyRow());
 				target.add(SchemaEditorPanel.this);
 			}
@@ -81,7 +81,7 @@ public abstract class SchemaEditorPanel extends Panel {
 		
 		form.add(new RBDefaultButton("save") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				final ResourceSchema original = model.getObject();
 				final ResourceSchemaImpl schema = new ResourceSchemaImpl(original.getDescribedType());
 				schema.setLabelBuilder(original.getLabelBuilder());
@@ -98,7 +98,7 @@ public abstract class SchemaEditorPanel extends Panel {
 		
 		form.add(new RBStandardButton("delete") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				final ResourceSchema original = model.getObject();
 				getServiceProvider().getTypeManager().removeType(original.getDescribedType());
 				info("Schema deleted.");

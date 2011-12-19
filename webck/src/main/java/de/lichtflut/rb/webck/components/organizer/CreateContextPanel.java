@@ -73,7 +73,7 @@ public abstract class CreateContextPanel extends Panel {
 		
 		form.add(new RBStandardButton("create") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				getOrganizer().registerContext(model.getObject());
 				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.NAMESPACE));
 				onSuccess(target);
@@ -84,7 +84,7 @@ public abstract class CreateContextPanel extends Panel {
 		
 		form.add(new RBCancelButton("cancel") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				onCancel(target);
 				resetModel();
 			}

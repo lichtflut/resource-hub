@@ -66,7 +66,7 @@ public abstract class CreateRelationshipPanel extends Panel {
 		
 		final AjaxButton selectButton = new RBStandardButton("select") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				target.focusComponent(predicatePicker.getDisplayComponent());
 				target.add(form);
 			}
@@ -78,7 +78,7 @@ public abstract class CreateRelationshipPanel extends Panel {
 		final AjaxButton createButton = new RBStandardButton("create") {
 			
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				createRelationshipTo(entityModel.getObject(), predicateModel.getObject());
 				resetModels();
 				target.add(form);
@@ -90,7 +90,7 @@ public abstract class CreateRelationshipPanel extends Panel {
 		final AjaxButton cancelButton = new RBCancelButton("cancel") {
 			
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				resetModels();
 				target.add(form);
 			}

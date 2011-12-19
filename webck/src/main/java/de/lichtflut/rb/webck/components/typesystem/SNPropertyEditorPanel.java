@@ -79,7 +79,7 @@ public abstract class SNPropertyEditorPanel extends Panel {
 		
 		form.add(new RBStandardButton("save") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				assureLabel(model.getObject(), nameModel.getObject());
 				target.add(form);
 			}
@@ -87,7 +87,7 @@ public abstract class SNPropertyEditorPanel extends Panel {
 		
 		form.add(new RBCancelButton("cancel") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				nameModel.setObject(null);
 			}
 		});

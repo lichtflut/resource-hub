@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Class-Path: antlr-2.7.7.jar antlr-3.1.3.jar antlr-runtime-3.1.3.jar ar
  astreju.neo4j.jar arastreju.sge.jar commons-lang3-3.0.1.jar geronimo-
  jta_1.1_spec-1.1.1.jar jackson-core-asl-1.9.0.jar jackson-mapper-asl-
- 1.8.6.jar js-1.7R2.jar lf.foundation.infra-1.1.0.jar lf.resource-brow
+ 1.8.7.jar js-1.7R2.jar lf.foundation.infra-1.1.0.jar lf.resource-brow
  ser.core.jar lf.resource-browser.webck.jar log4j-1.2.14.jar lucene-co
  re-3.1.0.jar neo4j-1.5.jar neo4j-cypher-1.5.jar neo4j-graph-algo-1.5.
  jar neo4j-graph-matching-1.5.jar neo4j-jmx-1.5.jar neo4j-kernel-1.5.j

@@ -20,7 +20,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public abstract class PublicTypeDefListModel extends AbstractLoadableModel<List<TypeDefinition>> {
+public abstract class PublicTypeDefListModel extends AbstractLoadableDetachableModel<List<TypeDefinition>> {
 
 	/** 
 	 * {@inheritDoc}
