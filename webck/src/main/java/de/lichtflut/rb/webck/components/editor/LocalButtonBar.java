@@ -82,7 +82,7 @@ public abstract class LocalButtonBar extends Panel {
 		final AjaxFallbackButton cancel = new AjaxFallbackButton("cancel", form) {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				RBWebSession.get().getHistory().finishEditing();
+				RBWebSession.get().getHistory().back();
 				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 			}
 			

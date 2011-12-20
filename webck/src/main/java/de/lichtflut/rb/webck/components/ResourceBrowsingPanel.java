@@ -64,13 +64,8 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	/**
 	 * @param id
 	 */
-	public ResourceBrowsingPanel(final String id, EntityHandle handle, boolean editable) {
+	public ResourceBrowsingPanel(final String id) {
 		super(id);
-		
-		history().browseTo(handle);
-		if (editable) {
-			history().beginEditing();
-		}
 		
 		model = new RBEntityModel() {
 			@Override
@@ -157,6 +152,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 			@Override
 			public void onSave() {
 				getServiceProvider().getEntityManager().store(model.getObject());
+				history().back();
 				history().applyReferencedEntity(new RBEntityReference(model.getObject()));
 				addToAjax();
 			}
@@ -164,7 +160,6 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 			@Override
 			public void onClassify() {
 				getServiceProvider().getEntityManager().changeType(model.getObject(), typeModel.getObject());
-				history().back();
 				history().back();
 				addToAjax();
 			}

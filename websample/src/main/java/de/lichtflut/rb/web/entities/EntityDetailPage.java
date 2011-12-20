@@ -14,6 +14,8 @@ import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
 import de.lichtflut.rb.webck.components.ResourceBrowsingPanel;
 
@@ -78,8 +80,13 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 	
 	// ----------------------------------------------------
 	
-	protected Component initBrowser(final EntityHandle handle, final boolean readonly) {
-		final Browser browser = new Browser("rb", handle, !readonly);
+	private Component initBrowser(final EntityHandle handle, final boolean readonly) {
+		final BrowsingHistory history = RBWebSession.get().getHistory();
+		history.view(handle);
+		if (!readonly) {
+			history.beginEditing();
+		}
+		final Browser browser = new Browser("rb");
 		add(browser);
 		return browser;
 	}
@@ -88,8 +95,8 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 
 	class Browser extends ResourceBrowsingPanel {
 		
-		public Browser(final String id, EntityHandle handle, boolean editable) {
-			super(id, handle, editable);
+		public Browser(final String id) {
+			super(id);
 		}
 
 		@Override

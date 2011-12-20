@@ -48,6 +48,17 @@ public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 	
 	// ----------------------------------------------------
 	
+	/**
+	 * Reset the model in order to reload.
+	 */
+	public void reset(final EntityHandle handle, Action<?>... initializers) {
+		reset();
+		this.handle = handle; 
+		this.initializers = initializers;
+	}
+	
+	// ----------------------------------------------------
+	
 	/** 
 	 * {@inheritDoc}
 	 */
@@ -67,17 +78,6 @@ public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 		} else {
 			throw new IllegalStateException("Cannot initialize RB Entity Model.");
 		}
-	}
-	
-	// -----------------------------------------------------
-	
-	/**
-	 * Reset the model in order to reload.
-	 */
-	public void reset(final EntityHandle handle, Action<?>... initializers) {
-		reset();
-		this.handle = handle; 
-		this.initializers = initializers;
 	}
 	
 	// -----------------------------------------------------
