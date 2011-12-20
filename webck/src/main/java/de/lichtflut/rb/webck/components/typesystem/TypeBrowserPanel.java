@@ -35,6 +35,8 @@ public abstract class TypeBrowserPanel extends Panel {
 
 	private final LoadableModel<List<SNClass>> model;
 	
+	// ----------------------------------------------------
+	
 	/**
 	 * @param id
 	 */
@@ -61,15 +63,11 @@ public abstract class TypeBrowserPanel extends Panel {
 				link.add(new AttributeAppender("title", type.getQualifiedName().toURI()));
 			}
 		});
-		
-		add(new AjaxFallbackLink("createType") {
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				target.add(TypeBrowserPanel.this);
-				onCreateType(target);
-			}
-		});
 	}
+	
+	// -- CALLBACKS ---------------------------------------
+	
+	public abstract void onTypeSelected(SNClass type, AjaxRequestTarget target);
 	
 	// ----------------------------------------------------
 	
@@ -93,11 +91,5 @@ public abstract class TypeBrowserPanel extends Panel {
 		super.onDetach();
 		model.detach();
 	}
-	
-	// -- CALLBACKS ---------------------------------------
-	
-	public abstract void onCreateType(AjaxRequestTarget target);
-	
-	public abstract void onTypeSelected(SNClass type, AjaxRequestTarget target);
 	
 }

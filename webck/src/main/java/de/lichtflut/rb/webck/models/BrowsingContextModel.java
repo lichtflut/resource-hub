@@ -3,9 +3,9 @@
  */
 package de.lichtflut.rb.webck.models;
 
-import de.lichtflut.rb.webck.application.BrowsingHistory;
-import de.lichtflut.rb.webck.application.BrowsingState;
 import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.browsing.BrowsingHistory;
+import de.lichtflut.rb.webck.browsing.BrowsingState;
 
 /**
  * <p>

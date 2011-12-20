@@ -14,8 +14,8 @@ import org.apache.wicket.model.IModel;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.webck.application.BrowsingState;
 import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.browsing.BrowsingState;
 import de.lichtflut.rb.webck.components.ResourceInfoPanel;
 import de.lichtflut.rb.webck.models.RBFieldsListModel;
 

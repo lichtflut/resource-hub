@@ -63,18 +63,18 @@ public class TermSearcher {
 		case PROPERTY:
 			query.beginAnd();
 			query.beginOr();
-			addValues(query, term.split("\\s+"));
-			query.addURI(prepareTerm(term, 0.5f));
-			query.end();
+				addValues(query, term.split("\\s+"));
+				query.addURI(prepareTerm(term, 0.5f));
+				query.end();
 			query.addField(RDF.TYPE, RDF.PROPERTY);
 			query.end();
 			break;
 		case SUB_CLASS:
 			query.beginAnd();
 			query.beginOr();
-			addValues(query, term.split("\\s+"));
-			query.addURI(prepareTerm(term, 0.5f));
-			query.end();
+				addValues(query, term.split("\\s+"));
+				query.addURI(prepareTerm(term, 0.5f));
+				query.end();
 			query.addField(RDF.TYPE, RDFS.CLASS);
 			if (type != null) {
 				query.addField(RDFS.SUB_CLASS_OF, type);
@@ -86,6 +86,8 @@ public class TermSearcher {
 		}
 		return query;
 	}
+	
+	// ----------------------------------------------------
 
 	protected void addValues(final Query query, final String... values) {
 		Validate.notEmpty(values);

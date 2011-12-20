@@ -5,6 +5,7 @@ package de.lichtflut.rb.web.types;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -54,7 +55,13 @@ public class TypeSystemPage extends RBBasePage {
 		
 		add(new TypeBrowserPanel("typeBrowser", initTypeListModel()) {
 			@Override
-			public void onCreateType(AjaxRequestTarget target) {
+			public void onTypeSelected(final SNClass type, final AjaxRequestTarget target) {
+				displaySchemaEditor(type);
+			}
+		});
+		add(new AjaxFallbackLink("createType") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
 				dialog.setContent(new CreateResourcePanel(ModalDialog.CONTENT_ID) {
 					public void onCreate(QualifiedName qn, AjaxRequestTarget target) {
 						dialog.close();
@@ -67,11 +74,6 @@ public class TypeSystemPage extends RBBasePage {
 					}
 				});
 				dialog.show();
-			}
-			
-			@Override
-			public void onTypeSelected(final SNClass type, final AjaxRequestTarget target) {
-				displaySchemaEditor(type);
 			}
 		});
 		
