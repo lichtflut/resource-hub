@@ -12,12 +12,15 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.BrowsingState;
 import de.lichtflut.rb.webck.components.ResourceInfoPanel;
+import de.lichtflut.rb.webck.components.common.GoogleMapsPanel;
 import de.lichtflut.rb.webck.models.RBFieldsListModel;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 
 /**
  * <p>
@@ -44,6 +47,17 @@ public class EntityPanel extends Panel {
 		add(new FeedbackPanel("feedbackPanel"));
 		
 		add(createRows(new RBFieldsListModel(model)));
+		
+		add(new GoogleMapsPanel("map", new DerivedModel<String, RBEntity>(model) {
+			@Override
+			protected String derive(RBEntity original) {
+				if (original != null && RB.ADDRESS.equals(original.getType())) {
+					return original.getLabel();
+				} else {
+					return null;
+				}
+			}
+		}));
 	}
 	
 	// ----------------------------------------------------

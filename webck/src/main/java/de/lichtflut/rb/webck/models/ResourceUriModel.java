@@ -36,7 +36,11 @@ public class ResourceUriModel extends AbstractReadOnlyModel<String> {
 	
 	@Override
 	public String getObject() {
-		return model.getObject().getQualifiedName().toURI();
+		if (model != null && model.getObject() != null) {
+			return model.getObject().getQualifiedName().toURI();
+		} else {
+			return "";
+		}
 	}
 
 	

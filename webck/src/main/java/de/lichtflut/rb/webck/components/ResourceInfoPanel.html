@@ -10,8 +10,13 @@
 </wicket:head>
 <wicket:panel>
 <div class="resource-info-panel">
-	<div wicket:id="label"></div>
-	<img wicket:id="image"/>
+	<div class="about">
+		<div wicket:id="label" class="title"></div>
+		<div class="type">
+			<wicket:message key="label.type">[type]</wicket:message>
+			<span wicket:id="type">[type]</span></div>
+	</div>
+	<img wicket:id="image"></img>
 </div>
 </wicket:panel>
 </html>

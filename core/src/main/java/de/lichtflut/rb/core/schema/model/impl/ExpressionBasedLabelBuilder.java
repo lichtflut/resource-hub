@@ -66,11 +66,16 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 	@Override
 	public String build(final RBEntity entity) {
 		final StringBuilder sb = new StringBuilder();
+		boolean hasContent = false;
 		for (Element el : elements) {
-			el.append(entity, sb);
+			hasContent = el.append(entity, sb) || hasContent;
 			sb.append(" ");
 		}
-		return sb.toString().trim();
+		if (hasContent) {
+			return sb.toString().trim();
+		} else {
+			return "";
+		}
 	}
 
 	/** 
@@ -133,7 +138,7 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 	// -- ELEMENT TYPES -----------------------------------
 	
 	interface Element extends Serializable {
-		void append(final RBEntity entity, final StringBuilder sb);
+		boolean append(final RBEntity entity, final StringBuilder sb);
 	}
 	
 	class LiteralElement implements Element {
@@ -145,8 +150,9 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 		}
 
 		@Override
-		public void append(RBEntity entity, StringBuilder sb) {
+		public boolean append(RBEntity entity, StringBuilder sb) {
 			sb.append(value);
+			return false;
 		}
 		
 		/** 
@@ -168,17 +174,17 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 		}
 		
 		@Override
-		public void append(RBEntity entity, StringBuilder sb) {
+		public boolean append(RBEntity entity, StringBuilder sb) {
 			final RBField field = entity.getField(predicate);
 			if (field == null) {
 				sb.append("%" + predicate + "% ");
-				return;
+				return false;
+			} 
+			if (field.getValues().isEmpty()) {
+				return false;
 			}
 			boolean first = true;
 			for (Object value : field.getValues()) {
-				if (value == null) {
-					continue;
-				}
 				if (first) {
 					first = false;
 				} else {
@@ -190,6 +196,7 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 					sb.append(value);
 				}
 			}
+			return true;
 		}
 		
 		public String toString() {

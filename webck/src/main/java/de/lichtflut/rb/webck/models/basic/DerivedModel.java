@@ -46,15 +46,24 @@ public abstract class DerivedModel<T, M> extends AbstractReadOnlyModel<T> {
 	public T getObject() {
 		if (original != null) {
 			return derive(original);
-		} else if (originalModel != null) {
+		} else if (originalModel != null && originalModel.getObject() != null) {
 			return derive(originalModel.getObject());
 		} else {
-			return null;
+			return getDefault();
 		}
+	}
+	
+	public T getDefault() {
+		return null;
 	}
 
 	// ----------------------------------------------------
 	
+	/**
+	 * Derive the value from the original. The original will never be null.
+	 * @param original The original model value.
+	 * @return The derived value.
+	 */
 	protected abstract T derive(M original);
 	
 }

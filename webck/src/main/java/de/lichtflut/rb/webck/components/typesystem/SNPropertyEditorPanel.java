@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -32,6 +33,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ResourceLabelModel;
 import de.lichtflut.rb.webck.models.ResourceUriModel;
 import de.lichtflut.rb.webck.models.basic.AbstractDerivedListModel;
@@ -89,6 +91,18 @@ public abstract class SNPropertyEditorPanel extends Panel {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				nameModel.setObject(null);
+			}
+		});
+		
+		form.add(new RBStandardButton("delete") {
+			@Override
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+				final SNProperty original = model.getObject();
+				getServiceProvider().getTypeManager().removeProperty(original);
+				info("Property deleted.");
+				SNPropertyEditorPanel.this.setVisible(false);
+				target.add(SNPropertyEditorPanel.this);
+				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Void>(ModelChangeEvent.PROPERTY));
 			}
 		});
 		
