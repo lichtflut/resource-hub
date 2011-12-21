@@ -37,6 +37,8 @@ public class TermSearcher {
 	
 	private static final Pattern ESCAPE_CHARS = Pattern.compile("[\\\\+\\-\\!\\(\\)\\:\\^\\]\\{\\}\\~\\*\\?\\s]");
 	
+	private static final String VERBATIM_PREFIX = "#!";
+	
 	// ----------------------------------------------------
 	
 	/**
@@ -54,7 +56,7 @@ public class TermSearcher {
 		case ENTITY:
 		case VALUES:
 			query.beginAnd();
-			addValues(query, term.split("\\s+"));
+			addValues(query, term);
 			if (type != null) {
 				query.addField(RDF.TYPE, type);
 			}
@@ -63,7 +65,7 @@ public class TermSearcher {
 		case PROPERTY:
 			query.beginAnd();
 			query.beginOr();
-				addValues(query, term.split("\\s+"));
+				addValues(query, term);
 				query.addURI(prepareTerm(term, 0.5f));
 				query.end();
 			query.addField(RDF.TYPE, RDF.PROPERTY);
@@ -72,7 +74,7 @@ public class TermSearcher {
 		case SUB_CLASS:
 			query.beginAnd();
 			query.beginOr();
-				addValues(query, term.split("\\s+"));
+				addValues(query, term);
 				query.addURI(prepareTerm(term, 0.5f));
 				query.end();
 			query.addField(RDF.TYPE, RDFS.CLASS);
@@ -89,10 +91,26 @@ public class TermSearcher {
 	
 	// ----------------------------------------------------
 
-	protected void addValues(final Query query, final String... values) {
+	protected void addValues(final Query query, final String term) {
+		if (term.startsWith(VERBATIM_PREFIX)) {
+			query.addValue(term.substring(VERBATIM_PREFIX.length()));
+		} else {
+			addValues(query, term.split("\\s+"));	
+		}
+	}
+	
+	protected void addValues(final Query query, final String[] values) {
 		Validate.notEmpty(values);
 		for (String val : values) {
-			query.addValue(prepareTerm(val));
+			query.addValue(escape(val));
+		}
+	}
+	
+	protected String prepareTerm(final String orig) {
+		if (orig.startsWith(VERBATIM_PREFIX)) {
+			return orig.substring(VERBATIM_PREFIX.length());
+		} else {
+			return escape(orig);	
 		}
 	}
 	
@@ -100,7 +118,7 @@ public class TermSearcher {
 		return prepareTerm(orig) + "^" + boost;
 	}
 	
-	protected String prepareTerm(final String orig) {
+	protected String escape(final String orig) {
 		final StringBuilder sb = new StringBuilder(128);
 		if (!orig.startsWith("*")) {
 			sb.append("*");

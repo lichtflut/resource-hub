@@ -112,6 +112,11 @@ public interface RB {
 	ResourceID HAS_NAME = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasName");
 
 	/**
+	 * General title of something (e.g. a project).
+	 */
+	ResourceID HAS_TITLE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasTitle");
+	
+	/**
 	 * General ID of something (e.g. an application).
 	 */
 	ResourceID HAS_ID = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasID");

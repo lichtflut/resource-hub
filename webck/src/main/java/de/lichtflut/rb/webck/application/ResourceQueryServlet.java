@@ -18,6 +18,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryManager;
 import org.arastreju.sge.query.QueryResult;
+import org.arastreju.sge.query.SimpleQueryResult;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -138,7 +139,12 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 		final QueryManager qm = getServiceProvider().getArastejuGate().createQueryManager();
 		final Query query = searcher.prepareQuery(qm, term, mode, type);
 		logger.info("Query: " + query);
-		return query.getResult();
+		try {
+			return query.getResult();
+		} catch (RuntimeException e) {
+			logger.warn("failed to execute query: " + query.toString());
+			return SimpleQueryResult.EMPTY;
+		}
 	}
 	
 	protected Mode getMode(final HttpServletRequest req) {

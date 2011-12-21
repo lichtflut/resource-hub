@@ -50,7 +50,7 @@ public class ClassifyEntityPanel extends Panel {
 		add(new AjaxLink("suggest") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				picker.getDisplayComponent().search(target, ".*");
+				picker.getDisplayComponent().search(target, "#!*");
 			}
 		});
 		
