@@ -90,6 +90,8 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		add(display);
 		
 		add(new AttributeModifier("title", hiddenModel));
+		
+		add(new PickerSuggestLink("suggest", display));
 	}
 	
 	// -----------------------------------------------------
@@ -97,6 +99,10 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	@SuppressWarnings("rawtypes")
 	public Autocomplete getDisplayComponent() {
 		return (Autocomplete) get("display");
+	}
+	
+	public PickerSuggestLink getSuggestLink() {
+		return (PickerSuggestLink) get("suggest");
 	}
 	
 	@SuppressWarnings("rawtypes")

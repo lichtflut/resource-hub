@@ -57,11 +57,13 @@ public abstract class CreateRelationshipPanel extends Panel {
 		
 		final EntityPickerField entityPicker = new EntityPickerField("entityPicker", entityModel, RB.ENTITY);
 		entityPicker.add(enableIf(isNull(entityModel)));
+		entityPicker.getSuggestLink().setVisible(false);
 		form.add(entityPicker);
 		
 		final PropertyPickerField predicatePicker = new PropertyPickerField("predicatePicker", predicateModel);
 		predicatePicker.add(visibleIf(not(isNull(entityModel))));
 		predicatePicker.setRequired(true);
+		predicatePicker.getSuggestLink().setVisible(false);
 		form.add(predicatePicker);
 		
 		final AjaxButton selectButton = new RBStandardButton("select") {

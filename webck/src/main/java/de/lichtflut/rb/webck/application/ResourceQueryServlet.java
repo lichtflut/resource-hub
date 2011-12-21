@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.TermSearcher;
 import de.lichtflut.rb.webck.common.TermSearcher.Mode;
@@ -110,15 +109,8 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 		final List<JsonNode> jsons = new ArrayList<JsonNode>();
 		int counter = 0;
 		for (ResourceNode current : result) {
-			if (Mode.ENTITY.equals(mode)) {
-				final RBEntity entity = getServiceProvider().getEntityManager().find(current);
-				if (entity != null) {
-					jsons.add(new JsonNode(entity.getID(), entity.getLabel()));
-				}
-			} else {
-				final String label = ResourceLabelBuilder.getInstance().getLabel(current, resp.getLocale());
-				jsons.add(new JsonNode(current, label));
-			}
+			final String label = ResourceLabelBuilder.getInstance().getLabel(current, resp.getLocale());
+			jsons.add(new JsonNode(current, label));
 			counter++;
 			if (counter > 20) {
 				break;
