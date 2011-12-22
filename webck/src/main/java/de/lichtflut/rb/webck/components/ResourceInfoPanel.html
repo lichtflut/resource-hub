@@ -14,7 +14,19 @@
 		<div wicket:id="label" class="title"></div>
 		<div class="type">
 			<wicket:message key="label.type">[type]</wicket:message>
-			<span wicket:id="type">[type]</span></div>
+			<span wicket:id="type">[type]</span>
+		</div>
+		<div class="visualization-links">
+			<span class="show-details-link">
+				<wicket:message key="global.link.detail-visualization">[periphery]</wicket:message>
+			</span>
+			<a wicket:id="showPeriphery" class="show-periphery-link">
+				<wicket:message key="global.link.hierarchical-visualization">[periphery]</wicket:message>
+			</a>
+			<a wicket:id="showHierarchy" class="show-hierarchy-link">
+				<wicket:message key="global.link.periphery-visualization">[hierarchical]</wicket:message>
+			</a>
+		</div>
 	</div>
 	<img wicket:id="image"></img>
 </div>

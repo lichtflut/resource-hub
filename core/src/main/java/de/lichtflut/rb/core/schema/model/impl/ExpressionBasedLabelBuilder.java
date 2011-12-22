@@ -84,9 +84,13 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 	@Override
 	public String getExpression() {
 		final StringBuilder sb = new StringBuilder();
+		Element predecessor = null;
 		for (Element el : elements) {
+			if (fields(el, predecessor)) {
+				sb.append(" ");
+			}
 			sb.append(el);
-			sb.append(" ");
+			predecessor = el;
 		}
 		return sb.toString().trim();
 	}
@@ -133,6 +137,18 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 		} else {
 			throw new LabelExpressionParseException("Field is neither URI nor QName: '" + name + "'");
 		}
+	}
+	
+	/**
+	 * Check if all elements are fields.
+	 */
+	private boolean fields(Element... elements) {
+		for (Element current : elements) {
+			if (!(current instanceof FieldElement)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	// -- ELEMENT TYPES -----------------------------------

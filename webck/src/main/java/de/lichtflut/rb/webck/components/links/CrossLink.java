@@ -4,6 +4,8 @@
 package de.lichtflut.rb.webck.components.links;
 
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 /**
  * <p>
@@ -16,21 +18,24 @@ import org.apache.wicket.markup.html.link.Link;
  *
  * @author Oliver Tigges
  */
-@SuppressWarnings("rawtypes")
-public class CrossLink extends Link {
-
-	private final CharSequence url;
-	
-	// ----------------------------------------------------
+public class CrossLink extends Link<String> {
 
 	/**
 	 * Constructor.
 	 * @param id The ID.
 	 * @param url The URL.
 	 */
-	public CrossLink(final String id, final CharSequence url) {
-		super(id);
-		this.url = url;
+	public CrossLink(final String id, final String url) {
+		super(id, Model.of(url));
+	}
+	
+	/**
+	 * Constructor.
+	 * @param id The ID.
+	 * @param url The URL.
+	 */
+	public CrossLink(final String id, final IModel<String> url) {
+		super(id, url);
 	}
 	
 	// ----------------------------------------------------
@@ -47,7 +52,7 @@ public class CrossLink extends Link {
 	
 	@Override
 	protected CharSequence getURL() {
-		return url;
+		return getModelObject();
 	}
 	
 }

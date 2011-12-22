@@ -36,6 +36,7 @@ import de.lichtflut.rb.webck.components.editor.ClassifyEntityPanel;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.editor.LocalButtonBar;
+import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
@@ -62,7 +63,8 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+	 * Constructor.
+	 * @param id The component ID.
 	 */
 	public ResourceBrowsingPanel(final String id) {
 		super(id);
@@ -113,7 +115,10 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	
 	// -- IBrowsingHandler --------------------------------
 
-	public abstract CharSequence getUrlToResource(EntityHandle handle);
+	/**
+	 * {@inheritDoc}
+	 */
+	public abstract CharSequence getUrlToResource(ResourceID id, VisualizationMode mode);
 
 	/** 
 	* {@inheritDoc}

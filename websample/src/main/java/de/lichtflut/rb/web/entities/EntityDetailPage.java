@@ -18,6 +18,7 @@ import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
 import de.lichtflut.rb.webck.components.ResourceBrowsingPanel;
+import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 
 /**
  * <p>
@@ -100,13 +101,9 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 		}
 
 		@Override
-		public CharSequence getUrlToResource(EntityHandle handle) {
+		public CharSequence getUrlToResource(ResourceID id, VisualizationMode mode) {
 			final PageParameters params = new PageParameters();
-			if (handle.hasId()) {
-				params.add(EntityDetailPage.PARAM_RESOURCE_ID, handle.getId().getQualifiedName().toURI());
-			} else {
-				params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, handle.getType().getQualifiedName().toURI());
-			}
+			params.add(EntityDetailPage.PARAM_RESOURCE_ID, id.getQualifiedName().toURI());
 			return RequestCycle.get().urlFor(EntityDetailPage.class, params);
 		}
 

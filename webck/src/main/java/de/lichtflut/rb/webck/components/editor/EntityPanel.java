@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.components.editor;
 import java.util.List;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
