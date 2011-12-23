@@ -105,7 +105,7 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 		SNOPS.associate(node, RDF.TYPE, RB.ENTITY);
 		for (RBField field :entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
-			SNOPS.replace(node, field.getPredicate(), nodes);
+			SNOPS.assure(node, field.getPredicate(), nodes);
 			if (field.isResourceReference()) {
 				resolveEntityReferences(field, true);
 			}

@@ -16,6 +16,7 @@ import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.behaviors.FocusFirstFormElementBehavior;
 import de.lichtflut.rb.webck.browsing.BrowsingState;
 import de.lichtflut.rb.webck.components.ResourceInfoPanel;
 import de.lichtflut.rb.webck.components.common.GoogleMapsPanel;
@@ -43,6 +44,8 @@ public class EntityPanel extends Panel {
 	public EntityPanel(final String id, final IModel<RBEntity> model) {
 		super(id, model);
 		
+		setOutputMarkupId(true);
+		
 		add(new ResourceInfoPanel("infoPanel", model));
 		add(new FeedbackPanel("feedbackPanel"));
 		
@@ -61,6 +64,17 @@ public class EntityPanel extends Panel {
 	}
 	
 	// ----------------------------------------------------
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	protected void onConfigure() {
+		super.onConfigure();
+		if (!isInViewMode()) {
+			add(new FocusFirstFormElementBehavior());
+		}
+	}
 	
 	protected Component createRows(final IModel<List<RBField>> listModel) {
 		final ListView<RBField> view = new ListView<RBField>("rows", listModel) {

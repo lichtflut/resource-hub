@@ -178,7 +178,6 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	@Override
 	public void onEvent(final IEvent<?> event) {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
-		model.reset();
 		if (mce.isAbout(ModelChangeEvent.RELATIONSHIP, ModelChangeEvent.ENTITY)) {
 			RBAjaxTarget.add(this);
 		}

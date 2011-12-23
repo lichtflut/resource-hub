@@ -6,8 +6,6 @@ package de.lichtflut.rb.webck.models;
 import org.apache.wicket.Session;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.protocol.http.WebSession;
-import org.arastreju.sge.eh.ArastrejuRuntimeException;
 import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.webck.application.RBWebSession;
@@ -31,12 +29,7 @@ public class CurrentUserModel extends AbstractReadOnlyModel<User> {
 			public String getObject() {
 				final User current = currentUser();
 				if (current != null) {
-					try {
-						return current.getEmail();
-					} catch (ArastrejuRuntimeException e) {
-						WebSession.get().invalidate();
-						return "error";
-					}
+					return current.getEmail();
 				} else {
 					return "";
 				}
@@ -76,14 +69,7 @@ public class CurrentUserModel extends AbstractReadOnlyModel<User> {
 	
 	private static User currentUser() {
 		if (Session.exists()) {
-			final User user = RBWebSession.get().getUser();
-//			try {
-//				// Workaround an issue with serialized sessions
-//				user.getEmail();
-//			} catch (ArastrejuRuntimeException e) {
-//				return null;
-//			}
-			return user;
+			return RBWebSession.get().getUser();
 		} else {
 			return null;
 		}
