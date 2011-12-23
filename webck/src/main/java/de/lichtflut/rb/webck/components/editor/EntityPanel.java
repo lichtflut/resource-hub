@@ -6,7 +6,6 @@ package de.lichtflut.rb.webck.components.editor;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -20,8 +19,8 @@ import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.BrowsingState;
 import de.lichtflut.rb.webck.components.ResourceInfoPanel;
 import de.lichtflut.rb.webck.components.common.GoogleMapsPanel;
-import de.lichtflut.rb.webck.models.RBFieldsListModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldsListModel;
 
 /**
  * <p>

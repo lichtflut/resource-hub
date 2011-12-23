@@ -34,10 +34,10 @@ import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.ResourceLabelModel;
-import de.lichtflut.rb.webck.models.ResourceUriModel;
 import de.lichtflut.rb.webck.models.basic.AbstractDerivedListModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
+import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
 
 /**
  * <p>

@@ -20,19 +20,28 @@
 
 			<div wicket:id="feedback"></div>
 
-			<div class="form-field">
-				<label for="entityPicker"><wicket:message key="label.entity">[entity]</wicket:message></label>
-				<wicket:container wicket:id="entityPicker"></wicket:container>
-				<button type="button" wicket:id="select" class="default-button">
-					<wicket:message key="button.select">[select]</wicket:message>
-				</button>
-			</div>
+			<wicket:enclosure child="select">
+				<div class="form-field">
+					<label for="objectPicker"><wicket:message key="label.entity">[entity]</wicket:message></label>
+					<wicket:container wicket:id="objectPicker"></wicket:container>
+					<button type="button" wicket:id="select" class="default-button">
+						<wicket:message key="button.select">[select]</wicket:message>
+					</button>
+				</div>
+			</wicket:enclosure>
 			
 			<wicket:enclosure child="predicatePicker">
 			
-				<div class="form-field">
+				<div class="section">
 					<label for="predicatePicker"><wicket:message key="label.predicate">[predicate]</wicket:message></label>
-					<wicket:container wicket:id="predicatePicker"></wicket:container>
+				</div>
+				<div class="left-to-right section">
+					<div wicket:id="subject" class="entity-label">[subject]</div>
+					<div wicket:id="predicatePicker" class="left-to-right column"></div>
+					<div wicket:id="object" class="entity-label">[object]</div>
+				</div>
+				
+				<div class="button-bar section">
 					<button type="button" wicket:id="cancel">
 						<wicket:message key="button.cancel">[cancel]</wicket:message>
 					</button>

@@ -21,7 +21,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.core.entity.ResourceField;
 import de.lichtflut.rb.webck.conversion.SemanticNodesRenderer;
-import de.lichtflut.rb.webck.models.UndeclaredFieldsListModel;
+import de.lichtflut.rb.webck.models.fields.UndeclaredFieldsListModel;
 
 /**
  * <p>

@@ -12,7 +12,8 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Behavior only active if condition is fulfilled.
+ *  @see ConditionalModel
  * </p>
  *
  * <p>
@@ -23,39 +24,12 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
  */
 public abstract class ConditionalBehavior<T> extends Behavior {
 
-	private Component component;
-	
-	// -----------------------------------------------------
-	
-	/**
-	 * 
-	 */
-	public ConditionalBehavior() {
-	}
-	
-	// -----------------------------------------------------
-	
 	/**
 	 * Apply the behavior.
 	 */
-	protected abstract void apply();
-	
-	/**
-	 * @return the component
-	 */
-	protected Component getComponent() {
-		return component;
-	}
+	protected abstract void apply(Component component);
 	
 	// -----------------------------------------------------
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void bind(final Component component) {
-		this.component = component;
-	}
 	
 	/** 
 	 * {@inheritDoc}
@@ -63,7 +37,7 @@ public abstract class ConditionalBehavior<T> extends Behavior {
 	@Override
 	public void onConfigure(Component component) {
 		super.onConfigure(component);
-		apply();
+		apply(component);
 	}
 	
 	// -----------------------------------------------------
@@ -72,8 +46,8 @@ public abstract class ConditionalBehavior<T> extends Behavior {
 	public static ConditionalBehavior visibleIf(final ConditionalModel model) {
 		return new ConditionalBehavior() {
 			@Override
-			protected void apply() {
-				getComponent().setVisible(model.isFulfilled());
+			protected void apply(Component component) {
+				component.setVisible(model.isFulfilled());
 			}
 		};
 	}
@@ -82,8 +56,8 @@ public abstract class ConditionalBehavior<T> extends Behavior {
 	public static ConditionalBehavior enableIf(final ConditionalModel model) {
 		return new ConditionalBehavior() {
 			@Override
-			protected void apply() {
-				getComponent().setEnabled(model.isFulfilled());
+			protected void apply(Component component) {
+				component.setEnabled(model.isFulfilled());
 			}
 		};
 	}
@@ -92,10 +66,10 @@ public abstract class ConditionalBehavior<T> extends Behavior {
 	public static ConditionalBehavior defaultButtonIf(final ConditionalModel model) {
 		return new ConditionalBehavior() {
 			@Override
-			protected void apply() {
-				if (getComponent().isVisible()) {
-					final Form<?> form = getComponent().findParent(Form.class);
-					form.setDefaultButton((IFormSubmittingComponent) getComponent());
+			protected void apply(Component component) {
+				if (model.isFulfilled()) {
+					final Form<?> form = component.findParent(Form.class);
+					form.setDefaultButton((IFormSubmittingComponent) component);
 				}
 			}
 		};

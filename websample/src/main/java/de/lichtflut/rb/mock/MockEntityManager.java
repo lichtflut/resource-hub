@@ -13,6 +13,7 @@ import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
@@ -109,4 +110,12 @@ public class MockEntityManager implements EntityManager, Serializable {
 		throw new NotYetSupportedException();
 	}
 
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void resolve(RBEntityReference reference) {
+		throw new NotYetSupportedException();
+	}
+	
 }

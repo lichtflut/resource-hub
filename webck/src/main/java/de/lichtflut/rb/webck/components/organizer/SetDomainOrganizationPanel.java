@@ -26,8 +26,8 @@ import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.models.ResourceLabelModel;
 import de.lichtflut.rb.webck.models.basic.LoadableModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
 /**
  * <p>

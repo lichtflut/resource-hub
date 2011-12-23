@@ -19,7 +19,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
 import de.lichtflut.rb.webck.components.listview.ReferenceLink;
 import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
-import de.lichtflut.rb.webck.models.ResourceListModel;
+import de.lichtflut.rb.webck.models.resources.ResourceListModel;
 
 /**
  * <p>

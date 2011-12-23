@@ -8,16 +8,13 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +37,7 @@ import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
-import de.lichtflut.rb.webck.models.RBEntityModel;
+import de.lichtflut.rb.webck.models.entity.RBEntityModel;
 
 /**
  * <p>
@@ -89,15 +86,11 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		form.add(createLocalBar(form));
 		form.add(createBrowsingBar(form, typeModel));
 		
-		form.add(new CreateRelationshipPanel("relationCreator") {
+		form.add(new CreateRelationshipPanel("relationCreator", model) {
 			@Override
-			protected void createRelationshipTo(RBEntityReference object, ResourceID predicate) {
-				final ResourceNode subject = model.getObject().getNode();
-				SNOPS.associate(subject, predicate, object);
-				getServiceProvider().getEntityManager().store(model.getObject());
-				model.reset();
-				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
-			}
+			protected ServiceProvider getServiceProvider() {
+				return ResourceBrowsingPanel.this.getServiceProvider();
+			};
 		}.add(visibleIf(BrowsingContextModel.isInViewMode())));
 		
 		form.add(createRelationshipView("relationships", model));
@@ -185,6 +178,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	@Override
 	public void onEvent(final IEvent<?> event) {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
+		model.reset();
 		if (mce.isAbout(ModelChangeEvent.RELATIONSHIP, ModelChangeEvent.ENTITY)) {
 			RBAjaxTarget.add(this);
 		}

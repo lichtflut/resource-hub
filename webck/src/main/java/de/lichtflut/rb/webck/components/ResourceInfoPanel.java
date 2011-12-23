@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.webck.components;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -16,10 +15,11 @@ import de.lichtflut.rb.webck.components.common.ImageReference;
 import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
-import de.lichtflut.rb.webck.models.EntityImageUrlModel;
-import de.lichtflut.rb.webck.models.ResourceLabelModel;
-import de.lichtflut.rb.webck.models.ResourceUriModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
+import de.lichtflut.rb.webck.models.entity.RBEntityImageUrlModel;
+import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
+import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
 
 /**
  * This Panel represents an {@link RBEntity}.
@@ -46,22 +46,10 @@ public class ResourceInfoPanel extends Panel {
 	public ResourceInfoPanel(final String id, final IModel<RBEntity> model) {
 		super(id);
 		
-		final IModel<String> resourceLabelModel = new DerivedModel<String, RBEntity>(model) {
-			@Override
-			protected String derive(RBEntity original) {
-				final String label = original.getLabel();
-				if (StringUtils.isBlank(label)) {
-					return getString("label.untitled");
-				} else {
-					return label;
-				}
-			}
-			/** 
-			* {@inheritDoc}
-			*/
+		final IModel<String> resourceLabelModel = new RBEntityLabelModel(model) {
 			@Override
 			public String getDefault() {
-				return "";
+				return getString("label.untitled");
 			}
 		};
 
@@ -84,7 +72,7 @@ public class ResourceInfoPanel extends Panel {
 		
 		add(new Label("label", resourceLabelModel));
 		add(new Label("type", typeLabelModel).add(TitleModifier.title(typeURIModel)));
-		add(new ImageReference("image", new EntityImageUrlModel(model)));
+		add(new ImageReference("image", new RBEntityImageUrlModel(model)));
 	}
 	
 	// ----------------------------------------------------

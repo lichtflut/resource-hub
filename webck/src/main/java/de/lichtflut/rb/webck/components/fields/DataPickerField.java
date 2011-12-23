@@ -96,6 +96,10 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	
 	// -----------------------------------------------------
 	
+	public String getDisplayValue() {
+		return getDisplayComponent().getDefaultModelObjectAsString();
+	}
+	
 	@SuppressWarnings("rawtypes")
 	public Autocomplete getDisplayComponent() {
 		return (Autocomplete) get("display");

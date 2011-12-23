@@ -33,11 +33,11 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.*;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import static de.lichtflut.rb.webck.models.ConditionalModel.*;
-import de.lichtflut.rb.webck.models.FieldCardinalityModel;
-import de.lichtflut.rb.webck.models.FieldLabelModel;
-import de.lichtflut.rb.webck.models.FieldSizeModel;
-import de.lichtflut.rb.webck.models.RBFieldValueModel;
-import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
+import de.lichtflut.rb.webck.models.fields.FieldCardinalityModel;
+import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
+import de.lichtflut.rb.webck.models.fields.FieldSizeModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
 
 /**
  * <p>

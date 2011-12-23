@@ -26,8 +26,8 @@ import de.lichtflut.rb.webck.components.typesystem.SchemaIOPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeBrowserPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeDefBrowserPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeDefEditorPanel;
-import de.lichtflut.rb.webck.models.PublicTypeDefListModel;
-import de.lichtflut.rb.webck.models.RBTypeListModel;
+import de.lichtflut.rb.webck.models.types.PublicTypeDefListModel;
+import de.lichtflut.rb.webck.models.types.SNClassListModel;
 
 /**
  * <p>
@@ -147,8 +147,8 @@ public class TypeSystemPage extends RBBasePage {
 		setResponsePage(TypeSystemPage.this);
 	}
 	
-	protected RBTypeListModel initTypeListModel() {
-		return new RBTypeListModel() {
+	protected SNClassListModel initTypeListModel() {
+		return new SNClassListModel() {
 			@Override
 			protected ServiceProvider getServiceProvider() {
 				return TypeSystemPage.this.getServiceProvider();
