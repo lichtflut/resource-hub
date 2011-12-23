@@ -95,6 +95,16 @@ public interface RB {
 	
 	
 	// -- COMMON PROPERTIES --------------------------------------
+
+	/**
+	 * Child node in tree structures.
+	 */
+	ResourceID HAS_CHILD_NODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasChildNode");
+	
+	/**
+	 * Child node in tree structures.
+	 */
+	ResourceID HAS_PARENT_NODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasParentNode");
 	
 	/**
 	 * Superordinate units.
