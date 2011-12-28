@@ -5,6 +5,7 @@ package de.lichtflut.rb.web.types;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -25,8 +26,8 @@ import de.lichtflut.rb.webck.components.typesystem.SchemaIOPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeBrowserPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeDefBrowserPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeDefEditorPanel;
-import de.lichtflut.rb.webck.models.PublicTypeDefListModel;
-import de.lichtflut.rb.webck.models.RBTypeListModel;
+import de.lichtflut.rb.webck.models.types.PublicTypeDefListModel;
+import de.lichtflut.rb.webck.models.types.SNClassListModel;
 
 /**
  * <p>
@@ -54,7 +55,13 @@ public class TypeSystemPage extends RBBasePage {
 		
 		add(new TypeBrowserPanel("typeBrowser", initTypeListModel()) {
 			@Override
-			public void onCreateType(AjaxRequestTarget target) {
+			public void onTypeSelected(final SNClass type, final AjaxRequestTarget target) {
+				displaySchemaEditor(type);
+			}
+		});
+		add(new AjaxFallbackLink("createType") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
 				dialog.setContent(new CreateResourcePanel(ModalDialog.CONTENT_ID) {
 					public void onCreate(QualifiedName qn, AjaxRequestTarget target) {
 						dialog.close();
@@ -67,11 +74,6 @@ public class TypeSystemPage extends RBBasePage {
 					}
 				});
 				dialog.show();
-			}
-			
-			@Override
-			public void onTypeSelected(final SNClass type, final AjaxRequestTarget target) {
-				displaySchemaEditor(type);
 			}
 		});
 		
@@ -121,8 +123,8 @@ public class TypeSystemPage extends RBBasePage {
 		final ResourceSchema schema = getServiceProvider().getSchemaManager().findSchemaForType(type);
 		final SchemaEditorPanel editor = new SchemaEditorPanel("editor", Model.of(schema)) {
 			@Override
-			public void onSave(final AjaxRequestTarget target, final ResourceSchema schema) {
-				getServiceProvider().getSchemaManager().store(schema);
+			protected ServiceProvider getServiceProvider() {
+				return TypeSystemPage.this.getServiceProvider();
 			}
 		};
 		TypeSystemPage.this.replace(editor);
@@ -145,8 +147,8 @@ public class TypeSystemPage extends RBBasePage {
 		setResponsePage(TypeSystemPage.this);
 	}
 	
-	protected RBTypeListModel initTypeListModel() {
-		return new RBTypeListModel() {
+	protected SNClassListModel initTypeListModel() {
+		return new SNClassListModel() {
 			@Override
 			protected ServiceProvider getServiceProvider() {
 				return TypeSystemPage.this.getServiceProvider();

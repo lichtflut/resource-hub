@@ -5,6 +5,7 @@ import java.util.List;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBEntityReference;
 
 /**
  * .
@@ -30,6 +31,12 @@ public interface EntityManager {
      * @return a list of {@link RBEntity}
      */
     List<RBEntity> findByType(ResourceID type);
+    
+    /**
+     * Resolve the reference.
+	 * @param reference The entity reference.
+	 */
+	void resolve(RBEntityReference reference);
 
     // -----------------------------------------------------
     
@@ -50,4 +57,12 @@ public interface EntityManager {
      * @param entityID - The ID of the entity to be deleted
      */
     void delete(ResourceID entityID);
+
+	/**
+	 * Change the type of an entity.
+	 * @param entity The entity.
+	 * @param type The new type.
+	 */
+	void changeType(RBEntity entity, ResourceID type);
+
 }

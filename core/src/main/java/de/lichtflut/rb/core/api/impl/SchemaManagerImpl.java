@@ -94,6 +94,14 @@ public class SchemaManagerImpl implements SchemaManager {
 	}
 	
 	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public boolean isSchemaDefinedFor(ResourceID type) {
+		return findSchemaNodeByType(type) != null;
+	}
+	
+	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -155,6 +163,18 @@ public class SchemaManagerImpl implements SchemaManager {
 		final SNResourceSchema node = binding.toSemanticNode(schema);
 		mc.attach(node);
 		mc.close();
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void removeSchemaForType(final ResourceID type) {
+		final ModelingConversation mc = startConversation();
+		final SNResourceSchema existing = findSchemaNodeByType(type);
+		if (existing != null) {
+			removeSchema(mc, existing);
+		}
 	}
 
 	/** 

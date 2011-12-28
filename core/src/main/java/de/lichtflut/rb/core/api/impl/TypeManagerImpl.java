@@ -9,6 +9,7 @@ import java.util.List;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNClass;
@@ -75,7 +76,8 @@ public class TypeManagerImpl implements TypeManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void removeType(final SNClass type) {
+	public void removeType(final ResourceID type) {
+		provider.getSchemaManager().removeSchemaForType(type);
 		newMC().remove(type, false);
 	}
 	

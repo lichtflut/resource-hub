@@ -14,7 +14,7 @@ import de.lichtflut.infra.Infra;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Conditional model.
  * </p>
  *
  * <p>
@@ -86,6 +86,15 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 	
+	public static ConditionalModel<?> isNotNull(final IModel<?> model) {
+		return new ConditionalModel<Object>(model) {
+			@Override
+			public boolean isFulfilled() {
+				return getObject() != null;
+			}
+		};
+	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static ConditionalModel<?> isEmpty(final IModel<? extends Collection<?>> model) {
 		return new ConditionalModel(model) {
@@ -133,6 +142,15 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			@Override
 			public boolean isFulfilled() {
 				return Infra.equals(model.getObject(), other);
+			}
+		};
+	}
+	
+	public static <T> ConditionalModel<T> lessThan(final IModel<? extends Number> model, final IModel<?extends Number> other) {
+		return new ConditionalModel<T>(model) {
+			@Override
+			public boolean isFulfilled() {
+				return model.getObject().doubleValue() < other.getObject().doubleValue();
 			}
 		};
 	}

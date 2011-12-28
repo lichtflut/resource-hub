@@ -9,6 +9,7 @@ import de.lichtflut.rb.core.api.DomainOrganizer;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 
 /**
  * <p>

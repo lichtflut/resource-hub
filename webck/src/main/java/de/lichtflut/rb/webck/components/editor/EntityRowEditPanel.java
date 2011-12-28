@@ -30,10 +30,14 @@ import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.*;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
-import de.lichtflut.rb.webck.models.FieldLabelModel;
-import de.lichtflut.rb.webck.models.RBFieldValueModel;
-import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
+import static de.lichtflut.rb.webck.models.ConditionalModel.*;
+import de.lichtflut.rb.webck.models.fields.FieldCardinalityModel;
+import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
+import de.lichtflut.rb.webck.models.fields.FieldSizeModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
 
 /**
  * <p>
@@ -90,6 +94,7 @@ public class EntityRowEditPanel extends Panel {
 			}
 		};
 		link.add(new AttributeModifier("title", new ResourceModel("link.title.add-field-value")));
+		link.add(visibleIf(lessThan(new FieldSizeModel(model), new FieldCardinalityModel(model))));
 		add(link);
 	}
 	
@@ -134,7 +139,11 @@ public class EntityRowEditPanel extends Panel {
 				target.add(EntityRowEditPanel.this);
 			}
 		};
-		link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));
+		if (!Datatype.BOOLEAN.equals(getField().getDataType())) {
+			link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));	
+		} else {
+			link.setVisible(false);
+		}
 		return link;
 	}
 	
@@ -151,7 +160,6 @@ public class EntityRowEditPanel extends Panel {
 				target.add(EntityRowEditPanel.this);
 			}
 		};
-		
 		if (getField().isResourceReference()){
 			link.add(new AttributeModifier("title", new ResourceModel("link.title.create-field-value")));	
 		} else {

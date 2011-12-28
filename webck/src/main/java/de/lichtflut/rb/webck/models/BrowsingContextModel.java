@@ -3,8 +3,9 @@
  */
 package de.lichtflut.rb.webck.models;
 
-import de.lichtflut.rb.webck.application.BrowsingHistory;
 import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.browsing.BrowsingHistory;
+import de.lichtflut.rb.webck.browsing.BrowsingState;
 
 /**
  * <p>
@@ -28,7 +29,35 @@ public class BrowsingContextModel {
 			
 			@Override
 			public Boolean getObject() {
-				return RBWebSession.get().getHistory().isEditing();
+				return BrowsingState.EDIT.equals(RBWebSession.get().getHistory().getState());
+			}
+		};
+	}
+	
+	public static ConditionalModel<Boolean> isInViewMode() {
+		return new ConditionalModel<Boolean>() {
+			@Override
+			public boolean isFulfilled() {
+				return getObject();
+			}
+			
+			@Override
+			public Boolean getObject() {
+				return BrowsingState.VIEW.equals(RBWebSession.get().getHistory().getState());
+			}
+		};
+	}
+	
+	public static ConditionalModel<Boolean> isInClassifyMode() {
+		return new ConditionalModel<Boolean>() {
+			@Override
+			public boolean isFulfilled() {
+				return getObject();
+			}
+			
+			@Override
+			public Boolean getObject() {
+				return BrowsingState.CLASSIFY.equals(RBWebSession.get().getHistory().getState());
 			}
 		};
 	}
@@ -57,7 +86,7 @@ public class BrowsingContextModel {
 			@Override
 			public Boolean getObject() {
 				final BrowsingHistory history = RBWebSession.get().getHistory();
-				return history.hasPredecessors() && history.isEditing();
+				return history.hasPredecessors() && !BrowsingState.VIEW.equals(history.getState());
 			}
 		};
 	}

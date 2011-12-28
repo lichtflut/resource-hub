@@ -21,7 +21,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.core.entity.ResourceField;
 import de.lichtflut.rb.webck.conversion.SemanticNodesRenderer;
-import de.lichtflut.rb.webck.models.UndeclaredFieldsListModel;
+import de.lichtflut.rb.webck.models.fields.UndeclaredFieldsListModel;
 
 /**
  * <p>
@@ -96,7 +96,7 @@ public class ResourceListPanel extends Panel {
 			public void onClick(final AjaxRequestTarget target) {
 				onView(entity, target);
 			}
-		}; 	
+		}.setLinkCssClass("action-view");
 	}
 	
 	protected Component createEditAction(final String componentId, final ResourceNode entity) {
@@ -104,7 +104,7 @@ public class ResourceListPanel extends Panel {
 			public void onClick(final AjaxRequestTarget target) {
 				onEdit(entity, target);
 			}
-		}; 
+		}.setLinkCssClass("action-edit"); 
 	}	
 	
 	protected Component createDeleteAction(final String componentId, final ResourceNode entity) {
@@ -112,7 +112,7 @@ public class ResourceListPanel extends Panel {
 			public void onClick(final AjaxRequestTarget target) {
 				onDelete(entity, target);
 			}
-		}; 	
+		}.needsConfirmation(new ResourceModel("global.message.delete-confirmation")).setLinkCssClass("action-delete");
 	}
 	
 	protected Component createCustomAction(final String componentId, final ResourceNode entity, final String action) {
@@ -120,7 +120,7 @@ public class ResourceListPanel extends Panel {
 			public void onClick(final AjaxRequestTarget target) {
 				onAction(entity, target, action);
 			}
-		}; 	
+		}.setLinkCssClass("action-custom action-custom-" +action);	
 	}
 	
 	// -- OUTPUT ------------------------------------------

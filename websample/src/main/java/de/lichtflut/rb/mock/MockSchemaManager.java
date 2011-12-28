@@ -103,6 +103,14 @@ public class MockSchemaManager implements SchemaManager, Serializable {
 	}
 	
 	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void removeSchemaForType(ResourceID type) {
+		throw new NotYetSupportedException();
+	}
+	
+	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -116,6 +124,14 @@ public class MockSchemaManager implements SchemaManager, Serializable {
 	@Override
 	public TypeDefinition prepareTypeDefinition(final QualifiedName qn, final String displayName) {
 		return new TypeDefinitionImpl(new SimpleResourceID(qn), true).setName(displayName);
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public boolean isSchemaDefinedFor(ResourceID type) {
+		throw new NotYetSupportedException();
 	}
 
 	// -----------------------------------------------------

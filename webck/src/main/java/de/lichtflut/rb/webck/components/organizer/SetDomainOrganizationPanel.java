@@ -24,9 +24,10 @@ import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.DomainOrganizer;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.models.LoadableModel;
-import de.lichtflut.rb.webck.models.ResourceLabelModel;
+import de.lichtflut.rb.webck.models.basic.LoadableModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
 /**
  * <p>
@@ -92,7 +93,7 @@ public abstract class SetDomainOrganizationPanel extends Panel {
 	protected Component createSetButton() {
 		return new RBStandardButton("set") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				readonly.setObject(false);
 				target.add(SetDomainOrganizationPanel.this);
 			}
@@ -102,7 +103,7 @@ public abstract class SetDomainOrganizationPanel extends Panel {
 	protected Component createChangeButton() {
 		return new RBStandardButton("change") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				readonly.setObject(false);
 				target.add(SetDomainOrganizationPanel.this);
 			}
@@ -110,9 +111,9 @@ public abstract class SetDomainOrganizationPanel extends Panel {
 	}
 
 	protected Component createSaveButton() {
-		return new RBStandardButton("save") {
+		return new RBDefaultButton("save") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				getOrganizer().setDomainOrganization(model.getObject());
 				readonly.setObject(true);
 				model.reset();
@@ -124,7 +125,7 @@ public abstract class SetDomainOrganizationPanel extends Panel {
 	protected Component createCancelButton() {
 		return new RBStandardButton("cancel") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				readonly.setObject(true);
 				model.reset();
 				target.add(SetDomainOrganizationPanel.this);

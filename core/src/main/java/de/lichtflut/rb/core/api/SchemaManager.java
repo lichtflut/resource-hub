@@ -55,10 +55,16 @@ public interface SchemaManager {
 	// -----------------------------------------------------
 
 	/**
-	 * Stores the given Resource Schema with the given one.
+	 * Stores the given Resource Schema.
 	 * @param schema - the {@link ResourceSchema}
 	 */
 	void store(ResourceSchema schema);
+	
+	/**
+	 * Remove the given Resource Schema.
+	 * @param schema - the {@link ResourceSchema}
+	 */
+	void removeSchemaForType(ResourceID type);
 	
 	/**
 	 * Stores the given Type Definition.
@@ -88,5 +94,12 @@ public interface SchemaManager {
 	 * @return The exporter.
 	 */
 	SchemaExporter getExporter(String format);
+
+	/**
+	 * Check if a schema is defined for the given type.
+	 * @param type The type.
+	 * @return true if a schema is defined.
+	 */
+	boolean isSchemaDefinedFor(ResourceID type);
 
 }

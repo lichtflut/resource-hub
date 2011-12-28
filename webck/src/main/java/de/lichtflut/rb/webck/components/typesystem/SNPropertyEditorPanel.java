@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -32,10 +33,11 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.models.AbstractDerivedListModel;
-import de.lichtflut.rb.webck.models.AbstractLoadableModel;
-import de.lichtflut.rb.webck.models.ResourceLabelModel;
-import de.lichtflut.rb.webck.models.ResourceUriModel;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.basic.AbstractDerivedListModel;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
+import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
 
 /**
  * <p>
@@ -67,7 +69,7 @@ public abstract class SNPropertyEditorPanel extends Panel {
 		form.setOutputMarkupId(true);
 		form.add(new FeedbackPanel("feedback"));
 		
-		final IModel<String> nameModel = new AbstractLoadableModel<String>() {
+		final IModel<String> nameModel = new AbstractLoadableDetachableModel<String>() {
 			@Override
 			public String load() {
 				return string(singleObject(model.getObject(), RB.HAS_FIELD_LABEL));
@@ -79,7 +81,7 @@ public abstract class SNPropertyEditorPanel extends Panel {
 		
 		form.add(new RBStandardButton("save") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				assureLabel(model.getObject(), nameModel.getObject());
 				target.add(form);
 			}
@@ -87,8 +89,20 @@ public abstract class SNPropertyEditorPanel extends Panel {
 		
 		form.add(new RBCancelButton("cancel") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				nameModel.setObject(null);
+			}
+		});
+		
+		form.add(new RBStandardButton("delete") {
+			@Override
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+				final SNProperty original = model.getObject();
+				getServiceProvider().getTypeManager().removeProperty(original);
+				info("Property deleted.");
+				SNPropertyEditorPanel.this.setVisible(false);
+				target.add(SNPropertyEditorPanel.this);
+				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Void>(ModelChangeEvent.PROPERTY));
 			}
 		});
 		

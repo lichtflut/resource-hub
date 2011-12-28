@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.api;
 
 import java.util.List;
 
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
@@ -30,11 +31,10 @@ public interface TypeManager {
 	SNClass createType(QualifiedName qn);
 	
 	/**
-	 * Create a new rb:Type with given name.
-	 * @param namespace The namespace.
-	 * @param name The simple name.
+	 * Remove an rb:Type by it's ID.
+	 * @param id The type's ID.
 	 */
-	void removeType(SNClass type);
+	void removeType(ResourceID id);
 	
 	/**
 	 * Find all types.

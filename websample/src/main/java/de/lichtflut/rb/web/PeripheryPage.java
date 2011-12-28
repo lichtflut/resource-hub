@@ -45,8 +45,7 @@ public class PeripheryPage extends WebPage {
 		gate = Arastreju.getInstance().rootContext();
 
 		SemanticGraph g = loadGraph();
-		StringBuilder jsonTree = new StringBuilder("graph = [ ");
-			//new StringBuilder("graph = { id: 0, name: 'root', children: [ ");
+		final StringBuilder jsonTree = new StringBuilder("graph = [ ");
 
 		JsonBinding binding = new JsonBinding();
 		try {

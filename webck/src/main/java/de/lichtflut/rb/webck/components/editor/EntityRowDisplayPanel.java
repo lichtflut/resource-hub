@@ -14,16 +14,15 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.FieldLabelModel;
-import de.lichtflut.rb.webck.models.RBFieldValueModel;
-import de.lichtflut.rb.webck.models.RBFieldValuesListModel;
+import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
 
 /**
  * <p>
@@ -100,7 +99,7 @@ public class EntityRowDisplayPanel extends Panel {
 	private void addResourceField(final ListItem<RBFieldValueModel> item) {
 		final RBEntityReference ref = (RBEntityReference) item.getModelObject().getObject();
 		if (ref != null) {
-			final CrossLink link = new CrossLink("link", getUrlTo(ref));
+			final CrossLink link = new CrossLink("link", getUrlTo(ref).toString());
 			link.add(new Label("label", Model.of(ref.toString())));
 			item.add(new Fragment("valuefield", "referenceLink", this).add(link));
 		} else {
@@ -115,7 +114,7 @@ public class EntityRowDisplayPanel extends Panel {
 					+ " must be placed placed in a component/page that implements " 
 					+ IBrowsingHandler.class);
 		}
-		final CharSequence url = handler.getUrlToResource(EntityHandle.forID(ref));
+		final CharSequence url = handler.getUrlToResource(ref.getId(), VisualizationMode.DETAILS);
 		return url;
 	}
 	

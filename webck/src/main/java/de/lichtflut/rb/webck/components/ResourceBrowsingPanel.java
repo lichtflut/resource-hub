@@ -8,15 +8,13 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.arastreju.sge.SNOPS;
+import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,19 +23,21 @@ import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.webck.application.BrowsingHistory;
 import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import de.lichtflut.rb.webck.common.Action;
 import de.lichtflut.rb.webck.common.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.editor.BrowsingButtonBar;
+import de.lichtflut.rb.webck.components.editor.ClassifyEntityPanel;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.editor.LocalButtonBar;
+import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
-import de.lichtflut.rb.webck.models.RBEntityModel;
+import de.lichtflut.rb.webck.models.entity.RBEntityModel;
 
 /**
  * <p>
@@ -60,15 +60,11 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+	 * Constructor.
+	 * @param id The component ID.
 	 */
-	public ResourceBrowsingPanel(final String id, EntityHandle handle, boolean editable) {
+	public ResourceBrowsingPanel(final String id) {
 		super(id);
-		
-		history().browseTo(handle);
-		if (editable) {
-			history().beginEditing();
-		}
 		
 		model = new RBEntityModel() {
 			@Override
@@ -80,21 +76,22 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		final Form form = new Form("form");
 		form.setOutputMarkupId(true);
 		
-		form.add(new EntityPanel("entity", model, BrowsingContextModel.isInEditMode()));
+		form.add(new EntityPanel("entity", model)
+			.add(visibleIf(not(BrowsingContextModel.isInClassifyMode()))));
+		
+		final IModel<ResourceID> typeModel = new Model<ResourceID>();
+		form.add(new ClassifyEntityPanel("classifier", model, typeModel)
+			.add(visibleIf(BrowsingContextModel.isInClassifyMode())));
 		
 		form.add(createLocalBar(form));
-		form.add(createBrowsingBar(form));
+		form.add(createBrowsingBar(form, typeModel));
 		
-		form.add(new CreateRelationshipPanel("relationCreator") {
+		form.add(new CreateRelationshipPanel("relationCreator", model) {
 			@Override
-			protected void createRelationshipTo(RBEntityReference object, ResourceID predicate) {
-				final ResourceNode subject = model.getObject().getNode();
-				SNOPS.associate(subject, predicate, object);
-				getServiceProvider().getEntityManager().store(model.getObject());
-				model.reset();
-				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
-			}
-		}.add(visibleIf(not(BrowsingContextModel.isInEditMode()))));
+			protected ServiceProvider getServiceProvider() {
+				return ResourceBrowsingPanel.this.getServiceProvider();
+			};
+		}.add(visibleIf(BrowsingContextModel.isInViewMode())));
 		
 		form.add(createRelationshipView("relationships", model));
 		
@@ -111,7 +108,10 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	
 	// -- IBrowsingHandler --------------------------------
 
-	public abstract CharSequence getUrlToResource(EntityHandle handle);
+	/**
+	 * {@inheritDoc}
+	 */
+	public abstract CharSequence getUrlToResource(ResourceID id, VisualizationMode mode);
 
 	/** 
 	* {@inheritDoc}
@@ -123,7 +123,10 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		
 		// navigate to sub entity
 		final Action action = new EntityAttributeApplyAction(predicate);
-		RBWebSession.get().getHistory().createReferencedEntity(handle, action);
+		history().createReferencedEntity(handle, action);
+		if (!getServiceProvider().getSchemaManager().isSchemaDefinedFor(handle.getType())) {
+			history().beginClassifying();
+		}
 		addToAjax();
 	}
 	
@@ -139,20 +142,23 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 			public EntityManager getEntityManager() {
 				return getServiceProvider().getEntityManager();
 			}
-			
-			@Override
-			public void updateView() {
-				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
-			}
 		};
 	}
 	
-	protected BrowsingButtonBar createBrowsingBar(Form form) {
+	protected BrowsingButtonBar createBrowsingBar(Form form, final IModel<ResourceID> typeModel) {
 		return new BrowsingButtonBar("browsingButtonBar", model, form) {
 			@Override
 			public void onSave() {
 				getServiceProvider().getEntityManager().store(model.getObject());
+				history().back();
 				history().applyReferencedEntity(new RBEntityReference(model.getObject()));
+				addToAjax();
+			}
+			
+			@Override
+			public void onClassify() {
+				getServiceProvider().getEntityManager().changeType(model.getObject(), typeModel.getObject());
+				history().back();
 				addToAjax();
 			}
 			

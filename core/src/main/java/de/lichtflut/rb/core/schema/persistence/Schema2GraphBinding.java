@@ -11,6 +11,7 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.slf4j.Logger;
@@ -217,8 +218,13 @@ public class Schema2GraphBinding {
 			final String value = snConst.getConstraintValue().asValue().getStringValue();
 			return ConstraintBuilder.buildConstraint(value);
 		} else if (snConst.isTypeConstraint()) {
-			final ResourceID type = snConst.getConstraintValue().asResource();
-			return  ConstraintBuilder.buildConstraint(type);
+			SemanticNode node = snConst.getConstraintValue();
+			if (node != null) {
+				final ResourceID type = snConst.getConstraintValue().asResource();
+				return ConstraintBuilder.buildConstraint(type);
+			} else {
+				return null;
+			}
 		} else {
 			throw new IllegalStateException();
 		}

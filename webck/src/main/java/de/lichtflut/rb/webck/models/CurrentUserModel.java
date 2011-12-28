@@ -69,14 +69,7 @@ public class CurrentUserModel extends AbstractReadOnlyModel<User> {
 	
 	private static User currentUser() {
 		if (Session.exists()) {
-			final User user = RBWebSession.get().getUser();
-//			try {
-//				// Workaround an issue with serialized sessions
-//				user.getEmail();
-//			} catch (ArastrejuRuntimeException e) {
-//				return null;
-//			}
-			return user;
+			return RBWebSession.get().getUser();
 		} else {
 			return null;
 		}

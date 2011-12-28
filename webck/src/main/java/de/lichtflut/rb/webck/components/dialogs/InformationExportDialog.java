@@ -163,12 +163,13 @@ public abstract class InformationExportDialog extends AbstractRBDialog implement
 				}
 				
 				length = Bytes.bytes(buffer.size());
+				in = new ByteArrayInputStream(buffer.toByteArray());
+				buffer.close();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			} catch (OntologyIOException e) {
 				throw new RuntimeException(e);
 			}
-			in = new ByteArrayInputStream(buffer.toByteArray());
 			return in;
 		}
 

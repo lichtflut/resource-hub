@@ -14,8 +14,11 @@ import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
 import de.lichtflut.rb.webck.components.ResourceBrowsingPanel;
+import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 
 /**
  * <p>
@@ -78,8 +81,13 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 	
 	// ----------------------------------------------------
 	
-	protected Component initBrowser(final EntityHandle handle, final boolean readonly) {
-		final Browser browser = new Browser("rb", handle, !readonly);
+	private Component initBrowser(final EntityHandle handle, final boolean readonly) {
+		final BrowsingHistory history = RBWebSession.get().getHistory();
+		history.view(handle);
+		if (!readonly) {
+			history.beginEditing();
+		}
+		final Browser browser = new Browser("rb");
 		add(browser);
 		return browser;
 	}
@@ -88,18 +96,14 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 
 	class Browser extends ResourceBrowsingPanel {
 		
-		public Browser(final String id, EntityHandle handle, boolean editable) {
-			super(id, handle, editable);
+		public Browser(final String id) {
+			super(id);
 		}
 
 		@Override
-		public CharSequence getUrlToResource(EntityHandle handle) {
+		public CharSequence getUrlToResource(ResourceID id, VisualizationMode mode) {
 			final PageParameters params = new PageParameters();
-			if (handle.hasId()) {
-				params.add(EntityDetailPage.PARAM_RESOURCE_ID, handle.getId().getQualifiedName().toURI());
-			} else {
-				params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, handle.getType().getQualifiedName().toURI());
-			}
+			params.add(EntityDetailPage.PARAM_RESOURCE_ID, id.getQualifiedName().toURI());
 			return RequestCycle.get().urlFor(EntityDetailPage.class, params);
 		}
 

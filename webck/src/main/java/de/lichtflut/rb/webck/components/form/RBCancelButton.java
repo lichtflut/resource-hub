@@ -6,7 +6,7 @@ package de.lichtflut.rb.webck.components.form;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Standard cancel button.
  * </p>
  *
  * <p>
@@ -15,7 +15,7 @@ package de.lichtflut.rb.webck.components.form;
  *
  * @author Oliver Tigges
  */
-public abstract class RBCancelButton extends RBStandardButton {
+public class RBCancelButton extends RBStandardButton {
 
 	/**
 	 * @param id

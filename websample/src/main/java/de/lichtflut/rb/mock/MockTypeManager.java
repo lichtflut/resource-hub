@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.model.nodes.views.SNProperty;
@@ -59,7 +60,7 @@ public class MockTypeManager implements TypeManager, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void removeType(final SNClass type) {
+	public void removeType(final ResourceID type) {
 		throw new NotYetImplementedException();
 	}
 

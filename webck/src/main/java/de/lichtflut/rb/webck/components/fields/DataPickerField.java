@@ -6,7 +6,6 @@ package de.lichtflut.rb.webck.components.fields;
 import java.io.Serializable;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
@@ -91,12 +90,29 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		add(display);
 		
 		add(new AttributeModifier("title", hiddenModel));
+		
+		add(new PickerSuggestLink("suggest", display));
 	}
 	
 	// -----------------------------------------------------
 	
-	public Component getDisplayComponent() {
-		return get("display");
+	public String getDisplayValue() {
+		return getDisplayComponent().getDefaultModelObjectAsString();
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public Autocomplete getDisplayComponent() {
+		return (Autocomplete) get("display");
+	}
+	
+	public PickerSuggestLink getSuggestLink() {
+		return (PickerSuggestLink) get("suggest");
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public DataPickerField setSource(AutocompleteSource source) {
+		getDisplayComponent().setSource(source);
+		return this;
 	}
 	
 	// ----------------------------------------------------
@@ -127,7 +143,6 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	/** 
 	 * {@inheritDoc}
 	 */
-	
 	@Override
 	protected void convertInput() {
 		final FormComponent<T> comp = getValueField();

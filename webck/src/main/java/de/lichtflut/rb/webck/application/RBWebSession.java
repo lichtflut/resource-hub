@@ -9,6 +9,8 @@ import org.apache.wicket.request.Request;
 import org.arastreju.sge.eh.ArastrejuRuntimeException;
 import org.arastreju.sge.security.User;
 
+import de.lichtflut.rb.webck.browsing.BrowsingHistory;
+
 
 /**
  * <p>

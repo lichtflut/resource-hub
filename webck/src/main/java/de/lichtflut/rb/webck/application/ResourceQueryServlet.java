@@ -6,31 +6,29 @@ package de.lichtflut.rb.webck.application;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.Validate;
 import org.apache.wicket.util.crypt.Base64;
-import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryManager;
 import org.arastreju.sge.query.QueryResult;
+import org.arastreju.sge.query.SimpleQueryResult;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.common.TermSearcher;
+import de.lichtflut.rb.webck.common.TermSearcher.Mode;
 
 /**
  * <p>
@@ -53,28 +51,18 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	
 	public final static String QUERY_PROPERTY = "/property";
 	
+	public final static String QUERY_SUB_CLASS = "/subclass";
+	
 	public final static String AUTOCOMPLETE_PARAM = "term";
 	
 	public final static String TYPE_PARAM = "type";
 	
 	public final static String QUERY_PARAM = "query";
 	
-	private static final Pattern ESCAPE_CHARS = Pattern.compile("[\\\\+\\-\\!\\(\\)\\:\\^\\]\\{\\}\\~\\*\\?\\s]");
-	
 	private Logger logger = LoggerFactory.getLogger(ResourceQueryServlet.class);
 	
 	// -----------------------------------------------------
 	
-	enum Mode {
-		UNKNOWN,
-		URI,
-		VALUES,
-		ENTITY,
-		PROPERTY,
-	}
-	
-	// -----------------------------------------------------
-
 	/** 
 	 * {@inheritDoc}
 	 */
@@ -121,15 +109,8 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 		final List<JsonNode> jsons = new ArrayList<JsonNode>();
 		int counter = 0;
 		for (ResourceNode current : result) {
-			if (Mode.ENTITY.equals(mode)) {
-				final RBEntity entity = getServiceProvider().getEntityManager().find(current);
-				if (entity != null) {
-					jsons.add(new JsonNode(entity.getID(), entity.getLabel()));
-				}
-			} else {
-				final String label = ResourceLabelBuilder.getInstance().getLabel(current, resp.getLocale());
-				jsons.add(new JsonNode(current, label));
-			}
+			final String label = ResourceLabelBuilder.getInstance().getLabel(current, resp.getLocale());
+			jsons.add(new JsonNode(current, label));
 			counter++;
 			if (counter > 20) {
 				break;
@@ -146,35 +127,16 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	 * @return The query result.
 	 */
 	protected QueryResult searchNodes(final String term, final Mode mode, final String type) {
+		final TermSearcher searcher = new TermSearcher();
 		final QueryManager qm = getServiceProvider().getArastejuGate().createQueryManager();
-		final Query query = qm.buildQuery();
-		switch (mode){
-		case URI:
-			query.addURI(prepareTerm(term));
-			break;
-		case ENTITY:
-		case VALUES:
-			query.beginAnd();
-			addValues(query, term.split("\\s+"));
-			if (type != null) {
-				query.addField(RDF.TYPE, type);
-			}
-			query.end();
-			break;
-		case PROPERTY:
-			query.beginAnd();
-			query.beginOr();
-			addValues(query, term.split("\\s+"));
-			query.addURI(prepareTerm(term, 0.5f));
-			query.end();
-			query.addField(RDF.TYPE, RDF.PROPERTY);
-			query.end();
-			break;
-		default:
-			throw new NotYetSupportedException();
-		}
+		final Query query = searcher.prepareQuery(qm, term, mode, type);
 		logger.info("Query: " + query);
-		return query.getResult();
+		try {
+			return query.getResult();
+		} catch (RuntimeException e) {
+			logger.warn("failed to execute query: " + query.toString());
+			return SimpleQueryResult.EMPTY;
+		}
 	}
 	
 	protected Mode getMode(final HttpServletRequest req) {
@@ -186,32 +148,11 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 			return Mode.ENTITY;
 		} else if (QUERY_PROPERTY.equals(req.getPathInfo())) {
 			return Mode.PROPERTY;
+		} else if (QUERY_SUB_CLASS.equals(req.getPathInfo())) {
+			return Mode.SUB_CLASS;
 		} else {
 			return Mode.UNKNOWN;
 		}
-	}
-	
-	protected void addValues(final Query query, final String... values) {
-		Validate.notEmpty(values);
-		for (String val : values) {
-			query.addValue(prepareTerm(val));
-		}
-	}
-	
-	protected String prepareTerm(final String orig, float boost) {
-		return prepareTerm(orig) + "^" + boost;
-	}
-	
-	protected String prepareTerm(final String orig) {
-		final StringBuilder sb = new StringBuilder(128);
-		if (!orig.startsWith("*")) {
-			sb.append("*");
-		}
-		sb.append(ESCAPE_CHARS.matcher(orig).replaceAll("\\\\$0"));
-		if (!orig.endsWith("*")) {
-			sb.append("*");
-		}
-		return sb.toString();
 	}
 	
 	// -----------------------------------------------------

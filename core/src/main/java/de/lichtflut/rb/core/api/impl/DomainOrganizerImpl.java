@@ -11,12 +11,13 @@ import java.util.List;
 
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
-import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
@@ -72,7 +73,7 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 		}
 		
 		ResourceNode attached = mc.resolve(organization);
-		assure(attached, RB.IS_DOMAIN_ORGANIZATION, Aras.TRUE);
+		assure(attached, RB.IS_DOMAIN_ORGANIZATION, new SNValue(ElementaryDataType.BOOLEAN, Boolean.TRUE));
 		mc.close();
 	}
 
@@ -84,7 +85,7 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 		final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
 		query.addField(RDF.TYPE, RB.ORGANIZATION);
 		query.and();
-		query.addField(RB.IS_DOMAIN_ORGANIZATION, Aras.TRUE);
+		query.addField(RB.IS_DOMAIN_ORGANIZATION, "true");
 		return query.getSingleNode();
 	}
 	

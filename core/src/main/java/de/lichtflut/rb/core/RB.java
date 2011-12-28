@@ -67,11 +67,9 @@ public interface RB {
 	
 	ResourceID ORGANIZATION = new SimpleResourceID(COMMON_NAMESPACE_URI, "Organization");
 	
-	ResourceID SYSTEM = new SimpleResourceID(COMMON_NAMESPACE_URI, "System");
-	
 	ResourceID PROJECT = new SimpleResourceID(COMMON_NAMESPACE_URI, "Project");
 	
-	ResourceID BUSINESS_PROCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "BusinessProcess");
+	ResourceID ADDRESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "Address");
 	
 	// -- SYSTEM PROPERTIES -------------------------------
 	
@@ -97,6 +95,16 @@ public interface RB {
 	
 	
 	// -- COMMON PROPERTIES --------------------------------------
+
+	/**
+	 * Child node in tree structures.
+	 */
+	ResourceID HAS_CHILD_NODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasChildNode");
+	
+	/**
+	 * Child node in tree structures.
+	 */
+	ResourceID HAS_PARENT_NODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasParentNode");
 	
 	/**
 	 * Superordinate units.
@@ -112,6 +120,16 @@ public interface RB {
 	 * General name of something (e.g. an organization).
 	 */
 	ResourceID HAS_NAME = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasName");
+
+	/**
+	 * General title of something (e.g. a project).
+	 */
+	ResourceID HAS_TITLE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasTitle");
+	
+	/**
+	 * General ID of something (e.g. an application).
+	 */
+	ResourceID HAS_ID = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasID");
 
 	/**
 	 * First name of a person.
@@ -147,6 +165,16 @@ public interface RB {
 	 * The address.
 	 */
 	ResourceID HAS_ADDRESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasAddress");
+	
+	/**
+	 * The address.
+	 */
+	ResourceID HAS_OWNER = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasOwner");
+	
+	/**
+	 * The address.
+	 */
+	ResourceID HAS_LEAD = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasLead");
 	
 	/**
 	 * Is non-profit organization.

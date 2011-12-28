@@ -36,7 +36,7 @@ public class SlideTransitionBehavior extends WiQueryAbstractBehavior {
 	*/
 	@Override
 	public JsStatement statement() {
-		return new JsStatement().$(getComponent()).append(".show('slide', '', 50)");
+		return new JsStatement().$(getComponent()).append(".show('slide', '', 1000)");
 	}
 	
 	@Override

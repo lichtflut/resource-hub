@@ -13,7 +13,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.webck.models.BrowsingContextModel;
+import static de.lichtflut.rb.webck.models.ConditionalModel.*;
+import static de.lichtflut.rb.webck.models.BrowsingContextModel.*;
 
 /**
  * <p>
@@ -37,13 +38,16 @@ public abstract class BrowsingButtonBar extends Panel {
 		
 		add(createSaveButton(model, form));
 		add(createCancelButton(model, form));
+		add(createClassifyButton(model, form));
 		
-		add(visibleIf(BrowsingContextModel.isInSubReferencingMode()));
+		add(visibleIf(isInSubReferencingMode()));
 	}
 	
 	// ----------------------------------------------------
 	
 	public abstract void onSave();
+	
+	public abstract void onClassify();
 	
 	public abstract void onCancel();
 	
@@ -61,8 +65,26 @@ public abstract class BrowsingButtonBar extends Panel {
 				target.add(form);
 			}
 		};
-		save.add(defaultButtonIf(BrowsingContextModel.isInSubReferencingMode()));
+		save.add(defaultButtonIf(and(isInSubReferencingMode(), not(isInClassifyMode()))));
+		save.add(visibleIf(not(isInClassifyMode())));
 		return save;
+	}
+	
+	protected AjaxFallbackButton createClassifyButton(final IModel<RBEntity> model, final Form form) {
+		final AjaxFallbackButton classify = new AjaxFallbackButton("classify", form) {
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				onClassify();
+			}
+			
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				target.add(form);
+			}
+		};
+		classify.add(defaultButtonIf(and(isInSubReferencingMode(), isInClassifyMode())));
+		classify.add(visibleIf(isInClassifyMode()));
+		return classify;
 	}
 	
 	protected AjaxFallbackButton createCancelButton(final IModel<RBEntity> model, final Form form) {
