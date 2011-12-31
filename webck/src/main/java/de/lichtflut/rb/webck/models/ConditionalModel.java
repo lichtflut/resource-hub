@@ -9,6 +9,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
+import org.arastreju.sge.security.User;
 
 import de.lichtflut.infra.Infra;
 
@@ -151,6 +152,17 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			@Override
 			public boolean isFulfilled() {
 				return model.getObject().doubleValue() < other.getObject().doubleValue();
+			}
+		};
+	}
+	
+
+	public static <T> ConditionalModel<T> hasPermission(final IModel<User> userModel, final String permission) {
+		return new ConditionalModel<T>(userModel) {
+			@Override
+			public boolean isFulfilled() {
+				final User user = userModel.getObject();
+				return user != null && user.hasPermission(permission);
 			}
 		};
 	}

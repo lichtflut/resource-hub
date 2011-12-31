@@ -86,7 +86,7 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 		query.addField(RDF.TYPE, RB.ORGANIZATION);
 		query.and();
 		query.addField(RB.IS_DOMAIN_ORGANIZATION, "true");
-		return query.getSingleNode();
+		return query.getResult().getSingleNode();
 	}
 	
 	// ----------------------------------------------------

@@ -76,6 +76,11 @@ public interface RB {
 	/**
 	 * Each RBEntity may have a primary image URL/ID.
 	 */
+	ResourceID HAS_RELOGIN_UUID = new SimpleResourceID(SYS_NAMESPACE_URI, "hasReloginUUID");
+	
+	/**
+	 * Each RBEntity may have a primary image URL/ID.
+	 */
 	ResourceID HAS_IMAGE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasImage");
 
 	/**

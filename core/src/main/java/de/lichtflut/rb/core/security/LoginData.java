@@ -19,6 +19,7 @@ public class LoginData implements Serializable {
 
 	private String password;
 	private String id;
+	private boolean stayLoggedIn;
 	
 	// ----------------------------------------------------
 	
@@ -44,6 +45,20 @@ public class LoginData implements Serializable {
 
 	public void setId(final String id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the stayLoggedIn
+	 */
+	public boolean getStayLoggedIn() {
+		return stayLoggedIn;
+	}
+
+	/**
+	 * @param stayLoggedIn the stayLoggedIn to set
+	 */
+	public void setStayLoggedIn(boolean stayLoggedIn) {
+		this.stayLoggedIn = stayLoggedIn;
 	}
 
 }
