@@ -89,7 +89,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 * @param ctx The context.
 	 */
 	public void setDisplayName(final String name, final Context... ctx) {
-		SNOPS.replace(this, RBSchema.HAS_NAME, new SNText(name), ctx);
+		SNOPS.assure(this, RBSchema.HAS_NAME, new SNText(name), ctx);
 	}
 	
 	/**
@@ -173,7 +173,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 * @param contexts The contexts of this statement. 
 	 */
 	public void setPublic(final Context... contexts) {
-		SNOPS.replace(this, RBSchema.IS_PUBLIC_TYPE_DEF, Aras.TRUE, contexts);
+		SNOPS.assure(this, RBSchema.IS_PUBLIC_TYPE_DEF, Aras.TRUE, contexts);
 	}
 	
 	/**
@@ -181,7 +181,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 * @param contexts The contexts of this statement. 
 	 */
 	public void setPrivate(final Context... contexts) {
-		SNOPS.replace(this, RBSchema.IS_PUBLIC_TYPE_DEF, Aras.FALSE, contexts);
+		SNOPS.assure(this, RBSchema.IS_PUBLIC_TYPE_DEF, Aras.FALSE, contexts);
 	}
 	
 	

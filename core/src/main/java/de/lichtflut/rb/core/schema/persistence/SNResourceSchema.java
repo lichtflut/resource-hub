@@ -81,7 +81,7 @@ public class SNResourceSchema extends ResourceView {
 	 * @param ctx The context.
 	 */
 	public void setDescribedType(final ResourceID type, final Context... ctx) {
-		SNOPS.replace(this, RBSchema.DESCRIBES, type, ctx);
+		SNOPS.assure(this, RBSchema.DESCRIBES, type, ctx);
 	}
 	
 	/**
@@ -110,7 +110,7 @@ public class SNResourceSchema extends ResourceView {
 	 * @param ctx The context.
 	 */
 	public void setLabelExpression(final SNText expression, final Context... ctx) {
-		SNOPS.replace(this, RBSchema.HAS_LABEL_EXPRESSION, expression, ctx);
+		SNOPS.assure(this, RBSchema.HAS_LABEL_EXPRESSION, expression, ctx);
 	}
 
 	/**

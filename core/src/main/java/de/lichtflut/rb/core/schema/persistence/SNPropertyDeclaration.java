@@ -100,7 +100,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	 */
 	public void setTypeDefinition(final SNPropertyTypeDefinition typeDef, final Context context) {
 		if (!Infra.equals(getTypeDefinition(), typeDef)){
-			SNOPS.replace(this, RBSchema.HAS_PROPERTY_TYPE_DEF, typeDef, context);
+			SNOPS.assure(this, RBSchema.HAS_PROPERTY_TYPE_DEF, typeDef, context);
 		}
 	}
 
@@ -124,7 +124,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	 */
 	public void setPropertyDescriptor(final ResourceID property, final Context context) {
 		if (!Infra.equals(getPropertyDescriptor(), property)){
-			SNOPS.replace(this, RBSchema.HAS_DESCRIPTOR, property, context);
+			SNOPS.assure(this, RBSchema.HAS_DESCRIPTOR, property, context);
 		}
 	}
 
@@ -148,7 +148,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	 */
 	public void setMinOccurs(final SNScalar minOccurs, final Context context) {
 		if (!Infra.equals(getMinOccurs(), minOccurs)){
-			SNOPS.replace(this, RBSchema.MIN_OCCURS, minOccurs, context);
+			SNOPS.assure(this, RBSchema.MIN_OCCURS, minOccurs, context);
 		}
 	}
 
@@ -172,7 +172,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	 */
 	public void setMaxOccurs(final SNScalar maxOccurs, final Context context) {
 		if (!Infra.equals(getMaxOccurs(), maxOccurs)){
-			SNOPS.replace(this, RBSchema.MAX_OCCURS, maxOccurs, context);
+			SNOPS.assure(this, RBSchema.MAX_OCCURS, maxOccurs, context);
 		}
 	}
 	
@@ -198,7 +198,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * @return The successor or null.
 	 */
 	public void setSuccessor(final SNPropertyDeclaration successor, final Context... contexts) {
-		SNOPS.replace(this, Aras.IS_PREDECESSOR_OF, successor, contexts);
+		SNOPS.assure(this, Aras.IS_PREDECESSOR_OF, successor, contexts);
 	}
 	
 	//-----------------------------------------------------
