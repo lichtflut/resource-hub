@@ -17,9 +17,7 @@ import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.entity.MetaInfo;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -97,43 +95,6 @@ public class RBEntityImpl implements RBEntity {
 	// -----------------------------------------------------
 
 	/**
-	 * <p>
-	 * Initialized this {@link RBEntity}s {@link RBField}s
-	 * </p>
-	 * <p>
-	 * If a {@link ResourceSchema} extists it is taken into account, as well as
-	 * additional fields which may not be specified in the schema, but present
-	 * in the Entity itself.
-	 * </p>
-	 * <p>
-	 * If no {@link ResourceSchema} exists, the {@link RBField}s will be created
-	 * according to the values present in the Entity itself.
-	 * TODO: Make protected id no longer needed by MockEntityManager
-	 */
-	public void initializeFields() {
-		final Set<ResourceID> predicates = new HashSet<ResourceID>();
-		for(Association current : node.getAssociations()) {
-			predicates.add(current.getPredicate());
-		}
-		fields = new ArrayList<RBField>();
-		if (schema != null) {
-			for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
-				final ResourceID predicate = decl.getPropertyDescriptor();
-				fields.add(new DeclaredRBField(decl, SNOPS.objects(node, predicate)));
-				predicates.remove(predicate);
-			}
-		}
-		// TODO: Remove from blacklist rdf(s):*
-		predicates.remove(RDF.TYPE);
-		for (ResourceID predicate : predicates) {
-			final Set<SemanticNode> nodes = filterValues(SNOPS.objects(node, predicate));
-			if (!nodes.isEmpty()) {
-				fields.add(new UndeclaredRBField(predicate, SNOPS.objects(node, predicate)));
-			}
-		}
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -143,14 +104,17 @@ public class RBEntityImpl implements RBEntity {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @return The corresponding {@link ResourceNode}.
 	 */
-	@Override
-	public QualifiedName getQualifiedName() {
-		return node.getQualifiedName();
+	public ResourceNode getNode(){
+		return node;
 	}
 
-
+	@Override
+	public ResourceID getType() {
+		return type;
+	}
+	
 	@Override
 	public String getLabel() {
 		if(null != schema){
@@ -158,11 +122,6 @@ public class RBEntityImpl implements RBEntity {
 		}else{
 			return "";
 		}
-	}
-
-	@Override
-	public ResourceID getType() {
-		return type;
 	}
 
 	/**
@@ -194,22 +153,6 @@ public class RBEntityImpl implements RBEntity {
 		return fields.add(field);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public MetaInfo getRBMetaInfo() {
-		return new StandardRBMetaInfo(schema);
-	}
-
-	/**
-	 * Returns this RBEntity as a {@link ResourceNode}.
-	 * @return this RBEntity as a {@link ResourceNode}
-	 */
-	public ResourceNode getNode(){
-		return node;
-	}
-	
 	// ----------------------------------------------------
 	
 	/**
@@ -217,7 +160,7 @@ public class RBEntityImpl implements RBEntity {
 	 */
 	@Override
 	public String toString(){
-		String s = getQualifiedName() + ", ";
+		String s = node.getQualifiedName() + ", ";
 		for(RBField field : getAllFields()) {
 			if(field.isResourceReference()) {
 				s += field.getLabel(Locale.getDefault()) + ": " + field.getConstraints() + ", ";
@@ -229,6 +172,42 @@ public class RBEntityImpl implements RBEntity {
 	}
 	
 	// ----------------------------------------------------
+	
+	/**
+	 * <p>
+	 * Initialized this {@link RBEntity}s {@link RBField}s
+	 * </p>
+	 * <p>
+	 * If a {@link ResourceSchema} extists it is taken into account, as well as
+	 * additional fields which may not be specified in the schema, but present
+	 * in the Entity itself.
+	 * </p>
+	 * <p>
+	 * If no {@link ResourceSchema} exists, the {@link RBField}s will be created
+	 * according to the values present in the Entity itself.
+	 */
+	private void initializeFields() {
+		final Set<ResourceID> predicates = new HashSet<ResourceID>();
+		for(Association current : node.getAssociations()) {
+			predicates.add(current.getPredicate());
+		}
+		fields = new ArrayList<RBField>();
+		if (schema != null) {
+			for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+				final ResourceID predicate = decl.getPropertyDescriptor();
+				fields.add(new DeclaredRBField(decl, SNOPS.objects(node, predicate)));
+				predicates.remove(predicate);
+			}
+		}
+		// TODO: Remove from blacklist rdf(s):*
+		predicates.remove(RDF.TYPE);
+		for (ResourceID predicate : predicates) {
+			final Set<SemanticNode> nodes = filterValues(SNOPS.objects(node, predicate));
+			if (!nodes.isEmpty()) {
+				fields.add(new UndeclaredRBField(predicate, SNOPS.objects(node, predicate)));
+			}
+		}
+	}
 	
 	/**
 	 * @param objects
@@ -243,6 +222,5 @@ public class RBEntityImpl implements RBEntity {
 		}
 		return filtered;
 	}
-
 
 }

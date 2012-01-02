@@ -8,12 +8,11 @@ import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.naming.QualifiedName;
 
 
 /**
  * <p>
- * An RBField represents one attribute of a RBEntity. This attribute can contain multiple values.
+ *  An RBField represents one attribute of a RBEntity. This attribute can contain multiple values.
  * </p>
  *
  * Created: Aug 15, 2011
@@ -27,12 +26,6 @@ public interface RBEntity extends Serializable {
 	 * @return - {@link ResourceID}
 	 */
 	ResourceID getID();
-
-	/**
-	 * Returns the full qualified name (URI) of this RBEntity.
-	 * @return - Entities qualified name
-	 */
-	QualifiedName getQualifiedName();
 
 	/**
 	 * Returns a Label for this {@link RBEntity}.
@@ -73,21 +66,5 @@ public interface RBEntity extends Serializable {
 	 * @return true if added successfully, false if not
 	 */
 	boolean addField(RBField field);
-
-	/**
-	 * Returns MetaInfo about this RBEntity.
-	 * TODO: It is not yet exactly specified what {@link MetaInfo} will contain (maybe RBSchema, number of fields, etc...).
-	 * @return - {@link MetaInfo}
-	 */
-	MetaInfo getRBMetaInfo();
-
-	// ------------------------------------------------------------
-
-	/**
-	 * String representation of this RBEntity.
-	 * TODO: Specify pattern
-	 * @return {@link String}
-	 */
-	String toString();
 
 }
