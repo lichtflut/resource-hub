@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.schema.model.impl;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 
 import org.arastreju.sge.model.ResourceID;
@@ -13,6 +14,7 @@ import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.NamespaceHandle;
 import org.arastreju.sge.naming.QualifiedName;
 
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
@@ -65,10 +67,11 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 	 */
 	@Override
 	public String build(final RBEntity entity) {
+		final Locale locale = Locale.getDefault();
 		final StringBuilder sb = new StringBuilder();
 		boolean hasContent = false;
 		for (Element el : elements) {
-			hasContent = el.append(entity, sb) || hasContent;
+			hasContent = el.append(entity, sb, locale) || hasContent;
 			sb.append(" ");
 		}
 		if (hasContent) {
@@ -154,7 +157,7 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 	// -- ELEMENT TYPES -----------------------------------
 	
 	interface Element extends Serializable {
-		boolean append(final RBEntity entity, final StringBuilder sb);
+		boolean append(RBEntity entity, StringBuilder sb, Locale locale);
 	}
 	
 	class LiteralElement implements Element {
@@ -166,7 +169,7 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 		}
 
 		@Override
-		public boolean append(RBEntity entity, StringBuilder sb) {
+		public boolean append(RBEntity entity, StringBuilder sb, Locale locale) {
 			sb.append(value);
 			return false;
 		}
@@ -190,7 +193,7 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 		}
 		
 		@Override
-		public boolean append(RBEntity entity, StringBuilder sb) {
+		public boolean append(RBEntity entity, StringBuilder sb, Locale locale) {
 			final RBField field = entity.getField(predicate);
 			if (field == null) {
 				sb.append("%" + predicate + "% ");
@@ -207,7 +210,7 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 					sb.append(" ");
 				}
 				if((field.isResourceReference()) && (value != null)){
-					sb.append(getResourceLabel(value));
+					sb.append(getResourceLabel(value, locale));
 				} else {
 					sb.append(value);
 				}
@@ -221,14 +224,11 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 		
 	}
 	
-	private static String getResourceLabel(final Object ref) {
+	private static String getResourceLabel(final Object ref, final Locale locale) {
 		if (ref instanceof RBEntityReference) {
-			final RBEntityReference entityReference = (RBEntityReference) ref;
-			if (entityReference.isResolved()) {
-				return entityReference.getEntity().getLabel();
-			} else {
-				return entityReference.getQualifiedName().toURI();
-			}
+			return ((RBEntityReference) ref).getLabel(locale);
+		} if (ref instanceof ResourceID) {
+			return ResourceLabelBuilder.getInstance().getLabel((ResourceID) ref, locale);
 		} else {
 			throw new IllegalStateException("Unecpected class for resource reference: " + ref.getClass());
 		}

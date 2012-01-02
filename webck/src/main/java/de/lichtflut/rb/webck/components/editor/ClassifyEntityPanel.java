@@ -32,7 +32,7 @@ public class ClassifyEntityPanel extends Panel {
 	
 	/**
 	 * @param id - wicket:id
-	 * @param entity - {@link RBEntity} which is to be displayed
+	 * @param entityModel - the entity to be classified.
 	 */
 	public ClassifyEntityPanel(final String id, final  IModel<RBEntity> entityModel, final IModel<ResourceID> targetModel) {
 		super(id);

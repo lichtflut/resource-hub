@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
+import java.util.Locale;
+
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.crypt.Base64;
@@ -72,7 +74,7 @@ public class EntityPickerField extends DataPickerField<RBEntityReference> {
 					value = null;
 					return "";
 				} else if (value == null) {
-					value = originalModel.getObject().toString();
+					value = originalModel.getObject().getLabel(Locale.getDefault());
 				} 
 				return value;
 			}

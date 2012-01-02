@@ -41,7 +41,7 @@ public class ResourceInfoPanel extends Panel {
 
 	/**
 	 * @param id - wicket:id
-	 * @param entity - {@link RBEntity} which is to be displayed
+	 * @param model - {@link RBEntity} which is to be displayed
 	 */
 	public ResourceInfoPanel(final String id, final IModel<RBEntity> model) {
 		super(id);

@@ -3,11 +3,15 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
+import java.util.Locale;
+
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.crypt.Base64;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
+
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 
 /**
  * <p>
@@ -47,7 +51,7 @@ public class ResourcePickerField extends DataPickerField<ResourceID> {
 	 * @param source The source for auto completion.
 	 */
 	public ResourcePickerField(final String id, final IModel<ResourceID> model, final AutocompleteSource src) {
-		super(id, model, src);
+		super(id, model, toDisplayModel(model), src);
 		setType(ResourceID.class);
 	}
 	
@@ -71,6 +75,38 @@ public class ResourcePickerField extends DataPickerField<ResourceID> {
 			sb.append(Base64.encodeBase64URLSafeString(type.getQualifiedName().toURI().getBytes()));
 		}
 		return new AutocompleteSource(sb.toString());
+	}
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * @param originalModel
+	 * @return A corresponding display model.
+	 */
+	private static IModel<String> toDisplayModel(final IModel<ResourceID> originalModel) {
+		return new IModel<String>() {
+			
+			private String value;
+
+			public void detach() {
+			}
+
+			public String getObject() {
+				final ResourceID orig = originalModel.getObject();
+				if (orig == null) {
+					value = null;
+					return "";
+				} else if (value == null) {
+					final ResourceID id = originalModel.getObject();
+					value = ResourceLabelBuilder.getInstance().getLabel(id, Locale.getDefault());
+				} 
+				return value;
+			}
+
+			public void setObject(final String object) {
+				value = object;
+			}
+		};
 	}
 	
 }

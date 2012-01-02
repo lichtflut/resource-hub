@@ -94,11 +94,12 @@ public abstract class CreateRelationshipPanel extends Panel {
 					getServiceProvider().getEntityManager().resolve(objectModel.getObject());
 					target.focusComponent(predicatePicker.getDisplayComponent());	
 				}
-				target.add(form);
+				// add root form due to default button change
+				target.add(form.getRootForm());
 			}
 		};
-		selectButton.add(defaultButtonIf(isFalse(objectSelected)));
 		selectButton.add(visibleIf(isFalse(objectSelected)));
+		selectButton.add(defaultButtonIf(isFalse(objectSelected)));
 		form.add(selectButton);
 		
 		final AjaxButton createButton = new RBStandardButton("create") {
@@ -113,7 +114,6 @@ public abstract class CreateRelationshipPanel extends Panel {
 		form.add(createButton);
 		
 		final AjaxButton cancelButton = new RBCancelButton("cancel") {
-			
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				resetModels();

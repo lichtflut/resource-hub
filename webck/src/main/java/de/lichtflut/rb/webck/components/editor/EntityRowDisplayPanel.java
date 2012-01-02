@@ -13,6 +13,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
@@ -99,7 +100,7 @@ public class EntityRowDisplayPanel extends Panel {
 	private void addResourceField(final ListItem<RBFieldValueModel> item) {
 		final RBEntityReference ref = (RBEntityReference) item.getModelObject().getObject();
 		if (ref != null) {
-			final CrossLink link = new CrossLink("link", getUrlTo(ref).toString());
+			final CrossLink link = new CrossLink("link", getUrlTo(ref.getId()).toString());
 			link.add(new Label("label", Model.of(ref.toString())));
 			item.add(new Fragment("valuefield", "referenceLink", this).add(link));
 		} else {
@@ -107,14 +108,14 @@ public class EntityRowDisplayPanel extends Panel {
 		}
 	}
 
-	protected CharSequence getUrlTo(final RBEntityReference ref) {
+	protected CharSequence getUrlTo(final ResourceID ref) {
 		final IBrowsingHandler handler = findParent(IBrowsingHandler.class);
 		if (handler == null) {
 			throw new IllegalStateException(getClass().getSimpleName() 
 					+ " must be placed placed in a component/page that implements " 
 					+ IBrowsingHandler.class);
 		}
-		final CharSequence url = handler.getUrlToResource(ref.getId(), VisualizationMode.DETAILS);
+		final CharSequence url = handler.getUrlToResource(ref, VisualizationMode.DETAILS);
 		return url;
 	}
 	

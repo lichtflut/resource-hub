@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.models.entity;
 import java.util.Locale;
 
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBEntityReference;
@@ -39,10 +40,11 @@ public class RBEntityReferenceLabelModel extends DerivedModel<String, RBEntityRe
 	*/
 	@Override
 	protected String derive(RBEntityReference original) {
+		final Locale locale = RequestCycle.get().getRequest().getLocale();
 		if (original.isResolved()) {
-			return original.getEntity().getLabel();
+			return original.getLabel(locale);
 		} else {
-			return ResourceLabelBuilder.getInstance().getLabel(original.getId().asResource(), Locale.getDefault());
+			return ResourceLabelBuilder.getInstance().getLabel(original.getId().asResource(), locale);
 		}
 	}
 	
