@@ -76,12 +76,12 @@ public interface RB {
 	/**
 	 * Each RBEntity may have a primary image URL/ID.
 	 */
-	ResourceID HAS_RELOGIN_UUID = new SimpleResourceID(SYS_NAMESPACE_URI, "hasReloginUUID");
+	ResourceID HAS_IMAGE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasImage");
 	
 	/**
-	 * Each RBEntity may have a primary image URL/ID.
+	 * The last login of a user.
 	 */
-	ResourceID HAS_IMAGE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasImage");
+	ResourceID HAS_LAST_LOGIN = new SimpleResourceID(SYS_NAMESPACE_URI, "hasLastLogin");
 
 	/**
 	 * Each RBEntity may have a short literal description.

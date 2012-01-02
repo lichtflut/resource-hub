@@ -17,6 +17,7 @@ import de.lichtflut.rb.core.api.TypeManager;
 import de.lichtflut.rb.core.api.impl.DomainOrganizerImpl;
 import de.lichtflut.rb.core.api.impl.EntityManagerImpl;
 import de.lichtflut.rb.core.api.impl.SchemaManagerImpl;
+import de.lichtflut.rb.core.api.impl.SecurityServiceImpl;
 import de.lichtflut.rb.core.api.impl.TypeManagerImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
@@ -37,7 +38,7 @@ public class DefaultRBServiceProvider implements ServiceProvider {
     private SchemaManager schemaManager;
     private EntityManager entityManager;
     private TypeManager typeManager;
-    private SecurityService service;
+    private SecurityService securityService;
     private DomainOrganizer organizer;
 
     // --CONSTRUCTOR----------------------------------------
@@ -53,6 +54,7 @@ public class DefaultRBServiceProvider implements ServiceProvider {
         entityManager = new EntityManagerImpl(this);
         typeManager = new TypeManagerImpl(this);
         organizer = new DomainOrganizerImpl(this);
+        securityService = new SecurityServiceImpl(this);
     }
 
     // -----------------------------------------------------
@@ -104,7 +106,7 @@ public class DefaultRBServiceProvider implements ServiceProvider {
     */
     @Override
     public SecurityService getSecurityService() {
-    	return service;
+    	return securityService;
     }
     
     // ----------------------------------------------------
