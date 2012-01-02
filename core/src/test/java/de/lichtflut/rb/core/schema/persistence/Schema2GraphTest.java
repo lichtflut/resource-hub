@@ -6,17 +6,25 @@ package de.lichtflut.rb.core.schema.persistence;
 
 import junit.framework.Assert;
 
+import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.junit.Test;
+import org.openrdf.model.impl.CalendarLiteralImpl;
 
+import com.sun.corba.se.spi.resolver.Resolver;
+
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
 
 /**
  * <p>
@@ -31,14 +39,14 @@ import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
  */
 public class Schema2GraphTest {
 	
+	private Schema2GraphBinding binding;
+	
 	@Test
 	public void testToSemanticNode(){
 		ResourceSchema schema = createSchema();
 		Assert.assertNotNull(schema);
 		
-		Schema2GraphBinding b = createSchema2GraphBinding();
-		
-		SNResourceSchema snr = b.toSemanticNode(schema);
+		SNResourceSchema snr = getBinding().toSemanticNode(schema);
 		
 		Assert.assertNotNull(snr);
 		Assert.assertTrue(snr.getDescribedType().equals(schema.getDescribedType()));
@@ -46,15 +54,55 @@ public class Schema2GraphTest {
 	}
 	
 	@Test
-	public void testTest(){
+	public void testToModelConstraint(){
 		
-		Schema2GraphBinding b = createSchema2GraphBinding();
-		//Schema2GraphBinding.this.toModelObject();
+		TypeDefinition td = new TypeDefinitionImpl();
+		td.setElementaryDataType(Datatype.STRING);
+		Constraint c = ConstraintBuilder.buildConstraint("*.A*");
+		td.addConstraint(c);
+		
+		Assert.assertNotNull(td);
+		
+		SNPropertyTypeDefinition snp = getBinding().toSemanticNode(td);
+		
+		Assert.assertNotNull(snp);
+		Assert.assertEquals(Datatype.STRING, snp.getDatatype());
+		SNConstraint snc = (SNConstraint) snp.getConstraints().toArray()[0];
+		
+		Assert.assertEquals(c.getLiteralConstraint(), getBinding().toModelConstraint(snc).getLiteralConstraint());
+	}
+	
+	@Test
+	public void testToModelObject(){
+		
+		ResourceSchema schema = createSchema();
+		SNResourceSchema snSchema = getBinding().toSemanticNode(schema);
+		ResourceSchema cSchema = getBinding().toModelObject(snSchema);
+		
+		Assert.assertEquals(schema, cSchema);
 		
 	}
 	
-	private Schema2GraphBinding createSchema2GraphBinding(){
-		return new Schema2GraphBinding(null);
+	@Test
+	public void testBuildCardinalety(){
+		
+		TypeDefinition tDef = new TypeDefinitionImpl();
+		tDef.setElementaryDataType(Datatype.STRING);
+		tDef.addConstraint(ConstraintBuilder.buildConstraint("*@*"));
+		
+		
+	}
+	
+	@Test 
+	public void testBuildConstrains(){
+		
+	}
+	
+	private Schema2GraphBinding getBinding(){
+		if(null==binding){
+			binding = new Schema2GraphBinding(null);
+		}
+		return binding;
 	}
 	
 	private ResourceSchema createSchema() {
