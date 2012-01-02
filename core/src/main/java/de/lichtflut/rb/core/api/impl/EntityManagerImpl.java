@@ -100,7 +100,7 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 	@Override
     public void store(final RBEntity entity) {
 		final ModelingConversation mc = startConversation();
-		final ResourceNode node = mc.resolve(entity.getID());
+		final ResourceNode node = entity.getNode();
 		SNOPS.associate(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, RB.ENTITY);
 		for (RBField field :entity.getAllFields()) {
@@ -112,6 +112,7 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 		}
 		// Set label after all entity references have been resolved
 		SNOPS.assure(node, RDFS.LABEL, new SNText(entity.getLabel()));
+		mc.attach(node);
 		mc.close();
     }
 	
@@ -143,8 +144,7 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 	 */
 	@Override
 	public void resolve(final RBEntityReference ref) {
-		final RBEntityImpl resolved = find(ref, false);
-		ref.setEntity(resolved);
+		ref.setResource(provider.getResourceResolver().resolve(ref.getId()));
 	}
 	
 	// -----------------------------------------------------
@@ -218,9 +218,9 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 	private void resolveEntityReferences(final RBField field, final boolean eager) {
 		for (RBEntityReference value : field.<RBEntityReference>getValues()) {
 			if (eager) {
-				value.setEntity(find(value, false));
+				resolve(value);
 			} else {
-				value.setResolver(this);
+				value.setResolver(provider.getResourceResolver());
 			}
 		}
 	}

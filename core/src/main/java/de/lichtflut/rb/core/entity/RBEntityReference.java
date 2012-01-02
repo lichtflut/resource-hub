@@ -6,9 +6,11 @@ package de.lichtflut.rb.core.entity;
 import java.util.Locale;
 
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.ValueNode;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.persistence.ResourceResolver;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 
@@ -28,9 +30,9 @@ public class RBEntityReference implements ResourceID {
 	
 	private final ResourceID id;
 	
-	private RBEntity entity;
+	private ResourceNode resource;
 	
-	private transient ReferenceResolver resolver;
+	private ResourceResolver resourceResolver;
 	
 	// ----------------------------------------------------
 
@@ -45,25 +47,20 @@ public class RBEntityReference implements ResourceID {
 	/**
 	 * Constructor.
 	 * @param id The id.
-	 * @param entity The resolved entity.
 	 */
-	public RBEntityReference(final RBEntity entity) {
-		this.id = entity.getID();
-		this.entity = entity;
+	public RBEntityReference(final ResourceNode resource) {
+		this.id = new SimpleResourceID(resource);
+		this.resource = resource;
 	}
 
 	// ----------------------------------------------------
 	
-	public boolean isResolved() {
-		return getEntity() != null;
+	public void setResource(final ResourceNode resource) {
+		this.resource = resource;
 	}
 	
-	public void setEntity(final RBEntity entity) {
-		this.entity = entity;
-	}
-	
-	public void setResolver(final ReferenceResolver resolver) {
-		this.resolver = resolver;
+	public void setResolver(final ResourceResolver resolver) {
+		this.resourceResolver = resolver;
 	}
 	
 	// ----------------------------------------------------
@@ -85,6 +82,9 @@ public class RBEntityReference implements ResourceID {
 	}
 
 	public ResourceNode asResource() {
+		if (resource != null) {
+			return resource;
+		}
 		return id.asResource();
 	}
 
@@ -95,8 +95,9 @@ public class RBEntityReference implements ResourceID {
 	// ----------------------------------------------------
 	
 	public String getLabel(Locale locale) {
-		if (isResolved()) {
-			return entity.getLabel();
+		final ResourceNode resolved = getResolvedResource();
+		if (resolved != null) {
+			return ResourceLabelBuilder.getInstance().getLabel(resolved, locale);
 		} else {
 			return ResourceLabelBuilder.getInstance().getLabel(id, locale);
 		}
@@ -104,20 +105,16 @@ public class RBEntityReference implements ResourceID {
 	
 	@Override
 	public String toString() {
-		if (isResolved()) {
-			return entity.getLabel();
-		} else {
-			return ResourceLabelBuilder.getInstance().getLabel(id, Locale.getDefault());
-		}
+		return getLabel(Locale.getDefault());
 	}
 	
 	// ----------------------------------------------------
 	
-	private RBEntity getEntity() {
-		if (entity == null && resolver != null) {
-			resolver.resolve(this);
+	private ResourceNode getResolvedResource() {
+		if (resource == null && resourceResolver != null) {
+			return resourceResolver.resolve(id);
 		}
-		return entity;
+		return resource;
 	}
 	
 }

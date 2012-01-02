@@ -13,7 +13,6 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Datatype;
@@ -202,10 +201,7 @@ public final class MockNewRBEntityFactory {
 		List<Object> memberList = new ArrayList<Object>();
 		List<Object> descriptionList = new ArrayList<Object>();
 		nameList.add("Lichtflut F & E GmbH");
-		ceoList.add(new RBEntityReference(createPerson()));
-		locationList.add(new RBEntityReference(createAddress()));
 		independentList.add(true);
-		memberList.add(new RBEntityReference(createPerson()));
 		descriptionList.add("Wir betreiben Grundlagenforschung im Bereich der semantischen Informationsverarbeitung, helfen unseren Kunden bei der Erstellung von Meta-Modellen ihrer Unternehmen und entwickeln Produkte für ontologiebasierte Informationsverwaltung.");
 		list.add(nameList);
 		list.add(ceoList);
@@ -266,11 +262,9 @@ public final class MockNewRBEntityFactory {
 		List<Object> childrenList = new ArrayList<Object>();
 		firstName.add(firstname);
 		lastName.add(lastname);
-		address.add(new RBEntityReference(address1));
 		dateOfBirth.add(date);
 		emailList.add(email);
 		if (children != null) {
-			childrenList.add(new RBEntityReference(children));
 		} else {
 			childrenList.add(null);
 		}
@@ -298,7 +292,6 @@ public final class MockNewRBEntityFactory {
 		List<Object> cityList = new ArrayList<Object>();
 		streetList.add(street);
 		houseNrList.add(houseNr);
-		cityList.add(new RBEntityReference(city));
 		list.add(streetList);
 		list.add(houseNrList);
 		list.add(cityList);

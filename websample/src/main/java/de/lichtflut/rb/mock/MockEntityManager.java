@@ -4,11 +4,11 @@
 package de.lichtflut.rb.mock;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.infra.exceptions.NoLongerSupportedException;
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
@@ -48,28 +48,12 @@ public class MockEntityManager implements EntityManager, Serializable {
 
 	@Override
 	public RBEntity find(final ResourceID resourceID) {
-		for (RBEntity e : dataPool) {
-			if (e.getID().equals(resourceID)) {
-				((RBEntityImpl) e).initializeFields();
-				return e;
-			}
-		}
-		return null;
+		throw new NoLongerSupportedException();
 	}
 
 	@Override
 	public List<RBEntity> findByType(final ResourceID type) {
-		if (type != null) {
-			List<RBEntity> list = new ArrayList<RBEntity>();
-			for (RBEntity e : dataPool) {
-				if (e.getType().equals(type)) {
-					((RBEntityImpl) e).initializeFields();
-					list.add(e);
-				}
-			}
-			return list;
-		}
-		return dataPool;
+		throw new NoLongerSupportedException();
 	}
 
 	// -----------------------------------------------------
