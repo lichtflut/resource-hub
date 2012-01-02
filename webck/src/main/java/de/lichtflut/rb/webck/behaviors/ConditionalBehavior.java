@@ -8,6 +8,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 
 /**
@@ -67,7 +68,7 @@ public abstract class ConditionalBehavior<T> extends Behavior {
 		return new ConditionalBehavior() {
 			@Override
 			protected void apply(Component component) {
-				if (model.isFulfilled()) {
+				if (component.isVisible() && model.isFulfilled()) {
 					final Form<?> form = component.findParent(Form.class);
 					form.setDefaultButton((IFormSubmittingComponent) component);
 				}

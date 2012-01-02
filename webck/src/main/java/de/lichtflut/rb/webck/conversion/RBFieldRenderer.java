@@ -76,13 +76,8 @@ public class RBFieldRenderer implements FieldRenderer<RBField> {
 		}
 
 		@Override
-		public String convertToString(RBEntityReference value, Locale locale) {
-			if (value.isResolved()) {
-				return value.getEntity().getLabel();	
-			} else {
-				return value.getQualifiedName().toURI();
-			}
-			
+		public String convertToString(RBEntityReference ref, Locale locale) {
+			return ref.getLabel(locale);
 		}
 		
 	}

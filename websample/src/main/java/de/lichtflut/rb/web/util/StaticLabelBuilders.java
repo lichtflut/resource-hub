@@ -4,6 +4,7 @@
 package de.lichtflut.rb.web.util;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import org.arastreju.sge.model.ResourceID;
 
@@ -162,12 +163,7 @@ public final class StaticLabelBuilders implements Serializable {
 	
 	private static String getResourceLabel(final Object ref) {
 		if (ref instanceof RBEntityReference) {
-			final RBEntityReference entityReference = (RBEntityReference) ref;
-			if (entityReference.isResolved()) {
-				return entityReference.getEntity().getLabel();
-			} else {
-				return entityReference.getQualifiedName().toURI();
-			}
+			return ((RBEntityReference) ref).getLabel(Locale.getDefault());
 		} else {
 			throw new IllegalStateException("Unecpected class for resource reference: " + ref.getClass());
 		}

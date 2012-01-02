@@ -45,16 +45,6 @@ public class RBEntityReference implements ResourceID {
 	/**
 	 * Constructor.
 	 * @param id The id.
-	 * @param resolver The resolver for the entity.
-	 */
-	public RBEntityReference(final ResourceID id, final ReferenceResolver resolver) {
-		this.id = id;
-		this.resolver = resolver;
-	}
-
-	/**
-	 * Constructor.
-	 * @param id The id.
 	 * @param entity The resolved entity.
 	 */
 	public RBEntityReference(final RBEntity entity) {
@@ -63,13 +53,6 @@ public class RBEntityReference implements ResourceID {
 	}
 
 	// ----------------------------------------------------
-	
-	public RBEntity getEntity() {
-		if (entity == null && resolver != null) {
-			resolver.resolve(this);
-		}
-		return entity;
-	}
 	
 	public boolean isResolved() {
 		return getEntity() != null;
@@ -111,6 +94,14 @@ public class RBEntityReference implements ResourceID {
 	
 	// ----------------------------------------------------
 	
+	public String getLabel(Locale locale) {
+		if (isResolved()) {
+			return entity.getLabel();
+		} else {
+			return ResourceLabelBuilder.getInstance().getLabel(id, locale);
+		}
+	}
+	
 	@Override
 	public String toString() {
 		if (isResolved()) {
@@ -118,6 +109,15 @@ public class RBEntityReference implements ResourceID {
 		} else {
 			return ResourceLabelBuilder.getInstance().getLabel(id, Locale.getDefault());
 		}
+	}
+	
+	// ----------------------------------------------------
+	
+	private RBEntity getEntity() {
+		if (entity == null && resolver != null) {
+			resolver.resolve(this);
+		}
+		return entity;
 	}
 	
 }
