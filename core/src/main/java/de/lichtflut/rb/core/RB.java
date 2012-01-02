@@ -97,6 +97,11 @@ public interface RB {
 	 * Boolean value indicating of an organization is the domain's owning one.
 	 */
 	ResourceID IS_DOMAIN_ORGANIZATION = new SimpleResourceID(SYS_NAMESPACE_URI, "isDomainOrganization");
+
+	/**
+	 * Each User may be represented by an RBEntity.
+	 */
+	ResourceID IS_RESPRESENTED_BY = new SimpleResourceID(SYS_NAMESPACE_URI, "isRepresentedBy");
 	
 	
 	// -- COMMON PROPERTIES --------------------------------------
