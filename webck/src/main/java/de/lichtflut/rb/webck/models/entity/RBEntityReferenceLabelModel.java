@@ -41,11 +41,7 @@ public class RBEntityReferenceLabelModel extends DerivedModel<String, RBEntityRe
 	@Override
 	protected String derive(RBEntityReference original) {
 		final Locale locale = RequestCycle.get().getRequest().getLocale();
-		if (original.isResolved()) {
-			return original.getLabel(locale);
-		} else {
-			return ResourceLabelBuilder.getInstance().getLabel(original.getId().asResource(), locale);
-		}
+		return original.getLabel(locale);
 	}
 	
 }

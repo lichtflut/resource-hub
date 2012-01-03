@@ -80,7 +80,7 @@ public final class RBEntityTest {
 
         // Add entity as field
         e1.getField(new SimpleResourceID("http://lichtflut.de#hatKind"))
-        	.addValue(new RBEntityReference(e2));
+        	.addValue(new RBEntityReference(e2.getNode()));
 
         // store entities
         m.store(e1);

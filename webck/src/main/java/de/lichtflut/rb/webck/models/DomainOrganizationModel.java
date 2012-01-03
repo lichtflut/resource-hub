@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.models;
 
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.api.DomainOrganizer;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -36,7 +37,7 @@ public abstract class DomainOrganizationModel extends AbstractLoadableModel<RBEn
 	public RBEntityReference load() {
 		final ResourceID org = organizer().getDomainOrganization();
 		if (org != null) {
-			final RBEntity entity = getServiceProvider().getEntityManager().find(org);
+			final ResourceNode entity = getServiceProvider().getResourceResolver().resolve(org);
 			return new RBEntityReference(entity);
 		} else {
 			return null;

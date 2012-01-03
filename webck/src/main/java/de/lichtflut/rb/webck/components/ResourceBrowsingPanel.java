@@ -15,6 +15,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -151,7 +152,8 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 			public void onSave() {
 				getServiceProvider().getEntityManager().store(model.getObject());
 				history().back();
-				history().applyReferencedEntity(new RBEntityReference(model.getObject()));
+				ResourceNode node = getServiceProvider().getResourceResolver().resolve(model.getObject().getID());
+				history().applyReferencedEntity(new RBEntityReference(node));
 				addToAjax();
 			}
 			
