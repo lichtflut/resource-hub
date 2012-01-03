@@ -75,19 +75,13 @@ public abstract class SetUserProfilePanel extends Panel {
 		add(form);
 	}
 
-	/**
-	 * @param model
-	 */
-	private void updateProfileModel() {
-		SemanticNode object = SNOPS.singleObject(model.getObject().getAssociatedResource(), RB.IS_RESPRESENTED_BY);
-		if (object != null && object.isResourceNode()) {
-			profileModel.setObject(new RBEntityReference(object.asResource()));
-		}
-		System.out.println("NEW PROFILE : " + profileModel.getObject());
-	}
-
 	// ------------------------------------------------------------
-
+	
+	
+	protected abstract SchemaManager getSchemaManager();
+	
+	protected abstract ResourceResolver getResourceResolver();
+	
 	/**
 	 * Action to perform when 'Save'-button is clicked.
 	 * @param reference 
@@ -96,14 +90,20 @@ public abstract class SetUserProfilePanel extends Panel {
 
 	/**
 	 * Action to perform when resourcelink is clicked.
-	 * @param user
+	 * @param resourceNode
 	 */
-	protected abstract void onResourceLinkClicked(RBEntity user);
-
+	protected abstract void onResourceLinkClicked(ResourceNode node);
 	
-	protected abstract SchemaManager getSchemaManager();
-
-	protected abstract ResourceResolver getResourceResolver();
+	/**
+	 * @param model
+	 */
+	private void updateProfileModel() {
+		ResourceNode rn = model.getObject().getAssociatedResource();
+		SemanticNode object = SNOPS.singleObject(rn, RB.IS_RESPRESENTED_BY);
+		if (object != null && object.isResourceNode()) {
+			profileModel.setObject(new RBEntityReference(object.asResource()));
+		}
+	}
 
 	/**
 	 * Create resource-{@link Link}
@@ -111,17 +111,27 @@ public abstract class SetUserProfilePanel extends Panel {
 	 */
 	private Component createResourceLink() {
 		IModel<String> label = Model.of("No Profile set");
-		RBEntityReference ref = profileModel.getObject();
-		final RBEntity userEntity = new RBEntityImpl(ref.asResource(), getSchemaManager().findSchemaForType(RB.PERSON));
+		final RBEntityReference ref = profileModel.getObject();
 		if (profileModel.getObject() != null){
+			final RBEntity userEntity = new RBEntityImpl(ref.asResource(), getSchemaManager().findSchemaForType(RB.PERSON));
 			label.setObject(userEntity.getLabel());
 		}
+		Fragment f = createReferenceLink(label, ref);
+		return f;
+	}
+
+	/**
+	 * @param label
+	 * @param ref
+	 * @return a {@link Fragment} containing a {@link Link}
+	 */
+	private Fragment createReferenceLink(IModel<String> label, final RBEntityReference ref) {
 		Fragment f = new Fragment("user", "referenceLink", this);
 		f.setOutputMarkupId(true);
 		Link link = new Link("link") {
 			@Override
 			public void onClick() {
-				onResourceLinkClicked(userEntity);
+				onResourceLinkClicked(ref.asResource());
 			}
 		};
 		link.add(new Label("label", label));
@@ -158,7 +168,6 @@ public abstract class SetUserProfilePanel extends Panel {
 				mode.setObject(Mode.EDIT);
 				updateProfileModel();
 				container.remove("user").add(createEntityPicker(user));
-				
 				target.add(form);
 			}
 
@@ -184,10 +193,11 @@ public abstract class SetUserProfilePanel extends Panel {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				ResourceNode user = getResourceResolver().resolve(model.getObject().getAssociatedResource());
 				createRelationship(user, profileModel.getObject().asResource());
+				user = getResourceResolver().resolve(user);
 				model.setObject(new UserImpl(user));
+				updateProfileModel();
 				container.remove("user").add(createResourceLink());
 				mode.setObject(Mode.VIEW);
-				updateProfileModel();
 				target.add(form);
 			}
 			
