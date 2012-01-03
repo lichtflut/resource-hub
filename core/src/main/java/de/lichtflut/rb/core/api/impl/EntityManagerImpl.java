@@ -22,9 +22,7 @@ import org.slf4j.LoggerFactory;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.entity.ReferenceResolver;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -41,7 +39,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public class EntityManagerImpl implements EntityManager, ReferenceResolver {
+public class EntityManagerImpl implements EntityManager {
 
 	private final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
 	
@@ -139,14 +137,6 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 		mc.close();
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void resolve(final RBEntityReference ref) {
-		ref.setResource(provider.getResourceResolver().resolve(ref.getId()));
-	}
-	
 	// -----------------------------------------------------
 	
 	private ModelingConversation startConversation() {
@@ -216,11 +206,10 @@ public class EntityManagerImpl implements EntityManager, ReferenceResolver {
 	 * @param field
 	 */
 	private void resolveEntityReferences(final RBField field, final boolean eager) {
-		for (RBEntityReference value : field.<RBEntityReference>getValues()) {
-			if (eager) {
-				resolve(value);
-			} else {
-				value.setResolver(provider.getResourceResolver());
+		for(int i=0; i < field.getSlots(); i++) {
+			final ResourceID id = (ResourceID) field.getValue(i);
+			if (id != null) {
+				field.setValue(i, provider.getResourceResolver().resolve(id));
 			}
 		}
 	}

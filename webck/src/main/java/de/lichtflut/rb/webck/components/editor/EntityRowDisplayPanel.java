@@ -15,7 +15,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.entity.RBEntityReference;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
@@ -98,13 +98,13 @@ public class EntityRowDisplayPanel extends Panel {
 	}
 	
 	private void addResourceField(final ListItem<RBFieldValueModel> item) {
-		final RBEntityReference ref = (RBEntityReference) item.getModelObject().getObject();
+		final ResourceID ref = (ResourceID) item.getModelObject().getObject();
 		if (ref != null) {
-			final CrossLink link = new CrossLink("link", getUrlTo(ref.getId()).toString());
-			link.add(new Label("label", Model.of(ref.toString())));
+			final CrossLink link = new CrossLink("link", getUrlTo(ref).toString());
+			link.add(new Label("label", Model.of(ResourceLabelBuilder.getInstance().getLabel(ref, getLocale()))));
 			item.add(new Fragment("valuefield", "referenceLink", this).add(link));
 		} else {
-			addTextOutput(item, RBEntityReference.class);
+			addTextOutput(item, ResourceID.class);
 		}
 	}
 

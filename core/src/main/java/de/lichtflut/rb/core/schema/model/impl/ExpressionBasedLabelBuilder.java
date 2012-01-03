@@ -16,7 +16,6 @@ import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 
@@ -225,9 +224,7 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 	}
 	
 	private static String getResourceLabel(final Object ref, final Locale locale) {
-		if (ref instanceof RBEntityReference) {
-			return ((RBEntityReference) ref).getLabel(locale);
-		} if (ref instanceof ResourceID) {
+		if (ref instanceof ResourceID) {
 			return ResourceLabelBuilder.getInstance().getLabel((ResourceID) ref, locale);
 		} else {
 			throw new IllegalStateException("Unecpected class for resource reference: " + ref.getClass());

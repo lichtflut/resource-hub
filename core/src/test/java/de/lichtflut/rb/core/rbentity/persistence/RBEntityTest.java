@@ -13,7 +13,6 @@ import org.junit.Test;
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.impl.AbstractRBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.entity.impl.UndeclaredRBField;
@@ -80,7 +79,7 @@ public final class RBEntityTest {
 
         // Add entity as field
         e1.getField(new SimpleResourceID("http://lichtflut.de#hatKind"))
-        	.addValue(new RBEntityReference(e2.getNode()));
+        	.addValue(e2.getNode());
 
         // store entities
         m.store(e1);

@@ -5,9 +5,10 @@ package de.lichtflut.rb.webck.browsing;
 
 import java.io.Serializable;
 
+import org.arastreju.sge.model.ResourceID;
+
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.webck.common.Action;
 
 /**
@@ -87,7 +88,7 @@ class EntityBrowsingStep implements Serializable {
 		this.actions = actions;
 	}
 	
-	public void loadActions(RBEntityReference ref) {
+	public void loadActions(ResourceID ref) {
 		for (Action action : actions) {
 			action.setValue(ref);
 		}

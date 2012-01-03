@@ -19,10 +19,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.DomainOrganizer;
-import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -42,7 +42,7 @@ import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
  */
 public abstract class SetDomainOrganizationPanel extends Panel {
 
-	private final LoadableModel<RBEntityReference> model;
+	private final LoadableModel<ResourceID> model;
 	
 	private final IModel<Boolean> readonly;
 	
@@ -53,7 +53,7 @@ public abstract class SetDomainOrganizationPanel extends Panel {
 	 * @param model
 	 */
 	@SuppressWarnings("rawtypes")
-	public SetDomainOrganizationPanel(String id, LoadableModel<RBEntityReference> model) {
+	public SetDomainOrganizationPanel(String id, LoadableModel<ResourceID> model) {
 		super(id);
 		this.model = model;
 		this.readonly = Model.of(true);

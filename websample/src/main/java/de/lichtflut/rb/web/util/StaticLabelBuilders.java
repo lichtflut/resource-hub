@@ -8,9 +8,9 @@ import java.util.Locale;
 
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.entity.RBEntityReference;
-import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 import de.lichtflut.rb.web.WSConstants;
 
@@ -162,10 +162,6 @@ public final class StaticLabelBuilders implements Serializable {
 	}
 	
 	private static String getResourceLabel(final Object ref) {
-		if (ref instanceof RBEntityReference) {
-			return ((RBEntityReference) ref).getLabel(Locale.getDefault());
-		} else {
-			throw new IllegalStateException("Unecpected class for resource reference: " + ref.getClass());
-		}
+		return ResourceLabelBuilder.getInstance().getLabel((ResourceID) ref, Locale.getDefault());
 	}
 }

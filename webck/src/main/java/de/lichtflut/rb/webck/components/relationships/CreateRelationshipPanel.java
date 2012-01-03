@@ -25,7 +25,6 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
@@ -33,7 +32,7 @@ import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
-import de.lichtflut.rb.webck.models.entity.RBEntityReferenceLabelModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
 /**
  * <p>
@@ -52,7 +51,7 @@ public abstract class CreateRelationshipPanel extends Panel {
 	
 	private final IModel<ResourceID> predicateModel = new Model<ResourceID>();
 	
-	private final IModel<RBEntityReference> objectModel = new Model<RBEntityReference>();
+	private final IModel<ResourceID> objectModel = new Model<ResourceID>();
 	
 	private final IModel<Boolean> objectSelected = Model.of(Boolean.FALSE);
 	
@@ -83,7 +82,7 @@ public abstract class CreateRelationshipPanel extends Panel {
 		final Label subjectLabel = new Label("subject", new RBEntityLabelModel(subjectModel));
 		form.add(subjectLabel);
 		
-		final Label objectLabel = new Label("object", new RBEntityReferenceLabelModel(objectModel));
+		final Label objectLabel = new Label("object", new ResourceLabelModel(objectModel));
 		form.add(objectLabel);
 		
 		final AjaxButton selectButton = new RBStandardButton("select") {
@@ -91,7 +90,6 @@ public abstract class CreateRelationshipPanel extends Panel {
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				if (objectModel.getObject() != null) {
 					objectSelected.setObject(Boolean.TRUE);
-					getServiceProvider().getEntityManager().resolve(objectModel.getObject());
 					target.focusComponent(predicatePicker.getDisplayComponent());	
 				}
 				// add root form due to default button change
@@ -132,7 +130,7 @@ public abstract class CreateRelationshipPanel extends Panel {
 	
 	// ----------------------------------------------------
 
-	protected void createRelationshipTo(RBEntityReference object, ResourceID predicate) {
+	protected void createRelationshipTo(ResourceID object, ResourceID predicate) {
 		final ResourceNode subject = subjectModel.getObject().getNode();
 		SNOPS.associate(subject, predicate, object);
 		getServiceProvider().getEntityManager().store(subjectModel.getObject());

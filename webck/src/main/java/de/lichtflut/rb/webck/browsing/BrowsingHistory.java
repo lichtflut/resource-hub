@@ -10,11 +10,11 @@ import java.util.concurrent.LinkedBlockingDeque;
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.arastreju.sge.model.ResourceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.webck.common.Action;
 
 /**
@@ -152,7 +152,7 @@ public class BrowsingHistory implements Serializable {
 		return BrowsingResponse.CONTINUE;
 	}
 	
-	public void applyReferencedEntity(final RBEntityReference ref) {
+	public void applyReferencedEntity(final ResourceID ref) {
 		stack.peek().loadActions(ref);
 		logger.debug("applying referenced " +  ref + " ----- " + this);
 	}

@@ -10,7 +10,6 @@ import java.util.Set;
 
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.RBField;
 
 /**
@@ -151,7 +150,7 @@ public abstract class AbstractRBField implements RBField, Serializable {
 	protected void addReferences(final Set<SemanticNode> givenValues) {
 		for (SemanticNode sn : givenValues) {
 			if (sn.isResourceNode()) {
-				this.values.add(new RBEntityReference(sn.asResource()));	
+				this.values.add(sn.asResource());	
 			} else {
 				this.values.add(null);
 			}

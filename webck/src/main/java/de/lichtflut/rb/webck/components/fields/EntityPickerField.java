@@ -11,7 +11,7 @@ import org.apache.wicket.util.crypt.Base64;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 
-import de.lichtflut.rb.core.entity.RBEntityReference;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 
 /**
  * <p>
@@ -24,13 +24,13 @@ import de.lichtflut.rb.core.entity.RBEntityReference;
  *
  * @author Oliver Tigges
  */
-public class EntityPickerField extends DataPickerField<RBEntityReference> {
+public class EntityPickerField extends DataPickerField<ResourceID> {
 
 	/**
 	 * @param id
 	 * @param model
 	 */
-	public EntityPickerField(final String id, final IModel<RBEntityReference> model) {
+	public EntityPickerField(final String id, final IModel<ResourceID> model) {
 		this(id, model, null);
 	}
 	
@@ -39,9 +39,9 @@ public class EntityPickerField extends DataPickerField<RBEntityReference> {
 	 * @param model
 	 * @param type
 	 */
-	public EntityPickerField(final String id, final IModel<RBEntityReference> model, final ResourceID type) {
+	public EntityPickerField(final String id, final IModel<ResourceID> model, final ResourceID type) {
 		super(id, model, toDisplayModel(model), findEntity(type));
-		setType(RBEntityReference.class);
+		setType(ResourceID.class);
 	}
 
 	// -----------------------------------------------------
@@ -60,7 +60,7 @@ public class EntityPickerField extends DataPickerField<RBEntityReference> {
 	 * @param originalModel
 	 * @return A corresponding display model.
 	 */
-	private static IModel<String> toDisplayModel(final IModel<RBEntityReference> originalModel) {
+	private static IModel<String> toDisplayModel(final IModel<ResourceID> originalModel) {
 		return new IModel<String>() {
 			
 			private String value;
@@ -69,12 +69,12 @@ public class EntityPickerField extends DataPickerField<RBEntityReference> {
 			}
 
 			public String getObject() {
-				final RBEntityReference orig = originalModel.getObject();
+				final ResourceID orig = originalModel.getObject();
 				if (orig == null) {
 					value = null;
 					return "";
 				} else if (value == null) {
-					value = originalModel.getObject().getLabel(Locale.getDefault());
+					value = ResourceLabelBuilder.getInstance().getLabel(orig, Locale.getDefault());
 				} 
 				return value;
 			}

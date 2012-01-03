@@ -9,7 +9,6 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.core.entity.RBEntityReference;
 
 /**
  * <p>
@@ -40,13 +39,8 @@ public class ResourceLabelModel extends AbstractReadOnlyModel<String> {
 	
 	@Override
 	public String getObject() {
-		final ResourceID id = model.getObject();
-		if (id instanceof RBEntityReference) {
-			return ((RBEntityReference)id ).toString();
-		} else {
-			return ResourceLabelBuilder.getInstance().getLabel(model.getObject(), 
-				RequestCycle.get().getRequest().getLocale());
-		}
+		return ResourceLabelBuilder.getInstance().getLabel(model.getObject(), 
+			RequestCycle.get().getRequest().getLocale());
 	}
 
 	

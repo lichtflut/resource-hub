@@ -15,11 +15,9 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 import de.lichtflut.rb.webck.conversion.LabelBuilderConverter;
 import de.lichtflut.rb.webck.conversion.QualifiedNameConverter;
-import de.lichtflut.rb.webck.conversion.RBEntityReferenceConverter;
 import de.lichtflut.rb.webck.conversion.ResourceIDConverter;
 import de.lichtflut.rb.webck.conversion.SNTextConverter;
 import de.lichtflut.rb.webck.conversion.SNTimeSpecConverter;
@@ -47,7 +45,6 @@ public abstract class AbstractResourceBrowserApplication extends WebApplication 
 		locator.set(SNTimeSpec.class, new SNTimeSpecConverter());
 		locator.set(ResourceID.class, new ResourceIDConverter());
 		locator.set(QualifiedName.class, new QualifiedNameConverter());
-		locator.set(RBEntityReference.class, new RBEntityReferenceConverter());
 		locator.set(EntityLabelBuilder.class, new LabelBuilderConverter());
 		return locator;
 	}
