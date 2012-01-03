@@ -27,8 +27,6 @@ import org.arastreju.sge.security.impl.UserImpl;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
@@ -60,7 +58,7 @@ public abstract class SetUserProfilePanel extends Panel {
 	 * @param id - wicket:id
 	 * @param model
 	 */
-	public SetUserProfilePanel(String id, final IModel<User> model) {
+	public SetUserProfilePanel(String id, final Model<User> model) {
 		super(id, model);
 		this.model = model;
 		final Form form = new Form("form");
@@ -102,7 +100,7 @@ public abstract class SetUserProfilePanel extends Panel {
 	private void updateProfileModel() {
 		ResourceNode rn = model.getObject().getAssociatedResource();
 		SemanticNode object = SNOPS.singleObject(rn, RB.IS_RESPRESENTED_BY);
-		if (object != null && object.isResourceNode()) {
+		if(object != null && object.isResourceNode()) {
 			profileModel.setObject(object.asResource());
 			hasProfile = true;
 		}
@@ -116,9 +114,7 @@ public abstract class SetUserProfilePanel extends Panel {
 		IModel<String> label;
 		final ResourceID ref = profileModel.getObject();
 		if (ref != null){
-//			final RBEntity userEntity = new RBEntityImpl(ref.asResource(), getSchemaManager().findSchemaForType(RB.PERSON));
 			label = new ResourceLabelModel(Model.of(ref.asResource()));
-//			label.setObject(userEntity.getLabel());
 		}else{
 			label = Model.of("No Profile set");
 		}
