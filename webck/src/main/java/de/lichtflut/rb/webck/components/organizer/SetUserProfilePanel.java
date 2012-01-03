@@ -30,6 +30,7 @@ import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
 /**
  * <p>
@@ -46,6 +47,7 @@ public abstract class SetUserProfilePanel extends Panel {
 	private IModel<ResourceID> profileModel = new Model<ResourceID>();
 	private WebMarkupContainer container;
 	private final IModel<Mode> mode = new Model<Mode>(Mode.VIEW);
+	private boolean hasProfile = false;
 
 	public enum Mode {
 		EDIT, VIEW;
@@ -102,6 +104,7 @@ public abstract class SetUserProfilePanel extends Panel {
 		SemanticNode object = SNOPS.singleObject(rn, RB.IS_RESPRESENTED_BY);
 		if (object != null && object.isResourceNode()) {
 			profileModel.setObject(object.asResource());
+			hasProfile = true;
 		}
 	}
 
@@ -110,11 +113,14 @@ public abstract class SetUserProfilePanel extends Panel {
 	 * @return {@link Link}
 	 */
 	private Component createResourceLink() {
-		IModel<String> label = Model.of("No Profile set");
+		IModel<String> label;
 		final ResourceID ref = profileModel.getObject();
-		if (profileModel.getObject() != null){
-			final RBEntity userEntity = new RBEntityImpl(ref.asResource(), getSchemaManager().findSchemaForType(RB.PERSON));
-			label.setObject(userEntity.getLabel());
+		if (ref != null){
+//			final RBEntity userEntity = new RBEntityImpl(ref.asResource(), getSchemaManager().findSchemaForType(RB.PERSON));
+			label = new ResourceLabelModel(Model.of(ref.asResource()));
+//			label.setObject(userEntity.getLabel());
+		}else{
+			label = Model.of("No Profile set");
 		}
 		Fragment f = createReferenceLink(label, ref);
 		return f;
@@ -135,6 +141,9 @@ public abstract class SetUserProfilePanel extends Panel {
 			}
 		};
 		link.add(new Label("label", label));
+		if(!hasProfile){
+			link.setEnabled(false);
+		}
 		f.add(link);
 		return f;
 	}
