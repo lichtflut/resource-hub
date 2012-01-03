@@ -7,8 +7,10 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -27,6 +29,11 @@ import org.arastreju.sge.security.impl.UserImpl;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.entity.EntityHandle;
+import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.browsing.JumpTarget;
+import de.lichtflut.rb.webck.common.Action;
+import de.lichtflut.rb.webck.common.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
@@ -67,6 +74,8 @@ public abstract class SetUserProfilePanel extends Panel {
 		container = new WebMarkupContainer("container");
 		container.setOutputMarkupId(true);
 		container.add(createResourceLink());
+		container.add(createCreateLink());
+		container.add(createDeleteLink());
 		container.add(createEditButton("edit", form));
 		container.add(createSaveButton("save", form));
 		
@@ -78,21 +87,76 @@ public abstract class SetUserProfilePanel extends Panel {
 	// ------------------------------------------------------------
 	
 	
+	/**
+	 * @return
+	 */
+	private AjaxSubmitLink createDeleteLink() {
+		final AjaxSubmitLink link = new AjaxSubmitLink("deleteLink") {
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				if(profileModel.getObject() != null){
+					SNOPS.remove(model.getObject().getAssociatedResource(), RB.IS_RESPRESENTED_BY, profileModel.getObject());
+					target.add(form);
+				}
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				target.add(SetUserProfilePanel.this);
+			}
+		};
+		if(mode.equals(Mode.VIEW)){
+			link.setVisible(false);
+		}
+		return link;
+	}
+
+	/**
+	 * @return a {@link Link}
+	 */
+	private AjaxSubmitLink createCreateLink() {
+		final AjaxSubmitLink link = new AjaxSubmitLink("createLink") {
+			@Override
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				final EntityHandle handle = EntityHandle.forID(RB.PERSON);
+				final Action action = new EntityAttributeApplyAction(RB.IS_RESPRESENTED_BY);
+				RBWebSession.get().getHistory().clear(new JumpTarget(getResourceEditorPage()));
+				RBWebSession.get().getHistory().createReferencedEntity(handle, action);
+				if (!getSchemaManager().isSchemaDefinedFor(handle.getType())) {
+					RBWebSession.get().getHistory().beginClassifying();
+				}
+			}
+			
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				target.add(SetUserProfilePanel.this);
+			}
+		};
+		if(mode.equals(Mode.VIEW)){
+			link.setVisible(false);
+		}
+		return link;
+	}
+
+	protected abstract Class<? extends Page> getResourceEditorPage();
+
 	protected abstract SchemaManager getSchemaManager();
 	
 	protected abstract ResourceResolver getResourceResolver();
-	
-	/**
-	 * Action to perform when 'Save'-button is clicked.
-	 * @param reference 
-	 */
-	protected abstract void createRelationship(ResourceNode user, ResourceNode profile);
 
 	/**
 	 * Action to perform when resourcelink is clicked.
 	 * @param resourceNode
 	 */
 	protected abstract void onResourceLinkClicked(ResourceNode node);
+	
+	/**
+	 * Action to perform when 'Save'-button is clicked.
+	 * @param reference 
+	 */
+	protected void createRelationship(ResourceNode user, ResourceNode profile){
+		SNOPS.assure(user, RB.IS_RESPRESENTED_BY, profile, RB.PRIVATE_CONTEXT);;
+	}
 	
 	/**
 	 * @param model
