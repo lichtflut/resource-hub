@@ -22,8 +22,10 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.persistence.ResourceResolver;
 import org.arastreju.sge.security.User;
+import org.arastreju.sge.security.impl.UserImpl;
 
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBEntityReference;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
@@ -41,7 +43,7 @@ import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 public abstract class SetUserProfilePanel extends Panel {
 
 	private IModel<User> model;
-	private IModel<RBEntityReference> resourcePickerModel = new Model<RBEntityReference>();
+	private IModel<RBEntityReference> profileModel = new Model<RBEntityReference>();
 	private WebMarkupContainer container;
 	private final IModel<Mode> mode = new Model<Mode>(Mode.VIEW);
 
@@ -60,7 +62,7 @@ public abstract class SetUserProfilePanel extends Panel {
 		super(id, model);
 		this.model = model;
 		final Form form = new Form("form");
-		updateResourcePickerModel();
+		updateProfileModel();
 		
 		container = new WebMarkupContainer("container");
 		container.setOutputMarkupId(true);
@@ -76,11 +78,12 @@ public abstract class SetUserProfilePanel extends Panel {
 	/**
 	 * @param model
 	 */
-	private void updateResourcePickerModel() {
+	private void updateProfileModel() {
 		SemanticNode object = SNOPS.singleObject(model.getObject().getAssociatedResource(), RB.IS_RESPRESENTED_BY);
 		if (object != null && object.isResourceNode()) {
-			resourcePickerModel.setObject(new RBEntityReference(object.asResource()));
+			profileModel.setObject(new RBEntityReference(object.asResource()));
 		}
+		System.out.println("NEW PROFILE : " + profileModel.getObject());
 	}
 
 	// ------------------------------------------------------------
@@ -97,18 +100,21 @@ public abstract class SetUserProfilePanel extends Panel {
 	 */
 	protected abstract void onResourceLinkClicked(RBEntity user);
 
+	
+	protected abstract SchemaManager getSchemaManager();
+
+	protected abstract ResourceResolver getResourceResolver();
+
 	/**
 	 * Create resource-{@link Link}
 	 * @return {@link Link}
 	 */
 	private Component createResourceLink() {
 		IModel<String> label = Model.of("No Profile set");
-		ResourceNode resource = null;
-		RBEntityReference ref = resourcePickerModel.getObject();
-		final RBEntity userEntity = new RBEntityImpl(resource);
-		if (resourcePickerModel.getObject() != null){
-			resource = ref.asResource();
-			label.setObject(new RBEntityImpl(resource).getLabel() + " LABEL");
+		RBEntityReference ref = profileModel.getObject();
+		final RBEntity userEntity = new RBEntityImpl(ref.asResource(), getSchemaManager().findSchemaForType(RB.PERSON));
+		if (profileModel.getObject() != null){
+			label.setObject(userEntity.getLabel());
 		}
 		Fragment f = new Fragment("user", "referenceLink", this);
 		f.setOutputMarkupId(true);
@@ -124,6 +130,7 @@ public abstract class SetUserProfilePanel extends Panel {
 	}
 	
 
+
 	/**
 	 * Create {@link EntityPickerField}.
 	 * @param user
@@ -131,7 +138,7 @@ public abstract class SetUserProfilePanel extends Panel {
 	 */
 	private Fragment createEntityPicker(Model<RBEntityReference> user) {
 		Fragment f = new Fragment("user", "resourcePicker", SetUserProfilePanel.this);
-		f.add(new EntityPickerField("picker", resourcePickerModel, RB.PERSON));
+		f.add(new EntityPickerField("picker", profileModel, RB.PERSON));
 		f.setOutputMarkupId(true);
 		return f;
 	}
@@ -149,7 +156,7 @@ public abstract class SetUserProfilePanel extends Panel {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				Model<RBEntityReference> user = Model.of(new RBEntityReference(model.getObject().getAssociatedResource()));
 				mode.setObject(Mode.EDIT);
-				updateResourcePickerModel();
+				updateProfileModel();
 				container.remove("user").add(createEntityPicker(user));
 				
 				target.add(form);
@@ -176,9 +183,11 @@ public abstract class SetUserProfilePanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				ResourceNode user = getResourceResolver().resolve(model.getObject().getAssociatedResource());
-				createRelationship(user, resourcePickerModel.getObject().asResource());
+				createRelationship(user, profileModel.getObject().asResource());
+				model.setObject(new UserImpl(user));
 				container.remove("user").add(createResourceLink());
 				mode.setObject(Mode.VIEW);
+				updateProfileModel();
 				target.add(form);
 			}
 			
@@ -191,5 +200,4 @@ public abstract class SetUserProfilePanel extends Panel {
 		return save;
 	}
 
-	protected abstract ResourceResolver getResourceResolver();
 }
