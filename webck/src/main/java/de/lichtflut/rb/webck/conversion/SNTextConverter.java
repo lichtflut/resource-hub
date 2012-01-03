@@ -28,9 +28,6 @@ public class SNTextConverter extends AbstractConverter {
 	public SNTextConverter() {
 	}
 
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String, java.util.Locale)
-	 */
 	/**
 	 * @param value /
 	 * @param locale /
@@ -40,9 +37,6 @@ public class SNTextConverter extends AbstractConverter {
 		return new SNText(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
-	 */
 	@Override
 	protected Class<?> getTargetType() {
 		return SNText.class;

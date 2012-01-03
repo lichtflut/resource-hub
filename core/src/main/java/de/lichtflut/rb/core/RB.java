@@ -71,6 +71,8 @@ public interface RB {
 	
 	ResourceID ADDRESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "Address");
 	
+	ResourceID NOTE = new SimpleResourceID(COMMON_NAMESPACE_URI, "Note");
+	
 	// -- SYSTEM PROPERTIES -------------------------------
 	
 	/**
@@ -102,6 +104,16 @@ public interface RB {
 	 * Each User may be represented by an RBEntity.
 	 */
 	ResourceID IS_RESPRESENTED_BY = new SimpleResourceID(SYS_NAMESPACE_URI, "isRepresentedBy");
+	
+	/**
+	 * Is attached to an entity.
+	 */
+	ResourceID IS_ATTACHED_TO = new SimpleResourceID(SYS_NAMESPACE_URI, "isAttachedTo");
+	
+	/**
+	 * The content. E.g. of an attachment.
+	 */
+	ResourceID HAS_CONTENT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasContent");
 	
 	
 	// -- COMMON PROPERTIES --------------------------------------
