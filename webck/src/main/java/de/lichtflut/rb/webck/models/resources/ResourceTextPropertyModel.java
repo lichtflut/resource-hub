@@ -9,6 +9,7 @@ import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNText;
 
 /**
  * <p>
@@ -21,7 +22,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
  *
  * @author Oliver Tigges
  */
-public class ResourcePropertyModel implements IModel<SemanticNode> {
+public class ResourceTextPropertyModel implements IModel<SNText> {
 	
 	private final IModel<ResourceNode> subject;
 	
@@ -36,7 +37,7 @@ public class ResourcePropertyModel implements IModel<SemanticNode> {
 	 * @param predicate The predicate.
 	 * @param ctx Optional context.
 	 */
-	public ResourcePropertyModel(IModel<ResourceNode> subject, ResourceID predicate, Context... ctx) {
+	public ResourceTextPropertyModel(IModel<ResourceNode> subject, ResourceID predicate, Context... ctx) {
 		this.subject = subject;
 		this.predicate = predicate;
 		this.ctx = ctx;
@@ -48,15 +49,20 @@ public class ResourcePropertyModel implements IModel<SemanticNode> {
 	* {@inheritDoc}
 	*/
 	@Override
-	public SemanticNode getObject() {
-		return SNOPS.singleObject(subject.getObject(), predicate);
+	public SNText getObject() {
+		final SemanticNode node = SNOPS.singleObject(subject.getObject(), predicate);
+		if (node != null) {
+			return node.asValue().asText();
+		} else {
+			return null;
+		}
 	}
 
 	/** 
 	* {@inheritDoc}
 	*/
 	@Override
-	public void setObject(SemanticNode object) {
+	public void setObject(SNText object) {
 		SNOPS.assure(subject.getObject(), predicate, object, ctx);
 	}
 

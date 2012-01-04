@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
@@ -26,6 +27,7 @@ import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.dialogs.EditNoteDialog;
 import de.lichtflut.rb.webck.models.QueryResultModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
+import de.lichtflut.rb.webck.models.basic.LoadableModel;
 
 /**
  * <p>
@@ -43,32 +45,62 @@ public abstract class NotePadPanel extends TypedPanel<ResourceID> {
 	/**
 	 * Constructor.
 	 * @param id The ID
-	 * @param model The target for the notes.
+	 * @param resource The target for the notes.
 	 */
 	@SuppressWarnings("rawtypes")
-	public NotePadPanel(final String id, final IModel<ResourceID> model) {
-		super(id, model);
+	public NotePadPanel(final String id, final IModel<ResourceID> resource) {
+		super(id, resource);
 		
 		setOutputMarkupId(true);
 		
-		final IModel<List<ResourceNode>> listModel = new QueryResultModel(new QueryModel(model));
+		final LoadableModel<List<ResourceNode>> listModel = new QueryResultModel(new QueryModel(resource));
 		
 		final ListView<ResourceNode> view = new ListView<ResourceNode>("notesList", listModel) {
 			@Override
 			protected void populateItem(ListItem<ResourceNode> item) {
-				item.add(new MezzlePanel("mezzle", item.getModel()));
+				item.add(new MezzlePanel("mezzle", item.getModel()){
+					@Override
+					public void edit(IModel<ResourceNode> mezzle) {
+						editNote(mezzle);
+					}
+					@Override
+					public void delete(IModel<ResourceNode> mezzle) {
+						deleteNote(mezzle);
+						removeAll();
+						listModel.reset();
+					}
+				});
 			}
 		}; 
+		view.setReuseItems(true);
 		add(view);
 		
 		add(new AjaxLink("create") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				final IModel<ResourceNode> mezzleNode = new Model<ResourceNode>(new SNResource());
-				final DialogHoster hoster = findParent(DialogHoster.class);
-				hoster.openDialog(new CreateNoteDialog(hoster.getDialogID(), mezzleNode, model));
+				createNote(resource);
 			}
 		});
+	}
+	
+	// ----------------------------------------------------
+
+	protected void createNote(final IModel<ResourceID> resource) {
+		final IModel<ResourceNode> mezzleNode = new Model<ResourceNode>(new SNResource());
+		final DialogHoster hoster = findParent(DialogHoster.class);
+		hoster.openDialog(new CreateNoteDialog(hoster.getDialogID(), mezzleNode, resource));
+	}
+	
+	protected void editNote(IModel<ResourceNode> mezzle) {
+		final DialogHoster hoster = findParent(DialogHoster.class);
+		hoster.openDialog(new ExtendedEditNoteDialog(hoster.getDialogID(), mezzle));
+	}
+	
+	protected void deleteNote(IModel<ResourceNode> mezzle) {
+		ModelingConversation mc = getServiceProvider().getArastejuGate().startConversation();
+		mc.remove(mezzle.getObject(), false);
+		mc.close();
+		RBAjaxTarget.add(this);
 	}
 	
 	// ----------------------------------------------------
@@ -84,6 +116,7 @@ public abstract class NotePadPanel extends TypedPanel<ResourceID> {
 		private CreateNoteDialog(String id, IModel<ResourceNode> note, IModel<ResourceID> target) {
 			super(id, note);
 			this.target = target;
+			setTitle(new ResourceModel("global.dialogs.create-note.title"));
 		}
 
 		@Override
@@ -100,6 +133,27 @@ public abstract class NotePadPanel extends TypedPanel<ResourceID> {
 			ModelingConversation mc = getServiceProvider().getArastejuGate().startConversation();
 			mc.attach(note);
 			mc.close();
+			RBAjaxTarget.add(NotePadPanel.this);
+		}
+	}
+	
+	private final class ExtendedEditNoteDialog extends EditNoteDialog {
+
+		private ExtendedEditNoteDialog(String id, IModel<ResourceNode> note) {
+			super(id, note);
+			setTitle(new ResourceModel("global.dialogs.edit-note.title"));
+		}
+
+		@Override
+		public ServiceProvider getServiceProvider() {
+			return NotePadPanel.this.getServiceProvider();
+		}
+		
+		/** 
+		* {@inheritDoc}
+		*/
+		@Override
+		protected void onSave(ResourceNode note) {
 			RBAjaxTarget.add(NotePadPanel.this);
 		}
 	}

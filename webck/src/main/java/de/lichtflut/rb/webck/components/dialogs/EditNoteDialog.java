@@ -3,19 +3,26 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
+import java.util.Date;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.DC;
+import org.arastreju.sge.model.TimeMask;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNText;
+import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
-import de.lichtflut.rb.webck.models.resources.ResourcePropertyModel;
+import de.lichtflut.rb.webck.models.CurrentUserModel;
+import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
 
 /**
  * <p>
@@ -39,13 +46,16 @@ public abstract class EditNoteDialog extends AbstractRBDialog {
 		super(id);
 		
 		final Form form = new Form("form");
-		form.add(new TextArea<SNText>("content", new ResourcePropertyModel(model, RB.HAS_CONTENT)).setType(SNText.class));
+		form.add(new TextArea<SNText>("content", new ResourceTextPropertyModel(model, RB.HAS_CONTENT)).setType(SNText.class));
 		form.add(new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				final ModelingConversation mc = getServiceProvider().getArastejuGate().startConversation();
-				mc.attach(model.getObject());
-				onSave(model.getObject());
+				final ResourceNode noteResource = model.getObject();
+				SNOPS.assure(noteResource, DC.CREATED, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
+				SNOPS.assure(noteResource, DC.CREATOR, CurrentUserModel.currentUserID());
+				mc.attach(noteResource);
+				onSave(noteResource);
 				mc.close();
 				close(target);
 			}
@@ -59,6 +69,9 @@ public abstract class EditNoteDialog extends AbstractRBDialog {
 		});
 		
 		add(form);
+		
+		setModal(true);
+		setWidth(600);
 	}
 
 	// ----------------------------------------------------
