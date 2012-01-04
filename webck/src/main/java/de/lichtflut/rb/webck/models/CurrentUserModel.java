@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.models;
 import org.apache.wicket.Session;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.webck.application.RBWebSession;
@@ -67,7 +68,7 @@ public class CurrentUserModel extends AbstractReadOnlyModel<User> {
 	
 	// ----------------------------------------------------
 	
-	private static User currentUser() {
+	public static User currentUser() {
 		if (Session.exists()) {
 			return RBWebSession.get().getUser();
 		} else {
@@ -75,4 +76,13 @@ public class CurrentUserModel extends AbstractReadOnlyModel<User> {
 		}
 	}
 	
+	public static ResourceID currentUserID() {
+		if (Session.exists()) {
+			User user = RBWebSession.get().getUser();
+			if (user != null) {
+				return user.getAssociatedResource();
+			}
+		}
+		return null;
+	}
 }

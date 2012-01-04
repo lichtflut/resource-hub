@@ -12,7 +12,16 @@
 
 	<p wicket:id="content">
 	</p>
-	<a wicket:id="edit"><wicket:message key="link.edit">[edit]</wicket:message></a>
+	<div class="note-info">
+		<wicket:message key="label.created">[created]</wicket:message>
+		<span wicket:id="created">[date]</span>
+		<wicket:message key="label.creator">[creator]</wicket:message>
+		<span wicket:id="creator">[name]</span>
+	</div>
+	<div class="note-actions">
+		<a wicket:id="edit"><wicket:message key="link.edit">[edit]</wicket:message></a>
+		<a wicket:id="delete"><wicket:message key="link.delete">[delete]</wicket:message></a>
+	</div>
 
 </wicket:panel>
 </html>
