@@ -12,9 +12,9 @@ import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.web.RBBasePage;
 import de.lichtflut.rb.web.util.ServiceProviderLocator;

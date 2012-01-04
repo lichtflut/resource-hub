@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.webck.common.Action;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 
 /**
@@ -28,8 +27,6 @@ public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 	private final Logger logger = LoggerFactory.getLogger(RBEntityModel.class);
 
 	private EntityHandle handle;
-	
-	private Action<?>[] initializers;
 	
 	// -----------------------------------------------------
 	
@@ -51,10 +48,9 @@ public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 	/**
 	 * Reset the model in order to reload.
 	 */
-	public void reset(final EntityHandle handle, Action<?>... initializers) {
+	public void reset(final EntityHandle handle) {
 		reset();
 		this.handle = handle; 
-		this.initializers = initializers;
 	}
 	
 	// ----------------------------------------------------
@@ -67,13 +63,11 @@ public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 		if (handle.hasId()) {
 			logger.info("Loading RB Entity: " + handle.getId());
 			final RBEntity loaded = getServiceProvider().getEntityManager().find(handle.getId());
-			initialize(loaded);
 			return loaded;
 		} else if (handle.hasType()){
 			logger.info("Creating new RB Entity");
 			final RBEntity loaded = getServiceProvider().getEntityManager().create(handle.getType());
 			handle.setId(loaded.getID());
-			initialize(loaded);
 			return loaded;
 		} else {
 			throw new IllegalStateException("Cannot initialize RB Entity Model.");
@@ -83,19 +77,5 @@ public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 	// -----------------------------------------------------
 	
 	protected abstract ServiceProvider getServiceProvider();
-
-	// ----------------------------------------------------
-	
-	/**
-	 * @param loaded
-	 */
-	private void initialize(RBEntity entity) {
-		if (initializers == null) {
-			return;
-		}
-		for (Action<?> action : initializers) {
-			action.execute(entity);
-		}
-	}
 
 }

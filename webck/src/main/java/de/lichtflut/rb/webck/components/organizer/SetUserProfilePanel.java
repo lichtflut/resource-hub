@@ -22,6 +22,7 @@ import org.apache.wicket.model.Model;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.persistence.ResourceResolver;
 import org.arastreju.sge.security.User;
 import org.arastreju.sge.security.impl.UserImpl;
@@ -74,7 +75,12 @@ public abstract class SetUserProfilePanel extends Panel {
 		profileModel = new DerivedModel<ResourceID, User>(model) {
 			@Override
 			protected ResourceID derive(User original) {
-				return SNOPS.singleObject(original.getAssociatedResource(), RB.IS_RESPRESENTED_BY).asResource();
+				final SemanticNode node = SNOPS.singleObject(original.getAssociatedResource(), RB.IS_RESPRESENTED_BY);
+				if (node != null) {
+					return node.asResource();
+				} else {
+					return null;
+				}
 			}
 		};
 		
@@ -126,13 +132,10 @@ public abstract class SetUserProfilePanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				final EntityHandle handle = EntityHandle.forType(RB.PERSON);
-				final Action action = new ResourceAttributeApplyAction(RB.IS_RESPRESENTED_BY);
+				final Action action = new ResourceAttributeApplyAction(
+						model.getObject().getAssociatedResource(), RB.IS_RESPRESENTED_BY);
 				RBWebSession.get().getHistory().clear(new JumpTarget(getUserProfilePage()));
-				RBWebSession.get().getHistory().edit(EntityHandle.forID(model.getObject().getAssociatedResource()));
 				RBWebSession.get().getHistory().createReferencedEntity(handle, action);
-				if (!getSchemaManager().isSchemaDefinedFor(RB.PERSON)) {
-					RBWebSession.get().getHistory().beginClassifying();
-				}
 				jumpToResourceEditorPage(handle);
 			}
 			

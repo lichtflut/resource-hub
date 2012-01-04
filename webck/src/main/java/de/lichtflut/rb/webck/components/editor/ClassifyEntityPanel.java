@@ -5,11 +5,11 @@ package de.lichtflut.rb.webck.components.editor;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.webck.components.fields.ClassPickerField;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 
 /**
  * <p>
@@ -24,7 +24,6 @@ import de.lichtflut.rb.webck.components.fields.ClassPickerField;
  */
 public class ClassifyEntityPanel extends Panel {
 
-	private final IModel<RBEntity> entityModel;
 	private final IModel<ResourceID> superClassModel;
 	private final IModel<ResourceID> targetModel;
 	
@@ -37,9 +36,13 @@ public class ClassifyEntityPanel extends Panel {
 	public ClassifyEntityPanel(final String id, final  IModel<RBEntity> entityModel, final IModel<ResourceID> targetModel) {
 		super(id);
 		
-		this.entityModel = entityModel;
 		this.targetModel = targetModel;
-		this.superClassModel = new Model<ResourceID>();
+		this.superClassModel = new DerivedModel<ResourceID, RBEntity>(entityModel) {
+			@Override
+			protected ResourceID derive(RBEntity original) {
+				return original.getType();
+			}
+		};
 		
 		final ClassPickerField picker = new ClassPickerField("typePicker", targetModel, superClassModel);
 		add(picker);
@@ -56,10 +59,6 @@ public class ClassifyEntityPanel extends Panel {
 	protected void onConfigure() {
 		super.onConfigure();
 		targetModel.setObject(null);
-		final RBEntity entity = entityModel.getObject();
-		if (entity != null) {
-			superClassModel.setObject(entity.getType());
-		} 
 	}
 
 }

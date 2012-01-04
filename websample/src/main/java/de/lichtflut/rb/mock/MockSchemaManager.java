@@ -13,17 +13,17 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
-import de.lichtflut.rb.core.api.SchemaExporter;
-import de.lichtflut.rb.core.api.SchemaImporter;
-import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.api.impl.SchemaExporterImpl;
-import de.lichtflut.rb.core.api.impl.SchemaImporterImpl;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
+import de.lichtflut.rb.core.services.SchemaExporter;
+import de.lichtflut.rb.core.services.SchemaImporter;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.impl.SchemaExporterImpl;
+import de.lichtflut.rb.core.services.impl.SchemaImporterImpl;
 
 /**
  * Mock-Implementation of {@link ISchemaManagement}.

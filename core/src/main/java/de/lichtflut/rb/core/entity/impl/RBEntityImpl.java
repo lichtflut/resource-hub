@@ -46,49 +46,55 @@ public class RBEntityImpl implements RBEntity {
 	// -----------------------------------------------------
 
 	/**
-	 * Creates a new entity without schema.
-	 * @param type - rdf:type
-	 */
-	public RBEntityImpl(final ResourceID type) {
-		this(new SNResource(), type);
-	}
-
-	/**
 	 * Creates a new entity with a given schema.
-	 *
 	 * @param schema - The schema.
 	 */
 	public RBEntityImpl(final ResourceSchema schema) {
 		this(new SNResource(), schema);
 	}
-
+	
 	/**
-	 * Creates an entity based on given node without schema.
+	 * Creates an entity based on node only.
 	 *
-	 * @param node - The node.
-	 * @param type - rdf:type
+	 * @param node The node.
 	 */
-	public RBEntityImpl(final ResourceNode node, final ResourceID type) {
+	public RBEntityImpl(final ResourceNode node) {
 		super();
-		this.node=node;
-		this.type = type;
+		this.node = node;
 		this.schema = null;
+		this.type = null;
 		initializeFields();
 	}
 
 	/**
 	 * Creates an entity based on node and schema.
 	 *
-	 * @param node
-	 *            The node.
-	 * @param schema
-	 *            The schema.
+	 * @param node The node.
+	 * @param schema The schema.
 	 */
 	public RBEntityImpl(final ResourceNode node, final ResourceSchema schema) {
 		super();
 		this.node = node;
 		this.schema = schema;
-		this.type = schema.getDescribedType();
+		if (schema != null) {
+			this.type = schema.getDescribedType();
+		} else {
+			this.type = null;
+		}
+		initializeFields();
+	}
+	
+	/**
+	 * Creates an entity based on node and type.
+	 *
+	 * @param node The node.
+	 * @param schema The schema.
+	 */
+	public RBEntityImpl(final ResourceNode node, final ResourceID type) {
+		super();
+		this.node = node;
+		this.type = type;
+		this.schema = null;
 		initializeFields();
 	}
 
@@ -152,7 +158,15 @@ public class RBEntityImpl implements RBEntity {
 	public boolean addField(final RBField field) {
 		return fields.add(field);
 	}
-
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public boolean hasSchema() {
+		return schema != null;
+	}
+	
 	// ----------------------------------------------------
 	
 	/**

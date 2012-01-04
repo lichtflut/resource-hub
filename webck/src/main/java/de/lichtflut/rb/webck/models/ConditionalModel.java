@@ -12,6 +12,7 @@ import org.apache.wicket.model.IWrapModel;
 import org.arastreju.sge.security.User;
 
 import de.lichtflut.infra.Infra;
+import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
  * <p>
@@ -163,6 +164,16 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			public boolean isFulfilled() {
 				final User user = userModel.getObject();
 				return user != null && user.hasPermission(permission);
+			}
+		};
+	}
+	
+	public static <T> ConditionalModel<T> hasSchema(final IModel<RBEntity> entityModel) {
+		return new ConditionalModel<T>(entityModel) {
+			@Override
+			public boolean isFulfilled() {
+				final RBEntity entity = entityModel.getObject();
+				return entity != null && entity.hasSchema();
 			}
 		};
 	}

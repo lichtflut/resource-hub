@@ -13,6 +13,7 @@ import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNText;
@@ -89,7 +90,12 @@ public class EntityManagerImpl implements EntityManager {
 	@Override
 	public RBEntity create(final ResourceID type) {
 		final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
-		return new RBEntityImpl(schema);
+		if (schema != null) {
+			return new RBEntityImpl(new SNResource(), schema);	
+		} else {
+			return new RBEntityImpl(new SNResource(), type);
+		}
+		
 	}
 	
 	/** 
@@ -158,10 +164,14 @@ public class EntityManagerImpl implements EntityManager {
 		final ResourceID type = detectType(node);
 		final RBEntityImpl entity;
 		if (type == null) {
-			entity = new RBEntityImpl(node, (ResourceID) null);
+			entity = new RBEntityImpl(node);
 		} else {
 			final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type.asResource());
-			entity = new RBEntityImpl(node, schema);
+			if (schema != null) {
+				entity = new RBEntityImpl(node, schema);
+			} else {
+				entity = new RBEntityImpl(node, type);
+			}
 		}
 		resolveEntityReferences(entity, cascadeEager);
 		return entity;

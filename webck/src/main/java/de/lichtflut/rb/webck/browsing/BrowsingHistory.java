@@ -10,7 +10,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.arastreju.sge.model.nodes.ResourceNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,16 +113,8 @@ public class BrowsingHistory implements Serializable {
 		logger.debug("Starting Editing " + this);
 	}
 	
-	public void beginClassifying() {
-		Validate.isTrue(!stack.isEmpty());
-		stack.push(new EntityBrowsingStep(getCurrentEntity(), BrowsingState.CLASSIFY));
-		logger.debug("Starting Classify " + this);
-	}
-	
 	public void createReferencedEntity(EntityHandle handle, Action<?>... actions) {
-		Validate.isTrue(!stack.isEmpty());
-		stack.peek().setActions(actions);
-		stack.push(new EntityBrowsingStep(handle, BrowsingState.CREATE));
+		stack.push(new EntityBrowsingStep(handle, BrowsingState.CREATE, actions));
 		logger.debug("Creating sub reference " + this);
 	}
 	
@@ -150,12 +141,6 @@ public class BrowsingHistory implements Serializable {
 			stack.push(new EntityBrowsingStep(last.getHandle(), BrowsingState.VIEW));
 		}
 		return BrowsingResponse.CONTINUE;
-	}
-	
-	public void applyReferencedEntity(final ResourceNode node) {
-		stack.pop();
-		stack.peek().loadActions(node);
-		logger.debug("applying referenced " +  node + " ----- " + this);
 	}
 	
 	// ----------------------------------------------------

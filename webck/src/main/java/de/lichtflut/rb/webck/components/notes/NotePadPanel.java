@@ -21,10 +21,12 @@ import org.arastreju.sge.query.Query;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.*;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.dialogs.EditNoteDialog;
+import static de.lichtflut.rb.webck.models.ConditionalModel.*;
 import de.lichtflut.rb.webck.models.QueryResultModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.basic.LoadableModel;
@@ -75,12 +77,19 @@ public abstract class NotePadPanel extends TypedPanel<ResourceID> {
 		view.setReuseItems(true);
 		add(view);
 		
-		add(new AjaxLink("create") {
+		add(new AjaxLink("createFirst") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				createNote(resource);
 			}
-		});
+		}.add(visibleIf(isEmpty(listModel))));
+		
+		add(new AjaxLink("createAnother") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				createNote(resource);
+			}
+		}.add(visibleIf(not(isEmpty(listModel)))));
 	}
 	
 	// ----------------------------------------------------

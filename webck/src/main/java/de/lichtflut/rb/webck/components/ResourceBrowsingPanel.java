@@ -4,10 +4,10 @@
 package de.lichtflut.rb.webck.components;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
@@ -15,7 +15,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,11 +76,11 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		form.setOutputMarkupId(true);
 		
 		form.add(new EntityPanel("entity", model)
-			.add(visibleIf(not(BrowsingContextModel.isInClassifyMode()))));
+			.add(visibleIf((hasSchema(model)))));
 		
 		final IModel<ResourceID> typeModel = new Model<ResourceID>();
 		form.add(new ClassifyEntityPanel("classifier", model, typeModel)
-			.add(visibleIf(BrowsingContextModel.isInClassifyMode())));
+			.add(visibleIf(not(hasSchema(model)))));
 		
 		form.add(createLocalBar(form));
 		form.add(createBrowsingBar(form, typeModel));
@@ -122,12 +121,9 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		getServiceProvider().getEntityManager().store(model.getObject());
 		
 		// navigate to sub entity
-		final Action action = new EntityAttributeApplyAction(predicate);
+		final Action action = new EntityAttributeApplyAction(model.getObject(), predicate);
 		history().createReferencedEntity(handle, action);
-		if (!getServiceProvider().getSchemaManager().isSchemaDefinedFor(handle.getType())) {
-			history().beginClassifying();
-		}
-		addToAjax();
+		updateAll();
 	}
 	
 	// ----------------------------------------------------
@@ -149,23 +145,25 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		return new BrowsingButtonBar("browsingButtonBar", model, form) {
 			@Override
 			public void onSave() {
-				getServiceProvider().getEntityManager().store(model.getObject());
-				final ResourceNode node = getServiceProvider().getResourceResolver().resolve(model.getObject().getID());
-				history().applyReferencedEntity(node);
-				addToAjax();
+				final RBEntity createdEntity = model.getObject();
+				getServiceProvider().getEntityManager().store(createdEntity);
+				for(Action action : history().getCurrentActions()) {
+					action.execute(getServiceProvider(), createdEntity);
+				}
+				history().back();
+				updateAll();
 			}
 			
 			@Override
 			public void onClassify() {
 				getServiceProvider().getEntityManager().changeType(model.getObject(), typeModel.getObject());
-				history().back();
-				addToAjax();
+				updateAll();
 			}
 			
 			@Override
 			public void onCancel() {
 				history().back();
-				addToAjax();
+				updateAll();
 			}
 		};
 	}
@@ -193,7 +191,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		super.onConfigure();
 		
 		final EntityHandle currentEntity = history().getCurrentEntity();
-		model.reset(currentEntity, history().getCurrentActions());
+		model.reset(currentEntity);
 		logger.info("Showing " + currentEntity);
 	}
 	
@@ -203,11 +201,8 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		return RBWebSession.get().getHistory();
 	}
 	
-	private void addToAjax() {
-		final AjaxRequestTarget target = AjaxRequestTarget.get();
-		if (target != null) {
-			target.add(this);
-		}
+	private void updateAll() {
+		RBAjaxTarget.add(this);
 	}
 
 }

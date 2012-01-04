@@ -65,8 +65,8 @@ public abstract class BrowsingButtonBar extends Panel {
 				target.add(form);
 			}
 		};
-		save.add(defaultButtonIf(and(isInSubReferencingMode(), not(isInClassifyMode()))));
-		save.add(visibleIf(not(isInClassifyMode())));
+		save.add(defaultButtonIf(and(isInSubReferencingMode(), hasSchema(model))));
+		save.add(visibleIf(hasSchema(model)));
 		return save;
 	}
 	
@@ -82,8 +82,8 @@ public abstract class BrowsingButtonBar extends Panel {
 				target.add(form);
 			}
 		};
-		classify.add(defaultButtonIf(and(isInSubReferencingMode(), isInClassifyMode())));
-		classify.add(visibleIf(isInClassifyMode()));
+		classify.add(defaultButtonIf(and(isInSubReferencingMode(), not(hasSchema(model)))));
+		classify.add(visibleIf(not(hasSchema(model))));
 		return classify;
 	}
 	

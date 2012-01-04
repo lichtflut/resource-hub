@@ -17,8 +17,8 @@ import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.api.TypeManager;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.TypeManager;
 
 /**
  * <p>

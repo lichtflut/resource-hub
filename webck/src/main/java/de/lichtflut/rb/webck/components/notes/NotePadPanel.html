@@ -10,15 +10,18 @@
 </wicket:head>
 <wicket:panel>
 
-	<div class="notepad">
+	<div class="notepad section">
 
 		<wicket:container wicket:id="notesList">
 			<div wicket:id="mezzle" class="note">
 			</div>
 		</wicket:container>
 	
-		<a wicket:id="create"><wicket:message key="link.create">[create]</wicket:message></a>
-	
+		<div class="section">
+			<a wicket:id="createAnother"><wicket:message key="link.create-another">[create]</wicket:message></a>
+			<a wicket:id="createFirst"><wicket:message key="link.create-first">[create]</wicket:message></a>
+		</div>
+		
 	</div>
 
 </wicket:panel>

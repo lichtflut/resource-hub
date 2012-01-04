@@ -18,6 +18,5 @@ public enum BrowsingState {
 
 	VIEW,
 	EDIT,
-	CREATE,
-	CLASSIFY;
+	CREATE;
 }

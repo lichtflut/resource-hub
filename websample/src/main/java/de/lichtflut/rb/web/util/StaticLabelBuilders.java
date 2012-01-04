@@ -8,10 +8,10 @@ import java.util.Locale;
 
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 import de.lichtflut.rb.web.WSConstants;
 
 /**

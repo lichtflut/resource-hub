@@ -66,5 +66,11 @@ public interface RBEntity extends Serializable {
 	 * @return true if added successfully, false if not
 	 */
 	boolean addField(RBField field);
+	
+	/**
+	 * Check if there is a schema defined for this entity.
+	 * @return True if there is a schema.
+	 */
+	boolean hasSchema();
 
 }

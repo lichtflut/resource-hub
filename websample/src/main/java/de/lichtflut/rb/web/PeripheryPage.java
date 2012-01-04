@@ -13,7 +13,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.io.JsonBinding;
-import org.arastreju.sge.io.OntologyIOException;
+import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.model.SemanticGraph;
@@ -54,7 +54,7 @@ public class PeripheryPage extends WebPage {
 			jsonTree.append(os.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (OntologyIOException e) {
+		} catch (SemanticIOException e) {
 			e.printStackTrace();
 		}
 
@@ -76,7 +76,7 @@ public class PeripheryPage extends WebPage {
 			return graph;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		} catch (OntologyIOException e) {
+		} catch (SemanticIOException e) {
 			throw new RuntimeException(e);
 		}
 	}

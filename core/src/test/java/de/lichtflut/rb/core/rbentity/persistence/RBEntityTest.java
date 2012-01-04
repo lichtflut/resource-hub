@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.rbentity.persistence;
 import java.util.Collections;
 
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.junit.Assert;
 import org.junit.Test;
@@ -47,8 +48,8 @@ public final class RBEntityTest {
         ResourceSchema schema = createSchema();
 
         // Create two entitys with given shema
-        RBEntityImpl e1 = new RBEntityImpl(schema);
-        RBEntityImpl e2 = new RBEntityImpl(schema);
+        RBEntityImpl e1 = new RBEntityImpl(new SNResource(), schema);
+        RBEntityImpl e2 = new RBEntityImpl(new SNResource(), schema);
 
         ServiceProvider sp = new DefaultRBServiceProvider(new RBConfig());
         

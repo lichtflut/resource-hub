@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.common;
 import java.io.Serializable;
 
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
@@ -20,8 +21,6 @@ import de.lichtflut.rb.core.entity.RBEntity;
  */
 public interface Action<T> extends Serializable {
 	
-	void setValue(T value);
-
-	void execute(RBEntity target);
+	void execute(ServiceProvider serviceProvider, RBEntity target);
 	
 }

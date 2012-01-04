@@ -5,8 +5,6 @@ package de.lichtflut.rb.webck.browsing;
 
 import java.io.Serializable;
 
-import org.arastreju.sge.model.ResourceID;
-
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.webck.common.Action;
@@ -22,7 +20,7 @@ import de.lichtflut.rb.webck.common.Action;
  *
  * @author Oliver Tigges
  */
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings("rawtypes")
 class EntityBrowsingStep implements Serializable {
 	
 	private static Action[] NO_ACTIONS = new Action[0];
@@ -86,12 +84,6 @@ class EntityBrowsingStep implements Serializable {
 	 */
 	public void setActions(Action<?>[] actions) {
 		this.actions = actions;
-	}
-	
-	public void loadActions(ResourceID ref) {
-		for (Action action : actions) {
-			action.setValue(ref);
-		}
 	}
 	
 	// ----------------------------------------------------

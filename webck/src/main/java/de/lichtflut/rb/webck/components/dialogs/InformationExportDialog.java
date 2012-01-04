@@ -26,7 +26,7 @@ import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.arastreju.sge.io.JsonBinding;
 import org.arastreju.sge.io.N3Binding;
-import org.arastreju.sge.io.OntologyIOException;
+import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.model.SemanticGraph;
 
@@ -167,7 +167,7 @@ public abstract class InformationExportDialog extends AbstractRBDialog implement
 				buffer.close();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
-			} catch (OntologyIOException e) {
+			} catch (SemanticIOException e) {
 				throw new RuntimeException(e);
 			}
 			return in;

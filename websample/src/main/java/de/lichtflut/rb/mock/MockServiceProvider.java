@@ -10,13 +10,13 @@ import java.util.List;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.persistence.ResourceResolver;
 
-import de.lichtflut.rb.core.api.DomainOrganizer;
-import de.lichtflut.rb.core.api.EntityManager;
-import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.api.SecurityService;
-import de.lichtflut.rb.core.api.TypeManager;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.TypeManager;
 
 /**
  * Mock-Implementation of {@link ServiceProvider}.

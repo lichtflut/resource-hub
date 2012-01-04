@@ -31,7 +31,6 @@ import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
-import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
@@ -89,7 +88,7 @@ public class SchemaManagerImpl implements SchemaManager {
 			final ResourceSchema schema = binding.toModelObject(schemaNode);
 			return schema;
 		} else {
-			return new ResourceSchemaImpl().setDescribedType(type);
+			return null;
 		}
 	}
 	

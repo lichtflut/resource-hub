@@ -48,20 +48,6 @@ public class BrowsingContextModel {
 		};
 	}
 	
-	public static ConditionalModel<Boolean> isInClassifyMode() {
-		return new ConditionalModel<Boolean>() {
-			@Override
-			public boolean isFulfilled() {
-				return getObject();
-			}
-			
-			@Override
-			public Boolean getObject() {
-				return BrowsingState.CLASSIFY.equals(RBWebSession.get().getHistory().getState());
-			}
-		};
-	}
-	
 	public static ConditionalModel<Boolean> hasPredecessors() {
 		return new ConditionalModel<Boolean>() {
 			@Override

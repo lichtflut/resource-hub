@@ -8,6 +8,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
@@ -21,38 +22,30 @@ import de.lichtflut.rb.core.entity.RBEntity;
  * @author Oliver Tigges
  */
 public class ResourceAttributeApplyAction implements Action<ResourceID> {
+
+	private final ResourceNode subject;
 	
 	private final ResourceID predicate;
-	
-	private ResourceID value;
 	
 	// ----------------------------------------------------
 	
 	/**
 	 * @param predicate
 	 */
-	public ResourceAttributeApplyAction(final ResourceID predicate) {
+	public ResourceAttributeApplyAction(final ResourceNode subject, final ResourceID predicate) {
+		this.subject = subject;
 		this.predicate = predicate;
 	}
 
 	// ----------------------------------------------------
 	
-	/**
-	 * @param value the value to set
-	 */
-	public void setValue(ResourceID value) {
-		this.value = value;
-	}
-	
-	// ----------------------------------------------------
-
 	/** 
 	* {@inheritDoc}
 	*/
 	@Override
-	public void execute(final RBEntity target) {
-		final ResourceNode node = target.getNode();
-		SNOPS.assure(node, predicate, value);
+	public void execute(final ServiceProvider sp, final RBEntity createdEntity) {
+		sp.getArastejuGate().startConversation().attach(subject);
+		SNOPS.assure(subject, predicate, createdEntity.getID());
 	}
 	
 	/** 
@@ -60,7 +53,7 @@ public class ResourceAttributeApplyAction implements Action<ResourceID> {
 	*/
 	@Override
 	public String toString() {
-		return "Action(" + predicate + "=" + value + ")";
+		return "Action(" + subject + "-->" + predicate + ")";
 	}
 
 }

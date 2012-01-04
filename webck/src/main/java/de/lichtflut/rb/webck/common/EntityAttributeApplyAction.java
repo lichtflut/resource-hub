@@ -7,6 +7,7 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
@@ -23,39 +24,32 @@ public class EntityAttributeApplyAction implements Action<Object> {
 	
 	private final ResourceID predicate;
 	
-	private Object value;
+	private final RBEntity subject;
 	
 	// ----------------------------------------------------
 	
 	/**
 	 * @param predicate
 	 */
-	public EntityAttributeApplyAction(final ResourceID predicate) {
+	public EntityAttributeApplyAction(final RBEntity subject, final ResourceID predicate) {
+		this.subject = subject;
 		this.predicate = predicate;
 	}
 
-	// ----------------------------------------------------
-	
-	/**
-	 * @param value the value to set
-	 */
-	public void setValue(Object value) {
-		this.value = value;
-	}
-	
 	// ----------------------------------------------------
 
 	/** 
 	* {@inheritDoc}
 	*/
 	@Override
-	public void execute(final RBEntity target) {
-		final RBField field = target.getField(predicate);
+	public void execute(final ServiceProvider sp, final RBEntity createdEntity) {
+		final RBField field = subject.getField(predicate);
 		if (field.getValues().isEmpty()) {
-			field.setValue(0, value);
+			field.setValue(0, createdEntity.getID());
 		} else {
-			field.addValue(value);
+			field.addValue(createdEntity.getID());
 		}
+		sp.getEntityManager().store(subject);
 	}
 	
 	/** 
@@ -63,7 +57,7 @@ public class EntityAttributeApplyAction implements Action<Object> {
 	*/
 	@Override
 	public String toString() {
-		return "Action(" + predicate + "=" + value + ")";
+		return "Action(" + subject + " --> " + predicate + ")";
 	}
 
 }

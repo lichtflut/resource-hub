@@ -15,7 +15,7 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
-import org.arastreju.sge.io.OntologyIOException;
+import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.model.SemanticGraph;
@@ -84,7 +84,7 @@ public abstract class InformationImportDialog extends AbstractRBDialog {
 			getServiceProvider().getArastejuGate().startConversation().attach(graph);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		} catch (OntologyIOException e) {
+		} catch (SemanticIOException e) {
 			throw new RuntimeException(e);
 		}
 		upload.closeStreams();
