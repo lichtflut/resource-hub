@@ -9,8 +9,8 @@ import java.util.Collection;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
-import de.lichtflut.rb.core.api.TypeManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.TypeManager;
 
 /**
  * <p>

@@ -13,9 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.api.SchemaImporter;
-import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.services.SchemaImporter;
+import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
 
 /**

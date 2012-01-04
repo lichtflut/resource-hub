@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.AbstractConverter;
 
-import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
+import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 
 /**

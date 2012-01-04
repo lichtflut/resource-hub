@@ -11,7 +11,7 @@ import java.util.Set;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
-import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
+import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 

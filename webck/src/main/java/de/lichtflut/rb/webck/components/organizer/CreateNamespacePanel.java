@@ -16,8 +16,8 @@ import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
 
-import de.lichtflut.rb.core.api.DomainOrganizer;
 import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
+import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;

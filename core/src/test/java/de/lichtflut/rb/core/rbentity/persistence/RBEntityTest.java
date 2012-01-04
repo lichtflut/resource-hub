@@ -11,8 +11,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.api.EntityManager;
-import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.entity.impl.AbstractRBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.entity.impl.UndeclaredRBField;
@@ -24,6 +22,8 @@ import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
 

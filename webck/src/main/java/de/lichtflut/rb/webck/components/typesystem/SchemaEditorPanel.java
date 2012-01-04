@@ -20,8 +20,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;

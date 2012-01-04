@@ -5,7 +5,7 @@ package de.lichtflut.rb.webck.models;
 
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.api.DomainOrganizer;
+import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 

@@ -22,8 +22,8 @@ import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
-import de.lichtflut.rb.core.api.SchemaExporter;
-import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.services.SchemaExporter;
+import de.lichtflut.rb.core.services.SchemaManager;
 
 /**
  * <p>

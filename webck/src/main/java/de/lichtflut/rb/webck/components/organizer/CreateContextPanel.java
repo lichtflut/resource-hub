@@ -17,8 +17,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 
-import de.lichtflut.rb.core.api.DomainOrganizer;
 import de.lichtflut.rb.core.organizer.ContextDeclaration;
+import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;

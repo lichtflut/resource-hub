@@ -15,7 +15,7 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
+import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.webck.conversion.LabelBuilderConverter;
 import de.lichtflut.rb.webck.conversion.QualifiedNameConverter;
 import de.lichtflut.rb.webck.conversion.ResourceIDConverter;

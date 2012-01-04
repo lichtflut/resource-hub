@@ -22,7 +22,6 @@ import org.odlabs.wiquery.ui.datepicker.DatePickerJavaScriptResourceReference;
 @SuppressWarnings("serial")
 public class DatePickerBehavior extends Behavior {
 
-	private Component component;
 
 	// -----------------------------------------------------
 
@@ -31,8 +30,7 @@ public class DatePickerBehavior extends Behavior {
 	 */
 	@Override
 	public void bind(final Component component) {
-		this.component = component;
-		this.component.setOutputMarkupId(true);
+		component.setOutputMarkupId(true);
 	}
 
 	/* (non-Javadoc)
@@ -41,7 +39,7 @@ public class DatePickerBehavior extends Behavior {
 	@Override
 	public void renderHead(final Component c, final IHeaderResponse response) {
 		response.renderJavaScriptReference(DatePickerJavaScriptResourceReference.get());
-		response.renderOnLoadJavaScript("$('#" + component.getMarkupId()+ "').datepicker()");
+		response.renderOnLoadJavaScript("$('#" + c.getMarkupId()+ "').datepicker()");
 	}
 
 }

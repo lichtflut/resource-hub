@@ -6,11 +6,6 @@ package de.lichtflut.rb.core.services;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.persistence.ResourceResolver;
 
-import de.lichtflut.rb.core.api.DomainOrganizer;
-import de.lichtflut.rb.core.api.EntityManager;
-import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.api.SecurityService;
-import de.lichtflut.rb.core.api.TypeManager;
 
 /**
   * <p>

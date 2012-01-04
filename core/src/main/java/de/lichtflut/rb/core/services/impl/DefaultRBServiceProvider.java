@@ -9,17 +9,12 @@ import org.arastreju.sge.ArastrejuProfile;
 import org.arastreju.sge.persistence.ResourceResolver;
 
 import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.api.DomainOrganizer;
-import de.lichtflut.rb.core.api.EntityManager;
-import de.lichtflut.rb.core.api.SchemaManager;
-import de.lichtflut.rb.core.api.SecurityService;
-import de.lichtflut.rb.core.api.TypeManager;
-import de.lichtflut.rb.core.api.impl.DomainOrganizerImpl;
-import de.lichtflut.rb.core.api.impl.EntityManagerImpl;
-import de.lichtflut.rb.core.api.impl.SchemaManagerImpl;
-import de.lichtflut.rb.core.api.impl.SecurityServiceImpl;
-import de.lichtflut.rb.core.api.impl.TypeManagerImpl;
+import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.TypeManager;
 
 /**
  * <p>

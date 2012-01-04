@@ -6,16 +6,18 @@ package de.lichtflut.rb.webck.components.organizer;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.validation.EqualPasswordInputValidator;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.validation.validator.PatternValidator;
 import org.arastreju.sge.security.User;
 
 /**
@@ -25,11 +27,12 @@ import org.arastreju.sge.security.User;
  *
  * @author Ravi Knox
  */
+@SuppressWarnings("rawtypes")
 public class ChangePasswordPanel extends Panel {
 
-	private final String PASSWORD_PATTERN = "";
 	private IModel<User> user;
 	private IModel<Mode> mode = new Model<Mode>(Mode.VIEW);
+	private WebMarkupContainer container;
 
 	public enum Mode {
 		EDIT, VIEW;
@@ -39,21 +42,34 @@ public class ChangePasswordPanel extends Panel {
 	 * @param id
 	 * @param model
 	 */
-	@SuppressWarnings("rawtypes")
 	public ChangePasswordPanel(String id, Model<User> user) {
 		super(id);
 		this.user = user;
-		add(new FeedbackPanel("feedback"));
+		container = new WebMarkupContainer("container");
+		container.setOutputMarkupId(true);
 		Form form = new Form("form");
-		final PasswordTextField current = new PasswordTextField("currentPassword", Model.of(""));
-		final PasswordTextField newPAssword = new PasswordTextField("newPassword", Model.of(""));
-		final PasswordTextField confirm = new PasswordTextField("confirmPassword", Model.of(""));
-		newPAssword.add(new PatternValidator(PASSWORD_PATTERN));
-		form.add(current, newPAssword, confirm);
-		form.add(new EqualPasswordInputValidator(newPAssword, confirm));
-		form.add(createEditButton("edit", form));
+		createContainer(form);
 		form.add(createSaveButton("save", form));
+		form.add(createEditButton("edit", form));
 		this.add(form);
+	}
+
+	/**
+	 * @param string
+	 * @param form
+	 * @return
+	 */
+	private void createContainer(Form form) {
+		
+		if(mode.getObject().equals(Mode.VIEW)){
+			container.removeAll();
+			container.add(new Label("password", Model.of("Password")));
+			
+		}else{
+			container.removeAll();
+			container.add(new PasswordPanel("password", user));
+		}
+		form.add(container);
 	}
 
 	/**
@@ -67,6 +83,8 @@ public class ChangePasswordPanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				mode.setObject(Mode.VIEW);
+				createContainer(form);
+				target.add(form);
 			}
 
 			@Override
@@ -88,6 +106,7 @@ public class ChangePasswordPanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				mode.setObject(Mode.EDIT);
+				createContainer(form);
 				target.add(form);
 			}
 
@@ -99,4 +118,25 @@ public class ChangePasswordPanel extends Panel {
 		return edit;
 	}
 
+	private class PasswordPanel extends Panel{
+
+		final String PASSWORD_PATTERN = "";
+		
+		/**
+		 * @param id - wicket:id
+		 * @param model
+		 */
+		public PasswordPanel(String id, IModel<?> model) {
+			super(id, model);
+			Form form = new Form("changePasswordForm");
+			PasswordTextField current = new PasswordTextField("current");
+			PasswordTextField newPassword = new PasswordTextField("newPassword");
+			PasswordTextField confirmPassword = new PasswordTextField("confirmPassword");
+			form.add(current, newPassword, confirmPassword);
+			form.add(new EqualPasswordInputValidator(newPassword, confirmPassword));
+			form.add(current);
+			this.add(form);
+		}
+		
+	}
 }

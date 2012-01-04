@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
-import de.lichtflut.rb.core.api.SchemaManager;
+import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.components.dialogs.SchemaExportDialog;
 import de.lichtflut.rb.webck.components.dialogs.SchemaImportDialog;
 

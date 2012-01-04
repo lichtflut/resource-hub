@@ -22,19 +22,19 @@ import org.apache.wicket.model.Model;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.persistence.ResourceResolver;
 import org.arastreju.sge.security.User;
 import org.arastreju.sge.security.impl.UserImpl;
 
 import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.entity.EntityHandle;
+import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.JumpTarget;
 import de.lichtflut.rb.webck.common.Action;
-import de.lichtflut.rb.webck.common.EntityAttributeApplyAction;
+import de.lichtflut.rb.webck.common.ResourceAttributeApplyAction;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
 /**
@@ -49,10 +49,10 @@ import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 public abstract class SetUserProfilePanel extends Panel {
 
 	private IModel<User> model;
-	private IModel<ResourceID> profileModel = new Model<ResourceID>();
+	private final IModel<ResourceID> profileModel;
+	private IModel<Boolean> hasProfile;
 	private WebMarkupContainer container;
 	private final IModel<Mode> mode = new Model<Mode>(Mode.VIEW);
-	private boolean hasProfile = false;
 
 	public enum Mode {
 		EDIT, VIEW;
@@ -65,11 +65,18 @@ public abstract class SetUserProfilePanel extends Panel {
 	 * @param id - wicket:id
 	 * @param model
 	 */
-	public SetUserProfilePanel(String id, final Model<User> model) {
+	public SetUserProfilePanel(String id, final IModel<User> model) {
 		super(id, model);
 		this.model = model;
+		this.hasProfile = Model.of(true);
 		final Form form = new Form("form");
-		updateProfileModel();
+		
+		profileModel = new DerivedModel<ResourceID, User>(model) {
+			@Override
+			protected ResourceID derive(User original) {
+				return SNOPS.singleObject(original.getAssociatedResource(), RB.IS_RESPRESENTED_BY).asResource();
+			}
+		};
 		
 		container = new WebMarkupContainer("container");
 		container.setOutputMarkupId(true);
@@ -118,13 +125,15 @@ public abstract class SetUserProfilePanel extends Panel {
 		final AjaxSubmitLink link = new AjaxSubmitLink("createLink") {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				final EntityHandle handle = EntityHandle.forID(RB.PERSON);
-				final Action action = new EntityAttributeApplyAction(RB.IS_RESPRESENTED_BY);
-				RBWebSession.get().getHistory().clear(new JumpTarget(getResourceEditorPage()));
+				final EntityHandle handle = EntityHandle.forType(RB.PERSON);
+				final Action action = new ResourceAttributeApplyAction(RB.IS_RESPRESENTED_BY);
+				RBWebSession.get().getHistory().clear(new JumpTarget(getUserProfilePage()));
+				RBWebSession.get().getHistory().edit(EntityHandle.forID(model.getObject().getAssociatedResource()));
 				RBWebSession.get().getHistory().createReferencedEntity(handle, action);
-				if (!getSchemaManager().isSchemaDefinedFor(handle.getType())) {
+				if (!getSchemaManager().isSchemaDefinedFor(RB.PERSON)) {
 					RBWebSession.get().getHistory().beginClassifying();
 				}
+				jumpToResourceEditorPage(handle);
 			}
 			
 			@Override
@@ -138,7 +147,9 @@ public abstract class SetUserProfilePanel extends Panel {
 		return link;
 	}
 
-	protected abstract Class<? extends Page> getResourceEditorPage();
+	protected abstract void jumpToResourceEditorPage(EntityHandle handle);
+
+	protected abstract Class<? extends Page> getUserProfilePage();
 
 	protected abstract SchemaManager getSchemaManager();
 	
@@ -155,20 +166,9 @@ public abstract class SetUserProfilePanel extends Panel {
 	 * @param reference 
 	 */
 	protected void createRelationship(ResourceNode user, ResourceNode profile){
-		SNOPS.assure(user, RB.IS_RESPRESENTED_BY, profile, RB.PRIVATE_CONTEXT);;
+		SNOPS.assure(user, RB.IS_RESPRESENTED_BY, profile, RB.PRIVATE_CONTEXT);
 	}
 	
-	/**
-	 * @param model
-	 */
-	private void updateProfileModel() {
-		ResourceNode rn = model.getObject().getAssociatedResource();
-		SemanticNode object = SNOPS.singleObject(rn, RB.IS_RESPRESENTED_BY);
-		if(object != null && object.isResourceNode()) {
-			profileModel.setObject(object.asResource());
-			hasProfile = true;
-		}
-	}
 
 	/**
 	 * Create resource-{@link Link}
@@ -201,7 +201,7 @@ public abstract class SetUserProfilePanel extends Panel {
 			}
 		};
 		link.add(new Label("label", label));
-		if(!hasProfile){
+		if(!hasProfile.getObject()){
 			link.setEnabled(false);
 		}
 		f.add(link);
@@ -235,7 +235,6 @@ public abstract class SetUserProfilePanel extends Panel {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				Model<ResourceID> user = new Model<ResourceID>(model.getObject().getAssociatedResource());
 				mode.setObject(Mode.EDIT);
-				updateProfileModel();
 				container.remove("user").add(createEntityPicker(user));
 				target.add(form);
 			}
@@ -264,7 +263,6 @@ public abstract class SetUserProfilePanel extends Panel {
 				createRelationship(user, profileModel.getObject().asResource());
 				user = getResourceResolver().resolve(user);
 				model.setObject(new UserImpl(user));
-				updateProfileModel();
 				container.remove("user").add(createResourceLink());
 				mode.setObject(Mode.VIEW);
 				target.add(form);

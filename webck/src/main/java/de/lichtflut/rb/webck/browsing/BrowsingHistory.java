@@ -10,7 +10,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -152,9 +152,10 @@ public class BrowsingHistory implements Serializable {
 		return BrowsingResponse.CONTINUE;
 	}
 	
-	public void applyReferencedEntity(final ResourceID ref) {
-		stack.peek().loadActions(ref);
-		logger.debug("applying referenced " +  ref + " ----- " + this);
+	public void applyReferencedEntity(final ResourceNode node) {
+		stack.pop();
+		stack.peek().loadActions(node);
+		logger.debug("applying referenced " +  node + " ----- " + this);
 	}
 	
 	// ----------------------------------------------------

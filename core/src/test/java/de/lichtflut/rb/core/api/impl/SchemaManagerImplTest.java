@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.api.SchemaManager;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
@@ -20,7 +19,9 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
+import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 
 /**
  * <p>

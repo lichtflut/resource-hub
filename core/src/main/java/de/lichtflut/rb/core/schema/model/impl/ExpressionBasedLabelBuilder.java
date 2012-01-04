@@ -14,10 +14,10 @@ import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.NamespaceHandle;
 import org.arastreju.sge.naming.QualifiedName;
 
+import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
 
 /**
  * <p>

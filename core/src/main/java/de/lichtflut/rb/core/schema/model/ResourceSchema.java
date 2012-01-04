@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.common.EntityLabelBuilder;
+
 /**
  * <p>
  *  Schema for a Resource Type, e.g. a person, an organization or a project.

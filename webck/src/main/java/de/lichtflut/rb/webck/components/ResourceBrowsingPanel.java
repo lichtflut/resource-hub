@@ -19,9 +19,9 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.api.EntityManager;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
@@ -150,7 +150,6 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 			@Override
 			public void onSave() {
 				getServiceProvider().getEntityManager().store(model.getObject());
-				history().back();
 				final ResourceNode node = getServiceProvider().getResourceResolver().resolve(model.getObject().getID());
 				history().applyReferencedEntity(node);
 				addToAjax();

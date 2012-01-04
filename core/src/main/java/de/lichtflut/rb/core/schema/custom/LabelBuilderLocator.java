@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.schema.custom;
 
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.schema.model.EntityLabelBuilder;
+import de.lichtflut.rb.core.common.EntityLabelBuilder;
 
 /**
  * <p>
