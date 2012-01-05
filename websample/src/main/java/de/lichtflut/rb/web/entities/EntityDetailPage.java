@@ -85,7 +85,7 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 		final BrowsingHistory history = RBWebSession.get().getHistory();
 		history.view(handle);
 		if (!readonly) {
-			history.beginEditing();
+			history.edit(handle);
 		}
 		final Browser browser = new Browser("rb");
 		add(browser);

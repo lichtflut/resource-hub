@@ -3,6 +3,9 @@
  */
 package de.lichtflut.rb.webck.components.editor;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
+
 import java.util.List;
 
 import org.apache.wicket.Component;
@@ -61,6 +64,7 @@ public class EntityPanel extends Panel {
 				}
 			}
 		}));
+		add(visibleIf((hasSchema(model))));
 	}
 	
 	// ----------------------------------------------------
@@ -91,7 +95,7 @@ public class EntityPanel extends Panel {
 	}
 	
 	private boolean isInViewMode() {
-		return BrowsingState.VIEW.equals(RBWebSession.get().getHistory().getState());
+		return BrowsingState.VIEW.equals(RBWebSession.get().getHistory().getCurrentStep().getState());
 	}
 	
 }

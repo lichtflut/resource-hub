@@ -37,4 +37,10 @@ public class TypedPanel<T> extends Panel {
 		return (IModel<T>) getDefaultModel();
 	}
 	
+	/**
+	 * @return The typed model object.
+	 */
+	public T getModelObject() {
+		return getModel().getObject();
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.browsing;
 
@@ -7,11 +7,10 @@ import java.io.Serializable;
 
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.webck.common.Action;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  A element on the browsing stack.
  * </p>
  *
  * <p>
@@ -21,14 +20,17 @@ import de.lichtflut.rb.webck.common.Action;
  * @author Oliver Tigges
  */
 @SuppressWarnings("rawtypes")
-class EntityBrowsingStep implements Serializable {
+public class EntityBrowsingStep implements Serializable {
 	
-	private static Action[] NO_ACTIONS = new Action[0];
+	private static final ReferenceReceiveAction[] NO_ACTIONS = new ReferenceReceiveAction[0];
+	
+	// ----------------------------------------------------
 	
 	private final EntityHandle handle;
+	
 	private final BrowsingState state;
 	
-	private Action<?>[] actions;
+	private ReferenceReceiveAction<?>[] actions;
 	
 	// ----------------------------------------------------
 	
@@ -36,21 +38,18 @@ class EntityBrowsingStep implements Serializable {
 	 * Constructor.
 	 * @param handle
 	 * @param state
-	 * @param actions
 	 */
 	public EntityBrowsingStep(EntityHandle handle, BrowsingState state) {
-		this.handle = handle;
-		this.state = state;
-		this.actions = NO_ACTIONS;
+		this(handle, state, NO_ACTIONS);
 	}
 	
 	/**
-	 * Constructor.
+	 * Constructor with actions.
 	 * @param handle
 	 * @param state
 	 * @param actions
 	 */
-	public EntityBrowsingStep(EntityHandle handle, BrowsingState state, Action<?>... actions) {
+	public EntityBrowsingStep(EntityHandle handle, BrowsingState state, ReferenceReceiveAction<?>... actions) {
 		this.handle = handle;
 		this.state = state;
 		this.actions = actions;
@@ -66,9 +65,12 @@ class EntityBrowsingStep implements Serializable {
 	}
 	
 	/**
-	 * @return the actions
+	 * @return the actions, will never be null.
 	 */
-	public Action<?>[] getActions() {
+	public ReferenceReceiveAction<?>[] getActions() {
+		if (actions == null) {
+			return NO_ACTIONS;
+		}
 		return actions;
 	}
 	
@@ -82,7 +84,7 @@ class EntityBrowsingStep implements Serializable {
 	/**
 	 * @param actions the actions to set
 	 */
-	public void setActions(Action<?>[] actions) {
+	public void setActions(ReferenceReceiveAction<?>[] actions) {
 		this.actions = actions;
 	}
 	

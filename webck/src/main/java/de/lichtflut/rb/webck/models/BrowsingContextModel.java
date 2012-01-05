@@ -20,20 +20,6 @@ import de.lichtflut.rb.webck.browsing.BrowsingState;
  */
 public class BrowsingContextModel {
 
-	public static ConditionalModel<Boolean> isInEditMode() {
-		return new ConditionalModel<Boolean>() {
-			@Override
-			public boolean isFulfilled() {
-				return getObject();
-			}
-			
-			@Override
-			public Boolean getObject() {
-				return BrowsingState.EDIT.equals(RBWebSession.get().getHistory().getState());
-			}
-		};
-	}
-	
 	public static ConditionalModel<Boolean> isInViewMode() {
 		return new ConditionalModel<Boolean>() {
 			@Override
@@ -43,12 +29,12 @@ public class BrowsingContextModel {
 			
 			@Override
 			public Boolean getObject() {
-				return BrowsingState.VIEW.equals(RBWebSession.get().getHistory().getState());
+				return BrowsingState.VIEW.equals(RBWebSession.get().getHistory().getCurrentStep().getState());
 			}
 		};
 	}
 	
-	public static ConditionalModel<Boolean> hasPredecessors() {
+	public static ConditionalModel<Boolean> isInCreateReferenceMode() {
 		return new ConditionalModel<Boolean>() {
 			@Override
 			public boolean isFulfilled() {
@@ -57,22 +43,7 @@ public class BrowsingContextModel {
 			
 			@Override
 			public Boolean getObject() {
-				return RBWebSession.get().getHistory().hasPredecessors();
-			}
-		};
-	}
-	
-	public static ConditionalModel<Boolean> isInSubReferencingMode() {
-		return new ConditionalModel<Boolean>() {
-			@Override
-			public boolean isFulfilled() {
-				return getObject();
-			}
-			
-			@Override
-			public Boolean getObject() {
-				final BrowsingHistory history = RBWebSession.get().getHistory();
-				return history.hasPredecessors() && !BrowsingState.VIEW.equals(history.getState());
+				return BrowsingState.CREATE_REFERENCE.equals(RBWebSession.get().getHistory().getCurrentStep().getState());
 			}
 		};
 	}

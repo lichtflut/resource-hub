@@ -63,7 +63,7 @@ public class RBFieldsListModel implements IModel<List<RBField>> {
 	 */
 	@Override
 	public List<RBField> getObject() {
-		if (model == null || model.getObject() == null) {
+		if (model.getObject() == null) {
 			return null;
 		} 
 		if (config == null) {

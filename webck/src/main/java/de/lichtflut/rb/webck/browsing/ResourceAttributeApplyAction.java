@@ -1,12 +1,13 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.common;
+package de.lichtflut.rb.webck.browsing;
 
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
@@ -20,36 +21,31 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public class EntityAttributeApplyAction implements Action<Object> {
+public class ResourceAttributeApplyAction implements ReferenceReceiveAction<ResourceID> {
+
+	private final ResourceNode subject;
 	
 	private final ResourceID predicate;
-	
-	private final RBEntity subject;
 	
 	// ----------------------------------------------------
 	
 	/**
 	 * @param predicate
 	 */
-	public EntityAttributeApplyAction(final RBEntity subject, final ResourceID predicate) {
+	public ResourceAttributeApplyAction(final ResourceNode subject, final ResourceID predicate) {
 		this.subject = subject;
 		this.predicate = predicate;
 	}
 
 	// ----------------------------------------------------
-
+	
 	/** 
 	* {@inheritDoc}
 	*/
 	@Override
 	public void execute(final ServiceProvider sp, final RBEntity createdEntity) {
-		final RBField field = subject.getField(predicate);
-		if (field.getValues().isEmpty()) {
-			field.setValue(0, createdEntity.getID());
-		} else {
-			field.addValue(createdEntity.getID());
-		}
-		sp.getEntityManager().store(subject);
+		sp.getArastejuGate().startConversation().attach(subject);
+		SNOPS.assure(subject, predicate, createdEntity.getID());
 	}
 	
 	/** 
@@ -57,7 +53,7 @@ public class EntityAttributeApplyAction implements Action<Object> {
 	*/
 	@Override
 	public String toString() {
-		return "Action(" + subject + " --> " + predicate + ")";
+		return "Action(" + subject + "-->" + predicate + ")";
 	}
 
 }

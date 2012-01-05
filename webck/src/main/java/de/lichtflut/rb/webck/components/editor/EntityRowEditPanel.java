@@ -152,7 +152,7 @@ public class EntityRowEditPanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				final EntityHandle handle = EntityHandle.forType(getTypeConstraint());
-				findParent(IBrowsingHandler.class).createSubEntity(handle, getField().getPredicate());
+				findParent(IBrowsingHandler.class).createReferencedEntity(handle, getField().getPredicate());
 			}
 			
 			@Override

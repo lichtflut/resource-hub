@@ -31,9 +31,9 @@ import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.browsing.JumpTarget;
-import de.lichtflut.rb.webck.common.Action;
-import de.lichtflut.rb.webck.common.ResourceAttributeApplyAction;
+import de.lichtflut.rb.webck.browsing.ResourceAttributeApplyAction;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
@@ -132,10 +132,10 @@ public abstract class SetUserProfilePanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				final EntityHandle handle = EntityHandle.forType(RB.PERSON);
-				final Action action = new ResourceAttributeApplyAction(
+				final ReferenceReceiveAction action = new ResourceAttributeApplyAction(
 						model.getObject().getAssociatedResource(), RB.IS_RESPRESENTED_BY);
 				RBWebSession.get().getHistory().clear(new JumpTarget(getUserProfilePage()));
-				RBWebSession.get().getHistory().createReferencedEntity(handle, action);
+				RBWebSession.get().getHistory().createReference(handle, action);
 				jumpToResourceEditorPage(handle);
 			}
 			

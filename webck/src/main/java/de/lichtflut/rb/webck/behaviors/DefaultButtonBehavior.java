@@ -27,7 +27,7 @@ public class DefaultButtonBehavior extends Behavior {
 	@Override
 	public void onConfigure(Component component) {
 		super.onConfigure(component);
-		if (component.isVisible()) {
+		if (component.isVisibleInHierarchy()) {
 			final Form<?> form = component.findParent(Form.class);
 			form.setDefaultButton((IFormSubmittingComponent) component);
 		}

@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
+import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.application.RBWebSession;
@@ -25,7 +26,7 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
 
 /**
  * <p>
- *  Simple Button Bar.
+ *  The standard button bar to be used when not in "create reference" mode.
  * </p>
  *
  * <p>
@@ -44,14 +45,14 @@ public abstract class LocalButtonBar extends Panel {
 	/**
 	 * @param id
 	 */
-	public LocalButtonBar(final String id, final IModel<RBEntity> model, final Form form) {
+	public LocalButtonBar(final String id, final IModel<RBEntity> model) {
 		super(id);
 		
-		add(createSaveButton(model, form));
-		add(createCancelButton(model, form));
-		add(createEditButton(model, form));
+		add(createSaveButton(model));
+		add(createCancelButton(model));
+		add(createEditButton(model));
 		
-		add(visibleIf(not(BrowsingContextModel.isInSubReferencingMode())));
+		add(visibleIf(not(BrowsingContextModel.isInCreateReferenceMode())));
 		
 	}
 	
@@ -61,7 +62,7 @@ public abstract class LocalButtonBar extends Panel {
 	
 	// -- BUTTONS -----------------------------------------
 	
-	protected Component createSaveButton(final IModel<RBEntity> model, final Form form) {
+	protected Component createSaveButton(final IModel<RBEntity> model) {
 		final RBStandardButton save = new RBStandardButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
@@ -75,7 +76,7 @@ public abstract class LocalButtonBar extends Panel {
 		return save;
 	}
 	
-	protected Component createCancelButton(final IModel<RBEntity> model, final Form form) {
+	protected Component createCancelButton(final IModel<RBEntity> model) {
 		final RBCancelButton cancel = new RBCancelButton("cancel") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
@@ -87,12 +88,12 @@ public abstract class LocalButtonBar extends Panel {
 		return cancel;
 	}
 	
-	protected Component createEditButton(final IModel<RBEntity> model, final Form form) {
+	protected Component createEditButton(final IModel<RBEntity> model) {
 		final RBStandardButton edit = new RBStandardButton("edit") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				RBWebSession.get().getHistory().beginEditing();
-				target.add(form);
+				RBWebSession.get().getHistory().edit(EntityHandle.forID(model.getObject().getID()));
+				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 			}
 		};
 		edit.add(visibleIf(not(not(viewMode))));

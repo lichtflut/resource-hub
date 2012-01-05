@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.common;
+package de.lichtflut.rb.webck.browsing;
 
 import java.io.Serializable;
 
@@ -10,7 +10,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
- *  Simple action interface.
+ *  Action to be executed when a new entity has been created in a page flow. 
  * </p>
  *
  * <p>
@@ -19,7 +19,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public interface Action<T> extends Serializable {
+public interface ReferenceReceiveAction<T> extends Serializable {
 	
 	void execute(ServiceProvider serviceProvider, RBEntity target);
 	

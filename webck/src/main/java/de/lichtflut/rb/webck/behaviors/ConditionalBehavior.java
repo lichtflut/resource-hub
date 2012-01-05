@@ -67,7 +67,7 @@ public abstract class ConditionalBehavior<T> extends Behavior {
 		return new ConditionalBehavior() {
 			@Override
 			protected void apply(Component component) {
-				if (component.isVisible() && model.isFulfilled()) {
+				if (component.isVisibleInHierarchy() && model.isFulfilled()) {
 					final Form<?> form = component.findParent(Form.class);
 					form.setDefaultButton((IFormSubmittingComponent) component);
 				}

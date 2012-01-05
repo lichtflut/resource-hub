@@ -3,6 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.editor;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.ResourceID;
@@ -47,7 +51,7 @@ public class ClassifyEntityPanel extends Panel {
 		final ClassPickerField picker = new ClassPickerField("typePicker", targetModel, superClassModel);
 		add(picker);
 		
-		setVisible(false);
+		add(visibleIf(not(hasSchema(entityModel))));
 	}
 	
 	// ----------------------------------------------------

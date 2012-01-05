@@ -28,7 +28,7 @@ public class CurrentEntityModel extends AbstractReadOnlyModel<ResourceID> {
 	*/
 	@Override
 	public ResourceID getObject() {
-		 EntityHandle handle = RBWebSession.get().getHistory().getCurrentEntity();
+		 EntityHandle handle = RBWebSession.get().getHistory().getCurrentStep().getHandle();
 		 if (handle != null) {
 			 return handle.getId();
 		 } else {

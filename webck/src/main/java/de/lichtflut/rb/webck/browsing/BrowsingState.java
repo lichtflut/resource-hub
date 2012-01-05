@@ -16,7 +16,23 @@ package de.lichtflut.rb.webck.browsing;
  */
 public enum BrowsingState {
 
+	/**
+	 * View an entity.
+	 */
 	VIEW,
+	
+	/**
+	 * Edit an entity.
+	 */
 	EDIT,
-	CREATE;
+	
+	/**
+	 * Create a new entity.
+	 */
+	CREATE,
+	
+	/**
+	 * Create an entity and return the reference to the initiator.
+	 */
+	CREATE_REFERENCE;
 }

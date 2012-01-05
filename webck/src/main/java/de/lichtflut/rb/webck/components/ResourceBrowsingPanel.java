@@ -4,8 +4,6 @@
 package de.lichtflut.rb.webck.components;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
-import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.event.IEvent;
@@ -15,17 +13,14 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.ResourceID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
-import de.lichtflut.rb.webck.browsing.BrowsingHistory;
-import de.lichtflut.rb.webck.common.Action;
-import de.lichtflut.rb.webck.common.EntityAttributeApplyAction;
+import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
+import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.editor.BrowsingButtonBar;
 import de.lichtflut.rb.webck.components.editor.ClassifyEntityPanel;
@@ -52,8 +47,6 @@ import de.lichtflut.rb.webck.models.entity.RBEntityModel;
 @SuppressWarnings("rawtypes")
 public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
-	private final Logger logger = LoggerFactory.getLogger(ResourceBrowsingPanel.class);
-	
 	private RBEntityModel model;
 	
 	// ----------------------------------------------------
@@ -72,18 +65,16 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 			}
 		};
 		
+		final IModel<ResourceID> typeModel = new Model<ResourceID>();
+		
 		final Form form = new Form("form");
 		form.setOutputMarkupId(true);
 		
-		form.add(new EntityPanel("entity", model)
-			.add(visibleIf((hasSchema(model)))));
+		form.add(new EntityPanel("entity", model));
+		form.add(new ClassifyEntityPanel("classifier", model, typeModel));
 		
-		final IModel<ResourceID> typeModel = new Model<ResourceID>();
-		form.add(new ClassifyEntityPanel("classifier", model, typeModel)
-			.add(visibleIf(not(hasSchema(model)))));
-		
-		form.add(createLocalBar(form));
-		form.add(createBrowsingBar(form, typeModel));
+		form.add(createLocalBar());
+		form.add(createBrowsingBar(typeModel));
 		
 		form.add(new CreateRelationshipPanel("relationCreator", model) {
 			@Override
@@ -97,13 +88,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		add(form);
 		
 		setOutputMarkupId(true);
-		
-		//add(new SlideTransitionBehavior());
 	}
-	
-	// ----------------------------------------------------
-	
-	public abstract ServiceProvider getServiceProvider();
 	
 	// -- IBrowsingHandler --------------------------------
 
@@ -116,14 +101,15 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	* {@inheritDoc}
 	*/
 	@Override
-	public void createSubEntity(EntityHandle handle, ResourceID predicate) {
-		// store current entity
+	public void createReferencedEntity(EntityHandle handle, ResourceID predicate) {
+		// store current entity 
+		// TODO: this should be stored transient in session / browsing history.
 		getServiceProvider().getEntityManager().store(model.getObject());
 		
 		// navigate to sub entity
-		final Action action = new EntityAttributeApplyAction(model.getObject(), predicate);
-		history().createReferencedEntity(handle, action);
-		updateAll();
+		final ReferenceReceiveAction action = new EntityAttributeApplyAction(model.getObject(), predicate);
+		RBWebSession.get().getHistory().createReference(handle, action);
+		RBAjaxTarget.add(this);
 	}
 	
 	// ----------------------------------------------------
@@ -132,8 +118,8 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		return new WebMarkupContainer(id);
 	}
 	
-	protected LocalButtonBar createLocalBar(Form form) {
-		return new LocalButtonBar("localButtonBar", model, form) {
+	protected LocalButtonBar createLocalBar() {
+		return new LocalButtonBar("localButtonBar", model) {
 			@Override
 			public EntityManager getEntityManager() {
 				return getServiceProvider().getEntityManager();
@@ -141,29 +127,11 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		};
 	}
 	
-	protected BrowsingButtonBar createBrowsingBar(Form form, final IModel<ResourceID> typeModel) {
-		return new BrowsingButtonBar("browsingButtonBar", model, form) {
+	protected BrowsingButtonBar createBrowsingBar(final IModel<ResourceID> typeModel) {
+		return new BrowsingButtonBar("browsingButtonBar", model, typeModel) {
 			@Override
-			public void onSave() {
-				final RBEntity createdEntity = model.getObject();
-				getServiceProvider().getEntityManager().store(createdEntity);
-				for(Action action : history().getCurrentActions()) {
-					action.execute(getServiceProvider(), createdEntity);
-				}
-				history().back();
-				updateAll();
-			}
-			
-			@Override
-			public void onClassify() {
-				getServiceProvider().getEntityManager().changeType(model.getObject(), typeModel.getObject());
-				updateAll();
-			}
-			
-			@Override
-			public void onCancel() {
-				history().back();
-				updateAll();
+			protected ServiceProvider getServiceProvider() {
+				return ResourceBrowsingPanel.this.getServiceProvider();
 			}
 		};
 	}
@@ -181,28 +149,18 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		}
 	}
 	
-	// -- WICKET LIFECYLCE --------------------------------
-	
 	/** 
-	* {@inheritDoc}
-	*/
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onConfigure() {
 		super.onConfigure();
-		
-		final EntityHandle currentEntity = history().getCurrentEntity();
-		model.reset(currentEntity);
-		logger.info("Showing " + currentEntity);
+		// reset the model before render to fetch the latest from browsing history.
+		model.reset();
 	}
 	
 	// -----------------------------------------------------
-
-	private BrowsingHistory history() {
-		return RBWebSession.get().getHistory();
-	}
 	
-	private void updateAll() {
-		RBAjaxTarget.add(this);
-	}
-
+	protected abstract ServiceProvider getServiceProvider();
+		
 }
