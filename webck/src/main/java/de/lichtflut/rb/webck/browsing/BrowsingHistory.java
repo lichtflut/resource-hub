@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.browsing;
 
 import java.io.Serializable;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import org.apache.commons.lang3.Validate;
@@ -43,7 +44,7 @@ public class BrowsingHistory implements Serializable {
 		clear(new JumpTarget(Application.get().getHomePage()));
 	}
 	
-	// ----------------------------------------------------
+	// -- ACCESS THE STACK --------------------------------
 	
 	/**
 	 * Get the top element on the stack.
@@ -57,6 +58,21 @@ public class BrowsingHistory implements Serializable {
 		}
 	}
 	
+	/**
+	 * Get an iterator over the steps on the stack beginning with top.
+	 * @return The iterator.
+	 */
+	public Iterator<EntityBrowsingStep> getSteps() {
+		return stack.iterator();
+	}
+
+	/**
+	 * @return The stack size.
+	 */
+	public int size() {
+		return stack.size();
+	}
+
 	// -- CLEAR -------------------------------------------
 	
 	/**
@@ -77,6 +93,7 @@ public class BrowsingHistory implements Serializable {
 	 */
 	public void view(EntityHandle handle) {
 		rollbackEditingSteps();
+		removeExisting(handle);
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.VIEW));
 		logger.debug("Browsing to " + handle + "  ----  " + this);
 	}
@@ -114,7 +131,7 @@ public class BrowsingHistory implements Serializable {
 	// --- STEP BACK --------------------------------------
 	
 	/**
-	 * Step back.
+	 * Step back. If the stack is empty, activate the offset.
 	 */
 	public BrowsingResponse back() {
 		stack.pop();
@@ -154,6 +171,14 @@ public class BrowsingHistory implements Serializable {
 	private void rollbackEditingSteps() {
 		while (!stack.isEmpty() && !(BrowsingState.VIEW.equals(stack.peek().getState()))) {
 			stack.pop();
+		}
+	}
+	
+	private void removeExisting(EntityHandle handle) {
+		for (EntityBrowsingStep step : stack) {
+			if (step.getHandle().equals(handle)) {
+				stack.remove(step);
+			}
 		}
 	}
 	

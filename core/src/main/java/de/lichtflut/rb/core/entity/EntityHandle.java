@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.infra.Infra;
+
 /**
  * <p>
  *  Handle of an entity that needs not to exist now.
@@ -89,5 +91,34 @@ public class EntityHandle implements Serializable {
 			return "type=" + type; 
 		}
 	}
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof EntityHandle) {
+			final EntityHandle other = (EntityHandle) obj;
+			if (!Infra.equals(id, other.id)) {
+				return false;
+			} 
+			return Infra.equals(type, other.getType());
+		}
+		return super.equals(obj);
+	}
+	
+	
 	
 }

@@ -114,7 +114,7 @@ public abstract class NotePadPanel extends TypedPanel<ResourceID> {
 	
 	// ----------------------------------------------------
 	
-	public abstract ServiceProvider getServiceProvider();
+	protected abstract ServiceProvider getServiceProvider();
 	
 	// ----------------------------------------------------
 	

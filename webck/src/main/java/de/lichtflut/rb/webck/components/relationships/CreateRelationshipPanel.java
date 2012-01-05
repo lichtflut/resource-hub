@@ -90,6 +90,7 @@ public abstract class CreateRelationshipPanel extends Panel {
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				if (objectModel.getObject() != null) {
 					objectSelected.setObject(Boolean.TRUE);
+					resolve(objectModel);
 					target.focusComponent(predicatePicker.getDisplayComponent());	
 				}
 				// add root form due to default button change
@@ -143,6 +144,11 @@ public abstract class CreateRelationshipPanel extends Panel {
 		objectSelected.setObject(Boolean.FALSE);
 		objectModel.setObject(null);
 		predicateModel.setObject(null);
+	}
+	
+	private void resolve(IModel<ResourceID> objectModel) {
+		final ResourceNode resolved = getServiceProvider().getResourceResolver().resolve(objectModel.getObject());
+		objectModel.setObject(resolved);
 	}
 	
 }
