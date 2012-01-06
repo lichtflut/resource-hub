@@ -78,7 +78,7 @@ public class TypeManagerImpl implements TypeManager {
 	@Override
 	public void removeType(final ResourceID type) {
 		provider.getSchemaManager().removeSchemaForType(type);
-		newMC().remove(type, false);
+		newMC().remove(type);
 	}
 	
 	// ----------------------------------------------------
@@ -99,7 +99,7 @@ public class TypeManagerImpl implements TypeManager {
 	*/
 	@Override
 	public void removeProperty(SNProperty property) {
-		newMC().remove(property, false);
+		newMC().remove(property);
 	}
 
 	/** 

@@ -107,7 +107,7 @@ public abstract class NotePadPanel extends TypedPanel<ResourceID> {
 	
 	protected void deleteNote(IModel<ResourceNode> mezzle) {
 		ModelingConversation mc = getServiceProvider().getArastejuGate().startConversation();
-		mc.remove(mezzle.getObject(), false);
+		mc.remove(mezzle.getObject());
 		mc.close();
 		RBAjaxTarget.add(this);
 	}

@@ -139,7 +139,7 @@ public class EntityManagerImpl implements EntityManager {
 	public void delete(final ResourceID entityID) {
 		final ModelingConversation mc = startConversation();
 		final ResourceNode node = mc.resolve(entityID);
-		mc.remove(node, false);
+		mc.remove(node);
 		mc.close();
 	}
 	

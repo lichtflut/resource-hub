@@ -185,7 +185,7 @@ public class SchemaManagerImpl implements SchemaManager {
 		final ModelingConversation mc = startConversation();
 		final ResourceNode existing = mc.findResource(definition.getID().getQualifiedName());
 		if (existing != null) {
-			mc.remove(existing, true);
+			mc.remove(existing);
 		}
 		final SNPropertyTypeDefinition node = binding.toSemanticNode(definition);
 		mc.attach(node);
@@ -265,9 +265,9 @@ public class SchemaManagerImpl implements SchemaManager {
 	 */
 	protected void removeSchema(final ModelingConversation mc, final SNResourceSchema schemaNode) {
 		for(SNPropertyDeclaration decl : schemaNode.getPropertyDeclarations()) {
-			mc.remove(decl, false);
+			mc.remove(decl);
 		}
-		mc.remove(schemaNode, false);
+		mc.remove(schemaNode);
 	}
 	
 	/**
