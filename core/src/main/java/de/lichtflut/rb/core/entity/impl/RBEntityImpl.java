@@ -13,7 +13,7 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.associations.Association;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -202,7 +202,7 @@ public class RBEntityImpl implements RBEntity {
 	 */
 	private void initializeFields() {
 		final Set<ResourceID> predicates = new HashSet<ResourceID>();
-		for(Association current : node.getAssociations()) {
+		for(Statement current : node.getAssociations()) {
 			predicates.add(current.getPredicate());
 		}
 		fields = new ArrayList<RBField>();

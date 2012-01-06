@@ -15,7 +15,7 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.associations.Association;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.naming.Namespace;
@@ -68,8 +68,8 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 		final ResourceNode previous = getDomainOrganization();
 		if (previous != null) {
 			ResourceNode attached = mc.resolve(previous);
-			Association association = singleAssociation(attached, RB.IS_DOMAIN_ORGANIZATION);
-			attached.remove(association);
+			Statement association = singleAssociation(attached, RB.IS_DOMAIN_ORGANIZATION);
+			attached.removeAssociation(association);
 		}
 		
 		ResourceNode attached = mc.resolve(organization);

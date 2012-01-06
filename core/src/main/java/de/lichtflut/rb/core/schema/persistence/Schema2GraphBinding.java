@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.associations.Association;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNScalar;
@@ -245,8 +245,8 @@ public class Schema2GraphBinding {
 	protected FieldLabelDefinition createFieldLabelDef(final SNPropertyDeclaration snDecl) {
 		final String defaultName = snDecl.getPropertyDescriptor().getQualifiedName().getSimpleName();
 		final FieldLabelDefinition def = new FieldLabelDefinitionImpl(defaultName);
-		final Set<Association> assocs = snDecl.getAssociations(RB.HAS_FIELD_LABEL);
-		for (Association current : assocs) {
+		final Set<? extends Statement> assocs = snDecl.getAssociations(RB.HAS_FIELD_LABEL);
+		for (Statement current : assocs) {
 			// TODO: Evaluate context to locale
 			def.setDefaultLabel(current.getObject().asValue().getStringValue());
 		}

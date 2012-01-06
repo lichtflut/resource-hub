@@ -23,14 +23,13 @@ import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.associations.Association;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.model.nodes.views.SNText;
 
-import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Datatype;
 
@@ -71,7 +70,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 */
 	public SNPropertyTypeDefinition(final ResourceNode resource, final Context... contexts) {
 		super(resource);
-		Association.create(this, RDF.TYPE, RBSchema.PROPERTY_TYPE_DEF, contexts);
+		SNOPS.associate(this, RDF.TYPE, RBSchema.PROPERTY_TYPE_DEF, contexts);
 	}
 
 	// -----------------------------------------------------
@@ -112,10 +111,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 * @param context -
 	 */
 	public void setDatatype(final Datatype type, final Context context) {
-		if (!Infra.equals(getDatatype(), type)){
-			removeAssocs(RBSchema.HAS_DATATYPE);
-			Association.create(this, RBSchema.HAS_DATATYPE, new SNText(type.name()), context);
-		}
+		SNOPS.assure(this, RBSchema.HAS_DATATYPE, new SNText(type.name()), context);
 	}
 
 	/**
@@ -126,7 +122,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 */
 	public SNConstraint addLiteralConstraint(final String constraint, final Context context) {
 		final SNConstraint constraintNode = new SNConstraint(constraint, context);
-		Association.create(this, RBSchema.HAS_LITERAL_CONSTRAINT, constraintNode, context);
+		SNOPS.associate(this, RBSchema.HAS_LITERAL_CONSTRAINT, constraintNode, context);
 		return constraintNode;
 	}
 
@@ -138,7 +134,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 */
 	public SNConstraint addTypeConstraint(final ResourceID constraint, final Context context) {
 		final SNConstraint constraintNode = new SNConstraint(constraint, context);
-		Association.create(this, RBSchema.HAS_TYPE_CONSTRAINT, constraintNode, context);
+		SNOPS.associate(this, RBSchema.HAS_TYPE_CONSTRAINT, constraintNode, context);
 		return constraintNode;
 	}
 
@@ -148,7 +144,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 */
 	public Set<SNConstraint> getConstraints() {
 		final Set<SNConstraint> result = new HashSet<SNConstraint>();
-		for (Association assoc: getAssociations()){
+		for (Statement assoc: getAssociations()){
 			if (RBSchema.HAS_LITERAL_CONSTRAINT.equals(assoc.getPredicate())){
 				result.add(new SNConstraint(assoc.getObject().asResource()));
 			} else if (RBSchema.HAS_TYPE_CONSTRAINT.equals(assoc.getPredicate())){
@@ -207,9 +203,9 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 * @param predicate The predicate.
 	 */
 	protected void removeAssocs(final ResourceID predicate){
-		Set<Association> assocs = getAssociations(predicate);
-		for (Association assoc : assocs) {
-			remove(assoc);
+		Set<? extends Statement> assocs = getAssociations(predicate);
+		for (Statement assoc : assocs) {
+			removeAssociation(assoc);
 		}
 	}
 }

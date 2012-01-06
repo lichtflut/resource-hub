@@ -21,7 +21,6 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.associations.Association;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
@@ -70,8 +69,8 @@ public class SNConstraint extends ResourceView {
 	 * @param ctx The context.
 	 */
 	public SNConstraint(final String literalConstraint, final Context ctx) {
-		Association.create(this, RDF.TYPE, RBSchema.LITERAL_CONSTRAINT, ctx);
-		Association.create(this, RBSchema.HAS_CONSTRAINT_VALUE, new SNText(literalConstraint), ctx);
+		SNOPS.associate(this, RDF.TYPE, RBSchema.LITERAL_CONSTRAINT, ctx);
+		SNOPS.associate(this, RBSchema.HAS_CONSTRAINT_VALUE, new SNText(literalConstraint), ctx);
 	}
 
 	/**
@@ -80,8 +79,8 @@ public class SNConstraint extends ResourceView {
 	 * @param ctx The context.
 	 */
 	public SNConstraint(final ResourceID typeConstraint, final Context ctx) {
-		Association.create(this, RDF.TYPE, RBSchema.TYPE_CONSTRAINT, ctx);
-		Association.create(this, RBSchema.HAS_CONSTRAINT_VALUE, typeConstraint, ctx);
+		SNOPS.associate(this, RDF.TYPE, RBSchema.TYPE_CONSTRAINT, ctx);
+		SNOPS.associate(this, RBSchema.HAS_CONSTRAINT_VALUE, typeConstraint, ctx);
 	}
 
 	// -----------------------------------------------------

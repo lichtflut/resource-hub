@@ -13,7 +13,7 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.associations.Association;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -57,7 +57,7 @@ public class SNResourceSchema extends ResourceView {
 	 */
 	public SNResourceSchema(final ResourceNode resource, final Context... ctx) {
 		super(resource);
-		Association.create(this, RDF.TYPE, RBSchema.RESOURCE_SCHEMA, ctx);
+		SNOPS.associate(this, RDF.TYPE, RBSchema.RESOURCE_SCHEMA, ctx);
 	}
 
 	// -----------------------------------------------------
@@ -119,7 +119,7 @@ public class SNResourceSchema extends ResourceView {
 	 * @param ctx The context.
 	 */
 	public void addPropertyDeclaration(final SNPropertyDeclaration decl, final Context... ctx){
-		Association.create(this, RBSchema.HAS_PROPERTY_DECL, decl, ctx);
+		SNOPS.associate(this, RBSchema.HAS_PROPERTY_DECL, decl, ctx);
 	}
 
 	/**
@@ -143,8 +143,8 @@ public class SNResourceSchema extends ResourceView {
 	 */
 	public List<SNPropertyDeclaration> getDeclaredPropertyDeclarations(){
 		List<SNPropertyDeclaration> result = new ArrayList<SNPropertyDeclaration>();
-		Set<Association> assocs = getAssociations(RBSchema.HAS_PROPERTY_DECL);
-		for (Association current : assocs) {
+		Set<? extends Statement> assocs = getAssociations(RBSchema.HAS_PROPERTY_DECL);
+		for (Statement current : assocs) {
 			result.add(new SNPropertyDeclaration(current.getObject().asResource()));
 		}
 		return result;
@@ -156,15 +156,15 @@ public class SNResourceSchema extends ResourceView {
 	 * @param decl -
 	 */
 	public void removePropertyDeclaration(final SNPropertyDeclaration decl) {
-		Set<Association> assocs = getAssociations(RBSchema.HAS_PROPERTY_DECL);
-		Association toBeRemoved = null;
-		for (Association current : assocs) {
+		Set<? extends Statement> assocs = getAssociations(RBSchema.HAS_PROPERTY_DECL);
+		Statement toBeRemoved = null;
+		for (Statement current : assocs) {
 			if (decl.equals(current.getObject())){
 				toBeRemoved = current;
 				break;
 			}
 		}
-		remove(toBeRemoved);
+		removeAssociation(toBeRemoved);
 	}
 
 	// -----------------------------------------------------
