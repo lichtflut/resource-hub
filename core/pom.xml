@@ -71,14 +71,14 @@
 		<dependency>
 			<groupId>org.arastreju</groupId>
 			<artifactId>arastreju.neo4j</artifactId>
-			<version>0.5.1-SNAPSHOT</version>
+			<version>0.6.0-SNAPSHOT</version>
 			<type>jar</type>
 			<optional>false</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.arastreju</groupId>
 			<artifactId>arastreju.sge</artifactId>
-			<version>0.5.1-SNAPSHOT</version>
+			<version>0.6.0-SNAPSHOT</version>
 			<type>jar</type>
 			<optional>false</optional>
 		</dependency>
