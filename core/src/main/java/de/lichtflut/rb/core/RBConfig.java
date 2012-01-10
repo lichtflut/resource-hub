@@ -21,6 +21,18 @@ import org.slf4j.LoggerFactory;
 public class RBConfig implements RBConstants {
 	
 	/**
+	 * Arastreju store directory.
+	 */
+	public static final String DOMAIN_WORK_DIRECTORY = "de.lichtflut.rb.workdir";
+	
+	/**
+	 * Default directory.
+	 */
+	public static final String DEFAULT_WORK_DIRECTORY = "root";
+	
+	// ----------------------------------------------------
+	
+	/**
 	 * Profilename.
 	 */
 	private final String profileName;
@@ -43,10 +55,10 @@ public class RBConfig implements RBConstants {
 
 	/**
 	 * Constructor.
-	 * @param arastrejuProfile The profile name for Arastreju.
+	 * @param domain The domain to be used.
 	 */
-	public RBConfig(final String arastrejuProfile) {
-		this.profileName = arastrejuProfile;
+	public RBConfig(final String profileName) {
+		this.profileName = profileName;
 	}
 	
 	// -----------------------------------------------------
@@ -61,7 +73,15 @@ public class RBConfig implements RBConstants {
 		}
 		return profile;
 	}
-
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return profileName;
+	}
+	
 	// -----------------------------------------------------
 
 	/**

@@ -17,9 +17,5 @@ package de.lichtflut.rb.core;
  */
 public interface RBConstants {
 
-	/**
-	 * Arastreju store directory.
-	 */
-	String DOMAIN_WORK_DIRECTORY = "de.lichtflut.rb.workdir";
 
 }

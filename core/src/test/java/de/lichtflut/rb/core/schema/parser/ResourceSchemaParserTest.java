@@ -16,6 +16,7 @@ import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.impl.AbstractServiceProvider;
 import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
 
 /**
@@ -32,7 +33,7 @@ import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
  */
 public class ResourceSchemaParserTest {
 
-	private DefaultRBServiceProvider serviceProvider;
+	private AbstractServiceProvider serviceProvider;
 
 	// -----------------------------------------------------
 	

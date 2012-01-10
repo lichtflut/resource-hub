@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.security.LoginData;
+import de.lichtflut.rb.core.services.AuthenticationService;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
@@ -41,7 +42,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public class SecurityServiceImpl implements SecurityService {
+public class SecurityServiceImpl implements SecurityService, AuthenticationService {
 	
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ssZ");
 	
@@ -119,6 +120,10 @@ public class SecurityServiceImpl implements SecurityService {
 	 */
 	@Override
 	public String createRememberMeToken(User user) {
+		if (user.getAssociatedResource() == null) {
+			logger.warn("User has no associated resurce " + user);
+			return null;
+		}
 		final String email = user.getEmail();
 		final SemanticNode credential = SNOPS.singleObject(user.getAssociatedResource(), Aras.HAS_CREDENTIAL);
 		final Calendar cal = Calendar.getInstance();

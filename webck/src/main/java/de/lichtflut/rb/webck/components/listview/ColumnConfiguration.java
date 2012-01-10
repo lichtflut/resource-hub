@@ -129,8 +129,10 @@ public class ColumnConfiguration implements Serializable {
 	 * @return This.
 	 */
 	public ColumnConfiguration fetchFieldLabels(final ResourceSchema schema) {
-		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
-			declMap.put(decl.getPropertyDescriptor(), decl);
+		if (schema != null) {
+			for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+				declMap.put(decl.getPropertyDescriptor(), decl);
+			}
 		}
 		return this;
 	}

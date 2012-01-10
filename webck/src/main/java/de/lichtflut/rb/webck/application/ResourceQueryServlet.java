@@ -125,8 +125,9 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	 * @param term The term.
 	 * @param type An optional rdf:type criteria. 
 	 * @return The query result.
+	 * @throws ServletException 
 	 */
-	protected QueryResult searchNodes(final String term, final Mode mode, final String type) {
+	protected QueryResult searchNodes(final String term, final Mode mode, final String type) throws ServletException {
 		final TermSearcher searcher = new TermSearcher();
 		final QueryManager qm = getServiceProvider().getArastejuGate().createQueryManager();
 		final Query query = searcher.prepareQuery(qm, term, mode, type);
@@ -157,7 +158,7 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	
 	// -----------------------------------------------------
 	
-	protected abstract ServiceProvider getServiceProvider();
+	protected abstract ServiceProvider getServiceProvider() throws ServletException;
 	
 	// -----------------------------------------------------
 	

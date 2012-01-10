@@ -3,10 +3,8 @@
  */
 package de.lichtflut.rb.core.services;
 
-import org.arastreju.sge.security.LoginException;
 import org.arastreju.sge.security.User;
 
-import de.lichtflut.rb.core.security.LoginData;
 
 /**
  * <p>
@@ -19,7 +17,7 @@ import de.lichtflut.rb.core.security.LoginData;
  *
  * @author Oliver Tigges
  */
-public interface SecurityService {
+public interface SecurityService extends AuthenticationService {
 	
 	/**
 	 * Create a new user.
@@ -29,27 +27,5 @@ public interface SecurityService {
 	 * @return The created user.
 	 */
 	User createUser(String emailID, String username, String password);
-	
-	/**
-	 * Try to login the given user.
-	 * @param loginData
-	 * @return The logged in user.
-	 * @throws LoginException when login wasn't successful.
-	 */
-	User login(LoginData loginData) throws LoginException;
-	
-	/**
-	 * Create the cookie token for the 'remember me' feature.
-	 * @param user The user.
-	 * @return The token to be saved as cookie.
-	 */
-	String createRememberMeToken(User user);
-	
-	/**
-	 * Log a user in by it's 'remember me' token.
-	 * @param token The token from the cookie.
-	 * @return The logged in user or null if not valid.
-	 */
-	User loginByToken(String token);
 	
 }

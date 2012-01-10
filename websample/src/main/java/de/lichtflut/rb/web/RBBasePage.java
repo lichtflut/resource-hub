@@ -12,7 +12,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.odlabs.wiquery.core.resources.CoreJavaScriptResourceReference;
 
 import de.lichtflut.rb.web.components.ComponentsCatalogPage;
-import de.lichtflut.rb.web.components.LoginPanelPage;
 import de.lichtflut.rb.web.entities.EntityOverviewPage;
 import de.lichtflut.rb.web.infomanagement.InformationManagementPage;
 import de.lichtflut.rb.web.types.TypeSystemPage;
@@ -107,12 +106,6 @@ public abstract class RBBasePage extends WebPage {
 				new CKLink("link", "Catalog", ComponentsCatalogPage.class, CKLinkType.WEB_PAGE_CLASS));
 		mainNavigation.addChild(compCat);
 		
-		// Security-Stuff Link
-		NavigationNode securityStuff = new NavigationNodePanel(new CKLink("link", "Security", CKLinkType.CUSTOM_BEHAVIOR));
-		CKLink login = new CKLink("link", "Login & Registration Modul", LoginPanelPage.class, CKLinkType.WEB_PAGE_CLASS);
-		securityStuff.addChild(new NavigationNodePanel(login));
-		mainNavigation.addChild(securityStuff);
-
 		add(mainNavigation);
 
 		add(createSideBar("sidebarLeft"));
