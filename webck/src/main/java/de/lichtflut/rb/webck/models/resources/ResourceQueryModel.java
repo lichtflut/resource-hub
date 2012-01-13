@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.models;
+package de.lichtflut.rb.webck.models.resources;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +23,7 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
  *
  * @author Oliver Tigges
  */
-public class QueryResultModel extends AbstractLoadableDetachableModel<List<ResourceNode>> {
+public class ResourceQueryModel extends AbstractLoadableDetachableModel<List<ResourceNode>> {
 
 	final IModel<Query> queryModel;
 	
@@ -32,7 +32,7 @@ public class QueryResultModel extends AbstractLoadableDetachableModel<List<Resou
 	/**
 	 * @param queryModel
 	 */
-	public QueryResultModel(IModel<Query> queryModel) {
+	public ResourceQueryModel(IModel<Query> queryModel) {
 		this.queryModel = queryModel;
 	}
 	

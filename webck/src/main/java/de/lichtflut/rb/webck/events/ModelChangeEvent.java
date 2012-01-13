@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.events;
 
@@ -38,6 +38,10 @@ public class ModelChangeEvent<T> {
 	public static final String ENTITY = "entity";
 	
 	public static final String RELATIONSHIP = "relationship";
+	
+	public static final String MASTER_DOMAIN = "master-domain";
+	
+	public static final String DOMAINS = "domains";
 	
 	private static final ModelChangeEvent EMPTY = new ModelChangeEvent(new String[0]);
 	

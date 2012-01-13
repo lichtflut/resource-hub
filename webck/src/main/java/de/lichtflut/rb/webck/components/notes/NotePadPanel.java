@@ -27,9 +27,9 @@ import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.dialogs.EditNoteDialog;
 import static de.lichtflut.rb.webck.models.ConditionalModel.*;
-import de.lichtflut.rb.webck.models.QueryResultModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.basic.LoadableModel;
+import de.lichtflut.rb.webck.models.resources.ResourceQueryModel;
 
 /**
  * <p>
@@ -55,7 +55,7 @@ public abstract class NotePadPanel extends TypedPanel<ResourceID> {
 		
 		setOutputMarkupId(true);
 		
-		final LoadableModel<List<ResourceNode>> listModel = new QueryResultModel(new QueryModel(resource));
+		final LoadableModel<List<ResourceNode>> listModel = new ResourceQueryModel(new QueryModel(resource));
 		
 		final ListView<ResourceNode> view = new ListView<ResourceNode>("notesList", listModel) {
 			@Override
