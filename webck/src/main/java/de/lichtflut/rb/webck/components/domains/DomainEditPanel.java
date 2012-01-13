@@ -29,7 +29,6 @@ import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.basic.LoadableModel;
 
 /**
  * <p>
@@ -63,7 +62,7 @@ public abstract class DomainEditPanel extends Panel{
 	 * @param domainModel The model containing the domain.
 	 * @param mode The initial mode.
 	 */
-	public DomainEditPanel(final String id, final LoadableModel<Domain> domainModel, final DisplayMode mode) {
+	public DomainEditPanel(final String id, final IModel<Domain> domainModel, final DisplayMode mode) {
 		this(id, domainModel, Model.of(mode));
 	}
 	

@@ -3,9 +3,10 @@
  */
 package de.lichtflut.rb.webck.models.resources;
 
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.ResourceID;
+
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 
 /**
  * <p>
@@ -18,30 +19,25 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public class ResourceUriModel extends AbstractReadOnlyModel<String> {
+public class ResourceUriModel extends DerivedModel<String, ResourceID> {
 
-	private final IModel<? extends ResourceID> model;
-	
-	// ----------------------------------------------------
-	
 	/**
 	 * Constuctor.
 	 * @param fiel The field model.
 	 */
+	@SuppressWarnings("unchecked")
 	public ResourceUriModel(final IModel<? extends ResourceID> model) {
-		this.model = model;
+		super((IModel<ResourceID>) model);
 	}
 
 	// ----------------------------------------------------
 	
+	/** 
+	 * {@inheritDoc}
+	 */
 	@Override
-	public String getObject() {
-		if (model != null && model.getObject() != null) {
-			return model.getObject().getQualifiedName().toURI();
-		} else {
-			return "";
-		}
+	public String derive(ResourceID source) {
+		return source.getQualifiedName().toURI();
 	}
-
 	
 }

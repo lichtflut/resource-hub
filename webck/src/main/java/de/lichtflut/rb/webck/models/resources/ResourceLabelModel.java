@@ -3,12 +3,12 @@
  */
 package de.lichtflut.rb.webck.models.resources;
 
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 
 /**
  * <p>
@@ -21,26 +21,25 @@ import de.lichtflut.rb.core.common.ResourceLabelBuilder;
  *
  * @author Oliver Tigges
  */
-public class ResourceLabelModel extends AbstractReadOnlyModel<String> {
+public class ResourceLabelModel extends DerivedModel<String, ResourceID> {
 
-	private final IModel<? extends ResourceID> model;
-	
-	// ----------------------------------------------------
-	
 	/**
 	 * Constuctor.
 	 * @param fiel The field model.
 	 */
+	@SuppressWarnings("unchecked")
 	public ResourceLabelModel(final IModel<? extends ResourceID> model) {
-		this.model = model;
+		super((IModel<ResourceID>) model);
 	}
 
 	// ----------------------------------------------------
 	
+	/** 
+	 * {@inheritDoc}
+	 */
 	@Override
-	public String getObject() {
-		return ResourceLabelBuilder.getInstance().getLabel(model.getObject(), 
-			RequestCycle.get().getRequest().getLocale());
+	public String derive(ResourceID source) {
+		return ResourceLabelBuilder.getInstance().getLabel(source, RequestCycle.get().getRequest().getLocale());
 	}
 
 	

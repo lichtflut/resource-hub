@@ -17,6 +17,7 @@ import org.arastreju.sge.persistence.ResourceResolver;
  * @author Ravi Knox
  */
 public interface ServiceProvider {
+	
 	/**
 	 * @return an instance of {@link ArastrejuGate} which depends on the specific ServiceProvider
 	 */
@@ -32,10 +33,10 @@ public interface ServiceProvider {
 	EntityManager getEntityManager();
 	
 	/**
-	 * {@link ISchemaManagement} provides the ability to generate, manipulate, maintain,
+	 * {@link SchemaManager} provides the ability to generate, manipulate, maintain,
 	 * persist and store an ResourceSchema through several I/O sources.
 	 * It's also interpreting the schema, checks for consistency and contains powerful error-processing mechanisms.
-	 * @return {@link ISchemaManagement}
+	 * @return {@link SchemaManager}
 	 */
 	SchemaManager getSchemaManager();
 

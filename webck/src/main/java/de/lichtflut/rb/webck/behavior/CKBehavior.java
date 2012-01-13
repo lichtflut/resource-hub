@@ -12,6 +12,7 @@ import java.io.Serializable;
  *
  * @author Ravi Knox
  */
+@Deprecated
 public interface CKBehavior extends Serializable {
 
 	CKBehavior VOID_BEHAVIOR = new CKBehavior() {

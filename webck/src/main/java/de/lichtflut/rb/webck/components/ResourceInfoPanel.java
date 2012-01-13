@@ -10,7 +10,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.webck.behaviors.TitleModifier;
+import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
 import de.lichtflut.rb.webck.components.common.ImageReference;
 import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.editor.VisualizationMode;
@@ -58,20 +58,20 @@ public class ResourceInfoPanel extends Panel {
 			protected String derive(RBEntity original) {
 				return getUrlTo(model.getObject().getID(), VisualizationMode.PERIPHERY);
 			}
-		}).add(TitleModifier.title(new ResourceModel("global.link.periphery-visualization"))));
+		}).add(title(new ResourceModel("global.link.periphery-visualization"))));
 		
 		add(new CrossLink("showHierarchy", new DerivedModel<String, RBEntity>(model) {
 			@Override
 			protected String derive(RBEntity original) {
 				return getUrlTo(model.getObject().getID(), VisualizationMode.HIERARCHY);
 			}
-		}).add(TitleModifier.title(new ResourceModel("global.link.hierarchical-visualization"))));
+		}).add(title(new ResourceModel("global.link.hierarchical-visualization"))));
 		
 		final ResourceLabelModel typeLabelModel = new ResourceLabelModel(new EntityTypeModel(model));
 		final ResourceUriModel typeURIModel = new ResourceUriModel(new EntityTypeModel(model));
 		
 		add(new Label("label", resourceLabelModel));
-		add(new Label("type", typeLabelModel).add(TitleModifier.title(typeURIModel)));
+		add(new Label("type", typeLabelModel).add(title(typeURIModel)));
 		add(new ImageReference("image", new RBEntityImageUrlModel(model)));
 	}
 	
