@@ -38,7 +38,6 @@ public class ServiceProviderLocator {
 
 	private static ServiceProvider newServiceProdider(final RBConfig rbConfig) {
 		final ServiceProvider sp = new DefaultRBServiceProvider(rbConfig);
-//		final ServiceProvider sp = new MockServiceProvider();
 		final RequestCycle cycle = RequestCycle.get();
 		if (cycle != null) {
 			cycle.setMetaData(REQUEST_KEY, sp);

@@ -8,11 +8,11 @@ import java.util.Collection;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.web.RBBasePage;
-import de.lichtflut.rb.web.util.ServiceProviderLocator;
 import de.lichtflut.rb.webck.components.CKLink;
 import de.lichtflut.rb.webck.components.CKLinkType;
 import de.lichtflut.rb.webck.components.navigation.NavigationBar;
@@ -32,12 +32,15 @@ import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
  */
 public class EntitySamplesBasePage extends RBBasePage {
 	
+	@SpringBean
+	private ServiceProvider provider;
+	
 	/**
 	 * Singleton pattern: There will be only one instance per runtime.
 	 * @return {@link ServiceProvider}
 	 */
 	public ServiceProvider getServiceProvider(){
-		return ServiceProviderLocator.get();
+		return provider;
 	}
 	
 	// -----------------------------------------------------

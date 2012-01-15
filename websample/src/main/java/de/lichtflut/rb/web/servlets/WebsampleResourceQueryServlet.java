@@ -3,8 +3,9 @@
  */
 package de.lichtflut.rb.web.servlets;
 
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.web.util.ServiceProviderLocator;
 import de.lichtflut.rb.webck.application.ResourceQueryServlet;
 
 /**
@@ -20,12 +21,15 @@ import de.lichtflut.rb.webck.application.ResourceQueryServlet;
  */
 public class WebsampleResourceQueryServlet extends ResourceQueryServlet {
 
+	@SpringBean
+	private ServiceProvider provider;
+	
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected ServiceProvider getServiceProvider() {
-		return ServiceProviderLocator.get();
+		return provider;
 	}
 
 }

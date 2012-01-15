@@ -9,6 +9,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.naming.QualifiedName;
 
@@ -17,7 +18,6 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.web.RBBasePage;
-import de.lichtflut.rb.web.util.ServiceProviderLocator;
 import de.lichtflut.rb.webck.components.modaldialog.ModalDialog;
 import de.lichtflut.rb.webck.components.typesystem.CreateResourcePanel;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
@@ -41,6 +41,11 @@ import de.lichtflut.rb.webck.models.types.SNClassListModel;
  * @author Oliver Tigges
  */
 public class TypeSystemPage extends RBBasePage {
+	
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -168,7 +173,7 @@ public class TypeSystemPage extends RBBasePage {
 	// -----------------------------------------------------
 	
 	protected ServiceProvider getServiceProvider() {
-		return ServiceProviderLocator.get();
+		return provider;
 	}
 	
 	protected SchemaManager schemaManager() {

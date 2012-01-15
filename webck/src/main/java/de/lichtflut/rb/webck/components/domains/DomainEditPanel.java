@@ -20,6 +20,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.Organizer;
 import org.arastreju.sge.security.Domain;
 
@@ -53,6 +54,9 @@ public abstract class DomainEditPanel extends Panel{
 	private final ConditionalModel isEditMode;
 	
 	private final ConditionalModel isCreateMode;
+	
+	@SpringBean
+	private ServiceProvider provider;
 	
 	// ----------------------------------------------------
 
@@ -196,6 +200,6 @@ public abstract class DomainEditPanel extends Panel{
 	}
 	
 	private Organizer organizer() {
-		return getServiceProvider().getArastejuGate().getOrganizer();
+		return provider.getArastejuGate().getOrganizer();
 	}
 }

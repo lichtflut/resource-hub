@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.web.infomanagement;
 
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.web.RBBasePage;
 import de.lichtflut.rb.web.util.ServiceProviderLocator;
@@ -20,6 +22,11 @@ import de.lichtflut.rb.webck.components.infomanagement.InformationIOPanel;
  * @author Oliver Tigges
  */
 public class InformationManagementPage extends RBBasePage {
+	
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -38,7 +45,7 @@ public class InformationManagementPage extends RBBasePage {
 	// -----------------------------------------------------
 	
 	protected ServiceProvider getServiceProvider() {
-		return ServiceProviderLocator.get();
+		return provider;
 	}
 	
 }

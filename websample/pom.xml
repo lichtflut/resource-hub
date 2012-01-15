@@ -16,6 +16,7 @@
 	
 	<properties>
 		<jetty.version>6.1.25</jetty.version>
+		<springframework.version>3.0.5.RELEASE</springframework.version>
 	</properties>
 	
 	<dependencies>
@@ -34,6 +35,8 @@
 			<type>jar</type>
 			<optional>false</optional>
 		</dependency>
+		
+		<!-- JETTY DEPENDENCIES FOR TESTING -->
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty</artifactId>

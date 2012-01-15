@@ -4,6 +4,7 @@
 package de.lichtflut.rb.web;
 
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.web.components.ComponentsCatalogPage;
@@ -46,6 +47,9 @@ public class WebsampleApplication extends AbstractResourceBrowserApplication {
 	@Override
 	protected void init() {
 		super.init();
+		
+		getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+		
 		mountPage("/RSSchema", RSPage.class);
 		mountPage("/entities", EntityOverviewPage.class);
 		mountPage("/entity-detail", EntityDetailPage.class);
