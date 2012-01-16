@@ -32,7 +32,7 @@ public class ChangePasswordPanel extends Panel {
 	private IModel<Mode> mode = new Model<Mode>(Mode.VIEW);
 	private WebMarkupContainer container;
 
-	public enum Mode {
+	private enum Mode {
 		EDIT, VIEW;
 	}
 	

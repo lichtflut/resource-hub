@@ -13,9 +13,11 @@
 	<form wicket:id="form">
 		<div class="form-field">
 			<label for="reference" class="field-label">That's Me: </label>
-			<wicket:container wicket:id="container">
-				<div class="left-to-right" wicket:id="user">
-
+				<div class="left-to-right">
+					<a wicket:id="link" href="#">
+						<wicket:container wicket:id="label" />
+					</a>
+					<span wicket:id="picker"></span>
 				</div>
 				<a wicket:id="createLink" href="#" class="left-to-right"><span class="create-value-link">*</span></a>
 				<a wicket:id="deleteLink" href="#"><span class="remove-value-link">-</span></a>
@@ -27,7 +29,6 @@
 						Edit
 					</button>
 				</div>
-			</wicket:container>
 		</div>
 	</form>
 
