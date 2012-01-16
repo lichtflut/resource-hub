@@ -13,10 +13,11 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -36,9 +37,12 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
  * @author Oliver Tigges
  */
 @SuppressWarnings("rawtypes")
-public abstract class LocalButtonBar extends Panel {
+public class LocalButtonBar extends Panel {
 
 	private final ConditionalModel viewMode = BrowsingContextModel.isInViewMode();
+	
+	@SpringBean
+	private ServiceProvider provider;
 	
 	// ----------------------------------------------------
 	
@@ -56,17 +60,13 @@ public abstract class LocalButtonBar extends Panel {
 		
 	}
 	
-	// ----------------------------------------------------
-	
-	public abstract EntityManager getEntityManager();
-	
 	// -- BUTTONS -----------------------------------------
 	
 	protected Component createSaveButton(final IModel<RBEntity> model) {
 		final RBStandardButton save = new RBStandardButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				getEntityManager().store(model.getObject());
+				provider.getEntityManager().store(model.getObject());
 				RBWebSession.get().getHistory().finishEditing();
 				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 			}

@@ -250,7 +250,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	// -----------------------------------------------------
 	
 	private String nextField(final JsonParser p) throws IOException {
-		Validate.isTrue(p.getCurrentToken() == JsonToken.FIELD_NAME);
+		Validate.isTrue(p.getCurrentToken() == JsonToken.FIELD_NAME, "expected fieldname: " + p.getTokenLocation());
 		final String field = p.getCurrentName();
 		p.nextToken();
 		return field;

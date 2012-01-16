@@ -13,7 +13,6 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
@@ -107,10 +106,6 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 			return RequestCycle.get().urlFor(EntityDetailPage.class, params);
 		}
 
-		@Override
-		public ServiceProvider getServiceProvider() {
-			return EntityDetailPage.this.getServiceProvider();
-		}
 	}
 
 }

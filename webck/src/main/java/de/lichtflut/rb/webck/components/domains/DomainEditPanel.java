@@ -43,7 +43,7 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
  * @author Oliver Tigges
  */
 @SuppressWarnings("rawtypes")
-public abstract class DomainEditPanel extends Panel{
+public class DomainEditPanel extends Panel{
 	
 	private final IModel<Domain> domainModel;
 	
@@ -115,10 +115,6 @@ public abstract class DomainEditPanel extends Panel{
 		
 		add(form);
 	}
-	
-	// ----------------------------------------------------
-	
-	protected abstract ServiceProvider getServiceProvider();
 	
 	// ----------------------------------------------------
 	

@@ -47,9 +47,11 @@ public class WebsampleApplication extends AbstractResourceBrowserApplication {
 	@Override
 	protected void init() {
 		super.init();
-		
 		getComponentInstantiationListeners().add(new SpringComponentInjector(this));
-		
+		initWebsampleApp();
+	}
+	
+	protected void initWebsampleApp() {
 		mountPage("/RSSchema", RSPage.class);
 		mountPage("/entities", EntityOverviewPage.class);
 		mountPage("/entity-detail", EntityDetailPage.class);

@@ -154,6 +154,11 @@ public interface RB {
 	ResourceID HAS_ID = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasID");
 
 	/**
+	 * General name of something (e.g. an organization).
+	 */
+	ResourceID HAS_STATUS = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasStatus");
+	
+	/**
 	 * First name of a person.
 	 */
 	ResourceID HAS_FIRST_NAME = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasFirstname");

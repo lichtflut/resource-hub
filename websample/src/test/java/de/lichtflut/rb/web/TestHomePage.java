@@ -1,10 +1,12 @@
 /*
- * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.web;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -15,7 +17,18 @@ public class TestHomePage extends TestCase{
 
 	@Override
 	public void setUp(){
-		tester = new WicketTester(new WebsampleApplication());
+
+		final WebsampleApplication app = new WebsampleApplication() {
+			@Override
+			protected void init() {
+				initWebsampleApp();
+			}
+		};
+		
+		ApplicationContextMock appctx=new ApplicationContextMock();
+		app.getComponentInstantiationListeners().add(new SpringComponentInjector(app, appctx ));
+		
+		tester = new WicketTester(app);
 	}
 
 	/**
