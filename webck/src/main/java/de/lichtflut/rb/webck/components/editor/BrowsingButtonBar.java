@@ -14,6 +14,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -38,9 +39,12 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
  * @author Oliver Tigges
  */
 @SuppressWarnings("rawtypes")
-public abstract class BrowsingButtonBar extends TypedPanel<RBEntity> {
+public class BrowsingButtonBar extends TypedPanel<RBEntity> {
 
 	private final IModel<ResourceID> typeModel;
+	
+	@SpringBean
+	private ServiceProvider provider;
 	
 	// ----------------------------------------------------
 
@@ -64,7 +68,7 @@ public abstract class BrowsingButtonBar extends TypedPanel<RBEntity> {
 		final RBEntity createdEntity = getModelObject();
 		getEntityManager().store(createdEntity);
 		for(ReferenceReceiveAction action : RBWebSession.get().getHistory().getCurrentStep().getActions()) {
-			action.execute(getServiceProvider(), createdEntity);
+			action.execute(provider, createdEntity);
 		}
 		RBWebSession.get().getHistory().back();
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
@@ -118,10 +122,8 @@ public abstract class BrowsingButtonBar extends TypedPanel<RBEntity> {
 	// ----------------------------------------------------
 	
 	protected EntityManager getEntityManager() {
-		return getServiceProvider().getEntityManager();
+		return provider.getEntityManager();
 	}
-	
-	protected abstract ServiceProvider getServiceProvider();
 	
 	// ----------------------------------------------------
 	

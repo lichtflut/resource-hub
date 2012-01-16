@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.components.relationships;
 
@@ -19,6 +19,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -45,7 +46,7 @@ import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
  *
  * @author Oliver Tigges
  */
-public abstract class CreateRelationshipPanel extends Panel {
+public class CreateRelationshipPanel extends Panel {
 
 	private final IModel<RBEntity> subjectModel;
 	
@@ -54,6 +55,9 @@ public abstract class CreateRelationshipPanel extends Panel {
 	private final IModel<ResourceID> objectModel = new Model<ResourceID>();
 	
 	private final IModel<Boolean> objectSelected = Model.of(Boolean.FALSE);
+	
+	@SpringBean
+	private ServiceProvider provider;
 	
 	// ----------------------------------------------------
 	
@@ -127,14 +131,10 @@ public abstract class CreateRelationshipPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	protected abstract ServiceProvider getServiceProvider();
-	
-	// ----------------------------------------------------
-
 	protected void createRelationshipTo(ResourceID object, ResourceID predicate) {
 		final ResourceNode subject = subjectModel.getObject().getNode();
 		SNOPS.associate(subject, predicate, object);
-		getServiceProvider().getEntityManager().store(subjectModel.getObject());
+		provider.getEntityManager().store(subjectModel.getObject());
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
 	}
 
@@ -147,7 +147,7 @@ public abstract class CreateRelationshipPanel extends Panel {
 	}
 	
 	private void resolve(IModel<ResourceID> objectModel) {
-		final ResourceNode resolved = getServiceProvider().getResourceResolver().resolve(objectModel.getObject());
+		final ResourceNode resolved = provider.getResourceResolver().resolve(objectModel.getObject());
 		objectModel.setObject(resolved);
 	}
 	

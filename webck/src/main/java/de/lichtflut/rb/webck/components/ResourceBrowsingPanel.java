@@ -12,15 +12,15 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
-import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
+import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.editor.BrowsingButtonBar;
 import de.lichtflut.rb.webck.components.editor.ClassifyEntityPanel;
@@ -49,6 +49,9 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 
 	private RBEntityModel model;
 	
+	@SpringBean
+	private ServiceProvider provider;
+	
 	// ----------------------------------------------------
 
 	/**
@@ -61,7 +64,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		model = new RBEntityModel() {
 			@Override
 			protected ServiceProvider getServiceProvider() {
-				return ResourceBrowsingPanel.this.getServiceProvider();
+				return provider;
 			}
 		};
 		
@@ -73,15 +76,11 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		form.add(new EntityPanel("entity", model));
 		form.add(new ClassifyEntityPanel("classifier", model, typeModel));
 		
-		form.add(createLocalBar());
-		form.add(createBrowsingBar(typeModel));
+		form.add(new LocalButtonBar("localButtonBar", model));
+		form.add(new BrowsingButtonBar("browsingButtonBar", model, typeModel));
 		
-		form.add(new CreateRelationshipPanel("relationCreator", model) {
-			@Override
-			protected ServiceProvider getServiceProvider() {
-				return ResourceBrowsingPanel.this.getServiceProvider();
-			};
-		}.add(visibleIf(BrowsingContextModel.isInViewMode())));
+		form.add(new CreateRelationshipPanel("relationCreator", model)
+			.add(visibleIf(BrowsingContextModel.isInViewMode())));
 		
 		form.add(createRelationshipView("relationships", model));
 		
@@ -104,7 +103,7 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	public void createReferencedEntity(EntityHandle handle, ResourceID predicate) {
 		// store current entity 
 		// TODO: this should be stored transient in session / browsing history.
-		getServiceProvider().getEntityManager().store(model.getObject());
+		provider.getEntityManager().store(model.getObject());
 		
 		// navigate to sub entity
 		final ReferenceReceiveAction action = new EntityAttributeApplyAction(model.getObject(), predicate);
@@ -116,24 +115,6 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	
 	protected Component createRelationshipView(String id, IModel<RBEntity> model) {
 		return new WebMarkupContainer(id);
-	}
-	
-	protected LocalButtonBar createLocalBar() {
-		return new LocalButtonBar("localButtonBar", model) {
-			@Override
-			public EntityManager getEntityManager() {
-				return getServiceProvider().getEntityManager();
-			}
-		};
-	}
-	
-	protected BrowsingButtonBar createBrowsingBar(final IModel<ResourceID> typeModel) {
-		return new BrowsingButtonBar("browsingButtonBar", model, typeModel) {
-			@Override
-			protected ServiceProvider getServiceProvider() {
-				return ResourceBrowsingPanel.this.getServiceProvider();
-			}
-		};
 	}
 	
 	// ----------------------------------------------------
@@ -159,8 +140,4 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		model.reset();
 	}
 	
-	// -----------------------------------------------------
-	
-	protected abstract ServiceProvider getServiceProvider();
-		
 }
