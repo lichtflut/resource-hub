@@ -87,7 +87,6 @@ public class ChangePasswordPanel extends Panel {
 				mode.setObject(Mode.VIEW);
 				target.add(form);
 			}
-
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 			}

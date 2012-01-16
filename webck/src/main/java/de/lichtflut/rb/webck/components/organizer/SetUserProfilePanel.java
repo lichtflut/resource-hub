@@ -19,6 +19,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.persistence.ResourceResolver;
@@ -33,6 +34,7 @@ import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import de.lichtflut.rb.webck.browsing.JumpTarget;
 import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.browsing.ResourceAttributeApplyAction;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
@@ -48,10 +50,11 @@ import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 @SuppressWarnings("rawtypes")
 public abstract class SetUserProfilePanel extends Panel {
 
-	private IModel<User> user;
 	private final DerivedModel<ResourceID, User> profileModel;
-	private IModel<Boolean> hasProfile;
 	private final IModel<Mode> mode = new Model<Mode>(Mode.VIEW);
+	private IModel<User> user;
+	private IModel<Boolean> hasProfile;
+	private IModel<ResourceID> profile;
 
 	private enum Mode {
 		EDIT, VIEW;
@@ -64,11 +67,11 @@ public abstract class SetUserProfilePanel extends Panel {
 	 * @param id - wicket:id
 	 * @param model
 	 */
-	public SetUserProfilePanel(String id, final IModel<User> model) {
-		super(id, model);
-		this.user = model;
+	public SetUserProfilePanel(String id, final IModel<User> user) {
+		super(id, user);
+		this.user = user;
 		this.hasProfile = Model.of(true);
-		this.profileModel = getProfileModel(model);
+		this.profileModel = refreshProfileModel();
 		
 		final Form form = new Form("form");
 		populateForm(form);
@@ -92,24 +95,6 @@ public abstract class SetUserProfilePanel extends Panel {
 	}
 
 	/**
-	 * @param model
-	 * @return a {@link DerivedModel} for the userprofile
-	 */
-	private DerivedModel<ResourceID, User> getProfileModel(final IModel<User> model) {
-		return new DerivedModel<ResourceID, User>(model) {
-			@Override
-			protected ResourceID derive(User original) {
-				final SemanticNode node = SNOPS.singleObject(original.getAssociatedResource(), RB.IS_RESPRESENTED_BY);
-				if (node != null) {
-					return node.asResource();
-				} else {
-					return null;
-				}
-			}
-		};
-	}
-
-	/**
 	 * @return an {@link AjaxSubmitLink} that removes the current Profile association.
 	 */
 	private AjaxSubmitLink createDeleteLink() {
@@ -118,6 +103,8 @@ public abstract class SetUserProfilePanel extends Panel {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				if(profileModel.getObject() != null){
 					SNOPS.remove(user.getObject().getAssociatedResource(), RB.IS_RESPRESENTED_BY, profileModel.getObject());
+					refreshModels();
+					mode.setObject(Mode.VIEW);
 					target.add(form);
 				}
 			}
@@ -177,25 +164,15 @@ public abstract class SetUserProfilePanel extends Panel {
 	protected abstract ResourceResolver getResourceResolver();
 
 	/**
-	 * Create resource-{@link Link}
-	 * @return {@link Link}
-	 */
-	private Link createResourceLink() {
-		final ResourceID ref = profileModel.getObject();
-		Link link = createReferenceLink(getResourceLabel(ref), ref);
-		return link;
-	}
-
-	/**
 	 * @param ref - {@link ResourceID}
 	 * @return a {@link IModel} that represents the resource label.
 	 */
-	private IModel<String> getResourceLabel(final ResourceID ref) {
+	private IModel<String> getResourceLabel() {
 		IModel<String> label;
-		if (ref != null){
-			label = new ResourceLabelModel(Model.of(ref.asResource()));
+		if (profileModel.getObject() != null){
+			label = new ResourceLabelModel(profileModel);
 		}else{
-			label = Model.of("No Profile set");
+			label = Model.of(profileModel);
 			hasProfile.setObject(false);
 		}
 		return label;
@@ -203,17 +180,16 @@ public abstract class SetUserProfilePanel extends Panel {
 
 	/**
 	 * @param label - {@link IModel}
-	 * @param ref - {@link ResourceID}
 	 * @return a {@link Link}
 	 */
-	private Link createReferenceLink(IModel<String> label, final ResourceID ref) {
+	private Link createResourceLink() {
 		Link link = new Link("link") {
 			@Override
 			public void onClick() {
-				onResourceLinkClicked(ref.asResource());
+				onResourceLinkClicked(profileModel.getObject().asResource());
 			}
 		};
-		link.add(new Label("label", label));
+		link.add(new Label("label", getResourceLabel()));
 		if(!hasProfile.getObject()){
 			link.setEnabled(false);
 		}
@@ -226,7 +202,12 @@ public abstract class SetUserProfilePanel extends Panel {
 	 * @return
 	 */
 	private EntityPickerField createEntityPicker() {
-		EntityPickerField picker = new EntityPickerField("picker", profileModel, RB.PERSON);
+		if(hasProfile.getObject()){
+			profile = Model.of(profileModel.getObject());
+		}else{
+			profile = new Model<ResourceID>();
+		}
+		EntityPickerField picker = new EntityPickerField("picker", profile, RB.PERSON);
 		picker.add(visibleIf(areEqual(mode, Mode.EDIT)));
 		return picker;
 	}
@@ -242,7 +223,7 @@ public abstract class SetUserProfilePanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				mode.setObject(Mode.EDIT);
-				target.add(form);
+				RBAjaxTarget.add(form);
 			}
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
@@ -264,16 +245,15 @@ public abstract class SetUserProfilePanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				ResourceNode userNode = getResourceResolver().resolve(user.getObject().getAssociatedResource());
-				createRelationship(userNode, profileModel.getObject().asResource());
-				userNode = getResourceResolver().resolve(userNode);
-				user.setObject(new UserImpl(userNode));
+				createRelationship(userNode, profile.getObject());
+				refreshModels();
 				mode.setObject(Mode.VIEW);
-				target.add(form);
+				RBAjaxTarget.add(form);
 			}
-			
+
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				target.add(form);
+				RBAjaxTarget.add(form);
 			}
 		};
 		save.add(visibleIf(areEqual(mode, Mode.EDIT)));
@@ -281,11 +261,48 @@ public abstract class SetUserProfilePanel extends Panel {
 	}
 	
 	/**
+	 * @param userNode
+	 */
+	private void refreshModels() {
+		refreshUser();
+		refreshProfileModel();
+	}
+	
+	/**
+	 * @param userNode
+	 */
+	private void refreshUser() {
+		ResourceNode userNode = getResourceResolver().resolve(user.getObject().getAssociatedResource());
+		user.setObject(new UserImpl(userNode));
+	}
+	
+	/**
+	 * @return a {@link DerivedModel} for the userprofile
+	 */
+	private DerivedModel<ResourceID, User> refreshProfileModel() {
+		return new DerivedModel<ResourceID, User>(user) {
+			@Override
+			protected ResourceID derive(User original) {
+				final SemanticNode node = SNOPS.singleObject(original.getAssociatedResource(), RB.IS_RESPRESENTED_BY);
+				if (node != null) {
+					hasProfile.setObject(true);
+					return node.asResource();
+				} else {
+					hasProfile.setObject(false);
+					return new SimpleResourceID("No Profile set");
+				}
+			}
+		};
+	}
+	
+	/**
 	 * Action to perform when 'Save'-button is clicked.
 	 * @param reference 
 	 */
-	protected void createRelationship(ResourceNode userNode, ResourceNode profile){
-		SNOPS.assure(userNode, RB.IS_RESPRESENTED_BY, profile, RB.PRIVATE_CONTEXT);
+	protected void createRelationship(ResourceNode userNode, ResourceID resourceID){
+		if(resourceID != null){
+			SNOPS.assure(userNode, RB.IS_RESPRESENTED_BY, resourceID, RB.PRIVATE_CONTEXT);
+		}
 	}
 
 	private BrowsingHistory getHistory(){
