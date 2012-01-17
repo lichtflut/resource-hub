@@ -22,6 +22,7 @@ import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 import org.arastreju.sge.security.Credential;
 import org.arastreju.sge.security.LoginException;
 import org.arastreju.sge.security.PasswordCredential;
+import org.arastreju.sge.security.Role;
 import org.arastreju.sge.security.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +82,22 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationServi
 		} catch(ArastrejuException e) {
 			return null;
 		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addRolesToUser(final User user, final Role... roles) {
+		identityManagement().addUserToRoles(user, roles);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Role registerRole(String name) {
+		return identityManagement().registerRole(name);
 	}
 
 	/** 
