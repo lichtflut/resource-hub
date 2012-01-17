@@ -13,7 +13,9 @@ import org.arastreju.sge.IdentityManagement;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.eh.ArastrejuException;
+import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.TimeMask;
+import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
@@ -132,7 +134,29 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationServi
 		return raw + ":" + Crypt.md5Hex(raw + credential.asValue().getStringValue());
 	}
 
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setNewPassword(User user, String currentPassword, String newPassword) {
+		if(verifyPassword(user, currentPassword)){
+			if(!user.getAssociatedResource().isAttached()){
+				// TODO Make sure node is attached
+			}
+			SNValue password = new SNValue(ElementaryDataType.STRING, newPassword);
+			SNOPS.assure(user.getAssociatedResource(), Aras.HAS_CREDENTIAL, password, RB.PRIVATE_CONTEXT);
+		}
+	}
 	// ----------------------------------------------------
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Boolean verifyPassword(User user, String md5Password){
+		final SemanticNode credential = SNOPS.singleObject(user.getAssociatedResource(), Aras.HAS_CREDENTIAL);
+		return credential.asValue().getStringValue().equals(md5Password);
+	}
 	
 	private void setLastLogin(final User user) {
 		if (user.getAssociatedResource() != null) {

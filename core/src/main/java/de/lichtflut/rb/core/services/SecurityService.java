@@ -27,5 +27,12 @@ public interface SecurityService extends AuthenticationService {
 	 * @return The created user.
 	 */
 	User createUser(String emailID, String username, String password);
-	
+
+	/**
+	 * Sets a new Password for a {@link User}.
+	 * @param user
+	 * @param currentPassword
+	 * @param newPassword
+	 */
+	void setNewPassword(User user, String currentPassword, String newPassword);
 }
