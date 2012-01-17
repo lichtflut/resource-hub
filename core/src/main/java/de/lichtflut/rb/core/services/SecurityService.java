@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.services;
 
+import org.arastreju.sge.security.Role;
 import org.arastreju.sge.security.User;
 
 
@@ -27,5 +28,19 @@ public interface SecurityService extends AuthenticationService {
 	 * @return The created user.
 	 */
 	User createUser(String emailID, String username, String password);
+	
+	/**
+	 * Add role(s) to a user.
+	 * @param user The user the roles should be added to.
+	 * @param roles The role(s) that should be added to the user. 
+	 */
+	void addRolesToUser(final User user, final Role... roles);
+	
+	/**
+	 * Gets a {@link Role} by its name.
+	 * @param name The name of the role.
+	 * @return The {@link Role}.
+	 */
+	public Role registerRole(final String name);
 	
 }
