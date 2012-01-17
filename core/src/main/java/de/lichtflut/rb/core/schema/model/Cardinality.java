@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import java.io.Serializable;
+
 /**
  * <p>
  *  The cardinality of a PropertyDeclaration.
@@ -23,7 +25,7 @@ package de.lichtflut.rb.core.schema.model;
  *
  * @author Oliver Tigges
  */
-public interface Cardinality extends ResourceSchemaElement{
+public interface Cardinality extends Serializable {
 
 	/**
 	 * Returns if Attribute can have unlimited values.

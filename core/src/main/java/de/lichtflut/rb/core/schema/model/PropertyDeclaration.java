@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
@@ -21,7 +22,7 @@ import org.arastreju.sge.naming.QualifiedName;
  *
  * @author Oliver Tigges
  */
-public interface PropertyDeclaration extends ResourceSchemaElement {
+public interface PropertyDeclaration extends Serializable {
 
 	/**
 	 * The property type. Usually this descriptor will be of type rdf:Property. 

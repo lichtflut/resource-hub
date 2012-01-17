@@ -7,7 +7,6 @@ import org.antlr.runtime.Token;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.parser.impl.simplersf.ResourceSchemaParser;
 /**
  *
  * TODO Discription.
@@ -25,11 +24,6 @@ public class RSCardinalityEvaluator implements RSEvaluator<Cardinality> {
 	 * @param amount -
 	 */
 	public RSCardinalityEvaluator(final Token t, final int amount){
-		if(!(t.getType()==ResourceSchemaParser.CARDINALITY)){
-			throw new IllegalArgumentException(
-					"Type of the given token " + t.getType() + " must be " + ResourceSchemaParser.CARDINALITY
-					+ " (CARDINALITY)");
-		}
 		String tokenLabel = t.getText().toLowerCase();
 		if (tokenLabel.equals("has")){
 			 this.cardinality = CardinalityBuilder.hasExactly(amount);

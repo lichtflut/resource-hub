@@ -10,6 +10,7 @@ import java.util.Collection;
 import junit.framework.Assert;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.RBConfig;
@@ -51,6 +52,23 @@ public class ResourceSchemaParserTest {
 		
 		final SchemaManager manager = serviceProvider.getSchemaManager();
 		final SchemaImporter importer = manager.getImporter("json");
+		importer.read(in);
+		
+		Collection<ResourceSchema> schemas = manager.findAllResourceSchemas();
+		System.out.println(schemas);
+		
+		Assert.assertEquals(5, manager.findAllResourceSchemas().size());
+		
+		Assert.assertEquals(1, manager.findPublicTypeDefinitions().size());
+	}
+	
+	@Ignore
+	public void testRsfImport() throws IOException {
+		final InputStream in = 
+				getClass().getClassLoader().getResourceAsStream("test-schema.rsf");
+		
+		final SchemaManager manager = serviceProvider.getSchemaManager();
+		final SchemaImporter importer = manager.getImporter("rsf");
 		importer.read(in);
 		
 		Collection<ResourceSchema> schemas = manager.findAllResourceSchemas();

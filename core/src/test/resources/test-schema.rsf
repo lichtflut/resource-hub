@@ -1,0 +1,29 @@
+namespace "http://rb.lichtflut.de/common#" prefix "common"
+namespace "http://rb.lichtflut.de/common#" prefix "common"
+	
+schema for "common:City" {
+
+	label-rule : "common:hasName common:hasCountry"
+
+	property "common:assignedTo" [1..n] {
+      	field-label : "assigned to"
+      	field-label[de] : "zugewiesen"
+        type-definition : "string"
+		resource-constraint: "common:Country"
+	}
+	
+	property "common:assignedTo" [1..n] {
+      	field-label : "assigned-to"
+      	field-label[de] : "zugewiesen"
+        type-definition : "string"
+		resource-constraint: "common:Country"
+	}
+	
+	property "common:assignedTo" [1..n] {
+      	field-label : "assigned-to"
+      	field-label[de] : "zugewiesen"
+        type-definition : "string"
+		resource-constraint: "common:Country"
+	}
+	
+}

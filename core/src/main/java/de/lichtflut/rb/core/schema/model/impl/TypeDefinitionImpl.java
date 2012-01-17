@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,10 +34,8 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
  *
  * @author Nils Bleisch
  */
-public final class TypeDefinitionImpl implements TypeDefinition{
+public final class TypeDefinitionImpl implements TypeDefinition, Serializable {
 
-	private static final long serialVersionUID = -863599762328529038L;
-	
 	private ResourceID id;
 
 	private Set<Constraint> constraints = new HashSet<Constraint>();

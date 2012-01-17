@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface TypeDefinition  extends ResourceSchemaElement{
+public interface TypeDefinition extends Serializable {
 
 	/**
 	 * Get the identifier of the property.

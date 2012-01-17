@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.schema.model.impl;
 
 import org.arastreju.sge.model.ResourceID;
+
 import de.lichtflut.rb.core.schema.model.Constraint;
 
 /**
@@ -22,8 +23,6 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 public abstract class AbstractConstraint implements Constraint{
 
 	// -----------------------------------------------------
-
-	private static final long serialVersionUID = 6062840670338394909L;
 
 	/**
 	 * {@inheritDoc}

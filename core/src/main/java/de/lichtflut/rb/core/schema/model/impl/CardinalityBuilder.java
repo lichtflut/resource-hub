@@ -137,8 +137,6 @@ public final class CardinalityBuilder{
      */
     private static final class SimpleCardinalityImpl implements Cardinality{
 
-		private static final long serialVersionUID = -8837248407635938888L;
-
 		/**
 		 * Default Constructor.
 		 */

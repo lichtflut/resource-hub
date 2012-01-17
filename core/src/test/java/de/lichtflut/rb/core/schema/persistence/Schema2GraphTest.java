@@ -71,6 +71,7 @@ public class Schema2GraphTest {
 		
 		ResourceSchema schema = createSchema();
 		SNResourceSchema snSchema = getBinding().toSemanticNode(schema);
+		@SuppressWarnings("unused")
 		ResourceSchema cSchema = getBinding().toModelObject(snSchema);
 		
 		// Cannot be equal when equals() not overridden! 

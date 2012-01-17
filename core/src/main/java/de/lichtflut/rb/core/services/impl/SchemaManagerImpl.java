@@ -34,6 +34,7 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
+import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
 import de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration;
 import de.lichtflut.rb.core.schema.persistence.SNPropertyTypeDefinition;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
@@ -212,6 +213,9 @@ public class SchemaManagerImpl implements SchemaManager {
 	public SchemaImporter getImporter(final String format) {
 		if ("JSON".equalsIgnoreCase(format.trim())) {
 			return new SchemaImporterImpl(provider, new JsonSchemaParser());
+		} 
+		if ("RSF".equalsIgnoreCase(format.trim())) {
+			return new SchemaImporterImpl(provider, new RsfSchemaParser());
 		} else {
 			throw new NotYetSupportedException("Unsupported format: " + format);
 		}
