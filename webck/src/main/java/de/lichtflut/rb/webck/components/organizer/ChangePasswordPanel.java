@@ -23,6 +23,7 @@ import org.arastreju.sge.security.User;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.models.CurrentUserModel;
 
 /**
@@ -36,7 +37,7 @@ import de.lichtflut.rb.webck.models.CurrentUserModel;
 @SuppressWarnings("rawtypes")
 public class ChangePasswordPanel extends Panel {
 
-	private final String PATTERN = "^(?=.*[a-z]).{4,16}$";
+	private final String PASSWORD_PATTERN = "^(?=.*[a-z]).{4,16}$";
 	
 	private IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
 	private IModel<String> newPassword;
@@ -44,9 +45,9 @@ public class ChangePasswordPanel extends Panel {
 	private IModel<String> confirmedPassword;
 	
 	@SpringBean
-	ServiceProvider provider;
+	private ServiceProvider provider;
 	
-	// ------------------------------------------------------
+	// ---------------- Constructor -------------------------
 	
 	/**
 	 * Constructor.
@@ -68,6 +69,8 @@ public class ChangePasswordPanel extends Panel {
 		this.add(form);
 	}
 
+	// ------------------------------------------------------
+	
 	/**
 	 * Populate the form.
 	 * @param form
@@ -77,7 +80,7 @@ public class ChangePasswordPanel extends Panel {
 		PasswordTextField currentPassField = new PasswordTextField("current", currentPassword);
 		PasswordTextField newPassField = new PasswordTextField("newPassword", newPassword);
 		PasswordTextField confirmPassField = new PasswordTextField("confirmPassword", confirmedPassword);
-		newPassField.add(new PatternValidator(PATTERN));
+		newPassField.add(new PatternValidator(PASSWORD_PATTERN));
 		container.add(currentPassField, newPassField, confirmPassField);
 		container.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
 		form.add(new EqualPasswordInputValidator(newPassField, confirmPassField));
@@ -96,10 +99,11 @@ public class ChangePasswordPanel extends Panel {
 				CurrentUserModel user = new CurrentUserModel();
 				setNewPassword(user.getObject(), currentPassword.getObject(), newPassword.getObject());
 				mode.setObject(DisplayMode.VIEW);
-				target.add(form);
+				RBAjaxTarget.add(form);
 			}
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				RBAjaxTarget.add(form);
 			}
 		};
 		save.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));

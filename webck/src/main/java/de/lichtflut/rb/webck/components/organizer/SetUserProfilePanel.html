@@ -13,32 +13,24 @@
 	<form wicket:id="form">
 		<div class="form-field">
 			<label for="reference" class="field-label">That's Me: </label>
-				<div class="left-to-right">
-					<a wicket:id="link" href="#">
-						<wicket:container wicket:id="label" />
-					</a>
-					<span wicket:id="picker"></span>
-				</div>
+			<div class="left-to-right">
+				<a wicket:id="link" href="#">
+					<wicket:container wicket:id="label" />
+				</a>
+				<span wicket:id="picker"></span>
 				<a wicket:id="createLink" href="#" class="left-to-right"><span class="create-value-link">*</span></a>
 				<a wicket:id="deleteLink" href="#"><span class="remove-value-link">-</span></a>
-				<div class="button-bar">
-					<button type="button" wicket:id="save" class="default-button">
-						Save
-					</button>
-					<button type="button" wicket:id="edit" class="default-button">
-						Edit
-					</button>
-				</div>
+			</div>
+			<div class="button-bar">
+				<button type="button" wicket:id="save" class="default-button">
+					Save
+				</button>
+				<button type="button" wicket:id="edit" class="default-button">
+					Edit
+				</button>
+			</div>
 		</div>
 	</form>
-
-<wicket:fragment wicket:id="referenceLink">
-	<a wicket:id="link" href="#">
-		<wicket:container wicket:id="label" />
-	</a>
-</wicket:fragment>
-<wicket:fragment wicket:id="resourcePicker">
-	<span wicket:id="picker"></span>
-</wicket:fragment>
+	
 </wicket:panel>
 </html>

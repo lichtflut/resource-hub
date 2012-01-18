@@ -15,6 +15,7 @@ import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.eh.ArastrejuException;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.TimeMask;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNText;
@@ -158,13 +159,15 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationServi
 	@Override
 	public void setNewPassword(User user, String currentPassword, String newPassword) {
 		if(verifyPassword(user, currentPassword)){
-			if(!user.getAssociatedResource().isAttached()){
-				// TODO Make sure node is attached
+			ResourceNode userNode = user.getAssociatedResource();
+			if(!userNode.isAttached()){
+				userNode = provider.getResourceResolver().resolve(userNode);
 			}
 			SNValue password = new SNValue(ElementaryDataType.STRING, newPassword);
-			SNOPS.assure(user.getAssociatedResource(), Aras.HAS_CREDENTIAL, password, RB.PRIVATE_CONTEXT);
+			SNOPS.assure(userNode, Aras.HAS_CREDENTIAL, password, RB.PRIVATE_CONTEXT);
 		}
 	}
+	
 	// ----------------------------------------------------
 	
 	/**
