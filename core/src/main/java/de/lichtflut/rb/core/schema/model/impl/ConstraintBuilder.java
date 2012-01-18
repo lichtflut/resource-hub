@@ -127,9 +127,6 @@ public final class ConstraintBuilder{
 	private static Constraint buildContraintInstanceFromParams(final String literal, final ResourceID resource){
 		return new AbstractConstraint(){
 
-
-			private static final long serialVersionUID = 8494235989367306587L;
-
 			public String getLiteralConstraint() {
 				return literal;
 			}

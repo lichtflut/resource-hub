@@ -4,6 +4,7 @@
 
 package de.lichtflut.rb.core.schema.model.impl;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -36,10 +37,8 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
  *
  * @author Raphael Esterle
  */
-public class PropertyDeclarationImpl implements PropertyDeclaration {
+public class PropertyDeclarationImpl implements PropertyDeclaration, Serializable {
 
-	private static final long serialVersionUID = -322769574493912661L;
-	
 	private ResourceID propertyDescriptor;
 	
 	private TypeDefinition typeDefinition;

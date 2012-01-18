@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.core.schema.parser.impl;
 
-import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
 
 
 /**
@@ -15,7 +14,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchemaElement;
  * @author Nils Bleisch
  * @param <E>
  */
-public interface RSEvaluator<E extends ResourceSchemaElement> {
+public interface RSEvaluator<E> {
 
 	/**
 	 * Tries to evaluate the given param.

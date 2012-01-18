@@ -16,13 +16,9 @@ import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
  * @author Nils Bleisch
  */
 public class RSParsingResultErrorReporter implements RSErrorReporter{
-	/**
-	 *
-	 */
+
 	private final Logger logger = LoggerFactory.getLogger(RSParsingResultErrorReporter.class);
-	/**
-	 *
-	 */
+	
 	private RSParsingResultImpl result;
 
 	// -----------------------------------------------------

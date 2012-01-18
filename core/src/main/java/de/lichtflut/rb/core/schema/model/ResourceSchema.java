@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
@@ -20,7 +21,7 @@ import de.lichtflut.rb.core.common.EntityLabelBuilder;
  *
  * @author Oliver Tigges
  */
-public interface ResourceSchema extends ResourceSchemaElement {
+public interface ResourceSchema extends Serializable {
 
 	/**
 	 * The ResourceID  of the Type described by this schema.
