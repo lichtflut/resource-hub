@@ -71,9 +71,9 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 				identityManagement().registerAlternateID(registered, username);
 			}
 			SNOPS.assure(registered.getAssociatedResource(), Aras.HAS_EMAIL, new SNText(emailID), Aras.IDENT);
-			final Domain domain = getProvider().getContext().getDomain();
+			final String domain = getProvider().getContext().getDomain();
 			if (domain != null && !gate().getContext().isMasterDomain()) {
-				registerUserInMasterDomain(registered, domain.getUniqueName());
+				registerUserInMasterDomain(registered, domain);
 			}
 			return registered;
 		} catch(ArastrejuException e) {

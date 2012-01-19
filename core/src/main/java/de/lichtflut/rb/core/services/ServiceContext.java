@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.core.services;
 
-import org.arastreju.sge.security.Domain;
 import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.core.RBConfig;
@@ -25,7 +24,7 @@ public class ServiceContext {
 	
 	private User user;
 	
-	private Domain domain;
+	private String domain;
 
 	// ----------------------------------------------------
 	
@@ -55,14 +54,14 @@ public class ServiceContext {
 	/**
 	 * @return the domain
 	 */
-	public Domain getDomain() {
+	public String getDomain() {
 		return domain;
 	}
 
 	/**
 	 * @param domain the domain to set
 	 */
-	public void setDomain(Domain domain) {
+	public void setDomain(String domain) {
 		this.domain = domain;
 	}
 

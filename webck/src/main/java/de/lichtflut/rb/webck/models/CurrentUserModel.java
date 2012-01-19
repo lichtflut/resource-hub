@@ -94,8 +94,7 @@ public class CurrentUserModel extends AbstractReadOnlyModel<User> {
 		if (user.getEmail() != null) {
 			return user.getEmail();
 		} else {
-			user.getName();
+			return user.getName();
 		}
-		return null;
 	}
 }
