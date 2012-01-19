@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.services;
 
+import org.arastreju.sge.security.Domain;
 import org.arastreju.sge.security.Role;
 import org.arastreju.sge.security.User;
 
@@ -18,7 +19,14 @@ import org.arastreju.sge.security.User;
  *
  * @author Oliver Tigges
  */
-public interface SecurityService extends AuthenticationService {
+public interface SecurityService {
+	
+	/**
+	 * Create the domain administration user.
+	 * @param domain The domain
+	 * @return The created user.
+	 */
+	User createDomainAdmin(Domain domain);
 	
 	/**
 	 * Create a new user.
@@ -50,5 +58,5 @@ public interface SecurityService extends AuthenticationService {
 	 * @return The {@link Role}.
 	 */
 	public Role registerRole(final String name);
-	
+
 }

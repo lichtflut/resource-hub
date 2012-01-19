@@ -9,6 +9,7 @@ import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.TypeManager;
 
@@ -25,26 +26,34 @@ import de.lichtflut.rb.core.services.TypeManager;
  */
 public abstract class AbstractServiceProvider implements ServiceProvider{
 
+	private final ServiceContext ctx;
+	
 	private SchemaManager schemaManager;
 	private EntityManager entityManager;
 	private TypeManager typeManager;
 	private SecurityService securityService;
-	private DomainOrganizer organizer;
 	
 	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
 	 */
-	public AbstractServiceProvider() {
+	public AbstractServiceProvider(ServiceContext ctx) {
+		this.ctx = ctx;
 		schemaManager = new SchemaManagerImpl(this);
 		entityManager = new EntityManagerImpl(this);
 		typeManager = new TypeManagerImpl(this);
-		organizer = new DomainOrganizerImpl(this);
-		securityService = new SecurityServiceImpl(this);
+		securityService = newSecurityService();
 	}
 
 	// ----------------------------------------------------
+	
+	/**
+	 *{@inheritDoc}
+	 */
+	public ServiceContext getContext() {
+		return ctx;
+	};
 	
 	/**
 	 *{@inheritDoc}
@@ -74,9 +83,7 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	* {@inheritDoc}
 	*/
 	@Override
-	public DomainOrganizer getDomainOrganizer() {
-		return organizer;
-	}
+	public abstract DomainOrganizer getDomainOrganizer();
 
 	/** 
 	* {@inheritDoc}
@@ -92,6 +99,15 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	@Override
 	public ResourceResolver getResourceResolver() {
 		return getArastejuGate().startConversation();
+	}
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * @return The security service.
+	 */
+	protected SecurityService newSecurityService() {
+		return new SecurityServiceImpl(this);
 	}
 
 }

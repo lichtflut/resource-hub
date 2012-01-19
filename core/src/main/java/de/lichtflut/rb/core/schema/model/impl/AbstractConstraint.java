@@ -20,7 +20,7 @@ import de.lichtflut.rb.core.schema.model.Constraint;
  *
  * @author Nils Bleisch
  */
-public abstract class AbstractConstraint implements Constraint{
+public abstract class AbstractConstraint implements Constraint {
 
 	// -----------------------------------------------------
 

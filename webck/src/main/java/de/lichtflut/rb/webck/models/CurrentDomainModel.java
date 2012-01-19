@@ -44,7 +44,7 @@ public class CurrentDomainModel extends AbstractLoadableDetachableModel<Domain> 
 	 */
 	@Override
 	public Domain load() {
-		return provider.getArastejuGate().getOrganizer().getMasterDomain();
+		return provider.getDomainOrganizer().getMasterDomain();
 	}
 
 	/**

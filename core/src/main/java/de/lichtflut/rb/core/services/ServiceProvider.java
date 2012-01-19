@@ -19,6 +19,11 @@ import org.arastreju.sge.persistence.ResourceResolver;
 public interface ServiceProvider {
 	
 	/**
+	 * @return The context of this service provider.
+	 */
+	ServiceContext getContext();
+	
+	/**
 	 * @return an instance of {@link ArastrejuGate} which depends on the specific ServiceProvider
 	 */
 	ArastrejuGate getArastejuGate();

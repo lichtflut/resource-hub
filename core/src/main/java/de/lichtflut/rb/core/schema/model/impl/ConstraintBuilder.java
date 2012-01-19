@@ -24,7 +24,7 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 * @author Nils Bleisch
 */
 
-public final class ConstraintBuilder{
+public final class ConstraintBuilder {
 
 	private static final ConstraintBuilder INSTANCE =  new ConstraintBuilder();
 

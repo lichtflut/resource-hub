@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import java.io.Serializable;
+
 import org.arastreju.sge.model.ResourceID;
 
 /**
@@ -34,7 +36,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface Constraint {
+public interface Constraint extends Serializable {
 
 	/**
 	 * Check if this constraint is for literal values.
