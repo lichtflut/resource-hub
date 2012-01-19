@@ -36,6 +36,14 @@ public class ContextDeclaration implements Context {
 		return qn;
 	}
 	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toURI() {
+		return qn.toURI();
+	}
+	
 	/**
 	 * @param qn the qn to set
 	 */

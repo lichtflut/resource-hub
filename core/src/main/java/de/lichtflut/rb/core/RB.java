@@ -115,6 +115,21 @@ public interface RB {
 	 */
 	ResourceID HAS_CONTENT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasContent");
 	
+	/**
+	 * The layout of a perspective.
+	 */
+	ResourceID HAS_LAYOUT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasLayout");
+	
+	/**
+	 * A view port of a perspective.
+	 */
+	ResourceID HAS_VIEW_PORT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasViewPort");
+	
+	/**
+	 * A view port contains widgets.
+	 */
+	ResourceID CONTAINS_WIDGET = new SimpleResourceID(SYS_NAMESPACE_URI, "containsWidget");
+	
 	
 	// -- COMMON PROPERTIES --------------------------------------
 

@@ -106,6 +106,11 @@
 			<version>0.6.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<groupId>org.arastreju</groupId>
+			<artifactId>arastreju.ogm</artifactId>
+			<version>0.6.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr</artifactId>
 			<version>3.1.3</version>
