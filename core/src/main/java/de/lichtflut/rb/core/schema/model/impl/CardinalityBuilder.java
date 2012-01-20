@@ -4,6 +4,8 @@
 
 package de.lichtflut.rb.core.schema.model.impl;
 
+import java.io.Serializable;
+
 import de.lichtflut.rb.core.schema.model.Cardinality;
 
 /**
@@ -20,7 +22,7 @@ import de.lichtflut.rb.core.schema.model.Cardinality;
  * @author Nils Bleisch
  */
 
-public final class CardinalityBuilder{
+public final class CardinalityBuilder implements Serializable {
 
 	//Let's instance of this class be a Singleton
 

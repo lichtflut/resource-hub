@@ -7,6 +7,7 @@ import static org.arastreju.sge.SNOPS.assure;
 import static org.arastreju.sge.SNOPS.singleAssociation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.arastreju.sge.ModelingConversation;
@@ -20,6 +21,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.query.Query;
+import org.arastreju.sge.security.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +47,7 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 	private final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
 	
 	private final ServiceProvider provider;
-	
+
 	// -----------------------------------------------------
 
 	/**
@@ -56,7 +58,43 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 		this.provider = provider;
 	}
 	
-	// ----------------------------------------------------
+	// -- DOMAINS -----------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Domain getMasterDomain() {
+		return arasOrganizer().getDomesticDomain();
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<Domain> getDomains() {
+		return arasOrganizer().getDomains();
+	}
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Domain registerDomain(Domain domain) {
+		final Domain registered = arasOrganizer()
+				.registerDomain(domain.getUniqueName(), domain.getTitle(), domain.getDescription());
+		provider.getSecurityService().createDomainAdmin(domain);
+		logger.info("Created new domain: " + registered);
+		return registered;
+	}
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateDomain(Domain domain) {
+		arasOrganizer().updateDomain(domain);
+	}
 
 	/** 
 	 * {@inheritDoc}

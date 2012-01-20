@@ -21,9 +21,9 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.Organizer;
 import org.arastreju.sge.security.Domain;
 
+import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
@@ -104,7 +104,7 @@ public class DomainEditPanel extends Panel{
 		descField.add(enableIf(not(isViewMode)));
 		form.add(descField);
 		
-		final CheckBox cb = new CheckBox("masterDomain");
+		final CheckBox cb = new CheckBox("domesticDomain");
 		cb.setEnabled(false);
 		form.add(cb);
 		
@@ -151,7 +151,7 @@ public class DomainEditPanel extends Panel{
 		final AjaxButton create = new RBDefaultButton("create") {
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				final Domain domain = domainModel.getObject();
-				organizer().registerDomain(domain.getUniqueName(), domain.getTitle(), domain.getDescription());
+				organizer().registerDomain(domain);
 				onModelChange(DisplayMode.VIEW);
 				target.add(form);
 				onCreate();
@@ -187,7 +187,7 @@ public class DomainEditPanel extends Panel{
 	// ----------------------------------------------------
 	
 	private void onModelChange(DisplayMode newMode) {
-		if (domainModel.getObject().isMasterDomain()) {
+		if (domainModel.getObject().isDomesticDomain()) {
 			send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.MASTER_DOMAIN));
 		} else {
 			send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.DOMAINS));
@@ -195,7 +195,7 @@ public class DomainEditPanel extends Panel{
 		modeModel.setObject(newMode);
 	}
 	
-	private Organizer organizer() {
-		return provider.getArastejuGate().getOrganizer();
+	private DomainOrganizer organizer() {
+		return provider.getDomainOrganizer();
 	}
 }

@@ -84,7 +84,7 @@ public class TransientDomain implements Domain, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isMasterDomain() {
+	public boolean isDomesticDomain() {
 		return false;
 	}
 

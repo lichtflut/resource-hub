@@ -30,7 +30,7 @@ public class CurrentUserModel extends AbstractReadOnlyModel<User> {
 			public String getObject() {
 				final User current = currentUser();
 				if (current != null) {
-					return current.getEmail();
+					return displayName(current);
 				} else {
 					return "";
 				}
@@ -84,5 +84,17 @@ public class CurrentUserModel extends AbstractReadOnlyModel<User> {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * @param user
+	 * @return The display name.
+	 */
+	public static String displayName(User user) {
+		if (user.getEmail() != null) {
+			return user.getEmail();
+		} else {
+			return user.getName();
+		}
 	}
 }

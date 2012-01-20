@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.services.SecurityService;
+import de.lichtflut.rb.core.services.AuthenticationService;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.ServiceProviderFactory;
 
@@ -54,9 +54,9 @@ public class DefaultServiceProviderFactory implements ServiceProviderFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SecurityService getAuthenitcationService() {
-		logger.info("creating new service provider");
-		return new SecurityServiceImpl(new DefaultRBServiceProvider(config));
+	public AuthenticationService getAuthenitcationService() {
+		logger.info("creating new auth service");
+		return new AuthenticationServiceImpl(new DefaultRBServiceProvider(config));
 	}
 
 }
