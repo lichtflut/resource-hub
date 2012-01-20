@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
+import java.io.Serializable;
+
 import org.arastreju.sge.model.ResourceID;
 
 /**
@@ -16,7 +18,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface Widget {
+public interface WidgetSpec extends Serializable {
 
 	ResourceID getID();
 	
@@ -26,10 +28,14 @@ public interface Widget {
 	
 	String getDescription();
 	
+	Selection getSelection();
+	
 	void setName(String name);
 	
 	void setTitle(String title);
 	
 	void setDescription(String desc);
+	
+	void setSelection(Selection selection);
 	
 }

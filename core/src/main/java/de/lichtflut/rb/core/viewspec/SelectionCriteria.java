@@ -3,20 +3,21 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
-import org.arastreju.ogm.annotations.EntityNode;
+import org.arastreju.sge.query.Query;
 
 /**
  * <p>
- *  Widget showing a list of entities.
+ *  [DESCRIPTION]
  * </p>
  *
  * <p>
- * 	Created Jan 19, 2012
+ * 	Created Jan 20, 2012
  * </p>
  *
  * @author Oliver Tigges
  */
-@EntityNode(type="")
-interface EntityDetailWidget extends Widget {
+public interface SelectionCriteria {
+	
+	void adapt(Query query);
 
 }

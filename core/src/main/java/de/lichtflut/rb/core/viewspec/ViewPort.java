@@ -24,6 +24,6 @@ public interface ViewPort {
 	
 	int getOrder();
 	
-	Widget getWidget();
+	WidgetSpec getWidget();
 
 }
