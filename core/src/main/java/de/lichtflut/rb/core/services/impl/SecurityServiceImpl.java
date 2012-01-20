@@ -3,8 +3,9 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.Set;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.IdentityManagement;
@@ -67,6 +68,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		final String crypted = Crypt.md5Hex(password);
 		final Credential credential = new PasswordCredential(crypted);
 		try {
+			//TODO: check duplicate username BEFORE registering the user!
 			final User registered = identityManagement().register(emailID, credential);
 			if (username != null) {
 				identityManagement().registerAlternateID(registered, username);
@@ -111,49 +113,65 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addRolesToUser(final User user, final Role... roles) {
-		identityManagement().addUserToRoles(user, roles);
+	public void setAlternateID(User user, String alternateID) throws ArastrejuException {
+		ModelingConversation mc = gate().startConversation();
+		IdentityManagement im = identityManagement();
+		ResourceNode userNode = user.getAssociatedResource();
+		mc.attach(userNode);
+		SemanticNode oldAlternateID = getAlternateIDNode(userNode);
+		im.registerAlternateID(user, alternateID);
+		// oldID will only be removed if new ID registered without exception thrown
+		SNOPS.remove(userNode, Aras.IDENTIFIED_BY, oldAlternateID);
+		mc.close();
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void removeRolesFromUser(final User user, final Role... roles) {
-		identityManagement().removeUserFromRoles(user, roles);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Role registerRole(String name) {
-		return identityManagement().registerRole(name);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setAlternateID(User user, String alternateID) {
-		try {
-			//TODO: ERIK_NOTIZ: UNDER CONSTRUCTION
-			identityManagement().registerAlternateID(user, alternateID);
-		} catch (ArastrejuException e) {
-			e.printStackTrace();
+	public String getAlternateID(User user) {
+		String result = "";
+		SemanticNode alternateIDNode = getAlternateIDNode(user.getAssociatedResource());
+		if(alternateIDNode != null) {
+			result = SNOPS.string(alternateIDNode);
 		}
+		return result;
 	}
 	
+	private SemanticNode getAlternateIDNode(ResourceNode userNode) {
+		if (userNode != null) {
+			final SemanticNode uniqueNameNode = SNOPS.fetchObject(userNode, Aras.HAS_UNIQUE_NAME);
+			Set<SemanticNode> identifications = SNOPS.objects(userNode, Aras.IDENTIFIED_BY);
+		    for (SemanticNode identificationNode : identifications) {
+		    	if(!uniqueNameNode.equals(identificationNode)) {
+		    		return identificationNode;
+		    	}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setUserRoles(User user, List<String> roles) {
-		ModelingConversation mc = provider.getArastejuGate().startConversation();
+		ModelingConversation mc = gate().startConversation();
 		IdentityManagement im = identityManagement();
 		mc.attach(user.getAssociatedResource());
 		SNOPS.remove(user.getAssociatedResource(), Aras.HAS_ROLE);
 		for (String current : roles) {
-			addRolesToUser(user, im.registerRole(current));
+			im.addUserToRoles(user, im.registerRole(current));
 		}
 		mc.close();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeAllUserRoles(User user) {
+		setUserRoles(user, new ArrayList<String>());
 	}
 
 	/** 

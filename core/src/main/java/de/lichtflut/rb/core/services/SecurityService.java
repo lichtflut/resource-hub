@@ -3,10 +3,10 @@
  */
 package de.lichtflut.rb.core.services;
 
-import org.arastreju.sge.security.Domain;
 import java.util.List;
 
-import org.arastreju.sge.security.Role;
+import org.arastreju.sge.eh.ArastrejuException;
+import org.arastreju.sge.security.Domain;
 import org.arastreju.sge.security.User;
 
 
@@ -46,39 +46,32 @@ public interface SecurityService {
 	 * @param newPassword
 	 */
 	void setNewPassword(User user, String currentPassword, String newPassword);
-	
-	/**
-	 * Add role(s) to a user.
-	 * @param user The user the roles should be added to.
-	 * @param roles The role(s) that should be added to the user. 
-	 */
-	void addRolesToUser(final User user, final Role... roles);
-	
-	/**
-	 * Remove role(s) from a user.
-	 * @param user The user the roles should be removed from.
-	 * @param roles The role(s) that should be removed from the user. 
-	 */
-	void removeRolesFromUser(final User user, final Role... roles);
-	
-	/**
-	 * Gets a {@link Role} by its name.
-	 * @param name The name of the role.
-	 * @return The {@link Role}.
-	 */
-	Role registerRole(final String name);
 
 	/**
-	 * Change (or register) an AlternateID for a user.
+	 * Set or change an AlternateID for a user.
 	 * @param user The User.
 	 * @param alternateID The alternateID for the user.
+	 * @throws ArastrejuException i.e. when alternateID already in use. 
 	 */
-	void setAlternateID(final User user, final String alternateID);
+	void setAlternateID(final User user, final String alternateID) throws ArastrejuException;
 
+	/**
+	 * Get the AlternateID as String.
+	 * @param user The User.
+	 * @return The AlternateID as String or empty String if user has none.
+	 */
+	String getAlternateID(User user);
+	
 	/**
 	 * Assure that the user has exactly the given roles.
 	 * @param user The user.
 	 * @param roles The roles.
 	 */
-	void setUserRoles(User user, List<String> roles); 
+	void setUserRoles(User user, List<String> roles);
+	
+	/**
+	 * Removes all roles from a user.
+	 * @param user The user the roles should be removed from.
+	 */
+	void removeAllUserRoles(final User user);
 }
