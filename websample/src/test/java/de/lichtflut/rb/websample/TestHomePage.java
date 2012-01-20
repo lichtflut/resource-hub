@@ -8,6 +8,8 @@ import junit.framework.TestCase;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Before;
+import org.junit.Ignore;
 
 import de.lichtflut.rb.websample.DashboardPage;
 import de.lichtflut.rb.websample.WebSampleApplication;
@@ -15,10 +17,10 @@ import de.lichtflut.rb.websample.WebSampleApplication;
 /**
  * Simple test using the WicketTester.
  */
-public class TestHomePage extends TestCase{
+public class TestHomePage {
 	private WicketTester tester;
 
-	@Override
+	@Before
 	public void setUp(){
 
 		final WebSampleApplication app = new WebSampleApplication() {
@@ -34,9 +36,7 @@ public class TestHomePage extends TestCase{
 		tester = new WicketTester(app);
 	}
 
-	/**
-	 *
-	 */
+	@Ignore
 	public void testRenderMyPage(){
 		//start and render the test page
 		tester.startPage(DashboardPage.class);
