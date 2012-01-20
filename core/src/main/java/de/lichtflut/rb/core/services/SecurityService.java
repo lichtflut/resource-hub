@@ -44,6 +44,12 @@ public interface SecurityService {
 	 * @param newPassword
 	 */
 	void setNewPassword(User user, String currentPassword, String newPassword);
+
+	/**
+	 * Resets the password for a User by a provided Email address.
+	 * @param user
+	 */
+	void resetPasswordForUser(User user);
 	
 	/**
 	 * Add role(s) to a user.
@@ -58,5 +64,6 @@ public interface SecurityService {
 	 * @return The {@link Role}.
 	 */
 	public Role registerRole(final String name);
+
 
 }

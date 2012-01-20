@@ -7,6 +7,7 @@ import org.arastreju.sge.persistence.ResourceResolver;
 
 import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.MessagingService;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
@@ -32,6 +33,7 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	private EntityManager entityManager;
 	private TypeManager typeManager;
 	private SecurityService securityService;
+	private MessagingService messagingService;
 	
 	// ----------------------------------------------------
 
@@ -43,6 +45,7 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		schemaManager = new SchemaManagerImpl(this);
 		entityManager = new EntityManagerImpl(this);
 		typeManager = new TypeManagerImpl(this);
+		messagingService = new MessagingServiceImpl(this);
 		securityService = newSecurityService();
 	}
 
@@ -101,6 +104,13 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		return getArastejuGate().startConversation();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public MessagingService getMessagingService(){
+		return messagingService;
+	}
 	// ----------------------------------------------------
 	
 	/**

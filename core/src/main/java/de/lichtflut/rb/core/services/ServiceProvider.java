@@ -68,5 +68,10 @@ public interface ServiceProvider {
 	 * @return A resource resolver.
 	 */
 	ResourceResolver getResourceResolver();
+
+	/**
+	 * @return The messaging service
+	 */
+	MessagingService getMessagingService();
 	
 }

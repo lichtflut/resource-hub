@@ -3,11 +3,20 @@
  */
 package de.lichtflut.rb.webck.components.organizer;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.security.User;
+
+import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
 
 /**
  * <p>
@@ -23,6 +32,9 @@ import org.apache.wicket.model.Model;
 public class ResetPasswordPanel extends Panel {
 
 	private IModel<String> emailModel;
+	
+	@SpringBean
+	private ServiceProvider provider;
 
 	// ---------------- Constructor -------------------------
 
@@ -36,10 +48,38 @@ public class ResetPasswordPanel extends Panel {
 		this.emailModel = Model.of("");
 		Form form = new Form("form");
 		
-		TextField<String> emailTField = new TextField<String>("email", emailModel);
+		form.add(new FeedbackPanel("feedback"));
+		form.add(createInputField("name"));
+		form.add(createButton("button"));
 		
-		form.add(emailTField);
 		this.add(form);
+	}
+
+	/**
+	 * @param string
+	 * @return
+	 */
+	private AjaxButton createButton(String id) {
+		AjaxButton button = new RBStandardButton(id) {
+			@Override
+			protected void applyActions(AjaxRequestTarget target, Form<?> form){
+				if(!emailModel.getObject().isEmpty()){
+					User user = provider.getArastejuGate().getIdentityManagement().findUser(emailModel.getObject());
+					if(user == null) {
+						error(getString("global.message.no-user-found"));
+					} else {
+						provider.getSecurityService().resetPasswordForUser(user);
+					}
+				}
+				RBAjaxTarget.add(form);
+			}
+		};
+		return button;
+	}
+
+	private TextField<String> createInputField(String id) {
+		TextField<String> emailTField = new TextField<String>("email", emailModel);
+		return emailTField;
 	}
 
 }

@@ -132,9 +132,18 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			if(!userNode.isAttached()){
 				userNode = getProvider().getResourceResolver().resolve(userNode);
 			}
-			SNValue password = new SNValue(ElementaryDataType.STRING, newPassword);
-			SNOPS.assure(userNode, Aras.HAS_CREDENTIAL, password, RB.PRIVATE_CONTEXT);
+			setNewPassword(newPassword, userNode);
 		}
+	}
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void resetPasswordForUser(User user) {
+		String generatedPwd = Crypt.md5Hex("changed");
+		setNewPassword(generatedPwd, user.getAssociatedResource());
+		getProvider().getMessagingService().getEmailService().sendNewPasswordforUser(user);
 	}
 	
 	// ----------------------------------------------------
@@ -176,6 +185,15 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	
 	private IdentityManagement identityManagement() {
 		return getProvider().getArastejuGate().getIdentityManagement();
+	}
+
+	/**
+	 * @param newPassword
+	 * @param userNode
+	 */
+	private void setNewPassword(String newPassword, ResourceNode userNode) {
+		SNValue password = new SNValue(ElementaryDataType.STRING, newPassword);
+		SNOPS.assure(userNode, Aras.HAS_CREDENTIAL, password, RB.PRIVATE_CONTEXT);
 	}
 	
 }
