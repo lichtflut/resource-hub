@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.components;
+package de.lichtflut.rb.websample.components;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -13,8 +13,8 @@ import org.odlabs.wiquery.core.javascript.JsScope;
 import org.odlabs.wiquery.core.javascript.JsScopeContext;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 
-import de.lichtflut.rb.web.RBBasePage;
 import de.lichtflut.rb.webck.components.fields.DataPickerField;
+import de.lichtflut.rb.websample.base.RBBasePage;
 
 /**
  * <p>

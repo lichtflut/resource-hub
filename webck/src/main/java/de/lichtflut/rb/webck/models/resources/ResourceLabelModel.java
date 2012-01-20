@@ -25,11 +25,19 @@ public class ResourceLabelModel extends DerivedModel<String, ResourceID> {
 
 	/**
 	 * Constuctor.
-	 * @param fiel The field model.
+	 * @param model The resource model.
 	 */
 	@SuppressWarnings("unchecked")
 	public ResourceLabelModel(final IModel<? extends ResourceID> model) {
 		super((IModel<ResourceID>) model);
+	}
+	
+	/**
+	 * Constuctor.
+	 * @param resource The resource.
+	 */
+	public ResourceLabelModel(ResourceID resource) {
+		super(resource);
 	}
 
 	// ----------------------------------------------------

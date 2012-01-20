@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.entities;
+package de.lichtflut.rb.websample.entities;
 
 import java.util.Collection;
 
@@ -12,12 +12,12 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.web.RBBasePage;
-import de.lichtflut.rb.webck.components.CKLink;
-import de.lichtflut.rb.webck.components.CKLinkType;
+import de.lichtflut.rb.webck.components.listview.ReferenceLink;
 import de.lichtflut.rb.webck.components.navigation.NavigationBar;
 import de.lichtflut.rb.webck.components.navigation.NavigationNode;
 import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
+import de.lichtflut.rb.websample.base.RBBasePage;
 
 /**
  * <p>
@@ -74,8 +74,7 @@ public class EntitySamplesBasePage extends RBBasePage {
 		for (SNClass type : types) {
 			PageParameters param = new PageParameters();
 			param.add("type", type);
-			CKLink link = new CKLink("link", type.getQualifiedName().getSimpleName(),
-					EntityOverviewPage.class, param, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS);
+			ReferenceLink link = new ReferenceLink("link", EntityOverviewPage.class, param, new ResourceLabelModel(type));
 			parent.addChild(new NavigationNodePanel(link));
 		}
 		menuLeft.addChild(parent);

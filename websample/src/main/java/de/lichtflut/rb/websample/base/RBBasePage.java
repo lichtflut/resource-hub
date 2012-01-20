@@ -1,25 +1,28 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web;
+package de.lichtflut.rb.websample.base;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.odlabs.wiquery.core.resources.CoreJavaScriptResourceReference;
 
-import de.lichtflut.rb.web.components.ComponentsCatalogPage;
-import de.lichtflut.rb.web.entities.EntityOverviewPage;
-import de.lichtflut.rb.web.infomanagement.InformationManagementPage;
-import de.lichtflut.rb.web.types.TypeSystemPage;
-import de.lichtflut.rb.webck.components.CKLink;
-import de.lichtflut.rb.webck.components.CKLinkType;
+import de.lichtflut.rb.webck.components.listview.ReferenceLink;
 import de.lichtflut.rb.webck.components.navigation.NavigationBar;
 import de.lichtflut.rb.webck.components.navigation.NavigationNode;
 import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
+import de.lichtflut.rb.websample.DashboardPage;
+import de.lichtflut.rb.websample.components.ComponentsCatalogPage;
+import de.lichtflut.rb.websample.entities.EntityOverviewPage;
+import de.lichtflut.rb.websample.infomanagement.InformationManagementPage;
+import de.lichtflut.rb.websample.types.TypeSystemPage;
 
 /**
  * <p>
@@ -62,8 +65,8 @@ public abstract class RBBasePage extends WebPage {
 
 	// -----------------------------------------------------
 
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void renderHead(final IHeaderResponse response) {
@@ -83,28 +86,19 @@ public abstract class RBBasePage extends WebPage {
 		add(titleLabel);
 
 		final NavigationBar mainNavigation = new NavigationBar("mainNavigation");
-		mainNavigation.addChild(new NavigationNodePanel(
-				new CKLink("link", "Home", RSPage.class, null, CKLinkType.BOOKMARKABLE_WEB_PAGE_CLASS)));
-
+		
+		mainNavigation.addChild(createNavigationNode(Model.of("Home"), DashboardPage.class));
 		// Entity Pages
-		NavigationNode entityPages = new NavigationNodePanel(
-				new CKLink("link", "Entities", EntityOverviewPage.class, CKLinkType.WEB_PAGE_CLASS));
-		mainNavigation.addChild(entityPages);
+		mainNavigation.addChild(createNavigationNode(Model.of("Entities"), EntityOverviewPage.class));
 		
 		// Type System
-		final NavigationNode typeSystem = new NavigationNodePanel(
-				new CKLink("link", "Type-System", TypeSystemPage.class, CKLinkType.WEB_PAGE_CLASS));
-		mainNavigation.addChild(typeSystem);
+		mainNavigation.addChild(createNavigationNode(Model.of("Type-System"), TypeSystemPage.class));
 		
 		// Information Management 
-		final NavigationNode infoMgmt = new NavigationNodePanel(
-				new CKLink("link", "Info-Mgmt", InformationManagementPage.class, CKLinkType.WEB_PAGE_CLASS));
-		mainNavigation.addChild(infoMgmt);
+		mainNavigation.addChild(createNavigationNode(Model.of("Info-Mgmt"), InformationManagementPage.class));
 
 		// Components Catalog
-		final NavigationNode compCat = new NavigationNodePanel(
-				new CKLink("link", "Catalog", ComponentsCatalogPage.class, CKLinkType.WEB_PAGE_CLASS));
-		mainNavigation.addChild(compCat);
+		mainNavigation.addChild(createNavigationNode(Model.of("Catalog"), ComponentsCatalogPage.class));
 		
 		add(mainNavigation);
 
@@ -115,5 +109,10 @@ public abstract class RBBasePage extends WebPage {
 	protected Component createSideBar(final String id) {
 		return new WebMarkupContainer(id);
 	}
+	
+	private NavigationNode createNavigationNode(IModel<String> label, Class<? extends Page> pageClass) {
+		return new NavigationNodePanel(new ReferenceLink("link", pageClass,label));
+	}
+	
 
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.types;
+package de.lichtflut.rb.websample.types;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -17,7 +17,6 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.web.RBBasePage;
 import de.lichtflut.rb.webck.components.modaldialog.ModalDialog;
 import de.lichtflut.rb.webck.components.typesystem.CreateResourcePanel;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
@@ -28,6 +27,7 @@ import de.lichtflut.rb.webck.components.typesystem.TypeDefBrowserPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeDefEditorPanel;
 import de.lichtflut.rb.webck.models.types.PublicTypeDefListModel;
 import de.lichtflut.rb.webck.models.types.SNClassListModel;
+import de.lichtflut.rb.websample.base.RBBasePage;
 
 /**
  * <p>

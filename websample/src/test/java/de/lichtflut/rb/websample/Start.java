@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web;
+package de.lichtflut.rb.websample;
 
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;

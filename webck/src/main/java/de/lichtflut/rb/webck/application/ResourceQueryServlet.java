@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.application;
 
@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.util.crypt.Base64;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -24,6 +25,8 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -32,7 +35,7 @@ import de.lichtflut.rb.webck.common.TermSearcher.Mode;
 
 /**
  * <p>
- *  Query Servlet.
+ *  Query Servlet. Performs a HTTP GET query and returns a list of JSon nodes a result. 
  * </p>
  *
  * <p>
@@ -41,7 +44,7 @@ import de.lichtflut.rb.webck.common.TermSearcher.Mode;
  *
  * @author Oliver Tigges
  */
-public abstract class ResourceQueryServlet extends HttpServlet {
+public class ResourceQueryServlet extends HttpServlet {
 	
 	public final static String QUERY_URI = "/uri";
 	
@@ -59,7 +62,11 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 	
 	public final static String QUERY_PARAM = "query";
 	
+	// ----------------------------------------------------
+	
 	private Logger logger = LoggerFactory.getLogger(ResourceQueryServlet.class);
+	
+	private ServiceProvider provider;
 	
 	// -----------------------------------------------------
 	
@@ -156,9 +163,19 @@ public abstract class ResourceQueryServlet extends HttpServlet {
 		}
 	}
 	
-	// -----------------------------------------------------
+	// ----------------------------------------------------
 	
-	protected abstract ServiceProvider getServiceProvider() throws ServletException;
+	private ServiceProvider getServiceProvider() throws ServletException {
+		if (!Session.exists() || !RBWebSession.get().isAuthenticated()) {
+			throw new ServletException("Unauthenitcated access");
+		}
+		if (provider == null) {
+			final WebApplicationContext wac = 
+					WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+			provider = wac.getBean(ServiceProvider.class);
+		}
+		return provider;
+	}
 	
 	// -----------------------------------------------------
 	

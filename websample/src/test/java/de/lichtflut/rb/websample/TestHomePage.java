@@ -1,13 +1,16 @@
 /*
  * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web;
+package de.lichtflut.rb.websample;
 
 import junit.framework.TestCase;
 
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.util.tester.WicketTester;
+
+import de.lichtflut.rb.websample.DashboardPage;
+import de.lichtflut.rb.websample.WebSampleApplication;
 
 /**
  * Simple test using the WicketTester.
@@ -18,7 +21,7 @@ public class TestHomePage extends TestCase{
 	@Override
 	public void setUp(){
 
-		final WebsampleApplication app = new WebsampleApplication() {
+		final WebSampleApplication app = new WebSampleApplication() {
 			@Override
 			protected void init() {
 				initWebsampleApp();
@@ -36,12 +39,12 @@ public class TestHomePage extends TestCase{
 	 */
 	public void testRenderMyPage(){
 		//start and render the test page
-		tester.startPage(RSPage.class);
+		tester.startPage(DashboardPage.class);
 
 		//assert rendered page class
-		tester.assertRenderedPage(RSPage.class);
+		tester.assertRenderedPage(DashboardPage.class);
 
 		//assert rendered label component
-		tester.assertLabel("title", "Resource Schema");
+		tester.assertLabel("title", "Dashboard");
 	}
 }
