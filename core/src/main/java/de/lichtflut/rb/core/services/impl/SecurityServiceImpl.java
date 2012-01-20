@@ -8,8 +8,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.arastreju.sge.IdentityManagement;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.eh.ArastrejuException;
@@ -97,8 +99,41 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationServi
 	 * {@inheritDoc}
 	 */
 	@Override
+	public void removeRolesFromUser(final User user, final Role... roles) {
+		identityManagement().removeUserFromRoles(user, roles);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Role registerRole(String name) {
 		return identityManagement().registerRole(name);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setAlternateID(User user, String alternateID) {
+		try {
+			//TODO: ERIK_NOTIZ: UNDER CONSTRUCTION
+			identityManagement().registerAlternateID(user, alternateID);
+		} catch (ArastrejuException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void setUserRoles(User user, List<String> roles) {
+		ModelingConversation mc = provider.getArastejuGate().startConversation();
+		IdentityManagement im = identityManagement();
+		mc.attach(user.getAssociatedResource());
+		SNOPS.remove(user.getAssociatedResource(), Aras.HAS_ROLE);
+		for (String current : roles) {
+			addRolesToUser(user, im.registerRole(current));
+		}
+		mc.close();
 	}
 
 	/** 
