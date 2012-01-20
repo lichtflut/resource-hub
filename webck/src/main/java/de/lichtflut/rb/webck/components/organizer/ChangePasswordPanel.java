@@ -24,6 +24,8 @@ import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.CurrentUserModel;
 
 /**
@@ -37,6 +39,7 @@ import de.lichtflut.rb.webck.models.CurrentUserModel;
 @SuppressWarnings("rawtypes")
 public class ChangePasswordPanel extends Panel {
 
+	// Enforced RegEx for passwords
 	private final String PASSWORD_PATTERN = "^(?=.*[a-z]).{4,16}$";
 	
 	private IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
@@ -63,14 +66,14 @@ public class ChangePasswordPanel extends Panel {
 		
 		populateForm(form);
 		
-		form.add(new FeedbackPanel("feedback"));
 		form.add(createSaveButton("save", form));
+		form.add(createCancelButton("cancel", form));
 		form.add(createEditButton("edit", form));
 		this.add(form);
 	}
 
 	// ------------------------------------------------------
-	
+
 	/**
 	 * Populate the form.
 	 * @param form
@@ -80,8 +83,11 @@ public class ChangePasswordPanel extends Panel {
 		PasswordTextField currentPassField = new PasswordTextField("current", currentPassword);
 		PasswordTextField newPassField = new PasswordTextField("newPassword", newPassword);
 		PasswordTextField confirmPassField = new PasswordTextField("confirmPassword", confirmedPassword);
+		
 		newPassField.add(new PatternValidator(PASSWORD_PATTERN));
+		
 		container.add(currentPassField, newPassField, confirmPassField);
+		container.add(new FeedbackPanel("feedback"));
 		container.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
 		form.add(new EqualPasswordInputValidator(newPassField, confirmPassField));
 		form.add(container);
@@ -93,45 +99,53 @@ public class ChangePasswordPanel extends Panel {
 	 * @return a {@link AjaxButton}
 	 */
 	private AjaxButton createSaveButton(String id, Form form) {
-		AjaxButton save = new AjaxButton(id, form) {
+		AjaxButton save = new RBStandardButton(id){
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form){
 				CurrentUserModel user = new CurrentUserModel();
 				setNewPassword(user.getObject(), currentPassword.getObject(), newPassword.getObject());
 				mode.setObject(DisplayMode.VIEW);
 				RBAjaxTarget.add(form);
 			}
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				RBAjaxTarget.add(form);
+			
+			private void setNewPassword(User user, String currentPassword, String newPassword) {
+				String currentPwd = Crypt.md5Hex(currentPassword);
+				String newPwd = Crypt.md5Hex(newPassword);
+				provider.getSecurityService().setNewPassword(user, currentPwd, newPwd);
 			}
 		};
 		save.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
 		return save;
 	}
 
-	private void setNewPassword(User user, String currentPassword, String newPassword) {
-		String currentPwd = Crypt.md5Hex(currentPassword);
-		String newPwd = Crypt.md5Hex(newPassword);
-		provider.getSecurityService().setNewPassword(user, currentPwd, newPwd);
+	
+	/**
+	 * @param string
+	 * @param form
+	 * @return
+	 */
+	private RBCancelButton createCancelButton(String id, Form form) {
+		RBCancelButton cancel = new RBCancelButton(id){
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+				mode.setObject(DisplayMode.VIEW);
+				RBAjaxTarget.add(form);
+			}
+		};
+		cancel.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
+		return cancel;
 	}
-
+	
 	/**
 	 * @param string - wicket:id 
 	 * @param form 
 	 * @return a {@link AjaxButton}
 	 */
 	private AjaxButton createEditButton(String id, Form form) {
-		AjaxButton edit = new AjaxButton(id, form) {
-
+		AjaxButton edit = new RBStandardButton(id){
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form){
 				mode.setObject(DisplayMode.EDIT);
-				target.add(form);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
+				RBAjaxTarget.add(form);
 			}
 		};
 		edit.add(visibleIf(areEqual(mode, DisplayMode.VIEW)));
