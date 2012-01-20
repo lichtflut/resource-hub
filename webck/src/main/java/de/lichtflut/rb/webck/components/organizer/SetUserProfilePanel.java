@@ -10,7 +10,7 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -19,18 +19,18 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.persistence.ResourceResolver;
 import org.arastreju.sge.security.User;
 import org.arastreju.sge.security.impl.UserImpl;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import de.lichtflut.rb.webck.browsing.JumpTarget;
@@ -39,6 +39,7 @@ import de.lichtflut.rb.webck.browsing.ResourceAttributeApplyAction;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
@@ -59,6 +60,9 @@ public abstract class SetUserProfilePanel extends Panel {
 	private IModel<Boolean> hasProfile;
 	private IModel<ResourceID> entityPickerModel;
 	private DerivedModel<ResourceID, User> profileModel;
+
+	@SpringBean
+	private ServiceProvider provider;
 	
 	// ---------------- Constructor -------------------------
 	
@@ -98,10 +102,6 @@ public abstract class SetUserProfilePanel extends Panel {
 	 */
 	protected abstract void onResourceLinkClicked(ResourceNode node);
 	
-	protected abstract SchemaManager getSchemaManager();
-	
-	protected abstract ResourceResolver getResourceResolver();
-
 	// ------------------------------------------------------
 
 	/**
@@ -144,7 +144,7 @@ public abstract class SetUserProfilePanel extends Panel {
 
 			@Override
 			public User load() {
-				return new UserImpl(getResourceResolver().resolve(user.getObject().getAssociatedResource()));
+				return new UserImpl(provider.getResourceResolver().resolve(user.getObject().getAssociatedResource()));
 			}
 		};
 	}
@@ -247,7 +247,6 @@ public abstract class SetUserProfilePanel extends Panel {
 					RBAjaxTarget.add(form);
 				}
 			}
-
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				RBAjaxTarget.add(SetUserProfilePanel.this);
@@ -263,16 +262,12 @@ public abstract class SetUserProfilePanel extends Panel {
 	 * @param string
 	 * @return
 	 */
-	private AjaxFallbackButton createEditButton(String id, Form form) {
-		AjaxFallbackButton edit = new AjaxFallbackButton(id, form) {
+	private AjaxButton createEditButton(String id, Form form) {
+		AjaxButton edit = new RBStandardButton(id) {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(AjaxRequestTarget target, Form<?> form){
 				mode.setObject(DisplayMode.EDIT);
 				RBAjaxTarget.add(form);
-			}
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				onSubmit(target, form);
 			}
 		};
 		edit.add(visibleIf(areEqual(mode, DisplayMode.VIEW)));
@@ -285,18 +280,13 @@ public abstract class SetUserProfilePanel extends Panel {
 	 * @param form
 	 * @return
 	 */
-	protected AjaxFallbackButton createSaveButton(String id, final Form<?> form) {
-		final AjaxFallbackButton save = new AjaxFallbackButton(id, form) {
+	protected AjaxButton createSaveButton(String id, final Form<?> form) {
+		final AjaxButton save = new RBStandardButton(id) {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				ResourceNode userNode = getResourceResolver().resolve(user.getObject().getAssociatedResource());
+			protected void applyActions(AjaxRequestTarget target, Form<?> form){
+				ResourceNode userNode = provider.getResourceResolver().resolve(user.getObject().getAssociatedResource());
 				createRelationship(userNode, entityPickerModel.getObject());
 				mode.setObject(DisplayMode.VIEW);
-				RBAjaxTarget.add(form);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
 				RBAjaxTarget.add(form);
 			}
 		};

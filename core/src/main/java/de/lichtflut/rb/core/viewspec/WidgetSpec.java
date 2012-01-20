@@ -3,17 +3,13 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
-import static de.lichtflut.rb.core.viewspec.ViewSpec.*;
-
 import java.io.Serializable;
-import java.util.Collection;
 
-import org.arastreju.ogm.annotations.EntityNode;
 import org.arastreju.sge.model.ResourceID;
 
 /**
  * <p>
- *  Definition of a dynamic view.
+ *  Definition of a widget.
  * </p>
  *
  * <p>
@@ -22,8 +18,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-@EntityNode(type=PERSPECTIVE_URI)
-public interface Perspective extends Serializable {
+public interface WidgetSpec extends Serializable {
 
 	ResourceID getID();
 	
@@ -33,12 +28,14 @@ public interface Perspective extends Serializable {
 	
 	String getDescription();
 	
+	Selection getSelection();
+	
 	void setName(String name);
 	
 	void setTitle(String title);
 	
 	void setDescription(String desc);
 	
-	Collection<ViewPort> getViewPorts();
-
+	void setSelection(Selection selection);
+	
 }

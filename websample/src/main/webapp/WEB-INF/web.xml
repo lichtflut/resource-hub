@@ -24,7 +24,7 @@
  		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>de.lichtflut.rb.web.WebsampleApplication</param-value>
+			<param-value>de.lichtflut.rb.websample.WebSampleApplication</param-value>
  		</init-param>
  		<init-param>
 	        <param-name>applicationFactoryClassName</param-name>
@@ -51,7 +51,7 @@
 	
 	<servlet>
 	   <servlet-name>QueryServlet</servlet-name>
-	   <servlet-class>de.lichtflut.rb.web.servlets.WebsampleResourceQueryServlet</servlet-class>
+	   <servlet-class>de.lichtflut.rb.webck.application.ResourceQueryServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>

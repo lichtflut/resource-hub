@@ -28,7 +28,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2012-01-16 09:57:34 +0000</string>
+	<string>2012-01-20 07:20:24 +0000</string>
 	<key>Modifier</key>
 	<string>Oliver Tigges</string>
 	<key>NotesVisible</key>
@@ -815,8 +815,8 @@
 					<integer>23</integer>
 					<key>Points</key>
 					<array>
-						<string>{279.63943, 217.5}</string>
-						<string>{279.62579, 373.5}</string>
+						<string>{448.64655, 246.5}</string>
+						<string>{448.65039, 402.5}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -848,8 +848,8 @@
 					<integer>22</integer>
 					<key>Points</key>
 					<array>
-						<string>{433.35498, 437.00003}</string>
-						<string>{359.64502, 437.00003}</string>
+						<string>{606.20996, 435.51477}</string>
+						<string>{528.64496, 435.52911}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -871,7 +871,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{433.85501, 419}, {159, 36}}</string>
+					<string>{{606.70996, 417.5}, {159, 36}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>ID</key>
@@ -899,7 +899,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{200.14499, 374}, {159, 126}}</string>
+					<string>{{369.14496, 403}, {159, 65}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>ID</key>
@@ -939,8 +939,8 @@
 					<integer>18</integer>
 					<key>Points</key>
 					<array>
-						<string>{462.50012, 149.8261}</string>
-						<string>{359.6449, 152.17389}</string>
+						<string>{621.5, 182.97185}</string>
+						<string>{528.64502, 182.93918}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -972,8 +972,8 @@
 					<integer>17</integer>
 					<key>Points</key>
 					<array>
-						<string>{471.64621, 101.13274}</string>
-						<string>{359.62708, 131.97704}</string>
+						<string>{630.48309, 124.15488}</string>
+						<string>{528.62109, 157.33981}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -995,7 +995,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{463, 130}, {159, 36}}</string>
+					<string>{{622, 165}, {159, 36}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>ID</key>
@@ -1023,7 +1023,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{458, 65}, {159, 36}}</string>
+					<string>{{606.70996, 88}, {159, 36}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>ID</key>
@@ -1061,8 +1061,8 @@
 					<integer>14</integer>
 					<key>Points</key>
 					<array>
-						<string>{353.39554, 216.85704}</string>
-						<string>{440.00732, 290.6756}</string>
+						<string>{522.39337, 245.85776}</string>
+						<string>{609.00079, 319.67566}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1084,7 +1084,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{382, 291}, {159, 36}}</string>
+					<string>{{551, 320}, {159, 36}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>ID</key>
@@ -1122,8 +1122,8 @@
 					<integer>12</integer>
 					<key>Points</key>
 					<array>
-						<string>{210.51868, 217.33778}</string>
-						<string>{141.40654, 280.66257}</string>
+						<string>{379.49173, 246.33769}</string>
+						<string>{310.35278, 309.66229}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1145,7 +1145,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{26, 281}, {159, 65}}</string>
+					<string>{{195, 310}, {159, 65}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>ID</key>
@@ -1185,8 +1185,8 @@ functional |\'a0non-functional}</string>
 					<integer>10</integer>
 					<key>Points</key>
 					<array>
-						<string>{199.66341, 131.67157}</string>
-						<string>{151.16785, 118.13309}</string>
+						<string>{368.6633, 160.75368}</string>
+						<string>{319.69678, 147.13399}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1218,8 +1218,8 @@ functional |\'a0non-functional}</string>
 					<integer>9</integer>
 					<key>Points</key>
 					<array>
-						<string>{359.62213, 179.06091}</string>
-						<string>{451.49921, 207.85068}</string>
+						<string>{528.62213, 208.05211}</string>
+						<string>{620.55914, 236.85054}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1251,8 +1251,8 @@ functional |\'a0non-functional}</string>
 					<integer>8</integer>
 					<key>Points</key>
 					<array>
-						<string>{199.66521, 177.4606}</string>
-						<string>{147.17072, 192.8589}</string>
+						<string>{368.66525, 206.48166}</string>
+						<string>{316.2887, 221.85915}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1274,7 +1274,7 @@ functional |\'a0non-functional}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{6, 82}, {159, 36}}</string>
+					<string>{{175, 111}, {159, 36}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>ID</key>
@@ -1302,7 +1302,7 @@ functional |\'a0non-functional}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{6, 193}, {159, 36}}</string>
+					<string>{{175, 222}, {159, 36}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>ID</key>
@@ -1330,7 +1330,7 @@ functional |\'a0non-functional}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{430, 208}, {159, 36}}</string>
+					<string>{{599, 237}, {159, 36}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>ID</key>
@@ -1358,7 +1358,7 @@ functional |\'a0non-functional}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{200.14499, 91}, {159, 126}}</string>
+					<string>{{369.14499, 120}, {159, 126}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>ID</key>
@@ -1490,8 +1490,8 @@ functional |\'a0non-functional}</string>
 					<integer>43</integer>
 					<key>Points</key>
 					<array>
-						<string>{321.65512, 187.12543}</string>
-						<string>{232.52138, 111.34642}</string>
+						<string>{321.66516, 187.12209}</string>
+						<string>{232.55301, 111.34623}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1523,8 +1523,8 @@ functional |\'a0non-functional}</string>
 					<integer>42</integer>
 					<key>Points</key>
 					<array>
-						<string>{391.3504, 186.5}</string>
-						<string>{391.16348, 111.52229}</string>
+						<string>{391.319, 186.5}</string>
+						<string>{391.0928, 111.52229}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1556,8 +1556,8 @@ functional |\'a0non-functional}</string>
 					<integer>41</integer>
 					<key>Points</key>
 					<array>
-						<string>{461.39258, 187.1414}</string>
-						<string>{550.62891, 111.34731}</string>
+						<string>{461.34027, 187.12393}</string>
+						<string>{550.46423, 111.34633}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1589,8 +1589,8 @@ functional |\'a0non-functional}</string>
 					<integer>40</integer>
 					<key>Points</key>
 					<array>
-						<string>{315.35199, 246.51398}</string>
-						<string>{202.79602, 246.52637}</string>
+						<string>{315.35199, 246.50696}</string>
+						<string>{202.79602, 246.50896}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1865,8 +1865,8 @@ functional |\'a0non-functional}</string>
 					<integer>32</integer>
 					<key>Points</key>
 					<array>
-						<string>{310.81525, 353.59988}</string>
-						<string>{346.17932, 306.40991}</string>
+						<string>{310.88345, 353.60037}</string>
+						<string>{346.36768, 306.41052}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -1898,8 +1898,8 @@ functional |\'a0non-functional}</string>
 					<integer>31</integer>
 					<key>Points</key>
 					<array>
-						<string>{455.17249, 353.5697}</string>
-						<string>{427.29343, 306.4404}</string>
+						<string>{455.11838, 353.57004}</string>
+						<string>{427.14438, 306.44092}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -2236,7 +2236,7 @@ functional |\'a0non-functional}</string>
 	<key>WindowInfo</key>
 	<dict>
 		<key>CurrentSheet</key>
-		<integer>3</integer>
+		<integer>2</integer>
 		<key>ExpandedCanvases</key>
 		<array>
 			<dict>
@@ -2259,7 +2259,7 @@ functional |\'a0non-functional}</string>
 		<key>SidebarWidth</key>
 		<integer>120</integer>
 		<key>VisibleRegion</key>
-		<string>{{-253, -80}, {1289, 719}}</string>
+		<string>{{-86, 0}, {1289, 719}}</string>
 		<key>Zoom</key>
 		<real>1</real>
 		<key>ZoomValues</key>
