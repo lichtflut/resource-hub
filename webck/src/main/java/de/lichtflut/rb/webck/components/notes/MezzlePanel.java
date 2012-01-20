@@ -9,7 +9,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
-import org.arastreju.sge.SNOPS;
+import static org.arastreju.sge.SNOPS.*;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.DC;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -50,7 +50,7 @@ public abstract class MezzlePanel extends TypedPanel<ResourceNode> {
 		add(new Label("creator", new DerivedModel<String, SemanticNode>(new ResourcePropertyModel(model, DC.CREATOR)) {
 			@Override
 			protected String derive(SemanticNode original) {
-				return SNOPS.fetchObject(original.asResource(), Aras.HAS_EMAIL).toString();
+				return string(fetchObject(original.asResource(), Aras.HAS_EMAIL));
 			}
 		}));
 		
