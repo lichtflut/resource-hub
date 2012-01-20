@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components;
+package de.lichtflut.rb.webck.components.fields;
 
 import java.util.Arrays;
 import java.util.List;

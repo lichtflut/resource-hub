@@ -12,7 +12,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.webck.components.EnumDropDownChoice;
+import de.lichtflut.rb.webck.components.fields.EnumDropDownChoice;
 
 /**
  * 

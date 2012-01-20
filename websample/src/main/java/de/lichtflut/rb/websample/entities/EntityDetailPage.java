@@ -15,7 +15,6 @@ import org.arastreju.sge.model.SimpleResourceID;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
-import de.lichtflut.rb.webck.components.IFeedbackContainerProvider;
 import de.lichtflut.rb.webck.components.ResourceBrowsingPanel;
 import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 
@@ -32,7 +31,7 @@ import de.lichtflut.rb.webck.components.editor.VisualizationMode;
  * @author Oliver Tigges
  */
 @SuppressWarnings("serial")
-public class EntityDetailPage extends EntitySamplesBasePage implements IFeedbackContainerProvider {
+public class EntityDetailPage extends EntitySamplesBasePage {
 
 	public static final String PARAM_RESOURCE_ID = "rid";
 	public static final String PARAM_RESOURCE_TYPE = "type";
@@ -71,13 +70,6 @@ public class EntityDetailPage extends EntitySamplesBasePage implements IFeedback
 		}
 	}
 
-	// ----------------------------------------------------
-	
-	@Override
-	public FeedbackPanel getFeedbackContainer() {
-		return (FeedbackPanel) get("feedback");
-	}
-	
 	// ----------------------------------------------------
 	
 	private Component initBrowser(final EntityHandle handle, final boolean readonly) {
