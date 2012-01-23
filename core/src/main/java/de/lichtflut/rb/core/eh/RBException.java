@@ -25,8 +25,8 @@ public class RBException extends Exception {
 	}
 
 	/**
-	 * @param invalidPassword
-	 * @param string
+	 * @param errorCode
+	 * @param msg
 	 */
 	public RBException(long errorCode, String msg) {
 		super(msg);

@@ -86,11 +86,11 @@ public class ChangePasswordPanel extends Panel {
 		PasswordTextField confirmPassField = new PasswordTextField("confirmPassword", confirmedPassword);
 		
 		newPassField.add(new PatternValidator(PASSWORD_PATTERN));
+		form.add(new EqualPasswordInputValidator(newPassField, confirmPassField));
 		
 		container.add(currentPassField, newPassField, confirmPassField);
 		container.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
 		form.add(new FeedbackPanel("feedback"));
-		form.add(new EqualPasswordInputValidator(newPassField, confirmPassField));
 		form.add(container);
 	}
 
@@ -123,7 +123,6 @@ public class ChangePasswordPanel extends Panel {
 		save.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
 		return save;
 	}
-
 	
 	/**
 	 * @param string
