@@ -20,7 +20,14 @@ public class MessagingServiceImpl implements MessagingService {
 	private EmailService emailService;
 	
 	public MessagingServiceImpl(ServiceProvider provider){
-		this.emailService = new EmailServiceImpl(provider);
+		this.emailService = new EmailServiceImpl(){
+
+			@Override
+			protected String getDefaultSender() {
+				// TODO Auto-generated method stub
+				return "rknox@lichtflut.de";
+			}
+		};
 	}
 	
 	/** 
