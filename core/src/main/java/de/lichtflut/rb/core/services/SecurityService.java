@@ -5,9 +5,10 @@ package de.lichtflut.rb.core.services;
 
 import java.util.List;
 
-import org.arastreju.sge.eh.ArastrejuException;
 import org.arastreju.sge.security.Domain;
 import org.arastreju.sge.security.User;
+
+import de.lichtflut.rb.core.eh.RBException;
 
 
 /**
@@ -36,16 +37,18 @@ public interface SecurityService {
 	 * @param username An optinal username as secondary Identifier.
 	 * @param password The unencrypted password.
 	 * @return The created user.
+	 * @throws RBException 
 	 */
-	User createUser(String emailID, String username, String password);
+	User createUser(String emailID, String username, String password) throws RBException;
 
 	/**
 	 * Sets a new Password for a {@link User}.
 	 * @param user
 	 * @param currentPassword
 	 * @param newPassword
+	 * @throws RBException if the current password is not valid
 	 */
-	void setNewPassword(User user, String currentPassword, String newPassword);
+	void setNewPassword(User user, String currentPassword, String newPassword) throws RBException;
 
 	/**
 	 * Resets the password with a generated one.
@@ -57,9 +60,9 @@ public interface SecurityService {
 	 * Set or change an AlternateID for a user.
 	 * @param user The User.
 	 * @param alternateID The alternateID for the user.
-	 * @throws ArastrejuException i.e. when alternateID already in use. 
+	 * @throws RBException i.e. when alternateID already in use. 
 	 */
-	void setAlternateID(final User user, final String alternateID) throws ArastrejuException;
+	void setAlternateID(final User user, final String alternateID) throws RBException;
 
 	/**
 	 * Get the AlternateID as String.

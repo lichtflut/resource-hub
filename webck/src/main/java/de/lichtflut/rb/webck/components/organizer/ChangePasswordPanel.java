@@ -21,6 +21,7 @@ import org.apache.wicket.validation.validator.PatternValidator;
 import org.arastreju.sge.security.User;
 
 import de.lichtflut.infra.security.Crypt;
+import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -85,11 +86,11 @@ public class ChangePasswordPanel extends Panel {
 		PasswordTextField confirmPassField = new PasswordTextField("confirmPassword", confirmedPassword);
 		
 		newPassField.add(new PatternValidator(PASSWORD_PATTERN));
+		form.add(new EqualPasswordInputValidator(newPassField, confirmPassField));
 		
 		container.add(currentPassField, newPassField, confirmPassField);
-		container.add(new FeedbackPanel("feedback"));
 		container.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
-		form.add(new EqualPasswordInputValidator(newPassField, confirmPassField));
+		form.add(new FeedbackPanel("feedback"));
 		form.add(container);
 	}
 
@@ -103,21 +104,25 @@ public class ChangePasswordPanel extends Panel {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form){
 				CurrentUserModel user = new CurrentUserModel();
-				setNewPassword(user.getObject(), currentPassword.getObject(), newPassword.getObject());
-				mode.setObject(DisplayMode.VIEW);
+				try {
+					setNewPassword(user.getObject(), currentPassword.getObject(), newPassword.getObject());
+					mode.setObject(DisplayMode.VIEW);
+				} catch (RBException e) {
+					error("error.invalid-password");
+				}
 				RBAjaxTarget.add(form);
 			}
 			
-			private void setNewPassword(User user, String currentPassword, String newPassword) {
+			private void setNewPassword(User user, String currentPassword, String newPassword) throws RBException {
 				String currentPwd = Crypt.md5Hex(currentPassword);
 				String newPwd = Crypt.md5Hex(newPassword);
-				provider.getSecurityService().setNewPassword(user, currentPwd, newPwd);
+					provider.getSecurityService().setNewPassword(user, currentPwd, newPwd);
+					info(getString("info.password-changed"));
 			}
 		};
 		save.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
 		return save;
 	}
-
 	
 	/**
 	 * @param string

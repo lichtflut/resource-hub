@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -55,6 +56,8 @@ public class ResetPasswordPanel extends Panel {
 		this.add(form);
 	}
 
+	// ------------------------------------------------------
+
 	/**
 	 * @param string
 	 * @return
@@ -63,13 +66,12 @@ public class ResetPasswordPanel extends Panel {
 		AjaxButton button = new RBStandardButton(id) {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form){
-				if(!emailModel.getObject().isEmpty()){
-					User user = provider.getArastejuGate().getIdentityManagement().findUser(emailModel.getObject());
-					if(user == null) {
-						error(getString("global.message.no-user-found"));
-					} else {
-						provider.getSecurityService().resetPasswordForUser(user);
-					}
+				User user = provider.getArastejuGate().getIdentityManagement().findUser(emailModel.getObject());
+				if(user == null) {
+					error(getString("message.no-user-found"));
+				} else {
+					provider.getSecurityService().resetPasswordForUser(user);
+					info(getString("message.password-changed"));
 				}
 				RBAjaxTarget.add(form);
 			}
@@ -79,6 +81,8 @@ public class ResetPasswordPanel extends Panel {
 
 	private TextField<String> createInputField(String id) {
 		TextField<String> emailTField = new TextField<String>("email", emailModel);
+		emailTField.add(EmailAddressValidator.getInstance());
+		emailTField.setRequired(true);
 		return emailTField;
 	}
 
