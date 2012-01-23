@@ -9,6 +9,8 @@ import org.arastreju.sge.eh.ArastrejuException;
 import org.arastreju.sge.security.Domain;
 import org.arastreju.sge.security.User;
 
+import de.lichtflut.rb.core.eh.RBException;
+
 
 /**
  * <p>
@@ -44,8 +46,9 @@ public interface SecurityService {
 	 * @param user
 	 * @param currentPassword
 	 * @param newPassword
+	 * @throws RBException if the current password is not valid
 	 */
-	void setNewPassword(User user, String currentPassword, String newPassword);
+	void setNewPassword(User user, String currentPassword, String newPassword) throws RBException;
 
 	/**
 	 * Resets the password with a generated one.

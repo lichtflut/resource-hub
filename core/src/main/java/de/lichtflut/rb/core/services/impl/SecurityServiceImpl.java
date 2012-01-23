@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
@@ -176,16 +177,16 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	/** 
 	 * {@inheritDoc}
+	 * @throws RBException 
 	 */
 	@Override
-	public void setNewPassword(User user, String currentPassword, String newPassword) {
-		if(verifyPassword(user, currentPassword)){
-			ResourceNode userNode = user.getAssociatedResource();
-			if(!userNode.isAttached()){
-				userNode = getProvider().getResourceResolver().resolve(userNode);
-			}
-			setNewPassword(newPassword, userNode);
+	public void setNewPassword(User user, String currentPassword, String newPassword) throws RBException{
+		verifyPassword(user, currentPassword);
+		ResourceNode userNode = user.getAssociatedResource();
+		if(!userNode.isAttached()){
+			userNode = getProvider().getResourceResolver().resolve(userNode);
 		}
+		setNewPassword(newPassword, userNode);
 	}
 
 	/** 
@@ -193,6 +194,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 */
 	@Override
 	public void resetPasswordForUser(User user) {
+		//TODO change generated pwd 
 		String generatedPwd = Crypt.md5Hex("changed");
 		setNewPassword(generatedPwd, user.getAssociatedResource());
 		getProvider().getMessagingService().getEmailService().sendNewPasswordforUser(user);
@@ -229,10 +231,18 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		logger.info("Registering user in master domain: " + user.getName() + " --> " + domain);
 		mc.close();
 	}
-	
-	private Boolean verifyPassword(User user, String md5Password){
+
+	/**
+	 * Verifies a password against a {@link User}
+	 * @param user
+	 * @param md5Password
+	 * @throws RBException if password is invalid
+	 */
+	private void verifyPassword(User user, String md5Password) throws RBException{
 		final SemanticNode credential = SNOPS.singleObject(user.getAssociatedResource(), Aras.HAS_CREDENTIAL);
-		return credential.asValue().getStringValue().equals(md5Password);
+		if(!credential.asValue().getStringValue().equals(md5Password)){
+			throw new RBException(de.lichtflut.rb.core.eh.ErrorCodes.INVALID_PASSWORD, "Password id not valid");
+		}
 	}
 	
 	private IdentityManagement identityManagement() {
