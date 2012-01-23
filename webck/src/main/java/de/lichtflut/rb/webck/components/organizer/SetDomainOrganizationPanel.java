@@ -19,10 +19,11 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -40,7 +41,10 @@ import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
  *
  * @author Oliver Tigges
  */
-public abstract class SetDomainOrganizationPanel extends Panel {
+public class SetDomainOrganizationPanel extends Panel {
+	
+	@SpringBean
+	private ServiceProvider provider;
 
 	private final LoadableModel<ResourceID> model;
 	
@@ -86,10 +90,6 @@ public abstract class SetDomainOrganizationPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	public abstract DomainOrganizer getOrganizer();
-	
-	// ----------------------------------------------------
-	
 	protected Component createSetButton() {
 		return new RBStandardButton("set") {
 			@Override
@@ -114,7 +114,7 @@ public abstract class SetDomainOrganizationPanel extends Panel {
 		return new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				getOrganizer().setDomainOrganization(model.getObject());
+				provider.getDomainOrganizer().setDomainOrganization(model.getObject());
 				readonly.setObject(true);
 				model.reset();
 				target.add(SetDomainOrganizationPanel.this);

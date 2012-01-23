@@ -8,13 +8,15 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.core.viewspec.impl.SimpleSelection;
+import de.lichtflut.rb.core.viewspec.impl.SNSelection;
 import de.lichtflut.rb.core.viewspec.impl.SimpleWidgetSpec;
 
 /**
@@ -42,25 +44,24 @@ public class PerspectivePanel extends Panel {
 		super(id);
 		
 		final WidgetSpec widgetSpec = new SimpleWidgetSpec();
-		widgetSpec.setSelection(new SimpleSelection(normalizeKey(RDF.TYPE) + ":" + normalizeValue(RB.PERSON)));
+		widgetSpec.setSelection(createSelection());
 		final Model<WidgetSpec> widgetModel = new Model<WidgetSpec>(widgetSpec);
 		
 		add(new EntityListWidget("widget", widgetModel));
 	}
 	
-	private String normalizeKey(final ResourceID id) {
-		return normalizeKey(id.toURI());
+	// ----------------------------------------------------
+	
+	private SNSelection createSelection() {
+		final SNSelection selection = new SNSelection();
+		
+		final ResourceNode typeParam = new SNResource();
+		typeParam.addAssociation(WDGT.CONCERNS_FIELD, RDF.TYPE);
+		typeParam.addAssociation(WDGT.HAS_TERM, RB.PERSON);
+		
+		selection.addAssociation(WDGT.HAS_PARAMETER, typeParam);
+		
+		return selection;
 	}
 	
-	private String normalizeValue(final ResourceID id) {
-		return normalizeValue(id.toURI());
-	}
-	
-	private String normalizeKey(final String key) {
-		return key.replaceAll(":", "\\\\:");
-	}
-	
-	private String normalizeValue(final String key) {
-		return key.trim().toLowerCase().replaceAll(":", "\\\\:");
-	}
 }

@@ -26,16 +26,17 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 public class EntityHistoryModel extends AbstractLoadableDetachableModel<List<EntityBrowsingStep>> {
 
 	private final int max;
-	private final boolean skipFirst;
+	private final boolean skipTop;
 	
 	// ----------------------------------------------------
 	
 	/**
 	 * @param max Max steps to retrieve.
+	 * @param skipTop Flag indicating if the current step (on top of stack) shall be excluded.
 	 */
-	public EntityHistoryModel(int max, boolean skipFirst) {
+	public EntityHistoryModel(int max, boolean skipTop) {
 		this.max = max;
-		this.skipFirst = skipFirst;
+		this.skipTop = skipTop;
 	}
 	
 	// ----------------------------------------------------
@@ -48,7 +49,7 @@ public class EntityHistoryModel extends AbstractLoadableDetachableModel<List<Ent
 		final List<EntityBrowsingStep> result = new ArrayList<EntityBrowsingStep>(max); 
 		final Iterator<EntityBrowsingStep> steps = RBWebSession.get().getHistory().getSteps();
 		int i = 1;
-		if (skipFirst && steps.hasNext()) {
+		if (skipTop && steps.hasNext()) {
 			steps.next();
 		}
 		while (steps.hasNext() && i++ <= max) {

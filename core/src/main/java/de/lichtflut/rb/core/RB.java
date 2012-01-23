@@ -115,22 +115,6 @@ public interface RB {
 	 */
 	ResourceID HAS_CONTENT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasContent");
 	
-	/**
-	 * The layout of a perspective.
-	 */
-	ResourceID HAS_LAYOUT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasLayout");
-	
-	/**
-	 * A view port of a perspective.
-	 */
-	ResourceID HAS_VIEW_PORT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasViewPort");
-	
-	/**
-	 * A view port contains widgets.
-	 */
-	ResourceID CONTAINS_WIDGET = new SimpleResourceID(SYS_NAMESPACE_URI, "containsWidget");
-	
-	
 	// -- COMMON PROPERTIES --------------------------------------
 
 	/**
@@ -152,6 +136,11 @@ public interface RB {
 	 * Subordinate units.
 	 */
 	ResourceID HAS_SUBORDINATE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasSubordinate");
+
+	/**
+	 * General ID of something (e.g. an application).
+	 */
+	ResourceID HAS_ID = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasID");
 	
 	/**
 	 * General name of something (e.g. an organization).
@@ -164,10 +153,10 @@ public interface RB {
 	ResourceID HAS_TITLE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasTitle");
 	
 	/**
-	 * General ID of something (e.g. an application).
+	 * A textual description.
 	 */
-	ResourceID HAS_ID = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasID");
-
+	ResourceID HAS_DESCRIPTION = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasDescription");;
+	
 	/**
 	 * General name of something (e.g. an organization).
 	 */
@@ -222,5 +211,5 @@ public interface RB {
 	 * Is non-profit organization.
 	 */
 	ResourceID IS_NPO = new SimpleResourceID(COMMON_NAMESPACE_URI, "isNPO");
-	
+
 }

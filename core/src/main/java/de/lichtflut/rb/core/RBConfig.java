@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Oliver Tigges
  */
-public class RBConfig implements RBConstants {
+public class RBConfig {
 	
 	/**
 	 * Arastreju store directory.

@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
@@ -42,7 +43,12 @@ import de.lichtflut.rb.webck.models.resources.ResourceQueryModel;
  *
  * @author Oliver Tigges
  */
-public abstract class NotePadPanel extends TypedPanel<ResourceID> {
+public class NotePadPanel extends TypedPanel<ResourceID> {
+	
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -106,15 +112,11 @@ public abstract class NotePadPanel extends TypedPanel<ResourceID> {
 	}
 	
 	protected void deleteNote(IModel<ResourceNode> mezzle) {
-		ModelingConversation mc = getServiceProvider().getArastejuGate().startConversation();
+		ModelingConversation mc = provider.getArastejuGate().startConversation();
 		mc.remove(mezzle.getObject());
 		mc.close();
 		RBAjaxTarget.add(this);
 	}
-	
-	// ----------------------------------------------------
-	
-	protected abstract ServiceProvider getServiceProvider();
 	
 	// ----------------------------------------------------
 	
@@ -130,7 +132,7 @@ public abstract class NotePadPanel extends TypedPanel<ResourceID> {
 
 		@Override
 		public ServiceProvider getServiceProvider() {
-			return NotePadPanel.this.getServiceProvider();
+			return provider;
 		}
 		
 		/** 
@@ -155,7 +157,7 @@ public abstract class NotePadPanel extends TypedPanel<ResourceID> {
 
 		@Override
 		public ServiceProvider getServiceProvider() {
-			return NotePadPanel.this.getServiceProvider();
+			return provider;
 		}
 		
 		/** 
@@ -181,7 +183,7 @@ public abstract class NotePadPanel extends TypedPanel<ResourceID> {
 		*/
 		@Override
 		protected Query derive(ResourceID original) {
-			final Query query = getServiceProvider().getArastejuGate().createQueryManager().buildQuery();
+			final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
 			query.addField(RB.IS_ATTACHED_TO, original.getQualifiedName().toURI());
 			return query;
 		}

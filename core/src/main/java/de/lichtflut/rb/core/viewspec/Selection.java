@@ -20,8 +20,6 @@ import org.arastreju.sge.query.Query;
  */
 public interface Selection extends Serializable {
 	
-	void setQueryString(String query);
-	
 	void adapt(Query query);
 
 }

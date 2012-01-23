@@ -40,10 +40,10 @@ public class SimpleSelection implements Selection {
 	
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
+	/**
+	 * Set the query string. 
+	 * @param query The query.
+	 */ 
 	public void setQueryString(String query) {
 		this.queryString = query;
 

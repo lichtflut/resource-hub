@@ -10,12 +10,14 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ArastrejuProfile;
 import org.arastreju.sge.IdentityManagement;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
+import org.arastreju.sge.eh.ArastrejuRuntimeException;
 import org.arastreju.sge.model.TimeMask;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
@@ -28,6 +30,8 @@ import org.arastreju.sge.security.PasswordCredential;
 import org.arastreju.sge.security.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import scala.actors.threadpool.Arrays;
 
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RB;
@@ -87,18 +91,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Override
 	public User loginByToken(String token) {
 		final String[] fields = token.split(":");
-		if (fields.length != 3) {
+		if (fields.length != 3 || StringUtils.isBlank(fields[0])) {
 			return null;
 		}
-		final User user = provider.getArastejuGate().getIdentityManagement().findUser(fields[0]);
-		if (user != null && isValid(user, fields[0], fields[1], fields[2])) {
-			logger.info("User {} logged in by token.", user);
-			setLastLogin(user);
-			return user;
-		} else {
-			logger.info("Login token is invalid: " + token);
-			return null;
+		try {
+			final User user = provider.getArastejuGate().getIdentityManagement().findUser(fields[0]);
+			if (user != null && isValid(user, fields[0], fields[1], fields[2])) {
+				logger.info("User {} logged in by token.", user);
+				setLastLogin(user);
+				return user;
+			}
+		} catch (ArastrejuRuntimeException e) {
+			logger.error("Failed to login by token " + Arrays.toString(fields), e);
 		}
+		logger.info("Login token is invalid: " + token);
+		return null;
 	}
 
 	/** 
