@@ -6,10 +6,13 @@ package de.lichtflut.rb.core.viewspec.impl;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 
+import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.viewspec.Selection;
+import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 
 /**
@@ -23,18 +26,18 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
  *
  * @author Oliver Tigges
  */
-public class SNWidget extends ResourceView implements WidgetSpec {
+public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 
 	/**
 	 * Default constructor for new widget specifications.
 	 */
-	public SNWidget() {
+	public SNWidgetSpec() {
 	}
 	
 	/**
 	 * @param resource
 	 */
-	public SNWidget(ResourceNode resource) {
+	public SNWidgetSpec(ResourceNode resource) {
 		super(resource);
 	}
 	
@@ -77,8 +80,12 @@ public class SNWidget extends ResourceView implements WidgetSpec {
 	 */
 	@Override
 	public Selection getSelection() {
-		// TODO Auto-generated method stub
-		return null;
+		SemanticNode node = SNOPS.singleObject(this, WDGT.HAS_SELECTION);
+		if (node != null && node.isResourceNode()) {
+			return new SNSelection(node.asResource());
+		} else {
+			return null;
+		}
 	}
 
 	/** 
@@ -86,8 +93,7 @@ public class SNWidget extends ResourceView implements WidgetSpec {
 	 */
 	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
-		
+		setValue(RB.HAS_NAME, name);
 	}
 
 	/** 
@@ -95,8 +101,7 @@ public class SNWidget extends ResourceView implements WidgetSpec {
 	 */
 	@Override
 	public void setTitle(String title) {
-		// TODO Auto-generated method stub
-		
+		setValue(RB.HAS_TITLE, title);
 	}
 
 	/** 
@@ -104,8 +109,7 @@ public class SNWidget extends ResourceView implements WidgetSpec {
 	 */
 	@Override
 	public void setDescription(String desc) {
-		// TODO Auto-generated method stub
-		
+		setValue(RB.HAS_DESCRIPTION, desc);
 	}
 
 	/** 
@@ -113,14 +117,7 @@ public class SNWidget extends ResourceView implements WidgetSpec {
 	 */
 	@Override
 	public void setSelection(Selection selection) {
-		// TODO Auto-generated method stub
-		
+		throw new NotYetSupportedException();
 	}
 	
-	// ----------------------------------------------------
-	
-	private String stringValue(ResourceID attribute) {
-		return SNOPS.string(SNOPS.fetchObject(this, attribute));
-	}
-
 }
