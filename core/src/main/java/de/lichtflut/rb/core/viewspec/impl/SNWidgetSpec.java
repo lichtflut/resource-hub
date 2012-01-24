@@ -117,7 +117,11 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	 */
 	@Override
 	public void setSelection(Selection selection) {
-		throw new NotYetSupportedException();
+		if (selection instanceof ResourceNode) {
+			setValue(WDGT.HAS_SELECTION, selection);
+		} else {
+			throw new NotYetSupportedException();
+		}
 	}
 	
 }

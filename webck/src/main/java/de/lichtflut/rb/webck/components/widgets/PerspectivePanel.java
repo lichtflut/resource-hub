@@ -17,7 +17,7 @@ import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.SNSelection;
-import de.lichtflut.rb.core.viewspec.impl.SimpleWidgetSpec;
+import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
 
 /**
  * <p>
@@ -43,7 +43,7 @@ public class PerspectivePanel extends Panel {
 	public PerspectivePanel(String id, IModel<Perspective> spec) {
 		super(id);
 		
-		final WidgetSpec widgetSpec = new SimpleWidgetSpec();
+		final WidgetSpec widgetSpec = new SNWidgetSpec();
 		widgetSpec.setSelection(createSelection());
 		final Model<WidgetSpec> widgetModel = new Model<WidgetSpec>(widgetSpec);
 		
