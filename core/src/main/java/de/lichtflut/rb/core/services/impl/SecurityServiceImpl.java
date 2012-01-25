@@ -207,10 +207,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	public void setNewPassword(User user, String currentPassword, String newPassword) throws RBException{
 		verifyPassword(user, currentPassword);
 		ResourceNode userNode = user.getAssociatedResource();
-		if(!userNode.isAttached()){
-			userNode = getProvider().getResourceResolver().resolve(userNode);
-		}
-		setNewPassword(newPassword, userNode);
+		setPassword(newPassword, userNode);
 	}
 
 	/** 
@@ -220,7 +217,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	public void resetPasswordForUser(User user) {
 		//TODO change generated pwd 
 		String generatedPwd = Crypt.md5Hex("changed");
-		setNewPassword(generatedPwd, user.getAssociatedResource());
+		setPassword(generatedPwd, user.getAssociatedResource());
 		getProvider().getMessagingService().getEmailService().sendNewPasswordforUser(user);
 	}
 	
@@ -277,7 +274,10 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * @param newPassword
 	 * @param userNode
 	 */
-	private void setNewPassword(String newPassword, ResourceNode userNode) {
+	private void setPassword(String newPassword, ResourceNode userNode) {
+		if(!userNode.isAttached()){
+			userNode = getProvider().getResourceResolver().resolve(userNode);
+		}
 		SNValue password = new SNValue(ElementaryDataType.STRING, newPassword);
 		SNOPS.assure(userNode, Aras.HAS_CREDENTIAL, password, RB.PRIVATE_CONTEXT);
 	}
