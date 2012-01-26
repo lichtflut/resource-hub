@@ -242,9 +242,10 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	@Override
 	public void resetPasswordForUser(User user) {
 		//TODO change generated pwd 
-		String generatedPwd = Crypt.md5Hex("changed");
+		String newPwd = "changed";
+		String generatedPwd = Crypt.md5Hex(newPwd);
 		setPassword(generatedPwd, user.getAssociatedResource());
-		getProvider().getMessagingService().getEmailService().sendNewPasswordforUser(user);
+		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, newPwd);
 	}
 	
 	// ----------------------------------------------------

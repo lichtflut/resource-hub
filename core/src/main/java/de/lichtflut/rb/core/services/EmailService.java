@@ -20,5 +20,5 @@ public interface EmailService {
 	 * This method sends an email containing his new password.
 	 * @param user
 	 */
-	void sendNewPasswordforUser(User user);
+	void sendPasswordInformation(User user, String Password);
 }

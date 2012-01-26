@@ -1,21 +1,24 @@
 Manifest-Version: 1.0
 Class-Path: activation-1.1.jar antlr-2.7.7.jar antlr-3.1.3.jar antlr-r
  untime-3.1.3.jar aopalliance-1.0.jar arastreju.neo4j.jar arastreju.og
- m.jar arastreju.sge.jar asm-3.3.1.jar cglib-2.2.2.jar commons-lang3-3
- .0.1.jar commons-logging-1.1.1.jar geronimo-jta_1.1_spec-1.1.1.jar ja
- ckson-core-asl-1.9.0.jar jackson-mapper-asl-1.8.8.jar js-1.7R2.jar lf
- .foundation.infra-1.1.1.jar lf.resource-browser.core.jar lf.resource-
- browser.webck.jar log4j-1.2.14.jar lucene-core-3.1.0.jar mail-1.4.jar
-  neo4j-1.5.jar neo4j-cypher-1.5.jar neo4j-graph-algo-1.5.jar neo4j-gr
- aph-matching-1.5.jar neo4j-jmx-1.5.jar neo4j-kernel-1.5.jar neo4j-luc
- ene-index-1.5.jar neo4j-udc-1.5.jar scala-library-2.9.0-1.jar sesame-
- model-2.6.1.jar sesame-rio-api-2.6.1.jar sesame-rio-n3-2.6.1.jar sesa
- me-rio-rdfxml-2.6.1.jar sesame-rio-turtle-2.6.1.jar sesame-util-2.6.1
- .jar slf4j-api-1.6.1.jar slf4j-log4j12-1.6.1.jar spring-aop-3.1.0.REL
- EASE.jar spring-asm-3.1.0.RELEASE.jar spring-beans-3.1.0.RELEASE.jar 
- spring-context-3.1.0.RELEASE.jar spring-core-3.1.0.RELEASE.jar spring
- -expression-3.1.0.RELEASE.jar spring-web-3.1.0.RELEASE.jar stringtemp
- late-3.2.jar wicket-core-1.5.3.jar wicket-extensions-1.5.3.jar wicket
- -ioc-1.5.3.jar wicket-request-1.5.3.jar wicket-spring-1.5.3.jar wicke
- t-util-1.5.3.jar wiquery-core-1.5.3.jar wiquery-jquery-ui-1.5.3.jar
+ m.jar arastreju.sge.jar asm-3.3.1.jar cglib-2.2.2.jar commons-collect
+ ions-3.2.1.jar commons-io-2.1.jar commons-lang3-3.0.1.jar commons-log
+ ging-1.1.1.jar geronimo-jta_1.1_spec-1.1.1.jar jackson-core-asl-1.9.0
+ .jar jackson-mapper-asl-1.8.8.jar jazzy-0.5.2-rtext-1.4.1.jar js-1.7R
+ 2.jar json-20090211.jar lf.foundation.infra-1.1.1.jar lf.resource-bro
+ wser.core.jar lf.resource-browser.webck.jar log4j-1.2.14.jar lucene-c
+ ore-3.1.0.jar mail-1.4.jar neo4j-1.5.jar neo4j-cypher-1.5.jar neo4j-g
+ raph-algo-1.5.jar neo4j-graph-matching-1.5.jar neo4j-jmx-1.5.jar neo4
+ j-kernel-1.5.jar neo4j-lucene-index-1.5.jar neo4j-udc-1.5.jar scala-l
+ ibrary-2.9.0-1.jar sesame-model-2.6.1.jar sesame-rio-api-2.6.1.jar se
+ same-rio-n3-2.6.1.jar sesame-rio-rdfxml-2.6.1.jar sesame-rio-turtle-2
+ .6.1.jar sesame-util-2.6.1.jar slf4j-api-1.6.1.jar slf4j-log4j12-1.6.
+ 1.jar spring-aop-3.1.0.RELEASE.jar spring-asm-3.1.0.RELEASE.jar sprin
+ g-beans-3.1.0.RELEASE.jar spring-context-3.1.0.RELEASE.jar spring-cor
+ e-3.1.0.RELEASE.jar spring-expression-3.1.0.RELEASE.jar spring-web-3.
+ 1.0.RELEASE.jar stringtemplate-3.2.jar wicket-1.5.3.pom wicket-core-1
+ .5.3.jar wicket-extensions-1.5.3.jar wicket-ioc-1.5.3.jar wicket-requ
+ est-1.5.3.jar wicket-spring-1.5.3.jar wicket-util-1.5.3.jar wicketstu
+ ff-tinymce-1.5.3.1.jar wiquery-core-1.5.3.jar wiquery-jquery-ui-1.5.3
+ .jar
 

@@ -92,6 +92,7 @@ public class EntityRowDisplayPanel extends Panel {
 			break;
 		case STRING:
 		case TEXT:
+		case RICH_TEXT:
 			addTextOutput(item, String.class);
 			break;
 		}
