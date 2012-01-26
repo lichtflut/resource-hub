@@ -34,7 +34,7 @@ public interface SecurityService {
 	/**
 	 * Create a new user.
 	 * @param emailID The email as primary identifier.
-	 * @param username An optinal username as secondary Identifier.
+	 * @param username An optional username as secondary Identifier.
 	 * @param password The unencrypted password.
 	 * @return The created user.
 	 * @throws RBException 
@@ -56,6 +56,14 @@ public interface SecurityService {
 	 */
 	void resetPasswordForUser(User user);
 
+	/**
+	 * Change the primary ID for a user. !!This also changes the users email-address and unique name!!
+	 * @param user The User.
+	 * @param emailID The primaryID/email/uniqueName for the user.
+	 * @throws RBException i.e. when ID/email-address already in use. 
+	 */
+	void changePrimaryID(final User user, final String emailID) throws RBException;
+	
 	/**
 	 * Set or change an AlternateID for a user.
 	 * @param user The User.

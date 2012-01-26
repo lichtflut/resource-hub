@@ -128,6 +128,32 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * {@inheritDoc}
 	 */
 	@Override
+	public void changePrimaryID(User user, String emailID) throws RBException {
+		String newID = emailID.trim().toLowerCase();
+		if(!newID.equals(user.getName())) {
+			ModelingConversation mc = gate().startConversation();
+			IdentityManagement im = identityManagement();
+			ResourceNode userNode = user.getAssociatedResource();
+			mc.attach(userNode);
+			try {
+				im.changeID(user, newID);
+				SNOPS.assure(userNode, Aras.HAS_EMAIL, new SNText(newID), Aras.IDENT);
+			} catch (ArastrejuException e) {
+				if(e.getErrCode().equals(org.arastreju.sge.eh.ErrorCodes.REGISTRATION_NAME_ALREADY_IN_USE)) {
+					throw new RBException(ErrorCodes.SECURITYSERVICE_ID_ALREADY_IN_USE, 
+							"The ID (email) '" + newID + "' is already in use.");
+				} else {
+					logger.error("Unexpected ArastrejuException while trying to change primaryID/email: ", e);
+				}
+			}
+			mc.close();
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void setAlternateID(User user, String alternateID) throws RBException {
 		if(!alternateID.equals(getAlternateID(user))) {
 			ModelingConversation mc = gate().startConversation();
