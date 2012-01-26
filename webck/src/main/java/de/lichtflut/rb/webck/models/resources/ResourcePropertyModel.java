@@ -23,7 +23,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
  */
 public class ResourcePropertyModel implements IModel<SemanticNode> {
 	
-	private final IModel<ResourceNode> subject;
+	private final IModel<? extends ResourceNode> subject;
 	
 	private final ResourceID predicate;
 
@@ -36,7 +36,7 @@ public class ResourcePropertyModel implements IModel<SemanticNode> {
 	 * @param predicate The predicate.
 	 * @param ctx Optional context.
 	 */
-	public ResourcePropertyModel(IModel<ResourceNode> subject, ResourceID predicate, Context... ctx) {
+	public ResourcePropertyModel(IModel<? extends ResourceNode> subject, ResourceID predicate, Context... ctx) {
 		this.subject = subject;
 		this.predicate = predicate;
 		this.ctx = ctx;
@@ -49,7 +49,7 @@ public class ResourcePropertyModel implements IModel<SemanticNode> {
 	*/
 	@Override
 	public SemanticNode getObject() {
-		return SNOPS.singleObject(subject.getObject(), predicate);
+		return SNOPS.fetchObject(subject.getObject(), predicate);
 	}
 
 	/** 

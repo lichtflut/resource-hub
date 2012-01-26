@@ -3,13 +3,12 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
-import java.io.Serializable;
-
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Selection of nodes.
  * </p>
  *
  * <p>
@@ -18,7 +17,7 @@ import org.arastreju.sge.query.Query;
  *
  * @author Oliver Tigges
  */
-public interface Selection extends Serializable {
+public interface Selection extends ResourceNode {
 	
 	void adapt(Query query);
 

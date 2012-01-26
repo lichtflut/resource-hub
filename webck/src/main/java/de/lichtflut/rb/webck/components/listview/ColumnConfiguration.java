@@ -11,7 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.arastreju.sge.model.ResourceID;
 
@@ -19,6 +18,7 @@ import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.webck.components.listview.ColumnHeader.ColumnType;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
  * <p>
@@ -77,6 +77,15 @@ public class ColumnConfiguration implements Serializable {
 	// ----------------------------------------------------
 	
 	public IModel<List<ColumnHeader>> getHeaderModel() {
+		return new AbstractLoadableDetachableModel<List<ColumnHeader>>() {
+			@Override
+			public List<ColumnHeader> load() {
+				return getHeaders();
+			}
+		};
+	}
+	
+	public List<ColumnHeader> getHeaders() {
 		final Locale locale = RequestCycle.get().getRequest().getLocale();
 		final List<ColumnHeader> headers = new ArrayList<ColumnHeader>();
 		for (ResourceID predicate : predicates) {
@@ -86,7 +95,7 @@ public class ColumnConfiguration implements Serializable {
 		for (@SuppressWarnings("unused") String action : getActions()) {
 			headers.add(new SimpleColumnHeader("", null, ColumnType.ACTION));
 		}
-		return new ListModel<ColumnHeader>(headers);
+		return headers;
 	}
 	
 	public String getLabel(ResourceID predicate, Locale locale) {

@@ -7,9 +7,11 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.dialogs.SchemaExportDialog;
 import de.lichtflut.rb.webck.components.dialogs.SchemaImportDialog;
 
@@ -24,7 +26,12 @@ import de.lichtflut.rb.webck.components.dialogs.SchemaImportDialog;
  *
  * @author Oliver Tigges
  */
-public abstract class SchemaIOPanel extends Panel {
+public class SchemaIOPanel extends Panel {
+	
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
 	
 	/**
 	 * Constructor.
@@ -58,7 +65,9 @@ public abstract class SchemaIOPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	protected abstract SchemaManager getSchemaManager();
+	protected SchemaManager getSchemaManager() {
+		return provider.getSchemaManager();
+	}
 	
 	// -----------------------------------------------------
 	

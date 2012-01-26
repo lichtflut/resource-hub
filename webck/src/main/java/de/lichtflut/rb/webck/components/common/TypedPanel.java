@@ -43,4 +43,5 @@ public class TypedPanel<T> extends Panel {
 	public T getModelObject() {
 		return getModel().getObject();
 	}
+	
 }

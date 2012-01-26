@@ -17,7 +17,7 @@ import de.lichtflut.rb.core.viewspec.WDGT;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Implementation of a selection.
  * </p>
  *
  * <p>

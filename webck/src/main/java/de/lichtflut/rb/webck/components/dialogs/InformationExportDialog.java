@@ -41,11 +41,13 @@ import org.arastreju.sge.model.SemanticGraph;
  *
  * @author Oliver Tigges
  */
-public abstract class InformationExportDialog extends AbstractRBDialog implements IResourceListener {
+public class InformationExportDialog extends AbstractRBDialog implements IResourceListener {
 
-	private ResourceStreamResource resource;
+	private final ResourceStreamResource resource;
 	
-	private IModel<String> format;
+	private final IModel<String> format;
+
+	private final IModel<SemanticGraph> graphModel;
 	
 	// ----------------------------------------------------
 
@@ -53,8 +55,9 @@ public abstract class InformationExportDialog extends AbstractRBDialog implement
 	 * @param id
 	 */
 	@SuppressWarnings("rawtypes")
-	public InformationExportDialog(final String id) {
+	public InformationExportDialog(final String id, final IModel<SemanticGraph> model) {
 		super(id);
+		this.graphModel = model;
 		
 		format = new Model<String>("RDF-XML");
 		resource = prepareResource(format);
@@ -93,10 +96,6 @@ public abstract class InformationExportDialog extends AbstractRBDialog implement
 		resource.setFileName(getFilename());
 		resource.respond(a);
 	}
-	
-	// ----------------------------------------------------
-	
-	protected abstract SemanticGraph getExportGraph();
 	
 	// ----------------------------------------------------
 	
@@ -150,7 +149,7 @@ public abstract class InformationExportDialog extends AbstractRBDialog implement
 			final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			try {
 				
-				SemanticGraph graph = getExportGraph();
+				final SemanticGraph graph = graphModel.getObject();
 				
 				if ("RDF-XML".equalsIgnoreCase(format.getObject())){
 					new RdfXmlBinding().write(graph, buffer);

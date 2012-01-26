@@ -103,5 +103,14 @@ input.resource-picker {
     color:red;  
 }
 
+/* WIDGETS */
+
+div.rb-widget {
+	border: 1px solid #777;
+	background: #EEE;
+	border-radius: 5px;
+	padding: 5px;
+	width: 100%;
+}
 
 
