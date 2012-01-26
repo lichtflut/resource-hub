@@ -3,13 +3,8 @@
  */
 package de.lichtflut.rb.core.messaging;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
-import org.junit.Test;
 
 /**
  * <p>
