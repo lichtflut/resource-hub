@@ -55,12 +55,4 @@ public class TextModules {
 		return content;
 	}
 	
-	public void test(){
-		String content = "";
-		ResourceBundle bundle = ResourceBundle.getBundle("1");
-		content = bundle.getString("password-information");
-				assertTrue(content.equals("Neues Password"));
-				
-	}
-	
 }
