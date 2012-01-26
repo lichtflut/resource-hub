@@ -7,18 +7,24 @@ import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import javax.mail.Authenticator;
 import javax.mail.Message;
+import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMessage.RecipientType;
 
 import org.arastreju.sge.security.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.lichtflut.rb.core.messaging.Configuration;
+import de.lichtflut.rb.core.messaging.MessageDescription;
+import de.lichtflut.rb.core.messaging.MessageType;
+import de.lichtflut.rb.core.messaging.TextModules;
 import de.lichtflut.rb.core.services.EmailService;
 
 /**
@@ -32,7 +38,7 @@ import de.lichtflut.rb.core.services.EmailService;
  *
  * @author Ravi Knox
  */
-public abstract class EmailServiceImpl implements EmailService {
+public class EmailServiceImpl implements EmailService {
 
 	private final String DEFAULT_SENDER = getDefaultSender();
 
@@ -48,12 +54,22 @@ public abstract class EmailServiceImpl implements EmailService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void sendNewPasswordforUser(User user) {
-		Session session = initSession();
-		String msg = ResourceBundle.getBundle("EmailServiceImpl").getString("reset-password");
-		System.out.println(" ################ " + msg);
+	public void sendPasswordInformation(User user, String password) {
+		TextModules modul = new TextModules();
+		
+		MessageDescription desc = new MessageDescription();
+		desc.setContent(modul.getMailFor(MessageType.PASSWORD_INFORMATION_MAIL));
+//		sendMail(desc);
+		System.out.println(" ################ " + desc.getContent());
+		System.out.println("########## sent new password for user " + user.getEmail() + "#############");
+	}
+
+	/**
+	 * 
+	 */
+	private void sendMail(MessageDescription desc) {
 		try {
-			Message mail = new MimeMessage(session);
+			Message mail = new MimeMessage(initSession());
 			mail.setFrom(new InternetAddress("rknox@lichtflut.de", "lichtflut.de - Ravi Knox"));
 			mail.addRecipient(RecipientType.TO, new InternetAddress("recipient@google.com", "Reci Pient"));
 			mail.setSubject("Test");
@@ -66,10 +82,14 @@ public abstract class EmailServiceImpl implements EmailService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("########## sent new password for user " + user.getEmail() + "#############");
 	}
 
-	protected abstract String getDefaultSender();
+	public void sendConfirmationMail(){
+		
+	}
+	protected String getDefaultSender(){
+		return "no-reply@glasnost.de";
+	}
 	
 	protected String getMessageEncoding(){
 		return "UTF-8";
@@ -77,9 +97,13 @@ public abstract class EmailServiceImpl implements EmailService {
 
 	protected Session initSession(){
 		Properties props = new Properties();
-		Session session = Session.getInstance(props, null);
-		Configuration cfg = Configuration.INSTANCE;
+		final Configuration cfg = Configuration.getInstance();
 		fillSessionProperties(props, cfg);
+		Session session = Session.getInstance(props, new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(cfg.getSmtpUser(), cfg.getSmtpPassword());
+				}
+		});
 		logger.info("Initialized mail session: " + props);
 		return session;
 	}
@@ -94,6 +118,5 @@ public abstract class EmailServiceImpl implements EmailService {
 		props.setProperty("mail.smtp.auth", "true");
 		props.setProperty("mail.smtp.submitter", cfg.getSmtpUser());
 	}
-
 
 }

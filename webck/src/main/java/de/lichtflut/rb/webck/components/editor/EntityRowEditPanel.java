@@ -3,6 +3,9 @@
  */
 package de.lichtflut.rb.webck.components.editor;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -25,14 +28,15 @@ import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
+import wicket.contrib.tinymce.TinyMceBehavior;
+import wicket.contrib.tinymce.settings.TinyMCESettings;
+import wicket.contrib.tinymce.settings.TinyMCESettings.Location;
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.*;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
-import static de.lichtflut.rb.webck.models.ConditionalModel.*;
 import de.lichtflut.rb.webck.models.fields.FieldCardinalityModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.FieldSizeModel;
@@ -121,11 +125,13 @@ public class EntityRowEditPanel extends Panel {
 			return addTextField(item, String.class);
 		case TEXT:
 			return addTextArea(item);
+		case RICH_TEXT:
+			return addRichTextArea(item);
 		default:
 			throw new NotYetImplementedException("Datatype: " + dataType);
 		}
 	}
-	
+
 	protected AjaxSubmitLink createRemoveLink(final int index) {
 		final AjaxSubmitLink link = new AjaxSubmitLink("removeLink") {
 			@Override
@@ -204,8 +210,18 @@ public class EntityRowEditPanel extends Panel {
 		return cb;
 	}
 	
+	private FormComponent<?> addRichTextArea(ListItem<RBFieldValueModel> item) {
+		TextArea<String> field = new TextArea("valuefield", item.getModelObject());
+		TinyMCESettings settings = new TinyMCESettings();
+		settings.setStatusbarLocation(Location.top);
+		settings.setToolbarLocation(Location.top);
+		settings.setResizing(true);
+		field.add(new TinyMceBehavior(settings));
+		item.add(new Fragment("valuefield", "textArea", this).add(field));
+		return field;
+	}
 	// ----------------------------------------------------
-	
+
 	/**
 	 * Extracts the resourceTypeConstraint of this {@link RBField}.
 	 * @param field - IRBField
