@@ -15,6 +15,7 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
@@ -33,8 +34,13 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public abstract class InformationImportDialog extends AbstractRBDialog {
+public class InformationImportDialog extends AbstractRBDialog {
 
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
+	
 	/**
 	 * @param id
 	 */
@@ -69,10 +75,6 @@ public abstract class InformationImportDialog extends AbstractRBDialog {
 	
 	// ----------------------------------------------------
 	
-	protected abstract ServiceProvider getServiceProvider();
-	
-	// ----------------------------------------------------
-	
 	private ListModel<String> getChoices() {
 		return new ListModel<String>(Arrays.asList(new String [] {"RDF-XML", "JSON", "N3"}));
 	}
@@ -81,7 +83,7 @@ public abstract class InformationImportDialog extends AbstractRBDialog {
 		final SemanticGraphIO io = new RdfXmlBinding();
 		try {
 			final SemanticGraph graph = io.read(upload.getInputStream());
-			getServiceProvider().getArastejuGate().startConversation().attach(graph);
+			provider.getArastejuGate().startConversation().attach(graph);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} catch (SemanticIOException e) {

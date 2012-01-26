@@ -3,8 +3,10 @@
  */
 package de.lichtflut.rb.websample.base;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -13,7 +15,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.odlabs.wiquery.core.resources.CoreJavaScriptResourceReference;
+import org.odlabs.wiquery.ui.dialog.Dialog;
 
+import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.listview.ReferenceLink;
 import de.lichtflut.rb.webck.components.navigation.NavigationBar;
 import de.lichtflut.rb.webck.components.navigation.NavigationNode;
@@ -36,7 +40,9 @@ import de.lichtflut.rb.websample.types.TypeSystemPage;
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public abstract class RBBasePage extends WebPage {
+public abstract class RBBasePage extends WebPage implements DialogHoster {
+	
+	private static final String MODALDIALOG = "modaldialog";
 
 	private String title;
 
@@ -104,6 +110,8 @@ public abstract class RBBasePage extends WebPage {
 
 		add(createSideBar("sidebarLeft"));
 		
+		add(emptyDialog());
+		
 	}
 	
 	protected Component createSideBar(final String id) {
@@ -112,6 +120,49 @@ public abstract class RBBasePage extends WebPage {
 	
 	private NavigationNode createNavigationNode(IModel<String> label, Class<? extends Page> pageClass) {
 		return new NavigationNodePanel(new ReferenceLink("link", pageClass,label));
+	}
+	
+	// -- DIALOG ------------------------------------------
+
+	/**
+	 * @return the ID to assign to dialog.
+	 */
+	@Override
+	public String getDialogID() {
+		return MODALDIALOG;
+	}
+	
+	@Override
+	public void openDialog(Dialog dialog) {
+		setDialog(dialog);
+		final AjaxRequestTarget target = AjaxRequestTarget.get();
+		if (target != null) {
+			dialog.open(target);
+			target.add(dialog);
+		} else {
+			dialog.open();
+		}
+	}
+	
+	@Override
+	public void closeDialog(Dialog dialog) {
+		setDialog(emptyDialog());
+		final AjaxRequestTarget target = AjaxRequestTarget.get();
+		if (target != null) {
+			dialog.close(target);
+			target.add(dialog);
+		} else {
+			dialog.close();
+		}
+	}
+	
+	protected void setDialog(Component dialog) {
+		Validate.isTrue(MODALDIALOG.equals(dialog.getId()));
+		replace(dialog);
+	}
+	
+	private Component emptyDialog() {
+		return new WebMarkupContainer(MODALDIALOG).setOutputMarkupPlaceholderTag(true).setVisible(false);
 	}
 	
 

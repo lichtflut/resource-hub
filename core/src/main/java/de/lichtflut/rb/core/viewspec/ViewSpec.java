@@ -3,10 +3,6 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
-
-import de.lichtflut.rb.core.RB;
 
 /**
  * <p>

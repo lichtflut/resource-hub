@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.components.domains;
 import java.util.List;
 
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.security.Domain;
@@ -42,18 +43,18 @@ public class DomainsListPanel extends ResourceListPanel {
 	 * @param dataModel The model providing the data to display..
 	 * @param config The configuration of the table and it's columns.
 	 */
-	public DomainsListPanel(final String id, final IModel<List<ResourceNode>> dataModel, final ColumnConfiguration config) {
+	public DomainsListPanel(final String id, final IModel<List<ResourceNode>> dataModel, final IModel<ColumnConfiguration> config) {
 		super(id, dataModel, config);
 	}
 	
 	// ----------------------------------------------------
 	
-	public static ColumnConfiguration defaultColumns() {
+	public static IModel<ColumnConfiguration> defaultColumns() {
 		final ColumnConfiguration config = new ColumnConfiguration(ListAction.VIEW);
 		config.addColumnByPredicate(Aras.HAS_UNIQUE_NAME);
 		config.addColumnByPredicate(Aras.HAS_TITLE);
 		config.addColumnByPredicate(Aras.HAS_DESCRIPTION);
-		return config;
+		return new Model<ColumnConfiguration>(config);
 	}
 
 }

@@ -7,9 +7,12 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.views.SNScalar;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -45,6 +48,12 @@ public class PerspectivePanel extends Panel {
 		
 		final WidgetSpec widgetSpec = new SNWidgetSpec();
 		widgetSpec.setSelection(createSelection());
+		
+		addColumn(widgetSpec, RB.HAS_FIRST_NAME);
+		addColumn(widgetSpec, RB.HAS_LAST_NAME);
+		addColumn(widgetSpec, RB.HAS_EMAIL);
+		addColumn(widgetSpec, RB.IS_EMPLOYED_BY);
+		
 		final Model<WidgetSpec> widgetModel = new Model<WidgetSpec>(widgetSpec);
 		
 		add(new EntityListWidget("widget", widgetModel));
@@ -62,6 +71,18 @@ public class PerspectivePanel extends Panel {
 		selection.addAssociation(WDGT.HAS_PARAMETER, typeParam);
 		
 		return selection;
+	}
+	
+	private void addColumn(WidgetSpec widgetSpec, ResourceID predicate) {
+		final int idx = widgetSpec.getAssociations(WDGT.DEFINES_COLUMN).size() +1;
+		widgetSpec.addAssociation(WDGT.DEFINES_COLUMN, createColumnDef(predicate, idx));
+	}
+	
+	private ResourceNode createColumnDef(ResourceID predicate, int serialNo) {
+		final ResourceNode def = new SNResource();
+		def.addAssociation(WDGT.CORRESPONDS_TO_PROPERTY, predicate);
+		def.addAssociation(Aras.HAS_SERIAL_NUMBER, new SNScalar(serialNo));
+		return def;
 	}
 	
 }

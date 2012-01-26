@@ -3,9 +3,8 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
-import java.io.Serializable;
-
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>
@@ -18,7 +17,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface WidgetSpec extends Serializable {
+public interface WidgetSpec extends ResourceNode {
 
 	ResourceID getID();
 	

@@ -48,7 +48,7 @@ public class ResourceListPanel extends Panel {
 	 * @param dataModel The model providing the data to display..
 	 * @param config The configuration of the table and it's columns.
 	 */
-	public ResourceListPanel(final String id, final IModel<List<ResourceNode>> dataModel, final ColumnConfiguration config) {
+	public ResourceListPanel(final String id, final IModel<List<ResourceNode>> dataModel, final IModel<ColumnConfiguration> config) {
 		super(id, dataModel);
 		
 		setOutputMarkupId(true);
@@ -136,8 +136,8 @@ public class ResourceListPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	private ListView<ColumnHeader> createHeaders(final ColumnConfiguration config) {
-		return new ListView<ColumnHeader>("headers", config.getHeaderModel()) {
+	private ListView<ColumnHeader> createHeaders(final IModel<ColumnConfiguration> configModel) {
+		return new ListView<ColumnHeader>("headers", new ColumnHeaderModel(configModel)) {
 			@Override
 			protected void populateItem(final ListItem<ColumnHeader> item) {
 				final ColumnHeader header = item.getModelObject();
@@ -146,10 +146,11 @@ public class ResourceListPanel extends Panel {
 		};
 	}
 	
-	private ListView<ResourceNode> createRows(final IModel<List<ResourceNode>> model, final ColumnConfiguration config) {
+	private ListView<ResourceNode> createRows(final IModel<List<ResourceNode>> model, final IModel<ColumnConfiguration> configModel) {
 		return new ListView<ResourceNode>("rows", model) {
 			@Override
 			protected void populateItem(final ListItem<ResourceNode> item) {
+				final ColumnConfiguration config = configModel.getObject();
 				item.add(createCells(new UndeclaredFieldsListModel(item.getModel(), config)));
 				item.add(createActions(item.getModelObject(), config.getActions()));
 			}

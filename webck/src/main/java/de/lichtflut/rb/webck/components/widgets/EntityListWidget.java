@@ -3,20 +3,29 @@
  */
 package de.lichtflut.rb.webck.components.widgets;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.query.Query;
+import org.arastreju.sge.structure.OrderBySerialNumber;
 
-import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
+import de.lichtflut.rb.webck.components.listview.ListAction;
 import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
+import de.lichtflut.rb.webck.components.widgets.config.EntityListWidgetConfigPanel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
 /**
  * <p>
@@ -31,6 +40,8 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
  */
 public class EntityListWidget extends AbstractWidget {
 
+	public static final int MAX_RESULTS = 10;
+	
 	@SpringBean
 	protected ServiceProvider provider;
 
@@ -42,22 +53,18 @@ public class EntityListWidget extends AbstractWidget {
 	public EntityListWidget(String id, IModel<WidgetSpec> spec) {
 		super(id, spec);
 		
-		final ColumnConfiguration config = ColumnConfiguration.defaultConfig();
-		addResolved(config, RB.HAS_FIRST_NAME);
-		addResolved(config, RB.HAS_LAST_NAME);
-		addResolved(config, RB.HAS_EMAIL);
-		addResolved(config, RB.IS_EMPLOYED_BY);
+		getDisplayPane().add(new ResourceListPanel("listView", modelFor(spec, MAX_RESULTS), configModel(spec)));
 		
-		add(new ResourceListPanel("listView", modelFor(spec, 10), config));
 	}
 	
 	// ----------------------------------------------------
 	
-	protected void addResolved(ColumnConfiguration config, ResourceID predicate) {
-		config.addColumnByPredicate(
-				provider.getArastejuGate().startConversation().resolve(predicate));
-	}
-
+	protected WebMarkupContainer createConfigurationPane(String componentID, IModel<WidgetSpec> spec) {
+		return new EntityListWidgetConfigPanel(componentID, spec);
+	};
+	
+	// ----------------------------------------------------
+	
 	protected IModel<List<ResourceNode>> modelFor(final IModel<WidgetSpec> spec, final int maxResults) {
 		return new AbstractLoadableDetachableModel<List<ResourceNode>>() {
 			@Override
@@ -67,6 +74,34 @@ public class EntityListWidget extends AbstractWidget {
 				return query.getResult().toList(maxResults);
 			}
 		};
+	}
+	
+	protected IModel<ColumnConfiguration> configModel(final IModel<WidgetSpec> specModel) {
+		return new DerivedDetachableModel<ColumnConfiguration, WidgetSpec>(specModel) {
+			@Override
+			protected ColumnConfiguration derive(WidgetSpec spec) {
+				final ColumnConfiguration config = new ColumnConfiguration(ListAction.VIEW);
+				for (ResourceNode node : getColumnDefs(spec)) {
+					final SemanticNode predicate = SNOPS.fetchObject(node.asResource(), WDGT.CORRESPONDS_TO_PROPERTY);
+					config.addColumnByPredicate(resolve(predicate));
+				}
+				return config;
+			}
+		};
+	}
+	
+	private ResourceNode resolve(SemanticNode node) {
+		return provider.getResourceResolver().resolve(node.asResource());
+	}
+	
+	private List<ResourceNode> getColumnDefs(WidgetSpec spec) {
+		final Set<SemanticNode> columnDefs = SNOPS.objects(spec, WDGT.DEFINES_COLUMN);
+		final List<ResourceNode> result = new ArrayList<ResourceNode>(columnDefs.size());
+		for (SemanticNode node : columnDefs) {
+			result.add(node.asResource());
+		}
+		Collections.sort(result, new OrderBySerialNumber());
+		return result;
 	}
 
 }
