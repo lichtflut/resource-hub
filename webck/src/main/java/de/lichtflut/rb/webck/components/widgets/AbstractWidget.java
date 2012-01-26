@@ -9,13 +9,17 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.resources.ResourcePropertyModel;
 
 /**
  * <p>
@@ -52,20 +56,38 @@ public abstract class AbstractWidget extends TypedPanel<WidgetSpec> {
 		this.isViewMode = areEqual(mode, DisplayMode.VIEW);
 		this.isEditMode = areEqual(mode, DisplayMode.EDIT);
 		
-		final WebMarkupContainer display = createDisplayPane("display");
-		display.add(new AjaxLink("configureLink") {
+		add(new Label("title", new ResourcePropertyModel(spec, RB.HAS_TITLE)));
+		
+		add(new AjaxLink("configureLink") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				mode.setObject(DisplayMode.EDIT);
-				target.add(AbstractWidget.this);
+				switchToConfiguration();
 			}
-		});
+		}.add(visibleIf(isViewMode)));
+		
+		final WebMarkupContainer display = createDisplayPane("display");
 		display.add(visibleIf(isViewMode));
 		add(display);
 		
 		final WebMarkupContainer config = createConfigurationPane("configuration", spec);
 		config.add(visibleIf(isEditMode));
 		add(config);
+	}
+	
+	// ----------------------------------------------------
+	
+	public boolean isEditMode() {
+		return DisplayMode.EDIT.equals(mode.getObject());
+	}
+	
+	public void switchToDisplay() {
+		this.mode.setObject(DisplayMode.VIEW);
+		RBAjaxTarget.add(this);
+	}
+	
+	public void switchToConfiguration() {
+		this.mode.setObject(DisplayMode.EDIT);
+		RBAjaxTarget.add(this);
 	}
 	
 	// ----------------------------------------------------
@@ -92,10 +114,6 @@ public abstract class AbstractWidget extends TypedPanel<WidgetSpec> {
 		return (WebMarkupContainer) get("display");
 	}
 	
-	// ----------------------------------------------------
-	
-	protected boolean isEditMode() {
-		return DisplayMode.EDIT.equals(mode.getObject());
-	}
+
 	
 }

@@ -48,6 +48,7 @@ public class PerspectivePanel extends Panel {
 		
 		final WidgetSpec widgetSpec = new SNWidgetSpec();
 		widgetSpec.setSelection(createSelection());
+		widgetSpec.setTitle("All people");
 		
 		addColumn(widgetSpec, RB.HAS_FIRST_NAME);
 		addColumn(widgetSpec, RB.HAS_LAST_NAME);
