@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
-import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -286,9 +286,9 @@ public class SchemaManagerImpl implements SchemaManager {
 		// 1st: check described type
 		final ResourceNode attached = mc.resolve(schema.getDescribedType());
 		final Set<SemanticNode> clazzes = SNOPS.objects(attached, RDF.TYPE);
-		if (!clazzes.contains(RB.TYPE)) {
+		if (!clazzes.contains(RBSystem.TYPE)) {
 			logger.info("Making {} an rb:Type", attached);
-			SNOPS.associate(attached, RDF.TYPE, RB.TYPE);
+			SNOPS.associate(attached, RDF.TYPE, RBSystem.TYPE);
 		}
 		// 2nd: check properties
 		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {

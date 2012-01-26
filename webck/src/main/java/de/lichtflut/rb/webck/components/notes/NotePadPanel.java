@@ -20,7 +20,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.query.Query;
 
-import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.*;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -140,7 +140,7 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 		*/
 		@Override
 		protected void onSave(ResourceNode note) {
-			SNOPS.assure(note, RB.IS_ATTACHED_TO, target.getObject());
+			SNOPS.assure(note, RBSystem.IS_ATTACHED_TO, target.getObject());
 			ModelingConversation mc = getServiceProvider().getArastejuGate().startConversation();
 			mc.attach(note);
 			mc.close();
@@ -184,7 +184,7 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 		@Override
 		protected Query derive(ResourceID original) {
 			final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
-			query.addField(RB.IS_ATTACHED_TO, original.getQualifiedName().toURI());
+			query.addField(RBSystem.IS_ATTACHED_TO, original.getQualifiedName().toURI());
 			return query;
 		}
 		

@@ -17,7 +17,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 
-import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
@@ -46,7 +46,7 @@ public abstract class EditNoteDialog extends AbstractRBDialog {
 		super(id);
 		
 		final Form form = new Form("form");
-		form.add(new TextArea<SNText>("content", new ResourceTextPropertyModel(model, RB.HAS_CONTENT)).setType(SNText.class));
+		form.add(new TextArea<SNText>("content", new ResourceTextPropertyModel(model, RBSystem.HAS_CONTENT)).setType(SNText.class));
 		form.add(new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {

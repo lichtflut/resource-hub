@@ -21,16 +21,6 @@ import de.lichtflut.rb.core.RB;
  */
 public interface ViewSpec {
 	
-	// -- TYPES -------------------------------------------
-	
-	ResourceID WIDGET = new SimpleResourceID(RB.COMMON_NAMESPACE_URI, "Widget");
-	
-	ResourceID LAYOUT = new SimpleResourceID(RB.COMMON_NAMESPACE_URI, "Layout");
-	
-	ResourceID PERSPECTIVE = new SimpleResourceID(RB.COMMON_NAMESPACE_URI,  "Perspective");
-	
-	ResourceID VIEW_PORT =new SimpleResourceID(RB.COMMON_NAMESPACE_URI,  "ViewPort");
-	
-	String PERSPECTIVE_URI = RB.COMMON_NAMESPACE_URI + "Perspective";
+
 	
 }

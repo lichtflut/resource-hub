@@ -29,6 +29,7 @@ import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
@@ -72,7 +73,7 @@ public abstract class SNPropertyEditorPanel extends Panel {
 		final IModel<String> nameModel = new AbstractLoadableDetachableModel<String>() {
 			@Override
 			public String load() {
-				return string(singleObject(model.getObject(), RB.HAS_FIELD_LABEL));
+				return string(singleObject(model.getObject(), RBSystem.HAS_FIELD_LABEL));
 			}
 		};
 		
@@ -134,10 +135,10 @@ public abstract class SNPropertyEditorPanel extends Panel {
 		final ModelingConversation mc = newMC();
 		final SNProperty property = mc.resolve(properyID).asProperty();
 		if (StringUtils.isBlank(label)) {
-			SNOPS.remove(property, RB.HAS_FIELD_LABEL);
+			SNOPS.remove(property, RBSystem.HAS_FIELD_LABEL);
 			info("Label has been removed");
 		} else {
-			assure(property, RB.HAS_FIELD_LABEL, new SNText(label), RB.TYPE_SYSTEM_CONTEXT);
+			assure(property, RBSystem.HAS_FIELD_LABEL, new SNText(label), RB.TYPE_SYSTEM_CONTEXT);
 			info("Label has been saved");
 		}
 	}

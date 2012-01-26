@@ -17,7 +17,7 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -245,7 +245,7 @@ public class Schema2GraphBinding {
 	protected FieldLabelDefinition createFieldLabelDef(final SNPropertyDeclaration snDecl) {
 		final String defaultName = snDecl.getPropertyDescriptor().getQualifiedName().getSimpleName();
 		final FieldLabelDefinition def = new FieldLabelDefinitionImpl(defaultName);
-		final Set<? extends Statement> assocs = snDecl.getAssociations(RB.HAS_FIELD_LABEL);
+		final Set<? extends Statement> assocs = snDecl.getAssociations(RBSystem.HAS_FIELD_LABEL);
 		for (Statement current : assocs) {
 			// TODO: Evaluate context to locale
 			def.setDefaultLabel(current.getObject().asValue().getStringValue());
@@ -255,7 +255,7 @@ public class Schema2GraphBinding {
 	
 	protected void setFieldLabels(final SNPropertyDeclaration snDecl, final FieldLabelDefinition def) {
 		if (def != null && def.getDefaultLabel() != null) {
-			SNOPS.associate(snDecl, RB.HAS_FIELD_LABEL, new SNText(def.getDefaultLabel()));
+			SNOPS.associate(snDecl, RBSystem.HAS_FIELD_LABEL, new SNText(def.getDefaultLabel()));
 		}
 		// TODO: set i18n labels.
 	}

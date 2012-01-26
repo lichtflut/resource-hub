@@ -10,7 +10,7 @@ import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 
 /**
  * <p>
@@ -36,7 +36,7 @@ public class ResourceLabelBuilder {
 	// ----------------------------------------------------
 
 	public String getFieldLabel(final ResourceID predicate, final Locale locale) {
-		final String label = getLabel(predicate, RB.HAS_FIELD_LABEL, locale);
+		final String label = getLabel(predicate, RBSystem.HAS_FIELD_LABEL, locale);
 		if (label != null) {
 			return label;
 		}

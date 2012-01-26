@@ -20,7 +20,7 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
@@ -106,7 +106,7 @@ public class EntityManagerImpl implements EntityManager {
 		final ModelingConversation mc = startConversation();
 		final ResourceNode node = entity.getNode();
 		SNOPS.associate(node, RDF.TYPE, entity.getType());
-		SNOPS.associate(node, RDF.TYPE, RB.ENTITY);
+		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
 		for (RBField field :entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.assure(node, field.getPredicate(), nodes);
@@ -231,7 +231,7 @@ public class EntityManagerImpl implements EntityManager {
 	private ResourceID detectType(ResourceNode node) {
 		final Set<SemanticNode> objects = SNOPS.objects(node, RDF.TYPE);
 		for (SemanticNode sn : objects) {
-			if (RB.ENTITY.equals(sn)) {
+			if (RBSystem.ENTITY.equals(sn)) {
 				continue;
 			} 
 			return sn.asResource();

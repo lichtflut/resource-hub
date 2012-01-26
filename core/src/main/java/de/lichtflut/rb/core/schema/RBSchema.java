@@ -86,12 +86,12 @@ public interface RBSchema {
 	ResourceID DESCRIBED_BY = new SimpleResourceID(NAMESPACE_URI, "describedBy");
 	
 	/**
-	 * A PropertyAssertion must have a PropertyDeclaration.
+	 * A Schema has one or more PropertyDeclarations.
 	 */
 	ResourceID HAS_PROPERTY_DECL = new SimpleResourceID(NAMESPACE_URI, "hasPropertyDeclaration");
 	
 	/**
-	 * A PropertyAssertion must have a PropertyDeclaration.
+	 * A PropertyDeclaration must have a Property Type Definition.
 	 */
 	ResourceID HAS_PROPERTY_TYPE_DEF = new SimpleResourceID(NAMESPACE_URI, "hasPropertyTypeDefinition");
 	

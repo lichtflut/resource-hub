@@ -6,7 +6,7 @@ package de.lichtflut.rb.webck.components.fields;
 import org.apache.wicket.model.IModel;
 import org.odlabs.wiquery.ui.autocomplete.Autocomplete;
 
-import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 
 /**
  * <p>
@@ -27,7 +27,7 @@ public class SearchField extends Autocomplete<String> {
 	 */
 	public SearchField(final String id, final IModel<String> model) {
 		super(id, model);
-		setSource(EntityPickerField.findEntity(RB.ENTITY));
+		setSource(EntityPickerField.findEntity(RBSystem.ENTITY));
 	}
 
 }

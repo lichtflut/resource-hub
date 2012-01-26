@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 import scala.actors.threadpool.Arrays;
 
 import de.lichtflut.infra.security.Crypt;
-import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.security.LoginData;
 import de.lichtflut.rb.core.services.AuthenticationService;
 import de.lichtflut.rb.core.services.SecurityService;
@@ -155,7 +155,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	
 	private void setLastLogin(final User user) {
 		if (user.getAssociatedResource() != null) {
-			SNOPS.assure(user.getAssociatedResource(), RB.HAS_LAST_LOGIN, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
+			SNOPS.assure(user.getAssociatedResource(), RBSystem.HAS_LAST_LOGIN, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
 		}
 	}
 	

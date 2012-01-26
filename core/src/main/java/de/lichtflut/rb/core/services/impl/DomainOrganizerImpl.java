@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.organizer.ContextDeclaration;
 import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
 import de.lichtflut.rb.core.services.DomainOrganizer;
@@ -106,12 +107,12 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 		final ResourceNode previous = getDomainOrganization();
 		if (previous != null) {
 			ResourceNode attached = mc.resolve(previous);
-			Statement association = singleAssociation(attached, RB.IS_DOMAIN_ORGANIZATION);
+			Statement association = singleAssociation(attached, RBSystem.IS_DOMAIN_ORGANIZATION);
 			attached.removeAssociation(association);
 		}
 		
 		ResourceNode attached = mc.resolve(organization);
-		assure(attached, RB.IS_DOMAIN_ORGANIZATION, new SNValue(ElementaryDataType.BOOLEAN, Boolean.TRUE));
+		assure(attached, RBSystem.IS_DOMAIN_ORGANIZATION, new SNValue(ElementaryDataType.BOOLEAN, Boolean.TRUE));
 		mc.close();
 	}
 
@@ -123,7 +124,7 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 		final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
 		query.addField(RDF.TYPE, RB.ORGANIZATION);
 		query.and();
-		query.addField(RB.IS_DOMAIN_ORGANIZATION, "true");
+		query.addField(RBSystem.IS_DOMAIN_ORGANIZATION, "true");
 		return query.getResult().getSingleNode();
 	}
 	

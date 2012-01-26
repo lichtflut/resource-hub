@@ -3,8 +3,6 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
-import static de.lichtflut.rb.core.viewspec.ViewSpec.*;
-
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -22,7 +20,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-@EntityNode(type=PERSPECTIVE_URI)
+@EntityNode()
 public interface Perspective extends Serializable {
 
 	ResourceID getID();

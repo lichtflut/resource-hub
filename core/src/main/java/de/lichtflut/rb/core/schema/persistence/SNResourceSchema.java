@@ -4,8 +4,6 @@
 package de.lichtflut.rb.core.schema.persistence;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +18,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.model.nodes.views.SNText;
+import org.arastreju.sge.structure.LinkedOrderedNodes;
 
 import de.lichtflut.rb.core.schema.RBSchema;
 
@@ -127,25 +126,14 @@ public class SNResourceSchema extends ResourceView {
 	 * @return The list of all property assertions.
 	 */
 	public List<SNPropertyDeclaration> getPropertyDeclarations(){
-		final List<SNPropertyDeclaration> result = new ArrayList<SNPropertyDeclaration>();
-		
-		SNPropertyDeclaration current = findFirst(getDeclaredPropertyDeclarations());
-		while (current != null) {
-			result.add(current);
-			current = current.getSuccessor();
+		final List<ResourceNode> unsorted = new ArrayList<ResourceNode>();
+		for (Statement current : getAssociations(RBSchema.HAS_PROPERTY_DECL)) {
+			unsorted.add(current.getObject().asResource());
 		}
-		return result;
-	}
-
-	/**
-	 * Returns only the unsorted property declarations declared for this classifier, not the inherited.
-	 * @return The list of property declarations.
-	 */
-	public List<SNPropertyDeclaration> getDeclaredPropertyDeclarations(){
-		List<SNPropertyDeclaration> result = new ArrayList<SNPropertyDeclaration>();
-		Set<? extends Statement> assocs = getAssociations(RBSchema.HAS_PROPERTY_DECL);
-		for (Statement current : assocs) {
-			result.add(new SNPropertyDeclaration(current.getObject().asResource()));
+		final List<SNPropertyDeclaration> result = new ArrayList<SNPropertyDeclaration>(unsorted.size());
+		final List<ResourceNode> sorted = LinkedOrderedNodes.sortResources(unsorted);
+		for (ResourceNode node : sorted) {
+			result.add(new SNPropertyDeclaration(node));
 		}
 		return result;
 	}
@@ -186,47 +174,10 @@ public class SNResourceSchema extends ResourceView {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("ResourceSchema[" + super.toString() + "]");
 		sb.append(" for " + getDescribedType() + "\n");
-		for(SNPropertyDeclaration pa : getDeclaredPropertyDeclarations()){
+		for(SNPropertyDeclaration pa : getPropertyDeclarations()){
 			sb.append("\t" + pa + "\n");
 		}
 		return sb.toString();
 	}
 	
-	// -----------------------------------------------------
-	
-	private SNPropertyDeclaration findFirst(final Collection<SNPropertyDeclaration> decls) {
-		if (decls.isEmpty()) {
-			return null;
-		}
-		ensureCorrectOrder(decls);
-		final Set<SNPropertyDeclaration> all = new HashSet<SNPropertyDeclaration>(decls);
-		final Set<SNPropertyDeclaration> successors = new HashSet<SNPropertyDeclaration>();
-		for (SNPropertyDeclaration current : all) {
-			final SNPropertyDeclaration successor = current.getSuccessor();
-			if (successors != successor) {
-				successors.add(successor);
-			}
-		}
-		all.removeAll(successors);
-		return all.iterator().next();
-	}
-	
-	private void ensureCorrectOrder(final Collection<SNPropertyDeclaration> decls) {
-		final Set<SNPropertyDeclaration> all = new HashSet<SNPropertyDeclaration>(decls);
-		final Set<SNPropertyDeclaration> successors = new HashSet<SNPropertyDeclaration>();
-		for (SNPropertyDeclaration current : all) {
-			final SNPropertyDeclaration successor = current.getSuccessor();
-			if (successors.contains(successor)) {
-				throw new IllegalStateException("Order of PropertyDeclarations has been corrupted!");
-			} else if (null != successor) {
-				successors.add(successor);
-			}
-		}
-		all.removeAll(successors);
-		if (all.isEmpty()) {
-			throw new IllegalStateException("Order of PropertyDeclarations has been corrupted! First element not found.");
-		} else if (all.size() > 1) {
-			throw new IllegalStateException("Order of PropertyDeclarations has been corrupted! More than one first found: " + all);
-		}
-	}
 }

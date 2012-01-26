@@ -20,7 +20,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.infra.data.MultiMap;
-import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 
@@ -41,9 +41,8 @@ public class RelationshipAccess implements Serializable {
 		add(RDF.TYPE);
 		add(RDFS.SUB_CLASS_OF);
 		add(RDFS.LABEL);
-		add(RB.HAS_FIELD_LABEL);
-		add(RB.HAS_IMAGE);
-		add(RB.HAS_SHORT_DESC);
+		add(RBSystem.HAS_FIELD_LABEL);
+		add(RBSystem.HAS_IMAGE);
 	}};
 	
 	private final IModel<RBEntity> source;

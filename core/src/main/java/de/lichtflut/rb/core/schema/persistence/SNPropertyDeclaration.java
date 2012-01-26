@@ -66,21 +66,6 @@ public class SNPropertyDeclaration extends ResourceView {
 	// -----------------------------------------------------
 	
 	/**
-	 * @param singleObject
-	 */
-	private static SNPropertyDeclaration view(final ResourceNode node) {
-		if (node == null){
-			return null;
-		} else if (node instanceof SNPropertyDeclaration) {
-			return (SNPropertyDeclaration) node;
-		} else {
-			return new SNPropertyDeclaration(node);
-		}
-	}
-
-	//-----------------------------------------------------
-
-	/**
 	 * Get the TypeDefinition.
 	 * @return The TypeDefinition.
 	 */
@@ -178,19 +163,6 @@ public class SNPropertyDeclaration extends ResourceView {
 	
 	// -- ORDER -------------------------------------------
 	
-	/**
-	 * Get the successor of this PropertyDeclaration in the ordered list.
-	 * @return The successor or null.
-	 */
-	public SNPropertyDeclaration getSuccessor() {
-		final SemanticNode successor = SNOPS.singleObject(this, Aras.IS_PREDECESSOR_OF);
-		if (successor != null) {
-			return view(successor.asResource());
-		} else {
-			return null;
-		}
-	}
-
 	/**
 	 * Set the successor of this PropertyDeclaration in the ordered list.
 	 * @param successor The successor node.

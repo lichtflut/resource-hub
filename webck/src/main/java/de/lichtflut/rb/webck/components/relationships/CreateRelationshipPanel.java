@@ -24,7 +24,7 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
-import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
@@ -73,7 +73,7 @@ public class CreateRelationshipPanel extends Panel {
 		final Form form = new Form("form");
 		form.add(new FeedbackPanel("feedback"));
 		
-		final EntityPickerField entityPicker = new EntityPickerField("objectPicker", objectModel, RB.ENTITY);
+		final EntityPickerField entityPicker = new EntityPickerField("objectPicker", objectModel, RBSystem.ENTITY);
 		entityPicker.add(enableIf(isNull(objectModel)));
 		entityPicker.getSuggestLink().setVisible(false);
 		form.add(entityPicker);

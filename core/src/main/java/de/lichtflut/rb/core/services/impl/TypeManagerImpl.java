@@ -18,6 +18,7 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.QueryManager;
 
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.TypeManager;
 
@@ -54,7 +55,7 @@ public class TypeManagerImpl implements TypeManager {
 	@Override
 	public List<SNClass> findAllTypes() {
 		final List<SNClass> result = new ArrayList<SNClass>();
-		final List<ResourceNode> nodes = query().findByType(RB.TYPE);
+		final List<ResourceNode> nodes = query().findByType(RBSystem.TYPE);
 		for (ResourceNode current : nodes) {
 			result.add(current.asClass());
 		}
@@ -67,7 +68,7 @@ public class TypeManagerImpl implements TypeManager {
 	@Override
 	public SNClass createType(final QualifiedName qn) {
 		final SNClass type = new SNResource(qn).asClass();
-		SNOPS.associate(type, RDF.TYPE, RB.TYPE, RB.TYPE_SYSTEM_CONTEXT);
+		SNOPS.associate(type, RDF.TYPE, RBSystem.TYPE, RB.TYPE_SYSTEM_CONTEXT);
 		newMC().attach(type);
 		return type;
 	}

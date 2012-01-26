@@ -19,8 +19,6 @@ import org.arastreju.sge.model.SimpleResourceID;
  */
 public interface RB {
 
-	String SYS_NAMESPACE_URI = "http://rb.lichtflut.de/system#";
-	
 	String CTX_NAMESPACE_URI = "http://rb.lichtflut.de/contexts#";
 	
 	String COMMON_NAMESPACE_URI = "http://rb.lichtflut.de/common#";
@@ -52,17 +50,6 @@ public interface RB {
 	
 	// ----------------------------------------------------
 
-	/**
-	 * Sub class of rdf:Class/owl:Class. Classes that are resource browser types.
-	 * can be marked as such by being of rdf:type rb:Type.
-	 */
-	ResourceID TYPE = new SimpleResourceID(SYS_NAMESPACE_URI, "Type");
-	
-	/**
-	 * rb:Entities are instances of rb:Type.
-	 */
-	ResourceID ENTITY = new SimpleResourceID(SYS_NAMESPACE_URI, "Entity");
-	
 	ResourceID PERSON = new SimpleResourceID(COMMON_NAMESPACE_URI, "Person");
 	
 	ResourceID ORGANIZATION = new SimpleResourceID(COMMON_NAMESPACE_URI, "Organization");
@@ -72,48 +59,6 @@ public interface RB {
 	ResourceID ADDRESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "Address");
 	
 	ResourceID NOTE = new SimpleResourceID(COMMON_NAMESPACE_URI, "Note");
-	
-	// -- SYSTEM PROPERTIES -------------------------------
-	
-	/**
-	 * Each RBEntity may have a primary image URL/ID.
-	 */
-	ResourceID HAS_IMAGE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasImage");
-	
-	/**
-	 * The last login of a user.
-	 */
-	ResourceID HAS_LAST_LOGIN = new SimpleResourceID(SYS_NAMESPACE_URI, "hasLastLogin");
-
-	/**
-	 * Each RBEntity may have a short literal description.
-	 */
-	ResourceID HAS_SHORT_DESC = new SimpleResourceID(SYS_NAMESPACE_URI, "hasShortDescription");
-	
-	/**
-	 * Each RBEntity may have a primary image URL/ID.
-	 */
-	ResourceID HAS_FIELD_LABEL = new SimpleResourceID(SYS_NAMESPACE_URI, "hasFieldLabel");
-	
-	/**
-	 * Boolean value indicating of an organization is the domain's owning one.
-	 */
-	ResourceID IS_DOMAIN_ORGANIZATION = new SimpleResourceID(SYS_NAMESPACE_URI, "isDomainOrganization");
-
-	/**
-	 * Each User may be represented by an RBEntity.
-	 */
-	ResourceID IS_RESPRESENTED_BY = new SimpleResourceID(SYS_NAMESPACE_URI, "isRepresentedBy");
-	
-	/**
-	 * Is attached to an entity.
-	 */
-	ResourceID IS_ATTACHED_TO = new SimpleResourceID(SYS_NAMESPACE_URI, "isAttachedTo");
-	
-	/**
-	 * The content. E.g. of an attachment.
-	 */
-	ResourceID HAS_CONTENT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasContent");
 	
 	// -- COMMON PROPERTIES --------------------------------------
 

@@ -29,6 +29,7 @@ import org.arastreju.sge.security.User;
 import org.arastreju.sge.security.impl.UserImpl;
 
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
@@ -112,7 +113,7 @@ public abstract class SetUserProfilePanel extends Panel {
 		this.profileModel = new DerivedModel<ResourceID, User>(user) {
 			@Override
 			protected ResourceID derive(User original) {
-				final SemanticNode node = SNOPS.singleObject(original.getAssociatedResource(), RB.IS_RESPRESENTED_BY);
+				final SemanticNode node = SNOPS.singleObject(original.getAssociatedResource(), RBSystem.IS_RESPRESENTED_BY);
 				if (node != null) {
 					return node.asResource();
 				} else {
@@ -130,7 +131,7 @@ public abstract class SetUserProfilePanel extends Panel {
 
 			@Override
 			protected Boolean derive(User original) {
-				return SNOPS.singleObject(original.getAssociatedResource(), RB.IS_RESPRESENTED_BY) != null;
+				return SNOPS.singleObject(original.getAssociatedResource(), RBSystem.IS_RESPRESENTED_BY) != null;
 			}
 		};
 	}
@@ -219,7 +220,7 @@ public abstract class SetUserProfilePanel extends Panel {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				final EntityHandle handle = EntityHandle.forType(RB.PERSON);
 				final ReferenceReceiveAction action = new ResourceAttributeApplyAction(
-					user.getObject().getAssociatedResource(), RB.IS_RESPRESENTED_BY);
+					user.getObject().getAssociatedResource(), RBSystem.IS_RESPRESENTED_BY);
 				getHistory().clear(new JumpTarget(getUserProfilePage()));
 				getHistory().createReference(handle, action);
 				jumpToResourceEditorPage(handle);
@@ -242,7 +243,7 @@ public abstract class SetUserProfilePanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				if(profileModel.getObject() != null){
-					SNOPS.remove(user.getObject().getAssociatedResource(), RB.IS_RESPRESENTED_BY, profileModel.getObject());
+					SNOPS.remove(user.getObject().getAssociatedResource(), RBSystem.IS_RESPRESENTED_BY, profileModel.getObject());
 					mode.setObject(DisplayMode.VIEW);
 					RBAjaxTarget.add(form);
 				}
@@ -300,7 +301,7 @@ public abstract class SetUserProfilePanel extends Panel {
 	 */
 	protected void createRelationship(ResourceNode userNode, ResourceID resourceID){
 		if(resourceID != null){
-			SNOPS.assure(userNode, RB.IS_RESPRESENTED_BY, resourceID, RB.PRIVATE_CONTEXT);
+			SNOPS.assure(userNode, RBSystem.IS_RESPRESENTED_BY, resourceID, RB.PRIVATE_CONTEXT);
 		}
 	}
 
