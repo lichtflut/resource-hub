@@ -166,14 +166,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				logger.info("Login token has been expired: " + token);
 				return false;
 			}
+			final SemanticNode credential = SNOPS.singleObject(user.getAssociatedResource(), Aras.HAS_CREDENTIAL);
+			if (credential != null) {
+				final String raw = email + ":" + validUntil; 
+				final String crypted = Crypt.md5Hex(raw + credential.asValue().getStringValue());
+				return crypted.equals(token);
+			}
 		} catch (ParseException e) {
 			logger.info("Login token could not be parsed: " + token);
-			return false;
 		}
-		final SemanticNode credential = SNOPS.singleObject(user.getAssociatedResource(), Aras.HAS_CREDENTIAL);
-		final String raw = email + ":" + validUntil; 
-		final String crypted = Crypt.md5Hex(raw + credential.asValue().getStringValue());
-		return crypted.equals(token);
+		return false;
 	}
 	
 	private Credential toCredential(final String password) {

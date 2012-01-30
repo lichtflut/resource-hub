@@ -59,7 +59,18 @@ public abstract class DerivedDetachableModel<T, M> extends AbstractLoadableDetac
 	public T getDefault() {
 		return null;
 	}
-
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void detach() {
+		super.detach();
+		if (originalModel != null) {
+			originalModel.detach();
+		}
+	}
+	
 	// ----------------------------------------------------
 	
 	/**

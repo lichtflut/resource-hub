@@ -165,7 +165,7 @@ public class ResourceQueryServlet extends HttpServlet {
 	
 	// ----------------------------------------------------
 	
-	private ServiceProvider getServiceProvider() throws ServletException {
+	protected ServiceProvider getServiceProvider() throws ServletException {
 		if (!Session.exists() || !RBWebSession.get().isAuthenticated()) {
 			throw new ServletException("Unauthenitcated access");
 		}

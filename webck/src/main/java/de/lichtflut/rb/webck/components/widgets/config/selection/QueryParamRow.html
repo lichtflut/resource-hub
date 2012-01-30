@@ -10,12 +10,16 @@
 </wicket:head>
 <wicket:panel>
 
-	<div class="data-picker">
-		<input type="hidden" wicket:id="acValue" />
-		<input type="text" wicket:id="display" class="data-picker-field"/>
-		<a wicket:id="suggest" class="suggest-link">suggest</a>
+	<div class="left-to-right">
+		<select wicket:id="type"></select>
+		<div class="column">
+			<div wicket:id="field"></div>
+		</div>
+		<div class="column">
+			<input wicket:id="valueInput"></input>
+			<div wicket:id="valuePicker"></div>
+		</div>
 	</div>
-		
+
 </wicket:panel>
 </html>
-

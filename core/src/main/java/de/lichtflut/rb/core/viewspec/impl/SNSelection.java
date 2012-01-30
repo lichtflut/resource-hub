@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.viewspec.impl;
 import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -76,7 +77,7 @@ public class SNSelection extends ResourceView implements Selection {
 		}
 		
 		for (SemanticNode parameter : SNOPS.objects(node, WDGT.HAS_PARAMETER)) {
-			appendParameter(parameter.asResource(), query);
+			appendParameter(new SNSelectionParameter(parameter.asResource()), query);
 		}
 		
 		if (expressions.size() > 1) {
@@ -88,24 +89,14 @@ public class SNSelection extends ResourceView implements Selection {
 	 * @param param The parameter node.
 	 * @param query The query to append to.
 	 */
-	private void appendParameter(ResourceNode param, Query query) {
-		final SemanticNode field = SNOPS.singleObject(param, WDGT.CONCERNS_FIELD);
-		final SemanticNode term = SNOPS.singleObject(param, WDGT.HAS_TERM);
-		
-		
-		final String value;
-		if (term.isResourceNode()) {
-			value = term.asResource().toURI();
-		} else {
-			value = term.asValue().getStringValue();
-		}
+	private void appendParameter(SNSelectionParameter param, Query query) {
+		final ResourceID field = param.getField();
+		final String term = SNOPS.string(param.getTerm());
 		
 		if (field != null) {
-			if (field.isResourceNode()) {
-				query.addField(field.asResource(), value);
-			} else {
-				query.addField(field.asValue().getStringValue(), value);
-			}
+			query.addField(field, term);
+		} else {
+			query.addValue(term);
 		}
 		
 	}
