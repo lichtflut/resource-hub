@@ -85,6 +85,11 @@
 			<scope>provided</scope>
 			<optional>false</optional>
 		</dependency>
+		<dependency>
+	<groupId>org.owasp.antisamy</groupId>
+	<artifactId>antisamy</artifactId>
+	<version>1.4.5</version>
+</dependency>
 	</dependencies>
 	<build>
 		<resources>

@@ -92,12 +92,14 @@ public class EntityRowDisplayPanel extends Panel {
 			break;
 		case STRING:
 		case TEXT:
-		case RICH_TEXT:
 			addTextOutput(item, String.class);
+			break;
+		case RICH_TEXT:
+			addHTMLOutput(item);
 			break;
 		}
 	}
-	
+
 	private void addResourceField(final ListItem<RBFieldValueModel> item) {
 		final ResourceID ref = (ResourceID) item.getModelObject().getObject();
 		if (ref != null) {
@@ -124,6 +126,12 @@ public class EntityRowDisplayPanel extends Panel {
 		final Label field = new Label("valuefield", item.getModelObject());
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
 		return field;
+	}
+	
+	private void addHTMLOutput(ListItem<RBFieldValueModel> item) {
+		final Label field = new Label("valuefield", item.getModelObject());
+		field.setEscapeModelStrings(false);
+		item.add(new Fragment("valuefield", "textOutput", this).add(field));
 	}
 	
 	private void addBooleanField(ListItem<RBFieldValueModel> item) {

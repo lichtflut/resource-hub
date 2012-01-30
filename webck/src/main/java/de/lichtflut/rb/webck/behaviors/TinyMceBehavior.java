@@ -49,10 +49,13 @@ public class TinyMceBehavior extends Behavior {
 	public void renderHead(final Component c, final IHeaderResponse response) {
 		response.renderJavaScriptReference("resources/tinymce/tiny_mce/tiny_mce.js");
 		response.renderOnLoadJavaScript("tinyMCE.init({	mode : 'textareas'	});");
-		response.renderOnLoadJavaScript("alert($('#" + component.getMarkupId()+"_ifr').contents().find('#tinymce').text())");
-		response.renderOnLoadJavaScript("$('#" + component.getMarkupId()+"_ifr').contents().find('#tinymce').bind('blur', function() { " +
-				"var htmlStr = $(this).html(); alert(htmlStr + ' ---');"+
-				"$("+ component.getMarkupId() + ").html(htmlStr);})");
+		response.renderOnLoadJavaScript("$(document).ready(function () {" +
+				"$('#" + component.getMarkupId()+"_ifr').contents().find('#tinymce').bind('blur', function() { " +
+					"var htmlStr = $(this).html();"+
+					"$('#"+ component.getMarkupId() + "').html(htmlStr);" +
+					"alert($('#" + component.getMarkupId()+"_ifr').contents().find('#tinymce').text() +' TEXT')" +
+				"})" +
+			"})");
 	}
 
 }
