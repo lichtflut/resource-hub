@@ -22,15 +22,6 @@ public class TinyMceBehavior extends Behavior {
 
 	private Component component;
 	
-	// ---------------- Constructor -------------------------
-
-	/**
-	 * 
-	 */
-	public TinyMceBehavior() {
-		// TODO Auto-generated constructor stub
-	}
-	
 	// ------------------------------------------------------
 	
 	/**
@@ -49,13 +40,11 @@ public class TinyMceBehavior extends Behavior {
 	public void renderHead(final Component c, final IHeaderResponse response) {
 		response.renderJavaScriptReference("resources/tinymce/tiny_mce/tiny_mce.js");
 		response.renderOnLoadJavaScript("tinyMCE.init({	mode : 'textareas'	});");
-		response.renderOnLoadJavaScript("$(document).ready(function () {" +
-				"$('#" + component.getMarkupId()+"_ifr').contents().find('#tinymce').bind('blur', function() { " +
-					"var htmlStr = $(this).html();"+
-					"$('#"+ component.getMarkupId() + "').html(htmlStr);" +
+		response.renderOnLoadJavaScript("$('#" + component.getMarkupId()+"_ifr').contents().find('#tinymce').bind('blur', function() { " +
+					"var val = $(this).html();"+
+					"$('#"+ component.getMarkupId() + "').html(val);" +
 					"alert($('#" + component.getMarkupId()+"_ifr').contents().find('#tinymce').text() +' TEXT')" +
-				"})" +
-			"})");
+				"})");
 	}
 
 }
