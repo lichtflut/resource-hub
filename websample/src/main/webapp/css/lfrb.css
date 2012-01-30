@@ -18,7 +18,40 @@ a:hover {
     text-decoration: underline;
 }
 
+/* COMMON */
+
+div.section {
+	margin: 20px 0 0 ;
+	clear: both;
+	float: none;
+}
+
+div.column {
+	margin: 0 20px;
+}
+
+.central {
+	margin-left: auto;
+	margin-right:auto;
+}
+
+div.left-to-right > * {
+	float:left;
+}
+
+div.right-to-left > * {
+	float:right;
+}
+
 /* INPUT PANELS */
+
+div.form-field {
+	padding: 2px 4px;
+	min-height: 18px;
+	clear: both;
+    float: none;
+    text-align: left;
+}
 
 div.entity-display {
 }
@@ -29,8 +62,6 @@ div.entity-display-fields {
 
 div.entity-field {
     width: 580px;
-    clear: both;
-    float: none;
     text-align: left;
 }
 
@@ -89,8 +120,12 @@ table.entity-list {
 
 /* RESOURCE PICKER */
 
-input.resource-picker {
-	width:200px;
+div.data-picker * {
+	float:left;
+}
+
+input.data-picker-field {
+	width:320px;
 }
 
 .resource-picker-info{

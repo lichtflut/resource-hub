@@ -115,6 +115,10 @@ public interface WDGT {
 	 */
 	ResourceID CORRESPONDS_TO_PROPERTY = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "correspondsToProperty");
 	
+	/**
+	 * A column corresponds to a predicate/property.
+	 */
+	ResourceID HAS_HEADER = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "hasHeader");
 	
 	
 }

@@ -9,8 +9,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.SemanticGraph;
 
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.ViewSpecExportTraverser;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
@@ -34,13 +36,18 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
  */
 @SuppressWarnings("rawtypes")
 public class AbstractWidgetConfigPanel extends TypedPanel<WidgetSpec> {
+	
+	@SpringBean
+	protected ServiceProvider provider;
+
+	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
-	 * @param id
-	 * @param model
+	 * @param id The component ID.
+	 * @param model The model.
 	 */
-	public AbstractWidgetConfigPanel(String id, IModel<WidgetSpec>  model) {
+	public AbstractWidgetConfigPanel(final String id, final IModel<WidgetSpec>  model) {
 		super(id, model);
 		
 		final IModel<SemanticGraph> exportModel = new DerivedModel<SemanticGraph, WidgetSpec>(model) {
@@ -65,6 +72,7 @@ public class AbstractWidgetConfigPanel extends TypedPanel<WidgetSpec> {
 		form.add(new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+				save(model.getObject());
 				findParent(AbstractWidget.class).switchToDisplay();
 			}
 		});
@@ -72,11 +80,38 @@ public class AbstractWidgetConfigPanel extends TypedPanel<WidgetSpec> {
 		form.add(new RBCancelButton("cancel") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+				cancel(model.getObject());
 				findParent(AbstractWidget.class).switchToDisplay();
 			}
 		});
 		
 		add(form);
+	}
+	
+	// ----------------------------------------------------
+	
+	protected final void save(WidgetSpec spec) {
+		onSave(spec);
+		provider.getArastejuGate().startConversation().attach(spec);
+	}
+	
+	/**
+	 * @param object
+	 */
+	protected void cancel(WidgetSpec spec) {
+		provider.getArastejuGate().startConversation().reset(spec);
+	}
+	
+	/**
+	 * @param object
+	 */
+	protected void onSave(WidgetSpec spec) {
+	}
+	
+	// ----------------------------------------------------
+
+	protected Form<?> getForm() {
+		return (Form<?>) get("form");
 	}
 
 }
