@@ -28,14 +28,12 @@ import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
-import wicket.contrib.tinymce.TinyMceBehavior;
-import wicket.contrib.tinymce.settings.TinyMCESettings;
-import wicket.contrib.tinymce.settings.TinyMCESettings.Location;
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.models.fields.FieldCardinalityModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
@@ -212,11 +210,7 @@ public class EntityRowEditPanel extends Panel {
 	
 	private FormComponent<?> addRichTextArea(ListItem<RBFieldValueModel> item) {
 		TextArea<String> field = new TextArea("valuefield", item.getModelObject());
-		TinyMCESettings settings = new TinyMCESettings();
-		settings.setStatusbarLocation(Location.top);
-		settings.setToolbarLocation(Location.top);
-		settings.setResizing(true);
-		field.add(new TinyMceBehavior(settings));
+		field.add(new TinyMceBehavior());
 		item.add(new Fragment("valuefield", "textArea", this).add(field));
 		return field;
 	}

@@ -85,11 +85,6 @@
 			<scope>provided</scope>
 			<optional>false</optional>
 		</dependency>
-		<dependency>
-			<groupId>org.wicketstuff</groupId>
-			<artifactId>wicketstuff-tinymce</artifactId>
-			<version>1.5.3.1</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<resources>
@@ -144,10 +139,6 @@
 			<name>wiQuery repository</name>
 			<url>http://wiquery.googlecode.com/svn/repo/</url>
 			<layout>default</layout>
-		</repository>
-		<repository>
-			<id>wicket-stuff</id>
-			<url>http://wicketstuff.org/maven/repository</url>
 		</repository>
 	</repositories>
 </project>
