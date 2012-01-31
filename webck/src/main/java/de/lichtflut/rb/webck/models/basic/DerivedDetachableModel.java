@@ -80,4 +80,16 @@ public abstract class DerivedDetachableModel<T, M> extends AbstractLoadableDetac
 	 */
 	protected abstract T derive(M original);
 	
+	// ----------------------------------------------------
+	
+	protected M getOriginal() {
+		if (original != null) {
+			return original;
+		} else if (originalModel != null) {
+			return originalModel.getObject();
+		} else {
+			return null;
+		}
+	}
+	
 }

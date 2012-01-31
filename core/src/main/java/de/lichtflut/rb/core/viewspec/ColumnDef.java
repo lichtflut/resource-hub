@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.viewspec;
 
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>
@@ -16,18 +17,18 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface ColumnDef {
+public interface ColumnDef extends ResourceNode {
 
-	public abstract ResourceID getProperty();
+	ResourceID getProperty();
 
-	public abstract String getHeader();
+	String getHeader();
 
-	public abstract Integer getPosition();
+	Integer getPosition();
 
-	public abstract void setProperty(ResourceID property);
+	void setProperty(ResourceID property);
 
-	public abstract void setHeader(String header);
+	void setHeader(String header);
 
-	public abstract void setPosition(Integer position);
+	void setPosition(Integer position);
 
 }

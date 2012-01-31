@@ -18,6 +18,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.common.EntityLabelBuilder;
@@ -46,7 +47,12 @@ import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
  *
  * @author Oliver Tigges
  */
-public abstract class SchemaEditorPanel extends Panel {
+public class SchemaEditorPanel extends Panel {
+	
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
 	
 	/**
 	 *  Constructor.
@@ -89,7 +95,7 @@ public abstract class SchemaEditorPanel extends Panel {
 					final PropertyDeclaration decl = PropertyRow.toPropertyDeclaration(row);
 					schema.addPropertyDeclaration(decl);	
 				}
-				getServiceProvider().getSchemaManager().store(schema);
+				provider.getSchemaManager().store(schema);
 				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
 				info("Schema saved succesfully.");
 				target.add(form);
@@ -100,7 +106,7 @@ public abstract class SchemaEditorPanel extends Panel {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				final ResourceSchema original = model.getObject();
-				getServiceProvider().getTypeManager().removeType(original.getDescribedType());
+				provider.getTypeManager().removeType(original.getDescribedType());
 				info("Schema deleted.");
 				SchemaEditorPanel.this.setVisible(false);
 				target.add(SchemaEditorPanel.this);
@@ -176,10 +182,6 @@ public abstract class SchemaEditorPanel extends Panel {
 	}
 	
 	// -----------------------------------------------------
-	
-	protected abstract ServiceProvider getServiceProvider();
-	
-	// ----------------------------------------------------
 	
 	protected String max(final PropertyDeclaration pa) {
 		if (pa.getCardinality().isUnbound()) {

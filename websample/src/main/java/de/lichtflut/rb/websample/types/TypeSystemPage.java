@@ -126,12 +126,7 @@ public class TypeSystemPage extends RBBasePage {
 	
 	protected void displaySchemaEditor(final SNClass type) {
 		final ResourceSchema schema = getServiceProvider().getSchemaManager().findSchemaForType(type);
-		final SchemaEditorPanel editor = new SchemaEditorPanel("editor", Model.of(schema)) {
-			@Override
-			protected ServiceProvider getServiceProvider() {
-				return TypeSystemPage.this.getServiceProvider();
-			}
-		};
+		final SchemaEditorPanel editor = new SchemaEditorPanel("editor", Model.of(schema));
 		TypeSystemPage.this.replace(editor);
 		// force redirect
 		setResponsePage(TypeSystemPage.this);

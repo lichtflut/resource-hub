@@ -10,13 +10,10 @@
 </wicket:head>
 <wicket:panel>
 
-	<div>
-		<div>
-			<wicket:container wicket:id="columnList">
-				<div wicket:id="row" class="form-field"></div>
-			</wicket:container>
-		</div>
-		<a wicket:id="addRow"><wicket:message key="link.add-colum">[add column]</wicket:message></a>
+	<div class="form-field">
+		<div wicket:id="property"></div>
+		<a wicket:id="up"><span class="move-item-up-link">[up]</span></a>
+		<a wicket:id="down"><span class="move-item-down-link">[down]</span></a>
 	</div>
 
 </wicket:panel>

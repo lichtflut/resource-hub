@@ -91,4 +91,14 @@ public class SNColumnDef extends ResourceView implements ColumnDef {
 		setValue(Aras.HAS_SERIAL_NUMBER, position);
 	}
 	
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return getProperty() + " [" + getPosition() + "]";
+	}
+	
 }

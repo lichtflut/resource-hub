@@ -43,6 +43,8 @@ public class ModelChangeEvent<T> {
 	
 	public static final String DOMAINS = "domains";
 	
+	public static final String ANY = "any";
+	
 	private static final ModelChangeEvent EMPTY = new ModelChangeEvent(new String[0]);
 	
 	// ----------------------------------------------------

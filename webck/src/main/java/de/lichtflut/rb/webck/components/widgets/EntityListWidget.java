@@ -83,7 +83,9 @@ public class EntityListWidget extends AbstractWidget {
 				final ColumnConfiguration config = new ColumnConfiguration(ListAction.VIEW);
 				for (ResourceNode node : getColumnDefs(spec)) {
 					final SemanticNode predicate = SNOPS.fetchObject(node.asResource(), WDGT.CORRESPONDS_TO_PROPERTY);
-					config.addColumnByPredicate(resolve(predicate));
+					if (predicate != null) {
+						config.addColumnByPredicate(resolve(predicate));
+					}
 				}
 				return config;
 			}

@@ -61,7 +61,7 @@ public interface EntityLabelBuilder extends Serializable{
 		*/
 		@Override
 		public String toString() {
-			return "----";
+			return "";
 		}
 	}
 
