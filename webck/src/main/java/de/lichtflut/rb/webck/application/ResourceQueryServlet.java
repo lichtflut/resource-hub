@@ -66,8 +66,6 @@ public class ResourceQueryServlet extends HttpServlet {
 	
 	private Logger logger = LoggerFactory.getLogger(ResourceQueryServlet.class);
 	
-	private ServiceProvider provider;
-	
 	// -----------------------------------------------------
 	
 	/** 
@@ -169,12 +167,9 @@ public class ResourceQueryServlet extends HttpServlet {
 		if (!Session.exists() || !RBWebSession.get().isAuthenticated()) {
 			throw new ServletException("Unauthenitcated access");
 		}
-		if (provider == null) {
-			final WebApplicationContext wac = 
-					WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-			provider = wac.getBean(ServiceProvider.class);
-		}
-		return provider;
+		final WebApplicationContext wac = 
+				WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+		return wac.getBean(ServiceProvider.class);
 	}
 	
 	// -----------------------------------------------------
