@@ -3,11 +3,11 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
-import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 
 import org.arastreju.ogm.annotations.EntityNode;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ import org.arastreju.sge.model.ResourceID;
  * @author Oliver Tigges
  */
 @EntityNode()
-public interface Perspective extends Serializable {
+public interface Perspective extends ResourceNode {
 
 	ResourceID getID();
 	
@@ -37,6 +37,6 @@ public interface Perspective extends Serializable {
 	
 	void setDescription(String desc);
 	
-	Collection<ViewPort> getViewPorts();
+	List<ViewPort> getViewPorts();
 
 }

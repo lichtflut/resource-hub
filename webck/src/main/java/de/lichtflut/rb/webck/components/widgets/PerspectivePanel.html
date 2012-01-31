@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+    Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
 
 -->
 <html
@@ -10,7 +10,14 @@
 </wicket:head>
 <wicket:panel>
 
-	<div wicket:id="widget"></div>
+	<div class="section" style="width:100%; text-align:right">
+		<a wicket:id="configureLink"><wicket:message key="link.configure">[configure]</wicket:message></a>
+		<a wicket:id="configDoneLink"><wicket:message key="link.configuration-done">[done]</wicket:message></a>
+	</div>
+
+	<wicket:container wicket:id="portList">
+		<wicket:container wicket:id="port"></wicket:container>
+	</wicket:container>
 
 </wicket:panel>
 </html>

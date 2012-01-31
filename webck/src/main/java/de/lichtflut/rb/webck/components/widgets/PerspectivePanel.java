@@ -3,24 +3,24 @@
  */
 package de.lichtflut.rb.webck.components.widgets;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+
+import java.util.List;
+
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.apriori.Aras;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.model.nodes.views.SNScalar;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.Perspective;
-import de.lichtflut.rb.core.viewspec.WDGT;
-import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.core.viewspec.impl.SNSelection;
-import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
+import de.lichtflut.rb.core.viewspec.ViewPort;
+import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
 /**
  * <p>
@@ -35,55 +35,66 @@ import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
  */
 public class PerspectivePanel extends Panel {
 
-	@SpringBean
-	protected ServiceProvider provider;
+	private IModel<Boolean> isConfigMode = new Model<Boolean>(false);
 
 	// ----------------------------------------------------
 	
 	/**
 	 * @param id
 	 */
+	@SuppressWarnings("rawtypes")
 	public PerspectivePanel(String id, IModel<Perspective> spec) {
 		super(id);
 		
-		final WidgetSpec widgetSpec = new SNWidgetSpec();
-		widgetSpec.setSelection(createSelection());
-		widgetSpec.setTitle("All people");
+		setOutputMarkupId(true);
 		
-		addColumn(widgetSpec, RB.HAS_FIRST_NAME);
-		addColumn(widgetSpec, RB.HAS_LAST_NAME);
-		addColumn(widgetSpec, RB.HAS_EMAIL);
-		addColumn(widgetSpec, RB.IS_EMPLOYED_BY);
+		final ConditionalModel<Boolean> isConfigConditional = isTrue(isConfigMode);
 		
-		final Model<WidgetSpec> widgetModel = new Model<WidgetSpec>(widgetSpec);
+		add(new AjaxLink("configureLink") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				isConfigMode.setObject(true);
+				target.add(PerspectivePanel.this);
+			}
+		}.add(visibleIf(not(isConfigConditional))));
 		
-		add(new EntityListWidget("widget", widgetModel));
+		add(new AjaxLink("configDoneLink") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				isConfigMode.setObject(false);
+				target.add(PerspectivePanel.this);
+			}
+		}.add(visibleIf(isConfigConditional)));
+		
+
+		add(new ListView<ViewPort>("portList", new PortListModel(spec)) {
+			@Override
+			protected void populateItem(ListItem<ViewPort> item) {
+				item.add(new ViewPortPanel("port", item.getModel(), isConfigConditional));
+			}
+		});
+		
 	}
 	
 	// ----------------------------------------------------
 	
-	private SNSelection createSelection() {
-		final SNSelection selection = new SNSelection();
+	class PortListModel extends DerivedDetachableModel<List<ViewPort>, Perspective> {
+
+		/**
+		 * @param original The original model.
+		 */
+		public PortListModel(IModel<Perspective> original) {
+			super(original);
+		}
+
+		/** 
+		 * {@inheritDoc}
+		 */
+		@Override
+		protected List<ViewPort> derive(Perspective original) {
+			return original.getViewPorts();
+		}
 		
-		final ResourceNode typeParam = new SNResource();
-		typeParam.addAssociation(WDGT.CONCERNS_FIELD, RDF.TYPE);
-		typeParam.addAssociation(WDGT.HAS_TERM, RB.PERSON);
-		
-		selection.addAssociation(WDGT.HAS_PARAMETER, typeParam);
-		
-		return selection;
-	}
-	
-	private void addColumn(WidgetSpec widgetSpec, ResourceID predicate) {
-		final int idx = widgetSpec.getAssociations(WDGT.DEFINES_COLUMN).size() +1;
-		widgetSpec.addAssociation(WDGT.DEFINES_COLUMN, createColumnDef(predicate, idx));
-	}
-	
-	private ResourceNode createColumnDef(ResourceID predicate, int serialNo) {
-		final ResourceNode def = new SNResource();
-		def.addAssociation(WDGT.CORRESPONDS_TO_PROPERTY, predicate);
-		def.addAssociation(Aras.HAS_SERIAL_NUMBER, new SNScalar(serialNo));
-		return def;
 	}
 	
 }

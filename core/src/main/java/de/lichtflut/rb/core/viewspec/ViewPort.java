@@ -3,7 +3,10 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
+import java.util.List;
+
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>
@@ -16,14 +19,15 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
-public interface ViewPort {
+public interface ViewPort extends ResourceNode {
 	
 	ResourceID getID();
 	
-	int getColumn();
+	Integer getPosition();
 	
-	int getOrder();
+	void setPosition(Integer position);
 	
-	WidgetSpec getWidget();
+	List<WidgetSpec> getWidgets();
+
 
 }

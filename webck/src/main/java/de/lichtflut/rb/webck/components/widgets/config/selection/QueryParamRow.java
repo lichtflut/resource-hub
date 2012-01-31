@@ -15,7 +15,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNText;
 
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.webck.components.fields.ResourcePickerField;
@@ -94,8 +94,9 @@ public class QueryParamRow extends Panel {
 		field.add(visibleIf(hasSpecificField));
 		add(field);
 		
-		final TextField<SemanticNode> valueInput = new TextField<SemanticNode>("valueInput", 
-				new PropertyModel<SemanticNode>(model, "value"));
+		final TextField<SNText> valueInput = new TextField<SNText>("valueInput", 
+				new PropertyModel<SNText>(model, "value"));
+		valueInput.setType(SNText.class);
 		valueInput.add(visibleIf(not(isRelation)));
 		add(valueInput);
 		

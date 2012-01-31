@@ -29,6 +29,8 @@ public class AbstractRBDialog extends Dialog {
 	 */
 	public AbstractRBDialog(final String id) {
 		super(id);
+		
+		setModal(true);
 	}
 	
 	// ----------------------------------------------------

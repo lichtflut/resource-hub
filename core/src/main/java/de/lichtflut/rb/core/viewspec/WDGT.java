@@ -23,6 +23,10 @@ public interface WDGT {
 	
 	// -- TYPES -------------------------------------------
 	
+	ResourceID PERSPECTIVE = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI,  "Perspective");
+	
+	ResourceID VIEW_PORT =new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI,  "ViewPort");
+	
 	ResourceID WIDGET = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "Widget");
 	
 	ResourceID ENTITY_DETAILS = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "EntityDetailsWidget");
@@ -32,10 +36,6 @@ public interface WDGT {
 	ResourceID INVOVIS = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "InfoVisWidget");
 	
 	ResourceID LAYOUT = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "Layout");
-	
-	ResourceID PERSPECTIVE = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI,  "Perspective");
-	
-	ResourceID VIEW_PORT =new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI,  "ViewPort");
 	
 	ResourceID COLUMN_DEF = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI,  "EntityListColumnDefinition");
 	

@@ -12,9 +12,10 @@
 
 	<div>
 		<div>
-			<wicket:container wicket:id="columnList">
-				<div wicket:id="row" class="form-field"></div>
-			</wicket:container>
+			<div wicket:id="columnList" class="form-field">
+				<wicket:container wicket:id="row" ></wicket:container>
+				<a wicket:id="removeLink" tabindex="-1"><span class="remove-value-link">-</span></a>
+			</div>
 		</div>
 		<a wicket:id="addRow"><wicket:message key="link.add-colum">[add column]</wicket:message></a>
 	</div>

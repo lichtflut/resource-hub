@@ -4,7 +4,9 @@
 package de.lichtflut.rb.webck.behaviors;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.model.IModel;
 
 /**
  * <p>
@@ -17,21 +19,18 @@ import org.apache.wicket.model.Model;
  *
  * @author Oliver Tigges
  */
-public class CssModifier extends AttributeModifier {
+public class CssModifier {
 
-	public static CssModifier setClass(final String cssClass) {
-		return new CssModifier("class", cssClass);
+	public static Behavior setClass(final String cssClass) {
+		return new AttributeModifier("class", cssClass);
 	}
 	
-	// ----------------------------------------------------
-	
-	/**
-	 * @param attribute
-	 * @param addAttributeIfNotPresent
-	 * @param replaceModel
-	 */
-	public CssModifier(final String attribute, final String value) {
-		super(attribute, new Model<String>(value));
+	public static Behavior setClass(final IModel<String> cssClass) {
+		return new AttributeModifier("class", cssClass);
 	}
-
+	
+	public static Behavior appendClass(final IModel<String> cssClass) {
+		return new AttributeAppender("class", cssClass, " ");
+	}
+	
 }

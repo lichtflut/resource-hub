@@ -10,9 +10,15 @@
 </wicket:head>
 <wicket:panel>
 
-	<wicket:container wicket:id="paramList">
-		<div wicket:id="param" class="form-field left-to-right"></div>
-	</wicket:container>
+	<div wicket:id="container" class="view-port">
+		
+		<a wicket:id="addWidget"><wicket:message key="link.add-widget">[add widget]</wicket:message></a>
+	
+		<wicket:container wicket:id="widgetList">
+			<div wicket:id="widget"></div>
+		</wicket:container>
+		
+	</div>
 
 </wicket:panel>
 </html>

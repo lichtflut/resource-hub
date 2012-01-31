@@ -14,6 +14,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
@@ -32,6 +33,7 @@ import de.lichtflut.rb.webck.common.OrderedNodesContainer;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.common.impl.SerialNumberOrderedNodesContainer;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.components.links.ConfirmedLink;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.basic.CastingModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
@@ -76,6 +78,7 @@ public class ColumnsConfigPanel extends TypedPanel<WidgetSpec> {
 			@Override
 			protected void populateItem(ListItem<ColumnDef> item) {
 				item.add(new ColumnsConfigRow("row", item.getModel(), container));
+				item.add(createRemoveLink(item.getModel()));
 			}
 		});
 		
@@ -96,8 +99,7 @@ public class ColumnsConfigPanel extends TypedPanel<WidgetSpec> {
 	@Override
 	public void onEvent(IEvent<?> event) {
 		if (ModelChangeEvent.from(event).isAbout(ModelChangeEvent.ANY)) {
-			RBAjaxTarget.add(this);	
-			columnsModel.reset();
+			update();
 		}
 	}
 	
@@ -110,13 +112,28 @@ public class ColumnsConfigPanel extends TypedPanel<WidgetSpec> {
 		columnsModel.detach();
 	}
 	
-	@SuppressWarnings("rawtypes")
-	private AjaxLink createRemoveLink() {
-		return new AjaxLink("remove") {
+	// ----------------------------------------------------
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private AjaxLink createRemoveLink(final IModel<ColumnDef> model) {
+		return new ConfirmedLink("removeLink", new ResourceModel("global.message.remove-widget-column-confirmation")) {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			protected void applyActions(AjaxRequestTarget target) {
+				removeColumn(model.getObject());
 			}
 		};
+	}
+	
+	private void removeColumn(final ColumnDef columnDef) {
+		final WidgetSpec widgetSpec = getModelObject();
+		SNOPS.remove(widgetSpec, WDGT.DEFINES_COLUMN, columnDef);
+		provider.getArastejuGate().startConversation().remove(columnDef);
+		update();
+	}
+	
+	private void update() {
+		RBAjaxTarget.add(this);	
+		columnsModel.reset();
 	}
 	
 	// ----------------------------------------------------
@@ -139,12 +156,6 @@ public class ColumnsConfigPanel extends TypedPanel<WidgetSpec> {
 			SNOPS.associate(widgetSpec, WDGT.DEFINES_COLUMN, columnDef);
 		}
 
-		public void removeColumn(SNColumnDef column) {
-			final WidgetSpec widgetSpec = getOriginal();
-			SNOPS.remove(widgetSpec, WDGT.DEFINES_COLUMN, column);
-			provider.getArastejuGate().startConversation().remove(column);
-		}
-		
 		/** 
 		 * {@inheritDoc}
 		 */

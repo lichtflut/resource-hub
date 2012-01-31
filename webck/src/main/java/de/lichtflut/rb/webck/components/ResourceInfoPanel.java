@@ -52,6 +52,13 @@ public class ResourceInfoPanel extends Panel {
 				return getString("label.untitled");
 			}
 		};
+		
+		add(new CrossLink("showDetails", new DerivedModel<String, RBEntity>(model) {
+			@Override
+			protected String derive(RBEntity original) {
+				return getUrlTo(model.getObject().getID(), VisualizationMode.DETAILS);
+			}
+		}).add(title(new ResourceModel("global.link.detail-visualization"))));
 
 		add(new CrossLink("showPeriphery", new DerivedModel<String, RBEntity>(model) {
 			@Override

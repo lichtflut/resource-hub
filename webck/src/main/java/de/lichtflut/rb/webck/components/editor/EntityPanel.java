@@ -21,6 +21,7 @@ import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.behaviors.FocusFirstFormElementBehavior;
 import de.lichtflut.rb.webck.browsing.BrowsingState;
+import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
 import de.lichtflut.rb.webck.components.ResourceInfoPanel;
 import de.lichtflut.rb.webck.components.common.GoogleMapsPanel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
@@ -95,7 +96,12 @@ public class EntityPanel extends Panel {
 	}
 	
 	private boolean isInViewMode() {
-		return BrowsingState.VIEW.equals(RBWebSession.get().getHistory().getCurrentStep().getState());
+		final EntityBrowsingStep step = RBWebSession.get().getHistory().getCurrentStep();
+		if (step != null) {
+			return BrowsingState.VIEW.equals(step.getState());
+		} else {
+			return true;
+		}
 	}
 	
 }

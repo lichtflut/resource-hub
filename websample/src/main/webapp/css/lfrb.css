@@ -53,6 +53,10 @@ div.form-field {
     text-align: left;
 }
 
+div.form-field > * {
+	margin-left: 5px;
+}
+
 div.entity-display {
 }
 
@@ -145,7 +149,19 @@ div.rb-widget {
 	background: #EEE;
 	border-radius: 5px;
 	padding: 5px;
-	width: 100%;
+	margin: 5px 0;
+}
+
+div.view-port {
+	margin:2px;
+	padding: 5px;
+	float:left;
+}
+
+div.view-port.configuration-mode {
+	border: 1px dashed #999;
+	padding: 3px;
+	background-color: #EEE; 
 }
 
 

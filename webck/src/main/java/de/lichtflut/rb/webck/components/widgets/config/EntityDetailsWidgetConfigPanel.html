@@ -8,11 +8,12 @@
 <wicket:head>
 	<style type="text/css"></style>
 </wicket:head>
-<wicket:panel>
+<wicket:extend>
 
-	<wicket:container wicket:id="paramList">
-		<div wicket:id="param" class="form-field left-to-right"></div>
-	</wicket:container>
+	<div class="section">
+		<h4><wicket:message key="header.selection">[selection]</wicket:message></h4>
+		<div wicket:id="selection"></div>
+	</div>
 
-</wicket:panel>
+</wicket:extend>
 </html>
