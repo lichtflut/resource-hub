@@ -19,7 +19,8 @@ import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
-import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
+import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
+import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
@@ -42,6 +43,9 @@ public class BreadCrumbsBar extends Panel {
 	
 	@SpringBean
 	private ServiceProvider provider;
+	
+	@SpringBean
+	private ResourceLinkProvider resourceLinkProvider;
 	
 	// ----------------------------------------------------
 	
@@ -120,14 +124,7 @@ public class BreadCrumbsBar extends Panel {
 	// ----------------------------------------------------
 	
 	protected CharSequence getUrlTo(ResourceID ref) {
-		final IBrowsingHandler handler = findParent(IBrowsingHandler.class);
-		if (handler == null) {
-			throw new IllegalStateException(getClass().getSimpleName() 
-					+ " must be placed placed in a component/page that implements " 
-					+ IBrowsingHandler.class);
-		}
-		final CharSequence url = handler.getUrlToResource(ref, VisualizationMode.DETAILS);
-		return url;
+		return resourceLinkProvider.getUrlToResource(ref, VisualizationMode.DETAILS, DisplayMode.VIEW);
 	}
 	
 	private ResourceID resolve(ResourceID rid) {

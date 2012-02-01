@@ -13,12 +13,15 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
+import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
@@ -43,6 +46,11 @@ import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
  */
 @SuppressWarnings("rawtypes")
 public class EntityRowDisplayPanel extends Panel {
+	
+	@SpringBean
+	private ResourceLinkProvider resourceLinkProvider;
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -112,14 +120,7 @@ public class EntityRowDisplayPanel extends Panel {
 	}
 
 	protected CharSequence getUrlTo(final ResourceID ref) {
-		final IBrowsingHandler handler = findParent(IBrowsingHandler.class);
-		if (handler == null) {
-			throw new IllegalStateException(getClass().getSimpleName() 
-					+ " must be placed placed in a component/page that implements " 
-					+ IBrowsingHandler.class);
-		}
-		final CharSequence url = handler.getUrlToResource(ref, VisualizationMode.DETAILS);
-		return url;
+		return resourceLinkProvider.getUrlToResource(ref, VisualizationMode.DETAILS, DisplayMode.VIEW);
 	}
 	
 	private Label addTextOutput(final ListItem<RBFieldValueModel> item, Class<?> type) {

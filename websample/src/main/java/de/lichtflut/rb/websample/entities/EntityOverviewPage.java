@@ -17,6 +17,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
 import de.lichtflut.rb.webck.components.listview.ReferenceLink;
 import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
@@ -67,7 +68,8 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 			protected Component createEditAction(final String componentId, final ResourceNode entity) {
 				final PageParameters params = new PageParameters();
 				params.set(EntityDetailPage.PARAM_RESOURCE_ID, entity.getQualifiedName().toURI());
-				params.set(EntityDetailPage.PARAM_MODE, EntityDetailPage.MODE_EDIT);
+				params.set(DisplayMode.PARAMETER, DisplayMode.CREATE);
+				params.set(DisplayMode.PARAMETER, DisplayMode.EDIT);
 				return new ReferenceLink(componentId, EntityDetailPage.class, params, new ResourceModel("action.edit"));
 			}
 			
@@ -83,7 +85,7 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 		
 		final PageParameters linkParams = new PageParameters();
 		linkParams.add(EntityDetailPage.PARAM_RESOURCE_TYPE, type.getQualifiedName().toURI());
-		linkParams.set(EntityDetailPage.PARAM_MODE, EntityDetailPage.MODE_EDIT);
+		linkParams.set(DisplayMode.PARAMETER, DisplayMode.CREATE);
 		final Link createLink = new BookmarkablePageLink("createLink", EntityDetailPage.class, linkParams);
 		add(createLink);
 	}

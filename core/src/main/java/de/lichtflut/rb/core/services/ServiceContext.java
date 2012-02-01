@@ -35,6 +35,14 @@ public class ServiceContext {
 		this.config = config;
 	}
 	
+	/**
+	 * @param config
+	 */
+	public ServiceContext(RBConfig config, String domain) {
+		this.config = config;
+		this.domain = domain;
+	}
+	
 	// ----------------------------------------------------
 
 	/**

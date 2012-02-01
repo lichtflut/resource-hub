@@ -81,6 +81,8 @@ public class DashboardPage extends RBBasePage {
 		addColumn(widgetSpec, RB.HAS_EMAIL);
 		addColumn(widgetSpec, RB.IS_EMPLOYED_BY);
 		
+		widgetSpec.addAssociation(WDGT.SUPPORTS_ACTION, createInstantiateAction(RB.PERSON));
+		
 		return widgetSpec;
 	}
 	
@@ -121,6 +123,12 @@ public class DashboardPage extends RBBasePage {
 		def.addAssociation(WDGT.CORRESPONDS_TO_PROPERTY, predicate);
 		def.addAssociation(Aras.HAS_SERIAL_NUMBER, new SNScalar(serialNo));
 		return def;
+	}
+	
+	private ResourceNode createInstantiateAction(ResourceID type) {
+		final ResourceNode action = new SNResource();
+		action.addAssociation(WDGT.ACTION_CREATE_INSTANCE_OF, type);
+		return action;
 	}
 
 }

@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.services.impl;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ArastrejuProfile;
+import org.arastreju.sge.spi.GateContext;
 
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.services.DomainOrganizer;
@@ -35,7 +36,7 @@ public class DefaultRBServiceProvider extends AbstractServiceProvider implements
      * @param config The RBConfig.
      */
     public DefaultRBServiceProvider(final RBConfig config) {
-    	super(new ServiceContext(config));
+    	super(new ServiceContext(config, GateContext.MASTER_DOMAIN));
         final ArastrejuProfile profile = config.getArastrejuConfiguration();
         gate = Arastreju.getInstance(profile).rootContext();
         organizer = new DomainOrganizerImpl(this);

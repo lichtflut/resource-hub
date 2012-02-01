@@ -8,8 +8,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -20,6 +22,11 @@ import org.arastreju.sge.structure.OrderBySerialNumber;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.components.editor.VisualizationMode;
+import de.lichtflut.rb.webck.components.links.CrossLink;
+import de.lichtflut.rb.webck.components.links.LabeledLink;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
 import de.lichtflut.rb.webck.components.listview.ListAction;
 import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
@@ -44,7 +51,10 @@ public class EntityListWidget extends ConfigurableWidget {
 	
 	@SpringBean
 	protected ServiceProvider provider;
-
+	
+	@SpringBean
+	private ResourceLinkProvider resourceLinkProvider;
+	
 	// ----------------------------------------------------
 	
 	/**
@@ -53,7 +63,18 @@ public class EntityListWidget extends ConfigurableWidget {
 	public EntityListWidget(String id, IModel<WidgetSpec> spec) {
 		super(id, spec);
 		
-		getDisplayPane().add(new ResourceListPanel("listView", modelFor(spec, MAX_RESULTS), configModel(spec)));
+		IModel<List<ResourceNode>> content = modelFor(spec, MAX_RESULTS);
+		IModel<ColumnConfiguration> config = configModel(spec);
+		
+		getDisplayPane().add(new ResourceListPanel("listView", content, config) {
+			protected Component createViewAction(String componentId, ResourceNode entity) {
+				final CharSequence url = resourceLinkProvider.getUrlToResource(entity, VisualizationMode.DETAILS, DisplayMode.VIEW);
+				final CrossLink link = new CrossLink(LabeledLink.LINK_ID, url.toString());
+				return new LabeledLink(componentId, link, new ResourceModel("action.view"))
+					.setLinkCssClass("action-view")
+					.setLinkTitle(new ResourceModel("action.view"));
+			};
+		});
 		
 	}
 	

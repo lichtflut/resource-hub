@@ -122,6 +122,19 @@ public interface WDGT {
 	 */
 	ResourceID HAS_HEADER = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "hasHeader");
 	
+	// -- ACTIONS -----------------------------------------
+	
+	/**
+	 * A widget can support actions.
+	 */
+	ResourceID SUPPORTS_ACTION = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "supportsAction");
+	
+	/**
+	 * Action to create instance of referenced type.
+	 */
+	ResourceID ACTION_CREATE_INSTANCE_OF = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "createInstanceOf");
+	
+	
 	// -- PREDEFINED --------------------------------------
 	
 	/**

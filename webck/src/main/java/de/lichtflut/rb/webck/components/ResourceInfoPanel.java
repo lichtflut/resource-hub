@@ -3,16 +3,19 @@
  */
 package de.lichtflut.rb.webck.components;
 
+import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
+import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
+import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.common.ImageReference;
-import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
@@ -38,6 +41,11 @@ import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
  * @author Ravi Knox
  */
 public class ResourceInfoPanel extends Panel {
+	
+	@SpringBean
+	private ResourceLinkProvider resourceLinkProvider;
+	
+	// ----------------------------------------------------
 
 	/**
 	 * @param id - wicket:id
@@ -85,13 +93,7 @@ public class ResourceInfoPanel extends Panel {
 	// ----------------------------------------------------
 	
 	protected String getUrlTo(final ResourceID rid, VisualizationMode mode) {
-		final IBrowsingHandler handler = findParent(IBrowsingHandler.class);
-		if (handler == null) {
-			throw new IllegalStateException(getClass().getSimpleName() 
-					+ " must be placed placed in a component/page that implements " 
-					+ IBrowsingHandler.class);
-		}
-		return handler.getUrlToResource(rid, mode).toString();
+		return resourceLinkProvider.getUrlToResource(rid, mode, DisplayMode.VIEW).toString();
 	}
 	
 	private final class EntityTypeModel extends DerivedModel<ResourceID, RBEntity> {

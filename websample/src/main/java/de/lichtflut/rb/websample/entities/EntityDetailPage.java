@@ -6,7 +6,6 @@ package de.lichtflut.rb.websample.entities;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.arastreju.sge.model.ResourceID;
@@ -15,8 +14,8 @@ import org.arastreju.sge.model.SimpleResourceID;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
+import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.ResourceBrowsingPanel;
-import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 
 /**
  * <p>
@@ -35,10 +34,6 @@ public class EntityDetailPage extends EntitySamplesBasePage {
 
 	public static final String PARAM_RESOURCE_ID = "rid";
 	public static final String PARAM_RESOURCE_TYPE = "type";
-	public static final String PARAM_MODE = "mode";
-	
-	public static final String MODE_EDIT = "edit";
-	public static final String MODE_VIEW = "view";
 	
 	// ----------------------------------------------------
 	
@@ -53,9 +48,8 @@ public class EntityDetailPage extends EntitySamplesBasePage {
 		
 		final StringValue idParam = params.get(PARAM_RESOURCE_ID);
 		final StringValue typeParam = params.get(PARAM_RESOURCE_TYPE);
-		final StringValue mode = params.get(PARAM_MODE);
 		
-		final boolean readonly = mode.isEmpty() || !MODE_EDIT.equals(mode.toString());
+		final boolean readonly = DisplayMode.VIEW.equals(DisplayMode.fromParams(params));
 
 		if (!idParam.isEmpty()) {
 			final ResourceID id = new SimpleResourceID(idParam.toString());
@@ -78,26 +72,9 @@ public class EntityDetailPage extends EntitySamplesBasePage {
 		if (!readonly) {
 			history.edit(handle);
 		}
-		final Browser browser = new Browser("rb");
+		final ResourceBrowsingPanel browser = new ResourceBrowsingPanel("rb");
 		add(browser);
 		return browser;
 	}
 	
-	// -----------------------------------------------------
-
-	class Browser extends ResourceBrowsingPanel {
-		
-		public Browser(final String id) {
-			super(id);
-		}
-
-		@Override
-		public CharSequence getUrlToResource(ResourceID id, VisualizationMode mode) {
-			final PageParameters params = new PageParameters();
-			params.add(EntityDetailPage.PARAM_RESOURCE_ID, id.getQualifiedName().toURI());
-			return RequestCycle.get().urlFor(EntityDetailPage.class, params);
-		}
-
-	}
-
 }
