@@ -64,7 +64,7 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	 */
 	@Override
 	public String getTitle() {
-		return stringValue(RB.HAS_NAME);
+		return stringValue(RB.HAS_TITLE);
 	}
 
 	/** 

@@ -35,6 +35,8 @@ public interface WDGT {
 	
 	ResourceID INVOVIS = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "InfoVisWidget");
 	
+	ResourceID PREDEFINED = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "PredefinedWidget");
+	
 	ResourceID LAYOUT = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "Layout");
 	
 	ResourceID COLUMN_DEF = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI,  "EntityListColumnDefinition");
@@ -119,6 +121,14 @@ public interface WDGT {
 	 * A column corresponds to a predicate/property.
 	 */
 	ResourceID HAS_HEADER = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "hasHeader");
+	
+	// -- PREDEFINED --------------------------------------
+	
+	/**
+	 * The full qualified class name of the Wicket component implementing a predefined widget.
+	 */
+	ResourceID IS_IMPLEMENTED_BY_CLASS = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "isImplementedByClass");
+	
 	
 	
 }

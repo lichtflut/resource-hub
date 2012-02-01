@@ -12,6 +12,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNScalar;
+import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.viewspec.Perspective;
@@ -23,6 +24,7 @@ import de.lichtflut.rb.core.viewspec.impl.SNSelection;
 import de.lichtflut.rb.core.viewspec.impl.SNViewPort;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
 import de.lichtflut.rb.webck.components.widgets.PerspectivePanel;
+import de.lichtflut.rb.webck.components.widgets.builtin.ThatsMeWidget;
 import de.lichtflut.rb.websample.base.RBBasePage;
 
 /**
@@ -49,14 +51,21 @@ public class DashboardPage extends RBBasePage {
 	
 	protected IModel<Perspective> createDummyPerspective() {
 		final Perspective perspective = new SNPerspective();
-		perspective.addAssociation(WDGT.HAS_VIEW_PORT, createDummyViewPort());
-		perspective.addAssociation(WDGT.HAS_VIEW_PORT, createDummyViewPort());
+		perspective.addAssociation(WDGT.HAS_VIEW_PORT, createDummyViewPort1());
+		perspective.addAssociation(WDGT.HAS_VIEW_PORT, createDummyViewPort2());
 		return new Model<Perspective>(perspective);
 	}
 	
-	private ViewPort createDummyViewPort() {
+	private ViewPort createDummyViewPort1() {
 		final ViewPort port = new SNViewPort();
 		port.addAssociation(WDGT.CONTAINS_WIDGET, createDummyDetailsWidget());
+		port.addAssociation(WDGT.CONTAINS_WIDGET, createDummyListWidget());
+		return port;
+	}
+	
+	private ViewPort createDummyViewPort2() {
+		final ViewPort port = new SNViewPort();
+		port.addAssociation(WDGT.CONTAINS_WIDGET, createThatsMeWidget());
 		port.addAssociation(WDGT.CONTAINS_WIDGET, createDummyListWidget());
 		return port;
 	}
@@ -80,6 +89,13 @@ public class DashboardPage extends RBBasePage {
 		widgetSpec.addAssociation(RDF.TYPE, WDGT.ENTITY_DETAILS);
 		widgetSpec.setSelection(createListSelection());
 		widgetSpec.setTitle("One people");
+		return widgetSpec;
+	}
+	
+	private WidgetSpec createThatsMeWidget() {
+		final WidgetSpec widgetSpec = new SNWidgetSpec();
+		widgetSpec.addAssociation(RDF.TYPE, WDGT.PREDEFINED);
+		widgetSpec.addAssociation(WDGT.IS_IMPLEMENTED_BY_CLASS, new SNText(ThatsMeWidget.class.getCanonicalName()));
 		return widgetSpec;
 	}
 	

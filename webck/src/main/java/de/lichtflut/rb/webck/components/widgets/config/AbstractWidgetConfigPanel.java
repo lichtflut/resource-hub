@@ -20,7 +20,7 @@ import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.dialogs.InformationExportDialog;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
-import de.lichtflut.rb.webck.components.widgets.AbstractWidget;
+import de.lichtflut.rb.webck.components.widgets.ConfigurableWidget;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 
 /**
@@ -73,7 +73,7 @@ public class AbstractWidgetConfigPanel extends TypedPanel<WidgetSpec> {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				save(model.getObject());
-				findParent(AbstractWidget.class).switchToDisplay();
+				findParent(ConfigurableWidget.class).switchToDisplay();
 			}
 		});
 
@@ -81,7 +81,7 @@ public class AbstractWidgetConfigPanel extends TypedPanel<WidgetSpec> {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				cancel(model.getObject());
-				findParent(AbstractWidget.class).switchToDisplay();
+				findParent(ConfigurableWidget.class).switchToDisplay();
 			}
 		});
 		

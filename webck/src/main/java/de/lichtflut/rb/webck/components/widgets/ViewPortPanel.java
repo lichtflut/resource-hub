@@ -99,6 +99,8 @@ public class ViewPortPanel extends Panel {
 			return new EntityListWidget("widget", model);
 		} else if (WDGT.ENTITY_DETAILS.equals(type)) {
 			return new EntityDetailsWidget("widget", model);
+		} else if (WDGT.PREDEFINED.equals(type)) {
+			return PredefinedWidget.create(spec, "widget");
 		} else {
 			throw new IllegalStateException();
 		}

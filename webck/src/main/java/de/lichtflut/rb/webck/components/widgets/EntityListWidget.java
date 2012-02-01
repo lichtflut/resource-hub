@@ -38,7 +38,7 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
  *
  * @author Oliver Tigges
  */
-public class EntityListWidget extends AbstractWidget {
+public class EntityListWidget extends ConfigurableWidget {
 
 	public static final int MAX_RESULTS = 10;
 	

@@ -28,7 +28,7 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
  *
  * @author Oliver Tigges
  */
-public class EntityDetailsWidget extends AbstractWidget {
+public class EntityDetailsWidget extends ConfigurableWidget {
 	
 	@SpringBean
 	protected ServiceProvider provider;
