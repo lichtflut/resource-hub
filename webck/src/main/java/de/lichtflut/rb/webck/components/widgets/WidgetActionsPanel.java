@@ -78,8 +78,8 @@ public class WidgetActionsPanel extends TypedPanel<WidgetSpec> {
 	public Component createNewInstanceLink(String componentID, WidgetAction action) {
 		SemanticNode type = SNOPS.fetchObject(action, WDGT.ACTION_CREATE_INSTANCE_OF);
 		String url = resourceLinkProvider.getUrlToResource(type.asResource(), VisualizationMode.DETAILS, DisplayMode.CREATE);
-		final CrossLink link = new CrossLink("link", url);
-		return new LabeledLink(componentID, link, new ResourceModel("Create a new instance"));
+		final CrossLink link = new CrossLink(LabeledLink.LINK_ID, url);
+		return new LabeledLink(componentID, link, new ResourceModel("widget.actions.create-instance"));
 	}
 
 }

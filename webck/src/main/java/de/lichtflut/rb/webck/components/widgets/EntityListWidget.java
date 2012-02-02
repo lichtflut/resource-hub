@@ -76,6 +76,8 @@ public class EntityListWidget extends ConfigurableWidget {
 			};
 		});
 		
+		getDisplayPane().add(new WidgetActionsPanel("actions", spec));
+		
 	}
 	
 	// ----------------------------------------------------

@@ -29,9 +29,14 @@ public class WebSampleResourceLinkProvider implements ResourceLinkProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getUrlToResource(ResourceID id, VisualizationMode mode, DisplayMode displayMode) {
+	public String getUrlToResource(ResourceID id, VisualizationMode visMode, DisplayMode displayMode) {
 		final PageParameters params = new PageParameters();
-		params.add(EntityDetailPage.PARAM_RESOURCE_ID, id.getQualifiedName().toURI());
+		if (DisplayMode.CREATE.equals(displayMode)) {
+			params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, id.getQualifiedName().toURI());
+		} else {
+			params.add(EntityDetailPage.PARAM_RESOURCE_ID, id.getQualifiedName().toURI());
+		}
+		params.add(DisplayMode.PARAMETER, displayMode);
 		return RequestCycle.get().urlFor(EntityDetailPage.class, params).toString();
 	}
 
