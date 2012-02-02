@@ -10,14 +10,16 @@
 </wicket:head>
 <wicket:panel>
 
-	<div class="section" style="width:100%; text-align:right">
-		<a wicket:id="configureLink"><wicket:message key="link.configure">[configure]</wicket:message></a>
-		<a wicket:id="configDoneLink"><wicket:message key="link.configuration-done">[done]</wicket:message></a>
+	<div class="perspective">
+		<div class="perspective-header">
+			<a wicket:id="configureLink"><wicket:message key="link.configure">[configure]</wicket:message></a>
+			<a wicket:id="configDoneLink"><wicket:message key="link.configuration-done">[done]</wicket:message></a>
+		</div>
+	
+		<wicket:container wicket:id="portList">
+			<wicket:container wicket:id="port"></wicket:container>
+		</wicket:container>
 	</div>
-
-	<wicket:container wicket:id="portList">
-		<wicket:container wicket:id="port"></wicket:container>
-	</wicket:container>
 
 </wicket:panel>
 </html>

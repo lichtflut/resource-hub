@@ -11,10 +11,12 @@
 <wicket:extend>
 
 		<div class="rb-widget-header">
-			<h4 wicket:id="title">[title]</h4>
-			<a wicket:id="configureLink" wicket:message="title:link.title.configure-widget">
-				<wicket:message key="link.configure-widget">[configure]</wicket:message>
-			</a>
+			<div class="title"><h3 wicket:id="title">[title]</h3></div>
+			<div class="action-links">
+				<a wicket:id="configureLink" wicket:message="title:link.title.configure-widget">
+					<wicket:message key="link.configure-widget">[configure]</wicket:message>
+				</a>
+			</div>
 		</div>
 		
 		<div wicket:id="display">
