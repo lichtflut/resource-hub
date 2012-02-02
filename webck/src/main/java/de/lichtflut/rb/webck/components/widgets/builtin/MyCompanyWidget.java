@@ -10,20 +10,20 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.components.widgets.PredefinedWidget;
-import de.lichtflut.rb.webck.models.CurrentPersonModel;
+import de.lichtflut.rb.webck.models.CurrentOrganizationModel;
 
 /**
  * <p>
- *  Widget showing the person associated with the current user.
+ *  Widget showing the organization associated with the current user.
  * </p>
  *
  * <p>
- * 	Created Jan 31, 2012
+ * 	Created Feb 2, 2012
  * </p>
  *
  * @author Oliver Tigges
  */
-public class ThatsMeWidget extends PredefinedWidget {
+public class MyCompanyWidget extends PredefinedWidget {
 	
 	@SpringBean
 	private ServiceProvider provider;
@@ -35,15 +35,16 @@ public class ThatsMeWidget extends PredefinedWidget {
 	 * @param id The component ID.
 	 * @param spec The specification.
 	 */
-	public ThatsMeWidget(String id, WidgetSpec spec) {
-		super(id, new ResourceModel("widget.title.thats-me"));
+	public MyCompanyWidget(String id, WidgetSpec spec) {
+		super(id, new ResourceModel("widget.title.my-company"));
 		
-		add(new EntityPanel("entity", new CurrentPersonModel() {
+		add(new EntityPanel("entity", new CurrentOrganizationModel() {
 			@Override
 			public ServiceProvider getServiceProvider() {
 				return provider;
 			}
 		}));
+		
 	}
 	
 }

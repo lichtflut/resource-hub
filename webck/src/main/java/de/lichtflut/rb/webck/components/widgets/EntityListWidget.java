@@ -31,6 +31,7 @@ import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
 import de.lichtflut.rb.webck.components.listview.ListAction;
 import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
 import de.lichtflut.rb.webck.components.widgets.config.EntityListWidgetConfigPanel;
+import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
@@ -58,10 +59,13 @@ public class EntityListWidget extends ConfigurableWidget {
 	// ----------------------------------------------------
 	
 	/**
-	 * @param id
+	 * The constructor.
+	 * @param id The component ID.
+	 * @param spec The widget specification.
+	 * @param isConfigMode Conditional whether the perspective is in configuration mode.
 	 */
-	public EntityListWidget(String id, IModel<WidgetSpec> spec) {
-		super(id, spec);
+	public EntityListWidget(String id, IModel<WidgetSpec> spec, ConditionalModel<Boolean> isConfigMode) {
+		super(id, spec, isConfigMode);
 		
 		IModel<List<ResourceNode>> content = modelFor(spec, MAX_RESULTS);
 		IModel<ColumnConfiguration> config = configModel(spec);
