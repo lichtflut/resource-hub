@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Various predefined Email texts can be found here.
  * </p>
  *
  * <p>
@@ -19,27 +19,7 @@ import java.util.ResourceBundle;
  */
 public class TextModules {
 
-	private Locale locale;
-
-	// ---------------- Constructor -------------------------
-
-	/**
-	 * Default Constructor.
-	 * {@link Locale} will be set to Engslish.
-	 */
-	public TextModules() {
-		this.locale = Locale.ENGLISH;
-	}
-
-	/**
-	 * Constructor.
-	 * @param locale
-	 */
-	public TextModules(Locale locale){
-		this.locale = locale;
-	}
-
-	public String getMailFor(MessageType type){
+	public static String getMailFor(MessageType type, Locale locale){
 		String content = "";
 		ResourceBundle bundle = ResourceBundle.getBundle("de/lichtflut/rb/core/messaging/EmailTextModules", locale);
 		switch (type){

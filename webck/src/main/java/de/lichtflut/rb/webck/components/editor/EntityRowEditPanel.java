@@ -4,10 +4,11 @@
 package de.lichtflut.rb.webck.components.editor;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.*;
+import static de.lichtflut.rb.webck.models.ConditionalModel.and;
+import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
 
-import java.io.File;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.Date;
 
 import org.apache.wicket.AttributeModifier;
@@ -36,6 +37,7 @@ import org.owasp.validator.html.PolicyException;
 import org.owasp.validator.html.ScanException;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -70,7 +72,7 @@ import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class EntityRowEditPanel extends Panel {
 
-	private final static String RTE_POLICY_LOCATION = "/home/ravi/work_stuff/forschungsreise/rb-prototype/webck/src/main/resources/antisamy/antisamy-tinymce-1.4.4.xml";
+	private final static String RTE_POLICY_LOCATION = "antisamy/antisamy-tinymce-1.4.4.xml";
 	
 	/**
 	 * Constructor.
@@ -230,6 +232,7 @@ public class EntityRowEditPanel extends Panel {
 		item.add(new Fragment("valuefield", "textArea", this).add(field));
 		return field;
 	}
+	
 	// ----------------------------------------------------
 
 	/**
@@ -264,11 +267,12 @@ public class EntityRowEditPanel extends Panel {
 
 	private class RichTextEditorModel implements IModel{
 
-		private IModel<String> content;
+		private IModel<String> model;
 		
 		public RichTextEditorModel(IModel<String> model){
-			this.content = model;
+			this.model = model;
 		}
+		
 		/** 
 		 * {@inheritDoc}
 		 */
@@ -280,7 +284,7 @@ public class EntityRowEditPanel extends Panel {
 		 */
 		@Override
 		public Object getObject() {
-			return content.getObject();
+			return model.getObject();
 		}
 
 		/** 
@@ -289,19 +293,31 @@ public class EntityRowEditPanel extends Panel {
 		@Override
 		public void setObject(Object object) {
 			try {
-				Policy policy = Policy.getInstance(new File(RTE_POLICY_LOCATION));
+				
+				URL url = Thread.currentThread().getContextClassLoader().getResource(RTE_POLICY_LOCATION);
+				
+				Policy policy = Policy.getInstance(url);
 				AntiSamy as = new AntiSamy();
 				CleanResults cr = as.scan(object.toString(), policy);
-				this.content.setObject(cr.getCleanHTML());
-				System.out.println(cr.getNumberOfErrors() + " - ERRORS");
-			} catch (PolicyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.model.setObject(cr.getCleanHTML());
+			} 
+			catch (PolicyException e) {
+				throwRBExepction("RichTextEditor Policy cannot be found");
 			} catch (ScanException e) {
-				// TODO Auto-generated catch block
+				throwRBExepction("Error while scanning content of RichTextEditor");
 				e.printStackTrace();
 			}
-			
+		}
+		
+		/**
+		 * @throws RBException
+		 */
+		private void throwRBExepction(String msg) {
+			try {
+				throw new RBException(msg);
+			} catch (RBException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}

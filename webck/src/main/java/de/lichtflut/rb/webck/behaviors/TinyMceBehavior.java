@@ -7,9 +7,11 @@ import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
+import wicket.contrib.tinymce.settings.TinyMCESettings;
+
 /**
  * <p>
- *  [DESCRIPTION]
+ *  This {@link Behavior} adds a RichTextEditor to a HTML input-field.
  * </p>
  *
  * <p>
@@ -18,9 +20,15 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  *
  * @author Ravi Knox
  */
-public class TinyMceBehavior extends Behavior {
+public class TinyMceBehavior extends wicket.contrib.tinymce.TinyMceBehavior{
 
-	private Component component;
+	public TinyMceBehavior(){
+		this(new TinyMCESettings());
+	}
+
+	public TinyMceBehavior(TinyMCESettings settings){
+		super(settings);
+	}
 	
 	// ------------------------------------------------------
 	
@@ -28,23 +36,12 @@ public class TinyMceBehavior extends Behavior {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void bind(final Component component) {
-		this.component = component;
-		this.component.setOutputMarkupId(true);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public void renderHead(final Component c, final IHeaderResponse response) {
-		response.renderJavaScriptReference("resources/tinymce/tiny_mce/tiny_mce.js");
-		response.renderOnLoadJavaScript("tinyMCE.init({	mode : 'textareas'	});");
-		response.renderOnLoadJavaScript("$('#" + component.getMarkupId()+"_ifr').contents().find('#tinymce').bind('blur', function() { " +
-					"var val = $(this).html();"+
-					"$('#"+ component.getMarkupId() + "').html(val);" +
-					"alert($('#" + component.getMarkupId()+"_ifr').contents().find('#tinymce').text() +' TEXT')" +
+		// Copies content from TinyMce field into Component
+		response.renderOnLoadJavaScript("$('#" + c.getMarkupId()+"_ifr').contents().find('#tinymce').bind('keyup', function() { " +
+				"var val = $(this).html();"+
+				"$('#"+ c.getMarkupId() + "').html(val);" +
 				"})");
+		super.renderHead(c, response);
 	}
-
 }
