@@ -308,4 +308,19 @@ public abstract class SetUserProfilePanel extends Panel {
 	private BrowsingHistory getHistory(){
 		return RBWebSession.get().getHistory();
 	}
+	
+	// ------------------------------------------------------
+	
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+		entityPickerModel.detach();
+		hasProfile.detach();
+		profileModel.detach();
+		
+	}
 }

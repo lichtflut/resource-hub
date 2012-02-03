@@ -7,6 +7,7 @@ import java.util.Date;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.ModelingConversation;
@@ -19,6 +20,7 @@ import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.models.CurrentUserModel;
@@ -46,7 +48,7 @@ public abstract class EditNoteDialog extends AbstractRBDialog {
 		super(id);
 		
 		final Form form = new Form("form");
-		form.add(new TextArea<SNText>("content", new ResourceTextPropertyModel(model, RBSystem.HAS_CONTENT)).setType(SNText.class));
+		form.add(createRichTextEditor(model));
 		form.add(new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
@@ -72,6 +74,17 @@ public abstract class EditNoteDialog extends AbstractRBDialog {
 		
 		setModal(true);
 		setWidth(600);
+	}
+
+	/**
+	 * @param model
+	 * @return a {@link TextArea} with a {@link TinyMceBehavior}
+	 */
+	private FormComponent<SNText> createRichTextEditor(final IModel<ResourceNode> model) {
+		TextArea<SNText> textArea = new TextArea<SNText>("content", new ResourceTextPropertyModel(model, RBSystem.HAS_CONTENT));
+		textArea.setType(SNText.class);
+//		textArea.add(new TinyMceBehavior());
+		return textArea;
 	}
 
 	// ----------------------------------------------------
