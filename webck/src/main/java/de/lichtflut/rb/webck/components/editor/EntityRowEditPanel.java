@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.resource.JavaScriptPackageResource;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 import org.owasp.validator.html.AntiSamy;
@@ -217,11 +218,12 @@ public class EntityRowEditPanel extends Panel {
 	}
 	
 	private FormComponent<?> addRichTextArea(ListItem<RBFieldValueModel> item) {
-		TextArea<String> field = new TextArea("valuefield", new RichTextEditorModel(item.getModelObject()));
+		TextArea<String> field = new TextArea("valuefield", item.getModelObject());
 		field.add(new TinyMceBehavior());
 		item.add(new Fragment("valuefield", "textArea", this).add(field));
 		return field;
 	}
+	
 	// ----------------------------------------------------
 
 	/**

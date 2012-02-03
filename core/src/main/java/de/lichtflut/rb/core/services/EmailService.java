@@ -5,6 +5,8 @@ package de.lichtflut.rb.core.services;
 
 import org.arastreju.sge.security.User;
 
+import de.lichtflut.rb.core.messaging.MessageDescription;
+
 /**
  * <p>
  *  This service provides way to transmit stuff via email.
@@ -17,8 +19,14 @@ import org.arastreju.sge.security.User;
 public interface EmailService {
 
 	/**
-	 * This method sends an email containing his new password.
+	 * This method sends an email containing a {@link User}s password.
 	 * @param user
 	 */
 	void sendPasswordInformation(User user, String Password);
+
+	/**
+	 * This method sends an email according to the {@link MessageDescription}.
+	 * @param desc
+	 */
+	void sendMail(MessageDescription desc);
 }

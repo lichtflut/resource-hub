@@ -6,6 +6,8 @@ package de.lichtflut.rb.webck.behaviors;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * <p>
@@ -18,9 +20,11 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  *
  * @author Ravi Knox
  */
-public class TinyMceBehavior extends Behavior {
+public class TinyMceBehavior extends Behavior{
 
+	private static ResourceReference JS_REF = new JavaScriptResourceReference(TinyMceBehavior.class, "tinymce/tiny_mce/tiny_mce.js");
 	private Component component;
+
 	
 	// ------------------------------------------------------
 	
@@ -38,13 +42,12 @@ public class TinyMceBehavior extends Behavior {
 	 */
 	@Override
 	public void renderHead(final Component c, final IHeaderResponse response) {
-		response.renderJavaScriptReference("resources/tinymce/tiny_mce/tiny_mce.js");
-		response.renderOnLoadJavaScript("tinyMCE.init({	mode : 'textareas'	});");
+		response.renderJavaScriptReference(JS_REF);
+		response.renderOnLoadJavaScript(" tinyMCE.init({ mode : 'textareas'  });");
 		response.renderOnLoadJavaScript("$('#" + component.getMarkupId()+"_ifr').contents().find('#tinymce').bind('blur', function() { " +
 					"var val = $(this).html();"+
 					"$('#"+ component.getMarkupId() + "').html(val);" +
 					"alert($('#" + component.getMarkupId()+"_ifr').contents().find('#tinymce').text() +' TEXT')" +
 				"})");
 	}
-
 }

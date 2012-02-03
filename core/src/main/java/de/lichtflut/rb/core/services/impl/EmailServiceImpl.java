@@ -3,11 +3,18 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.arastreju.sge.security.User;
 import org.slf4j.Logger;
@@ -32,12 +39,6 @@ import de.lichtflut.rb.core.services.EmailService;
  */
 public class EmailServiceImpl implements EmailService {
 
-//	private final String DEFAULT_SENDER = getDefaultSender();
-//
-//	private final String MESSAGE_ENCODING = getMessageEncoding();
-//
-//	private static final String DEFAULT_SENDER_TEXT = "lichtflut";
-//
 	private final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 
 	// ------------------------------------------------------
@@ -47,44 +48,27 @@ public class EmailServiceImpl implements EmailService {
 	 */
 	@Override
 	public void sendPasswordInformation(User user, String password) {
-		TextModules modul = new TextModules();
-		
-		MessageDescription desc = new MessageDescription();
-		desc.setContent(modul.getMailFor(MessageType.PASSWORD_INFORMATION_MAIL));
-		// TODO Activate when mailserver is ready
-		// sendMail(desc);
 		System.out.println("########## sent new password for user " + user.getEmail() + " - pwd: " + password + "#############");
 	}
 
-//	/**
-//	 * 
-//	 */
-//	private void sendMail(MessageDescription desc) {
-//		try {
-//			Message mail = new MimeMessage(initSession());
-//			mail.setFrom(new InternetAddress("rknox@lichtflut.de", "lichtflut.de - Ravi Knox"));
-//			mail.addRecipient(RecipientType.TO, new InternetAddress("recipient@google.com", "Reci Pient"));
-//			mail.setSubject("Test");
-//			mail.setText("Dies ist eine Testmail");
-//			Transport.send(mail);
-//		} catch (UnsupportedEncodingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (MessagingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-
-	public void sendConfirmationMail(){
-		
-	}
-	protected String getDefaultSender(){
-		return "no-reply@glasnost.de";
-	}
-	
-	protected String getMessageEncoding(){
-		return "UTF-8";
+	/**
+	 * {@inheritDoc}
+	 */
+	public void sendMail(MessageDescription desc) {
+		try {
+			Message mail = new MimeMessage(initSession());
+			mail.setFrom(new InternetAddress(desc.getSender(), desc.getSenderName()));
+			mail.addRecipient(RecipientType.TO, new InternetAddress(desc.getRecipient(), desc.getRecipientName()));
+			mail.setSubject(desc.getSubject());
+			mail.setText(desc.getContent());
+			Transport.send(mail);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	protected Session initSession(){

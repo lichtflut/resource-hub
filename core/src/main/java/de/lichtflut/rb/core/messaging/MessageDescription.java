@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.messaging;
 
+import java.util.Locale;
+
 /**
  * <p>
  *  This class wrappes various data needed for sending a message.
@@ -16,19 +18,35 @@ package de.lichtflut.rb.core.messaging;
 public class MessageDescription {
 	
 	private String charset = "UTF-8";
-	
 	private String subject;
-	
 	private String content;
-	
 	private String sender;
-	
 	private String recipient;
-	
 	private String recipientName;
-	
 	private String senderName;
+	private MessageType type;
+	private Locale locale;
 	
+	// ---------------- Constructor -------------------------
+	
+	/**
+	 * Constructor.<br>
+	 * {@link Locale} will be set to English.
+	 * @param type
+	 */
+	public MessageDescription (MessageType type){
+		this(type, Locale.ENGLISH);
+	}
+	
+	/**
+	 * Constructor.
+	 * @param type
+	 * @param locale
+	 */
+	public MessageDescription (MessageType type, Locale locale){
+		this.type = type;
+		this.locale = locale;
+	}
 	// ----------------------------------------------------
 	
 	/**
@@ -63,7 +81,10 @@ public class MessageDescription {
 	 * @return the content
 	 */
 	public String getContent() {
-		return content;
+		if(type.equals(MessageType.UNDEFINED)){
+			return content;
+		}
+		return TextModules.getMailFor(type, locale);
 	}
 	
 	/**

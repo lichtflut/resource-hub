@@ -5,7 +5,12 @@ package de.lichtflut.rb.core.messaging;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  A {@link MessageType} defines what kind of massage will be send.
+ *  <br />like:
+ *  <ul>
+ *  	<li>Passwort reset</li>
+ *  	<li>Confirmation mail</li>
+ *  </ul>
  * </p>
  *
  * <p>
@@ -17,5 +22,7 @@ package de.lichtflut.rb.core.messaging;
 public enum MessageType {
 
 	PASSWORD_INFORMATION_MAIL,
-	REGISTRATION_INFORMATION_MAIL
+	REGISTRATION_INFORMATION_MAIL,
+	UNDEFINED
+	
 }
