@@ -93,6 +93,11 @@ public interface RB {
 	 * General name of something (e.g. an organization).
 	 */
 	ResourceID HAS_NAME = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasName");
+	
+	/**
+	 * The value.
+	 */
+	ResourceID HAS_VALUE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasValue");
 
 	/**
 	 * General title of something (e.g. a project).
@@ -120,9 +125,24 @@ public interface RB {
 	ResourceID HAS_LAST_NAME = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasLastname");
 	
 	/**
+	 * The date of birth.
+	 */
+	ResourceID HAS_DATE_OF_BIRTH = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasDateOfBirth");
+	
+	/**
 	 * Has email.
 	 */
 	ResourceID HAS_EMAIL = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasEmail");
+	
+	/**
+	 * Has contact data.
+	 */
+	ResourceID HAS_CONTACT_DATA = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasContactData");
+	
+	/**
+	 * Has vCard type.
+	 */
+	ResourceID HAS_VCARD_TYPE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasVCardType");
 	
 	/**
 	 * Is employed by.
@@ -145,12 +165,37 @@ public interface RB {
 	ResourceID HAS_ADDRESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasAddress");
 	
 	/**
-	 * The address.
+	 * The street.
+	 */
+	ResourceID HAS_STREET = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasStreet");
+	
+	/**
+	 * The house number.
+	 */
+	ResourceID HAS_HOUSE_NO = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasHouseNo");
+	
+	/**
+	 * The zipcode.
+	 */
+	ResourceID HAS_ZIPCODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasZipcode");
+	
+	/**
+	 * The city.
+	 */
+	ResourceID HAS_CITY = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasCity");
+	
+	/**
+	 * The country.
+	 */
+	ResourceID HAS_COUNTRY = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasCountry");
+	
+	/**
+	 * The owner.
 	 */
 	ResourceID HAS_OWNER = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasOwner");
 	
 	/**
-	 * The address.
+	 * The lead.
 	 */
 	ResourceID HAS_LEAD = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasLead");
 	
