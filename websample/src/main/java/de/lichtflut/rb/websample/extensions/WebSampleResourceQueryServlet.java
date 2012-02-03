@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.websample.base;
+package de.lichtflut.rb.websample.extensions;
 
 import javax.servlet.ServletException;
 
@@ -22,7 +22,7 @@ import de.lichtflut.rb.webck.application.ResourceQueryServlet;
  *
  * @author Oliver Tigges
  */
-public class WebsampleResourceQueryServlet extends ResourceQueryServlet {
+public class WebSampleResourceQueryServlet extends ResourceQueryServlet {
 	
 	private ServiceProvider provider;
 	

@@ -21,4 +21,7 @@
 			factory-bean="serviceProviderFactory" factory-method="getAuthenitcationService">
 	</bean>
 	
+	<bean id="resourceLinkProvider" class="de.lichtflut.rb.websample.extensions.WebSampleResourceLinkProvider">
+	</bean>
+	
 </beans>

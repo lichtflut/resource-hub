@@ -8,15 +8,12 @@
 <wicket:head>
 	<style type="text/css"></style>
 </wicket:head>
-<wicket:extend>
-
-		<div class="rb-widget-header">
-			<div class="title"><h3 wicket:id="title">[title]</h3></div>
-		</div>
-
-		<div>
-			<wicket:child/>
-		</div>
-		
-</wicket:extend>
+<wicket:panel>
+	
+	   <form wicket:id="form">
+	       <select wicket:id="format"></select>
+	       <button wicket:id="exportButton"><wicket:message key="button.export"></wicket:message></button>
+	   </form>
+	
+</wicket:panel>
 </html>

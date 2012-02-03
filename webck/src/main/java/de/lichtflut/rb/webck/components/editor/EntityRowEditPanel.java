@@ -4,7 +4,7 @@
 package de.lichtflut.rb.webck.components.editor;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
+import static de.lichtflut.rb.webck.models.ConditionalModel.*;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -14,6 +14,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
@@ -40,8 +41,11 @@ import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.fields.FieldCardinalityModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.FieldSizeModel;
@@ -105,7 +109,9 @@ public class EntityRowEditPanel extends Panel {
 			}
 		};
 		link.add(new AttributeModifier("title", new ResourceModel("link.title.add-field-value")));
-		link.add(visibleIf(lessThan(new FieldSizeModel(model), new FieldCardinalityModel(model))));
+		link.add(visibleIf(and(
+				new IsBeneathFormConditional(), 
+				lessThan(new FieldSizeModel(model), new FieldCardinalityModel(model)))));
 		add(link);
 	}
 	
@@ -152,10 +158,11 @@ public class EntityRowEditPanel extends Panel {
 				target.add(EntityRowEditPanel.this);
 			}
 		};
-		if (!Datatype.BOOLEAN.equals(getField().getDataType())) {
-			link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));	
-		} else {
+		link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));
+		if (Datatype.BOOLEAN.equals(getField().getDataType())) {
 			link.setVisible(false);
+		} else {
+			link.add(visibleIf(new IsBeneathFormConditional()));	
 		}
 		return link;
 	}
@@ -166,6 +173,7 @@ public class EntityRowEditPanel extends Panel {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				final EntityHandle handle = EntityHandle.forType(getTypeConstraint());
 				findParent(IBrowsingHandler.class).createReferencedEntity(handle, getField().getPredicate());
+				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
 			}
 			
 			@Override
@@ -173,13 +181,13 @@ public class EntityRowEditPanel extends Panel {
 				target.add(EntityRowEditPanel.this);
 			}
 		};
+		link.add(new AttributeModifier("title", new ResourceModel("link.title.create-field-value")));
 		if (getField().isResourceReference()){
-			link.add(new AttributeModifier("title", new ResourceModel("link.title.create-field-value")));	
+			link.add(ConditionalBehavior.visibleIf(new IsBeneathFormConditional()));		
 		} else {
 			link.setVisible(false);
 		}
 		return link;
-
 	}
 	
 	// ----------------------------------------------------
@@ -247,6 +255,15 @@ public class EntityRowEditPanel extends Panel {
 		return (RBField) getDefaultModelObject();
 	}
 	
+	// -- INNER CLASSES -----------------------------------
+	
+	private class IsBeneathFormConditional extends ConditionalModel {
+		@Override
+		public boolean isFulfilled() {
+			return findParent(Form.class) != null;
+		}
+	}
+
 	private class RichTextEditorModel implements IModel{
 
 		private IModel<String> content;

@@ -83,7 +83,7 @@ public class ViewPortPanel extends Panel {
 		container.add(new ListView<WidgetSpec>("widgetList", new WidgetListModel(spec)) {
 			@Override
 			protected void populateItem(ListItem<WidgetSpec> item) {
-				item.add(createWidgetPanel(item.getModel()));
+				item.add(createWidgetPanel(item.getModel(), isConfigMode));
 			}
 		});
 		
@@ -92,13 +92,13 @@ public class ViewPortPanel extends Panel {
 
 	// ----------------------------------------------------
 
-	private Component createWidgetPanel(IModel<WidgetSpec> model) {
+	private Component createWidgetPanel(IModel<WidgetSpec> model, ConditionalModel<Boolean> isConfigMode) {
 		final WidgetSpec spec = model.getObject();
 		final SemanticNode type = SNOPS.fetchObject(spec, RDF.TYPE);
 		if (WDGT.ENTITY_LIST.equals(type)) {
-			return new EntityListWidget("widget", model);
+			return new EntityListWidget("widget", model, isConfigMode);
 		} else if (WDGT.ENTITY_DETAILS.equals(type)) {
-			return new EntityDetailsWidget("widget", model);
+			return new EntityDetailsWidget("widget", model, isConfigMode);
 		} else if (WDGT.PREDEFINED.equals(type)) {
 			return PredefinedWidget.create(spec, "widget");
 		} else {

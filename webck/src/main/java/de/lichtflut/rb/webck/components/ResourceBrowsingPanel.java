@@ -27,7 +27,6 @@ import de.lichtflut.rb.webck.components.editor.ClassifyEntityPanel;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.editor.LocalButtonBar;
-import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
@@ -45,7 +44,7 @@ import de.lichtflut.rb.webck.models.entity.RBEntityModel;
  * @author Oliver Tigges
  */
 @SuppressWarnings("rawtypes")
-public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
+public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 	private RBEntityModel model;
 	
@@ -91,11 +90,6 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 	
 	// -- IBrowsingHandler --------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public abstract CharSequence getUrlToResource(ResourceID id, VisualizationMode mode);
-
 	/** 
 	* {@inheritDoc}
 	*/
@@ -108,7 +102,6 @@ public abstract class ResourceBrowsingPanel extends Panel implements IBrowsingHa
 		// navigate to sub entity
 		final ReferenceReceiveAction action = new EntityAttributeApplyAction(model.getObject(), predicate);
 		RBWebSession.get().getHistory().createReference(handle, action);
-		RBAjaxTarget.add(this);
 	}
 	
 	// ----------------------------------------------------

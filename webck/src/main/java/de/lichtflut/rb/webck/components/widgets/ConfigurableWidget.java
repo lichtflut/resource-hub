@@ -4,9 +4,8 @@
 package de.lichtflut.rb.webck.components.widgets;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
+import static de.lichtflut.rb.webck.models.ConditionalModel.*;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -44,8 +43,10 @@ public abstract class ConfigurableWidget extends AbstractWidget {
 	 * The constructor.
 	 * @param id The component ID.
 	 * @param spec The widget specification.
+	 * @param perspectiveInConfigMode Conditional whether the perspective is in configuration mode.
 	 */
-	public ConfigurableWidget(String id, IModel<WidgetSpec> spec) {
+	@SuppressWarnings("rawtypes")
+	public ConfigurableWidget(String id, IModel<WidgetSpec> spec, ConditionalModel<Boolean> perspectiveInConfigMode) {
 		super(id, new TitleModel(spec));
 		
 		setOutputMarkupId(true);
@@ -53,7 +54,14 @@ public abstract class ConfigurableWidget extends AbstractWidget {
 		this.isViewMode = areEqual(mode, DisplayMode.VIEW);
 		this.isEditMode = areEqual(mode, DisplayMode.EDIT);
 		
-		add(createConfigurationLink("configureLink"));
+		final AjaxLink configLink = new AjaxLink("configureLink") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				switchToConfiguration();
+			}
+		};
+		configLink.add(visibleIf(and(perspectiveInConfigMode, isViewMode)));
+		add(configLink);
 		
 		final WebMarkupContainer display = createDisplayPane("display");
 		display.add(visibleIf(isViewMode));
@@ -98,16 +106,6 @@ public abstract class ConfigurableWidget extends AbstractWidget {
 		final WebMarkupContainer display = new WebMarkupContainer(componentID);
 		display.setOutputMarkupId(true);
 		return display;
-	}
-	
-	@SuppressWarnings("rawtypes")
-	protected Component createConfigurationLink(String componentID) {
-		return new AjaxLink(componentID) {
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				switchToConfiguration();
-			}
-		}.add(visibleIf(isViewMode));
 	}
 	
 	// ----------------------------------------------------

@@ -51,7 +51,7 @@
 	
 	<servlet>
 	   <servlet-name>QueryServlet</servlet-name>
-	   <servlet-class>de.lichtflut.rb.websample.base.WebsampleResourceQueryServlet</servlet-class>
+	   <servlet-class>de.lichtflut.rb.websample.extensions.WebSampleResourceQueryServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>

@@ -15,6 +15,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.components.widgets.config.EntityDetailsWidgetConfigPanel;
+import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
@@ -36,10 +37,13 @@ public class EntityDetailsWidget extends ConfigurableWidget {
 	// ----------------------------------------------------
 	
 	/**
-	 * @param id
+	 * The constructor.
+	 * @param id The component ID.
+	 * @param spec The widget specification.
+	 * @param isConfigMode Conditional whether the perspective is in configuration mode.
 	 */
-	public EntityDetailsWidget(String id, IModel<WidgetSpec> spec) {
-		super(id, spec);
+	public EntityDetailsWidget(String id, IModel<WidgetSpec> spec, ConditionalModel<Boolean> isConfigMode) {
+		super(id, spec, isConfigMode);
 		
 		getDisplayPane().add(new EntityPanel("entity", modelFor(spec)));
 		

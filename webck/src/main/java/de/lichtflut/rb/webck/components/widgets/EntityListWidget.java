@@ -8,8 +8,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -20,10 +22,16 @@ import org.arastreju.sge.structure.OrderBySerialNumber;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.components.editor.VisualizationMode;
+import de.lichtflut.rb.webck.components.links.CrossLink;
+import de.lichtflut.rb.webck.components.links.LabeledLink;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
 import de.lichtflut.rb.webck.components.listview.ListAction;
 import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
 import de.lichtflut.rb.webck.components.widgets.config.EntityListWidgetConfigPanel;
+import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
@@ -44,16 +52,35 @@ public class EntityListWidget extends ConfigurableWidget {
 	
 	@SpringBean
 	protected ServiceProvider provider;
-
+	
+	@SpringBean
+	private ResourceLinkProvider resourceLinkProvider;
+	
 	// ----------------------------------------------------
 	
 	/**
-	 * @param id
+	 * The constructor.
+	 * @param id The component ID.
+	 * @param spec The widget specification.
+	 * @param isConfigMode Conditional whether the perspective is in configuration mode.
 	 */
-	public EntityListWidget(String id, IModel<WidgetSpec> spec) {
-		super(id, spec);
+	public EntityListWidget(String id, IModel<WidgetSpec> spec, ConditionalModel<Boolean> isConfigMode) {
+		super(id, spec, isConfigMode);
 		
-		getDisplayPane().add(new ResourceListPanel("listView", modelFor(spec, MAX_RESULTS), configModel(spec)));
+		IModel<List<ResourceNode>> content = modelFor(spec, MAX_RESULTS);
+		IModel<ColumnConfiguration> config = configModel(spec);
+		
+		getDisplayPane().add(new ResourceListPanel("listView", content, config) {
+			protected Component createViewAction(String componentId, ResourceNode entity) {
+				final CharSequence url = resourceLinkProvider.getUrlToResource(entity, VisualizationMode.DETAILS, DisplayMode.VIEW);
+				final CrossLink link = new CrossLink(LabeledLink.LINK_ID, url.toString());
+				return new LabeledLink(componentId, link, new ResourceModel("action.view"))
+					.setLinkCssClass("action-view")
+					.setLinkTitle(new ResourceModel("action.view"));
+			};
+		});
+		
+		getDisplayPane().add(new WidgetActionsPanel("actions", spec));
 		
 	}
 	

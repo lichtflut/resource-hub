@@ -13,23 +13,17 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.core.resources.CoreJavaScriptResourceReference;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
-import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
-import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 import de.lichtflut.rb.webck.components.listview.ReferenceLink;
 import de.lichtflut.rb.webck.components.navigation.NavigationBar;
 import de.lichtflut.rb.webck.components.navigation.NavigationNode;
 import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.websample.DashboardPage;
 import de.lichtflut.rb.websample.components.ComponentsCatalogPage;
-import de.lichtflut.rb.websample.entities.EntityDetailPage;
 import de.lichtflut.rb.websample.entities.EntityOverviewPage;
 import de.lichtflut.rb.websample.infomanagement.InformationManagementPage;
 import de.lichtflut.rb.websample.types.TypeSystemPage;
@@ -46,7 +40,7 @@ import de.lichtflut.rb.websample.types.TypeSystemPage;
  * @author Nils Bleisch
  */
 @SuppressWarnings("serial")
-public abstract class RBBasePage extends WebPage implements DialogHoster, IBrowsingHandler {
+public abstract class RBBasePage extends WebPage implements DialogHoster {
 	
 	private static final String MODALDIALOG = "modaldialog";
 
@@ -126,25 +120,6 @@ public abstract class RBBasePage extends WebPage implements DialogHoster, IBrows
 	
 	private NavigationNode createNavigationNode(IModel<String> label, Class<? extends Page> pageClass) {
 		return new NavigationNodePanel(new ReferenceLink("link", pageClass,label));
-	}
-	
-	// -- BROWSING HANDLER --------------------------------
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	public void createReferencedEntity(EntityHandle handle, ResourceID predicate) {
-		throw new UnsupportedOperationException();
-	};
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CharSequence getUrlToResource(ResourceID id, VisualizationMode mode) {
-		final PageParameters params = new PageParameters();
-		params.add(EntityDetailPage.PARAM_RESOURCE_ID, id.getQualifiedName().toURI());
-		return RequestCycle.get().urlFor(EntityDetailPage.class, params);
 	}
 	
 	// -- DIALOG ------------------------------------------

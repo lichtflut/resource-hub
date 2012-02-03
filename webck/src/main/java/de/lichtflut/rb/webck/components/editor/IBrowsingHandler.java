@@ -20,8 +20,6 @@ import de.lichtflut.rb.core.entity.EntityHandle;
  */
 public interface IBrowsingHandler {
 	
-	CharSequence getUrlToResource(ResourceID id, VisualizationMode mode);
-	
 	void createReferencedEntity(EntityHandle handle, ResourceID predicate);
 
 }

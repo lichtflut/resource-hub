@@ -60,6 +60,8 @@ public interface RB {
 	
 	ResourceID NOTE = new SimpleResourceID(COMMON_NAMESPACE_URI, "Note");
 	
+	ResourceID PROCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "Process");
+	
 	// -- COMMON PROPERTIES --------------------------------------
 
 	/**
