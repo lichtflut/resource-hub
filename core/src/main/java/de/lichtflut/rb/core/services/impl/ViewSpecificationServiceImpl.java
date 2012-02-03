@@ -11,6 +11,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
 
 /**
@@ -40,7 +41,14 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public Perspective findPerspective(ResourceID id) {
-		return null;
+		final ModelingConversation mc = gate().startConversation();
+		ResourceNode existing = mc.findResource(id.getQualifiedName());
+		mc.close();
+		if (existing != null) {
+			return new SNPerspective(existing);
+		} else {
+			return null;
+		}
 	}
 
 	/** 

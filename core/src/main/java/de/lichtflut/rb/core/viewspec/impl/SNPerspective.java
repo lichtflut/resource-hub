@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
+import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import de.lichtflut.rb.core.RB;
@@ -20,7 +22,7 @@ import de.lichtflut.rb.core.viewspec.WDGT;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  A perspective.
  * </p>
  *
  * <p>
@@ -37,11 +39,20 @@ public class SNPerspective extends ResourceView implements Perspective {
 	public SNPerspective(ResourceNode resource) {
 		super(resource);
 	}
+	
+	/**
+	 * @param resource
+	 */
+	public SNPerspective(QualifiedName qn) {
+		super(qn);
+		setValue(RDF.TYPE, WDGT.PERSPECTIVE);
+	}
 
 	/**
 	 * Create a new perspeective.
 	 */
 	public SNPerspective() {
+		setValue(RDF.TYPE, WDGT.PERSPECTIVE);
 	}
 	
 	// ----------------------------------------------------

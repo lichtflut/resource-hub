@@ -13,6 +13,7 @@ import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 
 /**
  * <p>
@@ -34,6 +35,7 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	private TypeManager typeManager;
 	private SecurityService securityService;
 	private MessagingService messagingService;
+	private ViewSpecificationService viewSpecService;
 	
 	// ----------------------------------------------------
 
@@ -47,6 +49,7 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		typeManager = new TypeManagerImpl(this);
 		messagingService = new MessagingServiceImpl(this);
 		securityService = newSecurityService();
+		viewSpecService = new ViewSpecificationServiceImpl(this);
 	}
 
 	// ----------------------------------------------------
@@ -111,6 +114,15 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	public MessagingService getMessagingService(){
 		return messagingService;
 	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ViewSpecificationService getViewSpecificationService() {
+		return viewSpecService;
+	}
+	
 	// ----------------------------------------------------
 	
 	/**

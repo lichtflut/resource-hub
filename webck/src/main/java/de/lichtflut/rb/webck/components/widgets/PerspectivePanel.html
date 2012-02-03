@@ -12,13 +12,18 @@
 
 	<div class="perspective">
 		<div class="perspective-header">
+			<wicket:enclosure>
+				<a wicket:id="exportLink"><wicket:message key="link.export">[export]</wicket:message></a> |
+			</wicket:enclosure>
 			<a wicket:id="configureLink"><wicket:message key="link.configure">[configure]</wicket:message></a>
 			<a wicket:id="configDoneLink"><wicket:message key="link.configuration-done">[done]</wicket:message></a>
 		</div>
-	
-		<wicket:container wicket:id="portList">
-			<wicket:container wicket:id="port"></wicket:container>
-		</wicket:container>
+		
+		<div wicket:id="viewPortsContainer" class="view-ports-container">	
+			<wicket:container wicket:id="portList">
+				<wicket:container wicket:id="port"></wicket:container>
+			</wicket:container>
+		</div>
 	</div>
 
 </wicket:panel>

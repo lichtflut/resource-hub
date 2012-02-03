@@ -93,17 +93,21 @@ public abstract class SetUserProfilePanel extends Panel {
 	protected abstract void jumpToResourceEditorPage(EntityHandle handle);
 	
 	/**
-	 * @return the {@link WebPage} that displays a users' profile
-	 */
-	protected abstract Class<? extends Page> getUserProfilePage();
-	
-	/**
 	 * Action to perform when resourcelink is clicked.
 	 * @param resourceNode
 	 */
 	protected abstract void onResourceLinkClicked(ResourceNode node);
 	
 	// ------------------------------------------------------
+	
+	/**
+	 * @return the {@link WebPage} that displays a users' profile
+	 */
+	protected Class<? extends Page> getOffsetPage() {
+		return getPage().getPageClass();
+	}
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Initialize variable profileModel.
@@ -221,7 +225,7 @@ public abstract class SetUserProfilePanel extends Panel {
 				final EntityHandle handle = EntityHandle.forType(RB.PERSON);
 				final ReferenceReceiveAction action = new ResourceAttributeApplyAction(
 					user.getObject().getAssociatedResource(), RBSystem.IS_RESPRESENTED_BY);
-				getHistory().clear(new JumpTarget(getUserProfilePage()));
+				getHistory().clear(new JumpTarget(getOffsetPage()));
 				getHistory().createReference(handle, action);
 				jumpToResourceEditorPage(handle);
 			}

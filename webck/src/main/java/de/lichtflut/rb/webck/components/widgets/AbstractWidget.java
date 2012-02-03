@@ -9,7 +9,7 @@ import org.apache.wicket.model.IModel;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Base of all widgets.
  * </p>
  *
  * <p>

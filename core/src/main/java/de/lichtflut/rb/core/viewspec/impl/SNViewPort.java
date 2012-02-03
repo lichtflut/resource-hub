@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.arastreju.sge.apriori.Aras;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -20,7 +21,7 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  A view port of a perspective.
  * </p>
  *
  * <p>
@@ -43,6 +44,7 @@ public class SNViewPort extends ResourceView implements ViewPort {
 	 * Create a new view port.
 	 */
 	public SNViewPort() {
+		setValue(RDF.TYPE, WDGT.VIEW_PORT);
 	}
 	
 	// ----------------------------------------------------d

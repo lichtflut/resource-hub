@@ -142,6 +142,4 @@ public interface WDGT {
 	 */
 	ResourceID IS_IMPLEMENTED_BY_CLASS = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "isImplementedByClass");
 	
-	
-	
 }
