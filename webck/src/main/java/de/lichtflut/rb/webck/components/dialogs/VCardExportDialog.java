@@ -3,14 +3,13 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
-import static org.arastreju.sge.SNOPS.fetchObject;
-import static org.arastreju.sge.SNOPS.string;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -29,7 +28,12 @@ import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.ValueNode;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -120,14 +124,28 @@ public class VCardExportDialog extends AbstractRBDialog implements IResourceList
 	}
 	
 	private String getFilename(ResourceNode node) {
-		final StringBuilder sb = new StringBuilder(255);
-		sb.append(string(fetchObject(node, RB.HAS_LAST_NAME)));
+		final StringBuilder sb = new StringBuilder();
+		sb.append(nsString(node, RB.HAS_LAST_NAME));
 		sb.append("_");
-		sb.append(string(fetchObject(node, RB.HAS_FIRST_NAME)));
+		sb.append(nsString(node, RB.HAS_FIRST_NAME));
 		sb.append("-");
 		sb.append(System.currentTimeMillis());
 		sb.append(".vcf");
 		return sb.toString();
+	}
+	
+	/**
+	 * Private Method to return a null-save String
+	 * @param subject
+	 * @param predicate
+	 * @return the string representation or empty string if null
+	 */
+	private String nsString(ResourceNode subject, ResourceID predicate) {
+		String retVal = SNOPS.string(SNOPS.fetchObject(subject, predicate));
+		if(retVal == null) {
+			retVal = "";
+		}
+		return retVal;
 	}
 	
 	// ----------------------------------------------------
@@ -157,6 +175,8 @@ public class VCardExportDialog extends AbstractRBDialog implements IResourceList
 				
 				if ("vCard 3.0".equalsIgnoreCase(format.getObject())){
 					write30(entity.getNode(), buffer);
+				} else if ("vCard 2.1".equalsIgnoreCase(format.getObject())){
+					write21(entity.getNode(), buffer);
 				} else {
 					throw new IllegalArgumentException("Format not yet supported: " + format.getObject());
 				}
@@ -170,39 +190,90 @@ public class VCardExportDialog extends AbstractRBDialog implements IResourceList
 			return in;
 		}
 		
-		private void write30(final ResourceNode node, final OutputStream out)	throws IOException {
+		/**
+		 * Writes the vCard file content valid to specification 3.0
+		 * @param node
+		 * @param out
+		 * @throws IOException
+		 */
+		private void write30(final ResourceNode node, final OutputStream out) throws IOException {
 			final StringBuilder sb = new StringBuilder();
-/*
 
-BEGIN:VCARD
-VERSION:3.0
-FN:Vorname Nachname
-N:Nachname;Vorname;;;
-BDAY:1980-05-21
-ADR:;;Diestrasse 100;Stadt;;55555;Heimatland
-EMAIL;TYPE=internet:emailnr1@mail.de
-EMAIL;TYPE=internet:emailnr2@mail.de
-TEL;TYPE=work:0221-12345
-TEL;TYPE=cell:0162-1234567
-TEL;TYPE=home:02202-123456
-UID:
-REV:2012-01-31T14:28:30Z
-END:VCARD
+			String lastname = nsString(node, RB.HAS_LAST_NAME);
+			String firstname = nsString(node, RB.HAS_FIRST_NAME);
+			
+			
+			String bday = "";
+			SemanticNode bdayNode = SNOPS.fetchObject(node, RB.HAS_DATE_OF_BIRTH);
+			if(bdayNode != null && bdayNode.isValueNode()) {
+				ValueNode bdayValue = bdayNode.asValue();
+				if(bdayValue.getDataType().equals(ElementaryDataType.DATE)) {
+					bday = new SimpleDateFormat("yyyy-MM-dd").format(bdayValue.getTimeValue());
+				}
+			}
 
-*/
+			String street = "";
+			String city = "";
+			String zipcode = "";
+			String country = "";
+			SemanticNode addressNode = SNOPS.fetchObject(node, RB.HAS_ADDRESS);
+			if(addressNode != null && addressNode.isResourceNode()) {
+				ResourceNode adrResource = addressNode.asResource();
+				street = nsString(adrResource, RB.HAS_STREET) +" "
+						+nsString(adrResource, RB.HAS_HOUSE_NO);
+				zipcode = nsString(adrResource, RB.HAS_ZIPCODE);
+				SemanticNode cityNode = SNOPS.fetchObject(adrResource, RB.HAS_CITY);
+				if(cityNode != null && cityNode.isResourceNode()) {
+					ResourceNode cityResource = cityNode.asResource();
+					city = nsString(cityResource, RB.HAS_NAME);
+					SemanticNode countryNode = SNOPS.fetchObject(cityResource, RB.HAS_COUNTRY);
+					if(countryNode != null && countryNode.isResourceNode()) {
+						ResourceNode countryResource = countryNode.asResource();
+						country = nsString(countryResource, RB.HAS_NAME);
+					}
+				}
+			}
+			
+			String rev = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(Calendar.getInstance().getTime());
+			
 			sb.append("BEGIN:VCARD\n");
 			sb.append("VERSION:3.0\n");
-			sb.append("FN:" +string(fetchObject(node, RB.HAS_FIRST_NAME)) +" " +string(fetchObject(node, RB.HAS_LAST_NAME)) +"\n");
-			sb.append("N:" +string(fetchObject(node, RB.HAS_LAST_NAME)) +";" +string(fetchObject(node, RB.HAS_FIRST_NAME)) +";;;\n");
-			sb.append("BDAY:" +"\n");
+			sb.append("FN:" +firstname +" " +lastname +"\n");
+			sb.append("N:" +lastname +";" +firstname +";;;\n");
+			sb.append("BDAY:" +bday +"\n");
 			
-			//TODO: address
-			//TODO: iterate over e-mails and phone numbers
+			sb.append("ADR:;;" +street +";" +city +";;" +zipcode +";" +country +"\n");
+			
+			for (SemanticNode emailNode : SNOPS.objects(node, RB.HAS_EMAIL)) {
+				sb.append("EMAIL;TYPE=INTERNET:" +SNOPS.string(emailNode) +"\n");
+			}
+			
+			for (SemanticNode contactDataNode : SNOPS.objects(node, RB.HAS_CONTACT_DATA)) {
+				if(contactDataNode.isResourceNode()) {
+					ResourceNode contactResource = contactDataNode.asResource();
+					String type = nsString(contactResource, RB.HAS_VCARD_TYPE).toUpperCase();
+					String typePrfx = "";
+					if(!type.isEmpty()) {
+						typePrfx = ";TYPE=" +type;
+					}
+					sb.append("TEL" +typePrfx +":" +nsString(contactResource, RB.HAS_VALUE) +"\n");
+				}
+			}
 			
 			sb.append("UID:" +node.getQualifiedName() +"\n");
-			sb.append("REV:" +Calendar.getInstance().getTime() +"\n"); //TODO DateFormat
+			sb.append("REV:" +rev +"\n");
 			sb.append("END:VCARD");
 			out.write(sb.toString().getBytes());
+		}
+		
+		/**
+		 * Writes the vCard file content valid to specification 2.1
+		 * @param node
+		 * @param out
+		 * @throws IOException
+		 */
+		private void write21(final ResourceNode node, final OutputStream out) throws IOException {
+			//TODO !!
 		}
 
 		/** 
