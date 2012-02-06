@@ -11,6 +11,20 @@
 <wicket:panel>
 
 	<div class="rb-widget">
+		<div class="rb-widget-header">
+			<div class="title"><h3 wicket:id="title">[title]</h3></div>
+			<div class="action-links">
+				<a wicket:id="removeWidget" wicket:message="title:link.title.remove-widget">
+					<wicket:message key="link.remove-widget">[remove]</wicket:message>
+				</a>
+				<wicket:enclosure>
+					|
+					<a wicket:id="configureLink" wicket:message="title:link.title.configure-widget">
+						<wicket:message key="link.configure-widget">[configure]</wicket:message>
+					</a>
+				</wicket:enclosure>
+			</div>
+		</div>
 		<wicket:child/>
 	</div>
 	

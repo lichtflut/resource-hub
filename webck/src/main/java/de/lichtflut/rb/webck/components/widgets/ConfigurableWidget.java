@@ -4,8 +4,10 @@
 package de.lichtflut.rb.webck.components.widgets;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.*;
+import static de.lichtflut.rb.webck.models.ConditionalModel.and;
+import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -16,7 +18,6 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
 /**
  * <p>
@@ -33,9 +34,9 @@ public abstract class ConfigurableWidget extends AbstractWidget {
 	
 	private final IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
 	
-	private final ConditionalModel<DisplayMode> isViewMode;
+	private final ConditionalModel<DisplayMode> isViewMode = areEqual(mode, DisplayMode.VIEW);
 	
-	private final ConditionalModel<DisplayMode> isEditMode;
+	private final ConditionalModel<DisplayMode> isEditMode = areEqual(mode, DisplayMode.EDIT);
 	
 	// ----------------------------------------------------
 
@@ -45,23 +46,10 @@ public abstract class ConfigurableWidget extends AbstractWidget {
 	 * @param spec The widget specification.
 	 * @param perspectiveInConfigMode Conditional whether the perspective is in configuration mode.
 	 */
-	@SuppressWarnings("rawtypes")
 	public ConfigurableWidget(String id, IModel<WidgetSpec> spec, ConditionalModel<Boolean> perspectiveInConfigMode) {
-		super(id, new TitleModel(spec));
+		super(id, spec, perspectiveInConfigMode);
 		
 		setOutputMarkupId(true);
-		
-		this.isViewMode = areEqual(mode, DisplayMode.VIEW);
-		this.isEditMode = areEqual(mode, DisplayMode.EDIT);
-		
-		final AjaxLink configLink = new AjaxLink("configureLink") {
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				switchToConfiguration();
-			}
-		};
-		configLink.add(visibleIf(and(perspectiveInConfigMode, isViewMode)));
-		add(configLink);
 		
 		final WebMarkupContainer display = createDisplayPane("display");
 		display.add(visibleIf(isViewMode));
@@ -108,31 +96,27 @@ public abstract class ConfigurableWidget extends AbstractWidget {
 		return display;
 	}
 	
-	// ----------------------------------------------------
-	
-	protected WebMarkupContainer getDisplayPane() {
-		return (WebMarkupContainer) get("display");
+	/** 
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("rawtypes")
+	@Override
+	protected Component createConfigureLink(String componentID, ConditionalModel<Boolean> perspectiveInConfigMode) {
+		
+		final AjaxLink configLink = new AjaxLink("configureLink") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				switchToConfiguration();
+			}
+		};
+		configLink.add(visibleIf(and(perspectiveInConfigMode, isViewMode)));
+		return configLink;
 	}
 	
 	// ----------------------------------------------------
 	
-	private static class TitleModel extends DerivedDetachableModel<String, WidgetSpec> {
-
-		/**
-		 * @param original
-		 */
-		public TitleModel(IModel<WidgetSpec> original) {
-			super(original);
-		}
-
-		/** 
-		 * {@inheritDoc}
-		 */
-		@Override
-		protected String derive(WidgetSpec original) {
-			return original.getTitle();
-		}
-		
+	protected WebMarkupContainer getDisplayPane() {
+		return (WebMarkupContainer) get("display");
 	}
 	
 }

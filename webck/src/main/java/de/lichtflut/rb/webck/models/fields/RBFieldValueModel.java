@@ -42,7 +42,8 @@ public class RBFieldValueModel<T> implements IModel<T> {
 		this.field = field;
 		this.index = index;
 	}
- // -----------------------------------------------------
+	
+	// -----------------------------------------------------
 	
 
 	/**
@@ -60,6 +61,13 @@ public class RBFieldValueModel<T> implements IModel<T> {
 	@Override
 	public void setObject(final T object) {
 		field.setValue(index, object);
+	}
+	
+	/**
+	 * @return the index
+	 */
+	public int getIndex() {
+		return index;
 	}
 
 	// -----------------------------------------------------

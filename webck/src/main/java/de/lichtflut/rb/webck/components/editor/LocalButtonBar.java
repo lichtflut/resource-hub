@@ -5,7 +5,8 @@ package de.lichtflut.rb.webck.components.editor;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonIf;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
+import static de.lichtflut.rb.webck.models.ConditionalModel.*;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -47,7 +48,9 @@ public class LocalButtonBar extends Panel {
 	// ----------------------------------------------------
 	
 	/**
-	 * @param id
+	 * Constructor.
+	 * @param id The component ID.
+	 * @param model The model of the current entity.
 	 */
 	public LocalButtonBar(final String id, final IModel<RBEntity> model) {
 		super(id);
@@ -56,7 +59,7 @@ public class LocalButtonBar extends Panel {
 		add(createCancelButton(model));
 		add(createEditButton(model));
 		
-		add(visibleIf(not(BrowsingContextModel.isInCreateReferenceMode())));
+		add(visibleIf(and(hasSchema(model), not(BrowsingContextModel.isInCreateReferenceMode()))));
 		
 	}
 	

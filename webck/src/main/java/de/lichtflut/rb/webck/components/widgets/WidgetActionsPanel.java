@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
@@ -77,6 +78,9 @@ public class WidgetActionsPanel extends TypedPanel<WidgetSpec> {
 	
 	public Component createNewInstanceLink(String componentID, WidgetAction action) {
 		SemanticNode type = SNOPS.fetchObject(action, WDGT.ACTION_CREATE_INSTANCE_OF);
+		if (type == null) {
+			return new Label(componentID, "undefined");
+		}
 		String url = resourceLinkProvider.getUrlToResource(type.asResource(), VisualizationMode.DETAILS, DisplayMode.CREATE);
 		final CrossLink link = new CrossLink(LabeledLink.LINK_ID, url);
 		return new LabeledLink(componentID, link, new ResourceModel("widget.actions.create-instance"));

@@ -3,13 +3,14 @@
  */
 package de.lichtflut.rb.webck.components.widgets.builtin;
 
-import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.components.widgets.PredefinedWidget;
+import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.CurrentOrganizationModel;
 
 /**
@@ -35,8 +36,8 @@ public class MyCompanyWidget extends PredefinedWidget {
 	 * @param id The component ID.
 	 * @param spec The specification.
 	 */
-	public MyCompanyWidget(String id, WidgetSpec spec) {
-		super(id, new ResourceModel("widget.title.my-company"));
+	public MyCompanyWidget(String id, WidgetSpec spec, ConditionalModel<Boolean> perspectiveInConfigMode) {
+		super(id, Model.of(spec), perspectiveInConfigMode);
 		
 		add(new EntityPanel("entity", new CurrentOrganizationModel() {
 			@Override

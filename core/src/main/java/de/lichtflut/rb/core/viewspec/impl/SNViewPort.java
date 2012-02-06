@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
@@ -86,4 +87,20 @@ public class SNViewPort extends ResourceView implements ViewPort {
 		return result;
 	}
 
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addWidget(WidgetSpec widget, int position) {
+		addAssociation(WDGT.CONTAINS_WIDGET, widget);
+	}
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeWidget(WidgetSpec widget) {
+		SNOPS.remove(this, WDGT.CONTAINS_WIDGET, widget);
+	}
+	
 }

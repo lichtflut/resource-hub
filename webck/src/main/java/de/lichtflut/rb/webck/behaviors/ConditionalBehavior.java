@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.behaviors;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 
 import de.lichtflut.rb.webck.models.ConditionalModel;
@@ -48,6 +49,19 @@ public abstract class ConditionalBehavior<T> extends Behavior {
 			@Override
 			protected void apply(Component component) {
 				component.setVisible(model.isFulfilled());
+			}
+		};
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static ConditionalBehavior requiredIf(final ConditionalModel model) {
+		return new ConditionalBehavior() {
+			@Override
+			protected void apply(Component component) {
+				if (component instanceof FormComponent) {
+					final FormComponent<?> fc = (FormComponent<?>) component;
+					fc.setRequired(model.isFulfilled()); 
+				}
 			}
 		};
 	}

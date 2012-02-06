@@ -14,7 +14,7 @@ import org.arastreju.sge.model.SemanticGraph;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.core.viewspec.impl.ViewSpecExportTraverser;
+import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.dialogs.InformationExportDialog;
@@ -53,7 +53,7 @@ public class AbstractWidgetConfigPanel extends TypedPanel<WidgetSpec> {
 		final IModel<SemanticGraph> exportModel = new DerivedModel<SemanticGraph, WidgetSpec>(model) {
 			@Override
 			protected SemanticGraph derive(WidgetSpec spec) {
-				return new ViewSpecExportTraverser().toGraph(spec);
+				return new ViewSpecTraverser().toGraph(spec);
 			}
 		};
 		

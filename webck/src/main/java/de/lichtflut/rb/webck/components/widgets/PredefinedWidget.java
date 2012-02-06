@@ -13,6 +13,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.models.ConditionalModel;
 
 /**
  * <p>
@@ -31,20 +32,20 @@ public class PredefinedWidget extends AbstractWidget {
 	 * @param id
 	 * @param title
 	 */
-	public PredefinedWidget(String id, IModel<String> title) {
-		super(id, title);
+	public PredefinedWidget(String id, IModel<WidgetSpec> spec, ConditionalModel<Boolean> perspectiveInConfigMode) {
+		super(id, spec, perspectiveInConfigMode);
 	}
 	
 	// ----------------------------------------------------
 	
-	public static Component create(WidgetSpec spec, String componentID) {
+	public static Component create(WidgetSpec spec, String componentID, ConditionalModel<Boolean> configMode) {
 		SemanticNode implClass = SNOPS.fetchObject(spec, WDGT.IS_IMPLEMENTED_BY_CLASS);
 		if (implClass != null && implClass.isValueNode()) {
 			String fqcn = implClass.asValue().getStringValue();
 			try {
 				Class<?> clazz = Class.forName(fqcn, true, Thread.currentThread().getContextClassLoader());
-				Constructor<?> constructor = clazz.getConstructor(new Class[] { String.class, WidgetSpec.class });
-				return (Component) constructor.newInstance(componentID, spec);
+				Constructor<?> constructor = clazz.getConstructor(new Class[] { String.class, WidgetSpec.class, ConditionalModel.class });
+				return (Component) constructor.newInstance(componentID, spec, configMode);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new Label(componentID, e.getMessage());

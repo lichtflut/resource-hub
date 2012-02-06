@@ -5,14 +5,18 @@ package de.lichtflut.rb.core.services.impl;
 
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SemanticGraph;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
+import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
 
 /**
  * <p>
@@ -50,6 +54,19 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 			return null;
 		}
 	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void remove(Perspective perspective) {
+		final ModelingConversation mc = gate().startConversation();
+		final SemanticGraph graph = new ViewSpecTraverser().toGraph(perspective);
+		for (Statement stmt : graph.getStatements()) {
+			mc.removeStatement(stmt);
+		}
+		mc.close();
+	}
 
 	/** 
 	 * {@inheritDoc}
@@ -73,6 +90,16 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	public void store(WidgetSpec widgetSpec) {
 		final ModelingConversation mc = gate().startConversation();
 		mc.attach(widgetSpec);
+		mc.close();
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void store(ViewPort viewPort) {
+		final ModelingConversation mc = gate().startConversation();
+		mc.attach(viewPort);
 		mc.close();
 	}
 	

@@ -5,10 +5,12 @@ package de.lichtflut.rb.core.entity.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import de.lichtflut.rb.core.entity.RBField;
 
@@ -147,6 +149,7 @@ public abstract class AbstractRBField implements RBField, Serializable {
 		}
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void addReferences(final Set<SemanticNode> givenValues) {
 		for (SemanticNode sn : givenValues) {
 			if (sn.isResourceNode()) {
@@ -155,6 +158,7 @@ public abstract class AbstractRBField implements RBField, Serializable {
 				this.values.add(null);
 			}
 		}
+		Collections.sort((List) values, new OrderBySerialNumber());
 	}
 	
 	protected void addValues(final Set<SemanticNode> givenValues) {

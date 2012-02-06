@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.services;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 
 /**
@@ -28,6 +29,12 @@ public interface ViewSpecificationService {
 	 */
 	Perspective findPerspective(ResourceID id);
 	
+	/**
+	 * Remove a perspective.
+	 * @param perspective The perspective to be removed.
+	 */
+	void remove(Perspective perspective);
+	
 	// ----------------------------------------------------
 	
 	/**
@@ -37,10 +44,18 @@ public interface ViewSpecificationService {
 	 */
 	WidgetSpec findWidgetSpec(ResourceID id);
 	
+	// ----------------------------------------------------
+	
 	/**
 	 * Store the widget specification. Update or create.
 	 * @param widgetSpec The specification to store.
 	 */
 	void store(WidgetSpec widgetSpec);
+	
+	/**
+	 * Store a view port. Update or create.
+	 * @param viewPort The specification to store.
+	 */
+	void store(ViewPort viewPort);
 	
 }

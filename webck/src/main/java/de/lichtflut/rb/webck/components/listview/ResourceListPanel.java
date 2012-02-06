@@ -147,7 +147,7 @@ public class ResourceListPanel extends Panel {
 	}
 	
 	private ListView<ResourceNode> createRows(final IModel<List<ResourceNode>> model, final IModel<ColumnConfiguration> configModel) {
-		return new ListView<ResourceNode>("rows", model) {
+		final ListView<ResourceNode> listView = new ListView<ResourceNode>("rows", model) {
 			@Override
 			protected void populateItem(final ListItem<ResourceNode> item) {
 				final ColumnConfiguration config = configModel.getObject();
@@ -155,6 +155,8 @@ public class ResourceListPanel extends Panel {
 				item.add(createActions(item.getModelObject(), config.getActions()));
 			}
 		};
+		listView.setReuseItems(true);
+		return listView;
 	}
 	
 	private ListView<ResourceField> createCells(final IModel<List<ResourceField>> model) {
@@ -164,6 +166,7 @@ public class ResourceListPanel extends Panel {
 				item.add(createCell(item.getModel()));
 			}
 		}; 
+		columns.setReuseItems(true);
 		return columns;
 	}
 	
@@ -189,6 +192,7 @@ public class ResourceListPanel extends Panel {
 				}
 			}
 		}; 
+		columns.setReuseItems(true);
 		return columns;
 	}
 	

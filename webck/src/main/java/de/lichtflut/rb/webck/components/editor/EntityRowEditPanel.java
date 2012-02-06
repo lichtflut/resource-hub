@@ -8,11 +8,13 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.and;
 import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.Date;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
@@ -74,6 +76,8 @@ public class EntityRowEditPanel extends Panel {
 
 	private final static String RTE_POLICY_LOCATION = "antisamy/antisamy-tinymce-1.4.4.xml";
 	
+	// ----------------------------------------------------
+	
 	/**
 	 * Constructor.
 	 * @param id The ID.
@@ -90,8 +94,9 @@ public class EntityRowEditPanel extends Panel {
 			@Override
 			protected void populateItem(final ListItem<RBFieldValueModel> item) {
 				addValueField(item, model.getObject().getDataType());
-				item.add(createRemoveLink(item.getIndex()));
-				item.add(createCreateLink(item.getIndex()));
+				final int idx = item.getModelObject().getIndex();
+				item.add(createRemoveLink(idx));
+				item.add(createCreateLink(idx));
 			}
 		};
 		view.setReuseItems(true);
@@ -132,7 +137,7 @@ public class EntityRowEditPanel extends Panel {
 		case DATE:
 			return addDateField(item);
 		case INTEGER:
-			return addTextField(item, Integer.class);
+			return addTextField(item, BigInteger.class);
 		case DECIMAL:
 			return addTextField(item, BigDecimal.class);
 		case STRING:
@@ -151,6 +156,7 @@ public class EntityRowEditPanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				getField().removeSlot(index);
+				rebuildListView();
 				target.add(EntityRowEditPanel.this);
 			}
 			
@@ -254,6 +260,11 @@ public class EntityRowEditPanel extends Panel {
 	
 	private RBField getField() {
 		return (RBField) getDefaultModelObject();
+	}
+	
+	private void rebuildListView() {
+		MarkupContainer view = (MarkupContainer) get("values");
+		view.removeAll();
 	}
 	
 	// -- INNER CLASSES -----------------------------------

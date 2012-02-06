@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -23,11 +24,13 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WDGT;
-import de.lichtflut.rb.core.viewspec.impl.ViewSpecExportTraverser;
+import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.dialogs.InformationExportDialog;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
@@ -92,12 +95,23 @@ public class PerspectivePanel extends TypedPanel<Perspective> {
 	
 	// ----------------------------------------------------
 	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void onEvent(IEvent<?> event) {
+		if (ModelChangeEvent.from(event).isAbout(ModelChangeEvent.VIEW_SPEC)) {
+			getModel().detach();
+			RBAjaxTarget.add(this);
+		}
+	}
+	
 	@SuppressWarnings("rawtypes")
 	protected AjaxLink createExportLink() {
 		final IModel<SemanticGraph> exportModel = new DerivedModel<SemanticGraph, Perspective>(getModelObject()) {
 			@Override
 			protected SemanticGraph derive(Perspective spec) {
-				return new ViewSpecExportTraverser().toGraph(spec);
+				return new ViewSpecTraverser().toGraph(spec);
 			}
 		};
 		AjaxLink link = new AjaxLink("exportLink") {

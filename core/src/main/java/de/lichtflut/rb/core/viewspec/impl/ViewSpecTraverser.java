@@ -28,7 +28,7 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
  *
  * @author Oliver Tigges
  */
-public class ViewSpecExportTraverser {
+public class ViewSpecTraverser {
 
 	public SemanticGraph toGraph(WidgetSpec spec) {
 		final GraphBuilder builder = new GraphBuilder(createFilter());

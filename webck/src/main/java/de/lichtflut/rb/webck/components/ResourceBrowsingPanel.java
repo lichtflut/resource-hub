@@ -11,7 +11,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
@@ -67,16 +66,14 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 			}
 		};
 		
-		final IModel<ResourceID> typeModel = new Model<ResourceID>();
-		
 		final Form form = new Form("form");
 		form.setOutputMarkupId(true);
 		
 		form.add(new EntityPanel("entity", model));
-		form.add(new ClassifyEntityPanel("classifier", model, typeModel));
+		form.add(new ClassifyEntityPanel("classifier", model));
 		
 		form.add(new LocalButtonBar("localButtonBar", model));
-		form.add(new BrowsingButtonBar("browsingButtonBar", model, typeModel));
+		form.add(new BrowsingButtonBar("browsingButtonBar", model));
 		
 		form.add(new CreateRelationshipPanel("relationCreator", model)
 			.add(visibleIf(BrowsingContextModel.isInViewMode())));

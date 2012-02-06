@@ -123,6 +123,9 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			public boolean isFulfilled() {
 				boolean fulfilled = true;
 				for (ConditionalModel<?> current : model) {
+					if (current == null) {
+						System.out.println("null");
+					}
 					fulfilled &= current.isFulfilled();
 				}
 				return fulfilled;
