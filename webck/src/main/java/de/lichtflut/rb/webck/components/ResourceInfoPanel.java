@@ -18,6 +18,7 @@ import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.common.ImageReference;
 import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
+import de.lichtflut.rb.webck.components.navigation.ExtendedActionsPanel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityImageUrlModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
@@ -60,6 +61,8 @@ public class ResourceInfoPanel extends Panel {
 				return getString("label.untitled");
 			}
 		};
+		
+		add(new ExtendedActionsPanel("extendedActionsPanel", model));
 		
 		add(new CrossLink("showDetails", new DerivedModel<String, RBEntity>(model) {
 			@Override
