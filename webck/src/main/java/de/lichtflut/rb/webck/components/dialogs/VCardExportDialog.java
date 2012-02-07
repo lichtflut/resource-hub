@@ -273,7 +273,73 @@ public class VCardExportDialog extends AbstractRBDialog implements IResourceList
 		 * @throws IOException
 		 */
 		private void write21(final ResourceNode node, final OutputStream out) throws IOException {
-			//TODO !!
+			final StringBuilder sb = new StringBuilder();
+
+			String lastname = nsString(node, RB.HAS_LAST_NAME);
+			String firstname = nsString(node, RB.HAS_FIRST_NAME);
+			
+			
+			String bday = "";
+			SemanticNode bdayNode = SNOPS.fetchObject(node, RB.HAS_DATE_OF_BIRTH);
+			if(bdayNode != null && bdayNode.isValueNode()) {
+				ValueNode bdayValue = bdayNode.asValue();
+				if(bdayValue.getDataType().equals(ElementaryDataType.DATE)) {
+					bday = new SimpleDateFormat("yyyyMMdd").format(bdayValue.getTimeValue());
+				}
+			}
+
+			String street = "";
+			String city = "";
+			String zipcode = "";
+			String country = "";
+			SemanticNode addressNode = SNOPS.fetchObject(node, RB.HAS_ADDRESS);
+			if(addressNode != null && addressNode.isResourceNode()) {
+				ResourceNode adrResource = addressNode.asResource();
+				street = nsString(adrResource, RB.HAS_STREET) +" "
+						+nsString(adrResource, RB.HAS_HOUSE_NO);
+				zipcode = nsString(adrResource, RB.HAS_ZIPCODE);
+				SemanticNode cityNode = SNOPS.fetchObject(adrResource, RB.HAS_CITY);
+				if(cityNode != null && cityNode.isResourceNode()) {
+					ResourceNode cityResource = cityNode.asResource();
+					city = nsString(cityResource, RB.HAS_NAME);
+					SemanticNode countryNode = SNOPS.fetchObject(cityResource, RB.HAS_COUNTRY);
+					if(countryNode != null && countryNode.isResourceNode()) {
+						ResourceNode countryResource = countryNode.asResource();
+						country = nsString(countryResource, RB.HAS_NAME);
+					}
+				}
+			}
+			
+			String rev = new SimpleDateFormat("yyyyMMdd'T'HHmmss").format(Calendar.getInstance().getTime());
+			
+			sb.append("BEGIN:VCARD\r\n");
+			sb.append("VERSION:2.1\r\n");
+			sb.append("FN:" +firstname +" " +lastname +"\r\n");
+			sb.append("N:" +lastname +";" +firstname +"\r\n");
+			sb.append("BDAY:" +bday +"\r\n");
+			
+			sb.append("ADR:;;" +street +";" +city +";;" +zipcode +";" +country +"\r\n");
+			
+			for (SemanticNode emailNode : SNOPS.objects(node, RB.HAS_EMAIL)) {
+				sb.append("EMAIL;INTERNET:" +SNOPS.string(emailNode) +"\r\n");
+			}
+			
+			for (SemanticNode contactDataNode : SNOPS.objects(node, RB.HAS_CONTACT_DATA)) {
+				if(contactDataNode.isResourceNode()) {
+					ResourceNode contactResource = contactDataNode.asResource();
+					String type = nsString(contactResource, RB.HAS_VCARD_TYPE).toUpperCase();
+					String typePrfx = "";
+					if(!type.isEmpty()) {
+						typePrfx = ";" +type;
+					}
+					sb.append("TEL" +typePrfx +":" +nsString(contactResource, RB.HAS_VALUE) +"\r\n");
+				}
+			}
+			
+			sb.append("UID:" +node.getQualifiedName() +"\r\n");
+			sb.append("REV:" +rev +"\r\n");
+			sb.append("END:VCARD");
+			out.write(sb.toString().getBytes());
 		}
 
 		/** 
