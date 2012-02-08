@@ -58,7 +58,6 @@ public class HTMLSafeModel implements IModel<String> {
 			this.model.setObject(parseContent(object));
 	}
 	
-	
 	/** 
 	 * {@inheritDoc}
 	 */

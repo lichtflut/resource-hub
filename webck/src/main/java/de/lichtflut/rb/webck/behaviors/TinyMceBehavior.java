@@ -38,7 +38,7 @@ public class TinyMceBehavior extends wicket.contrib.tinymce.TinyMceBehavior{
 	@Override
 	public void renderHead(final Component c, final IHeaderResponse response) {
 		// Copies content from TinyMce field into Component
-		response.renderOnLoadJavaScript("$('#" + c.getMarkupId()+"_ifr').contents().find('#tinymce').bind('keyup', function() { " +
+		response.renderOnLoadJavaScript("$('#" + c.getMarkupId()+"_ifr').contents().find('#tinymce').bind('blur', function() { " +
 				"var val = $(this).html();"+
 				"$('#"+ c.getMarkupId() + "').html(val);" +
 				"})");

@@ -151,11 +151,25 @@
 		<tag name="u" action="validate" />
 		<tag name="em" action="validate" />
 		<tag name="blockquote" action="validate" />
+		<tag name="code" action="validate" />
+		<tag name="pre" action="validate" />
+		<tag name="address" action="validate" />
+		<tag name="h1" action="validate" />
+		<tag name="h2" action="validate" />
+		<tag name="h3" action="validate" />
+		<tag name="h4" action="validate" />
+		<tag name="h5" action="validate" />
+		<tag name="h6" action="validate" />
 		<tag name="tt" action="truncate" />
-
 		<tag name="a" action="validate">
 			<attribute name="href" onInvalid="filterTag" />
 
+			<attribute name="target">
+				<literal-list>
+					<literal value="_blank"/>
+				</literal-list>
+			</attribute>
+				
 			<attribute name="nohref">
 
 				<literal-list>

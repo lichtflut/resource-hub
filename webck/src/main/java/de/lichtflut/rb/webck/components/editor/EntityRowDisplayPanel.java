@@ -24,6 +24,7 @@ import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
@@ -130,7 +131,8 @@ public class EntityRowDisplayPanel extends Panel {
 	}
 	
 	private void addHTMLOutput(ListItem<RBFieldValueModel> item) {
-		final Label field = new Label("valuefield", item.getModelObject());
+		@SuppressWarnings("unchecked")
+		final Label field = new Label("valuefield", new HTMLSafeModel(item.getModelObject()));
 		field.setEscapeModelStrings(false);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
 	}
