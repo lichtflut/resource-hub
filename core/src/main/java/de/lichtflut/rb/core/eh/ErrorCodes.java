@@ -18,7 +18,7 @@ public interface ErrorCodes {
 
 	public static final Long UNKNOWN_ERROR = 0L;
 	
-	public static final long INVALID_PASSWORD = 100L;
+	public static final Long INVALID_PASSWORD = 100L;
 	
 	public static final Long SECURITYSERVICE_ID_ALREADY_IN_USE = 1201L;
 	public static final Long SECURITYSERVICE_ALTERNATEID_ALREADY_IN_USE = 1202L;

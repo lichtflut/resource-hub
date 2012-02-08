@@ -30,7 +30,7 @@ public class TinyMceBehavior extends wicket.contrib.tinymce.TinyMceBehavior{
 		super(settings);
 	}
 	
-	// ------------------------------------------------------
+	// --------------------------------------                                                                                       ----------------
 	
 	/**
 	 * {@inheritDoc}
