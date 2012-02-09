@@ -9,8 +9,9 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -32,14 +33,16 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
-import org.owasp.validator.html.AntiSamy;
-import org.owasp.validator.html.CleanResults;
-import org.owasp.validator.html.Policy;
-import org.owasp.validator.html.PolicyException;
-import org.owasp.validator.html.ScanException;
+
+import wicket.contrib.tinymce.settings.Button;
+import wicket.contrib.tinymce.settings.ContextMenuPlugin;
+import wicket.contrib.tinymce.settings.TinyMCESettings;
+import wicket.contrib.tinymce.settings.TinyMCESettings.Location;
+import wicket.contrib.tinymce.settings.TinyMCESettings.Position;
+import wicket.contrib.tinymce.settings.TinyMCESettings.Theme;
+import wicket.contrib.tinymce.settings.TinyMCESettings.Toolbar;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -49,6 +52,7 @@ import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.fields.FieldCardinalityModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.FieldSizeModel;
@@ -74,10 +78,6 @@ import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class EntityRowEditPanel extends Panel {
 
-	private final static String RTE_POLICY_LOCATION = "antisamy/antisamy-tinymce-1.4.4.xml";
-	
-	// ----------------------------------------------------
-	
 	/**
 	 * Constructor.
 	 * @param id The ID.
@@ -233,10 +233,57 @@ public class EntityRowEditPanel extends Panel {
 	}
 	
 	private FormComponent<?> addRichTextArea(ListItem<RBFieldValueModel> item) {
-		TextArea<String> field = new TextArea("valuefield", new RichTextEditorModel(item.getModelObject()));
-		field.add(new TinyMceBehavior());
+		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(item.getModelObject()));
+		TinyMCESettings settings = new TinyMCESettings(Theme.advanced);
+		configureToolbar(settings);
+		field.add(new TinyMceBehavior(settings));
 		item.add(new Fragment("valuefield", "textArea", this).add(field));
 		return field;
+	}
+
+	/**
+	 * @param settings
+	 */
+	private void configureToolbar(TinyMCESettings settings) {
+		settings.setResizing(false);
+		settings.setToolbarLocation(Location.top);
+		configureToolbarButtons(settings);
+	}
+
+	/**
+	 * @param settings
+	 */
+	private void configureToolbarButtons(TinyMCESettings settings) {
+		settings.disableButton(Button.anchor);
+		settings.disableButton(Button.backcolor);
+		settings.disableButton(Button.charmap);
+		settings.disableButton(Button.cleanup);
+		settings.disableButton(Button.copy);
+		settings.disableButton(Button.cut);
+		settings.disableButton(Button.fontselect);
+		settings.disableButton(Button.fontsizeselect);
+		settings.disableButton(Button.forecolor);
+//		settings.disableButton(Button.formatselect);
+		settings.disableButton(Button.help);
+		settings.disableButton(Button.hr);
+		settings.disableButton(Button.image);
+		settings.disableButton(Button.indent);
+		settings.disableButton(Button.justifycenter);
+		settings.disableButton(Button.justifyfull);
+		settings.disableButton(Button.justifyleft);
+		settings.disableButton(Button.justifyright);
+		settings.disableButton(Button.link);
+		settings.disableButton(Button.newdocument);
+		settings.disableButton(Button.outdent);
+		settings.disableButton(Button.redo);
+		settings.disableButton(Button.removeformat);
+		settings.disableButton(Button.strikethrough);
+		settings.disableButton(Button.styleselect);
+		settings.disableButton(Button.sub);
+		settings.disableButton(Button.sup);
+		settings.disableButton(Button.undo);
+		settings.disableButton(Button.unlink);
+		settings.disableButton(Button.visualaid);
 	}
 	
 	// ----------------------------------------------------
@@ -276,61 +323,4 @@ public class EntityRowEditPanel extends Panel {
 		}
 	}
 
-	private class RichTextEditorModel implements IModel{
-
-		private IModel<String> model;
-		
-		public RichTextEditorModel(IModel<String> model){
-			this.model = model;
-		}
-		
-		/** 
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void detach() {}
-
-		/** 
-		 * {@inheritDoc}
-		 */
-		@Override
-		public Object getObject() {
-			return model.getObject();
-		}
-
-		/** 
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void setObject(Object object) {
-			try {
-				
-				URL url = Thread.currentThread().getContextClassLoader().getResource(RTE_POLICY_LOCATION);
-				
-				Policy policy = Policy.getInstance(url);
-				AntiSamy as = new AntiSamy();
-				CleanResults cr = as.scan(object.toString(), policy);
-				this.model.setObject(cr.getCleanHTML());
-			} 
-			catch (PolicyException e) {
-				throwRBExepction("RichTextEditor Policy cannot be found");
-			} catch (ScanException e) {
-				throwRBExepction("Error while scanning content of RichTextEditor");
-				e.printStackTrace();
-			}
-		}
-		
-		/**
-		 * @throws RBException
-		 */
-		private void throwRBExepction(String msg) {
-			try {
-				throw new RBException(msg);
-			} catch (RBException e) {
-				e.printStackTrace();
-			}
-		}
-		
-	}
-	
 }

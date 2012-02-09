@@ -319,10 +319,9 @@ public abstract class SetUserProfilePanel extends Panel {
 	 */
 	@Override
 	protected void onDetach() {
-		super.onDetach();
 		entityPickerModel.detach();
 		hasProfile.detach();
 		profileModel.detach();
-		
+		super.onDetach();
 	}
 }
