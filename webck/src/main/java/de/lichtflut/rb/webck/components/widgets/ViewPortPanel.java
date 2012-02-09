@@ -80,6 +80,7 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 				hoster.openDialog(new SelectWidgetDialog(hoster.getDialogID()) {
 					@Override
 					protected void onSelection(WidgetSpec spec) {
+						addWidget(spec);
 					}
 				});
 			}
@@ -100,14 +101,23 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 	/** 
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void removeWidget(WidgetSpec widget) {
 		final ViewPort port = getModelObject();
 		port.removeWidget(widget);
 		provider.getViewSpecificationService().store(port);
-		send(this, Broadcast.BUBBLE, ModelChangeEvent.VIEW_SPEC);
+		send(this, Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
 	}
 
+	@SuppressWarnings("rawtypes")
+	public void addWidget(WidgetSpec widget) {
+		final ViewPort port = getModelObject();
+		port.addWidget(widget);
+		provider.getViewSpecificationService().store(port);
+		send(this, Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
+	}
+	
 	// ----------------------------------------------------
 
 	private Component createWidgetPanel(IModel<WidgetSpec> model, ConditionalModel<Boolean> isConfigMode) {

@@ -3,9 +3,10 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
-import org.arastreju.sge.ArastrejuProfile;
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.query.Query;
 import org.arastreju.sge.spi.GateContext;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -24,7 +25,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 public class AbstractService {
 	
 	private final ServiceProvider provider;
-
+	
 	// ----------------------------------------------------
 	
 	/**
@@ -45,6 +46,27 @@ public class AbstractService {
 	
 	// ----------------------------------------------------
 	
+	protected ResourceNode currentUser() {
+		final ResourceNode user = getProvider().getContext().getUser();
+		if (user == null) {
+			return null;
+		} else {
+			return getProvider().getResourceResolver().resolve(user); 
+		}
+	}
+	
+	// ----------------------------------------------------
+	
+	protected Query query() {
+		return provider.getArastejuGate().createQueryManager().buildQuery();
+	}
+	
+	protected ModelingConversation mc() {
+		return provider.getArastejuGate().startConversation();
+	}
+	
+	// ----------------------------------------------------
+	
 	protected ArastrejuGate gate() {
 		return provider.getArastejuGate();
 	}
@@ -54,8 +76,7 @@ public class AbstractService {
 	}
 	
 	protected ArastrejuGate gate(String domain) {
-		final ArastrejuProfile profile = provider.getContext().getConfig().getArastrejuConfiguration();
-		return Arastreju.getInstance(profile).rootContext(domain);
+		return provider.getArastejuGate(domain);
 	}
-
+	
 }

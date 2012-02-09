@@ -9,7 +9,7 @@ import de.lichtflut.rb.core.RBConfig;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Context of the backend services.
  * </p>
  *
  * <p>
@@ -39,12 +39,18 @@ public class ServiceContext {
 	 * @param config
 	 */
 	public ServiceContext(RBConfig config, String domain) {
-		this.config = config;
+		this(config);
 		this.domain = domain;
 	}
 	
 	// ----------------------------------------------------
 
+	public boolean isAuthenticated() {
+		return user != null;
+	}
+	
+	// ----------------------------------------------------
+	
 	/**
 	 * @return the user
 	 */

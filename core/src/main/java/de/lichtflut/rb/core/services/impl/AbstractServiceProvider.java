@@ -3,7 +3,15 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.arastreju.sge.Arastreju;
+import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.persistence.ResourceResolver;
+import org.arastreju.sge.spi.GateContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.EntityManager;
@@ -27,8 +35,14 @@ import de.lichtflut.rb.core.services.ViewSpecificationService;
  * @author Oliver Tigges
  */
 public abstract class AbstractServiceProvider implements ServiceProvider{
+	
+	private final Logger logger = LoggerFactory.getLogger(AbstractServiceProvider.class);
 
+	private final Set<String> initializedDomains = new HashSet<String>();
+	
 	private final ServiceContext ctx;
+	
+	private ArastrejuGate openGate;
 	
 	private SchemaManager schemaManager;
 	private EntityManager entityManager;
@@ -36,6 +50,7 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	private SecurityService securityService;
 	private MessagingService messagingService;
 	private ViewSpecificationService viewSpecService;
+	private DomainOrganizer domainOrganizer;
 	
 	// ----------------------------------------------------
 
@@ -48,10 +63,45 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		entityManager = new EntityManagerImpl(this);
 		typeManager = new TypeManagerImpl(this);
 		messagingService = new MessagingServiceImpl(this);
+		domainOrganizer = newDomainOrganizer();
 		securityService = newSecurityService();
-		viewSpecService = new ViewSpecificationServiceImpl(this);
+		viewSpecService = newViewSpecificationServiceImpl();
 	}
 
+	// ----------------------------------------------------
+	
+	/**
+	 * @return
+	 */
+	protected DomainOrganizer newDomainOrganizer() {
+		return new DomainOrganizerImpl(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ArastrejuGate getArastejuGate() {
+		if (openGate != null) {
+			return openGate;
+		}
+		if (ctx.isAuthenticated()) {
+			openGate = openGate(ctx.getDomain());
+			return openGate;
+		} else {
+			logger.info("Creating default Arastreju Gate for unauthenticated user.");
+			return openGate = openGate(GateContext.MASTER_DOMAIN);
+		}
+	}
+	
+	 /** 
+     * {@inheritDoc}
+     */
+    @Override
+    public ArastrejuGate getArastejuGate(String domain) {
+    	return openGate(domain);
+    }
+	
 	// ----------------------------------------------------
 	
 	/**
@@ -89,7 +139,9 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	* {@inheritDoc}
 	*/
 	@Override
-	public abstract DomainOrganizer getDomainOrganizer();
+	public DomainOrganizer getDomainOrganizer() {
+		return domainOrganizer;
+	}
 
 	/** 
 	* {@inheritDoc}
@@ -124,12 +176,47 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	}
 	
 	// ----------------------------------------------------
+
+	/**
+	 * Hook for domain initialization.
+	 * @param gate The gate to this domain.
+	 * @param domainName The domain name.
+	 */
+	protected void initializeDomain(ArastrejuGate gate, String domainName) {
+	}
+	
+	// ----------------------------------------------------
 	
 	/**
 	 * @return The security service.
 	 */
 	protected SecurityService newSecurityService() {
 		return new SecurityServiceImpl(this);
+	}
+	
+	/**
+	 * @return The view specification service.
+	 */
+	protected ViewSpecificationService newViewSpecificationServiceImpl() {
+		return new ViewSpecificationServiceImpl(this);
+	}
+	
+	// ----------------------------------------------------
+	
+	protected synchronized ArastrejuGate openGate(String domain) {
+		final Arastreju aras = Arastreju.getInstance(getContext().getConfig().getArastrejuConfiguration());
+		logger.debug("Opening Arastreju Gate for domain {} ", domain);
+		if (domain == null || GateContext.MASTER_DOMAIN.equals(domain)) {
+			openGate = aras.rootContext();
+		} else {
+			getContext().setDomain(domain);
+			openGate = aras.rootContext(domain);
+			if (!initializedDomains.contains(domain)) {
+				initializeDomain(openGate, domain);
+				initializedDomains.add(domain);
+			}
+		}
+		return openGate;
 	}
 
 }

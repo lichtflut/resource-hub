@@ -78,10 +78,7 @@ public class CurrentUserModel extends AbstractReadOnlyModel<User> {
 	
 	public static ResourceID currentUserID() {
 		if (Session.exists()) {
-			User user = RBWebSession.get().getUser();
-			if (user != null) {
-				return user.getAssociatedResource();
-			}
+			return RBWebSession.get().getUserID();
 		}
 		return null;
 	}

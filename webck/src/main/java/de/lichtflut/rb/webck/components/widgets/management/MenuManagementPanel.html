@@ -1,0 +1,47 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+	<div>
+
+		<table class="entity-list long">
+			<tr>
+				<th class="entity-list-header">
+					<wicket:message key="header.name">[name]</wicket:message>
+				</th>
+				<th class="entity-list-header">
+					<wicket:message key="header.perspective">[perspective]</wicket:message>
+				</th>
+				<th class="entity-list-header"></th>
+				<th class="entity-list-header"></th>
+				<th class="entity-list-header"></th>
+				<th class="entity-list-header"></th>
+			</tr>
+	
+			<wicket:container wicket:id="list">
+				<tr>
+					<td class="entity-list-cell" wicket:id="name"></td>
+					<td class="entity-list-cell" wicket:id="perspective"></td>
+					<td class="entity-list-action"><a wicket:id="up" class="action-move-up">[up]</a></td>
+					<td class="entity-list-action"><a wicket:id="down" class="action-move-down">[down]</a></td>
+					<td class="entity-list-action"><a wicket:id="edit" class="action-edit">[edit]</a></td>
+					<td class="entity-list-action"><a wicket:id="delete" class="action-delete">[delete]</a></td>
+				</tr>
+			</wicket:container>
+		</table>
+		
+		<a wicket:id="create"><wicket:message key="link.create">[create]</wicket:message></a>
+	
+	</div>
+		
+	
+</wicket:panel>
+</html>

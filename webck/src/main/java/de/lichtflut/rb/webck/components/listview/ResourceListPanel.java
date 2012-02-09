@@ -155,7 +155,6 @@ public class ResourceListPanel extends Panel {
 				item.add(createActions(item.getModelObject(), config.getActions()));
 			}
 		};
-		listView.setReuseItems(true);
 		return listView;
 	}
 	
@@ -166,7 +165,6 @@ public class ResourceListPanel extends Panel {
 				item.add(createCell(item.getModel()));
 			}
 		}; 
-		columns.setReuseItems(true);
 		return columns;
 	}
 	
@@ -192,7 +190,6 @@ public class ResourceListPanel extends Panel {
 				}
 			}
 		}; 
-		columns.setReuseItems(true);
 		return columns;
 	}
 	

@@ -3,17 +3,26 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
+import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.ViewPort;
+import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
 import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
@@ -38,8 +47,67 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 		super(provider);
 	}
 	
-	// ----------------------------------------------------
+	// -- MENU ITEMS --------------------------------------
 
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<MenuItem> getUsersMenuItems() {
+		final ResourceNode user = currentUser();
+		if (user == null) {
+			return Collections.emptyList();
+		}
+		final List<MenuItem> result = new ArrayList<MenuItem>();
+		for(Statement stmt : user.getAssociations()) {
+			if (WDGT.HAS_MENU_ITEM.equals(stmt.getPredicate()) && stmt.getObject().isResourceNode()) {
+				result.add(new SNMenuItem(stmt.getObject().asResource()));
+			}
+		}
+		if (result.isEmpty()) {
+			result.addAll(initializeDashboards(user));
+		}
+		Collections.sort(result, new OrderBySerialNumber());
+		return result;
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addUsersMenuItem(MenuItem item) {
+		final ResourceNode user = currentUser();
+		if (user != null) {
+			store(item);
+			user.addAssociation(WDGT.HAS_MENU_ITEM, item);
+		}
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void store(MenuItem item) {
+		final ModelingConversation mc = gate().startConversation();
+		mc.attach(item);
+		mc.close();
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeUsersItem(MenuItem item) {
+		final ResourceNode user = currentUser();
+		final ModelingConversation mc = gate().startConversation();
+		SNOPS.remove(user, WDGT.HAS_MENU_ITEM, item);
+		//TODO: Remove item if private one.
+		//mc.remove(item);
+		mc.close();
+	}
+	
+	// -- PERSPECTIVES ------------------------------------
+	
 	/** 
 	 * {@inheritDoc}
 	 */
@@ -59,6 +127,21 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 * {@inheritDoc}
 	 */
 	@Override
+	public void store(Perspective perspective) {
+		final ModelingConversation mc = gate().startConversation();
+		mc.attach(perspective);
+		if (perspective.getViewPorts().isEmpty()) {
+			// add two default view ports.
+			perspective.addViewPort();
+			perspective.addViewPort();
+		}
+		mc.close();
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void remove(Perspective perspective) {
 		final ModelingConversation mc = gate().startConversation();
 		final SemanticGraph graph = new ViewSpecTraverser().toGraph(perspective);
@@ -67,6 +150,8 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 		}
 		mc.close();
 	}
+
+	// -- WIDGETS -----------------------------------------
 
 	/** 
 	 * {@inheritDoc}
@@ -93,6 +178,8 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 		mc.close();
 	}
 	
+	// ----------------------------------------------------
+	
 	/** 
 	 * {@inheritDoc}
 	 */
@@ -101,6 +188,24 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 		final ModelingConversation mc = gate().startConversation();
 		mc.attach(viewPort);
 		mc.close();
+	}
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Initialize the (probably new) user's menu items and dashboards.
+	 */
+	protected List<MenuItem> initializeDashboards(ResourceNode user) {
+		final List<MenuItem> result = new ArrayList<MenuItem>();
+		final ResourceNode defaultMenu = getProvider().getResourceResolver().resolve(WDGT.DEFAULT_MENU);
+		for(Statement stmt : defaultMenu.getAssociations()) {
+			if (WDGT.HAS_MENU_ITEM.equals(stmt.getPredicate()) && stmt.getObject().isResourceNode()) {
+				final ResourceNode item = stmt.getObject().asResource();
+				user.addAssociation(WDGT.HAS_MENU_ITEM, item);
+				result.add(new SNMenuItem(item));
+			}
+		}
+		return result;
 	}
 	
 }

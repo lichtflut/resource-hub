@@ -3,34 +3,34 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
-import java.util.List;
-
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>
- *  Definition of a view port inside a perspective.
+ *  A menu item referreing to a perspective.
  * </p>
  *
  * <p>
- * 	Created Jan 19, 2012
+ * 	Created Feb 7, 2012
  * </p>
  *
  * @author Oliver Tigges
  */
-public interface ViewPort extends ResourceNode {
+public interface MenuItem extends ResourceNode {
 	
 	ResourceID getID();
+	
+	String getName();
+	
+	void setName(String name);
 	
 	Integer getPosition();
 	
 	void setPosition(Integer position);
-	
-	List<WidgetSpec> getWidgets();
-	
-	void addWidget(WidgetSpec widget);
-	
-	void removeWidget(WidgetSpec widget);
 
+	Perspective getPerspective();
+	
+	void setPerspective(Perspective perspective);
+	
 }

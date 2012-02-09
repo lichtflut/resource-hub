@@ -19,6 +19,8 @@ import org.arastreju.sge.query.Query;
  */
 public interface Selection extends ResourceNode {
 	
+	boolean isDefined();
+	
 	void adapt(Query query);
 
 }

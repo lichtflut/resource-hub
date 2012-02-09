@@ -131,7 +131,7 @@ public class SNResourceSchema extends ResourceView {
 			unsorted.add(current.getObject().asResource());
 		}
 		final List<SNPropertyDeclaration> result = new ArrayList<SNPropertyDeclaration>(unsorted.size());
-		final List<ResourceNode> sorted = LinkedOrderedNodes.sortResources(unsorted);
+		final List<ResourceNode> sorted = LinkedOrderedNodes.sortBySuccessors(unsorted);
 		for (ResourceNode node : sorted) {
 			result.add(new SNPropertyDeclaration(node));
 		}
