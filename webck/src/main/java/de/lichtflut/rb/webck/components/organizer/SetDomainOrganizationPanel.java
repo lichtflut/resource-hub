@@ -15,7 +15,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -24,10 +23,10 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.models.basic.LoadableModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
 /**
@@ -41,13 +40,11 @@ import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
  *
  * @author Oliver Tigges
  */
-public class SetDomainOrganizationPanel extends Panel {
+public class SetDomainOrganizationPanel extends TypedPanel<ResourceID> {
 	
 	@SpringBean
 	private ServiceProvider provider;
 
-	private final LoadableModel<ResourceID> model;
-	
 	private final IModel<Boolean> readonly;
 	
 	// ----------------------------------------------------
@@ -57,9 +54,8 @@ public class SetDomainOrganizationPanel extends Panel {
 	 * @param model
 	 */
 	@SuppressWarnings("rawtypes")
-	public SetDomainOrganizationPanel(String id, LoadableModel<ResourceID> model) {
-		super(id);
-		this.model = model;
+	public SetDomainOrganizationPanel(String id, IModel<ResourceID> model) {
+		super(id, model);
 		this.readonly = Model.of(true);
 		
 		setOutputMarkupId(true);
@@ -97,7 +93,7 @@ public class SetDomainOrganizationPanel extends Panel {
 				readonly.setObject(false);
 				target.add(SetDomainOrganizationPanel.this);
 			}
-		}.add(visibleIf(and(isTrue(readonly), isNull(model))));
+		}.add(visibleIf(and(isTrue(readonly), isNull(getOrganizationModel()))));
 	}
 	
 	protected Component createChangeButton() {
@@ -107,16 +103,15 @@ public class SetDomainOrganizationPanel extends Panel {
 				readonly.setObject(false);
 				target.add(SetDomainOrganizationPanel.this);
 			}
-		}.add(visibleIf(and(isTrue(readonly), not(isNull(model)))));
+		}.add(visibleIf(and(isTrue(readonly), not(isNull(getOrganizationModel() )))));
 	}
 
 	protected Component createSaveButton() {
 		return new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				provider.getDomainOrganizer().setDomainOrganization(model.getObject());
+				provider.getDomainOrganizer().setDomainOrganization(getOrganizationModel() .getObject());
 				readonly.setObject(true);
-				model.reset();
 				target.add(SetDomainOrganizationPanel.this);
 			}
 		}.add(visibleIf(isFalse(readonly)));
@@ -127,20 +122,15 @@ public class SetDomainOrganizationPanel extends Panel {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				readonly.setObject(true);
-				model.reset();
 				target.add(SetDomainOrganizationPanel.this);
 			}
 		}.add(visibleIf(isFalse(readonly)));
 	}
 	
 	// ----------------------------------------------------
-
-	/** 
-	* {@inheritDoc}
-	*/
-	@Override
-	protected void onDetach() {
-		super.onDetach();
-		model.detach();
+	
+	private IModel<ResourceID> getOrganizationModel() {
+		return getModel();
 	}
+	
 }

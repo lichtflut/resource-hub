@@ -44,6 +44,7 @@ public class MenuManagementPanel extends Panel {
 	
 	@SpringBean
 	private ServiceProvider provider;
+	
 	private OrderedNodesContainer container;
 	
 	// ----------------------------------------------------

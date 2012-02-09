@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.viewspec.Selection;
@@ -76,7 +77,8 @@ public class SelectionConfigPanel extends TypedPanel<Selection> {
 				if (list.isEmpty()) {
 					SNSelectionParameter param = new SNSelectionParameter();
 					selection.addAssociation(WDGT.HAS_PARAMETER, param);
-					list.add(new QueryParamUIModel(param, ParameterType.RESOURCE_TYPE));
+					param.setField(RDF.TYPE);
+					list.add(new QueryParamUIModel(param));
 				}
 			}
 			return list;

@@ -3,11 +3,12 @@
  */
 package de.lichtflut.rb.webck.models;
 
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
  * <p>
@@ -20,9 +21,15 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
  *
  * @author Oliver Tigges
  */
-public abstract class DomainOrganizationModel extends AbstractLoadableModel<ResourceID> {
+public class DomainOrganizationModel extends AbstractLoadableDetachableModel<ResourceID> {
+	
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
 	
 	public DomainOrganizationModel() {
+		Injector.get().inject(this);
 	}
 	
 	// ----------------------------------------------------
@@ -32,17 +39,7 @@ public abstract class DomainOrganizationModel extends AbstractLoadableModel<Reso
 	*/
 	@Override
 	public ResourceID load() {
-		return organizer().getDomainOrganization();
+		return provider.getDomainOrganizer().getDomainOrganization();
 	}
 	
-	// ----------------------------------------------------
-	
-	public abstract ServiceProvider getServiceProvider();
-	
-	// ----------------------------------------------------
-	
-	private DomainOrganizer organizer() {
-		return getServiceProvider().getDomainOrganizer();
-	}
-
 }

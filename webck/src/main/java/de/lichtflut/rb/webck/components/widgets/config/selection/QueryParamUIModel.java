@@ -32,14 +32,6 @@ class QueryParamUIModel implements Serializable {
 	// ----------------------------------------------------
 	
 	/**
-	 * Constructor.
-	 */
-	public QueryParamUIModel(SNSelectionParameter parameter, ParameterType type) {
-		this.parameter = parameter;
-		this.type = type;
-	}
-	
-	/**
 	 * @param field
 	 * @param value
 	 */
@@ -127,7 +119,9 @@ class QueryParamUIModel implements Serializable {
 	// ----------------------------------------------------
 	
 	static boolean isResourceReference(SemanticNode node) {
-		if (node.isResourceNode()) {
+		if (node == null) {
+			return false;
+		} else if (node.isResourceNode()) {
 			return true;
 		} else {
 			return QualifiedName.isUri(node.asValue().getStringValue());
