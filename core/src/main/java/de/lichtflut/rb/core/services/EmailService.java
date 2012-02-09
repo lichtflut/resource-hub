@@ -3,9 +3,9 @@
  */
 package de.lichtflut.rb.core.services;
 
-import org.arastreju.sge.security.User;
+import java.util.Locale;
 
-import de.lichtflut.rb.core.messaging.MessageDescription;
+import org.arastreju.sge.security.User;
 
 /**
  * <p>
@@ -19,14 +19,25 @@ import de.lichtflut.rb.core.messaging.MessageDescription;
 public interface EmailService {
 
 	/**
-	 * This method sends an email containing a {@link User}s password.
+	 * Sends an email containing a {@link User}s password.
 	 * @param user
+	 * @param password
+	 * @param locale
 	 */
-	void sendPasswordInformation(User user, String Password);
+	void sendPasswordInformation(User user, String password, Locale locale);
 
 	/**
-	 * This method sends an email according to the {@link MessageDescription}.
-	 * @param desc
+	 * Sends an email to inform a {@link User} of a successful account creation.
+	 * @param user
+	 * @param locale 
 	 */
-	void sendMail(MessageDescription desc);
+	void sendRegistrationConfirmation(User user, Locale locale);
+
+	/**
+	 * Sends an email to inform a {@link User} that his account has been activated.
+	 * @param user
+	 * @param locale
+	 */
+	void sendAccountActivatedInformation(User user, Locale locale);
+	
 }

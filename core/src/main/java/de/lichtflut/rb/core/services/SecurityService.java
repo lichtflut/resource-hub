@@ -53,6 +53,7 @@ public interface SecurityService {
 	/**
 	 * Resets the password with a generated one.
 	 * @param user
+	 * @return the new password
 	 */
 	void resetPasswordForUser(User user);
 

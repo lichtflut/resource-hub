@@ -9,9 +9,7 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -35,13 +33,9 @@ import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
 import wicket.contrib.tinymce.settings.Button;
-import wicket.contrib.tinymce.settings.ContextMenuPlugin;
 import wicket.contrib.tinymce.settings.TinyMCESettings;
 import wicket.contrib.tinymce.settings.TinyMCESettings.Location;
-import wicket.contrib.tinymce.settings.TinyMCESettings.Position;
 import wicket.contrib.tinymce.settings.TinyMCESettings.Theme;
-import wicket.contrib.tinymce.settings.TinyMCESettings.Toolbar;
-
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;

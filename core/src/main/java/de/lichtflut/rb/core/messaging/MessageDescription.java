@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.messaging;
 
 import java.util.Locale;
 
+
 /**
  * <p>
  *  This class wrappes various data needed for sending a message.
@@ -24,29 +25,23 @@ public class MessageDescription {
 	private String recipient;
 	private String recipientName;
 	private String senderName;
-	private MessageType type;
+	private String password;
 	private Locale locale;
-	
+	private MessageType type;
+
 	// ---------------- Constructor -------------------------
 	
 	/**
-	 * Constructor.<br>
-	 * {@link Locale} will be set to English.
-	 * @param type
-	 */
-	public MessageDescription (MessageType type){
-		this(type, Locale.ENGLISH);
-	}
-	
-	/**
 	 * Constructor.
-	 * @param type
-	 * @param locale
+	 * @param locale - if locale is <code>null</code>, locale will be set to Locale.ENGLISH
 	 */
-	public MessageDescription (MessageType type, Locale locale){
-		this.type = type;
+	public MessageDescription(Locale locale){
+		if(locale == null){
+			locale = Locale.ENGLISH;
+		}
 		this.locale = locale;
 	}
+	
 	// ----------------------------------------------------
 	
 	/**
@@ -81,10 +76,7 @@ public class MessageDescription {
 	 * @return the content
 	 */
 	public String getContent() {
-		if(type.equals(MessageType.UNDEFINED)){
-			return content;
-		}
-		return TextModules.getMailFor(type, locale);
+		return content;
 	}
 	
 	/**
@@ -148,6 +140,41 @@ public class MessageDescription {
 	 */
 	public void setSenderName(String senderName) {
 		this.senderName = senderName;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public MessageType getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(MessageType type) {
+		this.type = type;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * @return
+	 */
+	public Locale getLocale() {
+		return locale;
 	}
 	
 }

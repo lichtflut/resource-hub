@@ -66,17 +66,22 @@ public class ResetPasswordPanel extends Panel {
 		AjaxButton button = new RBStandardButton(id) {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form){
-				User user = provider.getArastejuGate().getIdentityManagement().findUser(emailModel.getObject());
-				if(user == null) {
-					error(getString("message.no-user-found"));
-				} else {
-					provider.getSecurityService().resetPasswordForUser(user);
-					info(getString("message.password-changed"));
-				}
+				resetPassword();
 				RBAjaxTarget.add(form);
 			}
+
 		};
 		return button;
+	}
+	
+	protected void resetPassword() {
+		User user = provider.getArastejuGate().getIdentityManagement().findUser(emailModel.getObject());
+		if(user == null) {
+			error(getString("message.no-user-found"));
+		} else {
+			provider.getSecurityService().resetPasswordForUser(user);
+			info(getString("message.password-changed"));
+		}
 	}
 
 	private TextField<String> createInputField(String id) {
