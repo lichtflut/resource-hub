@@ -7,6 +7,8 @@ import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.arastreju.sge.eh.ArastrejuRuntimeException;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
@@ -26,6 +28,8 @@ import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 public class RBWebSession extends WebSession {
 	
 	private final BrowsingHistory history = new BrowsingHistory();
+	
+	private ResourceID userID;
 	
 	private User user; 
 	
@@ -69,10 +73,18 @@ public class RBWebSession extends WebSession {
 	}
 	
 	/**
+	 * @return
+	 */
+	public ResourceID getUserID() {
+		return userID;
+	}
+	
+	/**
 	 * @param user The logged in user.
 	 */
 	public void setUser(final User user) {
+		this.userID = new SimpleResourceID(user.getQualifiedName());
 		this.user = user;
 	}
-	
+
 }

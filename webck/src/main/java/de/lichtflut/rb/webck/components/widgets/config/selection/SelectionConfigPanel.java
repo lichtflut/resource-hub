@@ -73,6 +73,11 @@ public class SelectionConfigPanel extends TypedPanel<Selection> {
 				for (SemanticNode parameter : SNOPS.objects(selection, WDGT.HAS_PARAMETER)) {
 					list.add(new QueryParamUIModel(new SNSelectionParameter(parameter.asResource())));
 				}
+				if (list.isEmpty()) {
+					SNSelectionParameter param = new SNSelectionParameter();
+					selection.addAssociation(WDGT.HAS_PARAMETER, param);
+					list.add(new QueryParamUIModel(param, ParameterType.RESOURCE_TYPE));
+				}
 			}
 			return list;
 		}

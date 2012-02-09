@@ -60,6 +60,7 @@ public class TransientModel<T> implements IModel<T> {
 	*/
 	@Override
 	public void detach() {
+		this.object = null;
 	}
 
 }

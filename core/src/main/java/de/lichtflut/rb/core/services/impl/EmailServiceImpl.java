@@ -22,8 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.messaging.Configuration;
 import de.lichtflut.rb.core.messaging.MessageDescription;
-import de.lichtflut.rb.core.messaging.MessageType;
-import de.lichtflut.rb.core.messaging.TextModules;
 import de.lichtflut.rb.core.services.EmailService;
 
 /**

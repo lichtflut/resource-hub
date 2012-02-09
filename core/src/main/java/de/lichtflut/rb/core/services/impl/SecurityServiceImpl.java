@@ -108,7 +108,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		final String emailID = "admin@" + domain.getUniqueName();
 		final Credential credential = new PasswordCredential(password);
 		try {
-			final ArastrejuGate gate = gate(domain.getUniqueName());	
+			final ArastrejuGate gate = gate(domain.getUniqueName());
 			final IdentityManagement im = gate.getIdentityManagement();
 			final User admin = im.register(emailID, credential);
 			for (String roleName : rolesOfDomainAdmin()) {

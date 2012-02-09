@@ -43,12 +43,10 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public class DomainOrganizerImpl implements DomainOrganizer {
+public class DomainOrganizerImpl extends AbstractService implements DomainOrganizer {
 	
 	private final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
 	
-	private final ServiceProvider provider;
-
 	// -----------------------------------------------------
 
 	/**
@@ -56,7 +54,7 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 	 * @param provider The service provider.
 	 */
 	public DomainOrganizerImpl(final ServiceProvider provider) {
-		this.provider = provider;
+		super(provider);
 	}
 	
 	// -- DOMAINS -----------------------------------------
@@ -84,7 +82,7 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 	public Domain registerDomain(Domain domain) {
 		final Domain registered = arasOrganizer()
 				.registerDomain(domain.getUniqueName(), domain.getTitle(), domain.getDescription());
-		provider.getSecurityService().createDomainAdmin(domain);
+		getProvider().getSecurityService().createDomainAdmin(domain);
 		logger.info("Created new domain: " + registered);
 		return registered;
 	}
@@ -103,7 +101,7 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 	@Override
 	public void setDomainOrganization(final ResourceID organization) {
 		logger.info("Setting domain organization to: " + organization);
-		final ModelingConversation mc = provider.getArastejuGate().startConversation();
+		final ModelingConversation mc = gate().startConversation();
 		final ResourceNode previous = getDomainOrganization();
 		if (previous != null) {
 			ResourceNode attached = mc.resolve(previous);
@@ -121,7 +119,7 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 	 */
 	@Override
 	public ResourceNode getDomainOrganization() {
-		final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
+		final Query query = gate().createQueryManager().buildQuery();
 		query.addField(RDF.TYPE, RB.ORGANIZATION);
 		query.and();
 		query.addField(RBSystem.IS_DOMAIN_ORGANIZATION, "true");
@@ -166,7 +164,7 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 	// ----------------------------------------------------
 	
 	protected Organizer arasOrganizer() {
-		return provider.getArastejuGate().getOrganizer();
+		return gate().getOrganizer();
 	}
 
 }

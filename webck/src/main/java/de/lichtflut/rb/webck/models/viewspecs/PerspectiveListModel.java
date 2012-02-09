@@ -50,7 +50,7 @@ public class PerspectiveListModel extends LoadableDetachableModel<List<Perspecti
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected List<Perspective> load() {
+	public List<Perspective> load() {
 		final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
 		query.addField(RDF.TYPE, WDGT.PERSPECTIVE);
 		final QueryResult result = query.getResult();

@@ -32,6 +32,14 @@ class QueryParamUIModel implements Serializable {
 	// ----------------------------------------------------
 	
 	/**
+	 * Constructor.
+	 */
+	public QueryParamUIModel(SNSelectionParameter parameter, ParameterType type) {
+		this.parameter = parameter;
+		this.type = type;
+	}
+	
+	/**
 	 * @param field
 	 * @param value
 	 */

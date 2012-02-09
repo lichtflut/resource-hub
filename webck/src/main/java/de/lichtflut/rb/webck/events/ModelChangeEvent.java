@@ -45,6 +45,8 @@ public class ModelChangeEvent<T> {
 	
 	public static final String VIEW_SPEC = "view-specification";
 	
+	public static final String MENU = "menu";
+	
 	public static final String ANY = "any";
 	
 	private static final ModelChangeEvent EMPTY = new ModelChangeEvent(new String[0]);

@@ -139,7 +139,7 @@ public class PerspectivePanel extends TypedPanel<Perspective> {
 			if (layout != null && layout.isValueNode()) {
 				return layout.asValue().getStringValue();
 			} else {
-				return "";
+				return WDGT.DEFAULT_LAYOUT;
 			}
 		}
 	}

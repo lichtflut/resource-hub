@@ -27,6 +27,11 @@ public interface ServiceProvider {
 	 * @return an instance of {@link ArastrejuGate} which depends on the specific ServiceProvider
 	 */
 	ArastrejuGate getArastejuGate();
+	
+	/**
+	 * @return an instance of {@link ArastrejuGate} which depends on the specific ServiceProvider
+	 */
+	ArastrejuGate getArastejuGate(String domain);
 
 	// -----------------------------------------------------
 

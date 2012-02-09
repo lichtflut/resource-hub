@@ -20,6 +20,7 @@ import org.arastreju.sge.query.Query;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
@@ -96,9 +97,14 @@ public class EntityListWidget extends ConfigurableWidget {
 		return new AbstractLoadableDetachableModel<List<ResourceNode>>() {
 			@Override
 			public List<ResourceNode> load() {
-				final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
-				spec.getObject().getSelection().adapt(query);
-				return query.getResult().toList(maxResults);
+				final Selection selection = spec.getObject().getSelection();
+				if (selection != null && selection.isDefined()) {
+					final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
+					selection.adapt(query);
+					return query.getResult().toList(maxResults);
+				} else {
+					return Collections.emptyList();
+				}
 			}
 		};
 	}
