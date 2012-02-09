@@ -7,7 +7,9 @@ import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -18,6 +20,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.MenuItem;
+import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.webck.common.OrderedNodesContainer;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.common.impl.SerialNumberOrderedNodesContainer;
@@ -65,7 +68,7 @@ public class MenuManagementPanel extends Panel {
 			protected void populateItem(final ListItem<MenuItem> item) {
 				final MenuItem menuItem = item.getModelObject();
 				item.add(new Label("name", menuItem.getName()));
-				item.add(new Label("perspective", menuItem.getPerspective().getName()));
+				item.add(new Label("perspective", perspectiveName(menuItem)));
 				item.add(createEditLink(item.getModel()));
 				item.add(createDeleteLink(menuItem));
 				item.add(createUpLink(menuItem));
@@ -147,10 +150,24 @@ public class MenuManagementPanel extends Panel {
 		return link;
 	}
 	
+
+	private String perspectiveName(MenuItem menuItem) {
+		Perspective perspective = menuItem.getPerspective();
+		if (perspective == null) {
+			return "-- undefined --";
+		} else {
+			return perspective.getName();
+		}
+	}
+	
 	// ----------------------------------------------------
 	
+	@SuppressWarnings("rawtypes")
 	protected void updatePanel() {
 		RBAjaxTarget.add(this);
+		WebMarkupContainer listView = (WebMarkupContainer) get("list");
+		listView.removeAll();
+		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent(ModelChangeEvent.MENU));
 	}
 	
 }

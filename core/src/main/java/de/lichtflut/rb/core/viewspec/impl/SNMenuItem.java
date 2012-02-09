@@ -92,7 +92,7 @@ public class SNMenuItem extends ResourceView implements MenuItem {
 	 */
 	@Override
 	public Perspective getPerspective() {
-		SemanticNode node = SNOPS.singleObject(this, WDGT.SHOWS_PERSPECTIVE);
+		SemanticNode node = SNOPS.fetchObject(this, WDGT.SHOWS_PERSPECTIVE);
 		if (node != null && node.isResourceNode()) {
 			return new SNPerspective(node.asResource());
 		}

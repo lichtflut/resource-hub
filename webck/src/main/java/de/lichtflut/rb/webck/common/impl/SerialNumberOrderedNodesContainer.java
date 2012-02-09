@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.webck.common.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.wicket.model.IModel;
@@ -10,6 +11,7 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import de.lichtflut.rb.webck.common.OrderedNodesContainer;
 
@@ -76,6 +78,7 @@ public class SerialNumberOrderedNodesContainer implements OrderedNodesContainer 
 		int bSN = getSerialNumber(b);
 		setSerialNumnber(a, bSN);
 		setSerialNumnber(b, aSN);
+		ensureCorrectness(getList());
 	};
 	
 	// ----------------------------------------------------
@@ -90,11 +93,19 @@ public class SerialNumberOrderedNodesContainer implements OrderedNodesContainer 
 	}
 	
 	private int getSerialNumber(ResourceNode n) {
-		SemanticNode sn = SNOPS.singleObject(n, Aras.HAS_SERIAL_NUMBER);
+		SemanticNode sn = SNOPS.fetchObject(n, Aras.HAS_SERIAL_NUMBER);
 		if (sn != null) {
 			return sn.asValue().getIntegerValue().intValue();
 		} else {
 			return -1;
+		}
+	}
+	
+	private void ensureCorrectness(List<ResourceNode> list) {
+		Collections.sort(list, new OrderBySerialNumber());
+		int idx = 1;
+		for (ResourceNode node : list) {
+			SNOPS.assure(node, Aras.HAS_SERIAL_NUMBER, idx++);
 		}
 	}
 
