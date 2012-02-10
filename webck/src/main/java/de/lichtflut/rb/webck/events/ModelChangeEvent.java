@@ -47,6 +47,10 @@ public class ModelChangeEvent<T> {
 	
 	public static final String ANY = "any";
 	
+	public static final String IO_REPORT = "io-report";
+	
+	public static final String START_TIMER_BEHAVIOR = "start-timer-behavior";
+	
 	private static final ModelChangeEvent EMPTY = new ModelChangeEvent(new String[0]);
 	
 	// ----------------------------------------------------

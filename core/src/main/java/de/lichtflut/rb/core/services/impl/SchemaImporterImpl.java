@@ -9,6 +9,7 @@ import java.io.InputStream;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.Statement;
 
+import de.lichtflut.rb.core.reporting.IOReport;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
@@ -54,19 +55,35 @@ public class SchemaImporterImpl implements SchemaImporter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void read(final InputStream in) throws IOException {
-		final ParsedElements elements = parser.parse(in);
-		for(TypeDefinition def : elements.getTypeDefs()) {
-			manager.store(def);
+	public IOReport read(final InputStream in)  {
+		IOReport report = new IOReport();
+		
+		ParsedElements elements;
+		try {
+			elements = parser.parse(in);
+		
+			for(TypeDefinition def : elements.getTypeDefs()) {
+				manager.store(def);
+			}
+			for(ResourceSchema schema : elements.getSchemas()) {
+				resolveTypeDefReferences(schema);
+				manager.store(schema);
+			}
+			final ModelingConversation mc = provider.getArastejuGate().startConversation();
+			for(Statement stmt : elements.getStatements()) {
+				mc.addStatement(stmt);
+			}
+			
+			report.add("TypeDefinitions", elements.getTypeDefs().size());
+			report.add("Schemas", elements.getSchemas().size());
+			report.add("Statements", elements.getStatements().size());
+			report.success();
+		} catch (IOException e) {
+			report.setAdditionalInfo(e.getMessage());
+			report.error();
+//			e.printStackTrace();
 		}
-		for(ResourceSchema schema : elements.getSchemas()) {
-			resolveTypeDefReferences(schema);
-			manager.store(schema);
-		}
-		final ModelingConversation mc = provider.getArastejuGate().startConversation();
-		for(Statement stmt : elements.getStatements()) {
-			mc.addStatement(stmt);
-		}
+		return report;
 	}
 	
 	// -----------------------------------------------------

@@ -7,11 +7,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.dialogs.SchemaExportDialog;
 import de.lichtflut.rb.webck.components.dialogs.SchemaImportDialog;
 
@@ -28,11 +25,6 @@ import de.lichtflut.rb.webck.components.dialogs.SchemaImportDialog;
  */
 public class SchemaIOPanel extends Panel {
 	
-	@SpringBean
-	private ServiceProvider provider;
-	
-	// ----------------------------------------------------
-	
 	/**
 	 * Constructor.
 	 */
@@ -40,7 +32,7 @@ public class SchemaIOPanel extends Panel {
 	public SchemaIOPanel(final String id) {
 		super(id);
 		
-		final Dialog exportDialog = createExportDialog();
+		final Dialog exportDialog = new SchemaExportDialog("exportDialog");
 		add(exportDialog);
 		
 		final Link exportLink = new AjaxFallbackLink("exportLink") {
@@ -51,7 +43,7 @@ public class SchemaIOPanel extends Panel {
 		};
 		add(exportLink);
 		
-		final Dialog importDialog = createImportDialog();
+		final Dialog importDialog = new SchemaImportDialog("importDialog");
 		add(importDialog);
 		
 		final Link importLink = new AjaxFallbackLink("importLink") {
@@ -62,33 +54,4 @@ public class SchemaIOPanel extends Panel {
 		};
 		add(importLink);
 	}
-	
-	// ----------------------------------------------------
-	
-	protected SchemaManager getSchemaManager() {
-		return provider.getSchemaManager();
-	}
-	
-	// -----------------------------------------------------
-	
-	private Dialog createExportDialog() {
-		final Dialog dialog = new SchemaExportDialog("exportDialog") {
-			@Override
-			public SchemaManager getSchemaManager() {
-				return SchemaIOPanel.this.getSchemaManager();
-			}
-		};
-		return dialog;
-	}
-	
-	private Dialog createImportDialog() {
-		final Dialog dialog = new SchemaImportDialog("importDialog") {
-			@Override
-			public SchemaManager getSchemaManager() {
-				return SchemaIOPanel.this.getSchemaManager();
-			}
-		};
-		return dialog;
-	}
-	
 }

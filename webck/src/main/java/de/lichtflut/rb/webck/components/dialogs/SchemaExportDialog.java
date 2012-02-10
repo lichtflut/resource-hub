@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -19,11 +20,14 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.request.resource.ResourceStreamResource;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
+import de.lichtflut.rb.core.reporting.IOReport;
 import de.lichtflut.rb.core.services.SchemaExporter;
-import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
  * <p>
@@ -36,9 +40,13 @@ import de.lichtflut.rb.core.services.SchemaManager;
  *
  * @author Oliver Tigges
  */
-public abstract class SchemaExportDialog extends AbstractExportDialog {
+public class SchemaExportDialog extends AbstractExportDialog {
+	
+	@SpringBean
+	private ServiceProvider provider;
 	
 	private IModel<String> format = new Model<String>("JSON");
+	private IOReport report;
 	
 	// ----------------------------------------------------
 
@@ -65,15 +73,12 @@ public abstract class SchemaExportDialog extends AbstractExportDialog {
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				final String uid = "&uid" + System.nanoTime();
 				target.appendJavaScript("window.location.href='" +  getDownloadUrl() + uid + "'");
+				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.START_TIMER_BEHAVIOR));
 				close(target);
 			}
 		});
 		add(form); 
 	}
-	
-	// ----------------------------------------------------
-
-	public abstract SchemaManager getSchemaManager();
 	
 	// ----------------------------------------------------
 	
@@ -107,12 +112,13 @@ public abstract class SchemaExportDialog extends AbstractExportDialog {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public InputStream getInputStream()
-				throws ResourceStreamNotFoundException {
-			final SchemaExporter exporter = getSchemaManager().getExporter(format.getObject());
+		public InputStream getInputStream()	throws ResourceStreamNotFoundException {
+			final SchemaExporter exporter = provider.getSchemaManager().getExporter(format.getObject());
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			try {
-				exporter.exportAll(out);
+				report = exporter.exportAll(out);
+				send(SchemaExportDialog.this.getPage(), Broadcast.BREADTH,
+						new ModelChangeEvent<IOReport>(report, ModelChangeEvent.IO_REPORT));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}

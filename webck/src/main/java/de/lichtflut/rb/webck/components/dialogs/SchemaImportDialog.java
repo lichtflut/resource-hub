@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -16,9 +17,12 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import de.lichtflut.rb.core.reporting.IOReport;
 import de.lichtflut.rb.core.services.SchemaImporter;
-import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
  * <p>
@@ -31,7 +35,10 @@ import de.lichtflut.rb.core.services.SchemaManager;
  *
  * @author Oliver Tigges
  */
-public abstract class SchemaImportDialog extends AbstractRBDialog {
+public class SchemaImportDialog extends AbstractRBDialog {
+	
+	@SpringBean
+	private ServiceProvider provider;
 	
 	private IModel<String> format = new Model<String>("JSON");
 	
@@ -67,19 +74,16 @@ public abstract class SchemaImportDialog extends AbstractRBDialog {
 	}
 	
 	// ----------------------------------------------------
-
-	public abstract SchemaManager getSchemaManager();
-	
-	// ----------------------------------------------------
 	
 	private ListModel<String> getChoices() {
 		return new ListModel<String>(Arrays.asList(new String [] {"JSON", "RDF", "RSF"}));
 	}
 	
 	private void importUpload(final FileUpload upload, final IModel<String> format) {
-		final SchemaImporter importer = getSchemaManager().getImporter(format.getObject());
+		final SchemaImporter importer = provider.getSchemaManager().getImporter(format.getObject());
 		try {
-			importer.read(upload.getInputStream());
+			IOReport report = importer.read(upload.getInputStream());
+			send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<IOReport>(report, ModelChangeEvent.IO_REPORT));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

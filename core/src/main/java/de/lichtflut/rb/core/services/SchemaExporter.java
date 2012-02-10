@@ -3,6 +3,8 @@ package de.lichtflut.rb.core.services;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import de.lichtflut.rb.core.reporting.IOReport;
+
 /**
  * <p>
  *  Exporter of Resource Schemas.
@@ -16,6 +18,6 @@ import java.io.OutputStream;
  */
 public interface SchemaExporter {
 	
-	void exportAll(OutputStream out) throws IOException;
+	IOReport exportAll(OutputStream out) throws IOException;
 	
 }
