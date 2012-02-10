@@ -92,8 +92,8 @@ public class SNViewPort extends ResourceView implements ViewPort {
 	 */
 	@Override
 	public void addWidget(WidgetSpec widget) {
-		addAssociation(WDGT.CONTAINS_WIDGET, widget);
 		widget.setPosition(getWidgets().size() + 1);
+		addAssociation(WDGT.CONTAINS_WIDGET, widget);
 	}
 
 	/** 

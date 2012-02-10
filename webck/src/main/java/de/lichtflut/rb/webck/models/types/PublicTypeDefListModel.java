@@ -6,6 +6,9 @@ package de.lichtflut.rb.webck.models.types;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
@@ -21,19 +24,29 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
  *
  * @author Oliver Tigges
  */
-public abstract class PublicTypeDefListModel extends AbstractLoadableDetachableModel<List<TypeDefinition>> {
+public class PublicTypeDefListModel extends AbstractLoadableDetachableModel<List<TypeDefinition>> {
 
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 */
+	public PublicTypeDefListModel() {
+		Injector.get().inject(this);
+	}
+	
+	// ----------------------------------------------------
+	
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
 	public List<TypeDefinition> load() {
 		return new ArrayList<TypeDefinition>(
-				getServiceProvider().getSchemaManager().findPublicTypeDefinitions());
+				provider.getSchemaManager().findPublicTypeDefinitions());
 	}
 	
-	// ----------------------------------------------------
-	
-	protected abstract ServiceProvider getServiceProvider();
-
 }

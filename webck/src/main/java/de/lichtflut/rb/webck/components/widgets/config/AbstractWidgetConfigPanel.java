@@ -6,9 +6,11 @@ package de.lichtflut.rb.webck.components.widgets.config;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.SemanticGraph;
 
@@ -68,6 +70,8 @@ public class AbstractWidgetConfigPanel extends TypedPanel<WidgetSpec> {
 		
 		final Form form = new Form("form");
 		form.add(new FeedbackPanel("feedback"));
+		
+		form.add(new TextField<String>("title", new PropertyModel<String>(model, "title")));
 		
 		form.add(new RBDefaultButton("save") {
 			@Override

@@ -14,17 +14,23 @@
 		<div class="rb-widget-header">
 			<div class="title"><h3 wicket:id="title">[title]</h3></div>
 			<div class="action-links">
-				<a wicket:id="removeWidget" wicket:message="title:link.title.remove-widget">
-					<wicket:message key="link.remove-widget">[remove]</wicket:message>
-				</a>
-				<wicket:enclosure>
-					|
-					<a wicket:id="configureLink" wicket:message="title:link.title.configure-widget">
+				<div class="left-to-right">
+					<a wicket:id="up" wicket:message="title:link.title.move-widget-up" class="action-move-up">
+						<wicket:message key="link.move-widget-up">[up]</wicket:message>
+					</a>
+					<a wicket:id="down" wicket:message="title:link.title.move-widget-down" class="action-move-down">
+						<wicket:message key="link.move-widget-down">[down]</wicket:message>
+					</a>
+					<a wicket:id="configureLink" wicket:message="title:link.title.configure-widget" class="action-edit">
 						<wicket:message key="link.configure-widget">[configure]</wicket:message>
 					</a>
-				</wicket:enclosure>
+					<a wicket:id="removeWidget" wicket:message="title:link.title.remove-widget" class="action-delete">
+						<wicket:message key="link.remove-widget">[remove]</wicket:message>
+					</a>
+				</div>
 			</div>
 		</div>
+		<div class="widget-overlay">&nbsp;</div>
 		<wicket:child/>
 	</div>
 	

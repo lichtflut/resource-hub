@@ -10,30 +10,38 @@
 </wicket:head>
 <wicket:panel>
 
-		<div class="section">
-			<h4><wicket:message key="header.basic-widgets">[basic]</wicket:message></h4>
-			<div wicket:id="basic">
-				<div>
-					<a wicket:id="select"><span wicket:id="label"></span></a>
-				</div>
-				<div wicket:id="description">
-				</div>
-			</div>
+	<div class="section">
+		<h3>
+			<wicket:message key="header.basic-widgets">[basic]</wicket:message>
+		</h3>
+	</div>
+	<div wicket:id="basic" class="widget-catalog-item">
+		<div class="widget-catalog-item-link">
+			<a wicket:id="select"><span wicket:id="label"></span></a>
 		</div>
-		
-		<div class="section">
-			<h4><wicket:message key="header.predefined-widgets">[predefined]</wicket:message></h4>
-			<div wicket:id="predefined">
-			
-			</div>
+		<div wicket:id="description" class="widget-catalog-item-description">
 		</div>
-		
-		<div class="section">
-			<h4><wicket:message key="header.published-widgets">[published]</wicket:message></h4>
-			<div wicket:id="published">
-			
-			</div>
+	</div>
+
+	<div class="section">
+		<h3>
+			<wicket:message key="header.predefined-widgets">[predefined]</wicket:message>
+		</h3>
+	</div>
+	<div wicket:id="predefined" class="widget-catalog-item">
+		<div class="widget-catalog-item-link">
+			<a wicket:id="select"><span wicket:id="label"></span></a>
 		</div>
-	
+		<div wicket:id="description" class="widget-catalog-item-description">
+		</div>
+	</div>
+
+	<div class="section">
+	<h3>
+		<wicket:message key="header.published-widgets">[published]</wicket:message>
+	</h3>
+	</div>
+	<div wicket:id="published" class="widget-catalog-item"></div>
+
 </wicket:panel>
 </html>

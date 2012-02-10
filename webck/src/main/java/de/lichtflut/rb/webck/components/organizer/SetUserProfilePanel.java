@@ -26,7 +26,7 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.security.User;
-import org.arastreju.sge.security.impl.UserImpl;
+import org.arastreju.sge.security.impl.SNUser;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
@@ -40,6 +40,7 @@ import de.lichtflut.rb.webck.browsing.ResourceAttributeApplyAction;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
@@ -117,7 +118,7 @@ public abstract class SetUserProfilePanel extends Panel {
 		this.profileModel = new DerivedModel<ResourceID, User>(user) {
 			@Override
 			protected ResourceID derive(User original) {
-				final SemanticNode node = SNOPS.singleObject(original.getAssociatedResource(), RBSystem.IS_RESPRESENTED_BY);
+				final SemanticNode node = SNOPS.singleObject(original, RBSystem.IS_RESPRESENTED_BY);
 				if (node != null) {
 					return node.asResource();
 				} else {
@@ -134,7 +135,7 @@ public abstract class SetUserProfilePanel extends Panel {
 		this.hasProfile = new DerivedModel<Boolean, User>(user) {
 			@Override
 			protected Boolean derive(User original) {
-				return SNOPS.singleObject(original.getAssociatedResource(), RBSystem.IS_RESPRESENTED_BY) != null;
+				return SNOPS.singleObject(original, RBSystem.IS_RESPRESENTED_BY) != null;
 			}
 		};
 	}
@@ -147,7 +148,7 @@ public abstract class SetUserProfilePanel extends Panel {
 		this.user = new AbstractLoadableModel<User>() {
 			@Override
 			public User load() {
-				return new UserImpl(provider.getResourceResolver().resolve(user.getObject().getAssociatedResource()));
+				return new SNUser(provider.getResourceResolver().resolve(user.getObject()));
 			}
 		};
 	}
@@ -222,7 +223,7 @@ public abstract class SetUserProfilePanel extends Panel {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				final EntityHandle handle = EntityHandle.forType(RB.PERSON);
 				final ReferenceReceiveAction action = new ResourceAttributeApplyAction(
-					user.getObject().getAssociatedResource(), RBSystem.IS_RESPRESENTED_BY);
+					user.getObject(), RBSystem.IS_RESPRESENTED_BY);
 				getHistory().clear(new JumpTarget(getOffsetPage()));
 				getHistory().createReference(handle, action);
 				jumpToResourceEditorPage(handle);
@@ -245,7 +246,7 @@ public abstract class SetUserProfilePanel extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				if(profileModel.getObject() != null){
-					SNOPS.remove(user.getObject().getAssociatedResource(), RBSystem.IS_RESPRESENTED_BY, profileModel.getObject());
+					SNOPS.remove(user.getObject(), RBSystem.IS_RESPRESENTED_BY, profileModel.getObject());
 					mode.setObject(DisplayMode.VIEW);
 					RBAjaxTarget.add(form);
 				}
@@ -284,10 +285,10 @@ public abstract class SetUserProfilePanel extends Panel {
 	 * @return
 	 */
 	protected AjaxButton createSaveButton(String id, final Form<?> form) {
-		final AjaxButton save = new RBStandardButton(id) {
+		final AjaxButton save = new RBDefaultButton(id) {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form){
-				ResourceNode userNode = provider.getResourceResolver().resolve(user.getObject().getAssociatedResource());
+				ResourceNode userNode = provider.getResourceResolver().resolve(user.getObject());
 				createRelationship(userNode, entityPickerModel.getObject());
 				mode.setObject(DisplayMode.VIEW);
 				RBAjaxTarget.add(form);

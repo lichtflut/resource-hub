@@ -20,6 +20,8 @@ import org.apache.wicket.model.util.ListModel;
 
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.components.widgets.builtin.MyCompanyWidget;
+import de.lichtflut.rb.webck.components.widgets.builtin.ThatsMeWidget;
 
 /**
  * <p>
@@ -43,7 +45,7 @@ public abstract class WidgetCatalogPanel extends Panel {
 		
 		add(createListView("basic", basicListModel()));
 		
-		add(createPredifinedCatalog("predefined"));
+		add(createListView("predefined", predefinedListModel()));
 		
 		add(createPublishedCatalog("published"));
 	}
@@ -53,10 +55,6 @@ public abstract class WidgetCatalogPanel extends Panel {
 	public abstract void onSelection(WidgetSpec selected);
 	
 	// ----------------------------------------------------
-	
-	protected Component createPredifinedCatalog(String componentID) {
-		return new WebMarkupContainer(componentID);
-	}
 	
 	protected Component createPublishedCatalog(String componentID) {
 		return new WebMarkupContainer(componentID);
@@ -96,6 +94,17 @@ public abstract class WidgetCatalogPanel extends Panel {
 		list.add(new BasicCatalogItem(WDGT.ENTITY_DETAILS, 
 				new ResourceModel("basic.enity-details.name"), 
 				new ResourceModel("basic.enity-details.description")));
+		return new ListModel<CatalogItem>(list);
+	}
+	
+	private IModel<List<CatalogItem>> predefinedListModel() {
+		final List<CatalogItem> list = new ArrayList<CatalogItem>();
+		list.add(new PredefinedCatalogItem(ThatsMeWidget.class, 
+				new ResourceModel("predefined.thats-me.name"), 
+				new ResourceModel("predefined.thats-me.description")));
+		list.add(new PredefinedCatalogItem(MyCompanyWidget.class, 
+				new ResourceModel("predefined.my-company.name"), 
+				new ResourceModel("predefined.my-company.description")));
 		return new ListModel<CatalogItem>(list);
 	}
 

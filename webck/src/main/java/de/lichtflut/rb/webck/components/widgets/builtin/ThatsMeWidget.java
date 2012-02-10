@@ -3,10 +3,14 @@
  */
 package de.lichtflut.rb.webck.components.widgets.builtin;
 
-import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
+
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.components.widgets.PredefinedWidget;
@@ -26,11 +30,6 @@ import de.lichtflut.rb.webck.models.CurrentPersonModel;
  */
 public class ThatsMeWidget extends PredefinedWidget {
 	
-	@SpringBean
-	private ServiceProvider provider;
-	
-	// ----------------------------------------------------
-
 	/**
 	 * Constructor.
 	 * @param id The component ID.
@@ -39,12 +38,23 @@ public class ThatsMeWidget extends PredefinedWidget {
 	public ThatsMeWidget(String id, WidgetSpec spec, ConditionalModel<Boolean> perspectiveInConfigMode) {
 		super(id, Model.of(spec), perspectiveInConfigMode);
 		
-		add(new EntityPanel("entity", new CurrentPersonModel() {
-			@Override
-			public ServiceProvider getServiceProvider() {
-				return provider;
-			}
-		}));
+		final CurrentPersonModel model = new CurrentPersonModel();
+		
+		add(new EntityPanel("entity", model));
+		
+		add(new Label("noEntityHint", new ResourceModel("message.person-not-found"))
+			.add(visibleIf(isNull(model))));
+
+	}
+	
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected IModel<String> getTitleModel() {
+		return new ResourceModel("title");
 	}
 	
 }

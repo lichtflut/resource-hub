@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
@@ -51,7 +52,12 @@ import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
  *
  * @author Oliver Tigges
  */
-public abstract class SNPropertyEditorPanel extends Panel {
+public class SNPropertyEditorPanel extends Panel {
+	
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
 	
 	/**
 	 *  Constructor.
@@ -99,7 +105,7 @@ public abstract class SNPropertyEditorPanel extends Panel {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				final SNProperty original = model.getObject();
-				getServiceProvider().getTypeManager().removeProperty(original);
+				provider.getTypeManager().removeProperty(original);
 				info("Property deleted.");
 				SNPropertyEditorPanel.this.setVisible(false);
 				target.add(SNPropertyEditorPanel.this);
@@ -127,10 +133,6 @@ public abstract class SNPropertyEditorPanel extends Panel {
 		add(form);
 	}
 	
-	public abstract ServiceProvider getServiceProvider();
-	
-	// ----------------------------------------------------
-	
 	void assureLabel(final ResourceID properyID, final String label) {
 		final ModelingConversation mc = newMC();
 		final SNProperty property = mc.resolve(properyID).asProperty();
@@ -144,7 +146,7 @@ public abstract class SNPropertyEditorPanel extends Panel {
 	}
 	
 	ModelingConversation newMC() {
-		return getServiceProvider().getArastejuGate().startConversation();
+		return provider.getArastejuGate().startConversation();
 	}
 	
 	// ----------------------------------------------------

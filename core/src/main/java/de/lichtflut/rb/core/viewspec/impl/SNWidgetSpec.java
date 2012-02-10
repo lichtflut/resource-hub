@@ -55,14 +55,6 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getName() {
-		return stringValue(RB.HAS_NAME);
-	}
-
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
 	public String getTitle() {
 		return stringValue(RB.HAS_TITLE);
 	}
@@ -86,14 +78,6 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 		} else {
 			return null;
 		}
-	}
-
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setName(String name) {
-		setValue(RB.HAS_NAME, name);
 	}
 
 	/** 

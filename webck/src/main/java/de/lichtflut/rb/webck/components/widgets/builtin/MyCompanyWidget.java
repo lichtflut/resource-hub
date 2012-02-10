@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.components.widgets.builtin;
 
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 
@@ -45,4 +46,13 @@ public class MyCompanyWidget extends PredefinedWidget {
 		
 	}
 	
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected IModel<String> getTitleModel() {
+		return new ResourceModel("title");
+	}
 }

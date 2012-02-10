@@ -6,7 +6,6 @@ package de.lichtflut.rb.core.viewspec.impl;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
-import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.traverse.GraphBuilder;
 import org.arastreju.sge.traverse.PredicateFilter;
@@ -45,7 +44,26 @@ public class ViewSpecTraverser {
 	}
 	
 	private TraversalFilter createFilter() {
-		return new PredicateFilter(new ResourceID[] {
+		return new PredicateFilter()
+			.addFollow(
+				// VIEW_PORTS
+				WDGT.HAS_VIEW_PORT,
+				WDGT.CONTAINS_WIDGET,
+				// LAYOUT
+				WDGT.HAS_LAYOUT,
+				// SELECTION
+				WDGT.HAS_SELECTION,
+				WDGT.HAS_EXPRESSION,
+				WDGT.HAS_OPERATOR,
+				WDGT.HAS_PARAMETER,
+				// COLUMNS
+				WDGT.DEFINES_COLUMN,
+				// PREDEFINED
+				WDGT.IS_IMPLEMENTED_BY_CLASS,
+				// ACTIONS
+				WDGT.SUPPORTS_ACTION,
+				WDGT.ACTION_CREATE_INSTANCE_OF
+			).addAllowed(
 				RDF.TYPE,
 				RDFS.LABEL,
 				Aras.HAS_SERIAL_NUMBER,
@@ -54,28 +72,12 @@ public class ViewSpecTraverser {
 				RB.HAS_NAME,
 				RB.HAS_ID,
 				RB.HAS_DESCRIPTION,
-				// VIEW_PORTS
-				WDGT.HAS_VIEW_PORT,
-				WDGT.CONTAINS_WIDGET,
+				// END NODES
 				WDGT.HAS_HEADER,
-				// LAYOUT
-				WDGT.HAS_LAYOUT,
-				// SELECTION
-				WDGT.HAS_SELECTION,
-				WDGT.HAS_EXPRESSION,
-				WDGT.HAS_OPERATOR,
-				WDGT.HAS_PARAMETER,
-				WDGT.CONCERNS_FIELD,
 				WDGT.HAS_TERM,
-				// COLUMNS
-				WDGT.DEFINES_COLUMN,
-				WDGT.CORRESPONDS_TO_PROPERTY,
-				// PREDEFINED
-				WDGT.IS_IMPLEMENTED_BY_CLASS,
-				// ACTIONS
-				WDGT.SUPPORTS_ACTION,
-				WDGT.ACTION_CREATE_INSTANCE_OF
-		});
+				WDGT.CONCERNS_FIELD,
+				WDGT.CORRESPONDS_TO_PROPERTY
+			);
 	}
 
 }

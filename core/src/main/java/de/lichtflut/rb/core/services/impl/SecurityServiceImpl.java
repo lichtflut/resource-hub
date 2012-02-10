@@ -78,12 +78,12 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 					setAlternateID(registered, username);
 				} catch(RBException rbe) {
 					// remove the new created user, if alternateID can't be set
-					final ResourceID id = new SimpleResourceID(registered.getAssociatedResource().getQualifiedName());
+					final ResourceID id = new SimpleResourceID(registered.getQualifiedName());
 					gate().startConversation().remove(id);
 					throw rbe;
 				}
 			}
-			SNOPS.assure(registered.getAssociatedResource(), Aras.HAS_EMAIL, new SNText(emailID), Aras.IDENT);
+			SNOPS.assure(registered, Aras.HAS_EMAIL, new SNText(emailID), Aras.IDENT);
 			final String domain = getProvider().getContext().getDomain();
 			if (domain != null && !gate().getContext().isMasterDomain()) {
 				registerUserInMasterDomain(registered, domain);
@@ -134,11 +134,10 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		if(!newID.equals(user.getName())) {
 			ModelingConversation mc = gate().startConversation();
 			IdentityManagement im = identityManagement();
-			ResourceNode userNode = user.getAssociatedResource();
-			mc.attach(userNode);
+			mc.attach(user);
 			try {
 				im.changeID(user, newID);
-				SNOPS.assure(userNode, Aras.HAS_EMAIL, new SNText(newID), Aras.IDENT);
+				SNOPS.assure(user, Aras.HAS_EMAIL, new SNText(newID), Aras.IDENT);
 			} catch (ArastrejuException e) {
 				if(e.getErrCode().equals(org.arastreju.sge.eh.ErrorCodes.REGISTRATION_NAME_ALREADY_IN_USE)) {
 					throw new RBException(ErrorCodes.SECURITYSERVICE_ID_ALREADY_IN_USE, 
@@ -159,9 +158,8 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		if(!alternateID.equals(getAlternateID(user))) {
 			ModelingConversation mc = gate().startConversation();
 			IdentityManagement im = identityManagement();
-			ResourceNode userNode = user.getAssociatedResource();
-			mc.attach(userNode);
-			SemanticNode oldAlternateID = getAlternateIDNode(userNode);
+			mc.attach(user);
+			SemanticNode oldAlternateID = getAlternateIDNode(user);
 			try {
 				im.registerAlternateID(user, alternateID.trim().toLowerCase());
 			} catch (ArastrejuException e) {
@@ -173,7 +171,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 				}
 			}
 			// oldID will only be removed if new ID is registered without exception thrown
-			SNOPS.remove(userNode, Aras.IDENTIFIED_BY, oldAlternateID);
+			SNOPS.remove(user, Aras.IDENTIFIED_BY, oldAlternateID);
 			mc.close();
 		}
 	}
@@ -184,7 +182,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	@Override
 	public String getAlternateID(User user) {
 		String result = "";
-		SemanticNode alternateIDNode = getAlternateIDNode(user.getAssociatedResource());
+		SemanticNode alternateIDNode = getAlternateIDNode(user);
 		if(alternateIDNode != null) {
 			result = SNOPS.string(alternateIDNode);
 		}
@@ -211,8 +209,8 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	public void setUserRoles(User user, List<String> roles) {
 		ModelingConversation mc = gate().startConversation();
 		IdentityManagement im = identityManagement();
-		mc.attach(user.getAssociatedResource());
-		SNOPS.remove(user.getAssociatedResource(), Aras.HAS_ROLE);
+		mc.attach(user);
+		SNOPS.remove(user, Aras.HAS_ROLE);
 		for (String current : roles) {
 			im.addUserToRoles(user, im.registerRole(current));
 		}
@@ -233,8 +231,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	@Override
 	public void setNewPassword(User user, String currentPassword, String newPassword) throws RBException{
 		verifyPassword(user, currentPassword);
-		ResourceNode userNode = user.getAssociatedResource();
-		setPassword(newPassword, userNode);
+		setPassword(newPassword, user);
 	}
 
 	/** 
@@ -245,7 +242,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		//TODO change generated pwd 
 		String newPwd = "changed";
 		String generatedPwd = Crypt.md5Hex(newPwd);
-		setPassword(generatedPwd, user.getAssociatedResource());
+		setPassword(generatedPwd, user);
 		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, newPwd, null);
 	}
 	
@@ -270,7 +267,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	private void registerUserInMasterDomain(User user, String domain) {
 		final ModelingConversation mc = masterGate().startConversation();
 		final ResourceNode userNode = new SNResource();
-		Set<SemanticNode> ids = SNOPS.objects(user.getAssociatedResource(), Aras.IDENTIFIED_BY);
+		Set<SemanticNode> ids = SNOPS.objects(user, Aras.IDENTIFIED_BY);
 		for (SemanticNode node : ids) {
 			final SNText copy = new SNText(node.asValue().getStringValue());
 			SNOPS.associate(userNode, Aras.IDENTIFIED_BY, copy, Aras.IDENT);
@@ -288,7 +285,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * @throws RBException if password is invalid
 	 */
 	private void verifyPassword(User user, String md5Password) throws RBException{
-		final SemanticNode credential = SNOPS.singleObject(user.getAssociatedResource(), Aras.HAS_CREDENTIAL);
+		final SemanticNode credential = SNOPS.singleObject(user, Aras.HAS_CREDENTIAL);
 		if(!credential.asValue().getStringValue().equals(md5Password)){
 			throw new RBException(ErrorCodes.INVALID_PASSWORD, "Password id not valid");
 		}

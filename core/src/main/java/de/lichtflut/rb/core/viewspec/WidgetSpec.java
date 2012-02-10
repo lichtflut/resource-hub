@@ -21,10 +21,6 @@ public interface WidgetSpec extends ResourceNode {
 
 	ResourceID getID();
 	
-	String getName();
-	
-	void setName(String name);
-	
 	String getTitle();
 	
 	void setTitle(String title);

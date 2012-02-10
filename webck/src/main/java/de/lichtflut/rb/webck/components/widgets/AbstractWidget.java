@@ -10,10 +10,10 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
@@ -28,9 +28,11 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
  *
  * @author Oliver Tigges
  */
-public class AbstractWidget extends Panel {
+public class AbstractWidget extends TypedPanel<WidgetSpec> {
 
 	private final ConditionalModel<Boolean> perspectiveInConfigMode;
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -43,18 +45,30 @@ public class AbstractWidget extends Panel {
 		super(id, spec);
 		this.perspectiveInConfigMode = perspectiveInConfigMode;
 		
-		add(new Label("title", new DerivedDetachableModel<String, WidgetSpec>(spec) {
-			@Override
-			protected String derive(WidgetSpec original) {
-				return original.getTitle();
-			}
-		}));
+		add(new Label("title", getTitleModel()));
 		
 		add(new AjaxLink("removeWidget"){
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				WidgetController controller = findParent(WidgetController.class);
-				controller.removeWidget(spec.getObject());
+				controller.remove(spec.getObject());
+			}
+		}.add(visibleIf(perspectiveInConfigMode)));
+		
+		
+		add(new AjaxLink("up"){
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				WidgetController controller = findParent(WidgetController.class);
+				controller.moveUp(spec.getObject());
+			}
+		}.add(visibleIf(perspectiveInConfigMode)));
+		
+		add(new AjaxLink("down"){
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				WidgetController controller = findParent(WidgetController.class);
+				controller.moveDown(spec.getObject());
 			}
 		}.add(visibleIf(perspectiveInConfigMode)));
 		
@@ -75,6 +89,15 @@ public class AbstractWidget extends Panel {
 	
 	protected Component createConfigureLink(String componentID, ConditionalModel<Boolean> perspectiveInConfigMode) {
 		return new WebMarkupContainer(componentID).setVisible(false);
+	}
+	
+	protected IModel<String> getTitleModel() {
+		return new DerivedDetachableModel<String, WidgetSpec>(getModel()) {
+			@Override
+			protected String derive(WidgetSpec original) {
+				return original.getTitle();
+			}
+		};
 	}
 	
 	// ----------------------------------------------------

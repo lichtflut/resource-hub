@@ -22,6 +22,19 @@ public interface WidgetController {
 	 * Remove a widget.
 	 * @param widget The widget to be removed.
 	 */
-	void removeWidget(WidgetSpec widget);
+	void remove(WidgetSpec widget);
+	
+	/**
+	 * Move a widget one position up
+	 * @param widget The widget to be moved.
+	 */
+	void moveUp(WidgetSpec widget);
+	
+	/**
+	 * Move a widget one position down
+	 * @param widget The widget to be moved.
+	 */
+	void moveDown(WidgetSpec widget);
+
 
 }

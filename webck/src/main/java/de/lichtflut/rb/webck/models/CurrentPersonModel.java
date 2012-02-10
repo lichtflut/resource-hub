@@ -3,10 +3,12 @@
  */
 package de.lichtflut.rb.webck.models;
 
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -24,28 +26,36 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
  *
  * @author Oliver Tigges
  */
-public abstract class CurrentPersonModel extends AbstractLoadableDetachableModel<RBEntity> {
+public class CurrentPersonModel extends AbstractLoadableDetachableModel<RBEntity> {
+	
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
+	
+	public CurrentPersonModel() {
+		Injector.get().inject(this);
+	}
+	
+	// ----------------------------------------------------
 
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
 	public RBEntity load() {
-		User user = CurrentUserModel.currentUser();
-		if (user == null) {
+		ResourceID userID = CurrentUserModel.currentUserID();
+		if (userID == null) {
 			return null;
 		}
-		final ResourceNode userNode = getServiceProvider().getResourceResolver().resolve(user.getAssociatedResource());
+		
+		final ResourceNode userNode = provider.getResourceResolver().resolve(userID);
 		final SemanticNode person = SNOPS.fetchObject(userNode, RBSystem.IS_RESPRESENTED_BY);
 		if (person != null && person.isResourceNode()) {
-			return getServiceProvider().getEntityManager().find(person.asResource());
+			return provider.getEntityManager().find(person.asResource());
 		} else {
 			return null;
 		}
 	}
-	
-	// ----------------------------------------------------
-	
-	public abstract ServiceProvider getServiceProvider();
 	
 }

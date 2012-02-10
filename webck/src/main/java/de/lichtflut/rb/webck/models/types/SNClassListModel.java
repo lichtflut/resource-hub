@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -23,14 +25,28 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
  *
  * @author Oliver Tigges
  */
-public abstract class SNClassListModel extends AbstractLoadableDetachableModel<List<SNClass>> {
+public class SNClassListModel extends AbstractLoadableDetachableModel<List<SNClass>> {
 
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 */
+	public SNClassListModel() {
+		Injector.get().inject(this);
+	}
+	
+	// ----------------------------------------------------
+	
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
 	public List<SNClass> load() {
-		final List<SNClass> types =getServiceProvider().getTypeManager().findAllTypes();
+		final List<SNClass> types = provider.getTypeManager().findAllTypes();
 		Collections.sort(types, new Comparator<SNClass>() {
 			@Override
 			public int compare(SNClass t1, SNClass t2) {
@@ -40,8 +56,4 @@ public abstract class SNClassListModel extends AbstractLoadableDetachableModel<L
 		return types;
 	}
 	
-	// ----------------------------------------------------
-	
-	protected abstract ServiceProvider getServiceProvider();
-
 }

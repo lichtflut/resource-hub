@@ -114,12 +114,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 */
 	@Override
 	public String createRememberMeToken(User user) {
-		if (user.getAssociatedResource() == null) {
-			logger.warn("User has no associated resurce " + user);
-			return null;
-		}
 		final String email = user.getEmail();
-		final SemanticNode credential = SNOPS.singleObject(user.getAssociatedResource(), Aras.HAS_CREDENTIAL);
+		final SemanticNode credential = SNOPS.singleObject(user, Aras.HAS_CREDENTIAL);
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, 30);
 		final String raw = email + ":" + DATE_FORMAT.format(cal.getTime()); 
@@ -140,7 +136,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		final Query query = masterGate.createQueryManager().buildQuery().addField(Aras.IDENTIFIED_BY, userID);
 		final QueryResult result = query.getResult();
 		if (!result.isEmpty()) {
-			final SemanticNode domainNode = SNOPS.singleObject(result.getSingleNode(), Aras.BELONGS_TO_DOMAIN);
+			final SemanticNode domainNode = SNOPS.fetchObject(result.getSingleNode(), Aras.BELONGS_TO_DOMAIN);
 			if (domainNode != null && domainNode.isValueNode()) {
 				String domain = domainNode.asValue().getStringValue();
 				final Collection<Domain> allDomains = masterGate.getOrganizer().getDomains();
@@ -155,9 +151,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	// ----------------------------------------------------
 	
 	private void setLastLogin(final User user) {
-		if (user.getAssociatedResource() != null) {
-			SNOPS.assure(user.getAssociatedResource(), RBSystem.HAS_LAST_LOGIN, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
-		}
+		SNOPS.assure(user, RBSystem.HAS_LAST_LOGIN, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
 	}
 	
 	private boolean isValid(User user, String id, String validUntil, String token) {
@@ -167,7 +161,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				logger.info("Login token has been expired: " + token);
 				return false;
 			}
-			final SemanticNode credential = SNOPS.singleObject(user.getAssociatedResource(), Aras.HAS_CREDENTIAL);
+			final SemanticNode credential = SNOPS.singleObject(user, Aras.HAS_CREDENTIAL);
 			if (credential != null) {
 				final String raw = id + ":" + validUntil; 
 				final String crypted = Crypt.md5Hex(raw + credential.asValue().getStringValue());
