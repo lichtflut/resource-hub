@@ -11,11 +11,10 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
 
 /**
  * <p>
@@ -29,29 +28,29 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
  * @author Oliver Tigges
  */
 @SuppressWarnings("serial")
-public class NavigationBar extends Panel implements NavigationNode {
+public class NavigationBar extends TypedPanel<List<NavigationNode>> implements NavigationNode {
 
 	private static final Behavior CSS_CLASS_EVEN =  new AttributeAppender("class", Model.of("even"), " ");
 	private static final Behavior CSS_CLASS_ODD =  new AttributeAppender("class", Model.of("odd"), " ");
 	
-	private final List<NavigationNode> children = new ArrayList<NavigationNode>();
-
 	// -----------------------------------------------------
 
 	/**
 	 * @param id The component ID.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public NavigationBar(final String id) {
-		super(id);
+		this(id, new Model(new ArrayList<NavigationNode>()));
+	}
+
+	/**
+	 * @param id The component ID.
+	 * @param model The model of the nodes.
+	 */
+	public NavigationBar(final String id, final IModel<List<NavigationNode>> model) {
+		super(id, model);
 		
-		final IModel<List<NavigationNode>> listModel = new AbstractLoadableDetachableModel<List<NavigationNode>>() {
-			@Override
-			public List<NavigationNode> load() {
-				return children;
-			}
-		};
-		
-		final ListView<NavigationNode> itemView = new ListView<NavigationNode>("nodeList", listModel) {
+		final ListView<NavigationNode> itemView = new ListView<NavigationNode>("nodeList", model) {
 			private boolean isEven = false;
 			@Override
 			protected void populateItem(final ListItem<NavigationNode> item) {
@@ -69,7 +68,7 @@ public class NavigationBar extends Panel implements NavigationNode {
 		
 		add(itemView);
 	}
-
+	
 	// -----------------------------------------------------
 
 	/**
@@ -101,7 +100,7 @@ public class NavigationBar extends Panel implements NavigationNode {
 	 */
 	@Override
 	public boolean hasChildren() {
-		return !children.isEmpty();
+		return !getChildren().isEmpty();
 	}
 
 	/**
@@ -109,15 +108,7 @@ public class NavigationBar extends Panel implements NavigationNode {
 	 */
 	@Override
 	public List<NavigationNode> getChildren() {
-		return children;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Component getComponent() {
-		return this;
+		return getModelObject();
 	}
 
 	/**
@@ -125,7 +116,17 @@ public class NavigationBar extends Panel implements NavigationNode {
 	 */
 	@Override
 	public NavigationNode addChild(final NavigationNode node) {
-		this.children.add(node);
+		this.getChildren().add(node);
+		return this;
+	}
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Component getComponent() {
 		return this;
 	}
 

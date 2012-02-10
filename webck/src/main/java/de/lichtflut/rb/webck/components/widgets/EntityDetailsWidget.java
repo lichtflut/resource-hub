@@ -12,6 +12,7 @@ import org.arastreju.sge.query.QueryResult;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.components.widgets.config.EntityDetailsWidgetConfigPanel;
@@ -61,21 +62,26 @@ public class EntityDetailsWidget extends ConfigurableWidget {
 		return new AbstractLoadableDetachableModel<RBEntity>() {
 			@Override
 			public RBEntity load() {
-				final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
-				spec.getObject().getSelection().adapt(query);
-				final QueryResult result = query.getResult();
-				if (result.isEmpty()) {
-					return null;
-				} else {
-					final ResourceID id = result.iterator().next();
-					result.close();
-					if (id == null) {
-						return null;
-					} else {
-						return provider.getEntityManager().find(id);
+				final Selection selection = spec.getObject().getSelection();
+				if (selection != null && selection.isDefined()) {
+					final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
+					spec.getObject().getSelection().adapt(query);
+					final QueryResult result = query.getResult();
+					if (!result.isEmpty()) {
+						return loadFirst(result);
 					}
 				}
-				
+				return null;
+			}
+
+			protected RBEntity loadFirst(final QueryResult result) {
+				final ResourceID id = result.iterator().next();
+				result.close();
+				if (id == null) {
+					return null;
+				} else {
+					return provider.getEntityManager().find(id);
+				}
 			}
 		};
 	}

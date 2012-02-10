@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.webck.models;
 
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -25,7 +27,18 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
  *
  * @author Oliver Tigges
  */
-public abstract class CurrentOrganizationModel extends AbstractLoadableDetachableModel<RBEntity> {
+public class CurrentOrganizationModel extends AbstractLoadableDetachableModel<RBEntity> {
+	
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
+	
+	public CurrentOrganizationModel() {
+		Injector.get().inject(this);
+	}
+	
+	// ----------------------------------------------------
 
 	/** 
 	 * {@inheritDoc}
@@ -37,7 +50,7 @@ public abstract class CurrentOrganizationModel extends AbstractLoadableDetachabl
 			return null;
 		}
 		
-		final ResourceNode userNode = getServiceProvider().getResourceResolver().resolve(user.getAssociatedResource());
+		final ResourceNode userNode = provider.getResourceResolver().resolve(user.getAssociatedResource());
 		final SemanticNode person = SNOPS.fetchObject(userNode, RBSystem.IS_RESPRESENTED_BY);
 		if (person == null || !person.isResourceNode()) {
 			return null;
@@ -47,13 +60,8 @@ public abstract class CurrentOrganizationModel extends AbstractLoadableDetachabl
 		if (org == null || !org.isResourceNode()) {
 			return null;
 		} else {
-			return getServiceProvider().getEntityManager().find(org.asResource());
+			return provider.getEntityManager().find(org.asResource());
 		}
-		
 	}
-	
-	// ----------------------------------------------------
-	
-	public abstract ServiceProvider getServiceProvider();
 	
 }

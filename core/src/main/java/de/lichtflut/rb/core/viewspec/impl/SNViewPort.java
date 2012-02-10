@@ -86,13 +86,14 @@ public class SNViewPort extends ResourceView implements ViewPort {
 		Collections.sort(result, new OrderBySerialNumber());
 		return result;
 	}
-
+	
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addWidget(WidgetSpec widget, int position) {
+	public void addWidget(WidgetSpec widget) {
 		addAssociation(WDGT.CONTAINS_WIDGET, widget);
+		widget.setPosition(getWidgets().size() + 1);
 	}
 
 	/** 

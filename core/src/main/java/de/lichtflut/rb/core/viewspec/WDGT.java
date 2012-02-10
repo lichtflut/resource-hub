@@ -21,6 +21,14 @@ import de.lichtflut.rb.core.RBSystem;
  */
 public interface WDGT {
 	
+	String DEFAULT_LAYOUT = "layout-50-50";
+	
+	String VIEWS_NAMESPACE_URI = "http://rb.lichtflut.de/view-specifications#";
+	
+	// -- CONSTANT RESOURCE IDS ---------------------------
+	
+	ResourceID DEFAULT_MENU = new SimpleResourceID(VIEWS_NAMESPACE_URI,  "DefaultMenu");
+	
 	// -- TYPES -------------------------------------------
 	
 	ResourceID PERSPECTIVE = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI,  "Perspective");
@@ -29,19 +37,29 @@ public interface WDGT {
 	
 	ResourceID WIDGET = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "Widget");
 	
+	
+	ResourceID LAYOUT = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "Layout");
+	
+	ResourceID COLUMN_DEF = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI,  "EntityListColumnDefinition");
+	
+	ResourceID MENU_ITEM = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI,  "MenuItem");
+	
+	// -- WIDGET TYPES ------------------------------------
+	
+	ResourceID PREDEFINED = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "PredefinedWidget");
+	
 	ResourceID ENTITY_DETAILS = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "EntityDetailsWidget");
 	
 	ResourceID ENTITY_LIST = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "EnitityListWidget");
 	
 	ResourceID INVOVIS = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "InfoVisWidget");
 	
-	ResourceID PREDEFINED = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "PredefinedWidget");
-	
-	ResourceID LAYOUT = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "Layout");
-	
-	ResourceID COLUMN_DEF = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI,  "EntityListColumnDefinition");
-	
 	// -- PROPERTIES --------------------------------------
+	
+	/**
+	 * A user has menu items.
+	 */
+	ResourceID HAS_MENU_ITEM = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "hasMenuItem");
 	
 	/**
 	 * The layout of a perspective.
@@ -57,6 +75,11 @@ public interface WDGT {
 	 * A view port contains widgets.
 	 */
 	ResourceID CONTAINS_WIDGET = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "containsWidget");
+	
+	/**
+	 * A Menu item shows a perspective.
+	 */
+	ResourceID SHOWS_PERSPECTIVE = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "showsPerspective");
 	
 	// -- SELECTION ---------------------------------------
 	

@@ -38,5 +38,7 @@ public interface Perspective extends ResourceNode {
 	void setDescription(String desc);
 	
 	List<ViewPort> getViewPorts();
+	
+	ViewPort addViewPort();
 
 }

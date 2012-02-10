@@ -23,18 +23,22 @@ public interface WidgetSpec extends ResourceNode {
 	
 	String getName();
 	
-	String getTitle();
-	
-	String getDescription();
-	
-	Selection getSelection();
-	
 	void setName(String name);
+	
+	String getTitle();
 	
 	void setTitle(String title);
 	
+	String getDescription();
+	
 	void setDescription(String desc);
 	
+	Selection getSelection();
+	
 	void setSelection(Selection selection);
+	
+	Integer getPosition();
+	
+	void setPosition(Integer position);
 	
 }

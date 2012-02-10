@@ -4,12 +4,12 @@
 package de.lichtflut.rb.core.viewspec.impl;
 
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 
-import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WDGT;
@@ -117,11 +117,23 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	 */
 	@Override
 	public void setSelection(Selection selection) {
-		if (selection instanceof ResourceNode) {
-			setValue(WDGT.HAS_SELECTION, selection);
-		} else {
-			throw new NotYetSupportedException();
-		}
+		setValue(WDGT.HAS_SELECTION, selection);
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Integer getPosition() {
+		return intValue(Aras.HAS_SERIAL_NUMBER);
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setPosition(Integer position) {
+		setValue(Aras.HAS_SERIAL_NUMBER, position);
 	}
 	
 }

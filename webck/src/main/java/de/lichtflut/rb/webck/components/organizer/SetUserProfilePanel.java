@@ -132,7 +132,6 @@ public abstract class SetUserProfilePanel extends Panel {
 	 */
 	private void initHasProfileModel() {
 		this.hasProfile = new DerivedModel<Boolean, User>(user) {
-
 			@Override
 			protected Boolean derive(User original) {
 				return SNOPS.singleObject(original.getAssociatedResource(), RBSystem.IS_RESPRESENTED_BY) != null;
@@ -146,7 +145,6 @@ public abstract class SetUserProfilePanel extends Panel {
 	 */
 	private void initUserModel(final IModel<User> user) {
 		this.user = new AbstractLoadableModel<User>() {
-
 			@Override
 			public User load() {
 				return new UserImpl(provider.getResourceResolver().resolve(user.getObject().getAssociatedResource()));

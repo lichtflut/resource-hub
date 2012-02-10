@@ -88,6 +88,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			if (domain != null && !gate().getContext().isMasterDomain()) {
 				registerUserInMasterDomain(registered, domain);
 			}
+			getProvider().getMessagingService().getEmailService().sendRegistrationConfirmation(registered, null);
 		} catch(ArastrejuException e) {
 			if(e.getErrCode().equals(org.arastreju.sge.eh.ErrorCodes.REGISTRATION_NAME_ALREADY_IN_USE)) {
 				throw new RBException(ErrorCodes.SECURITYSERVICE_ID_ALREADY_IN_USE, 
@@ -108,7 +109,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		final String emailID = "admin@" + domain.getUniqueName();
 		final Credential credential = new PasswordCredential(password);
 		try {
-			final ArastrejuGate gate = gate(domain.getUniqueName());	
+			final ArastrejuGate gate = gate(domain.getUniqueName());
 			final IdentityManagement im = gate.getIdentityManagement();
 			final User admin = im.register(emailID, credential);
 			for (String roleName : rolesOfDomainAdmin()) {
@@ -245,7 +246,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		String newPwd = "changed";
 		String generatedPwd = Crypt.md5Hex(newPwd);
 		setPassword(generatedPwd, user.getAssociatedResource());
-		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, newPwd);
+		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, newPwd, null);
 	}
 	
 	// ----------------------------------------------------

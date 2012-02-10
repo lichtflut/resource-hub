@@ -3,13 +3,15 @@
  */
 package de.lichtflut.rb.webck.components.widgets.builtin;
 
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.model.ResourceModel;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.*;
 import de.lichtflut.rb.webck.components.editor.EntityPanel;
 import de.lichtflut.rb.webck.components.widgets.PredefinedWidget;
+import static de.lichtflut.rb.webck.models.ConditionalModel.*;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.CurrentOrganizationModel;
 
@@ -26,11 +28,6 @@ import de.lichtflut.rb.webck.models.CurrentOrganizationModel;
  */
 public class MyCompanyWidget extends PredefinedWidget {
 	
-	@SpringBean
-	private ServiceProvider provider;
-	
-	// ----------------------------------------------------
-
 	/**
 	 * Constructor.
 	 * @param id The component ID.
@@ -39,12 +36,12 @@ public class MyCompanyWidget extends PredefinedWidget {
 	public MyCompanyWidget(String id, WidgetSpec spec, ConditionalModel<Boolean> perspectiveInConfigMode) {
 		super(id, Model.of(spec), perspectiveInConfigMode);
 		
-		add(new EntityPanel("entity", new CurrentOrganizationModel() {
-			@Override
-			public ServiceProvider getServiceProvider() {
-				return provider;
-			}
-		}));
+		final CurrentOrganizationModel model = new CurrentOrganizationModel();
+		
+		add(new EntityPanel("entity", model));
+		
+		add(new Label("noEntityHint", new ResourceModel("message.company-not-found"))
+				.add(visibleIf(isNull(model))));
 		
 	}
 	

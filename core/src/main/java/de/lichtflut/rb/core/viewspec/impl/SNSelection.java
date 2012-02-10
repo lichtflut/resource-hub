@@ -54,11 +54,20 @@ public class SNSelection extends ResourceView implements Selection {
 		appendExpressions(this, query);
 	}
 	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isDefined() {
+		return !getAssociations(WDGT.HAS_EXPRESSION).isEmpty()
+			|| !getAssociations(WDGT.HAS_PARAMETER).isEmpty();
+	}
+	
 	// ----------------------------------------------------
 	
 	protected void appendExpressions(ResourceNode node, Query query) {
 		final Set<Statement> expressions = node.getAssociations(WDGT.HAS_EXPRESSION);
-		final SemanticNode operator = SNOPS.singleObject(this, WDGT.HAS_OPERATOR);
+		final SemanticNode operator = SNOPS.singleObject(node, WDGT.HAS_OPERATOR);
 		if (WDGT.NOT_OPERATOR.equals(operator)) {
 			query.not();
 		}

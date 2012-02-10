@@ -125,5 +125,16 @@ public class SNPerspective extends ResourceView implements Perspective {
 		Collections.sort(result, new OrderBySerialNumber());
 		return result;
 	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ViewPort addViewPort() {
+		final SNViewPort port = new SNViewPort();
+		port.setPosition(getViewPorts().size() +1);
+		addAssociation(WDGT.HAS_VIEW_PORT, port);
+		return port;
+	}
 
 }

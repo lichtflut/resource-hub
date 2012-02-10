@@ -95,8 +95,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			return null;
 		}
 		try {
-			final User user = provider.getArastejuGate().getIdentityManagement().findUser(fields[0]);
-			if (user != null && isValid(user, fields[0], fields[1], fields[2])) {
+			final String id = fields[0];
+			final User user = getGateForUser(id).getIdentityManagement().findUser(id);
+			if (user != null && isValid(user, id, fields[1], fields[2])) {
 				logger.info("User {} logged in by token.", user);
 				setLastLogin(user);
 				return user;
@@ -159,7 +160,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 	}
 	
-	private boolean isValid(User user, String email, String validUntil, String token) {
+	private boolean isValid(User user, String id, String validUntil, String token) {
 		try {
 			final Date date = DATE_FORMAT.parse(validUntil);
 			if (date.before(new Date())){
@@ -168,7 +169,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			}
 			final SemanticNode credential = SNOPS.singleObject(user.getAssociatedResource(), Aras.HAS_CREDENTIAL);
 			if (credential != null) {
-				final String raw = email + ":" + validUntil; 
+				final String raw = id + ":" + validUntil; 
 				final String crypted = Crypt.md5Hex(raw + credential.asValue().getStringValue());
 				return crypted.equals(token);
 			}

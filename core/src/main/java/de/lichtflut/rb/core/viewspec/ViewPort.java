@@ -29,7 +29,7 @@ public interface ViewPort extends ResourceNode {
 	
 	List<WidgetSpec> getWidgets();
 	
-	void addWidget(WidgetSpec widget, int position);
+	void addWidget(WidgetSpec widget);
 	
 	void removeWidget(WidgetSpec widget);
 

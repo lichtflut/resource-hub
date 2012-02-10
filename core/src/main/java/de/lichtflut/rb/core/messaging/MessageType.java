@@ -21,8 +21,8 @@ package de.lichtflut.rb.core.messaging;
  */
 public enum MessageType {
 
+	ACCOUNT_ACTIVATED_MAIL,
 	PASSWORD_INFORMATION_MAIL,
-	REGISTRATION_INFORMATION_MAIL,
-	UNDEFINED
+	REGISTRATION_CONFIRMATION_MAIL,
 	
 }
