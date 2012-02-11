@@ -188,7 +188,7 @@ public class DomainEditPanel extends Panel{
 	
 	private void onModelChange(DisplayMode newMode) {
 		if (domainModel.getObject().isDomesticDomain()) {
-			send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.MASTER_DOMAIN));
+			send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.DOMESTIC_DOMAIN));
 		} else {
 			send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.DOMAINS));
 		}

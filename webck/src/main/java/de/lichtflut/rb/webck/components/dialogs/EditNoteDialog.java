@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.DC;
@@ -23,7 +24,6 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
-import de.lichtflut.rb.webck.models.CurrentUserModel;
 import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
 
 /**
@@ -37,7 +37,12 @@ import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
  *
  * @author Oliver Tigges
  */
-public abstract class EditNoteDialog extends AbstractRBDialog {
+public class EditNoteDialog extends AbstractRBDialog {
+	
+	@SpringBean
+	private ServiceProvider provider;
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Constrcutor.
@@ -52,10 +57,10 @@ public abstract class EditNoteDialog extends AbstractRBDialog {
 		form.add(new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				final ModelingConversation mc = getServiceProvider().getArastejuGate().startConversation();
+				final ModelingConversation mc = provider.getArastejuGate().startConversation();
 				final ResourceNode noteResource = model.getObject();
 				SNOPS.assure(noteResource, DC.CREATED, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
-				SNOPS.assure(noteResource, DC.CREATOR, CurrentUserModel.currentUserID());
+				SNOPS.assure(noteResource, DC.CREATOR, provider.getContext().getUser());
 				mc.attach(noteResource);
 				onSave(noteResource);
 				mc.close();
@@ -89,9 +94,6 @@ public abstract class EditNoteDialog extends AbstractRBDialog {
 
 	// ----------------------------------------------------
 	
-	public abstract ServiceProvider getServiceProvider();
-	
-	// ----------------------------------------------------
 	
 	protected void onSave(ResourceNode resourceNode) {
 	}

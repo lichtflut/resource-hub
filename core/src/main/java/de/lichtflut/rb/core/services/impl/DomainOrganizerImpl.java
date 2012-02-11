@@ -94,6 +94,16 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	public void updateDomain(Domain domain) {
 		arasOrganizer().updateDomain(domain);
 	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void deleteDomain(Domain domain) {
+		if (!domain.isDomesticDomain()) {
+			mc().remove(domain);
+		}
+	}
 
 	/** 
 	 * {@inheritDoc}

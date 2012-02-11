@@ -48,9 +48,17 @@ public interface DomainOrganizer {
 
 	/**
 	 * Update info for given domain.
-	 * @param domain The domain info.
+	 * @param domain The domain.
 	 */
 	void updateDomain(Domain domain);
+	
+	/**
+	 * Delete a domain.
+	 * @param domain The domain.
+	 */
+	void deleteDomain(Domain domain);
+	
+	// ----------------------------------------------------
 	
 	/**
 	 * Link the domain to it's organisation.
@@ -80,5 +88,6 @@ public interface DomainOrganizer {
 	 * @param object
 	 */
 	void registerContext(ContextDeclaration object);
+
 
 }

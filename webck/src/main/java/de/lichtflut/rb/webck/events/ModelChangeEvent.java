@@ -39,7 +39,7 @@ public class ModelChangeEvent<T> {
 	
 	public static final String RELATIONSHIP = "relationship";
 	
-	public static final String MASTER_DOMAIN = "master-domain";
+	public static final String DOMESTIC_DOMAIN = "master-domain";
 	
 	public static final String DOMAINS = "domains";
 	

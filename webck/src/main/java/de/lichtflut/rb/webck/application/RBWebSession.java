@@ -6,11 +6,10 @@ package de.lichtflut.rb.webck.application;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
-import org.arastreju.sge.eh.ArastrejuRuntimeException;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.security.User;
 
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 
 
@@ -29,9 +28,10 @@ public class RBWebSession extends WebSession {
 	
 	private final BrowsingHistory history = new BrowsingHistory();
 	
-	private ResourceID userID;
+	@SpringBean
+	private ServiceProvider provider;
 	
-	private User user; 
+	private User user;
 	
 	// ----------------------------------------------------
 
@@ -52,39 +52,39 @@ public class RBWebSession extends WebSession {
 	}
 	
 	public boolean isAuthenticated() {
-		try {
-			if (user != null) {
-				// trigger fetching of associations to check if object is still alive
-				user.getName();
-				return true;
-			}
-		} catch (ArastrejuRuntimeException e) {
-			user = null;
-			invalidate();
-		}
-		return false;
+		return getUser() != null;
 	}
 	
 	/**
 	 * @return this session's user.
 	 */
 	public User getUser() {
+		if (user != null) {
+			return user;
+		} else if (provider != null) {
+			retriveUserFromContext();
+		}
 		return user;
 	}
 	
-	/**
-	 * @return
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
 	 */
-	public ResourceID getUserID() {
-		return userID;
+	@Override
+	public void detach() {
+		super.detach();
+		user = null;
 	}
 	
-	/**
-	 * @param user The logged in user.
-	 */
-	public void setUser(final User user) {
-		this.userID = new SimpleResourceID(user.getQualifiedName());
-		this.user = user;
+	// ----------------------------------------------------
+	
+	private void retriveUserFromContext() {
+		user = provider.getContext().getUser();
+		if (user == null) {
+			invalidate();
+		}
 	}
-
+	
 }

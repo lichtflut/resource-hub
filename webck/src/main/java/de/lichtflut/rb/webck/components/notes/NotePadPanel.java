@@ -130,18 +130,13 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 			setTitle(new ResourceModel("global.dialogs.create-note.title"));
 		}
 
-		@Override
-		public ServiceProvider getServiceProvider() {
-			return provider;
-		}
-		
 		/** 
 		* {@inheritDoc}
 		*/
 		@Override
 		protected void onSave(ResourceNode note) {
 			SNOPS.assure(note, RBSystem.IS_ATTACHED_TO, target.getObject());
-			ModelingConversation mc = getServiceProvider().getArastejuGate().startConversation();
+			ModelingConversation mc = provider.getArastejuGate().startConversation();
 			mc.attach(note);
 			mc.close();
 			RBAjaxTarget.add(NotePadPanel.this);
@@ -155,11 +150,6 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 			setTitle(new ResourceModel("global.dialogs.edit-note.title"));
 		}
 
-		@Override
-		public ServiceProvider getServiceProvider() {
-			return provider;
-		}
-		
 		/** 
 		* {@inheritDoc}
 		*/

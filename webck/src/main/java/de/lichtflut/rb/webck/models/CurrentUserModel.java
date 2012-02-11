@@ -31,7 +31,7 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<User> {
 
 	public static ResourceID currentUserID() {
 		if (Session.exists()) {
-			return RBWebSession.get().getUserID();
+			return RBWebSession.get().getUser();
 		}
 		return null;
 	}
