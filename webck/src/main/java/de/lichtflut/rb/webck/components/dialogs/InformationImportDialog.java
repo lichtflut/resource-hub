@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -21,7 +22,9 @@ import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.model.SemanticGraph;
 
+import de.lichtflut.rb.core.reporting.IOReport;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
  * <p>
@@ -80,15 +83,27 @@ public class InformationImportDialog extends AbstractRBDialog {
 	}
 	
 	private void importUpload(final FileUpload upload, final IModel<String> format) {
+		IOReport report = new IOReport();
 		final SemanticGraphIO io = new RdfXmlBinding();
 		try {
 			final SemanticGraph graph = io.read(upload.getInputStream());
 			provider.getArastejuGate().startConversation().attach(graph);
+			
+			report.add("Namespaces", graph.getNamespaces().size());
+			report.add("Nodes", graph.getNodes().size());
+			report.add("Subjects", graph.getSubjects().size());
+			report.add("Statements", graph.getStatements().size());
+			report.success();
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+//			throw new RuntimeException(e);
+			report.setAdditionalInfo(e.getMessage());
+			report.error();
 		} catch (SemanticIOException e) {
-			throw new RuntimeException(e);
+//			throw new RuntimeException(e);
+			report.setAdditionalInfo(e.getMessage());
+			report.error();
 		}
+		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<IOReport>(report, ModelChangeEvent.IO_REPORT));
 		upload.closeStreams();
 	}
 	

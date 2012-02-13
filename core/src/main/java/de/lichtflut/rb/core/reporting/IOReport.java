@@ -108,7 +108,7 @@ public class IOReport implements Serializable{
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("<h3>IO Report</h3>");
-		sb.append("<div style='display: inline-block; border: 1px solid #000; padding: 5px;'>");
+		sb.append("<div style='display: inline-block; border: 1px solid #000; padding: 5px; background-color: #EEE'>");
 		
 		String color = "#F90000";
 		if(getStatus().equals(ReportStatus.SUCCESS)) {

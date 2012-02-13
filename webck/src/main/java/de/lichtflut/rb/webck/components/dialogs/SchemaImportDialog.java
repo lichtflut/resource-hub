@@ -59,6 +59,7 @@ public class SchemaImportDialog extends AbstractRBDialog {
 		form.add(new DropDownChoice<String>("format", format, getChoices()));
 
 		final FileUploadField uploadField = new FileUploadField("file");
+		uploadField.setRequired(true);
 		form.add(uploadField);
 		form.add(new AjaxButton("upload", form) {
 			@Override
@@ -81,12 +82,16 @@ public class SchemaImportDialog extends AbstractRBDialog {
 	
 	private void importUpload(final FileUpload upload, final IModel<String> format) {
 		final SchemaImporter importer = provider.getSchemaManager().getImporter(format.getObject());
+		IOReport report;
 		try {
-			IOReport report = importer.read(upload.getInputStream());
-			send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<IOReport>(report, ModelChangeEvent.IO_REPORT));
+			report = importer.read(upload.getInputStream());
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+//			throw new RuntimeException(e);
+			report = new IOReport();
+			report.setAdditionalInfo(e.getMessage());
+			report.error();
 		}
+		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<IOReport>(report, ModelChangeEvent.IO_REPORT));
 		upload.closeStreams();
 	}
 	

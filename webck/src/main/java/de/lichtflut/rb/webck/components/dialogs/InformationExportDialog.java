@@ -12,6 +12,7 @@ import java.util.Arrays;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
@@ -29,6 +30,9 @@ import org.arastreju.sge.io.N3Binding;
 import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.model.SemanticGraph;
+
+import de.lichtflut.rb.core.reporting.IOReport;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
  * <p>
@@ -69,6 +73,7 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				final String uid = "&uid" + System.nanoTime();
 				target.appendJavaScript("window.location.href='" +  getDownloadUrl() + uid + "'");
+				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.START_TIMER_BEHAVIOR));
 				close(target);
 			}
 			@Override
@@ -146,9 +151,9 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 		*/
 		@Override
 		public InputStream getInputStream() throws ResourceStreamNotFoundException {
+			IOReport report = new IOReport();
 			final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			try {
-				
 				final SemanticGraph graph = graphModel.getObject();
 				
 				if ("RDF-XML".equalsIgnoreCase(format.getObject())){
@@ -163,12 +168,24 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 				
 				length = Bytes.bytes(buffer.size());
 				in = new ByteArrayInputStream(buffer.toByteArray());
+				
+				report.add("Namespaces", graph.getNamespaces().size());
+				report.add("Nodes", graph.getNodes().size());
+				report.add("Subjects", graph.getSubjects().size());
+				report.add("Statements", graph.getStatements().size());
+				report.success();
 				buffer.close();
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+//				throw new RuntimeException(e);
+				report.setAdditionalInfo(e.getMessage());
+				report.error();
 			} catch (SemanticIOException e) {
-				throw new RuntimeException(e);
+//				throw new RuntimeException(e);
+				report.setAdditionalInfo(e.getMessage());
+				report.error();
 			}
+			send(InformationExportDialog.this.getPage(), Broadcast.BREADTH,
+					new ModelChangeEvent<IOReport>(report, ModelChangeEvent.IO_REPORT));
 			return in;
 		}
 
