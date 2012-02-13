@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.dialogs;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -67,7 +68,7 @@ public class SchemaImportDialog extends AbstractRBDialog {
 			}
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-				importUpload(uploadField.getFileUpload(), format);
+				importUpload(uploadField.getFileUploads(), format);
 				close(target);
 			}
 		});
@@ -80,19 +81,30 @@ public class SchemaImportDialog extends AbstractRBDialog {
 		return new ListModel<String>(Arrays.asList(new String [] {"JSON", "RDF", "RSF"}));
 	}
 	
-	private void importUpload(final FileUpload upload, final IModel<String> format) {
-		final SchemaImporter importer = provider.getSchemaManager().getImporter(format.getObject());
-		IOReport report;
-		try {
-			report = importer.read(upload.getInputStream());
-		} catch (IOException e) {
-//			throw new RuntimeException(e);
-			report = new IOReport();
-			report.setAdditionalInfo(e.getMessage());
-			report.error();
+	private void importUpload(final List<FileUpload> uploadList, final IModel<String> format) {
+		Boolean isFirstReport = true;
+		IOReport endReport = null;
+		
+		for (FileUpload upload : uploadList) {
+			final SchemaImporter importer = provider.getSchemaManager().getImporter(format.getObject());
+			IOReport report;
+			try {
+				report = importer.read(upload.getInputStream());
+			} catch (IOException e) {
+//				throw new RuntimeException(e);
+				report = new IOReport();
+				report.setAdditionalInfo("[" +upload.getClientFileName() +"] " +e.getMessage());
+				report.error();
+			}
+			upload.closeStreams();
+			if(isFirstReport) {
+				endReport = report;
+				isFirstReport = false;
+			} else {
+				endReport.merge(report);
+			}
 		}
-		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<IOReport>(report, ModelChangeEvent.IO_REPORT));
-		upload.closeStreams();
+		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<IOReport>(endReport, ModelChangeEvent.IO_REPORT));
 	}
 	
 }

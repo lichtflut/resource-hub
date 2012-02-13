@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.dialogs;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -61,7 +62,7 @@ public class InformationImportDialog extends AbstractRBDialog {
 		form.add(new AjaxButton("upload", form) {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-				importUpload(uploadField.getFileUpload(), format);
+				importUpload(uploadField.getFileUploads(), format);
 				close(target);
 			}
 			@Override
@@ -82,29 +83,40 @@ public class InformationImportDialog extends AbstractRBDialog {
 		return new ListModel<String>(Arrays.asList(new String [] {"RDF-XML", "JSON", "N3"}));
 	}
 	
-	private void importUpload(final FileUpload upload, final IModel<String> format) {
-		IOReport report = new IOReport();
-		final SemanticGraphIO io = new RdfXmlBinding();
-		try {
-			final SemanticGraph graph = io.read(upload.getInputStream());
-			provider.getArastejuGate().startConversation().attach(graph);
-			
-			report.add("Namespaces", graph.getNamespaces().size());
-			report.add("Nodes", graph.getNodes().size());
-			report.add("Subjects", graph.getSubjects().size());
-			report.add("Statements", graph.getStatements().size());
-			report.success();
-		} catch (IOException e) {
-//			throw new RuntimeException(e);
-			report.setAdditionalInfo(e.getMessage());
-			report.error();
-		} catch (SemanticIOException e) {
-//			throw new RuntimeException(e);
-			report.setAdditionalInfo(e.getMessage());
-			report.error();
+	private void importUpload(final List<FileUpload> uploadList, final IModel<String> format) {
+		Boolean isFirstReport = true;
+		IOReport endReport = null;
+		
+		for (FileUpload upload : uploadList) {
+			IOReport report = new IOReport();
+			final SemanticGraphIO io = new RdfXmlBinding();
+			try {
+				final SemanticGraph graph = io.read(upload.getInputStream());
+				provider.getArastejuGate().startConversation().attach(graph);
+				
+				report.add("Namespaces", graph.getNamespaces().size());
+				report.add("Nodes", graph.getNodes().size());
+				report.add("Subjects", graph.getSubjects().size());
+				report.add("Statements", graph.getStatements().size());
+				report.success();
+			} catch (IOException e) {
+//				throw new RuntimeException(e);
+				report.setAdditionalInfo("[" +upload.getClientFileName() +"] " +e.getMessage());
+				report.error();
+			} catch (SemanticIOException e) {
+//				throw new RuntimeException(e);
+				report.setAdditionalInfo("[" +upload.getClientFileName() +"] " +e.getMessage());
+				report.error();
+			}
+			upload.closeStreams();
+			if(isFirstReport) {
+				endReport = report;
+				isFirstReport = false;
+			} else {
+				endReport.merge(report);
+			}
 		}
-		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<IOReport>(report, ModelChangeEvent.IO_REPORT));
-		upload.closeStreams();
+		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<IOReport>(endReport, ModelChangeEvent.IO_REPORT));
 	}
 	
 }
