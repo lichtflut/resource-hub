@@ -7,6 +7,8 @@ import java.util.Locale;
 
 import org.arastreju.sge.security.User;
 
+import de.lichtflut.rb.core.messaging.EmailConfiguration;
+
 /**
  * <p>
  *  This service provides way to transmit stuff via email.
@@ -24,20 +26,20 @@ public interface EmailService {
 	 * @param password
 	 * @param locale
 	 */
-	void sendPasswordInformation(User user, String password, Locale locale);
+	void sendPasswordInformation(User user, String password, EmailConfiguration conf, Locale locale);
 
 	/**
 	 * Sends an email to inform a {@link User} of a successful account creation.
 	 * @param user
 	 * @param locale 
 	 */
-	void sendRegistrationConfirmation(User user, Locale locale);
+	void sendRegistrationConfirmation(User user, EmailConfiguration conf, Locale locale);
 
 	/**
 	 * Sends an email to inform a {@link User} that his account has been activated.
 	 * @param user
 	 * @param locale
 	 */
-	void sendAccountActivatedInformation(User user, Locale locale);
-	
+	void sendAccountActivatedInformation(User user, EmailConfiguration conf, Locale locale);
+
 }

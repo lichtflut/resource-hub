@@ -20,7 +20,7 @@ import org.arastreju.sge.security.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.messaging.Configuration;
+import de.lichtflut.rb.core.messaging.EmailConfiguration;
 import de.lichtflut.rb.core.messaging.MessageDescription;
 import de.lichtflut.rb.core.messaging.MessageType;
 import de.lichtflut.rb.core.messaging.TextModules;
@@ -41,22 +41,26 @@ public class EmailServiceImpl implements EmailService {
 
 	private final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 	
+	// ---------------- Constructor -------------------------
+	
+	public EmailServiceImpl(){
+	}
+	
 	// ------------------------------------------------------
 
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void sendPasswordInformation(User user, String password, Locale locale) {
+	public void sendPasswordInformation(User user, String password, EmailConfiguration conf, Locale locale) {
 		MessageDescription desc = new MessageDescription(locale);
 		desc.setType(MessageType.PASSWORD_INFORMATION_MAIL);
 		desc.setRecipient(user.getEmail());
 		desc.setRecipientName(user.getName());
-		desc.setSenderName(Configuration.APPLICATION_SUPPORT_NAME);
-		desc.setSender(Configuration.APPLICATION_SUPPORT_EMAIL);
-		desc.setPassword(password);
+		desc.setSender(conf.getApplicationSupportName());
+		desc.setSenderName(conf.getApplicationSupportName());
 		desc.setContent(TextModules.getMailFor(desc));
-		sendMail(desc);
+		sendMail(desc, conf);
 	}
 
 
@@ -64,15 +68,15 @@ public class EmailServiceImpl implements EmailService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void sendRegistrationConfirmation(User user, Locale locale) {
+	public void sendRegistrationConfirmation(User user, EmailConfiguration conf, Locale locale) {
 		MessageDescription desc = new MessageDescription(locale);
 		desc.setType(MessageType.REGISTRATION_CONFIRMATION_MAIL);
 		desc.setRecipient(user.getEmail());
 		desc.setRecipientName(user.getName());
-		desc.setSender(Configuration.APPLICATION_SUPPORT_EMAIL);
-		desc.setSenderName(Configuration.APPLICATION_SUPPORT_NAME);
+		desc.setSender(conf.getApplicationSupportEmail());
+		desc.setSenderName(conf.getApplicationSupportName());
 		desc.setContent(TextModules.getMailFor(desc));
-		sendMail(desc);
+		sendMail(desc, conf);
 	}
 	
 
@@ -80,38 +84,23 @@ public class EmailServiceImpl implements EmailService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void sendAccountActivatedInformation(User user, Locale locale) {
+	public void sendAccountActivatedInformation(User user, EmailConfiguration conf, Locale locale) {
 		MessageDescription desc = new MessageDescription(locale);
 		desc.setType(MessageType.ACCOUNT_ACTIVATED_MAIL);
 		desc.setRecipient(user.getEmail());
 		desc.setRecipientName(user.getName());
-		desc.setSender(Configuration.APPLICATION_SUPPORT_EMAIL);
-		desc.setSenderName(Configuration.APPLICATION_SUPPORT_NAME);
 		desc.setContent(TextModules.getMailFor(desc));
-		sendMail(desc);
+		sendMail(desc, conf);
 	}
 	
 	// ------------------------------------------------------
 	
-	protected Session initSession(){
-		Properties props = new Properties();
-		final Configuration cfg = Configuration.getInstance();
-		fillSessionProperties(props, cfg);
-		Session session = Session.getInstance(props, new Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(cfg.getSmtpUser(), cfg.getSmtpPassword());
-			}
-		});
-		logger.info("Initialized mail session: " + props);
-		return session;
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */
-	private void sendMail(MessageDescription desc) {
+	private void sendMail(MessageDescription desc, EmailConfiguration conf) {
 		try {
-			Message mail = new MimeMessage(initSession());
+			Message mail = new MimeMessage(initSession(conf));
 			mail.setFrom(new InternetAddress(desc.getSender(), desc.getSenderName()));
 			mail.addRecipient(RecipientType.TO, new InternetAddress(desc.getRecipient(), desc.getRecipientName()));
 			mail.setSubject(desc.getSubject());
@@ -125,10 +114,22 @@ public class EmailServiceImpl implements EmailService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		logger.info("Send email " + desc.getSubject() + " to " + desc.getRecipient());
+		logger.info("Send email '" + desc.getSubject() + "' from " + desc.getSender() + " to " + desc.getRecipient());
 	}
-
-	private void fillSessionProperties(Properties props, Configuration cfg) {
+	
+	protected Session initSession(final EmailConfiguration conf){
+		Properties props = new Properties();
+		fillSessionProperties(props, conf);
+		Session session = Session.getInstance(props, new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(conf.getSmtpUser(), conf.getSmtpPassword());
+			}
+		});
+		logger.info("Initialized mail session: " + props);
+		return session;
+	}
+	
+	private void fillSessionProperties(Properties props, EmailConfiguration cfg) {
 		props.put("mail.smtp.host", cfg.getSmtpServer());
 		props.setProperty("mail.smtp.port", "25");
 		props.setProperty("mail.smtp.auth", "true");

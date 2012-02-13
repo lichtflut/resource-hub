@@ -19,9 +19,13 @@ public class MessagingServiceImpl implements MessagingService {
 
 	private EmailService emailService;
 	
+	// ---------------- Constructor -------------------------
+	
 	public MessagingServiceImpl(ServiceProvider provider){
 		this.emailService = new EmailServiceImpl();
 	}
+	
+	// ------------------------------------------------------
 	
 	/** 
 	 * {@inheritDoc}

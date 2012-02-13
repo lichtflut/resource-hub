@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.arastreju.sge.ArastrejuGate;
@@ -34,6 +35,7 @@ import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.RBException;
+import de.lichtflut.rb.core.messaging.EmailConfiguration;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
@@ -67,7 +69,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User createUser(String emailID, String username, String password) throws RBException {
+	public User createUser(String emailID, String username, String password, EmailConfiguration conf, Locale locale) throws RBException {
 		final String crypted = Crypt.md5Hex(password);
 		final Credential credential = new PasswordCredential(crypted);
 		User registered = null;
@@ -88,7 +90,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			if (domain != null && !gate().getContext().isMasterDomain()) {
 				registerUserInMasterDomain(registered, domain);
 			}
-			getProvider().getMessagingService().getEmailService().sendRegistrationConfirmation(registered, null);
+			getProvider().getMessagingService().getEmailService().sendRegistrationConfirmation(registered, conf, locale);
 		} catch(ArastrejuException e) {
 			if(e.getErrCode().equals(org.arastreju.sge.eh.ErrorCodes.REGISTRATION_NAME_ALREADY_IN_USE)) {
 				throw new RBException(ErrorCodes.SECURITYSERVICE_ID_ALREADY_IN_USE, 
@@ -238,12 +240,12 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void resetPasswordForUser(User user) {
+	public void resetPasswordForUser(User user, EmailConfiguration conf, Locale locale) {
 		//TODO change generated pwd 
 		String newPwd = "changed";
 		String generatedPwd = Crypt.md5Hex(newPwd);
 		setPassword(generatedPwd, user);
-		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, newPwd, null);
+		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, newPwd, conf, locale);
 	}
 	
 	// ----------------------------------------------------

@@ -4,11 +4,13 @@
 package de.lichtflut.rb.core.services;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.arastreju.sge.security.Domain;
 import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.core.eh.RBException;
+import de.lichtflut.rb.core.messaging.EmailConfiguration;
 
 
 /**
@@ -39,7 +41,7 @@ public interface SecurityService {
 	 * @return The created user.
 	 * @throws RBException 
 	 */
-	User createUser(String emailID, String username, String password) throws RBException;
+	User createUser(String emailID, String username, String password, EmailConfiguration conf, Locale locale) throws RBException;
 
 	/**
 	 * Sets a new Password for a {@link User}.
@@ -55,7 +57,7 @@ public interface SecurityService {
 	 * @param user
 	 * @return the new password
 	 */
-	void resetPasswordForUser(User user);
+	void resetPasswordForUser(User user, EmailConfiguration conf, Locale locale);
 
 	/**
 	 * Change the primary ID for a user. !!This also changes the users email-address and unique name!!
