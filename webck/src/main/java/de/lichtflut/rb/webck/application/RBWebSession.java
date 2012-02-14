@@ -76,6 +76,9 @@ public class RBWebSession extends WebSession {
 	public void detach() {
 		super.detach();
 		user = null;
+		if (provider != null) {
+			provider.onDetach();
+		}
 	}
 	
 	// ----------------------------------------------------

@@ -63,7 +63,6 @@ public class EditNoteDialog extends AbstractRBDialog {
 				SNOPS.assure(noteResource, DC.CREATOR, provider.getContext().getUser());
 				mc.attach(noteResource);
 				onSave(noteResource);
-				mc.close();
 				close(target);
 			}
 		});

@@ -50,6 +50,8 @@ public interface RB {
 	
 	// ----------------------------------------------------
 
+	ResourceID LOCATION = new SimpleResourceID(COMMON_NAMESPACE_URI, "Location");
+	
 	ResourceID PERSON = new SimpleResourceID(COMMON_NAMESPACE_URI, "Person");
 	
 	ResourceID ORGANIZATION = new SimpleResourceID(COMMON_NAMESPACE_URI, "Organization");

@@ -40,11 +40,9 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public class EntityManagerImpl implements EntityManager {
+public class EntityManagerImpl extends AbstractService implements EntityManager {
 
 	private final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
-	
-	private final ServiceProvider provider;
 	
 	// -----------------------------------------------------
 
@@ -53,7 +51,7 @@ public class EntityManagerImpl implements EntityManager {
 	 * @param provider The service provider.
 	 */
 	public EntityManagerImpl(final ServiceProvider provider) {
-		this.provider = provider;
+		super(provider);
 	}
 	
 	// -----------------------------------------------------
@@ -72,8 +70,8 @@ public class EntityManagerImpl implements EntityManager {
 	@Override
 	public List<RBEntity> findByType(final ResourceID type) {
 		final List<RBEntity> result = new ArrayList<RBEntity>();
-		final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
-		final List<ResourceNode> nodes = provider.getArastejuGate().createQueryManager().findByType(type);
+		final ResourceSchema schema = getProvider().getSchemaManager().findSchemaForType(type);
+		final List<ResourceNode> nodes = getProvider().getArastejuGate().createQueryManager().findByType(type);
 		for (ResourceNode n : nodes) {
 			n.getAssociations();
 			RBEntityImpl entity = new RBEntityImpl(n, schema);
@@ -89,7 +87,7 @@ public class EntityManagerImpl implements EntityManager {
 	 */
 	@Override
 	public RBEntity create(final ResourceID type) {
-		final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type);
+		final ResourceSchema schema = getProvider().getSchemaManager().findSchemaForType(type);
 		if (schema != null) {
 			return new RBEntityImpl(new SNResource(), schema);	
 		} else {
@@ -103,7 +101,7 @@ public class EntityManagerImpl implements EntityManager {
 	 */
 	@Override
     public void store(final RBEntity entity) {
-		final ModelingConversation mc = startConversation();
+		final ModelingConversation mc = mc();
 		final ResourceNode node = entity.getNode();
 		SNOPS.associate(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
@@ -117,7 +115,6 @@ public class EntityManagerImpl implements EntityManager {
 		// Set label after all entity references have been resolved
 		SNOPS.assure(node, RDFS.LABEL, new SNText(entity.getLabel()));
 		mc.attach(node);
-		mc.close();
     }
 	
 	/** 
@@ -125,11 +122,10 @@ public class EntityManagerImpl implements EntityManager {
 	*/
 	@Override
 	public void changeType(RBEntity entity, ResourceID type) {
-		final ModelingConversation mc = startConversation();
+		final ModelingConversation mc = mc();
 		final ResourceNode node = mc.resolve(entity.getID());
 		SNOPS.remove(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, type);
-		mc.close();
 	}
 
 	/** 
@@ -137,16 +133,9 @@ public class EntityManagerImpl implements EntityManager {
 	 */
 	@Override
 	public void delete(final ResourceID entityID) {
-		final ModelingConversation mc = startConversation();
+		final ModelingConversation mc = mc();
 		final ResourceNode node = mc.resolve(entityID);
 		mc.remove(node);
-		mc.close();
-	}
-	
-	// -----------------------------------------------------
-	
-	private ModelingConversation startConversation() {
-		return provider.getArastejuGate().startConversation();
 	}
 	
 	// -----------------------------------------------------
@@ -155,9 +144,8 @@ public class EntityManagerImpl implements EntityManager {
 	 * {@inheritDoc}
 	 */
 	private RBEntityImpl find(final ResourceID resourceID, final boolean cascadeEager) {
-		final ModelingConversation mc = provider.getArastejuGate().startConversation();
+		final ModelingConversation mc = mc();
 		final ResourceNode node = mc.findResource(resourceID.getQualifiedName());
-		mc.close();
 		if (node == null) {
 			return null;
 		}
@@ -166,7 +154,7 @@ public class EntityManagerImpl implements EntityManager {
 		if (type == null) {
 			entity = new RBEntityImpl(node);
 		} else {
-			final ResourceSchema schema = provider.getSchemaManager().findSchemaForType(type.asResource());
+			final ResourceSchema schema = getProvider().getSchemaManager().findSchemaForType(type.asResource());
 			if (schema != null) {
 				entity = new RBEntityImpl(node, schema);
 			} else {
@@ -219,7 +207,7 @@ public class EntityManagerImpl implements EntityManager {
 		for(int i=0; i < field.getSlots(); i++) {
 			final ResourceID id = (ResourceID) field.getValue(i);
 			if (id != null) {
-				field.setValue(i, provider.getResourceResolver().resolve(id));
+				field.setValue(i, getProvider().getResourceResolver().resolve(id));
 			}
 		}
 	}

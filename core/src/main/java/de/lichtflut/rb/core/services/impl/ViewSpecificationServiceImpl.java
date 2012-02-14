@@ -88,9 +88,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public void store(MenuItem item) {
-		final ModelingConversation mc = gate().startConversation();
-		mc.attach(item);
-		mc.close();
+		mc().attach(item);
 	}
 	
 	/** 
@@ -99,11 +97,9 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	@Override
 	public void removeUsersItem(MenuItem item) {
 		final ResourceNode user = currentUser();
-		final ModelingConversation mc = gate().startConversation();
 		SNOPS.remove(user, WDGT.HAS_MENU_ITEM, item);
 		//TODO: Remove item if private one.
-		//mc.remove(item);
-		mc.close();
+		//mc().remove(item);
 	}
 	
 	// -- PERSPECTIVES ------------------------------------
@@ -113,9 +109,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public Perspective findPerspective(ResourceID id) {
-		final ModelingConversation mc = gate().startConversation();
-		ResourceNode existing = mc.findResource(id.getQualifiedName());
-		mc.close();
+		final ResourceNode existing = mc().findResource(id.getQualifiedName());
 		if (existing != null) {
 			return new SNPerspective(existing);
 		} else {
@@ -128,14 +122,12 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public void store(Perspective perspective) {
-		final ModelingConversation mc = gate().startConversation();
-		mc.attach(perspective);
+		mc().attach(perspective);
 		if (perspective.getViewPorts().isEmpty()) {
 			// add two default view ports.
 			perspective.addViewPort();
 			perspective.addViewPort();
 		}
-		mc.close();
 	}
 	
 	/** 
@@ -143,12 +135,11 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public void remove(Perspective perspective) {
-		final ModelingConversation mc = gate().startConversation();
+		final ModelingConversation mc = mc();
 		final SemanticGraph graph = new ViewSpecTraverser().toGraph(perspective);
 		for (Statement stmt : graph.getStatements()) {
 			mc.removeStatement(stmt);
 		}
-		mc.close();
 	}
 
 	// -- WIDGETS -----------------------------------------
@@ -158,9 +149,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public WidgetSpec findWidgetSpec(ResourceID id) {
-		final ModelingConversation mc = gate().startConversation();
-		ResourceNode existing = mc.findResource(id.getQualifiedName());
-		mc.close();
+		final ResourceNode existing = mc().findResource(id.getQualifiedName());
 		if (existing != null) {
 			return new SNWidgetSpec(existing);
 		} else {
@@ -173,9 +162,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public void store(WidgetSpec widgetSpec) {
-		final ModelingConversation mc = gate().startConversation();
-		mc.attach(widgetSpec);
-		mc.close();
+		mc().attach(widgetSpec);
 	}
 	
 	// ----------------------------------------------------
@@ -185,9 +172,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public void store(ViewPort viewPort) {
-		final ModelingConversation mc = gate().startConversation();
-		mc.attach(viewPort);
-		mc.close();
+		mc().attach(viewPort);
 	}
 	
 	// ----------------------------------------------------

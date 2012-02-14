@@ -114,7 +114,6 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 	protected void deleteNote(IModel<ResourceNode> mezzle) {
 		ModelingConversation mc = provider.getArastejuGate().startConversation();
 		mc.remove(mezzle.getObject());
-		mc.close();
 		RBAjaxTarget.add(this);
 	}
 	
@@ -138,7 +137,6 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 			SNOPS.assure(note, RBSystem.IS_ATTACHED_TO, target.getObject());
 			ModelingConversation mc = provider.getArastejuGate().startConversation();
 			mc.attach(note);
-			mc.close();
 			RBAjaxTarget.add(NotePadPanel.this);
 		}
 	}

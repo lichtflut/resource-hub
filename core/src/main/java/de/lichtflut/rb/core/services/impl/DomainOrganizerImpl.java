@@ -111,7 +111,7 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	@Override
 	public void setDomainOrganization(final ResourceID organization) {
 		logger.info("Setting domain organization to: " + organization);
-		final ModelingConversation mc = gate().startConversation();
+		final ModelingConversation mc = mc();
 		final ResourceNode previous = getDomainOrganization();
 		if (previous != null) {
 			ResourceNode attached = mc.resolve(previous);
@@ -121,7 +121,6 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 		
 		ResourceNode attached = mc.resolve(organization);
 		assure(attached, RBSystem.IS_DOMAIN_ORGANIZATION, new SNValue(ElementaryDataType.BOOLEAN, Boolean.TRUE));
-		mc.close();
 	}
 
 	/** 

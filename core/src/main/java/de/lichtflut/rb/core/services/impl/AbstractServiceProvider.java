@@ -176,6 +176,18 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	}
 	
 	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void onDetach() {
+		if (openGate != null) {
+			openGate.startConversation().close();
+		}
+	}
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Hook for domain initialization.
@@ -218,5 +230,5 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		}
 		return openGate;
 	}
-
+	
 }

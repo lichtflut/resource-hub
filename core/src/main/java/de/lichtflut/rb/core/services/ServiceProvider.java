@@ -85,5 +85,10 @@ public interface ServiceProvider {
 	 */
 	ResourceResolver getResourceResolver();
 
+	/**
+	 * Called in detach phase, when the provider shall release resources.
+	 */
+	void onDetach();
+
 	
 }

@@ -20,7 +20,6 @@ import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.FieldParam;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryManager;
 import org.arastreju.sge.query.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,13 +54,10 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  * @author Nils Bleisch
  * @author Oliver Tigges
  */
-@SuppressWarnings("serial")
-public class SchemaManagerImpl implements SchemaManager {
+public class SchemaManagerImpl extends AbstractService implements SchemaManager {
 
 	// -------------MEMBER-FIELDS--------------------------
 
-	private ServiceProvider provider;
-	
 	private Schema2GraphBinding binding;
 	
 	private Logger logger = LoggerFactory.getLogger(SchemaImporterImpl.class);
@@ -73,7 +69,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	 * @param provider The service provider.
 	 */
 	public SchemaManagerImpl(final ServiceProvider provider) {
-		this.provider = provider;
+		super(provider);
 		this.binding = new Schema2GraphBinding(new TypeDefResolverImpl());
 	}
 	
@@ -106,9 +102,8 @@ public class SchemaManagerImpl implements SchemaManager {
 	 */
 	@Override
 	public TypeDefinition findTypeDefinition(final ResourceID id) {
-		final ModelingConversation mc = startConversation();
+		final ModelingConversation mc = mc();
 		final ResourceNode node = mc.findResource(id.getQualifiedName());
-		mc.close();
 		if (node != null) {
 			return binding.toModelObject(new SNPropertyTypeDefinition(node));
 		} else {
@@ -122,7 +117,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	@Override
 	public Collection<ResourceSchema> findAllResourceSchemas() {
 		final List<ResourceSchema> result = new ArrayList<ResourceSchema>();
-		final List<ResourceNode> nodes = query().findByType(RBSchema.RESOURCE_SCHEMA);
+		final List<ResourceNode> nodes = gate().createQueryManager().findByType(RBSchema.RESOURCE_SCHEMA);
 		for (ResourceNode node : nodes) {
 			final ResourceSchema schema = binding.toModelObject(SNResourceSchema.view(node));
 			result.add(schema);
@@ -136,7 +131,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	@Override
 	public Collection<TypeDefinition> findPublicTypeDefinitions() {
 		final List<TypeDefinition> result = new ArrayList<TypeDefinition>();
-		final List<ResourceNode> nodes = query().findByType(RBSchema.PROPERTY_TYPE_DEF);
+		final List<ResourceNode> nodes = gate().createQueryManager().findByType(RBSchema.PROPERTY_TYPE_DEF);
 		for (ResourceNode node : nodes) {
 			final TypeDefinition typeDef = binding.toModelObject(new SNPropertyTypeDefinition(node));
 			if (typeDef.isPublicTypeDef()) {
@@ -154,7 +149,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	@Override
 	public void store(final ResourceSchema schema) {
 		Validate.isTrue(schema.getDescribedType() != null, "The type described by this schema is not defined.");
-		final ModelingConversation mc = startConversation();
+		final ModelingConversation mc = mc();
 		final SNResourceSchema existing = findSchemaNodeByType(schema.getDescribedType());
 		if (existing != null) {
 			removeSchema(mc, existing);
@@ -162,7 +157,6 @@ public class SchemaManagerImpl implements SchemaManager {
 		ensureReferencedResourcesExist(mc, schema);
 		final SNResourceSchema node = binding.toSemanticNode(schema);
 		mc.attach(node);
-		mc.close();
 	}
 	
 	/** 
@@ -170,7 +164,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	*/
 	@Override
 	public void removeSchemaForType(final ResourceID type) {
-		final ModelingConversation mc = startConversation();
+		final ModelingConversation mc = mc();
 		final SNResourceSchema existing = findSchemaNodeByType(type);
 		if (existing != null) {
 			removeSchema(mc, existing);
@@ -183,14 +177,13 @@ public class SchemaManagerImpl implements SchemaManager {
 	@Override
 	public void store(final TypeDefinition definition) {
 		Validate.isTrue(definition.isPublicTypeDef(), "Only public type definition may be stopred explicitly.");
-		final ModelingConversation mc = startConversation();
+		final ModelingConversation mc = mc();
 		final ResourceNode existing = mc.findResource(definition.getID().getQualifiedName());
 		if (existing != null) {
 			mc.remove(existing);
 		}
 		final SNPropertyTypeDefinition node = binding.toSemanticNode(definition);
 		mc.attach(node);
-		mc.close();
 	}
 	
 	/** 
@@ -212,10 +205,10 @@ public class SchemaManagerImpl implements SchemaManager {
 	@Override
 	public SchemaImporter getImporter(final String format) {
 		if ("JSON".equalsIgnoreCase(format.trim())) {
-			return new SchemaImporterImpl(provider, new JsonSchemaParser());
+			return new SchemaImporterImpl(getProvider(), new JsonSchemaParser());
 		} 
 		if ("RSF".equalsIgnoreCase(format.trim())) {
-			return new SchemaImporterImpl(provider, new RsfSchemaParser());
+			return new SchemaImporterImpl(getProvider(), new RsfSchemaParser());
 		} else {
 			throw new NotYetSupportedException("Unsupported format: " + format);
 		}
@@ -235,24 +228,12 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	// -----------------------------------------------------
 	
-	private ModelingConversation startConversation() {
-		return provider.getArastejuGate().startConversation();
-	}
-	
-	private QueryManager query() {
-		return provider.getArastejuGate().createQueryManager();
-	}
-	
-	// -----------------------------------------------------
-	
 	/**
 	 * Find the persistent node representing the schema of the given type.
 	 */
 	private SNResourceSchema findSchemaNodeByType(final ResourceID type) {
-		final ModelingConversation mc = startConversation();
-		final Query query = query().buildQuery().add(new FieldParam(RBSchema.DESCRIBES, type));
+		final Query query = query().add(new FieldParam(RBSchema.DESCRIBES, type));
 		final QueryResult result = query.getResult();
-		mc.close();
 		if (result.isEmpty()) {
 			return null;
 		} else if (result.size() == 1) {
@@ -308,9 +289,8 @@ public class SchemaManagerImpl implements SchemaManager {
 	private class TypeDefResolverImpl implements TypeDefinitionResolver {
 		@Override
 		public SNPropertyTypeDefinition resolve(final TypeDefinition typeDef) {
-			final ModelingConversation mc = startConversation();
+			final ModelingConversation mc = mc();
 			final ResourceNode node = mc.findResource(typeDef.getID().getQualifiedName());
-			mc.close();
 			if (node != null) {
 				return new SNPropertyTypeDefinition(node);
 			} else {

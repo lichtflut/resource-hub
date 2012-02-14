@@ -26,6 +26,8 @@ public class AbstractService {
 	
 	private final ServiceProvider provider;
 	
+	private ModelingConversation conversation;
+	
 	// ----------------------------------------------------
 	
 	/**
@@ -62,7 +64,10 @@ public class AbstractService {
 	}
 	
 	protected ModelingConversation mc() {
-		return provider.getArastejuGate().startConversation();
+		if (conversation == null) {
+			conversation = provider.getArastejuGate().startConversation();
+		}
+		return conversation;
 	}
 	
 	// ----------------------------------------------------

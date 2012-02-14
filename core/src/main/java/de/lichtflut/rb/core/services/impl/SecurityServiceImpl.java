@@ -134,7 +134,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	public void changePrimaryID(User user, String emailID) throws RBException {
 		String newID = emailID.trim().toLowerCase();
 		if(!newID.equals(user.getName())) {
-			ModelingConversation mc = gate().startConversation();
+			ModelingConversation mc = mc();
 			IdentityManagement im = identityManagement();
 			mc.attach(user);
 			try {
@@ -148,7 +148,6 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 					logger.error("Unexpected ArastrejuException while trying to change primaryID/email: ", e);
 				}
 			}
-			mc.close();
 		}
 	}
 	
@@ -158,7 +157,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	@Override
 	public void setAlternateID(User user, String alternateID) throws RBException {
 		if(!alternateID.equals(getAlternateID(user))) {
-			ModelingConversation mc = gate().startConversation();
+			ModelingConversation mc = mc();
 			IdentityManagement im = identityManagement();
 			mc.attach(user);
 			SemanticNode oldAlternateID = getAlternateIDNode(user);
@@ -174,7 +173,6 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			}
 			// oldID will only be removed if new ID is registered without exception thrown
 			SNOPS.remove(user, Aras.IDENTIFIED_BY, oldAlternateID);
-			mc.close();
 		}
 	}
 	
@@ -209,14 +207,13 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 */
 	@Override
 	public void setUserRoles(User user, List<String> roles) {
-		ModelingConversation mc = gate().startConversation();
+		ModelingConversation mc = mc();
 		IdentityManagement im = identityManagement();
 		mc.attach(user);
 		SNOPS.remove(user, Aras.HAS_ROLE);
 		for (String current : roles) {
 			im.addUserToRoles(user, im.registerRole(current));
 		}
-		mc.close();
 	}
 	
 	/**
@@ -267,7 +264,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * @param domain The domain.
 	 */
 	private void registerUserInMasterDomain(User user, String domain) {
-		final ModelingConversation mc = masterGate().startConversation();
+		final ModelingConversation mc = mc();
 		final ResourceNode userNode = new SNResource();
 		Set<SemanticNode> ids = SNOPS.objects(user, Aras.IDENTIFIED_BY);
 		for (SemanticNode node : ids) {
@@ -277,7 +274,6 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		userNode.addAssociation(Aras.BELONGS_TO_DOMAIN, new SNText(domain), Aras.IDENT);
 		mc.attach(userNode);
 		logger.info("Registering user in master domain: " + user.getName() + " --> " + domain);
-		mc.close();
 	}
 
 	/**
