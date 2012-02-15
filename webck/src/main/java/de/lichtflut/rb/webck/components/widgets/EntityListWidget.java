@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -17,7 +18,7 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryException;
+import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -36,6 +37,7 @@ import de.lichtflut.rb.webck.components.widgets.config.EntityListWidgetConfigPan
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
 
 /**
  * <p>
@@ -50,7 +52,7 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
  */
 public class EntityListWidget extends ConfigurableWidget {
 
-	public static final int MAX_RESULTS = 10;
+	public static final int MAX_RESULTS = 15;
 	
 	@SpringBean
 	protected ServiceProvider provider;
@@ -69,7 +71,8 @@ public class EntityListWidget extends ConfigurableWidget {
 	public EntityListWidget(String id, IModel<WidgetSpec> spec, ConditionalModel<Boolean> isConfigMode) {
 		super(id, spec, isConfigMode);
 		
-		IModel<List<ResourceNode>> content = modelFor(spec, MAX_RESULTS);
+		IModel<QueryResult> queryModel = modelFor(spec);
+		IModel<List<ResourceNode>> content = new ResourceQueryResultModel(queryModel, MAX_RESULTS);
 		IModel<ColumnConfiguration> config = configModel(spec);
 		
 		getDisplayPane().add(new ResourceListPanel("listView", content, config) {
@@ -81,6 +84,13 @@ public class EntityListWidget extends ConfigurableWidget {
 					.setLinkTitle(new ResourceModel("action.view"));
 			};
 		});
+		
+		getDisplayPane().add(new Label("found", new DerivedDetachableModel<Integer, QueryResult>(queryModel) {
+			@Override
+			protected Integer derive(QueryResult result) {
+				return result.size();
+			}
+		}));
 		
 		getDisplayPane().add(new WidgetActionsPanel("actions", spec));
 		
@@ -94,21 +104,18 @@ public class EntityListWidget extends ConfigurableWidget {
 	
 	// ----------------------------------------------------
 	
-	protected IModel<List<ResourceNode>> modelFor(final IModel<WidgetSpec> spec, final int maxResults) {
-		return new AbstractLoadableDetachableModel<List<ResourceNode>>() {
+	protected IModel<QueryResult> modelFor(final IModel<WidgetSpec> spec) {
+		return new AbstractLoadableDetachableModel<QueryResult>() {
 			@Override
-			public List<ResourceNode> load() {
+			public QueryResult load() {
 				final Selection selection = spec.getObject().getSelection();
 				if (selection != null && selection.isDefined()) {
 					final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
 					selection.adapt(query);
-					try {
-						return query.getResult().toList(maxResults);
-					} catch (QueryException e) {
-						// ignore and return empty list
-					}
+					return query.getResult();
+				} else {
+					return null;
 				}
-				return Collections.emptyList();
 			}
 		};
 	}
