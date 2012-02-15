@@ -15,14 +15,18 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 import de.lichtflut.rb.webck.components.dialogs.VCardExportDialog;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
@@ -41,6 +45,9 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
  */
 public class ExtendedActionsPanel extends Panel {
 
+	@SpringBean 
+	private ServiceProvider provider;
+	
 	private IModel<Boolean> isOpen = new Model<Boolean>(false);
 	
 	public ExtendedActionsPanel(final String id, final IModel<RBEntity> model) {
@@ -59,7 +66,28 @@ public class ExtendedActionsPanel extends Panel {
 			}
 		};
 		add(openMenuLink);
+
+		/*TODO: Sichtbarkeitssteuerung des Links funktioniert nicht! Der Link ist IMMER sichtbar, auch wenn sich im
+		 * 		Container keine	sichtbaren Links befinden!! */		
+		openMenuLink.add(visibleIf(isTrue(new HasVisibleLinksModel(new Model<MarkupContainer>(linkContainer)))));
+
+		// adding the action links
+		addDeleteEntityLink(model, linkContainer);
+		addExportVCardLink(model, linkContainer);
 		
+	}
+
+	// ----------------------------------------------------
+	
+	private void toggleContainerVisibility(final MarkupContainer linkContainer) {
+		isOpen.setObject(!isOpen.getObject());
+		RBAjaxTarget.add(linkContainer);
+	}
+
+	
+	// -- LINK_CREATOR_METHODS ----------------------------
+	
+	private void addExportVCardLink(final IModel<RBEntity> model, final MarkupContainer linkContainer) {
 		@SuppressWarnings("rawtypes")
 		final Link exportVCardLink = new AjaxFallbackLink("exportVCardLink") {
 			public void onClick(AjaxRequestTarget target) {
@@ -70,16 +98,29 @@ public class ExtendedActionsPanel extends Panel {
 		};
 		exportVCardLink.add(visibleIf(ConditionalModel.areEqual(new EntityTypeModel(model), Model.of(RB.PERSON))));
 		linkContainer.add(exportVCardLink);
-		
-		/*TODO: Sichtbarkeitssteuerung des Links funktioniert nicht! Der Link ist IMMER sichtbar, auch wenn sich im
-		 * 		Container keine	sichtbaren Links befinden!! */		
-		openMenuLink.add(visibleIf(isTrue(new HasVisibleLinksModel(new Model<MarkupContainer>(linkContainer)))));
 	}
 	
-	private void toggleContainerVisibility(final MarkupContainer linkContainer) {
-		isOpen.setObject(!isOpen.getObject());
-		RBAjaxTarget.add(linkContainer);
+	private void addDeleteEntityLink(final IModel<RBEntity> model, final MarkupContainer linkContainer) {
+		@SuppressWarnings("rawtypes")
+		final Link deleteEntityLink = new AjaxFallbackLink("deleteEntityLink") {
+			public void onClick(AjaxRequestTarget target) {
+			    DialogHoster hoster = findParent(DialogHoster.class);
+			    ConfirmationDialog confirmDialog = new ConfirmationDialog(hoster.getDialogID(),
+			    		new Model<String>(getString("global.message.delete-confirmation"))) {
+							@Override
+							public void onConfirm() {
+								provider.getEntityManager().delete(model.getObject().getID());
+								RBWebSession.get().getHistory().back();
+							}
+			    };
+			    hoster.openDialog(confirmDialog);
+			    toggleContainerVisibility(linkContainer);
+			}
+		};
+
+		linkContainer.add(deleteEntityLink);
 	}
+
 	
 	// ----------------------------------------------------
 	
