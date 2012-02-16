@@ -10,8 +10,8 @@ import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
@@ -27,11 +27,13 @@ import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.components.links.LabeledLink;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
 import de.lichtflut.rb.webck.components.listview.ListAction;
+import de.lichtflut.rb.webck.components.listview.ListPagerPanel;
 import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
 import de.lichtflut.rb.webck.components.widgets.config.EntityListWidgetConfigPanel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
@@ -52,7 +54,11 @@ import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
  */
 public class EntityListWidget extends ConfigurableWidget {
 
-	public static final int MAX_RESULTS = 15;
+	public static final int MAX_RESULTS = 3;
+	
+	private IModel<Integer> pagesize = new Model<Integer>(MAX_RESULTS);
+	
+	private IModel<Integer> offset = new Model<Integer>(0);
 	
 	@SpringBean
 	protected ServiceProvider provider;
@@ -71,8 +77,10 @@ public class EntityListWidget extends ConfigurableWidget {
 	public EntityListWidget(String id, IModel<WidgetSpec> spec, ConditionalModel<Boolean> isConfigMode) {
 		super(id, spec, isConfigMode);
 		
+		setOutputMarkupId(true);
+		
 		IModel<QueryResult> queryModel = modelFor(spec);
-		IModel<List<ResourceNode>> content = new ResourceQueryResultModel(queryModel, MAX_RESULTS);
+		IModel<List<ResourceNode>> content = new ResourceQueryResultModel(queryModel, pagesize, offset);
 		IModel<ColumnConfiguration> config = configModel(spec);
 		
 		getDisplayPane().add(new ResourceListPanel("listView", content, config) {
@@ -85,12 +93,11 @@ public class EntityListWidget extends ConfigurableWidget {
 			};
 		});
 		
-		getDisplayPane().add(new Label("found", new DerivedDetachableModel<Integer, QueryResult>(queryModel) {
-			@Override
-			protected Integer derive(QueryResult result) {
-				return result.size();
-			}
-		}));
+		getDisplayPane().add(new ListPagerPanel("pager", queryModel, offset, pagesize) {
+			public void onPage() {
+				RBAjaxTarget.add(EntityListWidget.this);
+			};
+		});
 		
 		getDisplayPane().add(new WidgetActionsPanel("actions", spec));
 		

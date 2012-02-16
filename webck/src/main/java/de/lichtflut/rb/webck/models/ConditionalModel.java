@@ -123,9 +123,6 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			public boolean isFulfilled() {
 				boolean fulfilled = true;
 				for (ConditionalModel<?> current : model) {
-					if (current == null) {
-						System.out.println("null");
-					}
 					fulfilled &= current.isFulfilled();
 				}
 				return fulfilled;
@@ -160,6 +157,14 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 	
+	public static <T> ConditionalModel<T> greaterThan(final IModel<? extends Number> model, final IModel<?extends Number> other) {
+		return new ConditionalModel<T>(model) {
+			@Override
+			public boolean isFulfilled() {
+				return model.getObject().doubleValue() > other.getObject().doubleValue();
+			}
+		};
+	}
 
 	public static <T> ConditionalModel<T> hasPermission(final IModel<User> userModel, final String permission) {
 		return new ConditionalModel<T>(userModel) {

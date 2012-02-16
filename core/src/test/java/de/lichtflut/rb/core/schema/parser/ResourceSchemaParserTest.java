@@ -5,7 +5,6 @@ package de.lichtflut.rb.core.schema.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 
 import junit.framework.Assert;
 
@@ -14,7 +13,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.impl.AbstractServiceProvider;
@@ -54,9 +52,6 @@ public class ResourceSchemaParserTest {
 		final SchemaImporter importer = manager.getImporter("json");
 		importer.read(in);
 		
-		Collection<ResourceSchema> schemas = manager.findAllResourceSchemas();
-		System.out.println(schemas);
-		
 		Assert.assertEquals(5, manager.findAllResourceSchemas().size());
 		
 		Assert.assertEquals(1, manager.findPublicTypeDefinitions().size());
@@ -70,9 +65,6 @@ public class ResourceSchemaParserTest {
 		final SchemaManager manager = serviceProvider.getSchemaManager();
 		final SchemaImporter importer = manager.getImporter("rsf");
 		importer.read(in);
-		
-		Collection<ResourceSchema> schemas = manager.findAllResourceSchemas();
-		System.out.println(schemas);
 		
 		Assert.assertEquals(5, manager.findAllResourceSchemas().size());
 		

@@ -8,13 +8,16 @@
 <wicket:head>
 	<style type="text/css"></style>
 </wicket:head>
-<wicket:extend>
+<wicket:panel>
 
-	<div wicket:id="listView"></div>
+	<div>
+		<span wicket:id="info">[found]</span>
+		<span wicket:id="empty">[nothing found]</span>
+	</div>
 	
-	<div wicket:id="pager" class="left-to-right"></div>
+	<div>
+		<a wicket:id="previos">&lt;</a> &nbsp; <a wicket:id="next">&gt;</a>
+	</div>
 	
-	<div wicket:id="actions" class="section"></div>
-
-</wicket:extend>
+</wicket:panel>
 </html>
