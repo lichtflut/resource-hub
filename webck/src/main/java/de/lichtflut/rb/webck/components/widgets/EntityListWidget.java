@@ -54,7 +54,7 @@ import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
  */
 public class EntityListWidget extends ConfigurableWidget {
 
-	public static final int MAX_RESULTS = 3;
+	public static final int MAX_RESULTS = 15;
 	
 	private IModel<Integer> pagesize = new Model<Integer>(MAX_RESULTS);
 	
