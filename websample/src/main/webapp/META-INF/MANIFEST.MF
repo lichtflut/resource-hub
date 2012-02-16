@@ -6,7 +6,7 @@ Class-Path: activation-1.1.jar antisamy-1.4.5.jar antlr-2.7.7.jar antl
  dec-1.2.jar commons-collections-3.2.1.jar commons-httpclient-3.1.jar 
  commons-io-2.1.jar commons-lang3-3.0.1.jar commons-logging-1.1.1.jar 
  geronimo-jta_1.1_spec-1.1.1.jar jackson-core-asl-1.9.0.jar jackson-ma
- pper-asl-1.8.8.jar jazzy-0.5.2-rtext-1.4.1.jar js-1.7R2.jar json-2009
+ pper-asl-1.9.3.jar jazzy-0.5.2-rtext-1.4.1.jar js-1.7R2.jar json-2009
  0211.jar jxl-2.6.12.jar lf.foundation.infra-1.1.1.jar lf.resource-bro
  wser.core.jar lf.resource-browser.webck.jar log4j-1.2.14.jar lucene-c
  ore-3.1.0.jar mail-1.4.jar nekohtml-1.9.12.jar neo4j-1.5.jar neo4j-cy
@@ -19,9 +19,9 @@ Class-Path: activation-1.1.jar antisamy-1.4.5.jar antlr-2.7.7.jar antl
  .0.RELEASE.jar spring-beans-3.1.0.RELEASE.jar spring-context-3.1.0.RE
  LEASE.jar spring-core-3.1.0.RELEASE.jar spring-expression-3.1.0.RELEA
  SE.jar spring-web-3.1.0.RELEASE.jar stringtemplate-3.2.jar wicket-1.5
- .3.pom wicket-core-1.5.3.jar wicket-extensions-1.5.3.jar wicket-ioc-1
- .5.3.jar wicket-request-1.5.3.jar wicket-spring-1.5.3.jar wicket-util
- -1.5.3.jar wicketstuff-tinymce-1.5.3.1.jar wiquery-core-1.5.3.jar wiq
- uery-jquery-ui-1.5.3.jar xercesImpl-2.8.1.jar xml-apis-1.3.03.jar xml
- -apis-ext-1.3.04.jar
+ .4.pom wicket-core-1.5.4.jar wicket-extensions-1.5.4.jar wicket-ioc-1
+ .5.4.jar wicket-request-1.5.4.jar wicket-spring-1.5.4.jar wicket-util
+ -1.5.4.jar wicketstuff-tinymce-1.5.4.jar wiquery-core-1.5.4.jar wique
+ ry-jquery-ui-1.5.4.jar xercesImpl-2.8.1.jar xml-apis-1.3.03.jar xml-a
+ pis-ext-1.3.04.jar
 
