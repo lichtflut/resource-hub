@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.QueryResult;
 
@@ -25,7 +26,9 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
  */
 public class ResourceQueryResultModel extends DerivedDetachableModel<List<ResourceNode>, QueryResult>{
 
-	private int maxResults;
+	private IModel<Integer> maxResults;
+	
+	private IModel<Integer> offset;
 
 	// ----------------------------------------------------
 	
@@ -33,15 +36,23 @@ public class ResourceQueryResultModel extends DerivedDetachableModel<List<Resour
 	 * @param queryResult
 	 */
 	public ResourceQueryResultModel(IModel<QueryResult> queryResult) {
-		super(queryResult);
+		this(queryResult, new Model<Integer>(Integer.MAX_VALUE));
 	}
 	
 	/**
 	 * @param queryResult
 	 */
-	public ResourceQueryResultModel(IModel<QueryResult> queryResult, int maxResults) {
+	public ResourceQueryResultModel(IModel<QueryResult> queryResult, IModel<Integer> maxResults) {
+		this(queryResult, maxResults, Model.of(0));
+	}
+	
+	/**
+	 * @param queryResult
+	 */
+	public ResourceQueryResultModel(IModel<QueryResult> queryResult, IModel<Integer> maxResults, IModel<Integer> offset) {
 		super(queryResult);
 		this.maxResults = maxResults;
+		this.offset = offset;
 	}
 	
 	// ----------------------------------------------------
@@ -51,11 +62,8 @@ public class ResourceQueryResultModel extends DerivedDetachableModel<List<Resour
 	 */
 	@Override
 	public List<ResourceNode> derive(QueryResult result) {
-		if (maxResults > 0) {
-			return result.toList(maxResults);
-		} else {
-			return result.toList();
-		}
+		int max = Math.min(result.size(), maxResults.getObject());
+		return result.toList(offset.getObject(), max);
 	}
 
 
@@ -66,4 +74,5 @@ public class ResourceQueryResultModel extends DerivedDetachableModel<List<Resour
 	public List<ResourceNode> getDefault() {
 		return Collections.emptyList();
 	}
+	
 }

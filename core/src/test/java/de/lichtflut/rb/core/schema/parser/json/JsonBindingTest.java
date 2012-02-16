@@ -65,8 +65,6 @@ public class JsonBindingTest {
 		exporter.write(out, elements);
 		final byte[] bytes = out.toByteArray();
 		
-		System.out.println(new String(bytes));
-		
 		final JsonSchemaParser importer = new JsonSchemaParser();
 		importer.parse(new ByteArrayInputStream(bytes));
 	}
