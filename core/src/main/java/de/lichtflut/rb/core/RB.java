@@ -64,6 +64,10 @@ public interface RB {
 	
 	ResourceID PROCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "Process");
 	
+	ResourceID SKILL = new SimpleResourceID(COMMON_NAMESPACE_URI, "Skill");
+	
+	ResourceID EXPERTISE = new SimpleResourceID(COMMON_NAMESPACE_URI, "Expertise");
+	
 	// -- COMMON PROPERTIES --------------------------------------
 
 	/**
@@ -72,7 +76,7 @@ public interface RB {
 	ResourceID HAS_CHILD_NODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasChildNode");
 	
 	/**
-	 * Child node in tree structures.
+	 * Parent node in tree structures.
 	 */
 	ResourceID HAS_PARENT_NODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasParentNode");
 	

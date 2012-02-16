@@ -95,7 +95,7 @@ public class JsonBindingTest {
 	@Test
 	public void testSchemaImport() throws IOException {
 		final InputStream in = 
-				getClass().getClassLoader().getResourceAsStream("test-schema.json");
+				Thread.currentThread().getContextClassLoader().getResourceAsStream("test-schema.json");
 		final JsonSchemaParser parser = new JsonSchemaParser();
 		final ParsedElements result = parser.parse(in);
 		Assert.assertEquals(5, result.getSchemas().size());
