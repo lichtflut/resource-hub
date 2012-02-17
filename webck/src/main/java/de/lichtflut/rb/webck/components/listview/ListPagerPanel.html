@@ -10,13 +10,22 @@
 </wicket:head>
 <wicket:panel>
 
-	<div>
-		<span wicket:id="info">[found]</span>
-		<span wicket:id="empty">[nothing found]</span>
-	</div>
+	<div class="pager">
 	
-	<div>
-		<a wicket:id="previos">&lt;</a> &nbsp; <a wicket:id="next">&gt;</a>
+		<div class="pager-info">
+			<span wicket:id="info">[found]</span>
+			<span wicket:id="empty">[nothing found]</span>
+		</div>
+	
+		<div wicket:id="pager" class="pager-links">
+			<a wicket:id="previous">
+				<wicket:message key="link.previous">[previous]</wicket:message>
+			</a> 
+			| 
+			<a wicket:id="next">
+				<wicket:message key="link.next">[next]</wicket:message>
+			</a>
+		</div>
 	</div>
 	
 </wicket:panel>

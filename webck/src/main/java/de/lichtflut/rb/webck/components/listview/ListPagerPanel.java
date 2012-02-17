@@ -3,21 +3,23 @@
  */
 package de.lichtflut.rb.webck.components.listview;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.enableIf;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.*;
+import static de.lichtflut.rb.webck.models.ConditionalModel.greaterThan;
+import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.arastreju.sge.query.QueryResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
 /**
@@ -32,10 +34,11 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
  * @author Oliver Tigges
  */
 public class ListPagerPanel extends TypedPanel<QueryResult> {
-	
-	private final Logger logger = LoggerFactory.getLogger(ListPagerPanel.class);
 
+	private final DerivedDetachableModel<Integer, QueryResult> found;
+	
 	private final IModel<Integer> offset;
+	
 	private final IModel<Integer> viewsize;
 	
 	// ----------------------------------------------------
@@ -51,7 +54,7 @@ public class ListPagerPanel extends TypedPanel<QueryResult> {
 		this.offset = offset;
 		this.viewsize = viewsize;
 		
-		final DerivedDetachableModel<Integer, QueryResult> found = new DerivedDetachableModel<Integer, QueryResult>(model) {
+		found = new DerivedDetachableModel<Integer, QueryResult>(model) {
 			@Override
 			protected Integer derive(QueryResult result) {
 				return result.size();
@@ -71,26 +74,30 @@ public class ListPagerPanel extends TypedPanel<QueryResult> {
 		add(new Label("empty", new ResourceModel("label.display-info.empty"))
 				.add(visibleIf(lessThan(found, Model.of(1)))));
 		
-		add(new AjaxLink("previos") {
+		final WebMarkupContainer pager = new WebMarkupContainer("pager");
+		pager.add(visibleIf(lessThan(showing, found)));
+		
+		pager.add(new AjaxLink("previous") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				int newOffset = Math.max(0, offset.getObject() - viewsize.getObject());
-				logger.info("new Offset: " + newOffset);
 				offset.setObject(newOffset);
 				onPage();
 			}
-		});
+		}.add(enableIf(greaterThan(offset, Model.of(0)))));
 		
-		add(new AjaxLink("next") {
+		pager.add(new AjaxLink("next") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				int newOffset = offset.getObject() + viewsize.getObject();
-				logger.info("new Offset: " + newOffset);
-				offset.setObject(newOffset);
-				onPage();
+				if (newOffset < found.getObject()) {
+					offset.setObject(newOffset);
+					onPage();
+				}
 			}
-		});
+		}.add(enableIf(new ProceedConditional())));
 		
+		add(pager);
 	}
 	
 	// ----------------------------------------------------
@@ -107,6 +114,16 @@ public class ListPagerPanel extends TypedPanel<QueryResult> {
 		super.onDetach();
 		this.offset.detach();
 		this.viewsize.detach();
+		this.found.detach();
+	}
+	
+	// ----------------------------------------------------
+	
+	private class ProceedConditional extends ConditionalModel<Integer> {
+		@Override
+		public boolean isFulfilled() {
+			return (offset.getObject() + viewsize.getObject()) < found.getObject();
+		}
 	}
 	
 }
