@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.Session;
 import org.apache.wicket.util.crypt.Base64;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -164,12 +163,13 @@ public class ResourceQueryServlet extends HttpServlet {
 	// ----------------------------------------------------
 	
 	protected ServiceProvider getServiceProvider() throws ServletException {
-		if (!Session.exists() || !RBWebSession.get().isAuthenticated()) {
-			throw new ServletException("Unauthenitcated access");
-		}
 		final WebApplicationContext wac = 
 				WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-		return wac.getBean(ServiceProvider.class);
+		final ServiceProvider provider = wac.getBean(ServiceProvider.class);
+		if (provider == null || !provider.getContext().isAuthenticated()) {
+			throw new ServletException("Unauthenitcated access");
+		}
+		return provider;
 	}
 	
 	// -----------------------------------------------------
