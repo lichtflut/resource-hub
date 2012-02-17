@@ -32,6 +32,11 @@ public class RBException extends Exception {
 		super(msg);
 		this.errorCode = errorCode;
 	}
+	
+	public RBException(long errorCode, String msg, Throwable e){
+		super(msg, e);
+		this.errorCode = errorCode;
+	}
 
 	// ------------------------------------------------------
 
@@ -41,4 +46,6 @@ public class RBException extends Exception {
 	public long getErrorCode() {
 		return errorCode;
 	}
+	
+	
 }

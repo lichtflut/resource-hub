@@ -13,6 +13,7 @@ import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -20,6 +21,8 @@ import org.arastreju.sge.security.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.lichtflut.rb.core.eh.ErrorCodes;
+import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
 import de.lichtflut.rb.core.messaging.MessageDescription;
 import de.lichtflut.rb.core.messaging.MessageType;
@@ -49,14 +52,15 @@ public class EmailServiceImpl implements EmailService {
 
 	/** 
 	 * {@inheritDoc}
+	 * @throws RBException 
 	 */
 	@Override
-	public void sendPasswordInformation(User user, String password, EmailConfiguration conf, Locale locale) {
+	public void sendPasswordInformation(User user, String password, EmailConfiguration conf, Locale locale) throws RBException {
 		MessageDescription desc = new MessageDescription(locale);
 		desc.setType(MessageType.PASSWORD_INFORMATION_MAIL);
 		desc.setRecipient(user.getEmail());
 		desc.setRecipientName(user.getName());
-		desc.setSender(conf.getApplicationSupportName());
+		desc.setSender(conf.getApplicationEmail());
 		desc.setSenderName(conf.getApplicationSupportName());
 		new TextModules().insertMailFor(desc);
 		sendMail(desc, conf);
@@ -65,9 +69,10 @@ public class EmailServiceImpl implements EmailService {
 
 	/** 
 	 * {@inheritDoc}
+	 * @throws RBException 
 	 */
 	@Override
-	public void sendRegistrationConfirmation(User user, EmailConfiguration conf, Locale locale) {
+	public void sendRegistrationConfirmation(User user, EmailConfiguration conf, Locale locale) throws RBException {
 		MessageDescription desc = new MessageDescription(locale);
 		desc.setType(MessageType.REGISTRATION_CONFIRMATION_MAIL);
 		desc.setRecipient(user.getEmail());
@@ -80,9 +85,10 @@ public class EmailServiceImpl implements EmailService {
 
 	/** 
 	 * {@inheritDoc}
+	 * @throws RBException 
 	 */
 	@Override
-	public void sendAccountActivatedInformation(User user, EmailConfiguration conf, Locale locale) {
+	public void sendAccountActivatedInformation(User user, EmailConfiguration conf, Locale locale) throws RBException {
 		MessageDescription desc = new MessageDescription(locale);
 		desc.setType(MessageType.ACCOUNT_ACTIVATED_MAIL);
 		desc.setRecipient(user.getEmail());
@@ -95,8 +101,9 @@ public class EmailServiceImpl implements EmailService {
 	
 	/**
 	 * {@inheritDoc}
+	 * @throws RBException 
 	 */
-	private void sendMail(MessageDescription desc, EmailConfiguration conf) {
+	private void sendMail(MessageDescription desc, EmailConfiguration conf) throws RBException {
 		try {
 			Message mail = new MimeMessage(initSession(conf));
 			mail.setFrom(new InternetAddress(desc.getSender(), desc.getSenderName()));
@@ -104,13 +111,13 @@ public class EmailServiceImpl implements EmailService {
 			mail.setSubject(desc.getSubject());
 			mail.setText(desc.getContent());
 			// TODO ENABLE EMAIL 
-//			Transport.send(mail);
+			Transport.send(mail);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("UnsupportedEncodingException");
+			throw new RBException(ErrorCodes.EMAIL_SERVICE_EXCEPTIO, "UnsupportedEncodingException", e);
 		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("MessagingException");
+			throw new RBException(ErrorCodes.EMAIL_SERVICE_EXCEPTIO, "MessagingException", e);
 		}
 		logger.info("Send email '" + desc.getSubject() + "' from " + desc.getSender() + " to " + desc.getRecipient());
 	}

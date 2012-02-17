@@ -23,4 +23,6 @@ public interface ErrorCodes {
 	public static final Long SECURITYSERVICE_ID_ALREADY_IN_USE = 1201L;
 	public static final Long SECURITYSERVICE_ALTERNATEID_ALREADY_IN_USE = 1202L;
 	
+	public static final Long EMAIL_SERVICE_EXCEPTIO = 1300L;
+	
 }

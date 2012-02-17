@@ -235,9 +235,10 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 
 	/** 
 	 * {@inheritDoc}
+	 * @throws RBException 
 	 */
 	@Override
-	public void resetPasswordForUser(User user, EmailConfiguration conf, Locale locale) {
+	public void resetPasswordForUser(User user, EmailConfiguration conf, Locale locale) throws RBException {
 		//TODO change generated pwd 
 		String newPwd = "changed";
 		String generatedPwd = Crypt.md5Hex(newPwd);

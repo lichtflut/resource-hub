@@ -15,6 +15,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.arastreju.sge.security.User;
 
+import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -85,8 +86,12 @@ public abstract class ResetPasswordPanel extends Panel {
 		if(user == null) {
 			error(getString("message.no-user-found"));
 		} else {
-			provider.getSecurityService().resetPasswordForUser(user, getEmailConfig(), getLocale());
-			info(getString("message.password-changed"));
+			try {
+				provider.getSecurityService().resetPasswordForUser(user, getEmailConfig(), getLocale());
+				info(getString("message.password-changed"));
+			} catch (RBException e) {
+				error(getString("error.send.email"));
+			}
 		}
 	}
 

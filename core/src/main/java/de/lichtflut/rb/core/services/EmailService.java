@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import org.arastreju.sge.security.User;
 
+import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
 
 /**
@@ -25,21 +26,24 @@ public interface EmailService {
 	 * @param user
 	 * @param password
 	 * @param locale
+	 * @throws RBException 
 	 */
-	void sendPasswordInformation(User user, String password, EmailConfiguration conf, Locale locale);
+	void sendPasswordInformation(User user, String password, EmailConfiguration conf, Locale locale) throws RBException;
 
 	/**
 	 * Sends an email to inform a {@link User} of a successful account creation.
 	 * @param user
 	 * @param locale 
+	 * @throws RBException 
 	 */
-	void sendRegistrationConfirmation(User user, EmailConfiguration conf, Locale locale);
+	void sendRegistrationConfirmation(User user, EmailConfiguration conf, Locale locale) throws RBException;
 
 	/**
 	 * Sends an email to inform a {@link User} that his account has been activated.
 	 * @param user
 	 * @param locale
+	 * @throws RBException 
 	 */
-	void sendAccountActivatedInformation(User user, EmailConfiguration conf, Locale locale);
+	void sendAccountActivatedInformation(User user, EmailConfiguration conf, Locale locale) throws RBException;
 
 }

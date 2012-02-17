@@ -56,8 +56,9 @@ public interface SecurityService {
 	 * Resets the password with a generated one.
 	 * @param user
 	 * @return the new password
+	 * @throws RBException 
 	 */
-	void resetPasswordForUser(User user, EmailConfiguration conf, Locale locale);
+	void resetPasswordForUser(User user, EmailConfiguration conf, Locale locale) throws RBException;
 
 	/**
 	 * Change the primary ID for a user. !!This also changes the users email-address and unique name!!
