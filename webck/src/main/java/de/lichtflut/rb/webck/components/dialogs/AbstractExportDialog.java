@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.dialogs;
 
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 
@@ -29,7 +30,7 @@ public abstract class AbstractExportDialog extends AbstractRBDialog implements I
 	}
 
 	protected CharSequence getDownloadUrl() {
-		return urlFor(IResourceListener.INTERFACE);
+		return urlFor(IResourceListener.INTERFACE, new PageParameters());
 	}
 
 	/** 

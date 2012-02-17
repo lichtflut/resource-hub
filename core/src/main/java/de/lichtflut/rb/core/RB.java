@@ -52,6 +52,12 @@ public interface RB {
 
 	ResourceID LOCATION = new SimpleResourceID(COMMON_NAMESPACE_URI, "Location");
 	
+	ResourceID CITY = new SimpleResourceID(COMMON_NAMESPACE_URI, "City");
+	
+	ResourceID COUNTRY = new SimpleResourceID(COMMON_NAMESPACE_URI, "Country");
+	
+	ResourceID CONTINENT = new SimpleResourceID(COMMON_NAMESPACE_URI, "Continent");
+	
 	ResourceID PERSON = new SimpleResourceID(COMMON_NAMESPACE_URI, "Person");
 	
 	ResourceID ORGANIZATION = new SimpleResourceID(COMMON_NAMESPACE_URI, "Organization");
@@ -196,6 +202,11 @@ public interface RB {
 	ResourceID HAS_COUNTRY = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasCountry");
 	
 	/**
+	 * The country.
+	 */
+	ResourceID HAS_CONTINENT = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasContinent");
+	
+	/**
 	 * The owner.
 	 */
 	ResourceID HAS_OWNER = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasOwner");
@@ -209,5 +220,21 @@ public interface RB {
 	 * Is non-profit organization.
 	 */
 	ResourceID IS_NPO = new SimpleResourceID(COMMON_NAMESPACE_URI, "isNPO");
+	
+	/**
+	 * Populations size of a location.
+	 */
+	ResourceID HAS_POPULATION_SIZE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasPopulationSize");
+	
+	/**
+	 * ISO alpha 2 code of a country.
+	 */
+	ResourceID HAS_ISO_ALPHA2_CODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasIsoAplpha2Code");
+	
+	/**
+	 * ISO alpha 3 code of a country.
+	 */
+	ResourceID HAS_ISO_ALPHA3_CODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasIsoAplpha3Code");
+	
 
 }

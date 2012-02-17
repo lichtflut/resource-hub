@@ -19,6 +19,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceStreamResource;
@@ -109,7 +110,7 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 	}
 	
 	protected CharSequence getDownloadUrl() {
-		return urlFor(IResourceListener.INTERFACE);
+		return urlFor(IResourceListener.INTERFACE, new PageParameters());
 	}
 	
 	protected ResourceStreamResource prepareResource(final IModel<String> format) {
