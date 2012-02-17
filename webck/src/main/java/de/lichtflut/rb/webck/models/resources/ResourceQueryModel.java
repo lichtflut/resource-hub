@@ -10,7 +10,7 @@ import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
 /**
  * <p>
@@ -23,31 +23,48 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
  *
  * @author Oliver Tigges
  */
-public class ResourceQueryModel extends AbstractLoadableDetachableModel<List<ResourceNode>> {
+public class ResourceQueryModel extends DerivedDetachableModel<List<ResourceNode>, Query> {
 
-	final IModel<Query> queryModel;
-	
+	private int maxResults;
+
 	// ----------------------------------------------------
 	
 	/**
 	 * @param queryModel
 	 */
 	public ResourceQueryModel(IModel<Query> queryModel) {
-		this.queryModel = queryModel;
+		super(queryModel);
+	}
+	
+	/**
+	 * @param queryModel
+	 */
+	public ResourceQueryModel(IModel<Query> queryModel, int maxResults) {
+		super(queryModel);
+		this.maxResults = maxResults;
 	}
 	
 	// ----------------------------------------------------
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected List<ResourceNode> derive(final Query query) {
+		if (maxResults > 0) {
+			return query.getResult().toList(maxResults);
+		} else {
+			return query.getResult().toList();
+		}
+		
+	}
 	
 	/** 
-	* {@inheritDoc}
-	*/
+	 * {@inheritDoc}
+	 */
 	@Override
-	public List<ResourceNode> load() {
-		if (queryModel.getObject() != null) {
-			return queryModel.getObject().getResult().toList();
-		} else {
-			return Collections.emptyList();
-		}
+	public List<ResourceNode> getDefault() {
+		return Collections.emptyList();
 	}
 
 }

@@ -9,8 +9,10 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>core</module>
+		<module>tools</module>
 		<module>webck</module>
 		<module>websample</module>
+		<module>mock</module>
 	</modules>
 	<build>
 		<pluginManagement>

@@ -58,7 +58,6 @@ public final class RBEntityTest {
         SchemaManager sm = sp.getSchemaManager();
 
         sm.store(schema);
-        System.out.println("**********"+sm.findAllResourceSchemas().size());
 
         // Add a Email to the entities
         e1.getField(new SimpleResourceID("http://lichtflut.de#hatEmail")).addValue("mutter@fam.com");
@@ -87,13 +86,10 @@ public final class RBEntityTest {
         m.store(e2);
 
         // Tests
-        System.out.println(m.find(e1.getID()).getAllFields());
         Assert.assertEquals(4, m.find(e1.getID()).getAllFields().size());
         Assert.assertEquals(2, m.findByType(new SimpleResourceID("http://lf.de#", "Person")).size());
 
         m.delete(e1.getID());
-        System.out.println("-->"+m.find(e1.getID()));
-        // System.out.println(MockNewRBEntityFactory.createNewRBEntity().getID());
     }
 
     /**

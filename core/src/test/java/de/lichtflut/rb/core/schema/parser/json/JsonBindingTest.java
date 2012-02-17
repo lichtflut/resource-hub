@@ -65,8 +65,6 @@ public class JsonBindingTest {
 		exporter.write(out, elements);
 		final byte[] bytes = out.toByteArray();
 		
-		System.out.println(new String(bytes));
-		
 		final JsonSchemaParser importer = new JsonSchemaParser();
 		importer.parse(new ByteArrayInputStream(bytes));
 	}
@@ -95,7 +93,7 @@ public class JsonBindingTest {
 	@Test
 	public void testSchemaImport() throws IOException {
 		final InputStream in = 
-				getClass().getClassLoader().getResourceAsStream("test-schema.json");
+				Thread.currentThread().getContextClassLoader().getResourceAsStream("test-schema.json");
 		final JsonSchemaParser parser = new JsonSchemaParser();
 		final ParsedElements result = parser.parse(in);
 		Assert.assertEquals(5, result.getSchemas().size());

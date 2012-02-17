@@ -264,7 +264,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * @param domain The domain.
 	 */
 	private void registerUserInMasterDomain(User user, String domain) {
-		final ModelingConversation mc = mc();
+		final ModelingConversation mc = masterGate().startConversation();
 		final ResourceNode userNode = new SNResource();
 		Set<SemanticNode> ids = SNOPS.objects(user, Aras.IDENTIFIED_BY);
 		for (SemanticNode node : ids) {
