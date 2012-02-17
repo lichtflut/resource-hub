@@ -135,6 +135,5 @@
 			<version>1.9</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 </project>

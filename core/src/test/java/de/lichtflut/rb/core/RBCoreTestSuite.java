@@ -8,7 +8,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import de.lichtflut.rb.core.rbentity.persistence.RBEntityTest;
-import de.lichtflut.rb.core.schema.persistence.OSFPersistenceTest;
 
 /**
  * <p>
@@ -23,6 +22,6 @@ import de.lichtflut.rb.core.schema.persistence.OSFPersistenceTest;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses({RBEntityTest.class, OSFPersistenceTest.class})
+@SuiteClasses({RBEntityTest.class})
 public class RBCoreTestSuite {
 }

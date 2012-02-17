@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.messaging;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -22,17 +23,32 @@ public class TextModules {
 	private static final String PASSWORD = "password";
 	private static final String SENDER = "sender";
 	
+	private static TextModules INSTANCE;
+	
+	// ---------------- Constructor -------------------------
+	
+	/**
+	 * Default Constructor.
+	 */
+	public TextModules(){}
+	
 	// ------------------------------------------------------
 
+	public static TextModules getInstance(){
+		if(INSTANCE == null){
+			INSTANCE = new TextModules();
+		}
+		return INSTANCE;
+	}
+	
 	/**
 	 * The subject and content is set according to the {@link MessageType} provided by the {@link MessageDescription}.
 	 * @param desc
 	 * @param locale
-	 * @return an Emailtext for a given Locale.
 	 */
-	public static String getMailFor(MessageDescription desc){
+	public void insertMailFor(MessageDescription desc){
 		String content = "";
-		ResourceBundle bundle = ResourceBundle.getBundle("de/lichtflut/rb/core/messaging/EmailTextModules", desc.getLocale());
+		ResourceBundle bundle = getResourceBundle(desc.getLocale());
 		switch (desc.getType()){
 			case PASSWORD_INFORMATION_MAIL:
 				content = bundle.getString("password-information");
@@ -48,17 +64,25 @@ public class TextModules {
 				content = bundle.getString("account-activated-information");
 				content = replaceVariables(desc, content);
 				desc.setSubject(bundle.getString("account-activated-information-subject"));
+				break;
 		}
 		desc.setContent(content);
-		return content;
 	}
 
+	/**
+	 * @param locale
+	 * @return a {@link ResourceBundle} containing email related content
+	 */
+	protected ResourceBundle getResourceBundle(Locale locale){
+		return ResourceBundle.getBundle("de/lichtflut/rb/core/messaging/EmailTextModules", locale);
+	}
+	
 	/**
 	 * Replaces
 	 * @param desc - {@link MessageDescription}
 	 * @param content
 	 */
-	private static String replaceVariables(MessageDescription desc, String content) {
+	private String replaceVariables(MessageDescription desc, String content) {
 		content = replace(RECIPIENT, desc.getRecipientName(), content);
 		content = replace(PASSWORD, desc.getPassword(), content);
 		content = replace(SENDER, desc.getSenderName(), content);

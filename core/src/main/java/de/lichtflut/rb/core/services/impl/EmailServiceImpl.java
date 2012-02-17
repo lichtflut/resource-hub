@@ -43,8 +43,7 @@ public class EmailServiceImpl implements EmailService {
 	
 	// ---------------- Constructor -------------------------
 	
-	public EmailServiceImpl(){
-	}
+	public EmailServiceImpl(){}
 	
 	// ------------------------------------------------------
 
@@ -59,7 +58,7 @@ public class EmailServiceImpl implements EmailService {
 		desc.setRecipientName(user.getName());
 		desc.setSender(conf.getApplicationSupportName());
 		desc.setSenderName(conf.getApplicationSupportName());
-		desc.setContent(TextModules.getMailFor(desc));
+		new TextModules().insertMailFor(desc);
 		sendMail(desc, conf);
 	}
 
@@ -75,10 +74,9 @@ public class EmailServiceImpl implements EmailService {
 		desc.setRecipientName(user.getName());
 		desc.setSender(conf.getApplicationSupportEmail());
 		desc.setSenderName(conf.getApplicationSupportName());
-		desc.setContent(TextModules.getMailFor(desc));
+		new TextModules().insertMailFor(desc);
 		sendMail(desc, conf);
 	}
-	
 
 	/** 
 	 * {@inheritDoc}
@@ -89,7 +87,7 @@ public class EmailServiceImpl implements EmailService {
 		desc.setType(MessageType.ACCOUNT_ACTIVATED_MAIL);
 		desc.setRecipient(user.getEmail());
 		desc.setRecipientName(user.getName());
-		desc.setContent(TextModules.getMailFor(desc));
+		new TextModules().insertMailFor(desc);
 		sendMail(desc, conf);
 	}
 	
