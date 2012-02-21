@@ -3,6 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.notes;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -19,18 +23,17 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.query.Query;
+import org.arastreju.sge.query.QueryResult;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.*;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.dialogs.EditNoteDialog;
-import static de.lichtflut.rb.webck.models.ConditionalModel.*;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.basic.LoadableModel;
-import de.lichtflut.rb.webck.models.resources.ResourceQueryModel;
+import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
 
 /**
  * <p>
@@ -61,7 +64,7 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 		
 		setOutputMarkupId(true);
 		
-		final LoadableModel<List<ResourceNode>> listModel = new ResourceQueryModel(new QueryModel(resource));
+		final LoadableModel<List<ResourceNode>> listModel = new ResourceQueryResultModel(new QueryModel(resource));
 		
 		final ListView<ResourceNode> view = new ListView<ResourceNode>("notesList", listModel) {
 			@Override
@@ -157,7 +160,7 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 		}
 	}
 
-	private class QueryModel extends DerivedModel<Query, ResourceID> {
+	private class QueryModel extends DerivedModel<QueryResult, ResourceID> {
 
 		/**
 		 * @param original
@@ -170,10 +173,10 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 		* {@inheritDoc}
 		*/
 		@Override
-		protected Query derive(ResourceID original) {
+		protected QueryResult derive(ResourceID original) {
 			final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
 			query.addField(RBSystem.IS_ATTACHED_TO, original.getQualifiedName().toURI());
-			return query;
+			return query.getResult();
 		}
 		
 	}

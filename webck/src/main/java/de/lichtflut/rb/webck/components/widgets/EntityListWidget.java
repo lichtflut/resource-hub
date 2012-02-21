@@ -39,6 +39,7 @@ import de.lichtflut.rb.webck.components.widgets.config.EntityListWidgetConfigPan
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.basic.PageableModel;
 import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
 
 /**
@@ -55,10 +56,6 @@ import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
 public class EntityListWidget extends ConfigurableWidget {
 
 	public static final int MAX_RESULTS = 15;
-	
-	private IModel<Integer> pagesize = new Model<Integer>(MAX_RESULTS);
-	
-	private IModel<Integer> offset = new Model<Integer>(0);
 	
 	@SpringBean
 	protected ServiceProvider provider;
@@ -80,8 +77,10 @@ public class EntityListWidget extends ConfigurableWidget {
 		setOutputMarkupId(true);
 		
 		IModel<QueryResult> queryModel = modelFor(spec);
-		IModel<List<ResourceNode>> content = new ResourceQueryResultModel(queryModel, pagesize, offset);
 		IModel<ColumnConfiguration> config = configModel(spec);
+		
+		final PageableModel<ResourceNode> content = 
+				new ResourceQueryResultModel(queryModel, new Model<Integer>(MAX_RESULTS), new Model<Integer>(0));
 		
 		getDisplayPane().add(new ResourceListPanel("listView", content, config) {
 			protected Component createViewAction(String componentId, ResourceNode entity) {
@@ -93,7 +92,7 @@ public class EntityListWidget extends ConfigurableWidget {
 			};
 		});
 		
-		getDisplayPane().add(new ListPagerPanel("pager", queryModel, offset, pagesize) {
+		getDisplayPane().add(new ListPagerPanel("pager", content.getResultSize(), content.getOffset(), content.getPageSize()) {
 			public void onPage() {
 				RBAjaxTarget.add(EntityListWidget.this);
 			};

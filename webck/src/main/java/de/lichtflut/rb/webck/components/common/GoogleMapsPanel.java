@@ -30,13 +30,13 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
 public class GoogleMapsPanel extends Panel {
 
 	/**
-	 * @param id
-	 * @param model
+	 * @param id The component ID.
+	 * @param location Model representing the location as a string.
 	 */
-	public GoogleMapsPanel(String id, IModel<String> addressModel) {
-		super(id, addressModel);
+	public GoogleMapsPanel(String id, IModel<String> location) {
+		super(id, location);
 		
-		final IModel<String> uriModel = new DerivedModel<String, String>(addressModel) {
+		final IModel<String> uriModel = new DerivedModel<String, String>(location) {
 			@Override
 			protected String derive(String original) {
 				try {
@@ -51,7 +51,7 @@ public class GoogleMapsPanel extends Panel {
 		
 		final WebMarkupContainer map = new WebMarkupContainer("map");
 		map.add(new AttributeModifier("src", uriModel));
-		map.add(visibleIf(isNotNull(addressModel)));
+		map.add(visibleIf(isNotNull(location)));
 		add(map);
 	}
 	

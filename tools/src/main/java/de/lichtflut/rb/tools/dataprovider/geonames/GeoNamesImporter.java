@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import de.lichtflut.infra.Infra;
 import de.lichtflut.infra.logging.StopWatch;
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.apriori.Geonames;
 
 /**
@@ -45,8 +46,8 @@ import de.lichtflut.rb.core.apriori.Geonames;
  */
 public class GeoNamesImporter {
 	
-	public static final int MIN_POPULATION = 900000;
-	public static final int MIN_POPULATION_GERMANY = 90000;
+	public static final int MIN_POPULATION = 200000;
+	public static final int MIN_POPULATION_GERMANY = 9000;
 	
 	private static Logger logger = org.slf4j.LoggerFactory.getLogger(GeoNamesImporter.class);
 	
@@ -84,6 +85,8 @@ public class GeoNamesImporter {
 				country = new SNResource(qn);
 			}
 			addName(country, record.getName());
+			SNOPS.associate(country, RDF.TYPE, RB.COUNTRY);
+			SNOPS.associate(country, RDF.TYPE, RBSystem.ENTITY);
 			SNOPS.assure(country, RB.HAS_ISO_ALPHA2_CODE, new SNText(record.getIso2()));
 			SNOPS.assure(country, RB.HAS_ISO_ALPHA3_CODE, new SNText(record.getIso3()));
 			SNOPS.assure(country, RB.HAS_CONTINENT, getContinent(record));
@@ -108,6 +111,8 @@ public class GeoNamesImporter {
 				QualifiedName qn = new QualifiedName(Geonames.GEO_NAMESPACE_URI, name);
 				ResourceNode city = new SNResource(qn);
 				addName(city, record.getName());
+				SNOPS.associate(city, RDF.TYPE, RB.CITY);
+				SNOPS.associate(city, RDF.TYPE, RBSystem.ENTITY);
 				city.addAssociation(RDF.TYPE, RB.CITY);
 				city.addAssociation(RB.HAS_POPULATION_SIZE, new SNScalar(record.getPopulation()));
 				

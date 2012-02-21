@@ -5,11 +5,12 @@ package de.lichtflut.rb.core.common;
 
 import java.util.Locale;
 
-import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.Statement;
+import org.arastreju.sge.model.nodes.ValueNode;
 
+import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.RBSystem;
 
 /**
@@ -57,11 +58,23 @@ public class ResourceLabelBuilder {
 		if (predicate == null || src == null) {
 			return null;
 		}
-		final SemanticNode label = SNOPS.fetchObject(src.asResource(), predicate);
-		if (label != null && label.isValueNode()) {
-			return label.asValue().getStringValue();
-		} else {
-			return null;
+		String first = null;
+		String noLanguage = null;
+		String matchingLanguage = null;
+		for (Statement statement : src.asResource().getAssociations(predicate)) {
+			if (statement.getObject().isValueNode()) {
+				final ValueNode value = statement.getObject().asValue();
+				if (Infra.equals(value.getLocale(), locale)) {
+					return value.getStringValue();
+				} else if (matchingLanguage == null && value.getLocale() != null && Infra.equals(locale.getLanguage(), value.getLocale().getLanguage())) {
+					matchingLanguage = value.getStringValue();
+				} else if (noLanguage == null && value.getLocale() == null) {
+					noLanguage = value.getStringValue();
+				}else if (first == null) {
+					first = value.getStringValue();
+				}
+			}
 		}
+		return Infra.coalesce(matchingLanguage, noLanguage, first);
 	}
 }

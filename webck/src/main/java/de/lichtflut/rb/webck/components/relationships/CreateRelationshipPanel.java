@@ -47,6 +47,9 @@ import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
  * @author Oliver Tigges
  */
 public class CreateRelationshipPanel extends Panel {
+	
+	@SpringBean
+	private ServiceProvider provider;
 
 	private final IModel<RBEntity> subjectModel;
 	
@@ -55,9 +58,6 @@ public class CreateRelationshipPanel extends Panel {
 	private final IModel<ResourceID> objectModel = new Model<ResourceID>();
 	
 	private final IModel<Boolean> objectSelected = Model.of(Boolean.FALSE);
-	
-	@SpringBean
-	private ServiceProvider provider;
 	
 	// ----------------------------------------------------
 	

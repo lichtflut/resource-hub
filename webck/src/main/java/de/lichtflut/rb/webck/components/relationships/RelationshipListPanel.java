@@ -37,8 +37,9 @@ import de.lichtflut.rb.webck.components.listview.ActionLink;
 public abstract class RelationshipListPanel extends Panel {
 
 	/**
-	 * @param id
-	 * @param model
+	 * Constructor.
+	 * @param id The component ID.
+	 * @param model The model containing the statements.
 	 */
 	public RelationshipListPanel(final String id, final IModel<List<Statement>> model) {
 		super(id, model);
