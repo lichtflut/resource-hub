@@ -32,10 +32,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
-import wicket.contrib.tinymce.settings.Button;
-import wicket.contrib.tinymce.settings.TinyMCESettings;
-import wicket.contrib.tinymce.settings.TinyMCESettings.Location;
-import wicket.contrib.tinymce.settings.TinyMCESettings.Theme;
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
@@ -228,56 +224,9 @@ public class EntityRowEditPanel extends Panel {
 	
 	private FormComponent<?> addRichTextArea(ListItem<RBFieldValueModel> item) {
 		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(item.getModelObject()));
-		TinyMCESettings settings = new TinyMCESettings(Theme.advanced);
-		configureToolbar(settings);
-		field.add(new TinyMceBehavior(settings));
+		field.add(new TinyMceBehavior());
 		item.add(new Fragment("valuefield", "textArea", this).add(field));
 		return field;
-	}
-
-	/**
-	 * @param settings
-	 */
-	private void configureToolbar(TinyMCESettings settings) {
-		settings.setResizing(false);
-		settings.setToolbarLocation(Location.top);
-		configureToolbarButtons(settings);
-	}
-
-	/**
-	 * @param settings
-	 */
-	private void configureToolbarButtons(TinyMCESettings settings) {
-		settings.disableButton(Button.anchor);
-		settings.disableButton(Button.backcolor);
-		settings.disableButton(Button.charmap);
-		settings.disableButton(Button.cleanup);
-		settings.disableButton(Button.copy);
-		settings.disableButton(Button.cut);
-		settings.disableButton(Button.fontselect);
-		settings.disableButton(Button.fontsizeselect);
-		settings.disableButton(Button.forecolor);
-//		settings.disableButton(Button.formatselect);
-		settings.disableButton(Button.help);
-		settings.disableButton(Button.hr);
-		settings.disableButton(Button.image);
-		settings.disableButton(Button.indent);
-		settings.disableButton(Button.justifycenter);
-		settings.disableButton(Button.justifyfull);
-		settings.disableButton(Button.justifyleft);
-		settings.disableButton(Button.justifyright);
-		settings.disableButton(Button.link);
-		settings.disableButton(Button.newdocument);
-		settings.disableButton(Button.outdent);
-		settings.disableButton(Button.redo);
-		settings.disableButton(Button.removeformat);
-		settings.disableButton(Button.strikethrough);
-		settings.disableButton(Button.styleselect);
-		settings.disableButton(Button.sub);
-		settings.disableButton(Button.sup);
-		settings.disableButton(Button.undo);
-		settings.disableButton(Button.unlink);
-		settings.disableButton(Button.visualaid);
 	}
 	
 	// ----------------------------------------------------

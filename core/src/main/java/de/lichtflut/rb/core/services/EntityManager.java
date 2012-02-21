@@ -16,11 +16,9 @@ import de.lichtflut.rb.core.entity.RBEntity;
 public interface EntityManager {
 
     /**
-     *
-     * @param resourceID /
+     * Find an Entity by its {@link ResourceID}.
+     * @param resourceID  of the Entity
      * @return {@link RBEntity}
-     *
-     * Returns an Entity for a given ResourceID.
      */
     RBEntity find(ResourceID resourceID);
 
@@ -34,19 +32,18 @@ public interface EntityManager {
     // -----------------------------------------------------
     
     /**
-     * Create and initialize a new {@link RBEntity} with given type. The entitiy will not
-     * be stored. 
+     * Create and initialize a new {@link RBEntity} with given type.
      */
     RBEntity create(ResourceID type);
     
     /**
-     * Stores an Entity.
+     * Store an Entity.
      * @param entity The entity.
      */
     void store(RBEntity entity);
 
     /**
-     * Deletes an {@link RBEntity}.
+     * Delete an {@link RBEntity}.
      * @param entityID - The ID of the entity to be deleted
      */
     void delete(ResourceID entityID);

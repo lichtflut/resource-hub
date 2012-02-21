@@ -86,15 +86,12 @@
 			<scope>provided</scope>
 			<optional>false</optional>
 		</dependency>
+		
+		<!-- HTML-SANITIZER -->
 		<dependency>
 			<groupId>org.owasp.antisamy</groupId>
 			<artifactId>antisamy</artifactId>
 			<version>1.4.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wicketstuff</groupId>
-			<artifactId>wicketstuff-tinymce</artifactId>
-			<version>${wicketstuff-tinymce.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

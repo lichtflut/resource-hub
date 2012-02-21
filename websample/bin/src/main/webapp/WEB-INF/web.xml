@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	 version="2.4">
+
+	<display-name>lf.resource-browser</display-name>
+
+	<filter>
+        <filter-name>spring.request-context-filter</filter-name>
+        <filter-class>org.springframework.web.filter.RequestContextFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>rb.filter</filter-name>
+		<filter-class>de.lichtflut.rb.webck.application.RBServletFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>wicket.lf.resource-browser</filter-name>
+ 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>de.lichtflut.rb.websample.WebSampleApplication</param-value>
+ 		</init-param>
+ 		<init-param>
+	        <param-name>applicationFactoryClassName</param-name>
+	        <param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
+	    </init-param>
+ 	</filter>
+ 	
+ 	<filter-mapping>
+		<filter-name>spring.request-context-filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>rb.filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>wicket.lf.resource-browser</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>ERROR</dispatcher>
+	</filter-mapping>
+	
+	<servlet>
+	   <servlet-name>QueryServlet</servlet-name>
+	   <servlet-class>de.lichtflut.rb.websample.extensions.WebSampleResourceQueryServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+	   <servlet-name>QueryServlet</servlet-name>
+	   <url-pattern>/internal/query/*</url-pattern>
+	</servlet-mapping>
+
+	<context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/applicationContext.xml</param-value>
+    </context-param>
+    
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+</web-app>
