@@ -115,6 +115,7 @@ public class EntityManagerImplTest {
 		assertNotNull(entity);
 		assertNull(entity.getType());
 
+		
 		// find entity with type
 		when(mc.findResource(user.getQualifiedName())).thenReturn(user);
 		when(provider.getSchemaManager().findSchemaForType(RB.PERSON)).thenReturn(null);
@@ -124,6 +125,7 @@ public class EntityManagerImplTest {
 		assertNotNull(e.getType());
 		assertFalse(e.hasSchema());
 
+		
 		// find entity with type, schema
 		when(mc.findResource(user.getQualifiedName())).thenReturn(user);
 		when(provider.getSchemaManager().findSchemaForType(RB.PERSON)).thenReturn(new ResourceSchemaImpl(RB.PERSON));
@@ -133,6 +135,7 @@ public class EntityManagerImplTest {
 		assertNotNull(e1.getType());
 		assertTrue(e1.hasSchema());
 
+		
 		// find non-existing Entity
 		ResourceID nullID = new SimpleResourceID();
 		when(mc.findResource(nullID.getQualifiedName())).thenReturn(null);
