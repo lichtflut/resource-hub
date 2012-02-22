@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.components.navigation;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
 
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -21,8 +22,10 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.editor.VisualizationMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
@@ -56,6 +59,8 @@ public class BreadCrumbsBar extends Panel {
 	 */
 	public BreadCrumbsBar(String id, int max) {
 		super(id);
+		
+		setOutputMarkupId(true);
 
 		// the links for the last entries - excluding the current
 		final ListView<EntityBrowsingStep> view = new ListView<EntityBrowsingStep>("linkList", new EntityHistoryModel(max -1, true)) {
@@ -87,6 +92,19 @@ public class BreadCrumbsBar extends Panel {
 		
 		// special link for the current entry
 		add(createCurrentEntityLink());
+	}
+	
+	// ----------------------------------------------------
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void onEvent(final IEvent<?> event) {
+		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
+		if (mce.isAbout(ModelChangeEvent.ENTITY)) {
+			RBAjaxTarget.add(this);
+		}
 	}
 	
 	// ----------------------------------------------------
