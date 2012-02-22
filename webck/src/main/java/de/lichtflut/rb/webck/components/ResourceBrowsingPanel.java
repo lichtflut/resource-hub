@@ -45,7 +45,7 @@ import de.lichtflut.rb.webck.models.entity.RBEntityModel;
 @SuppressWarnings("rawtypes")
 public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
-	private RBEntityModel model;
+	private final RBEntityModel model = new RBEntityModel();
 	
 	@SpringBean
 	private ServiceProvider provider;
@@ -58,13 +58,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	 */
 	public ResourceBrowsingPanel(final String id) {
 		super(id);
-		
-		model = new RBEntityModel() {
-			@Override
-			protected ServiceProvider getServiceProvider() {
-				return provider;
-			}
-		};
 		
 		final Form form = new Form("form");
 		form.setOutputMarkupId(true);

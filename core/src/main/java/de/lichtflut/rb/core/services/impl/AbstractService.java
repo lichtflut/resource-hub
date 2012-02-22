@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.services.impl;
 
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.spi.GateContext;
@@ -49,7 +50,7 @@ public class AbstractService {
 	// ----------------------------------------------------
 	
 	protected ResourceNode currentUser() {
-		final ResourceNode user = getProvider().getContext().getUser();
+		final ResourceID user = getProvider().getContext().getUser();
 		if (user == null) {
 			return null;
 		} else {

@@ -7,7 +7,9 @@ import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.security.User;
+import org.arastreju.sge.security.impl.SNUser;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
@@ -84,9 +86,11 @@ public class RBWebSession extends WebSession {
 	// ----------------------------------------------------
 	
 	private void retriveUserFromContext() {
-		user = provider.getContext().getUser();
-		if (user == null) {
+		ResourceID id = provider.getContext().getUser();
+		if (id == null) {
 			invalidate();
+		} else {
+			user = new SNUser(provider.getResourceResolver().resolve(id));
 		}
 	}
 	

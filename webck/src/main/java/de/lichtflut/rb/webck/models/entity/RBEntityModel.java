@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.webck.models.entity;
 
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +25,12 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
  *
  * @author Oliver Tigges
  */
-public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
+public class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 	
 	private final Logger logger = LoggerFactory.getLogger(RBEntityModel.class);
+	
+	@SpringBean
+	private ServiceProvider provider;
 
 	// -----------------------------------------------------
 	
@@ -33,6 +38,7 @@ public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 	 * Default constructor.
 	 */
 	public RBEntityModel() {
+		Injector.get().inject(this);
 	}
 	
 	// ----------------------------------------------------
@@ -45,11 +51,11 @@ public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 		final EntityHandle handle = RBWebSession.get().getHistory().getCurrentStep().getHandle();
 		if (handle.hasId()) {
 			logger.debug("Loading RB Entity: " + handle.getId());
-			final RBEntity loaded = getServiceProvider().getEntityManager().find(handle.getId());
+			final RBEntity loaded = provider.getEntityManager().find(handle.getId());
 			return loaded;
 		} else if (handle.hasType()){
 			logger.debug("Creating new RB Entity");
-			final RBEntity loaded = getServiceProvider().getEntityManager().create(handle.getType());
+			final RBEntity loaded = provider.getEntityManager().create(handle.getType());
 			handle.setId(loaded.getID());
 			return loaded;
 		} else {
@@ -57,8 +63,4 @@ public abstract class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 		}
 	}
 	
-	// -----------------------------------------------------
-	
-	protected abstract ServiceProvider getServiceProvider();
-
 }
