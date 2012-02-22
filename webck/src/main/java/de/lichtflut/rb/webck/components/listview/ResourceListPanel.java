@@ -20,6 +20,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.core.entity.ResourceField;
+import de.lichtflut.rb.webck.components.navigation.ExtendedActionsPanel;
 import de.lichtflut.rb.webck.conversion.SemanticNodesRenderer;
 import de.lichtflut.rb.webck.models.fields.UndeclaredFieldsListModel;
 
@@ -56,6 +57,8 @@ public class ResourceListPanel extends Panel {
 		add(createHeaders(config));
 		
 		add(createRows(dataModel, config));
+		
+		add(new ExtendedActionsPanel("extendedActionsPanel", dataModel, config));
 	}
 
 	// -- ACTION EVENTS -----------------------------------
