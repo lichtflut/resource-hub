@@ -5,9 +5,12 @@ package de.lichtflut.rb.core.common;
 
 import java.util.Locale;
 
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.ValueNode;
 
 import de.lichtflut.infra.Infra;
@@ -57,11 +60,18 @@ public class ResourceLabelBuilder {
 	private String getLabel(final ResourceID src, final ResourceID predicate, final Locale locale) {
 		if (predicate == null || src == null) {
 			return null;
+		} else if (locale == null) { 
+			return fetchFirst(src.asResource(), predicate);
+		} else {
+			return fetchBest(src.asResource(), predicate, locale);
 		}
+	}
+
+	protected String fetchBest(final ResourceNode src, final ResourceID predicate, final Locale locale) {
 		String first = null;
 		String noLanguage = null;
 		String matchingLanguage = null;
-		for (Statement statement : src.asResource().getAssociations(predicate)) {
+		for (Statement statement : src.getAssociations(predicate)) {
 			if (statement.getObject().isValueNode()) {
 				final ValueNode value = statement.getObject().asValue();
 				if (Infra.equals(value.getLocale(), locale)) {
@@ -76,5 +86,14 @@ public class ResourceLabelBuilder {
 			}
 		}
 		return Infra.coalesce(matchingLanguage, noLanguage, first);
+	}
+
+	protected String fetchFirst(final ResourceNode src, final ResourceID predicate) {
+		SemanticNode object = SNOPS.fetchObject(src, predicate);
+		if (object != null && object.isValueNode()) {
+			return object.asValue().getStringValue();
+		} else {
+			return null;
+		}
 	}
 }

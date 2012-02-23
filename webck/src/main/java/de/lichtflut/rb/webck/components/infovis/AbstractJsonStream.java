@@ -12,10 +12,11 @@ import java.io.OutputStreamWriter;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.time.Time;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Abstract JSON stream.
  * </p>
  *
  * <p>
@@ -62,7 +63,7 @@ public abstract class AbstractJsonStream extends AbstractResourceStream {
 		}
 		return in;
 	}
-
+	
 	/** 
 	* {@inheritDoc}
 	*/
@@ -79,5 +80,21 @@ public abstract class AbstractJsonStream extends AbstractResourceStream {
 	public Bytes length() {
 		return length;
 	}
-
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Time lastModifiedTime() {
+		return Time.now();
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getContentType() {
+		return "application/json";
+	}
+	
 }
