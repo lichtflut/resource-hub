@@ -62,6 +62,7 @@ public class EmailServiceImpl implements EmailService {
 		desc.setRecipientName(user.getName());
 		desc.setSender(conf.getApplicationEmail());
 		desc.setSenderName(conf.getApplicationSupportName());
+		desc.setPassword(password);
 		new TextModules().insertMailFor(desc);
 		sendMail(desc, conf);
 	}

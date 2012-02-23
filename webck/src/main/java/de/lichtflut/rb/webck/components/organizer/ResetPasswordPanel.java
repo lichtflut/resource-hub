@@ -74,6 +74,7 @@ public abstract class ResetPasswordPanel extends Panel {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form){
 				resetPassword();
+				emailModel.setObject("");
 				RBAjaxTarget.add(form);
 			}
 
