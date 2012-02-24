@@ -1,10 +1,12 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.tools.parser.excel;
+package de.lichtflut.rb.tools.dataprovider.expertises;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import jxl.Cell;
 import jxl.Sheet;
@@ -13,6 +15,8 @@ import jxl.read.biff.BiffException;
 
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
+import org.arastreju.sge.io.RdfXmlBinding;
+import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.model.DefaultSemanticGraph;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
@@ -27,7 +31,7 @@ import de.lichtflut.rb.core.RB;
 
 /**
  * <p>
- *  Schema importer from EXCEL format.
+ *  Imports Expertises from an EXCEL file.
  * </p>
  *
  * <p>
@@ -115,6 +119,29 @@ public class ExcelExpertiseParser {
 			}
 		} catch (BiffException e) {
 			throw new IOException("Could not parse Excel Sheet", e);
+		}
+	}
+	
+	public static void main(String[] args) {
+		int startRow = 1;
+		int startColumn = 1;
+		
+		final InputStream in = 
+				Thread.currentThread().getContextClassLoader().getResourceAsStream("expertise-taxonomy.xls");
+		final ExcelExpertiseParser parser = new ExcelExpertiseParser(RB.EXPERTISE, startRow, startColumn);
+		SemanticGraph graph;
+		try {
+			graph = parser.parse(in);
+			OutputStream out = new FileOutputStream("src/main/resources/expertise-taxonomy.rdf.xml");
+			new RdfXmlBinding().write(graph, out);
+			System.out.println("SUCCESS: " +graph.getSubjects().size()
+					+" Expertises imported from excel-file and exported to rdf-file.");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		} catch (SemanticIOException e) {
+			e.printStackTrace();
+			System.exit(1);
 		}
 	}
 }
