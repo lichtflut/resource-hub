@@ -14,8 +14,8 @@ import org.apache.wicket.request.resource.ResourceReference;
  * <p>
  *  This {@link Behavior} adds a RichTextEditor to a HTML input-field.<br>
  *  !!!ATTENTION!!!<br>
- *  Adapted <code> tiny_mce.js</code> so that the referenced <code>n.baseURL</code>
- *	points to <code>wicket/resource/de.lichtflut.rb...</code> which is where the references can be accessed.
+ *  Adapted <code> tiny_mce.js</code> so that resources can be accessed using a propper URL.
+ *  That file should not be changed without having a solid reason!
  * </p>
  *
  * <p>
@@ -28,7 +28,6 @@ public class TinyMceBehavior extends Behavior{
 	
 	private final static ResourceReference TINY_MCE = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/tiny_mce.js");
 	private final static ResourceReference TINY_EN = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/langs/en.js");
-	private final static ResourceReference TINY_EN_THEME = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/langs/en.js");
 	private final static ResourceReference TINY_THEME = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/editor_template.js");
 	private final static ResourceReference UI_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/skins/default/ui.css");
 	private final static ResourceReference CONTENT_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/skins/default/content.css");
@@ -47,8 +46,7 @@ public class TinyMceBehavior extends Behavior{
 	public void renderHead(final Component c, final IHeaderResponse response) {
 		response.renderJavaScriptReference(TINY_MCE);
 		response.renderJavaScriptReference(TINY_THEME);
-		response.renderJavaScriptReference(TINY_EN_THEME);
-		response.renderJavaScriptReference(TINY_EN, null, "lang_en", true);
+		response.renderJavaScriptReference(TINY_EN);
 		response.renderCSSReference(UI_CSS);
 		response.renderCSSReference(CONTENT_CSS);
 		response.renderOnLoadJavaScript("tinyMCE.init({ mode : 'exact', elements : '" + 
