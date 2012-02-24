@@ -6,10 +6,16 @@ package de.lichtflut.rb.webck.behaviors;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * <p>
- *  This {@link Behavior} adds a RichTextEditor to a HTML input-field.
+ *  This {@link Behavior} adds a RichTextEditor to a HTML input-field.<br>
+ *  !!!ATTENTION!!!<br>
+ *  Adapted <code> tiny_mce.js</code> so that the referenced <code>n.baseURL</code>
+ *	points to <code>wicket/resource/de.lichtflut.rb...</code> which is where the references can be accessed.
  * </p>
  *
  * <p>
@@ -20,26 +26,31 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  */
 public class TinyMceBehavior extends Behavior{
 	
-	private Component component;
-
+	private final static ResourceReference TINY_MCE = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/tiny_mce.js");
+	private final static ResourceReference TINY_EN = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/langs/en.js");
+	private final static ResourceReference TINY_EN_THEME = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/langs/en.js");
+	private final static ResourceReference TINY_THEME = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/editor_template.js");
+	private final static ResourceReference UI_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/skins/default/ui.css");
+	private final static ResourceReference CONTENT_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/skins/default/content.css");
+	
 	@Override
 	public void bind(Component component)
 	{
-		if (this.component != null)
-			throw new IllegalStateException(
-					"TinyMceBehavior can not bind to more than one component");
 		super.bind(component);
  		component.setOutputMarkupId(true);
-		this.component = component;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void renderHead(final Component c, final IHeaderResponse response) {
-		c.setOutputMarkupId(true);
-		response.renderJavaScriptReference("tinymce/tiny_mce.js");
+		response.renderJavaScriptReference(TINY_MCE);
+		response.renderJavaScriptReference(TINY_THEME);
+		response.renderJavaScriptReference(TINY_EN_THEME);
+		response.renderJavaScriptReference(TINY_EN, null, "lang_en", true);
+		response.renderCSSReference(UI_CSS);
+		response.renderCSSReference(CONTENT_CSS);
 		response.renderOnLoadJavaScript("tinyMCE.init({ mode : 'exact', elements : '" + 
 				c.getMarkupId() + "', theme : 'simple' });");
 		// Copies content from TinyMce field into Component

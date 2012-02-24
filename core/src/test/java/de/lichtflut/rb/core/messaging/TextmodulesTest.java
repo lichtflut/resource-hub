@@ -30,7 +30,8 @@ public class TextmodulesTest {
 	public void setUp(){
 		tm = new TextModules() {
 			protected ResourceBundle getResourceBundle(Locale locale) {
-				return ResourceBundle.getBundle("de/lichtflut/rb/core/messaging/TextModulesTestBundle", locale);
+				 ResourceBundle bundle = ResourceBundle.getBundle("de/lichtflut/rb/core/messaging/TextModulesTestBundle", locale);
+				 return bundle;
 			}
 		};
 	}
