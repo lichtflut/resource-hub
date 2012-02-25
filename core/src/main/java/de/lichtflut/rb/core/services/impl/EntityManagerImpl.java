@@ -177,7 +177,7 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 				// ignore
 			} else if (field.isResourceReference()) {
 				final ResourceID ref = (ResourceID) value;
-				result.add(new SimpleResourceID(ref));
+				result.add(new SimpleResourceID(ref.getQualifiedName()));
 			} else {
 				final ElementaryDataType datatype = Datatype.getCorrespondingArastrejuType(field.getDataType());
 				result.add(new SNValue(datatype, value));

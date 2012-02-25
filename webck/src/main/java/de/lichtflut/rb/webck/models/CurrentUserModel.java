@@ -73,7 +73,17 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<User> {
 			}
 		};
 	}
-
+	
+	public static ConditionalModel<User> hasPermission(final String permission) {
+		return new ConditionalModel<User>(new CurrentUserModel()) {
+			@Override
+			public boolean isFulfilled() {
+				final User user = getObject();
+				return user != null && user.hasPermission(permission);
+			}
+		};
+	}
+	
 	// ----------------------------------------------------
 
 	@SpringBean

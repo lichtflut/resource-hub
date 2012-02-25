@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.tools.dataprovider.geonames;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,16 +79,17 @@ public class AlternateNamesReader {
 	 */
 	public static void main(String[] args) {
 		try {
-			AlternateNamesReader gnr = new AlternateNamesReader("input/temp/alternateNames.txt");
-			int counter = 0;
-			while (gnr.hasNext()){
-				AlternateNameRecord record = gnr.next();
-				if ("de".equals(record.getLanguage())){
-					System.out.println(record.toDebugString());
-					counter++;
+			LineReader in = new LineReader("/Users/otigges/temp/alternateNames/alternateNames.txt", "UTF-8");
+			FileWriter out = new FileWriter("/Users/otigges/temp/alternateNames/alternateNames-filtered.txt");
+			while (in.hasNext()) {
+				String line = in.nextLine();
+				String[] fields = line.split(FIELD_DELIM);
+				String language = fields[2];
+				if ("en".equals(language) || "de".equals(language)) {
+					out.write(line + "\n");
 				}
 			}
-			System.out.println(counter);
+			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);

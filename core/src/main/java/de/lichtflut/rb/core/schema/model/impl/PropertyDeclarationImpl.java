@@ -10,8 +10,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.naming.VoidNamespace;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -49,8 +47,6 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	
 	private Set<Constraint> constraints = new HashSet<Constraint>();
 	
-	private String oldIdentifier = null;
-
 	// -----------------------------------------------------
 	
 	/**
@@ -71,16 +67,6 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 		this.labelDefinition = new FieldLabelDefinitionImpl(propertyDescriptor);
 	}
 
-	/**
-	 * Constructor.
-	 * @param propertyIdentifier -
-	 * @param c -
-	 */
-	public PropertyDeclarationImpl(final String propertyIdentifier, final Cardinality c){
-		this.cardinality = c;
-		this.oldIdentifier = propertyIdentifier;
-	}
-	
 	// -----------------------------------------------------
 
 	/**
@@ -184,39 +170,6 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 			}
 		}
 		return sb.toString();
-	}
-
-	// ----------------------------------------------------
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Deprecated
-	@Override
-	public QualifiedName getQualifiedPropertyIdentifier() {
-		if (this.oldIdentifier == null) {
-			return null;
-		}
-		if (!(QualifiedName.isUri(this.oldIdentifier) || QualifiedName
-				.isQname(this.oldIdentifier))) {
-			return new QualifiedName(VoidNamespace.getInstance(),
-					this.oldIdentifier);
-		} else {
-			return new QualifiedName(this.oldIdentifier);
-		}
-	}
-	
-
-	/**
-	 * Sets the property identifier.
-	 * @param identifier -
-	 */
-	public void setPropertyIdentifier(final String identifier) {
-		this.oldIdentifier = identifier;
-		//TODO This must form a valid URI
-		if(!(QualifiedName.isUri(this.oldIdentifier) || QualifiedName.isQname(this.oldIdentifier))){
-			this.oldIdentifier =  new QualifiedName(VoidNamespace.getInstance(),this.oldIdentifier).toURI();
-		}
 	}
 
 }

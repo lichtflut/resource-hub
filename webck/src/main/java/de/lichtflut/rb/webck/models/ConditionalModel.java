@@ -9,7 +9,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
-import org.arastreju.sge.security.User;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -180,16 +179,6 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 
-	public static <T> ConditionalModel<T> hasPermission(final IModel<User> userModel, final String permission) {
-		return new ConditionalModel<T>(userModel) {
-			@Override
-			public boolean isFulfilled() {
-				final User user = userModel.getObject();
-				return user != null && user.hasPermission(permission);
-			}
-		};
-	}
-	
 	public static <T> ConditionalModel<T> hasSchema(final IModel<RBEntity> entityModel) {
 		return new ConditionalModel<T>(entityModel) {
 			@Override

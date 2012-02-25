@@ -273,12 +273,12 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		final String simpleName = QualifiedName.getSimpleName(name);
 		if (nsMap.containsKey(prefix)) {
 			logger.debug("found registered prefix " + nsMap.get(prefix));
-			return new SimpleResourceID(nsMap.get(prefix), simpleName);
+			return new SimpleResourceID(nsMap.get(prefix).getUri(), simpleName);
 		} else {
 			final NamespaceHandle handle = new NamespaceHandle(null, prefix);
 			nsMap.put(prefix, handle);
 			logger.debug("found unknown prefix " + prefix);
-			return new SimpleResourceID(handle, simpleName);	
+			return new SimpleResourceID(handle.getUri(), simpleName);	
 		}
 	}
 	

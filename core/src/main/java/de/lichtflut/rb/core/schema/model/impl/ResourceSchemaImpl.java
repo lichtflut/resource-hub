@@ -56,7 +56,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * @param @param describedType The Resource Type defined by this schema
 	 */
 	public ResourceSchemaImpl(final ResourceID describedType) {
-		this.describedType = new SimpleResourceID(describedType);
+		this.describedType = new SimpleResourceID(describedType.getQualifiedName());
 	}
 
 	// -----------------------------------------------------

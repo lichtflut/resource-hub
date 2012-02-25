@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.naming.QualifiedName;
 
 
 /**
@@ -80,16 +79,6 @@ public interface PropertyDeclaration extends Serializable {
 	 */
 	void setFieldLabelDefinition(FieldLabelDefinition def);
 	
-	/**
-	 * returns the QualifiedName of the PropertyIdentifier.
-	 * This is necessary to resolve this PropertyAssertion with a given PropertyDeclaration
-	 * If this assertion is still resolved, the PropertyIdentifier is not more needed
-	 * If the propertyIdentifier is not a valid URI, it's converted to the default void-namespace URI
-	 * @return {@link QualifiedName}
-	 */
-	@Deprecated
-	QualifiedName getQualifiedPropertyIdentifier();
-
 	// -----------------------------------------------------
 
 	/**

@@ -128,7 +128,7 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 			final String simpleName = QualifiedName.getSimpleName(name);
 			if (namespaces.containsKey(prefix)) {
 				final Namespace namespace = namespaces.get(prefix);
-				return new FieldElement(new SimpleResourceID(namespace, simpleName));
+				return new FieldElement(new SimpleResourceID(namespace.getUri(), simpleName));
 			} else {
 				throw new LabelExpressionParseException("Could not resolve URI for " + name);
 			}

@@ -61,7 +61,7 @@ public abstract class CreateResourcePanel extends Panel {
 		form.add(new AjaxFallbackButton("save", form) {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				onCreate(new QualifiedName(nsModel.getObject(), nameModel.getObject()), target);
+				onCreate(new QualifiedName(nsModel.getObject().getUri(), nameModel.getObject()), target);
 				resetModel();
 			}
 			@Override

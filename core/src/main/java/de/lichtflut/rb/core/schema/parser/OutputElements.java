@@ -11,6 +11,7 @@ import org.arastreju.sge.io.NamespaceMap;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.naming.SimpleNamespace;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -137,7 +138,7 @@ public class OutputElements {
 	}
 	
 	private void register(final QualifiedName qn) {
-		namespaceMap.addNamespace(qn.getNamespace());
+		namespaceMap.addNamespace(new SimpleNamespace(qn.getNamespace()));
 	}
 	
 }

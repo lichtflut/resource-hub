@@ -63,7 +63,7 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Domain getMasterDomain() {
+	public Domain getDomesticDomain() {
 		return arasOrganizer().getDomesticDomain();
 	}
 	

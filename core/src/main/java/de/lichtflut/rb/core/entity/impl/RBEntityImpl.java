@@ -106,7 +106,7 @@ public class RBEntityImpl implements RBEntity {
 	@Override
 	public ResourceID getID() {
 		// create a copy of Resource ID
-		return new SimpleResourceID(node);
+		return new SimpleResourceID(node.getQualifiedName());
 	}
 
 	/**

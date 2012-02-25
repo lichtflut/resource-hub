@@ -31,7 +31,7 @@ public interface DomainOrganizer {
 	 * Get the master domain or null if not initialized.
 	 * @return The master domain or null.
 	 */
-	Domain getMasterDomain();
+	Domain getDomesticDomain();
 	
 	/**
 	 * Get all registered domains.

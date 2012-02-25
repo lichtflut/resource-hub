@@ -38,19 +38,11 @@ public interface RB {
 	
 	Context PRIVATE_CONTEXT = new SimpleContextID(CTX_NAMESPACE_URI, "Private");
 	
-	Context LOCALE_CONTEXT = new SimpleContextID(CTX_NAMESPACE_URI, "Locale");
-	
-	Context DEFAULT_LOCALE_CONTEXT = new SimpleContextID(CTX_NAMESPACE_URI, "DefaultLocale");
-	
-	Context LOCALE_ENGLISH_CONTEXT = new SimpleContextID(CTX_NAMESPACE_URI, "English");
-	
-	Context LOCALE_GERMAN_CONTEXT = new SimpleContextID(CTX_NAMESPACE_URI, "German");
-	
-	Context LOCALE_FRENCH_CONTEXT = new SimpleContextID(CTX_NAMESPACE_URI, "French");
-	
 	// ----------------------------------------------------
 
 	ResourceID LOCATION = new SimpleResourceID(COMMON_NAMESPACE_URI, "Location");
+	
+	ResourceID LANGUAGE = new SimpleResourceID(COMMON_NAMESPACE_URI, "Language");
 	
 	ResourceID CITY = new SimpleResourceID(COMMON_NAMESPACE_URI, "City");
 	

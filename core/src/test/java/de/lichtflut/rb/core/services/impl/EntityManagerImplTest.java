@@ -27,7 +27,6 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.naming.SimpleNamespace;
 import org.arastreju.sge.query.QueryManager;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -104,7 +103,7 @@ public class EntityManagerImplTest {
 		ResourceNode user = getUser();
 
 		// find Entity without type, schema
-		ResourceID id = new SimpleResourceID(new SimpleNamespace("http://test.de/"), "t1");
+		ResourceID id = new SimpleResourceID("http://test.de/", "t1");
 		when(mc.findResource(id.getQualifiedName())).thenReturn(new SNResource(id.getQualifiedName()));
 
 		RBEntity entity = em.find(id);
@@ -152,7 +151,7 @@ public class EntityManagerImplTest {
 	 */
 	@Test
 	public void testFindByType() {
-		ResourceID type = new SimpleResourceID(RB.PERSON);
+		ResourceID type = new SimpleResourceID(RB.PERSON.getQualifiedName());
 		List<ResourceNode> list = new ArrayList<ResourceNode>();
 		list.add(getUser());
 		when(sm.findSchemaForType(type)).thenReturn(new ResourceSchemaImpl(RB.PERSON));
