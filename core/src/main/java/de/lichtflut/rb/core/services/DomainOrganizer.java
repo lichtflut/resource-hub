@@ -10,6 +10,7 @@ import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.security.Domain;
+import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.core.organizer.ContextDeclaration;
 import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
@@ -57,6 +58,18 @@ public interface DomainOrganizer {
 	 * @param domain The domain.
 	 */
 	void deleteDomain(Domain domain);
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Create a new user for given domain with domain administration permissions.
+	 * @param domain The domain.
+	 * @param email The user's email.
+	 * @param username The user's unique name - may be null.
+	 * @param password The password.
+	 * @return The domain administration user.
+	 */
+	public User createDomainAdmin(Domain domain, String email, String username, String password);
 	
 	// ----------------------------------------------------
 	

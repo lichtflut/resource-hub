@@ -5,6 +5,8 @@ package de.lichtflut.rb.webck.models.entity;
 
 import java.util.List;
 
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -22,8 +24,11 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
  *
  * @author Oliver Tigges
  */
-public abstract class RBEntityListModel extends AbstractLoadableDetachableModel<List<RBEntity>> {
+public class RBEntityListModel extends AbstractLoadableDetachableModel<List<RBEntity>> {
 
+	@SpringBean
+	private ServiceProvider provider;
+	
 	private ResourceID type;
 	
 	// -----------------------------------------------------
@@ -33,6 +38,7 @@ public abstract class RBEntityListModel extends AbstractLoadableDetachableModel<
 	 */
 	public RBEntityListModel(final ResourceID type) {
 		this.type = type;
+		Injector.get().inject(this);
 	}
 
 	// -----------------------------------------------------
@@ -41,11 +47,7 @@ public abstract class RBEntityListModel extends AbstractLoadableDetachableModel<
 	 * {@inheritDoc}
 	 */
 	public List<RBEntity> load() {
-		return getServiceProvider().getEntityManager().findByType(type);
+		return provider.getEntityManager().findByType(type);
 	}
 	
-	// -----------------------------------------------------
-	
-	protected abstract ServiceProvider getServiceProvider();
-
 }
