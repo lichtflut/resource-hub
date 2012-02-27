@@ -51,7 +51,9 @@ public class SchemaDetailPanelTest{
 		tester.assertNoErrorMessage();
 		tester.assertNoInfoMessage();
 		tester.assertContains(">hatAlter");
-		tester.assertContains(".*@.*");
+		tester.assertContains(">1");
+		tester.assertContains(">3");
+		tester.assertContains(">.*@.*");
 	}
 
 	/**

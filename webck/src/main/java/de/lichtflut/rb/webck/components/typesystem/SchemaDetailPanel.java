@@ -12,14 +12,13 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.webck.models.basic.AbstractDerivedModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
 
@@ -72,16 +71,32 @@ public class SchemaDetailPanel extends Panel{
 		addMinimumDecl(decl, item);
 		addMaximumDecl(decl, item);
 		addDatatypeDecl(decl, item);
-		item.add(new Label("constraints", decl.getLiteralConstraints().toString()));
+		addContraintsDecl(decl, item);
 	}
 
 	/**
 	 * @param decl
-	 * @param item
+	 * @param item 
+	 * @return
 	 */
-	protected void addDatatypeDecl(PropertyRow decl, ListItem<PropertyRow> item) {
-		Label label = new Label("datatype", decl.getDataType().name());
-//		addTitle(decl.getDataType().name().toLowerCase()., label)
+	@SuppressWarnings("rawtypes")
+	protected void addContraintsDecl(PropertyRow decl, ListItem<PropertyRow> item) {
+		IModel model = new DerivedModel<String, List<String>>(decl.getLiteralConstraints()) {
+
+			@Override
+			protected String derive(List<String> original) {
+				StringBuilder sb = new StringBuilder();
+				for (String s : original) {
+					sb.append(s + ", ");
+				}
+				if(sb.length() == 0){
+					return "";
+				}
+				return sb.substring(0, (sb.length() -2));
+			}
+		};
+		Label label = new Label("constraints", model);
+		addTitle(model, label);
 		item.add(label);
 	}
 
@@ -89,10 +104,27 @@ public class SchemaDetailPanel extends Panel{
 	 * @param decl
 	 * @param item
 	 */
+	protected void addDatatypeDecl(PropertyRow decl, ListItem<PropertyRow> item) {
+		IModel<Datatype> model = Model.of(decl.getDataType());
+		Label label = new Label("datatype", model);
+		addTitle(model, label);
+		item.add(label);
+	}
+
+	/**
+	 * @param decl
+	 * @param item
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void addMaximumDecl(PropertyRow decl, ListItem<PropertyRow> item) {
-		String max = String.valueOf(decl.getMax());
-		Label label = new Label("max", max);
-//		addTitle(max, label);
+		IModel<Integer> model = Model.of(decl.getMax());
+		IModel labelModel = model;
+		Label label = new Label("max", labelModel);
+		if(model.getObject() == Integer.MAX_VALUE){
+			labelModel.setObject("&#8734");
+			label.setEscapeModelStrings(false);
+		}
+		addTitle(model, label);
 		item.add(label);
 	}
 
@@ -101,9 +133,9 @@ public class SchemaDetailPanel extends Panel{
 	 * @param item
 	 */
 	protected void addMinimumDecl(PropertyRow decl, ListItem<PropertyRow> item) {
-		String min = String.valueOf(decl.getMin());
-		Label label = new Label("min", min);
-//		addTitle(min, label);
+		IModel<String> model = Model.of(String.valueOf(decl.getMin()));
+		Label label = new Label("min", model);
+		addTitle(model, label);
 		item.add(label);
 	}
 
@@ -115,7 +147,7 @@ public class SchemaDetailPanel extends Panel{
 	protected void addLabelDecl(PropertyRow decl, ListItem<PropertyRow> item) {
 		IModel model =  new PropertyModel<ResourceID>(decl, "defaultLabel");
 		Label label = new Label("label", model);
-//		addTitle(model.getObject().toString(), label);
+		addTitle(model, label);
 		item.add(label);
 	}
 
@@ -124,11 +156,14 @@ public class SchemaDetailPanel extends Panel{
 	 * @param item
 	 */
 	protected void addPropertyDecl(PropertyRow decl, ListItem<PropertyRow> item) {
-		
-//		ResourceLabelBuilder.getInstance().getFieldLabel(decl.getPropertyDescriptor(), getLocale()));		
-		
-		Label label = new Label("property", Model.of(ResourceLabelBuilder.getInstance().getFieldLabel(decl.getPropertyDescriptor(), getLocale())));
-//		addTitle(decl.getPropertyDescriptor().toURI(), label);
+		IModel<String> model = new DerivedModel<String, ResourceID>(decl.getPropertyDescriptor()) {
+			@Override
+			protected String derive(ResourceID original) {
+				return ResourceLabelBuilder.getInstance().getFieldLabel(original, getLocale());
+			}
+		};
+		Label label = new Label("property",model);
+		addTitle(Model.of(decl.getPropertyDescriptor()), label);
 		item.add(label);
 	}
 
@@ -137,7 +172,7 @@ public class SchemaDetailPanel extends Panel{
 	 * @param label
 	 * @return 
 	 */
-	private void addTitle(IModel model, Label label) {
+	private void addTitle(IModel<?> model, Label label) {
 		label.add(new AttributeAppender("title", model));
 	}
 }
