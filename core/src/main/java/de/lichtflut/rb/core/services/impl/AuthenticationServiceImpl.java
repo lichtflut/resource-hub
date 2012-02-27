@@ -11,9 +11,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
-import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
-import org.arastreju.sge.ArastrejuProfile;
 import org.arastreju.sge.IdentityManagement;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
@@ -32,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import scala.actors.threadpool.Arrays;
-
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.security.LoginData;
@@ -57,14 +54,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	
 	private final Logger logger = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
 	
-	private final ServiceProvider provider;
+	private final AbstractServiceProvider provider;
 	
 	// ----------------------------------------------------
 	
 	/**
 	 * @param provider
 	 */
-	public AuthenticationServiceImpl(ServiceProvider provider) {
+	public AuthenticationServiceImpl(AbstractServiceProvider provider) {
 		this.provider = provider;
 	}
 
@@ -141,9 +138,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				String domain = domainNode.asValue().getStringValue();
 				final Collection<Domain> allDomains = masterGate.getOrganizer().getDomains();
 				assertContains(allDomains, domain);
-				ArastrejuProfile profile = provider.getContext().getConfig().getArastrejuConfiguration();
-				return Arastreju.getInstance(profile).rootContext(domain);
+				return provider.openGate(domain);
 			}
+		} else {
+			logger.info("Login ID unknown: " + userID);
 		}
 		return masterGate;
 	}

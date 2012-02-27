@@ -19,7 +19,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Nils Bleisch
  */
-public class DefaultRBServiceProvider extends AbstractServiceProvider implements ServiceProvider {
+public class DefaultRBServiceProvider extends AbstractServiceProvider {
 
     // --CONSTRUCTOR----------------------------------------
 

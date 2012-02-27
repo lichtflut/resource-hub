@@ -41,7 +41,7 @@ public class ModelChangeEvent<T> {
 	
 	public static final String DOMESTIC_DOMAIN = "master-domain";
 	
-	public static final String DOMAINS = "domains";
+	public static final String DOMAIN = "domain";
 	
 	public static final String VIEW_SPEC = "view-specification";
 	

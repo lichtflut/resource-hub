@@ -14,7 +14,7 @@ import de.lichtflut.rb.webck.behaviors.TitleModifier;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Link with a label.
  * </p>
  *
  * <p>

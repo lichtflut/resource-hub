@@ -3,12 +3,13 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
+import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.ArastrejuProfile;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.spi.GateContext;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 
@@ -32,7 +33,8 @@ public class AbstractService {
 	// ----------------------------------------------------
 	
 	/**
-	 * @param provider
+	 * Constructor.
+	 * @param provider The provider.
 	 */
 	public AbstractService(ServiceProvider provider) {
 		this.provider = provider;
@@ -78,11 +80,13 @@ public class AbstractService {
 	}
 	
 	protected ArastrejuGate masterGate() {
-		return gate(GateContext.MASTER_DOMAIN);
+		final ArastrejuProfile profile = provider.getContext().getConfig().getArastrejuConfiguration();
+		return Arastreju.getInstance(profile).rootContext();
 	}
 	
 	protected ArastrejuGate gate(String domain) {
-		return provider.getArastejuGate(domain);
+		final ArastrejuProfile profile = provider.getContext().getConfig().getArastrejuConfiguration();
+		return Arastreju.getInstance(profile).rootContext(domain);
 	}
 	
 }

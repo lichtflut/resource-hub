@@ -22,7 +22,6 @@ import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.security.Domain;
-import org.arastreju.sge.security.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +82,6 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	public Domain registerDomain(Domain domain) {
 		final Domain registered = arasOrganizer()
 				.registerDomain(domain.getUniqueName(), domain.getTitle(), domain.getDescription());
-		getProvider().getSecurityService().createDomainAdmin(domain);
 		logger.info("Created new domain: " + registered);
 		return registered;
 	}
@@ -134,16 +132,6 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 		query.and();
 		query.addField(RBSystem.IS_DOMAIN_ORGANIZATION, "true");
 		return query.getResult().getSingleNode();
-	}
-	
-	// ----------------------------------------------------
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public User createDomainAdmin(Domain domain, String email, String username, String password) {
-		return getProvider().getSecurityService().createDomainAdmin(domain);
 	}
 	
 	// ----------------------------------------------------

@@ -94,14 +94,6 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		}
 	}
 	
-	 /** 
-     * {@inheritDoc}
-     */
-    @Override
-    public ArastrejuGate getArastejuGate(String domain) {
-    	return openGate(domain);
-    }
-	
 	// ----------------------------------------------------
 	
 	/**
@@ -219,16 +211,15 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		final Arastreju aras = Arastreju.getInstance(getContext().getConfig().getArastrejuConfiguration());
 		logger.debug("Opening Arastreju Gate for domain {} ", domain);
 		if (domain == null || GateContext.MASTER_DOMAIN.equals(domain)) {
-			openGate = aras.rootContext();
+			return aras.rootContext();
 		} else {
-			getContext().setDomain(domain);
-			openGate = aras.rootContext(domain);
+			final ArastrejuGate gate = aras.rootContext(domain);
 			if (!initializedDomains.contains(domain)) {
-				initializeDomain(openGate, domain);
+				initializeDomain(gate, domain);
 				initializedDomains.add(domain);
 			}
+			return gate;	
 		}
-		return openGate;
 	}
 	
 }

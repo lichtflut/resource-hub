@@ -1,0 +1,52 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+	<div class="input-panel">
+
+		<form wicket:id="form">
+
+			<div wicket:id="feedback"></div>
+
+			<div class="form-field">
+				<label for="id"><wicket:message key="label.id">[id]</wicket:message></label>
+				<input type="text" wicket:id="id" size="60"/>
+			</div>
+			
+			<div class="form-field">
+				<label for="username"><wicket:message key="label.username">[username]</wicket:message></label>
+				<input type="text" wicket:id="username" size="20"/>
+			</div>
+			
+			<div class="form-field">
+				<label for="password"><wicket:message key="label.password">[password]</wicket:message></label>
+				<input type="password" wicket:id="password" size="20"/>
+			</div>
+			
+			<div class="form-field">
+				<label for="passwordConfirm"><wicket:message key="label.password.confirm">[passwordConfirm]</wicket:message></label>
+				<input type="password" wicket:id="passwordConfirm" size="20"/>
+			</div>
+
+			<div class="button-bar">
+				<button type="button" wicket:id="cancel">
+					<wicket:message key="button.cancel">[cancel]</wicket:message>
+				</button>
+				<button type="button" wicket:id="create" class="default-button">
+					<wicket:message key="button.create">[save]</wicket:message>
+				</button>
+			</div>
+		</form>
+
+	</div>
+
+</wicket:panel>
+</html>

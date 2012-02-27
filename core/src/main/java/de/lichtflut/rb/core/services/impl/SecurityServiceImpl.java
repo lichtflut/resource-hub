@@ -13,6 +13,7 @@ import org.arastreju.sge.IdentityManagement;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.eh.ArastrejuException;
 import org.arastreju.sge.eh.ArastrejuRuntimeException;
 import org.arastreju.sge.model.ElementaryDataType;
@@ -37,7 +38,6 @@ import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
 import de.lichtflut.rb.core.services.SecurityService;
-import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
@@ -52,14 +52,14 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  */
 public class SecurityServiceImpl extends AbstractService implements SecurityService {
 	
-	private final Logger logger = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(SecurityServiceImpl.class);
 	
 	// ----------------------------------------------------
 	
 	/**
 	 * @param provider
 	 */
-	public SecurityServiceImpl(ServiceProvider provider) {
+	public SecurityServiceImpl(AbstractServiceProvider provider) {
 		super(provider);
 	}
 
@@ -106,20 +106,23 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User createDomainAdmin(final Domain domain) {
-		final String password = Crypt.md5Hex("admin");
-		final String emailID = "admin@" + domain.getUniqueName();
-		final Credential credential = new PasswordCredential(password);
+	public User createDomainAdmin(final Domain domain, String email, String username, String password) {
+		final String crypted = Crypt.md5Hex(password);
+		final Credential credential = new PasswordCredential(crypted);
 		try {
 			final ArastrejuGate gate = gate(domain.getUniqueName());
 			final IdentityManagement im = gate.getIdentityManagement();
-			final User admin = im.register(emailID, credential);
+			final User admin = im.register(email, credential);
+			SNOPS.assure(admin, Aras.HAS_EMAIL, email, Aras.IDENT);
 			for (String roleName : rolesOfDomainAdmin()) {
 				final Role role = im.registerRole(roleName);
 				im.addUserToRoles(admin, role);
 			}
+			if (username != null) {
+				im.registerAlternateID(admin, username);
+			}
 			registerUserInMasterDomain(admin, domain.getUniqueName());
-			logger.info("created domain admin: " + admin);
+			logger.info("Created domain admin: " + admin);
 			return admin;
 		} catch(ArastrejuException e) {
 			logger.error("Error while trying to create admin for domain " + domain);
@@ -267,14 +270,15 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	private void registerUserInMasterDomain(User user, String domain) {
 		final ModelingConversation mc = masterGate().startConversation();
 		final ResourceNode userNode = new SNResource();
+		userNode.addAssociation(RDF.TYPE, Aras.USER, Aras.IDENT);
+		userNode.addAssociation(Aras.BELONGS_TO_DOMAIN, new SNText(domain), Aras.IDENT);
 		Set<SemanticNode> ids = SNOPS.objects(user, Aras.IDENTIFIED_BY);
 		for (SemanticNode node : ids) {
 			final SNText copy = new SNText(node.asValue().getStringValue());
 			SNOPS.associate(userNode, Aras.IDENTIFIED_BY, copy, Aras.IDENT);
 		}
-		userNode.addAssociation(Aras.BELONGS_TO_DOMAIN, new SNText(domain), Aras.IDENT);
 		mc.attach(userNode);
-		logger.info("Registering user in master domain: " + user.getName() + " --> " + domain);
+		logger.info("Registering user in master domain: " + user + " --> " + domain);
 	}
 
 	/**

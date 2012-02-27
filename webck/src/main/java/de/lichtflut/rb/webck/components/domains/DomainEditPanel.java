@@ -6,26 +6,31 @@ package de.lichtflut.rb.webck.components.domains;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.enableIf;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.security.Domain;
 
-import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.components.dialogs.CreateDomainAdminDialog;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
@@ -43,9 +48,10 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
  * @author Oliver Tigges
  */
 @SuppressWarnings("rawtypes")
-public class DomainEditPanel extends Panel{
+public class DomainEditPanel extends TypedPanel<Domain> {
 	
-	private final IModel<Domain> domainModel;
+	@SpringBean
+	private ServiceProvider provider;
 	
 	private final IModel<DisplayMode> modeModel;
 	
@@ -54,9 +60,6 @@ public class DomainEditPanel extends Panel{
 	private final ConditionalModel isEditMode;
 	
 	private final ConditionalModel isCreateMode;
-	
-	@SpringBean
-	private ServiceProvider provider;
 	
 	// ----------------------------------------------------
 
@@ -77,14 +80,16 @@ public class DomainEditPanel extends Panel{
 	 * @param mode The initial mode.
 	 */
 	public DomainEditPanel(final String id, final IModel<Domain> domainModel, final IModel<DisplayMode> mode) {
-		super(id);
-		this.domainModel = domainModel;
+		super(id, domainModel);
 		
 		this.modeModel = mode;
 		
 		this.isViewMode = areEqual(mode, DisplayMode.VIEW);
 		this.isEditMode = areEqual(mode, DisplayMode.EDIT);
 		this.isCreateMode = areEqual(mode, DisplayMode.CREATE);
+		
+		setOutputMarkupId(true);
+		setOutputMarkupPlaceholderTag(true);
 		
 		final Form<Domain> form = new Form<Domain>("form", new CompoundPropertyModel<Domain>(domainModel));
 
@@ -114,6 +119,16 @@ public class DomainEditPanel extends Panel{
 		form.add(createCancelButton());
 		
 		add(form);
+		
+		add(new AjaxLink("createDomainAdmin") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				final DialogHoster hoster = findParent(DialogHoster.class);
+				hoster.openDialog(new CreateDomainAdminDialog(hoster.getDialogID(), domainModel));
+			}
+		}.add(visibleIf(isViewMode)));
+		
+		add(visibleIf(isNotNull(domainModel)));
 	}
 	
 	// ----------------------------------------------------
@@ -126,7 +141,7 @@ public class DomainEditPanel extends Panel{
 		final AjaxButton save = new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				organizer().updateDomain(domainModel.getObject());
+				store();
 				onModelChange(DisplayMode.VIEW);
 				target.add(form);
 			}
@@ -150,8 +165,7 @@ public class DomainEditPanel extends Panel{
 	protected AjaxButton createCreateButton() {
 		final AjaxButton create = new RBDefaultButton("create") {
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				final Domain domain = domainModel.getObject();
-				organizer().registerDomain(domain);
+				register();
 				onModelChange(DisplayMode.VIEW);
 				target.add(form);
 				onCreate();
@@ -180,22 +194,37 @@ public class DomainEditPanel extends Panel{
 	@Override
 	public void detachModels() {
 		super.detachModels();
-		domainModel.detach();
 		modeModel.detach();
 	}
 	
 	// ----------------------------------------------------
 	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void onEvent(IEvent<?> event) {
+		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
+		if (mce.isAbout(ModelChangeEvent.DOMAIN)) {
+			RBAjaxTarget.add(this);
+		} 
+	}
+	
 	private void onModelChange(DisplayMode newMode) {
-		if (domainModel.getObject().isDomesticDomain()) {
+		if (getModelObject().isDomesticDomain()) {
 			send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.DOMESTIC_DOMAIN));
 		} else {
-			send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.DOMAINS));
+			send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.DOMAIN));
 		}
 		modeModel.setObject(newMode);
 	}
 	
-	private DomainOrganizer organizer() {
-		return provider.getDomainOrganizer();
+	protected void register() {
+		provider.getDomainOrganizer().registerDomain(getModelObject());
 	}
+	
+	protected void store() {
+		provider.getDomainOrganizer().updateDomain(getModelObject());
+	}
+	
 }

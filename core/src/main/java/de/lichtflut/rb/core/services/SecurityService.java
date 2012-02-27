@@ -27,13 +27,6 @@ import de.lichtflut.rb.core.messaging.EmailConfiguration;
 public interface SecurityService {
 	
 	/**
-	 * Create the domain administration user.
-	 * @param domain The domain
-	 * @return The created user.
-	 */
-	User createDomainAdmin(Domain domain);
-	
-	/**
 	 * Create a new user.
 	 * @param emailID The email as primary identifier.
 	 * @param username An optional username as secondary Identifier.
@@ -43,6 +36,16 @@ public interface SecurityService {
 	 */
 	User createUser(String emailID, String username, String password, EmailConfiguration conf, Locale locale) throws RBException;
 
+	/**
+	 * Create a new user for given domain with domain administration permissions.
+	 * @param domain The domain.
+	 * @param email The user's email.
+	 * @param username The user's unique name - may be null.
+	 * @param password The password.
+	 * @return The domain administration user.
+	 */
+	User createDomainAdmin(Domain domain, String email, String username, String password);
+	
 	/**
 	 * Sets a new Password for a {@link User}.
 	 * @param user
