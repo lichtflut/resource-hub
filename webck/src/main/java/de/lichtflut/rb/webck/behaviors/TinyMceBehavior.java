@@ -14,7 +14,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * <p>
  *  This {@link Behavior} adds a RichTextEditor to a HTML input-field.<br>
  *  !!!ATTENTION!!!<br>
- *  Adapted <code> tiny_mce.js</code> so that resources can be accessed using a propper URL.
+ *  Adapted <code> tiny_mce.js</code> so that resources can be accessed using a valid URL.
  *  That file should not be changed without having a solid reason!
  * </p>
  *
@@ -31,6 +31,8 @@ public class TinyMceBehavior extends Behavior{
 	private final static ResourceReference TINY_THEME = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/editor_template.js");
 	private final static ResourceReference UI_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/skins/default/ui.css");
 	private final static ResourceReference CONTENT_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/skins/default/content.css");
+	
+	// ------------------------------------------------------
 	
 	@Override
 	public void bind(Component component)
@@ -49,8 +51,12 @@ public class TinyMceBehavior extends Behavior{
 		response.renderJavaScriptReference(TINY_EN);
 		response.renderCSSReference(UI_CSS);
 		response.renderCSSReference(CONTENT_CSS);
-		response.renderOnLoadJavaScript("tinyMCE.init({ mode : 'exact', elements : '" + 
-				c.getMarkupId() + "', theme : 'simple' });");
+		response.renderOnLoadJavaScript("tinyMCE.init({ " +
+					"language: 'en', " +
+					"mode : 'exact'," +
+					"elements : '" + c.getMarkupId() + "'," +
+					"theme : 'simple'" +
+				"});");
 		// Copies content from TinyMce field into Component
 		response.renderOnLoadJavaScript("$('#" + c.getMarkupId()+"_ifr').contents().find('#tinymce').bind('blur', function() { " +
 				"var val = $(this).html();"+
