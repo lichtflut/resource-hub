@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import jxl.CellView;
 import jxl.Workbook;
@@ -129,14 +130,22 @@ public class ResourceListExcelExporterImpl implements ResourceListExcelExporter 
 		for(ResourceNode node : data) {
 			for(ResourceID predicate : predicates) {
 				String string = "";
-				SemanticNode object = SNOPS.fetchObject(node, predicate);
-				if(object != null) {
-					if(object.isValueNode()) {
-						string = object.asValue().getStringValue();
-					} else {
-						string = labelBuilder.getLabel(object.asResource(), locale);
+				Set<SemanticNode> objects = SNOPS.objects(node, predicate);
+				int objectsLeft = objects.size();
+				for (SemanticNode object : objects) {
+					objectsLeft--;
+					if(object != null) {
+						if(object.isValueNode()) {
+							string += object.asValue().getStringValue();
+						} else {
+							string += labelBuilder.getLabel(object.asResource(), locale);
+						}
+					}
+					if(objectsLeft > 0) {
+						string += "; ";
 					}
 				}
+				
 				Label label = new Label(column, row, string, contentFormat);
 				sheet.addCell(label);
 				column++;

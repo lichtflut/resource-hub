@@ -58,6 +58,7 @@ public class ResourceListExcelExporterImplTest {
 		
 		// ----- node2 -----
 		SNOPS.associate(node2, pred1, new SNValue(ElementaryDataType.STRING, "Another String-Value"));
+		SNOPS.associate(node2, pred1, new SNValue(ElementaryDataType.STRING, "Another Value, Same Predicate"));
 		SNOPS.associate(node2, pred2, new SNValue(ElementaryDataType.DATE, Calendar.getInstance().getTime()));
 		SNOPS.associate(node2, pred3, node1);
 		SNOPS.associate(node2, pred4, new SNValue(ElementaryDataType.STRING, "HOPE NOT VISIBLE??!"));
