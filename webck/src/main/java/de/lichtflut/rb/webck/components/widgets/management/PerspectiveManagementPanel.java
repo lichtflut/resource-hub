@@ -46,7 +46,8 @@ public class PerspectiveManagementPanel extends Panel {
 		
 		setOutputMarkupId(true);
 		
-		final ListView<Perspective> view = new ListView<Perspective>("list", new PerspectiveListModel()) {
+		final PerspectiveListModel perspectives = new PerspectiveListModel();
+		final ListView<Perspective> view = new ListView<Perspective>("list", perspectives) {
 			@Override
 			protected void populateItem(final ListItem<Perspective> item) {
 				final Perspective perspective = item.getModelObject();
@@ -61,6 +62,7 @@ public class PerspectiveManagementPanel extends Panel {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 						delete(item.getModelObject());
+						perspectives.detach();
 					}
 				});
 			}
@@ -94,6 +96,7 @@ public class PerspectiveManagementPanel extends Panel {
 
 	private void delete(Perspective perspective) {
 		provider.getViewSpecificationService().remove(perspective);
+		RBAjaxTarget.add(this);
 	}
 
 }

@@ -13,6 +13,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.persistence.TransactionControl;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -135,10 +136,16 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public void remove(Perspective perspective) {
-		final ModelingConversation mc = mc();
 		final SemanticGraph graph = new ViewSpecTraverser().toGraph(perspective);
-		for (Statement stmt : graph.getStatements()) {
-			mc.removeStatement(stmt);
+		final ModelingConversation mc = mc();
+		final TransactionControl tx = mc.beginTransaction();
+		try {
+			for (Statement stmt : graph.getStatements()) {
+				mc.removeStatement(stmt);
+			}
+			tx.success();
+		} finally {
+			tx.finish();
 		}
 	}
 

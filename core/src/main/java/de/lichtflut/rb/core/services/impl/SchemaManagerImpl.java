@@ -18,6 +18,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.persistence.TransactionControl;
 import org.arastreju.sge.query.FieldParam;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
@@ -60,7 +61,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 
 	private Schema2GraphBinding binding;
 	
-	private Logger logger = LoggerFactory.getLogger(SchemaImporterImpl.class);
+	private Logger logger = LoggerFactory.getLogger(SchemaManagerImpl.class);
 
 	// -----------------------------------------------------
 
@@ -150,13 +151,20 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	public void store(final ResourceSchema schema) {
 		Validate.isTrue(schema.getDescribedType() != null, "The type described by this schema is not defined.");
 		final ModelingConversation mc = mc();
-		final SNResourceSchema existing = findSchemaNodeByType(schema.getDescribedType());
-		if (existing != null) {
-			removeSchema(mc, existing);
+		final TransactionControl tx = mc.beginTransaction();
+		try {
+			final SNResourceSchema existing = findSchemaNodeByType(schema.getDescribedType());
+			if (existing != null) {
+				removeSchema(mc, existing);
+			}
+			ensureReferencedResourcesExist(mc, schema);
+			final SNResourceSchema node = binding.toSemanticNode(schema);
+			mc.attach(node);
+			logger.info("Stored schema for type {}.", schema.getDescribedType());
+			tx.success();
+		} finally {
+			tx.finish();
 		}
-		ensureReferencedResourcesExist(mc, schema);
-		final SNResourceSchema node = binding.toSemanticNode(schema);
-		mc.attach(node);
 	}
 	
 	/** 
@@ -168,6 +176,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 		final SNResourceSchema existing = findSchemaNodeByType(type);
 		if (existing != null) {
 			removeSchema(mc, existing);
+			logger.info("Removed schema for type {}.", type);
 		}
 	}
 
@@ -268,14 +277,12 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 		final ResourceNode attached = mc.resolve(schema.getDescribedType());
 		final Set<SemanticNode> clazzes = SNOPS.objects(attached, RDF.TYPE);
 		if (!clazzes.contains(RBSystem.TYPE)) {
-			logger.info("Making {} an rb:Type", attached);
 			SNOPS.associate(attached, RDF.TYPE, RBSystem.TYPE);
 		}
 		// 2nd: check properties
 		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 			final SNProperty property = mc.resolve(decl.getPropertyDescriptor()).asResource().asProperty();
 			if (!property.isSubPropertyOf(RDF.PROPERTY)) {
-				logger.info("Making {} an rdf:Property", property);
 				SNOPS.associate(property, RDF.TYPE, RDF.PROPERTY);
 			}
 		}
