@@ -6,7 +6,9 @@ package de.lichtflut.rb.core.services.impl;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Locale;
 
+import jxl.CellView;
 import jxl.Workbook;
 import jxl.write.Label;
 import jxl.write.WritableCellFormat;
@@ -20,6 +22,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.services.ResourceListExcelExporter;
 
 /**
@@ -37,6 +40,9 @@ public class ResourceListExcelExporterImpl implements ResourceListExcelExporter 
 
 	private final List<ResourceNode> data;
 	private final List<ResourceID> predicates;
+	private final Locale locale;
+	
+	private final ResourceLabelBuilder labelBuilder;
 	
 	private WritableCellFormat labelFormat;
 	private WritableCellFormat contentFormat;
@@ -46,9 +52,12 @@ public class ResourceListExcelExporterImpl implements ResourceListExcelExporter 
 	/**
 	 * Constructor.
 	 */
-	public ResourceListExcelExporterImpl(List<ResourceNode> data, List<ResourceID> predicates) {
+	public ResourceListExcelExporterImpl(List<ResourceNode> data, List<ResourceID> predicates, Locale locale) {
 		this.data = data;
 		this.predicates = predicates;
+		this.locale = locale;
+		
+		this.labelBuilder = ResourceLabelBuilder.getInstance();
 	}
 	
 	// -----------------------------------------------------
@@ -64,12 +73,14 @@ public class ResourceListExcelExporterImpl implements ResourceListExcelExporter 
 		
 		workbook.createSheet("ResourceList", 0);
 		WritableSheet excelSheet = workbook.getSheet(0);
+
+		prepare();
 		
 		try {
-			prepare();
-			
 			createLabels(excelSheet);
 			createContent(excelSheet);
+			
+			autosizeColumns(excelSheet);
 	
 			workbook.write();
 			workbook.close();
@@ -80,30 +91,37 @@ public class ResourceListExcelExporterImpl implements ResourceListExcelExporter 
 
 	/**
 	 * Get prepared.
-	 * @throws WriteException
 	 */
-	private void prepare() throws WriteException {
+	private void prepare() {
 		WritableFont arial10pt = new WritableFont(WritableFont.ARIAL, 10);
 		contentFormat = new WritableCellFormat(arial10pt);
-		contentFormat.setWrap(true);
 
 		WritableFont arial10ptBold = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD);
 		labelFormat = new WritableCellFormat(arial10ptBold);
-		labelFormat.setWrap(true);
 	}
 	
+	/**
+	 * Create the headlines.
+	 * @param sheet
+	 * @throws WriteException
+	 */
 	private void createLabels(WritableSheet sheet) throws WriteException {
 		int row = 0;
 		int column = 0;
 		
 		for(ResourceID predicate : predicates) {
-			String string = predicate.getQualifiedName().getSimpleName();
+			String string = labelBuilder.getFieldLabel(predicate, locale); 
 			Label label = new Label(column, row, string, labelFormat);
 			sheet.addCell(label);
 			column++;
 		}
 	}
 	
+	/**
+	 * Create the content.
+	 * @param sheet
+	 * @throws WriteException
+	 */
 	private void createContent(WritableSheet sheet) throws WriteException {
 		int row = 1;
 		int column = 0;
@@ -116,9 +134,7 @@ public class ResourceListExcelExporterImpl implements ResourceListExcelExporter 
 					if(object.isValueNode()) {
 						string = object.asValue().getStringValue();
 					} else {
-						if(object.isResourceNode()) {
-							string = object.asResource().getQualifiedName().getSimpleName();
-						}
+						string = labelBuilder.getLabel(object.asResource(), locale);
 					}
 				}
 				Label label = new Label(column, row, string, contentFormat);
@@ -127,6 +143,19 @@ public class ResourceListExcelExporterImpl implements ResourceListExcelExporter 
 			}
 			row++;
 			column = 0;
+		}
+	}
+	
+	/**
+	 * Autosize the columns to fit the contents.
+	 * @param sheet
+	 */
+	private void autosizeColumns(WritableSheet sheet) {
+		for(int i=0; i < sheet.getColumns(); i++)
+		{
+		    CellView cellView = sheet.getColumnView(i);
+		    cellView.setAutosize(true);
+		    sheet.setColumnView(i, cellView);
 		}
 	}
 	

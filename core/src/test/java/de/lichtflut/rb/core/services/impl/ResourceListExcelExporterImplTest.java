@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ElementaryDataType;
@@ -69,7 +70,7 @@ public class ResourceListExcelExporterImplTest {
 		predicates.add(pred3);
 		// NO pred4 --> shouldn't be exported!
 		
-		ResourceListExcelExporter exporter = new ResourceListExcelExporterImpl(data, predicates);
+		ResourceListExcelExporter exporter = new ResourceListExcelExporterImpl(data, predicates, Locale.ENGLISH);
 		
 		try {
 			OutputStream out = new FileOutputStream("src/test/resources/ResourceListExportTest.xls");

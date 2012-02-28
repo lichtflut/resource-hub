@@ -9,8 +9,6 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
 
-import java.util.List;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -25,16 +23,16 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.query.QueryResult;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
-
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
+import de.lichtflut.rb.webck.components.dialogs.ResourceListExportDialog;
 import de.lichtflut.rb.webck.components.dialogs.VCardExportDialog;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
@@ -61,7 +59,7 @@ public class ExtendedActionsPanel extends Panel {
 	private MarkupContainer linkContainer;
 
 	private IModel<RBEntity> entityModel = null;
-	private IModel<List<ResourceNode>> dataModel = null;
+	private IModel<QueryResult> dataModel = null;
 	private IModel<ColumnConfiguration> configModel = null;
 	
 	// ----------------------------------------------------
@@ -72,7 +70,7 @@ public class ExtendedActionsPanel extends Panel {
 		init();
 	}
 	
-	public ExtendedActionsPanel(final String id, final IModel<List<ResourceNode>> dataModel,
+	public ExtendedActionsPanel(final String id, final IModel<QueryResult> dataModel,
 			final IModel<ColumnConfiguration> configModel) {
 		super(id);
 		this.dataModel = dataModel;
@@ -161,14 +159,9 @@ public class ExtendedActionsPanel extends Panel {
 		final Link exportExcelListLink = new AjaxFallbackLink("exportExcelListLink") {
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
-			    ConfirmationDialog confirmDialog = new ConfirmationDialog(hoster.getDialogID(),
-			    		new Model<String>("SORRY!!! NOT YET IMPLEMENTED!")) {
-							@Override
-							public void onConfirm() {
-								// TODO: THE MAGIC!!!
-							}
-			    };
-			    hoster.openDialog(confirmDialog);
+
+			    hoster.openDialog(new ResourceListExportDialog(hoster.getDialogID(), dataModel, configModel));
+			    
 			    toggleContainerVisibility(linkContainer);
 			}
 		};

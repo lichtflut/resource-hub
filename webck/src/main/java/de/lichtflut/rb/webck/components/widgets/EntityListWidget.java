@@ -35,6 +35,7 @@ import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
 import de.lichtflut.rb.webck.components.listview.ListAction;
 import de.lichtflut.rb.webck.components.listview.ListPagerPanel;
 import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
+import de.lichtflut.rb.webck.components.navigation.ExtendedActionsPanel;
 import de.lichtflut.rb.webck.components.widgets.config.EntityListWidgetConfigPanel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
@@ -78,6 +79,8 @@ public class EntityListWidget extends ConfigurableWidget {
 		
 		IModel<QueryResult> queryModel = modelFor(spec);
 		IModel<ColumnConfiguration> config = configModel(spec);
+		
+		getDisplayPane().add(new ExtendedActionsPanel("extendedActionsPanel", queryModel, config));
 		
 		final PageableModel<ResourceNode> content = 
 				new ResourceQueryResultModel(queryModel, new Model<Integer>(MAX_RESULTS), new Model<Integer>(0));
