@@ -13,6 +13,8 @@ import org.apache.wicket.model.IModel;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WDGT;
@@ -31,6 +33,10 @@ import de.lichtflut.rb.webck.components.common.TypedPanel;
  * @author Oliver Tigges
  */
 public class SelectionConfigPanel extends TypedPanel<Selection> {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SelectionConfigPanel.class);
+	
+	// ----------------------------------------------------
 	
 	/**
 	 * @param id
@@ -75,6 +81,7 @@ public class SelectionConfigPanel extends TypedPanel<Selection> {
 					list.add(new QueryParamUIModel(new SNSelectionParameter(parameter.asResource())));
 				}
 				if (list.isEmpty()) {
+					logger.info("Selection had no parameters yet. Will create one.");
 					SNSelectionParameter param = new SNSelectionParameter();
 					selection.addAssociation(WDGT.HAS_PARAMETER, param);
 					param.setField(RDF.TYPE);

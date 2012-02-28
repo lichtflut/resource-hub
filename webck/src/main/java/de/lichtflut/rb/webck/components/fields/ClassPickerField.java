@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.components.fields;
 
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.crypt.Base64;
 import org.arastreju.sge.model.ResourceID;
@@ -30,6 +31,15 @@ public class ClassPickerField extends DataPickerField<ResourceID> {
 	
 	// ----------------------------------------------------
 
+	/**
+	 * Constructor.
+	 * @param id The component ID.
+	 * @param model The model.
+	 */
+	public ClassPickerField(final String id, final IModel<ResourceID> model) {
+		this(id, model, new Model<ResourceID>());
+	}
+	
 	/**
 	 * Constructor.
 	 * @param id The component ID.

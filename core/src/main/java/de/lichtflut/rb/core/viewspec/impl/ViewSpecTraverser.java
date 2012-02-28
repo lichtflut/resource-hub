@@ -8,7 +8,9 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.traverse.GraphBuilder;
+import org.arastreju.sge.traverse.GraphTraverser;
 import org.arastreju.sge.traverse.PredicateFilter;
+import org.arastreju.sge.traverse.StatementVisitor;
 import org.arastreju.sge.traverse.TraversalFilter;
 
 import de.lichtflut.rb.core.RB;
@@ -28,7 +30,7 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
  * @author Oliver Tigges
  */
 public class ViewSpecTraverser {
-
+	
 	public SemanticGraph toGraph(WidgetSpec spec) {
 		final GraphBuilder builder = new GraphBuilder(createFilter());
 		builder.addStatements(spec.getAssociations());
@@ -42,6 +44,12 @@ public class ViewSpecTraverser {
 		builder.addCascading(spec);
 		return builder.getGraph();
 	}
+	
+	public void traverse(WidgetSpec spec, StatementVisitor visitor) {
+		new GraphTraverser(createFilter(), visitor).start(spec);
+	}
+	
+	// ----------------------------------------------------
 	
 	private TraversalFilter createFilter() {
 		return new PredicateFilter()

@@ -18,7 +18,9 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.query.Query;
+import org.arastreju.sge.query.QueryException;
 import org.arastreju.sge.query.QueryResult;
+import org.arastreju.sge.query.SimpleQueryResult;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -121,9 +123,14 @@ public class EntityListWidget extends ConfigurableWidget {
 				if (selection != null && selection.isDefined()) {
 					final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
 					selection.adapt(query);
-					return query.getResult();
+					try {
+						return query.getResult();
+					} catch(QueryException e) {
+						error("Error while executing query: " + e);
+						return SimpleQueryResult.EMPTY;
+					}
 				} else {
-					return null;
+					return SimpleQueryResult.EMPTY;
 				}
 			}
 		};

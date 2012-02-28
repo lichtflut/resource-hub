@@ -49,6 +49,7 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 
 	@SpringBean
 	protected ServiceProvider provider;
+	
 	private SerialNumberOrderedNodesContainer orderedNodesContainer;
 	
 	// ----------------------------------------------------

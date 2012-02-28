@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.viewspec.impl;
 
+import static org.arastreju.sge.SNOPS.fetchObject;
 import static org.arastreju.sge.SNOPS.resource;
 import static org.arastreju.sge.SNOPS.singleObject;
 
@@ -16,7 +17,7 @@ import de.lichtflut.rb.core.viewspec.WDGT;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Decorator for a resource node representing a parameter of a selection.
  * </p>
  *
  * <p>
@@ -48,7 +49,7 @@ public class SNSelectionParameter extends ResourceView {
 	}
 	
 	public SemanticNode getTerm() {
-		return singleObject(this, WDGT.HAS_TERM);
+		return fetchObject(this, WDGT.HAS_TERM);
 	}
 	
 	public void setField(ResourceID id) {

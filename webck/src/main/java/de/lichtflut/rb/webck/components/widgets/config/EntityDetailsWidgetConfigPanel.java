@@ -39,12 +39,4 @@ public class EntityDetailsWidgetConfigPanel extends AbstractWidgetConfigPanel {
 		}));
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void onSave(WidgetSpec widgetSpec) {
-		super.onSave(widgetSpec);
-	}
-
 }

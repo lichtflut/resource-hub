@@ -54,7 +54,7 @@ public class RBWebSession extends WebSession {
 	}
 	
 	public boolean isAuthenticated() {
-		return getUser() != null;
+		return getUser() != null && provider != null;
 	}
 	
 	/**

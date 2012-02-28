@@ -55,11 +55,11 @@ public class ResourceQueryServlet extends HttpServlet {
 	
 	public final static String QUERY_SUB_CLASS = "/subclass";
 	
+	// -- PARAMETERS --------------------------------------
+	
 	public final static String AUTOCOMPLETE_PARAM = "term";
 	
 	public final static String TYPE_PARAM = "type";
-	
-	public final static String QUERY_PARAM = "query";
 	
 	// ----------------------------------------------------
 	

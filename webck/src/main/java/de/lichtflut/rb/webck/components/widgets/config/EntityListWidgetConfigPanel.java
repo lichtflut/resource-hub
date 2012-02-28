@@ -36,18 +36,10 @@ public class EntityListWidgetConfigPanel extends AbstractWidgetConfigPanel {
 			@Override
 			protected Selection derive(WidgetSpec original) {
 				return original.getSelection();
-			}
+			}	
 		}));
 		
 		getForm().add(new ColumnsConfigPanel("columns", model));
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void onSave(WidgetSpec widgetSpec) {
-		super.onSave(widgetSpec);
-	}
-
 }
