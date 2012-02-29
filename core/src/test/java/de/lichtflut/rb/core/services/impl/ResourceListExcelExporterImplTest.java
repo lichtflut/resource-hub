@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -76,7 +77,9 @@ public class ResourceListExcelExporterImplTest {
 		ResourceListExcelExporter exporter = new ResourceListExcelExporterImpl(data, predicates, Locale.ENGLISH);
 		
 		try {
-			OutputStream out = new FileOutputStream("src/test/resources/ResourceListExportTest.xls");
+			// ByteArrayOutputStream to not produce a new file every time the test runs -> prevents GIT-SPAMMING !!
+//			OutputStream out = new FileOutputStream("src/test/resources/ResourceListExportTest.xls");
+			OutputStream out = new ByteArrayOutputStream();
 			exporter.export(out);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
