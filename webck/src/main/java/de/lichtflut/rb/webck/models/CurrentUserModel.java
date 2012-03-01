@@ -9,8 +9,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.security.User;
-import org.arastreju.sge.security.impl.SNUser;
 
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
@@ -27,7 +27,7 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
  * 
  * @author Oliver Tigges
  */
-public class CurrentUserModel extends AbstractLoadableDetachableModel<User> {
+public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 
 	public static ResourceID currentUserID() {
 		if (Session.exists()) {
@@ -39,14 +39,10 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<User> {
 	// ----------------------------------------------------
 
 	public static IModel<String> displayNameModel() {
-		return new DerivedDetachableModel<String, User>(new CurrentUserModel()) {
+		return new DerivedDetachableModel<String, RBUser>(new CurrentUserModel()) {
 			@Override
-			protected String derive(User user) {
-				if (user.getEmail() != null) {
-					return user.getEmail();
-				} else {
-					return user.getName();
-				}
+			protected String derive(RBUser user) {
+				return user.getName();
 			}
 
 			@Override
@@ -103,10 +99,10 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<User> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public User load() {
+	public RBUser load() {
 		final ResourceID userID = currentUserID();
 		if (userID != null) {
-			return new SNUser(provider.getResourceResolver().resolve(userID));
+			return new RBUser(provider.getResourceResolver().resolve(userID));
 		} else {
 			return null;
 		}

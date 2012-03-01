@@ -42,6 +42,16 @@ public interface RBSystem {
 	ResourceID HAS_CONTENT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasContent");
 	
 	/**
+	 * Users must provide an email address for identification.  
+	 */
+	ResourceID HAS_EMAIL = new SimpleResourceID(SYS_NAMESPACE_URI, "hasEmail");
+	
+	/**
+	 * Users may have a unique user name additionally to their email address.  
+	 */
+	ResourceID HAS_USERNAME = new SimpleResourceID(SYS_NAMESPACE_URI, "hasUsername");
+	
+	/**
 	 * The last login of a user.
 	 */
 	ResourceID HAS_LAST_LOGIN = new SimpleResourceID(SYS_NAMESPACE_URI, "hasLastLogin");
