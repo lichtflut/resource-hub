@@ -10,6 +10,8 @@
 </wicket:head>
 <wicket:panel>
 
+	<h2 wicket:id="type">[type]</h2>
+
 	<form wicket:id="form">
 	   
 	    <div wicket:id="feedback"></div>
@@ -46,6 +48,7 @@
 	                    <th>
 	                        <wicket:message key="header.constraints"></wicket:message>
 	                    </th>
+	                    <th colspan="3"></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -64,6 +67,15 @@
 						</td>
 						<td><select wicket:id="dataType" ></select></td>
 						<td><div wicket:id="constraints"></div></td>
+						<td>
+							<a wicket:id="up" class="action-move-up">[up]</a>
+						</td>
+						<td>
+							<a wicket:id="down" class="action-move-down">[down]</a>
+						</td>
+						<td>
+							<a wicket:id="removeLink" tabindex="-1"><span class="action-delete">-</span></a>
+						</td>
 					</tr>
 				</tbody>
 			</table>

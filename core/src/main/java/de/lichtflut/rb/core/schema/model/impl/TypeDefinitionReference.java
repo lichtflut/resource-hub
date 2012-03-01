@@ -14,7 +14,7 @@ import de.lichtflut.rb.core.schema.model.TypeDefinition;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Reference to a type definition needed during parsing process.
  * </p>
  *
  * <p>

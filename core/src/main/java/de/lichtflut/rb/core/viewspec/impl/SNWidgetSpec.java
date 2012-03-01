@@ -120,4 +120,16 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 		setValue(Aras.HAS_SERIAL_NUMBER, position);
 	}
 	
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("WidgetSpec[" + getQualifiedName().getSimpleName() + "]\n");
+		sb.append("  Selection: " + getSelection() + "\n");
+		return sb.toString();
+	}
+	
 }
