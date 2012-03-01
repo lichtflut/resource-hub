@@ -28,9 +28,9 @@ public class TinyMceBehavior extends Behavior{
 	
 	private final static ResourceReference TINY_MCE = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/tiny_mce.js");
 	private final static ResourceReference TINY_EN = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/langs/en.js");
-	private final static ResourceReference TINY_THEME = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/editor_template.js");
-	private final static ResourceReference UI_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/skins/default/ui.css");
-	private final static ResourceReference CONTENT_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/simple/skins/default/content.css");
+	private final static ResourceReference TINY_THEME = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/themes/rb/editor_template.js");
+	private final static ResourceReference UI_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/rb/skins/default/ui.css");
+	private final static ResourceReference CONTENT_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/rb/skins/default/content.css");
 	
 	// ------------------------------------------------------
 	
@@ -55,7 +55,7 @@ public class TinyMceBehavior extends Behavior{
 					"language: 'en', " +
 					"mode : 'exact'," +
 					"elements : '" + c.getMarkupId() + "'," +
-					"theme : 'simple'" +
+					"theme : 'rb'" +
 				"});");
 		// Copies content from TinyMce field into Component
 		response.renderOnLoadJavaScript("$('#" + c.getMarkupId()+"_ifr').contents().find('#tinymce').bind('blur', function() { " +
