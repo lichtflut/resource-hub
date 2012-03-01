@@ -1,5 +1,5 @@
 /* Generic */
-body {
+/*body {
 font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px;
 scrollbar-3dlight-color:#F0F0EE;
 scrollbar-arrow-color:#676662;
@@ -12,7 +12,7 @@ scrollbar-track-color:#F5F5F5;
 background:#F0F0EE;
 padding:0;
 margin:8px 8px 0 8px;
-}
+}*/
 
 html {background:#F0F0EE;}
 td {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
@@ -96,8 +96,9 @@ td.charmap, #charmap a {width:18px; height:18px; color:#000; border:1px solid #A
 /* Titles */
 h1, h2, h3, h4 {color:#2B6FB6; margin:0; padding:0; padding-top:5px;}
 h3 {font-size:14px;}
+/*
 .title {font-size:12px; font-weight:bold; color:#2B6FB6;}
-
+*/
 /* Dialog specific */
 #link .panel_wrapper, #link div.current {height:125px;}
 #image .panel_wrapper, #image div.current {height:200px;}
