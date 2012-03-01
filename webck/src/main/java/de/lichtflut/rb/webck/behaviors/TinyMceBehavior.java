@@ -31,12 +31,13 @@ public class TinyMceBehavior extends Behavior{
 	private final static ResourceReference TINY_THEME = new JavaScriptResourceReference(TinyMceBehavior.class, "tiny_mce/themes/rb/editor_template.js");
 	private final static ResourceReference UI_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/rb/skins/default/ui.css");
 	private final static ResourceReference CONTENT_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/rb/skins/default/content.css");
+	private final static ResourceReference DIALOG_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/rb/skins/default/dialog.css");
+
 	
 	// ------------------------------------------------------
 	
 	@Override
-	public void bind(Component component)
-	{
+	public void bind(Component component){
 		super.bind(component);
  		component.setOutputMarkupId(true);
 	}
@@ -51,6 +52,7 @@ public class TinyMceBehavior extends Behavior{
 		response.renderJavaScriptReference(TINY_EN);
 		response.renderCSSReference(UI_CSS);
 		response.renderCSSReference(CONTENT_CSS);
+		response.renderCSSReference(DIALOG_CSS);
 		response.renderOnLoadJavaScript("tinyMCE.init({ " +
 					"language: 'en', " +
 					"mode : 'exact'," +

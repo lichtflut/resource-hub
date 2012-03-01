@@ -87,7 +87,7 @@ public class EditNoteDialog extends AbstractRBDialog {
 	private FormComponent<SNText> createRichTextEditor(final IModel<ResourceNode> model) {
 		TextArea<SNText> textArea = new TextArea<SNText>("content", new ResourceTextPropertyModel(model, RBSystem.HAS_CONTENT));
 		textArea.setType(SNText.class);
-//		textArea.add(new TinyMceBehavior());
+		textArea.add(new TinyMceBehavior());
 		return textArea;
 	}
 
