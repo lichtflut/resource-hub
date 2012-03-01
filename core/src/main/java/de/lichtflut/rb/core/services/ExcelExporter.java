@@ -17,10 +17,10 @@ import java.io.OutputStream;
  *
  * @author Erik Aderhold
  */
-public interface ResourceListExcelExporter {
+public interface ExcelExporter {
 	
 	/**
-	 * Export the ResourceList to excel format.
+	 * Export to excel format.
 	 * @param out
 	 * @throws IOException
 	 */

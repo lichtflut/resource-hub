@@ -32,6 +32,7 @@ import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
+import de.lichtflut.rb.webck.components.dialogs.EntityExcelExportDialog;
 import de.lichtflut.rb.webck.components.dialogs.ResourceListExportDialog;
 import de.lichtflut.rb.webck.components.dialogs.VCardExportDialog;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
@@ -100,12 +101,13 @@ public class ExtendedActionsPanel extends Panel {
 
 		setOutputMarkupId(true);
 		
-		/*TODO: Sichtbarkeitssteuerung des Links funktioniert nicht! Der Link ist IMMER sichtbar, auch wenn sich im
+		/*TODO: RB-7 - Sichtbarkeitssteuerung des Links funktioniert nicht! Der Link ist IMMER sichtbar, auch wenn sich im
 		 * 		Container keine	sichtbaren Links befinden!! */		
 		openMenuLink.add(visibleIf(isTrue(new HasVisibleLinksModel(new Model<MarkupContainer>(linkContainer)))));
 		
 		// adding the action links
 		addDeleteEntityLink();
+		addExportExcelEntityLink();
 		addExportVCardLink();
 		
 		addExportExcelListLink();
@@ -154,6 +156,21 @@ public class ExtendedActionsPanel extends Panel {
 		linkContainer.add(deleteEntityLink);
 	}
 	
+	private void addExportExcelEntityLink() {
+		@SuppressWarnings("rawtypes")
+		final Link exportExcelEntityLink = new AjaxFallbackLink("exportExcelEntityLink") {
+			public void onClick(AjaxRequestTarget target) {
+			    DialogHoster hoster = findParent(DialogHoster.class);
+
+			    hoster.openDialog(new EntityExcelExportDialog(hoster.getDialogID(), entityModel));
+			    
+			    toggleContainerVisibility(linkContainer);
+			}
+		};
+		exportExcelEntityLink.add(visibleIf(isNotNull(entityModel)));
+		linkContainer.add(exportExcelEntityLink);
+	}
+	
 	private void addExportExcelListLink() {
 		@SuppressWarnings("rawtypes")
 		final Link exportExcelListLink = new AjaxFallbackLink("exportExcelListLink") {
@@ -167,7 +184,6 @@ public class ExtendedActionsPanel extends Panel {
 		};
 		exportExcelListLink.add(visibleIf(and(isNotNull(dataModel), isNotNull(configModel))));
 		linkContainer.add(exportExcelListLink);
-		
 	}
 	
 	// ----------------------------------------------------

@@ -5,7 +5,6 @@ package de.lichtflut.rb.core.services.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -23,11 +22,11 @@ import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.naming.QualifiedName;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.services.ResourceListExcelExporter;
+import de.lichtflut.rb.core.services.ExcelExporter;
 
 /**
  * <p>
- *  Test-class for {@link ResourceListExcelExporterImpl}.
+ *  Test-class for {@link ResourceListExcelExporter}.
  * </p>
  *
  * <p>
@@ -36,7 +35,7 @@ import de.lichtflut.rb.core.services.ResourceListExcelExporter;
  *
  * @author Erik Aderhold
  */
-public class ResourceListExcelExporterImplTest {
+public class ResourceListExcelExporterTest {
 
 	@Test
 	public void testExport() {
@@ -74,7 +73,7 @@ public class ResourceListExcelExporterImplTest {
 		predicates.add(pred3);
 		// NO pred4 --> shouldn't be exported!
 		
-		ResourceListExcelExporter exporter = new ResourceListExcelExporterImpl(data, predicates, Locale.ENGLISH);
+		ExcelExporter exporter = new ResourceListExcelExporter(data, predicates, Locale.ENGLISH);
 		
 		try {
 			// ByteArrayOutputStream to not produce a new file every time the test runs -> prevents GIT-SPAMMING !!
