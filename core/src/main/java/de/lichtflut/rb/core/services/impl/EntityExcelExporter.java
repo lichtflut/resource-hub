@@ -5,7 +5,6 @@ package de.lichtflut.rb.core.services.impl;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -24,11 +23,11 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.core.services.ResourceListExcelExporter;
+import de.lichtflut.rb.core.services.ExcelExporter;
 
 /**
  * <p>
- *  Implementation of {@link ResourceListExcelExporter}.
+ *  Implementation of {@link ExcelExporter} to export a single entity.
  * </p>
  *
  * <p>
@@ -37,10 +36,10 @@ import de.lichtflut.rb.core.services.ResourceListExcelExporter;
  *
  * @author Erik Aderhold
  */
-public class ResourceListExcelExporterImpl implements ResourceListExcelExporter {
+public class EntityExcelExporter implements ExcelExporter {
 
-	private final List<ResourceNode> data;
-	private final List<ResourceID> predicates;
+	private final ResourceNode entity;
+	private Set<ResourceID> predicates;
 	private final Locale locale;
 	
 	private final ResourceLabelBuilder labelBuilder;
@@ -53,11 +52,11 @@ public class ResourceListExcelExporterImpl implements ResourceListExcelExporter 
 	/**
 	 * Constructor.
 	 */
-	public ResourceListExcelExporterImpl(List<ResourceNode> data, List<ResourceID> predicates, Locale locale) {
-		this.data = data;
-		this.predicates = predicates;
+	public EntityExcelExporter(final ResourceNode entity, Locale locale) {
+		this.entity = entity;
 		this.locale = locale;
 		
+		this.predicates = SNOPS.predicates(entity.getAssociations());
 		this.labelBuilder = ResourceLabelBuilder.getInstance();
 	}
 	
@@ -72,7 +71,7 @@ public class ResourceListExcelExporterImpl implements ResourceListExcelExporter 
 
 		WritableWorkbook workbook = Workbook.createWorkbook(out);
 		
-		workbook.createSheet("ResourceList", 0);
+		workbook.createSheet("Resource", 0);
 		WritableSheet excelSheet = workbook.getSheet(0);
 
 		prepare();
@@ -102,7 +101,7 @@ public class ResourceListExcelExporterImpl implements ResourceListExcelExporter 
 	}
 	
 	/**
-	 * Create the headlines.
+	 * Create the labels.
 	 * @param sheet
 	 * @throws WriteException
 	 */
@@ -114,7 +113,7 @@ public class ResourceListExcelExporterImpl implements ResourceListExcelExporter 
 			String string = labelBuilder.getFieldLabel(predicate, locale); 
 			Label label = new Label(column, row, string, labelFormat);
 			sheet.addCell(label);
-			column++;
+			row++;
 		}
 	}
 	
@@ -124,34 +123,29 @@ public class ResourceListExcelExporterImpl implements ResourceListExcelExporter 
 	 * @throws WriteException
 	 */
 	private void createContent(WritableSheet sheet) throws WriteException {
-		int row = 1;
-		int column = 0;
+		int row = 0;
+		int column = 1;
 		
-		for(ResourceNode node : data) {
-			for(ResourceID predicate : predicates) {
-				String string = "";
-				Set<SemanticNode> objects = SNOPS.objects(node, predicate);
-				int objectsLeft = objects.size();
-				for (SemanticNode object : objects) {
-					objectsLeft--;
-					if(object != null) {
-						if(object.isValueNode()) {
-							string += object.asValue().getStringValue();
-						} else {
-							string += labelBuilder.getLabel(object.asResource(), locale);
-						}
-					}
-					if(objectsLeft > 0) {
-						string += "; ";
+		for(ResourceID predicate : predicates) {
+			String string = "";
+			Set<SemanticNode> objects = SNOPS.objects(entity, predicate);
+			int objectsLeft = objects.size();
+			for (SemanticNode object : objects) {
+				objectsLeft--;
+				if(object != null) {
+					if(object.isValueNode()) {
+						string += object.asValue().getStringValue();
+					} else {
+						string += labelBuilder.getLabel(object.asResource(), locale);
 					}
 				}
-				
-				Label label = new Label(column, row, string, contentFormat);
-				sheet.addCell(label);
-				column++;
+				if(objectsLeft > 0) {
+					string += "; ";
+				}
 			}
+			Label label = new Label(column, row, string, contentFormat);
+			sheet.addCell(label);
 			row++;
-			column = 0;
 		}
 	}
 	
