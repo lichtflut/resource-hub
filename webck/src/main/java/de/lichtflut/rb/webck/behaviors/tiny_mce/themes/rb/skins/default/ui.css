@@ -32,6 +32,10 @@
 .defaultSkin td.mceCenter {text-align:center;}
 .defaultSkin td.mceCenter table {margin:0 auto; text-align:left;}
 .defaultSkin td.mceRight table {margin:0 0 0 auto;}
+.defaultSkin table.mceLayout tbody tr.mceLast td.mceFirst { width: 100%; }
+.defaultSkin table.mceLayout tbody tr.mceLast { width: 100%;}
+.defaultSkin table.mceLayout tbody tr.mceFirst td.mceFirst { width: 100%;}
+.defaultSkin table.mceLayout tbody tr.mceFirst { width: 100%;}
 
 /* Button */
 .defaultSkin .mceButton {display:block; border:1px solid #F0F0EE; width:20px; height:20px; margin-right:1px}
