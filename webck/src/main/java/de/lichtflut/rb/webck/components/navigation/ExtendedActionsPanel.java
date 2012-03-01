@@ -100,7 +100,7 @@ public class ExtendedActionsPanel extends Panel {
 
 		setOutputMarkupId(true);
 		
-		/*TODO: Sichtbarkeitssteuerung des Links funktioniert nicht! Der Link ist IMMER sichtbar, auch wenn sich im
+		/*TODO: RB-7 - Sichtbarkeitssteuerung des Links funktioniert nicht! Der Link ist IMMER sichtbar, auch wenn sich im
 		 * 		Container keine	sichtbaren Links befinden!! */		
 		openMenuLink.add(visibleIf(isTrue(new HasVisibleLinksModel(new Model<MarkupContainer>(linkContainer)))));
 		

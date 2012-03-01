@@ -8,13 +8,22 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.MissingResourceException;
+import java.util.Set;
 
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ContentDisposition;
@@ -23,9 +32,12 @@ import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.QueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.services.ResourceListExcelExporter;
 import de.lichtflut.rb.core.services.impl.ResourceListExcelExporterImpl;
@@ -44,8 +56,12 @@ import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
  */
 public class ResourceListExportDialog extends AbstractRBDialog implements IResourceListener {
 
+	private final Logger logger = LoggerFactory.getLogger(ResourceListExportDialog.class);
+	
 	private final ResourceStreamResource resource;
 
+	private final IModel<String> selection;
+	
 	private IModel<QueryResult> dataModel;
 	private IModel<ColumnConfiguration> configModel;
 	
@@ -62,9 +78,12 @@ public class ResourceListExportDialog extends AbstractRBDialog implements IResou
 		this.dataModel = dataModel;
 		this.configModel = configModel;
 		
+		selection = new Model<String>("DISPLAYED");
 		resource = prepareResource();
 		
 		final Form form = new Form("form");
+		
+		form.add(new DropDownChoice<String>("selection", selection, getChoices(), selectionChoiceRenderer()));
 		form.add(new AjaxButton("exportButton", form) {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
@@ -98,6 +117,30 @@ public class ResourceListExportDialog extends AbstractRBDialog implements IResou
 	}
 	
 	// ----------------------------------------------------
+	
+	protected ListModel<String> getChoices() {
+		return new ListModel<String>(Arrays.asList(new String [] {"DISPLAYED", "ALL"}));
+	}
+	
+	protected IChoiceRenderer<String> selectionChoiceRenderer() {
+		return new IChoiceRenderer<String>() {
+			@Override
+			public Object getDisplayValue(String object) {
+				try {
+					String string = getString(object);
+					return string;
+				} catch (MissingResourceException e) {
+					// return the object if resource is missing!
+					logger.warn("Missing Resource String for selection: " +object);
+					return object;
+				}
+			}
+			@Override
+			public String getIdValue(String object, int index) {
+				return object;
+			}
+		};
+	}
 	
 	protected CharSequence getDownloadUrl() {
 		return urlFor(IResourceListener.INTERFACE, new PageParameters());
@@ -134,7 +177,19 @@ public class ResourceListExportDialog extends AbstractRBDialog implements IResou
 			try {
 				
 				List<ResourceNode> data = dataModel.getObject().toList();
-				List<ResourceID> predicates = configModel.getObject().getPredicatesToDisplay();
+				List<ResourceID> predicates;
+				
+				if("DISPLAYED".equalsIgnoreCase(selection.getObject())) {
+					predicates = configModel.getObject().getPredicatesToDisplay();
+				} else if("ALL".equalsIgnoreCase(selection.getObject())) {
+					Set<ResourceID> allPredicates = new HashSet<ResourceID>();
+					for (ResourceNode dataNode : data) {
+						allPredicates.addAll(SNOPS.predicates(dataNode.getAssociations()));
+					}
+					predicates = new ArrayList<ResourceID>(allPredicates);
+				} else {
+					throw new IllegalArgumentException("Selection not yet supported: " + selection.getObject());
+				}
 				
 				ResourceListExcelExporter exporter = new ResourceListExcelExporterImpl(data, predicates, getLocale());
 				exporter.export(buffer);
