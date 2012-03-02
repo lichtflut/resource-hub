@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.IdentityManagement;
@@ -194,11 +195,11 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 */
 	@Override
 	public void resetPasswordForUser(RBUser user, EmailConfiguration conf, Locale locale) throws RBException {
-		//TODO change generated pwd 
-		String newPwd = "changed";
-		String generatedPwd = Crypt.md5Hex(newPwd);
-		setPassword(generatedPwd, user);
-		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, newPwd, conf, locale);
+		String generatedPwd = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+		String newCrypt = Crypt.md5Hex(generatedPwd);
+		setPassword(newCrypt, user);
+		logGeneratedPwd(generatedPwd);
+		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, generatedPwd, conf, locale);
 	}
 	
 	// ----------------------------------------------------
@@ -209,6 +210,15 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 */
 	protected String[] rolesOfDomainAdmin() {
 		return new String[0];
+	}
+	
+	/**
+	 * Can be implemented by sub classes to log the generated password.
+	 * <p><b>!!WARNING!!<br/>
+	 * <i>Implementation should check for DEVELOPMENT-Mode</i>
+	 * <br/>!!WARNING!!</b></p>
+	 */
+	protected void logGeneratedPwd(String generatedPwd) {
 	}
 	
 	// ----------------------------------------------------
