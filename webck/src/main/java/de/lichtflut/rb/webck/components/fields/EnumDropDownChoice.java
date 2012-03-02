@@ -21,6 +21,7 @@ import org.apache.wicket.model.IModel;
  *
  * @author Oliver Tigges
  */
+@Deprecated
 public class EnumDropDownChoice<T extends Enum<T>> extends DropDownChoice<T> {
 
 	/**

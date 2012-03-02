@@ -10,8 +10,10 @@
 </wicket:head>
 <wicket:panel>
 
+<form wicket:id="form">
 	<div class="table">
 		<div class="row header">
+			<div class="cell"></div>
 			<div class="cell"><wicket:message key="property.label" /></div>
 			<div class="cell"><wicket:message key="field-label.label" /></div>
 			<div class="cell"><wicket:message key="minimum.label" /></div>
@@ -21,6 +23,7 @@
 			<div class="cell"><wicket:message key="constraints.label" /></div>
 		</div>
 		<div wicket:id="row" class="row">
+			<div class="cell"><input wicket:id="checkbox" type="checkbox" /></div>
 			<div wicket:id="property" class="cell"></div>
 			<div wicket:id="label" class="cell"></div>
 			<div wicket:id="min" class="cell"></div>
@@ -30,6 +33,11 @@
 			<div wicket:id="constraints" class="cell"></div>
 		</div>
 	</div>
+	
+	<div class="button-bar">
+		<Button wicket:id="button">Edit</Button>
+	</div>
+</form>
 </wicket:panel>
 </html>
 

@@ -1,0 +1,47 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+	<div wicket:id="info"></div>
+	<form wicket:id="form">
+	
+		<div class="row">
+			<span class="cell">Property: </span><span wicket:id="propertyDescriptor" class="cell"></span>
+		</div>
+		<div class="row">
+			<span class="cell"><wicket:message key="fieldLabel"></wicket:message></span>
+			<span class="cell"><input wicket:id="fieldLabel" /></span>
+		</div>
+		<div class="row">
+			<span class="cell"><wicket:message key="min-label"></wicket:message></span>
+			<span class="cell"><input wicket:id="min" /></span>
+		</div>
+		<div class="row">
+			<span class="cell"><wicket:message key="max-label"></wicket:message></span>
+			<span class="cell"><input wicket:id="max" /></span>
+		</div>
+		<div class="row">
+			<span class="cell"><wicket:message key="datatype-label"></wicket:message></span>
+			<span class="cell"><select wicket:id="datatype" /></span>
+		</div>
+		<div class="row">
+			<span class="cell"><wicket:message key="constraints-label"></wicket:message></span>
+			<span class="cell"><wicket:container wicket:id="constraints"></wicket:container></span>
+		</div>
+	
+		<div class="button-bar">
+			<Button wicket:id="cancel"><wicket:container wicket:id="cancelLabel"></wicket:container></Button>
+			<Button wicket:id="save"><wicket:container wicket:id="saveLabel"></wicket:container></Button>
+		</div>
+		
+	</form>
+	
+</wicket:panel>
+</html>
