@@ -174,7 +174,6 @@ public class SchemaEditorPanel extends Panel {
 				dataTypeChoice.add(new AjaxFormComponentUpdatingBehavior("onclick") {
 					@Override
 					protected void onUpdate(AjaxRequestTarget target) {
-						System.err.println("New Type: " + row.getDataType());
 						target.add(constraintsEditor);
 					}
 				});
