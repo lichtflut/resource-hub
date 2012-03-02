@@ -14,7 +14,7 @@ import de.lichtflut.rb.webck.application.ResourceQueryServlet;
 
 /**
  * <p>
- * 	Picker field for rdf:Properties.
+ * 	Picker field for rdfs:Class'es.
  * </p>
  *
  * <p>

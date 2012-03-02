@@ -65,6 +65,25 @@ public class SNSelection extends ResourceView implements Selection {
 	
 	// ----------------------------------------------------
 	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("Selection[" + getQualifiedName().getSimpleName() + "]");
+		sb.append("\n    Expressions: ");
+		for (SemanticNode parameter : SNOPS.objects(this, WDGT.HAS_EXPRESSION)) {
+			sb.append(parameter);
+		}
+		sb.append("\n    Parameters: ");
+		for (SemanticNode parameter : SNOPS.objects(this, WDGT.HAS_PARAMETER)) {
+			sb.append(new SNSelectionParameter(parameter.asResource()));
+		}
+		return sb.toString();
+	}
+	
+	// ----------------------------------------------------
+	
 	protected void appendExpressions(ResourceNode node, Query query) {
 		final Set<Statement> expressions = node.getAssociations(WDGT.HAS_EXPRESSION);
 		final SemanticNode operator = SNOPS.singleObject(node, WDGT.HAS_OPERATOR);

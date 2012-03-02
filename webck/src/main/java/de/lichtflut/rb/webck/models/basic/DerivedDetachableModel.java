@@ -92,4 +92,11 @@ public abstract class DerivedDetachableModel<T, M> extends AbstractLoadableDetac
 		}
 	}
 	
+	/**
+	 * @return The original model.
+	 */
+	protected IModel<M> getOriginalModel() {
+		return originalModel;
+	}
+	
 }

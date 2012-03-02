@@ -14,8 +14,9 @@ import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
-import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.components.fields.ClassPickerField;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.*;
+import static de.lichtflut.rb.webck.models.ConditionalModel.*;
 
 /**
  * 
@@ -43,9 +44,9 @@ public class ConstraintsEditorPanel extends Panel {
 		
 		final IModel<Boolean> isResourceReferenceModel = new PropertyModel(model, "isResourceReference");
 
-		final TextField<ResourceID> resourceConstraint = 
-			new TextField<ResourceID>("resourceConstraint", new PropertyModel<ResourceID>(model, "resourceConstraint"));
-		resourceConstraint.add(ConditionalBehavior.visibleIf(ConditionalModel.isTrue(isResourceReferenceModel)));
+		final ClassPickerField resourceConstraint = 
+			new ClassPickerField("resourceConstraint", new PropertyModel<ResourceID>(model, "resourceConstraint"));
+		resourceConstraint.add(visibleIf(isTrue(isResourceReferenceModel)));
 		add(resourceConstraint);
 		
 		final IModel<List<Constraint>> literalConstraintsModel = 
@@ -54,7 +55,7 @@ public class ConstraintsEditorPanel extends Panel {
 			protected void populateItem(final ListItem<Constraint> item) {
 				item.add(new TextField("literalConstraint", item.getModel()));
 			}
-		}.add(ConditionalBehavior.visibleIf(ConditionalModel.isFalse(isResourceReferenceModel))));
+		}.add(visibleIf(isFalse(isResourceReferenceModel))));
 	}
 	
 }

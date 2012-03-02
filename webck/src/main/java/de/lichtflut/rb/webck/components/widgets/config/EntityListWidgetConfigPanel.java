@@ -26,6 +26,7 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
 public class EntityListWidgetConfigPanel extends AbstractWidgetConfigPanel {
 	
 	/**
+	 * Constructor.
 	 * @param id
 	 * @param model
 	 */
@@ -34,8 +35,8 @@ public class EntityListWidgetConfigPanel extends AbstractWidgetConfigPanel {
 		
 		getForm().add(new SelectionConfigPanel("selection", new DerivedModel<Selection, WidgetSpec>(model) {
 			@Override
-			protected Selection derive(WidgetSpec original) {
-				return original.getSelection();
+			protected Selection derive(WidgetSpec widgetSpec) {
+				return widgetSpec.getSelection();
 			}	
 		}));
 		

@@ -87,7 +87,7 @@ public class ListPagerPanel extends Panel {
 				.add(visibleIf(areEqual(found, ZERO))));
 		
 		final WebMarkupContainer pager = new WebMarkupContainer("pager");
-		pager.add(visibleIf(lessThan(last, found)));
+		pager.add(visibleIf(greaterThan(found, pagesize)));
 		
 		pager.add(new AjaxLink("previous") {
 			@Override

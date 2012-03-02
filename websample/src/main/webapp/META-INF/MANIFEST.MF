@@ -7,10 +7,10 @@ Class-Path: activation-1.1.jar antisamy-1.4.5.jar antlr-2.7.7.jar antl
  s-logging-1.1.1.jar geronimo-jta_1.1_spec-1.1.1.jar jackson-core-asl-
  1.9.0.jar jackson-mapper-asl-1.9.3.jar js-1.7R2.jar jxl-2.6.12.jar lf
  .foundation.infra-1.1.1.jar lf.resource-browser.core.jar lf.resource-
- browser.webck.jar log4j-1.2.14.jar lucene-core-3.1.0.jar mail-1.4.jar
-  nekohtml-1.9.12.jar neo4j-1.5.jar neo4j-cypher-1.5.jar neo4j-graph-a
- lgo-1.5.jar neo4j-graph-matching-1.5.jar neo4j-jmx-1.5.jar neo4j-kern
- el-1.5.jar neo4j-lucene-index-1.5.jar neo4j-udc-1.5.jar scala-library
+ browser.webck.jar log4j-1.2.14.jar lucene-core-3.5.0.jar mail-1.4.jar
+  nekohtml-1.9.12.jar neo4j-1.6.jar neo4j-cypher-1.6.jar neo4j-graph-a
+ lgo-1.6.jar neo4j-graph-matching-1.6.jar neo4j-jmx-1.6.jar neo4j-kern
+ el-1.6.jar neo4j-lucene-index-1.6.jar neo4j-udc-1.6.jar scala-library
  -2.9.0-1.jar sesame-model-2.6.1.jar sesame-rio-api-2.6.1.jar sesame-r
  io-n3-2.6.1.jar sesame-rio-rdfxml-2.6.1.jar sesame-rio-turtle-2.6.1.j
  ar sesame-util-2.6.1.jar slf4j-api-1.6.1.jar slf4j-log4j12-1.6.1.jar 

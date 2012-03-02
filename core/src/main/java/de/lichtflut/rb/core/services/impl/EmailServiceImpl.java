@@ -17,7 +17,6 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.arastreju.sge.security.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +26,7 @@ import de.lichtflut.rb.core.messaging.EmailConfiguration;
 import de.lichtflut.rb.core.messaging.MessageDescription;
 import de.lichtflut.rb.core.messaging.MessageType;
 import de.lichtflut.rb.core.messaging.TextModules;
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.EmailService;
 
 /**
@@ -55,7 +55,7 @@ public class EmailServiceImpl implements EmailService {
 	 * @throws RBException 
 	 */
 	@Override
-	public void sendPasswordInformation(User user, String password, EmailConfiguration conf, Locale locale) throws RBException {
+	public void sendPasswordInformation(RBUser user, String password, EmailConfiguration conf, Locale locale) throws RBException {
 		MessageDescription desc = new MessageDescription(locale);
 		desc.setType(MessageType.PASSWORD_INFORMATION_MAIL);
 		desc.setRecipient(user.getEmail());
@@ -73,7 +73,7 @@ public class EmailServiceImpl implements EmailService {
 	 * @throws RBException 
 	 */
 	@Override
-	public void sendRegistrationConfirmation(User user, EmailConfiguration conf, Locale locale) throws RBException {
+	public void sendRegistrationConfirmation(RBUser user, EmailConfiguration conf, Locale locale) throws RBException {
 		MessageDescription desc = new MessageDescription(locale);
 		desc.setType(MessageType.REGISTRATION_CONFIRMATION_MAIL);
 		desc.setRecipient(user.getEmail());
@@ -89,7 +89,7 @@ public class EmailServiceImpl implements EmailService {
 	 * @throws RBException 
 	 */
 	@Override
-	public void sendAccountActivatedInformation(User user, EmailConfiguration conf, Locale locale) throws RBException {
+	public void sendAccountActivatedInformation(RBUser user, EmailConfiguration conf, Locale locale) throws RBException {
 		MessageDescription desc = new MessageDescription(locale);
 		desc.setType(MessageType.ACCOUNT_ACTIVATED_MAIL);
 		desc.setRecipient(user.getEmail());

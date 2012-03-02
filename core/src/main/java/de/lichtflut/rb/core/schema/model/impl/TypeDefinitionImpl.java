@@ -66,18 +66,6 @@ public final class TypeDefinitionImpl implements TypeDefinition, Serializable {
 		this.isPublicType = isPublic;
 	}
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param identifierString
-	 *            -
-	 */
-	@Deprecated
-	public TypeDefinitionImpl(final String identifierString) {
-		this(new SimpleResourceID(), false);
-		setName(identifierString);
-	}
-
 	// -----------------------------------------------------
 	
 	/**

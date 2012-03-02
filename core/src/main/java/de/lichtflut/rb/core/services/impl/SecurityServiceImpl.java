@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.IdentityManagement;
@@ -17,8 +18,6 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.eh.ArastrejuException;
 import org.arastreju.sge.eh.ArastrejuRuntimeException;
 import org.arastreju.sge.model.ElementaryDataType;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
@@ -32,11 +31,14 @@ import org.arastreju.sge.security.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import scala.actors.threadpool.Arrays;
+import de.lichtflut.infra.Infra;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.SecurityService;
 
 /**
@@ -69,57 +71,54 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User createUser(String emailID, String username, String password, EmailConfiguration conf, Locale locale) throws RBException {
+	public RBUser createUser(String email, String username, String password, EmailConfiguration conf, Locale locale) throws RBException {
 		final String crypted = Crypt.md5Hex(password);
 		final Credential credential = new PasswordCredential(crypted);
-		User registered = null;
 		try {
-			registered = identityManagement().register(emailID, credential);
+			final ResourceNode userNode = identityManagement().register(email, credential);
+			final RBUser user = new RBUser(userNode);
+			user.setEmail(email);
 			if (username != null) {
-				try {
-					setAlternateID(registered, username);
-				} catch(RBException rbe) {
-					// remove the new created user, if alternateID can't be set
-					final ResourceID id = new SimpleResourceID(registered.getQualifiedName());
-					gate().startConversation().remove(id);
-					throw rbe;
-				}
+				identityManagement().registerAlternateID(user, username);
+				user.setUsername(username);
 			}
-			SNOPS.assure(registered, Aras.HAS_EMAIL, new SNText(emailID), Aras.IDENT);
 			final String domain = getProvider().getContext().getDomain();
 			if (domain != null && !gate().getContext().isMasterDomain()) {
-				registerUserInMasterDomain(registered, domain);
+				registerUserInMasterDomain(user, domain);
 			}
-			getProvider().getMessagingService().getEmailService().sendRegistrationConfirmation(registered, conf, locale);
+			getProvider().getMessagingService().getEmailService().sendRegistrationConfirmation(user, conf, locale);
+			return user;
 		} catch(ArastrejuException e) {
 			if(e.getErrCode().equals(org.arastreju.sge.eh.ErrorCodes.REGISTRATION_NAME_ALREADY_IN_USE)) {
-				throw new RBException(ErrorCodes.SECURITYSERVICE_ID_ALREADY_IN_USE, 
-						"The ID (emailID) '" + emailID + "' is already in use.");
+				throw new RBException(ErrorCodes.SECURITYSERVICE_EMAIL_ALREADY_IN_USE, 
+						"The ID (emailID) '" + email + "' is already in use.");
 			} else {
 				logger.error("Unexpected ArastrejuException while trying to register user: ", e);
+				throw new RBException(ErrorCodes.UNKNOWN_ERROR, "User could not be registered.", e);
+
 			}
 		}
-		return registered;
 	}
 	
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User createDomainAdmin(final Domain domain, String email, String username, String password) {
+	public RBUser createDomainAdmin(final Domain domain, String email, String username, String password) {
 		final String crypted = Crypt.md5Hex(password);
 		final Credential credential = new PasswordCredential(crypted);
 		try {
 			final ArastrejuGate gate = gate(domain.getUniqueName());
 			final IdentityManagement im = gate.getIdentityManagement();
-			final User admin = im.register(email, credential);
-			SNOPS.assure(admin, Aras.HAS_EMAIL, email, Aras.IDENT);
+			final RBUser admin = new RBUser(im.register(email, credential));
+			admin.setEmail(email);
+			if (username != null) {
+				im.registerAlternateID(admin, username);
+				admin.setUsername(username);
+			}
 			for (String roleName : rolesOfDomainAdmin()) {
 				final Role role = im.registerRole(roleName);
 				im.addUserToRoles(admin, role);
-			}
-			if (username != null) {
-				im.registerAlternateID(admin, username);
 			}
 			registerUserInMasterDomain(admin, domain.getUniqueName());
 			logger.info("Created domain admin: " + admin);
@@ -130,79 +129,33 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		}
 	}
 	
-	/**
+	/** 
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public void changePrimaryID(User user, String emailID) throws RBException {
-		String newID = emailID.trim().toLowerCase();
-		if(!newID.equals(user.getName())) {
-			ModelingConversation mc = mc();
-			IdentityManagement im = identityManagement();
-			mc.attach(user);
-			try {
-				im.changeID(user, newID);
-				SNOPS.assure(user, Aras.HAS_EMAIL, new SNText(newID), Aras.IDENT);
-			} catch (ArastrejuException e) {
-				if(e.getErrCode().equals(org.arastreju.sge.eh.ErrorCodes.REGISTRATION_NAME_ALREADY_IN_USE)) {
-					throw new RBException(ErrorCodes.SECURITYSERVICE_ID_ALREADY_IN_USE, 
-							"The ID (email) '" + newID + "' is already in use.");
-				} else {
-					logger.error("Unexpected ArastrejuException while trying to change primaryID/email: ", e);
-				}
+	public void storeUser(RBUser updated) throws RBException {
+		final RBUser existing = new RBUser(mc().findResource(updated.getQualifiedName()));
+		if (!Infra.equals(existing.getEmail(), updated.getEmail())) {
+			if (identityManagement().isIdentifierInUse(updated.getEmail())) {
+				throw new RBException(ErrorCodes.SECURITYSERVICE_EMAIL_ALREADY_IN_USE, "Email already in use.");
 			}
 		}
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setAlternateID(User user, String alternateID) throws RBException {
-		if(!alternateID.equals(getAlternateID(user))) {
-			ModelingConversation mc = mc();
-			IdentityManagement im = identityManagement();
-			mc.attach(user);
-			SemanticNode oldAlternateID = getAlternateIDNode(user);
-			try {
-				im.registerAlternateID(user, alternateID.trim().toLowerCase());
-			} catch (ArastrejuException e) {
-				if(e.getErrCode().equals(org.arastreju.sge.eh.ErrorCodes.REGISTRATION_NAME_ALREADY_IN_USE)) {
-					throw new RBException(ErrorCodes.SECURITYSERVICE_ALTERNATEID_ALREADY_IN_USE, 
-							"The AlternateID (username) '" + alternateID + "' is already in use.");
-				} else {
-					logger.error("Unexpected ArastrejuException while trying to register alternateID: ", e);
-				}
-			}
-			// oldID will only be removed if new ID is registered without exception thrown
-			SNOPS.remove(user, Aras.IDENTIFIED_BY, oldAlternateID);
-		}
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getAlternateID(User user) {
-		String result = "";
-		SemanticNode alternateIDNode = getAlternateIDNode(user);
-		if(alternateIDNode != null) {
-			result = SNOPS.string(alternateIDNode);
-		}
-		return result;
-	}
-	
-	private SemanticNode getAlternateIDNode(ResourceNode userNode) {
-		if (userNode != null) {
-			final SemanticNode uniqueNameNode = SNOPS.fetchObject(userNode, Aras.HAS_UNIQUE_NAME);
-			Set<SemanticNode> identifications = SNOPS.objects(userNode, Aras.IDENTIFIED_BY);
-		    for (SemanticNode identificationNode : identifications) {
-		    	if(!uniqueNameNode.equals(identificationNode)) {
-		    		return identificationNode;
-		    	}
+		if (updated.getUsername() != null && !Infra.equals(existing.getUsername(), updated.getUsername())) {
+			if (identityManagement().isIdentifierInUse(updated.getUsername())) {
+				throw new RBException(ErrorCodes.SECURITYSERVICE_USERNAME_ALREADY_IN_USE, "Username already in use.");
 			}
 		}
-		return null;
+		mc().attach(updated);
+		final List<SNText> identifiers = Arrays.asList(new SNText[] {
+				new SNText(updated.getEmail()), 
+				new SNText(updated.getUsername())
+			});
+		SNOPS.assure(updated, Aras.IDENTIFIED_BY, identifiers, Aras.IDENT);
+		final String domain = getProvider().getContext().getDomain();
+		if (domain != null && !gate().getContext().isMasterDomain()) {
+			registerUserInMasterDomain(updated, domain);
+		}
 	}
 	
 	/**
@@ -231,7 +184,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setNewPassword(User user, String currentPassword, String newPassword) throws RBException{
+	public void setNewPassword(RBUser user, String currentPassword, String newPassword) throws RBException{
 		verifyPassword(user, currentPassword);
 		setPassword(newPassword, user);
 	}
@@ -241,12 +194,12 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * @throws RBException 
 	 */
 	@Override
-	public void resetPasswordForUser(User user, EmailConfiguration conf, Locale locale) throws RBException {
-		//TODO change generated pwd 
-		String newPwd = "changed";
-		String generatedPwd = Crypt.md5Hex(newPwd);
-		setPassword(generatedPwd, user);
-		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, newPwd, conf, locale);
+	public void resetPasswordForUser(RBUser user, EmailConfiguration conf, Locale locale) throws RBException {
+		String generatedPwd = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+		String newCrypt = Crypt.md5Hex(generatedPwd);
+		setPassword(newCrypt, user);
+		logGeneratedPwd(generatedPwd);
+		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, generatedPwd, conf, locale);
 	}
 	
 	// ----------------------------------------------------
@@ -257,6 +210,15 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 */
 	protected String[] rolesOfDomainAdmin() {
 		return new String[0];
+	}
+	
+	/**
+	 * Can be implemented by sub classes to log the generated password.
+	 * <p><b>!!WARNING!!<br/>
+	 * <i>Implementation should check for DEVELOPMENT-Mode</i>
+	 * <br/>!!WARNING!!</b></p>
+	 */
+	protected void logGeneratedPwd(String generatedPwd) {
 	}
 	
 	// ----------------------------------------------------

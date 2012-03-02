@@ -17,6 +17,7 @@ import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -83,12 +84,14 @@ public abstract class ResetPasswordPanel extends Panel {
 	}
 	
 	protected void resetPassword() {
-		User user = provider.getArastejuGate().getIdentityManagement().findUser(emailModel.getObject());
+		final String email = emailModel.getObject();
+		final User user = provider.getArastejuGate().getIdentityManagement().findUser(email);
 		if(user == null) {
 			error(getString("message.no-user-found"));
 		} else {
 			try {
-				provider.getSecurityService().resetPasswordForUser(user, getEmailConfig(), getLocale());
+				final RBUser existing = new RBUser(user);
+				provider.getSecurityService().resetPasswordForUser(existing, getEmailConfig(), getLocale());
 				info(getString("message.password-changed"));
 			} catch (RBException e) {
 				error(getString("error.send.email"));

@@ -33,6 +33,7 @@ import scala.actors.threadpool.Arrays;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.security.LoginData;
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.AuthenticationService;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -71,12 +72,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User login(LoginData loginData) throws LoginException {
+	public RBUser login(LoginData loginData) throws LoginException {
 		final String id = normalize(loginData.getId());
 		final Credential credential = toCredential(loginData.getPassword());
 		final IdentityManagement im = getGateForUser(id).getIdentityManagement();
-		final User user = im.login(id, credential);
-		// root and anonymous may not have an associated resource.
+		final RBUser user = new RBUser(im.login(id, credential));
 		setLastLogin(user);
 		logger.info("User {} logged in. ", user);
 		return user;
@@ -86,14 +86,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User loginByToken(String token) {
+	public RBUser loginByToken(String token) {
 		final String[] fields = token.split(":");
 		if (fields.length != 3 || StringUtils.isBlank(fields[0])) {
 			return null;
 		}
 		try {
 			final String id = fields[0];
-			final User user = getGateForUser(id).getIdentityManagement().findUser(id);
+			final RBUser user = new RBUser(getGateForUser(id).getIdentityManagement().findUser(id));
 			if (user != null && isValid(user, id, fields[1], fields[2])) {
 				logger.info("User {} logged in by token.", user);
 				setLastLogin(user);
@@ -110,7 +110,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String createRememberMeToken(User user) {
+	public String createRememberMeToken(RBUser user) {
 		final String email = user.getEmail();
 		final SemanticNode credential = SNOPS.singleObject(user, Aras.HAS_CREDENTIAL);
 		final Calendar cal = Calendar.getInstance();

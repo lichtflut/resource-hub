@@ -13,6 +13,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.SemanticGraph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
@@ -38,6 +40,8 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
  */
 @SuppressWarnings("rawtypes")
 public class AbstractWidgetConfigPanel extends TypedPanel<WidgetSpec> {
+	
+	private final Logger logger = LoggerFactory.getLogger(AbstractWidgetConfigPanel.class);
 	
 	@SpringBean
 	protected ServiceProvider provider;
@@ -95,6 +99,7 @@ public class AbstractWidgetConfigPanel extends TypedPanel<WidgetSpec> {
 	// ----------------------------------------------------
 	
 	protected final void save(WidgetSpec spec) {
+		logger.info("Storing widget {}.", spec);
 		onSave(spec);
 		provider.getArastejuGate().startConversation().attach(spec);
 	}

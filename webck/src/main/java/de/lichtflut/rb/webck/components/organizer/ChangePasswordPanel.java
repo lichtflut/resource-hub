@@ -22,6 +22,7 @@ import org.arastreju.sge.security.User;
 
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.eh.RBException;
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -113,7 +114,7 @@ public class ChangePasswordPanel extends Panel {
 				RBAjaxTarget.add(form);
 			}
 			
-			private void setNewPassword(User user, String currentPassword, String newPassword) throws RBException {
+			private void setNewPassword(RBUser user, String currentPassword, String newPassword) throws RBException {
 				String currentPwd = Crypt.md5Hex(currentPassword);
 				String newPwd = Crypt.md5Hex(newPassword);
 					provider.getSecurityService().setNewPassword(user, currentPwd, newPwd);

@@ -3,21 +3,18 @@
  */
 package de.lichtflut.rb.webck.components.notes;
 
-import static org.arastreju.sge.SNOPS.fetchObject;
-import static org.arastreju.sge.SNOPS.string;
-
 import java.text.DateFormat;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
-import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.DC;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.resources.ResourcePropertyModel;
@@ -51,8 +48,8 @@ public abstract class MezzlePanel extends TypedPanel<ResourceNode> {
 		
 		add(new Label("creator", new DerivedModel<String, SemanticNode>(new ResourcePropertyModel(model, DC.CREATOR)) {
 			@Override
-			protected String derive(SemanticNode original) {
-				return string(fetchObject(original.asResource(), Aras.HAS_EMAIL));
+			protected String derive(SemanticNode userNode) {
+				return new RBUser(userNode.asResource()).getName();
 			}
 		}));
 		

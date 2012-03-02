@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.widgets.config.selection;
 
 import java.io.Serializable;
 
+import org.apache.wicket.model.IModel;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -25,9 +26,7 @@ import de.lichtflut.rb.core.viewspec.impl.SNSelectionParameter;
  */
 class QueryParamUIModel implements Serializable {
 
-	private final SNSelectionParameter parameter;
-	
-	private ParameterType type;
+	private final IModel<SNSelectionParameter> model;
 	
 	// ----------------------------------------------------
 	
@@ -35,11 +34,20 @@ class QueryParamUIModel implements Serializable {
 	 * @param field
 	 * @param value
 	 */
-	public QueryParamUIModel(SNSelectionParameter parameter) {
-		this.parameter = parameter;
-		
+	public QueryParamUIModel(IModel<SNSelectionParameter> model) {
+		this.model = model;
+	}
+
+	// ----------------------------------------------------
+
+	/**
+	 * @return the type
+	 */
+	public ParameterType getType() {
+		SNSelectionParameter parameter = this.model.getObject();
 		boolean isRelation = isResourceReference(parameter.getTerm());
 		
+		final ParameterType type;
 		if (parameter.getField() == null) {
 			if (isRelation) {
 				type = ParameterType.ANY_FIELD_RELATION;
@@ -53,14 +61,6 @@ class QueryParamUIModel implements Serializable {
 		} else {
 			type = ParameterType.SPECIAL_FIELD_VALUE;
 		}
-	}
-
-	// ----------------------------------------------------
-
-	/**
-	 * @return the type
-	 */
-	public ParameterType getType() {
 		return type;
 	}
 
@@ -68,14 +68,13 @@ class QueryParamUIModel implements Serializable {
 	 * @param type the type to set
 	 */
 	public void setType(ParameterType type) {
-		this.type = type;
 		switch (type) {
 		case RESOURCE_TYPE:
 			setField(RDF.TYPE);
 			break;
 		case ANY_FIELD_RELATION:
 		case ANY_FIELD_VALUE:
-			parameter.unsetField();
+			model.getObject().unsetField();
 			break;
 		}
 	}
@@ -84,14 +83,14 @@ class QueryParamUIModel implements Serializable {
 	 * @return the field
 	 */
 	public ResourceID getField() {
-		switch (type) {
+		switch (getType()) {
 		case RESOURCE_TYPE:
 			return RDF.TYPE;
 		case ANY_FIELD_RELATION:
 		case ANY_FIELD_VALUE:
 			return null;
 		default:
-			return parameter.getField();
+			return model.getObject().getField();
 		}
 	}
 
@@ -99,21 +98,21 @@ class QueryParamUIModel implements Serializable {
 	 * @param field the field to set
 	 */
 	public void setField(ResourceID field) {
-		parameter.setField(field);
+		model.getObject().setField(field);
 	}
 
 	/**
 	 * @return the value
 	 */
 	public SemanticNode getValue() {
-		return parameter.getTerm();
+		return model.getObject().getTerm();
 	}
 
 	/**
 	 * @param term the value to set
 	 */
 	public void setValue(SemanticNode term) {
-		parameter.setTerm(term);
+		model.getObject().setTerm(term);
 	}
 	
 	// ----------------------------------------------------

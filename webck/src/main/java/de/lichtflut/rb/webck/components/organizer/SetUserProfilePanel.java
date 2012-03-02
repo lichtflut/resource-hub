@@ -26,11 +26,11 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.security.User;
-import org.arastreju.sge.security.impl.SNUser;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.EntityHandle;
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
@@ -73,7 +73,7 @@ public abstract class SetUserProfilePanel extends Panel {
 	 * @param id - wicket:id
 	 * @param model
 	 */
-	public SetUserProfilePanel(String id, final IModel<User> user) {
+	public SetUserProfilePanel(String id, final IModel<RBUser> user) {
 		super(id, user);
 		initUserModel(user);
 		initProfileModel();
@@ -144,11 +144,11 @@ public abstract class SetUserProfilePanel extends Panel {
 	 * Initialize variable user.
 	 * @param user
 	 */
-	private void initUserModel(final IModel<User> user) {
+	private void initUserModel(final IModel<RBUser> user) {
 		this.user = new AbstractLoadableModel<User>() {
 			@Override
 			public User load() {
-				return new SNUser(provider.getResourceResolver().resolve(user.getObject()));
+				return new RBUser(provider.getResourceResolver().resolve(user.getObject()));
 			}
 		};
 	}

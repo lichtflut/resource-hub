@@ -5,13 +5,13 @@ package de.lichtflut.rb.webck.components.typesystem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
@@ -47,7 +47,7 @@ public class PropertyRow implements Serializable {
 	
 	private FieldLabelDefinition fieldLabel;
 	
-	private Datatype dataType;
+	private Datatype datatype;
 	
 	private ResourceID resourceConstraint;
 	
@@ -58,8 +58,6 @@ public class PropertyRow implements Serializable {
 	private int max;
 	
 	private boolean unbounded;
-	
-	private boolean isResourceReference;
 	
 	// -----------------------------------------------------
 	
@@ -89,7 +87,7 @@ public class PropertyRow implements Serializable {
 			decl.setTypeDefinition(row.typeDefinition);
 		} else {
 			final TypeDefinition typeDef = new TypeDefinitionImpl();
-			typeDef.setElementaryDataType(row.dataType);
+			typeDef.setElementaryDataType(row.datatype);
 			typeDef.setConstraints(row.buildConstraints());
 			decl.setTypeDefinition(typeDef);
 		}
@@ -103,14 +101,16 @@ public class PropertyRow implements Serializable {
 	public static TypeDefinition toTypeDefinition(final PropertyRow row) {
 		final TypeDefinitionImpl def = new TypeDefinitionImpl(row.typeDefinition.getID(), row.isTypeDefinitionPublic());
 		def.setName(row.displayName);
-		if (row.isResourceReference) {
+		if (row.isResourceReference()) {
 			def.addConstraint(ConstraintBuilder.buildConstraint(row.resourceConstraint));
 		} else {
 			for (String constraint : row.literalConstraints) {
-				def.addConstraint(ConstraintBuilder.buildConstraint(constraint));
+				if (constraint != null && !constraint.trim().isEmpty()) {
+					def.addConstraint(ConstraintBuilder.buildConstraint(constraint));
+				}
 			}
 		}
-		def.setElementaryDataType(row.dataType);
+		def.setElementaryDataType(row.datatype);
 		return def;
 	}
 	
@@ -127,7 +127,7 @@ public class PropertyRow implements Serializable {
 		this.unbounded = decl.getCardinality().isUnbound();
 		this.fieldLabel = decl.getFieldLabelDefinition();
 		
-		setTypeDefinition(decl.getTypeDefinition());
+		initializeFrom(decl.getTypeDefinition());
 	}
 	
 	/**
@@ -135,7 +135,7 @@ public class PropertyRow implements Serializable {
 	 * @param def The type definition.
 	 */
 	public PropertyRow(final TypeDefinition def) {
-		setTypeDefinition(def);
+		initializeFrom(def);
 	}
 	
 	/**
@@ -145,7 +145,7 @@ public class PropertyRow implements Serializable {
 		this.min = 0;
 		this.max = 1;
 		this.unbounded = true;
-		this.dataType = Datatype.STRING;
+		this.datatype = Datatype.STRING;
 		this.literalConstraints = new ArrayList<String>();
 		this.fieldLabel = new FieldLabelDefinitionImpl();
 	}
@@ -175,14 +175,14 @@ public class PropertyRow implements Serializable {
 	}
 	
 	/**
-	 * @return the displayName
+	 * @return the display name for public type definitions.
 	 */
 	public String getDisplayName() {
 		return displayName;
 	}
 	
 	/**
-	 * @param displayName the displayName to set
+	 * @param displayName the display name for public type definitions.
 	 */
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
@@ -192,14 +192,16 @@ public class PropertyRow implements Serializable {
 	 * @return the dataType
 	 */
 	public Datatype getDataType() {
-		return dataType;
+		return datatype;
 	}
 
 	/**
-	 * @param dataType the dataType to set
+	 * @param newDatatype the new data type to set
 	 */
-	public void setDataType(Datatype dataType) {
-		this.dataType = dataType;
+	public void setDataType(Datatype newDatatype) {
+		if (!Infra.equals(this.datatype, newDatatype)) {
+			initializeFrom(newDatatype);
+		}
 	}
 
 	/**
@@ -248,6 +250,9 @@ public class PropertyRow implements Serializable {
 	 * @return the literalConstraints
 	 */
 	public List<String> getLiteralConstraints() {
+		if (literalConstraints.isEmpty()) {
+			literalConstraints.add("");
+		}
 		return literalConstraints;
 	}
 
@@ -269,7 +274,7 @@ public class PropertyRow implements Serializable {
 	 * @return the isResourceReference
 	 */
 	public boolean isResourceReference() {
-		return isResourceReference;
+		return Datatype.RESOURCE.equals(datatype);
 	}
 	
 	/**
@@ -288,29 +293,33 @@ public class PropertyRow implements Serializable {
 	
 	// -----------------------------------------------------
 	
-	public void setTypeDefinition(final TypeDefinition def) {
+	protected void initializeFrom(final TypeDefinition def) {
 		this.typeDefinition = def;
-		this.dataType = def.getElementaryDataType();
+		this.datatype = def.getElementaryDataType();
 		this.displayName = def.getName();
-		this.isResourceReference = def.isResourceReference();
+		this.literalConstraints = new ArrayList<String>();
 		if (def.isResourceReference()) {
 			this.resourceConstraint = ResourceTypeDefinition.view(def).getResourceTypeConstraint();
-			this.literalConstraints = Collections.emptyList();
 		} else {
-			this.literalConstraints = new ArrayList<String>();
 			for (Constraint constraint : def.getConstraints()) {
 				literalConstraints.add(constraint.getLiteralConstraint());
 			}
 		}
 	}
 	
+	protected void initializeFrom(final Datatype datatype) {
+		this.datatype = datatype;
+		this.resourceConstraint = null;
+		this.literalConstraints = new ArrayList<String>();
+	}
+	
 	// -----------------------------------------------------
 	
 	protected Set<Constraint> buildConstraints() {
 		final Set<Constraint> constraints = new HashSet<Constraint>();
-		if (isResourceReference && resourceConstraint != null) {
+		if (isResourceReference() && resourceConstraint != null) {
 			constraints.add(ConstraintBuilder.buildConstraint(resourceConstraint));
-		} else if (!isResourceReference && !literalConstraints.isEmpty()){
+		} else if (!isResourceReference() && !literalConstraints.isEmpty()){
 			for (String constraint : literalConstraints) {
 				constraints.add(ConstraintBuilder.buildConstraint(constraint));
 			}

@@ -6,8 +6,10 @@ package de.lichtflut.rb.webck.components.typesystem;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -18,6 +20,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
@@ -28,10 +31,12 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.fields.EnumDropDownChoice;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.components.links.ConfirmedLink;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
@@ -65,6 +70,8 @@ public class SchemaEditorPanel extends Panel {
 		
 		setOutputMarkupPlaceholderTag(true);
 		setOutputMarkupId(true);
+		
+		add(new Label("type", new PropertyModel(model, "describedType")));
 		
 		final Form<?> form = new Form("form");
 		form.setOutputMarkupId(true);
@@ -124,7 +131,7 @@ public class SchemaEditorPanel extends Panel {
 	protected ListView<PropertyRow> createRows(final PropertyRowListModel rowModel) {
 		return new ListView<PropertyRow>("listView", rowModel) {
 			@Override
-			protected void populateItem(ListItem<PropertyRow> item) {
+			protected void populateItem(final ListItem<PropertyRow> item) {
 				final PropertyRow row = item.getModelObject();
 				
 				final IModel<ResourceID> property = new PropertyModel<ResourceID>(row, "propertyDescriptor");
@@ -153,16 +160,42 @@ public class SchemaEditorPanel extends Panel {
 				});
 				item.add(checkBox);
 				
-				final EnumDropDownChoice<Datatype> dataTypeChoice = 
-					new EnumDropDownChoice<Datatype>("dataType", 
-						new PropertyModel(row, "dataType"),
-						Datatype.values());
+				final ConstraintsEditorPanel constraintsEditor = 
+						new ConstraintsEditorPanel("constraints", item.getModel());
+				item.add(constraintsEditor);
 				
 				final boolean isPrivateTD = !row.isTypeDefinitionPublic();
+				
+				final EnumDropDownChoice<Datatype> dataTypeChoice = 
+						new EnumDropDownChoice<Datatype>("dataType", 
+							new PropertyModel(item.getModel(), "dataType"),
+							Datatype.values());
 				dataTypeChoice.setEnabled(isPrivateTD);
+				dataTypeChoice.add(new AjaxFormComponentUpdatingBehavior("onclick") {
+					@Override
+					protected void onUpdate(AjaxRequestTarget target) {
+						target.add(constraintsEditor);
+					}
+				});
 				item.add(dataTypeChoice);
-			
-				item.add(new ConstraintsEditorPanel("constraints", item.getModel()));
+				
+				item.add(new AjaxLink("up") {
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						rowModel.moveUp(item.getIndex());
+						update();
+					}
+				});
+				
+				item.add(new AjaxLink("down") {
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						rowModel.moveDown(item.getIndex());
+						update();
+					}
+				});
+				
+				item.add(createRemoveRowLink(rowModel, item.getIndex()));
 			}
 		};
 	}
@@ -181,6 +214,17 @@ public class SchemaEditorPanel extends Panel {
 		return link.setVisible(false);
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private AjaxLink createRemoveRowLink(final PropertyRowListModel rowModel, final int index) {
+		return new ConfirmedLink("removeLink", new ResourceModel("global.message.remove-property-declaration-confirmation")) {
+			@Override
+			protected void applyActions(AjaxRequestTarget target) {
+				rowModel.remove(index);
+				update();
+			}
+		};
+	}
+	
 	// -----------------------------------------------------
 	
 	protected String max(final PropertyDeclaration pa) {
@@ -189,6 +233,10 @@ public class SchemaEditorPanel extends Panel {
 		} else {
 			return "" + pa.getCardinality().getMaxOccurs();
 		}
+	}
+	
+	protected void update() {
+		RBAjaxTarget.add(this);
 	}
 	
 }
