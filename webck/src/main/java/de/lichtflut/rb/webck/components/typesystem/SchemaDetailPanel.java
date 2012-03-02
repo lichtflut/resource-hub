@@ -137,14 +137,14 @@ public class SchemaDetailPanel extends Panel{
 		AjaxEditableLabel<ResourceID> label = new AjaxEditableLabel<ResourceID>("property", model){
 			protected Component newLabel(final MarkupContainer parent, final String componentId,
 					final IModel<ResourceID> model){
-				Label label = new Label(componentId, ResourceLabelBuilder.getInstance().getFieldLabel(model.getObject(), getLocale()));
-				System.out.println(ResourceLabelBuilder.getInstance().getFieldLabel(model.getObject(), getLocale()));
+				Label label = new Label(componentId, ResourceLabelBuilder.getInstance().getLabel(model.getObject(), getLocale()));
+				System.out.println(ResourceLabelBuilder.getInstance().getLabel(model.getObject(), getLocale()));
 				label.setOutputMarkupId(true);
 				label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
 				return label;
 			}
 		};
-		addTitleAttribute(item.getModel(), label);
+		addTitleAttribute(model, label);
 		item.add(label);
 	}
 	
@@ -177,8 +177,9 @@ public class SchemaDetailPanel extends Panel{
 	 * @param item
 	 */
 	protected void addDatatypeDecl(ListItem<PropertyRow> item) {
-		Label label = new Label("datatype", item.getModel());
-		addTitleAttribute(item.getModel(), label);
+		IModel<Datatype> model = new PropertyModel<Datatype>(item.getModel(), "dataType");
+		Label label = new Label("datatype", model);
+		addTitleAttribute(model, label);
 		item.add(label);
 	}
 
