@@ -39,9 +39,11 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
  *
  * @author Ravi Knox
  */
+// TODO THIS IS NOT YET IMPLEMENTED PROPERLY!
 @SuppressWarnings("rawtypes")
 public class EditTypePropertyDeclDialog extends AbstractRBDialog {
 
+	
 	// TODO Introduce FeedbackPanel, replace infoBox
 	
 	IModel<Boolean> multiple;

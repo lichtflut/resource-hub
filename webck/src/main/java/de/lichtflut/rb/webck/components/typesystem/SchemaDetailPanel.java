@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -47,6 +49,9 @@ import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
 public class SchemaDetailPanel extends Panel{
 
 	IModel<List<PropertyDeclaration>> markedForEdit;
+	
+	// ---------------- Constructor -------------------------
+	
 	/**
 	 * @param id - wicket:id
 	 * @param model to display
@@ -62,6 +67,20 @@ public class SchemaDetailPanel extends Panel{
 	}
 
 	// ------------------------------------------------------
+	
+	private Component createListView(IModel<ResourceSchema> schema) {
+		
+		IModel<List<PropertyRow>> list = new PropertyRowListModel(schema);
+		ListView<PropertyRow> view = new ListView<PropertyRow>("row", list) {
+			
+			@Override
+			protected void populateItem(ListItem<PropertyRow> item) {
+				fillRow(item);
+				addColorCode(item);
+			}
+		};
+		return view;
+	}
 
 	private Component createEditButton() {
 		Button button = new RBStandardButton("button") {
@@ -74,41 +93,24 @@ public class SchemaDetailPanel extends Panel{
 		return button;
 	}
 
-	private Component createListView(IModel<ResourceSchema> schema) {
-		
-		IModel<List<PropertyRow>> list = new PropertyRowListModel(schema);
-		ListView<PropertyRow> view = new ListView<PropertyRow>("row", list) {
-
-			@Override
-			protected void populateItem(ListItem<PropertyRow> item) {
-				PropertyRow decl = (PropertyRow) item.getModelObject();
-				fillRow(decl, item);
-				addColorCode(decl, item);
-			}
-		};
-		return view;
-	}
-
 	/**
 	 * Fills a {@link ListItem} with all the informations provided by a PropertyRow.
-	 * @param decl
 	 * @param item
 	 */
-	private void fillRow(PropertyRow decl, ListItem<PropertyRow> item) {
-		addCheckBox(decl, item);
-		addPropertyDecl(decl, item);
-		addLabelDecl(decl, item);
-		addMinimumDecl(decl, item);
-		addMaximumDecl(decl, item);
-		addDatatypeDecl(decl, item);
-		addContraintsDecl(decl, item);
+	private void fillRow(ListItem<PropertyRow> item) {
+		addCheckBox(item);
+		addPropertyDecl(item);
+		addLabelDecl(item);
+		addMinimumDecl(item);
+		addMaximumDecl(item);
+		addDatatypeDecl(item);
+		addContraintsDecl(item);
 	}
 
 	/**
-	 * @param decl
 	 * @param item
 	 */
-	private void addCheckBox(final PropertyRow decl, final ListItem<PropertyRow> item) {
+	private void addCheckBox(final ListItem<PropertyRow> item) {
 		CheckBox checkbox = new CheckBox("checkbox", Model.of(false)){
 		
 			@Override
@@ -128,13 +130,31 @@ public class SchemaDetailPanel extends Panel{
 	}
 
 	/**
-	 * @param decl
+	 * @param item
+	 */
+	protected void addPropertyDecl(ListItem<PropertyRow> item) {
+		IModel<ResourceID> model = new PropertyModel<ResourceID>(item.getModel(), "propertyType");
+		AjaxEditableLabel<ResourceID> label = new AjaxEditableLabel<ResourceID>("property", model){
+			protected Component newLabel(final MarkupContainer parent, final String componentId,
+					final IModel<ResourceID> model){
+				Label label = new Label(componentId, ResourceLabelBuilder.getInstance().getFieldLabel(model.getObject(), getLocale()));
+				System.out.println(ResourceLabelBuilder.getInstance().getFieldLabel(model.getObject(), getLocale()));
+				label.setOutputMarkupId(true);
+				label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
+				return label;
+			}
+		};
+		addTitleAttribute(item.getModel(), label);
+		item.add(label);
+	}
+	
+	/**
 	 * @param item 
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	protected void addContraintsDecl(PropertyRow decl, ListItem<PropertyRow> item) {
-		IModel model = new DerivedModel<String, List<String>>(decl.getLiteralConstraints()) {
+	protected void addContraintsDecl(ListItem<PropertyRow> item) {
+		IModel model = new DerivedModel<String, List<String>>(item.getModelObject().getLiteralConstraints()) {
 
 			@Override
 			protected String derive(List<String> original) {
@@ -154,70 +174,43 @@ public class SchemaDetailPanel extends Panel{
 	}
 
 	/**
+	 * @param item
+	 */
+	protected void addDatatypeDecl(ListItem<PropertyRow> item) {
+		Label label = new Label("datatype", item.getModel());
+		addTitleAttribute(item.getModel(), label);
+		item.add(label);
+	}
+
+	/**
 	 * @param decl
 	 * @param item
 	 */
-	protected void addDatatypeDecl(PropertyRow decl, ListItem<PropertyRow> item) {
-		IModel<Datatype> model = Model.of(decl.getDataType());
-		Label label = new Label("datatype", model);
+	protected void addMaximumDecl(ListItem<PropertyRow> item) {
+		IModel<Integer> model = new PropertyModel<Integer>(item.getModel(), "max");
+		Label label = new Label("max", model);
 		addTitleAttribute(model, label);
 		item.add(label);
 	}
 
 	/**
-	 * @param decl
 	 * @param item
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected void addMaximumDecl(PropertyRow decl, ListItem<PropertyRow> item) {
-		IModel<Integer> model = Model.of(decl.getMax());
-		// In case of reuse; create an extra model for html-view
-		IModel labelModel = model;
-		Label label = new Label("max", labelModel);
-		if(model.getObject() == Integer.MAX_VALUE){
-			labelModel.setObject("&#8734");
-			label.setEscapeModelStrings(false);
-		}
-		addTitleAttribute(labelModel, label);
-		item.add(label);
-	}
-
-	/**
-	 * @param decl
-	 * @param item
-	 */
-	protected void addMinimumDecl(PropertyRow decl, ListItem<PropertyRow> item) {
-		IModel<String> model = Model.of(String.valueOf(decl.getMin()));
-		Label label = new Label("min", model);
+	protected void addMinimumDecl(ListItem<PropertyRow> item) {
+		PropertyModel<PropertyRow> model = new PropertyModel<PropertyRow>(item.getModel(), "min");
+		Label label = new Label("minimum", model);
 		addTitleAttribute(model, label);
 		item.add(label);
 	}
 
 	/**
-	 * @param decl
 	 * @param item
 	 */
 	@SuppressWarnings("rawtypes")
-	protected void addLabelDecl(PropertyRow decl, ListItem<PropertyRow> item) {
-		IModel model =  new PropertyModel<ResourceID>(decl, "defaultLabel");
+	protected void addLabelDecl(ListItem<PropertyRow> item) {
+		IModel model =  new PropertyModel<ResourceID>(item.getModel(), "defaultLabel");
 		Label label = new Label("label", model);
 		addTitleAttribute(model, label);
-		item.add(label);
-	}
-
-	/**
-	 * @param decl
-	 * @param item
-	 */
-	protected void addPropertyDecl(PropertyRow decl, ListItem<PropertyRow> item) {
-		IModel<String> model = new DerivedModel<String, ResourceID>(decl.getPropertyDescriptor()) {
-			@Override
-			protected String derive(ResourceID original) {
-				return ResourceLabelBuilder.getInstance().getFieldLabel(original, getLocale());
-			}
-		};
-		Label label = new Label("property",model);
-		addTitleAttribute(Model.of(decl.getPropertyDescriptor()), label);
 		item.add(label);
 	}
 
@@ -226,17 +219,16 @@ public class SchemaDetailPanel extends Panel{
 	 * @param label
 	 * @return 
 	 */
-	private void addTitleAttribute(IModel<?> model, Label label) {
-		label.add(new AttributeAppender("title", model));
+	private void addTitleAttribute(IModel<?> model, Component c) {
+		c.add(new AttributeAppender("title", model));
 	}
 	
 	/**
 	 * Adds a colorcode to the table for better usability.
-	 * @param decl
 	 * @param item
 	 */
-	private void addColorCode(PropertyRow decl, ListItem<PropertyRow> item) {
-		switch (decl.getDataType()) {
+	private void addColorCode(ListItem<PropertyRow> item) {
+		switch (item.getModelObject().getDataType()) {
 			case DATE:
 			case TIME_OF_DAY:
 			case TIMESTAMP:
