@@ -48,6 +48,20 @@ public interface SecurityService {
 	RBUser createDomainAdmin(Domain domain, String email, String username, String password);
 	
 	/**
+	 * @param user The existing user to update.
+	 * @throws RBException 
+	 */
+	void storeUser(RBUser user) throws RBException;
+	
+	/**
+	 * Delete a user from this domain and unregister in master domain.
+	 * @param user The user to be deleted.
+	 */
+	void deleteUser(RBUser user);
+	
+	// ----------------------------------------------------
+	
+	/**
 	 * Sets a new Password for a {@link User}.
 	 * @param user
 	 * @param currentPassword
@@ -64,6 +78,8 @@ public interface SecurityService {
 	 */
 	void resetPasswordForUser(RBUser user, EmailConfiguration conf, Locale locale) throws RBException;
 
+	// ----------------------------------------------------
+	
 	/**
 	 * Assure that the user has exactly the given roles.
 	 * @param user The user.
@@ -76,11 +92,5 @@ public interface SecurityService {
 	 * @param user The user the roles should be removed from.
 	 */
 	void removeAllUserRoles(final User user);
-
-	/**
-	 * @param user The existing user to update.
-	 * @throws RBException 
-	 */
-	void storeUser(RBUser user) throws RBException;
 
 }

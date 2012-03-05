@@ -23,6 +23,8 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNText;
+import org.arastreju.sge.query.Query;
+import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.security.Credential;
 import org.arastreju.sge.security.Domain;
 import org.arastreju.sge.security.PasswordCredential;
@@ -124,8 +126,9 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			logger.info("Created domain admin: " + admin);
 			return admin;
 		} catch(ArastrejuException e) {
-			logger.error("Error while trying to create admin for domain " + domain);
-			throw new ArastrejuRuntimeException(org.arastreju.sge.eh.ErrorCodes.GENERAL_RUNTIME_ERROR);
+			logger.error("Error while trying to create admin for domain {} : {}", domain, e.getMessage());
+			throw new ArastrejuRuntimeException(org.arastreju.sge.eh.ErrorCodes.GENERAL_RUNTIME_ERROR, 
+					"domain admin could not be created", e);
 		}
 	}
 	
@@ -157,6 +160,18 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			registerUserInMasterDomain(updated, domain);
 		}
 	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void deleteUser(RBUser user) {
+		mc().remove(user);
+		logger.info("Deleted user: " + user);
+		deleteUserInMasterDomain(user);
+	}
+	
+	// ----------------------------------------------------
 	
 	/**
 	 * {@inheritDoc}
@@ -224,13 +239,14 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	// ----------------------------------------------------
 	
 	/**
-	 * WARNING: Very dangerous! Copying data between domain!
+	 * WARNING: Never forget to sync the users between current domain and master domain!
 	 * The user's login IDs have to be mapped to the domain.
 	 * @param user The user.
-	 * @param domain The domain.
+	 * @param domain The user's domain.
 	 */
 	private void registerUserInMasterDomain(User user, String domain) {
-		final ModelingConversation mc = masterGate().startConversation();
+		final ArastrejuGate masterGate = masterGate();
+		final ModelingConversation mc = masterGate.startConversation();
 		final ResourceNode userNode = new SNResource();
 		userNode.addAssociation(RDF.TYPE, Aras.USER, Aras.IDENT);
 		userNode.addAssociation(Aras.BELONGS_TO_DOMAIN, new SNText(domain), Aras.IDENT);
@@ -241,7 +257,31 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		}
 		mc.attach(userNode);
 		logger.info("Registered user in master domain: " + user + " --> " + domain);
+		masterGate.close();
 	}
+	
+	/**
+	 *  WARNING: Never forget to sync the users between current domain and master domain!
+	 * The user's login IDs have to be mapped to the domain.
+	 * @param user The user.
+	 */
+	private void deleteUserInMasterDomain(RBUser user) {
+		final ArastrejuGate masterGate = masterGate();
+		final Query query = masterGate.createQueryManager().buildQuery()
+				.addField(Aras.IDENTIFIED_BY, user.getEmail());
+		final QueryResult result = query.getResult();
+		if (!result.isEmpty()) {
+			for (ResourceNode id : result) {
+				masterGate.startConversation().remove(id);
+				logger.info("User deleted user {} from master domain; ID: {} ", user, id);	
+			}
+		} else {
+			logger.warn("User could not be deleted from master domain: " + user);
+		}
+		masterGate.close();
+	}
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Verifies a password against a {@link User}

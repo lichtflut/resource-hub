@@ -61,15 +61,6 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 		};
 	}
 
-	public static ConditionalModel<User> isDomainAdmin() {
-		return new ConditionalModel<User>() {
-			@Override
-			public boolean isFulfilled() {
-				return currentUserID() != null;
-			}
-		};
-	}
-	
 	public static ConditionalModel<User> hasPermission(final String permission) {
 		return new ConditionalModel<User>(new CurrentUserModel()) {
 			@Override
