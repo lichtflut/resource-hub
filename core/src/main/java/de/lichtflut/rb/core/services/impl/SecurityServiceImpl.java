@@ -157,7 +157,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		SNOPS.assure(updated, Aras.IDENTIFIED_BY, identifiers, Aras.IDENT);
 		final String domain = getProvider().getContext().getDomain();
 		if (domain != null && !gate().getContext().isMasterDomain()) {
-			registerUserInMasterDomain(updated, domain);
+			updateUserInMasterDomain(existing, updated, domain);
 		}
 	}
 	
@@ -257,6 +257,35 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		}
 		mc.attach(userNode);
 		logger.info("Registered user in master domain: " + user + " --> " + domain);
+		masterGate.close();
+	}
+	
+	/**
+	 * WARNING: Never forget to sync the users between current domain and master domain!
+	 * The user's login IDs have to be mapped to the domain.
+	 * @param existing The existing user.
+	 * @param updated The updated user.
+	 * @param domain The user's domain.
+	 */
+	private void updateUserInMasterDomain(RBUser existing, RBUser updated, String domain) {
+		final ArastrejuGate masterGate = masterGate();
+		final Query query = masterGate.createQueryManager().buildQuery()
+				.addField(Aras.IDENTIFIED_BY, existing.getEmail())
+				.or()
+				.addField(Aras.IDENTIFIED_BY, existing.getUsername());
+		final QueryResult result = query.getResult();
+		if (!result.isEmpty()) {
+			final ResourceNode targetUser = result.getSingleNode();
+			SNOPS.remove(targetUser, Aras.IDENTIFIED_BY);
+			for (SemanticNode node : SNOPS.objects(updated, Aras.IDENTIFIED_BY)) {
+				final SNText copy = new SNText(node.asValue().getStringValue());
+				SNOPS.associate(targetUser, Aras.IDENTIFIED_BY, copy, Aras.IDENT);
+			}
+			logger.info("Updated user {} in master domain to {}.", existing, updated);
+		} else {
+			logger.info("User not found in master domain: " + existing + " --> " + domain);
+			registerUserInMasterDomain(updated, domain);
+		}
 		masterGate.close();
 	}
 	
