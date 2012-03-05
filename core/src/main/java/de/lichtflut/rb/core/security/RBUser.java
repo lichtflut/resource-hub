@@ -12,6 +12,7 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.security.User;
 import org.arastreju.sge.security.impl.AbstractIdentity;
 
+import scala.actors.threadpool.Arrays;
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.RBSystem;
 
@@ -71,7 +72,7 @@ public class RBUser extends AbstractIdentity implements User {
 	 */
 	@Override
 	public String getName() {
-		return Infra.coalesce(getUsername(), getEmail(), getQualifiedName().getSimpleName());
+		return Infra.coalesce(getUsername(), getEmail(), identifiers(), getQualifiedName().getSimpleName());
 	}
 	
 	/** 
@@ -89,6 +90,17 @@ public class RBUser extends AbstractIdentity implements User {
 	@Override
 	public String toString() {
 		return getName();
+	}
+	
+	// ----------------------------------------------------
+	
+	protected String identifiers() {
+		final String[] identifiers = getIdentifiers();
+		if (identifiers == null || identifiers.length == 0) {
+			return null;
+		} else {
+			return Arrays.toString(identifiers);
+		}
 	}
 
 }

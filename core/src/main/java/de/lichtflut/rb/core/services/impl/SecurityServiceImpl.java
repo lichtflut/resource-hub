@@ -268,7 +268,9 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	private void deleteUserInMasterDomain(RBUser user) {
 		final ArastrejuGate masterGate = masterGate();
 		final Query query = masterGate.createQueryManager().buildQuery()
-				.addField(Aras.IDENTIFIED_BY, user.getEmail());
+				.addField(Aras.IDENTIFIED_BY, user.getEmail())
+				.or()
+				.addField(Aras.IDENTIFIED_BY, user.getUsername());
 		final QueryResult result = query.getResult();
 		if (!result.isEmpty()) {
 			for (ResourceNode id : result) {
