@@ -240,7 +240,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 			SNOPS.associate(userNode, Aras.IDENTIFIED_BY, copy, Aras.IDENT);
 		}
 		mc.attach(userNode);
-		logger.info("Registering user in master domain: " + user + " --> " + domain);
+		logger.info("Registered user in master domain: " + user + " --> " + domain);
 	}
 
 	/**

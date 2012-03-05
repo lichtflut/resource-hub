@@ -93,8 +93,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 		try {
 			final String id = fields[0];
-			final RBUser user = new RBUser(getGateForUser(id).getIdentityManagement().findUser(id));
-			if (user != null && isValid(user, id, fields[1], fields[2])) {
+			final User arasUser = getGateForUser(id).getIdentityManagement().findUser(id);
+			if (arasUser != null && isValid(arasUser, id, fields[1], fields[2])) {
+				final RBUser user = new RBUser(arasUser);
 				logger.info("User {} logged in by token.", user);
 				setLastLogin(user);
 				return user;
