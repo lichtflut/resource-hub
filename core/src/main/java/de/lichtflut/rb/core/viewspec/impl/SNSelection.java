@@ -18,7 +18,11 @@ import de.lichtflut.rb.core.viewspec.WDGT;
 
 /**
  * <p>
- *  Implementation of a selection.
+ *  Implementation of a selection. Each selection constists of 
+ *  <ul>
+ *  	<li>Expressions and/or</li>
+ *  	<li>Parameters</li>
+ *  </ul>
  * </p>
  *
  * <p>

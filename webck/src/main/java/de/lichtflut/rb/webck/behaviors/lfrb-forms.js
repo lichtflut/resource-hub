@@ -7,7 +7,7 @@ LFRB.Forms = {
 			var button = document.getElementById(buttonId);
 			if (event.keyCode != 13 || button == null || button.onclick == null || typeof(button.onclick) == 'undefined') {
 				return;
-			} R
+			}
 			alert("enter");
 			var tag = event.target.tagName;
 			if (tag == 'INPUT' || tag == 'SELECT') {

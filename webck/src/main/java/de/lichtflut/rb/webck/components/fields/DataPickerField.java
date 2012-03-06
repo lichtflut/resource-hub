@@ -11,6 +11,8 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.odlabs.wiquery.core.javascript.JsScopeContext;
 import org.odlabs.wiquery.ui.autocomplete.Autocomplete;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteJavaScriptResourceReference;
@@ -33,6 +35,10 @@ import de.lichtflut.rb.core.entity.RBEntity;
  */
 @SuppressWarnings("serial")
 public class DataPickerField<T extends Serializable> extends FormComponentPanel<T> {
+	
+	public static final ResourceReference REF = new JavaScriptResourceReference(DataPickerField.class, "lfrb-datapicker.js");
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -67,24 +73,27 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		display.setSource(source);
 		display.setSearchEvent(new JsScopeUiEvent() {
 			protected void execute(final JsScopeContext ctx) {
-				ctx.append("$('#" +  displayMarkupID + "').removeClass('status-error').addClass('status-warning');");
+				ctx.append("LFRB.Datapicker.onSearch('#" +  displayMarkupID + "');");
 			}
 		});
 		display.setSelectEvent(new JsScopeUiEvent() {
 			protected void execute(final JsScopeContext ctx) {
-				ctx.append("if (ui.item) {");
-				ctx.append("  $('#" +  hiddenMarkupId + "').attr('value', ui.item.id);");
-				ctx.append("  $('#" +  displayMarkupID + "').attr('value', ui.item.label)" +
-						".removeClass('status-error').removeClass('status-warning');");
-				ctx.append("} else { alert ('internal error nothing selected')};");
-				ctx.append("return false;");
+				ctx.append("LFRB.Datapicker.accept('#" +  hiddenMarkupId + "', '#" +  displayMarkupID + "', ui.item);"); 
 			}
 		});
 		display.setChangeEvent(new JsScopeUiEvent() {
 			protected void execute(final JsScopeContext ctx) {
-				ctx.append("if ($('#" +  displayMarkupID + "').hasClass('status-warning')) { " +
-					       "    $('#" +  displayMarkupID + "').addClass('status-error');" +
-						   "} ");
+				ctx.append("LFRB.Datapicker.onChange('#" +  displayMarkupID + "');");
+			}
+		});
+		display.setOpenEvent(new JsScopeUiEvent() {
+			protected void execute(final JsScopeContext ctx) {
+				ctx.append("LFRB.Datapicker.onOpen('#" +  displayMarkupID + "');");
+			}
+		});
+		display.setCloseEvent(new JsScopeUiEvent() {
+			protected void execute(final JsScopeContext ctx) {
+				ctx.append("LFRB.Datapicker.onClose('#" +  displayMarkupID + "');");
 			}
 		});
 		add(display);
@@ -136,6 +145,7 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	public void renderHead(final IHeaderResponse response) {
 		super.renderHead(response);
 		response.renderJavaScriptReference(AutocompleteJavaScriptResourceReference.get());
+		response.renderJavaScriptReference(REF);
 	}
 
 	// -----------------------------------------------------

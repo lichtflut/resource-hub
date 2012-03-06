@@ -3,13 +3,13 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.basic.Label;
 import org.odlabs.wiquery.ui.autocomplete.Autocomplete;
 
 /**
  * <p>
- *  A suggest link/button for data picker fields.
+ *  A suggest link/button for data picker fields. Only to be used together with {@link DataPickerField}s.
  * </p>
  *
  * <p>
@@ -19,36 +19,14 @@ import org.odlabs.wiquery.ui.autocomplete.Autocomplete;
  * @author Oliver Tigges
  */
 @SuppressWarnings("rawtypes")
-public class PickerSuggestLink extends AjaxLink {
-
-	private final Autocomplete field;
-	
-	private boolean open;
-	
-	// ----------------------------------------------------
+public class PickerSuggestLink extends Label {
 
 	/**
 	 * @param id
 	 */
-	public PickerSuggestLink(String id, Autocomplete field) {
+	protected PickerSuggestLink(String id, Autocomplete field) {
 		super(id);
-		this.field = field;
+		add(new AttributeModifier("onclick", "LFRB.Datapicker.toggle('#"+ field.getMarkupId() + "')"));
 	}
 	
-	// ----------------------------------------------------
-	
-	/** 
-	* {@inheritDoc}
-	*/
-	@Override
-	public void onClick(AjaxRequestTarget target) {
-		if (open) {
-			field.close(target);
-			open = false;
-		} else {
-			field.search(target, "#!*");
-			open = true;
-		}
-	}
-
 }
