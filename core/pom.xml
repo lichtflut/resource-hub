@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.lichtflut</groupId>
 		<artifactId>lf.resource-browser</artifactId>
-		<version>0.2-SNAPSHOT</version>
+		<version>0.4-SNAPSHOT</version>
 	</parent>
 	<groupId>de.lichtflut.rb</groupId>
 	<artifactId>lf.resource-browser.core</artifactId>
@@ -98,17 +98,14 @@
 		<dependency>
 			<groupId>org.arastreju</groupId>
 			<artifactId>arastreju.neo4j</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.arastreju</groupId>
 			<artifactId>arastreju.sge</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.arastreju</groupId>
 			<artifactId>arastreju.ogm</artifactId>
-			<version>0.6.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.antlr</groupId>

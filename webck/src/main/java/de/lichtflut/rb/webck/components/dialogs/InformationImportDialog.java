@@ -18,12 +18,14 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.io.SemanticIOException;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
-import org.arastreju.sge.model.SemanticGraph;
+import org.arastreju.sge.io.SemanticIOException;
+import org.arastreju.sge.persistence.TransactionControl;
 
-import de.lichtflut.rb.core.reporting.IOReport;
+import de.lichtflut.rb.core.io.IOReport;
+import de.lichtflut.rb.core.io.ReportingStatementImporter;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
@@ -84,29 +86,32 @@ public class InformationImportDialog extends AbstractRBDialog {
 	}
 	
 	private void importUpload(final List<FileUpload> uploadList, final IModel<String> format) {
-		Boolean isFirstReport = true;
+		boolean isFirstReport = true;
 		IOReport endReport = null;
 		
+		final ModelingConversation mc = provider.getArastejuGate().startConversation();
+		
 		for (FileUpload upload : uploadList) {
-			IOReport report = new IOReport();
+			final IOReport report = new IOReport();
 			final SemanticGraphIO io = new RdfXmlBinding();
-			try {
-				final SemanticGraph graph = io.read(upload.getInputStream());
-				provider.getArastejuGate().startConversation().attach(graph);
-				
-				report.add("Namespaces", graph.getNamespaces().size());
-				report.add("Nodes", graph.getNodes().size());
-				report.add("Subjects", graph.getSubjects().size());
-				report.add("Statements", graph.getStatements().size());
+			
+			final TransactionControl tx = mc.beginTransaction();
+			final ReportingStatementImporter importer = new ReportingStatementImporter(mc);
+			try {	
+				io.read(upload.getInputStream(), importer);
+				report.merge(importer.createReport());
+				tx.success();
 				report.success();
 			} catch (IOException e) {
-//				throw new RuntimeException(e);
 				report.setAdditionalInfo("[" +upload.getClientFileName() +"] " +e.getMessage());
 				report.error();
+				tx.fail();
 			} catch (SemanticIOException e) {
-//				throw new RuntimeException(e);
 				report.setAdditionalInfo("[" +upload.getClientFileName() +"] " +e.getMessage());
 				report.error();
+				tx.fail();
+			} finally {
+				tx.finish();
 			}
 			upload.closeStreams();
 			if(isFirstReport) {

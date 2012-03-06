@@ -9,7 +9,7 @@ import java.io.InputStream;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.Statement;
 
-import de.lichtflut.rb.core.reporting.IOReport;
+import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;

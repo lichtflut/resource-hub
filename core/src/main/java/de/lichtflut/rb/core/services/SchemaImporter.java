@@ -3,7 +3,7 @@ package de.lichtflut.rb.core.services;
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.lichtflut.rb.core.reporting.IOReport;
+import de.lichtflut.rb.core.io.IOReport;
 
 
 /**

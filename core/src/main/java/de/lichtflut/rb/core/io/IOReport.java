@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.reporting;
+package de.lichtflut.rb.core.io;
 
 import java.io.Serializable;
 import java.util.HashMap;

@@ -6,7 +6,7 @@ package de.lichtflut.rb.core.services.impl;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import de.lichtflut.rb.core.reporting.IOReport;
+import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.schema.parser.OutputElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaWriter;
 import de.lichtflut.rb.core.services.SchemaExporter;

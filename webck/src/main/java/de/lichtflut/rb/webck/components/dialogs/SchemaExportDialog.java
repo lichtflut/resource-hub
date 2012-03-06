@@ -24,7 +24,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
-import de.lichtflut.rb.core.reporting.IOReport;
+import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.services.SchemaExporter;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;

@@ -32,7 +32,7 @@ import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.model.SemanticGraph;
 
-import de.lichtflut.rb.core.reporting.IOReport;
+import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**

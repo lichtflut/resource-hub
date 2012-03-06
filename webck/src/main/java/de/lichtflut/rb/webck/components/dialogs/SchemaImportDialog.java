@@ -20,7 +20,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.core.reporting.IOReport;
+import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
