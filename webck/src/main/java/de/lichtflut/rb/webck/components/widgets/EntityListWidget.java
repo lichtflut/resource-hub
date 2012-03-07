@@ -22,6 +22,7 @@ import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryException;
 import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.query.SimpleQueryResult;
+import org.arastreju.sge.query.SortCriteria;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import de.lichtflut.rb.core.RBSystem;
@@ -128,6 +129,7 @@ public class EntityListWidget extends ConfigurableWidget {
 					selection.adapt(query);
 					query.end();
 					try {
+						query.setSortCriteria(new SortCriteria(getSortCriteria(spec.getObject())));
 						return query.getResult();
 					} catch(QueryException e) {
 						error("Error while executing query: " + e);
@@ -158,6 +160,18 @@ public class EntityListWidget extends ConfigurableWidget {
 	
 	private ResourceNode resolve(SemanticNode node) {
 		return provider.getResourceResolver().resolve(node.asResource());
+	}
+	
+	private String[] getSortCriteria(WidgetSpec spec) {
+		List<ResourceNode> defs = getColumnDefs(spec);
+		List<String> columns = new ArrayList<String>();
+		for (ResourceNode def : defs) {
+			final SemanticNode predicate = SNOPS.fetchObject(def.asResource(), WDGT.CORRESPONDS_TO_PROPERTY);
+			if (predicate != null && predicate.isResourceNode()) {
+				columns.add(predicate.asResource().toURI());
+			}
+		}
+		return columns.toArray(new String[columns.size()]);
 	}
 	
 	private List<ResourceNode> getColumnDefs(WidgetSpec spec) {

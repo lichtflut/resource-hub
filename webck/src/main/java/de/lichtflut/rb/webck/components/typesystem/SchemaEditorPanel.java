@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
+import java.util.Arrays;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -11,6 +13,8 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -32,7 +36,6 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.fields.EnumDropDownChoice;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -72,6 +75,8 @@ public class SchemaEditorPanel extends Panel {
 		setOutputMarkupId(true);
 		
 		add(new Label("type", new PropertyModel(model, "describedType")));
+		
+		add(new TypeHierarchyPanel("hierarchy", new PropertyModel(model, "describedType")));
 		
 		final Form<?> form = new Form("form");
 		form.setOutputMarkupId(true);
@@ -166,10 +171,10 @@ public class SchemaEditorPanel extends Panel {
 				
 				final boolean isPrivateTD = !row.isTypeDefinitionPublic();
 				
-				final EnumDropDownChoice<Datatype> dataTypeChoice = 
-						new EnumDropDownChoice<Datatype>("dataType", 
-							new PropertyModel(item.getModel(), "dataType"),
-							Datatype.values());
+				final DropDownChoice<Datatype> dataTypeChoice = 
+						new DropDownChoice<Datatype>("dataType", new PropertyModel(item.getModel(), "dataType"),
+						Arrays.asList(Datatype.values()), new EnumChoiceRenderer<Datatype>(this)) ;
+				
 				dataTypeChoice.setEnabled(isPrivateTD);
 				dataTypeChoice.add(new AjaxFormComponentUpdatingBehavior("onclick") {
 					@Override

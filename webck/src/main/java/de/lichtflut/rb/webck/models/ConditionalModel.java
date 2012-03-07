@@ -107,6 +107,17 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static ConditionalModel<?> isNotEmpty(final IModel<? extends Collection<?>> model) {
+		return new ConditionalModel(model) {
+			@Override
+			public boolean isFulfilled() {
+				Collection collection = (Collection) getObject();
+				return collection != null && !collection.isEmpty();
+			}
+		};
+	}
+	
 	public static ConditionalModel<?> not(final ConditionalModel<?> model) {
 		return new ConditionalModel<Boolean>(model) {
 			@Override

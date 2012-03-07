@@ -1,0 +1,42 @@
+<!--
+
+    Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+	<div class="input-panel">
+		<h4><wicket:message key="title">[title]</wicket:message></h4>
+		<ul>
+		<wicket:container wicket:id="superClasses">
+ 			<li class="action-list">
+ 				<span>
+ 					<span wicket:id="class">[class]</span>
+ 					<a wicket:id="remove" tabindex="-1" wicket:message="title:link.remove.title">
+ 						<span class="remove-value-link">-</span>
+ 					</a>
+ 				</span>
+ 			</li>
+ 		</wicket:container>
+ 		</ul>
+ 		<span wicket:id="noSuperClassesHint">[no super classes hint]</span>
+ 		
+ 		<form wicket:id="form">
+ 			<div wicket:id="feedback"></div>
+	 		<div class="section form-field">
+	 			<label><wicket:message key="label.add-class">[add]</wicket:message></label>
+	 			<div wicket:id="classPicker"></div>
+	 			<button wicket:id="addClass" class="default-button">
+	 				<wicket:message key="button.add-class">[add]</wicket:message>
+	 			</button>
+	 		</div>
+ 		</form>
+	</div>
+
+</wicket:panel>
+</html>

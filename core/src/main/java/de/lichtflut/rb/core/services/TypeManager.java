@@ -42,6 +42,20 @@ public interface TypeManager {
 	 */
 	List<SNClass> findAllTypes();
 	
+	/**
+	 * Add a super class to an existing type.
+	 * @param type The type.
+	 * @param superClass The new super class for this type.
+	 */
+	void addSuperClass(ResourceID type, ResourceID superClass);
+	
+	/**
+	 * Add a super class from an existing type.
+	 * @param type The type.
+	 * @param superClass The super class to be removed from this type.
+	 */
+	void removeSuperClass(ResourceID type, ResourceID superClass);
+	
 	// ----------------------------------------------------
 	
 	/**
