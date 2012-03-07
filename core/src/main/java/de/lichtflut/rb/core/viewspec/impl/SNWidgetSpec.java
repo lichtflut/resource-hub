@@ -3,9 +3,13 @@
  */
 package de.lichtflut.rb.core.viewspec.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
@@ -13,6 +17,7 @@ import org.arastreju.sge.model.nodes.views.ResourceView;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WDGT;
+import de.lichtflut.rb.core.viewspec.WidgetAction;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 
 /**
@@ -118,6 +123,20 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	@Override
 	public void setPosition(Integer position) {
 		setValue(Aras.HAS_SERIAL_NUMBER, position);
+	}
+	
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<WidgetAction> getActions() {
+		final List<WidgetAction> result = new ArrayList<WidgetAction>();
+		for(Statement stmt : getAssociations(WDGT.SUPPORTS_ACTION)) {
+			result.add(new SNWidgetAction(stmt.getObject().asResource()));
+		}
+		return result;
 	}
 	
 	// ----------------------------------------------------

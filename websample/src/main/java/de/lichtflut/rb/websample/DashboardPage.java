@@ -127,7 +127,7 @@ public class DashboardPage extends RBBasePage {
 	
 	private ResourceNode createInstantiateAction(ResourceID type) {
 		final ResourceNode action = new SNResource();
-		action.addAssociation(WDGT.ACTION_CREATE_INSTANCE_OF, type);
+		action.addAssociation(WDGT.CREATE_INSTANCE_OF, type);
 		return action;
 	}
 

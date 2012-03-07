@@ -8,6 +8,7 @@ import org.apache.wicket.model.IModel;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.components.widgets.EntityListWidget;
+import de.lichtflut.rb.webck.components.widgets.config.actions.ActionsConfigPanel;
 import de.lichtflut.rb.webck.components.widgets.config.columns.ColumnsConfigPanel;
 import de.lichtflut.rb.webck.components.widgets.config.selection.SelectionConfigPanel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
@@ -41,6 +42,8 @@ public class EntityListWidgetConfigPanel extends AbstractWidgetConfigPanel {
 		}));
 		
 		getForm().add(new ColumnsConfigPanel("columns", model));
+		
+		getForm().add(new ActionsConfigPanel("actions", model));
 	}
 	
 }

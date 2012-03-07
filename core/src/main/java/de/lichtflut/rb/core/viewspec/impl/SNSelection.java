@@ -123,10 +123,14 @@ public class SNSelection extends ResourceView implements Selection {
 	 */
 	private void appendParameter(SNSelectionParameter param, Query query) {
 		final ResourceID field = param.getField();
-		final String term = SNOPS.string(param.getTerm());
+		final SemanticNode termNode = param.getTerm();
+		final boolean isResourceReference = termNode != null && termNode.isResourceNode();
+		final String term = SNOPS.string(termNode);
 		
 		if (field != null) {
 			query.addField(field, term);
+		} else if (isResourceReference){
+			query.addRelation(term);
 		} else {
 			query.addValue(term);
 		}

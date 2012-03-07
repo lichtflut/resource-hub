@@ -9,6 +9,7 @@ import java.util.List;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
@@ -68,6 +69,7 @@ public class TypeManagerImpl implements TypeManager {
 	@Override
 	public SNClass createType(final QualifiedName qn) {
 		final SNClass type = new SNResource(qn).asClass();
+		SNOPS.associate(type, RDF.TYPE, RDFS.CLASS, RB.TYPE_SYSTEM_CONTEXT);
 		SNOPS.associate(type, RDF.TYPE, RBSystem.TYPE, RB.TYPE_SYSTEM_CONTEXT);
 		newMC().attach(type);
 		return type;

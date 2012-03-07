@@ -15,6 +15,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.query.Query;
@@ -23,6 +24,7 @@ import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.query.SimpleQueryResult;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WDGT;
@@ -122,7 +124,9 @@ public class EntityListWidget extends ConfigurableWidget {
 				final Selection selection = spec.getObject().getSelection();
 				if (selection != null && selection.isDefined()) {
 					final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
+					query.beginAnd().addField(RDF.TYPE, RBSystem.ENTITY);
 					selection.adapt(query);
+					query.end();
 					try {
 						return query.getResult();
 					} catch(QueryException e) {

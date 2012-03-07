@@ -44,6 +44,8 @@ public interface WDGT {
 	
 	ResourceID MENU_ITEM = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI,  "MenuItem");
 	
+	ResourceID ACTION_INSTANTIATE = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI,  "InstantiateAction");
+	
 	// -- WIDGET TYPES ------------------------------------
 	
 	ResourceID PREDEFINED = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "PredefinedWidget");
@@ -155,7 +157,7 @@ public interface WDGT {
 	/**
 	 * Action to create instance of referenced type.
 	 */
-	ResourceID ACTION_CREATE_INSTANCE_OF = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "createInstanceOf");
+	ResourceID CREATE_INSTANCE_OF = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "createInstanceOf");
 	
 	
 	// -- PREDEFINED --------------------------------------

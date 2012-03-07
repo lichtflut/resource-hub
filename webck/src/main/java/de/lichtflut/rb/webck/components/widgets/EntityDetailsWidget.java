@@ -6,10 +6,12 @@ package de.lichtflut.rb.webck.components.widgets;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
 
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.Selection;
@@ -65,7 +67,9 @@ public class EntityDetailsWidget extends ConfigurableWidget {
 				final Selection selection = spec.getObject().getSelection();
 				if (selection != null && selection.isDefined()) {
 					final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
-					spec.getObject().getSelection().adapt(query);
+					query.beginAnd().addField(RDF.TYPE, RBSystem.ENTITY);
+					selection.adapt(query);
+					query.end();
 					final QueryResult result = query.getResult();
 					if (!result.isEmpty()) {
 						return loadFirst(result);

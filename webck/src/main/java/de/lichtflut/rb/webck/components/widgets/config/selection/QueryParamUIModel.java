@@ -5,11 +5,11 @@ package de.lichtflut.rb.webck.components.widgets.config.selection;
 
 import java.io.Serializable;
 
+import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.viewspec.impl.SNSelectionParameter;
 
@@ -24,9 +24,11 @@ import de.lichtflut.rb.core.viewspec.impl.SNSelectionParameter;
  *
  * @author Oliver Tigges
  */
-class QueryParamUIModel implements Serializable {
+class QueryParamUIModel implements Serializable, IDetachable {
 
 	private final IModel<SNSelectionParameter> model;
+	
+	private ParameterType type;
 	
 	// ----------------------------------------------------
 	
@@ -44,10 +46,11 @@ class QueryParamUIModel implements Serializable {
 	 * @return the type
 	 */
 	public ParameterType getType() {
+		if (type != null) {
+			return type;
+		}
 		SNSelectionParameter parameter = this.model.getObject();
 		boolean isRelation = isResourceReference(parameter.getTerm());
-		
-		final ParameterType type;
 		if (parameter.getField() == null) {
 			if (isRelation) {
 				type = ParameterType.ANY_FIELD_RELATION;
@@ -65,9 +68,10 @@ class QueryParamUIModel implements Serializable {
 	}
 
 	/**
-	 * @param type the type to set
+	 * @param type Set the type explicitly.
 	 */
 	public void setType(ParameterType type) {
+		this.type = type;
 		switch (type) {
 		case RESOURCE_TYPE:
 			setField(RDF.TYPE);
@@ -105,7 +109,14 @@ class QueryParamUIModel implements Serializable {
 	 * @return the value
 	 */
 	public SemanticNode getValue() {
-		return model.getObject().getTerm();
+		switch (getType()) {
+		case RESOURCE_TYPE:
+		case SPECIAL_FIELD_RELATION:
+		case ANY_FIELD_RELATION:
+			return getResourceValue();
+		default:
+			return model.getObject().getTerm();
+		}
 	}
 
 	/**
@@ -117,14 +128,31 @@ class QueryParamUIModel implements Serializable {
 	
 	// ----------------------------------------------------
 	
-	static boolean isResourceReference(SemanticNode node) {
-		if (node == null) {
-			return false;
-		} else if (node.isResourceNode()) {
-			return true;
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void detach() {
+		type = null;
+	}
+	
+	// ----------------------------------------------------
+	
+	private ResourceID getResourceValue() {
+		SemanticNode term = model.getObject().getTerm();
+		if (term.isResourceNode()) {
+			return term.asResource();
 		} else {
-			return QualifiedName.isUri(node.asValue().getStringValue());
+			return null;
 		}
 	}
 	
+	private boolean isResourceReference(SemanticNode node) {
+		if (node == null) {
+			return false;
+		} else {
+			return node.isResourceNode();
+		}
+	}
+
 }

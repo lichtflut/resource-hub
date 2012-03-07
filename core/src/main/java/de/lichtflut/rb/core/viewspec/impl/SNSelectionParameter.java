@@ -29,14 +29,15 @@ import de.lichtflut.rb.core.viewspec.WDGT;
 public class SNSelectionParameter extends ResourceView {
 
 	/**
-	 * 
+	 * Constructor for new parameters.
 	 */
 	public SNSelectionParameter() {
 		super();
 	}
 
 	/**
-	 * @param resource
+	 * Constructor for existing parameters.
+	 * @param resource The existing resource representing the parameter.
 	 */
 	public SNSelectionParameter(ResourceNode resource) {
 		super(resource);
@@ -48,23 +49,42 @@ public class SNSelectionParameter extends ResourceView {
 		return resource(singleObject(this, WDGT.CONCERNS_FIELD));
 	}
 	
-	public SemanticNode getTerm() {
-		return fetchObject(this, WDGT.HAS_TERM);
-	}
-	
 	public void setField(ResourceID id) {
 		setValue(WDGT.CONCERNS_FIELD, id);
 	}
 	
-	public void setTerm(SemanticNode term) {
-		setValue(WDGT.HAS_TERM, term);
-	}
-
 	/**
 	 * Unset any field constraint.
 	 */
 	public void unsetField() {
 		SNOPS.remove(this, WDGT.CONCERNS_FIELD);
+	}
+	
+	// ----------------------------------------------------
+	
+	public SemanticNode getTerm() {
+		return fetchObject(this, WDGT.HAS_TERM);
+	}
+	
+	public void setTerm(SemanticNode term) {
+		setValue(WDGT.HAS_TERM, term);
+	}
+	
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("Param(");
+		final ResourceID field = getField();
+		if (field != null) {
+			sb.append(field.getQualifiedName() + "=");
+		}
+		sb.append(getTerm());
+		sb.append(")");
+		return sb.toString();
 	}
 	
 }

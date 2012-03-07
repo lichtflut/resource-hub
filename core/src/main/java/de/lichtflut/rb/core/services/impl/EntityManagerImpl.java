@@ -188,9 +188,6 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 	
 	// ----------------------------------------------------
 	
-	/**
-	 * @param field
-	 */
 	private RBEntityImpl resolveEntityReferences(final RBEntityImpl entity, final boolean eager) {
 		for (RBField field : entity.getAllFields()) {
 			if (field.isResourceReference()) {
@@ -200,9 +197,6 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 		return entity;
 	}
 	
-	/**
-	 * @param field
-	 */
 	private void resolveEntityReferences(final RBField field, final boolean eager) {
 		for(int i=0; i < field.getSlots(); i++) {
 			final ResourceID id = (ResourceID) field.getValue(i);
@@ -213,6 +207,7 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 	}
 	
 	/**
+	 * Try to find the best matching type.
 	 * @param node the node.
 	 * @return The detected type.
 	 */

@@ -70,7 +70,7 @@ public class ViewSpecTraverser {
 				WDGT.IS_IMPLEMENTED_BY_CLASS,
 				// ACTIONS
 				WDGT.SUPPORTS_ACTION,
-				WDGT.ACTION_CREATE_INSTANCE_OF
+				WDGT.CREATE_INSTANCE_OF
 			).addAllowed(
 				RDF.TYPE,
 				RDFS.LABEL,

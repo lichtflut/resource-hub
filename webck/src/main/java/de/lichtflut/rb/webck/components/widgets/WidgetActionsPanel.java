@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.widgets;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.Component;
@@ -14,13 +13,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetAction;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.core.viewspec.impl.SNWidgetAction;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
@@ -56,12 +53,8 @@ public class WidgetActionsPanel extends TypedPanel<WidgetSpec> {
 		
 		IModel<List<WidgetAction>> actionsModel = new DerivedDetachableModel<List<WidgetAction>, WidgetSpec>(model) {
 			@Override
-			protected List<WidgetAction> derive(WidgetSpec original) {
-				final List<WidgetAction> result = new ArrayList<WidgetAction>();
-				for(Statement stmt : original.getAssociations(WDGT.SUPPORTS_ACTION)) {
-					result.add(new SNWidgetAction(stmt.getObject().asResource()));
-				}
-				return result;
+			protected List<WidgetAction> derive(WidgetSpec spec) {
+				return spec.getActions();
 			}
 		};
 		
@@ -77,7 +70,7 @@ public class WidgetActionsPanel extends TypedPanel<WidgetSpec> {
 	// ----------------------------------------------------
 	
 	public Component createNewInstanceLink(String componentID, WidgetAction action) {
-		SemanticNode type = SNOPS.fetchObject(action, WDGT.ACTION_CREATE_INSTANCE_OF);
+		SemanticNode type = SNOPS.fetchObject(action, WDGT.CREATE_INSTANCE_OF);
 		if (type == null) {
 			return new Label(componentID, "undefined");
 		}

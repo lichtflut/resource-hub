@@ -21,7 +21,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
  *
  * @author Oliver Tigges
  */
-public class ResourcePropertyModel implements IModel<SemanticNode> {
+public class ResourcePropertyModel<T extends SemanticNode> implements IModel<T> {
 	
 	private final IModel<? extends ResourceNode> subject;
 	
@@ -47,9 +47,10 @@ public class ResourcePropertyModel implements IModel<SemanticNode> {
 	/** 
 	* {@inheritDoc}
 	*/
+	@SuppressWarnings("unchecked")
 	@Override
-	public SemanticNode getObject() {
-		return SNOPS.fetchObject(subject.getObject(), predicate);
+	public T getObject() {
+		return (T) SNOPS.fetchObject(subject.getObject(), predicate);
 	}
 
 	/** 
