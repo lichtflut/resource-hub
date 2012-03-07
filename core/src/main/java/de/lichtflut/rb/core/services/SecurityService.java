@@ -60,6 +60,13 @@ public interface SecurityService {
 	void deleteUser(RBUser user);
 	
 	// ----------------------------------------------------
+
+	/**
+	 * Returns the salt that was used for this users password encryption.
+	 * @param user The user.
+	 * @return The salt.
+	 */
+	String getSalt(User user);
 	
 	/**
 	 * Sets a new Password for a {@link User}.
@@ -68,7 +75,7 @@ public interface SecurityService {
 	 * @param newPassword
 	 * @throws RBException if the current password is not valid
 	 */
-	void setNewPassword(RBUser user, String currentPassword, String newPassword) throws RBException;
+	void changePassword(RBUser user, String currentPassword, String newPassword) throws RBException;
 
 	/**
 	 * Resets the password with a generated one.

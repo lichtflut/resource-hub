@@ -44,31 +44,37 @@ public class RBCryptTest {
 	public void testVerification() {
 		String password = "an0thErPa$$word1";
 		String salt = "some_SALT";
-		String md5Hash = "bd445095f4a3311eeb71a474c28c4305";
+		String credential = "bd445095f4a3311eeb71a474c28c4305" +RBCrypt.DELIMITER +salt;
 		
 		String wrongPassword = "aWr0ngPa$$word";
-		String wrongSalt = "badSalt";
 		
 		boolean result;
 		
-		// everything is fine
-		result = RBCrypt.verify(password, salt, md5Hash);
+		// correct password
+		result = RBCrypt.verify(password, credential);
 		Assert.assertTrue(result);
 		
 		// wrong password
-		result = RBCrypt.verify(wrongPassword, salt, md5Hash);
+		result = RBCrypt.verify(wrongPassword, credential);
 		Assert.assertFalse(result);
+	}
+	
+	@Test
+	public void testBuildCredential() {
+		String crypt = "bd445095f4a3311eeb71a474c28c4305";
+		String salt = "some_SALT";
 		
-		// wrong salt
-		result = RBCrypt.verify(password, wrongSalt, md5Hash);
-		Assert.assertFalse(result);
+		String expected = crypt + RBCrypt.DELIMITER +salt;
+		String actual = RBCrypt.buildCredentialString(crypt, salt);
 		
-		// wrong password and wrong salt
-		result = RBCrypt.verify(wrongPassword, wrongSalt, md5Hash);
-		Assert.assertFalse(result);
+		Assert.assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testExtractSalt() {
+		String credential = "71de01c3b0cd2e2c8b9960176ab9e8c6#ThisIsTheSalt";
+		String salt = RBCrypt.extractSalt(credential);
 		
-		// right password but no salt
-		result = RBCrypt.verify(password, null, md5Hash);
-		Assert.assertFalse(result);
+		Assert.assertEquals("ThisIsTheSalt", salt);
 	}
 }

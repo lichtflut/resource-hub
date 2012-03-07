@@ -35,11 +35,11 @@ import org.slf4j.LoggerFactory;
 
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.infra.Infra;
-import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
+import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.SecurityService;
 
@@ -74,7 +74,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 */
 	@Override
 	public RBUser createUser(String email, String username, String password, EmailConfiguration conf, Locale locale) throws RBException {
-		final String crypted = Crypt.md5Hex(password);
+		final String crypted = RBCrypt.encryptWithRandomSalt(password);
 		final Credential credential = new PasswordCredential(crypted);
 		try {
 			final ResourceNode userNode = identityManagement().register(email, credential);
@@ -107,7 +107,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 */
 	@Override
 	public RBUser createDomainAdmin(final Domain domain, String email, String username, String password) {
-		final String crypted = Crypt.md5Hex(password);
+		final String crypted = RBCrypt.encryptWithRandomSalt(password);
 		final Credential credential = new PasswordCredential(crypted);
 		try {
 			final ArastrejuGate gate = gate(domain.getUniqueName());
@@ -194,12 +194,20 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	public void removeAllUserRoles(User user) {
 		setUserRoles(user, new ArrayList<String>());
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getSalt(User user) {
+		final String credential = SNOPS.string(SNOPS.singleObject(user, Aras.HAS_CREDENTIAL));
+		return RBCrypt.extractSalt(credential);
+	}
 
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setNewPassword(RBUser user, String currentPassword, String newPassword) throws RBException{
+	public void changePassword(RBUser user, String currentPassword, String newPassword) throws RBException{
 		verifyPassword(user, currentPassword);
 		setPassword(newPassword, user);
 	}
@@ -211,8 +219,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	@Override
 	public void resetPasswordForUser(RBUser user, EmailConfiguration conf, Locale locale) throws RBException {
 		String generatedPwd = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-		String newCrypt = Crypt.md5Hex(generatedPwd);
-		setPassword(newCrypt, user);
+		setPassword(generatedPwd, user);
 		logGeneratedPwd(generatedPwd);
 		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, generatedPwd, conf, locale);
 	}
@@ -315,14 +322,28 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	// ----------------------------------------------------
 
 	/**
+	 * Saves the newPassword to the user in the database.
+	 * @param newPassword
+	 * @param userNode
+	 */
+	private void setPassword(String newPassword, ResourceNode userNode) {
+		if(!userNode.isAttached()){
+			userNode = getProvider().getResourceResolver().resolve(userNode);
+		}
+		String newCrypt = RBCrypt.encryptWithRandomSalt(newPassword);
+		SNValue credential = new SNValue(ElementaryDataType.STRING, newCrypt);
+		SNOPS.assure(userNode, Aras.HAS_CREDENTIAL, credential, RB.PRIVATE_CONTEXT);
+	}
+	
+	/**
 	 * Verifies a password against a {@link User}
 	 * @param user
-	 * @param md5Password
+	 * @param password
 	 * @throws RBException if password is invalid
 	 */
-	private void verifyPassword(User user, String md5Password) throws RBException{
-		final SemanticNode credential = SNOPS.singleObject(user, Aras.HAS_CREDENTIAL);
-		if(!credential.asValue().getStringValue().equals(md5Password)){
+	private void verifyPassword(User user, String password) throws RBException{
+		final String checkCredential = SNOPS.string(SNOPS.singleObject(user, Aras.HAS_CREDENTIAL));
+		if(!RBCrypt.verify(password, checkCredential)) {
 			throw new RBException(ErrorCodes.INVALID_PASSWORD, "Password id not valid");
 		}
 	}
@@ -331,16 +352,4 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		return getProvider().getArastejuGate().getIdentityManagement();
 	}
 
-	/**
-	 * @param newPassword
-	 * @param userNode
-	 */
-	private void setPassword(String newPassword, ResourceNode userNode) {
-		if(!userNode.isAttached()){
-			userNode = getProvider().getResourceResolver().resolve(userNode);
-		}
-		SNValue password = new SNValue(ElementaryDataType.STRING, newPassword);
-		SNOPS.assure(userNode, Aras.HAS_CREDENTIAL, password, RB.PRIVATE_CONTEXT);
-	}
-	
 }

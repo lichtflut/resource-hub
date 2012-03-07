@@ -33,6 +33,7 @@ import scala.actors.threadpool.Arrays;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.security.LoginData;
+import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.AuthenticationService;
 import de.lichtflut.rb.core.services.SecurityService;
@@ -74,8 +75,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Override
 	public RBUser login(LoginData loginData) throws LoginException {
 		final String id = normalize(loginData.getId());
-		final Credential credential = toCredential(loginData.getPassword());
 		final IdentityManagement im = getGateForUser(id).getIdentityManagement();
+		final Credential credential = toCredential(loginData.getPassword(), im.findUser(id));
 		final RBUser user = new RBUser(im.login(id, credential));
 		setLastLogin(user);
 		logger.info("User {} logged in. ", user);
@@ -172,9 +173,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return false;
 	}
 	
-	private Credential toCredential(final String password) {
+	private Credential toCredential(final String password, final User user) {
 		if (password != null) {
-			return new PasswordCredential(Crypt.md5Hex(password));
+			String salt = provider.getSecurityService().getSalt(user);
+			return new PasswordCredential(RBCrypt.encrypt(password, salt));
 		} else {
 			return new PasswordCredential(null);
 		}

@@ -20,7 +20,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.arastreju.sge.security.User;
 
-import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -115,10 +114,8 @@ public class ChangePasswordPanel extends Panel {
 			}
 			
 			private void setNewPassword(RBUser user, String currentPassword, String newPassword) throws RBException {
-				String currentPwd = Crypt.md5Hex(currentPassword);
-				String newPwd = Crypt.md5Hex(newPassword);
-					provider.getSecurityService().setNewPassword(user, currentPwd, newPwd);
-					info(getString("info.password-changed"));
+				provider.getSecurityService().changePassword(user, currentPassword, newPassword);
+				info(getString("info.password-changed"));
 			}
 		};
 		save.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
