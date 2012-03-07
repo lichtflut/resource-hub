@@ -21,8 +21,11 @@ import de.lichtflut.infra.security.Crypt;
  */
 public abstract class RBCrypt {
 
+	protected static final String DELIMITER = "#";
+	
 	private static final String DEFAULT_SALT = "d3F4uLt-5alT";
-	public static final String DELIMITER = "#";
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Encrypts a password with a salt.
@@ -31,15 +34,14 @@ public abstract class RBCrypt {
 	 * @return credential-String: crypt with the salt included (separated by delimiter '#').
 	 */
 	public static String encrypt(final String password, final String salt) {
-		String crypted = password;
-		String checkedSalt;
-		
+		final String checkedSalt;
 		if(salt == null || salt.isEmpty()) {
 			checkedSalt = DEFAULT_SALT;
 		} else {
 			checkedSalt = salt;
 		}
-						
+
+		String crypted = password;
 		for(int i = 0; i < 1000; i++) {
 			if(i % 2 == 0) {
 				crypted = crypted + checkedSalt;
@@ -57,7 +59,7 @@ public abstract class RBCrypt {
 	 * @return credential-String: crypt with the salt included (separated by delimiter '#').
 	 */
 	public static String encrypt(final String password) {
-		return encrypt(password, null);
+		return encrypt(password, DEFAULT_SALT);
 	}
 	
 	/**
@@ -77,7 +79,7 @@ public abstract class RBCrypt {
 	 * @return The credential string "crypt#salt"
 	 */
 	public static String buildCredentialString(final String crypt, final String salt) {
-		return crypt +DELIMITER +salt;
+		return crypt + DELIMITER +salt;
 	}
 	
 	/**

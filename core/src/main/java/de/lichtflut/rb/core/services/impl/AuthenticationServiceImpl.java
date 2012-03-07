@@ -176,6 +176,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	private Credential toCredential(final String password, final User user) {
 		if (password != null) {
 			String salt = provider.getSecurityService().getSalt(user);
+			if (salt == null || salt.isEmpty()) {
+				logger.warn("User has no salt, will use old password crypter.");
+				return new PasswordCredential(Crypt.md5Hex(password));
+			}
 			return new PasswordCredential(RBCrypt.encrypt(password, salt));
 		} else {
 			return new PasswordCredential(null);

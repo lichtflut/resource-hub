@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.infra.Infra;
+import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.RBException;
@@ -344,7 +345,11 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	private void verifyPassword(User user, String password) throws RBException{
 		final String checkCredential = SNOPS.string(SNOPS.singleObject(user, Aras.HAS_CREDENTIAL));
 		if(!RBCrypt.verify(password, checkCredential)) {
-			throw new RBException(ErrorCodes.INVALID_PASSWORD, "Password id not valid");
+			if (Crypt.md5Hex(password).equals(checkCredential)) {
+				logger.warn("User's password has been encrypted the old way.");
+			} else {
+				throw new RBException(ErrorCodes.INVALID_PASSWORD, "Password id not valid");
+			}
 		}
 	}
 	

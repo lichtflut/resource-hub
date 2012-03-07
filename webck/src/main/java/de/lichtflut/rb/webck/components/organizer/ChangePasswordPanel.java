@@ -108,7 +108,7 @@ public class ChangePasswordPanel extends Panel {
 					setNewPassword(user.getObject(), currentPassword.getObject(), newPassword.getObject());
 					mode.setObject(DisplayMode.VIEW);
 				} catch (RBException e) {
-					error("error.invalid-password");
+					error(getString("error.invalid-password"));
 				}
 				RBAjaxTarget.add(form);
 			}
