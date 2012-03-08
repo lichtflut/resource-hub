@@ -1,9 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.infovis.flowchart;
-
-import java.util.Collection;
+package de.lichtflut.rb.webck.components.infovis.periphery;
 
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
@@ -11,6 +9,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
+import de.lichtflut.rb.webck.components.infovis.common.JitJsonStream;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
 
 /**
@@ -24,20 +23,15 @@ import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
  *
  * @author Oliver Tigges
  */
-public class FlowChartPanel extends InfoVisPanel<Collection<ResourceNode>> {
+public class PeripheryVisualizationPanel extends InfoVisPanel<ResourceNode> {
 	
-	private final FlowChartModeler modeler; 
-	
-	// ----------------------------------------------------
-
 	/**
 	 * Constructor.
 	 * @param id The component ID.
 	 * @param model The model.
 	 */
-	public FlowChartPanel(String id, IModel<Collection<ResourceNode>> model) {
+	public PeripheryVisualizationPanel(String id, IModel<ResourceNode> model) {
 		super(id, model);
-		this.modeler = new DefaultFlowChartModeler();
 	}
 	
 	// ----------------------------------------------------
@@ -48,12 +42,9 @@ public class FlowChartPanel extends InfoVisPanel<Collection<ResourceNode>> {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.RAPHAEL_JS);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.FLOWCHART_JS);
-		response.renderOnLoadJavaScript(
-				"var paper = Raphael('infovis', 2000, 1000);" +
-				"LFRB.FlowChart.drawChart(DataSet.nodeset, DataSet.lanes, paper);"
-		);
+		response.renderJavaScriptReference(InfoVisJavaScriptResources.JIT_JS);
+		response.renderJavaScriptReference(InfoVisJavaScriptResources.PERIPHERY_JS);
+		response.renderOnLoadJavaScript("initGraph()");
 	}
 	
 	/** 
@@ -61,8 +52,7 @@ public class FlowChartPanel extends InfoVisPanel<Collection<ResourceNode>> {
 	 */
 	@Override
 	protected IResourceStream getJsonResource() {
-		final FlowChartModel model = new FlowChartModel(modeler).add(getModelObject());
-		return new FlowChartJsonStream(model, getLocale());
+		return new JitJsonStream(getModelObject());
 	}
 
 }

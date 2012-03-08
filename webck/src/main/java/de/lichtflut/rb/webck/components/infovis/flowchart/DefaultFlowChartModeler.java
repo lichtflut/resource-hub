@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.infovis.flowchart;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import org.arastreju.sge.apriori.Aras;
@@ -13,6 +14,9 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 
 /**
  * <p>
@@ -44,7 +48,16 @@ public class DefaultFlowChartModeler extends AbstractFlowChartModeler {
 	 */
 	@Override
 	public String getLane(ResourceNode node) {
-		return "Unassigned";
+		String lane = "Unassigned";
+		for (Statement stmt : node.getAssociations()) {
+			final SNProperty predicate = stmt.getPredicate().asResource().asProperty();
+			if (predicate.isSubPropertyOf(RB.HAS_OWNER)) {
+				lane = ResourceLabelBuilder.getInstance().getLabel(
+						stmt.getObject().asResource(), Locale.getDefault());
+			}
+		}
+		logger.info("Lane of {} is: {}", node, lane);
+		return lane;
 	}
 
 	/** 
@@ -59,6 +72,7 @@ public class DefaultFlowChartModeler extends AbstractFlowChartModeler {
 				predecessors.add(stmt.getObject().asResource());
 			}
 		}
+		logger.info("Predecessors of {} are: {}", node, predecessors);
 		return predecessors;
 	}
 

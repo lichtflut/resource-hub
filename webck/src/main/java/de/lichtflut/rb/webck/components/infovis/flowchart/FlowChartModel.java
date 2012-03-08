@@ -9,11 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SemanticNode;
-
-import de.lichtflut.infra.data.MultiMap;
 
 /**
  * <p>
@@ -28,9 +24,9 @@ import de.lichtflut.infra.data.MultiMap;
  */
 public class FlowChartModel {
 	
-	private final Map<String, ResourceNode> laneMap = new HashMap<String, ResourceNode>();
+	private final Map<String, Lane> laneMap = new HashMap<String, Lane>();
 	
-	private final MultiMap<ResourceNode, ResourceNode> predecessorMap = new MultiMap<ResourceNode, ResourceNode>();
+	private final Map<ResourceNode, FlowChartNode> nodeMap = new HashMap<ResourceNode, FlowChartNode>();
 	
 	private final FlowChartModeler modeler;
 	
@@ -46,12 +42,11 @@ public class FlowChartModel {
 	
 	// ----------------------------------------------------
 
-	public FlowChartModel add(SemanticGraph graph) {
-		for (SemanticNode node : graph.getNodes()) {
-			if (node.isResourceNode() && modeler.isFlowChartNode(node.asResource())) {
-				addFlowChartNode(node.asResource());
-			}
+	public FlowChartModel add(Collection<ResourceNode> nodes) {
+		for (ResourceNode node : nodes) {
+			addFlowChartNode(node.asResource());
 		}
+		calculatePredecessors();
 		return this;
 	}
 	
@@ -60,16 +55,12 @@ public class FlowChartModel {
 	/**
 	 * @return the lanes
 	 */
-	public List<String> getLanes() {
-		return new ArrayList<String>(laneMap.keySet());
+	public List<Lane> getLanes() {
+		return new ArrayList<Lane>(laneMap.values());
 	}
 	
-	public List<ResourceNode> getNodes() {
-		return new ArrayList<ResourceNode>(laneMap.values());
-	}
-	
-	public MultiMap<ResourceNode, ResourceNode> getPredecessorMap() {
-		return predecessorMap;
+	public List<FlowChartNode> getNodes() {
+		return new ArrayList<FlowChartNode>(nodeMap.values());
 	}
 	
 	// ----------------------------------------------------
@@ -80,12 +71,28 @@ public class FlowChartModel {
 	private void addFlowChartNode(ResourceNode node) {
 		final String lane = modeler.getLane(node);
 		if (!laneMap.containsKey(lane)) {
-			laneMap.put(lane, node);
+			laneMap.put(lane, new Lane(lane, "l" + laneMap.size()));
 		}
-		final Collection<ResourceNode> predecessors = modeler.getPredecessors(node);
-		if (predecessors != null && !predecessors.isEmpty()) {
-			predecessorMap.addAll(node, predecessors);
+		final FlowChartNode flowChartNode = new FixedDurationFlowChartNode(node, "n" + nodeMap.size());
+		flowChartNode.setLane(laneMap.get(lane));
+		nodeMap.put(node, flowChartNode);
+	}
+	
+	private void calculatePredecessors() {
+		for (FlowChartNode node : nodeMap.values()) {
+			final Collection<ResourceNode> predecessors = modeler.getPredecessors(node.getResourceNode());
+			if (predecessors != null && !predecessors.isEmpty()) {
+				addPredecessors(node, predecessors);
+			}
 		}
 	}
-
+	
+	private void addPredecessors(FlowChartNode node, Collection<ResourceNode> predecessors) {
+		for (ResourceNode predecessor : predecessors) {
+			if (nodeMap.containsKey(predecessor)) {
+				node.addPredecessor(nodeMap.get(predecessor));
+			}
+		}
+	}
+	
 }

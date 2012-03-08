@@ -1,7 +1,8 @@
 
 var GraphVisConfig = GraphVisConfig || {
-	laneHeight : 100,
-	chartStart : 100
+	laneHeight : 80,
+	chartStart : 200,
+	scale : 60
 };
 
 var LFRB = LFRB || {};
@@ -22,14 +23,16 @@ LFRB.FlowChart = {
 			lane.height = GraphVisConfig.laneHeight;
 			paper.path('M0 ' + y + 'L5000 ' + y)
 				.attr({'stroke':'#777'});
-			paper.text(10, lane.center, lane.title)
-				.attr({'text-anchor': 'start', 'font-size':'14pt'});
+			paper.text(5, lane.center, lane.title)
+				.attr({'text-anchor': 'start', 'font-size':'12pt', 'font-weight':'bold'});
 			y += GraphVisConfig.laneHeight;
 		}
+		paper.path('M0 ' + y + 'L5000 ' + y)
+			.attr({'stroke':'#777'});
 	},
 	calculateNodes : function(nodeset) {
 		var offsetX = GraphVisConfig.chartStart;
-		var scale = 40;
+		var scale = GraphVisConfig.scale;
 		var margin = 10;
 		for (id in nodeset) {
 			var node = nodeset[id];
@@ -57,7 +60,7 @@ LFRB.FlowChart = {
 				.attr({'fill': '#d5d5df', 'stroke':'#889', 'title' : node.name });
 			
 			paper.text(node.centerX, lane.center, node.name)
-				.attr({'font-size':'12pt', 'clip-rect': clip});
+				.attr({'font-size':'10pt', 'clip-rect': clip});
 			
 		}
 	},

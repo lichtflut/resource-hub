@@ -11,7 +11,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.arastreju.sge.model.SemanticGraph;
 
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 
@@ -26,14 +25,14 @@ import de.lichtflut.rb.webck.components.common.TypedPanel;
  *
  * @author Oliver Tigges
  */
-public abstract class InfoVisPanel extends TypedPanel<SemanticGraph> implements IResourceListener {
+public abstract class InfoVisPanel<T> extends TypedPanel<T> implements IResourceListener {
 
 	/**
 	 * Constructor.
 	 * @param id
 	 * @param model
 	 */
-	public InfoVisPanel(String id, IModel<SemanticGraph> model) {
+	public InfoVisPanel(String id, IModel<T> model) {
 		super(id, model);
 	}
 	
