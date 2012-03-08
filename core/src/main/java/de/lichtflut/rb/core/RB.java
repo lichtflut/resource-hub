@@ -71,6 +71,11 @@ public interface RB {
 	/**
 	 * Child node in tree structures.
 	 */
+	ResourceID DEPENDS_ON = new SimpleResourceID(COMMON_NAMESPACE_URI, "dependsOn");
+	
+	/**
+	 * Child node in tree structures.
+	 */
 	ResourceID HAS_CHILD_NODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasChildNode");
 	
 	/**

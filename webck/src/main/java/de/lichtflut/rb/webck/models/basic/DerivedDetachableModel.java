@@ -36,6 +36,9 @@ public abstract class DerivedDetachableModel<T, M> extends AbstractLoadableDetac
 	 * @param original
 	 */
 	public DerivedDetachableModel(M original) {
+		if (original == null) {
+			throw new IllegalStateException("Original value may not be null");
+		}
 		this.original = original;
 		this.originalModel = null;
 	}

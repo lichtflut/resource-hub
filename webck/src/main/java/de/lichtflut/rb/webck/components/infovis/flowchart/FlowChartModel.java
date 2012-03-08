@@ -12,61 +12,80 @@ import java.util.Map;
 import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.naming.QualifiedName;
+
+import de.lichtflut.infra.data.MultiMap;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Model of a flow chart.
  * </p>
  *
  * <p>
- * 	Created Feb 15, 2012
+ * 	Created Mar 8, 2012
  * </p>
  *
  * @author Oliver Tigges
  */
 public class FlowChartModel {
 	
-	private final SemanticGraph graph;
+	private final Map<String, ResourceNode> laneMap = new HashMap<String, ResourceNode>();
+	
+	private final MultiMap<ResourceNode, ResourceNode> predecessorMap = new MultiMap<ResourceNode, ResourceNode>();
+	
+	private final FlowChartModeler modeler;
+	
+	// ----------------------------------------------------
+
+	/**
+	 * Constructor.
+	 * @param modeler
+	 */
+	public FlowChartModel(FlowChartModeler modeler) {
+		this.modeler = modeler;
+	}
+	
+	// ----------------------------------------------------
+
+	public FlowChartModel add(SemanticGraph graph) {
+		for (SemanticNode node : graph.getNodes()) {
+			if (node.isResourceNode() && modeler.isFlowChartNode(node.asResource())) {
+				addFlowChartNode(node.asResource());
+			}
+		}
+		return this;
+	}
 	
 	// ----------------------------------------------------
 	
 	/**
-	 * Constructor.
-	 * @param graph The data graph.
+	 * @return the lanes
 	 */
-	public FlowChartModel(final SemanticGraph graph) {
-		this.graph = graph;
+	public List<String> getLanes() {
+		return new ArrayList<String>(laneMap.keySet());
 	}
-
-	// ----------------------------------------------------
-
-	public Collection<FlowChartNode> getNodes() {
-		final Map<QualifiedName, FlowChartNode> nodeMap = new HashMap<QualifiedName, FlowChartNode>();
-		final Collection<FlowChartNode> result = new ArrayList<FlowChartNode>();
-		for(ResourceNode resource : getResources()) {
-			final FlowChartNode flowChartNode = new FlowChartNode(resource);
-			nodeMap.put(resource.getQualifiedName(), flowChartNode);
-			result.add(flowChartNode);
-		}
-		
-		for (FlowChartNode node : result) {
-			node.linkYourself(nodeMap);
-		}
-		
-		return result;
+	
+	public List<ResourceNode> getNodes() {
+		return new ArrayList<ResourceNode>(laneMap.values());
+	}
+	
+	public MultiMap<ResourceNode, ResourceNode> getPredecessorMap() {
+		return predecessorMap;
 	}
 	
 	// ----------------------------------------------------
-
-	protected List<ResourceNode> getResources() {
-		final List<ResourceNode> resources = new ArrayList<ResourceNode>();
-		for (SemanticNode current : graph.getNodes()) {
-			if (current.isResourceNode()) {
-				resources.add(current.asResource());
-			}
+	
+	/**
+	 * @param asResource
+	 */
+	private void addFlowChartNode(ResourceNode node) {
+		final String lane = modeler.getLane(node);
+		if (!laneMap.containsKey(lane)) {
+			laneMap.put(lane, node);
 		}
-		return resources;
+		final Collection<ResourceNode> predecessors = modeler.getPredecessors(node);
+		if (predecessors != null && !predecessors.isEmpty()) {
+			predecessorMap.addAll(node, predecessors);
+		}
 	}
 
 }
