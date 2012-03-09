@@ -25,6 +25,9 @@ public class InfoVisJavaScriptResources {
 	public static ResourceReference JIT_JS = 
 			new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "jit-2.0.1-min.js");
 	
+	public static ResourceReference INFOVIS_JS = 
+			new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "infovis-0.1.js");
+	
 	public static ResourceReference FLOWCHART_JS = 
 			new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "flowchart-0.1.js");
 	
@@ -32,6 +35,6 @@ public class InfoVisJavaScriptResources {
 			new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "periphery-0.1.js");
 	
 	public static ResourceReference HIERARCHY_JS = 
-			new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "hierarchy-0.1.js");
+			new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "hierarchy-0.2.js");
 
 }

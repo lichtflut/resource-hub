@@ -140,7 +140,7 @@ class QueryParamUIModel implements Serializable, IDetachable {
 	
 	private ResourceID getResourceValue() {
 		SemanticNode term = model.getObject().getTerm();
-		if (term.isResourceNode()) {
+		if (term != null && term.isResourceNode()) {
 			return term.asResource();
 		} else {
 			return null;

@@ -21,11 +21,12 @@ import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.editor.BrowsingButtonBar;
-import de.lichtflut.rb.webck.components.editor.ClassifyEntityPanel;
-import de.lichtflut.rb.webck.components.editor.EntityPanel;
-import de.lichtflut.rb.webck.components.editor.IBrowsingHandler;
-import de.lichtflut.rb.webck.components.editor.LocalButtonBar;
+import de.lichtflut.rb.webck.components.entity.BrowsingButtonBar;
+import de.lichtflut.rb.webck.components.entity.ClassifyEntityPanel;
+import de.lichtflut.rb.webck.components.entity.EntityPanel;
+import de.lichtflut.rb.webck.components.entity.IBrowsingHandler;
+import de.lichtflut.rb.webck.components.entity.LocalButtonBar;
+import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
 import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
@@ -59,6 +60,8 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	public ResourceBrowsingPanel(final String id) {
 		super(id);
 		
+		add(new EntityInfoPanel("resourceInfo", model));
+
 		final Form form = new Form("form");
 		form.setOutputMarkupId(true);
 		

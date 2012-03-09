@@ -3,7 +3,7 @@
  */
 package de.lichtflut.rb.webck.components.organizer;
 
-import static de.lichtflut.rb.webck.components.ComponentFactory.addTextField;
+import static de.lichtflut.rb.webck.components.common.ComponentFactory.addTextField;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;

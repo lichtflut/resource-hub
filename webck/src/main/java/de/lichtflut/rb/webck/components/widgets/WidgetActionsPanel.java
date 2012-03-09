@@ -21,7 +21,7 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.components.editor.VisualizationMode;
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.components.links.LabeledLink;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;

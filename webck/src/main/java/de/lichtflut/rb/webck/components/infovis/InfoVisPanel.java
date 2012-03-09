@@ -11,8 +11,11 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.components.infovis.common.CurrentNodeInfoPanel;
+import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
 
 /**
  * <p>
@@ -25,15 +28,18 @@ import de.lichtflut.rb.webck.components.common.TypedPanel;
  *
  * @author Oliver Tigges
  */
-public abstract class InfoVisPanel<T> extends TypedPanel<T> implements IResourceListener {
+public abstract class InfoVisPanel extends TypedPanel<ResourceNode> implements IResourceListener {
 
 	/**
 	 * Constructor.
-	 * @param id
-	 * @param model
+	 * @param id The component ID.
+	 * @param model Model containing the initially selected node.
+	 * @param modes
 	 */
-	public InfoVisPanel(String id, IModel<T> model) {
+	public InfoVisPanel(String id, IModel<ResourceNode> model) {
 		super(id, model);
+		
+		add(new CurrentNodeInfoPanel("info", model));
 	}
 	
 	// ----------------------------------------------------
@@ -44,6 +50,7 @@ public abstract class InfoVisPanel<T> extends TypedPanel<T> implements IResource
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
+		response.renderJavaScriptReference(InfoVisJavaScriptResources.INFOVIS_JS);
 		response.renderJavaScriptReference(getScriptUrl());
 	}
 

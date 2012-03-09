@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.widgets;
 
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,10 +32,11 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.editor.VisualizationMode;
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.components.links.LabeledLink;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
@@ -82,10 +85,11 @@ public class EntityListWidget extends ConfigurableWidget {
 		
 		setOutputMarkupId(true);
 		
-		IModel<QueryResult> queryModel = modelFor(spec);
-		IModel<ColumnConfiguration> config = configModel(spec);
+		final IModel<QueryResult> queryModel = modelFor(spec);
+		final IModel<ColumnConfiguration> config = configModel(spec);
 		
-		getDisplayPane().add(new ExtendedActionsPanel("extendedActionsPanel", queryModel, config));
+		getDisplayPane().add(new ExtendedActionsPanel("extendedActionsPanel", queryModel, config)
+				.add(ConditionalBehavior.visibleIf(not(isConfigMode))));
 		
 		final PageableModel<ResourceNode> content = 
 				new ResourceQueryResultModel(queryModel, new Model<Integer>(MAX_RESULTS), new Model<Integer>(0));

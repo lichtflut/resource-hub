@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.editor;
+package de.lichtflut.rb.webck.components.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;

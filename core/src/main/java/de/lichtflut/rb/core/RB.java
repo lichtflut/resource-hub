@@ -54,6 +54,8 @@ public interface RB {
 	
 	ResourceID ORGANIZATION = new SimpleResourceID(COMMON_NAMESPACE_URI, "Organization");
 	
+	ResourceID ORGANIZATIONAL_UNIT = new SimpleResourceID(COMMON_NAMESPACE_URI, "OrganizationalUnit");
+	
 	ResourceID PROJECT = new SimpleResourceID(COMMON_NAMESPACE_URI, "Project");
 	
 	ResourceID ADDRESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "Address");
@@ -61,6 +63,8 @@ public interface RB {
 	ResourceID NOTE = new SimpleResourceID(COMMON_NAMESPACE_URI, "Note");
 	
 	ResourceID PROCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "Process");
+	
+	ResourceID PROCESS_ELEMENT = new SimpleResourceID(COMMON_NAMESPACE_URI, "ProcessElement");
 	
 	ResourceID SKILL = new SimpleResourceID(COMMON_NAMESPACE_URI, "Skill");
 	

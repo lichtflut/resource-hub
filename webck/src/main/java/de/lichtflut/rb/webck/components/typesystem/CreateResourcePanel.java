@@ -17,7 +17,7 @@ import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
-import de.lichtflut.rb.webck.components.ComponentFactory;
+import de.lichtflut.rb.webck.components.common.ComponentFactory;
 
 /**
  * <p>

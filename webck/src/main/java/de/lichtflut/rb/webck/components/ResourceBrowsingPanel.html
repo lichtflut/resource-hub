@@ -10,8 +10,10 @@
 </wicket:head>
 <wicket:panel>
 
-	<form wicket:id="form">
+	<wicket:container wicket:id="resourceInfo"/>
 
+	<form wicket:id="form">
+	
 		<div class="entity-display input-panel">
 			<wicket:container wicket:id="classifier"></wicket:container>
 			<div wicket:id="entity"></div>
@@ -19,7 +21,7 @@
 			<wicket:container wicket:id="browsingButtonBar"></wicket:container>
 		</div>
 		
-		<div wicket:id="relationCreator"></div>
+		<div wicket:id="relationCreator" class="section"></div>
 	
 		<div wicket:id="relationships"></div>
 	

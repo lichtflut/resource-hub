@@ -1,11 +1,11 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.editor;
+package de.lichtflut.rb.webck.components.entity;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Enumeration of visualization modes.
  * </p>
  *
  * <p>
@@ -18,6 +18,7 @@ public enum VisualizationMode {
 	
 	DETAILS,
 	HIERARCHY,
-	PERIPHERY
+	PERIPHERY,
+	FLOW_CHART
 
 }

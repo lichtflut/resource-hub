@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -12,6 +13,7 @@ import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
@@ -50,7 +52,36 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 	}
 	
 	// -----------------------------------------------------
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SNClass findType(ResourceID type) {
+		final ResourceNode existing = mc().findResource(type.getQualifiedName());
+		if (existing != null) {
+			return existing.asClass();
+		} else {
+			return null;
+		}
+	};
 
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SNClass getTypeOfResource(final ResourceID resource) {
+		final ResourceNode node = mc().resolve(resource);
+		final Set<SemanticNode> objects = SNOPS.objects(node, RDF.TYPE);
+		for (SemanticNode sn : objects) {
+			if (RBSystem.ENTITY.equals(sn)) {
+				continue;
+			} 
+			return sn.asResource().asClass();
+		}
+		return null;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

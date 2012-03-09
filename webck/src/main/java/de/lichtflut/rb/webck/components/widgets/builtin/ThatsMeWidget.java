@@ -12,7 +12,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.webck.components.editor.EntityPanel;
+import de.lichtflut.rb.webck.components.entity.EntityPanel;
+import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
 import de.lichtflut.rb.webck.components.widgets.PredefinedWidget;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.CurrentPersonModel;
@@ -39,6 +40,8 @@ public class ThatsMeWidget extends PredefinedWidget {
 		super(id, Model.of(spec), perspectiveInConfigMode);
 		
 		final CurrentPersonModel model = new CurrentPersonModel();
+		
+		add(new EntityInfoPanel("info", model));
 		
 		add(new EntityPanel("entity", model));
 		

@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.editor;
+package de.lichtflut.rb.webck.components.entity;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;

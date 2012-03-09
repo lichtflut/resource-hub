@@ -9,7 +9,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
  * <p>
@@ -22,7 +22,7 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
  *
  * @author Oliver Tigges
  */
-public class ResourceLoadModel extends AbstractLoadableModel<ResourceNode> {
+public class ResourceLoadModel extends AbstractLoadableDetachableModel<ResourceNode> {
 
 	@SpringBean
 	private ServiceProvider provider;
@@ -46,5 +46,5 @@ public class ResourceLoadModel extends AbstractLoadableModel<ResourceNode> {
 	public ResourceNode load() {
 		return provider.getArastejuGate().startConversation().findResource(id.getQualifiedName());
 	}
-
+	
 }

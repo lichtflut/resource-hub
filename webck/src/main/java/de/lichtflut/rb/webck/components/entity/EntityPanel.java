@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.editor;
+package de.lichtflut.rb.webck.components.entity;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
@@ -25,7 +25,6 @@ import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.behaviors.FocusFirstFormElementBehavior;
 import de.lichtflut.rb.webck.browsing.BrowsingState;
 import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
-import de.lichtflut.rb.webck.components.ResourceInfoPanel;
 import de.lichtflut.rb.webck.components.common.GoogleMapsPanel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldsListModel;
@@ -58,7 +57,6 @@ public class EntityPanel extends Panel {
 		
 		setOutputMarkupId(true);
 		
-		add(new ResourceInfoPanel("infoPanel", model));
 		add(new FeedbackPanel("feedbackPanel"));
 		
 		add(createRows(new RBFieldsListModel(model)));

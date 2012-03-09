@@ -41,6 +41,7 @@ function initGraph() {
             domElement.onclick = function(){
                 rgraph.onClick(node.id, {
                     onComplete: function() {
+                    	LFRB.InfoVis.updateNodeInfo(node.id);
                     }
                 });
             };

@@ -3,12 +3,18 @@
  */
 package de.lichtflut.rb.webck.components.widgets;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
+
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.query.Query;
+import org.arastreju.sge.query.QueryException;
 import org.arastreju.sge.query.QueryResult;
 
 import de.lichtflut.rb.core.RBSystem;
@@ -16,7 +22,8 @@ import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.webck.components.editor.EntityPanel;
+import de.lichtflut.rb.webck.components.entity.EntityPanel;
+import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
 import de.lichtflut.rb.webck.components.widgets.config.EntityDetailsWidgetConfigPanel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
@@ -48,7 +55,14 @@ public class EntityDetailsWidget extends ConfigurableWidget {
 	public EntityDetailsWidget(String id, IModel<WidgetSpec> spec, ConditionalModel<Boolean> isConfigMode) {
 		super(id, spec, isConfigMode);
 		
-		getDisplayPane().add(new EntityPanel("entity", modelFor(spec)));
+		final IModel<RBEntity> entityModel = modelFor(spec);
+		
+		getDisplayPane().add(new EntityInfoPanel("info", entityModel));
+		
+		getDisplayPane().add(new EntityPanel("entity", entityModel));
+		
+		getDisplayPane().add(new Label("noEntityHint", new ResourceModel("message.entity-not-found"))
+			.add(visibleIf(isNull(entityModel))));
 		
 	}
 	
@@ -70,9 +84,13 @@ public class EntityDetailsWidget extends ConfigurableWidget {
 					query.beginAnd().addField(RDF.TYPE, RBSystem.ENTITY);
 					selection.adapt(query);
 					query.end();
-					final QueryResult result = query.getResult();
-					if (!result.isEmpty()) {
-						return loadFirst(result);
+					try {
+						final QueryResult result = query.getResult();
+						if (!result.isEmpty()) {
+							return loadFirst(result);
+						}
+					} catch(QueryException e) {
+						error("Error while executing query: " + e);
 					}
 				}
 				return null;

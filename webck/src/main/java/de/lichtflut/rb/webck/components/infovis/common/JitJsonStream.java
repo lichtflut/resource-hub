@@ -103,6 +103,7 @@ public class JitJsonStream extends AbstractJsonStream {
 			case ACCEPPT_CONTINUE:
 			case ACCEPT:
 				list.add(stmt.getObject().asResource());
+				written.add(stmt.getObject());
 			default:
 				break;
 			}

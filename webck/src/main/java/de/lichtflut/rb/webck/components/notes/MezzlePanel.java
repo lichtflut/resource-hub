@@ -33,8 +33,6 @@ import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
  */
 public abstract class MezzlePanel extends TypedPanel<ResourceNode> {
 	
-	
-	
 	/**
 	 * Constructor.
 	 * @param id The ID.
@@ -46,14 +44,16 @@ public abstract class MezzlePanel extends TypedPanel<ResourceNode> {
 		
 		add(new Label("content", new ResourceTextPropertyModel(model, RBSystem.HAS_CONTENT)));
 		
-		add(new Label("creator", new DerivedModel<String, SemanticNode>(new ResourcePropertyModel(model, DC.CREATOR)) {
+		add(new Label("creator", new DerivedModel<String, SemanticNode>(
+				new ResourcePropertyModel<SemanticNode>(model, DC.CREATOR)) {
 			@Override
 			protected String derive(SemanticNode userNode) {
 				return new RBUser(userNode.asResource()).getName();
 			}
 		}));
 		
-		add(new Label("created", new DerivedModel<String, SemanticNode>(new ResourcePropertyModel(model, DC.CREATED)) {
+		add(new Label("created", new DerivedModel<String, SemanticNode>(
+				new ResourcePropertyModel<SemanticNode>(model, DC.CREATED)) {
 			@Override
 			protected String derive(SemanticNode original) {
 				return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale()).format(
@@ -76,8 +76,18 @@ public abstract class MezzlePanel extends TypedPanel<ResourceNode> {
 		});
 	}
 	
+	// ----------------------------------------------------
+	
+	/**
+	 * Hook for editing of notes.
+	 * @param mezzle The node representing the mezzle.
+	 */
 	public abstract void edit(final IModel<ResourceNode> mezzle);
 	
+	/**
+	 * Hook for deleting of notes.
+	 * @param mezzle The node representing the mezzle.
+	 */
 	public abstract void delete(final IModel<ResourceNode> mezzle);
 	
 }

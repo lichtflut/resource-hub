@@ -24,6 +24,26 @@ import org.arastreju.sge.naming.QualifiedName;
 public interface TypeManager {
 	
 	/**
+	 * Find a type by it's ID.
+	 * @param type The type.
+	 * @return The corresponding class or null.
+	 */
+	SNClass findType(ResourceID type);
+	
+	/**
+	 * Get the primary class of a resource.
+	 * @param resource The resource to check.
+	 * @return The corresponding class or null.
+	 */
+	SNClass getTypeOfResource(ResourceID resource);
+	
+	/**
+	 * Find all types.
+	 * @return A list with all sub classes of rb:Type.
+	 */
+	List<SNClass> findAllTypes();
+	
+	/**
 	 * Create and persist a new rb:Type with given name.
 	 * @param qn The qualified name of the type.
 	 * @return The persistent class node.
@@ -35,12 +55,6 @@ public interface TypeManager {
 	 * @param id The type's ID.
 	 */
 	void removeType(ResourceID id);
-	
-	/**
-	 * Find all types.
-	 * @return A list with all sub classes of rb:Type.
-	 */
-	List<SNClass> findAllTypes();
 	
 	/**
 	 * Add a super class to an existing type.

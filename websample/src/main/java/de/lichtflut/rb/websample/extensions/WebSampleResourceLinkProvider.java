@@ -9,7 +9,7 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.components.editor.VisualizationMode;
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.websample.entities.EntityDetailPage;
 
 /**

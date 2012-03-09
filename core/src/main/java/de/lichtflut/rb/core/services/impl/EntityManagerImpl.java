@@ -3,7 +3,6 @@ package de.lichtflut.rb.core.services.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
@@ -149,7 +148,7 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 		if (node == null) {
 			return null;
 		}
-		final ResourceID type = detectType(node);
+		final ResourceID type = getProvider().getTypeManager().getTypeOfResource(node);
 		final RBEntityImpl entity;
 		if (type == null) {
 			entity = new RBEntityImpl(node);
@@ -206,20 +205,4 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 		}
 	}
 	
-	/**
-	 * Try to find the best matching type.
-	 * @param node the node.
-	 * @return The detected type.
-	 */
-	private ResourceID detectType(ResourceNode node) {
-		final Set<SemanticNode> objects = SNOPS.objects(node, RDF.TYPE);
-		for (SemanticNode sn : objects) {
-			if (RBSystem.ENTITY.equals(sn)) {
-				continue;
-			} 
-			return sn.asResource();
-		}
-		return null;
-	}
-
 }

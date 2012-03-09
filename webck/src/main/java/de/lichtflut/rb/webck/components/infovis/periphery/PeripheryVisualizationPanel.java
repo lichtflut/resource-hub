@@ -23,7 +23,7 @@ import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
  *
  * @author Oliver Tigges
  */
-public class PeripheryVisualizationPanel extends InfoVisPanel<ResourceNode> {
+public class PeripheryVisualizationPanel extends InfoVisPanel {
 	
 	/**
 	 * Constructor.

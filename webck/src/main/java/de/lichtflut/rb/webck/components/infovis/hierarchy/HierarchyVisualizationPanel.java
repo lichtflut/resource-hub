@@ -25,7 +25,7 @@ import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
  *
  * @author Oliver Tigges
  */
-public class HierarchyVisualizationPanel extends InfoVisPanel<ResourceNode> {
+public class HierarchyVisualizationPanel extends InfoVisPanel {
 	
 	/**
 	 * Constructor.
@@ -44,9 +44,13 @@ public class HierarchyVisualizationPanel extends InfoVisPanel<ResourceNode> {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.JIT_JS);
+		response.renderJavaScriptReference(InfoVisJavaScriptResources.RAPHAEL_JS);
 		response.renderJavaScriptReference(InfoVisJavaScriptResources.HIERARCHY_JS);
-		response.renderOnLoadJavaScript("initTree('top')");
+		//response.renderOnLoadJavaScript("initTree('top')");
+		response.renderOnLoadJavaScript(
+				"var paper = Raphael('infovis', 2000, 1000);" +
+				"showTree(root, paper);"
+		);
 	}
 	
 	/** 

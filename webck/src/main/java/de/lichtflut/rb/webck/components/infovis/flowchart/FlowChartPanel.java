@@ -24,9 +24,11 @@ import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
  *
  * @author Oliver Tigges
  */
-public class FlowChartPanel extends InfoVisPanel<Collection<ResourceNode>> {
+public class FlowChartPanel extends InfoVisPanel {
 	
-	private final FlowChartModeler modeler; 
+	private final FlowChartModeler modeler;
+	
+	private final IModel<Collection<ResourceNode>> nodeSet; 
 	
 	// ----------------------------------------------------
 
@@ -35,8 +37,9 @@ public class FlowChartPanel extends InfoVisPanel<Collection<ResourceNode>> {
 	 * @param id The component ID.
 	 * @param model The model.
 	 */
-	public FlowChartPanel(String id, IModel<Collection<ResourceNode>> model) {
-		super(id, model);
+	public FlowChartPanel(String id, IModel<ResourceNode> base, IModel<Collection<ResourceNode>> nodeSet) {
+		super(id, base);
+		this.nodeSet = nodeSet;
 		this.modeler = new DefaultFlowChartModeler();
 	}
 	
@@ -61,8 +64,18 @@ public class FlowChartPanel extends InfoVisPanel<Collection<ResourceNode>> {
 	 */
 	@Override
 	protected IResourceStream getJsonResource() {
-		final FlowChartModel model = new FlowChartModel(modeler).add(getModelObject());
+		final FlowChartModel model = new FlowChartModel(modeler).add(nodeSet.getObject());
 		return new FlowChartJsonStream(model, getLocale());
 	}
 
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+		nodeSet.detach();
+	}
 }

@@ -1,0 +1,37 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+	<div class="entity-info">
+		<div class="floater">
+			<div class="about">
+				<div class="entity-description">
+					<div wicket:id="label" class="title"></div>
+					<div class="type">
+						<wicket:message key="label.type">[type]</wicket:message>
+						<span wicket:id="type">[type]</span>
+					</div>
+				</div>
+				<div class="entity-image">
+					<img wicket:id="image"></img>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="entity-menu">
+		<div wicket:id="visLinks" class="entity-menu-item">
+			<a wicket:id="link">[link]</a>
+		</div>
+		<div wicket:id="extendedActionsPanel" class="entity-menu-extended"></div>
+	</div>
+
+</wicket:panel>
+</html>

@@ -108,7 +108,7 @@ public class SchemaEditorPanel extends Panel {
 					schema.addPropertyDeclaration(decl);	
 				}
 				provider.getSchemaManager().store(schema);
-				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
+				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
 				info("Schema saved succesfully.");
 				target.add(form);
 			}
@@ -122,7 +122,7 @@ public class SchemaEditorPanel extends Panel {
 				info("Schema deleted.");
 				SchemaEditorPanel.this.setVisible(false);
 				target.add(SchemaEditorPanel.this);
-				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
+				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
 			}
 		});
 		

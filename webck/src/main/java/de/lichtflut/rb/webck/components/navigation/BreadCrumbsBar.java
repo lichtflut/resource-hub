@@ -23,7 +23,7 @@ import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.editor.VisualizationMode;
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;

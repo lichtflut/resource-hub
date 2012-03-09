@@ -10,7 +10,8 @@ import org.apache.wicket.model.ResourceModel;
 
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.*;
-import de.lichtflut.rb.webck.components.editor.EntityPanel;
+import de.lichtflut.rb.webck.components.entity.EntityPanel;
+import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
 import de.lichtflut.rb.webck.components.widgets.PredefinedWidget;
 import static de.lichtflut.rb.webck.models.ConditionalModel.*;
 import de.lichtflut.rb.webck.models.ConditionalModel;
@@ -38,6 +39,8 @@ public class MyCompanyWidget extends PredefinedWidget {
 		super(id, Model.of(spec), perspectiveInConfigMode);
 		
 		final CurrentOrganizationModel model = new CurrentOrganizationModel();
+		
+		add(new EntityInfoPanel("info", model));
 		
 		add(new EntityPanel("entity", model));
 		
