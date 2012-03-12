@@ -58,6 +58,9 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 	 */
 	@Override
 	public SNClass findType(ResourceID type) {
+		if (type == null) { 
+			return null;
+		}
 		final ResourceNode existing = mc().findResource(type.getQualifiedName());
 		if (existing != null) {
 			return existing.asClass();
