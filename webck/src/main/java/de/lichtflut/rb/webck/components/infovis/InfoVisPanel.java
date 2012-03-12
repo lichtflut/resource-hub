@@ -14,6 +14,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.common.CurrentNodeInfoPanel;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
 
@@ -34,12 +35,12 @@ public abstract class InfoVisPanel extends TypedPanel<ResourceNode> implements I
 	 * Constructor.
 	 * @param id The component ID.
 	 * @param model Model containing the initially selected node.
-	 * @param modes
+	 * @param mode The visualization mode.
 	 */
-	public InfoVisPanel(String id, IModel<ResourceNode> model) {
+	public InfoVisPanel(String id, IModel<ResourceNode> model, VisualizationMode mode) {
 		super(id, model);
 		
-		add(new CurrentNodeInfoPanel("info", model));
+		add(new CurrentNodeInfoPanel("info", model, mode));
 	}
 	
 	// ----------------------------------------------------
@@ -52,6 +53,7 @@ public abstract class InfoVisPanel extends TypedPanel<ResourceNode> implements I
 		super.renderHead(response);
 		response.renderJavaScriptReference(InfoVisJavaScriptResources.INFOVIS_JS);
 		response.renderJavaScriptReference(getScriptUrl());
+		response.renderOnDomReadyJavaScript("LFRB.InfoVis.contextPath='" + RequestCycle.get().getRequest().getContextPath() + "';");
 	}
 
 	/** 

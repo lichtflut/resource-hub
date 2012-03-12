@@ -23,7 +23,7 @@ public interface FlowChartModeler extends Serializable {
 
 	boolean isFlowChartNode(ResourceNode node);
 	
-	String getLane(ResourceNode node);
+	ResourceNode getLane(ResourceNode node);
 	
 	Collection<ResourceNode> getPredecessors(ResourceNode node);
 

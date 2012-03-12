@@ -41,6 +41,7 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.TypeManager;
 
 /**
  * <p>
@@ -59,6 +60,7 @@ public class EntityManagerImplTest {
 	private ServiceProvider provider;
 	private EntityManager em;
 	private SchemaManager sm;
+	private TypeManager tm;
 	private ModelingConversation mc;
 	private ArastrejuGate gate;
 	private QueryManager qm;
@@ -73,14 +75,19 @@ public class EntityManagerImplTest {
 		mc = mock(ModelingConversation.class);
 		gate = mock(ArastrejuGate.class);
 		qm = mock(QueryManager.class);
+		tm = mock(TypeManager.class);
 		
 		when(gate.createQueryManager()).thenReturn(qm);
 		when(provider.getSchemaManager()).thenReturn(sm);
+		when(provider.getTypeManager()).thenReturn(tm);
 		when(provider.getArastejuGate()).thenReturn(gate);
 
 		em = new EntityManagerImpl(provider){
 			protected ModelingConversation mc(){
 				return mc;
+			}
+			protected ServiceProvider getProvider() {
+				return provider;
 			}
 		};
 
@@ -116,6 +123,7 @@ public class EntityManagerImplTest {
 
 		
 		// find entity with type
+		when(tm.getTypeOfResource(user)).thenReturn(RB.PERSON.asResource().asClass());
 		when(mc.findResource(user.getQualifiedName())).thenReturn(user);
 		when(provider.getSchemaManager().findSchemaForType(RB.PERSON)).thenReturn(null);
 

@@ -10,6 +10,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
 
@@ -38,7 +39,7 @@ public class FlowChartPanel extends InfoVisPanel {
 	 * @param model The model.
 	 */
 	public FlowChartPanel(String id, IModel<ResourceNode> base, IModel<Collection<ResourceNode>> nodeSet) {
-		super(id, base);
+		super(id, base, VisualizationMode.FLOW_CHART);
 		this.nodeSet = nodeSet;
 		this.modeler = new DefaultFlowChartModeler();
 	}

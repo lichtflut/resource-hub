@@ -13,12 +13,32 @@ function drawicon(node, paper) {
 	icon.click(function() {
 		LFRB.FlowChart.onSelectNode(node, icon);
 	});
+	icon.dblclick(function() {
+		LFRB.FlowChart.switchToNode(node);
+	});
 	
-	var clip = (node.x + 1) + ' ' + node.y + ' '+ (node.width -2) + ' ' + node.height;
-	var text = paper.text(node.centerX, node.centerY, node.name)
-		.attr({'font-size':'10pt', 'clip-rect': clip});
+	var clipWidth = node.width -2;
+	var clip = (node.x + 1) + ' ' + node.y + ' '+ clipWidth + ' ' + node.height;
+	var text = paper.text(node.centerX, node.centerY)
+		.attr({'font-size':'10pt', 'clip-rect': clip, 'cursor':'pointer'});
+	LFRB.InfoVis.setWrappingText(text, node.name, clipWidth);
+	
 	text.click(function() {
 		LFRB.FlowChart.onSelectNode(node, icon);
+	});
+	text.dblclick(function() {
+		LFRB.FlowChart.switchToNode(node);
+	});
+}
+
+function drawLaneIcon(lane, paper) {
+	paper.path('M0 ' + lane.offset + 'L5000 ' + lane.offset)
+		.attr({'stroke':'#777'});
+	var text = paper.text(5, lane.center, lane.title)
+		.attr({'text-anchor': 'start', 'font-size':'12pt', 'font-weight':'bold', 'cursor':'pointer'});
+	
+	text.click(function() {
+		LFRB.FlowChart.onSelectLane(lane, text);
 	});
 }
 
@@ -36,10 +56,12 @@ LFRB.FlowChart = {
 			lane.offset = y;
 			lane.center = lane.offset + GraphVisConfig.laneHeight/2;
 			lane.height = GraphVisConfig.laneHeight;
-			paper.path('M0 ' + y + 'L5000 ' + y)
+			drawLaneIcon(lane, paper);
+			/*paper.path('M0 ' + y + 'L5000 ' + y)
 				.attr({'stroke':'#777'});
 			paper.text(5, lane.center, lane.title)
 				.attr({'text-anchor': 'start', 'font-size':'12pt', 'font-weight':'bold'});
+				*/
 			y += GraphVisConfig.laneHeight;
 		}
 		paper.path('M0 ' + y + 'L5000 ' + y)
@@ -99,11 +121,28 @@ LFRB.FlowChart = {
 	},
 	onSelectNode : function(node, icon) {
 		if (LFRB.InfoVis.currentNode !== undefined) {
-			LFRB.InfoVis.currentNode.attr({'stroke':'#889', 'stroke-width':1});
+			LFRB.InfoVis.currentNode.reset();
 		}
 		LFRB.InfoVis.currentNode = icon;
 		LFRB.InfoVis.updateNodeInfo(node.id);
 		icon.attr({'stroke':'#762226', 'stroke-width':2});
+		icon.reset = function() {
+			icon.attr({'stroke':'#889', 'stroke-width':1})
+		}
+	},
+	onSelectLane : function(lane, icon) {
+		if (LFRB.InfoVis.currentNode !== undefined) {
+			LFRB.InfoVis.currentNode.reset();
+		}
+		LFRB.InfoVis.currentNode = icon;
+		LFRB.InfoVis.updateNodeInfo(lane.uri);
+		icon.attr({'fill':'#762226'});
+		icon.reset = function() {
+			icon.attr({'fill':'#000'})
+		}
+	},
+	switchToNode : function(node) {
+		LFRB.InfoVis.switchToNode(node.id, 'flowchart');
 	}
 }
 

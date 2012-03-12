@@ -74,19 +74,7 @@ function renderNode(node, paper) {
 		onSelectNode(node, rect);
 	});
 	
-	var words = node.name.split(" ");
-
-	var tempText = "";
-	for (var i=0; i<words.length; i++) {
-	  text.attr("text", tempText + " " + words[i]);
-	  if (text.getBBox().width > clipWidth) {
-	    tempText += "\n" + words[i];
-	  } else {
-	    tempText += " " + words[i];
-	  }
-	}
-
-	text.attr("text", tempText.substring(1));
+	LFRB.InfoVis.setWrappingText(text, node.name, clipWidth);
 	
 }
 

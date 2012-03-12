@@ -6,7 +6,7 @@ package de.lichtflut.rb.webck.components.entity;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Link to a URL representing a special visualization.
  * </p>
  *
  * <p>
@@ -14,6 +14,7 @@ package de.lichtflut.rb.webck.components.entity;
  * </p>
  *
  * @author Oliver Tigges
+ * @see VisualizationMode
  */
 public class VisualizationLink {
 	

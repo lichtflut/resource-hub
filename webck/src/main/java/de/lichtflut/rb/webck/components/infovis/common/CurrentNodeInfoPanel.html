@@ -12,10 +12,17 @@
 
 	<div id="node-info">
 		<div wicket:id="label" class="node-name"></div>
+		
+		<div class="cross-references">
+			<div wicket:id="crossReferenceLinks">
+				<span class="field" wicket:id="field">[field]</span>:
+				<a wicket:id="link">[link]</a>
+			</div>
+		</div>
 
 		<div class="visualization-links">
 			<div wicket:id="visLinks">
-				<a wicket:id="link">[link]</a>
+				<wicket:container wicket:id="link">[link]</wicket:container>
 			</div>
 		</div>
 	

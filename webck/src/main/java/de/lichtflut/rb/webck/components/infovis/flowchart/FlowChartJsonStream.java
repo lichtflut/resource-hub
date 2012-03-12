@@ -67,6 +67,8 @@ public class FlowChartJsonStream extends AbstractJsonStream {
 		for (Lane lane : lanes) {
 			g.writeFieldName(lane.getID());
 			g.writeStartObject();
+			g.writeFieldName("uri");
+			g.writeString(lane.getURI());
 			g.writeFieldName("title");
 			g.writeString(lane.getTitle());
 			g.writeEndObject();

@@ -45,6 +45,19 @@ public class LabeledLink extends Panel {
 	}
 	
 	/**
+	 * Constructor.
+	 * @param id The component ID.
+	 * @param link The link.
+	 * @param label The links label.
+	 */
+	public LabeledLink(final String id, final AbstractLink link, final String label) {
+		super(id);
+		Validate.isTrue(LINK_ID.equals(link.getId()), "The link of a LabeledLink must have 'link' as compontent ID");
+		link.add(new Label(LABEL_ID, label));
+		add(link);
+	}
+	
+	/**
 	 * Technical constructor for subclasses. These have to care that link and label are set.
 	 * @param id The component ID.
 	 */

@@ -200,6 +200,9 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * {@inheritDoc}
 	 */
 	public String getSalt(User user) {
+		if (user == null) {
+			return null;
+		}
 		final String credential = SNOPS.string(SNOPS.singleObject(user, Aras.HAS_CREDENTIAL));
 		return RBCrypt.extractSalt(credential);
 	}

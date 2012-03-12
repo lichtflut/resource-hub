@@ -8,6 +8,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
 import de.lichtflut.rb.webck.components.infovis.common.JitJsonStream;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
@@ -31,7 +32,7 @@ public class PeripheryVisualizationPanel extends InfoVisPanel {
 	 * @param model The model.
 	 */
 	public PeripheryVisualizationPanel(String id, IModel<ResourceNode> model) {
-		super(id, model);
+		super(id, model, VisualizationMode.PERIPHERY);
 	}
 	
 	// ----------------------------------------------------

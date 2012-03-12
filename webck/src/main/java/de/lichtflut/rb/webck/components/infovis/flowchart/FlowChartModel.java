@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
 
 /**
  * <p>
@@ -24,7 +25,9 @@ import org.arastreju.sge.model.nodes.ResourceNode;
  */
 public class FlowChartModel {
 	
-	private final Map<String, Lane> laneMap = new HashMap<String, Lane>();
+	private final ResourceNode unassignedLane = new SNResource();
+	
+	private final Map<ResourceNode, Lane> laneMap = new HashMap<ResourceNode, Lane>();
 	
 	private final Map<ResourceNode, FlowChartNode> nodeMap = new HashMap<ResourceNode, FlowChartNode>();
 	
@@ -69,15 +72,26 @@ public class FlowChartModel {
 	 * @param asResource
 	 */
 	private void addFlowChartNode(ResourceNode node) {
-		final String lane = modeler.getLane(node);
-		if (!laneMap.containsKey(lane)) {
-			laneMap.put(lane, new Lane(lane, "l" + laneMap.size()));
-		}
 		final FlowChartNode flowChartNode = new FixedDurationFlowChartNode(node, "n" + nodeMap.size());
-		flowChartNode.setLane(laneMap.get(lane));
 		nodeMap.put(node, flowChartNode);
+		
+		ResourceNode laneNode = modeler.getLane(node);
+		Lane lane = getOrCreateLane(laneNode);
+		flowChartNode.setLane(lane);
 	}
 	
+	private Lane getOrCreateLane(ResourceNode laneNode) {
+		if (laneMap.containsKey(laneNode)) {
+			return laneMap.get(laneNode); 
+		} else if (laneNode != null) {
+			final Lane lane = new Lane(laneNode, "l" + laneMap.size());
+			laneMap.put(laneNode, lane);
+			return lane;
+		} else {
+			return getUnassignedLane();
+		}
+	}
+
 	private void calculatePredecessors() {
 		for (FlowChartNode node : nodeMap.values()) {
 			final Collection<ResourceNode> predecessors = modeler.getPredecessors(node.getResourceNode());
@@ -92,6 +106,16 @@ public class FlowChartModel {
 			if (nodeMap.containsKey(predecessor)) {
 				node.addPredecessor(nodeMap.get(predecessor));
 			}
+		}
+	}
+	
+	private Lane getUnassignedLane() {
+		if (laneMap.containsKey(unassignedLane)) {
+			return laneMap.get(unassignedLane);
+		} else {
+			final Lane lane = new Lane("unnassigned");
+			laneMap.put(unassignedLane, lane);
+			return lane;
 		}
 	}
 	

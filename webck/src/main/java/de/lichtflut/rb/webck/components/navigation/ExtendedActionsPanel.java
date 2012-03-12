@@ -9,27 +9,33 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.query.QueryResult;
+import org.odlabs.wiquery.ui.autocomplete.AutocompleteJavaScriptResourceReference;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 import de.lichtflut.rb.webck.components.dialogs.EntityExcelExportDialog;
@@ -52,11 +58,15 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
  * @author Erik Aderhold
  */
 public class ExtendedActionsPanel extends Panel {
+	
+	public static final ResourceReference REF = new JavaScriptResourceReference(ExtendedActionsPanel.class, "lfrb-contextmenu.js");
+			
+	// ----------------------------------------------------
+			
 
 	@SpringBean 
 	private ServiceProvider provider;
 	
-	private IModel<Boolean> isOpen = new Model<Boolean>(false);
 	private MarkupContainer linkContainer;
 
 	private IModel<RBEntity> entityModel = null;
@@ -80,27 +90,32 @@ public class ExtendedActionsPanel extends Panel {
 	}
 
 	// ----------------------------------------------------
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void renderHead(final IHeaderResponse response) {
+		super.renderHead(response);
+		response.renderJavaScriptReference(AutocompleteJavaScriptResourceReference.get());
+		response.renderJavaScriptReference(REF);
+	}
+	
+	// ----------------------------------------------------
 
 	/**
 	 * General ExtendedActionsPanel initialization.
 	 */
 	private void init() {
 		linkContainer = new WebMarkupContainer("extendedActionsContainer");
-		linkContainer.add(visibleIf(isTrue(isOpen)));
 		linkContainer.setOutputMarkupId(true);
+		linkContainer.setOutputMarkupPlaceholderTag(true);
 		add(linkContainer);
 		
-		@SuppressWarnings("rawtypes")
-		Link openMenuLink = new AjaxFallbackLink("showExtendedActionsLink") {
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				toggleContainerVisibility(linkContainer);
-			}
-		};
+		final Label openMenuLink = new Label("showExtendedActionsLink", new ResourceModel("link.extended-actions"));
+		openMenuLink.add(new AttributeModifier("onclick", "LFRB.ContextMenu.toggle('#"+ linkContainer.getMarkupId() + "')"));
 		add(openMenuLink);
 
-		setOutputMarkupId(true);
-		
 		/*TODO: RB-7 - Sichtbarkeitssteuerung des Links funktioniert nicht! Der Link ist IMMER sichtbar, auch wenn sich im
 		 * 		Container keine	sichtbaren Links befinden!! */		
 		openMenuLink.add(visibleIf(isTrue(new HasVisibleLinksModel(new Model<MarkupContainer>(linkContainer)))));
@@ -113,12 +128,6 @@ public class ExtendedActionsPanel extends Panel {
 		addExportExcelListLink();
 	}
 
-	private void toggleContainerVisibility(final MarkupContainer linkContainer) {
-		isOpen.setObject(!isOpen.getObject());
-		RBAjaxTarget.add(this);
-	}
-
-	
 	// -- LINK_CREATOR_METHODS ----------------------------
 	
 	private void addExportVCardLink() {
@@ -127,7 +136,7 @@ public class ExtendedActionsPanel extends Panel {
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
 			    hoster.openDialog(new VCardExportDialog(hoster.getDialogID(), entityModel));
-			    toggleContainerVisibility(linkContainer);
+			    closeContextMenu(target);
 			}
 		};
 		exportVCardLink.add(visibleIf(areEqual(new EntityTypeModel(entityModel), Model.of(RB.PERSON))));
@@ -149,7 +158,7 @@ public class ExtendedActionsPanel extends Panel {
 							}
 			    };
 			    hoster.openDialog(confirmDialog);
-			    toggleContainerVisibility(linkContainer);
+			    closeContextMenu(target);
 			}
 		};
 		deleteEntityLink.add(visibleIf(isNotNull(entityModel)));
@@ -161,10 +170,8 @@ public class ExtendedActionsPanel extends Panel {
 		final Link exportExcelEntityLink = new AjaxFallbackLink("exportExcelEntityLink") {
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
-
 			    hoster.openDialog(new EntityExcelExportDialog(hoster.getDialogID(), entityModel));
-			    
-			    toggleContainerVisibility(linkContainer);
+			    closeContextMenu(target);
 			}
 		};
 		exportExcelEntityLink.add(visibleIf(isNotNull(entityModel)));
@@ -176,14 +183,18 @@ public class ExtendedActionsPanel extends Panel {
 		final Link exportExcelListLink = new AjaxFallbackLink("exportExcelListLink") {
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
-
 			    hoster.openDialog(new ResourceListExportDialog(hoster.getDialogID(), dataModel, configModel));
-			    
-			    toggleContainerVisibility(linkContainer);
+			    closeContextMenu(target);
 			}
 		};
 		exportExcelListLink.add(visibleIf(and(isNotNull(dataModel), isNotNull(configModel))));
 		linkContainer.add(exportExcelListLink);
+	}
+	
+	// ----------------------------------------------------
+	
+	private void closeContextMenu(AjaxRequestTarget target) {
+		target.appendJavaScript("LFRB.ContextMenu.close('#"+ linkContainer.getMarkupId() + "')");
 	}
 	
 	// ----------------------------------------------------
@@ -206,7 +217,6 @@ public class ExtendedActionsPanel extends Panel {
 		@Override
 		public Boolean load() {
 			final IModel<Boolean> retValModel = new Model<Boolean>(false);
-			
 			containerModel.getObject().visitChildren(new IVisitor<Component, Void>() {
 				public void component(final Component component, final IVisit<Void> visit) {
 					if (component instanceof Link) {

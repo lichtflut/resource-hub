@@ -8,6 +8,7 @@ import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.injection.Injector;
@@ -25,11 +26,13 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
@@ -53,15 +56,17 @@ import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
  * @author Oliver Tigges
  */
 public class CurrentNodeInfoPanel extends Panel {
+
+	private final VisualizationMode visMode;
+	
+	private final AbstractDefaultAjaxBehavior updateBehavior;
 	
 	@SpringBean
 	private ServiceProvider serviceProvider;
 
 	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;
-	
-	private AbstractDefaultAjaxBehavior updateBehavior;
-	
+
 	// ----------------------------------------------------
 	
 	/**
@@ -69,8 +74,9 @@ public class CurrentNodeInfoPanel extends Panel {
 	 * @param id The component ID.
 	 * @param model Model containing the initially selected node.
 	 */
-	public CurrentNodeInfoPanel(String id, IModel<ResourceNode> initial) {
+	public CurrentNodeInfoPanel(String id, IModel<ResourceNode> initial, VisualizationMode mode) {
 		super(id, initial);
+		this.visMode = mode;
 		
 		setOutputMarkupId(true);
 		
@@ -83,23 +89,9 @@ public class CurrentNodeInfoPanel extends Panel {
 			}
 		};
 		
-		IModel<List<VisualizationLink>> linkModel = new DerivedDetachableModel<List<VisualizationLink>, ResourceNode>(model) {
-			protected List<VisualizationLink> derive(ResourceNode node) {
-				final List<VisualizationLink> result = new ArrayList<VisualizationLink>();
-				final SNClass type = serviceProvider.getTypeManager().getTypeOfResource(node);
-				result.add(createLink(node, VisualizationMode.DETAILS));
-				result.add(createLink(node, VisualizationMode.PERIPHERY));
-				if (type.isSpecializationOf(RB.ORGANIZATIONAL_UNIT)) {
-					result.add(createLink(node, VisualizationMode.HIERARCHY));
-				}
-				if (type.isSpecializationOf(RB.PROCESS_ELEMENT)) {
-					result.add(createLink(node, VisualizationMode.FLOW_CHART));
-				}
-				return result;
-			}
-		};
+		add(createCrossRefLinks(model));
 		
-		add(createLinkList(linkModel));
+		add(createVisLinks(model));
 		
 		add(new Label("label", resourceLabelModel));
 		
@@ -130,9 +122,53 @@ public class CurrentNodeInfoPanel extends Panel {
 	}
 	
 	// ----------------------------------------------------
+	
+	protected Component createCrossRefLinks(final ContextModel model) {
+		final IModel<List<CrossReferenceLink>> visLinkModel = new DerivedDetachableModel<List<CrossReferenceLink>, ResourceNode>(model) {
+			protected List<CrossReferenceLink> derive(ResourceNode node) {
+				final List<CrossReferenceLink> result = new ArrayList<CrossReferenceLink>();
+				for (Statement stmt : node.getAssociations(RB.HAS_PARENT_NODE)) {
+					if (stmt.getObject().isResourceNode()) {
+						final ResourceNode target = stmt.getObject().asResource();
+						final String label = ResourceLabelBuilder.getInstance().getFieldLabel(stmt.getPredicate(), getLocale());
+						result.add(new CrossReferenceLink(label, target));
+					}
+				}
+				return result;
+			}
+		};
+		return new ListView<CrossReferenceLink>("crossReferenceLinks", visLinkModel) {
+			@Override
+			protected void populateItem(ListItem<CrossReferenceLink> item) {
+				final CrossReferenceLink def = item.getModelObject();
+				item.add(new Label("field", def.getField()));
+				
+				final String url = resourceLinkProvider.getUrlToResource(def.getTarget(), visMode, DisplayMode.VIEW).toString();
+				final CrossLink crossLink = new CrossLink(LabeledLink.LINK_ID, url);
+				crossLink.add(title(def.getField()));
+				final String label = ResourceLabelBuilder.getInstance().getLabel(def.getTarget(), getLocale());
+				item.add(new LabeledLink("link", crossLink, label));
+			}
+		};
+	}
 
-	protected ListView<VisualizationLink> createLinkList(IModel<List<VisualizationLink>> model) {
-		return new ListView<VisualizationLink>("visLinks", model) {
+	protected ListView<VisualizationLink> createVisLinks(final ContextModel model) {
+		final IModel<List<VisualizationLink>> visLinkModel = new DerivedDetachableModel<List<VisualizationLink>, ResourceNode>(model) {
+			protected List<VisualizationLink> derive(ResourceNode node) {
+				final List<VisualizationLink> result = new ArrayList<VisualizationLink>();
+				final SNClass type = serviceProvider.getTypeManager().getTypeOfResource(node);
+				result.add(createLink(node, VisualizationMode.DETAILS));
+				result.add(createLink(node, VisualizationMode.PERIPHERY));
+				if (type.isSpecializationOf(RB.ORGANIZATIONAL_UNIT)) {
+					result.add(createLink(node, VisualizationMode.HIERARCHY));
+				}
+				if (type.isSpecializationOf(RB.PROCESS_ELEMENT)) {
+					result.add(createLink(node, VisualizationMode.FLOW_CHART));
+				}
+				return result;
+			}
+		};
+		return new ListView<VisualizationLink>("visLinks", visLinkModel) {
 			@Override
 			protected void populateItem(ListItem<VisualizationLink> item) {
 				final VisualizationLink def = item.getModelObject();

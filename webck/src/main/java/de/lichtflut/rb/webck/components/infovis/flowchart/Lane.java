@@ -3,7 +3,12 @@
  */
 package de.lichtflut.rb.webck.components.infovis.flowchart;
 
+import java.util.Locale;
+
+import org.arastreju.sge.model.nodes.ResourceNode;
+
 import de.lichtflut.infra.Infra;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 
 /**
  * <p>
@@ -18,7 +23,7 @@ import de.lichtflut.infra.Infra;
  */
 public class Lane {
 	
-	private String title;
+	private ResourceNode node;
 	
 	private String id;
 	
@@ -28,25 +33,48 @@ public class Lane {
 	 * @param title
 	 * @param id
 	 */
-	public Lane(String title, String id) {
-		this.title = title;
+	public Lane(String id) {
 		this.id = id;
+	}
+	
+	/**
+	 * @param title
+	 * @param id
+	 */
+	public Lane(ResourceNode node, String id) {
+		this(id);
+		this.node = node;
 	}
 	
 	// ----------------------------------------------------
 	
 	/**
-	 * @return the id
+	 * @return the technical ID of this lane.
 	 */
 	public String getID() {
 		return id;
 	}
 	
 	/**
+	 * @return The URI of the node represented by this lane.
+	 */
+	public String getURI() {
+		if (node != null) {
+			return node.toURI();
+		} else {
+			return "";
+		}
+	}
+	
+	/**
 	 * @return the title
 	 */
 	public String getTitle() {
-		return title;
+		if (node != null) {
+			return ResourceLabelBuilder.getInstance().getLabel(node, Locale.getDefault());
+		} else {
+			return "Unnassigned";
+		}
 	}
 	
 	// ----------------------------------------------------

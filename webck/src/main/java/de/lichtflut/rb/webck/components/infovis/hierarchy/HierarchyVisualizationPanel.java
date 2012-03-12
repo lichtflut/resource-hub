@@ -10,6 +10,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.traverse.PredicateFilter;
 
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
 import de.lichtflut.rb.webck.components.infovis.common.JitJsonStream;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
@@ -33,7 +34,7 @@ public class HierarchyVisualizationPanel extends InfoVisPanel {
 	 * @param model The model.
 	 */
 	public HierarchyVisualizationPanel(String id, IModel<ResourceNode> model) {
-		super(id, model);
+		super(id, model, VisualizationMode.HIERARCHY);
 	}
 	
 	// ----------------------------------------------------
@@ -46,7 +47,6 @@ public class HierarchyVisualizationPanel extends InfoVisPanel {
 		super.renderHead(response);
 		response.renderJavaScriptReference(InfoVisJavaScriptResources.RAPHAEL_JS);
 		response.renderJavaScriptReference(InfoVisJavaScriptResources.HIERARCHY_JS);
-		//response.renderOnLoadJavaScript("initTree('top')");
 		response.renderOnLoadJavaScript(
 				"var paper = Raphael('infovis', 2000, 1000);" +
 				"showTree(root, paper);"
