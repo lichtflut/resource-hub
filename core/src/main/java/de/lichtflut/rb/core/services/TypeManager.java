@@ -73,6 +73,13 @@ public interface TypeManager {
 	// ----------------------------------------------------
 	
 	/**
+	 * Find a property by it's qualified name.
+	 * @param qn The properties name.
+	 * @return The corresponding class or null.
+	 */
+	SNProperty findProperty(QualifiedName qn);
+	
+	/**
 	 * Create and persist a new rdf:Property with given name.
 	 * @param qn The qualified name of the type.
 	 * @return The persistent property node.

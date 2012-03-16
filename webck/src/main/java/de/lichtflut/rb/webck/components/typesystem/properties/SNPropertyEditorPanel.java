@@ -36,8 +36,8 @@ import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.basic.AbstractDerivedListModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
 
@@ -152,21 +152,21 @@ public class SNPropertyEditorPanel extends Panel {
 	// ----------------------------------------------------
 	
 	private IModel<List<SNProperty>> superPropertyModel(IModel<SNProperty> src) {
-		return new AbstractDerivedListModel<SNProperty, SNProperty>(src) {
+		return new DerivedDetachableModel<List<SNProperty>, SNProperty>(src) {
 			@Override
-			public List<SNProperty> derive(IModel<SNProperty> source) {
-				final Set<SNProperty> all = source.getObject().getSuperProperties();
-				all.remove(source.getObject());
+			public List<SNProperty> derive(SNProperty source) {
+				final Set<SNProperty> all = source.getSuperProperties();
+				all.remove(source);
 				return new ArrayList<SNProperty>(all);
 			}
 		};
 	}
 	
 	private IModel<List<SNProperty>> inversePropertyModel(IModel<SNProperty> src) {
-		return new AbstractDerivedListModel<SNProperty, SNProperty>(src) {
+		return new DerivedDetachableModel<List<SNProperty>, SNProperty>(src) {
 			@Override
-			public List<SNProperty> derive(IModel<SNProperty> source) {
-				return new ArrayList<SNProperty>(source.getObject().getInverseProperties());
+			public List<SNProperty> derive(SNProperty source) {
+				return new ArrayList<SNProperty>(source.getInverseProperties());
 			}
 		};
 	}

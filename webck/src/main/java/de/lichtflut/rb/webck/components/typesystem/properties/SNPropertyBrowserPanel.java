@@ -53,7 +53,7 @@ public abstract class SNPropertyBrowserPanel extends Panel {
 				final Link link = new AjaxFallbackLink("link") {
 						@Override
 						public void onClick(AjaxRequestTarget target) {
-							onTypeSelected(type, target);
+							onPropertySelected(type, target);
 						}	
 				};
 				item.add(link);
@@ -65,7 +65,7 @@ public abstract class SNPropertyBrowserPanel extends Panel {
 		add(new AjaxFallbackLink("createType") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				onCreateType(target);
+				onCreateProperty(target);
 			}
 		});
 	}
@@ -95,8 +95,8 @@ public abstract class SNPropertyBrowserPanel extends Panel {
 	
 	// -- CALLBACKS ---------------------------------------
 	
-	public abstract void onCreateType(AjaxRequestTarget target);
+	public abstract void onCreateProperty(AjaxRequestTarget target);
 	
-	public abstract void onTypeSelected(SNProperty type, AjaxRequestTarget target);
+	public abstract void onPropertySelected(SNProperty property, AjaxRequestTarget target);
 	
 }

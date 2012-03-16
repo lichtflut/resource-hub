@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.model.IModel;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
@@ -45,14 +44,14 @@ public class RelationshipAccess implements Serializable {
 		add(RBSystem.HAS_IMAGE);
 	}};
 	
-	private final IModel<RBEntity> source;
+	private final RBEntity source;
 
 	// ----------------------------------------------------
 	
 	/**
 	 * @param source
 	 */
-	public RelationshipAccess(IModel<RBEntity> source) {
+	public RelationshipAccess(RBEntity source) {
 		this.source = source;
 	}
 	
@@ -83,13 +82,12 @@ public class RelationshipAccess implements Serializable {
 	// ----------------------------------------------------
 	
 	protected List<Statement> filter(RelationshipFilter filter) {
-		final RBEntity entity = source.getObject();
-		if (entity == null) {
+		if (source == null) {
 			return Collections.emptyList();
 		}
 		final List<Statement> result = new ArrayList<Statement>();
-		final Set<ResourceID> declared = getDeclaredPredicates(entity);
-		final ResourceNode node = entity.getNode();
+		final Set<ResourceID> declared = getDeclaredPredicates(source);
+		final ResourceNode node = source.getNode();
 
 		for(Statement stmt: node.getAssociations()) {
 			if (stmt.getObject().isResourceNode() &&

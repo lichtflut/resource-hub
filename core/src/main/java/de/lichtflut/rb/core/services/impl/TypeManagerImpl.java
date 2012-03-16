@@ -143,6 +143,18 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 	
 	// ----------------------------------------------------
 	
+	public SNProperty findProperty(QualifiedName qn) {
+		if (qn == null) { 
+			return null;
+		}
+		final ResourceNode existing = mc().findResource(qn);
+		if (existing != null) {
+			return existing.asProperty();
+		} else {
+			return null;
+		}
+	};
+	
 	/** 
 	* {@inheritDoc}
 	*/

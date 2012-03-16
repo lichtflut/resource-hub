@@ -12,7 +12,7 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.webck.models.basic.AbstractDerivedModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
 /**
  * <p>
@@ -25,7 +25,7 @@ import de.lichtflut.rb.webck.models.basic.AbstractDerivedModel;
  * 
  * @author Oliver Tigges
  */
-public class RBEntityImageUrlModel extends AbstractDerivedModel<String, RBEntity> {
+public class RBEntityImageUrlModel extends DerivedDetachableModel<String, RBEntity> {
 
 	/**
 	 * @param source
@@ -40,11 +40,7 @@ public class RBEntityImageUrlModel extends AbstractDerivedModel<String, RBEntity
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String derive(IModel<RBEntity> source) {
-		if (source.getObject() == null) {
-			return null;
-		}
-		final RBEntity entity = source.getObject();
+	public String derive(RBEntity entity) {
 		final ResourceID type = entity.getType();
 		// TODO: check direct image URL rb:hasImage
 		if (RB.PERSON.equals(type)) {

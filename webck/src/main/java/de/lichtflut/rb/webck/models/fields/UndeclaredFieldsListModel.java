@@ -13,7 +13,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.entity.ResourceField;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
-import de.lichtflut.rb.webck.models.basic.AbstractDerivedListModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ import de.lichtflut.rb.webck.models.basic.AbstractDerivedListModel;
  *
  * @author Oliver Tigges
  */
-public class UndeclaredFieldsListModel extends AbstractDerivedListModel<ResourceField, ResourceNode> {
+public class UndeclaredFieldsListModel extends DerivedDetachableModel<List<ResourceField>, ResourceNode> {
 
 	private final ColumnConfiguration config;
 	
@@ -48,8 +48,7 @@ public class UndeclaredFieldsListModel extends AbstractDerivedListModel<Resource
 	* {@inheritDoc}
 	*/
 	@Override
-	public List<ResourceField> derive(final IModel<ResourceNode> source) {
-		final ResourceNode subject = source.getObject();
+	public List<ResourceField> derive(final ResourceNode subject) {
 		final List<ResourceField> result = new ArrayList<ResourceField>();
 		for(ResourceID predicate : config.getPredicatesToDisplay()) {
 			result.add(new ResourceField(predicate, SNOPS.objects(subject, predicate)));
