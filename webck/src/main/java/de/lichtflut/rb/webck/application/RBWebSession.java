@@ -7,10 +7,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.security.User;
 
-import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 
@@ -33,8 +30,6 @@ public class RBWebSession extends WebSession {
 	@SpringBean
 	private ServiceProvider provider;
 	
-	private User user;
-	
 	// ----------------------------------------------------
 
 	public RBWebSession(final Request request) {
@@ -54,19 +49,7 @@ public class RBWebSession extends WebSession {
 	}
 	
 	public boolean isAuthenticated() {
-		return getUser() != null && provider != null;
-	}
-	
-	/**
-	 * @return this session's user.
-	 */
-	public User getUser() {
-		if (user != null) {
-			return user;
-		} else if (provider != null) {
-			retriveUserFromContext();
-		}
-		return user;
+		return provider != null && provider.getContext().getUser() != null;
 	}
 	
 	// ----------------------------------------------------
@@ -77,20 +60,8 @@ public class RBWebSession extends WebSession {
 	@Override
 	public void detach() {
 		super.detach();
-		user = null;
 		if (provider != null) {
 			provider.onDetach();
-		}
-	}
-	
-	// ----------------------------------------------------
-	
-	private void retriveUserFromContext() {
-		ResourceID id = provider.getContext().getUser();
-		if (id == null) {
-			invalidate();
-		} else {
-			user = new RBUser(provider.getResourceResolver().resolve(id));
 		}
 	}
 	

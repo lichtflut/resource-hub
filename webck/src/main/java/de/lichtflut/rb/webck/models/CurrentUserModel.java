@@ -29,15 +29,6 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
  */
 public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 
-	public static ResourceID currentUserID() {
-		if (Session.exists()) {
-			return RBWebSession.get().getUser();
-		}
-		return null;
-	}
-	
-	// ----------------------------------------------------
-
 	public static IModel<String> displayNameModel() {
 		return new DerivedDetachableModel<String, RBUser>(new CurrentUserModel()) {
 			@Override
@@ -56,7 +47,7 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 		return new ConditionalModel<User>() {
 			@Override
 			public boolean isFulfilled() {
-				return currentUserID() != null;
+				 return Session.exists() && RBWebSession.get().isAuthenticated();
 			}
 		};
 	}
@@ -91,7 +82,7 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 	 * {@inheritDoc}
 	 */
 	public RBUser load() {
-		final ResourceID userID = currentUserID();
+		final ResourceID userID = provider.getContext().getUser();
 		if (userID != null) {
 			return new RBUser(provider.getResourceResolver().resolve(userID));
 		} else {

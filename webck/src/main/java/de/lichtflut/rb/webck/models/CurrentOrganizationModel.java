@@ -45,7 +45,7 @@ public class CurrentOrganizationModel extends AbstractLoadableDetachableModel<RB
 	 */
 	@Override
 	public RBEntity load() {
-		ResourceID userID = CurrentUserModel.currentUserID();
+		ResourceID userID = provider.getContext().getUser();
 		if (userID == null) {
 			return null;
 		}
