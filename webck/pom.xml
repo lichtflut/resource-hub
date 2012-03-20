@@ -1,16 +1,18 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
 	<parent>
 		<groupId>de.lichtflut</groupId>
 		<artifactId>lf.resource-browser</artifactId>
 		<version>0.4-SNAPSHOT</version>
 	</parent>
+	
 	<groupId>de.lichtflut.rb</groupId>
 	<artifactId>lf.resource-browser.webck</artifactId>
 	<packaging>jar</packaging>
 	<name>RB Web Construction Kit</name>
-	<description/>
+	
 	<properties>
 		<wicket.version>1.5.4</wicket.version>
 		<jetty.version>6.1.25</jetty.version>

@@ -65,6 +65,7 @@ public class EditTypePropertyDeclDialog extends AbstractRBDialog {
 			addEmptyListWarning(form);
 		}
 		add(form);
+		
 	}
 
 	// ------------------------------------------------------

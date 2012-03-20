@@ -54,8 +54,6 @@ public class ConfirmationDialog extends AbstractRBDialog {
 		
 		setTitle(new ResourceModel("title.confirmation-dialog"));
 		setModal(true);
-//		setWidth(400);
-//		setHeight(150);
 	}
 	
 	// -- HOOKS -------------------------------------------
