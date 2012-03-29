@@ -124,6 +124,51 @@ public final class CardinalityBuilder implements Serializable {
     	return new SimpleCardinalityImpl(min, max);
     }
 
+    // ------------------------------------------------------
+    
+	/**
+	 * Extracts the cardinality from a String like:
+	 * <code>
+	 * [1..n]
+	 * </code>
+	 * <br>As a fallback <code>hasOptionalOneToMany()</code> will be used.
+	 * @param string
+	 */
+	public static Cardinality extractFromString(String string){
+		// Check RegEx
+		if(string.matches("\\[....\\]")){
+			return hasOptionalOneToMany();
+		}
+		if(string.isEmpty() || (string == null)){
+			return hasOptionalOneToMany();
+		}
+		int min, max;
+		String clean = string.replace("[", "");
+		clean = clean.replace("]", "");
+		String[] temp = clean.split("\\.\\.");
+		min = convertToInt(temp[0], false);
+		max = convertToInt(temp[1], true);
+		return between(min, max);
+	}
+
+	/**
+	 * Converts a String into int. 
+	 * @param s - string
+	 * @param flag - if true and s is not an integer, the maximum value will be assigned, minimum if false. 
+	 */
+	private static int convertToInt(String s, boolean flag) {
+		int num;
+		if(Character.isDigit(s.charAt(0))){
+			num = Integer.parseInt(s);
+		}else{
+			if(flag){
+				num = Integer.MAX_VALUE;
+			}else{
+				num = 0;
+			}
+		}
+		return num;
+	}
 
     // -----------CONSTRUCTOR--------------------------------------
 

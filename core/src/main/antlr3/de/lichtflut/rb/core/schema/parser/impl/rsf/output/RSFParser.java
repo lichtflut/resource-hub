@@ -1,14 +1,10 @@
-// $ANTLR 3.4 /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g 2012-01-17 19:37:32
+// $ANTLR 3.4 RSF.g 2012-03-29 10:09:46
 
 /*
- * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
+
 package de.lichtflut.rb.core.schema.parser.impl.rsf;
-
-import de.lichtflut.rb.core.schema.model.*;
-import de.lichtflut.rb.core.schema.model.impl.*;
-
-import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 
 
 
@@ -23,43 +19,33 @@ import org.antlr.runtime.tree.*;
 @SuppressWarnings({"all", "warnings", "unchecked"})
 public class RSFParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "BOOLEAN", "CARDINALITY", "CONSTRAINT", "DATE", "DECIMAL", "Digit", "EscapeSequence", "FIELD_LABEL", "FOR", "HexDigit", "INTEGER", "LABEL_RULE", "MAX", "MIN", "NAMESPACE", "NUMBER", "Number", "PREFIX", "PROPERTY", "RESOURCE", "SCHEMA", "STRING", "String", "TEXT", "TYPE", "TYPE_DEFINITION", "UnicodeEscape", "WS", "':'", "'['", "']'", "'{'", "'}'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "ASSIGMENT", "CARDINALITY", "CARDINALITY_DECL", "COLON", "CONSTRAINT", "FIELD_LABEL", "INT_LABEL", "LABEL", "LABEL_RULE", "NAMESPACE", "NS", "PREFIX", "PROPERTY", "PROPERTY_DECL", "RESOURCE_CONSTRAINT", "SCHEMA", "SCHEMA_FOR", "STATEMENTS", "STRING", "TYPE_DEF", "WS", "'{'", "'}'"
     };
 
     public static final int EOF=-1;
-    public static final int T__32=32;
-    public static final int T__33=33;
-    public static final int T__34=34;
-    public static final int T__35=35;
-    public static final int T__36=36;
-    public static final int BOOLEAN=4;
+    public static final int T__25=25;
+    public static final int T__26=26;
+    public static final int ASSIGMENT=4;
     public static final int CARDINALITY=5;
-    public static final int CONSTRAINT=6;
-    public static final int DATE=7;
-    public static final int DECIMAL=8;
-    public static final int Digit=9;
-    public static final int EscapeSequence=10;
-    public static final int FIELD_LABEL=11;
-    public static final int FOR=12;
-    public static final int HexDigit=13;
-    public static final int INTEGER=14;
-    public static final int LABEL_RULE=15;
-    public static final int MAX=16;
-    public static final int MIN=17;
-    public static final int NAMESPACE=18;
-    public static final int NUMBER=19;
-    public static final int Number=20;
-    public static final int PREFIX=21;
-    public static final int PROPERTY=22;
-    public static final int RESOURCE=23;
-    public static final int SCHEMA=24;
-    public static final int STRING=25;
-    public static final int String=26;
-    public static final int TEXT=27;
-    public static final int TYPE=28;
-    public static final int TYPE_DEFINITION=29;
-    public static final int UnicodeEscape=30;
-    public static final int WS=31;
+    public static final int CARDINALITY_DECL=6;
+    public static final int COLON=7;
+    public static final int CONSTRAINT=8;
+    public static final int FIELD_LABEL=9;
+    public static final int INT_LABEL=10;
+    public static final int LABEL=11;
+    public static final int LABEL_RULE=12;
+    public static final int NAMESPACE=13;
+    public static final int NS=14;
+    public static final int PREFIX=15;
+    public static final int PROPERTY=16;
+    public static final int PROPERTY_DECL=17;
+    public static final int RESOURCE_CONSTRAINT=18;
+    public static final int SCHEMA=19;
+    public static final int SCHEMA_FOR=20;
+    public static final int STATEMENTS=21;
+    public static final int STRING=22;
+    public static final int TYPE_DEF=23;
+    public static final int WS=24;
 
     // delegates
     public Parser[] getDelegates() {
@@ -85,70 +71,54 @@ public TreeAdaptor getTreeAdaptor() {
     return adaptor;
 }
     public String[] getTokenNames() { return RSFParser.tokenNames; }
-    public String getGrammarFileName() { return "/Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g"; }
+    public String getGrammarFileName() { return "RSF.g"; }
 
 
-
-    	private RSErrorReporter errorReporter = null;
-        public void setErrorReporter(RSErrorReporter errorReporter) {
-            this.errorReporter = errorReporter;
-        }
-        public void emitErrorMessage(String msg) {
-            errorReporter.reportError(msg);
-        }
-
-
-
-    public static class declarations_return extends ParserRuleReturnScope {
+    public static class statements_return extends ParserRuleReturnScope {
         CommonTree tree;
         public Object getTree() { return tree; }
     };
 
 
-    // $ANTLR start "declarations"
-    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:63:1: declarations : ( decl )+ EOF ;
-    public final RSFParser.declarations_return declarations() throws RecognitionException {
-        RSFParser.declarations_return retval = new RSFParser.declarations_return();
+    // $ANTLR start "statements"
+    // RSF.g:35:1: statements : ( statement )+ -> ^( STATEMENTS ( statement )+ ) ;
+    public final RSFParser.statements_return statements() throws RecognitionException {
+        RSFParser.statements_return retval = new RSFParser.statements_return();
         retval.start = input.LT(1);
 
 
         CommonTree root_0 = null;
 
-        Token EOF2=null;
-        RSFParser.decl_return decl1 =null;
+        RSFParser.statement_return statement1 =null;
 
 
-        CommonTree EOF2_tree=null;
-
+        RewriteRuleSubtreeStream stream_statement=new RewriteRuleSubtreeStream(adaptor,"rule statement");
         try {
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:63:15: ( ( decl )+ EOF )
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:63:17: ( decl )+ EOF
+            // RSF.g:35:12: ( ( statement )+ -> ^( STATEMENTS ( statement )+ ) )
+            // RSF.g:35:14: ( statement )+
             {
-            root_0 = (CommonTree)adaptor.nil();
-
-
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:63:17: ( decl )+
+            // RSF.g:35:14: ( statement )+
             int cnt1=0;
             loop1:
             do {
                 int alt1=2;
                 int LA1_0 = input.LA(1);
 
-                if ( (LA1_0==NAMESPACE||LA1_0==SCHEMA) ) {
+                if ( (LA1_0==NS||LA1_0==SCHEMA_FOR) ) {
                     alt1=1;
                 }
 
 
                 switch (alt1) {
             	case 1 :
-            	    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:63:17: decl
+            	    // RSF.g:35:14: statement
             	    {
-            	    pushFollow(FOLLOW_decl_in_declarations129);
-            	    decl1=decl();
+            	    pushFollow(FOLLOW_statement_in_statements79);
+            	    statement1=statement();
 
             	    state._fsp--;
 
-            	    adaptor.addChild(root_0, decl1.getTree());
+            	    stream_statement.add(statement1.getTree());
 
             	    }
             	    break;
@@ -163,12 +133,42 @@ public TreeAdaptor getTreeAdaptor() {
             } while (true);
 
 
-            EOF2=(Token)match(input,EOF,FOLLOW_EOF_in_declarations132); 
-            EOF2_tree = 
-            (CommonTree)adaptor.create(EOF2)
-            ;
-            adaptor.addChild(root_0, EOF2_tree);
+            // AST REWRITE
+            // elements: statement
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
+            root_0 = (CommonTree)adaptor.nil();
+            // 35:26: -> ^( STATEMENTS ( statement )+ )
+            {
+                // RSF.g:35:29: ^( STATEMENTS ( statement )+ )
+                {
+                CommonTree root_1 = (CommonTree)adaptor.nil();
+                root_1 = (CommonTree)adaptor.becomeRoot(
+                (CommonTree)adaptor.create(STATEMENTS, "STATEMENTS")
+                , root_1);
+
+                if ( !(stream_statement.hasNext()) ) {
+                    throw new RewriteEarlyExitException();
+                }
+                while ( stream_statement.hasNext() ) {
+                    adaptor.addChild(root_1, stream_statement.nextTree());
+
+                }
+                stream_statement.reset();
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+
+            retval.tree = root_0;
 
             }
 
@@ -191,40 +191,39 @@ public TreeAdaptor getTreeAdaptor() {
         }
         return retval;
     }
-    // $ANTLR end "declarations"
+    // $ANTLR end "statements"
 
 
-    public static class decl_return extends ParserRuleReturnScope {
+    public static class statement_return extends ParserRuleReturnScope {
         CommonTree tree;
         public Object getTree() { return tree; }
     };
 
 
-    // $ANTLR start "decl"
-    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:66:1: decl : ( namespace_decl -> ^( NAMESPACE namespace_decl ) | schema_decl -> ^( SCHEMA schema_decl ) );
-    public final RSFParser.decl_return decl() throws RecognitionException {
-        RSFParser.decl_return retval = new RSFParser.decl_return();
+    // $ANTLR start "statement"
+    // RSF.g:38:1: statement : ( namespace_decl | schema_decl );
+    public final RSFParser.statement_return statement() throws RecognitionException {
+        RSFParser.statement_return retval = new RSFParser.statement_return();
         retval.start = input.LT(1);
 
 
         CommonTree root_0 = null;
 
-        RSFParser.namespace_decl_return namespace_decl3 =null;
+        RSFParser.namespace_decl_return namespace_decl2 =null;
 
-        RSFParser.schema_decl_return schema_decl4 =null;
+        RSFParser.schema_decl_return schema_decl3 =null;
 
 
-        RewriteRuleSubtreeStream stream_namespace_decl=new RewriteRuleSubtreeStream(adaptor,"rule namespace_decl");
-        RewriteRuleSubtreeStream stream_schema_decl=new RewriteRuleSubtreeStream(adaptor,"rule schema_decl");
+
         try {
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:66:7: ( namespace_decl -> ^( NAMESPACE namespace_decl ) | schema_decl -> ^( SCHEMA schema_decl ) )
+            // RSF.g:38:11: ( namespace_decl | schema_decl )
             int alt2=2;
             int LA2_0 = input.LA(1);
 
-            if ( (LA2_0==NAMESPACE) ) {
+            if ( (LA2_0==NS) ) {
                 alt2=1;
             }
-            else if ( (LA2_0==SCHEMA) ) {
+            else if ( (LA2_0==SCHEMA_FOR) ) {
                 alt2=2;
             }
             else {
@@ -236,86 +235,32 @@ public TreeAdaptor getTreeAdaptor() {
             }
             switch (alt2) {
                 case 1 :
-                    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:67:2: namespace_decl
+                    // RSF.g:38:14: namespace_decl
                     {
-                    pushFollow(FOLLOW_namespace_decl_in_decl143);
-                    namespace_decl3=namespace_decl();
+                    root_0 = (CommonTree)adaptor.nil();
+
+
+                    pushFollow(FOLLOW_namespace_decl_in_statement100);
+                    namespace_decl2=namespace_decl();
 
                     state._fsp--;
 
-                    stream_namespace_decl.add(namespace_decl3.getTree());
-
-                    // AST REWRITE
-                    // elements: namespace_decl
-                    // token labels: 
-                    // rule labels: retval
-                    // token list labels: 
-                    // rule list labels: 
-                    // wildcard labels: 
-                    retval.tree = root_0;
-                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-                    root_0 = (CommonTree)adaptor.nil();
-                    // 67:17: -> ^( NAMESPACE namespace_decl )
-                    {
-                        // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:67:20: ^( NAMESPACE namespace_decl )
-                        {
-                        CommonTree root_1 = (CommonTree)adaptor.nil();
-                        root_1 = (CommonTree)adaptor.becomeRoot(
-                        (CommonTree)adaptor.create(NAMESPACE, "NAMESPACE")
-                        , root_1);
-
-                        adaptor.addChild(root_1, stream_namespace_decl.nextTree());
-
-                        adaptor.addChild(root_0, root_1);
-                        }
-
-                    }
-
-
-                    retval.tree = root_0;
+                    adaptor.addChild(root_0, namespace_decl2.getTree());
 
                     }
                     break;
                 case 2 :
-                    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:68:4: schema_decl
+                    // RSF.g:39:7: schema_decl
                     {
-                    pushFollow(FOLLOW_schema_decl_in_decl156);
-                    schema_decl4=schema_decl();
+                    root_0 = (CommonTree)adaptor.nil();
+
+
+                    pushFollow(FOLLOW_schema_decl_in_statement108);
+                    schema_decl3=schema_decl();
 
                     state._fsp--;
 
-                    stream_schema_decl.add(schema_decl4.getTree());
-
-                    // AST REWRITE
-                    // elements: schema_decl
-                    // token labels: 
-                    // rule labels: retval
-                    // token list labels: 
-                    // rule list labels: 
-                    // wildcard labels: 
-                    retval.tree = root_0;
-                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-                    root_0 = (CommonTree)adaptor.nil();
-                    // 68:16: -> ^( SCHEMA schema_decl )
-                    {
-                        // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:68:19: ^( SCHEMA schema_decl )
-                        {
-                        CommonTree root_1 = (CommonTree)adaptor.nil();
-                        root_1 = (CommonTree)adaptor.becomeRoot(
-                        (CommonTree)adaptor.create(SCHEMA, "SCHEMA")
-                        , root_1);
-
-                        adaptor.addChild(root_1, stream_schema_decl.nextTree());
-
-                        adaptor.addChild(root_0, root_1);
-                        }
-
-                    }
-
-
-                    retval.tree = root_0;
+                    adaptor.addChild(root_0, schema_decl3.getTree());
 
                     }
                     break;
@@ -340,7 +285,7 @@ public TreeAdaptor getTreeAdaptor() {
         }
         return retval;
     }
-    // $ANTLR end "decl"
+    // $ANTLR end "statement"
 
 
     public static class namespace_decl_return extends ParserRuleReturnScope {
@@ -350,7 +295,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "namespace_decl"
-    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:71:1: namespace_decl : NAMESPACE string PREFIX string ;
+    // RSF.g:43:1: namespace_decl : NS e= STRING PREFIX f= STRING -> ^( NAMESPACE $e $f) ;
     public final RSFParser.namespace_decl_return namespace_decl() throws RecognitionException {
         RSFParser.namespace_decl_return retval = new RSFParser.namespace_decl_return();
         retval.start = input.LT(1);
@@ -358,50 +303,72 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token NAMESPACE5=null;
-        Token PREFIX7=null;
-        RSFParser.string_return string6 =null;
+        Token e=null;
+        Token f=null;
+        Token NS4=null;
+        Token PREFIX5=null;
 
-        RSFParser.string_return string8 =null;
-
-
-        CommonTree NAMESPACE5_tree=null;
-        CommonTree PREFIX7_tree=null;
+        CommonTree e_tree=null;
+        CommonTree f_tree=null;
+        CommonTree NS4_tree=null;
+        CommonTree PREFIX5_tree=null;
+        RewriteRuleTokenStream stream_PREFIX=new RewriteRuleTokenStream(adaptor,"token PREFIX");
+        RewriteRuleTokenStream stream_NS=new RewriteRuleTokenStream(adaptor,"token NS");
+        RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
 
         try {
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:72:4: ( NAMESPACE string PREFIX string )
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:72:6: NAMESPACE string PREFIX string
+            // RSF.g:43:15: ( NS e= STRING PREFIX f= STRING -> ^( NAMESPACE $e $f) )
+            // RSF.g:43:17: NS e= STRING PREFIX f= STRING
             {
+            NS4=(Token)match(input,NS,FOLLOW_NS_in_namespace_decl121);  
+            stream_NS.add(NS4);
+
+
+            e=(Token)match(input,STRING,FOLLOW_STRING_in_namespace_decl125);  
+            stream_STRING.add(e);
+
+
+            PREFIX5=(Token)match(input,PREFIX,FOLLOW_PREFIX_in_namespace_decl127);  
+            stream_PREFIX.add(PREFIX5);
+
+
+            f=(Token)match(input,STRING,FOLLOW_STRING_in_namespace_decl131);  
+            stream_STRING.add(f);
+
+
+            // AST REWRITE
+            // elements: e, f
+            // token labels: f, e
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleTokenStream stream_f=new RewriteRuleTokenStream(adaptor,"token f",f);
+            RewriteRuleTokenStream stream_e=new RewriteRuleTokenStream(adaptor,"token e",e);
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
             root_0 = (CommonTree)adaptor.nil();
+            // 43:45: -> ^( NAMESPACE $e $f)
+            {
+                // RSF.g:43:48: ^( NAMESPACE $e $f)
+                {
+                CommonTree root_1 = (CommonTree)adaptor.nil();
+                root_1 = (CommonTree)adaptor.becomeRoot(
+                (CommonTree)adaptor.create(NAMESPACE, "NAMESPACE")
+                , root_1);
+
+                adaptor.addChild(root_1, stream_e.nextNode());
+
+                adaptor.addChild(root_1, stream_f.nextNode());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
 
 
-            NAMESPACE5=(Token)match(input,NAMESPACE,FOLLOW_NAMESPACE_in_namespace_decl180); 
-            NAMESPACE5_tree = 
-            (CommonTree)adaptor.create(NAMESPACE5)
-            ;
-            adaptor.addChild(root_0, NAMESPACE5_tree);
-
-
-            pushFollow(FOLLOW_string_in_namespace_decl182);
-            string6=string();
-
-            state._fsp--;
-
-            adaptor.addChild(root_0, string6.getTree());
-
-            PREFIX7=(Token)match(input,PREFIX,FOLLOW_PREFIX_in_namespace_decl184); 
-            PREFIX7_tree = 
-            (CommonTree)adaptor.create(PREFIX7)
-            ;
-            adaptor.addChild(root_0, PREFIX7_tree);
-
-
-            pushFollow(FOLLOW_string_in_namespace_decl186);
-            string8=string();
-
-            state._fsp--;
-
-            adaptor.addChild(root_0, string8.getTree());
+            retval.tree = root_0;
 
             }
 
@@ -434,7 +401,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "schema_decl"
-    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:74:1: schema_decl : SCHEMA FOR string '{' ( property_decl )* '}' ;
+    // RSF.g:46:1: schema_decl : SCHEMA_FOR s= STRING '{' ( decl )+ '}' -> ^( SCHEMA $s ( decl )+ ) ;
     public final RSFParser.schema_decl_return schema_decl() throws RecognitionException {
         RSFParser.schema_decl_return retval = new RSFParser.schema_decl_return();
         retval.start = input.LT(1);
@@ -442,92 +409,117 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token SCHEMA9=null;
-        Token FOR10=null;
-        Token char_literal12=null;
-        Token char_literal14=null;
-        RSFParser.string_return string11 =null;
-
-        RSFParser.property_decl_return property_decl13 =null;
+        Token s=null;
+        Token SCHEMA_FOR6=null;
+        Token char_literal7=null;
+        Token char_literal9=null;
+        RSFParser.decl_return decl8 =null;
 
 
-        CommonTree SCHEMA9_tree=null;
-        CommonTree FOR10_tree=null;
-        CommonTree char_literal12_tree=null;
-        CommonTree char_literal14_tree=null;
-
+        CommonTree s_tree=null;
+        CommonTree SCHEMA_FOR6_tree=null;
+        CommonTree char_literal7_tree=null;
+        CommonTree char_literal9_tree=null;
+        RewriteRuleTokenStream stream_25=new RewriteRuleTokenStream(adaptor,"token 25");
+        RewriteRuleTokenStream stream_SCHEMA_FOR=new RewriteRuleTokenStream(adaptor,"token SCHEMA_FOR");
+        RewriteRuleTokenStream stream_26=new RewriteRuleTokenStream(adaptor,"token 26");
+        RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
+        RewriteRuleSubtreeStream stream_decl=new RewriteRuleSubtreeStream(adaptor,"rule decl");
         try {
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:75:3: ( SCHEMA FOR string '{' ( property_decl )* '}' )
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:75:5: SCHEMA FOR string '{' ( property_decl )* '}'
+            // RSF.g:46:13: ( SCHEMA_FOR s= STRING '{' ( decl )+ '}' -> ^( SCHEMA $s ( decl )+ ) )
+            // RSF.g:46:15: SCHEMA_FOR s= STRING '{' ( decl )+ '}'
             {
-            root_0 = (CommonTree)adaptor.nil();
+            SCHEMA_FOR6=(Token)match(input,SCHEMA_FOR,FOLLOW_SCHEMA_FOR_in_schema_decl153);  
+            stream_SCHEMA_FOR.add(SCHEMA_FOR6);
 
 
-            SCHEMA9=(Token)match(input,SCHEMA,FOLLOW_SCHEMA_in_schema_decl197); 
-            SCHEMA9_tree = 
-            (CommonTree)adaptor.create(SCHEMA9)
-            ;
-            adaptor.addChild(root_0, SCHEMA9_tree);
+            s=(Token)match(input,STRING,FOLLOW_STRING_in_schema_decl157);  
+            stream_STRING.add(s);
 
 
-            FOR10=(Token)match(input,FOR,FOLLOW_FOR_in_schema_decl199); 
-            FOR10_tree = 
-            (CommonTree)adaptor.create(FOR10)
-            ;
-            adaptor.addChild(root_0, FOR10_tree);
+            char_literal7=(Token)match(input,25,FOLLOW_25_in_schema_decl159);  
+            stream_25.add(char_literal7);
 
 
-            pushFollow(FOLLOW_string_in_schema_decl201);
-            string11=string();
-
-            state._fsp--;
-
-            adaptor.addChild(root_0, string11.getTree());
-
-            char_literal12=(Token)match(input,35,FOLLOW_35_in_schema_decl206); 
-            char_literal12_tree = 
-            (CommonTree)adaptor.create(char_literal12)
-            ;
-            adaptor.addChild(root_0, char_literal12_tree);
-
-
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:77:4: ( property_decl )*
+            // RSF.g:47:6: ( decl )+
+            int cnt3=0;
             loop3:
             do {
                 int alt3=2;
                 int LA3_0 = input.LA(1);
 
-                if ( (LA3_0==PROPERTY) ) {
+                if ( (LA3_0==LABEL_RULE||LA3_0==PROPERTY_DECL) ) {
                     alt3=1;
                 }
 
 
                 switch (alt3) {
             	case 1 :
-            	    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:77:4: property_decl
+            	    // RSF.g:47:6: decl
             	    {
-            	    pushFollow(FOLLOW_property_decl_in_schema_decl211);
-            	    property_decl13=property_decl();
+            	    pushFollow(FOLLOW_decl_in_schema_decl166);
+            	    decl8=decl();
 
             	    state._fsp--;
 
-            	    adaptor.addChild(root_0, property_decl13.getTree());
+            	    stream_decl.add(decl8.getTree());
 
             	    }
             	    break;
 
             	default :
-            	    break loop3;
+            	    if ( cnt3 >= 1 ) break loop3;
+                        EarlyExitException eee =
+                            new EarlyExitException(3, input);
+                        throw eee;
                 }
+                cnt3++;
             } while (true);
 
 
-            char_literal14=(Token)match(input,36,FOLLOW_36_in_schema_decl217); 
-            char_literal14_tree = 
-            (CommonTree)adaptor.create(char_literal14)
-            ;
-            adaptor.addChild(root_0, char_literal14_tree);
+            char_literal9=(Token)match(input,26,FOLLOW_26_in_schema_decl172);  
+            stream_26.add(char_literal9);
 
+
+            // AST REWRITE
+            // elements: s, decl
+            // token labels: s
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleTokenStream stream_s=new RewriteRuleTokenStream(adaptor,"token s",s);
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (CommonTree)adaptor.nil();
+            // 49:4: -> ^( SCHEMA $s ( decl )+ )
+            {
+                // RSF.g:49:7: ^( SCHEMA $s ( decl )+ )
+                {
+                CommonTree root_1 = (CommonTree)adaptor.nil();
+                root_1 = (CommonTree)adaptor.becomeRoot(
+                (CommonTree)adaptor.create(SCHEMA, "SCHEMA")
+                , root_1);
+
+                adaptor.addChild(root_1, stream_s.nextNode());
+
+                if ( !(stream_decl.hasNext()) ) {
+                    throw new RewriteEarlyExitException();
+                }
+                while ( stream_decl.hasNext() ) {
+                    adaptor.addChild(root_1, stream_decl.nextTree());
+
+                }
+                stream_decl.reset();
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+
+            retval.tree = root_0;
 
             }
 
@@ -553,6 +545,197 @@ public TreeAdaptor getTreeAdaptor() {
     // $ANTLR end "schema_decl"
 
 
+    public static class decl_return extends ParserRuleReturnScope {
+        CommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+
+    // $ANTLR start "decl"
+    // RSF.g:52:1: decl : ( label_decl | property_decl );
+    public final RSFParser.decl_return decl() throws RecognitionException {
+        RSFParser.decl_return retval = new RSFParser.decl_return();
+        retval.start = input.LT(1);
+
+
+        CommonTree root_0 = null;
+
+        RSFParser.label_decl_return label_decl10 =null;
+
+        RSFParser.property_decl_return property_decl11 =null;
+
+
+
+        try {
+            // RSF.g:52:6: ( label_decl | property_decl )
+            int alt4=2;
+            int LA4_0 = input.LA(1);
+
+            if ( (LA4_0==LABEL_RULE) ) {
+                alt4=1;
+            }
+            else if ( (LA4_0==PROPERTY_DECL) ) {
+                alt4=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("", 4, 0, input);
+
+                throw nvae;
+
+            }
+            switch (alt4) {
+                case 1 :
+                    // RSF.g:52:10: label_decl
+                    {
+                    root_0 = (CommonTree)adaptor.nil();
+
+
+                    pushFollow(FOLLOW_label_decl_in_decl198);
+                    label_decl10=label_decl();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, label_decl10.getTree());
+
+                    }
+                    break;
+                case 2 :
+                    // RSF.g:53:5: property_decl
+                    {
+                    root_0 = (CommonTree)adaptor.nil();
+
+
+                    pushFollow(FOLLOW_property_decl_in_decl204);
+                    property_decl11=property_decl();
+
+                    state._fsp--;
+
+                    adaptor.addChild(root_0, property_decl11.getTree());
+
+                    }
+                    break;
+
+            }
+            retval.stop = input.LT(-1);
+
+
+            retval.tree = (CommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+
+        finally {
+        	// do for sure before leaving
+        }
+        return retval;
+    }
+    // $ANTLR end "decl"
+
+
+    public static class label_decl_return extends ParserRuleReturnScope {
+        CommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+
+    // $ANTLR start "label_decl"
+    // RSF.g:57:1: label_decl : LABEL_RULE COLON e= STRING -> ^( LABEL $e) ;
+    public final RSFParser.label_decl_return label_decl() throws RecognitionException {
+        RSFParser.label_decl_return retval = new RSFParser.label_decl_return();
+        retval.start = input.LT(1);
+
+
+        CommonTree root_0 = null;
+
+        Token e=null;
+        Token LABEL_RULE12=null;
+        Token COLON13=null;
+
+        CommonTree e_tree=null;
+        CommonTree LABEL_RULE12_tree=null;
+        CommonTree COLON13_tree=null;
+        RewriteRuleTokenStream stream_COLON=new RewriteRuleTokenStream(adaptor,"token COLON");
+        RewriteRuleTokenStream stream_LABEL_RULE=new RewriteRuleTokenStream(adaptor,"token LABEL_RULE");
+        RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
+
+        try {
+            // RSF.g:57:11: ( LABEL_RULE COLON e= STRING -> ^( LABEL $e) )
+            // RSF.g:57:13: LABEL_RULE COLON e= STRING
+            {
+            LABEL_RULE12=(Token)match(input,LABEL_RULE,FOLLOW_LABEL_RULE_in_label_decl216);  
+            stream_LABEL_RULE.add(LABEL_RULE12);
+
+
+            COLON13=(Token)match(input,COLON,FOLLOW_COLON_in_label_decl218);  
+            stream_COLON.add(COLON13);
+
+
+            e=(Token)match(input,STRING,FOLLOW_STRING_in_label_decl222);  
+            stream_STRING.add(e);
+
+
+            // AST REWRITE
+            // elements: e
+            // token labels: e
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleTokenStream stream_e=new RewriteRuleTokenStream(adaptor,"token e",e);
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (CommonTree)adaptor.nil();
+            // 57:39: -> ^( LABEL $e)
+            {
+                // RSF.g:57:42: ^( LABEL $e)
+                {
+                CommonTree root_1 = (CommonTree)adaptor.nil();
+                root_1 = (CommonTree)adaptor.becomeRoot(
+                (CommonTree)adaptor.create(LABEL, "LABEL")
+                , root_1);
+
+                adaptor.addChild(root_1, stream_e.nextNode());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+
+            retval.tree = root_0;
+
+            }
+
+            retval.stop = input.LT(-1);
+
+
+            retval.tree = (CommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+
+        finally {
+        	// do for sure before leaving
+        }
+        return retval;
+    }
+    // $ANTLR end "label_decl"
+
+
     public static class property_decl_return extends ParserRuleReturnScope {
         CommonTree tree;
         public Object getTree() { return tree; }
@@ -560,7 +743,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "property_decl"
-    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:80:1: property_decl : PROPERTY string cardinality '{' assignment '}' ;
+    // RSF.g:60:1: property_decl : PROPERTY_DECL id= STRING cardinal_decl '{' ( assigment )+ '}' -> ^( PROPERTY $id cardinal_decl ( assigment )+ ) ;
     public final RSFParser.property_decl_return property_decl() throws RecognitionException {
         RSFParser.property_decl_return retval = new RSFParser.property_decl_return();
         retval.start = input.LT(1);
@@ -568,68 +751,129 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token PROPERTY15=null;
+        Token id=null;
+        Token PROPERTY_DECL14=null;
+        Token char_literal16=null;
         Token char_literal18=null;
-        Token char_literal20=null;
-        RSFParser.string_return string16 =null;
+        RSFParser.cardinal_decl_return cardinal_decl15 =null;
 
-        RSFParser.cardinality_return cardinality17 =null;
-
-        RSFParser.assignment_return assignment19 =null;
+        RSFParser.assigment_return assigment17 =null;
 
 
-        CommonTree PROPERTY15_tree=null;
+        CommonTree id_tree=null;
+        CommonTree PROPERTY_DECL14_tree=null;
+        CommonTree char_literal16_tree=null;
         CommonTree char_literal18_tree=null;
-        CommonTree char_literal20_tree=null;
-
+        RewriteRuleTokenStream stream_PROPERTY_DECL=new RewriteRuleTokenStream(adaptor,"token PROPERTY_DECL");
+        RewriteRuleTokenStream stream_25=new RewriteRuleTokenStream(adaptor,"token 25");
+        RewriteRuleTokenStream stream_26=new RewriteRuleTokenStream(adaptor,"token 26");
+        RewriteRuleTokenStream stream_STRING=new RewriteRuleTokenStream(adaptor,"token STRING");
+        RewriteRuleSubtreeStream stream_assigment=new RewriteRuleSubtreeStream(adaptor,"rule assigment");
+        RewriteRuleSubtreeStream stream_cardinal_decl=new RewriteRuleSubtreeStream(adaptor,"rule cardinal_decl");
         try {
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:81:2: ( PROPERTY string cardinality '{' assignment '}' )
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:81:4: PROPERTY string cardinality '{' assignment '}'
+            // RSF.g:60:15: ( PROPERTY_DECL id= STRING cardinal_decl '{' ( assigment )+ '}' -> ^( PROPERTY $id cardinal_decl ( assigment )+ ) )
+            // RSF.g:60:17: PROPERTY_DECL id= STRING cardinal_decl '{' ( assigment )+ '}'
             {
+            PROPERTY_DECL14=(Token)match(input,PROPERTY_DECL,FOLLOW_PROPERTY_DECL_in_property_decl240);  
+            stream_PROPERTY_DECL.add(PROPERTY_DECL14);
+
+
+            id=(Token)match(input,STRING,FOLLOW_STRING_in_property_decl244);  
+            stream_STRING.add(id);
+
+
+            pushFollow(FOLLOW_cardinal_decl_in_property_decl246);
+            cardinal_decl15=cardinal_decl();
+
+            state._fsp--;
+
+            stream_cardinal_decl.add(cardinal_decl15.getTree());
+
+            char_literal16=(Token)match(input,25,FOLLOW_25_in_property_decl248);  
+            stream_25.add(char_literal16);
+
+
+            // RSF.g:61:6: ( assigment )+
+            int cnt5=0;
+            loop5:
+            do {
+                int alt5=2;
+                int LA5_0 = input.LA(1);
+
+                if ( ((LA5_0 >= FIELD_LABEL && LA5_0 <= INT_LABEL)||LA5_0==RESOURCE_CONSTRAINT||LA5_0==TYPE_DEF) ) {
+                    alt5=1;
+                }
+
+
+                switch (alt5) {
+            	case 1 :
+            	    // RSF.g:61:6: assigment
+            	    {
+            	    pushFollow(FOLLOW_assigment_in_property_decl255);
+            	    assigment17=assigment();
+
+            	    state._fsp--;
+
+            	    stream_assigment.add(assigment17.getTree());
+
+            	    }
+            	    break;
+
+            	default :
+            	    if ( cnt5 >= 1 ) break loop5;
+                        EarlyExitException eee =
+                            new EarlyExitException(5, input);
+                        throw eee;
+                }
+                cnt5++;
+            } while (true);
+
+
+            char_literal18=(Token)match(input,26,FOLLOW_26_in_property_decl262);  
+            stream_26.add(char_literal18);
+
+
+            // AST REWRITE
+            // elements: id, cardinal_decl, assigment
+            // token labels: id
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleTokenStream stream_id=new RewriteRuleTokenStream(adaptor,"token id",id);
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
             root_0 = (CommonTree)adaptor.nil();
+            // 63:5: -> ^( PROPERTY $id cardinal_decl ( assigment )+ )
+            {
+                // RSF.g:63:8: ^( PROPERTY $id cardinal_decl ( assigment )+ )
+                {
+                CommonTree root_1 = (CommonTree)adaptor.nil();
+                root_1 = (CommonTree)adaptor.becomeRoot(
+                (CommonTree)adaptor.create(PROPERTY, "PROPERTY")
+                , root_1);
+
+                adaptor.addChild(root_1, stream_id.nextNode());
+
+                adaptor.addChild(root_1, stream_cardinal_decl.nextTree());
+
+                if ( !(stream_assigment.hasNext()) ) {
+                    throw new RewriteEarlyExitException();
+                }
+                while ( stream_assigment.hasNext() ) {
+                    adaptor.addChild(root_1, stream_assigment.nextTree());
+
+                }
+                stream_assigment.reset();
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
 
 
-            PROPERTY15=(Token)match(input,PROPERTY,FOLLOW_PROPERTY_in_property_decl227); 
-            PROPERTY15_tree = 
-            (CommonTree)adaptor.create(PROPERTY15)
-            ;
-            adaptor.addChild(root_0, PROPERTY15_tree);
-
-
-            pushFollow(FOLLOW_string_in_property_decl231);
-            string16=string();
-
-            state._fsp--;
-
-            adaptor.addChild(root_0, string16.getTree());
-
-            pushFollow(FOLLOW_cardinality_in_property_decl235);
-            cardinality17=cardinality();
-
-            state._fsp--;
-
-            adaptor.addChild(root_0, cardinality17.getTree());
-
-            char_literal18=(Token)match(input,35,FOLLOW_35_in_property_decl239); 
-            char_literal18_tree = 
-            (CommonTree)adaptor.create(char_literal18)
-            ;
-            adaptor.addChild(root_0, char_literal18_tree);
-
-
-            pushFollow(FOLLOW_assignment_in_property_decl244);
-            assignment19=assignment();
-
-            state._fsp--;
-
-            adaptor.addChild(root_0, assignment19.getTree());
-
-            char_literal20=(Token)match(input,36,FOLLOW_36_in_property_decl248); 
-            char_literal20_tree = 
-            (CommonTree)adaptor.create(char_literal20)
-            ;
-            adaptor.addChild(root_0, char_literal20_tree);
-
+            retval.tree = root_0;
 
             }
 
@@ -655,155 +899,169 @@ public TreeAdaptor getTreeAdaptor() {
     // $ANTLR end "property_decl"
 
 
-    public static class cardinality_return extends ParserRuleReturnScope {
+    public static class cardinal_decl_return extends ParserRuleReturnScope {
         CommonTree tree;
         public Object getTree() { return tree; }
     };
 
 
-    // $ANTLR start "cardinality"
-    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:89:1: cardinality : '[' string ']' ;
-    public final RSFParser.cardinality_return cardinality() throws RecognitionException {
-        RSFParser.cardinality_return retval = new RSFParser.cardinality_return();
+    // $ANTLR start "cardinal_decl"
+    // RSF.g:66:1: cardinal_decl : e= CARDINALITY_DECL -> ^( CARDINALITY $e) ;
+    public final RSFParser.cardinal_decl_return cardinal_decl() throws RecognitionException {
+        RSFParser.cardinal_decl_return retval = new RSFParser.cardinal_decl_return();
         retval.start = input.LT(1);
 
 
         CommonTree root_0 = null;
 
-        Token char_literal21=null;
-        Token char_literal23=null;
-        RSFParser.string_return string22 =null;
+        Token e=null;
 
-
-        CommonTree char_literal21_tree=null;
-        CommonTree char_literal23_tree=null;
+        CommonTree e_tree=null;
+        RewriteRuleTokenStream stream_CARDINALITY_DECL=new RewriteRuleTokenStream(adaptor,"token CARDINALITY_DECL");
 
         try {
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:91:2: ( '[' string ']' )
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:91:4: '[' string ']'
+            // RSF.g:66:15: (e= CARDINALITY_DECL -> ^( CARDINALITY $e) )
+            // RSF.g:66:17: e= CARDINALITY_DECL
             {
+            e=(Token)match(input,CARDINALITY_DECL,FOLLOW_CARDINALITY_DECL_in_cardinal_decl292);  
+            stream_CARDINALITY_DECL.add(e);
+
+
+            // AST REWRITE
+            // elements: e
+            // token labels: e
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleTokenStream stream_e=new RewriteRuleTokenStream(adaptor,"token e",e);
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
             root_0 = (CommonTree)adaptor.nil();
+            // 66:36: -> ^( CARDINALITY $e)
+            {
+                // RSF.g:66:39: ^( CARDINALITY $e)
+                {
+                CommonTree root_1 = (CommonTree)adaptor.nil();
+                root_1 = (CommonTree)adaptor.becomeRoot(
+                (CommonTree)adaptor.create(CARDINALITY, "CARDINALITY")
+                , root_1);
+
+                adaptor.addChild(root_1, stream_e.nextNode());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
 
 
-            char_literal21=(Token)match(input,33,FOLLOW_33_in_cardinality261); 
-            char_literal21_tree = 
-            (CommonTree)adaptor.create(char_literal21)
-            ;
-            adaptor.addChild(root_0, char_literal21_tree);
+            retval.tree = root_0;
+
+            }
+
+            retval.stop = input.LT(-1);
 
 
-            pushFollow(FOLLOW_string_in_cardinality263);
-            string22=string();
+            retval.tree = (CommonTree)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+
+        finally {
+        	// do for sure before leaving
+        }
+        return retval;
+    }
+    // $ANTLR end "cardinal_decl"
+
+
+    public static class assigment_return extends ParserRuleReturnScope {
+        CommonTree tree;
+        public Object getTree() { return tree; }
+    };
+
+
+    // $ANTLR start "assigment"
+    // RSF.g:69:1: assigment : k= key COLON v= value -> ^( ASSIGMENT $k $v) ;
+    public final RSFParser.assigment_return assigment() throws RecognitionException {
+        RSFParser.assigment_return retval = new RSFParser.assigment_return();
+        retval.start = input.LT(1);
+
+
+        CommonTree root_0 = null;
+
+        Token COLON19=null;
+        RSFParser.key_return k =null;
+
+        RSFParser.value_return v =null;
+
+
+        CommonTree COLON19_tree=null;
+        RewriteRuleTokenStream stream_COLON=new RewriteRuleTokenStream(adaptor,"token COLON");
+        RewriteRuleSubtreeStream stream_value=new RewriteRuleSubtreeStream(adaptor,"rule value");
+        RewriteRuleSubtreeStream stream_key=new RewriteRuleSubtreeStream(adaptor,"rule key");
+        try {
+            // RSF.g:69:11: (k= key COLON v= value -> ^( ASSIGMENT $k $v) )
+            // RSF.g:69:13: k= key COLON v= value
+            {
+            pushFollow(FOLLOW_key_in_assigment312);
+            k=key();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, string22.getTree());
+            stream_key.add(k.getTree());
 
-            char_literal23=(Token)match(input,34,FOLLOW_34_in_cardinality265); 
-            char_literal23_tree = 
-            (CommonTree)adaptor.create(char_literal23)
-            ;
-            adaptor.addChild(root_0, char_literal23_tree);
+            COLON19=(Token)match(input,COLON,FOLLOW_COLON_in_assigment314);  
+            stream_COLON.add(COLON19);
 
 
-            }
+            pushFollow(FOLLOW_value_in_assigment318);
+            v=value();
 
-            retval.stop = input.LT(-1);
+            state._fsp--;
 
+            stream_value.add(v.getTree());
 
-            retval.tree = (CommonTree)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+            // AST REWRITE
+            // elements: k, v
+            // token labels: 
+            // rule labels: v, retval, k
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_v=new RewriteRuleSubtreeStream(adaptor,"rule v",v!=null?v.tree:null);
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+            RewriteRuleSubtreeStream stream_k=new RewriteRuleSubtreeStream(adaptor,"rule k",k!=null?k.tree:null);
 
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-
-        finally {
-        	// do for sure before leaving
-        }
-        return retval;
-    }
-    // $ANTLR end "cardinality"
-
-
-    public static class assignment_return extends ParserRuleReturnScope {
-        CommonTree tree;
-        public Object getTree() { return tree; }
-    };
-
-
-    // $ANTLR start "assignment"
-    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:93:1: assignment : ( key ':' value )* ;
-    public final RSFParser.assignment_return assignment() throws RecognitionException {
-        RSFParser.assignment_return retval = new RSFParser.assignment_return();
-        retval.start = input.LT(1);
-
-
-        CommonTree root_0 = null;
-
-        Token char_literal25=null;
-        RSFParser.key_return key24 =null;
-
-        RSFParser.value_return value26 =null;
-
-
-        CommonTree char_literal25_tree=null;
-
-        try {
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:94:2: ( ( key ':' value )* )
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:94:4: ( key ':' value )*
-            {
             root_0 = (CommonTree)adaptor.nil();
+            // 69:33: -> ^( ASSIGMENT $k $v)
+            {
+                // RSF.g:69:36: ^( ASSIGMENT $k $v)
+                {
+                CommonTree root_1 = (CommonTree)adaptor.nil();
+                root_1 = (CommonTree)adaptor.becomeRoot(
+                (CommonTree)adaptor.create(ASSIGMENT, "ASSIGMENT")
+                , root_1);
 
+                adaptor.addChild(root_1, stream_k.nextTree());
 
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:94:4: ( key ':' value )*
-            loop4:
-            do {
-                int alt4=2;
-                int LA4_0 = input.LA(1);
+                adaptor.addChild(root_1, stream_v.nextTree());
 
-                if ( (LA4_0==CONSTRAINT||LA4_0==FIELD_LABEL||LA4_0==TYPE_DEFINITION) ) {
-                    alt4=1;
+                adaptor.addChild(root_0, root_1);
                 }
 
-
-                switch (alt4) {
-            	case 1 :
-            	    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:94:5: key ':' value
-            	    {
-            	    pushFollow(FOLLOW_key_in_assignment277);
-            	    key24=key();
-
-            	    state._fsp--;
-
-            	    adaptor.addChild(root_0, key24.getTree());
-
-            	    char_literal25=(Token)match(input,32,FOLLOW_32_in_assignment279); 
-            	    char_literal25_tree = 
-            	    (CommonTree)adaptor.create(char_literal25)
-            	    ;
-            	    adaptor.addChild(root_0, char_literal25_tree);
+            }
 
 
-            	    pushFollow(FOLLOW_value_in_assignment281);
-            	    value26=value();
-
-            	    state._fsp--;
-
-            	    adaptor.addChild(root_0, value26.getTree());
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop4;
-                }
-            } while (true);
-
+            retval.tree = root_0;
 
             }
 
@@ -826,7 +1084,7 @@ public TreeAdaptor getTreeAdaptor() {
         }
         return retval;
     }
-    // $ANTLR end "assignment"
+    // $ANTLR end "assigment"
 
 
     public static class key_return extends ParserRuleReturnScope {
@@ -836,7 +1094,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "key"
-    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:96:1: key : ( FIELD_LABEL -> FIELD_LABEL | TYPE_DEFINITION -> TYPE_DEFINITION | CONSTRAINT -> CONSTRAINT );
+    // RSF.g:72:1: key : ( FIELD_LABEL | INT_LABEL | TYPE_DEF | RESOURCE_CONSTRAINT );
     public final RSFParser.key_return key() throws RecognitionException {
         RSFParser.key_return retval = new RSFParser.key_return();
         retval.start = input.LT(1);
@@ -844,140 +1102,34 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        Token FIELD_LABEL27=null;
-        Token TYPE_DEFINITION28=null;
-        Token CONSTRAINT29=null;
+        Token set20=null;
 
-        CommonTree FIELD_LABEL27_tree=null;
-        CommonTree TYPE_DEFINITION28_tree=null;
-        CommonTree CONSTRAINT29_tree=null;
-        RewriteRuleTokenStream stream_TYPE_DEFINITION=new RewriteRuleTokenStream(adaptor,"token TYPE_DEFINITION");
-        RewriteRuleTokenStream stream_FIELD_LABEL=new RewriteRuleTokenStream(adaptor,"token FIELD_LABEL");
-        RewriteRuleTokenStream stream_CONSTRAINT=new RewriteRuleTokenStream(adaptor,"token CONSTRAINT");
+        CommonTree set20_tree=null;
 
         try {
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:97:2: ( FIELD_LABEL -> FIELD_LABEL | TYPE_DEFINITION -> TYPE_DEFINITION | CONSTRAINT -> CONSTRAINT )
-            int alt5=3;
-            switch ( input.LA(1) ) {
-            case FIELD_LABEL:
-                {
-                alt5=1;
-                }
-                break;
-            case TYPE_DEFINITION:
-                {
-                alt5=2;
-                }
-                break;
-            case CONSTRAINT:
-                {
-                alt5=3;
-                }
-                break;
-            default:
-                NoViableAltException nvae =
-                    new NoViableAltException("", 5, 0, input);
+            // RSF.g:72:5: ( FIELD_LABEL | INT_LABEL | TYPE_DEF | RESOURCE_CONSTRAINT )
+            // RSF.g:
+            {
+            root_0 = (CommonTree)adaptor.nil();
 
-                throw nvae;
+
+            set20=(Token)input.LT(1);
+
+            if ( (input.LA(1) >= FIELD_LABEL && input.LA(1) <= INT_LABEL)||input.LA(1)==RESOURCE_CONSTRAINT||input.LA(1)==TYPE_DEF ) {
+                input.consume();
+                adaptor.addChild(root_0, 
+                (CommonTree)adaptor.create(set20)
+                );
+                state.errorRecovery=false;
+            }
+            else {
+                MismatchedSetException mse = new MismatchedSetException(null,input);
+                throw mse;
+            }
+
 
             }
 
-            switch (alt5) {
-                case 1 :
-                    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:97:4: FIELD_LABEL
-                    {
-                    FIELD_LABEL27=(Token)match(input,FIELD_LABEL,FOLLOW_FIELD_LABEL_in_key294);  
-                    stream_FIELD_LABEL.add(FIELD_LABEL27);
-
-
-                    // AST REWRITE
-                    // elements: FIELD_LABEL
-                    // token labels: 
-                    // rule labels: retval
-                    // token list labels: 
-                    // rule list labels: 
-                    // wildcard labels: 
-                    retval.tree = root_0;
-                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-                    root_0 = (CommonTree)adaptor.nil();
-                    // 97:16: -> FIELD_LABEL
-                    {
-                        adaptor.addChild(root_0, 
-                        stream_FIELD_LABEL.nextNode()
-                        );
-
-                    }
-
-
-                    retval.tree = root_0;
-
-                    }
-                    break;
-                case 2 :
-                    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:98:4: TYPE_DEFINITION
-                    {
-                    TYPE_DEFINITION28=(Token)match(input,TYPE_DEFINITION,FOLLOW_TYPE_DEFINITION_in_key303);  
-                    stream_TYPE_DEFINITION.add(TYPE_DEFINITION28);
-
-
-                    // AST REWRITE
-                    // elements: TYPE_DEFINITION
-                    // token labels: 
-                    // rule labels: retval
-                    // token list labels: 
-                    // rule list labels: 
-                    // wildcard labels: 
-                    retval.tree = root_0;
-                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-                    root_0 = (CommonTree)adaptor.nil();
-                    // 98:21: -> TYPE_DEFINITION
-                    {
-                        adaptor.addChild(root_0, 
-                        stream_TYPE_DEFINITION.nextNode()
-                        );
-
-                    }
-
-
-                    retval.tree = root_0;
-
-                    }
-                    break;
-                case 3 :
-                    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:99:4: CONSTRAINT
-                    {
-                    CONSTRAINT29=(Token)match(input,CONSTRAINT,FOLLOW_CONSTRAINT_in_key313);  
-                    stream_CONSTRAINT.add(CONSTRAINT29);
-
-
-                    // AST REWRITE
-                    // elements: CONSTRAINT
-                    // token labels: 
-                    // rule labels: retval
-                    // token list labels: 
-                    // rule list labels: 
-                    // wildcard labels: 
-                    retval.tree = root_0;
-                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-                    root_0 = (CommonTree)adaptor.nil();
-                    // 99:15: -> CONSTRAINT
-                    {
-                        adaptor.addChild(root_0, 
-                        stream_CONSTRAINT.nextNode()
-                        );
-
-                    }
-
-
-                    retval.tree = root_0;
-
-                    }
-                    break;
-
-            }
             retval.stop = input.LT(-1);
 
 
@@ -1007,7 +1159,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "value"
-    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:101:1: value : string ;
+    // RSF.g:78:1: value : STRING ;
     public final RSFParser.value_return value() throws RecognitionException {
         RSFParser.value_return retval = new RSFParser.value_return();
         retval.start = input.LT(1);
@@ -1015,23 +1167,23 @@ public TreeAdaptor getTreeAdaptor() {
 
         CommonTree root_0 = null;
 
-        RSFParser.string_return string30 =null;
+        Token STRING21=null;
 
-
+        CommonTree STRING21_tree=null;
 
         try {
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:103:2: ( string )
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:103:4: string
+            // RSF.g:78:7: ( STRING )
+            // RSF.g:78:9: STRING
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            pushFollow(FOLLOW_string_in_value327);
-            string30=string();
+            STRING21=(Token)match(input,STRING,FOLLOW_STRING_in_value367); 
+            STRING21_tree = 
+            (CommonTree)adaptor.create(STRING21)
+            ;
+            adaptor.addChild(root_0, STRING21_tree);
 
-            state._fsp--;
-
-            adaptor.addChild(root_0, string30.getTree());
 
             }
 
@@ -1056,210 +1208,38 @@ public TreeAdaptor getTreeAdaptor() {
     }
     // $ANTLR end "value"
 
-
-    public static class string_return extends ParserRuleReturnScope {
-        CommonTree tree;
-        public Object getTree() { return tree; }
-    };
-
-
-    // $ANTLR start "string"
-    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:106:1: string : String -> ^( STRING String ) ;
-    public final RSFParser.string_return string() throws RecognitionException {
-        RSFParser.string_return retval = new RSFParser.string_return();
-        retval.start = input.LT(1);
-
-
-        CommonTree root_0 = null;
-
-        Token String31=null;
-
-        CommonTree String31_tree=null;
-        RewriteRuleTokenStream stream_String=new RewriteRuleTokenStream(adaptor,"token String");
-
-        try {
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:106:9: ( String -> ^( STRING String ) )
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:106:11: String
-            {
-            String31=(Token)match(input,String,FOLLOW_String_in_string337);  
-            stream_String.add(String31);
-
-
-            // AST REWRITE
-            // elements: String
-            // token labels: 
-            // rule labels: retval
-            // token list labels: 
-            // rule list labels: 
-            // wildcard labels: 
-            retval.tree = root_0;
-            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            root_0 = (CommonTree)adaptor.nil();
-            // 107:4: -> ^( STRING String )
-            {
-                // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:107:7: ^( STRING String )
-                {
-                CommonTree root_1 = (CommonTree)adaptor.nil();
-                root_1 = (CommonTree)adaptor.becomeRoot(
-                (CommonTree)adaptor.create(STRING, "STRING")
-                , root_1);
-
-                adaptor.addChild(root_1, 
-                stream_String.nextNode()
-                );
-
-                adaptor.addChild(root_0, root_1);
-                }
-
-            }
-
-
-            retval.tree = root_0;
-
-            }
-
-            retval.stop = input.LT(-1);
-
-
-            retval.tree = (CommonTree)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-
-        finally {
-        	// do for sure before leaving
-        }
-        return retval;
-    }
-    // $ANTLR end "string"
-
-
-    public static class number_return extends ParserRuleReturnScope {
-        CommonTree tree;
-        public Object getTree() { return tree; }
-    };
-
-
-    // $ANTLR start "number"
-    // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:110:1: number : Number -> ^( NUMBER Number ) ;
-    public final RSFParser.number_return number() throws RecognitionException {
-        RSFParser.number_return retval = new RSFParser.number_return();
-        retval.start = input.LT(1);
-
-
-        CommonTree root_0 = null;
-
-        Token Number32=null;
-
-        CommonTree Number32_tree=null;
-        RewriteRuleTokenStream stream_Number=new RewriteRuleTokenStream(adaptor,"token Number");
-
-        try {
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:110:8: ( Number -> ^( NUMBER Number ) )
-            // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:110:10: Number
-            {
-            Number32=(Token)match(input,Number,FOLLOW_Number_in_number358);  
-            stream_Number.add(Number32);
-
-
-            // AST REWRITE
-            // elements: Number
-            // token labels: 
-            // rule labels: retval
-            // token list labels: 
-            // rule list labels: 
-            // wildcard labels: 
-            retval.tree = root_0;
-            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            root_0 = (CommonTree)adaptor.nil();
-            // 110:17: -> ^( NUMBER Number )
-            {
-                // /Users/otigges/projects/rb/core/src/main/antlr3/de/lichtflut/rb/core/schema/parser/impl/rsf/RSF.g:110:20: ^( NUMBER Number )
-                {
-                CommonTree root_1 = (CommonTree)adaptor.nil();
-                root_1 = (CommonTree)adaptor.becomeRoot(
-                (CommonTree)adaptor.create(NUMBER, "NUMBER")
-                , root_1);
-
-                adaptor.addChild(root_1, 
-                stream_Number.nextNode()
-                );
-
-                adaptor.addChild(root_0, root_1);
-                }
-
-            }
-
-
-            retval.tree = root_0;
-
-            }
-
-            retval.stop = input.LT(-1);
-
-
-            retval.tree = (CommonTree)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-
-        finally {
-        	// do for sure before leaving
-        }
-        return retval;
-    }
-    // $ANTLR end "number"
-
     // Delegated rules
 
 
  
 
-    public static final BitSet FOLLOW_decl_in_declarations129 = new BitSet(new long[]{0x0000000001040000L});
-    public static final BitSet FOLLOW_EOF_in_declarations132 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_namespace_decl_in_decl143 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_schema_decl_in_decl156 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAMESPACE_in_namespace_decl180 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_string_in_namespace_decl182 = new BitSet(new long[]{0x0000000000200000L});
-    public static final BitSet FOLLOW_PREFIX_in_namespace_decl184 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_string_in_namespace_decl186 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SCHEMA_in_schema_decl197 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_FOR_in_schema_decl199 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_string_in_schema_decl201 = new BitSet(new long[]{0x0000000800000000L});
-    public static final BitSet FOLLOW_35_in_schema_decl206 = new BitSet(new long[]{0x0000001000400000L});
-    public static final BitSet FOLLOW_property_decl_in_schema_decl211 = new BitSet(new long[]{0x0000001000400000L});
-    public static final BitSet FOLLOW_36_in_schema_decl217 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_PROPERTY_in_property_decl227 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_string_in_property_decl231 = new BitSet(new long[]{0x0000000200000000L});
-    public static final BitSet FOLLOW_cardinality_in_property_decl235 = new BitSet(new long[]{0x0000000800000000L});
-    public static final BitSet FOLLOW_35_in_property_decl239 = new BitSet(new long[]{0x0000001020000840L});
-    public static final BitSet FOLLOW_assignment_in_property_decl244 = new BitSet(new long[]{0x0000001000000000L});
-    public static final BitSet FOLLOW_36_in_property_decl248 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_33_in_cardinality261 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_string_in_cardinality263 = new BitSet(new long[]{0x0000000400000000L});
-    public static final BitSet FOLLOW_34_in_cardinality265 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_key_in_assignment277 = new BitSet(new long[]{0x0000000100000000L});
-    public static final BitSet FOLLOW_32_in_assignment279 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_value_in_assignment281 = new BitSet(new long[]{0x0000000020000842L});
-    public static final BitSet FOLLOW_FIELD_LABEL_in_key294 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TYPE_DEFINITION_in_key303 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_CONSTRAINT_in_key313 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_string_in_value327 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_String_in_string337 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_Number_in_number358 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_statement_in_statements79 = new BitSet(new long[]{0x0000000000104002L});
+    public static final BitSet FOLLOW_namespace_decl_in_statement100 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_schema_decl_in_statement108 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NS_in_namespace_decl121 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_STRING_in_namespace_decl125 = new BitSet(new long[]{0x0000000000008000L});
+    public static final BitSet FOLLOW_PREFIX_in_namespace_decl127 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_STRING_in_namespace_decl131 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SCHEMA_FOR_in_schema_decl153 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_STRING_in_schema_decl157 = new BitSet(new long[]{0x0000000002000000L});
+    public static final BitSet FOLLOW_25_in_schema_decl159 = new BitSet(new long[]{0x0000000000021000L});
+    public static final BitSet FOLLOW_decl_in_schema_decl166 = new BitSet(new long[]{0x0000000004021000L});
+    public static final BitSet FOLLOW_26_in_schema_decl172 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_label_decl_in_decl198 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_property_decl_in_decl204 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_LABEL_RULE_in_label_decl216 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_COLON_in_label_decl218 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_STRING_in_label_decl222 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_PROPERTY_DECL_in_property_decl240 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_STRING_in_property_decl244 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_cardinal_decl_in_property_decl246 = new BitSet(new long[]{0x0000000002000000L});
+    public static final BitSet FOLLOW_25_in_property_decl248 = new BitSet(new long[]{0x0000000000840600L});
+    public static final BitSet FOLLOW_assigment_in_property_decl255 = new BitSet(new long[]{0x0000000004840600L});
+    public static final BitSet FOLLOW_26_in_property_decl262 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_CARDINALITY_DECL_in_cardinal_decl292 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_key_in_assigment312 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_COLON_in_assigment314 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_value_in_assigment318 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_in_value367 = new BitSet(new long[]{0x0000000000000002L});
 
 }

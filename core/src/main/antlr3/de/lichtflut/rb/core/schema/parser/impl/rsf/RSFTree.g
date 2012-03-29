@@ -1,118 +1,210 @@
 tree grammar RSFTree;
 
 options {
-	output = AST;
-	//tokenVocab=RSF; // reuse token types
-	ASTLabelType=CommonTree; // $label will have type CommonTree
+  tokenVocab = RSF;
+  ASTLabelType = CommonTree;
 }
 
-
-@header {
+@header{
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
+
 package de.lichtflut.rb.core.schema.parser.impl.rsf;
 
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.naming.NamespaceHandle;
 
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 
-}
 
-// Optional step: Disable automatic error recovery
-@members {
-	private ResourceSchemaImpl resourceSchema = null;
-	private RSErrorReporter errorReporter = null;
-    	
-    public void setErrorReporter(RSErrorReporter errorReporter) {
+import java.util.Locale;
+import java.util.HashMap;
+
+}
+@members{
+
+	private static final String TYPE_DEF_CONST = "type-definition";
+	private static final String RESOURCE_CONSTRAINT_CONST = "resource-constraint";
+	private static final String FIELD_LABEL_CONST = "field-label";
+	private static final String FIELD_LABEL_INT_CONST = "field-label\\[..\\]";
+	
+	private List<ResourceSchemaImpl> schemaList = new ArrayList<ResourceSchemaImpl>();
+	private HashMap<String, NamespaceHandle> nsMap = new HashMap<String, NamespaceHandle>();
+	private RSErrorReporter errorReporter;
+
+	public void setErrorReporter(RSErrorReporter errorReporter) {
        	this.errorReporter = errorReporter;
     }
     
     public void emitErrorMessage(String msg) {
        	errorReporter.reportError(msg);
     }
-
-	private Integer extractNumber(CommonTree numberToken) {
-       	String numberBody = numberToken.getText();
-       	return new Integer(numberBody);
-    }
-
-    private String extractString(CommonTree token) {
-       	String extract = token.getText();
-       	extract = extract.replaceAll("\"","");
-       	return extract;
-    }
-
-		
-	public String getErrorMessage(RecognitionException e, String[] tokenNames) {
-		List stack = getRuleInvocationStack(e, this.getClass().getName());
-		String msg = null;
-		String inputContext =
-			input.LT(-3) == null ? "" : ((Tree)input.LT(-3)).getText()+" "+
-			input.LT(-2) == null ? "" : ((Tree)input.LT(-2)).getText()+" "+
-			input.LT(-1) == null ? "" : ((Tree)input.LT(-1)).getText()+" >>>"+
-			((Tree)input.LT(1)).getText()+"<<< "+
-			((Tree)input.LT(2)).getText()+" "+
-			((Tree)input.LT(3)).getText();
-		if ( e instanceof NoViableAltException ) {
-			NoViableAltException nvae = (NoViableAltException)e;
-			msg = " no viable alt; token="+e.token+
-			" (decision="+nvae.decisionNumber+
-			" state "+nvae.stateNumber+")"+
-			" decision=<<"+nvae.grammarDecisionDescription+">>";
-		} else {
-			msg = super.getErrorMessage(e, this.tokenNames);
+    
+	private String removeAll(String s, String remove){
+		s = s.replaceAll(remove, "");
+		return s;
+	}
+	
+	private String extract(String s, String delim, int pos){
+		String[] array = s.split(delim);
+		return array[pos];
+	}
+	
+	private void buildTypeDef(String key, String value){
+		String ns = $schema_decl::currentNS.getUri();
+		if(TYPE_DEF_CONST.equals(key)){
+			TypeDefinitionImpl def = $property_decl::def;
+			def.setName(ns+key);
+			def.setElementaryDataType(Datatype.valueOf(value.toUpperCase()));
 		}
-		return stack+" "+msg+" context=..."+inputContext+"...";
+		if(RESOURCE_CONSTRAINT_CONST.equals(key)){
+			TypeDefinitionImpl def = $property_decl::def;
+			def.addConstraint(ConstraintBuilder.buildConstraint(toResourceID(value)));
+		}
+		if(FIELD_LABEL_CONST.equals(key)){
+			PropertyDeclarationImpl pDec = $property_decl::pDec;
+			if(pDec.getFieldLabelDefinition() == null){
+				pDec.setFieldLabelDefinition(new FieldLabelDefinitionImpl(value));
+			}else{
+				pDec.getFieldLabelDefinition().setDefaultLabel(value);
+			}
+		}
+		if(key.matches(FIELD_LABEL_INT_CONST)){
+			PropertyDeclarationImpl pDec = $property_decl::pDec;
+			if(pDec.getFieldLabelDefinition() == null){
+				pDec.setFieldLabelDefinition(new FieldLabelDefinitionImpl(value));
+			}
+			String locale = key.substring(12, 14);
+			pDec.getFieldLabelDefinition().setLabel(new Locale(locale), value);
+		}
 	}
-		
-	public String getTokenErrorDisplay(Token t) {
-		return t.toString();
+	
+	public ResourceID toResourceID(final String name) {
+		if (QualifiedName.isUri(name)) {
+			return new SimpleResourceID(name); 
+		} else if (!QualifiedName.isQname(name)) {
+			throw new IllegalArgumentException("Name is neither URI nor QName: " + name);
+		}
+		final String prefix = QualifiedName.getPrefix(name);
+		final String simpleName = QualifiedName.getSimpleName(name);
+		if (nsMap.containsKey(prefix)) {
+			return new SimpleResourceID(nsMap.get(prefix).getUri(), simpleName);
+		} else {
+			final NamespaceHandle handle = new NamespaceHandle(null, prefix);
+			nsMap.put(prefix, handle);
+			return new SimpleResourceID(handle.getUri(), simpleName);	
+		}
 	}
-
 }
+// TODO: SWITCH TO  INTERFACES
+// Input contains 1 or more statements
+statements returns [ List<ResourceSchemaImpl> list ]
+    @init
+    {
+    	$list = new ArrayList<ResourceSchemaImpl>();
+    }
+	:   ^(STATEMENTS statement +) {$list.addAll(schemaList); };
+	
+// A statement is either a namespace or a schema
+statement : 	namespace_decl 
+			| 	schema_decl 
+			;
 
+// Definition of a namespace
+namespace_decl: ^(NAMESPACE (ns=STRING qn=STRING
+	{
+		String prefix = removeAll($qn.text, "\"");
+		String uri = removeAll($ns.text, "\"");
+		nsMap.put(prefix, new NamespaceHandle(uri, prefix));
+		}
+		
+)) ;
 
-declarations returns [List list] 
-	@init{ $list = new ArrayList(); }
-	: ^(DECLARATION (d=decl {$list.add(d);})*);
+// Definition of a schema
+schema_decl scope{
+	ResourceSchemaImpl schema;
+	NamespaceHandle currentNS;
+}
+	 		:  ^(SCHEMA 
+			(id=STRING {
+				String cleaned = removeAll($id.text, "\"");
+				$schema_decl::currentNS = nsMap.get(extract(cleaned, ":", 0));
+				String described = extract(cleaned, ":", 1);
+				$schema_decl::schema = new ResourceSchemaImpl(new SimpleResourceID($schema_decl::currentNS.getUri() + described));
+				schemaList.add($schema_decl::schema);
+			})
+	 		decl + )
+	 			 ;
 
-
-decl returns [Object obj]	:
-	(^(PROPERTY p=property_decl{$obj=p.pDec;})
-	|^(SCHEMA r=schema_decl{$obj=r.rSchema;})
-	)
-	; 
-
-	schema_decl returns [ResourceSchema rSchema]
-		: ^(STRING s=string {$rSchema = new ResourceSchemaImpl(new SimpleResourceID(s.result));
-		this.resourceSchema = (ResourceSchemaImpl) $rSchema;} PROPERTY_DECL)
+//Definition of a declaration within a schema
+decl : 		label_decl
+		|	property_decl
 		;
 
-property_decl returns [PropertyDeclaration pDec]
-	@init{ $pDec = new PropertyDeclarationImpl();}
-	: ^(STRING s=string {$pDec.setPropertyDescriptor(new SimpleResourceID(s.result));})
+//Definition of a label-declaration
+label_decl:  ^(LABEL (rule=STRING{
+						String cleaned = removeAll($rule.text, "\"");
+						try{
+						$schema_decl::schema.setLabelBuilder(new ExpressionBasedLabelBuilder(cleaned, nsMap));
+						}catch (LabelExpressionParseException e) {
+							emitErrorMessage(e.getMessage());
+						}
+}));
+
+// Definition of a property-declaration
+property_decl scope{
+TypeDefinitionImpl def;
+PropertyDeclarationImpl pDec;
+} 
+@init{
+	$property_decl::def = new TypeDefinitionImpl(new SimpleResourceID(), true);
+	$property_decl::pDec = new PropertyDeclarationImpl();
+
+}: ^(PROPERTY (s=STRING cardinal_decl (assigment +) {
+					String cleaned = removeAll($s.text, "\"");
+					ResourceID sid = toResourceID(cleaned);
+					$property_decl::pDec.setPropertyDescriptor(sid);
+					$property_decl::pDec.setTypeDefinition($property_decl::def);
+					$property_decl::pDec.setCardinality(CardinalityBuilder.extractFromString($cardinal_decl.text));
+					$schema_decl::schema.addPropertyDeclaration($property_decl::pDec);
+				}
+			)) ;
+
+// Definition of a cardinality-declaration
+cardinal_decl returns [String s]
+@init{
+	$s = $cardinal_decl.text;
+} :  ^(CARDINALITY CARDINALITY_DECL) ;
+
+//Definition of an assigment within a property-declaration
+assigment :
+					^(ASSIGMENT (key value {
+					buildTypeDef($key.text, removeAll($value.text, "\""));
+				}));
+
+// Definition of an assigments' key
+key returns [String s] 
+@init{
+	$s = $key.text;
+}
+	: FIELD_LABEL 
+	| INT_LABEL 
+	| TYPE_DEF 
+	| RESOURCE_CONSTRAINT 
+	
 	;
 
-value returns [Object obj]
-	: ^(STRING s=string {$obj = s.result;})
-	;
-
-string returns [String result]
-	: String^
-	  { $result = extractString($String); }
-	;
-
-number	returns [Integer result]
-	: ^(NUMBER Number)
-	  { $result = extractNumber($Number); }
-	;
-
-
-
+//Definition of a value within a property-declaration
+value returns [String s] : STRING {$s = $STRING.text;};

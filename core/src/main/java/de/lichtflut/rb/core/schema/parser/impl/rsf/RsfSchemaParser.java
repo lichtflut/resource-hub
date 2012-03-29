@@ -7,14 +7,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.antlr.runtime.ANTLRInputStream;
+import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
-import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
-import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
-import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 
 /**
  * <p>
@@ -35,18 +34,21 @@ public class RsfSchemaParser implements ResourceSchemaParser{
 	@Override
 	public ParsedElements parse(InputStream in) throws IOException {
 		final ParsedElements result = new ParsedElements();
-		
-		final RSErrorReporter errorReporter = new RSParsingResultErrorReporter(new RSParsingResultImpl());
-		
-		final ANTLRInputStream antlrInput = new ANTLRInputStream(in);
-		final RSFLexer lexer = new RSFLexer(antlrInput);
-		lexer.setErrorReporter(errorReporter);
-		final CommonTokenStream tokens = new CommonTokenStream(lexer);
-		final RSFParser parser = new RSFParser(tokens);
-		parser.setErrorReporter(errorReporter);
+
+		CharStream input = null;
+		input = new ANTLRInputStream(in);
+		RSFLexer lexer = new RSFLexer(input);
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		RSFParser parser = new RSFParser(tokens);
 		try {
-			parser.declarations();
+			RSFParser.statements_return r = parser.statements();
+
+			CommonTreeNodeStream nodes = new CommonTreeNodeStream(r.getTree());
+			nodes.setTokenStream(tokens);
+			RSFTree walker = new RSFTree(nodes);
+			result.getSchemas().addAll(walker.statements());
 		} catch (RecognitionException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;

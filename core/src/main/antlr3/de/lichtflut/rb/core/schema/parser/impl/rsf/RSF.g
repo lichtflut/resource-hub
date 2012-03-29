@@ -1,157 +1,106 @@
 grammar RSF;
 
-
-
 options {
-  language = Java;
   output = AST;
   ASTLabelType = CommonTree;
 }
 
 tokens {
-	STRING; INTEGER; DECIMAL; BOOLEAN; TEXT; DATE;
-	NAMESPACE; PREFIX;
-	SCHEMA; FOR; LABEL_RULE; PROPERTY; FIELD_LABEL; TYPE_DEFINITION; CONSTRAINT;
+	NAMESPACE;
+	SCHEMA;
+	LABEL;
+	CARDINALITY;
+	ASSIGMENT;
+	PROPERTY;
+	STATEMENTS;
 }
 
-@header {
+@header{
 /*
- * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
+
 package de.lichtflut.rb.core.schema.parser.impl.rsf;
 
-import de.lichtflut.rb.core.schema.model.*;
-import de.lichtflut.rb.core.schema.model.impl.*;
-
-import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
-
 }
-
-@lexer::header {
+@lexer::header{
 /*
-  * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
-*/
+ * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ */
+
 package de.lichtflut.rb.core.schema.parser.impl.rsf;
-
-import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
-
 }
 
-@lexer::members {
- private RSErrorReporter errorReporter = null;
- public void setErrorReporter(RSErrorReporter errorReporter) {
-     this.errorReporter = errorReporter;
- }
- public void emitErrorMessage(String msg) {
-     errorReporter.reportError(msg);
- }
-}
+// Input contains 1 or more statements
+statements : statement + -> ^(STATEMENTS statement+);
 
+// A statement is either a namespace or a schema
+statement : 	namespace_decl
+			| 	schema_decl 
+			;
 
-@members {
+// Definition of a namespace
+namespace_decl: NS e=STRING PREFIX f=STRING -> ^(NAMESPACE $e $f) ;
 
-	private RSErrorReporter errorReporter = null;
-    public void setErrorReporter(RSErrorReporter errorReporter) {
-        this.errorReporter = errorReporter;
-    }
-    public void emitErrorMessage(String msg) {
-        errorReporter.reportError(msg);
-    }
+// Definition of a schema
+schema_decl : SCHEMA_FOR s=STRING '{'
+					decl+
+			'}'
+			-> ^(SCHEMA $s decl+);
 
-}
+//Definition of a declaration within a schema
+decl : 		label_decl
+		|	property_decl 
+		;
 
-declarations 	:	decl+ EOF;
+//Definition of a label-declaration
+label_decl: LABEL_RULE COLON e=STRING -> ^(LABEL $e);
 
+// Definition of a property-declaration
+property_decl : PROPERTY_DECL id=STRING cardinal_decl '{'
+					assigment+
+				'}'
+				-> ^(PROPERTY $id cardinal_decl assigment+)	;
 
-decl 	:
-	namespace_decl -> ^(NAMESPACE namespace_decl)
-	| schema_decl -> ^(SCHEMA schema_decl)
-	; 
-	
-namespace_decl 
-			:	NAMESPACE string PREFIX string;
+// Definition of a cardinality-declaration
+cardinal_decl : e=CARDINALITY_DECL	-> ^(CARDINALITY $e);
 
-schema_decl 
-		:	SCHEMA FOR string
-			'{'
-			property_decl*
-			'}';
+//Definition of an assigment within a preoperty-declaration
+assigment : k=key COLON v=value -> ^(ASSIGMENT $k $v);
 
-property_decl 
-	:	PROPERTY
-		string
-		cardinality
-		'{'
-			assignment
-		'}';
-	
-	
-cardinality
-
-	: '[' string ']';	
-	
-assignment
-	: (key ':' value)* ;
-
-key 
-	:	FIELD_LABEL -> FIELD_LABEL
-	|	TYPE_DEFINITION  -> TYPE_DEFINITION
-	|	CONSTRAINT -> CONSTRAINT;
-
-value
-
-	: string;
-
-
-string 	: String
-	  -> ^(STRING String)
+// Definition of an assigments' key
+key : FIELD_LABEL
+	| INT_LABEL 
+	| TYPE_DEF 
+	| RESOURCE_CONSTRAINT 
 	;
 
-number	: Number -> ^(NUMBER Number)
-	;
+value : STRING ;
 
-// Simple, but more permissive than the RFC allows. See number above for a validity check.
-Number	: '-'? Digit+ ( '.' Digit+)?;
+NS : 'namespace';
 
+SCHEMA_FOR : 'schema for';
 
-SCHEMA  :   'schema';
-FOR     :   'for';
-
-PROPERTY:	'property';
-TYPE_DEFINITION : 'type-definition';
-CONSTRAINT : 'constraint';
-FIELD_LABEL: 'field-label'; 
 LABEL_RULE : 'label-rule';
-NAMESPACE : 'namespace';
-PREFIX  :   'prefix';
 
-TEXT 	:	'text';
-DATE 	:   'date';
-BOOLEAN :	'boolean';
-NUMBER 	:	'number';
+PROPERTY_DECL : 'property';
 
+FIELD_LABEL : 'field-label';
 
+TYPE_DEF:'type-definition';
 
+RESOURCE_CONSTRAINT:'resource-constraint';
 
-String	: '"' ('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | ' ' | '_' | '-' | '#' | '/' | ':' | '.' )+ '"';
+CONSTRAINT:'literal-constraint';
+	
+PREFIX : 'prefix';
 
+COLON : ':';
+
+INT_LABEL : 'field-label[' (('a' .. 'z' | 'A' .. 'Z')+ )']'*;
+
+CARDINALITY_DECL  : '['('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+'..'('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+']';
+
+STRING 	: '"' ('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | ' ' | '_' | '-' | '#' | '/' | ':' | '.' )+ '"';
 
 WS: (' '|'\n'|'\r'|'\t')+ {$channel=HIDDEN;} ; // ignore whitespace
-
-fragment EscapeSequence
-    	:   '\\' (UnicodeEscape |'b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
-    	;
-
-fragment UnicodeEscape
-	: 'u' HexDigit HexDigit HexDigit HexDigit
-	;
-
-fragment HexDigit
-	: '0'..'9' | 'A'..'F' | 'a'..'f'
-	;
-
-fragment Digit
-	: '0'..'9'
-	;
-
-

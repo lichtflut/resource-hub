@@ -1,29 +1,28 @@
 namespace "http://rb.lichtflut.de/common#" prefix "common"
-namespace "http://rb.lichtflut.de/common#" prefix "common"
-	
+namespace "http://rb.lichtflut.de/common2#" prefix "common2"
+			
 schema for "common:City" {
-
 	label-rule : "common:hasName common:hasCountry"
+					
+	property "common:hasMayor" [1000..xs] {
+		field-label : "Mayor"
+		field-label[de] : "Buergermeister"
+		field-label[fr] : "Maire"
+		type-definition : "date"
+	}
 
-	property "common:assignedTo" [1..n] {
-      	field-label : "assigned to"
-      	field-label[de] : "zugewiesen"
-        type-definition : "string"
-		resource-constraint: "common:Country"
+	property "common:hasCountry" [1..1] {
+		field-label[en] : "Name"
+		type-definition : "String"
+		resource-constraint : "common:Country"
 	}
-	
-	property "common:assignedTo" [1..n] {
-      	field-label : "assigned-to"
-      	field-label[de] : "zugewiesen"
-        type-definition : "string"
-		resource-constraint: "common:Country"
+}
+
+schema for "common:Person" {
+	label-rule : "common:hasName"
+		
+	property "common:hasName" [1..n] {
+		field-label[en] : "Name"
+		type-definition : "String"
 	}
-	
-	property "common:assignedTo" [1..n] {
-      	field-label : "assigned-to"
-      	field-label[de] : "zugewiesen"
-        type-definition : "string"
-		resource-constraint: "common:Country"
-	}
-	
 }

@@ -8,13 +8,16 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
+import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -31,6 +34,8 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.EditTypePropertyDeclDialog;
+import de.lichtflut.rb.webck.components.fields.AjaxEditablePanelLabel;
+import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
@@ -133,19 +138,42 @@ public class SchemaDetailPanel extends Panel{
 	 * @param item
 	 */
 	protected void addPropertyDecl(ListItem<PropertyRow> item) {
-		IModel<ResourceID> model = new PropertyModel<ResourceID>(item.getModel(), "propertyType");
-		AjaxEditableLabel<ResourceID> label = new AjaxEditableLabel<ResourceID>("property", model){
-			protected Component newLabel(final MarkupContainer parent, final String componentId,
+		
+		final IModel<ResourceID> model = new PropertyModel<ResourceID>(item.getModel(), "propertyType");
+		final AjaxEditablePanelLabel<ResourceID> field = new AjaxEditablePanelLabel<ResourceID>("property", model){
+			@Override
+			protected WebComponent newLabel(final MarkupContainer parent, final String componentId,
 					final IModel<ResourceID> model){
 				Label label = new Label(componentId, ResourceLabelBuilder.getInstance().getLabel(model.getObject(), getLocale()));
-				System.out.println(ResourceLabelBuilder.getInstance().getLabel(model.getObject(), getLocale()));
 				label.setOutputMarkupId(true);
 				label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
 				return label;
 			}
+			@Override
+			protected FormComponent<ResourceID> newEditor(final MarkupContainer parent, final String componentId,
+					final IModel<ResourceID> model)
+				{
+					PropertyPickerField editor = new PropertyPickerField(componentId, model);
+					editor.setOutputMarkupId(true);
+					editor.setVisible(false);
+					editor.getDisplayComponent().add(new EditorAjaxBehavior());
+					return editor;
+				}
+			
+			protected void onSubmit(final AjaxRequestTarget target)
+			{
+				PropertyPickerField field = (PropertyPickerField) getEditor();
+				System.out.println(field.getDisplayComponent().getModelObject().toString() + " SUBMIT");
+				getLabel().setVisible(true);
+				getEditor().setVisible(false);
+				target.add(this);
+
+				target.appendJavaScript("window.status='';");
+			}
 		};
-		addTitleAttribute(model, label);
-		item.add(label);
+		field.setType(ResourceID.class);
+		addTitleAttribute(model, field);
+		item.add(field);
 	}
 	
 	/**

@@ -61,7 +61,7 @@ public class SchemaDetailPanelTest{
 	 */
 	private ResourceSchema createSchema() {
 		ResourceSchemaImpl schema = new ResourceSchemaImpl(SNOPS.id(new QualifiedName("http://lichtflut.de#Person")));
-		
+
 		TypeDefinitionImpl p1 = new TypeDefinitionImpl();
 		TypeDefinitionImpl p2 = new TypeDefinitionImpl();
 		TypeDefinitionImpl p3 = new TypeDefinitionImpl();
