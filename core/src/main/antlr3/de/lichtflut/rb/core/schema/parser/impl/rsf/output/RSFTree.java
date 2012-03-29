@@ -1,7 +1,7 @@
 // $ANTLR 3.4 RSFTree.g 2012-03-29 10:09:49
 
 /*
- * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 
 package de.lichtflut.rb.core.schema.parser.impl.rsf;
