@@ -155,6 +155,7 @@ public class SchemaDetailPanel extends Panel{
 				Label label = new Label(componentId, ResourceLabelBuilder.getInstance().getLabel(model.getObject(), getLocale()));
 				label.setOutputMarkupId(true);
 				label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
+				System.out.println(ResourceLabelBuilder.getInstance().getLabel(model.getObject(), getLocale()));
 				return label;
 			}
 			@Override

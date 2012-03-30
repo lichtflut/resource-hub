@@ -135,11 +135,8 @@ public final class CardinalityBuilder implements Serializable {
 	 * @param string
 	 */
 	public static Cardinality extractFromString(String string){
-		// Check RegEx
-		if(string.matches("\\[....\\]")){
-			return hasOptionalOneToMany();
-		}
-		if(string.isEmpty() || (string == null)){
+		// Check RegEx and null String
+		if((!string.matches("\\[.*\\.\\..*\\]")) || (string == null)){
 			return hasOptionalOneToMany();
 		}
 		int min, max;

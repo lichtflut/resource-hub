@@ -267,12 +267,11 @@ public class PropertyRow implements Serializable {
 			s+= String.valueOf(min) + "..";
 		}
 		if(max == Integer.MAX_VALUE){
-			s+="n..";
+			s+="n";
 		}else{
 			s+=String.valueOf(max);
 		}
 		s += "]";
-		System.out.println(s);
 		return s;
 	}
 	/**

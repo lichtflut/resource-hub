@@ -51,7 +51,7 @@ public class SchemaDetailPanelTest{
 		tester.assertNoErrorMessage();
 		tester.assertNoInfoMessage();
 		tester.assertContains(">hatAlter");
-		tester.assertContains(">\\[1\\.\\.3\\]");
+		tester.assertContains(">\\[1\\.\\.3868686\\]");
 		tester.assertContains(">.*@.*");
 	}
 
@@ -77,7 +77,7 @@ public class SchemaDetailPanelTest{
 		PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
 		PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(3));
+		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(3868686));
 		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
 
 		schema.addPropertyDeclaration(pa1);
