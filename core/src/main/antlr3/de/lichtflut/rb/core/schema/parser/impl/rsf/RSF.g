@@ -103,4 +103,4 @@ CARDINALITY_DECL  : '['('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+'..'('a' .. 'z' | 
 
 STRING 	: '"' ('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | ' ' | '_' | '-' | '#' | '/' | ':' | '.' )+ '"';
 
-WS: (' '|'\n'|'\r'|'\t')+ {$channel=HIDDEN;} ; // ignore whitespace
+WS: (' '|'\n'|'\r'|'\t')+ {$channel=HIDDEN;} ;

@@ -64,7 +64,6 @@ public class ResourceSchemaParserTest {
 		final SchemaManager manager = serviceProvider.getSchemaManager();
 		final SchemaImporter importer = manager.getImporter("rsf");
 		importer.read(in);
-		
 		Assert.assertEquals(2, manager.findAllResourceSchemas().size());
 		
 //		Assert.assertEquals(1, manager.findPublicTypeDefinitions().size());

@@ -1,4 +1,4 @@
-tree grammar RSFTree;
+tree grammar RSFTree_Old;
 
 options {
 	output = AST;

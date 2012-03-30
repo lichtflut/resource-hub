@@ -1,4 +1,4 @@
-// $ANTLR 3.4 RSF.g 2012-03-29 10:09:46
+// $ANTLR 3.4 RSF.g 2012-03-29 13:54:50
 
 /*
  * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
@@ -337,7 +337,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
             // AST REWRITE
-            // elements: e, f
+            // elements: f, e
             // token labels: f, e
             // rule labels: retval
             // token list labels: 
@@ -482,7 +482,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
             // AST REWRITE
-            // elements: s, decl
+            // elements: decl, s
             // token labels: s
             // rule labels: retval
             // token list labels: 
@@ -834,7 +834,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
             // AST REWRITE
-            // elements: id, cardinal_decl, assigment
+            // elements: id, assigment, cardinal_decl
             // token labels: id
             // rule labels: retval
             // token list labels: 

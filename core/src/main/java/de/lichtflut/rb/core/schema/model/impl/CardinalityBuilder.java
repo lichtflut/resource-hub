@@ -162,7 +162,7 @@ public final class CardinalityBuilder implements Serializable {
 			num = Integer.parseInt(s);
 		}else{
 			if(flag){
-				num = Integer.MAX_VALUE;
+				num = -1;
 			}else{
 				num = 0;
 			}

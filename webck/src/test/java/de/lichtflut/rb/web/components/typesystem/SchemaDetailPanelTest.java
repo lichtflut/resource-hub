@@ -51,8 +51,7 @@ public class SchemaDetailPanelTest{
 		tester.assertNoErrorMessage();
 		tester.assertNoInfoMessage();
 		tester.assertContains(">hatAlter");
-		tester.assertContains(">1");
-		tester.assertContains(">3");
+		tester.assertContains(">\\[1\\.\\.3\\]");
 		tester.assertContains(">.*@.*");
 	}
 
@@ -68,7 +67,7 @@ public class SchemaDetailPanelTest{
 		p1.setName("http://lichtflut.de#geburtsdatum");
 		p2.setName("http://lichtflut.de#email");
 		p3.setName("http://lichtflut.de#alter");
-
+ 
 		p1.setElementaryDataType(Datatype.DATE);
 		p2.setElementaryDataType(Datatype.STRING);
 		p3.setElementaryDataType(Datatype.INTEGER);

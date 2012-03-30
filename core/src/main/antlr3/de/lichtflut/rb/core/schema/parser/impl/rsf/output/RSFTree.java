@@ -1,4 +1,4 @@
-// $ANTLR 3.4 RSFTree.g 2012-03-29 10:09:49
+// $ANTLR 3.4 RSFTree.g 2012-03-29 13:54:55
 
 /*
  * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH

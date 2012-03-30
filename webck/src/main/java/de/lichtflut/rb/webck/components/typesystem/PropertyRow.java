@@ -247,6 +247,35 @@ public class PropertyRow implements Serializable {
 	}
 
 	/**
+	 * Sets the cardinality with a String like <code>[1..n]</code>
+	 * @param string
+	 */
+	public void setCardinality(String string){
+		min = CardinalityBuilder.extractFromString(string).getMinOccurs();
+		max = CardinalityBuilder.extractFromString(string).getMaxOccurs();
+	}
+
+	/**
+	 * Get the cardinality as a String like <code>[1..n]</code>
+	 * @param string
+	 */
+	public String getCardinality(){
+		String s = "[";
+		if(min == 0){
+			s+= "n..";
+		}else{
+			s+= String.valueOf(min) + "..";
+		}
+		if(max == Integer.MAX_VALUE){
+			s+="n..";
+		}else{
+			s+=String.valueOf(max);
+		}
+		s += "]";
+		System.out.println(s);
+		return s;
+	}
+	/**
 	 * @return the literalConstraints
 	 */
 	public List<String> getLiteralConstraints() {

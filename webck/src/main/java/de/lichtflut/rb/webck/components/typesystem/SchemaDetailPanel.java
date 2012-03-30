@@ -4,14 +4,16 @@
 package de.lichtflut.rb.webck.components.typesystem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableChoiceLabel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -25,16 +27,21 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.EditTypePropertyDeclDialog;
 import de.lichtflut.rb.webck.components.fields.AjaxEditablePanelLabel;
+import de.lichtflut.rb.webck.components.fields.DataPickerField;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
@@ -55,6 +62,9 @@ public class SchemaDetailPanel extends Panel{
 
 	IModel<List<PropertyDeclaration>> markedForEdit;
 	
+	@SpringBean
+	ServiceProvider provider;
+
 	// ---------------- Constructor -------------------------
 	
 	/**
@@ -62,7 +72,7 @@ public class SchemaDetailPanel extends Panel{
 	 * @param model to display
 	 */
 	public SchemaDetailPanel(String id, IModel<ResourceSchema> schema) {
-		super(id);
+		super(id, schema);
 		markedForEdit = new ListModel<PropertyDeclaration>(new ArrayList<PropertyDeclaration>());
 		@SuppressWarnings("rawtypes")
 		Form form = new Form("form");
@@ -106,8 +116,7 @@ public class SchemaDetailPanel extends Panel{
 		addCheckBox(item);
 		addPropertyDecl(item);
 		addLabelDecl(item);
-		addMinimumDecl(item);
-		addMaximumDecl(item);
+		addCardinality(item);
 		addDatatypeDecl(item);
 		addContraintsDecl(item);
 	}
@@ -138,7 +147,6 @@ public class SchemaDetailPanel extends Panel{
 	 * @param item
 	 */
 	protected void addPropertyDecl(ListItem<PropertyRow> item) {
-		
 		final IModel<ResourceID> model = new PropertyModel<ResourceID>(item.getModel(), "propertyType");
 		final AjaxEditablePanelLabel<ResourceID> field = new AjaxEditablePanelLabel<ResourceID>("property", model){
 			@Override
@@ -159,11 +167,10 @@ public class SchemaDetailPanel extends Panel{
 					editor.getDisplayComponent().add(new EditorAjaxBehavior());
 					return editor;
 				}
-			
+
 			protected void onSubmit(final AjaxRequestTarget target)
 			{
-				PropertyPickerField field = (PropertyPickerField) getEditor();
-				System.out.println(field.getDisplayComponent().getModelObject().toString() + " SUBMIT");
+				System.out.println( " SUBMIT :" + getEditor().getValue() + " + " + getEditor().getInput() + " DONE");
 				getLabel().setVisible(true);
 				getEditor().setVisible(false);
 				target.add(this);
@@ -171,9 +178,29 @@ public class SchemaDetailPanel extends Panel{
 				target.appendJavaScript("window.status='';");
 			}
 		};
+		field.setDefaultModel(model);
 		field.setType(ResourceID.class);
 		addTitleAttribute(model, field);
 		item.add(field);
+	}
+	
+
+	/**
+	 * Adds the default-label name.
+	 * @param item
+	 */
+	protected void addLabelDecl(ListItem<PropertyRow> item) {
+		IModel<ResourceID> model =  new PropertyModel<ResourceID>(item.getModel(), "defaultLabel");
+		AjaxEditableLabel<ResourceID> label = new AjaxEditableLabel<ResourceID>("label", model){
+			protected void onSubmit(final AjaxRequestTarget target)
+			{
+				saveSchema();
+				super.onSubmit(target);
+			}
+
+		};
+		addTitleAttribute(model, label);
+		item.add(label);
 	}
 	
 	/**
@@ -206,39 +233,33 @@ public class SchemaDetailPanel extends Panel{
 	 */
 	protected void addDatatypeDecl(ListItem<PropertyRow> item) {
 		IModel<Datatype> model = new PropertyModel<Datatype>(item.getModel(), "dataType");
-		Label label = new Label("datatype", model);
-		addTitleAttribute(model, label);
-		item.add(label);
-	}
+		AjaxEditableChoiceLabel<Datatype> field = new AjaxEditableChoiceLabel<Datatype>("datatype", model,
+				Arrays.asList(Datatype.values())) {
 
-	/**
-	 * @param decl
-	 * @param item
-	 */
-	protected void addMaximumDecl(ListItem<PropertyRow> item) {
-		IModel<Integer> model = new PropertyModel<Integer>(item.getModel(), "max");
-		Label label = new Label("max", model);
-		addTitleAttribute(model, label);
-		item.add(label);
-	}
-
-	/**
-	 * @param item
-	 */
-	protected void addMinimumDecl(ListItem<PropertyRow> item) {
-		PropertyModel<PropertyRow> model = new PropertyModel<PropertyRow>(item.getModel(), "min");
-		Label label = new Label("minimum", model);
-		addTitleAttribute(model, label);
-		item.add(label);
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target) {
+				saveSchema();
+				super.onSubmit(target);
+			}
+		};
+		addTitleAttribute(model, field);
+		item.add(field);
 	}
 
 	/**
 	 * @param item
 	 */
-	@SuppressWarnings("rawtypes")
-	protected void addLabelDecl(ListItem<PropertyRow> item) {
-		IModel model =  new PropertyModel<ResourceID>(item.getModel(), "defaultLabel");
-		Label label = new Label("label", model);
+	protected void addCardinality(ListItem<PropertyRow> item) {
+		IModel<String> model = new PropertyModel<String>(item.getModel(), "cardinality");
+		AjaxEditableLabel<String> label = new AjaxEditableLabel<String>("cardinality", model){
+			
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target)
+			{
+				saveSchema();
+				super.onSubmit(target);
+			}
+		};
 		addTitleAttribute(model, label);
 		item.add(label);
 	}
@@ -276,5 +297,10 @@ public class SchemaDetailPanel extends Panel{
 			default:
 				break;
 		}
+	}
+	
+
+	private void saveSchema() {
+		provider.getSchemaManager().store((ResourceSchema)getDefaultModelObject());
 	}
 }
