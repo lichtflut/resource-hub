@@ -140,8 +140,7 @@ public final class CardinalityBuilder implements Serializable {
 			return hasOptionalOneToMany();
 		}
 		int min, max;
-		String clean = string.replace("[", "");
-		clean = clean.replace("]", "");
+		String clean = string.replace("[", "").replace("]", "");
 		String[] temp = clean.split("\\.\\.");
 		min = convertToInt(temp[0], false);
 		max = convertToInt(temp[1], true);

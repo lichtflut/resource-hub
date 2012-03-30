@@ -87,22 +87,4 @@ public class AjaxEditablePanelLabel<T> extends AjaxEditableLabel<T> {
 		return label;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void onModelChanged()
-	{
-		super.onModelChanged();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void onModelChanging()
-	{
-		super.onModelChanging();
-	}
-
 }

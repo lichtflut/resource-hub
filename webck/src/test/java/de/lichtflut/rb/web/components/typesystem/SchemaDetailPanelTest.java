@@ -50,6 +50,7 @@ public class SchemaDetailPanelTest{
 		tester.startComponentInPage(panel);
 		tester.assertNoErrorMessage();
 		tester.assertNoInfoMessage();
+		tester.assertContains("#TestRes");
 		tester.assertContains(">hatAlter");
 		tester.assertContains(">\\[1\\.\\.3868686\\]");
 		tester.assertContains(">.*@.*");
@@ -68,10 +69,11 @@ public class SchemaDetailPanelTest{
 		p2.setName("http://lichtflut.de#email");
 		p3.setName("http://lichtflut.de#alter");
  
-		p1.setElementaryDataType(Datatype.DATE);
+		p1.setElementaryDataType(Datatype.RESOURCE);
 		p2.setElementaryDataType(Datatype.STRING);
 		p3.setElementaryDataType(Datatype.INTEGER);
 
+		p1.addConstraint(ConstraintBuilder.buildConstraint(new SimpleResourceID("http://lichtflut.de#TestRes")));
 		p2.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
 		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
 		PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
