@@ -25,7 +25,7 @@ import de.lichtflut.rb.webck.components.dialogs.EditTypePropertyDeclDialog;
 
 /**
  * <p>
- * [DESCRIPTION]
+ * Test for {@link EditTypePropertyDeclDialog}.
  * </p>
  * 
  * <p>
@@ -50,13 +50,12 @@ public class EditTypePropertyDeclDialogTest {
 		decls = new ListModel<PropertyDeclaration>(list);
 		EditTypePropertyDeclDialog panel = new EditTypePropertyDeclDialog("test", decls);
 		tester.startComponentInPage(panel);
-//		tester.assertErrorMessages("No Properties to edit");
 		tester.assertNoInfoMessage();
 		tester.assertContains("No Properties to edit");
 	}
 	
 	@Test
-	public void testdialogWithSinglePropertyDecl(){
+	public void testDialogWithSinglePropertyDecl(){
 		List<PropertyDeclaration> list = new ArrayList<PropertyDeclaration>();
 		list.add(createDecl().get(0));
 		decls = new ListModel<PropertyDeclaration>(list);
@@ -68,10 +67,8 @@ public class EditTypePropertyDeclDialogTest {
 		tester.assertContains("hatKind");
 		tester.assertContains("Field Label");
 		tester.assertContains("Kinder");
-		tester.assertContains("Minimum");
-		tester.assertContains("0");
-		tester.assertContains("Maximum");
-		tester.assertContains(String.valueOf(Integer.MAX_VALUE));
+		tester.assertContains("Cardinality");
+		tester.assertContains("[1..2]");
 		tester.assertContains("Datatype");
 		tester.assertContains("Resource");
 		tester.assertContains("Constraints");
@@ -80,12 +77,26 @@ public class EditTypePropertyDeclDialogTest {
 	
 	@Test
 	public void testDialogWithMultiplePropertyDecl(){
-//		List<PropertyDeclaration> list = new ArrayList<PropertyDeclaration>();
-//		list.addAll(createDecl());
-//		decls = new ListModel<PropertyDeclaration>(list);
-//		EditTypePropertyDeclDialog panel = new EditTypePropertyDeclDialog("test", decls);
-//		tester.startComponentInPage(panel);
+		List<PropertyDeclaration> list = new ArrayList<PropertyDeclaration>();
+		list.add(createDecl().get(0));
+		list.add(createDecl().get(1));
+		decls = new ListModel<PropertyDeclaration>(list);
+		EditTypePropertyDeclDialog panel = new EditTypePropertyDeclDialog("test", decls);
+		tester.startComponentInPage(panel);
+		tester.assertNoErrorMessage();
+		tester.assertNoInfoMessage();
+		tester.assertContains("Property");
+		tester.assertContains("hatKind, hatAlter<");
+//		tester.assertContainsNot("Field Label");
+		tester.assertContainsNot("Kinder");
+		tester.assertContains("Cardinality");
+		tester.assertContains("[1..2]");
+		tester.assertContains("Datatype");
+		tester.assertContains("Resource");
+		tester.assertContains("Constraints");
+		tester.assertContains("Person");
 	}
+	
 	/**
 	 * Tests.
 	 * 

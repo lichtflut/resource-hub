@@ -13,27 +13,23 @@
 	<form wicket:id="form">
 	
 		<div class="row">
-			<span class="cell">Property: </span><span wicket:id="propertyDescriptor" class="cell"></span>
+			<div class="cell">Property: </div><div class="cell"><span wicket:id="propertyDescriptor" ></span></div>
 		</div>
 		<div class="row">
-			<span class="cell"><wicket:message key="fieldLabel"></wicket:message></span>
-			<span class="cell"><input wicket:id="fieldLabel" /></span>
+			<div class="cell"><wicket:message key="fieldLabel"></wicket:message></div>
+			<div class="cell"><input wicket:id="fieldLabel" /></div>
 		</div>
 		<div class="row">
-			<span class="cell"><wicket:message key="min-label"></wicket:message></span>
-			<span class="cell"><input wicket:id="min" /></span>
+			<div class="cell"><wicket:message key="cardinality-label"></wicket:message></div>
+			<div class="cell"><input wicket:id="cardinality" /></div>
 		</div>
 		<div class="row">
-			<span class="cell"><wicket:message key="max-label"></wicket:message></span>
-			<span class="cell"><input wicket:id="max" /></span>
+			<div class="cell"><wicket:message key="datatype-label"></wicket:message></div>
+			<div class="cell"><select wicket:id="datatype"></select></div>
 		</div>
 		<div class="row">
-			<span class="cell"><wicket:message key="datatype-label"></wicket:message></span>
-			<span class="cell"><select wicket:id="datatype"></select></span>
-		</div>
-		<div class="row">
-			<span class="cell"><wicket:message key="constraints-label"></wicket:message></span>
-			<span class="cell"><wicket:container wicket:id="constraints"></wicket:container></span>
+			<div class="cell"><wicket:message key="constraints-label"></wicket:message></div>
+			<div class="cell"><wicket:container wicket:id="constraints"></wicket:container></div>
 		</div>
 	
 		<div class="button-bar">

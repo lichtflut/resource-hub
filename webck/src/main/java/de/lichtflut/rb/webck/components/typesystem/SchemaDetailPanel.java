@@ -94,7 +94,19 @@ public class SchemaDetailPanel extends Panel{
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				DialogHoster hoster = findParent(DialogHoster.class);
-			    hoster.openDialog(new EditTypePropertyDeclDialog(hoster.getDialogID(), markedForEdit));
+			    hoster.openDialog(new EditTypePropertyDeclDialog(hoster.getDialogID(), markedForEdit){
+			    	@Override
+			    	protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			    		saveSchema();
+			    		RBAjaxTarget.add(SchemaDetailPanel.this);
+			    		close(target);
+			    	}
+			    	@Override
+			    	protected void onCancel(AjaxRequestTarget target, Form<?> form) {
+			    		setDefaultFormProcessing(false);
+			    		close(target);
+			    	}
+			    });
 			}
 		};
 		return button;
@@ -292,6 +304,7 @@ public class SchemaDetailPanel extends Panel{
 	}
 	
 	private void saveSchema() {
+		System.out.println((ResourceSchema)getDefaultModelObject());
 		provider.getSchemaManager().store((ResourceSchema)getDefaultModelObject());
 	}
 	
