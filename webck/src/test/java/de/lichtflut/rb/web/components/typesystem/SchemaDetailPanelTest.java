@@ -24,7 +24,7 @@ import de.lichtflut.rb.webck.components.typesystem.SchemaDetailPanel;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Testcase for {@link SchemaDetailPanel}.
  * </p>
  *
  * <p>
@@ -50,6 +50,7 @@ public class SchemaDetailPanelTest{
 		tester.startComponentInPage(panel);
 		tester.assertNoErrorMessage();
 		tester.assertNoInfoMessage();
+		tester.assertContains(">http://lichtflut.de#Person");
 		tester.assertContains("#TestRes");
 		tester.assertContains(">hatAlter");
 		tester.assertContains(">\\[1\\.\\.3868686\\]");

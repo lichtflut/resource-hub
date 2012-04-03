@@ -54,10 +54,10 @@ import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
  */
 public class SchemaDetailPanel extends Panel{
 
-	@SpringBean
 	private IModel<List<PropertyDeclaration>> markedForEdit;
-
 	private IModel<ResourceSchema> schema;
+
+	@SpringBean
 	private ServiceProvider provider;
 	
 	// ---------------- Constructor -------------------------
@@ -72,12 +72,18 @@ public class SchemaDetailPanel extends Panel{
 		markedForEdit = new ListModel<PropertyDeclaration>(new ArrayList<PropertyDeclaration>());
 		@SuppressWarnings("rawtypes")
 		Form form = new Form("form");
+		this.add(createTitleLabel());
 		form.add(createListView(this.schema));
 		form.add(createEditButton());
 		add(form);
 	}
 
 	// ------------------------------------------------------
+	
+	private Component createTitleLabel() {
+		return new Label("title", Model.of(schema.getObject().getDescribedType()));
+		
+	}
 	
 	private Component createListView(IModel<ResourceSchema> schema) {
 		IModel<List<PropertyRow>> list = new PropertyRowListModel(schema);
