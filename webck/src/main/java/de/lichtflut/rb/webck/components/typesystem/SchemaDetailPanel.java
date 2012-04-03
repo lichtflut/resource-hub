@@ -55,7 +55,7 @@ import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
 public class SchemaDetailPanel extends Panel{
 
 	IModel<List<PropertyDeclaration>> markedForEdit;
-	
+	IModel<ResourceSchema> schema;
 	@SpringBean
 	ServiceProvider provider;
 	
@@ -66,11 +66,12 @@ public class SchemaDetailPanel extends Panel{
 	 * @param model to display
 	 */
 	public SchemaDetailPanel(String id, IModel<ResourceSchema> schema) {
-		super(id, schema);
+		super(id);
+		this.schema = schema;
 		markedForEdit = new ListModel<PropertyDeclaration>(new ArrayList<PropertyDeclaration>());
 		@SuppressWarnings("rawtypes")
 		Form form = new Form("form");
-		form.add(createListView(schema));
+		form.add(createListView(this.schema));
 		form.add(createEditButton());
 		add(form);
 	}
@@ -148,7 +149,7 @@ public class SchemaDetailPanel extends Panel{
 	 * Adds the PropertyDescriptor.
 	 * @param item
 	 */
-	protected void addPropertyDecl(ListItem<PropertyRow> item) {
+	protected void addPropertyDecl(final ListItem<PropertyRow> item) {
 		final IModel<ResourceID> model =   new PropertyModel<ResourceID>(item.getModel(), "propertyType");
 		AjaxEditableLabel<ResourceID> field = new AjaxEditableLabel<ResourceID>("property", model){
 			@Override
@@ -161,7 +162,7 @@ public class SchemaDetailPanel extends Panel{
 			}
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target){
-				saveSchema();
+				saveSchema(PropertyRow.toPropertyDeclaration(item.getModelObject()), item.getIndex());
 				super.onSubmit(target);
 			}
 		};
@@ -173,11 +174,11 @@ public class SchemaDetailPanel extends Panel{
 	 * Adds the default-label name.
 	 * @param item
 	 */
-	protected void addLabelDecl(ListItem<PropertyRow> item) {
+	protected void addLabelDecl(final ListItem<PropertyRow> item) {
 		IModel<ResourceID> model =  new PropertyModel<ResourceID>(item.getModel(), "defaultLabel");
 		AjaxEditableLabel<ResourceID> label = new AjaxEditableLabel<ResourceID>("label", model){
 			protected void onSubmit(final AjaxRequestTarget target){
-				saveSchema();
+				saveSchema(PropertyRow.toPropertyDeclaration(item.getModelObject()), item.getIndex());
 				super.onSubmit(target);
 			}
 		};
@@ -189,12 +190,12 @@ public class SchemaDetailPanel extends Panel{
 	 * Adds the cardinality in the following form <code>[2..n]</code>
 	 * @param item
 	 */
-	protected void addCardinality(ListItem<PropertyRow> item) {
-		IModel<String> model = new PropertyModel<String>(item.getModel(), "cardinality");
+	protected void addCardinality(final ListItem<PropertyRow> item) {
+		IModel<String> model = new PropertyModel<String>(item.getModelObject(), "cardinality");
 		AjaxEditableLabel<String> label = new AjaxEditableLabel<String>("cardinality", model){
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target){
-				saveSchema();
+				saveSchema(PropertyRow.toPropertyDeclaration(item.getModelObject()), item.getIndex());
 				super.onSubmit(target);
 			}
 		};
@@ -211,7 +212,7 @@ public class SchemaDetailPanel extends Panel{
 				Arrays.asList(Datatype.values())) {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target) {
-				saveSchema();
+				saveSchema(PropertyRow.toPropertyDeclaration(item.getModelObject()), item.getIndex());
 				super.onSubmit(target);
 			}
 		};
@@ -303,9 +304,13 @@ public class SchemaDetailPanel extends Panel{
 		}
 	}
 	
-	private void saveSchema() {
-		System.out.println((ResourceSchema)getDefaultModelObject());
-		provider.getSchemaManager().store((ResourceSchema)getDefaultModelObject());
+	private void saveSchema(PropertyDeclaration decl, int index) {
+		schema.getObject().getPropertyDeclarations().set(index, decl);
+		saveSchema();
+	}
+	
+	private void saveSchema(){
+		provider.getSchemaManager().store(schema.getObject());
 	}
 	
 }
