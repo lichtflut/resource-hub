@@ -9,35 +9,6 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
-	<div wicket:id="info"></div>
-	<form wicket:id="form">
-	
-		<div class="row">
-			<div class="cell">Property: </div><div class="cell"><span wicket:id="propertyDescriptor" ></span></div>
-		</div>
-		<div class="row">
-			<div class="cell"><wicket:message key="fieldLabel"></wicket:message></div>
-			<div class="cell"><input wicket:id="fieldLabel" /></div>
-		</div>
-		<div class="row">
-			<div class="cell"><wicket:message key="cardinality-label"></wicket:message></div>
-			<div class="cell"><input wicket:id="cardinality" /></div>
-		</div>
-		<div class="row">
-			<div class="cell"><wicket:message key="datatype-label"></wicket:message></div>
-			<div class="cell"><select wicket:id="datatype"></select></div>
-		</div>
-		<div class="row">
-			<div class="cell"><wicket:message key="constraints-label"></wicket:message></div>
-			<div class="cell"><wicket:container wicket:id="constraints"></wicket:container></div>
-		</div>
-	
-		<div class="button-bar">
-			<Button wicket:id="cancel"><wicket:container wicket:id="cancelLabel"></wicket:container></Button>
-			<Button wicket:id="save"><wicket:container wicket:id="saveLabel"></wicket:container></Button>
-		</div>
-		
-	</form>
-	
+	<div wicket:id=panel></div>
 </wicket:panel>
 </html>

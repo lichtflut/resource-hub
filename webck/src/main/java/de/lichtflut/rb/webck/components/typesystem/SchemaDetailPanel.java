@@ -72,22 +72,22 @@ public class SchemaDetailPanel extends Panel{
 		markedForEdit = new ListModel<PropertyDeclaration>(new ArrayList<PropertyDeclaration>());
 		@SuppressWarnings("rawtypes")
 		Form form = new Form("form");
-		this.add(createTitleLabel());
-		form.add(createListView(this.schema));
-		form.add(createEditButton());
+		this.add(createTitleLabel("title"));
+		form.add(createListView("row", this.schema));
+		form.add(createEditButton("editButton"));
 		add(form);
 	}
 
 	// ------------------------------------------------------
 	
-	private Component createTitleLabel() {
-		return new Label("title", Model.of(schema.getObject().getDescribedType()));
+	private Component createTitleLabel(String id) {
+		return new Label(id, Model.of(schema.getObject().getDescribedType()));
 		
 	}
 	
-	private Component createListView(IModel<ResourceSchema> schema) {
+	private Component createListView(String id, IModel<ResourceSchema> schema) {
 		IModel<List<PropertyRow>> list = new PropertyRowListModel(schema);
-		ListView<PropertyRow> view = new ListView<PropertyRow>("row", list) {
+		ListView<PropertyRow> view = new ListView<PropertyRow>(id, list) {
 			@Override
 			protected void populateItem(ListItem<PropertyRow> item) {
 				fillRow(item);
@@ -97,8 +97,8 @@ public class SchemaDetailPanel extends Panel{
 		return view;
 	}
 
-	private Component createEditButton() {
-		Button button = new RBStandardButton("editButton") {
+	private Component createEditButton(String id) {
+		Button button = new RBStandardButton(id) {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				DialogHoster hoster = findParent(DialogHoster.class);
