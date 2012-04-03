@@ -26,7 +26,6 @@ import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -48,9 +47,9 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
 //TODO Introduce FeedbackPanel, replace infoBox and change test accordingly
 public class EditPropertyDeclPanel extends Panel {
 
-	private IModel<List<PropertyDeclaration>> decls;
+	private IModel<List<PropertyRow>> decls;
 	private IModel<Number> number = Model.of(Number.Singular);
-	private DerivedModel<String, List<PropertyDeclaration>> propertyDescModel;
+	private DerivedModel<String, List<PropertyRow>> propertyDescModel;
 	private IModel<String> fieldLabelModel, cardinalityModel;
 	private IModel<Datatype> dataTypeModel;
 	private IModel<PropertyRow> constraintsModel;
@@ -59,18 +58,18 @@ public class EditPropertyDeclPanel extends Panel {
 	
 	/**
 	 * @param id
-	 * @param model
+	 * @param decls
 	 */
-	public EditPropertyDeclPanel(String id, IModel<List<PropertyDeclaration>> model) {
-		super(id, model);
-		this.decls = model;
+	public EditPropertyDeclPanel(String id, IModel<List<PropertyRow>> decls) {
+		super(id, decls);
+		this.decls = decls;
 		@SuppressWarnings("rawtypes")
 		Form<?> form = new Form("form");
-		if(model.getObject().size() == 1){
-			addTypeDecls(form, model);
-		}else if(model.getObject().size() > 1){
+		if(decls.getObject().size() == 1){
+			addTypeDecls(form, decls);
+		}else if(decls.getObject().size() > 1){
 			number.setObject(Number.Plural);
-			addTypeDecls(form, model);
+			addTypeDecls(form, decls);
 		}else{
 			addEmptyListWarning(form);
 		}
@@ -97,7 +96,7 @@ public class EditPropertyDeclPanel extends Panel {
 	}
 	
 	/**
-	 * Updates all PropertyDecls if Number.Plural.name().equals(number.name()).
+	 * Updates all PropertyDecls if multiple PropertyDecls were changed.
 	 */
 	protected void updateDecls() {
 		List<Constraint> constraints = new ArrayList<Constraint>();
@@ -108,10 +107,14 @@ public class EditPropertyDeclPanel extends Panel {
 				constraints.add(ConstraintBuilder.buildConstraint(s));
 			}
 		}
-		for (PropertyDeclaration decl : decls.getObject()) {
-			decl.setCardinality(CardinalityBuilder.extractFromString(cardinalityModel.getObject()));
-			decl.getTypeDefinition().setElementaryDataType(dataTypeModel.getObject());
-			decl.getTypeDefinition().setConstraints(constraints);
+		for (PropertyRow decl : decls.getObject()) {
+			decl.setCardinality(cardinalityModel.getObject());
+			decl.setDataType(dataTypeModel.getObject());
+			if(constraintsModel.getObject().isResourceReference()){
+				decl.setResourceConstraint(constraintsModel.getObject().getResourceConstraint());
+			}else{
+				decl.setLiteralConstraints(constraintsModel.getObject().getLiteralConstraints());
+			}
 		}
 	}
 
@@ -160,30 +163,29 @@ public class EditPropertyDeclPanel extends Panel {
 	/**
 	 * All PropertyDecls can be edited.
 	 */
-	private void addTypeDecls(Form<?> form, IModel<List<PropertyDeclaration>> decls) {
+	private void addTypeDecls(Form<?> form, IModel<List<PropertyRow>> decls) {
 		addInfo(Model.of(""));
 		// Initialize model values with the first entry of the list for initial values
-		PropertyRow row = new PropertyRow(decls.getObject().get(0));
 		if(Number.Singular.name().equals(number.getObject().name())){
-			propertyDescModel = new DerivedModel<String, List<PropertyDeclaration>>(decls.getObject()) {
+			propertyDescModel = new DerivedModel<String, List<PropertyRow>>(decls.getObject()) {
 				@Override
-				protected String derive(List<PropertyDeclaration> original) {
+				protected String derive(List<PropertyRow> original) {
 					return ResourceLabelBuilder.getInstance().getFieldLabel(original.get(0).getPropertyDescriptor(), getLocale());
 				}
 			};
 		}else{
-			propertyDescModel = new DerivedModel<String, List<PropertyDeclaration>>(decls.getObject()) {
+			propertyDescModel = new DerivedModel<String, List<PropertyRow>>(decls.getObject()) {
 				@Override
-				protected String derive(List<PropertyDeclaration> original) {
+				protected String derive(List<PropertyRow> original) {
 					return concatFields(original);
 				}
 			};
 		}
 		
-		fieldLabelModel = new PropertyModel<String>(row, "defaultLabel");
-		cardinalityModel = new PropertyModel<String>(row, "cardinality");
-		dataTypeModel = new PropertyModel<Datatype>(row, "dataType");
-		constraintsModel = new Model<PropertyRow>(row);
+		fieldLabelModel = new PropertyModel<String>(decls.getObject().get(0), "defaultLabel");
+		cardinalityModel = new PropertyModel<String>(decls.getObject().get(0), "cardinality");
+		dataTypeModel = new PropertyModel<Datatype>(decls.getObject().get(0), "dataType");
+		constraintsModel = new Model<PropertyRow>(decls.getObject().get(0));
 
 		Label fieldLabel = new Label("propertyDescriptor", propertyDescModel);
 		TextField<String> fieldLabelTField = new TextField<String>("fieldLabel", fieldLabelModel);
@@ -200,9 +202,9 @@ public class EditPropertyDeclPanel extends Panel {
 	 * @param string
 	 * @return 
 	 */
-	protected String concatFields(List<PropertyDeclaration> original) {
+	protected String concatFields(List<PropertyRow> original) {
 		StringBuilder sb = new StringBuilder();
-		for (PropertyDeclaration decl : original) {
+		for (PropertyRow decl : original) {
 			sb.append(ResourceLabelBuilder.getInstance().getFieldLabel(decl.getPropertyDescriptor(), getLocale()) + ", ");
 		}
 		return sb.toString().substring(0, (sb.length()-2));

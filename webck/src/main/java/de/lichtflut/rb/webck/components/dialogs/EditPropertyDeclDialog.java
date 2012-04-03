@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 import de.lichtflut.rb.webck.components.typesystem.properties.EditPropertyDeclPanel;
 
 /**
@@ -30,7 +31,7 @@ public class EditPropertyDeclDialog extends AbstractRBDialog {
 	 * @param id - wicket:id
 	 * @param decls
 	 */
-	public EditPropertyDeclDialog(String id, IModel<List<PropertyDeclaration>> decls) {
+	public EditPropertyDeclDialog(String id, IModel<List<PropertyRow>> decls) {
 		super(id);
 		add(new EditPropertyDeclPanel("panel", decls){
 			/**

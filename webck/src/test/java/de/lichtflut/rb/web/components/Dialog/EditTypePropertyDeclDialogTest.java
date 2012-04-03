@@ -22,6 +22,7 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
+import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 
 /**
  * <p>
@@ -36,7 +37,7 @@ import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
  */
 public class EditTypePropertyDeclDialogTest {
 
-	private IModel<List<PropertyDeclaration>> decls;
+	private IModel<List<PropertyRow>> decls;
 	private WicketTester tester;
 	
 	@Before
@@ -46,8 +47,8 @@ public class EditTypePropertyDeclDialogTest {
 	
 	@Test
 	public void testdialogWithEmptyList(){
-		List<PropertyDeclaration> list = new ArrayList<PropertyDeclaration>();
-		decls = new ListModel<PropertyDeclaration>(list);
+		List<PropertyRow> list = new ArrayList<PropertyRow>();
+		decls = new ListModel<PropertyRow>(list);
 		EditPropertyDeclDialog panel = new EditPropertyDeclDialog("test", decls);
 		tester.startComponentInPage(panel);
 		tester.assertNoInfoMessage();
@@ -56,9 +57,9 @@ public class EditTypePropertyDeclDialogTest {
 	
 	@Test
 	public void testDialogWithSinglePropertyDecl(){
-		List<PropertyDeclaration> list = new ArrayList<PropertyDeclaration>();
-		list.add(createDecl().get(0));
-		decls = new ListModel<PropertyDeclaration>(list);
+		List<PropertyRow> list = new ArrayList<PropertyRow>();
+		list.add(new PropertyRow(createDecl().get(0)));
+		decls = new ListModel<PropertyRow>(list);
 		EditPropertyDeclDialog panel = new EditPropertyDeclDialog("test", decls);
 		tester.startComponentInPage(panel);
 		tester.assertNoErrorMessage();
@@ -77,10 +78,10 @@ public class EditTypePropertyDeclDialogTest {
 	
 	@Test
 	public void testDialogWithMultiplePropertyDecl(){
-		List<PropertyDeclaration> list = new ArrayList<PropertyDeclaration>();
-		list.add(createDecl().get(0));
-		list.add(createDecl().get(1));
-		decls = new ListModel<PropertyDeclaration>(list);
+		List<PropertyRow> list = new ArrayList<PropertyRow>();
+		list.add(new PropertyRow(createDecl().get(0)));
+		list.add(new PropertyRow(createDecl().get(1)));
+		decls = new ListModel<PropertyRow>(list);
 		EditPropertyDeclDialog panel = new EditPropertyDeclDialog("test", decls);
 		tester.startComponentInPage(panel);
 		tester.assertNoErrorMessage();

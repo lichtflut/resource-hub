@@ -52,9 +52,10 @@ import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
  *
  * @author Ravi Knox
  */
+// TODO save via model, implizit not explizit(line: 316)
 public class SchemaDetailPanel extends Panel{
 
-	private IModel<List<PropertyDeclaration>> markedForEdit;
+	private IModel<List<PropertyRow>> markedForEdit;
 	private IModel<ResourceSchema> schema;
 
 	@SpringBean
@@ -69,7 +70,7 @@ public class SchemaDetailPanel extends Panel{
 	public SchemaDetailPanel(String id, IModel<ResourceSchema> schema) {
 		super(id);
 		this.schema = schema;
-		markedForEdit = new ListModel<PropertyDeclaration>(new ArrayList<PropertyDeclaration>());
+		markedForEdit = new ListModel<PropertyRow>(new ArrayList<PropertyRow>());
 		@SuppressWarnings("rawtypes")
 		Form form = new Form("form");
 		this.add(createTitleLabel("title"));
@@ -141,7 +142,7 @@ public class SchemaDetailPanel extends Panel{
 		CheckBox checkbox = new CheckBox("checkbox", Model.of(false)){
 			@Override
 			protected void onSelectionChanged(Boolean newSelection){
-				markedForEdit.getObject().add(PropertyRow.toPropertyDeclaration(item.getModelObject()));
+				markedForEdit.getObject().add(item.getModelObject());
 			}
 			@Override
 			protected boolean wantOnSelectionChangedNotifications(){
