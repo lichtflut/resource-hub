@@ -13,7 +13,7 @@ import de.lichtflut.rb.core.security.RBUser;
 
 /**
  * <p>
- *  This service provides way to transmit stuff via email.
+ *  This service provides way to transmit messages via email.
  * </p><p>
  * 	Created Jan 20, 2012
  * </p>

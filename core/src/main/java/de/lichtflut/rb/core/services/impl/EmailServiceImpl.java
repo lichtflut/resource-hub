@@ -31,7 +31,7 @@ import de.lichtflut.rb.core.services.EmailService;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Implementation od {@link EmailService}.
  * </p>
  *
  * <p>
@@ -111,7 +111,6 @@ public class EmailServiceImpl implements EmailService {
 			mail.addRecipient(RecipientType.TO, new InternetAddress(desc.getRecipient(), desc.getRecipientName()));
 			mail.setSubject(desc.getSubject());
 			mail.setText(desc.getContent());
-			// TODO ENABLE EMAIL 
 			Transport.send(mail);
 		} catch (UnsupportedEncodingException e) {
 			logger.error("UnsupportedEncodingException");

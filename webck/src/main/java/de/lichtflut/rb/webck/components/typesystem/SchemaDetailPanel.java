@@ -37,7 +37,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.components.dialogs.EditTypePropertyDeclDialog;
+import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
 
@@ -54,10 +54,11 @@ import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
  */
 public class SchemaDetailPanel extends Panel{
 
-	IModel<List<PropertyDeclaration>> markedForEdit;
-	IModel<ResourceSchema> schema;
 	@SpringBean
-	ServiceProvider provider;
+	private IModel<List<PropertyDeclaration>> markedForEdit;
+
+	private IModel<ResourceSchema> schema;
+	private ServiceProvider provider;
 	
 	// ---------------- Constructor -------------------------
 	
@@ -91,11 +92,11 @@ public class SchemaDetailPanel extends Panel{
 	}
 
 	private Component createEditButton() {
-		Button button = new RBStandardButton("button") {
+		Button button = new RBStandardButton("editButton") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				DialogHoster hoster = findParent(DialogHoster.class);
-			    hoster.openDialog(new EditTypePropertyDeclDialog(hoster.getDialogID(), markedForEdit){
+			    hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), markedForEdit){
 			    	@Override
 			    	protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 			    		saveSchema();
@@ -163,6 +164,7 @@ public class SchemaDetailPanel extends Panel{
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target){
 				saveSchema(PropertyRow.toPropertyDeclaration(item.getModelObject()), item.getIndex());
+				RBAjaxTarget.add(SchemaDetailPanel.this);
 				super.onSubmit(target);
 			}
 		};
@@ -264,8 +266,7 @@ public class SchemaDetailPanel extends Panel{
 	 * @return
 	 */
 	protected Label buildFieldLabelFromResourceID(final String componentId, final IModel<ResourceID> model) {
-		ResourceID rId = (ResourceID) model.getObject();
-		String s = ResourceLabelBuilder.getInstance().getFieldLabel(rId, getLocale());
+		String s = ResourceLabelBuilder.getInstance().getFieldLabel(model.getObject(), getLocale());
 		return new Label(componentId, s);
 	}
 	

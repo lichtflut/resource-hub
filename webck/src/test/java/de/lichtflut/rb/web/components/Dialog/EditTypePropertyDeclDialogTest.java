@@ -21,11 +21,11 @@ import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
-import de.lichtflut.rb.webck.components.dialogs.EditTypePropertyDeclDialog;
+import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
 
 /**
  * <p>
- * Test for {@link EditTypePropertyDeclDialog}.
+ * Test for {@link EditPropertyDeclDialog}.
  * </p>
  * 
  * <p>
@@ -48,7 +48,7 @@ public class EditTypePropertyDeclDialogTest {
 	public void testdialogWithEmptyList(){
 		List<PropertyDeclaration> list = new ArrayList<PropertyDeclaration>();
 		decls = new ListModel<PropertyDeclaration>(list);
-		EditTypePropertyDeclDialog panel = new EditTypePropertyDeclDialog("test", decls);
+		EditPropertyDeclDialog panel = new EditPropertyDeclDialog("test", decls);
 		tester.startComponentInPage(panel);
 		tester.assertNoInfoMessage();
 		tester.assertContains("No Properties to edit");
@@ -59,7 +59,7 @@ public class EditTypePropertyDeclDialogTest {
 		List<PropertyDeclaration> list = new ArrayList<PropertyDeclaration>();
 		list.add(createDecl().get(0));
 		decls = new ListModel<PropertyDeclaration>(list);
-		EditTypePropertyDeclDialog panel = new EditTypePropertyDeclDialog("test", decls);
+		EditPropertyDeclDialog panel = new EditPropertyDeclDialog("test", decls);
 		tester.startComponentInPage(panel);
 		tester.assertNoErrorMessage();
 		tester.assertNoInfoMessage();
@@ -81,7 +81,7 @@ public class EditTypePropertyDeclDialogTest {
 		list.add(createDecl().get(0));
 		list.add(createDecl().get(1));
 		decls = new ListModel<PropertyDeclaration>(list);
-		EditTypePropertyDeclDialog panel = new EditTypePropertyDeclDialog("test", decls);
+		EditPropertyDeclDialog panel = new EditPropertyDeclDialog("test", decls);
 		tester.startComponentInPage(panel);
 		tester.assertNoErrorMessage();
 		tester.assertNoInfoMessage();
