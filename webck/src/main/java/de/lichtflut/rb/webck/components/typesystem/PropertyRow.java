@@ -39,7 +39,7 @@ import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
  */
 public class PropertyRow implements Serializable {
 	
-	private ResourceID propertyType;
+	private final PropertyDeclaration decl;
 	
 	private TypeDefinition typeDefinition;
 	
@@ -75,8 +75,7 @@ public class PropertyRow implements Serializable {
 	}
 	
 	public static PropertyDeclaration toPropertyDeclaration(final PropertyRow row) {
-		final PropertyDeclaration decl = new PropertyDeclarationImpl();
-		decl.setPropertyDescriptor(row.propertyType);
+		final PropertyDeclaration decl = row.decl;
 		decl.setFieldLabelDefinition(row.fieldLabel);
 		if (row.isUnbounded()) {
 			decl.setCardinality(CardinalityBuilder.hasAtLeast(row.min));	
@@ -121,7 +120,7 @@ public class PropertyRow implements Serializable {
 	 * @param decl The declaration.
 	 */
 	public PropertyRow(final PropertyDeclaration decl) {
-		this.propertyType = decl.getPropertyDescriptor();
+		this.decl = decl;
 		this.min = decl.getCardinality().getMinOccurs();
 		this.max = decl.getCardinality().getMaxOccurs();
 		this.unbounded = decl.getCardinality().isUnbound();
@@ -135,6 +134,7 @@ public class PropertyRow implements Serializable {
 	 * @param def The type definition.
 	 */
 	public PropertyRow(final TypeDefinition def) {
+		this.decl = new PropertyDeclarationImpl();
 		initializeFrom(def);
 	}
 	
@@ -142,6 +142,7 @@ public class PropertyRow implements Serializable {
 	 * Constructs a default,empty row.
 	 */
 	public PropertyRow() {
+		this.decl = new PropertyDeclarationImpl();
 		this.min = 0;
 		this.max = 1;
 		this.unbounded = true;
@@ -156,14 +157,14 @@ public class PropertyRow implements Serializable {
 	 * @return the propertyDescriptor
 	 */
 	public ResourceID getPropertyDescriptor() {
-		return propertyType;
+		return decl.getPropertyDescriptor();
 	}
 
 	/**
 	 * @param propertyDescriptor the propertyDescriptor to set
 	 */
 	public void setPropertyDescriptor(ResourceID propertyDescriptor) {
-		this.propertyType = propertyDescriptor;
+		decl.setPropertyDescriptor(propertyDescriptor);
 	}
 	
 	public String getDefaultLabel() {
