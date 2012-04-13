@@ -28,7 +28,7 @@ public class RBWebSession extends WebSession {
 	private final BrowsingHistory history = new BrowsingHistory();
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private transient ServiceProvider provider;
 	
 	// ----------------------------------------------------
 
@@ -50,6 +50,10 @@ public class RBWebSession extends WebSession {
 	
 	public boolean isAuthenticated() {
 		return provider != null && provider.getContext().getUser() != null;
+	}
+	
+	public void onLogout() {
+		provider = null;
 	}
 	
 	// ----------------------------------------------------
