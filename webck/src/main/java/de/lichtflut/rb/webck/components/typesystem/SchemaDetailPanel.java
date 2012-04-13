@@ -40,6 +40,7 @@ import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
 import de.lichtflut.rb.webck.components.fields.AjaxEditablePanelLabel;
+import de.lichtflut.rb.webck.components.fields.AjaxUpdateDataPickerField;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
@@ -184,7 +185,12 @@ public class SchemaDetailPanel extends Panel{
 				PropertyPickerField picker = new PropertyPickerField(componentId, model);
 				picker.setOutputMarkupId(true);
 				picker.setVisible(false);
-				picker.getDisplayComponent().add(new EditorAjaxBehavior());
+				picker.add(new AjaxUpdateDataPickerField() {
+					public void onSubmit(AjaxRequestTarget target) {
+						saveSchema(PropertyRow.toPropertyDeclaration(item.getModelObject()), item.getIndex());
+						RBAjaxTarget.add(SchemaDetailPanel.this);
+					};
+				});
 				return picker;
 			}
 			

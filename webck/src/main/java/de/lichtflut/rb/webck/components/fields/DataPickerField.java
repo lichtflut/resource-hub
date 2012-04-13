@@ -10,9 +10,11 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.HiddenField;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.core.javascript.JsScopeContext;
 import org.odlabs.wiquery.ui.autocomplete.Autocomplete;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteJavaScriptResourceReference;
@@ -112,6 +114,11 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	@SuppressWarnings("rawtypes")
 	public Autocomplete getDisplayComponent() {
 		return (Autocomplete) get("display");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public TextField<ResourceID> getValueComponent() {
+		return (TextField<ResourceID>) get("acValue");
 	}
 	
 	public PickerSuggestLink getSuggestLink() {

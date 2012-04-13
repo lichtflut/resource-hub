@@ -88,6 +88,7 @@ public interface PropertyDeclaration extends Serializable {
 	 * this method contains them all.
 	 * @return Set the constraints.
 	 */
+	@Deprecated
 	Set<Constraint> getConstraints();
 	
 }
