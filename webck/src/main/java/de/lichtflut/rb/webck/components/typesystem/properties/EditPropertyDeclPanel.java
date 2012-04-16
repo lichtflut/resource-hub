@@ -21,6 +21,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -28,6 +29,7 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.components.typesystem.ConstraintsEditorPanel;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
@@ -49,7 +51,8 @@ public class EditPropertyDeclPanel extends Panel {
 
 	private IModel<List<PropertyRow>> decls;
 	private IModel<Number> number = Model.of(Number.Singular);
-	private DerivedModel<String, List<PropertyRow>> propertyDescModel;
+//	private DerivedModel<String, List<PropertyRow>> propertyDescModel;
+	private IModel<ResourceID> propertyDescModel;
 	private IModel<String> fieldLabelModel, cardinalityModel;
 	private IModel<Datatype> dataTypeModel;
 	private IModel<PropertyRow> constraintsModel;
@@ -136,7 +139,6 @@ public class EditPropertyDeclPanel extends Panel {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				updateDecls();
-				System.out.println(decls);
 				EditPropertyDeclPanel.this.onSubmit(target, form);
 			}
 		};
@@ -166,35 +168,20 @@ public class EditPropertyDeclPanel extends Panel {
 	private void addTypeDecls(Form<?> form, IModel<List<PropertyRow>> decls) {
 		addInfo(Model.of(""));
 		// Initialize model values with the first entry of the list for initial values
-		if(Number.Singular.name().equals(number.getObject().name())){
-			propertyDescModel = new DerivedModel<String, List<PropertyRow>>(decls.getObject()) {
-				@Override
-				protected String derive(List<PropertyRow> original) {
-					return ResourceLabelBuilder.getInstance().getFieldLabel(original.get(0).getPropertyDescriptor(), getLocale());
-				}
-			};
-		}else{
-			propertyDescModel = new DerivedModel<String, List<PropertyRow>>(decls.getObject()) {
-				@Override
-				protected String derive(List<PropertyRow> original) {
-					return concatFields(original);
-				}
-			};
-		}
-		
+		propertyDescModel = new PropertyModel<ResourceID>(decls.getObject().get(0), "propertyDescriptor");
 		fieldLabelModel = new PropertyModel<String>(decls.getObject().get(0), "defaultLabel");
 		cardinalityModel = new PropertyModel<String>(decls.getObject().get(0), "cardinality");
 		dataTypeModel = new PropertyModel<Datatype>(decls.getObject().get(0), "dataType");
 		constraintsModel = new Model<PropertyRow>(decls.getObject().get(0));
 
-		Label fieldLabel = new Label("propertyDescriptor", propertyDescModel);
+		PropertyPickerField picker = new PropertyPickerField("propertyDescriptor", propertyDescModel);
 		TextField<String> fieldLabelTField = new TextField<String>("fieldLabel", fieldLabelModel);
 		fieldLabelTField.add(ConditionalBehavior.visibleIf(areEqual(number, Number.Singular)));
 		TextField<String> cardinalityTField = new TextField<String>("cardinality", cardinalityModel);
-		DropDownChoice<Datatype> datatypeDDC = new DropDownChoice<Datatype>("datatype", dataTypeModel, 
+		DropDownChoice<Datatype> datatypeDDC = new DropDownChoice<Datatype>("datatype", dataTypeModel,
 				 Arrays.asList(Datatype.values()), new EnumChoiceRenderer<Datatype>(form));
 		ConstraintsEditorPanel	constraintsDPicker = new ConstraintsEditorPanel("constraints", constraintsModel);
-		form.add(fieldLabel, fieldLabelTField, cardinalityTField, datatypeDDC, constraintsDPicker);
+		form.add(picker, fieldLabelTField, cardinalityTField, datatypeDDC, constraintsDPicker);
 	}
 
 	/**

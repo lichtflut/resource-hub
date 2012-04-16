@@ -12,6 +12,7 @@ import java.util.Set;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.infra.Infra;
+import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
@@ -47,15 +48,9 @@ public class PropertyRow implements Serializable {
 	
 	private FieldLabelDefinition fieldLabel;
 	
-	private Datatype datatype;
-	
 	private ResourceID resourceConstraint;
 	
 	private List<String> literalConstraints;
-	
-	private int min;
-	
-	private int max;
 	
 	private boolean unbounded;
 	
@@ -78,15 +73,15 @@ public class PropertyRow implements Serializable {
 		final PropertyDeclaration decl = row.decl;
 		decl.setFieldLabelDefinition(row.fieldLabel);
 		if (row.isUnbounded()) {
-			decl.setCardinality(CardinalityBuilder.hasAtLeast(row.min));	
+			decl.setCardinality(CardinalityBuilder.hasAtLeast(decl.getCardinality().getMinOccurs()));	
 		} else {
-			decl.setCardinality(CardinalityBuilder.between(row.min, row.max));
+			decl.setCardinality(CardinalityBuilder.between(decl.getCardinality().getMinOccurs(), decl.getCardinality().getMaxOccurs()));
 		}
 		if (row.isTypeDefinitionPublic()) {
 			decl.setTypeDefinition(row.typeDefinition);
 		} else {
 			final TypeDefinition typeDef = new TypeDefinitionImpl();
-			typeDef.setElementaryDataType(row.datatype);
+			typeDef.setElementaryDataType(decl.getTypeDefinition().getElementaryDataType());
 			typeDef.setConstraints(row.buildConstraints());
 			decl.setTypeDefinition(typeDef);
 		}
@@ -109,7 +104,7 @@ public class PropertyRow implements Serializable {
 				}
 			}
 		}
-		def.setElementaryDataType(row.datatype);
+		def.setElementaryDataType(row.getDataType());
 		return def;
 	}
 	
@@ -121,8 +116,6 @@ public class PropertyRow implements Serializable {
 	 */
 	public PropertyRow(final PropertyDeclaration decl) {
 		this.decl = decl;
-		this.min = decl.getCardinality().getMinOccurs();
-		this.max = decl.getCardinality().getMaxOccurs();
 		this.unbounded = decl.getCardinality().isUnbound();
 		this.fieldLabel = decl.getFieldLabelDefinition();
 		
@@ -143,10 +136,10 @@ public class PropertyRow implements Serializable {
 	 */
 	public PropertyRow() {
 		this.decl = new PropertyDeclarationImpl();
-		this.min = 0;
-		this.max = 1;
 		this.unbounded = true;
-		this.datatype = Datatype.STRING;
+		TypeDefinition def = new TypeDefinitionImpl();
+		def.setElementaryDataType(Datatype.STRING);
+		this.decl.setTypeDefinition(def);
 		this.literalConstraints = new ArrayList<String>();
 		this.fieldLabel = new FieldLabelDefinitionImpl();
 	}
@@ -193,14 +186,14 @@ public class PropertyRow implements Serializable {
 	 * @return the dataType
 	 */
 	public Datatype getDataType() {
-		return datatype;
+		return decl.getTypeDefinition().getElementaryDataType();
 	}
 
 	/**
 	 * @param newDatatype the new data type to set
 	 */
 	public void setDataType(Datatype newDatatype) {
-		if (!Infra.equals(this.datatype, newDatatype)) {
+		if (!Infra.equals(this.decl.getTypeDefinition().getElementaryDataType(), newDatatype)) {
 			initializeFrom(newDatatype);
 		}
 	}
@@ -223,28 +216,30 @@ public class PropertyRow implements Serializable {
 	 * @return the min
 	 */
 	public int getMin() {
-		return min;
+		return decl.getCardinality().getMinOccurs();
 	}
 
 	/**
 	 * @param min the min to set
 	 */
 	public void setMin(int min) {
-		this.min = min;
+		Cardinality c = CardinalityBuilder.between(min, decl.getCardinality().getMaxOccurs());
+		this.decl.setCardinality(c);
 	}
 
 	/**
 	 * @return the max
 	 */
 	public int getMax() {
-		return max;
+		return decl.getCardinality().getMaxOccurs();
 	}
 
 	/**
 	 * @param max the max to set
 	 */
 	public void setMax(int max) {
-		this.max = max;
+		Cardinality c = CardinalityBuilder.between(decl.getCardinality().getMinOccurs(), max);
+		this.decl.setCardinality(c);
 	}
 
 	/**
@@ -252,8 +247,7 @@ public class PropertyRow implements Serializable {
 	 * @param string
 	 */
 	public void setCardinality(String string){
-		min = CardinalityBuilder.extractFromString(string).getMinOccurs();
-		max = CardinalityBuilder.extractFromString(string).getMaxOccurs();
+		this.decl.setCardinality(CardinalityBuilder.extractFromString(string));
 	}
 
 	/**
@@ -261,6 +255,8 @@ public class PropertyRow implements Serializable {
 	 * @param string
 	 */
 	public String getCardinality(){
+		int min = decl.getCardinality().getMinOccurs();
+		int max = decl.getCardinality().getMaxOccurs();
 		String s = "[";
 		if(min == 0){
 			s+= "n..";
@@ -303,7 +299,7 @@ public class PropertyRow implements Serializable {
 	 * @return the isResourceReference
 	 */
 	public boolean isResourceReference() {
-		return Datatype.RESOURCE.equals(datatype);
+		return Datatype.RESOURCE.equals(decl.getTypeDefinition().getElementaryDataType());
 	}
 	
 	/**
@@ -323,8 +319,7 @@ public class PropertyRow implements Serializable {
 	// -----------------------------------------------------
 	
 	protected void initializeFrom(final TypeDefinition def) {
-		this.typeDefinition = def;
-		this.datatype = def.getElementaryDataType();
+		this.decl.setTypeDefinition(def);
 		this.displayName = def.getName();
 		this.literalConstraints = new ArrayList<String>();
 		if (def.isResourceReference()) {
@@ -337,7 +332,7 @@ public class PropertyRow implements Serializable {
 	}
 	
 	protected void initializeFrom(final Datatype datatype) {
-		this.datatype = datatype;
+		this.decl.getTypeDefinition().setElementaryDataType(datatype);
 		this.resourceConstraint = null;
 		this.literalConstraints = new ArrayList<String>();
 	}

@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.web.components.typesystem;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -20,6 +21,7 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.components.typesystem.SchemaDetailPanel;
 
 /**
@@ -50,6 +52,9 @@ public class SchemaDetailPanelTest{
 		tester.startComponentInPage(panel);
 		tester.assertNoErrorMessage();
 		tester.assertNoInfoMessage();
+		tester.assertComponent("test:form:deleteButton", RBStandardButton.class); 
+		tester.assertComponent("test:form:addButton", RBStandardButton.class);
+		tester.assertComponent("test:form:editButton", RBStandardButton.class);
 		tester.assertContains(">http://lichtflut.de#Person");
 		tester.assertContains("#TestRes");
 		tester.assertContains(">hatAlter");

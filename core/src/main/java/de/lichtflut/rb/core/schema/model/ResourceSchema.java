@@ -41,7 +41,7 @@ public interface ResourceSchema extends Serializable {
 	 * Add a additional {@link PropertyDeclaration} to the ResourceSchema.
 	 * @param assertion -
 	 */
-	void addPropertyDeclaration(final PropertyDeclaration assertion);
+	void addPropertyDeclaration(final PropertyDeclaration declaration);
 	
 	// -----------------------------------------------------
 
