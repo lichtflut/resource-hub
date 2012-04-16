@@ -15,7 +15,6 @@ import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeDefinition;
@@ -42,18 +41,6 @@ public class PropertyRow implements Serializable {
 	
 	private final PropertyDeclaration decl;
 	
-	private TypeDefinition typeDefinition;
-	
-	private String displayName;
-	
-	private FieldLabelDefinition fieldLabel;
-	
-	private ResourceID resourceConstraint;
-	
-	private List<String> literalConstraints;
-	
-	private boolean unbounded;
-	
 	// -----------------------------------------------------
 	
 	/**
@@ -70,22 +57,7 @@ public class PropertyRow implements Serializable {
 	}
 	
 	public static PropertyDeclaration toPropertyDeclaration(final PropertyRow row) {
-		final PropertyDeclaration decl = row.decl;
-		decl.setFieldLabelDefinition(row.fieldLabel);
-		if (row.isUnbounded()) {
-			decl.setCardinality(CardinalityBuilder.hasAtLeast(decl.getCardinality().getMinOccurs()));	
-		} else {
-			decl.setCardinality(CardinalityBuilder.between(decl.getCardinality().getMinOccurs(), decl.getCardinality().getMaxOccurs()));
-		}
-		if (row.isTypeDefinitionPublic()) {
-			decl.setTypeDefinition(row.typeDefinition);
-		} else {
-			final TypeDefinition typeDef = new TypeDefinitionImpl();
-			typeDef.setElementaryDataType(decl.getTypeDefinition().getElementaryDataType());
-			typeDef.setConstraints(row.buildConstraints());
-			decl.setTypeDefinition(typeDef);
-		}
-		return decl;
+		return row.getPropertyDeclaration();
 	}
 	
 	/**
@@ -93,19 +65,7 @@ public class PropertyRow implements Serializable {
 	 * @param row The row object to be converted.
 	 */
 	public static TypeDefinition toTypeDefinition(final PropertyRow row) {
-		final TypeDefinitionImpl def = new TypeDefinitionImpl(row.typeDefinition.getID(), row.isTypeDefinitionPublic());
-		def.setName(row.displayName);
-		if (row.isResourceReference()) {
-			def.addConstraint(ConstraintBuilder.buildConstraint(row.resourceConstraint));
-		} else {
-			for (String constraint : row.literalConstraints) {
-				if (constraint != null && !constraint.trim().isEmpty()) {
-					def.addConstraint(ConstraintBuilder.buildConstraint(constraint));
-				}
-			}
-		}
-		def.setElementaryDataType(row.getDataType());
-		return def;
+		return row.getPropertyDeclaration().getTypeDefinition();
 	}
 	
 	// -----------------------------------------------------
@@ -116,10 +76,6 @@ public class PropertyRow implements Serializable {
 	 */
 	public PropertyRow(final PropertyDeclaration decl) {
 		this.decl = decl;
-		this.unbounded = decl.getCardinality().isUnbound();
-		this.fieldLabel = decl.getFieldLabelDefinition();
-		
-		initializeFrom(decl.getTypeDefinition());
 	}
 	
 	/**
@@ -128,7 +84,7 @@ public class PropertyRow implements Serializable {
 	 */
 	public PropertyRow(final TypeDefinition def) {
 		this.decl = new PropertyDeclarationImpl();
-		initializeFrom(def);
+		decl.setTypeDefinition(def);
 	}
 	
 	/**
@@ -136,16 +92,19 @@ public class PropertyRow implements Serializable {
 	 */
 	public PropertyRow() {
 		this.decl = new PropertyDeclarationImpl();
-		this.unbounded = true;
+		decl.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 		TypeDefinition def = new TypeDefinitionImpl();
 		def.setElementaryDataType(Datatype.STRING);
 		this.decl.setTypeDefinition(def);
-		this.literalConstraints = new ArrayList<String>();
-		this.fieldLabel = new FieldLabelDefinitionImpl();
+		this.decl.setFieldLabelDefinition(new FieldLabelDefinitionImpl());
 	}
 	
 	// -----------------------------------------------------
 
+	public PropertyDeclaration getPropertyDeclaration(){
+		return decl;
+	}
+	
 	/**
 	 * @return the propertyDescriptor
 	 */
@@ -161,25 +120,18 @@ public class PropertyRow implements Serializable {
 	}
 	
 	public String getDefaultLabel() {
-		return fieldLabel.getDefaultLabel();
+		return decl.getFieldLabelDefinition().getDefaultLabel();
 	}
 	
 	public void setDefaultLabel(String label) {
-		this.fieldLabel.setDefaultLabel(label);
+		this.decl.getFieldLabelDefinition().setDefaultLabel(label);
 	}
 	
 	/**
 	 * @return the display name for public type definitions.
 	 */
 	public String getDisplayName() {
-		return displayName;
-	}
-	
-	/**
-	 * @param displayName the display name for public type definitions.
-	 */
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+		return decl.getTypeDefinition().getName();
 	}
 
 	/**
@@ -194,7 +146,7 @@ public class PropertyRow implements Serializable {
 	 */
 	public void setDataType(Datatype newDatatype) {
 		if (!Infra.equals(this.decl.getTypeDefinition().getElementaryDataType(), newDatatype)) {
-			initializeFrom(newDatatype);
+			decl.getTypeDefinition().setElementaryDataType(newDatatype);
 		}
 	}
 
@@ -202,14 +154,21 @@ public class PropertyRow implements Serializable {
 	 * @return the resourceConstraint
 	 */
 	public ResourceID getResourceConstraint() {
-		return resourceConstraint;
+		if (decl.getTypeDefinition().isResourceReference()) {
+			return ResourceTypeDefinition.view(decl.getTypeDefinition()).getResourceTypeConstraint();
+		}
+		return null;
 	}
 
 	/**
 	 * @param resourceConstraint the resourceConstraint to set
 	 */
 	public void setResourceConstraint(ResourceID resourceConstraint) {
-		this.resourceConstraint = resourceConstraint;
+		final Set<Constraint> constraints = new HashSet<Constraint>();
+		if (isResourceReference() && getResourceConstraint() != null) {
+			constraints.add(ConstraintBuilder.buildConstraint(resourceConstraint));
+		}
+		decl.getTypeDefinition().setConstraints(constraints);
 	}
 
 	/**
@@ -275,24 +234,31 @@ public class PropertyRow implements Serializable {
 	 * @return the literalConstraints
 	 */
 	public List<String> getLiteralConstraints() {
-		if (literalConstraints.isEmpty()) {
-			literalConstraints.add("");
+		List<String> constraints = new ArrayList<String>();
+		if(!decl.getTypeDefinition().isResourceReference()){
+			for (Constraint c : decl.getTypeDefinition().getConstraints()) {
+				constraints.add(c.getLiteralConstraint());
+			}
 		}
-		return literalConstraints;
+		return constraints;
 	}
 
 	/**
 	 * @param literalConstraints the literalConstraints to set
 	 */
 	public void setLiteralConstraints(final List<String> literalConstraints) {
-		this.literalConstraints = literalConstraints;
+		final Set<Constraint> constraints = new HashSet<Constraint>();
+		for (String constraint : getLiteralConstraints()) {
+			constraints.add(ConstraintBuilder.buildConstraint(constraint));
+		}
+		decl.getTypeDefinition().setConstraints(constraints);
 	}
 
 	/**
 	 * @return true if the Type Definition is public, false if it is private.
 	 */
 	public boolean isTypeDefinitionPublic() {
-		return typeDefinition != null && typeDefinition.isPublicTypeDef();
+		return decl.getTypeDefinition() != null && decl.getTypeDefinition().isPublicTypeDef();
 	}
 
 	/**
@@ -306,49 +272,11 @@ public class PropertyRow implements Serializable {
 	 * @return the unbounded
 	 */
 	public boolean isUnbounded() {
-		return unbounded;
+		return decl.getCardinality().isUnbound();
 	}
 	
-	/**
-	 * @param unbounded the unbounded to set
-	 */
-	public void setUnbounded(boolean unbounded) {
-		this.unbounded = unbounded;
-	}
-	
-	// -----------------------------------------------------
-	
-	protected void initializeFrom(final TypeDefinition def) {
-		this.decl.setTypeDefinition(def);
-		this.displayName = def.getName();
-		this.literalConstraints = new ArrayList<String>();
-		if (def.isResourceReference()) {
-			this.resourceConstraint = ResourceTypeDefinition.view(def).getResourceTypeConstraint();
-		} else {
-			for (Constraint constraint : def.getConstraints()) {
-				literalConstraints.add(constraint.getLiteralConstraint());
-			}
-		}
-	}
-	
-	protected void initializeFrom(final Datatype datatype) {
-		this.decl.getTypeDefinition().setElementaryDataType(datatype);
-		this.resourceConstraint = null;
-		this.literalConstraints = new ArrayList<String>();
-	}
-	
-	// -----------------------------------------------------
-	
-	protected Set<Constraint> buildConstraints() {
-		final Set<Constraint> constraints = new HashSet<Constraint>();
-		if (isResourceReference() && resourceConstraint != null) {
-			constraints.add(ConstraintBuilder.buildConstraint(resourceConstraint));
-		} else if (!isResourceReference() && !literalConstraints.isEmpty()){
-			for (String constraint : literalConstraints) {
-				constraints.add(ConstraintBuilder.buildConstraint(constraint));
-			}
-		}
-		return constraints;
+	public TypeDefinition getTypeDefinition(){
+		return decl.getTypeDefinition();
 	}
 
 }

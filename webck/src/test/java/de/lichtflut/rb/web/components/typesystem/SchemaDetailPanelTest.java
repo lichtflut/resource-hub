@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.web.components.typesystem;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;

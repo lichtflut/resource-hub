@@ -19,7 +19,6 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -35,7 +34,6 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -58,7 +56,6 @@ import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
  *
  * @author Ravi Knox
  */
-// TODO save via model, implizit not explizit(saveSchema(PropertyDeclaration decl, int index))
 public class SchemaDetailPanel extends Panel{
 
 	private IModel<List<PropertyRow>> markedDecls;
@@ -79,8 +76,8 @@ public class SchemaDetailPanel extends Panel{
 		markedDecls = new ListModel<PropertyRow>(new ArrayList<PropertyRow>());
 		@SuppressWarnings("rawtypes")
 		Form form = new Form("form");
-		this.add(createTitleLabel("title"));
-		form.add(createListView("row", this.schema));
+		add(createTitleLabel("title"));
+		form.add(createListView("row", schema));
 		addButtonBar(form);
 		add(form);
 	}
@@ -115,10 +112,6 @@ public class SchemaDetailPanel extends Panel{
 		form.add(createAddbutton("addButton"));
 	}
 
-	/**
-	 * @param id
-	 * @return
-	 */
 	private Component createAddbutton(String id) {
 		Button button = new RBStandardButton(id) {
 			@Override
@@ -127,25 +120,24 @@ public class SchemaDetailPanel extends Panel{
 			}
 
 			protected void openPropertyDeclDialog() {
-				DialogHoster hoster = findParent(DialogHoster.class);
-				List<PropertyRow> list = new ArrayList<PropertyRow>();
 				final PropertyRow row = new PropertyRow();
+				List<PropertyRow> list = new ArrayList<PropertyRow>();
 				list.add(row);
-				IModel<List<PropertyRow>> listModel = new ListModel<PropertyRow>(list);
-			    hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), listModel){
-			    	@Override
-			    	protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-			    		schema.getObject().addPropertyDeclaration(PropertyRow.toPropertyDeclaration(row));
-			    		saveSchema();
-			    		RBAjaxTarget.add(SchemaDetailPanel.this);
-			    		close(target);
-			    	}
-			    	@Override
-			    	protected void onCancel(AjaxRequestTarget target, Form<?> form) {
-			    		setDefaultFormProcessing(false);
-			    		close(target);
-			    	}
-			    });
+				DialogHoster hoster = findParent(DialogHoster.class);
+				hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), new ListModel<PropertyRow>(list)) {
+					@Override
+					protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+						schema.getObject().addPropertyDeclaration(PropertyRow.toPropertyDeclaration(row));
+						saveSchema();
+						RBAjaxTarget.add(SchemaDetailPanel.this);
+						close(target);
+					}
+					@Override
+					protected void onCancel(AjaxRequestTarget target, Form<?> form) {
+						setDefaultFormProcessing(false);
+						close(target);
+					}
+				});
 			}
 		};
 		return button;
@@ -178,10 +170,6 @@ public class SchemaDetailPanel extends Panel{
 		return button;
 	}
 
-	/**
-	 * @param id
-	 * @return
-	 */
 	private Component createDeleteButton(String id) {
 		Button button = new RBStandardButton(id) {
 			@Override
@@ -196,6 +184,7 @@ public class SchemaDetailPanel extends Panel{
 				}
 				schema.getObject().getPropertyDeclarations().removeAll(decls);
 				saveSchema();
+				RBAjaxTarget.add(SchemaDetailPanel.this);
 			}
 		};
 		return button;
