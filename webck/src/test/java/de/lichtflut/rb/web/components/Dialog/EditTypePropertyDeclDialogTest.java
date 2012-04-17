@@ -11,6 +11,7 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.tester.WicketTester;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.Datatype;
@@ -77,6 +78,7 @@ public class EditTypePropertyDeclDialogTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testDialogWithMultiplePropertyDecl(){
 		List<PropertyRow> list = new ArrayList<PropertyRow>();
 		list.add(new PropertyRow(createDecl().get(0)));

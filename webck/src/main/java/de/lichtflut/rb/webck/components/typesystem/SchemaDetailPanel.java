@@ -75,7 +75,7 @@ public class SchemaDetailPanel extends Panel{
 	public SchemaDetailPanel(String id, IModel<ResourceSchema> schema) {
 		super(id);
 		this.schema = schema;
-		markedDecls = new ListModel<PropertyRow>(new ArrayList<PropertyRow>());
+		markedDecls = new PropertyRowListModel(this.schema);
 		@SuppressWarnings("rawtypes")
 		Form form = new Form("form");
 		add(createTitleLabel("title"));
@@ -119,11 +119,12 @@ public class SchemaDetailPanel extends Panel{
 		Button button = new RBStandardButton(id) {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				openPropertyDeclDialog();
+				final PropertyRow row = new PropertyRow();
+				listModel.getObject().add(row);
+				openPropertyDeclDialog(row);
 			}
 
-			protected void openPropertyDeclDialog() {
-				final PropertyRow row = new PropertyRow();
+			protected void openPropertyDeclDialog(final PropertyRow row) {
 				List<PropertyRow> list = new ArrayList<PropertyRow>();
 				list.add(row);
 				DialogHoster hoster = findParent(DialogHoster.class);
@@ -186,6 +187,7 @@ public class SchemaDetailPanel extends Panel{
 					decls.add(PropertyRow.toPropertyDeclaration(row));
 				}
 				schema.getObject().getPropertyDeclarations().removeAll(decls);
+//				listModel.getObject().removeAll(markedDecls.getObject());
 				saveSchema();
 				RBAjaxTarget.add(SchemaDetailPanel.this);
 			}
