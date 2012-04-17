@@ -56,6 +56,7 @@ public class PropertyRow implements Serializable {
 		return list;
 	}
 	
+	@Deprecated
 	public static PropertyDeclaration toPropertyDeclaration(final PropertyRow row) {
 		return row.asPropertyDeclaration();
 	}

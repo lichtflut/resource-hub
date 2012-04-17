@@ -75,7 +75,7 @@ public class SchemaDetailPanel extends Panel{
 	public SchemaDetailPanel(String id, IModel<ResourceSchema> schema) {
 		super(id);
 		this.schema = schema;
-		markedDecls = new PropertyRowListModel(this.schema);
+		markedDecls = new ListModel<PropertyRow>(new ArrayList<PropertyRow>());
 		@SuppressWarnings("rawtypes")
 		Form form = new Form("form");
 		add(createTitleLabel("title"));
@@ -182,12 +182,13 @@ public class SchemaDetailPanel extends Panel{
 			}
 
 			protected void deletePropertyDecls() {
+				//TODO the schemas PropertyDecls should be removed implizit when removing from listModel
 				List<PropertyDeclaration> decls = new ArrayList<PropertyDeclaration>();
 				for (PropertyRow row : markedDecls.getObject()) {
-					decls.add(PropertyRow.toPropertyDeclaration(row));
+					decls.add(row.asPropertyDeclaration());
 				}
 				schema.getObject().getPropertyDeclarations().removeAll(decls);
-//				listModel.getObject().removeAll(markedDecls.getObject());
+				listModel.getObject().removeAll(markedDecls.getObject());
 				saveSchema();
 				RBAjaxTarget.add(SchemaDetailPanel.this);
 			}
