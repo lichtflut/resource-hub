@@ -33,7 +33,6 @@ import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.components.typesystem.ConstraintsEditorPanel;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
 
 /**
  * <p>
@@ -175,6 +174,7 @@ public class EditPropertyDeclPanel extends Panel {
 		constraintsModel = new Model<PropertyRow>(decls.getObject().get(0));
 
 		PropertyPickerField picker = new PropertyPickerField("propertyDescriptor", propertyDescModel);
+		picker.add(ConditionalBehavior.visibleIf(areEqual(number, Number.Singular)));
 		TextField<String> fieldLabelTField = new TextField<String>("fieldLabel", fieldLabelModel);
 		fieldLabelTField.add(ConditionalBehavior.visibleIf(areEqual(number, Number.Singular)));
 		TextField<String> cardinalityTField = new TextField<String>("cardinality", cardinalityModel);
@@ -182,19 +182,6 @@ public class EditPropertyDeclPanel extends Panel {
 				 Arrays.asList(Datatype.values()), new EnumChoiceRenderer<Datatype>(form));
 		ConstraintsEditorPanel	constraintsDPicker = new ConstraintsEditorPanel("constraints", constraintsModel);
 		form.add(picker, fieldLabelTField, cardinalityTField, datatypeDDC, constraintsDPicker);
-	}
-
-	/**
-	 * @param original
-	 * @param string
-	 * @return 
-	 */
-	protected String concatFields(List<PropertyRow> original) {
-		StringBuilder sb = new StringBuilder();
-		for (PropertyRow decl : original) {
-			sb.append(ResourceLabelBuilder.getInstance().getFieldLabel(decl.getPropertyDescriptor(), getLocale()) + ", ");
-		}
-		return sb.toString().substring(0, (sb.length()-2));
 	}
 
 	// ------------------------------------------------------

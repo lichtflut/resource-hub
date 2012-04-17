@@ -87,8 +87,8 @@ public class EditTypePropertyDeclDialogTest {
 		tester.assertNoErrorMessage();
 		tester.assertNoInfoMessage();
 		tester.assertContains("Property");
-//		tester.assertContains("hatKind<");
-//		tester.assertContainsNot("Field Label");
+		tester.assertContainsNot("hatKind");
+		tester.assertContainsNot("Field Label");
 		tester.assertContainsNot("Kinder");
 		tester.assertContains("Cardinality");
 		tester.assertContains("[1..2]");

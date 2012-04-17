@@ -57,7 +57,7 @@ public class PropertyRow implements Serializable {
 	}
 	
 	public static PropertyDeclaration toPropertyDeclaration(final PropertyRow row) {
-		return row.getPropertyDeclaration();
+		return row.asPropertyDeclaration();
 	}
 	
 	/**
@@ -65,7 +65,7 @@ public class PropertyRow implements Serializable {
 	 * @param row The row object to be converted.
 	 */
 	public static TypeDefinition toTypeDefinition(final PropertyRow row) {
-		return row.getPropertyDeclaration().getTypeDefinition();
+		return row.asPropertyDeclaration().getTypeDefinition();
 	}
 	
 	// -----------------------------------------------------
@@ -101,7 +101,7 @@ public class PropertyRow implements Serializable {
 	
 	// -----------------------------------------------------
 
-	public PropertyDeclaration getPropertyDeclaration(){
+	public PropertyDeclaration asPropertyDeclaration(){
 		return decl;
 	}
 	
