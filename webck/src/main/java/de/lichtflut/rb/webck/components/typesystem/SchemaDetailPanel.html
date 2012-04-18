@@ -13,7 +13,7 @@
 	<h2 wicket:id="title"></h2>
 </div>
 <form wicket:id="form">
-	<div class="table">
+	<div class="table schema-details">
 		<div class="row header">
 			<div class="cell"></div>
 			<div class="cell"><wicket:message key="property.label" /></div>
@@ -21,14 +21,19 @@
 			<div class="cell"><wicket:message key="cardinality.label" /></div>
 			<div class="cell"><wicket:message key="datatype.label" /></div>
 			<div class="cell"><wicket:message key="constraints.label" /></div>
+			<div class="cell"></div>
 		</div>
 		<div wicket:id="listView" class="row">
 			<div class="cell"><input wicket:id="checkbox" type="checkbox" /></div>
-			<div  class="cell"><span wicket:id="property">[PROPERTY ID]</span></div>
-			<div  class="cell"><span wicket:id="label">[LABEL]</span></div>
+			<div class="cell property-picker"><span wicket:id="property">[PROPERTY ID]</span></div>
+			<div class="cell"><span wicket:id="label">[LABEL]</span></div>
 			<div class="cell"><span wicket:id="cardinality" >[CARDINALITY]</span></div>
 			<div class="cell"><span  wicket:id="datatype" >[DATATYPE]</span></div>
 			<div class="cell"><span  wicket:id="constraints">[CONSTRAINTS]</span></div>
+			<div class="cell">
+				<a wicket:id="up" class="action-move-up">[up]</a>
+				<a wicket:id="down" class="action-move-down">[down]</a>
+			</div>
 		</div>
 	</div>
 	

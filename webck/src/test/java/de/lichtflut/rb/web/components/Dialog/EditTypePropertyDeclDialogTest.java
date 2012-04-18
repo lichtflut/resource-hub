@@ -76,9 +76,8 @@ public class EditTypePropertyDeclDialogTest {
 		tester.assertContains("Constraints");
 		tester.assertContains("Person");
 	}
-	
+	 
 	@Test
-	@Ignore
 	public void testDialogWithMultiplePropertyDecl(){
 		List<PropertyRow> list = new ArrayList<PropertyRow>();
 		list.add(new PropertyRow(createDecl().get(0)));
@@ -90,8 +89,8 @@ public class EditTypePropertyDeclDialogTest {
 		tester.assertNoInfoMessage();
 		tester.assertContains("Property");
 		tester.assertContainsNot("hatKind");
-		tester.assertContainsNot("Field Label");
-		tester.assertContainsNot("Kinder");
+		tester.assertContains("Field Label");
+		tester.assertContains("Kinder, hat Alter");
 		tester.assertContains("Cardinality");
 		tester.assertContains("[1..2]");
 		tester.assertContains("Datatype");

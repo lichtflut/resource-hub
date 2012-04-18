@@ -11,6 +11,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableChoiceLabel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
@@ -61,7 +62,7 @@ public class SchemaDetailPanel extends Panel{
 
 	private IModel<List<PropertyRow>> markedDecls;
 	private IModel<ResourceSchema> schema;
-	private IModel<List<PropertyRow>> listModel;
+	private PropertyRowListModel listModel;
 
 	@SpringBean
 	private ServiceProvider provider;
@@ -88,7 +89,6 @@ public class SchemaDetailPanel extends Panel{
 
 	private Component createTitleLabel(String id) {
 		return new Label(id, Model.of(schema.getObject().getDescribedType()));
-		
 	}
 	
 	private Component createListView(String id, IModel<ResourceSchema> schema) {
@@ -103,7 +103,6 @@ public class SchemaDetailPanel extends Panel{
 		view.setOutputMarkupId(true);
 		return view;
 	}
-
 
 	/**
 	 * Adds Delete, Add, Edit Buttons to the component
@@ -133,7 +132,7 @@ public class SchemaDetailPanel extends Panel{
 					protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 						schema.getObject().addPropertyDeclaration(row.asPropertyDeclaration());
 						saveSchema();
-						RBAjaxTarget.add(SchemaDetailPanel.this);
+						updatePanel();
 						close(target);
 					}
 					@Override
@@ -160,13 +159,16 @@ public class SchemaDetailPanel extends Panel{
 			    	@Override
 			    	protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 			    		saveSchema();
-			    		RBAjaxTarget.add(SchemaDetailPanel.this);
+			    		updatePanel();
 			    		close(target);
+			    		markedDecls.getObject().clear();
 			    	}
 			    	@Override
 			    	protected void onCancel(AjaxRequestTarget target, Form<?> form) {
 			    		setDefaultFormProcessing(false);
+			    		updatePanel();
 			    		close(target);
+			    		markedDecls.getObject().clear();
 			    	}
 			    });
 			}
@@ -190,7 +192,8 @@ public class SchemaDetailPanel extends Panel{
 				schema.getObject().getPropertyDeclarations().removeAll(decls);
 				listModel.getObject().removeAll(markedDecls.getObject());
 				saveSchema();
-				RBAjaxTarget.add(SchemaDetailPanel.this);
+				updatePanel();
+				markedDecls.getObject().clear();
 			}
 		};
 		return button;
@@ -207,8 +210,32 @@ public class SchemaDetailPanel extends Panel{
 		addCardinality(item);
 		addDatatypeDecl(item);
 		addContraintsDecl(item);
+		addUpDownButton(item);
 	}
 	
+	/**
+	 * @param item
+	 */
+	private void addUpDownButton(final ListItem<PropertyRow> item) {
+		item.add(new AjaxLink<Void>("up") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				System.out.println("BEFORELIST: " + listModel.getObject());
+				listModel.moveUp(item.getIndex());
+				saveAndUpdate();
+				System.out.println("AFTERLIST: " + listModel.getObject());
+			}
+		});
+		
+		item.add(new AjaxLink<Void>("down") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				listModel.moveDown(item.getIndex());
+				saveAndUpdate();
+			}
+		});
+	}
+
 	/**
 	 * Adds a {@link CheckBox} in case of multiple editing of Propertydecls.
 	 * @param item
@@ -253,7 +280,7 @@ public class SchemaDetailPanel extends Panel{
 				picker.add(new AjaxUpdateDataPickerField() {
 					public void onSubmit(AjaxRequestTarget target) {
 						saveSchema();
-						RBAjaxTarget.add(SchemaDetailPanel.this);
+						updatePanel();
 					};
 				});
 				return picker;
@@ -262,7 +289,7 @@ public class SchemaDetailPanel extends Panel{
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target){
 				saveSchema();
-				RBAjaxTarget.add(SchemaDetailPanel.this);
+				updatePanel();
 
 				super.onSubmit(target);
 			}
@@ -403,8 +430,16 @@ public class SchemaDetailPanel extends Panel{
 		}
 	}
 	
+	protected void saveAndUpdate() {
+		saveSchema();
+		updatePanel();
+	}
+
+	protected void updatePanel() {
+		RBAjaxTarget.add(SchemaDetailPanel.this);
+	}
+	
 	private void saveSchema(){
-		System.out.println(" --- " + schema.getObject());
 		provider.getSchemaManager().store(schema.getObject());
 	}
 

@@ -5,13 +5,17 @@ package de.lichtflut.rb.webck.components.typesystem.properties;
 
 import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
 
+import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Check;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
@@ -50,11 +54,11 @@ public class EditPropertyDeclPanel extends Panel {
 
 	private IModel<List<PropertyRow>> decls;
 	private IModel<Number> number = Model.of(Number.Singular);
-//	private DerivedModel<String, List<PropertyRow>> propertyDescModel;
 	private IModel<ResourceID> propertyDescModel;
 	private IModel<String> fieldLabelModel, cardinalityModel;
 	private IModel<Datatype> dataTypeModel;
 	private IModel<PropertyRow> constraintsModel;
+	private IModel<Boolean> datatypeBol, constraintsBol, cardinalityBol;
 	
 	// ---------------- Constructor -------------------------
 	
@@ -65,6 +69,9 @@ public class EditPropertyDeclPanel extends Panel {
 	public EditPropertyDeclPanel(String id, IModel<List<PropertyRow>> decls) {
 		super(id, decls);
 		this.decls = decls;
+		this.datatypeBol = Model.of(false);
+		this.constraintsBol = Model.of(false);
+		this.cardinalityBol = Model.of(false);
 		@SuppressWarnings("rawtypes")
 		Form<?> form = new Form("form");
 		if(decls.getObject().size() == 1){
@@ -172,16 +179,32 @@ public class EditPropertyDeclPanel extends Panel {
 		cardinalityModel = new PropertyModel<String>(decls.getObject().get(0), "cardinality");
 		dataTypeModel = new PropertyModel<Datatype>(decls.getObject().get(0), "dataType");
 		constraintsModel = new Model<PropertyRow>(decls.getObject().get(0));
-
-		PropertyPickerField picker = new PropertyPickerField("propertyDescriptor", propertyDescModel);
-		picker.add(ConditionalBehavior.visibleIf(areEqual(number, Number.Singular)));
+		Component propertyDescriptorField = null;
+		if(Number.Singular.name().equals(number.getObject().name())){
+			propertyDescriptorField = new PropertyPickerField("propertyDescriptor", propertyDescModel);
+			propertyDescriptorField.add(ConditionalBehavior.enableIf(areEqual(number, Number.Singular)));
+		}else {
+			propertyDescriptorField = new Label("propertyDescriptor", concatDescriptorLabels(decls));
+		}
 		TextField<String> fieldLabelTField = new TextField<String>("fieldLabel", fieldLabelModel);
 		fieldLabelTField.add(ConditionalBehavior.visibleIf(areEqual(number, Number.Singular)));
 		TextField<String> cardinalityTField = new TextField<String>("cardinality", cardinalityModel);
 		DropDownChoice<Datatype> datatypeDDC = new DropDownChoice<Datatype>("datatype", dataTypeModel,
 				 Arrays.asList(Datatype.values()), new EnumChoiceRenderer<Datatype>(form));
 		ConstraintsEditorPanel	constraintsDPicker = new ConstraintsEditorPanel("constraints", constraintsModel);
-		form.add(picker, fieldLabelTField, cardinalityTField, datatypeDDC, constraintsDPicker);
+		form.add(new CheckBox("cardinalityCheckBox", cardinalityBol));
+		form.add(new CheckBox("constraintsCheckBox", constraintsBol));
+		form.add(new CheckBox("datatypeCheckBox", datatypeBol));
+		form.add(propertyDescriptorField, fieldLabelTField, cardinalityTField, datatypeDDC, constraintsDPicker);
+	}
+
+	private String concatDescriptorLabels(IModel<List<PropertyRow>> decls) {
+		StringBuilder sb = new StringBuilder();
+		for (PropertyRow pdec : decls.getObject()) {
+			sb.append(pdec.getDefaultLabel() + ", ");
+		}
+		sb.delete(sb.length()-2, sb.length());
+		return sb.toString();
 	}
 
 	// ------------------------------------------------------

@@ -50,8 +50,8 @@ public class PropertyRow implements Serializable {
 	 */
 	public static List<PropertyRow> toRowList(final ResourceSchema schema) {
 		final List<PropertyRow> list = new ArrayList<PropertyRow>();
-		for (PropertyDeclaration pa : schema.getPropertyDeclarations()) {
-			list.add(new PropertyRow(pa));
+		for (PropertyDeclaration pd : schema.getPropertyDeclarations()) {
+			list.add(new PropertyRow(pd));
 		}
 		return list;
 	}

@@ -73,12 +73,6 @@ public class RSFTreeTest {
 	@Test
 	public void testRSFTree() throws RecognitionException {
 		List<ResourceSchemaImpl> list = extractSchemas(decl);
-		if(list.size()>0){
-			System.out.println(list.toString());
-			System.out.println(" ----------------------------");
-		}else{
-			System.out.println("SIZE : " + list.size() + list.toString());
-		}
 		assertTrue((2 == list.size() ));
 		ResourceSchema city = list.get(0);
 		assertTrue(new SimpleResourceID(namespace, "City").equals(city.getDescribedType()));
