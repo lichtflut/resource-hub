@@ -281,7 +281,7 @@ public class SchemaDetailPanel extends Panel{
 					public void onSubmit(AjaxRequestTarget target) {
 						saveSchema();
 						updatePanel();
-					};
+					}; 
 				});
 				return picker;
 			}
@@ -290,7 +290,6 @@ public class SchemaDetailPanel extends Panel{
 			protected void onSubmit(final AjaxRequestTarget target){
 				saveSchema();
 				updatePanel();
-
 				super.onSubmit(target);
 			}
 		};

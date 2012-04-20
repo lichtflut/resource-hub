@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.services.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -33,7 +34,6 @@ import org.arastreju.sge.security.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import scala.actors.threadpool.Arrays;
 import de.lichtflut.infra.Infra;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RB;
@@ -136,7 +136,6 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	/** 
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void storeUser(RBUser updated) throws RBException {
 		final RBUser existing = new RBUser(mc().findResource(updated.getQualifiedName()));
