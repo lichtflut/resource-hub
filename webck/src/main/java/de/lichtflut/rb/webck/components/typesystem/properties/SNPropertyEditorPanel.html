@@ -9,54 +9,57 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
-
-	<h4>
-		<span wicket:id="propertyUri">[URI]</span>
-		<wicket:enclosure>
-			(default label: <span wicket:id="propertyLabel">[Label]</span>)
-		</wicket:enclosure>
-	</h4>
-	
-	<wicket:enclosure child="inverseProps">
-		<div>
-			<wicket:message key="label.super-properties">[superProps]</wicket:message>
-			<ul wicket:id="superProps">
-				<li wicket:id="property"></li>
-			</ul>
-		</div>
-	</wicket:enclosure>
-	
-	<wicket:enclosure child="inverseProps">
-		<div>
-			<wicket:message key="label.inverse-properties">[inverseProps]</wicket:message>
-			<ul wicket:id="inverseProps">
-				<li wicket:id="property"></li>
-			</ul>
-		</div>
-	</wicket:enclosure>
-	
-	<div class="input-panel">
-		<form wicket:id="form">
-			<div wicket:id="feedback"></div>
-
-			<div class="form-field">
-				<label wicket:for="name"><wicket:message key="label.name">[name]</wicket:message></label>
-				<input type="text" wicket:id="name" />
-			</div>
-			<div class="button-bar">
-				<button wicket:id="delete">
-					<wicket:message key="button.delete">[delete]</wicket:message>
-				</button>
-				<button wicket:id="cancel">
-					<wicket:message key="button.cancel">[cancel]</wicket:message>
-				</button>
-				<button wicket:id="save" class="default-button">
-					<wicket:message key="button.save">[save]</wicket:message>
-				</button>
-			</div>
-
-		</form>
+<div class="input-panel">
+	<div style="margin-top: 10px; margin-bottom: 10px">
+		<h2>
+			<span wicket:id="propertyUri">[URI]</span>
+			<wicket:enclosure>
+				(default label: <span wicket:id="propertyLabel">[Label]</span>)
+			</wicket:enclosure>
+		</h2>
 	</div>
-
+	<div class="table">
+		<wicket:enclosure child="inverseProps">
+			<div>
+				<wicket:message key="label.super-properties">[superProps]</wicket:message>
+				<ul wicket:id="superProps">
+					<li wicket:id="property"></li>
+				</ul>
+			</div>
+		</wicket:enclosure>
+		
+		<wicket:enclosure child="inverseProps">
+			<div>
+				<wicket:message key="label.inverse-properties">[inverseProps]</wicket:message>
+				<ul wicket:id="inverseProps">
+					<li wicket:id="property"></li>
+				</ul>
+			</div>
+		</wicket:enclosure>
+		
+		<div class="">
+			<form wicket:id="form">
+				<div wicket:id="feedback"></div>
+	
+				<div class="row">
+					<div><label wicket:for="name"><wicket:message key="label.name">[name]</wicket:message></label></div>
+					<div class="cell"><input type="text" wicket:id="name" /></div>
+				</div>
+				<div class="button-bar">
+					<button wicket:id="delete">
+						<wicket:message key="button.delete">[delete]</wicket:message>
+					</button>
+					<button wicket:id="cancel">
+						<wicket:message key="button.cancel">[cancel]</wicket:message>
+					</button>
+					<button wicket:id="save" class="default-button">
+						<wicket:message key="button.save">[save]</wicket:message>
+					</button>
+				</div>
+	
+			</form>
+		</div>
+	</div>
+</div>
 </wicket:panel>
 </html>

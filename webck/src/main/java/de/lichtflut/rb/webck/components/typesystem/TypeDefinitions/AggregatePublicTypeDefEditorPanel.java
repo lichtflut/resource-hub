@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.typesystem.TypeDefinitions;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -15,8 +16,6 @@ import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
-import de.lichtflut.rb.webck.components.typesystem.TypeDefBrowserPanel;
-import de.lichtflut.rb.webck.components.typesystem.TypeDefEditorPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeSystemHelpPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.types.PublicTypeDefListModel;
@@ -41,6 +40,7 @@ public class AggregatePublicTypeDefEditorPanel extends Panel {
 	public AggregatePublicTypeDefEditorPanel(String id) {
 		super(id);
 		add(new TypeSystemHelpPanel("editor").setOutputMarkupId(true));
+		add(new Label("searchbox", Model.of("Search...")));
 		add(new TypeDefBrowserPanel("publicTypeDefBrowser", new PublicTypeDefListModel()) {
 			@Override
 			public void onCreateTypeDef(AjaxRequestTarget target) {

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.typesystem;
+package de.lichtflut.rb.webck.components.typesystem.TypeDefinitions;
 
 import java.util.Arrays;
 
@@ -16,6 +16,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.webck.components.typesystem.ConstraintsEditorPanel;
+import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 
 /**
  * 

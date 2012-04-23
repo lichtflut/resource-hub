@@ -9,31 +9,27 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
-
+<div class="input-panel">
 	<form wicket:id="form">
 
-		<table>
-			<thead>
-				<tr>
-					<th>
+		<div class="table">
+				<div class="row">
+					<div class="cell">
 					   <wicket:message key="header.display-name"></wicket:message>
-					</th>
-					<th>
+					</div>
+					<div class="cell">
 					   <wicket:message key="header.datatype"></wicket:message>
-                    </th>
-                    <th>
+                    </div>
+                    <div class="cell">
                         <wicket:message key="header.constraints"></wicket:message>
-                    </th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td><input wicket:id="name" size="60"/></td>
-					<td><select wicket:id="dataType" ></select></td>
-					<td><div wicket:id="constraints"></div></td>
-				</tr>
-			</tbody>
-		</table>
+                    </div>
+				</div>
+				<div class="row">
+					<div class="cell"><input wicket:id="name" size="60"/></div>
+					<div class="cell"><select wicket:id="dataType" ></select></div>
+					<div class="cell"><div wicket:id="constraints"></div></div>
+				</div>
+		</div>
 		<div>
 			  <button wicket:id="save">
 			      <wicket:message key="button.save">[save]</wicket:message>
@@ -41,6 +37,6 @@
 		</div>
     
 	</form>
-
+</div>
 </wicket:panel>
 </html>
