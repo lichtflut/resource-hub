@@ -21,7 +21,7 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.components.typesystem.SchemaDetailPanel;
+import de.lichtflut.rb.webck.components.typesystem.schema.SchemaDetailPanel;
 
 /**
  * <p>

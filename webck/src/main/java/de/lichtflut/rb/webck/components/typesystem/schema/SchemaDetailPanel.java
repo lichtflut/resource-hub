@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.typesystem;
+package de.lichtflut.rb.webck.components.typesystem.schema;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +45,7 @@ import de.lichtflut.rb.webck.components.fields.AjaxEditablePanelLabel;
 import de.lichtflut.rb.webck.components.fields.AjaxUpdateDataPickerField;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
 
 /**
