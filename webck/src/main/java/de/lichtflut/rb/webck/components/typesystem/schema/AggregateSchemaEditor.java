@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.components.typesystem.schema;
 
@@ -40,21 +40,12 @@ public class AggregateSchemaEditor extends Panel {
 	 */
 	public AggregateSchemaEditor(String id) {
 		super(id);
-		createTitle();
 		createTypesPanel();
 		add(new TypeSystemHelpPanel("schemaDetails").setOutputMarkupId(true));
 
 	}
 
 	// ------------------------------------------------------
-
-	/**
-	 * Adds the pagetitle
-	 */
-	private void createTitle() {
-		Label label = new Label("pageTitle", Model.of("Type System"));
-		this.add(label);
-	}
 
 	/**
 	 * display all RDF:TYPES that exist.
