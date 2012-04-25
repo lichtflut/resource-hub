@@ -90,7 +90,7 @@ public class GeoNamesProvider {
 			SNOPS.associate(country, RDF.TYPE, RBSystem.ENTITY);
 			SNOPS.assure(country, RB.HAS_ISO_ALPHA2_CODE, new SNText(record.getIso2()));
 			SNOPS.assure(country, RB.HAS_ISO_ALPHA3_CODE, new SNText(record.getIso3()));
-			SNOPS.assure(country, RB.HAS_CONTINENT, getContinent(record));
+			SNOPS.assure(country, RB.IS_IN_CONTINENT, getContinent(record));
 			SNOPS.assure(country, RB.HAS_POPULATION_SIZE, new SNScalar(record.getPopulation()));
 			addAlternateNames(record, country);
 			logger.info("created country: " + country);
@@ -120,7 +120,7 @@ public class GeoNamesProvider {
 				
 				ResourceNode country = findCountryByIsoCode(record.getCountryCode());
 				if (country != null){
-					city.addAssociation(RB.HAS_COUNTRY, country);
+					city.addAssociation(RB.IS_IN_COUNTRY, country);
 				}
 				addAlternateNames(record, city);
 				graph.addStatements(city.getAssociations());

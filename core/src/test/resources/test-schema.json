@@ -18,7 +18,7 @@
 }{
   "resource-schemas" : [ {
     "for-type" : "common:City",
-	"label-rule" : "common:hasName <(> common:hasCountry <)>",
+	"label-rule" : "common:hasName <(> common:isInCountry <)>",
     "property-declaration" : {
       "property-type" : "common:hasName",
       "min" : 1,
@@ -31,7 +31,7 @@
       }
     },
     "property-declaration" : {
-      "property-type" : "common:hasCountry",
+      "property-type" : "common:isInCountry",
       "min" : 1,
       "field-label" : {
         "default" : "Country"

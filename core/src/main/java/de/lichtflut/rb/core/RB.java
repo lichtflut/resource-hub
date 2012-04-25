@@ -195,17 +195,17 @@ public interface RB {
 	/**
 	 * The city.
 	 */
-	ResourceID HAS_CITY = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasCity");
+	ResourceID IS_IN_CITY = new SimpleResourceID(COMMON_NAMESPACE_URI, "isInCity");
 	
 	/**
 	 * The country.
 	 */
-	ResourceID HAS_COUNTRY = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasCountry");
+	ResourceID IS_IN_COUNTRY = new SimpleResourceID(COMMON_NAMESPACE_URI, "isInCountry");
 	
 	/**
 	 * The country.
 	 */
-	ResourceID HAS_CONTINENT = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasContinent");
+	ResourceID IS_IN_CONTINENT = new SimpleResourceID(COMMON_NAMESPACE_URI, "isInContinent");
 	
 	/**
 	 * The owner.

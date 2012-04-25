@@ -223,11 +223,11 @@ public class VCardExportDialog extends AbstractRBDialog implements IResourceList
 				street = nsString(adrResource, RB.HAS_STREET) +" "
 						+nsString(adrResource, RB.HAS_HOUSE_NO);
 				zipcode = nsString(adrResource, RB.HAS_ZIPCODE);
-				SemanticNode cityNode = SNOPS.fetchObject(adrResource, RB.HAS_CITY);
+				SemanticNode cityNode = SNOPS.fetchObject(adrResource, RB.IS_IN_CITY);
 				if(cityNode != null && cityNode.isResourceNode()) {
 					ResourceNode cityResource = cityNode.asResource();
 					city = nsString(cityResource, RB.HAS_NAME);
-					SemanticNode countryNode = SNOPS.fetchObject(cityResource, RB.HAS_COUNTRY);
+					SemanticNode countryNode = SNOPS.fetchObject(cityResource, RB.IS_IN_COUNTRY);
 					if(countryNode != null && countryNode.isResourceNode()) {
 						ResourceNode countryResource = countryNode.asResource();
 						country = nsString(countryResource, RB.HAS_NAME);
@@ -299,11 +299,11 @@ public class VCardExportDialog extends AbstractRBDialog implements IResourceList
 				street = nsString(adrResource, RB.HAS_STREET) +" "
 						+nsString(adrResource, RB.HAS_HOUSE_NO);
 				zipcode = nsString(adrResource, RB.HAS_ZIPCODE);
-				SemanticNode cityNode = SNOPS.fetchObject(adrResource, RB.HAS_CITY);
+				SemanticNode cityNode = SNOPS.fetchObject(adrResource, RB.IS_IN_CITY);
 				if(cityNode != null && cityNode.isResourceNode()) {
 					ResourceNode cityResource = cityNode.asResource();
 					city = nsString(cityResource, RB.HAS_NAME);
-					SemanticNode countryNode = SNOPS.fetchObject(cityResource, RB.HAS_COUNTRY);
+					SemanticNode countryNode = SNOPS.fetchObject(cityResource, RB.IS_IN_COUNTRY);
 					if(countryNode != null && countryNode.isResourceNode()) {
 						ResourceNode countryResource = countryNode.asResource();
 						country = nsString(countryResource, RB.HAS_NAME);

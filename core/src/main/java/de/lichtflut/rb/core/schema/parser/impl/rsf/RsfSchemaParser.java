@@ -14,10 +14,12 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
+import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
+import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Schema Parser for RSF files.
  * </p>
  *
  * <p>
@@ -46,10 +48,10 @@ public class RsfSchemaParser implements ResourceSchemaParser{
 			CommonTreeNodeStream nodes = new CommonTreeNodeStream(r.getTree());
 			nodes.setTokenStream(tokens);
 			RSFTree walker = new RSFTree(nodes);
+			walker.setErrorReporter(new RSParsingResultErrorReporter(new RSParsingResultImpl()));
 			result.getSchemas().addAll(walker.statements());
 		} catch (RecognitionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		return result;
 	}
