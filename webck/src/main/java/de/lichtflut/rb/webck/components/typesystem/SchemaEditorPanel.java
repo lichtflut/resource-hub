@@ -104,8 +104,7 @@ public class SchemaEditorPanel extends Panel {
 				final ResourceSchemaImpl schema = new ResourceSchemaImpl(original.getDescribedType());
 				schema.setLabelBuilder(original.getLabelBuilder());
 				for (PropertyRow row: rowModel.getObject()) {
-					final PropertyDeclaration decl = PropertyRow.toPropertyDeclaration(row);
-					schema.addPropertyDeclaration(decl);	
+					schema.addPropertyDeclaration(row.asPropertyDeclaration());	
 				}
 				provider.getSchemaManager().store(schema);
 				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
@@ -176,7 +175,7 @@ public class SchemaEditorPanel extends Panel {
 						Arrays.asList(Datatype.values()), new EnumChoiceRenderer<Datatype>(this)) ;
 				
 				dataTypeChoice.setEnabled(isPrivateTD);
-				dataTypeChoice.add(new AjaxFormComponentUpdatingBehavior("onclick") {
+				dataTypeChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
 					@Override
 					protected void onUpdate(AjaxRequestTarget target) {
 						target.add(constraintsEditor);
