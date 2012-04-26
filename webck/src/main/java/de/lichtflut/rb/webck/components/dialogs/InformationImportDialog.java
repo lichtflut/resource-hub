@@ -23,6 +23,8 @@ import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.persistence.TransactionControl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.io.ReportingStatementImporter;
@@ -42,6 +44,8 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
  */
 public class InformationImportDialog extends AbstractRBDialog {
 
+	private static Logger logger = LoggerFactory.getLogger(InformationImportDialog.class);
+	
 	@SpringBean
 	private ServiceProvider provider;
 	
@@ -103,10 +107,12 @@ public class InformationImportDialog extends AbstractRBDialog {
 				tx.success();
 				report.success();
 			} catch (IOException e) {
+				logger.error("Import failed.", e);
 				report.setAdditionalInfo("[" +upload.getClientFileName() +"] " +e.getMessage());
 				report.error();
 				tx.fail();
 			} catch (SemanticIOException e) {
+				logger.error("Import failed.", e);
 				report.setAdditionalInfo("[" +upload.getClientFileName() +"] " +e.getMessage());
 				report.error();
 				tx.fail();
