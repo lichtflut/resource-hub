@@ -56,11 +56,6 @@ public class PropertyRow implements Serializable {
 		return list;
 	}
 	
-	@Deprecated
-	public static PropertyDeclaration toPropertyDeclaration(final PropertyRow row) {
-		return row.asPropertyDeclaration();
-	}
-	
 	/**
 	 * Converts the given row to a new TypeDefinition.
 	 * @param row The row object to be converted.
@@ -166,9 +161,7 @@ public class PropertyRow implements Serializable {
 	 */
 	public void setResourceConstraint(ResourceID resourceConstraint) {
 		final Set<Constraint> constraints = new HashSet<Constraint>();
-		if (isResourceReference() && getResourceConstraint() != null) {
-			constraints.add(ConstraintBuilder.buildConstraint(resourceConstraint));
-		}
+		constraints.add(ConstraintBuilder.buildConstraint(resourceConstraint));
 		decl.getTypeDefinition().setConstraints(constraints);
 	}
 
@@ -274,6 +267,15 @@ public class PropertyRow implements Serializable {
 	 */
 	public boolean isUnbounded() {
 		return decl.getCardinality().isUnbound();
+	}
+	
+	public void setUnbounded(boolean unbounded) {
+		int min = decl.getCardinality().getMinOccurs();
+		if (unbounded) {
+			decl.setCardinality(CardinalityBuilder.hasAtLeast(min));
+		} else {
+			decl.setCardinality(CardinalityBuilder.between(min, Math.max(min, 1)));
+		}
 	}
 	
 	public TypeDefinition getTypeDefinition(){
