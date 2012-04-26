@@ -259,6 +259,9 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 */
 	protected void removeSchema(final ModelingConversation mc, final SNResourceSchema schemaNode) {
 		for(SNPropertyDeclaration decl : schemaNode.getPropertyDeclarations()) {
+			if (!decl.getTypeDefinition().isPublic()) {
+				mc.remove(decl.getTypeDefinition());
+			}
 			mc.remove(decl);
 		}
 		mc.remove(schemaNode);
