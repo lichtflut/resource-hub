@@ -47,7 +47,7 @@ public class RSFTreeTest {
 							"namespace \"http://rb.lichtflut.de/common2#\" prefix \"common2\"" +
 							"" +
 							"schema for \"common:City\" { " +
-									"label-rule : \"common:hasName common:hasCountry\"" +
+									"label-rule : \"common:hasName <,> common:hasCountry\"" +
 									"" +
 										"property \"common:hasMayor\" [1000..xs] {" +
 											"field-label : \"Mayor\"" +
@@ -76,8 +76,9 @@ public class RSFTreeTest {
 		assertTrue((2 == list.size() ));
 		ResourceSchema city = list.get(0);
 		assertTrue(new SimpleResourceID(namespace, "City").equals(city.getDescribedType()));
-		assertTrue("http://rb.lichtflut.de/common#hasName http://rb.lichtflut.de/common#hasCountry".equals(city.getLabelBuilder().getExpression()));
+		assertTrue("http://rb.lichtflut.de/common#hasName <,> http://rb.lichtflut.de/common#hasCountry".equals(city.getLabelBuilder().getExpression()));
 		assertTrue(2 == city.getPropertyDeclarations().size());
+		System.out.println(city.getLabelBuilder().getExpression());
 		PropertyDeclaration pdec = city.getPropertyDeclarations().get(0);
 		assertEquals(new SimpleResourceID("http://rb.lichtflut.de/common#hasMayor"), pdec.getPropertyDescriptor());
 		assertEquals(1000, pdec.getCardinality().getMinOccurs());
