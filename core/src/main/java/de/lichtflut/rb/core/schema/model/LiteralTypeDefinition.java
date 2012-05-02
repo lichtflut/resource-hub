@@ -86,18 +86,18 @@ public class LiteralTypeDefinition implements TypeDefinition {
 
 	/**
 	 * @return
-	 * @see de.lichtflut.rb.core.schema.model.TypeDefinition#getElementaryDataType()
+	 * @see de.lichtflut.rb.core.schema.model.TypeDefinition#getDataType()
 	 */
-	public Datatype getElementaryDataType() {
-		return def.getElementaryDataType();
+	public Datatype getDataType() {
+		return def.getDataType();
 	}
 
 	/**
 	 * @param type
-	 * @see de.lichtflut.rb.core.schema.model.TypeDefinition#setElementaryDataType(org.arastreju.sge.model.ElementaryDataType)
+	 * @see de.lichtflut.rb.core.schema.model.TypeDefinition#setDataType(org.arastreju.sge.model.ElementaryDataType)
 	 */
-	public void setElementaryDataType(Datatype type) {
-		def.setElementaryDataType(type);
+	public void setDataType(Datatype type) {
+		def.setDataType(type);
 	}
 
 	/**

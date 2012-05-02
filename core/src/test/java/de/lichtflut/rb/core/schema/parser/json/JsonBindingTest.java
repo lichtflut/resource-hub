@@ -106,27 +106,27 @@ public class JsonBindingTest {
 		personSchema.setDescribedType(new SimpleResourceID(NAMESPACE_URI, "Person"));
 			
 		TypeDefinitionImpl typeDef1 = new TypeDefinitionImpl();
-		typeDef1.setElementaryDataType(Datatype.STRING);
+		typeDef1.setDataType(Datatype.STRING);
 		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(HAS_FORENAME, typeDef1);
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		personSchema.addPropertyDeclaration(pa1);
 
 		TypeDefinitionImpl typeDef2 = new TypeDefinitionImpl();
-		typeDef2.setElementaryDataType(Datatype.STRING);
+		typeDef2.setDataType(Datatype.STRING);
 		PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(HAS_SURNAME, typeDef2);
 		pa3.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 		personSchema.addPropertyDeclaration(pa3);
 
 		TypeDefinitionImpl typeDef3 = new TypeDefinitionImpl();
-		typeDef3.setElementaryDataType(Datatype.RESOURCE);
-		typeDef3.addConstraint(ConstraintBuilder.buildConstraint(new SimpleResourceID(NAMESPACE_URI, "Adress")));
+		typeDef3.setDataType(Datatype.RESOURCE);
+		typeDef3.addConstraint(ConstraintBuilder.buildResourceConstraint(new SimpleResourceID(NAMESPACE_URI, "Adress")));
 		PropertyDeclarationImpl pa8 = new PropertyDeclarationImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasAddress"), typeDef3);
 		pa8.setCardinality(CardinalityBuilder.hasAtLeastOneToMany());
 		personSchema.addPropertyDeclaration(pa8);
 
 		TypeDefinitionImpl typeDef4 = new TypeDefinitionImpl();
-		typeDef4.setElementaryDataType(Datatype.DATE);
+		typeDef4.setDataType(Datatype.DATE);
 		PropertyDeclarationImpl pa4 = new PropertyDeclarationImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasDateOfBirth"),
 				typeDef4);
@@ -139,8 +139,8 @@ public class JsonBindingTest {
 		personSchema.addPropertyDeclaration(pa5);
 		
 		TypeDefinitionImpl typeDef6 = new TypeDefinitionImpl();
-		typeDef6.setElementaryDataType(Datatype.RESOURCE);
-		typeDef6.addConstraint(ConstraintBuilder.buildConstraint(personSchema.getDescribedType()));	
+		typeDef6.setDataType(Datatype.RESOURCE);
+		typeDef6.addConstraint(ConstraintBuilder.buildResourceConstraint(personSchema.getDescribedType()));	
 		PropertyDeclarationImpl pa7 = new PropertyDeclarationImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasChildren"), typeDef6);
 		pa7.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
@@ -156,8 +156,8 @@ public class JsonBindingTest {
 		final ResourceID id = new SimpleResourceID(NAMESPACE_URI, "EmailAdressTypeDef");
 		final TypeDefinitionImpl typeDef = new TypeDefinitionImpl(id, true);
 		typeDef.setName("Email-Address");
-		typeDef.setElementaryDataType(Datatype.STRING);
-		typeDef.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
+		typeDef.setDataType(Datatype.STRING);
+		typeDef.addConstraint(ConstraintBuilder.buildLiteralConstraint(".*@.*"));
 		return typeDef;
 	}
 	

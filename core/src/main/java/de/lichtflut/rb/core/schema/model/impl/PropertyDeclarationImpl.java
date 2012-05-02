@@ -13,6 +13,7 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
@@ -39,13 +40,15 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 
 	private ResourceID propertyDescriptor;
 	
-	private TypeDefinition typeDefinition;
+	private Datatype datatype;
 	
 	private FieldLabelDefinition labelDefinition;
 	
 	private Cardinality cardinality = CardinalityBuilder.hasOptionalOneToMany();
 	
 	private Set<Constraint> constraints = new HashSet<Constraint>();
+
+	private Constraint constraint;
 	
 	// -----------------------------------------------------
 	
@@ -57,12 +60,28 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	
 	/**
 	 * Constructor.
+	 * Besides the given values, the PropertyDeclaration's default values for Cardinality will be <code>[n..n]</code>
+	 * and the PropertyDescriptor will be used as a default label.
 	 * @param propertyDescriptor -
 	 * @param typeDefinition -
 	 */
+	@Deprecated
 	public PropertyDeclarationImpl(final ResourceID propertyDescriptor,	final TypeDefinition typeDefinition) {
+		this(propertyDescriptor, typeDefinition.getDataType(), null);
+	}
+	
+	/**
+	 * Constructor.
+	 * Besides the given values, the PropertyDeclaration's default values for Cardinality will be <code>[n..n]</code>
+	 * and the PropertyDescriptor will be used as a default label.
+	 * @param propertyDescriptor
+	 * @param typeDefinition
+	 * @param constraint
+	 */
+	public PropertyDeclarationImpl(ResourceID propertyDescriptor, Datatype dataType, Constraint constraint) {
 		this.propertyDescriptor = propertyDescriptor;
-		this.typeDefinition = typeDefinition;
+		this.datatype = dataType;
+		this.constraint = constraint;
 		this.cardinality = CardinalityBuilder.hasOptionalOneToMany();
 		this.labelDefinition = new FieldLabelDefinitionImpl(propertyDescriptor);
 	}
@@ -93,7 +112,9 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	 */
 	@Override
 	public TypeDefinition getTypeDefinition() {
-		return typeDefinition;
+		TypeDefinition typeDef = new TypeDefinitionImpl();
+		typeDef.setDataType(datatype);
+		return typeDef;
 	}
 	
 	/** 
@@ -101,7 +122,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	 */
 	@Override
 	public void setTypeDefinition(final TypeDefinition def) {
-		this.typeDefinition = def;
+		this.datatype = def.getDataType();
 	}
 
 	// -----------------------------------------------------
@@ -128,11 +149,8 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<Constraint> getConstraints() {
-		Set<Constraint> output = new HashSet<Constraint>();
-		output.addAll(getTypeDefinition().getConstraints());
-		output.addAll(this.constraints);
-		return output;
+	public Constraint getConstraint() {
+		return constraint;
 	}
 	
 	/**
@@ -162,7 +180,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 		sb.append("PropertyDeclaration for " + ((propertyDescriptor!=null)
 					? propertyDescriptor.getQualifiedName().toURI() : ""));
 		sb.append(" " + cardinality.toString());
-		sb.append(", " + typeDefinition);
+		sb.append(", " + datatype);
 		if(null!=constraints){
 			Iterator<Constraint> i = constraints.iterator();
 			while(i.hasNext()){

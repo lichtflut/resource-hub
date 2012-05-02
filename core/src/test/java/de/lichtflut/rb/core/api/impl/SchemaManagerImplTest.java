@@ -102,11 +102,11 @@ public class SchemaManagerImplTest {
 		p2.setName("http://lichtflut.de#email");
 		p3.setName("http://lichtflut.de#alter");
 
-		p1.setElementaryDataType(Datatype.DATE);
-		p2.setElementaryDataType(Datatype.STRING);
-		p3.setElementaryDataType(Datatype.INTEGER);
+		p1.setDataType(Datatype.DATE);
+		p2.setDataType(Datatype.STRING);
+		p3.setDataType(Datatype.INTEGER);
 
-		p2.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
+		p2.addConstraint(ConstraintBuilder.buildLiteralConstraint(".*@.*"));
 		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
 		PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
 		PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);

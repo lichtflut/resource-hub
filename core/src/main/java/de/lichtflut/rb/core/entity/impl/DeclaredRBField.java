@@ -57,7 +57,7 @@ public class DeclaredRBField extends AbstractRBField {
 	
 	@Override
 	public Datatype getDataType() {
-		return declaration.getTypeDefinition().getElementaryDataType();
+		return declaration.getTypeDefinition().getDataType();
 	}
 
 	@Override

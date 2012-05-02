@@ -105,7 +105,7 @@ public class Schema2GraphBinding {
 			return null;
 		}
 		final TypeDefinitionImpl typeDef = new TypeDefinitionImpl(SNOPS.id(snTypeDef), snTypeDef.isPublic());
-		typeDef.setElementaryDataType(snTypeDef.getDatatype());
+		typeDef.setDataType(snTypeDef.getDatatype());
 		typeDef.setName(snTypeDef.getDisplayName());
 		typeDef.setConstraints(buildConstraints(snTypeDef.getConstraints()));
 		return typeDef;
@@ -173,7 +173,7 @@ public class Schema2GraphBinding {
 	protected SNPropertyTypeDefinition createSemanticNode(final TypeDefinition typeDef) {
 		final SNResource node = new SNResource(typeDef.getID().getQualifiedName());
 		final SNPropertyTypeDefinition sn = new SNPropertyTypeDefinition(node);
-		sn.setDatatype(typeDef.getElementaryDataType(), RBSchema.CONTEXT);
+		sn.setDatatype(typeDef.getDataType(), RBSchema.CONTEXT);
 		sn.setDisplayName(typeDef.getName(), RBSchema.CONTEXT);
 		if (typeDef.isPublicTypeDef()) {
 			sn.setPublic(RBSchema.CONTEXT);
@@ -216,12 +216,12 @@ public class Schema2GraphBinding {
 	protected Constraint toModelConstraint(final SNConstraint snConst) {
 		if (snConst.isLiteralConstraint()){
 			final String value = snConst.getConstraintValue().asValue().getStringValue();
-			return ConstraintBuilder.buildConstraint(value);
+			return ConstraintBuilder.buildLiteralConstraint(value);
 		} else if (snConst.isTypeConstraint()) {
 			SemanticNode node = snConst.getConstraintValue();
 			if (node != null) {
 				final ResourceID type = snConst.getConstraintValue().asResource();
-				return ConstraintBuilder.buildConstraint(type);
+				return ConstraintBuilder.buildResourceConstraint(type);
 			} else {
 				return null;
 			}

@@ -106,18 +106,18 @@ public class TypeDefinitionReference implements TypeDefinition {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Datatype getElementaryDataType() {
+	public Datatype getDataType() {
 		assertResolved();
-		return delegate.getElementaryDataType();
+		return delegate.getDataType();
 	}
 
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setElementaryDataType(final Datatype type) {
+	public void setDataType(final Datatype type) {
 		assertResolved();
-		delegate.setElementaryDataType(type);
+		delegate.setDataType(type);
 	}
 
 	/** 

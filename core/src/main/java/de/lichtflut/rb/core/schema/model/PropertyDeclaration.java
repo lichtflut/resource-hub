@@ -4,7 +4,6 @@
 package de.lichtflut.rb.core.schema.model;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 
@@ -83,12 +82,8 @@ public interface PropertyDeclaration extends Serializable {
 
 	/**
 	 * The constraints for this property assertion.
-	 * There are to levels where constraints can be defined. Either for the property (First lvl)
-	 * or directly for the assertion (Second lvl) . The set of constraints returned by
-	 * this method contains them all.
 	 * @return Set the constraints.
 	 */
-	@Deprecated
-	Set<Constraint> getConstraints();
+	Constraint getConstraint();
 	
 }

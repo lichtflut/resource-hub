@@ -134,7 +134,7 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 			g.writeStringField(ID, uri(def.getID()));
 			g.writeStringField(NAME, def.getName());
 		}
-		g.writeStringField(DATATYPE, def.getElementaryDataType().name().toLowerCase());
+		g.writeStringField(DATATYPE, def.getDataType().name().toLowerCase());
 		if (!def.getConstraints().isEmpty()) {
 			writeConstraints(g, def.getConstraints());	
 		}
@@ -142,7 +142,7 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	
 	private void writeImplicitTypeDef(final JsonGenerator g, final TypeDefinition def) throws JsonGenerationException, IOException {
 		g.writeObjectFieldStart(TYPE_DEFINITION);
-		g.writeStringField(DATATYPE, def.getElementaryDataType().name().toLowerCase());
+		g.writeStringField(DATATYPE, def.getDataType().name().toLowerCase());
 		if (!def.getConstraints().isEmpty()) {
 			writeConstraints(g, def.getConstraints());	
 		}
@@ -164,7 +164,7 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 		g.writeObjectFieldStart(CONSTRAINTS);
 		for (Constraint constraint : constraints) {
 			if (constraint.isLiteralConstraint()) {
-				g.writeStringField(LITERAL, constraint.getLiteralConstraint());
+				g.writeStringField(LITERAL, constraint.getLiteralConstraint().toString());
 			} else {
 				g.writeStringField(RESOURCE_TYPE, uri(constraint.getResourceTypeConstraint()));
 			}

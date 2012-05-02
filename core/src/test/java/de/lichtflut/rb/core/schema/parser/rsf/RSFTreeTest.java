@@ -85,7 +85,7 @@ public class RSFTreeTest {
 		assertEquals(Integer.MAX_VALUE, pdec.getCardinality().getMaxOccurs());
 		assertEquals("Mayor", pdec.getFieldLabelDefinition().getDefaultLabel());
 		assertEquals("Buergermeister", pdec.getFieldLabelDefinition().getLabel(Locale.GERMAN));
-		assertEquals(Datatype.DATE, pdec.getTypeDefinition().getElementaryDataType());
+		assertEquals(Datatype.DATE, pdec.getTypeDefinition().getDataType());
 	}
 
 	/**

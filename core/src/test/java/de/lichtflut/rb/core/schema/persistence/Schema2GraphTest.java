@@ -51,8 +51,8 @@ public class Schema2GraphTest {
 	public void testToModelConstraint(){
 		
 		TypeDefinition td = new TypeDefinitionImpl();
-		td.setElementaryDataType(Datatype.STRING);
-		Constraint c = ConstraintBuilder.buildConstraint("*.A*");
+		td.setDataType(Datatype.STRING);
+		Constraint c = ConstraintBuilder.buildLiteralConstraint("*.A*");
 		td.addConstraint(c);
 		
 		Assert.assertNotNull(td);
@@ -83,8 +83,8 @@ public class Schema2GraphTest {
 	public void testBuildCardinalety(){
 		
 		TypeDefinition tDef = new TypeDefinitionImpl();
-		tDef.setElementaryDataType(Datatype.STRING);
-		tDef.addConstraint(ConstraintBuilder.buildConstraint("*@*"));
+		tDef.setDataType(Datatype.STRING);
+		tDef.addConstraint(ConstraintBuilder.buildLiteralConstraint("*@*"));
 		
 		
 	}
@@ -110,13 +110,13 @@ public class Schema2GraphTest {
         TypeDefinitionImpl p3 = new TypeDefinitionImpl();
         TypeDefinitionImpl p4 = new TypeDefinitionImpl();
 
-        p1.setElementaryDataType(Datatype.STRING);
-        p2.setElementaryDataType(Datatype.STRING);
-        p3.setElementaryDataType(Datatype.INTEGER);
-        p4.setElementaryDataType(Datatype.RESOURCE);
+        p1.setDataType(Datatype.STRING);
+        p2.setDataType(Datatype.STRING);
+        p3.setDataType(Datatype.INTEGER);
+        p4.setDataType(Datatype.RESOURCE);
 
-        p2.addConstraint(ConstraintBuilder.buildConstraint(".*@.*"));
-        p4.addConstraint(ConstraintBuilder.buildConstraint(schema
+        p2.addConstraint(ConstraintBuilder.buildLiteralConstraint(".*@.*"));
+        p4.addConstraint(ConstraintBuilder.buildResourceConstraint(schema
                 .getDescribedType()));
 
         PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(

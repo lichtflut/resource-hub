@@ -90,7 +90,7 @@ public class PropertyRow implements Serializable {
 		this.decl = new PropertyDeclarationImpl();
 		decl.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 		TypeDefinition def = new TypeDefinitionImpl();
-		def.setElementaryDataType(Datatype.STRING);
+		def.setDataType(Datatype.STRING);
 		this.decl.setTypeDefinition(def);
 		this.decl.setFieldLabelDefinition(new FieldLabelDefinitionImpl());
 	}
@@ -134,15 +134,15 @@ public class PropertyRow implements Serializable {
 	 * @return the dataType
 	 */
 	public Datatype getDataType() {
-		return decl.getTypeDefinition().getElementaryDataType();
+		return decl.getTypeDefinition().getDataType();
 	}
 
 	/**
 	 * @param newDatatype the new data type to set
 	 */
 	public void setDataType(Datatype newDatatype) {
-		if (!Infra.equals(this.decl.getTypeDefinition().getElementaryDataType(), newDatatype)) {
-			decl.getTypeDefinition().setElementaryDataType(newDatatype);
+		if (!Infra.equals(this.decl.getTypeDefinition().getDataType(), newDatatype)) {
+			decl.getTypeDefinition().setDataType(newDatatype);
 		}
 	}
 
@@ -161,7 +161,7 @@ public class PropertyRow implements Serializable {
 	 */
 	public void setResourceConstraint(ResourceID resourceConstraint) {
 		final Set<Constraint> constraints = new HashSet<Constraint>();
-		constraints.add(ConstraintBuilder.buildConstraint(resourceConstraint));
+		constraints.add(ConstraintBuilder.buildResourceConstraint(resourceConstraint));
 		decl.getTypeDefinition().setConstraints(constraints);
 	}
 
@@ -231,7 +231,7 @@ public class PropertyRow implements Serializable {
 		List<String> constraints = new ArrayList<String>();
 		if(!decl.getTypeDefinition().isResourceReference()){
 			for (Constraint c : decl.getTypeDefinition().getConstraints()) {
-				constraints.add(c.getLiteralConstraint());
+				constraints.add(c.getLiteralConstraint().toString());
 			}
 		}
 		return constraints;
@@ -243,7 +243,7 @@ public class PropertyRow implements Serializable {
 	public void setLiteralConstraints(final List<String> literalConstraints) {
 		final Set<Constraint> constraints = new HashSet<Constraint>();
 		for (String constraint : getLiteralConstraints()) {
-			constraints.add(ConstraintBuilder.buildConstraint(constraint));
+			constraints.add(ConstraintBuilder.buildLiteralConstraint(constraint));
 		}
 		decl.getTypeDefinition().setConstraints(constraints);
 	}
@@ -259,7 +259,7 @@ public class PropertyRow implements Serializable {
 	 * @return the isResourceReference
 	 */
 	public boolean isResourceReference() {
-		return Datatype.RESOURCE.equals(decl.getTypeDefinition().getElementaryDataType());
+		return Datatype.RESOURCE.equals(decl.getTypeDefinition().getDataType());
 	}
 	
 	/**

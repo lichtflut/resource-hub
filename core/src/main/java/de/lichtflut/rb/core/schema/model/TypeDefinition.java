@@ -51,6 +51,7 @@ public interface TypeDefinition extends Serializable {
 	 * Useful if it is a public TypeDefinition.
 	 * @return The display name.
 	 */
+	@Deprecated
 	String getName();
 	
 	// -----------------------------------------------------
@@ -59,11 +60,13 @@ public interface TypeDefinition extends Serializable {
 	 * Check if this is a public/global or an private/implicit type definition.
 	 * return true if this is a public type.
 	 */
+	@Deprecated
 	boolean isPublicTypeDef();
 	
 	/**
 	 * @return boolean true if defined datatype is elementary. 
 	 */
+	@Deprecated
 	boolean isLiteralValue();
 
 	/**
@@ -78,13 +81,13 @@ public interface TypeDefinition extends Serializable {
 	 * Get the {@link Datatype}.
 	 * @return The elementary property.
 	 */
-	Datatype getElementaryDataType();
+	Datatype getDataType();
 
 	/**
 	 * Set the {@link Datatype}.
 	 * @param type -
 	 */
-	void setElementaryDataType(Datatype type);
+	void setDataType(Datatype type);
 
 	// -----------------------------------------------------
 
@@ -92,18 +95,21 @@ public interface TypeDefinition extends Serializable {
 	 * The context independent constraints for this property.
 	 * @return the constraints.
 	 */
+	@Deprecated
 	Set<Constraint> getConstraints();
 
 	/**
 	 * The context independent constraints for this property.
 	 * @param constraints the constraints you like to set
 	 */
+	@Deprecated
 	void setConstraints(Collection<Constraint> constraints);
 
 	/**
 	 * The context independent constraints for this property.
 	 * @param constraint the constraint you like to add
 	 */
+	@Deprecated
 	void addConstraint(Constraint constraint);
 
 	// -----------------------------------------------------

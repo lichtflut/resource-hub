@@ -107,10 +107,10 @@ public class EditPropertyDeclPanel extends Panel {
 	protected void updateDecls() {
 		List<Constraint> constraints = new ArrayList<Constraint>();
 		if(constraintsModel.getObject().isResourceReference()){
-			constraints.add(ConstraintBuilder.buildConstraint(constraintsModel.getObject().getResourceConstraint()));
+			constraints.add(ConstraintBuilder.buildResourceConstraint(constraintsModel.getObject().getResourceConstraint()));
 		}else{
 			for (String s : constraintsModel.getObject().getLiteralConstraints()) {
-				constraints.add(ConstraintBuilder.buildConstraint(s));
+				constraints.add(ConstraintBuilder.buildLiteralConstraint(s));
 			}
 		}
 		for (PropertyRow decl : decls.getObject()) {

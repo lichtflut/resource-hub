@@ -74,11 +74,11 @@ public class ConstraintBuilderTest extends TestCase{
 
 		//For the following calls, no exception should be raised
 		String a = null;
-		f.buildConstraint(a);
+		f.buildLiteralConstraint(a);
 		f.buildConstraint(new String[]{a});
 		f.buildConstraint(new String[]{});
 		ResourceID id = null;
-		f.buildConstraint(id);
+		f.buildResourceConstraint(id);
    }
 
   //-------------------------------//
@@ -93,14 +93,14 @@ public class ConstraintBuilderTest extends TestCase{
 	   //check some constraints based on patterns-array
 
 	   //1) verify that a null value is interpreted as blank ""
-	   Constraint c = f.buildConstraint(patterns[2]);
+	   Constraint c = f.buildLiteralConstraint(patterns[2]);
 	   assertNotNull(c);
 	   assertTrue(c.isLiteralConstraint());
 	   assertFalse(c.isResourceTypeConstraint());
 	   assertEquals(c.getLiteralConstraint(),"");
 
 	   //2) verify that a non null value pattern as parameter is equal compared to the value from getLiteralConstraint
-	   c = f.buildConstraint(patterns[0]);
+	   c = f.buildLiteralConstraint(patterns[0]);
 	   assertNotNull(c);
 	   assertTrue(c.isLiteralConstraint());
 	   assertFalse(c.isResourceTypeConstraint());
@@ -124,7 +124,7 @@ public class ConstraintBuilderTest extends TestCase{
   public void testBuildResourceTypeConstraint(){
 	   ConstraintBuilder f = ConstraintBuilder.getInstance();
 	   ResourceID id = null;
-	   Constraint c = f.buildConstraint(id);
+	   Constraint c = f.buildResourceConstraint(id);
 	   assertNotNull(c);
 	   assertFalse(c.isLiteralConstraint());
 	   assertFalse(c.isResourceTypeConstraint());
@@ -135,7 +135,7 @@ public class ConstraintBuilderTest extends TestCase{
 				"NAMESPACE",
 				"IDENTIFIER");
 
-	   c = f.buildConstraint(id);
+	   c = f.buildResourceConstraint(id);
 	   assertNotNull(c);
 	   assertFalse(c.isLiteralConstraint());
 	   assertTrue(c.isResourceTypeConstraint());

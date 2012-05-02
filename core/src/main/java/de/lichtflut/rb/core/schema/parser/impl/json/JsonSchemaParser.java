@@ -160,7 +160,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		}
 		final TypeDefinitionImpl def = new TypeDefinitionImpl(id, true);
 		def.setName(name);
-		def.setElementaryDataType(datatype);
+		def.setDataType(datatype);
 		def.setConstraints(constraints);
 		return def;
 	}
@@ -213,7 +213,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (DATATYPE.equals(field)) {
-				def.setElementaryDataType(Datatype.valueOf(p.getText().toUpperCase()));
+				def.setDataType(Datatype.valueOf(p.getText().toUpperCase()));
 			} else if (CONSTRAINTS.equals(field)) {
 				def.setConstraints(readConstraints(p));
 			}
@@ -239,9 +239,9 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (LITERAL.equals(field)) {
-				result.add(ConstraintBuilder.buildConstraint(p.getText()));
+				result.add(ConstraintBuilder.buildLiteralConstraint(p.getText()));
 			} else if (RESOURCE_TYPE.equals(field)){
-				result.add(ConstraintBuilder.buildConstraint(toResourceID(p.getText())));
+				result.add(ConstraintBuilder.buildResourceConstraint(toResourceID(p.getText())));
 			}
 		}
 		return result;

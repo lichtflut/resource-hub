@@ -3,9 +3,6 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -47,12 +44,11 @@ public final class ConstraintBuilder {
 	 * @param literal - if this param is null, a blank "" will be chosen instead
 	 * @return {@link Constraint}
 	 */
-	public static Constraint buildConstraint(final String literal){
-		/** Make sure that literal has to be "" if it's null
-		 *  Currently this is done by buildConstraint(final String[] literals)
-		 *  A test already to verifies this
-		 */
-		return buildConstraint(new String[]{literal});
+	public static Constraint buildLiteralConstraint(String literal){
+		if (literal==null){
+			literal = "";
+		}
+		return buildContraintInstanceFromParams(literal, null);
 	}
 
 	/**
@@ -60,56 +56,11 @@ public final class ConstraintBuilder {
 	 * @param constraint -
 	 * @return {@link Constraint}
 	 */
-	public static Constraint buildConstraint(final ResourceID constraint){
+	public static Constraint buildResourceConstraint(final ResourceID constraint){
 		return buildContraintInstanceFromParams(null, constraint);
 	}
 
-
 	// -----------------------------------------------------
-
-	/**
-	 * <p>
-	 * Please note, that this method is for future uses.
-	 * All those literals will be concatenated in order to build one whole literal string.
-	 * If an element is null, a blank "" will be taken instead.
-	 * Throws a NullPointerException if the specified collection is null.
-	 * </p>
-	 * @param literals - the described literals
-	 * @return {@link Constraint}
-	 */
-	public static Constraint buildConstraint(final String[] literals){
-		if (literals==null){
-			throw new NullPointerException("literals can not be null");
-		}
-		//Build one whole literal
-		StringBuffer literal = new StringBuffer("");
-		for (String string : literals) {
-			//If the string is null, append a blank "" instead of "null"
-			literal.append(string==null ? "" : string);
-		}
-		return buildContraintInstanceFromParams(literal.toString(), null);
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * <p>
-	 * Please note, that this method is for future uses.
-	 * All those literals will be concatenated in order to build one whole literal string.
-	 * If an element is null, a blank "" will be taken instead.
-	 * Throws a NullPointerException if the specified collection is null.
-	 * </p>
-	 * @param literals - the described literals
-	 * @return {@link Constraint}
-	 */
-	public static Constraint buildConstraint(final Collection<String> literals){
-		if (literals==null){
-			throw new NullPointerException("literals can not be null");
-		}
-		return buildConstraint(
-				(new ArrayList<String>(literals).toArray(new String[literals.size()]))
-				);
-	}
 
 	/**
 	 * TODO: PLEASE FIX AND TO COMMMENT! AND This is not the way I like it.

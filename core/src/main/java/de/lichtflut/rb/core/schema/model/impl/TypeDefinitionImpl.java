@@ -100,6 +100,7 @@ public final class TypeDefinitionImpl implements TypeDefinition, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	public void addConstraint(final Constraint constraint) {
 		constraints.add(constraint);
 	}
@@ -110,7 +111,7 @@ public final class TypeDefinitionImpl implements TypeDefinition, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Datatype getElementaryDataType() {
+	public Datatype getDataType() {
 		return type;
 	}
 	
@@ -118,7 +119,7 @@ public final class TypeDefinitionImpl implements TypeDefinition, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setElementaryDataType(final Datatype type) {
+	public void setDataType(final Datatype type) {
 		this.type = type;
 	}
 
@@ -200,7 +201,7 @@ public final class TypeDefinitionImpl implements TypeDefinition, Serializable {
 		} else {
 			sb.append("private TypeDefinition");
 		}
-		sb.append(" " + getElementaryDataType());
+		sb.append(" " + getDataType());
 		if(!constraints.isEmpty()){
 			sb.append(" constraints: ");
 			final Iterator<Constraint> i = constraints.iterator();
