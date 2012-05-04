@@ -9,7 +9,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.schema.model.impl.OldConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 
 
 /**
@@ -25,27 +25,6 @@ import de.lichtflut.rb.core.schema.model.impl.OldConstraintBuilder;
  *
  */
 public class ConstraintBuilderTest extends TestCase{
-	/**
-	 * <p>
-	 * This test makes some assertion about the general nature of ConstraintFactory.
-	 *    <ul>
-     *    	 <li> the one and only instance of ConstraintFactory is given by the class itself as singleton
-     *    </ul>
-     * </p>
-	 */
-	@SuppressWarnings("static-access")
-	@Test (expected=IllegalArgumentException.class)
-	public void testFactoryInCommon(){
-		//Let's proof that singleton pattern of CardinalityFactory is still working
-		OldConstraintBuilder factory = OldConstraintBuilder.getInstance();
-		assertSame("getInstance() should deliver allways the same instance",
-				factory,OldConstraintBuilder.getInstance());
-		assertSame("getInstance() should deliver allways the same instance",
-				factory,factory.getInstance());
-
-	}//End of method testFactoryInCommon()
-
-   //-------------------------------//
 
 	/**
 	 * <p>
@@ -54,11 +33,10 @@ public class ConstraintBuilderTest extends TestCase{
 	 */
 	@SuppressWarnings("static-access")
    public void testNullPointerExceptionInBuildingConstraints(){
-		OldConstraintBuilder f = OldConstraintBuilder.getInstance();
 		boolean exceptionIsOccured=false;
 		try{
 		  String a =null;
-		  f.buildLiteralConstraint(a);
+		  ConstraintBuilder.buildLiteralConstraint(a);
 		}catch(NullPointerException exe){
 			exceptionIsOccured=true;
 		}
@@ -66,10 +44,10 @@ public class ConstraintBuilderTest extends TestCase{
 
 		//For the following calls, no exception should be raised
 		String a = null;
-		f.buildLiteralConstraint(a);
-		f.buildLiteralConstraint(new String());
+		ConstraintBuilder.buildLiteralConstraint(a);
+		ConstraintBuilder.buildLiteralConstraint(new String());
 		ResourceID id = null;
-		f.buildResourceConstraint(id);
+		ConstraintBuilder.buildResourceConstraint(id);
    }
 
   //-------------------------------//
@@ -79,11 +57,10 @@ public class ConstraintBuilderTest extends TestCase{
    */
   @SuppressWarnings("static-access")
   public void testBuildResourceTypeConstraint(){
-	   OldConstraintBuilder f = OldConstraintBuilder.getInstance();
 	   ResourceID id = null;
-	   Constraint c = f.buildResourceConstraint(id);
+	   Constraint c = ConstraintBuilder.buildResourceConstraint(id);
 	   assertNotNull(c);
-	   assertFalse(c.isResourceTypeConstraint());
+	   assertFalse(c.isResourceReference());
 	   assertNull(c.getLiteralConstraint());
 	   assertNull(c.getResourceTypeConstraint());
 
@@ -91,10 +68,10 @@ public class ConstraintBuilderTest extends TestCase{
 				"NAMESPACE",
 				"IDENTIFIER");
 
-	   c = f.buildResourceConstraint(id);
+	   c = ConstraintBuilder.buildResourceConstraint(id);
 	   assertNotNull(c);
-	   assertFalse(!c.isResourceTypeConstraint());
-	   assertTrue(c.isResourceTypeConstraint());
+	   assertFalse(!c.isResourceReference());
+	   assertTrue(c.isResourceReference());
 	   assertNull(c.getLiteralConstraint());
 	   assertEquals(c.getResourceTypeConstraint(), id);
 

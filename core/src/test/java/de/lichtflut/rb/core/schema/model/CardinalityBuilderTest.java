@@ -3,10 +3,12 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import junit.framework.TestCase;
 
 
 /**
@@ -19,9 +21,9 @@ import junit.framework.TestCase;
  *  </p>
  *
  * @author Nils Bleisch
- *
  */
-public class CardinalityBuilderTest extends TestCase{
+public class CardinalityBuilderTest{
+	
 	/**
 	 * <p>
 	 * This test makes some assertion about the general nature of CardinalityFactory.
@@ -43,14 +45,8 @@ public class CardinalityBuilderTest extends TestCase{
 
 		//An exception should be raised when max is smaller than min
 
-		boolean exceptionIsOccured=false;
-		try{
 		  final Integer min = -3;
 		  factory.between(-1, min);
-		}catch(IllegalArgumentException exe){
-			exceptionIsOccured=true;
-		}
-		assertEquals(true,exceptionIsOccured);
 
 	}//End of method testFactoryInCommon()
 

@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.schema.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 
@@ -52,7 +53,7 @@ public interface Constraint extends Serializable {
 	 * Check if this constraint is a type-of constraint for resources.
 	 * @return true if this constraint is for resources.
 	 */
-	boolean isResourceTypeConstraint();
+	boolean isResourceReference();
 
 	/**
 	 * Get the literal constraint, a regular expression pattern. If this constraint is a resource type constraint
@@ -74,4 +75,9 @@ public interface Constraint extends Serializable {
 	 * @return true if Constraint is public, false if not
 	 */
 	boolean isPublicConstraint();
+	
+	/**
+	 * @return a list of applicable {@link Datatype}s for this {@link Constraint}.
+	 */
+	List<Datatype> getApplicableDatatypes();
 }

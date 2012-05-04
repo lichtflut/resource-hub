@@ -46,8 +46,6 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	
 	private Cardinality cardinality = CardinalityBuilder.hasOptionalOneToMany();
 	
-	private Set<Constraint> constraints = new HashSet<Constraint>();
-
 	private Constraint constraint;
 	
 	// -----------------------------------------------------
@@ -56,6 +54,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	 * Default Constructor.
 	 */
 	public PropertyDeclarationImpl() {
+		this.constraint = ConstraintBuilder.emptyConstraint();
 	}
 	
 	/**
@@ -67,7 +66,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	 */
 	@Deprecated
 	public PropertyDeclarationImpl(final ResourceID propertyDescriptor,	final TypeDefinition typeDefinition) {
-		this(propertyDescriptor, typeDefinition.getDataType(), null);
+		this(propertyDescriptor, typeDefinition.getDataType(), ConstraintBuilder.emptyConstraint());
 	}
 	
 	/**
@@ -78,7 +77,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	 * @param typeDefinition
 	 */
 	public PropertyDeclarationImpl(ResourceID propertyDescriptor, Datatype dataType) {
-		this(propertyDescriptor, dataType, null);
+		this(propertyDescriptor, dataType, ConstraintBuilder.emptyConstraint());
 	}
 	
 	/**
@@ -216,11 +215,8 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 					? propertyDescriptor.getQualifiedName().toURI() : ""));
 		sb.append(" " + cardinality.toString());
 		sb.append(", " + datatype);
-		if(null!=constraints){
-			Iterator<Constraint> i = constraints.iterator();
-			while(i.hasNext()){
-				sb.append(" "+i.next().toString());
-			}
+		if(null!=constraint){
+			sb.append(" "+constraint.toString());
 		}
 		return sb.toString();
 	}

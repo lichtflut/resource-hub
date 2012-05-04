@@ -166,7 +166,7 @@ public class LiteralTypeDefinition implements TypeDefinition {
 			throw new IllegalStateException("type definition is not about literal values.");
 		} 
 		for (Constraint constraint : getConstraints()) {
-			if (constraint.isResourceTypeConstraint()) {
+			if (constraint.isResourceReference()) {
 				throw new IllegalStateException("type definition's constraint is not about literal values: " 
 						+ constraint);
 			}	

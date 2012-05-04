@@ -28,7 +28,7 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.impl.OldConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -107,10 +107,10 @@ public class EditPropertyDeclPanel extends Panel {
 	protected void updateDecls() {
 		List<Constraint> constraints = new ArrayList<Constraint>();
 		if(constraintsModel.getObject().isResourceReference()){
-			constraints.add(OldConstraintBuilder.buildResourceConstraint(constraintsModel.getObject().getResourceConstraint()));
+			constraints.add(ConstraintBuilder.buildResourceConstraint(constraintsModel.getObject().getResourceConstraint()));
 		}else{
 			for (String s : constraintsModel.getObject().getLiteralConstraints()) {
-				constraints.add(OldConstraintBuilder.buildLiteralConstraint(s));
+				constraints.add(ConstraintBuilder.buildLiteralConstraint(s));
 			}
 		}
 		for (PropertyRow decl : decls.getObject()) {

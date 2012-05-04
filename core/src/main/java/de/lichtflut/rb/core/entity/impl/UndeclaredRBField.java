@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.core.entity.impl;
 
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Set;
 
@@ -75,8 +74,8 @@ public class UndeclaredRBField extends AbstractRBField {
 	}
 
 	@Override
-	public Set<Constraint> getConstraints() {
-		return Collections.emptySet();
+	public Constraint getConstraint() {
+		return null;
 	}
 	
 }

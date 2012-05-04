@@ -38,6 +38,7 @@ import org.arastreju.sge.model.ResourceID;
  *
  * @author Oliver Tigges
  */
+@Deprecated
 public interface TypeDefinition extends Serializable {
 
 	/**

@@ -20,7 +20,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.ResourceTypeDefinition;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.OldConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
@@ -162,7 +162,7 @@ public class PropertyRow implements Serializable {
 	 */
 	public void setResourceConstraint(ResourceID resourceConstraint) {
 		final Set<Constraint> constraints = new HashSet<Constraint>();
-		constraints.add(OldConstraintBuilder.buildResourceConstraint(resourceConstraint));
+		constraints.add(ConstraintBuilder.buildResourceConstraint(resourceConstraint));
 		decl.getTypeDefinition().setConstraints(constraints);
 	}
 
@@ -244,7 +244,7 @@ public class PropertyRow implements Serializable {
 	public void setLiteralConstraints(final List<String> literalConstraints) {
 		final Set<Constraint> constraints = new HashSet<Constraint>();
 		for (String constraint : getLiteralConstraints()) {
-			constraints.add(OldConstraintBuilder.buildLiteralConstraint(constraint));
+			constraints.add(ConstraintBuilder.buildLiteralConstraint(constraint));
 		}
 		decl.getTypeDefinition().setConstraints(constraints);
 	}

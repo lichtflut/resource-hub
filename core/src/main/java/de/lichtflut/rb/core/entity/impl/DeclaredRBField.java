@@ -38,11 +38,11 @@ public class DeclaredRBField extends AbstractRBField {
 	 * @param values - values of this field
 	 */
 	public DeclaredRBField(final PropertyDeclaration declaration, final Set<SemanticNode> values) {
-		super(values, declaration.getTypeDefinition().isResourceReference());
+		super(values, declaration.getConstraint().isResourceReference());
 		Validate.notNull(declaration, "The property declaration may never be null.");
 		this.declaration = declaration;
 	}
-
+	
 	//------------------------------------------------------------
 
 	@Override
@@ -57,7 +57,7 @@ public class DeclaredRBField extends AbstractRBField {
 	
 	@Override
 	public Datatype getDataType() {
-		return declaration.getTypeDefinition().getDataType();
+		return declaration.getDatatype();
 	}
 
 	@Override
@@ -72,12 +72,12 @@ public class DeclaredRBField extends AbstractRBField {
 
 	@Override
 	public boolean isResourceReference() {
-		return declaration.getTypeDefinition().isResourceReference();
+		return declaration.getConstraint().isResourceReference();
 	}
 
 	@Override
-	public Set<Constraint> getConstraints() {
-		return declaration.getTypeDefinition().getConstraints();
+	public Constraint getConstraint() {
+		return declaration.getConstraint();
 	}
 	
 }

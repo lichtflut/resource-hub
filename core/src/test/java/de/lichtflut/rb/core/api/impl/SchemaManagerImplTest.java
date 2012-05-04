@@ -15,7 +15,7 @@ import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.OldConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.SchemaManager;
@@ -96,7 +96,7 @@ public class SchemaManagerImplTest {
 		
 		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), Datatype.DATE);
 		PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), Datatype.STRING);
-		pa2.setConstraint(OldConstraintBuilder.buildLiteralConstraint(".*@.*"));
+		pa2.setConstraint(ConstraintBuilder.buildLiteralConstraint(".*@.*"));
 		PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), Datatype.INTEGER);
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(3));

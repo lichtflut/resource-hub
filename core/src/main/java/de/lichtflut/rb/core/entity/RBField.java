@@ -5,7 +5,6 @@ package de.lichtflut.rb.core.entity;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 
@@ -71,9 +70,9 @@ public interface RBField {
 	 * Returns this field's constraint according to the RBSchema.
 	 * TODO: specify return type (Constraint / Pattern)?!
 	 * TODO: If reference type Resource = full qualified ResourceURI as constraint?!
-	 * @return List of {@link Constraint}
+	 * @return {@link Constraint}
 	 */
-	Set<Constraint> getConstraints();
+	Constraint getConstraint();
 	
 	// -----------------------------------------------------
 	

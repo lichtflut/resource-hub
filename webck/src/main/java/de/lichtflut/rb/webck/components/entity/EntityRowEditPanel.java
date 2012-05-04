@@ -35,7 +35,6 @@ import org.odlabs.wiquery.ui.datepicker.DatePicker;
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
@@ -239,10 +238,8 @@ public class EntityRowEditPanel extends Panel {
 	private ResourceID getTypeConstraint() {
 		final RBField field = getField();
 		if(field.getDataType().equals(Datatype.RESOURCE)){
-			for (Constraint c : field.getConstraints()) {
-				if(c.isResourceTypeConstraint()){
-					return c.getResourceTypeConstraint().asResource();
-				}
+			if (field.getConstraint().isResourceReference()) {
+				return field.getConstraint().getResourceTypeConstraint().asResource();
 			}
 		}
 		return null;

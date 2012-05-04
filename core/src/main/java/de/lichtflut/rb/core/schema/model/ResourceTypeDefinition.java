@@ -180,7 +180,7 @@ public class ResourceTypeDefinition implements TypeDefinition {
 		if (getConstraints().size() > 1) {
 			throw new IllegalStateException("Given type definition has more than one constraint. " + getConstraints());
 		} 
-		if (!getConstraints().isEmpty() && !getConstraints().iterator().next().isResourceTypeConstraint()) {
+		if (!getConstraints().isEmpty() && !getConstraints().iterator().next().isResourceReference()) {
 			throw new IllegalStateException("Constraint is not a resource type constraint.");
 		}
 	}

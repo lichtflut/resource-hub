@@ -126,7 +126,7 @@ public class OutputElements {
 			register(def.getID());
 		} else {
 			for (Constraint constraint : def.getConstraints()) {
-				if (constraint.isResourceTypeConstraint()) {
+				if (constraint.isResourceReference()) {
 					register(constraint.getResourceTypeConstraint());
 				}
 			}

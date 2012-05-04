@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import de.lichtflut.rb.core.rbentity.persistence.RBEntityTest;
+import de.lichtflut.rb.core.rbentity.persistence.RBEntityImplTest;
 
 /**
  * <p>
@@ -22,6 +22,6 @@ import de.lichtflut.rb.core.rbentity.persistence.RBEntityTest;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses({RBEntityTest.class})
+@SuiteClasses({RBEntityImplTest.class})
 public class RBCoreTestSuite {
 }

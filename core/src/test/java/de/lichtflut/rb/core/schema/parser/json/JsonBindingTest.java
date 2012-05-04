@@ -20,7 +20,7 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.OldConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
@@ -122,7 +122,7 @@ public class JsonBindingTest {
 
 		TypeDefinitionImpl typeDef3 = new TypeDefinitionImpl();
 		typeDef3.setDataType(Datatype.RESOURCE);
-		typeDef3.addConstraint(OldConstraintBuilder.buildResourceConstraint(new SimpleResourceID(NAMESPACE_URI, "Adress")));
+		typeDef3.addConstraint(ConstraintBuilder.buildResourceConstraint(new SimpleResourceID(NAMESPACE_URI, "Adress")));
 		PropertyDeclarationImpl pa8 = new PropertyDeclarationImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasAddress"), typeDef3);
 		pa8.setCardinality(CardinalityBuilder.hasAtLeastOneToMany());
@@ -143,7 +143,7 @@ public class JsonBindingTest {
 		
 		TypeDefinitionImpl typeDef6 = new TypeDefinitionImpl();
 		typeDef6.setDataType(Datatype.RESOURCE);
-		typeDef6.addConstraint(OldConstraintBuilder.buildResourceConstraint(personSchema.getDescribedType()));	
+		typeDef6.addConstraint(ConstraintBuilder.buildResourceConstraint(personSchema.getDescribedType()));	
 		PropertyDeclarationImpl pa7 = new PropertyDeclarationImpl(
 				new SimpleResourceID("http://lichtflut.de#", "hasChildren"), typeDef6);
 		pa7.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
@@ -160,7 +160,7 @@ public class JsonBindingTest {
 		final TypeDefinitionImpl typeDef = new TypeDefinitionImpl(id, true);
 		typeDef.setName("Email-Address");
 		typeDef.setDataType(Datatype.STRING);
-		typeDef.addConstraint(OldConstraintBuilder.buildLiteralConstraint(".*@.*"));
+		typeDef.addConstraint(ConstraintBuilder.buildLiteralConstraint(".*@.*"));
 		return typeDef;
 	}
 	

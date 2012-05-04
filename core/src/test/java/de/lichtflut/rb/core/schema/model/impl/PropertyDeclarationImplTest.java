@@ -35,7 +35,7 @@ public class PropertyDeclarationImplTest {
 		String label = "field1";
 		String pattern = "htp://lf.de/person#123456-lki8";
 		ResourceID resID = new SimpleResourceID("http://lf.de/test#" + label);
-		Constraint constr = OldConstraintBuilder.buildLiteralConstraint(pattern);
+		Constraint constr = ConstraintBuilder.buildLiteralConstraint(pattern);
 		
 		PropertyDeclaration pdec = new PropertyDeclarationImpl(resID, Datatype.STRING, constr);
 		
