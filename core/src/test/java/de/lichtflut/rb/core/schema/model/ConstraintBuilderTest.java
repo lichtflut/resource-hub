@@ -3,12 +3,13 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
-import java.util.Collection;
+import junit.framework.TestCase;
+
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
-import junit.framework.TestCase;
+
+import de.lichtflut.rb.core.schema.model.impl.OldConstraintBuilder;
 
 
 /**
@@ -36,9 +37,9 @@ public class ConstraintBuilderTest extends TestCase{
 	@Test (expected=IllegalArgumentException.class)
 	public void testFactoryInCommon(){
 		//Let's proof that singleton pattern of CardinalityFactory is still working
-		ConstraintBuilder factory = ConstraintBuilder.getInstance();
+		OldConstraintBuilder factory = OldConstraintBuilder.getInstance();
 		assertSame("getInstance() should deliver allways the same instance",
-				factory,ConstraintBuilder.getInstance());
+				factory,OldConstraintBuilder.getInstance());
 		assertSame("getInstance() should deliver allways the same instance",
 				factory,factory.getInstance());
 
@@ -53,66 +54,22 @@ public class ConstraintBuilderTest extends TestCase{
 	 */
 	@SuppressWarnings("static-access")
    public void testNullPointerExceptionInBuildingConstraints(){
-		ConstraintBuilder f = ConstraintBuilder.getInstance();
+		OldConstraintBuilder f = OldConstraintBuilder.getInstance();
 		boolean exceptionIsOccured=false;
 		try{
-		  String[] a =null;
-		  f.buildConstraint(a);
+		  String a =null;
+		  f.buildLiteralConstraint(a);
 		}catch(NullPointerException exe){
 			exceptionIsOccured=true;
 		}
-		assertEquals(true,exceptionIsOccured);
-
-		exceptionIsOccured=false;
-		try{
-		  Collection<String> a =null;
-		  f.buildConstraint(a);
-		}catch(NullPointerException exe){
-			exceptionIsOccured=true;
-		}
-		assertEquals(true,exceptionIsOccured);
+		assertEquals(false,exceptionIsOccured);
 
 		//For the following calls, no exception should be raised
 		String a = null;
 		f.buildLiteralConstraint(a);
-		f.buildConstraint(new String[]{a});
-		f.buildConstraint(new String[]{});
+		f.buildLiteralConstraint(new String());
 		ResourceID id = null;
 		f.buildResourceConstraint(id);
-   }
-
-  //-------------------------------//
-
-/**
- * TODO:.
- */
-  @SuppressWarnings("static-access")
-   public void testBuildPatternConstraint(){
-	   ConstraintBuilder f = ConstraintBuilder.getInstance();
-	   String[] patterns = new String[]{"Pattern1", "Pattern2", null};
-	   //check some constraints based on patterns-array
-
-	   //1) verify that a null value is interpreted as blank ""
-	   Constraint c = f.buildLiteralConstraint(patterns[2]);
-	   assertNotNull(c);
-	   assertTrue(c.isLiteralConstraint());
-	   assertFalse(c.isResourceTypeConstraint());
-	   assertEquals(c.getLiteralConstraint(),"");
-
-	   //2) verify that a non null value pattern as parameter is equal compared to the value from getLiteralConstraint
-	   c = f.buildLiteralConstraint(patterns[0]);
-	   assertNotNull(c);
-	   assertTrue(c.isLiteralConstraint());
-	   assertFalse(c.isResourceTypeConstraint());
-	   assertEquals(c.getLiteralConstraint(),patterns[0]);
-
-	   //3) verify that a collection of patterns is concatenated to one whole pattern string
-	   c = f.buildConstraint(patterns);
-	   assertNotNull(c);
-	   assertTrue(c.isLiteralConstraint());
-	   assertFalse(c.isResourceTypeConstraint());
-	   assertEquals(c.getLiteralConstraint(),patterns[0] + patterns[1] + "");
-
    }
 
   //-------------------------------//
@@ -122,11 +79,10 @@ public class ConstraintBuilderTest extends TestCase{
    */
   @SuppressWarnings("static-access")
   public void testBuildResourceTypeConstraint(){
-	   ConstraintBuilder f = ConstraintBuilder.getInstance();
+	   OldConstraintBuilder f = OldConstraintBuilder.getInstance();
 	   ResourceID id = null;
 	   Constraint c = f.buildResourceConstraint(id);
 	   assertNotNull(c);
-	   assertFalse(c.isLiteralConstraint());
 	   assertFalse(c.isResourceTypeConstraint());
 	   assertNull(c.getLiteralConstraint());
 	   assertNull(c.getResourceTypeConstraint());
@@ -137,7 +93,7 @@ public class ConstraintBuilderTest extends TestCase{
 
 	   c = f.buildResourceConstraint(id);
 	   assertNotNull(c);
-	   assertFalse(c.isLiteralConstraint());
+	   assertFalse(!c.isResourceTypeConstraint());
 	   assertTrue(c.isResourceTypeConstraint());
 	   assertNull(c.getLiteralConstraint());
 	   assertEquals(c.getResourceTypeConstraint(), id);

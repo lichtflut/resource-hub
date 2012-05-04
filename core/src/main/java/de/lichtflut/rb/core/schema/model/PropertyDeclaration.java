@@ -42,12 +42,14 @@ public interface PropertyDeclaration extends Serializable {
 	 * The concrete property of this assertion.
 	 * @return The property.
 	 */
+	@Deprecated
 	TypeDefinition getTypeDefinition();
 	
 	/**
 	 * Assign an implicit/private oder an standalone/public TypeDefinition.
 	 * @param def The type definition.
 	 */
+	@Deprecated
 	void setTypeDefinition(TypeDefinition def);
 
 	// -----------------------------------------------------
@@ -86,4 +88,20 @@ public interface PropertyDeclaration extends Serializable {
 	 */
 	Constraint getConstraint();
 	
+	/**
+	 * Set the Constraint for this PropertyDeclaration.
+	 */
+	void setConstraint(Constraint constraint);
+	
+	// ------------------------------------------------------
+	
+	/**
+	 * Get the {@link Datatype} for this PropertyDeclaration.
+	 */
+	void setDatatype(Datatype datatype);
+	
+	/**
+	 * Get the {@link Datatype} for this PropertyDeclaration.
+	 */
+	Datatype getDatatype();
 }

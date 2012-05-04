@@ -39,11 +39,15 @@ import org.arastreju.sge.model.ResourceID;
 public interface Constraint extends Serializable {
 
 	/**
-	 * Check if this constraint is for literal values.
-	 * @return true if this constraint is for literal values.
+	 * @return the ID of a Constraint.
 	 */
-	boolean isLiteralConstraint();
-
+	ResourceID getID();
+	
+	/**
+	 * Returns the name of a public constraint.
+	 */
+	String getName();
+	
 	/**
 	 * Check if this constraint is a type-of constraint for resources.
 	 * @return true if this constraint is for resources.
@@ -65,4 +69,9 @@ public interface Constraint extends Serializable {
 	 */
 	ResourceID getResourceTypeConstraint();
 
+	/**
+	 * Returns wether this constraint can be re-used by other {@link PropertyDeclaration}s or not.
+	 * @return true if Constraint is public, false if not
+	 */
+	boolean isPublicConstraint();
 }

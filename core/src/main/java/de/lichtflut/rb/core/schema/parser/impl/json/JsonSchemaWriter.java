@@ -163,10 +163,10 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	private void writeConstraints(final JsonGenerator g, final Collection<Constraint> constraints) throws JsonGenerationException, IOException {
 		g.writeObjectFieldStart(CONSTRAINTS);
 		for (Constraint constraint : constraints) {
-			if (constraint.isLiteralConstraint()) {
-				g.writeStringField(LITERAL, constraint.getLiteralConstraint().toString());
-			} else {
+			if (constraint.isResourceTypeConstraint()) {
 				g.writeStringField(RESOURCE_TYPE, uri(constraint.getResourceTypeConstraint()));
+			} else {
+				g.writeStringField(LITERAL, constraint.getLiteralConstraint().toString());
 			}
 		}
 		g.writeEndObject();

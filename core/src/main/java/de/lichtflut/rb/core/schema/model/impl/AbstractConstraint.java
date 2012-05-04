@@ -48,16 +48,6 @@ public abstract class AbstractConstraint implements Constraint {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isLiteralConstraint() {
-		return false;
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public boolean isResourceTypeConstraint() {
 		return false;
 	}
@@ -66,7 +56,7 @@ public abstract class AbstractConstraint implements Constraint {
 	 * {@inheritDoc}
 	 */
 	public String toString(){
-		if (isLiteralConstraint()) {
+		if (!isResourceTypeConstraint()) {
 			return "literal-constraint(" + getLiteralConstraint() + ")"; 
 		} else {
 			return "resource-constraint(" + getResourceTypeConstraint().getQualifiedName() + ")";

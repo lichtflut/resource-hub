@@ -17,7 +17,7 @@ import org.junit.Test;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.OldConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
@@ -80,8 +80,8 @@ public class SchemaDetailPanelTest{
 		p2.setDataType(Datatype.STRING);
 		p3.setDataType(Datatype.INTEGER);
 
-		p1.addConstraint(ConstraintBuilder.buildResourceConstraint(new SimpleResourceID("http://lichtflut.de#TestRes")));
-		p2.addConstraint(ConstraintBuilder.buildLiteralConstraint(".*@.*"));
+		p1.addConstraint(OldConstraintBuilder.buildResourceConstraint(new SimpleResourceID("http://lichtflut.de#TestRes")));
+		p2.addConstraint(OldConstraintBuilder.buildLiteralConstraint(".*@.*"));
 		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
 		PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
 		PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);

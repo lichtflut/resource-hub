@@ -15,10 +15,9 @@ import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.OldConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
@@ -95,21 +94,10 @@ public class SchemaManagerImplTest {
 	private ResourceSchema createSchema() {
 		ResourceSchemaImpl schema = new ResourceSchemaImpl(SNOPS.id(personQN));
 		
-		TypeDefinitionImpl p1 = new TypeDefinitionImpl();
-		TypeDefinitionImpl p2 = new TypeDefinitionImpl();
-		TypeDefinitionImpl p3 = new TypeDefinitionImpl();
-		p1.setName("http://lichtflut.de#geburtsdatum");
-		p2.setName("http://lichtflut.de#email");
-		p3.setName("http://lichtflut.de#alter");
-
-		p1.setDataType(Datatype.DATE);
-		p2.setDataType(Datatype.STRING);
-		p3.setDataType(Datatype.INTEGER);
-
-		p2.addConstraint(ConstraintBuilder.buildLiteralConstraint(".*@.*"));
-		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), p1);
-		PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), p2);
-		PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), p3);
+		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatGeburtstag"), Datatype.DATE);
+		PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatEmail"), Datatype.STRING);
+		pa2.setConstraint(OldConstraintBuilder.buildLiteralConstraint(".*@.*"));
+		PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#","hatAlter"), Datatype.INTEGER);
 		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(3));
 		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());

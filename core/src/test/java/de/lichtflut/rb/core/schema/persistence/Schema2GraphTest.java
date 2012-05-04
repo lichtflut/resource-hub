@@ -14,7 +14,7 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.OldConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
@@ -52,7 +52,7 @@ public class Schema2GraphTest {
 		
 		TypeDefinition td = new TypeDefinitionImpl();
 		td.setDataType(Datatype.STRING);
-		Constraint c = ConstraintBuilder.buildLiteralConstraint("*.A*");
+		Constraint c = OldConstraintBuilder.buildLiteralConstraint("*.A*");
 		td.addConstraint(c);
 		
 		Assert.assertNotNull(td);
@@ -84,7 +84,7 @@ public class Schema2GraphTest {
 		
 		TypeDefinition tDef = new TypeDefinitionImpl();
 		tDef.setDataType(Datatype.STRING);
-		tDef.addConstraint(ConstraintBuilder.buildLiteralConstraint("*@*"));
+		tDef.addConstraint(OldConstraintBuilder.buildLiteralConstraint("*@*"));
 		
 		
 	}
@@ -115,8 +115,8 @@ public class Schema2GraphTest {
         p3.setDataType(Datatype.INTEGER);
         p4.setDataType(Datatype.RESOURCE);
 
-        p2.addConstraint(ConstraintBuilder.buildLiteralConstraint(".*@.*"));
-        p4.addConstraint(ConstraintBuilder.buildResourceConstraint(schema
+        p2.addConstraint(OldConstraintBuilder.buildLiteralConstraint(".*@.*"));
+        p4.addConstraint(OldConstraintBuilder.buildResourceConstraint(schema
                 .getDescribedType()));
 
         PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(

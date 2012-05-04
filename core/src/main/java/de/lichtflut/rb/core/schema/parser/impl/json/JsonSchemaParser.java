@@ -32,7 +32,7 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.OldConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
@@ -239,9 +239,9 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (LITERAL.equals(field)) {
-				result.add(ConstraintBuilder.buildLiteralConstraint(p.getText()));
+				result.add(OldConstraintBuilder.buildLiteralConstraint(p.getText()));
 			} else if (RESOURCE_TYPE.equals(field)){
-				result.add(ConstraintBuilder.buildResourceConstraint(toResourceID(p.getText())));
+				result.add(OldConstraintBuilder.buildResourceConstraint(toResourceID(p.getText())));
 			}
 		}
 		return result;

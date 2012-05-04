@@ -26,7 +26,7 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.OldConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
@@ -181,10 +181,10 @@ public class Schema2GraphBinding {
 			sn.setPrivate(RBSchema.CONTEXT);
 		}
 		for(Constraint constraint : typeDef.getConstraints()) {
-			if (constraint.isLiteralConstraint()) {
-				sn.addLiteralConstraint(constraint.getLiteralConstraint(), RBSchema.CONTEXT);
-			} else {
+			if (constraint.isResourceTypeConstraint()) {
 				sn.addTypeConstraint(constraint.getResourceTypeConstraint(), RBSchema.CONTEXT);
+			} else {
+				sn.addLiteralConstraint(constraint.getLiteralConstraint(), RBSchema.CONTEXT);
 			}
 		}
 		return sn;
@@ -216,12 +216,12 @@ public class Schema2GraphBinding {
 	protected Constraint toModelConstraint(final SNConstraint snConst) {
 		if (snConst.isLiteralConstraint()){
 			final String value = snConst.getConstraintValue().asValue().getStringValue();
-			return ConstraintBuilder.buildLiteralConstraint(value);
+			return OldConstraintBuilder.buildLiteralConstraint(value);
 		} else if (snConst.isTypeConstraint()) {
 			SemanticNode node = snConst.getConstraintValue();
 			if (node != null) {
 				final ResourceID type = snConst.getConstraintValue().asResource();
-				return ConstraintBuilder.buildResourceConstraint(type);
+				return OldConstraintBuilder.buildResourceConstraint(type);
 			} else {
 				return null;
 			}
