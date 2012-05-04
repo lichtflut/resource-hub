@@ -57,7 +57,7 @@ public interface ServiceProvider {
 	SecurityService getSecurityService();
 	
 	/**
-	 * @return The orgainzer for this domain.
+	 * @return The organizer for this domain.
 	 */
 	DomainOrganizer getDomainOrganizer();
 	

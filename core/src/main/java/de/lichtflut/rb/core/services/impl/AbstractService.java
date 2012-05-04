@@ -7,10 +7,10 @@ import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ArastrejuProfile;
 import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
@@ -52,11 +52,11 @@ public class AbstractService {
 	// ----------------------------------------------------
 	
 	protected ResourceNode currentUser() {
-		final ResourceID user = getProvider().getContext().getUser();
+		final RBUser user = getProvider().getContext().getUser();
 		if (user == null) {
 			return null;
 		} else {
-			return getProvider().getResourceResolver().resolve(user); 
+			return mc().findResource(user.getQualifiedName());
 		}
 	}
 	
@@ -77,11 +77,6 @@ public class AbstractService {
 	
 	protected ArastrejuGate gate() {
 		return provider.getArastejuGate();
-	}
-	
-	protected ArastrejuGate masterGate() {
-		final ArastrejuProfile profile = provider.getContext().getConfig().getArastrejuConfiguration();
-		return Arastreju.getInstance(profile).rootContext();
 	}
 	
 	protected ArastrejuGate gate(String domain) {

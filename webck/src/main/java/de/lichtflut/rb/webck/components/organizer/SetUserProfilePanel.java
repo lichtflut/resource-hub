@@ -26,6 +26,7 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.security.User;
+import org.arastreju.sge.security.impl.SNUser;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
@@ -148,7 +149,9 @@ public abstract class SetUserProfilePanel extends Panel {
 		this.user = new AbstractLoadableModel<User>() {
 			@Override
 			public User load() {
-				return new RBUser(provider.getResourceResolver().resolve(user.getObject()));
+				final ResourceNode node = provider.getArastejuGate().startConversation()
+						.findResource(user.getObject().getQualifiedName());
+				return new SNUser(node);
 			}
 		};
 	}

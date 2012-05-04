@@ -32,9 +32,10 @@ public interface AuthenticationService {
 	/**
 	 * Create the cookie token for the 'remember me' feature.
 	 * @param user The user.
+	 * @param loginData The login data used.
 	 * @return The token to be saved as cookie.
 	 */
-	String createRememberMeToken(RBUser user);
+	String createRememberMeToken(RBUser user, LoginData loginData);
 	
 	/**
 	 * Log a user in by it's 'remember me' token.

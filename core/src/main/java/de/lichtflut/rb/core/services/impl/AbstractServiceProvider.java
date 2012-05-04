@@ -82,14 +82,14 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	 */
 	@Override
 	public ArastrejuGate getArastejuGate() {
-		if (openGate != null) {
+		if (openGate != null && openGate.getContext().getDomain().equals(ctx.getDomain())) {
 			return openGate;
 		}
 		if (ctx.isAuthenticated()) {
 			openGate = openGate(ctx.getDomain());
 			return openGate;
 		} else {
-			logger.info("Creating default Arastreju Gate for unauthenticated user.");
+			logger.warn("Creating default Arastreju Gate for unauthenticated user.");
 			return openGate = openGate(GateContext.MASTER_DOMAIN);
 		}
 	}
