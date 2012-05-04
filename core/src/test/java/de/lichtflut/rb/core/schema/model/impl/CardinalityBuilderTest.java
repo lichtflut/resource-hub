@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -38,13 +37,31 @@ public class CardinalityBuilderTest {
 	}
 
 	@Test
+	public void testExtractFromStringHasExactlyOne() {
+		String pattern = "[1..1]";
+		Cardinality cardinality = CardinalityBuilder.extractFromString(pattern);
+		assertTrue("Cardinality has more than one", cardinality.getMaxOccurs() == 1);
+		assertTrue("Cardinality has less than one", cardinality.getMinOccurs() == 1);
+		assertFalse("Cardinality should not be unbound", cardinality.isUnbound());
+	}
+	
+	@Test
 	public void testHasOptionalOne() {
 		cardinality = CardinalityBuilder.hasOptionalOne();
 		assertTrue("Cardinality has more than one", cardinality.getMaxOccurs() == 1);
 		assertTrue("Cardinality min is not zero", cardinality.getMinOccurs() == 0);
 		assertFalse("Cardinality should not be unbound", cardinality.isUnbound());
 	}
-
+	
+	@Test
+	public void testExtractFromStringOptionalOne() {
+		String pattern = "[n..1]";
+		Cardinality cardinality = CardinalityBuilder.extractFromString(pattern);
+		assertTrue("Cardinality has more than one", cardinality.getMaxOccurs() == 1);
+		assertTrue("Cardinality min is not zero", cardinality.getMinOccurs() == 0);
+		assertFalse("Cardinality should not be unbound", cardinality.isUnbound());
+	}
+	
 	@Test
 	public void testHasAtLeastOneToMany() {
 		cardinality = CardinalityBuilder.hasAtLeastOneToMany();
@@ -54,6 +71,15 @@ public class CardinalityBuilderTest {
 	}
 
 	@Test
+	public void testExtractFromStringOneToMany() {
+		String pattern = "[1..n]";
+		Cardinality cardinality = CardinalityBuilder.extractFromString(pattern);
+		assertTrue("Cardinality is not unbound", cardinality.getMaxOccurs() == Integer.MAX_VALUE);
+		assertTrue("Cardinality min is not one", cardinality.getMinOccurs() == 1);
+		assertTrue("Cardinality should be unbound", cardinality.isUnbound());
+	}
+	
+	@Test
 	public void testHasAtLeast() {
 		cardinality = CardinalityBuilder.hasAtLeast(min);
 		assertTrue("Cardinality is not unbound", cardinality.getMaxOccurs() == Integer.MAX_VALUE);
@@ -61,6 +87,15 @@ public class CardinalityBuilderTest {
 		assertTrue("Cardinality should be unbound", cardinality.isUnbound());
 	}
 
+	@Test
+	public void testExtractFromStringHasAtLeast() {
+		String pattern = "["+min+"..n]";
+		Cardinality cardinality = CardinalityBuilder.extractFromString(pattern);
+		assertTrue("Cardinality is not unbound", cardinality.getMaxOccurs() == Integer.MAX_VALUE);
+		assertTrue("Cardinality min is not as expected", cardinality.getMinOccurs() == min);
+		assertTrue("Cardinality should be unbound", cardinality.isUnbound());
+	}
+	
 	@Test
 	public void testHasOptionalOneToMany() {
 		cardinality = CardinalityBuilder.hasOptionalOneToMany();
@@ -70,6 +105,15 @@ public class CardinalityBuilderTest {
 	}
 
 	@Test
+	public void testExtractFromStringOptionalyOneToMany() {
+		String pattern = "[n..n]";
+		Cardinality cardinality = CardinalityBuilder.extractFromString(pattern);
+		assertTrue("Cardinality is not unbound", cardinality.getMaxOccurs() == Integer.MAX_VALUE);
+		assertTrue("Cardinality min is not as expected", cardinality.getMinOccurs() == 0);
+		assertTrue("Cardinality should be unbound", cardinality.isUnbound());
+	}
+	
+	@Test
 	public void testHasAtLeastOneUpTo() {
 		cardinality = CardinalityBuilder.hasAtLeastOneUpTo(max);
 		assertTrue("Cardinality max is not as expected", cardinality.getMaxOccurs() == max);
@@ -77,6 +121,15 @@ public class CardinalityBuilderTest {
 		assertFalse("Cardinality should not be unbound", cardinality.isUnbound());
 	}
 
+	@Test
+	public void testExtractFromStringAtLeastOneToMany() {
+		String pattern = "[1.."+max+"]";
+		Cardinality cardinality = CardinalityBuilder.extractFromString(pattern);
+		assertTrue("Cardinality max is not as expected", cardinality.getMaxOccurs() == max);
+		assertTrue("Cardinality min is not as expected", cardinality.getMinOccurs() == 1);
+		assertFalse("Cardinality should not be unbound", cardinality.isUnbound());
+	}
+	
 	@Test
 	public void testHasOptionalOneUpTo() {
 		cardinality = CardinalityBuilder.hasOptionalOneUpTo(max);
@@ -86,6 +139,15 @@ public class CardinalityBuilderTest {
 	}
 
 	@Test
+	public void testExtractFromStringHasOptionalOneUpTo() {
+		String pattern = "[n.."+max+"]";
+		Cardinality cardinality = CardinalityBuilder.extractFromString(pattern);
+		assertTrue("Cardinality max is not as expected", cardinality.getMaxOccurs() == max);
+		assertTrue("Cardinality min is not as expected", cardinality.getMinOccurs() == 0);
+		assertFalse("Cardinality should not be unbound", cardinality.isUnbound());
+	}
+	
+	@Test
 	public void testHasExactly() {
 		cardinality = CardinalityBuilder.hasExactly(max);
 		assertTrue("Cardinality max is not as expected", cardinality.getMaxOccurs() == max);
@@ -93,6 +155,15 @@ public class CardinalityBuilderTest {
 		assertFalse("Cardinality should not be unbound", cardinality.isUnbound());
 	}
 
+	@Test
+	public void testExtractFromStringHasExactly() {
+		String pattern = "["+max+".."+max+"]";
+		Cardinality cardinality = CardinalityBuilder.extractFromString(pattern);
+		assertTrue("Cardinality max is not as expected", cardinality.getMaxOccurs() == max);
+		assertTrue("Cardinality min is not as expected", cardinality.getMinOccurs() == max);
+		assertFalse("Cardinality should not be unbound", cardinality.isUnbound());
+	}
+	
 	@Test
 	public void testBetween() {
 		cardinality = CardinalityBuilder.between(min, max);
@@ -102,54 +173,40 @@ public class CardinalityBuilderTest {
 	}
 	
 	@Test
-	public void testBuildSingleCardinalities() {
-		Cardinality c = CardinalityBuilder.hasExcactlyOne();
-		assertEquals(false, c.isUnbound());
-		assertEquals(1, c.getMaxOccurs());
-		assertEquals(1, c.getMinOccurs());
-
-		c = CardinalityBuilder.hasOptionalOne();
-		assertEquals(false, c.isUnbound());
-		assertEquals(1, c.getMaxOccurs());
-		assertEquals(0, c.getMinOccurs());
-		final int aMount = 5;
-		int amount_current = aMount;
-		c = CardinalityBuilder.hasExactly(amount_current);
-		assertEquals(false, c.isUnbound());
-		assertEquals(amount_current, c.getMaxOccurs());
-		assertEquals(amount_current, c.getMinOccurs());
-
-		amount_current = -aMount;
-		c = CardinalityBuilder.hasExactly(amount_current);
-		assertEquals(false, c.isUnbound());
-		assertEquals(Math.abs(amount_current), c.getMaxOccurs());
-		assertEquals(Math.abs(amount_current), c.getMinOccurs());
+	public void testExtractFromStringBetween() {
+		String pattern = "["+min+".."+max+"]";
+		Cardinality cardinality = CardinalityBuilder.extractFromString(pattern);
+		assertTrue("Cardinality max is not as expected", cardinality.getMaxOccurs() == max);
+		assertTrue("Cardinality min is not as expected", cardinality.getMinOccurs() == min);
+		assertFalse("Cardinality should not be unbound", cardinality.isUnbound());
 	}
 	
 	@Test
-	public void testBuildHABTMCardinalities() {
-		Cardinality c = CardinalityBuilder.hasAtLeastOneToMany();
-		assertEquals(true, c.isUnbound());
-		assertEquals(Integer.MAX_VALUE, c.getMaxOccurs());
-		assertEquals(1, c.getMinOccurs());
-
-		c = CardinalityBuilder.hasOptionalOneToMany();
-		assertEquals(true, c.isUnbound());
-		assertEquals(Integer.MAX_VALUE, c.getMaxOccurs());
-		assertEquals(0, c.getMinOccurs());
-
-		final int aMount = 5;
-		int amount_current = aMount;
-		c = CardinalityBuilder.hasOptionalOneUpTo(amount_current);
-		assertEquals(false, c.isUnbound());
-		assertEquals(Math.abs(amount_current), c.getMaxOccurs());
-		assertEquals(0, c.getMinOccurs());
-
-		c = CardinalityBuilder.hasAtLeastOneUpTo(amount_current);
-		assertEquals(false, c.isUnbound());
-		assertEquals(Math.abs(amount_current), c.getMaxOccurs());
-		assertEquals(1, c.getMinOccurs());
-
+	public void testExtractStringWithNonsense(){
+		String pattern = "[34rew]";
+		Cardinality cardinality = CardinalityBuilder.extractFromString(pattern);
+		assertTrue("Cardinality is not unbound", cardinality.getMaxOccurs() == Integer.MAX_VALUE);
+		assertTrue("Cardinality min is not as expected", cardinality.getMinOccurs() == 0);
+		assertTrue("Cardinality should be unbound", cardinality.isUnbound());
 	}
-
+	
+	@Test
+	public void testExtractStringWithNull(){
+		String pattern = null;
+		Cardinality cardinality = CardinalityBuilder.extractFromString(pattern);
+		assertTrue("Cardinality is not unbound", cardinality.getMaxOccurs() == Integer.MAX_VALUE);
+		assertTrue("Cardinality min is not as expected", cardinality.getMinOccurs() == 0);
+		assertTrue("Cardinality should be unbound", cardinality.isUnbound());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testBetweenWithNegativNumber(){
+		CardinalityBuilder.between(-1, 100);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testBetweenWithMinGreaterThenMax(){
+		CardinalityBuilder.between(500, 100);
+	}
+	
 }

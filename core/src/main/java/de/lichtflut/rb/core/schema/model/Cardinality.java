@@ -13,10 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * <p>
- * 	The methods are may seem slightly redundant. If <code>isSingle()</code> is true, this
- *  could also be expressed by max occurs = 1. But this cardinality representation can be
- *  used in a fuzzy mode (isSingle()/isUnbound()) and in an exact mode. Additionally
- *  <code>isUnbound()</code> must be true if max occurs will be grater than Integer.MAX_VALUE;
+ * 	<code>isUnbound()</code> must be true if max occurs will be grater than Integer.MAX_VALUE;
  * </p>
  *
  * <p>

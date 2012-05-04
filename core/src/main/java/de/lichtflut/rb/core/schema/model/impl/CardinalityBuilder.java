@@ -122,7 +122,7 @@ public final class CardinalityBuilder implements Serializable {
 	 */
 	public static Cardinality extractFromString(String string){
 		// Check RegEx and null String
-		if((!string.matches("\\[.*\\.\\..*\\]")) || (string == null)){
+		if(((string == null) || (!string.matches("\\[.*\\.\\..*\\]")))){
 			return hasOptionalOneToMany();
 		}
 		int min, max;
@@ -175,21 +175,24 @@ public final class CardinalityBuilder implements Serializable {
 		}
 
 		/**
-		 * Max should be greater than Min, otherwise, an {@link IllegalArgumentException} will be raised.
-		 * @param min - a negative value is interpreted as a positive one.
-		 * @param max - unbound could be set up with -1.
+		 * Max should be greater than Min, otherwise, an
+		 * {@link IllegalArgumentException} will be raised.
+		 * 
+		 * @param min
+		 * @param max
 		 */
-		public SimpleCardinalityImpl(final int min,final int max){
+		public SimpleCardinalityImpl(final int min, final int max) {
 			int minimum = min;
-			minimum = Math.abs(min);
-			if((max < min) && (max!=-1)){
-				throw new IllegalArgumentException(
-						"The minimum count of " + minimum + " must be less than the maximum count of " + max);
+			if (min < 0) {
+				throw new IllegalArgumentException("The minimum count of " + minimum + " must notbe negativ");
+			}
+			if ((max < min) && (max != -1)) {
+				throw new IllegalArgumentException("The minimum count of " + minimum
+						+ " must be less than the maximum count of " + max);
 			}
 			setMax(max);
 			setMin(minimum);
 		}
-
 
 		//Define inner members and fields
 		private int max=-1, min=0;
