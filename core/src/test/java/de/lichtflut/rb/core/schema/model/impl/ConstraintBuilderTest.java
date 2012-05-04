@@ -99,7 +99,6 @@ public class ConstraintBuilderTest {
 		assertNull(constraint.getLiteralConstraint());
 		assertEquals("Constraints are not equal", resource.getQualifiedName(), constraint.getResourceTypeConstraint()
 				.getQualifiedName());
-		System.out.println(constraint.getName());
 		assertEquals("Constraintname is not as expected", publicResConstrName, constraint.getName());
 	}
 	

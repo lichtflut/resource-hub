@@ -223,6 +223,17 @@ public final class ConstraintBuilder {
 			public List<Datatype> getApplicableDatatypes() {
 				return list;
 			}
+			
+			/**
+			 * {@inheritDoc}
+			 */
+			public String toString(){
+				if (!isResourceReference()) {
+					return "literal-constraint(" + getLiteralConstraint() + ")"; 
+				} else {
+					return "resource-constraint(" + getResourceTypeConstraint().getQualifiedName() + ")";
+				}
+			}
 		};
 	}
 }

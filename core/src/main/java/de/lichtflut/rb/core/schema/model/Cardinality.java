@@ -34,12 +34,6 @@ public interface Cardinality extends Serializable {
 	boolean isUnbound();
 
 	/**
-	 * Returns if Attribute can have only one value.
-	 * @return boolean
-	 */
-	boolean isSingle();
-
-	/**
 	 * Returns min. occurence of a value.
 	 * @return int
 	 */

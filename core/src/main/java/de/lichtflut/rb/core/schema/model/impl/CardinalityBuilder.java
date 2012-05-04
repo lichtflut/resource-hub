@@ -24,20 +24,6 @@ import de.lichtflut.rb.core.schema.model.Cardinality;
 
 public final class CardinalityBuilder implements Serializable {
 
-	//Let's instance of this class be a Singleton
-
-	private static final CardinalityBuilder INSTANCE =  new CardinalityBuilder();
-
-	/**
-	 * For future uses.
-	 * @return the singleton-instance of this builder
-	 */
-	public static CardinalityBuilder getInstance(){
-		return INSTANCE;
-	}
-
-	// -----------------------------------------------------
-
 	/**
 	 * @return a 1:1-Cardinality
 	 */
@@ -173,7 +159,8 @@ public final class CardinalityBuilder implements Serializable {
      */
     private CardinalityBuilder(){}
 
-
+    // ------------------------------------------------------
+    
     /**
      * Default implementation of Cardinality.
      * if max == -1 it will be handled as unbounded.
@@ -221,15 +208,6 @@ public final class CardinalityBuilder implements Serializable {
 		 */
 		public int getMinOccurs() {
 			return Math.abs(getMin());
-		}
-
-		// -----------------------------------------------------
-
-		/**
-		 * @return true if is single cardinality
-		 */
-		public boolean isSingle() {
-			return (getMax()==1);
 		}
 
 		// -----------------------------------------------------
