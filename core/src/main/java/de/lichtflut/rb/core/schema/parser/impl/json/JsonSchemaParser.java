@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -19,11 +18,13 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.NamespaceHandle;
 import org.arastreju.sge.naming.QualifiedName;
 import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import scala.actors.threadpool.Arrays;
 import de.lichtflut.infra.logging.StopWatch;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
@@ -43,7 +44,7 @@ import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
 
 /**
  * <p>
- *  Schema importer from JSON formart.
+ *  Schema importer from JSON format.
  * </p>
  *
  * <p>
@@ -92,11 +93,10 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 					final ResourceSchema schema = readSchema(p, result);
 					result.add(schema);
 				}
-			} else if (PUBLIC_TYPE_DEFINITIONS.equals(p.getCurrentName())) {
+			} else if (PUBLIC_CONSTRAINTS.equals(p.getCurrentName())) {
 				assertStartArray(p);
 				while (p.nextToken() != JsonToken.END_ARRAY) {
-					final Constraint constraint = readConstraint(p, result);
-					result.add(constraint);
+					readPublicConstraints(p, result);
 				}
 			} else if (NAMESPACE_DECLS.equals(p.getCurrentName())) {
 				assertStartArray(p);
@@ -138,26 +138,36 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		return schema;
 	}
 	
-	private Constraint readConstraint(final JsonParser p, final ParsedElements result) throws IOException {
+	private void readPublicConstraints(final JsonParser p, final ParsedElements result) throws IOException {
 		ResourceID id = new SimpleResourceID();
 		String name = id.getQualifiedName().getSimpleName();
-		Datatype datatype = Datatype.STRING;
-		Collection<Constraint> constraints = Collections.emptySet();
+		List<Datatype> datatypes = new ArrayList<Datatype>();
+		Constraint constraint;
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (ID.equals(field)) {
 				id = toResourceID(p.getText());
 			} else if (NAME.equals(field)) {
 				name = p.getText();
-			} else if (DATATYPE.equals(field)) {
-				 datatype = Datatype.valueOf(p.getText().toUpperCase());
-			} else if (CONSTRAINTS.equals(field)) {
-				constraints = readConstraints(p);
+			} else if(APPLICABLE_DATATYPES.equals(field)){
+					datatypes.addAll(extractDatatypes(p));
+			} else if (RESOURCE_CONSTRAINT.equals(field)) {
+				result.add(ConstraintBuilder.buildPublicResourceConstraint(id, name, readConstraint(p).getResourceTypeConstraint()));
+			} else if (LITERAL_CONSTRAINT.equals(field)) {
+				constraint = readConstraint(p);
+				result.add(ConstraintBuilder.buildPublicLiteralConstraint(id, name, constraint.getLiteralConstraint(), constraint.getApplicableDatatypes()));
 			}
 		}
-		return ConstraintBuilder.emptyConstraint();
 	}
 	
+	private Collection<Datatype> extractDatatypes(JsonParser p) throws JsonParseException, IOException {
+		List<Datatype> list = new ArrayList<Datatype>();
+			for (Object string : Arrays.asList(p.getText().split(","))) {
+				list.add(Datatype.valueOf(((String) string).trim().toUpperCase()));
+			}
+		return list;
+	}
+
 	private void readNamespaces(final JsonParser p) throws IOException {
 		String uri = null;
 		String prefix = null;
@@ -188,11 +198,12 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				min = p.getIntValue();
 			} else if (MAX.equals(field)) {
 				max = p.getIntValue();
-			} else if (TYPE_REFERENCE.equals(field)) {
-//				final ResourceID ref = toResourceID(p.getText());
-//				decl.setTypeDefinition(new TypeDefinitionReference(ref));
-			} else if (TYPE_DEFINITION.equals(field)) {
-//				decl.setTypeDefinition(readTypeDef(p));
+			} else if (DATATYPE.equals(field)) {
+				decl.setDatatype(Datatype.valueOf(p.getText().toUpperCase()));
+			} else if (RESOURCE_CONSTRAINT.equals(field)) {
+				decl.setConstraint(readConstraint(p));
+			} else if (LITERAL_CONSTRAINT.equals(field)) {
+				decl.setConstraint(readConstraint(p));
 			} else if (FIELD_LABEL.equals(field)) {
 				decl.setFieldLabelDefinition(readFieldLabel(p));
 			}
@@ -201,18 +212,6 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		return decl;
 	}
 	
-//	private TypeDefinition readTypeDef(final JsonParser p) throws IOException {
-//		final TypeDefinitionImpl def = new TypeDefinitionImpl();
-//		while (p.nextToken() != JsonToken.END_OBJECT) {
-//			final String field = nextField(p);
-//			if (DATATYPE.equals(field)) {
-//				def.setDataType(Datatype.valueOf(p.getText().toUpperCase()));
-//			} else if (CONSTRAINTS.equals(field)) {
-//				def.setConstraints(readConstraints(p));
-//			}
-//		}
-//		return def;
-//	}
 	
 	private FieldLabelDefinition readFieldLabel(final JsonParser p) throws IOException {
 		final FieldLabelDefinitionImpl def = new FieldLabelDefinitionImpl();
@@ -227,22 +226,28 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		return def;
 	}
 	
-	private Collection<Constraint> readConstraints(final JsonParser p) throws IOException {
-		final List<Constraint> result = new ArrayList<Constraint>();
+	private Constraint readConstraint(final JsonParser p) throws IOException {
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
-			if (LITERAL.equals(field)) {
-				result.add(ConstraintBuilder.buildLiteralConstraint(p.getText()));
-			} else if (RESOURCE_TYPE.equals(field)){
-				result.add(ConstraintBuilder.buildResourceConstraint(toResourceID(p.getText())));
-			}
+			return getConstraintFromString(p, field);
 		}
-		return result;
+		return ConstraintBuilder.emptyConstraint();
+	}
+
+	private Constraint getConstraintFromString(final JsonParser p, final String field) throws IOException, JsonParseException {
+		Constraint c = ConstraintBuilder.emptyConstraint();
+		if (LITERAL_CONSTRAINT.equals(field)) {
+			c = ConstraintBuilder.buildLiteralConstraint(p.getText());
+		} else if (RESOURCE_CONSTRAINT.equals(field)){
+			c = ConstraintBuilder.buildResourceConstraint(toResourceID(p.getText()));
+		}
+		return c;
 	}
 	
 	// -----------------------------------------------------
 	
 	private String nextField(final JsonParser p) throws IOException {
+		System.out.println(p.getCurrentName() + " - " + p.getText()+ " - " + p.getLastClearedToken());
 		Validate.isTrue(p.getCurrentToken() == JsonToken.FIELD_NAME, "expected fieldname: " + p.getTokenLocation());
 		final String field = p.getCurrentName();
 		p.nextToken();

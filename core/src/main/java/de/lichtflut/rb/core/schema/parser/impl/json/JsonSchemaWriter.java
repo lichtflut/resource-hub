@@ -80,7 +80,7 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	 * @throws JsonGenerationException
 	 */
 	public void writePublicConstraints(final JsonGenerator g,  final List<Constraint> constraints) throws IOException {
-		g.writeArrayFieldStart(PUBLIC_TYPE_DEFINITIONS);
+		g.writeArrayFieldStart(PUBLIC_CONSTRAINTS);
 		for (Constraint constr : constraints) {
 			g.writeStartObject();
 			writePublicConstraint(g, constr);
@@ -157,7 +157,7 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	}
 	
 	private void writeConstraints(final JsonGenerator g, final Collection<Constraint> constraints) throws JsonGenerationException, IOException {
-		g.writeObjectFieldStart(CONSTRAINTS);
+		g.writeObjectFieldStart(CONSTRAINT);
 		for (Constraint constraint : constraints) {
 			if (constraint.isResourceReference()) {
 				g.writeStringField(RESOURCE_TYPE, uri(constraint.getResourceTypeConstraint()));

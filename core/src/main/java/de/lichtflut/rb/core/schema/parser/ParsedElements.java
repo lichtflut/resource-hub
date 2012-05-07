@@ -40,10 +40,10 @@ public class ParsedElements {
 	}
 
 	/**
-	 * @param typeDef
+	 * @param constraint
 	 */
-	public void add(final Constraint typeDef) {
-		this.constraints.add(typeDef);
+	public void add(final Constraint constraint) {
+		this.constraints.add(constraint);
 	}
 	
 	/**

@@ -154,9 +154,9 @@ public class JsonBindingTest {
 	/**
 	 * @return
 	 */
-	private Constraint createEmailTypeDef() {
-		final ResourceID id = new SimpleResourceID(NAMESPACE_URI, "EmailAdressTypeDef");
-		return ConstraintBuilder.buildPublicLiteralConstraint(id, "Email-Address", ".*@.*", Datatype.STRING);
-	}
+//	private Constraint createEmailTypeDef() {
+//		final ResourceID id = new SimpleResourceID(NAMESPACE_URI, "EmailAdressTypeDef");
+//		return ConstraintBuilder.buildPublicLiteralConstraint(id, "Email-Address", ".*@.*", Datatype.STRING);
+//	}
 	
 }
