@@ -8,6 +8,7 @@ import static org.arastreju.sge.SNOPS.uri;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -18,10 +19,10 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonGenerator;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.parser.IOConstants;
 import de.lichtflut.rb.core.schema.parser.OutputElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaWriter;
@@ -49,7 +50,7 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 		g.writeStartObject();
 		write(g, elements.getNamespaceMap());
 		writeSchemas(g, elements.getSchemas());
-		writeTypeDefs(g, elements.getTypeDefs());
+		writePublicConstraints(g, elements.getConstraints());
 		g.close(); 
 	}
 	
@@ -74,15 +75,15 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	
 	/**
 	 * @param g The generator.
-	 * @param typeDefinitions
+	 * @param constraints
 	 * @throws IOException
 	 * @throws JsonGenerationException
 	 */
-	public void writeTypeDefs(final JsonGenerator g,  final List<TypeDefinition> typeDefinitions) throws IOException {
+	public void writePublicConstraints(final JsonGenerator g,  final List<Constraint> constraints) throws IOException {
 		g.writeArrayFieldStart(PUBLIC_TYPE_DEFINITIONS);
-		for (TypeDefinition def : typeDefinitions) {
+		for (Constraint constr : constraints) {
 			g.writeStartObject();
-			writePublicTypeDef(g, def);
+			writePublicConstraint(g, constr);
 			g.writeEndObject();
 		}
 		g.writeEndArray();
@@ -120,32 +121,27 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 			if (!decl.getCardinality().isUnbound()) {
 				g.writeNumberField(MAX, decl.getCardinality().getMaxOccurs());
 			}
-			if (decl.getTypeDefinition().isPublicTypeDef()) {
-				g.writeStringField(TYPE_REFERENCE, uri(decl.getTypeDefinition().getID()));
+			if (decl.getConstraint().isPublicConstraint()) {
+				g.writeStringField(TYPE_REFERENCE, uri(decl.getConstraint().getID()));
 			} else {
-				writeImplicitTypeDef(g, decl.getTypeDefinition());
+				writeDatatype(g, decl.getDatatype());
 			}
 			g.writeEndObject();
 		}
 	}
 
-	private void writePublicTypeDef(final JsonGenerator g, final TypeDefinition def) throws JsonGenerationException, IOException {
-		if (def.isPublicTypeDef()) {
-			g.writeStringField(ID, uri(def.getID()));
-			g.writeStringField(NAME, def.getName());
+	private void writePublicConstraint(final JsonGenerator g, final Constraint constr) throws JsonGenerationException, IOException {
+		if (constr.isPublicConstraint()) {
+			g.writeStringField(ID, uri(constr.getID()));
+			g.writeStringField(NAME, constr.getName());
 		}
-		g.writeStringField(DATATYPE, def.getDataType().name().toLowerCase());
-		if (!def.getConstraints().isEmpty()) {
-			writeConstraints(g, def.getConstraints());	
-		}
+		ArrayList<Constraint> list = new ArrayList<Constraint>();
+		list.add(constr);
+		writeConstraints(g, list);	
 	}
 	
-	private void writeImplicitTypeDef(final JsonGenerator g, final TypeDefinition def) throws JsonGenerationException, IOException {
-		g.writeObjectFieldStart(TYPE_DEFINITION);
-		g.writeStringField(DATATYPE, def.getDataType().name().toLowerCase());
-		if (!def.getConstraints().isEmpty()) {
-			writeConstraints(g, def.getConstraints());	
-		}
+	private void writeDatatype(final JsonGenerator g, final Datatype datatype) throws JsonGenerationException, IOException {
+		g.writeStringField(DATATYPE, datatype.name().toLowerCase());
 		g.writeEndObject();
 	}
 	

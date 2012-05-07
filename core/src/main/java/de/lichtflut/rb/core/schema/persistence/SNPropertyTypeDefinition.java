@@ -70,7 +70,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 */
 	public SNPropertyTypeDefinition(final ResourceNode resource, final Context... contexts) {
 		super(resource);
-		SNOPS.associate(this, RDF.TYPE, RBSchema.PROPERTY_TYPE_DEF, contexts);
+		SNOPS.associate(this, RDF.TYPE, RBSchema.PROPERTY_CONSTRAINT, contexts);
 	}
 
 	// -----------------------------------------------------
@@ -161,7 +161,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 * @return true if it is defined as public.
 	 */
 	public boolean isPublic() {
-		return Aras.TRUE.equals(SNOPS.singleObject(this, RBSchema.IS_PUBLIC_TYPE_DEF));
+		return Aras.TRUE.equals(SNOPS.singleObject(this, RBSchema.IS_PUBLIC_CONSTRAINT));
 	}
 	
 	/**
@@ -169,7 +169,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 * @param contexts The contexts of this statement. 
 	 */
 	public void setPublic(final Context... contexts) {
-		SNOPS.assure(this, RBSchema.IS_PUBLIC_TYPE_DEF, Aras.TRUE, contexts);
+		SNOPS.assure(this, RBSchema.IS_PUBLIC_CONSTRAINT, Aras.TRUE, contexts);
 	}
 	
 	/**
@@ -177,7 +177,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 * @param contexts The contexts of this statement. 
 	 */
 	public void setPrivate(final Context... contexts) {
-		SNOPS.assure(this, RBSchema.IS_PUBLIC_TYPE_DEF, Aras.FALSE, contexts);
+		SNOPS.assure(this, RBSchema.IS_PUBLIC_CONSTRAINT, Aras.FALSE, contexts);
 	}
 	
 	

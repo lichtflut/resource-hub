@@ -23,7 +23,6 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
@@ -63,32 +62,6 @@ import java.util.HashMap;
 	}
 	
 	private void buildTypeDef(String key, String value){
-		String ns = $schema_decl::currentNS.getUri();
-		if(TYPE_DEF_CONST.equals(key)){
-			TypeDefinitionImpl def = $property_decl::def;
-			def.setName(ns+key);
-			def.setElementaryDataType(Datatype.valueOf(value.toUpperCase()));
-		}
-		if(RESOURCE_CONSTRAINT_CONST.equals(key)){
-			TypeDefinitionImpl def = $property_decl::def;
-			def.addConstraint(ConstraintBuilder.buildConstraint(toResourceID(value)));
-		}
-		if(FIELD_LABEL_CONST.equals(key)){
-			PropertyDeclarationImpl pDec = $property_decl::pDec;
-			if(pDec.getFieldLabelDefinition() == null){
-				pDec.setFieldLabelDefinition(new FieldLabelDefinitionImpl(value));
-			}else{
-				pDec.getFieldLabelDefinition().setDefaultLabel(value);
-			}
-		}
-		if(key.matches(FIELD_LABEL_INT_CONST)){
-			PropertyDeclarationImpl pDec = $property_decl::pDec;
-			if(pDec.getFieldLabelDefinition() == null){
-				pDec.setFieldLabelDefinition(new FieldLabelDefinitionImpl(value));
-			}
-			String locale = key.substring(12, 14);
-			pDec.getFieldLabelDefinition().setLabel(new Locale(locale), value);
-		}
 	}
 	
 	public ResourceID toResourceID(final String name) {
@@ -165,18 +138,15 @@ label_decl:  ^(LABEL (rule=STRING{
 
 // Definition of a property-declaration
 property_decl scope{
-TypeDefinitionImpl def;
 PropertyDeclarationImpl pDec;
 } 
 @init{
-	$property_decl::def = new TypeDefinitionImpl(new SimpleResourceID(), true);
 	$property_decl::pDec = new PropertyDeclarationImpl();
 
 }: ^(PROPERTY (s=STRING cardinal_decl (assigment +) {
 					String cleaned = removeAll($s.text, "\"");
 					ResourceID sid = toResourceID(cleaned);
 					$property_decl::pDec.setPropertyDescriptor(sid);
-					$property_decl::pDec.setTypeDefinition($property_decl::def);
 					$property_decl::pDec.setCardinality(CardinalityBuilder.extractFromString($cardinal_decl.text));
 					$schema_decl::schema.addPropertyDeclaration($property_decl::pDec);
 				}

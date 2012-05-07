@@ -8,8 +8,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
@@ -34,7 +35,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	/**
 	 *
 	 */
-	private Collection<TypeDefinition> propertiesDeclarations = new LinkedHashSet<TypeDefinition>();
+	private Collection<Constraint> propertiesDeclarations = new LinkedHashSet<Constraint>();
 	/**
 	 *
 	 */
@@ -52,7 +53,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	 * @param propertiesDeclarations -
 	 */
 	public void setPropertyDeclarations(
-			final Collection<TypeDefinition> propertiesDeclarations) {
+			final Collection<Constraint> propertiesDeclarations) {
 		this.propertiesDeclarations = propertiesDeclarations;
 	}
 
@@ -62,7 +63,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	 * Adds a proppertydeclaration.
 	 * @param property -
 	 */
-	public void addPropertyDeclaration(final TypeDefinition property) {
+	public void addPropertyDeclaration(final Constraint property) {
 		this.propertiesDeclarations.add(property);
 	}
 
@@ -146,7 +147,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	 * Returns all Propertydeclarations.
 	 * @return Propertydeclarationsgit check
 	 */
-	public Collection<TypeDefinition> getPropertyDeclarations() {
+	public Collection<Constraint> getPublicConstraints() {
 		//return an empty collection if an error is occured
 		if(isErrorOccured()){
 			return Collections.emptySet();
@@ -160,7 +161,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<TypeDefinition> getPropertyDeclarationsIgnoreErrors() {
+	public Collection<Constraint> getPropertyDeclarationsIgnoreErrors() {
 		return this.propertiesDeclarations;
 	}
 
@@ -169,16 +170,16 @@ public class RSParsingResultImpl implements RSParsingResult{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<TypeDefinition> getPropertyDeclarationsWithoutResourceAssocIgnoreErrors(){
-		Collection<TypeDefinition> output = new HashSet<TypeDefinition>();
+	public Collection<Constraint> getPropertyDeclarationsWithoutResourceAssocIgnoreErrors(){
+		Collection<Constraint> output = new HashSet<Constraint>();
 		//Get all propertyDecs assigned to the ResourceSchema
 		for (ResourceSchema rSchema : this.resourceSchemas) {
 			for (PropertyDeclaration assertion : rSchema.getPropertyDeclarations()) {
-				output.add(assertion.getTypeDefinition());
+				output.add(assertion.getConstraint());
 			}
 		}//End of outer for
 
-		for (TypeDefinition pDec : this.propertiesDeclarations) {
+		for (Constraint pDec : this.propertiesDeclarations) {
 			if(output.contains(pDec)) {output.remove(pDec);}
 		}
 		return output;
@@ -189,7 +190,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<TypeDefinition> getPropertyDeclarationsWithoutResourceAssoc() {
+	public Collection<Constraint> getPropertyDeclarationsWithoutResourceAssoc() {
 		//return an empty collection if an error is occured
 		if(isErrorOccured()){ return Collections.emptySet();}
 		return getPropertyDeclarationsWithoutResourceAssocIgnoreErrors();

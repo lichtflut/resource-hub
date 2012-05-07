@@ -42,7 +42,7 @@ public class CreatePublicTypeDefDialog extends AbstractCreateResourceDialog {
 	@Override
 	public void onCreate(QualifiedName qn, AjaxRequestTarget target) {
 		final TypeDefinition def = provider.getSchemaManager().
-				prepareTypeDefinition(qn, qn.getSimpleName());
+				prepareConstraint(qn, qn.getSimpleName());
 		send(getPage(), Broadcast.BREADTH, 
 				new ModelChangeEvent<TypeDefinition>(def, ModelChangeEvent.PUBLIC_TYPE_DEFINITION));
 	}

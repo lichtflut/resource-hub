@@ -20,14 +20,33 @@ import java.util.Set;
  */
 public interface FieldLabelDefinition extends Serializable {
 
+	/**
+	 * @return the default label for this Field label.
+	 */
 	String getDefaultLabel();
 	
+	/**
+	 * @param locale
+	 * @return the Label for a given {@link Locale}. If no label is set for the given Locale, the Default label will be returned.
+	 */
 	String getLabel(Locale locale);
 	
+	/**
+	 * @return a {@link Set} of {@link Locale}s that are supported by this Field label.
+	 */
 	Set<Locale> getSupportedLocales();
 	
+	/**
+	 * Sets the default label.
+	 * @param label
+	 */
 	void setDefaultLabel(String label);
 	
+	/**
+	 * Sets the label for a given {@link Locale}.
+	 * @param locale
+	 * @param label
+	 */
 	void setLabel(Locale locale, String label);
 	
 }

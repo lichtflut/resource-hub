@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.schema.parser;
 
 import java.util.Collection;
 
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
@@ -86,7 +86,7 @@ public interface RSParsingResult {
 	 * Returns a Collection of property declarations.
 	 * @return is empty when at least on error has been occurred
 	 */
-	Collection<TypeDefinition> getPropertyDeclarations();
+	Collection<Constraint> getPublicConstraints();
 
 	// -----------------------------------------------------
 
@@ -110,7 +110,7 @@ public interface RSParsingResult {
 	 *
 	 * @return the PropertyDeclaration even if errors have been occured
 	 */
-	Collection<TypeDefinition> getPropertyDeclarationsIgnoreErrors();
+	Collection<Constraint> getPropertyDeclarationsIgnoreErrors();
 
 	// -----------------------------------------------------
 
@@ -119,7 +119,7 @@ public interface RSParsingResult {
 	 * @return the PropertyDeclaration which are not assigned to a
 	 *         ResourceSchema, even if errors have been occured
 	 */
-	Collection<TypeDefinition> getPropertyDeclarationsWithoutResourceAssocIgnoreErrors();
+	Collection<Constraint> getPropertyDeclarationsWithoutResourceAssocIgnoreErrors();
 
 	// -----------------------------------------------------
 
@@ -128,7 +128,7 @@ public interface RSParsingResult {
 	 *
 	 * @return is empty when at least on error has been occurred
 	 */
-	Collection<TypeDefinition> getPropertyDeclarationsWithoutResourceAssoc();
+	Collection<Constraint> getPropertyDeclarationsWithoutResourceAssoc();
 
 	// -----------------------------------------------------
 

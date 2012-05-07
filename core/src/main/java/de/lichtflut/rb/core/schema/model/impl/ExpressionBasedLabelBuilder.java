@@ -214,5 +214,5 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 			throw new IllegalStateException("Unecpected class for resource reference: " + ref.getClass());
 		}
 	}
-	
+
 }

@@ -46,7 +46,7 @@ public class PublicTypeDefListModel extends AbstractLoadableDetachableModel<List
 	@Override
 	public List<TypeDefinition> load() {
 		return new ArrayList<TypeDefinition>(
-				provider.getSchemaManager().findPublicTypeDefinitions());
+				provider.getSchemaManager().findPublicConstraints());
 	}
 	
 }

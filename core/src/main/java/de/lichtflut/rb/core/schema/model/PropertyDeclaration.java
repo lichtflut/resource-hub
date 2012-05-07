@@ -39,22 +39,6 @@ public interface PropertyDeclaration extends Serializable {
 	// -----------------------------------------------------
 
 	/**
-	 * The concrete property of this assertion.
-	 * @return The property.
-	 */
-	@Deprecated
-	TypeDefinition getTypeDefinition();
-	
-	/**
-	 * Assign an implicit/private oder an standalone/public TypeDefinition.
-	 * @param def The type definition.
-	 */
-	@Deprecated
-	void setTypeDefinition(TypeDefinition def);
-
-	// -----------------------------------------------------
-
-	/**
 	 * The cardinality of this property.
 	 * @return The cardinality.
 	 */

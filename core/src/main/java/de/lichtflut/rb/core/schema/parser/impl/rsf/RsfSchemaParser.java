@@ -6,16 +6,8 @@ package de.lichtflut.rb.core.schema.parser.impl.rsf;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.antlr.runtime.ANTLRInputStream;
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
-
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
-import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultErrorReporter;
-import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 
 /**
  * <p>
@@ -35,25 +27,25 @@ public class RsfSchemaParser implements ResourceSchemaParser{
 	 */
 	@Override
 	public ParsedElements parse(InputStream in) throws IOException {
-		final ParsedElements result = new ParsedElements();
-
-		CharStream input = null;
-		input = new ANTLRInputStream(in);
-		RSFLexer lexer = new RSFLexer(input);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		RSFParser parser = new RSFParser(tokens);
-		try {
-			RSFParser.statements_return r = parser.statements();
-
-			CommonTreeNodeStream nodes = new CommonTreeNodeStream(r.getTree());
-			nodes.setTokenStream(tokens);
-			RSFTree walker = new RSFTree(nodes);
-			walker.setErrorReporter(new RSParsingResultErrorReporter(new RSParsingResultImpl()));
-			result.getSchemas().addAll(walker.statements());
-		} catch (RecognitionException e) {
-			throw new RuntimeException(e);
-		}
-		return result;
+//		final ParsedElements result = new ParsedElements();
+//
+//		CharStream input = null;
+//		input = new ANTLRInputStream(in);
+//		RSFLexer lexer = new RSFLexer(input);
+//		CommonTokenStream tokens = new CommonTokenStream(lexer);
+//		RSFParser parser = new RSFParser(tokens);
+//		try {
+//			RSFParser.statements_return r = parser.statements();
+//
+//			CommonTreeNodeStream nodes = new CommonTreeNodeStream(r.getTree());
+//			nodes.setTokenStream(tokens);
+//			RSFTree walker = new RSFTree(nodes);
+//			walker.setErrorReporter(new RSParsingResultErrorReporter(new RSParsingResultImpl()));
+//			result.getSchemas().addAll(walker.statements());
+//		} catch (RecognitionException e) {
+//			throw new RuntimeException(e);
+//		}
+		return null;
 	}
 
 }

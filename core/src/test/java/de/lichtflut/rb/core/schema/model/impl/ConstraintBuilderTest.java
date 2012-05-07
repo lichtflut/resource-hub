@@ -19,7 +19,7 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 
 /**
- * Testclass for {@link OldConstraintBuilder}. <br>
+ * Testclass for {@link ConstraintBuilder}. <br>
  * Created: May 2, 2012
  * 
  * @author Ravi Knox

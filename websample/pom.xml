@@ -31,9 +31,7 @@
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
 			<artifactId>lf.resource-browser.webck</artifactId>
-			<version>${project.version}</version>
-			<type>jar</type>
-			<optional>false</optional>
+			<version>0.4-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- JETTY DEPENDENCIES FOR TESTING -->

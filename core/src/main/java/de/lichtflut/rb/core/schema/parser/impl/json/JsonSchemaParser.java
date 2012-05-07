@@ -30,7 +30,6 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
@@ -38,8 +37,6 @@ import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionReference;
 import de.lichtflut.rb.core.schema.parser.IOConstants;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
@@ -98,8 +95,8 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 			} else if (PUBLIC_TYPE_DEFINITIONS.equals(p.getCurrentName())) {
 				assertStartArray(p);
 				while (p.nextToken() != JsonToken.END_ARRAY) {
-					final TypeDefinition typeDef = readPublicTypeDef(p, result);
-					result.add(typeDef);
+					final Constraint constraint = readConstraint(p, result);
+					result.add(constraint);
 				}
 			} else if (NAMESPACE_DECLS.equals(p.getCurrentName())) {
 				assertStartArray(p);
@@ -141,7 +138,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		return schema;
 	}
 	
-	private TypeDefinition readPublicTypeDef(final JsonParser p, final ParsedElements result) throws IOException {
+	private Constraint readConstraint(final JsonParser p, final ParsedElements result) throws IOException {
 		ResourceID id = new SimpleResourceID();
 		String name = id.getQualifiedName().getSimpleName();
 		Datatype datatype = Datatype.STRING;
@@ -158,11 +155,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				constraints = readConstraints(p);
 			}
 		}
-		final TypeDefinitionImpl def = new TypeDefinitionImpl(id, true);
-		def.setName(name);
-		def.setDataType(datatype);
-		def.setConstraints(constraints);
-		return def;
+		return ConstraintBuilder.emptyConstraint();
 	}
 	
 	private void readNamespaces(final JsonParser p) throws IOException {
@@ -196,10 +189,10 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 			} else if (MAX.equals(field)) {
 				max = p.getIntValue();
 			} else if (TYPE_REFERENCE.equals(field)) {
-				final ResourceID ref = toResourceID(p.getText());
-				decl.setTypeDefinition(new TypeDefinitionReference(ref));
+//				final ResourceID ref = toResourceID(p.getText());
+//				decl.setTypeDefinition(new TypeDefinitionReference(ref));
 			} else if (TYPE_DEFINITION.equals(field)) {
-				decl.setTypeDefinition(readTypeDef(p));
+//				decl.setTypeDefinition(readTypeDef(p));
 			} else if (FIELD_LABEL.equals(field)) {
 				decl.setFieldLabelDefinition(readFieldLabel(p));
 			}
@@ -208,18 +201,18 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		return decl;
 	}
 	
-	private TypeDefinition readTypeDef(final JsonParser p) throws IOException {
-		final TypeDefinitionImpl def = new TypeDefinitionImpl();
-		while (p.nextToken() != JsonToken.END_OBJECT) {
-			final String field = nextField(p);
-			if (DATATYPE.equals(field)) {
-				def.setDataType(Datatype.valueOf(p.getText().toUpperCase()));
-			} else if (CONSTRAINTS.equals(field)) {
-				def.setConstraints(readConstraints(p));
-			}
-		}
-		return def;
-	}
+//	private TypeDefinition readTypeDef(final JsonParser p) throws IOException {
+//		final TypeDefinitionImpl def = new TypeDefinitionImpl();
+//		while (p.nextToken() != JsonToken.END_OBJECT) {
+//			final String field = nextField(p);
+//			if (DATATYPE.equals(field)) {
+//				def.setDataType(Datatype.valueOf(p.getText().toUpperCase()));
+//			} else if (CONSTRAINTS.equals(field)) {
+//				def.setConstraints(readConstraints(p));
+//			}
+//		}
+//		return def;
+//	}
 	
 	private FieldLabelDefinition readFieldLabel(final JsonParser p) throws IOException {
 		final FieldLabelDefinitionImpl def = new FieldLabelDefinitionImpl();

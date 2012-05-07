@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.arastreju.sge.model.Statement;
 
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ public class ParsedElements {
 	
 	private final List<ResourceSchema> schemas = new ArrayList<ResourceSchema>();
 	
-	private final List<TypeDefinition> typeDefs = new ArrayList<TypeDefinition>();
+	private final List<Constraint> constraints = new ArrayList<Constraint>();
 	
 	private final List<Statement> statements = new ArrayList<Statement>();
 	
@@ -42,8 +42,8 @@ public class ParsedElements {
 	/**
 	 * @param typeDef
 	 */
-	public void add(final TypeDefinition typeDef) {
-		this.typeDefs.add(typeDef);
+	public void add(final Constraint typeDef) {
+		this.constraints.add(typeDef);
 	}
 	
 	/**
@@ -65,8 +65,8 @@ public class ParsedElements {
 	/**
 	 * @return the typeDefs
 	 */
-	public List<TypeDefinition> getTypeDefs() {
-		return typeDefs;
+	public List<Constraint> getConstraints() {
+		return constraints;
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class ParsedElements {
 	@Override
 	public String toString() {
 		return schemas.size() + " schema(s) and " 
-				+ typeDefs.size() + " type definition(s) with "
+				+ constraints.size() + " type definition(s) with "
 				+ statements.size() + " additional statement(s)"; 
 	}
 	

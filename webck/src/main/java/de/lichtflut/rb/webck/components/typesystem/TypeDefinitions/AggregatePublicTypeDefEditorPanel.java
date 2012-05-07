@@ -55,7 +55,7 @@ public class AggregatePublicTypeDefEditorPanel extends Panel {
 	// ------------------------------------------------------
 	
 	protected void displayTypeDefEditor(final TypeDefinition def) {
-		final TypeDefinition reloaded = schemaManager().findTypeDefinition(def.getID());
+		final TypeDefinition reloaded = schemaManager().findConstraint(def.getID());
 		final IModel<PropertyRow> model = Model.of(new PropertyRow(reloaded));
 		final TypeDefEditorPanel editor = new TypeDefEditorPanel("editor", model) {
 			@Override

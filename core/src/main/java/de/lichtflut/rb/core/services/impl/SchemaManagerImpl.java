@@ -28,18 +28,19 @@ import org.slf4j.LoggerFactory;
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
 import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
+import de.lichtflut.rb.core.schema.persistence.ConstraintResolver;
 import de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration;
 import de.lichtflut.rb.core.schema.persistence.SNPropertyTypeDefinition;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 import de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding;
-import de.lichtflut.rb.core.schema.persistence.TypeDefinitionResolver;
 import de.lichtflut.rb.core.services.SchemaExporter;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
@@ -57,13 +58,11 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  */
 public class SchemaManagerImpl extends AbstractService implements SchemaManager {
 
-	// -------------MEMBER-FIELDS--------------------------
-
 	private Schema2GraphBinding binding;
 	
 	private Logger logger = LoggerFactory.getLogger(SchemaManagerImpl.class);
 
-	// -----------------------------------------------------
+	// ---------------- Constructor -------------------------
 
 	/**
 	 * Constructor.
@@ -102,7 +101,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public TypeDefinition findTypeDefinition(final ResourceID id) {
+	public Constraint findConstraint(final ResourceID id) {
 		final ModelingConversation mc = mc();
 		final ResourceNode node = mc.findResource(id.getQualifiedName());
 		if (node != null) {
@@ -130,12 +129,12 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<TypeDefinition> findPublicTypeDefinitions() {
-		final List<TypeDefinition> result = new ArrayList<TypeDefinition>();
-		final List<ResourceNode> nodes = gate().createQueryManager().findByType(RBSchema.PROPERTY_TYPE_DEF);
+	public Collection<Constraint> findPublicConstraints() {
+		final List<Constraint> result = new ArrayList<Constraint>();
+		final List<ResourceNode> nodes = gate().createQueryManager().findByType(RBSchema.PROPERTY_CONSTRAINT);
 		for (ResourceNode node : nodes) {
-			final TypeDefinition typeDef = binding.toModelObject(new SNPropertyTypeDefinition(node));
-			if (typeDef.isPublicTypeDef()) {
+			final Constraint typeDef = binding.toModelObject(new SNPropertyTypeDefinition(node));
+			if (typeDef.isPublicConstraint()) {
 				result.add(typeDef);
 			}
 		}
@@ -184,14 +183,14 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void store(final TypeDefinition definition) {
-		Validate.isTrue(definition.isPublicTypeDef(), "Only public type definition may be stopred explicitly.");
+	public void store(final Constraint constraint) {
+		Validate.isTrue(constraint.isPublicConstraint(), "Only public type definition may be stopred explicitly.");
 		final ModelingConversation mc = mc();
-		final ResourceNode existing = mc.findResource(definition.getID().getQualifiedName());
+		final ResourceNode existing = mc.findResource(constraint.getID().getQualifiedName());
 		if (existing != null) {
 			mc.remove(existing);
 		}
-		final SNPropertyTypeDefinition node = binding.toSemanticNode(definition);
+		final SNPropertyTypeDefinition node = binding.toSemanticNode(constraint);
 		mc.attach(node);
 	}
 	
@@ -199,11 +198,10 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public TypeDefinition prepareTypeDefinition(final QualifiedName qn, final String displayName) {
-		final TypeDefinitionImpl typeDef = new TypeDefinitionImpl(new SimpleResourceID(qn), true);
-		typeDef.setName(displayName);
-		store(typeDef);
-		return typeDef;
+	public Constraint prepareConstraint(final QualifiedName qn, final String displayName) {
+		final Constraint constraint = ConstraintBuilder.buildPublicLiteralConstraint(new SimpleResourceID(qn), displayName, "", Datatype.STRING);
+		store(constraint);
+		return constraint;
 	}
 	
 	// -----------------------------------------------------
@@ -259,8 +257,8 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 */
 	protected void removeSchema(final ModelingConversation mc, final SNResourceSchema schemaNode) {
 		for(SNPropertyDeclaration decl : schemaNode.getPropertyDeclarations()) {
-			if (!decl.getTypeDefinition().isPublic()) {
-				mc.remove(decl.getTypeDefinition());
+			if (decl.getConstraints() != null && !decl.getConstraints().isPublic()) {
+				mc.remove(decl.getConstraints());
 			}
 			mc.remove(decl);
 		}
@@ -294,13 +292,13 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	// -----------------------------------------------------
 	
 	/**
-	 * Simple implementation of {@link TypeDefinitionResolver}.
+	 * Simple implementation of {@link ConstraintResolver}.
 	 */
-	private class TypeDefResolverImpl implements TypeDefinitionResolver {
+	private class TypeDefResolverImpl implements ConstraintResolver {
 		@Override
-		public SNPropertyTypeDefinition resolve(final TypeDefinition typeDef) {
+		public SNPropertyTypeDefinition resolve(final Constraint constraint) {
 			final ModelingConversation mc = mc();
-			final ResourceNode node = mc.findResource(typeDef.getID().getQualifiedName());
+			final ResourceNode node = mc.findResource(constraint.getID().getQualifiedName());
 			if (node != null) {
 				return new SNPropertyTypeDefinition(node);
 			} else {

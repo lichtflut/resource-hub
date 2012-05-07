@@ -5,9 +5,6 @@
 package de.lichtflut.rb.core.schema.model.impl;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 
@@ -16,7 +13,6 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
 
 /**
  * <p>
@@ -55,18 +51,6 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	 */
 	public PropertyDeclarationImpl() {
 		this.constraint = ConstraintBuilder.emptyConstraint();
-	}
-	
-	/**
-	 * Constructor.
-	 * Besides the given values, the PropertyDeclaration's default values for Cardinality will be <code>[n..n]</code>
-	 * and the PropertyDescriptor will be used as a default label.
-	 * @param propertyDescriptor -
-	 * @param typeDefinition -
-	 */
-	@Deprecated
-	public PropertyDeclarationImpl(final ResourceID propertyDescriptor,	final TypeDefinition typeDefinition) {
-		this(propertyDescriptor, typeDefinition.getDataType(), ConstraintBuilder.emptyConstraint());
 	}
 	
 	/**
@@ -113,26 +97,6 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	@Override
 	public void setPropertyDescriptor(final ResourceID propertyDescriptor){
 		this.propertyDescriptor = propertyDescriptor;
-	}
-
-	// -----------------------------------------------------
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public TypeDefinition getTypeDefinition() {
-		TypeDefinition typeDef = new TypeDefinitionImpl();
-		typeDef.setDataType(datatype);
-		return typeDef;
-	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setTypeDefinition(final TypeDefinition def) {
-		this.datatype = def.getDataType();
 	}
 
 	// -----------------------------------------------------

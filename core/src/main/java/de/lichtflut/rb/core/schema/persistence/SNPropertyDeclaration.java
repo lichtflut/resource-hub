@@ -69,8 +69,8 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * Get the TypeDefinition.
 	 * @return The TypeDefinition.
 	 */
-	public SNPropertyTypeDefinition getTypeDefinition() {
-		SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_PROPERTY_TYPE_DEF);
+	public SNPropertyTypeDefinition getConstraints() {
+		SemanticNode node = SNOPS.singleObject(this, RBSchema.PROPERTY_CONSTRAINT);
 		if (node != null){
 			return new SNPropertyTypeDefinition(node.asResource());
 		} else {
@@ -84,7 +84,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * @param context The context.
 	 */
 	public void setTypeDefinition(final SNPropertyTypeDefinition typeDef, final Context context) {
-		if (!Infra.equals(getTypeDefinition(), typeDef)){
+		if (!Infra.equals(getConstraints(), typeDef)){
 			SNOPS.assure(this, RBSchema.HAS_PROPERTY_TYPE_DEF, typeDef, context);
 		}
 	}
@@ -185,7 +185,7 @@ public class SNPropertyDeclaration extends ResourceView {
 			sb.append(getPropertyDescriptor().getQualifiedName().toURI());
 		}
 		sb.append(" " + getMinOccurs() + ".." + getMaxOccurs());
-		sb.append("\n\t\t" + getTypeDefinition());
+		sb.append("\n\t\t" + getConstraints());
 		return sb.toString();
 	}
 
