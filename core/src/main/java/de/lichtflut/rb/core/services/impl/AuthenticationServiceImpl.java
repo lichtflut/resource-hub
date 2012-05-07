@@ -77,10 +77,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		final String id = normalize(loginData.getId());
 		final IdentityManagement im = getGateForUser(id).getIdentityManagement();
 		final Credential credential = toCredential(loginData.getPassword(), im.findUser(id));
-		final RBUser user = new RBUser(im.login(id, credential));
+		final User user = im.login(id, credential);
 		setLastLogin(user);
 		logger.info("User {} logged in. ", user);
-		return user;
+		return new RBUser(user);
 	}
 
 	/** 
@@ -98,7 +98,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			if (arasUser != null && isValid(arasUser, id, fields[1], fields[2])) {
 				final RBUser user = new RBUser(arasUser);
 				logger.info("User {} logged in by token.", user);
-				setLastLogin(user);
+				setLastLogin(arasUser);
 				return user;
 			}
 		} catch (ArastrejuRuntimeException e) {
@@ -112,13 +112,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String createRememberMeToken(RBUser user) {
+	public String createRememberMeToken(RBUser user, LoginData loginData) {
 		final String email = user.getEmail();
-		final SemanticNode credential = SNOPS.singleObject(user, Aras.HAS_CREDENTIAL);
+		final String id = normalize(loginData.getId());
+		final IdentityManagement im = getGateForUser(id).getIdentityManagement();
+		final Credential credential = toCredential(loginData.getPassword(), im.findUser(id));
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, 30);
 		final String raw = email + ":" + DATE_FORMAT.format(cal.getTime()); 
-		return raw + ":" + Crypt.md5Hex(raw + credential.asValue().getStringValue());
+		return raw + ":" + Crypt.md5Hex(raw + credential);
 	}
 
 	// ----------------------------------------------------
@@ -185,7 +187,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			return new PasswordCredential(null);
 		}
 	}
-	 
+	
 	private String normalize(String name) {
 		if (name == null) {
 			return null;

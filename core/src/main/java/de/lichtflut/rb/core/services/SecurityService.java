@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.services;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -11,6 +12,7 @@ import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
+import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
 
 
@@ -92,12 +94,20 @@ public interface SecurityService {
 	 * @param user The user.
 	 * @param roles The roles.
 	 */
-	void setUserRoles(User user, List<String> roles);
+	void setUserRoles(RBUser user, List<String> roles);
 	
 	/**
 	 * Removes all roles from a user.
 	 * @param user The user the roles should be removed from.
 	 */
-	void removeAllUserRoles(final User user);
+	void removeAllUserRoles(RBUser user);
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Get all domains known to this system.
+	 * @return The collection of all domains.
+	 */
+	Collection<RBDomain> getAllDomains();
 
 }

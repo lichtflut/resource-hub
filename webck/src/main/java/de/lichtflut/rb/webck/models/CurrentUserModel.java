@@ -7,8 +7,6 @@ import org.apache.wicket.Session;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -43,8 +41,8 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 		};
 	}
 
-	public static ConditionalModel<User> isLoggedIn() {
-		return new ConditionalModel<User>() {
+	public static ConditionalModel<RBUser> isLoggedIn() {
+		return new ConditionalModel<RBUser>() {
 			@Override
 			public boolean isFulfilled() {
 				 return Session.exists() && RBWebSession.get().isAuthenticated();
@@ -52,11 +50,11 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 		};
 	}
 
-	public static ConditionalModel<User> hasPermission(final String permission) {
-		return new ConditionalModel<User>(new CurrentUserModel()) {
+	public static ConditionalModel<RBUser> hasPermission(final String permission) {
+		return new ConditionalModel<RBUser>(new CurrentUserModel()) {
 			@Override
 			public boolean isFulfilled() {
-				final User user = getObject();
+				final RBUser user = getObject();
 				return user != null && user.hasPermission(permission);
 			}
 		};
@@ -82,12 +80,7 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 	 * {@inheritDoc}
 	 */
 	public RBUser load() {
-		final ResourceID userID = provider.getContext().getUser();
-		if (userID != null) {
-			return new RBUser(provider.getResourceResolver().resolve(userID));
-		} else {
-			return null;
-		}
+		return provider.getContext().getUser();
 	}
 	
 }

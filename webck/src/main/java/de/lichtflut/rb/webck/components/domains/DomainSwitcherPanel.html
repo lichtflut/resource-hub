@@ -1,0 +1,27 @@
+<!--
+
+    Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+	<div wicket:id="menu" class="context-menu" style="display:none">
+		<div>
+			<span wicket:id="currentDomain">[current domain]</span>
+		</div>
+		<div wicket:id="domains">
+			<a wicket:id="link">
+				<wicket:container wicket:id="domainName">[domain]</wicket:container>
+			</a>
+		</div>
+	</div>
+
+	<a href="#" wicket:id="domainLabel"></a>
+
+</wicket:panel>
+</html>

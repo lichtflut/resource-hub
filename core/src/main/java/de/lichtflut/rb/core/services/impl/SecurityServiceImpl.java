@@ -3,29 +3,24 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.UUID;
 
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.IdentityManagement;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
-import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.eh.ArastrejuException;
 import org.arastreju.sge.eh.ArastrejuRuntimeException;
 import org.arastreju.sge.model.ElementaryDataType;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
-import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNText;
-import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.security.Credential;
 import org.arastreju.sge.security.Domain;
 import org.arastreju.sge.security.PasswordCredential;
@@ -37,11 +32,15 @@ import org.slf4j.LoggerFactory;
 import de.lichtflut.infra.Infra;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
+import de.lichtflut.rb.core.security.ExternalAuthServer;
 import de.lichtflut.rb.core.security.RBCrypt;
+import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.security.authserver.DedicatedAuthDomain;
 import de.lichtflut.rb.core.services.SecurityService;
 
 /**
@@ -58,6 +57,7 @@ import de.lichtflut.rb.core.services.SecurityService;
 public class SecurityServiceImpl extends AbstractService implements SecurityService {
 	
 	private final Logger logger = LoggerFactory.getLogger(SecurityServiceImpl.class);
+	private ExternalAuthServer authServer;
 	
 	// ----------------------------------------------------
 	
@@ -66,6 +66,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 */
 	public SecurityServiceImpl(AbstractServiceProvider provider) {
 		super(provider);
+		this.authServer = new DedicatedAuthDomain(provider);
 	}
 
 	// ----------------------------------------------------
@@ -78,19 +79,20 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		final String crypted = RBCrypt.encryptWithRandomSalt(password);
 		final Credential credential = new PasswordCredential(crypted);
 		try {
-			final ResourceNode userNode = identityManagement().register(email, credential);
-			final RBUser user = new RBUser(userNode);
-			user.setEmail(email);
+			final IdentityManagement im = identityManagement();
+			final User user = im.register(email, credential);
+			SNOPS.assure(user, RBSystem.HAS_EMAIL, email);
 			if (username != null) {
-				identityManagement().registerAlternateID(user, username);
-				user.setUsername(username);
+				im.registerAlternateID(user, username);
+				SNOPS.assure(user, RBSystem.HAS_USERNAME, username);
 			}
 			final String domain = getProvider().getContext().getDomain();
+			final RBUser rbUser = new RBUser(user);
 			if (domain != null && !gate().getContext().isMasterDomain()) {
-				registerUserInMasterDomain(user, domain);
+				registerUserInMasterDomain(rbUser, domain);
 			}
-			getProvider().getMessagingService().getEmailService().sendRegistrationConfirmation(user, conf, locale);
-			return user;
+			getProvider().getMessagingService().getEmailService().sendRegistrationConfirmation(rbUser, conf, locale);
+			return rbUser;
 		} catch(ArastrejuException e) {
 			if(e.getErrCode().equals(org.arastreju.sge.eh.ErrorCodes.REGISTRATION_NAME_ALREADY_IN_USE)) {
 				throw new RBException(ErrorCodes.SECURITYSERVICE_EMAIL_ALREADY_IN_USE, 
@@ -113,19 +115,19 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		try {
 			final ArastrejuGate gate = gate(domain.getUniqueName());
 			final IdentityManagement im = gate.getIdentityManagement();
-			final RBUser admin = new RBUser(im.register(email, credential));
-			admin.setEmail(email);
+			final User admin = im.register(email, credential);
+			SNOPS.assure(admin, RBSystem.HAS_EMAIL, email);
 			if (username != null) {
 				im.registerAlternateID(admin, username);
-				admin.setUsername(username);
+				SNOPS.assure(admin, RBSystem.HAS_USERNAME, username);
 			}
 			for (String roleName : rolesOfDomainAdmin()) {
 				final Role role = im.registerRole(roleName);
 				im.addUserToRoles(admin, role);
 			}
-			registerUserInMasterDomain(admin, domain.getUniqueName());
+			registerUserInMasterDomain(new RBUser(admin), domain.getUniqueName());
 			logger.info("Created domain admin: " + admin);
-			return admin;
+			return new RBUser(admin);
 		} catch(ArastrejuException e) {
 			logger.error("Error while trying to create admin for domain {} : {}", domain, e.getMessage());
 			throw new ArastrejuRuntimeException(org.arastreju.sge.eh.ErrorCodes.GENERAL_RUNTIME_ERROR, 
@@ -138,7 +140,8 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 */
 	@Override
 	public void storeUser(RBUser updated) throws RBException {
-		final RBUser existing = new RBUser(mc().findResource(updated.getQualifiedName()));
+		final ResourceNode attachedUser = mc().findResource(updated.getQualifiedName());
+		final RBUser existing = new RBUser(attachedUser);
 		if (!Infra.equals(existing.getEmail(), updated.getEmail())) {
 			if (identityManagement().isIdentifierInUse(updated.getEmail())) {
 				throw new RBException(ErrorCodes.SECURITYSERVICE_EMAIL_ALREADY_IN_USE, "Email already in use.");
@@ -149,12 +152,17 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 				throw new RBException(ErrorCodes.SECURITYSERVICE_USERNAME_ALREADY_IN_USE, "Username already in use.");
 			}
 		}
-		mc().attach(updated);
+		SNOPS.assure(attachedUser, RBSystem.HAS_EMAIL, updated.getEmail());
+		if (updated.getUsername() != null) {
+			SNOPS.assure(attachedUser, RBSystem.HAS_USERNAME, updated.getUsername());	
+		} else {
+			SNOPS.remove(attachedUser, RBSystem.HAS_USERNAME);
+		}
 		final List<SNText> identifiers = Arrays.asList(new SNText[] {
 				new SNText(updated.getEmail()), 
 				new SNText(updated.getUsername())
 			});
-		SNOPS.assure(updated, Aras.IDENTIFIED_BY, identifiers, Aras.IDENT);
+		SNOPS.assure(attachedUser, Aras.IDENTIFIED_BY, identifiers, Aras.IDENT);
 		final String domain = getProvider().getContext().getDomain();
 		if (domain != null && !gate().getContext().isMasterDomain()) {
 			updateUserInMasterDomain(existing, updated, domain);
@@ -166,7 +174,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 */
 	@Override
 	public void deleteUser(RBUser user) {
-		mc().remove(user);
+		mc().remove(new SimpleResourceID(user.getQualifiedName()));
 		logger.info("Deleted user: " + user);
 		deleteUserInMasterDomain(user);
 	}
@@ -177,13 +185,12 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setUserRoles(User user, List<String> roles) {
-		ModelingConversation mc = mc();
+	public void setUserRoles(RBUser user, List<String> roles) {
 		IdentityManagement im = identityManagement();
-		mc.attach(user);
-		SNOPS.remove(user, Aras.HAS_ROLE);
+		User arasUser = im.findUser(user.getEmail());
+		SNOPS.remove(arasUser, Aras.HAS_ROLE);
 		for (String current : roles) {
-			im.addUserToRoles(user, im.registerRole(current));
+			im.addUserToRoles(arasUser, im.registerRole(current));
 		}
 	}
 	
@@ -191,8 +198,8 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void removeAllUserRoles(User user) {
-		setUserRoles(user, new ArrayList<String>());
+	public void removeAllUserRoles(RBUser user) {
+		setUserRoles(user, Collections.<String>emptyList());
 	}
 	
 	/**
@@ -212,7 +219,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	@Override
 	public void changePassword(RBUser user, String currentPassword, String newPassword) throws RBException{
 		verifyPassword(user, currentPassword);
-		setPassword(newPassword, user);
+		setPassword(user, newPassword);
 	}
 
 	/** 
@@ -222,9 +229,19 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	@Override
 	public void resetPasswordForUser(RBUser user, EmailConfiguration conf, Locale locale) throws RBException {
 		String generatedPwd = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-		setPassword(generatedPwd, user);
+		setPassword(user, generatedPwd);
 		logGeneratedPwd(generatedPwd);
 		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, generatedPwd, conf, locale);
+	}
+	
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<RBDomain> getAllDomains() {
+		return authServer.getAllDomains();
 	}
 	
 	// ----------------------------------------------------
@@ -249,93 +266,47 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	// ----------------------------------------------------
 	
 	/**
-	 * WARNING: Never forget to sync the users between current domain and master domain!
+	 * WARNING: Never forget to sync the users between current domain and auth server!
 	 * The user's login IDs have to be mapped to the domain.
 	 * @param user The user.
 	 * @param domain The user's domain.
 	 */
-	private void registerUserInMasterDomain(User user, String domain) {
-		final ArastrejuGate masterGate = masterGate();
-		final ModelingConversation mc = masterGate.startConversation();
-		final ResourceNode userNode = new SNResource();
-		userNode.addAssociation(RDF.TYPE, Aras.USER, Aras.IDENT);
-		userNode.addAssociation(Aras.BELONGS_TO_DOMAIN, new SNText(domain), Aras.IDENT);
-		Set<SemanticNode> ids = SNOPS.objects(user, Aras.IDENTIFIED_BY);
-		for (SemanticNode node : ids) {
-			final SNText copy = new SNText(node.asValue().getStringValue());
-			SNOPS.associate(userNode, Aras.IDENTIFIED_BY, copy, Aras.IDENT);
-		}
-		mc.attach(userNode);
-		logger.info("Registered user in master domain: " + user + " --> " + domain);
-		masterGate.close();
+	private void registerUserInMasterDomain(RBUser user, String domain) {
+		authServer.registerUser(user, domain);
 	}
 	
 	/**
-	 * WARNING: Never forget to sync the users between current domain and master domain!
+	 * WARNING: Never forget to sync the users between current domain and auth server!
 	 * The user's login IDs have to be mapped to the domain.
 	 * @param existing The existing user.
 	 * @param updated The updated user.
 	 * @param domain The user's domain.
 	 */
 	private void updateUserInMasterDomain(RBUser existing, RBUser updated, String domain) {
-		final ArastrejuGate masterGate = masterGate();
-		final Query query = masterGate.createQueryManager().buildQuery()
-				.addField(Aras.IDENTIFIED_BY, existing.getEmail())
-				.or()
-				.addField(Aras.IDENTIFIED_BY, existing.getUsername());
-		final QueryResult result = query.getResult();
-		if (!result.isEmpty()) {
-			final ResourceNode targetUser = result.getSingleNode();
-			SNOPS.remove(targetUser, Aras.IDENTIFIED_BY);
-			for (SemanticNode node : SNOPS.objects(updated, Aras.IDENTIFIED_BY)) {
-				final SNText copy = new SNText(node.asValue().getStringValue());
-				SNOPS.associate(targetUser, Aras.IDENTIFIED_BY, copy, Aras.IDENT);
-			}
-			logger.info("Updated user {} in master domain to {}.", existing, updated);
-		} else {
-			logger.info("User not found in master domain: " + existing + " --> " + domain);
-			registerUserInMasterDomain(updated, domain);
-		}
-		masterGate.close();
+		authServer.updateUserIdentity(existing, updated, domain);
 	}
 	
 	/**
-	 *  WARNING: Never forget to sync the users between current domain and master domain!
+	 * WARNING: Never forget to sync the users between current domain and auth server!
 	 * The user's login IDs have to be mapped to the domain.
 	 * @param user The user.
 	 */
 	private void deleteUserInMasterDomain(RBUser user) {
-		final ArastrejuGate masterGate = masterGate();
-		final Query query = masterGate.createQueryManager().buildQuery()
-				.addField(Aras.IDENTIFIED_BY, user.getEmail())
-				.or()
-				.addField(Aras.IDENTIFIED_BY, user.getUsername());
-		final QueryResult result = query.getResult();
-		if (!result.isEmpty()) {
-			for (ResourceNode id : result) {
-				masterGate.startConversation().remove(id);
-				logger.info("User deleted user {} from master domain; ID: {} ", user, id);	
-			}
-		} else {
-			logger.warn("User could not be deleted from master domain: " + user);
-		}
-		masterGate.close();
+		authServer.deleteUser(user);
 	}
 	
 	// ----------------------------------------------------
 
 	/**
 	 * Saves the newPassword to the user in the database.
-	 * @param newPassword
-	 * @param userNode
+	 * @param user The user.
+	 * @param newPassword The new Password.
 	 */
-	private void setPassword(String newPassword, ResourceNode userNode) {
-		if(!userNode.isAttached()){
-			userNode = getProvider().getResourceResolver().resolve(userNode);
-		}
+	private void setPassword(RBUser user, String newPassword) {
 		String newCrypt = RBCrypt.encryptWithRandomSalt(newPassword);
 		SNValue credential = new SNValue(ElementaryDataType.STRING, newCrypt);
-		SNOPS.assure(userNode, Aras.HAS_CREDENTIAL, credential, RB.PRIVATE_CONTEXT);
+		User arasUser = identityManagement().findUser(user.getEmail());
+		SNOPS.assure(arasUser, Aras.HAS_CREDENTIAL, credential, RB.PRIVATE_CONTEXT);
 	}
 	
 	/**
@@ -344,8 +315,9 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * @param password
 	 * @throws RBException if password is invalid
 	 */
-	private void verifyPassword(User user, String password) throws RBException{
-		final String checkCredential = SNOPS.string(SNOPS.singleObject(user, Aras.HAS_CREDENTIAL));
+	private void verifyPassword(RBUser user, String password) throws RBException{
+		User arasUser = identityManagement().findUser(user.getEmail());
+		final String checkCredential = SNOPS.string(SNOPS.singleObject(arasUser, Aras.HAS_CREDENTIAL));
 		if(!RBCrypt.verify(password, checkCredential)) {
 			if (Crypt.md5Hex(password).equals(checkCredential)) {
 				logger.warn("User's password has been encrypted the old way.");
@@ -358,5 +330,5 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	private IdentityManagement identityManagement() {
 		return getProvider().getArastejuGate().getIdentityManagement();
 	}
-
+	
 }

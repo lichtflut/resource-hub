@@ -3,9 +3,8 @@
  */
 package de.lichtflut.rb.core.services;
 
-import org.arastreju.sge.model.ResourceID;
-
 import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.security.RBUser;
 
 /**
  * <p>
@@ -22,7 +21,7 @@ public class ServiceContext {
 	
 	private final RBConfig config;
 	
-	private ResourceID user;
+	private RBUser user;
 	
 	private String domain;
 
@@ -54,14 +53,14 @@ public class ServiceContext {
 	/**
 	 * @return the user
 	 */
-	public ResourceID getUser() {
+	public RBUser getUser() {
 		return user;
 	}
 
 	/**
 	 * @param user the user to set
 	 */
-	public void setUser(ResourceID user) {
+	public void setUser(RBUser user) {
 		this.user = user;
 	}
 

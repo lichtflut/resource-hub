@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.models;
+package de.lichtflut.rb.webck.models.domains;
 
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
@@ -10,6 +10,7 @@ import org.arastreju.sge.security.Domain;
 import org.arastreju.sge.spi.GateContext;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 
