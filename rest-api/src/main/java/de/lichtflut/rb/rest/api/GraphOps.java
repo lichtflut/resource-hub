@@ -1,11 +1,11 @@
 package de.lichtflut.rb.rest.api;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -151,7 +151,16 @@ public class GraphOps extends RBServiceEndpoint{
 
 	@PUT
 	@Consumes({MediaType.APPLICATION_XML})
-	public Response importGraph(@PathParam(DOMAIN_ID_PARAM) String domainID){
+	public Response importGraph(@PathParam(DOMAIN_ID_PARAM) String domainID, InputStream xmlBody){
+		final SemanticGraphIO io = new RdfXmlBinding();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			SemanticGraph graph = io.read(xmlBody);
+			String result = out.toString();
+		}catch(Exception any){
+			
+		}
+		ServiceProvider provider = getProvider(domainID);
 		return Response.ok().build();
 	}
 	

@@ -6,6 +6,7 @@ package de.lichtflut.rb.rest.api;
 import org.arastreju.sge.security.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.ServiceProviderFactory;
 
@@ -36,7 +37,8 @@ public abstract class RBServiceEndpoint {
 		User userNode = rootProvider.getArastejuGate().getIdentityManagement().findUser(ROOT_USER);
 		ServiceProvider provider = providerFactory.create();
 		provider.getContext().setDomain(domainID);
-		provider.getContext().setUser(userNode);
+		RBUser user = new RBUser(userNode);
+		provider.getContext().setUser(user);
 		return provider;
 	}
 	
