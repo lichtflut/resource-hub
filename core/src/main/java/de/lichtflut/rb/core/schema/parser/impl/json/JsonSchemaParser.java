@@ -156,7 +156,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 					datatypes.addAll(extractDatatypes(p));
 			} else if (RESOURCE_CONSTRAINT.equals(field)) {
 				constraint = getConstraintFromString(p, field);
-				result.add(ConstraintBuilder.buildPublicResourceConstraint(id, name, constraint.getResourceTypeConstraint()));
+				result.add(ConstraintBuilder.buildPublicResourceConstraint(id, name, constraint.getResourceConstraint()));
 			} else if (LITERAL_CONSTRAINT.equals(field)) {
 				constraint = getConstraintFromString(p, field);
 				result.add(ConstraintBuilder.buildPublicLiteralConstraint(id, name, constraint.getLiteralConstraint(), datatypes));

@@ -100,7 +100,7 @@ public class JsonSchemaParserTest {
 		assertThat(constraint.getApplicableDatatypes().size(), is(3));
 		assertThat(constraint.getName(), equalTo(name));
 		assertThat(constraint.getLiteralConstraint(), equalTo(literalConstr));
-		assertThat(constraint.getResourceTypeConstraint(), nullValue());
+		assertThat(constraint.getResourceConstraint(), nullValue());
 	}
 	
 	/**
@@ -118,7 +118,7 @@ public class JsonSchemaParserTest {
 		assertThat(constraint.getApplicableDatatypes().size(), is(1));
 		assertThat(constraint.getApplicableDatatypes().get(0), is(Datatype.RESOURCE));
 		assertThat(constraint.getName(), equalTo(name));
-		assertThat(constraint.getResourceTypeConstraint(), equalTo(resourceConstr));
+		assertThat(constraint.getResourceConstraint(), equalTo(resourceConstr));
 		assertThat(constraint.getLiteralConstraint(), nullValue());
 	}
 

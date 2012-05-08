@@ -180,7 +180,7 @@ public class Schema2GraphBinding {
 			sn.setPrivate(RBSchema.CONTEXT);
 		}
 		if (constraint.isResourceReference()) {
-			sn.addTypeConstraint(constraint.getResourceTypeConstraint(), RBSchema.CONTEXT);
+			sn.addTypeConstraint(constraint.getResourceConstraint(), RBSchema.CONTEXT);
 		} else {
 			sn.addLiteralConstraint(constraint.getLiteralConstraint(), RBSchema.CONTEXT);
 		}

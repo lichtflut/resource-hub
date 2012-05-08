@@ -54,7 +54,6 @@ public class OutputElements {
 	 * @param typeDefs
 	 */
 	public void addConstraint(final Collection<Constraint> constraints) {
-		this.constraints.addAll(constraints);
 		for (Constraint constr : constraints) {
 			this.constraints.add(constr);
 			register(constr);
@@ -123,8 +122,6 @@ public class OutputElements {
 	private void register(final Constraint constr) {
 		if (constr.isPublicConstraint()) {
 			register(constr.getID());
-		} else {
-			register(constr.getResourceTypeConstraint());
 		}
 	}
 	

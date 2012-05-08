@@ -70,7 +70,7 @@ public class JsonBindingTest {
 	}
 	
 	@Test
-	public void testTypeDefExport() throws IOException {
+	public void testConstraintsExport() throws IOException {
 //		final JsonSchemaWriter exporter = new JsonSchemaWriter();
 //
 //		final TypeDefinition emailTypeDef = createEmailTypeDef();

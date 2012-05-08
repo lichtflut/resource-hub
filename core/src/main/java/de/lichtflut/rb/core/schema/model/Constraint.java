@@ -68,7 +68,7 @@ public interface Constraint extends Serializable {
 	 * (isResourceTypeConstraint() returns false) null will be returned;
 	 * @return The resource type or null.
 	 */
-	ResourceID getResourceTypeConstraint();
+	ResourceID getResourceConstraint();
 
 	/**
 	 * Returns wether this constraint can be re-used by other {@link PropertyDeclaration}s or not.

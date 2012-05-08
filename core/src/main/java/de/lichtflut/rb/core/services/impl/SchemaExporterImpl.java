@@ -60,7 +60,6 @@ public class SchemaExporterImpl implements SchemaExporter {
 		} catch (IOException e) {
 			report.setAdditionalInfo(e.getMessage());
 			report.error();
-//			e.printStackTrace();
 		}
 		return report;
 	}

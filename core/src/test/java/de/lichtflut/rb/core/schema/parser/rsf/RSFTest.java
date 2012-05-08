@@ -89,7 +89,7 @@ public class RSFTest {
 	}
 	
 	@Test
-	public void readMultipleePropertyDecl() throws RecognitionException{
+	public void readMultiplePropertyDecl() throws RecognitionException{
 		String property = "property \"common:assignedTo\" [1..n] {" +
 				"field-label[klingonian] : \"Kaaargh\"" +
 				"type-definition : \"date\"" +

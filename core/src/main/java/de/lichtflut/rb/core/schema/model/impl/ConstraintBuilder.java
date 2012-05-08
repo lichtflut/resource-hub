@@ -207,7 +207,7 @@ public final class ConstraintBuilder {
 			 * {@inheritDoc}
 			 */
 			@Override
-			public ResourceID getResourceTypeConstraint() {
+			public ResourceID getResourceConstraint() {
 				return resource;
 			}
 
@@ -231,11 +231,45 @@ public final class ConstraintBuilder {
 			 * {@inheritDoc}
 			 */
 			public String toString(){
-				if (!isResourceReference()) {
-					return "literal-constraint(" + getLiteralConstraint() + ")"; 
+				StringBuilder sb = new StringBuilder();
+				if (isResourceReference()) {
+					sb.append("resource-constraint(" + getResourceConstraint().getQualifiedName() + ")");
 				} else {
-					return "resource-constraint(" + getResourceTypeConstraint().getQualifiedName() + ")";
+					sb.append("literal-constraint(" + getLiteralConstraint() + ")");
 				}
+				sb.append(" - id: " + getID() + " name: " + getName() + " appl. datatypes: " + getApplicableDatatypes());
+				return sb.toString();
+			}
+			
+			/**
+			 * {@inheritDoc}
+			 */
+			public boolean equals(Object obj) {
+                if (this == obj){
+                	return true;
+                }
+                if (obj == null){
+                	return false;
+                }
+                if (getClass() != obj.getClass()){
+                	return false;
+                }
+                Constraint copy = (Constraint) obj;
+                if (!id.toURI().equals(copy.getID().toURI())) {
+                	return false;
+                } else if (!name.equals(copy.getName())){
+                	return false;
+				}
+                if(isResourceReference()){
+                	if(!resource.toURI().equals(copy.getResourceConstraint().toURI())){
+                		return false;
+                	}
+                }else{
+                	if(!pattern.equals(copy.getLiteralConstraint())){
+                		return false;
+                	}
+                }
+                return true;
 			}
 		};
 	}

@@ -14,10 +14,13 @@ import java.util.List;
 import java.util.Locale;
 
 import org.arastreju.sge.io.NamespaceMap;
+import org.arastreju.sge.naming.QualifiedName;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonGenerator;
 
+import de.lichtflut.infra.Infra;
+import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
@@ -116,16 +119,18 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 		for(PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 			g.writeObjectFieldStart(PROPERTY_DECLARATION);
 			g.writeStringField(PROPERTY_TYPE, uri(decl.getPropertyDescriptor()));
-			g.writeNumberField(MIN, decl.getCardinality().getMinOccurs());
+			g.writeStringField(CARDINALITY, buildCardinalityString(decl.getCardinality()));
 			writeFieldLabelDef(g, decl.getFieldLabelDefinition());
-			if (!decl.getCardinality().isUnbound()) {
-				g.writeNumberField(MAX, decl.getCardinality().getMaxOccurs());
-			}
 			if (decl.getConstraint().isPublicConstraint()) {
-				g.writeStringField(TYPE_REFERENCE, uri(decl.getConstraint().getID()));
+				g.writeStringField(CONSTRAINT_REFERENCE, uri(decl.getConstraint().getID()));
 			} else {
-				writeDatatype(g, decl.getDatatype());
+				if(decl.getConstraint().isResourceReference()){
+					g.writeStringField(RESOURCE_CONSTRAINT, uri(decl.getConstraint().getResourceConstraint()));
+				} else{
+					g.writeStringField(LITERAL_CONSTRAINT, decl.getConstraint().getLiteralConstraint());
+				}
 			}
+			g.writeStringField(DATATYPE, decl.getDatatype().name());
 			g.writeEndObject();
 		}
 	}
@@ -134,17 +139,11 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 		if (constr.isPublicConstraint()) {
 			g.writeStringField(ID, uri(constr.getID()));
 			g.writeStringField(NAME, constr.getName());
+			g.writeStringField(APPLICABLE_DATATYPES, prepareApplicableDatatypes(constr.getApplicableDatatypes()));
 		}
-		ArrayList<Constraint> list = new ArrayList<Constraint>();
-		list.add(constr);
-		writeConstraints(g, list);	
+		writeConstraints(g, constr);	
 	}
-	
-	private void writeDatatype(final JsonGenerator g, final Datatype datatype) throws JsonGenerationException, IOException {
-		g.writeStringField(DATATYPE, datatype.name().toLowerCase());
-		g.writeEndObject();
-	}
-	
+
 	private void writeFieldLabelDef(final JsonGenerator g, final FieldLabelDefinition def) throws JsonGenerationException, IOException {
 		g.writeObjectFieldStart(FIELD_LABEL);
 		if (def.getDefaultLabel() != null) {
@@ -156,16 +155,40 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 		g.writeEndObject();
 	}
 	
-	private void writeConstraints(final JsonGenerator g, final Collection<Constraint> constraints) throws JsonGenerationException, IOException {
-		g.writeObjectFieldStart(CONSTRAINT);
-		for (Constraint constraint : constraints) {
+	private void writeConstraints(final JsonGenerator g, final Constraint constraint) throws JsonGenerationException, IOException {
 			if (constraint.isResourceReference()) {
-				g.writeStringField(RESOURCE_TYPE, uri(constraint.getResourceTypeConstraint()));
+				g.writeStringField(RESOURCE_CONSTRAINT, uri(constraint.getResourceConstraint()));
 			} else {
-				g.writeStringField(LITERAL, constraint.getLiteralConstraint().toString());
+				if(QualifiedName.isUri(constraint.getLiteralConstraint())){
+					g.writeStringField(CONSTRAINT_REFERENCE, constraint.getLiteralConstraint());
+				}else{
+					g.writeStringField(LITERAL_CONSTRAINT, constraint.getLiteralConstraint().toString());
+				}
 			}
+	}
+	
+	private String prepareApplicableDatatypes(List<Datatype> applicableDatatypes) {
+		StringBuilder sb = new StringBuilder("");
+		for (Datatype datatype : applicableDatatypes) {
+			sb.append(datatype.name() + ", ");
 		}
-		g.writeEndObject();
+		sb.substring(0, (sb.length()-2));
+		return sb.toString().trim();
+	}
+	
+	private String buildCardinalityString(Cardinality cardinality) {
+		StringBuilder sb = new StringBuilder("[");
+		if(cardinality.getMinOccurs() == 0){
+			sb.append("n..");
+		}else{
+			sb.append(cardinality.getMinOccurs() + " ..");
+		}
+		if(cardinality.isUnbound()){
+			sb.append("n]");
+		}else{
+			sb.append(cardinality.getMaxOccurs() + "]");
+		}
+		return sb.toString();
 	}
 	
 }

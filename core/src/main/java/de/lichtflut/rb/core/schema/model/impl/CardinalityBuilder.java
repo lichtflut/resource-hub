@@ -128,8 +128,8 @@ public final class CardinalityBuilder implements Serializable {
 		int min, max;
 		String clean = string.replace("[", "").replace("]", "");
 		String[] temp = clean.split("\\.\\.");
-		min = convertToInt(temp[0], false);
-		max = convertToInt(temp[1], true);
+		min = convertToInt(temp[0].trim(), false);
+		max = convertToInt(temp[1].trim(), true);
 		return between(min, max);
 	}
 

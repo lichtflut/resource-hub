@@ -37,7 +37,7 @@ public class ConstraintBuilderTest {
 
 		assertNotNull("Constraint is null", constraint);
 		assertNull("Id should be null", constraint.getID());
-		assertNull(constraint.getResourceTypeConstraint());
+		assertNull(constraint.getResourceConstraint());
 		assertEquals("Constraints are not equal", pattern, constraint.getLiteralConstraint());
 		assertEquals("Constraintname is not as expected", pattern, constraint.getName());
 	}
@@ -48,7 +48,7 @@ public class ConstraintBuilderTest {
 		Constraint constraint = ConstraintBuilder.buildPublicLiteralConstraint(id, name, pattern, Datatype.STRING);
 
 		assertNotNull(constraint);
-		assertNull(constraint.getResourceTypeConstraint());
+		assertNull(constraint.getResourceConstraint());
 		assertEquals("Constraints are not equal", pattern, constraint.getLiteralConstraint());
 		assertEquals("Constraintname is not as expected", name, constraint.getName());
 		assertEquals("Constraint-id not as expected", id, constraint.getID());
@@ -65,7 +65,7 @@ public class ConstraintBuilderTest {
 		Constraint constraint = ConstraintBuilder.buildPublicLiteralConstraint(id, name, pattern, list);
 		
 		assertNotNull(constraint);
-		assertNull(constraint.getResourceTypeConstraint());
+		assertNull(constraint.getResourceConstraint());
 		assertEquals("Constraints are not equal", pattern, constraint.getLiteralConstraint());
 		assertEquals("Constraintname is not as expected", name, constraint.getName());
 		assertEquals("Constraint-id not as expected", id, constraint.getID());
@@ -83,7 +83,7 @@ public class ConstraintBuilderTest {
 		assertNotNull(constraint);
 		assertNull("Id should be null", constraint.getID());
 		assertNull(constraint.getLiteralConstraint());
-		assertEquals("Constraints are not equal", resource.getQualifiedName(), constraint.getResourceTypeConstraint()
+		assertEquals("Constraints are not equal", resource.getQualifiedName(), constraint.getResourceConstraint()
 				.getQualifiedName());
 		assertEquals("Constraintname is not as expected", resource.toURI(), constraint.getName());
 	}
@@ -97,7 +97,7 @@ public class ConstraintBuilderTest {
 		assertNotNull("Id should not be null", constraint.getID());
 		assertEquals("Id is not as expected", id, constraint.getID());
 		assertNull(constraint.getLiteralConstraint());
-		assertEquals("Constraints are not equal", resource.getQualifiedName(), constraint.getResourceTypeConstraint()
+		assertEquals("Constraints are not equal", resource.getQualifiedName(), constraint.getResourceConstraint()
 				.getQualifiedName());
 		assertEquals("Constraintname is not as expected", publicResConstrName, constraint.getName());
 	}
@@ -109,7 +109,7 @@ public class ConstraintBuilderTest {
 		assertNull(c.getID());
 		assertNull(c.getLiteralConstraint());
 		assertNull(c.getName());
-		assertNull(c.getResourceTypeConstraint());
+		assertNull(c.getResourceConstraint());
 	}
 
 }
