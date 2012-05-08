@@ -6,13 +6,13 @@ package de.lichtflut.rb.webck.models;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
@@ -45,12 +45,12 @@ public class CurrentOrganizationModel extends AbstractLoadableDetachableModel<RB
 	 */
 	@Override
 	public RBEntity load() {
-		ResourceID userID = provider.getContext().getUser();
-		if (userID == null) {
+		RBUser user = provider.getContext().getUser();
+		if (user == null) {
 			return null;
 		}
 		
-		final ResourceNode userNode = provider.getResourceResolver().resolve(userID);
+		final ResourceNode userNode = provider.getResourceResolver().resolve(SNOPS.id(user.getQualifiedName()));
 		final SemanticNode person = SNOPS.fetchObject(userNode, RBSystem.IS_RESPRESENTED_BY);
 		if (person == null || !person.isResourceNode()) {
 			return null;
