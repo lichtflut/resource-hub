@@ -3,17 +3,16 @@
  */
 package de.lichtflut.rb.core.schema.parser.impl.json;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
-import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 
