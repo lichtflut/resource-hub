@@ -50,6 +50,8 @@ public interface IOConstants {
 	
 	public static final String LITERAL_CONSTRAINT = "literal-constraint";
 	
+	public static final String CONSTRAINT_REFERENCE = "constraint-reference";
+	
 	public static final String PUBLIC_CONSTRAINTS = "public-constraints";
 
 	public static final String APPLICABLE_DATATYPES = "applicable-datatypes";

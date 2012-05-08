@@ -207,6 +207,8 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				decl.setConstraint(getConstraintFromString(p, field));
 			} else if (LITERAL_CONSTRAINT.equals(field)) {
 				decl.setConstraint(getConstraintFromString(p, field));
+			} else if (CONSTRAINT_REFERENCE.equals(field)) {
+				decl.setConstraint(getConstraintFromString(p, field));
 			} else if (FIELD_LABEL.equals(field)) {
 				decl.setFieldLabelDefinition(readFieldLabel(p));
 			}else {
@@ -235,7 +237,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		Constraint c = ConstraintBuilder.emptyConstraint();
 		if (LITERAL_CONSTRAINT.equals(field)) {
 			c = ConstraintBuilder.buildLiteralConstraint(p.getText());
-		} else if (RESOURCE_CONSTRAINT.equals(field)){
+		} else if (RESOURCE_CONSTRAINT.equals(field) || CONSTRAINT_REFERENCE.equals(field)){
 			c = ConstraintBuilder.buildResourceConstraint(toResourceID(p.getText()));
 		}
 		return c;

@@ -91,11 +91,9 @@ public class JsonBindingTest {
 	}
 	
 	@Test
-	@Ignore ("Adopt TypeDefinition in TypeDefinitionREference")
 	public void testSchemaImport() throws IOException {
-		//TODO FIX
 		final InputStream in = 
-				Thread.currentThread().getContextClassLoader().getResourceAsStream("test-schema.json");
+				Thread.currentThread().getContextClassLoader().getResourceAsStream("test-schema-2.json");
 		final JsonSchemaParser parser = new JsonSchemaParser();
 		final ParsedElements result = parser.parse(in);
 		Assert.assertEquals(5, result.getSchemas().size());
