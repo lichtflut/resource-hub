@@ -8,12 +8,19 @@
 }
 {
   "public-constraints" : [ {
-    "id" : "constraints:EmailConstraint",
+    "id" : "constraints:Email-Constraint",
     "name" : "Email-Constraint",
-    "applicable-datatypes" : "string, rich_text, text",
-    "literal-constraint" : ".*@.*"
+    "applicable-datatypes" : "string, RICH_TEXT, text",
+    "literal-constraint" : ".*@.*",
+    "haha" : "hoho"
+  }, {
+    "id" : "constraints:Person",
+    "name" : "Person-Constraint",
+    "applicable-datatypes" : "resource",
+    "resource-constraint" : "common:Person",
+     "haha" : "hoho"
   } ]
- }
+}
 {
   "resource-schemas" : [ {
     "for-type" : "common:City",
@@ -36,5 +43,221 @@
       "datatype" : "string",
       "max" : 1
       }
+  } , {
+    "for-type" : "common:Person",
+	"label-rule" : "common:hasFirstname common:hasLastname",
+    "property-declaration" : {
+      "property-type" : "common:hasFirstname",
+      "min" : 1,
+      "field-label" : {
+        "default" : "First name"
+      },
+      "datatype" : "string",
+      "max" : 1
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasLastname",
+      "min" : 0,
+      "field-label" : {
+        "default" : "Last name"
+      },
+      "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasAddress",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Address"
+      },
+      "datatype" : "resource",
+      "resource-constraint" : "common:Address"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasDateOfBirth",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Birthdate"
+      },
+      "max" : 1,
+      "datatype" : "date"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasPlaceOfBirth",
+      "min" : 0,
+      "field-label" : {
+        "default" : "Birthplace"
+      },
+      "max" : 1,
+      "datatype" : "resource",
+      "resource-constraint" : "common:City"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasEmail",
+      "min" : 0,
+      "field-label" : {
+        "default" : "E-Mail"
+      },
+      "datatype" : "string",
+      "constraints-reference" : "constraints:Email-Constraint"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasChildren",
+      "min" : 0,
+      "field-label" : {
+        "default" : "Children"
+      },
+      "datatype" : "resource",
+      "resource-constraint" : "common:Person"
+    }
+  }, {
+    "for-type" : "common:Address",
+	"label-rule" : "common:hasStreet common:hasHouseNo <,> common:hasCity",
+    "property-declaration" : {
+      "property-type" : "common:hasStreet",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Street"
+      },
+      "max" : 1,
+      "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasHouseNo",
+      "min" : 1,
+      "field-label" : {
+        "default" : "House No."
+      },
+      "max" : 1,
+      "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:Zipcode",
+      "min" : 1,
+      "field-label" : {
+        "default" : "ZIP code"
+      },
+      "max" : 1,
+      "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasCity",
+      "min" : 1,
+      "field-label" : {
+        "default" : "City"
+      },
+      "max" : 1,
+      "datatype" : "resource",
+      "resource-constraint" : "common:City"
+    }
+  }, {
+    "for-type" : "common:Organization",
+	"label-rule" : "<firma> common:hasName <von> common:hasGeneralManager",
+    "property-declaration" : {
+      "property-type" : "common:hasName",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Name"
+      },
+      "max" : 1,
+      "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasGeneralManager",
+      "min" : 1,
+      "field-label" : {
+        "default" : "General Manager / CEO"
+      },
+      "datatype" : "resource",
+      "resource-constraint" : "common:Person"
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasDomicile",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Domicile"
+      },
+      "max" : 1,
+        "datatype" : "resource",
+          "resource-constraint" : "common:City"
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasAddress",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Address"
+      },
+      "type-definition" : {
+        "datatype" : "resource",
+          "resource-constraint" : "common:Address"
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "common:isIndependent",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Is independent"
+      },
+      "max" : 1,
+        "datatype" : "boolean"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasEmployees",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Has employees"
+      },
+        "datatype" : "resource",
+          "resource-constraint" : "common:Person"
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasDescription",
+      "min" : 0,
+      "field-label" : {
+        "default" : "hasDescription"
+      },
+      "max" : 1,
+      "type-definition" : {
+        "datatype" : "string"
+    }
+  }, {
+    "for-type" : "common:Project",
+	"label-rule" : "common:hasTitle <(> common:hasID <)>",
+    "property-declaration" : {
+      "property-type" : "common:hasID",
+      "min" : 1,
+      "field-label" : {
+        "default" : "ID"
+      },
+      "max" : 1,
+      "type-definition" : {
+        "datatype" : "string"
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasTitle",
+      "min" : 1,
+      "field-label" : {
+        "default" : "Name"
+      },
+      "max" : 1,
+      "type-definition" : {
+        "datatype" : "string"
+      }
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasLead",
+      "min" : 0,
+      "field-label" : {
+        "default" : "Project lead"
+      },
+      "type-definition" : {
+        "datatype" : "resource",
+        "constraints" : {
+          "resource-type" : "common:Person"
+      }
+    }
   } ]
 }

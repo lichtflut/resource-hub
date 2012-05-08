@@ -48,6 +48,9 @@ public final class ConstraintBuilder {
 		if (literal == null) {
 			literal = "";
 		}
+		if(list == null || list.isEmpty()){
+			list.add(Datatype.STRING);
+		}
 		return buildConstraint(id, name, literal, null, true, list);
 	}
 	

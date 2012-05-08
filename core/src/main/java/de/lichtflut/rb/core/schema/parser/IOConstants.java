@@ -58,6 +58,8 @@ public interface IOConstants {
 
 	public static final String MIN = "min";
 
+	public static final String CARDINALITY = "cardinality";
+	
 	public static final String TYPE_REFERENCE = "type-reference";
 
 	public static final String PROPERTY_TYPE = "property-type";

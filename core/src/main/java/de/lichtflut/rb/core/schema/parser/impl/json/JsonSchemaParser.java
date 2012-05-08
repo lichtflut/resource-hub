@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.infra.logging.StopWatch;
+import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
@@ -133,6 +134,8 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				} catch (LabelExpressionParseException e) {
 					throw new RuntimeException(e);
 				}
+			}else {
+ 				logger.warn("unkown token : " + p.getCurrentName() + " - " + p.getText());
 			}
 		}
 		return schema;
@@ -152,10 +155,13 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 			} else if(APPLICABLE_DATATYPES.equals(field)){
 					datatypes.addAll(extractDatatypes(p));
 			} else if (RESOURCE_CONSTRAINT.equals(field)) {
-				result.add(ConstraintBuilder.buildPublicResourceConstraint(id, name, readConstraint(p).getResourceTypeConstraint()));
+				constraint = getConstraintFromString(p, field);
+				result.add(ConstraintBuilder.buildPublicResourceConstraint(id, name, constraint.getResourceTypeConstraint()));
 			} else if (LITERAL_CONSTRAINT.equals(field)) {
-				constraint = readConstraint(p);
-				result.add(ConstraintBuilder.buildPublicLiteralConstraint(id, name, constraint.getLiteralConstraint(), constraint.getApplicableDatatypes()));
+				constraint = getConstraintFromString(p, field);
+				result.add(ConstraintBuilder.buildPublicLiteralConstraint(id, name, constraint.getLiteralConstraint(), datatypes));
+			} else {
+ 				logger.warn("unkown token : " + p.getCurrentName() + " - " + p.getText());
 			}
 		}
 	}
@@ -188,27 +194,26 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	
 	private PropertyDeclaration readPropertyDecl(final JsonParser p, final ParsedElements result) throws IOException {
 		final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
-		int min = 0;
-		int max = -1;
+		Cardinality cardinality = CardinalityBuilder.hasOptionalOneToMany();
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (PROPERTY_TYPE.equals(field)) {
 				decl.setPropertyDescriptor(toResourceID(p.getText()));
-			} else if (MIN.equals(field)) {
-				min = p.getIntValue();
-			} else if (MAX.equals(field)) {
-				max = p.getIntValue();
+			} else if (CARDINALITY.equals(field)) {
+				cardinality = CardinalityBuilder.extractFromString(p.getText());
 			} else if (DATATYPE.equals(field)) {
 				decl.setDatatype(Datatype.valueOf(p.getText().toUpperCase()));
 			} else if (RESOURCE_CONSTRAINT.equals(field)) {
-				decl.setConstraint(readConstraint(p));
+				decl.setConstraint(getConstraintFromString(p, field));
 			} else if (LITERAL_CONSTRAINT.equals(field)) {
-				decl.setConstraint(readConstraint(p));
+				decl.setConstraint(getConstraintFromString(p, field));
 			} else if (FIELD_LABEL.equals(field)) {
 				decl.setFieldLabelDefinition(readFieldLabel(p));
+			}else {
+ 				logger.warn("unkown token : " + p.getCurrentName() + " - " + p.getText());
 			}
 		}
-		decl.setCardinality(CardinalityBuilder.between(min, max));
+		decl.setCardinality(cardinality);
 		return decl;
 	}
 	
@@ -226,14 +231,6 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		return def;
 	}
 	
-	private Constraint readConstraint(final JsonParser p) throws IOException {
-		while (p.nextToken() != JsonToken.END_OBJECT) {
-			final String field = nextField(p);
-			return getConstraintFromString(p, field);
-		}
-		return ConstraintBuilder.emptyConstraint();
-	}
-
 	private Constraint getConstraintFromString(final JsonParser p, final String field) throws IOException, JsonParseException {
 		Constraint c = ConstraintBuilder.emptyConstraint();
 		if (LITERAL_CONSTRAINT.equals(field)) {
@@ -247,7 +244,6 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	// -----------------------------------------------------
 	
 	private String nextField(final JsonParser p) throws IOException {
-		System.out.println(p.getCurrentName() + " - " + p.getText()+ " - " + p.getLastClearedToken());
 		Validate.isTrue(p.getCurrentToken() == JsonToken.FIELD_NAME, "expected fieldname: " + p.getTokenLocation());
 		final String field = p.getCurrentName();
 		p.nextToken();
@@ -260,6 +256,11 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	
 	// ----------------------------------------------------
 	
+	/**
+	 * Convert a String to a {@link ResourceID}.
+	 * @param name
+	 * @return a {@link ResourceID} representation of a String.
+	 */
 	public ResourceID toResourceID(final String name) {
 		if (QualifiedName.isUri(name)) {
 			logger.debug("found uri " + name);
