@@ -5,8 +5,6 @@ package de.lichtflut.rb.core.schema;
 
 import java.util.Locale;
 
-import org.arastreju.sge.model.SimpleResourceID;
-
 import de.lichtflut.rb.core.constants.RBMock;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -28,7 +26,6 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 public class ResourceSchemaFactory {
 
 	public static ResourceSchema buildPersonSchema() {
-		String emailPatern = ".*@.*";
 		ResourceSchemaImpl schema = new ResourceSchemaImpl(RBMock.PERSON);
 
 		PropertyDeclaration firstname = new PropertyDeclarationImpl(RBMock.HAS_FIRST_NAME, Datatype.STRING);
@@ -39,7 +36,7 @@ public class ResourceSchemaFactory {
 		PropertyDeclaration children = new PropertyDeclarationImpl(RBMock.HAS_CHILD_NODE, Datatype.RESOURCE);
 
 		dateOfBirth.setConstraint(ConstraintBuilder.buildResourceConstraint(RBMock.ADDRESS));
-		email.setConstraint(ConstraintBuilder.buildPublicLiteralConstraint(new SimpleResourceID("http://rb.test.lichtflut.de/common#Email-Constraint"), "Email-Constraint", emailPatern, Datatype.STRING));
+		email.setConstraint(ConstraintsFactory.buildPublicEmailConstraint());
 		children.setConstraint(ConstraintBuilder.buildResourceConstraint(RBMock.PERSON));
 
 		firstname.setCardinality(CardinalityBuilder.hasExcactlyOne());
