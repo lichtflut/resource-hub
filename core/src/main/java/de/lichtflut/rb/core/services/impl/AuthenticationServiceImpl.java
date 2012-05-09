@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import scala.actors.threadpool.Arrays;
+import de.lichtflut.infra.logging.Log;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.security.LoginData;
@@ -120,7 +121,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, 30);
 		final String raw = email + ":" + DATE_FORMAT.format(cal.getTime()); 
-		return raw + ":" + Crypt.md5Hex(raw + credential);
+		return raw + ":" + Crypt.md5Hex(raw);// + credential);
 	}
 
 	// ----------------------------------------------------
@@ -163,14 +164,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				logger.info("Login token has been expired: " + token);
 				return false;
 			}
-			final SemanticNode credential = SNOPS.singleObject(user, Aras.HAS_CREDENTIAL);
-			if (credential != null) {
+//			final SemanticNode credential = SNOPS.singleObject(user, Aras.HAS_CREDENTIAL);
+//			if (credential != null) {
 				final String raw = id + ":" + validUntil; 
-				final String crypted = Crypt.md5Hex(raw + credential.asValue().getStringValue());
+				final String crypted = Crypt.md5Hex(raw );//+ credential.asValue().getStringValue());
 				return crypted.equals(token);
-			}
+//			}
 		} catch (ParseException e) {
-			logger.info("Login token could not be parsed: " + token);
+			logger.info("Login token could not be parsed: " + token, e);
 		}
 		return false;
 	}

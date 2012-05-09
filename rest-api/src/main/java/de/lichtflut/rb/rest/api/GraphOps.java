@@ -1,3 +1,6 @@
+/*
+ * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ */
 package de.lichtflut.rb.rest.api;
 
 import java.io.ByteArrayOutputStream;
@@ -14,7 +17,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.model.DefaultSemanticGraph;
@@ -24,11 +29,12 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.arastreju.sge.persistence.TransactionControl;
 import org.springframework.stereotype.Component;
 
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.rest.api.security.RBOperation;
 
 /**
  * <p>
@@ -41,19 +47,13 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  */
 @Component
-@Path("/graph/{" + RBServiceEndpoint.DOMAIN_ID_PARAM + "}/")
+@Path("graph/{" + RBServiceEndpoint.DOMAIN_ID_PARAM + "}/")
 public class GraphOps extends RBServiceEndpoint{
-
+	
 	//Constants (package visibility sufficient)
 	static final String NODE_ID_PARAM = "ID";
 
-	/**
-	 * Instance of {@link Logger}
-	 */
-	private Logger log = LoggerFactory.getLogger(this.getClass());
-
-	//Constructor
-	
+	//Constructor	
 	/**
 	 * Default empty constructor.
 	 * Nothing special about it
@@ -72,8 +72,13 @@ public class GraphOps extends RBServiceEndpoint{
 	@GET
 	@Path("/node")
 	@Produces({MediaType.APPLICATION_XML })
-	public Response getGraphNode(@PathParam(DOMAIN_ID_PARAM) String domainID, @QueryParam(NODE_ID_PARAM) String resourceID) {
-		ServiceProvider provider = getProvider(domainID);
+	@RBOperation(type = TYPE.GRAPH_NODE_READ)
+	public Response getGraphNode(@QueryParam(NODE_ID_PARAM) String resourceID, @QueryParam(AUTH_TOKEN) String token,	@PathParam(DOMAIN_ID_PARAM) String domainID) {
+		RBUser user = authenticateUser(token);
+		if(!getAuthHandler().isAuthorized(user, domainID)){
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+		ServiceProvider provider = getProvider(domainID, user);
 		Response rsp = null;
 		if (resourceID == null || resourceID.equals("")) {
 			rsp = Response.status(Response.Status.BAD_REQUEST).build();
@@ -98,7 +103,7 @@ public class GraphOps extends RBServiceEndpoint{
 			String result = out.toString();
 			rsp = Response.ok(result).build();
 		} catch (Exception e) {
-			log.error(
+			getLog().error(
 					"An "
 							+ e.getClass().getName()
 							+ " has been occured while processing the request for getResource."
@@ -119,8 +124,13 @@ public class GraphOps extends RBServiceEndpoint{
 	 */
 	@GET
 	@Produces({MediaType.APPLICATION_XML })
-	public Response getGraph(@PathParam(DOMAIN_ID_PARAM) String domainID) {
-		ServiceProvider provider = getProvider(domainID);
+	@RBOperation(type = TYPE.GRAPH_READ)
+	public Response getGraph(@PathParam(DOMAIN_ID_PARAM) String domainID, @QueryParam(AUTH_TOKEN) String token) {
+		RBUser user = authenticateUser(token);
+		if(!getAuthHandler().isAuthorized(user, domainID)){
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+		ServiceProvider provider = getProvider(domainID, user);
 		Response rsp = null;
 
 		final List<SNClass> types = provider.getTypeManager().findAllTypes();
@@ -138,7 +148,7 @@ public class GraphOps extends RBServiceEndpoint{
 			String result = out.toString();
 			rsp = Response.ok(result).build();
 		} catch (Exception e) {
-			log.error(
+			getLog().error(
 					"An "
 							+ e.getClass().getName()
 							+ " has been occured while processing the request for getResources."
@@ -151,16 +161,32 @@ public class GraphOps extends RBServiceEndpoint{
 
 	@PUT
 	@Consumes({MediaType.APPLICATION_XML})
-	public Response importGraph(@PathParam(DOMAIN_ID_PARAM) String domainID, InputStream xmlBody){
-		final SemanticGraphIO io = new RdfXmlBinding();
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		try {
-			SemanticGraph graph = io.read(xmlBody);
-			String result = out.toString();
-		}catch(Exception any){
-			
+	@RBOperation(type = TYPE.GRAPH_UPDATE)
+	public Response importGraph(@PathParam(DOMAIN_ID_PARAM) String domainID, InputStream xmlBody, @QueryParam(AUTH_TOKEN) String token){
+		RBUser user = authenticateUser(token);
+		if(!getAuthHandler().isAuthorized(user, domainID)){
+			return Response.status(Status.UNAUTHORIZED).build();
 		}
-		ServiceProvider provider = getProvider(domainID);
+		final SemanticGraphIO io = new RdfXmlBinding();
+		ServiceProvider provider = getProvider(domainID, user);
+		ModelingConversation mc = provider.getArastejuGate().startConversation();
+		
+		TransactionControl tx=null;
+		try {
+			tx = mc.beginTransaction();
+			SemanticGraph graph = io.read(xmlBody);
+			for(Statement stmt : graph.getStatements()){
+				mc.addStatement(stmt);
+			}
+			tx.success();
+			tx.commit();
+		}catch(Exception any){
+			getLog().error("The graph couldnt be imported due to the following exception",any);
+			tx.fail();
+			tx.rollback();
+			return Response.serverError().build();
+		}
+
 		return Response.ok().build();
 	}
 	
