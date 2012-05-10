@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:systemIdentity xmlns:p="http://rb.lichtflut.de/ns#ServiceAPI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://rb.lichtflut.de/ns#ServiceAPI ../../main/resources/xsd/api-structures.xsd ">
+  <id>test@test.de</id>
+  <password>test</password>
+  <username>test</username>
+</p:systemIdentity>

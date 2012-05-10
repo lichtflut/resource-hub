@@ -112,6 +112,32 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+<!-- 					Changes the default schema directory -->
+					<schemaDirectory>src/main/resources/xsd</schemaDirectory>
+					<generateDirectory>src/main/java</generateDirectory>
+					<cleanPackageDirectories>true</cleanPackageDirectories>
+					<generatePackage>de.lichtflut.rb.rest.api.models.generate</generatePackage>
+					<forceRegenerate>true</forceRegenerate>
+				</configuration>
+			</plugin>
+		</plugins>
+
+
+	</build>
 	<reporting>
 		<plugins>
 			<plugin>
@@ -125,6 +151,7 @@
 					<consoleOutput>true</consoleOutput>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</reporting>
 </project>

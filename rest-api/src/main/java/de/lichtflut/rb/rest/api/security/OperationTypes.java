@@ -17,5 +17,6 @@ public interface OperationTypes {
 		GRAPH_UPDATE,
 		DOMAIN_DELETE,
 		DOMAIN_CREATE,
+		DOMAIN_UPDATE,
 	}
 }

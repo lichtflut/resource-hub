@@ -16,14 +16,14 @@ import org.springframework.stereotype.Component;
 import de.lichtflut.rb.core.security.LoginData;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.AuthenticationService;
-import de.lichtflut.rb.rest.api.models.LoginUser;
+import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
 
 /**
  * @author Nils Bleisch (nbleisch@lichtflut.de)
  *
  */
 @Component
-@Path("auth/{" + RBServiceEndpoint.DOMAIN_ID_PARAM + "}/")
+@Path("auth/")
 public class AuthOps extends RBServiceEndpoint {
 		
 	public AuthOps(){}
@@ -32,7 +32,7 @@ public class AuthOps extends RBServiceEndpoint {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	@Produces({MediaType.TEXT_PLAIN})
-	public Response createToken(LoginUser loginUser){
+	public Response createToken(SystemIdentity loginUser){
 		LoginData loginData = new LoginData();
 		loginData.setId(loginUser.getId());
 		loginData.setPassword(loginUser.getPassword());

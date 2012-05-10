@@ -30,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import scala.actors.threadpool.Arrays;
-import de.lichtflut.infra.logging.Log;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.security.LoginData;
