@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema;
+package de.lichtflut.rb.mock.schema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +9,10 @@ import java.util.List;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
-import de.lichtflut.rb.core.constants.RBMock;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.mock.RBMock;
 
 /**
  * <p>
@@ -31,5 +31,20 @@ public class ConstraintsFactory {
 		list.add(Datatype.TEXT);
 		list.add(Datatype.RICH_TEXT);
 		return ConstraintBuilder.buildPublicLiteralConstraint(id, "Email-Address", ".*@.*", list);
+	}
+	
+	public static Constraint buildPrivateLiteralConstraint(){
+		return ConstraintBuilder.buildLiteralConstraint(".*@.*");
+	}
+	
+	public static Constraint buildPublicPersonConstraint(){
+		ResourceID id = new SimpleResourceID();
+		ResourceID resource = new SimpleResourceID(RBMock.COMMON_NAMESPACE_URI + "PersonConstraint");
+		return ConstraintBuilder.buildPublicResourceConstraint(id, "Person-Constraint", resource);
+	}
+	
+	public static Constraint buildPrivatePersonConstraint(){
+		ResourceID resource = new SimpleResourceID(RBMock.COMMON_NAMESPACE_URI + "PersonConstraint");
+		return ConstraintBuilder.buildResourceConstraint(resource);
 	}
 }

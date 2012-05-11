@@ -9,7 +9,6 @@ import de.lichtflut.rb.core.schema.model.Constraint;
  * <p>
  *  Resolver for public Type Definitions.
  *  @see TypeDefinition
- *  @see SNPropertyTypeDefinition
  * </p>
  *
  * <p>
@@ -26,6 +25,6 @@ public interface ConstraintResolver {
 	 * @param typeDef The type definition to be resolved.
 	 * @return The corresponding node or null.
 	 */
-	SNPropertyTypeDefinition resolve(Constraint constraint);
+	Constraint resolve(Constraint constraint);
 
 }

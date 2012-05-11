@@ -6,21 +6,15 @@ package de.lichtflut.rb.web.components.Dialog;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.tester.WicketTester;
-import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
-import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
-import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.mock.schema.PropertyDeclarationFactory;
 import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 
@@ -59,7 +53,7 @@ public class EditTypePropertyDeclDialogTest {
 	@Ignore(value="Fix me")
 	public void testDialogWithSinglePropertyDecl(){
 		List<PropertyRow> list = new ArrayList<PropertyRow>();
-		list.add(new PropertyRow(createDecl().get(0)));
+		list.add(new PropertyRow(PropertyDeclarationFactory.buildPersonPropertyDecls().get(0)));
 		decls = new ListModel<PropertyRow>(list);
 		EditPropertyDeclDialog panel = new EditPropertyDeclDialog("test", decls);
 		tester.startComponentInPage(panel);
@@ -81,8 +75,8 @@ public class EditTypePropertyDeclDialogTest {
 	@Ignore(value="Fix me")
 	public void testDialogWithMultiplePropertyDecl(){
 		List<PropertyRow> list = new ArrayList<PropertyRow>();
-		list.add(new PropertyRow(createDecl().get(0)));
-		list.add(new PropertyRow(createDecl().get(1)));
+		list.add(new PropertyRow(PropertyDeclarationFactory.buildPersonPropertyDecls().get(0)));
+		list.add(new PropertyRow(PropertyDeclarationFactory.buildPersonPropertyDecls().get(1)));
 		decls = new ListModel<PropertyRow>(list);
 		EditPropertyDeclDialog panel = new EditPropertyDeclDialog("test", decls);
 		tester.startComponentInPage(panel);
@@ -100,54 +94,4 @@ public class EditTypePropertyDeclDialogTest {
 		tester.assertContains("Person");
 	}
 	
-	/**
-	 * Tests.
-	 * 
-	 * @return shema
-	 */
-	private List<PropertyDeclaration> createDecl() {
-
-		TypeDefinitionImpl p1 = new TypeDefinitionImpl();
-		TypeDefinitionImpl p2 = new TypeDefinitionImpl();
-		TypeDefinitionImpl p3 = new TypeDefinitionImpl();
-		TypeDefinitionImpl p4 = new TypeDefinitionImpl();
-
-		p1.setDataType(Datatype.STRING);
-		p2.setDataType(Datatype.STRING);
-		p3.setDataType(Datatype.INTEGER);
-		p4.setDataType(Datatype.RESOURCE);
-
-		ResourceSchemaImpl schema = new ResourceSchemaImpl(
-	        		new SimpleResourceID("http://lf.de#", "Person"));
-		 
-		p2.addConstraint(ConstraintBuilder.buildLiteralConstraint(".*@.*"));
-		p4.addConstraint(ConstraintBuilder.buildResourceConstraint(schema.getDescribedType()));
-
-		PropertyDeclarationImpl pa1 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#",
-				"hatGeburtstag"), p1);
-		PropertyDeclarationImpl pa2 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#",
-				"hatEmail"), p2);
-		PropertyDeclarationImpl pa3 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#",
-				"hatAlter"), p3);
-		PropertyDeclarationImpl pa4 = new PropertyDeclarationImpl(new SimpleResourceID("http://lichtflut.de#",
-				"hatKind"), p4);
-
-		pa1.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		pa2.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
-		pa3.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		pa4.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
-
-		pa1.setFieldLabelDefinition(new FieldLabelDefinitionImpl("hat Geburtstag"));
-		pa2.setFieldLabelDefinition(new FieldLabelDefinitionImpl("hat Email"));
-		pa3.setFieldLabelDefinition(new FieldLabelDefinitionImpl("hat Alter"));
-		pa4.setFieldLabelDefinition(new FieldLabelDefinitionImpl("Kinder"));
-
-		List<PropertyDeclaration> list = new ArrayList<PropertyDeclaration>();
-		list.add(pa4);
-		list.add(pa3);
-		list.add(pa2);
-		list.add(pa1);
-		
-		return list;
-	}
 }

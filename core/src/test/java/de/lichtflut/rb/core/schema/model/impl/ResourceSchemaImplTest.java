@@ -11,17 +11,18 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collections;
 import java.util.List;
 
+
 import org.arastreju.sge.model.ResourceID;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.core.common.EntityLabelBuilder.DefaultBuilder;
-import de.lichtflut.rb.core.constants.RBMock;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBEntityFactory;
-import de.lichtflut.rb.core.schema.PropertyDeclarationFactory;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.mock.RBEntityFactory;
+import de.lichtflut.rb.mock.RBMock;
+import de.lichtflut.rb.mock.schema.PropertyDeclarationFactory;
 
 /**
  * <p>

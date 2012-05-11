@@ -9,7 +9,7 @@ import java.util.List;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
@@ -24,7 +24,7 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
  *
  * @author Oliver Tigges
  */
-public class PublicTypeDefListModel extends AbstractLoadableDetachableModel<List<TypeDefinition>> {
+public class PublicConstraintsListModel extends AbstractLoadableDetachableModel<List<Constraint>> {
 
 	@SpringBean
 	private ServiceProvider provider;
@@ -34,7 +34,7 @@ public class PublicTypeDefListModel extends AbstractLoadableDetachableModel<List
 	/**
 	 * Constructor.
 	 */
-	public PublicTypeDefListModel() {
+	public PublicConstraintsListModel() {
 		Injector.get().inject(this);
 	}
 	
@@ -44,8 +44,8 @@ public class PublicTypeDefListModel extends AbstractLoadableDetachableModel<List
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<TypeDefinition> load() {
-		return new ArrayList<TypeDefinition>(
+	public List<Constraint> load() {
+		return new ArrayList<Constraint>(
 				provider.getSchemaManager().findPublicConstraints());
 	}
 	

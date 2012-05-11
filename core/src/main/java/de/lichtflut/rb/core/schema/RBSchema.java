@@ -59,15 +59,10 @@ public interface RBSchema {
 	ResourceID PROPERTY_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "PropertyConstraint");
 	
 	/**
-	 * Each TypeConstraint has to be a type of this.
+	 * Each Resource-Constraint has to be a type of this.
 	 */
-	ResourceID TYPE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "TypeConstraint");
+	ResourceID RESOURCE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "ResourceConstraint");
 	
-	/**
-	 * Each LiteralConstraint has to be a type of this.
-	 */
-	ResourceID LITERAL_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "LiteralConstraint");
-
 	// -- PROPERTIES --------------------------------------
 
 	/**
@@ -119,7 +114,7 @@ public interface RBSchema {
 	/**
 	 * Boolean expression if a Property Type Definition is public or private.
 	 */
-	ResourceID IS_PUBLIC_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "isPublicTypeDefinition");
+	ResourceID IS_PUBLIC_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "isPublicConstraint");
 	
 	/**
 	 * Text expression for building a label for an entity.

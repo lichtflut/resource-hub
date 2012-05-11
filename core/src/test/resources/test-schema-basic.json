@@ -35,7 +35,7 @@
         "default" : "Name"
       },
       "datatype" : "string",
-       "unknown-token-propDEcl" : "log me",
+      "unknown-token-propDEcl" : "log me"
     },
     "property-declaration" : {
       "property-type" : "common:isInCountry",

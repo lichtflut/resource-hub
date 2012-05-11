@@ -31,13 +31,13 @@ import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
  *
  * @author Oliver Tigges
  */
-public abstract class TypeDefEditorPanel extends Panel {
+public abstract class ConstraintEditorPanel extends Panel {
 	
 	/**
 	 *  Constructor.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public TypeDefEditorPanel(final String id, final IModel<PropertyRow> model) {
+	public ConstraintEditorPanel(final String id, final IModel<PropertyRow> model) {
 		super(id, model);
 		
 		setOutputMarkupPlaceholderTag(true);

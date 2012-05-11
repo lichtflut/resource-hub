@@ -11,17 +11,18 @@ import java.util.Collections;
 
 import junit.framework.Assert;
 
+
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.schema.ConstraintsFactory;
-import de.lichtflut.rb.core.schema.ResourceSchemaFactory;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.OutputElements;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
+import de.lichtflut.rb.mock.schema.ConstraintsFactory;
+import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 
 /**
  * <p>

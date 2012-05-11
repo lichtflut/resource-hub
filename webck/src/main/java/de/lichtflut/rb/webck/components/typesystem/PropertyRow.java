@@ -5,29 +5,25 @@ package de.lichtflut.rb.webck.components.typesystem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.infra.Infra;
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.ResourceTypeDefinition;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 
 /**
  * <p>
- *  This value object represents a flattened Property Assertion (with Declaration) of a Resource Schema.
+ *  This value object represents a flattened {@link PropertyDeclaration} of a Resource Schema.
  *  It is meant for being edited in a table or similar component. 
  * </p>
  *
@@ -57,12 +53,11 @@ public class PropertyRow implements Serializable {
 	}
 	
 	/**
-	 * Converts the given row to a new TypeDefinition.
+	 * Converts the given row to a new Constraint.
 	 * @param row The row object to be converted.
 	 */
-	@Deprecated
-	public static TypeDefinition toTypeDefinition(final PropertyRow row) {
-		return row.asPropertyDeclaration().getTypeDefinition();
+	public static Constraint toPublicConstraint(final PropertyRow row) {
+		throw new NotYetImplementedException();
 	}
 	
 	// -----------------------------------------------------
@@ -75,24 +70,16 @@ public class PropertyRow implements Serializable {
 		this.decl = decl;
 	}
 	
-	/**
-	 * Constructor for a TypeDefintion.
-	 * @param def The type definition.
-	 */
-	public PropertyRow(final TypeDefinition def) {
+	public PropertyRow(final Constraint constraint){
 		this.decl = new PropertyDeclarationImpl();
-		decl.setTypeDefinition(def);
+		this.decl.setConstraint(constraint);
 	}
-	
 	/**
 	 * Constructs a default,empty row.
 	 */
 	public PropertyRow() {
 		this.decl = new PropertyDeclarationImpl();
-		decl.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
-		TypeDefinition def = new TypeDefinitionImpl();
-		def.setDataType(Datatype.STRING);
-		this.decl.setTypeDefinition(def);
+		this.decl.setDatatype(Datatype.STRING);
 		this.decl.setFieldLabelDefinition(new FieldLabelDefinitionImpl());
 	}
 	
@@ -123,27 +110,20 @@ public class PropertyRow implements Serializable {
 	public void setDefaultLabel(String label) {
 		this.decl.getFieldLabelDefinition().setDefaultLabel(label);
 	}
-	
-	/**
-	 * @return the display name for public type definitions.
-	 */
-	public String getDisplayName() {
-		return decl.getTypeDefinition().getName();
-	}
 
 	/**
 	 * @return the dataType
 	 */
 	public Datatype getDataType() {
-		return decl.getTypeDefinition().getDataType();
+		return decl.getDatatype();
 	}
 
 	/**
 	 * @param newDatatype the new data type to set
 	 */
 	public void setDataType(Datatype newDatatype) {
-		if (!Infra.equals(this.decl.getTypeDefinition().getDataType(), newDatatype)) {
-			decl.getTypeDefinition().setDataType(newDatatype);
+		if (!Infra.equals(this.decl.getDatatype(), newDatatype)) {
+			decl.setDatatype(newDatatype);
 		}
 	}
 
@@ -151,8 +131,8 @@ public class PropertyRow implements Serializable {
 	 * @return the resourceConstraint
 	 */
 	public ResourceID getResourceConstraint() {
-		if (decl.getTypeDefinition().isResourceReference()) {
-			return ResourceTypeDefinition.view(decl.getTypeDefinition()).getResourceTypeConstraint();
+		if (decl.getConstraint().isResourceReference()) {
+			return decl.getConstraint().getResourceConstraint();
 		}
 		return null;
 	}
@@ -161,9 +141,7 @@ public class PropertyRow implements Serializable {
 	 * @param resourceConstraint the resourceConstraint to set
 	 */
 	public void setResourceConstraint(ResourceID resourceConstraint) {
-		final Set<Constraint> constraints = new HashSet<Constraint>();
-		constraints.add(ConstraintBuilder.buildResourceConstraint(resourceConstraint));
-		decl.getTypeDefinition().setConstraints(constraints);
+		decl.setConstraint(ConstraintBuilder.buildResourceConstraint(resourceConstraint));
 	}
 
 	/**
@@ -228,39 +206,33 @@ public class PropertyRow implements Serializable {
 	/**
 	 * @return the literalConstraints
 	 */
-	public List<String> getLiteralConstraints() {
-		List<String> constraints = new ArrayList<String>();
-		if(!decl.getTypeDefinition().isResourceReference()){
-			for (Constraint c : decl.getTypeDefinition().getConstraints()) {
-				constraints.add(c.getLiteralConstraint().toString());
-			}
+	public String getLiteralConstraint() {
+		String constraint = null;
+		if(!decl.getConstraint().isResourceReference()){
+			constraint = decl.getConstraint().getLiteralConstraint();
 		}
-		return constraints;
+		return constraint;
 	}
 
 	/**
-	 * @param literalConstraints the literalConstraints to set
+	 * @param literalConstraint the literalConstraints to set
 	 */
-	public void setLiteralConstraints(final List<String> literalConstraints) {
-		final Set<Constraint> constraints = new HashSet<Constraint>();
-		for (String constraint : getLiteralConstraints()) {
-			constraints.add(ConstraintBuilder.buildLiteralConstraint(constraint));
-		}
-		decl.getTypeDefinition().setConstraints(constraints);
+	public void setLiteralConstraint(final String literalConstraint) {
+		decl.setConstraint(ConstraintBuilder.buildLiteralConstraint(literalConstraint));
 	}
 
 	/**
 	 * @return true if the Type Definition is public, false if it is private.
 	 */
-	public boolean isTypeDefinitionPublic() {
-		return decl.getTypeDefinition() != null && decl.getTypeDefinition().isPublicTypeDef();
+	public boolean hasPublicConstraint() {
+		return decl.getConstraint().isPublicConstraint();
 	}
 
 	/**
 	 * @return the isResourceReference
 	 */
 	public boolean isResourceReference() {
-		return Datatype.RESOURCE.equals(decl.getTypeDefinition().getDataType());
+		return Datatype.RESOURCE.equals(decl.getDatatype());
 	}
 	
 	/**
@@ -277,10 +249,6 @@ public class PropertyRow implements Serializable {
 		} else {
 			decl.setCardinality(CardinalityBuilder.between(min, Math.max(min, 1)));
 		}
-	}
-	
-	public TypeDefinition getTypeDefinition(){
-		return decl.getTypeDefinition();
 	}
 
 }

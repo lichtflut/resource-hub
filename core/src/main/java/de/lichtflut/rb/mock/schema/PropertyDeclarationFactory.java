@@ -1,15 +1,17 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema;
+package de.lichtflut.rb.mock.schema;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.lichtflut.rb.core.constants.RBMock;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
+import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.mock.RBMock;
 
 /**
  * <p>
@@ -28,11 +30,18 @@ public class PropertyDeclarationFactory {
 		list.add(new PropertyDeclarationImpl(RBMock.HAS_ADDRESS, Datatype.RESOURCE));
 		list.add(new PropertyDeclarationImpl(RBMock.HAS_DATE_OF_BIRTH, Datatype.DATE));
 		list.add(new PropertyDeclarationImpl(RBMock.HAS_EMAIL, Datatype.STRING));
-		list.add(new PropertyDeclarationImpl(RBMock.HAS_CHILD_NODE, Datatype.RESOURCE));
+		list.add(buildHasChildrenPropertyDecl());
 		return list;
 	}
 	
 	public static PropertyDeclaration buildHasNameProperty(){
 		return new PropertyDeclarationImpl(RBMock.HAS_NAME, Datatype.STRING);
+	}
+	
+	public static PropertyDeclaration buildHasChildrenPropertyDecl(){
+		PropertyDeclaration decl = new PropertyDeclarationImpl(RBMock.HAS_CHILD_NODE, Datatype.RESOURCE, ConstraintsFactory.buildPublicPersonConstraint());
+		decl.setCardinality(CardinalityBuilder.extractFromString("[n..n]"));
+		decl.setFieldLabelDefinition(new FieldLabelDefinitionImpl("Children"));
+		return decl;
 	}
 }

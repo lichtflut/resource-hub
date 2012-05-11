@@ -15,22 +15,36 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.model.nodes.views.SNScalar;
+import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.infra.Infra;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
+import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 
 
 /**
  * <p>
- * Represents the assertion of a Property Declaration to a Class.
+ * Represents the Property Declaration to a Class.
  * <p>
  *
  * <p>
@@ -69,24 +83,33 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * Get the TypeDefinition.
 	 * @return The TypeDefinition.
 	 */
-	public SNPropertyTypeDefinition getConstraints() {
-		SemanticNode node = SNOPS.singleObject(this, RBSchema.PROPERTY_CONSTRAINT);
-		if (node != null){
-			return new SNPropertyTypeDefinition(node.asResource());
-		} else {
-			return null;
+	public Constraint getConstraint() {
+		Constraint constraint = null;
+		SemanticNode constraintNode = SNOPS.singleObject(this, RBSchema.HAS_CONSTRAINT);
+		if (constraintNode == null){
+			return ConstraintBuilder.emptyConstraint();
 		}
+		boolean isPublic = SNOPS.singleObject(constraintNode.asResource(), RBSchema.IS_PUBLIC_CONSTRAINT).asValue().getBooleanValue();
+		if(isPublic){
+			constraint = getPublicConstraint(constraintNode.asResource());
+		} else{
+			constraint = getPrivateConstraint(constraintNode.asResource());
+		}
+		
+		return constraint;
 	}
 
 	/**
-	 * Set the TypeDefinition.
-	 * @param typeDef The TypeDefinition
-	 * @param context The context.
+	 * @param resource
+	 * @return
 	 */
-	public void setTypeDefinition(final SNPropertyTypeDefinition typeDef, final Context context) {
-		if (!Infra.equals(getConstraints(), typeDef)){
-			SNOPS.assure(this, RBSchema.HAS_PROPERTY_TYPE_DEF, typeDef, context);
+	private List<Datatype> getDatatypes(ResourceNode resource) {
+		List<Datatype> datatypes = new ArrayList<Datatype>();
+		for (SemanticNode node : SNOPS.objects(resource, RBSchema.HAS_DATATYPE)) {
+			String text = node.asValue().getStringValue();
+			datatypes.add(Datatype.valueOf(text));
 		}
+		return datatypes;
 	}
 
 	/**
@@ -101,7 +124,7 @@ public class SNPropertyDeclaration extends ResourceView {
 			return null;
 		}
 	}
-
+	
 	/**
 	 * Set the property declared by this property declaration.
 	 * @param property The property.
@@ -113,6 +136,30 @@ public class SNPropertyDeclaration extends ResourceView {
 		}
 	}
 
+	/**
+	 * Returns the {@link Datatype} declared by this property declaration.
+	 * @return The property.
+	 */
+	public Datatype getDatatype() {
+		final SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_DATATYPE);
+		if (node != null) {
+			return Datatype.valueOf(node.asValue().getStringValue());
+		} else {
+			throw new IllegalArgumentException("No Datatype found");
+		}
+	}
+
+	/**
+	 * Sets the {@link Datatype}
+	 * @param datatype
+	 * @param context
+	 */
+	public void setDatatype(final Datatype datatype, final Context context){
+		if(datatype != null){
+			SNOPS.assure(this, RBSchema.HAS_DATATYPE, datatype.name(), context);
+		}
+	}
+	
 	/**
 	 * Returns the min. occurrences.
 	 * @return {@link SNScalar}
@@ -161,6 +208,40 @@ public class SNPropertyDeclaration extends ResourceView {
 		}
 	}
 	
+	/**
+	 * Sets the constraint.
+	 * @param constraint
+	 * @param context
+	 */
+	public void setConstraint(final SNConstraint constraint, Context context){
+		SNOPS.assure(this, RBSchema.HAS_CONSTRAINT, constraint, context);
+	}
+
+	/**
+	 * Set the FieldLabel.
+	 * @param def
+	 * @param ctx
+	 */
+	public void setFieldLabelDefinition(final FieldLabelDefinition def, Context ctx){
+		SNOPS.associate(this, RBSystem.HAS_FIELD_LABEL, new SNText(def.getDefaultLabel()));
+	}
+	
+	/**
+	 * Set the FieldLabel.
+	 * @param def
+	 * @param ctx
+	 */
+	public FieldLabelDefinition getFieldLabelDefinition(){
+		final String defaultName = getPropertyDescriptor().getQualifiedName().getSimpleName();
+		final FieldLabelDefinition def = new FieldLabelDefinitionImpl(defaultName);
+		final Set<? extends Statement> assocs = getAssociations(RBSystem.HAS_FIELD_LABEL);
+		for (Statement current : assocs) {
+			// TODO: Evaluate context to locale
+			def.setDefaultLabel(current.getObject().asValue().getStringValue());
+		}
+		return def;
+	}
+	
 	// -- ORDER -------------------------------------------
 	
 	/**
@@ -173,8 +254,8 @@ public class SNPropertyDeclaration extends ResourceView {
 		SNOPS.assure(this, Aras.IS_PREDECESSOR_OF, successor, contexts);
 	}
 	
-	//-----------------------------------------------------
-
+	// ------------------------------------------------------
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -185,8 +266,72 @@ public class SNPropertyDeclaration extends ResourceView {
 			sb.append(getPropertyDescriptor().getQualifiedName().toURI());
 		}
 		sb.append(" " + getMinOccurs() + ".." + getMaxOccurs());
-		sb.append("\n\t\t" + getConstraints());
+		sb.append("\n\t\t" + getConstraint());
 		return sb.toString();
 	}
 
+
+	/**
+	 * @param asResource
+	 * @return
+	 */
+	private Constraint getPrivateConstraint(ResourceNode resource) {
+		SemanticNode isResource = SNOPS.singleObject(this, RBSchema.RESOURCE_CONSTRAINT);
+		if(isResource == null){
+			return getPrivateResourceConstraint(resource);
+		}
+		return getPrivateLiteralConstraint(resource);
+	}
+
+	/**
+	 * @param resource
+	 * @return
+	 */
+	private Constraint getPrivateLiteralConstraint(ResourceNode resource) {
+		String pattern = SNOPS.singleObject(resource, RBSchema.HAS_CONSTRAINT_VALUE).asValue().getStringValue();
+		return ConstraintBuilder.buildLiteralConstraint(pattern);
+	}
+
+	/**
+	 * @param resource
+	 * @return
+	 */
+	private Constraint getPrivateResourceConstraint(ResourceNode resource) {
+		ResourceID uri = SNOPS.singleObject(resource, RBSchema.HAS_CONSTRAINT_VALUE).asResource();
+		return ConstraintBuilder.buildResourceConstraint(uri);
+	}
+
+	/**
+	 * @param asResource
+	 * @return
+	 */
+	private Constraint getPublicConstraint(ResourceNode resource) {
+		SemanticNode isResource = SNOPS.singleObject(this, RBSchema.RESOURCE_CONSTRAINT);
+		if(isResource == null){
+			return getResourceConstraint(resource);
+		}
+		return getLiteralConstraint(resource);
+	}
+
+	/**
+	 * @param resource
+	 * @return
+	 */
+	private Constraint getLiteralConstraint(ResourceNode resource) {
+		ResourceID id = SNOPS.singleObject(resource, RBSchema.HAS_IDENTIFIER).asResource();
+		String name = SNOPS.singleObject(resource, RBSchema.HAS_NAME).asValue().getStringValue();
+		String pattern = SNOPS.singleObject(resource, RBSchema.HAS_CONSTRAINT_VALUE).asValue().getStringValue();
+		return ConstraintBuilder.buildPublicLiteralConstraint(id, name, pattern, getDatatypes(resource));
+	}
+
+	/**
+	 * @param resource
+	 * @return
+	 */
+	private Constraint getResourceConstraint(ResourceNode resource) {
+		ResourceID id = SNOPS.singleObject(resource, RBSchema.HAS_IDENTIFIER).asResource();
+		String name = SNOPS.singleObject(resource, RBSchema.HAS_NAME).asValue().getStringValue();
+		ResourceID uri = SNOPS.singleObject(resource, RBSchema.HAS_CONSTRAINT_VALUE).asResource();
+		return ConstraintBuilder.buildPublicResourceConstraint(id, name, uri);
+	}
 }

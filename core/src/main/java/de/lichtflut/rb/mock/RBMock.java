@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.constants;
+package de.lichtflut.rb.mock;
 
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.context.SimpleContextID;

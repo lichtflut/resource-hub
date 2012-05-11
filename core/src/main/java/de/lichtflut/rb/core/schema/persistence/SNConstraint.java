@@ -15,6 +15,9 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
@@ -24,14 +27,16 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
+import org.arastreju.sge.model.nodes.views.SNBoolean;
 import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.Datatype;
 
 
 /**
  * <p>
- * Represents the declaration of a Constraint for a Property Declaration or Assertion.
+ * Represents the declaration of a Constraint for a Property Declaration.
  * <p>
  *
  * <p>
@@ -68,38 +73,66 @@ public class SNConstraint extends ResourceView {
 	 * @param literalConstraint The literal constraint.
 	 * @param ctx The context.
 	 */
-	public SNConstraint(final String literalConstraint, final Context ctx) {
-		SNOPS.associate(this, RDF.TYPE, RBSchema.LITERAL_CONSTRAINT, ctx);
+	public SNConstraint(final String literalConstraint, List<Datatype> datatypes, Context ctx) {
+		SNOPS.associate(this, RDF.TYPE, RBSchema.PROPERTY_CONSTRAINT, ctx);
 		SNOPS.associate(this, RBSchema.HAS_CONSTRAINT_VALUE, new SNText(literalConstraint), ctx);
+		SNOPS.assure(this, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(false), ctx);
+		SNOPS.assure(this, RBSchema.RESOURCE_CONSTRAINT, new SNBoolean(false), ctx);
+		setApplicableDatatypes(datatypes, ctx);
 	}
-
+	
 	/**
 	 * Creates a new type constraint.
 	 * @param typeConstraint The type constraint.
 	 * @param ctx The context.
 	 */
 	public SNConstraint(final ResourceID typeConstraint, final Context ctx) {
-		SNOPS.associate(this, RDF.TYPE, RBSchema.TYPE_CONSTRAINT, ctx);
+		SNOPS.associate(this, RDF.TYPE, RBSchema.PROPERTY_CONSTRAINT, ctx);
 		SNOPS.associate(this, RBSchema.HAS_CONSTRAINT_VALUE, typeConstraint, ctx);
+		SNOPS.assure(this, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(false), ctx);
+		SNOPS.assure(this, RBSchema.RESOURCE_CONSTRAINT, new SNBoolean(true), ctx);
+		setApplicableDatatypes(Collections.singletonList(Datatype.RESOURCE), ctx);
 	}
 
 	// -----------------------------------------------------
-
-	/**
-	 * Returns whether constraint is literal constraint.
-	 * @return boolean
-	 */
-	public boolean isLiteralConstraint() {
-		return isOfType(RBSchema.LITERAL_CONSTRAINT);
-	}
+	
 	/**
 	 * Returns whether constraint is type constraint.
 	 * @return boolean
 	 */
-	public boolean isTypeConstraint() {
-		return isOfType(RBSchema.TYPE_CONSTRAINT);
+	public boolean isResourceConstraint() {
+		boolean node = SNOPS.singleObject(this, RBSchema.RESOURCE_CONSTRAINT).asValue().getBooleanValue();
+		return node;
 	}
 
+	/**
+	 * Returns whether constraint is public.
+	 * @return true if constraint is public, false if not
+	 */
+	public boolean isPublic(){
+		return SNOPS.singleObject(this, RBSchema.IS_PUBLIC_CONSTRAINT).asValue().getBooleanValue();
+	}
+	
+	/**
+	 * @return the name of this constraint.
+	 */
+	public String getName(){
+		SemanticNode name = SNOPS.singleObject(this, RBSchema.HAS_NAME);
+		if(name == null){
+			return null;
+		}
+		else{
+			return name.asValue().getStringValue();
+		}
+	}
+	
+	/**
+	 * @return the id of this constraint
+	 */
+	public ResourceID getID(){
+		return (ResourceID) SNOPS.singleObject(this, RBSchema.HAS_IDENTIFIER);
+	}
+	
 	/**
 	 * Value of constraint.
 	 * @return {@link SemanticNode}
@@ -107,7 +140,48 @@ public class SNConstraint extends ResourceView {
 	public SemanticNode getConstraintValue() {
 		return SNOPS.singleObject(this, RBSchema.HAS_CONSTRAINT_VALUE);
 	}
+	
+	/**
+	 * @return a {@link List} of applicable {@link Datatype}s
+	 */
+	public List<Datatype> getApplicableDatatypes(){
+		List<Datatype> datatypes = new ArrayList<Datatype>();
+		for (SemanticNode snType : SNOPS.objects(this, RBSchema.HAS_DATATYPE)) {
+			datatypes.add(Datatype.valueOf(snType.asValue().getStringValue()));
+		}
+		return datatypes;
+	}
 
+	/**
+	 * Sets the ID.
+	 * @param publicID
+	 */
+	public void setID(ResourceID publicID, Context ctx) {
+		if(publicID != null){
+			SNOPS.assure(this, RBSchema.HAS_IDENTIFIER, publicID, ctx);
+		}
+	}
+
+	/**
+	 * Sets the name.
+	 * @param name
+	 * @param context
+	 */
+	public void setName(String name, Context ctx) {
+		if(name != null){
+			SNOPS.assure(this, RBSchema.HAS_NAME, new SNText(name), ctx);
+		}
+	}
+
+	/**
+	 * Sets whether this Constraint is public or not.
+	 * @param b
+	 * @param context
+	 */
+	public void setPublic(boolean isPublic, Context ctx) {
+		SNOPS.assure(this, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(isPublic), ctx);
+	}
+	
 	// -----------------------------------------------------
 
 	/**
@@ -119,6 +193,7 @@ public class SNConstraint extends ResourceView {
 		return sb.toString();
 	}
 
+	
 	// -----------------------------------------------------
 
 	/**
@@ -136,4 +211,18 @@ public class SNConstraint extends ResourceView {
 		return false;
 	}
 
+	/**
+	 * Sets the applicable {@link Datatype}s.
+	 * @param datatypes
+	 * @param ctx
+	 */
+	private void setApplicableDatatypes(List<Datatype> datatypes, Context ctx){
+		if(datatypes == null){
+			throw new IllegalArgumentException("No applicable Datatype found for the constraint: " + getQualifiedName());
+		}
+		for (Datatype datatype : datatypes) {
+			SNOPS.associate(this, RBSchema.HAS_DATATYPE, new SNText(datatype.name()), ctx);
+		}
+	}
+	
 }

@@ -8,13 +8,13 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
  * <p>
- *  Dialog for creation of a new Public Type Definition.
+ *  Dialog for creation of a new Public {@link Constraint}.
  * </p>
  *
  * <p>
@@ -23,12 +23,12 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
  *
  * @author Oliver Tigges
  */
-public class CreatePublicTypeDefDialog extends AbstractCreateResourceDialog {
+public class CreatePublicConstraintDialog extends AbstractCreateResourceDialog {
 
 	/**
 	 * @param id
 	 */
-	public CreatePublicTypeDefDialog(String id) {
+	public CreatePublicConstraintDialog(String id) {
 		super(id);
 		
 		add(TitleModifier.title(new ResourceModel("global.dialogs.create-public-type-def.title")));
@@ -41,10 +41,10 @@ public class CreatePublicTypeDefDialog extends AbstractCreateResourceDialog {
 	 */
 	@Override
 	public void onCreate(QualifiedName qn, AjaxRequestTarget target) {
-		final TypeDefinition def = provider.getSchemaManager().
+		final Constraint constraint = provider.getSchemaManager().
 				prepareConstraint(qn, qn.getSimpleName());
 		send(getPage(), Broadcast.BREADTH, 
-				new ModelChangeEvent<TypeDefinition>(def, ModelChangeEvent.PUBLIC_TYPE_DEFINITION));
+				new ModelChangeEvent<Constraint>(constraint, ModelChangeEvent.PUBLIC_TYPE_DEFINITION));
 	}
 
 }

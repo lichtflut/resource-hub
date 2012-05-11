@@ -1,13 +1,13 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.entity;
+package de.lichtflut.rb.mock;
 
 import java.util.Date;
 
-import de.lichtflut.rb.core.constants.RBMock;
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
-import de.lichtflut.rb.core.schema.ResourceSchemaFactory;
+import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 
 /**
  * <p>

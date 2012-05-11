@@ -15,6 +15,7 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -121,9 +122,9 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 * @return The constraint node.
 	 */
 	public SNConstraint addLiteralConstraint(final String constraint, final Context context) {
-		final SNConstraint constraintNode = new SNConstraint(constraint, context);
+		final SNConstraint constraintNode = new SNConstraint(constraint, Collections.singletonList(Datatype.STRING), context);
 		SNOPS.associate(this, RBSchema.HAS_LITERAL_CONSTRAINT, constraintNode, context);
-		return constraintNode;
+		return null;
 	}
 
 	/**

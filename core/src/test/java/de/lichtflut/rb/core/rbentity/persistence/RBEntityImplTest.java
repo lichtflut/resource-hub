@@ -3,29 +3,7 @@
  */
 package de.lichtflut.rb.core.rbentity.persistence;
 
-import java.util.Collections;
-
-import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.junit.Assert;
 import org.junit.Test;
-
-import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.entity.impl.AbstractRBField;
-import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
-import de.lichtflut.rb.core.entity.impl.UndeclaredRBField;
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
-import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
-import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
 
 /**
  * Testcase to test ResourceTypeInstance- validators, ticket-algorithms and

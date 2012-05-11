@@ -75,7 +75,7 @@ public class Schema2GraphBinding {
 			final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
 			decl.setPropertyDescriptor(snDecl.getPropertyDescriptor());
 			decl.setCardinality(buildCardinality(snDecl));
-//			decl.setTypeDefinition(toModelObject(snDecl.getTypeDefinition()));
+			decl.setDatatype(snDecl.getDatatype());
 			decl.setFieldLabelDefinition(createFieldLabelDef(snDecl));
 			
 			schema.addPropertyDeclaration(decl);
@@ -91,22 +91,6 @@ public class Schema2GraphBinding {
 		}
 
 		return schema;
-	}
-	
-	/**
-	 * Convert a property type definition node to a model element.
-	 * @param constraint The type definition node.
-	 * @return The schema model element.
-	 */
-	public Constraint toModelObject(final SNPropertyTypeDefinition constraint) {
-//		if(constraint == null) {
-//			return null;
-//		}
-//		final Constraint constr = new TypeDefinitionImpl(SNOPS.id(constraint), constraint.isPublic());
-//		constr.setDataType(constraint.getDatatype());
-//		constr.setName(constraint.getDisplayName());
-//		constr.setConstraints(buildConstraints(constraint.getConstraints()));
-		return null;
 	}
 	
 	// -----------------------------------------------------
@@ -133,56 +117,13 @@ public class Schema2GraphBinding {
 			snDecl.setPropertyDescriptor(decl.getPropertyDescriptor(), RBSchema.CONTEXT);
 			snDecl.setMinOccurs(minAsScalar(decl.getCardinality()), RBSchema.CONTEXT);
 			snDecl.setMaxOccurs(maxAsScalar(decl.getCardinality()), RBSchema.CONTEXT);
-//			snDecl.setTypeDefinition(toSemanticNode(decl.getTypeDefinition()), RBSchema.CONTEXT);
+			snDecl.setDatatype(decl.getDatatype(), RBSchema.CONTEXT);
 			setFieldLabels(snDecl, decl.getFieldLabelDefinition());
 			if (null != predecessor) {
 				predecessor.setSuccessor(snDecl, RBSchema.CONTEXT);
 			}
 			predecessor = snDecl;
 			sn.addPropertyDeclaration(snDecl);
-		}
-		return sn;
-	}
-	
-	/**
-	 * Creates a new semantic node for given Type Definition.
-	 * @param constraint The type definition model object.
-	 * @return A new semantic node representing this definition.
-	 */
-	public SNPropertyTypeDefinition toSemanticNode(final Constraint constraint) {
-		if(constraint == null) {
-			return null;
-		} else if (constraint.isPublicConstraint()) {
-			final SNPropertyTypeDefinition resolved = resolver.resolve(constraint);
-			if (resolved != null) {
-				return resolved;
-			}
-		}
-		return createSemanticNode(constraint);	
-	}
-
-	// -----------------------------------------------------
-	
-	/**
-	 * Create a node corresponding to type definition.
-	 * 
-	 * @param constraint
-	 *            The type definition.
-	 * @return The created node.
-	 */
-	protected SNPropertyTypeDefinition createSemanticNode(final Constraint constraint) {
-		final SNResource node = new SNResource(constraint.getID().getQualifiedName());
-		final SNPropertyTypeDefinition sn = new SNPropertyTypeDefinition(node);
-		sn.setDisplayName(constraint.getName(), RBSchema.CONTEXT);
-		if (constraint.isPublicConstraint()) {
-			sn.setPublic(RBSchema.CONTEXT);
-		} else {
-			sn.setPrivate(RBSchema.CONTEXT);
-		}
-		if (constraint.isResourceReference()) {
-			sn.addTypeConstraint(constraint.getResourceConstraint(), RBSchema.CONTEXT);
-		} else {
-			sn.addLiteralConstraint(constraint.getLiteralConstraint(), RBSchema.CONTEXT);
 		}
 		return sn;
 	}
@@ -211,10 +152,10 @@ public class Schema2GraphBinding {
 	}
 
 	protected Constraint toModelConstraint(final SNConstraint snConst) {
-		if (snConst.isLiteralConstraint()){
+		if (!snConst.isResourceConstraint()){
 			final String value = snConst.getConstraintValue().asValue().getStringValue();
 			return ConstraintBuilder.buildLiteralConstraint(value);
-		} else if (snConst.isTypeConstraint()) {
+		} else if (snConst.isResourceConstraint()) {
 			SemanticNode node = snConst.getConstraintValue();
 			if (node != null) {
 				final ResourceID type = snConst.getConstraintValue().asResource();
@@ -261,8 +202,7 @@ public class Schema2GraphBinding {
 	
 	private static final class VoidTypeDefResovler implements ConstraintResolver {
 		@Override
-		public SNPropertyTypeDefinition resolve(Constraint constraint) {
-			// TODO Auto-generated method stub
+		public Constraint resolve(Constraint constraint) {
 			return null;
 		}
 	}

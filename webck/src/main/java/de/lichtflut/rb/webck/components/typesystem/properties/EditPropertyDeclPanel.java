@@ -109,9 +109,7 @@ public class EditPropertyDeclPanel extends Panel {
 		if(constraintsModel.getObject().isResourceReference()){
 			constraints.add(ConstraintBuilder.buildResourceConstraint(constraintsModel.getObject().getResourceConstraint()));
 		}else{
-			for (String s : constraintsModel.getObject().getLiteralConstraints()) {
-				constraints.add(ConstraintBuilder.buildLiteralConstraint(s));
-			}
+			constraints.add(ConstraintBuilder.buildLiteralConstraint(constraintsModel.getObject().getLiteralConstraint()));
 		}
 		for (PropertyRow decl : decls.getObject()) {
 			decl.setCardinality(cardinalityModel.getObject());
@@ -119,7 +117,7 @@ public class EditPropertyDeclPanel extends Panel {
 			if(constraintsModel.getObject().isResourceReference()){
 				decl.setResourceConstraint(constraintsModel.getObject().getResourceConstraint());
 			}else{
-				decl.setLiteralConstraints(constraintsModel.getObject().getLiteralConstraints());
+				decl.setLiteralConstraint(constraintsModel.getObject().getLiteralConstraint());
 			}
 		}
 	}

@@ -243,6 +243,7 @@ public final class ConstraintBuilder {
 			
 			@Override
 			public boolean equals(Object obj) {
+				// TODO improve eventually occuring nullpointer exception
                 if (this == obj){
                 	return true;
                 }
@@ -253,16 +254,18 @@ public final class ConstraintBuilder {
                 	return false;
                 }
                 Constraint copy = (Constraint) obj;
-                if (!id.toURI().equals(copy.getID().toURI())) {
-                	return false;
-                } else if (!name.equals(copy.getName())){
-                	return false;
-				}
+                if(isPublic){
+	                if (!(id == copy.getID())){
+	                	return false;
+	                } else if (!name.equals(copy.getName())){
+	                	return false;
+					}
+                }
                 if(isResourceReference()){
                 	if(!resource.toURI().equals(copy.getResourceConstraint().toURI())){
                 		return false;
                 	}
-                }else{
+                }else if((copy.getLiteralConstraint() != null) && (pattern!= null)){
                 	if(!pattern.equals(copy.getLiteralConstraint())){
                 		return false;
                 	}
@@ -272,12 +275,12 @@ public final class ConstraintBuilder {
 			
 			@Override
 			public int hashCode() {
-			            final int prime = 31;
-			            int result = 1;
-			            result = prime * result + id.hashCode();
-			            result = prime * result + name.hashCode();
-			            result = prime * result + list.hashCode();
-			            return result;
+				final int prime = 31;
+				int result = 1;
+				result = prime * result + id.hashCode();
+				result = prime * result + name.hashCode();
+				result = prime * result + list.hashCode();
+				return result;
 			}
 		};
 	}

@@ -168,7 +168,7 @@ public class SchemaEditorPanel extends Panel {
 						new ConstraintsEditorPanel("constraints", item.getModel());
 				item.add(constraintsEditor);
 				
-				final boolean isPrivateTD = !row.isTypeDefinitionPublic();
+				final boolean isPrivateTD = !row.hasPublicConstraint();
 				
 				final DropDownChoice<Datatype> dataTypeChoice = 
 						new DropDownChoice<Datatype>("dataType", new PropertyModel(item.getModel(), "dataType"),

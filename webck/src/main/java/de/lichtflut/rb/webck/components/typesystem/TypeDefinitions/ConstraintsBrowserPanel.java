@@ -15,7 +15,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.basic.LoadableModel;
@@ -31,9 +31,9 @@ import de.lichtflut.rb.webck.models.basic.LoadableModel;
  *
  * @author Oliver Tigges
  */
-public abstract class TypeDefBrowserPanel extends Panel {
+public abstract class ConstraintsBrowserPanel extends Panel {
 
-	private final LoadableModel<List<TypeDefinition>> model;
+	private final LoadableModel<List<Constraint>> model;
 	
 	// ----------------------------------------------------
 
@@ -42,33 +42,33 @@ public abstract class TypeDefBrowserPanel extends Panel {
 	 * @param id
 	 */
 	@SuppressWarnings("rawtypes")
-	public TypeDefBrowserPanel(final String id, final LoadableModel<List<TypeDefinition>> model) {
+	public ConstraintsBrowserPanel(final String id, final LoadableModel<List<Constraint>> model) {
 		super(id);
 		this.model = model;
 		
 		setOutputMarkupId(true);
 		
-		add(new ListView<TypeDefinition>("listview", model) {
+		add(new ListView<Constraint>("listview", model) {
 			@Override
-			protected void populateItem(final ListItem<TypeDefinition> item) {
-				final TypeDefinition typeDef = item.getModelObject();
+			protected void populateItem(final ListItem<Constraint> item) {
+				final Constraint constraint = item.getModelObject();
 				final Link link = new AjaxFallbackLink("link") {
 						@Override
 						public void onClick(AjaxRequestTarget target) {
-							onTypeDefSelected(typeDef, target);
+							onConstraintSelected(constraint, target);
 						}	
 				};
 				item.add(link);
-				link.add(new Label("typeDef", typeDef.getName()));
-				link.add(new AttributeAppender("title", typeDef.getID().getQualifiedName()));
+				link.add(new Label("constraint", constraint.getName()));
+				link.add(new AttributeAppender("title", constraint.getID().getQualifiedName()));
 			}
 		});
 		
-		add(new AjaxFallbackLink("createTypeDef") {
+		add(new AjaxFallbackLink("createConstraint") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				target.add(TypeDefBrowserPanel.this);
-				onCreateTypeDef(target);
+				target.add(ConstraintsBrowserPanel.this);
+				onCreateConstraint(target);
 			}
 		});
 	}
@@ -98,8 +98,8 @@ public abstract class TypeDefBrowserPanel extends Panel {
 	
 	// -- CALLBACKS ---------------------------------------
 	
-	public abstract void onCreateTypeDef(AjaxRequestTarget target);
+	public abstract void onCreateConstraint(AjaxRequestTarget target);
 	
-	public abstract void onTypeDefSelected(TypeDefinition typeDef, AjaxRequestTarget target);
+	public abstract void onConstraintSelected(Constraint constraint, AjaxRequestTarget target);
 	
 }

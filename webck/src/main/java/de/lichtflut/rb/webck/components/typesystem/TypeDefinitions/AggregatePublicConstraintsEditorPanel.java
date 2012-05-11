@@ -11,14 +11,14 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 import de.lichtflut.rb.webck.components.typesystem.TypeSystemHelpPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.types.PublicTypeDefListModel;
+import de.lichtflut.rb.webck.models.types.PublicConstraintsListModel;
 
 /**
  * [TODO Insert description here.]
@@ -27,7 +27,7 @@ import de.lichtflut.rb.webck.models.types.PublicTypeDefListModel;
  *
  * @author Ravi Knox
  */
-public class AggregatePublicTypeDefEditorPanel extends Panel {
+public class AggregatePublicConstraintsEditorPanel extends Panel {
 
 	@SpringBean
 	private ServiceProvider provider;
@@ -37,32 +37,32 @@ public class AggregatePublicTypeDefEditorPanel extends Panel {
 	/**
 	 * @param id
 	 */
-	public AggregatePublicTypeDefEditorPanel(String id) {
+	public AggregatePublicConstraintsEditorPanel(String id) {
 		super(id);
 		add(new TypeSystemHelpPanel("editor").setOutputMarkupId(true));
 		add(new Label("searchbox", Model.of("Search...")));
-		add(new TypeDefBrowserPanel("publicTypeDefBrowser", new PublicTypeDefListModel()) {
+		add(new ConstraintsBrowserPanel("publicConstraintsBrowser", new PublicConstraintsListModel()) {
 			@Override
-			public void onCreateTypeDef(AjaxRequestTarget target) {
+			public void onCreateConstraint(AjaxRequestTarget target) {
 			}
 			@Override
-			public void onTypeDefSelected(final TypeDefinition def, final AjaxRequestTarget target) {
-				displayTypeDefEditor(def);
+			public void onConstraintSelected(final Constraint constraint, final AjaxRequestTarget target) {
+				displayConstraintEditor(constraint);
 			}
 		});
 	}
 
 	// ------------------------------------------------------
 	
-	protected void displayTypeDefEditor(final TypeDefinition def) {
-		final TypeDefinition reloaded = schemaManager().findConstraint(def.getID());
+	protected void displayConstraintEditor(final Constraint constraint) {
+		final Constraint reloaded = schemaManager().findConstraint(constraint.getID());
 		final IModel<PropertyRow> model = Model.of(new PropertyRow(reloaded));
-		final TypeDefEditorPanel editor = new TypeDefEditorPanel("editor", model) {
+		final ConstraintEditorPanel editor = new ConstraintEditorPanel("editor", model) {
 			@Override
 			public void onSave(final AjaxRequestTarget target) {
-				final TypeDefinition definition = PropertyRow.toTypeDefinition(model.getObject());
-				schemaManager().store(definition);
-				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<TypeDefinition>(def, ModelChangeEvent.PUBLIC_TYPE_DEFINITION));
+				final Constraint constraint = PropertyRow.toPublicConstraint(model.getObject());
+				schemaManager().store(constraint);
+				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Constraint>(constraint, ModelChangeEvent.PUBLIC_TYPE_DEFINITION));
 			}
 		};
 		replace(editor);

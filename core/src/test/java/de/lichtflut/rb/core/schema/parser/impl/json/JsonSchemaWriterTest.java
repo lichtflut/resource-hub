@@ -13,16 +13,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 
+
 import org.junit.Before;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.schema.ConstraintsFactory;
-import de.lichtflut.rb.core.schema.ResourceSchemaFactory;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.OutputElements;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
+import de.lichtflut.rb.mock.schema.ConstraintsFactory;
+import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 
 /**
  * <p>

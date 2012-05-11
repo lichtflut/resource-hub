@@ -110,11 +110,11 @@
 			<groupId>org.arastreju</groupId>
 			<artifactId>arastreju.ogm</artifactId>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>de.lichtflut.rb</groupId>
 			<artifactId>mock</artifactId>
 			<version>0.4-SNAPSHOT</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr</artifactId>
