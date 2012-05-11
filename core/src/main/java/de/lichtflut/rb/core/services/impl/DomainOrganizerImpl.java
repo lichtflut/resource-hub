@@ -7,7 +7,6 @@ import static org.arastreju.sge.SNOPS.assure;
 import static org.arastreju.sge.SNOPS.singleAssociation;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.arastreju.sge.ModelingConversation;
@@ -21,7 +20,6 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.security.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +27,7 @@ import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.organizer.ContextDeclaration;
 import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
+import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
@@ -63,46 +62,11 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Domain getDomesticDomain() {
-		return arasOrganizer().getDomesticDomain();
+	public RBDomain getDomesticDomain() {
+		return new RBDomain(arasOrganizer().getDomesticDomain());
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Collection<Domain> getDomains() {
-		return arasOrganizer().getDomains();
-	}
-
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Domain registerDomain(Domain domain) {
-		final Domain registered = arasOrganizer()
-				.registerDomain(domain.getUniqueName(), domain.getTitle(), domain.getDescription());
-		logger.info("Created new domain: " + registered);
-		return registered;
-	}
-
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateDomain(Domain domain) {
-		arasOrganizer().updateDomain(domain);
-	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void deleteDomain(Domain domain) {
-		if (!domain.isDomesticDomain()) {
-			mc().remove(domain);
-		}
-	}
+	// ----------------------------------------------------
 
 	/** 
 	 * {@inheritDoc}

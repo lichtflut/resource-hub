@@ -13,7 +13,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
-import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
@@ -85,12 +84,11 @@ public abstract class ResetPasswordPanel extends Panel {
 	
 	protected void resetPassword() {
 		final String email = emailModel.getObject();
-		final User user = provider.getArastejuGate().getIdentityManagement().findUser(email);
-		if(user == null) {
+		final RBUser existing = provider.getSecurityService().findUser(email);
+		if(existing == null) {
 			error(getString("message.no-user-found"));
 		} else {
 			try {
-				final RBUser existing = new RBUser(user);
 				provider.getSecurityService().resetPasswordForUser(existing, getEmailConfig(), getLocale());
 				info(getString("message.password-changed"));
 			} catch (RBException e) {

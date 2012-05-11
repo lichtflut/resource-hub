@@ -3,11 +3,12 @@
  */
 package de.lichtflut.rb.core.services;
 
-
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.AuthenticationService;
 
 /**
  * <p>
- *  Interface for fac
+ *  Interface for factory of a service provider.
  * </p>
  *
  * <p>
@@ -28,6 +29,12 @@ public interface ServiceProviderFactory {
 	 * Create a security service instance for login.
 	 * @return The security service.
 	 */
-	AuthenticationService getAuthenitcationService();
+	AuthModule createAuthModule();
+	
+	/**
+	 * Create a security service instance for login.
+	 * @return The security service.
+	 */
+	AuthenticationService createAuthenticationService();
 
 }

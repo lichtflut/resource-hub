@@ -3,11 +3,14 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
+import org.arastreju.sge.Arastreju;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.services.AuthenticationService;
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.AuthenticationService;
+import de.lichtflut.rb.core.security.authserver.EmbeddedAuthModule;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.ServiceProviderFactory;
 
@@ -54,9 +57,19 @@ public class DefaultServiceProviderFactory implements ServiceProviderFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public AuthenticationService getAuthenitcationService() {
+	public AuthenticationService createAuthenticationService() {
 		logger.info("creating new auth service");
-		return new AuthenticationServiceImpl(new DefaultRBServiceProvider(config));
+		return createAuthModule().getAuthenticationService();
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public AuthModule createAuthModule() {
+		logger.info("creating new auth module");
+		final Arastreju aras = Arastreju.getInstance(config.getArastrejuConfiguration());
+		return new EmbeddedAuthModule(aras.rootContext());
 	}
 
 }

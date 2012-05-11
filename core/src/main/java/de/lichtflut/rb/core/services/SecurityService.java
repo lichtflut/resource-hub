@@ -1,15 +1,16 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.services;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
-import org.arastreju.sge.security.Domain;
 import org.arastreju.sge.security.User;
 
+import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
 import de.lichtflut.rb.core.security.RBDomain;
@@ -30,6 +31,13 @@ import de.lichtflut.rb.core.security.RBUser;
 public interface SecurityService {
 	
 	/**
+	 * Find a user by one of it's identifiers (username, email address, URI).
+	 * @param identifier The identifier.
+	 * @return The user or null if not found.
+	 */
+	RBUser findUser(String identifier);
+	
+	/**
 	 * Create a new user.
 	 * @param emailID The email as primary identifier.
 	 * @param username An optional username as secondary Identifier.
@@ -46,8 +54,9 @@ public interface SecurityService {
 	 * @param username The user's unique name - may be null.
 	 * @param password The password.
 	 * @return The domain administration user.
+	 * @throws RBAuthException 
 	 */
-	RBUser createDomainAdmin(Domain domain, String email, String username, String password);
+	RBUser createDomainAdmin(RBDomain domain, String email, String username, String password) throws RBAuthException;
 	
 	/**
 	 * @param user The existing user to update.
@@ -63,13 +72,6 @@ public interface SecurityService {
 	
 	// ----------------------------------------------------
 
-	/**
-	 * Returns the salt that was used for this users password encryption.
-	 * @param user The user.
-	 * @return The salt.
-	 */
-	String getSalt(User user);
-	
 	/**
 	 * Sets a new Password for a {@link User}.
 	 * @param user
@@ -89,18 +91,36 @@ public interface SecurityService {
 
 	// ----------------------------------------------------
 	
+
+	/**
+	 * Get the user's roles.
+	 * @param user The user who's roles are requested.
+	 * @return The list of roles.
+	 */
+	List<String> getUserRoles(RBUser user);
+	
+	/**
+	 * Get the user's permissions.
+	 * @param user The user who's permissions are requested.
+	 * @return The list of permissions.
+	 */
+	Set<String> getUserPermissions(RBUser user);
+	
 	/**
 	 * Assure that the user has exactly the given roles.
 	 * @param user The user.
+	 * @param domain TODO
 	 * @param roles The roles.
+	 * @throws RBAuthException 
 	 */
-	void setUserRoles(RBUser user, List<String> roles);
+	void setUserRoles(RBUser user, String domain, List<String> roles) throws RBAuthException;
 	
 	/**
 	 * Removes all roles from a user.
 	 * @param user The user the roles should be removed from.
+	 * @throws RBAuthException 
 	 */
-	void removeAllUserRoles(RBUser user);
+	void removeAllUserRoles(RBUser user) throws RBAuthException;
 	
 	// ----------------------------------------------------
 	

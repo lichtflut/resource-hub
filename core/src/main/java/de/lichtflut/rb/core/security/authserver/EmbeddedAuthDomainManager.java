@@ -1,0 +1,204 @@
+/*
+ * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ */
+package de.lichtflut.rb.core.security.authserver;
+
+import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.Aras;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNText;
+import org.arastreju.sge.query.Query;
+import org.arastreju.sge.security.Domain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.security.DomainManager;
+import de.lichtflut.rb.core.security.RBDomain;
+
+/**
+ * <p>
+ *  Manager of domains inside an instance.
+ * </p>
+ *
+ * <p>
+ * 	Created May 7, 2012
+ * </p>
+ *
+ * @author Oliver Tigges
+ */
+public class EmbeddedAuthDomainManager implements DomainManager {
+	
+	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthDomainManager.class);
+	
+	private final ArastrejuGate masterGate;
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 * @param provider The service provider.
+	 */
+	public EmbeddedAuthDomainManager(ArastrejuGate masterGate) {
+		this.masterGate = masterGate;
+	}
+	
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RBDomain findDomain(String domain) {
+		final ResourceNode domainNode = findDomainNode(domain);
+		return new RBDomain(domainNode);
+	}
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<RBDomain> getAllDomains() {
+		final List<RBDomain> result = new ArrayList<RBDomain>();
+		final Collection<Domain> domains = masterGate.getOrganizer().getDomains();
+		for (Domain current : domains) {
+			final RBDomain rbDomain = new RBDomain(current.getQualifiedName());
+			rbDomain.setName(current.getUniqueName());
+			rbDomain.setTitle(current.getTitle());
+			rbDomain.setDescription(current.getDescription());
+			result.add(rbDomain);
+		}
+		return result;
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RBDomain registerDomain(RBDomain domain) {
+		final Domain registered = masterGate.getOrganizer()
+				.registerDomain(domain.getName(), domain.getTitle(), domain.getDescription());
+		logger.info("Created new domain: " + registered);
+		return new RBDomain(registered);
+	}
+
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateDomain(RBDomain domain) {
+		throw new NotYetImplementedException();
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void deleteDomain(RBDomain domain) {
+		throw new NotYetImplementedException();
+	}
+	
+	// -- ROLE MANAGMENT ----------------------------------
+	
+	public Collection<String> getRoles(String domain) {
+		final ResourceNode domainNode = findDomainNode(domain);
+		Collection<String> result = new ArrayList<String>();
+		for (SemanticNode current : SNOPS.objects(domainNode, Aras.DEFINES_ROLE)) {
+			result.add(uniqueName(current));
+		}
+		return result;
+	}
+	
+	public Collection<String> getPermissions(String domain, String role) {
+		final ResourceNode domainNode = findDomainNode(domain);
+		final ResourceNode roleNode = getRole(domainNode, role);
+		if (roleNode == null) {
+			return Collections.emptyList();
+		}
+		Collection<String> result = new ArrayList<String>();
+		for (SemanticNode current : SNOPS.objects(roleNode, Aras.HAS_PERMISSION)) {
+			result.add(current.asValue().getStringValue());
+		}
+		return result;
+	}
+	
+	public void registerRole(String domain, String role, Set<String> permissions) {
+		final ResourceNode domainNode = findDomainNode(domain);
+		final ResourceNode roleNode = getOrCreateRole(domainNode, role);
+		SNOPS.assure(roleNode, Aras.HAS_PERMISSION, toSemanticNodes(permissions));
+		logger.info("Registered permissions {} for role {}.", permissions, role + "@" + uniqueName(domainNode));
+	}
+	
+	// ----------------------------------------------------
+	
+	protected ResourceNode findDomainNode(String domain) {
+		if (domain == null) {
+			throw new IllegalArgumentException("Domain name may not be null.");
+		}
+		final Query query = query()
+				.addField(RDF.TYPE, Aras.DOMAIN)
+				.and()
+				.addField(Aras.HAS_UNIQUE_NAME, domain);
+		final ResourceNode domainNode = query.getResult().getSingleNode();
+		return domainNode;
+	}
+	
+	protected ResourceNode getOrCreateRole(ResourceNode domainNode, String role) {
+		ResourceNode roleNode = getRole(domainNode, role);
+		if (roleNode == null) {
+			roleNode = new SNResource();
+			domainNode.addAssociation(Aras.DEFINES_ROLE, roleNode);
+			roleNode.addAssociation(Aras.BELONGS_TO_DOMAIN, domainNode);
+			roleNode.addAssociation(Aras.HAS_UNIQUE_NAME, new SNText(role));
+			logger.info("Registered role {} for domain {}.", role, uniqueName(domainNode));
+		}
+		return roleNode;
+	}
+	
+	// ----------------------------------------------------
+	
+	private Set<SNText> toSemanticNodes(Collection<String> values) {
+		final Set<SNText> result = new HashSet<SNText>();
+		for (String current : values) {
+			result.add(new SNText(current));
+		}
+		return result;
+	}
+	
+	private ResourceNode getRole(ResourceNode domainNode, String role) {
+		for (SemanticNode current : SNOPS.objects(domainNode, Aras.DEFINES_ROLE)) {
+			String currentName = uniqueName(current);
+			if (role.equals(currentName)) {
+				return current.asResource();
+			}
+		} 
+		return null;
+	}
+	
+	private String uniqueName(SemanticNode node) {
+		if (node != null && node.isResourceNode()) {
+			return string(singleObject(node.asResource(), Aras.HAS_UNIQUE_NAME));
+		} else {
+			return null;
+		}
+	}
+	
+	private Query query() {
+		return masterGate.createQueryManager().buildQuery();
+	}
+	
+}

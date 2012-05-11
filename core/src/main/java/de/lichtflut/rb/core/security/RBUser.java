@@ -5,16 +5,11 @@ package de.lichtflut.rb.core.security;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.security.Permission;
-import org.arastreju.sge.security.Role;
-import org.arastreju.sge.security.impl.SNUser;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.RBSystem;
@@ -42,10 +37,6 @@ public class RBUser implements Serializable {
 	
 	private Date lastLogin;
 	
-	private Set<String> roles = new HashSet<String>();
-	
-	private Set<String> permissions = new HashSet<String>();
-	
 	// ----------------------------------------------------
 
 	/**
@@ -58,14 +49,6 @@ public class RBUser implements Serializable {
 		username = SNOPS.string(SNOPS.singleObject(userNode, RBSystem.HAS_USERNAME));
 		domesticDomain = SNOPS.string(SNOPS.singleObject(userNode, Aras.BELONGS_TO_DOMAIN));
 		lastLogin = SNOPS.date(SNOPS.singleObject(userNode, RBSystem.HAS_LAST_LOGIN));
-
-		final SNUser arasUser = new SNUser(userNode);
-		for(Role role : arasUser.getRoles()) {
-			this.roles.add(role.getName());
-		}
-		for(Permission permission : arasUser.getPermissions()) {
-			this.permissions.add(permission.getName());
-		}
 	}
 	
 	/**
@@ -115,20 +98,6 @@ public class RBUser implements Serializable {
 
 	public void setLastLogin(Date lastLogin) {
 		this.lastLogin = lastLogin;
-	}
-	
-	// ----------------------------------------------------
-
-	public Set<String> getRoles() {
-		return roles;
-	}
-	
-	/**
-	 * @param permission The permission to check.
-	 * @return true if this user has the required permission.
-	 */
-	public boolean hasPermission(String permission) {
-		return permissions.contains(permission);
 	}
 	
 	// ----------------------------------------------------
