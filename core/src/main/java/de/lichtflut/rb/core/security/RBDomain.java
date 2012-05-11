@@ -3,9 +3,14 @@
  */
 package de.lichtflut.rb.core.security;
 
-import org.arastreju.sge.model.ResourceID;
+import java.io.Serializable;
+
+import static org.arastreju.sge.SNOPS.*;
+import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.security.Domain;
 
 /**
  * <p>
@@ -18,9 +23,9 @@ import org.arastreju.sge.naming.QualifiedName;
  *
  * @author Oliver Tigges
  */
-public class RBDomain {
+public class RBDomain implements Serializable {
 	
-	private final ResourceID id;
+	private final QualifiedName qn;
 	
 	private String name;
 	
@@ -31,28 +36,51 @@ public class RBDomain {
 	// ----------------------------------------------------
 	
 	/**
-	 * @param id The unique ID/URI of the domain. 
+	 * Creates a new domain. 
 	 */
-	public RBDomain(ResourceID id) {
-		this.id = id;
+	public RBDomain() {
+		this(new SimpleResourceID().getQualifiedName());
 	}
 	
 	/**
-	 * @param id The unique ID/URI of the domain. 
+	 * Creates a new domain. 
+	 * @param qn The unique ID/URI of the domain. 
 	 */
 	public RBDomain(QualifiedName qn) {
-		this(new SimpleResourceID(qn));
+		this.qn = qn;
+	}
+	
+	/**
+	 * Create a domain object based on a domain node.
+	 * @param domainNode The node.
+	 */
+	public RBDomain(ResourceNode domainNode) {
+		this.qn = domainNode.getQualifiedName();
+		this.name = string(singleObject(domainNode, Aras.HAS_UNIQUE_NAME));
+		this.title = string(singleObject(domainNode, Aras.HAS_TITLE));
+		this.description = string(singleObject(domainNode, Aras.HAS_DESCRIPTION));
+	}
+	
+	/**
+	 * Constructor.
+	 * @param qn The unique ID/URI of the domain. 
+	 */
+	public RBDomain(Domain domain) {
+		this.qn = domain.getQualifiedName();
+		this.name = domain.getUniqueName();
+		this.description = domain.getDescription();
+		this.title = domain.getTitle();
 	}
 	
 	// ----------------------------------------------------
 	
 	/**
-	 * @return the id
+	 * @return the QualifiedName.
 	 */
-	public ResourceID getId() {
-		return id;
+	public QualifiedName getQualifiedName() {
+		return qn;
 	}
-
+	
 	/**
 	 * @return the name
 	 */
@@ -102,7 +130,27 @@ public class RBDomain {
 	 */
 	@Override
 	public String toString() {
-		return "RBDomain [id=" + id + ", name=" + name + "]";
+		return "RBDomain [qn=" + qn + ", name=" + name + "]";
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		return qn.hashCode();
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof RBDomain) {
+			RBDomain other = (RBDomain) obj;
+			return this.qn.equals(other.qn);
+		}
+		return super.equals(obj);
 	}
 
 }

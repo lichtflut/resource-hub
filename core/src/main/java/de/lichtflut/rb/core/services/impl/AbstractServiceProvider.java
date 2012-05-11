@@ -85,7 +85,7 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		if (openGate != null && openGate.getContext().getDomain().equals(ctx.getDomain())) {
 			return openGate;
 		}
-		if (ctx.isAuthenticated()) {
+		if (ctx.getDomain() != null) {
 			openGate = openGate(ctx.getDomain());
 			return openGate;
 		} else {

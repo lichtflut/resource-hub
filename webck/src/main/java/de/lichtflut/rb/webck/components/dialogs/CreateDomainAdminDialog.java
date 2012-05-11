@@ -7,8 +7,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.security.Domain;
 
+import de.lichtflut.rb.core.eh.RBAuthException;
+import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.identities.UserCreationPanel;
 
@@ -33,7 +34,7 @@ public class CreateDomainAdminDialog extends AbstractRBDialog {
 	/**
 	 * @param id
 	 */
-	public CreateDomainAdminDialog(final String id, final IModel<Domain> model) {
+	public CreateDomainAdminDialog(final String id, final IModel<RBDomain> model) {
 		super(id);
 		
 		setTitle(new ResourceModel("dialog.title"));
@@ -41,8 +42,12 @@ public class CreateDomainAdminDialog extends AbstractRBDialog {
 		add(new UserCreationPanel(CONTENT) {
 			@Override
 			public void onCreate(String email, String username, String password) {
-				provider.getSecurityService().createDomainAdmin(model.getObject(), email, username, password);
-				close(AjaxRequestTarget.get());
+				try {
+					provider.getSecurityService().createDomainAdmin(model.getObject(), email, username, password);
+					close(AjaxRequestTarget.get());
+				} catch (RBAuthException e) {
+					error(e.getMessage());
+				}
 			}
 			
 			@Override
