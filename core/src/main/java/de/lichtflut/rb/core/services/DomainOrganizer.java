@@ -11,7 +11,6 @@ import org.arastreju.sge.naming.Namespace;
 
 import de.lichtflut.rb.core.organizer.ContextDeclaration;
 import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
-import de.lichtflut.rb.core.security.RBDomain;
 
 /**
  * <p>
@@ -25,12 +24,6 @@ import de.lichtflut.rb.core.security.RBDomain;
  * @author Oliver Tigges
  */
 public interface DomainOrganizer {
-	
-	/**
-	 * Get the master domain or null if not initialized.
-	 * @return The master domain or null.
-	 */
-	RBDomain getDomesticDomain();
 	
 	/**
 	 * Link the domain to it's organisation.

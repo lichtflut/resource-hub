@@ -14,7 +14,6 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -108,10 +107,6 @@ public class DomainEditPanel extends TypedPanel<RBDomain> {
 		final TextArea<String> descField = new TextArea<String>("description");
 		descField.add(enableIf(not(isViewMode)));
 		form.add(descField);
-		
-		final CheckBox cb = new CheckBox("domesticDomain");
-		cb.setEnabled(false);
-		form.add(cb);
 		
 		form.add(createSaveButton());
 		form.add(createEditButton());

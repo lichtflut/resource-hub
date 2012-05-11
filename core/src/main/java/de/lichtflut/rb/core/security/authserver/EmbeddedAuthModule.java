@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.AuthenticationService;
+import de.lichtflut.rb.core.security.DomainInitializer;
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.UserManager;
 
@@ -27,7 +28,7 @@ public class EmbeddedAuthModule implements AuthModule {
 
 	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthUserManager.class);
 	
-	private final DomainManager domainManager;
+	private final EmbeddedAuthDomainManager domainManager;
 	
 	private final EmbeddedAuthUserManager userManager;
 	
@@ -38,10 +39,20 @@ public class EmbeddedAuthModule implements AuthModule {
 	 * @param gate The Arastreju Gate.
 	 */
 	public EmbeddedAuthModule(ArastrejuGate gate) {
-		logger.info("Creating new Embedded Auth Module.");
-		this.userManager = new EmbeddedAuthUserManager(gate, null);
-		this.domainManager = new EmbeddedAuthDomainManager(gate);
+		this(gate, null);
 	}
+	
+	/**
+	 * Constructor.
+	 * @param gate The Arastreju Gate.
+	 */
+	public EmbeddedAuthModule(ArastrejuGate gate, DomainInitializer initializer) {
+		logger.info("Creating new Embedded Auth Module.");
+		this.domainManager = new EmbeddedAuthDomainManager(gate, initializer);
+		this.userManager = new EmbeddedAuthUserManager(gate, domainManager);
+	}
+	
+	// ----------------------------------------------------
 	
 	/** 
 	 * {@inheritDoc}

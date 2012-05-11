@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.core.services;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -122,12 +121,4 @@ public interface SecurityService {
 	 */
 	void removeAllUserRoles(RBUser user) throws RBAuthException;
 	
-	// ----------------------------------------------------
-	
-	/**
-	 * Get all domains known to this system.
-	 * @return The collection of all domains.
-	 */
-	Collection<RBDomain> getAllDomains();
-
 }

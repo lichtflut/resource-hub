@@ -50,7 +50,7 @@ public class DefaultServiceProviderFactory implements ServiceProviderFactory {
 	@Override
 	public ServiceProvider create() {
 		logger.info("creating new service provider");
-		return new DefaultRBServiceProvider(config);
+		return new DefaultRBServiceProvider(config, createAuthModule());
 	}
 	
 	/** 

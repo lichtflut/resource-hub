@@ -11,6 +11,7 @@ import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
@@ -32,6 +33,9 @@ public class AlternateDomainsModel extends DerivedDetachableModel<List<RBDomain>
 
 	@SpringBean
 	private ServiceProvider provider;
+	
+	@SpringBean
+	private AuthModule authModule;
 	
 	// ----------------------------------------------------
 	
@@ -60,7 +64,7 @@ public class AlternateDomainsModel extends DerivedDetachableModel<List<RBDomain>
 		final String currentDomain = provider.getContext().getDomain();
 		
 		final List<RBDomain> domains = new ArrayList<RBDomain>();
-		final Collection<RBDomain> all = provider.getSecurityService().getAllDomains();
+		final Collection<RBDomain> all = authModule.getDomainManager().getAllDomains();
 		for (RBDomain current : all) {
 			if (!current.getName().equals(currentDomain)) {
 				domains.add(current);

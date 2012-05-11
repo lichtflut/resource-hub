@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
@@ -22,11 +23,11 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.security.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.security.DomainInitializer;
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.RBDomain;
 
@@ -46,15 +47,27 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthDomainManager.class);
 	
 	private final ArastrejuGate masterGate;
+
+	private final DomainInitializer initializer;
 	
 	// ----------------------------------------------------
 	
 	/**
 	 * Constructor.
-	 * @param provider The service provider.
+	 * @param gate The gate to Arastreju. 
 	 */
-	public EmbeddedAuthDomainManager(ArastrejuGate masterGate) {
-		this.masterGate = masterGate;
+	public EmbeddedAuthDomainManager(ArastrejuGate gate) {
+		this(gate, null);
+	}
+	
+	/**
+	 * Constructor.
+	 * @param gate The gate to Arastreju.
+	 * @param initializer The initializer for new domains.
+	 */
+	public EmbeddedAuthDomainManager(ArastrejuGate gate, DomainInitializer initializer) {
+		this.masterGate = gate;
+		this.initializer = initializer;
 	}
 	
 	// ----------------------------------------------------
@@ -74,13 +87,9 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	@Override
 	public Collection<RBDomain> getAllDomains() {
 		final List<RBDomain> result = new ArrayList<RBDomain>();
-		final Collection<Domain> domains = masterGate.getOrganizer().getDomains();
-		for (Domain current : domains) {
-			final RBDomain rbDomain = new RBDomain(current.getQualifiedName());
-			rbDomain.setName(current.getUniqueName());
-			rbDomain.setTitle(current.getTitle());
-			rbDomain.setDescription(current.getDescription());
-			result.add(rbDomain);
+		final Query query = query().addField(RDF.TYPE, Aras.DOMAIN);
+		for (ResourceNode domainNode : query.getResult()) {
+			result.add(new RBDomain(domainNode));
 		}
 		return result;
 	}
@@ -90,10 +99,26 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	 */
 	@Override
 	public RBDomain registerDomain(RBDomain domain) {
-		final Domain registered = masterGate.getOrganizer()
-				.registerDomain(domain.getName(), domain.getTitle(), domain.getDescription());
-		logger.info("Created new domain: " + registered);
-		return new RBDomain(registered);
+		final ResourceNode node = new SNResource();
+		node.addAssociation(Aras.HAS_UNIQUE_NAME, new SNText(domain.getName()), Aras.IDENT);
+		if (domain.getTitle() != null) {
+			node.addAssociation(Aras.HAS_TITLE, new SNText(domain.getTitle()), Aras.IDENT);
+		}
+		if (domain.getDescription() != null) {
+			node.addAssociation(Aras.HAS_DESCRIPTION, new SNText(domain.getDescription()), Aras.IDENT);
+		}
+		node.addAssociation(RDF.TYPE, Aras.DOMAIN, Aras.IDENT);
+		final RBDomain created = new RBDomain(node);
+		
+		final ModelingConversation mc = mc();
+		mc.attach(node);
+		if (initializer != null) {
+			initializer.initialize(created, this);
+		}
+		mc.close();
+		
+		logger.info("Created new domain: " + created);
+		return created;
 	}
 
 	/** 
@@ -195,6 +220,10 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		} else {
 			return null;
 		}
+	}
+	
+	private ModelingConversation mc() {
+		return masterGate.startConversation();
 	}
 	
 	private Query query() {

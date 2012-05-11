@@ -27,7 +27,6 @@ import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.organizer.ContextDeclaration;
 import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
-import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.ServiceProvider;
 
@@ -54,16 +53,6 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	 */
 	public DomainOrganizerImpl(final ServiceProvider provider) {
 		super(provider);
-	}
-	
-	// -- DOMAINS -----------------------------------------
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RBDomain getDomesticDomain() {
-		return new RBDomain(arasOrganizer().getDomesticDomain());
 	}
 	
 	// ----------------------------------------------------
