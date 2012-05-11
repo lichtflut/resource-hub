@@ -101,7 +101,7 @@ public class EmbeddedAuthUserManager implements AuthenticationService, UserManag
 			throw new LoginException(ErrorCodes.LOGIN_INVALID_DATA, "No username given");	
 		}
 		
-		logger.debug("Trying to login user '" + id + "'.");
+		logger.info("Trying to login user '" + id + "'.");
 
 		final ResourceNode user = findUserNode(id);
 		if (user == null){
@@ -186,7 +186,7 @@ public class EmbeddedAuthUserManager implements AuthenticationService, UserManag
 		}
 		
 		mc.attach(userNode);
-		logger.info("Registered user in master domain: " + user + " --> " + domain);
+		logger.info("Registered user: " + user + " --> " + domain);
 		mc.close();
 	}
 	

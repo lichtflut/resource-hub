@@ -3,14 +3,15 @@
  */
 package de.lichtflut.rb.core.security;
 
+import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
+
 import java.io.Serializable;
 
-import static org.arastreju.sge.SNOPS.*;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.security.Domain;
 
 /**
  * <p>
@@ -59,17 +60,6 @@ public class RBDomain implements Serializable {
 		this.name = string(singleObject(domainNode, Aras.HAS_UNIQUE_NAME));
 		this.title = string(singleObject(domainNode, Aras.HAS_TITLE));
 		this.description = string(singleObject(domainNode, Aras.HAS_DESCRIPTION));
-	}
-	
-	/**
-	 * Constructor.
-	 * @param qn The unique ID/URI of the domain. 
-	 */
-	public RBDomain(Domain domain) {
-		this.qn = domain.getQualifiedName();
-		this.name = domain.getUniqueName();
-		this.description = domain.getDescription();
-		this.title = domain.getTitle();
 	}
 	
 	// ----------------------------------------------------

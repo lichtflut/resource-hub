@@ -49,7 +49,7 @@ public abstract class DomainBrowserPanel extends TypedPanel<List<RBDomain>> {
 				final Link link = new AjaxFallbackLink("link") {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						onDomainSelected(domain);
+						onDomainSelected(item.getModel());
 					}
 				};
 				item.add(link);
@@ -62,6 +62,6 @@ public abstract class DomainBrowserPanel extends TypedPanel<List<RBDomain>> {
 	
 	// ----------------------------------------------------
 	
-	public abstract void onDomainSelected(RBDomain domain);
+	public abstract void onDomainSelected(IModel<RBDomain> domain);
 
 }

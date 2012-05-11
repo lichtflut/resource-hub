@@ -4,14 +4,12 @@
 package de.lichtflut.rb.core.services.impl;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.spi.GateContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +21,6 @@ import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.security.UserManager;
-import de.lichtflut.rb.core.security.authserver.EmbeddedAuthModule;
 import de.lichtflut.rb.core.services.SecurityService;
 
 /**
@@ -49,9 +46,9 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * Constructor.
 	 * @param The service provider
 	 */
-	public SecurityServiceImpl(AbstractServiceProvider provider) {
+	public SecurityServiceImpl(AbstractServiceProvider provider, AuthModule authServer) {
 		super(provider);
-		this.authServer = new EmbeddedAuthModule(provider.openGate(GateContext.MASTER_DOMAIN));
+		this.authServer = authServer;
 	}
 
 	// ----------------------------------------------------
@@ -87,7 +84,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		rbUser.setEmail(email);
 		rbUser.setUsername(username);
 		final String crypted = RBCrypt.encryptWithRandomSalt(password);
-		authServer.getUserManagement().registerUser(rbUser, crypted, getProvider().getContext().getDomain());
+		authServer.getUserManagement().registerUser(rbUser, crypted, domain.getName());
 		setUserRoles(rbUser, domain.getName(), Arrays.asList(rolesOfDomainAdmin()));
 		return rbUser;
 	}
@@ -165,16 +162,6 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		authServer.getUserManagement().changePassword(user, generatedPwd);
 		logGeneratedPwd(generatedPwd);
 		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, generatedPwd, conf, locale);
-	}
-	
-	// ----------------------------------------------------
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Collection<RBDomain> getAllDomains() {
-		return authServer.getDomainManager().getAllDomains();
 	}
 	
 	// ----------------------------------------------------

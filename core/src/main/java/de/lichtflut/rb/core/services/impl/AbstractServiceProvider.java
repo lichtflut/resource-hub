@@ -13,6 +13,7 @@ import org.arastreju.sge.spi.GateContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.MessagingService;
@@ -51,20 +52,21 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	private MessagingService messagingService;
 	private ViewSpecificationService viewSpecService;
 	private DomainOrganizer domainOrganizer;
+
 	
 	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
 	 */
-	public AbstractServiceProvider(ServiceContext ctx) {
+	public AbstractServiceProvider(ServiceContext ctx, AuthModule authModule) {
 		this.ctx = ctx;
 		schemaManager = new SchemaManagerImpl(this);
 		entityManager = new EntityManagerImpl(this);
 		typeManager = new TypeManagerImpl(this);
 		messagingService = new MessagingServiceImpl(this);
 		domainOrganizer = newDomainOrganizer();
-		securityService = newSecurityService();
+		securityService = newSecurityService(authModule);
 		viewSpecService = newViewSpecificationServiceImpl();
 	}
 
@@ -192,10 +194,11 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	// ----------------------------------------------------
 	
 	/**
+	 * @param authModule
 	 * @return The security service.
 	 */
-	protected SecurityService newSecurityService() {
-		return new SecurityServiceImpl(this);
+	protected SecurityService newSecurityService(AuthModule authModule) {
+		return new SecurityServiceImpl(this, authModule);
 	}
 	
 	/**
