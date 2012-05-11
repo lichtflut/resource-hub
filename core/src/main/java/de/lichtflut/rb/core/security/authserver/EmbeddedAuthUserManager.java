@@ -110,6 +110,7 @@ public class EmbeddedAuthUserManager implements AuthenticationService, UserManag
 		
 		verifyPassword(user, loginData.getPassword());
 		setLastLogin(user);
+		
 		logger.info("User {} logged in. ", user);
 		return new RBUser(user);
 	}
@@ -173,15 +174,24 @@ public class EmbeddedAuthUserManager implements AuthenticationService, UserManag
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void registerUser(RBUser user, String credential, String domain) {
+	public void registerUser(RBUser user, String credential, String domain) throws RBAuthException {
+		if (isIdentifierInUse(user.getEmail())) {
+				throw new EmailAlreadyInUseException("Email already in use.");
+		}
+		if (user.getUsername() != null && isIdentifierInUse(user.getUsername())) {
+				throw new UsernameAlreadyInUseException("Username already in use.");
+		}
 		final ModelingConversation mc = masterGate.startConversation();
-		final ResourceNode userNode = new SNResource();
+		final ResourceNode userNode = new SNResource(user.getQualifiedName());
 		userNode.addAssociation(RDF.TYPE, Aras.USER, Aras.IDENT);
 		userNode.addAssociation(Aras.BELONGS_TO_DOMAIN, new SNText(domain), Aras.IDENT);
 		userNode.addAssociation(Aras.HAS_CREDENTIAL, new SNText(credential), Aras.IDENT);
-		
+
+		SNOPS.assure(userNode, RBSystem.HAS_EMAIL, user.getEmail());
 		SNOPS.associate(userNode, Aras.IDENTIFIED_BY, new SNText(user.getEmail()), Aras.IDENT);
+		SNOPS.associate(userNode, Aras.IDENTIFIED_BY, new SNText(user.getQualifiedName().toURI()), Aras.IDENT);
 		if (user.getUsername() != null) {
+			SNOPS.assure(userNode, RBSystem.HAS_USERNAME, user.getUsername());
 			SNOPS.associate(userNode, Aras.IDENTIFIED_BY, new SNText(user.getUsername()), Aras.IDENT);
 		}
 		
@@ -279,16 +289,16 @@ public class EmbeddedAuthUserManager implements AuthenticationService, UserManag
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<String> getUserRoles(RBUser user) {
-		return authorization.getUserRoles(user, user.getDomesticDomain());
+	public List<String> getUserRoles(RBUser user, String domain) {
+		return authorization.getUserRoles(user, domain);
 	}
 
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getUserPermissions(RBUser user) {
-		return authorization.getUserPermissions(user, user.getDomesticDomain());
+	public Set<String> getUserPermissions(RBUser user, String domain) {
+		return authorization.getUserPermissions(user.getQualifiedName(), domain);
 	}
 	
 	/**

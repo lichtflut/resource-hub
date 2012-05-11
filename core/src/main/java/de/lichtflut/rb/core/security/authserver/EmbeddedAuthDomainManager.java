@@ -30,6 +30,7 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.security.DomainInitializer;
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.RBDomain;
+import de.lichtflut.rb.core.security.RBUser;
 
 /**
  * <p>
@@ -85,19 +86,6 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<RBDomain> getAllDomains() {
-		final List<RBDomain> result = new ArrayList<RBDomain>();
-		final Query query = query().addField(RDF.TYPE, Aras.DOMAIN);
-		for (ResourceNode domainNode : query.getResult()) {
-			result.add(new RBDomain(domainNode));
-		}
-		return result;
-	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
 	public RBDomain registerDomain(RBDomain domain) {
 		final ResourceNode node = new SNResource();
 		node.addAssociation(Aras.HAS_UNIQUE_NAME, new SNText(domain.getName()), Aras.IDENT);
@@ -135,6 +123,35 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	@Override
 	public void deleteDomain(RBDomain domain) {
 		throw new NotYetImplementedException();
+	}
+	
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<RBDomain> getAllDomains() {
+		final List<RBDomain> result = new ArrayList<RBDomain>();
+		final Query query = query().addField(RDF.TYPE, Aras.DOMAIN);
+		for (ResourceNode domainNode : query.getResult()) {
+			result.add(new RBDomain(domainNode));
+		}
+		return result;
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<RBUser> loadUsers(String domainName, int offset, int max) {
+		RBDomain domain = findDomain(domainName);
+		final List<RBUser> result = new ArrayList<RBUser>();
+		final Query query = query().addField(Aras.BELONGS_TO_DOMAIN, domain.getQualifiedName());
+		for (ResourceNode userNode : query.getResult().toList(offset, max)) {
+			result.add(new RBUser(userNode));
+		}
+		return result;
 	}
 	
 	// -- ROLE MANAGMENT ----------------------------------

@@ -13,7 +13,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.security.RBDomain;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.components.navigation.ContextMenu;
 import de.lichtflut.rb.webck.models.domains.AlternateDomainsModel;
 
@@ -31,7 +31,7 @@ import de.lichtflut.rb.webck.models.domains.AlternateDomainsModel;
 public class DomainSwitcherPanel extends Panel {
 
 	@SpringBean
-	private ServiceProvider provider;
+	private ServiceContext context;
 	
 	// ----------------------------------------------------
 	
@@ -52,7 +52,7 @@ public class DomainSwitcherPanel extends Panel {
 				final Link link = new Link("link") {
 					@Override
 					public void onClick() {
-						provider.getContext().setDomain(domain);
+						context.setDomain(domain);
 						throw new RestartResponseException(getApplication().getHomePage());
 					}
 				};

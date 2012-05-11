@@ -43,12 +43,20 @@ public interface DomainManager {
 	 * @param domain The domain.
 	 */
 	void deleteDomain(RBDomain domain);
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Get all registered domain.
 	 * @return All domains.
 	 */
 	Collection<RBDomain> getAllDomains();
+	
+	/**
+	 * Get all registered domain.
+	 * @return All domains.
+	 */
+	Collection<RBUser> loadUsers(String domain, int offset, int max);
 	
 	// ----------------------------------------------------
 	

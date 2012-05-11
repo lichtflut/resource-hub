@@ -80,12 +80,16 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 */
 	@Override
 	public RBUser createDomainAdmin(final RBDomain domain, String email, String username, String password) throws RBAuthException {
+		logger.info("Creating domain admin {} for domain {}.", email, domain.getName());
 		final RBUser rbUser = new RBUser(new SimpleResourceID().getQualifiedName());
 		rbUser.setEmail(email);
 		rbUser.setUsername(username);
 		final String crypted = RBCrypt.encryptWithRandomSalt(password);
 		authServer.getUserManagement().registerUser(rbUser, crypted, domain.getName());
-		setUserRoles(rbUser, domain.getName(), Arrays.asList(rolesOfDomainAdmin()));
+		
+		final List<String> roles = Arrays.asList(rolesOfDomainAdmin());
+		logger.info("Adding roles {} to user {}.", roles, email);
+		setUserRoles(rbUser, domain.getName(), roles);
 		return rbUser;
 	}
 	
@@ -113,16 +117,16 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<String> getUserRoles(RBUser user) {
-		return authServer.getUserManagement().getUserRoles(user);
+	public List<String> getUserRoles(RBUser user, String domain) {
+		return authServer.getUserManagement().getUserRoles(user, domain);
 	}
 
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getUserPermissions(RBUser user) {
-		return authServer.getUserManagement().getUserPermissions(user);
+	public Set<String> getUserPermissions(RBUser user, String domain) {
+		return authServer.getUserManagement().getUserPermissions(user, domain);
 	}
 	
 	/**

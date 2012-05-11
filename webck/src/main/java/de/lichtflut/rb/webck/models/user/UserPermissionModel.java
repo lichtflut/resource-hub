@@ -50,7 +50,8 @@ public class UserPermissionModel extends DerivedDetachableModel<Set<String>, RBU
 	@Override
 	protected Set<String> derive(RBUser user) {
 		if (user != null) {
-			return provider.getSecurityService().getUserPermissions(user);
+			String domain = provider.getContext().getDomain();
+			return provider.getSecurityService().getUserPermissions(user, domain);
 		} else {
 			return Collections.emptySet();
 		}
