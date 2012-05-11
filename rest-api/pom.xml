@@ -17,6 +17,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<springframework.version>3.1.0.RELEASE</springframework.version>
+		<jersey.version>1.8</jersey.version>
 	</properties>
 	<dependencies>
 
@@ -33,13 +34,13 @@
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-server</artifactId>
-			<version>1.8</version>
+			<version>${jersey.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-json</artifactId>
-			<version>1.8</version>
+			<version>${jersey.version}</version>
 		</dependency>
 
 		<dependency>
@@ -49,9 +50,17 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.sun.jersey.jersey-test-framework</groupId>
+			<artifactId>jersey-test-framework-grizzly2</artifactId>
+			<version>${jersey.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
 			<groupId>com.sun.jersey.contribs</groupId>
 			<artifactId>jersey-spring</artifactId>
-			<version>1.8</version>
+			<version>${jersey.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
@@ -101,6 +110,12 @@
 
 		<dependency>
 			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
 			<version>${springframework.version}</version>
 		</dependency>
@@ -108,7 +123,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>4.10</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -126,7 +141,7 @@
 					</execution>
 				</executions>
 				<configuration>
-<!-- 					Changes the default schema directory -->
+					<!-- Changes the default schema directory -->
 					<schemaDirectory>src/main/resources/xsd</schemaDirectory>
 					<generateDirectory>src/main/java</generateDirectory>
 					<cleanPackageDirectories>true</cleanPackageDirectories>

@@ -175,8 +175,7 @@ public class DomainOps extends RBServiceEndpoint {
 		}
 		// Check if the domain does already exists
 		ServiceProvider provider = getProvider(domainID, user);
-		Domain domainNode = provider.getArastejuGate().getOrganizer()
-				.findDomain(domainID);
+		Domain domainNode = provider.getArastejuGate().getOrganizer().findDomain(domainID);
 		if (domainNode == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
