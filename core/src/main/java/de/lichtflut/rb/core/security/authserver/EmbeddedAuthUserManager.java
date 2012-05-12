@@ -77,6 +77,8 @@ public class EmbeddedAuthUserManager implements AuthenticationService, UserManag
 	
 	private final EmbeddedAuthAuthorizationManager authorization;
 
+	private final EmbeddedAuthDomainManager domainManager;
+
 	// ----------------------------------------------------
 	
 	/**
@@ -86,6 +88,7 @@ public class EmbeddedAuthUserManager implements AuthenticationService, UserManag
 	 */
 	public EmbeddedAuthUserManager(ArastrejuGate gate, EmbeddedAuthDomainManager domainManager) {
 		this.masterGate = gate;
+		this.domainManager = domainManager;
 		this.authorization = new EmbeddedAuthAuthorizationManager(masterGate, domainManager);
 	}
 	
@@ -174,17 +177,18 @@ public class EmbeddedAuthUserManager implements AuthenticationService, UserManag
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void registerUser(RBUser user, String credential, String domain) throws RBAuthException {
+	public void registerUser(RBUser user, String credential, String domainName) throws RBAuthException {
 		if (isIdentifierInUse(user.getEmail())) {
 				throw new EmailAlreadyInUseException("Email already in use.");
 		}
 		if (user.getUsername() != null && isIdentifierInUse(user.getUsername())) {
 				throw new UsernameAlreadyInUseException("Username already in use.");
 		}
+		final ResourceNode domain = domainManager.findDomainNode(domainName);
 		final ModelingConversation mc = masterGate.startConversation();
 		final ResourceNode userNode = new SNResource(user.getQualifiedName());
 		userNode.addAssociation(RDF.TYPE, Aras.USER, Aras.IDENT);
-		userNode.addAssociation(Aras.BELONGS_TO_DOMAIN, new SNText(domain), Aras.IDENT);
+		userNode.addAssociation(Aras.BELONGS_TO_DOMAIN, domain, Aras.IDENT);
 		userNode.addAssociation(Aras.HAS_CREDENTIAL, new SNText(credential), Aras.IDENT);
 
 		SNOPS.assure(userNode, RBSystem.HAS_EMAIL, user.getEmail());

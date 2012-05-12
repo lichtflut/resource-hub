@@ -26,16 +26,6 @@ import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
 public interface DomainOrganizer {
 	
 	/**
-	 * Link the domain to it's organisation.
-	 * @param organization
-	 */
-	void setDomainOrganization(final ResourceID organization);
-	
-	ResourceID getDomainOrganization();
-	
-	// ----------------------------------------------------
-
-	/**
 	 * @return
 	 */
 	List<Namespace> getNamespaces();
@@ -45,14 +35,41 @@ public interface DomainOrganizer {
 	// ----------------------------------------------------
 	
 	/**
-	 * @return
+	 * @return The contexts for the domain.
 	 */
 	List<Context> getContexts();
 
 	/**
-	 * @param object
+	 * @param context The context to be registered.
 	 */
-	void registerContext(ContextDeclaration object);
-
-
+	void registerContext(ContextDeclaration context);
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Link the domain to it's organisation.
+	 * @param organization
+	 */
+	void setDomainOrganization(final ResourceID organization);
+	
+	/**
+	 * Get the organization linked to the domain.
+	 * @return The Organization.
+	 */
+	ResourceID getDomainOrganization();
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Link the current user to the person representing him.
+	 * @param person
+	 */
+	void setUsersPerson(final ResourceID person);
+	
+	/**
+	 * Get the person representing the current user.
+	 * @return The person.
+	 */
+	ResourceID getUsersPerson();
+	
 }

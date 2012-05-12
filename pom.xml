@@ -19,7 +19,7 @@
 	</modules>
 	
 	<properties>
-		<arastreju.version>0.7.0-SNAPSHOT</arastreju.version>
+		<arastreju.version>0.7.1-SNAPSHOT</arastreju.version>
 	</properties>
 	
 	<build>
