@@ -74,11 +74,13 @@ public class SNConstraint extends ResourceView {
 	 * @param ctx The context.
 	 */
 	public SNConstraint(final String literalConstraint, List<Datatype> datatypes, Context ctx) {
-		SNOPS.associate(this, RDF.TYPE, RBSchema.PROPERTY_CONSTRAINT, ctx);
-		SNOPS.associate(this, RBSchema.HAS_CONSTRAINT_VALUE, new SNText(literalConstraint), ctx);
-		SNOPS.assure(this, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(false), ctx);
-		SNOPS.assure(this, RBSchema.RESOURCE_CONSTRAINT, new SNBoolean(false), ctx);
-		setApplicableDatatypes(datatypes, ctx);
+		if(literalConstraint != null){
+			SNOPS.associate(this, RDF.TYPE, RBSchema.PROPERTY_CONSTRAINT, ctx);
+			SNOPS.associate(this, RBSchema.HAS_CONSTRAINT_VALUE, new SNText(literalConstraint), ctx);
+			SNOPS.assure(this, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(false), ctx);
+			SNOPS.assure(this, RBSchema.RESOURCE_CONSTRAINT, new SNBoolean(false), ctx);
+			setApplicableDatatypes(datatypes, ctx);
+		}
 	}
 	
 	/**

@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.schema.model.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
@@ -33,7 +34,7 @@ public final class ConstraintBuilder {
 		if (literal == null) {
 			literal = "";
 		}
-		return buildConstraint(null, null, literal, null, false, null);
+		return buildConstraint(null, null, literal, null, false, Collections.<Datatype> emptyList());
 	}
 
 	/**
@@ -75,7 +76,7 @@ public final class ConstraintBuilder {
 	 * @return {@link Constraint}
 	 */
 	public static Constraint buildResourceConstraint(final ResourceID resource) {
-		return buildConstraint(null, null, null, resource, false, null);
+		return buildConstraint(null, null, null, resource, false,  new ArrayList<Datatype>(){{add(Datatype.RESOURCE);}});
 	}
 
 	/**
@@ -87,13 +88,6 @@ public final class ConstraintBuilder {
 	 */
 	public static Constraint buildPublicResourceConstraint(ResourceID id, String name, final ResourceID resource) {
 		return buildConstraint(id, name, null, resource, true, new ArrayList<Datatype>(){{add(Datatype.RESOURCE);}});
-	}
-
-	/**
-	 * @return an empty Constraint for initialization purpose
-	 */
-	public static Constraint emptyConstraint() {
-		return buildConstraint(null, null, null, null, false, null);
 	}
 
 //	// ------------------------------------------------------
@@ -255,7 +249,7 @@ public final class ConstraintBuilder {
                 }
                 Constraint copy = (Constraint) obj;
                 if(isPublic){
-	                if (!(id == copy.getID())){
+	                if (!(id.getQualifiedName().equals(copy.getID().getQualifiedName()))){
 	                	return false;
 	                } else if (!name.equals(copy.getName())){
 	                	return false;

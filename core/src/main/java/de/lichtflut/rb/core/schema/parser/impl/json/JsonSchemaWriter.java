@@ -111,20 +111,23 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	private void writeSchema(final JsonGenerator g, ResourceSchema schema) throws IOException {
 		g.writeStringField(FOR_TYPE, schema.getDescribedType().getQualifiedName().toURI());
 		if (schema.getLabelBuilder().getExpression() != null) {
-			g.writeStringField(LABEL_RULE, schema.getLabelBuilder().getExpression());	
+			g.writeStringField(LABEL_RULE, schema.getLabelBuilder().getExpression());
 		}
-		for(PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 			g.writeObjectFieldStart(PROPERTY_DECLARATION);
 			g.writeStringField(PROPERTY_TYPE, uri(decl.getPropertyDescriptor()));
 			g.writeStringField(CARDINALITY, buildCardinalityString(decl.getCardinality()));
 			writeFieldLabelDef(g, decl.getFieldLabelDefinition());
-			if (decl.getConstraint().isPublicConstraint()) {
-				g.writeStringField(CONSTRAINT_REFERENCE, uri(decl.getConstraint().getID()));
-			} else {
-				if(decl.getConstraint().isResourceReference()){
-					g.writeStringField(RESOURCE_CONSTRAINT, uri(decl.getConstraint().getResourceConstraint()));
-				} else{
-					g.writeStringField(LITERAL_CONSTRAINT, decl.getConstraint().getLiteralConstraint());
+			if (decl.hasConstraint()) {
+
+				if (decl.getConstraint().isPublicConstraint()) {
+					g.writeStringField(CONSTRAINT_REFERENCE, uri(decl.getConstraint().getID()));
+				} else {
+					if (decl.getConstraint().isResourceReference()) {
+						g.writeStringField(RESOURCE_CONSTRAINT, uri(decl.getConstraint().getResourceConstraint()));
+					} else {
+						g.writeStringField(LITERAL_CONSTRAINT, decl.getConstraint().getLiteralConstraint());
+					}
 				}
 			}
 			g.writeStringField(DATATYPE, decl.getDatatype().name());

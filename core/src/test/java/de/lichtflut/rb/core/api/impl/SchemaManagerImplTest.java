@@ -7,6 +7,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
@@ -61,7 +62,7 @@ public class SchemaManagerImplTest {
 		PropertyDeclaration originalDecl = original.getPropertyDeclarations().get(0);
 		assertThat(decl.getCardinality().getMaxOccurs(), is(originalDecl.getCardinality().getMaxOccurs()));
 		assertThat(decl.getCardinality().getMinOccurs(), is(originalDecl.getCardinality().getMinOccurs()));
-		assertThat(decl.getConstraint(), notNullValue());
+		assertThat(decl.getConstraint(), nullValue());
 		assertThat(decl.getDatatype(), equalTo(originalDecl.getDatatype()));
 		assertThat(decl.getFieldLabelDefinition(), instanceOf(FieldLabelDefinition.class));
 		assertThat(decl.getPropertyDescriptor(), equalTo(originalDecl.getPropertyDescriptor()));

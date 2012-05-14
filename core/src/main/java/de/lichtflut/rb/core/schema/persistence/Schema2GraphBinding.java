@@ -3,8 +3,6 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
@@ -46,7 +44,7 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 public class Schema2GraphBinding {
 	
 	private final Logger logger = LoggerFactory.getLogger(Schema2GraphBinding.class);
-	
+	// TODO resolve public constraint
 	private ConstraintResolver resolver = new VoidTypeDefResovler();
 	
 	// -----------------------------------------------------
@@ -76,8 +74,8 @@ public class Schema2GraphBinding {
 			decl.setPropertyDescriptor(snDecl.getPropertyDescriptor());
 			decl.setCardinality(buildCardinality(snDecl));
 			decl.setDatatype(snDecl.getDatatype());
-			decl.setFieldLabelDefinition(createFieldLabelDef(snDecl));
-			
+			decl.setFieldLabelDefinition(snDecl.getFieldLabelDefinition());
+			decl.setConstraint(snDecl.getConstraint());
 			schema.addPropertyDeclaration(decl);
 		}
 		if (snSchema.hasLabelExpression()) {
@@ -91,6 +89,18 @@ public class Schema2GraphBinding {
 		}
 
 		return schema;
+	}
+	
+	/**
+	 * Convert a constraint node to a model element.
+	 * @param snConstraint - The constraint node.
+	 * @return the constraint model element.
+	 */
+	public Constraint toModelObject(final SNConstraint snConstraint) {
+		if(snConstraint == null) {
+			return null;
+		}
+		return toModelObject(snConstraint);
 	}
 	
 	// -----------------------------------------------------
@@ -132,23 +142,14 @@ public class Schema2GraphBinding {
 		int min = snDecl.getMinOccurs().getIntegerValue().intValue();
 		int max = snDecl.getMaxOccurs().getIntegerValue().intValue();
 		if (max > 0) {
-			return CardinalityBuilder.between(min, max);
+			if(max ==Integer.MAX_VALUE){
+				return CardinalityBuilder.hasAtLeast(min);
+			}else{
+				return CardinalityBuilder.between(min, max);
+			}
 		} else {
 			return CardinalityBuilder.hasAtLeast(min);
 		}
-	}
-	
-	/**
-	 * Build constraint objects from {@link SNConstraint} nodes.
-	 * @param src The source.
-	 * @return The constraints.
-	 */
-	protected Set<Constraint> buildConstraints(final Collection<SNConstraint> src) {
-		final Set<Constraint> result = new HashSet<Constraint>();
-		for (SNConstraint snConst : src){
-			result.add(toModelConstraint(snConst));
-		}
-		return result;
 	}
 
 	protected Constraint toModelConstraint(final SNConstraint snConst) {

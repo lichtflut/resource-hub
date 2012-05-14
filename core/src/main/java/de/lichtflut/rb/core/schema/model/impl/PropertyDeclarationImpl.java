@@ -49,9 +49,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	/**
 	 * Default Constructor.
 	 */
-	public PropertyDeclarationImpl() {
-		this.constraint = ConstraintBuilder.emptyConstraint();
-	}
+	public PropertyDeclarationImpl() {}
 	
 	/**
 	 * Constructor.
@@ -61,7 +59,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	 * @param typeDefinition
 	 */
 	public PropertyDeclarationImpl(ResourceID propertyDescriptor, Datatype dataType) {
-		this(propertyDescriptor, dataType, ConstraintBuilder.emptyConstraint());
+		this(propertyDescriptor, dataType, null);
 	}
 	
 	/**
@@ -135,6 +133,18 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 		this.constraint = constraint;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasConstraint() {
+		boolean hasConstraint = false;
+		if(getConstraint() != null){
+			hasConstraint = true;
+		}
+		return hasConstraint;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

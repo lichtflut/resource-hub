@@ -3,13 +3,15 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.nodes.BlankNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.junit.Before;
@@ -20,10 +22,7 @@ import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
-import de.lichtflut.rb.mock.RBMock;
 import de.lichtflut.rb.mock.schema.ConstraintsFactory;
-import de.lichtflut.rb.mock.schema.PropertyDeclarationFactory;
 
 /**
  * <p>
@@ -36,24 +35,12 @@ import de.lichtflut.rb.mock.schema.PropertyDeclarationFactory;
 public class SNPropertyDeclarationTest {
 
 	private SNPropertyDeclaration snDecl;
-	private Constraint constraint;
 	private Context ctx;
 	
 	@Before
 	public void setUp(){
 		ctx= RBSchema.CONTEXT;
-		PropertyDeclaration decl = PropertyDeclarationFactory.buildHasChildrenPropertyDecl();
 		snDecl = new SNPropertyDeclaration();
-//		snDecl.setDatatype(decl.getDatatype(), ctx);
-//		snDecl.setMinOccurs(new SNScalar(decl.getCardinality().getMinOccurs()), ctx);
-//		snDecl.setMaxOccurs(new SNScalar(decl.getCardinality().getMaxOccurs()), ctx);
-//		snDecl.setPropertyDescriptor(decl.getPropertyDescriptor(), ctx);
-//		constraint = decl.getConstraint();
-//		SNConstraint snConstraint = new SNConstraint(constraint.getResourceConstraint(), ctx);
-//		snConstraint.setID(constraint.getID(), ctx);
-//		snConstraint.setName(constraint.getName(), ctx);
-//		snConstraint.setPublic(constraint.isPublicConstraint(), ctx);
-//		snDecl.setConstraint(snConstraint, ctx);
 	}
 
 	/**
@@ -113,7 +100,7 @@ public class SNPropertyDeclarationTest {
 	@Test
 	public void testGetPublicLiteralConstraint() {
 		Constraint constraint = ConstraintsFactory.buildPublicEmailConstraint();
-		SNConstraint snConstraint = new SNConstraint(constraint.getResourceConstraint(), ctx);
+		SNConstraint snConstraint = new SNConstraint(constraint.getLiteralConstraint(), constraint.getApplicableDatatypes(), ctx);
 		snConstraint.setID(constraint.getID(), ctx);
 		snConstraint.setName(constraint.getName(), ctx);
 		snConstraint.setPublic(constraint.isPublicConstraint(), ctx);
@@ -130,7 +117,7 @@ public class SNPropertyDeclarationTest {
 	@Test
 	public void testGetPrivateLiteralConstraint() {
 		Constraint constraint = ConstraintsFactory.buildPrivateLiteralConstraint();
-		SNConstraint snConstraint = new SNConstraint(constraint.getResourceConstraint(), ctx);
+		SNConstraint snConstraint = new SNConstraint(constraint.getLiteralConstraint(), constraint.getApplicableDatatypes(), ctx);
 		
 		snDecl.setConstraint(snConstraint, ctx);
 		
@@ -191,7 +178,7 @@ public class SNPropertyDeclarationTest {
 	 * @param retrieved
 	 */
 	private void assertConstraints(Constraint retrieved, Constraint constraint) {
-		assertThat(retrieved.getApplicableDatatypes(), equalTo(constraint.getApplicableDatatypes()));
+		assertThat(retrieved.getApplicableDatatypes().size(), is(constraint.getApplicableDatatypes().size()));
 		assertThat(retrieved.getID(), equalTo(constraint.getID()));
 		assertThat(retrieved.getLiteralConstraint(), equalTo(constraint.getLiteralConstraint()));
 		assertThat(retrieved.getName(), equalTo(constraint.getName()));

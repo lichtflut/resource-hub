@@ -58,7 +58,7 @@ public class ResourceSchemaImplTest {
 		schema = new ResourceSchemaImpl(describedType);
 		assertNotNull("Schema is null.", schema);
 		assertNotNull("Label builder should not be null.", schema.getLabelBuilder());
-		assertEquals("Label is not as expexted.", entity.getLabel(), schema.getLabelBuilder().build(entity));
+		assertEquals("Label is not as expexted.", entity.getNode().getQualifiedName().getSimpleName(), schema.getLabelBuilder().build(entity));
 		assertEquals("Described type is not as expected.", entity.getType(), schema.getDescribedType());
 		assertEquals("PropertyDeclarations should be empty.", Collections.EMPTY_LIST, schema.getPropertyDeclarations());
 	}

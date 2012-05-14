@@ -21,12 +21,10 @@ import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
-import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.model.nodes.views.SNScalar;
@@ -87,7 +85,7 @@ public class SNPropertyDeclaration extends ResourceView {
 		Constraint constraint = null;
 		SemanticNode constraintNode = SNOPS.singleObject(this, RBSchema.HAS_CONSTRAINT);
 		if (constraintNode == null){
-			return ConstraintBuilder.emptyConstraint();
+			return null;
 		}
 		boolean isPublic = SNOPS.singleObject(constraintNode.asResource(), RBSchema.IS_PUBLIC_CONSTRAINT).asValue().getBooleanValue();
 		if(isPublic){
@@ -97,6 +95,17 @@ public class SNPropertyDeclaration extends ResourceView {
 		}
 		
 		return constraint;
+	}
+	
+	/**
+	 * @return true if the SNPropertyDeclaration has a {@link Constraint}, false if not.
+	 */
+	public boolean hasConstraint(){
+		boolean hasConstraint = false;
+		if(getConstraint() != null){
+			hasConstraint = true;
+		}
+		return hasConstraint;
 	}
 
 	/**
@@ -276,8 +285,8 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * @return
 	 */
 	private Constraint getPrivateConstraint(ResourceNode resource) {
-		SemanticNode isResource = SNOPS.singleObject(this, RBSchema.RESOURCE_CONSTRAINT);
-		if(isResource == null){
+		boolean isResource = SNOPS.singleObject(resource, RBSchema.RESOURCE_CONSTRAINT).asValue().getBooleanValue();
+		if(isResource){
 			return getPrivateResourceConstraint(resource);
 		}
 		return getPrivateLiteralConstraint(resource);
@@ -305,12 +314,12 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * @param asResource
 	 * @return
 	 */
-	private Constraint getPublicConstraint(ResourceNode resource) {
-		SemanticNode isResource = SNOPS.singleObject(this, RBSchema.RESOURCE_CONSTRAINT);
-		if(isResource == null){
-			return getResourceConstraint(resource);
+	private Constraint getPublicConstraint(ResourceNode constraintNode) {
+		Boolean isResource = SNOPS.singleObject(constraintNode, RBSchema.RESOURCE_CONSTRAINT).asValue().getBooleanValue();
+		if(isResource){
+			return getResourceConstraint(constraintNode);
 		}
-		return getLiteralConstraint(resource);
+		return getLiteralConstraint(constraintNode);
 	}
 
 	/**

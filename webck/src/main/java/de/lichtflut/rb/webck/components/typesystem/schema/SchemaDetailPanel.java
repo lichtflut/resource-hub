@@ -38,6 +38,7 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
@@ -110,7 +111,7 @@ public class SchemaDetailPanel extends Panel{
 	 * @param form 
 	 */
 	private void addButtonBar(Form<?> form) {
-		form.add(createEditButton("editButton"));
+		form.add(createSaveButton("saveButton"));
 		form.add(createDeleteButton("deleteButton"));
 		form.add(createAddbutton("addButton"));
 	}
@@ -147,33 +148,14 @@ public class SchemaDetailPanel extends Panel{
 		return button;
 	}
 
-	private Component createEditButton(String id) {
+	private Component createSaveButton(String id) {
 		Button button = new RBStandardButton(id) {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				openPropertyDeclDialog();
-			}
-
-			protected void openPropertyDeclDialog() {
-				DialogHoster hoster = findParent(DialogHoster.class);
-			    hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), markedDecls){
-			    	@Override
-			    	protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-			    		saveSchema();
-			    		updatePanel();
-			    		close(target);
-			    		markedDecls.getObject().clear();
-			    	}
-			    	@Override
-			    	protected void onCancel(AjaxRequestTarget target, Form<?> form) {
-			    		setDefaultFormProcessing(false);
-			    		updatePanel();
-			    		close(target);
-			    		markedDecls.getObject().clear();
-			    	}
-			    });
+				saveAndUpdate();
 			}
 		};
+		button.add(new DefaultButtonBehavior());
 		return button;
 	}
 
@@ -280,7 +262,6 @@ public class SchemaDetailPanel extends Panel{
 				picker.setVisible(false);
 				picker.add(new AjaxUpdateDataPickerField() {
 					public void onSubmit(AjaxRequestTarget target) {
-						saveSchema();
 						updatePanel();
 					}; 
 				});
@@ -289,7 +270,6 @@ public class SchemaDetailPanel extends Panel{
 			
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target){
-				saveSchema();
 				updatePanel();
 				super.onSubmit(target);
 			}
@@ -306,7 +286,7 @@ public class SchemaDetailPanel extends Panel{
 		IModel<ResourceID> model =  new PropertyModel<ResourceID>(item.getModel(), "defaultLabel");
 		AjaxEditableLabel<ResourceID> label = new AjaxEditableLabel<ResourceID>("label", model){
 			protected void onSubmit(final AjaxRequestTarget target){
-				saveSchema();
+				updatePanel();
 				super.onSubmit(target);
 			}
 		};
@@ -323,7 +303,7 @@ public class SchemaDetailPanel extends Panel{
 		AjaxEditableLabel<String> label = new AjaxEditableLabel<String>("cardinality", model){
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target){
-				saveSchema();
+				updatePanel();
 				super.onSubmit(target);
 			}
 		};
@@ -340,7 +320,7 @@ public class SchemaDetailPanel extends Panel{
 				Arrays.asList(Datatype.values())) {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target) {
-				saveSchema();
+				updatePanel();
 				super.onSubmit(target);
 			}
 		};
@@ -382,7 +362,7 @@ public class SchemaDetailPanel extends Panel{
 	}
 
 	protected IModel<String> createModelForLiteralConstraint(ListItem<PropertyRow> item) {
-		final IModel<String> model = new PropertyModel<String>(item.getModel(), "literalConstraints");
+		final IModel<String> model = new PropertyModel<String>(item.getModel(), "literalConstraint");
 		return model;
 	}
 

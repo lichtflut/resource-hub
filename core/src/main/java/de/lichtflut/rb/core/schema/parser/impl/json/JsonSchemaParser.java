@@ -234,7 +234,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	}
 	
 	private Constraint getConstraintFromString(final JsonParser p, final String field) throws IOException, JsonParseException {
-		Constraint c = ConstraintBuilder.emptyConstraint();
+		Constraint c = null;
 		if (LITERAL_CONSTRAINT.equals(field)) {
 			c = ConstraintBuilder.buildLiteralConstraint(p.getText());
 		} else if (RESOURCE_CONSTRAINT.equals(field) || CONSTRAINT_REFERENCE.equals(field)){

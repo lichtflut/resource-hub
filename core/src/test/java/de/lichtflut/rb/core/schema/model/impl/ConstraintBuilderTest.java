@@ -101,15 +101,5 @@ public class ConstraintBuilderTest {
 				.getQualifiedName());
 		assertEquals("Constraintname is not as expected", publicResConstrName, constraint.getName());
 	}
-	
-	@Test
-	public void testEmptyConstraint() {
-		Constraint c = ConstraintBuilder.emptyConstraint();
-		assertNull(c.getApplicableDatatypes());
-		assertNull(c.getID());
-		assertNull(c.getLiteralConstraint());
-		assertNull(c.getName());
-		assertNull(c.getResourceConstraint());
-	}
 
 }

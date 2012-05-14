@@ -24,7 +24,7 @@ public interface PropertyDeclaration extends Serializable {
 
 	/**
 	 * The property type. Usually this descriptor will be of type rdf:Property. 
-	 * In a concrete RDF statement corresponding to this PropertyAssertion this 
+	 * In a concrete RDF statement corresponding to this PropertyDeclaration this 
 	 * will be the predicate.
 	 * @return The resource identifier representing the descriptor.
 	 */
@@ -76,6 +76,11 @@ public interface PropertyDeclaration extends Serializable {
 	 * Set the Constraint for this PropertyDeclaration.
 	 */
 	void setConstraint(Constraint constraint);
+	
+	/**
+	 * @return true if this PropertyDeclaration has a {@link Constraint}, flase if not.
+	 */
+	boolean hasConstraint();
 	
 	// ------------------------------------------------------
 	

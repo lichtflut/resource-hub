@@ -32,7 +32,7 @@ public interface SchemaManager {
 	ResourceSchema findSchemaForType(ResourceID type);
 	
 	/**
-	 * Finds a Type Definition by it's ID.
+	 * Finds a {@link Constraint} by it's ID.
 	 * @param id The IT
 	 * @return the TypeDefinition or null.
 	 */
@@ -48,7 +48,7 @@ public interface SchemaManager {
 	// -----------------------------------------------------
 
 	/**
-	 * @return all public {@link TypeDefinition}s.
+	 * @return all public {@link Constraint}s.
 	 */
 	Collection<Constraint> findPublicConstraints();
 

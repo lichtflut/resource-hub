@@ -38,7 +38,7 @@ public class DeclaredRBField extends AbstractRBField {
 	 * @param values - values of this field
 	 */
 	public DeclaredRBField(final PropertyDeclaration declaration, final Set<SemanticNode> values) {
-		super(values, declaration.getConstraint().isResourceReference());
+		super(values, declaration.getDatatype().name().equals(Datatype.RESOURCE.name()));
 		Validate.notNull(declaration, "The property declaration may never be null.");
 		this.declaration = declaration;
 	}

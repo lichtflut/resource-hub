@@ -51,7 +51,7 @@ public class OutputElements {
 	}
 
 	/**
-	 * @param typeDefs
+	 * @param constraints
 	 */
 	public void addConstraint(final Collection<Constraint> constraints) {
 		for (Constraint constr : constraints) {
@@ -120,7 +120,7 @@ public class OutputElements {
 	}
 	
 	private void register(final Constraint constr) {
-		if (constr.isPublicConstraint()) {
+		if (constr != null && constr.isPublicConstraint()) {
 			register(constr.getID());
 		}
 	}
