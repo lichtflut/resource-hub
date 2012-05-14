@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.schema.persistence;
 import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SNResource;
@@ -100,7 +101,7 @@ public class Schema2GraphBinding {
 		if(snConstraint == null) {
 			return null;
 		}
-		return toModelObject(snConstraint);
+		return new SNConstraint().toConstraintModel(snConstraint);
 	}
 	
 	// -----------------------------------------------------
@@ -129,6 +130,9 @@ public class Schema2GraphBinding {
 			snDecl.setMaxOccurs(maxAsScalar(decl.getCardinality()), RBSchema.CONTEXT);
 			snDecl.setDatatype(decl.getDatatype(), RBSchema.CONTEXT);
 			setFieldLabels(snDecl, decl.getFieldLabelDefinition());
+			if(decl.hasConstraint()){
+				setConstraint(snDecl, decl.getConstraint(), RBSchema.CONTEXT);
+			}
 			if (null != predecessor) {
 				predecessor.setSuccessor(snDecl, RBSchema.CONTEXT);
 			}
@@ -138,6 +142,26 @@ public class Schema2GraphBinding {
 		return sn;
 	}
 	
+	/**
+	 * @param snDecl
+	 * @param constraint 
+	 * @param context
+	 */
+	private void setConstraint(SNPropertyDeclaration snDecl, Constraint constraint, Context ctx) {
+		SNConstraint snConstraint;
+		if(constraint.isResourceReference()){
+			snConstraint = new SNConstraint(constraint.getResourceConstraint(), ctx);
+		}else{
+			snConstraint = new SNConstraint(constraint.getLiteralConstraint(), constraint.getApplicableDatatypes(), ctx);
+		}
+		if(constraint.isPublicConstraint()){
+			snConstraint.setID(constraint.getID(), ctx);
+			snConstraint.setName(constraint.getName(), ctx);
+			snConstraint.setPublic(true, ctx);
+		}
+		SNOPS.associate(snDecl, RBSchema.HAS_CONSTRAINT, snConstraint, ctx);
+	}
+
 	protected Cardinality buildCardinality(final SNPropertyDeclaration snDecl) {
 		int min = snDecl.getMinOccurs().getIntegerValue().intValue();
 		int max = snDecl.getMaxOccurs().getIntegerValue().intValue();

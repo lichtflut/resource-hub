@@ -131,6 +131,9 @@ public class PropertyRow implements Serializable {
 	 * @return the resourceConstraint
 	 */
 	public ResourceID getResourceConstraint() {
+		if(!hasConstraint()){
+			return null;
+		}
 		if (decl.getConstraint().isResourceReference()) {
 			return decl.getConstraint().getResourceConstraint();
 		}
@@ -207,6 +210,9 @@ public class PropertyRow implements Serializable {
 	 * @return the literalConstraints
 	 */
 	public String getLiteralConstraint() {
+		if(!hasConstraint()){
+			return null;
+		}
 		String constraint = null;
 		if(!decl.getConstraint().isResourceReference()){
 			constraint = decl.getConstraint().getLiteralConstraint();
@@ -228,6 +234,10 @@ public class PropertyRow implements Serializable {
 		return decl.getConstraint().isPublicConstraint();
 	}
 
+	public boolean hasConstraint(){
+		return decl.hasConstraint();
+	}
+	
 	/**
 	 * @return the isResourceReference
 	 */

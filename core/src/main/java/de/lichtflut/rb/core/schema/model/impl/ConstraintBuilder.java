@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
@@ -34,7 +35,7 @@ public final class ConstraintBuilder {
 		if (literal == null) {
 			literal = "";
 		}
-		return buildConstraint(null, null, literal, null, false, Collections.<Datatype> emptyList());
+		return buildConstraint(new SimpleResourceID(), null, literal, null, false, Collections.<Datatype> emptyList());
 	}
 
 	/**
@@ -76,7 +77,7 @@ public final class ConstraintBuilder {
 	 * @return {@link Constraint}
 	 */
 	public static Constraint buildResourceConstraint(final ResourceID resource) {
-		return buildConstraint(null, null, null, resource, false,  new ArrayList<Datatype>(){{add(Datatype.RESOURCE);}});
+		return buildConstraint(new SimpleResourceID(), null, null, resource, false,  new ArrayList<Datatype>(){{add(Datatype.RESOURCE);}});
 	}
 
 	/**

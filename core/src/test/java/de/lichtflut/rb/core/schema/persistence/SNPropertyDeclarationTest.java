@@ -179,7 +179,9 @@ public class SNPropertyDeclarationTest {
 	 */
 	private void assertConstraints(Constraint retrieved, Constraint constraint) {
 		assertThat(retrieved.getApplicableDatatypes().size(), is(constraint.getApplicableDatatypes().size()));
-		assertThat(retrieved.getID(), equalTo(constraint.getID()));
+		if(retrieved.isPublicConstraint()){
+			assertThat(retrieved.getID(), equalTo(constraint.getID()));
+		}
 		assertThat(retrieved.getLiteralConstraint(), equalTo(constraint.getLiteralConstraint()));
 		assertThat(retrieved.getName(), equalTo(constraint.getName()));
 		assertThat(retrieved.getResourceConstraint(), equalTo(constraint.getResourceConstraint()));

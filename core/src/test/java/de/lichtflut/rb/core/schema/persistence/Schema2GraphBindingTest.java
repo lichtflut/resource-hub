@@ -10,7 +10,10 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
+import java.util.Set;
+
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNText;
@@ -23,6 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.mock.RBMock;
 import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 
 /**
@@ -111,28 +115,45 @@ public class Schema2GraphBindingTest {
 	}
 
 	/**
-	 * Test method for {@link de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding#toSemanticNode(de.lichtflut.rb.core.schema.model.ResourceSchema)}.
+	 * Test method for
+	 * {@link de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding#toSemanticNode(de.lichtflut.rb.core.schema.model.ResourceSchema)}.
 	 */
 	@Test
 	public void testToSemanticNode() {
 		ResourceSchema schema = ResourceSchemaFactory.buildPersonSchema();
-		
+
 		SNResourceSchema snr = getBinding().toSemanticNode(schema);
-		PropertyDeclaration decl = schema.getPropertyDeclarations().get(0);
-		SNPropertyDeclaration snDecl = snr.getPropertyDeclarations().get(0);
-		
 		assertThat(snr, notNullValue());
 		assertThat(snr.getDescribedType(), equalTo(schema.getDescribedType()));
 		assertThat(snr.getPropertyDeclarations().size(), is(schema.getPropertyDeclarations().size()));
 		assertThat(snr.getLabelExpression().getStringValue(), equalTo(schema.getLabelBuilder().getExpression()));
-		assertThat(snDecl.getMaxOccurs(), equalTo(new SNScalar(decl.getCardinality().getMaxOccurs())));
-		assertThat(snDecl.getMinOccurs(), equalTo(new SNScalar(decl.getCardinality().getMinOccurs())));
-		assertThat(snDecl.getConstraint(), equalTo(decl.getConstraint()));
-		assertThat(snDecl.getDatatype(), equalTo(decl.getDatatype()));
-		assertThat(snDecl.getFieldLabelDefinition().getDefaultLabel(), equalTo(decl.getFieldLabelDefinition().getDefaultLabel()));
+		int counter = 0;
+		while (counter < schema.getPropertyDeclarations().size()){
+			assertDeclaration(snr.getPropertyDeclarations().get(counter), schema.getPropertyDeclarations().get(counter));
+			counter++;
+		}
+	}
+
+	/**
+	 * @param converted
+	 * @param decl
+	 */
+	private void assertDeclaration(SNPropertyDeclaration converted, PropertyDeclaration decl) {
+		assertThat(converted.getPropertyDescriptor(), equalTo(decl.getPropertyDescriptor()));
+		assertThat(converted.getFieldLabelDefinition().getDefaultLabel(), equalTo(decl
+				.getFieldLabelDefinition().getDefaultLabel()));
+		if(decl.getCardinality().isUnbound()){
+			assertThat(converted.getMaxOccurs().getIntegerValue().intValue(), is(-1));
+		}else{
+			assertThat(converted.getMaxOccurs().getIntegerValue().intValue(), equalTo(decl.getCardinality().getMaxOccurs()));
+		}
+		assertThat(converted.getMinOccurs(), equalTo(new SNScalar(decl.getCardinality().getMinOccurs())));
+		assertThat(converted.getDatatype(), equalTo(decl.getDatatype()));
+		assertThat(converted.getConstraint(), equalTo(decl.getConstraint()));
 		// Impement I18n in Fieldlabelmapping
-//		assertThat(snDecl.getFieldLabelDefinition().getSupportedLocales().size(), is(decl.getFieldLabelDefinition().getSupportedLocales().size()));
-		assertThat(snDecl.getPropertyDescriptor(), equalTo(decl.getPropertyDescriptor()));
+		// assertThat(snDecl.getFieldLabelDefinition().getSupportedLocales().size(),
+		// is(decl.getFieldLabelDefinition().getSupportedLocales().size()));
+		assertThat(converted.getPropertyDescriptor(), equalTo(decl.getPropertyDescriptor()));
 	}
 
 	private Schema2GraphBinding getBinding() {

@@ -7,7 +7,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class ConstraintBuilderTest {
 		Constraint constraint = ConstraintBuilder.buildLiteralConstraint(pattern);
 
 		assertNotNull("Constraint is null", constraint);
-		assertNull("Id should be null", constraint.getID());
+		assertThat(constraint.getID(), notNullValue());
 		assertNull(constraint.getResourceConstraint());
 		assertEquals("Constraints are not equal", pattern, constraint.getLiteralConstraint());
 		assertEquals("Constraintname is not as expected", pattern, constraint.getName());
@@ -81,7 +82,7 @@ public class ConstraintBuilderTest {
 		Constraint constraint = ConstraintBuilder.buildResourceConstraint(resource);
 
 		assertNotNull(constraint);
-		assertNull("Id should be null", constraint.getID());
+		assertThat(constraint.getID(), notNullValue());
 		assertNull(constraint.getLiteralConstraint());
 		assertEquals("Constraints are not equal", resource.getQualifiedName(), constraint.getResourceConstraint()
 				.getQualifiedName());

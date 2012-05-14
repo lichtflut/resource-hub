@@ -31,7 +31,9 @@ import org.arastreju.sge.model.nodes.views.SNBoolean;
 import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 
 
 /**
@@ -53,7 +55,7 @@ import de.lichtflut.rb.core.schema.model.Datatype;
  */
 @SuppressWarnings("serial")
 public class SNConstraint extends ResourceView {
-
+	
 	/**
 	 * Constructor for a new constraint node.
 	 */
@@ -184,6 +186,21 @@ public class SNConstraint extends ResourceView {
 		SNOPS.assure(this, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(isPublic), ctx);
 	}
 	
+	public Constraint toConstraintModel(ResourceNode node){
+		Constraint constraint;
+		if (node == null){
+			return null;
+		}
+		boolean isPublic = SNOPS.singleObject(node.asResource(), RBSchema.IS_PUBLIC_CONSTRAINT).asValue().getBooleanValue();
+		if(isPublic){
+			constraint = getPublicConstraint(node.asResource());
+		} else{
+			constraint = getPrivateConstraint(node.asResource());
+		}
+		
+		return constraint;
+	}
+	
 	// -----------------------------------------------------
 
 	/**
@@ -227,4 +244,80 @@ public class SNConstraint extends ResourceView {
 		}
 	}
 	
+	/**
+	 * @param asResource
+	 * @return
+	 */
+	private Constraint getPrivateConstraint(ResourceNode resource) {
+		boolean isResource = SNOPS.singleObject(resource, RBSchema.RESOURCE_CONSTRAINT).asValue().getBooleanValue();
+		if(isResource){
+			return getPrivateResourceConstraint(resource);
+		}
+		return getPrivateLiteralConstraint(resource);
+	}
+
+	/**
+	 * @param resource
+	 * @return
+	 */
+	private Constraint getPrivateLiteralConstraint(ResourceNode resource) {
+		String pattern = SNOPS.singleObject(resource, RBSchema.HAS_CONSTRAINT_VALUE).asValue().getStringValue();
+		return ConstraintBuilder.buildLiteralConstraint(pattern);
+	}
+
+	/**
+	 * @param resource
+	 * @return
+	 */
+	private Constraint getPrivateResourceConstraint(ResourceNode resource) {
+		ResourceID uri = SNOPS.singleObject(resource, RBSchema.HAS_CONSTRAINT_VALUE).asResource();
+		return ConstraintBuilder.buildResourceConstraint(uri);
+	}
+
+	/**
+	 * @param asResource
+	 * @return
+	 */
+	private Constraint getPublicConstraint(ResourceNode constraintNode) {
+		Boolean isResource = SNOPS.singleObject(constraintNode, RBSchema.RESOURCE_CONSTRAINT).asValue().getBooleanValue();
+		if(isResource){
+			return getResourceConstraint(constraintNode);
+		}
+		return getLiteralConstraint(constraintNode);
+	}
+
+	/**
+	 * @param resource
+	 * @return
+	 */
+	private Constraint getLiteralConstraint(ResourceNode resource) {
+		ResourceID id = SNOPS.singleObject(resource, RBSchema.HAS_IDENTIFIER).asResource();
+		String name = SNOPS.singleObject(resource, RBSchema.HAS_NAME).asValue().getStringValue();
+		String pattern = SNOPS.singleObject(resource, RBSchema.HAS_CONSTRAINT_VALUE).asValue().getStringValue();
+		return ConstraintBuilder.buildPublicLiteralConstraint(id, name, pattern, getDatatypes(resource));
+	}
+
+	/**
+	 * @param resource
+	 * @return
+	 */
+	private Constraint getResourceConstraint(ResourceNode resource) {
+		ResourceID id = SNOPS.singleObject(resource, RBSchema.HAS_IDENTIFIER).asResource();
+		String name = SNOPS.singleObject(resource, RBSchema.HAS_NAME).asValue().getStringValue();
+		ResourceID uri = SNOPS.singleObject(resource, RBSchema.HAS_CONSTRAINT_VALUE).asResource();
+		return ConstraintBuilder.buildPublicResourceConstraint(id, name, uri);
+	}
+
+	/**
+	 * @param resource
+	 * @return
+	 */
+	private List<Datatype> getDatatypes(ResourceNode resource) {
+		List<Datatype> datatypes = new ArrayList<Datatype>();
+		for (SemanticNode node : SNOPS.objects(resource, RBSchema.HAS_DATATYPE)) {
+			String text = node.asValue().getStringValue();
+			datatypes.add(Datatype.valueOf(text));
+		}
+		return datatypes;
+	}
 }
