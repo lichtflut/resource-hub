@@ -186,6 +186,11 @@ public class SNConstraint extends ResourceView {
 		SNOPS.assure(this, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(isPublic), ctx);
 	}
 	
+	/**
+	 * Converts a ResourceNode to {@link Constraint}.
+	 * @param node
+	 * @return
+	 */
 	public Constraint toConstraintModel(ResourceNode node){
 		Constraint constraint;
 		if (node == null){
@@ -201,6 +206,29 @@ public class SNConstraint extends ResourceView {
 		return constraint;
 	}
 	
+	/**
+	 * Converts a {@link Constraint} to a {@link SemanticNode}.
+	 * @param constraint
+	 * @return
+	 */
+	public SNConstraint toSemanticNode(Constraint constraint, Context ctx) {
+		if(null == constraint){
+			return null;
+		}
+		SNConstraint snConstraint;
+		if(constraint.isResourceReference()){
+			snConstraint = new SNConstraint(constraint.getResourceConstraint(), ctx);
+		}else{
+			snConstraint = new SNConstraint(constraint.getLiteralConstraint(), constraint.getApplicableDatatypes(), ctx);
+		}
+		if(constraint.isPublicConstraint()){
+			snConstraint.setID(constraint.getID(), ctx);
+			snConstraint.setName(constraint.getName(), ctx);
+			snConstraint.setPublic(true, ctx);
+		}
+		return snConstraint;
+		
+	}
 	// -----------------------------------------------------
 
 	/**
@@ -270,8 +298,8 @@ public class SNConstraint extends ResourceView {
 	 * @return
 	 */
 	private Constraint getPrivateResourceConstraint(ResourceNode resource) {
-		ResourceID uri = SNOPS.singleObject(resource, RBSchema.HAS_CONSTRAINT_VALUE).asResource();
-		return ConstraintBuilder.buildResourceConstraint(uri);
+		SemanticNode uri = SNOPS.singleObject(resource, RBSchema.HAS_CONSTRAINT_VALUE);
+		return ConstraintBuilder.buildResourceConstraint(uri.asResource());
 	}
 
 	/**

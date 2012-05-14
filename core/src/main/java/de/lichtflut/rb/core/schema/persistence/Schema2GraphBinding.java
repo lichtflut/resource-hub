@@ -131,7 +131,9 @@ public class Schema2GraphBinding {
 			snDecl.setDatatype(decl.getDatatype(), RBSchema.CONTEXT);
 			setFieldLabels(snDecl, decl.getFieldLabelDefinition());
 			if(decl.hasConstraint()){
-				setConstraint(snDecl, decl.getConstraint(), RBSchema.CONTEXT);
+//				setConstraint(snDecl, decl.getConstraint(), RBSchema.CONTEXT);
+				SNConstraint constraint =  new SNConstraint().toSemanticNode(decl.getConstraint(), RBSchema.CONTEXT);
+				SNOPS.associate(snDecl, RBSchema.HAS_CONSTRAINT, constraint, RBSchema.CONTEXT);
 			}
 			if (null != predecessor) {
 				predecessor.setSuccessor(snDecl, RBSchema.CONTEXT);
@@ -143,22 +145,22 @@ public class Schema2GraphBinding {
 	}
 	
 	/**
+	 * Creates a new semantic node for a given {@link Constraint}
+	 * @param constraint
+	 * @return
+	 */
+	public SNConstraint toSemanticNode(final Constraint constraint) {
+		SNConstraint snConstraint = new SNConstraint().toSemanticNode(constraint, RBSchema.CONTEXT);
+		return snConstraint;
+		
+	}
+	/**
 	 * @param snDecl
 	 * @param constraint 
 	 * @param context
 	 */
 	private void setConstraint(SNPropertyDeclaration snDecl, Constraint constraint, Context ctx) {
-		SNConstraint snConstraint;
-		if(constraint.isResourceReference()){
-			snConstraint = new SNConstraint(constraint.getResourceConstraint(), ctx);
-		}else{
-			snConstraint = new SNConstraint(constraint.getLiteralConstraint(), constraint.getApplicableDatatypes(), ctx);
-		}
-		if(constraint.isPublicConstraint()){
-			snConstraint.setID(constraint.getID(), ctx);
-			snConstraint.setName(constraint.getName(), ctx);
-			snConstraint.setPublic(true, ctx);
-		}
+		SNConstraint snConstraint = new SNConstraint().toSemanticNode(constraint, ctx);
 		SNOPS.associate(snDecl, RBSchema.HAS_CONSTRAINT, snConstraint, ctx);
 	}
 

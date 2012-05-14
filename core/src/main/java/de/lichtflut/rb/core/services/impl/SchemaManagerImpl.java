@@ -190,8 +190,8 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 		if (existing != null) {
 			mc.remove(existing);
 		}
-//		final SNConstraint node = binding.toSemanticNode(constraint);
-//		mc.attach(node);
+		final SNConstraint node = binding.toSemanticNode(constraint);
+		mc.attach(node);
 	}
 	
 	/** 

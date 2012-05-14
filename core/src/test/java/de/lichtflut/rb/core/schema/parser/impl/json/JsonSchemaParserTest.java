@@ -101,6 +101,7 @@ public class JsonSchemaParserTest {
 		assertThat(constraint.getName(), equalTo(name));
 		assertThat(constraint.getLiteralConstraint(), equalTo(literalConstr));
 		assertThat(constraint.getResourceConstraint(), nullValue());
+		assertThat(constraint.isPublicConstraint(), is(Boolean.TRUE));
 	}
 	
 	/**
@@ -120,6 +121,7 @@ public class JsonSchemaParserTest {
 		assertThat(constraint.getName(), equalTo(name));
 		assertThat(constraint.getResourceConstraint(), equalTo(resourceConstr));
 		assertThat(constraint.getLiteralConstraint(), nullValue());
+		assertThat(constraint.isPublicConstraint(), is(Boolean.TRUE));
 	}
 
 	/**
