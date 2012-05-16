@@ -47,7 +47,8 @@ public class RBUser implements Serializable {
 		this(userNode.getQualifiedName());
 		email = SNOPS.string(SNOPS.singleObject(userNode, RBSystem.HAS_EMAIL));
 		username = SNOPS.string(SNOPS.singleObject(userNode, RBSystem.HAS_USERNAME));
-		domesticDomain = SNOPS.string(SNOPS.singleObject(userNode, Aras.BELONGS_TO_DOMAIN));
+		final RBDomain domain = new RBDomain(SNOPS.singleObject(userNode, Aras.BELONGS_TO_DOMAIN).asResource());
+		domesticDomain = domain.getName();
 		lastLogin = SNOPS.date(SNOPS.singleObject(userNode, RBSystem.HAS_LAST_LOGIN));
 	}
 	
