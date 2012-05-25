@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
-import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
@@ -29,11 +28,11 @@ public class EditPropertyDeclDialog extends AbstractRBDialog {
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
-	 * @param decls
+	 * @param decl
 	 */
-	public EditPropertyDeclDialog(String id, IModel<List<PropertyRow>> decls) {
+	public EditPropertyDeclDialog(String id, IModel<PropertyRow> decl) {
 		super(id);
-		add(new EditPropertyDeclPanel("panel", decls){
+		add(new EditPropertyDeclPanel("panel", decl){
 			/**
 			 * Execute on onSubmit.
 			 * @param form 

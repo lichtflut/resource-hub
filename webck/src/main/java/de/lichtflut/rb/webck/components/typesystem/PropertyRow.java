@@ -23,25 +23,29 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 
 /**
  * <p>
- *  This value object represents a flattened {@link PropertyDeclaration} of a Resource Schema.
- *  It is meant for being edited in a table or similar component. 
+ * This value object represents a flattened {@link PropertyDeclaration} of a
+ * Resource Schema. It is meant for being edited in a table or similar
+ * component.
  * </p>
- *
+ * 
  * <p>
- * 	Created Sep 23, 2011
+ * Created Sep 23, 2011
  * </p>
- *
+ * 
  * @author Oliver Tigges
  */
 public class PropertyRow implements Serializable {
-	
+
 	private final PropertyDeclaration decl;
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Create rows corresponding to Property Declarations of given Resource Schema.
-	 * @param schema The Resource Schema.
+	 * Create rows corresponding to Property Declarations of given Resource
+	 * Schema.
+	 * 
+	 * @param schema
+	 *            The Resource Schema.
 	 * @return The row list.
 	 */
 	public static List<PropertyRow> toRowList(final ResourceSchema schema) {
@@ -51,29 +55,34 @@ public class PropertyRow implements Serializable {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * Converts the given row to a new Constraint.
-	 * @param row The row object to be converted.
+	 * 
+	 * @param row
+	 *            The row object to be converted.
 	 */
 	public static Constraint toPublicConstraint(final PropertyRow row) {
 		throw new NotYetImplementedException();
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * Constructor for a {@link PropertyDeclaration}
-	 * @param decl The declaration.
+	 * 
+	 * @param decl
+	 *            The declaration.
 	 */
 	public PropertyRow(final PropertyDeclaration decl) {
 		this.decl = decl;
 	}
-	
-	public PropertyRow(final Constraint constraint){
+
+	public PropertyRow(final Constraint constraint) {
 		this.decl = new PropertyDeclarationImpl();
 		this.decl.setConstraint(constraint);
 	}
+
 	/**
 	 * Constructs a default,empty row.
 	 */
@@ -82,13 +91,13 @@ public class PropertyRow implements Serializable {
 		this.decl.setDatatype(Datatype.STRING);
 		this.decl.setFieldLabelDefinition(new FieldLabelDefinitionImpl());
 	}
-	
+
 	// -----------------------------------------------------
 
-	public PropertyDeclaration asPropertyDeclaration(){
+	public PropertyDeclaration asPropertyDeclaration() {
 		return decl;
 	}
-	
+
 	/**
 	 * @return the propertyDescriptor
 	 */
@@ -97,16 +106,17 @@ public class PropertyRow implements Serializable {
 	}
 
 	/**
-	 * @param propertyDescriptor the propertyDescriptor to set
+	 * @param propertyDescriptor
+	 *            the propertyDescriptor to set
 	 */
 	public void setPropertyDescriptor(ResourceID propertyDescriptor) {
 		decl.setPropertyDescriptor(propertyDescriptor);
 	}
-	
+
 	public String getDefaultLabel() {
 		return decl.getFieldLabelDefinition().getDefaultLabel();
 	}
-	
+
 	public void setDefaultLabel(String label) {
 		this.decl.getFieldLabelDefinition().setDefaultLabel(label);
 	}
@@ -119,32 +129,13 @@ public class PropertyRow implements Serializable {
 	}
 
 	/**
-	 * @param newDatatype the new data type to set
+	 * @param newDatatype
+	 *            the new data type to set
 	 */
 	public void setDataType(Datatype newDatatype) {
 		if (!Infra.equals(this.decl.getDatatype(), newDatatype)) {
 			decl.setDatatype(newDatatype);
 		}
-	}
-
-	/**
-	 * @return the resourceConstraint
-	 */
-	public ResourceID getResourceConstraint() {
-		if(!hasConstraint()){
-			return null;
-		}
-		if (decl.getConstraint().isResourceReference()) {
-			return decl.getConstraint().getResourceConstraint();
-		}
-		return null;
-	}
-
-	/**
-	 * @param resourceConstraint the resourceConstraint to set
-	 */
-	public void setResourceConstraint(ResourceID resourceConstraint) {
-		decl.setConstraint(ConstraintBuilder.buildResourceConstraint(resourceConstraint));
 	}
 
 	/**
@@ -155,7 +146,8 @@ public class PropertyRow implements Serializable {
 	}
 
 	/**
-	 * @param min the min to set
+	 * @param min
+	 *            the min to set
 	 */
 	public void setMin(int min) {
 		Cardinality c = CardinalityBuilder.between(min, decl.getCardinality().getMaxOccurs());
@@ -170,7 +162,8 @@ public class PropertyRow implements Serializable {
 	}
 
 	/**
-	 * @param max the max to set
+	 * @param max
+	 *            the max to set
 	 */
 	public void setMax(int max) {
 		Cardinality c = CardinalityBuilder.between(decl.getCardinality().getMinOccurs(), max);
@@ -179,54 +172,78 @@ public class PropertyRow implements Serializable {
 
 	/**
 	 * Sets the cardinality with a String like <code>[1..n]</code>
+	 * 
 	 * @param string
 	 */
-	public void setCardinality(String string){
+	public void setCardinality(String string) {
 		this.decl.setCardinality(CardinalityBuilder.extractFromString(string));
 	}
 
 	/**
 	 * Get the cardinality as a String like <code>[1..n]</code>
+	 * 
 	 * @param string
 	 */
-	public String getCardinality(){
+	public String getCardinality() {
 		int min = decl.getCardinality().getMinOccurs();
 		int max = decl.getCardinality().getMaxOccurs();
 		String s = "[";
-		if(min == 0){
-			s+= "n..";
-		}else{
-			s+= String.valueOf(min) + "..";
+		if (min == 0) {
+			s += "n..";
+		} else {
+			s += String.valueOf(min) + "..";
 		}
-		if(max == Integer.MAX_VALUE){
-			s+="n";
-		}else{
-			s+=String.valueOf(max);
+		if (max == Integer.MAX_VALUE) {
+			s += "n";
+		} else {
+			s += String.valueOf(max);
 		}
 		s += "]";
 		return s;
 	}
+
 	/**
-	 * @return the literalConstraints
+	 * @return the literalConstraint
 	 */
 	public String getLiteralConstraint() {
-		if(!hasConstraint()){
+		if (!hasConstraint()) {
 			return null;
 		}
 		String constraint = null;
-		if(!decl.getConstraint().isResourceReference()){
+		if (!decl.getConstraint().isResourceReference()) {
 			constraint = decl.getConstraint().getLiteralConstraint();
 		}
 		return constraint;
 	}
 
 	/**
-	 * @param literalConstraint the literalConstraints to set
+	 * @param literalConstraint
 	 */
 	public void setLiteralConstraint(final String literalConstraint) {
 		decl.setConstraint(ConstraintBuilder.buildLiteralConstraint(literalConstraint));
 	}
 
+	/**
+	 * @return the resourceConstraint
+	 */
+	public ResourceID getResourceConstraint() {
+		if (!hasConstraint()) {
+			return null;
+		}
+		if (decl.getConstraint().isResourceReference()) {
+			return decl.getConstraint().getResourceConstraint();
+		}
+		return null;
+	}
+
+	/**
+	 * @param resourceConstraint
+	 *            the resourceConstraint to set
+	 */
+	public void setResourceConstraint(ResourceID resourceConstraint) {
+		decl.setConstraint(ConstraintBuilder.buildResourceConstraint(resourceConstraint));
+	}
+	
 	/**
 	 * @return true if the Type Definition is public, false if it is private.
 	 */
@@ -234,24 +251,24 @@ public class PropertyRow implements Serializable {
 		return decl.getConstraint().isPublicConstraint();
 	}
 
-	public boolean hasConstraint(){
+	public boolean hasConstraint() {
 		return decl.hasConstraint();
 	}
-	
+
 	/**
 	 * @return the isResourceReference
 	 */
 	public boolean isResourceReference() {
 		return Datatype.RESOURCE.equals(decl.getDatatype());
 	}
-	
+
 	/**
 	 * @return the unbounded
 	 */
 	public boolean isUnbounded() {
 		return decl.getCardinality().isUnbound();
 	}
-	
+
 	public void setUnbounded(boolean unbounded) {
 		int min = decl.getCardinality().getMinOccurs();
 		if (unbounded) {
@@ -260,5 +277,4 @@ public class PropertyRow implements Serializable {
 			decl.setCardinality(CardinalityBuilder.between(min, Math.max(min, 1)));
 		}
 	}
-
 }

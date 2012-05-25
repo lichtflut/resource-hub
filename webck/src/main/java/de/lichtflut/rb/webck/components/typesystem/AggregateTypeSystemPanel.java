@@ -16,7 +16,7 @@ import org.apache.wicket.model.Model;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.webck.components.typesystem.TypeDefinitions.AggregatePublicConstraintsEditorPanel;
+import de.lichtflut.rb.webck.components.typesystem.constraints.AggregatePublicConstraintsEditorPanel;
 import de.lichtflut.rb.webck.components.typesystem.properties.AggregatePropertyDeclEditorPanel;
 import de.lichtflut.rb.webck.components.typesystem.schema.AggregateSchemaEditor;
 

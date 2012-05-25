@@ -72,7 +72,10 @@ public class DeclaredRBField extends AbstractRBField {
 
 	@Override
 	public boolean isResourceReference() {
-		return declaration.getConstraint().isResourceReference();
+		if(declaration.hasConstraint()){
+			return declaration.getConstraint().isResourceReference();
+		}
+		return false;
 	}
 
 	@Override

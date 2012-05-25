@@ -3,14 +3,11 @@
  */
 package de.lichtflut.rb.webck.components.typesystem.schema;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableChoiceLabel;
@@ -18,7 +15,6 @@ import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -27,14 +23,11 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
@@ -47,6 +40,7 @@ import de.lichtflut.rb.webck.components.fields.AjaxUpdateDataPickerField;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
+import de.lichtflut.rb.webck.components.typesystem.TypeHierarchyPanel;
 import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
 
 /**
@@ -62,7 +56,6 @@ import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
  */
 public class SchemaDetailPanel extends Panel{
 
-	private IModel<List<PropertyRow>> markedDecls;
 	private IModel<ResourceSchema> schema;
 	private PropertyRowListModel listModel;
 
@@ -78,21 +71,47 @@ public class SchemaDetailPanel extends Panel{
 	public SchemaDetailPanel(String id, IModel<ResourceSchema> schema) {
 		super(id);
 		this.schema = schema;
-		markedDecls = new ListModel<PropertyRow>(new ArrayList<PropertyRow>());
 		@SuppressWarnings("rawtypes")
 		Form form = new Form("form");
 		add(createTitleLabel("title"));
+		add(new TypeHierarchyPanel("typeHierarchy", Model.of(schema.getObject().getDescribedType())));
 		form.add(createListView("listView", this.schema));
 		addButtonBar(form);
 		add(form);
 	}
+	
+	// ------------------------------------------------------
+	
+	protected void saveAndUpdate() {
+		saveSchema();
+		updatePanel();
+	}
+
+	protected void updatePanel() {
+		RBAjaxTarget.add(SchemaDetailPanel.this);
+	}
+	
+	protected void saveSchema(){
+		provider.getSchemaManager().store(schema.getObject());
+	}
 
 	// ------------------------------------------------------
-
+	
+	/**
+	 * Create Title.
+	 * @param id - wicket:id
+	 * @return
+	 */
 	private Component createTitleLabel(String id) {
 		return new Label(id, Model.of(schema.getObject().getDescribedType()));
 	}
 	
+	/**
+	 * Create {@link ListView} of PrepertyDecls.
+	 * @param id
+	 * @param schema
+	 * @return
+	 */
 	private Component createListView(String id, IModel<ResourceSchema> schema) {
 		listModel = new PropertyRowListModel(schema);
 		ListView<PropertyRow> view = new ListView<PropertyRow>(id, listModel) {
@@ -112,28 +131,26 @@ public class SchemaDetailPanel extends Panel{
 	 */
 	private void addButtonBar(Form<?> form) {
 		form.add(createSaveButton("saveButton"));
-		form.add(createDeleteButton("deleteButton"));
 		form.add(createAddbutton("addButton"));
 	}
 
+	// ------------------------------------------------------
+	
 	private Component createAddbutton(String id) {
 		Button button = new RBStandardButton(id) {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				final PropertyRow row = new PropertyRow();
-				listModel.getObject().add(row);
+				IModel<PropertyRow> row = Model.of(new PropertyRow());
+				listModel.getObject().add(row.getObject());
 				openPropertyDeclDialog(row);
 			}
 
-			protected void openPropertyDeclDialog(final PropertyRow row) {
-				List<PropertyRow> list = new ArrayList<PropertyRow>();
-				list.add(row);
+			protected void openPropertyDeclDialog(final IModel<PropertyRow> row) {
 				DialogHoster hoster = findParent(DialogHoster.class);
-				hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), new ListModel<PropertyRow>(list)) {
+				hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), row) {
 					@Override
 					protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-						schema.getObject().addPropertyDeclaration(row.asPropertyDeclaration());
-						saveSchema();
+						schema.getObject().addPropertyDeclaration(row.getObject().asPropertyDeclaration());
 						updatePanel();
 						close(target);
 					}
@@ -159,90 +176,26 @@ public class SchemaDetailPanel extends Panel{
 		return button;
 	}
 
-	private Component createDeleteButton(String id) {
-		Button button = new RBStandardButton(id) {
-			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				deletePropertyDecls();
-			}
-
-			protected void deletePropertyDecls() {
-				//TODO the schemas PropertyDecls should be removed implizit when removing from listModel
-				List<PropertyDeclaration> decls = new ArrayList<PropertyDeclaration>();
-				for (PropertyRow row : markedDecls.getObject()) {
-					decls.add(row.asPropertyDeclaration());
-				}
-				schema.getObject().getPropertyDeclarations().removeAll(decls);
-				listModel.getObject().removeAll(markedDecls.getObject());
-				saveSchema();
-				updatePanel();
-				markedDecls.getObject().clear();
-			}
-		};
-		return button;
-	}
-	
 	/**
 	 * Fills a {@link ListItem} with all the informations provided by a PropertyRow.
 	 * @param item
 	 */
 	private void fillRow(ListItem<PropertyRow> item) {
-		addCheckBox(item);
 		addPropertyDecl(item);
 		addLabelDecl(item);
 		addCardinality(item);
 		addDatatypeDecl(item);
 		addContraintsDecl(item);
 		addUpDownButton(item);
-	}
-	
-	/**
-	 * @param item
-	 */
-	private void addUpDownButton(final ListItem<PropertyRow> item) {
-		item.add(new AjaxLink<Void>("up") {
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				System.out.println("BEFORELIST: " + listModel.getObject());
-				listModel.moveUp(item.getIndex());
-				saveAndUpdate();
-				System.out.println("AFTERLIST: " + listModel.getObject());
-			}
-		});
-		
-		item.add(new AjaxLink<Void>("down") {
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				listModel.moveDown(item.getIndex());
-				saveAndUpdate();
-			}
-		});
-	}
-
-	/**
-	 * Adds a {@link CheckBox} in case of multiple editing of Propertydecls.
-	 * @param item
-	 */
-	private void addCheckBox(final ListItem<PropertyRow> item) {
-		CheckBox checkbox = new CheckBox("checkbox", Model.of(false));
-		checkbox.add(new AjaxFormComponentUpdatingBehavior("onclick") {
-			@Override
-			protected void onUpdate(AjaxRequestTarget target) {
-				if(markedDecls.getObject().contains(item.getModelObject())) {
-					markedDecls.getObject().remove(item.getModelObject());
-				} else {
-					markedDecls.getObject().add(item.getModelObject());
-				}
-			}
-		});
-		item.add(checkbox);
+		addEditButton(item);
+		addDeleteButton(item);
 	}
 
 	/**
 	 * Adds the PropertyDescriptor.
 	 * @param item
 	 */
-	protected void addPropertyDecl(final ListItem<PropertyRow> item) {
+	private void addPropertyDecl(final ListItem<PropertyRow> item) {
 		final IModel<ResourceID> model =   new PropertyModel<ResourceID>(item.getModel(), "propertyDescriptor");
 		AjaxEditablePanelLabel<ResourceID> field = new AjaxEditablePanelLabel<ResourceID>("property", model){
 			@Override
@@ -278,11 +231,7 @@ public class SchemaDetailPanel extends Panel{
 		item.add(field);
 	}
 	
-	/**
-	 * Adds the default-label name.
-	 * @param item
-	 */
-	protected void addLabelDecl(final ListItem<PropertyRow> item) {
+	private void addLabelDecl(final ListItem<PropertyRow> item) {
 		IModel<ResourceID> model =  new PropertyModel<ResourceID>(item.getModel(), "defaultLabel");
 		AjaxEditableLabel<ResourceID> label = new AjaxEditableLabel<ResourceID>("label", model){
 			protected void onSubmit(final AjaxRequestTarget target){
@@ -294,11 +243,7 @@ public class SchemaDetailPanel extends Panel{
 		item.add(label);
 	}
 	
-	/**
-	 * Adds the cardinality in the following form <code>[2..n]</code>
-	 * @param item
-	 */
-	protected void addCardinality(final ListItem<PropertyRow> item) {
+	private void addCardinality(final ListItem<PropertyRow> item) {
 		IModel<String> model = new PropertyModel<String>(item.getModelObject(), "cardinality");
 		AjaxEditableLabel<String> label = new AjaxEditableLabel<String>("cardinality", model){
 			@Override
@@ -310,11 +255,8 @@ public class SchemaDetailPanel extends Panel{
 		addTitleAttribute(model, label);
 		item.add(label);
 	}
-	
-	/**
-	 * @param item
-	 */
-	protected void addDatatypeDecl(final ListItem<PropertyRow> item) {
+
+	private void addDatatypeDecl(final ListItem<PropertyRow> item) {
 		final IModel<Datatype> model = new PropertyModel<Datatype>(item.getModel(), "dataType");
 		AjaxEditableChoiceLabel<Datatype> field = new AjaxEditableChoiceLabel<Datatype>("datatype", model,
 				Arrays.asList(Datatype.values())) {
@@ -328,12 +270,8 @@ public class SchemaDetailPanel extends Panel{
 		item.add(field);
 	}
 	
-	/**
-	 * Adds {@link Constraint}s if present.
-	 * @param item 
-	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected void addContraintsDecl(ListItem<PropertyRow> item) {
+	private void addContraintsDecl(ListItem<PropertyRow> item) {
 		IModel model = null;
 		AjaxEditableLabel field = null;
 		if(null != item.getModelObject().getResourceConstraint()) {
@@ -355,35 +293,80 @@ public class SchemaDetailPanel extends Panel{
 		addTitleAttribute(model, field);
 		item.add(field);
 	}
+	
+	private void addUpDownButton(final ListItem<PropertyRow> item) {
+		item.add(new AjaxLink<Void>("up") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				listModel.moveUp(item.getIndex());
+				updatePanel();
+			}
+		});
+		
+		item.add(new AjaxLink<Void>("down") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				listModel.moveDown(item.getIndex());
+				updatePanel();
+			}
+		});
+	}
 
+	private void addEditButton(final ListItem<PropertyRow> item) {
+		item.add(new AjaxLink<Void>("edit") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				openPropertyDeclDialog(item);
+			}
+
+			protected void openPropertyDeclDialog(final ListItem<PropertyRow> item) {
+				DialogHoster hoster = findParent(DialogHoster.class);
+				hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), item.getModel()) {
+					@Override
+					protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+						updatePanel();
+						close(target);
+					}
+					@Override
+					protected void onCancel(AjaxRequestTarget target, Form<?> form) {
+						close(target);
+					}
+				});
+			}
+		});
+	}
+
+	private void addDeleteButton(final ListItem<PropertyRow> item) {
+		item.add(new AjaxLink<Void>("delete") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				schema.getObject().getPropertyDeclarations().remove(item.getIndex());
+				updatePanel();
+			}
+		});
+	}
+	
+	// ------------------------------------------------------
+	
 	private IModel<ResourceID> createModelForResourceContraint(ListItem<PropertyRow> item) {
 		final IModel<ResourceID> model = new PropertyModel<ResourceID>(item.getModel(), "resourceConstraint");
 		return model;
 	}
 
-	protected IModel<String> createModelForLiteralConstraint(ListItem<PropertyRow> item) {
+	private IModel<String> createModelForLiteralConstraint(ListItem<PropertyRow> item) {
 		final IModel<String> model = new PropertyModel<String>(item.getModel(), "literalConstraint");
 		return model;
 	}
 
-	/**
-	 * @param componentId
-	 * @param model
-	 * @return
-	 */
-	protected Label buildFieldLabelFromResourceID(final String componentId, final IModel<ResourceID> model) {
+	private Label buildFieldLabelFromResourceID(final String componentId, final IModel<ResourceID> model) {
 		String s = ResourceLabelBuilder.getInstance().getFieldLabel(model.getObject(), getLocale());
 		return new Label(componentId, s);
 	}
-	
-	/**
-	 * @param valueOf
-	 * @param label
-	 */
+
 	private void addTitleAttribute(IModel<?> model, Component c) {
 		c.add(new AttributeAppender("title", model));
 	}
-	
+
 	/**
 	 * Adds a colorcode to the table for better usability.
 	 * @param item
@@ -408,19 +391,6 @@ public class SchemaDetailPanel extends Panel{
 			default:
 				break;
 		}
-	}
-	
-	protected void saveAndUpdate() {
-		saveSchema();
-		updatePanel();
-	}
-
-	protected void updatePanel() {
-		RBAjaxTarget.add(SchemaDetailPanel.this);
-	}
-	
-	private void saveSchema(){
-		provider.getSchemaManager().store(schema.getObject());
 	}
 
 }
