@@ -60,7 +60,7 @@ public class AggregateTypeSystemPanel extends Panel{
 				return new AggregatePropertyDeclEditorPanel(panelId);
 			}
 		});
-		tabs.add(new AbstractTab(Model.of("Public Type Definitions")) {
+		tabs.add(new AbstractTab(Model.of("Public Constraints")) {
 			
 			@Override
 			public WebMarkupContainer getPanel(String panelId) {

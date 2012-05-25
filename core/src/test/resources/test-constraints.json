@@ -1,0 +1,16 @@
+{ "namespace-declarations" : [ {
+	"namespace": "http://test.com/common#", 
+	"prefix" : "common"
+  }, {
+	"namespace": "http://test.com/public-constraints#", 
+	"prefix" : "constraints"
+  } ] 
+}
+{
+  "public-constraints" : [ {
+    "id" : "constraints:Person",
+    "name" : "Person-Constraint",
+    "applicable-datatypes" : "resource",
+    "resource-constraint" : "common:Person"
+  } ]
+}

@@ -15,8 +15,6 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
@@ -36,7 +34,6 @@ import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 
 

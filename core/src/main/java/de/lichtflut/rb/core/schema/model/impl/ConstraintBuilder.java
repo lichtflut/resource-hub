@@ -260,7 +260,7 @@ public final class ConstraintBuilder {
                 	if(!resource.toURI().equals(copy.getResourceConstraint().toURI())){
                 		return false;
                 	}
-                }else if((copy.getLiteralConstraint() != null) && (pattern!= null)){
+                }else if((null != copy.getLiteralConstraint()) && (null != pattern)){
                 	if(!pattern.equals(copy.getLiteralConstraint())){
                 		return false;
                 	}

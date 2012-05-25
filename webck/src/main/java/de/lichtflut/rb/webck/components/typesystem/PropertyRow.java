@@ -207,9 +207,9 @@ public class PropertyRow implements Serializable {
 	 */
 	public String getLiteralConstraint() {
 		if (!hasConstraint()) {
-			return null;
+			return "";
 		}
-		String constraint = null;
+		String constraint = "";
 		if (!decl.getConstraint().isResourceReference()) {
 			constraint = decl.getConstraint().getLiteralConstraint();
 		}

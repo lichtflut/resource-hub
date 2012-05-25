@@ -135,7 +135,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 	 */
 	public SNConstraint addTypeConstraint(final ResourceID constraint, final Context context) {
 		final SNConstraint constraintNode = new SNConstraint(constraint, context);
-		SNOPS.associate(this, RBSchema.HAS_TYPE_CONSTRAINT, constraintNode, context);
+		SNOPS.associate(this, RBSchema.HAS_RESOURCE_CONSTRAINT, constraintNode, context);
 		return constraintNode;
 	}
 
@@ -148,7 +148,7 @@ public class SNPropertyTypeDefinition extends ResourceView {
 		for (Statement assoc: getAssociations()){
 			if (RBSchema.HAS_LITERAL_CONSTRAINT.equals(assoc.getPredicate())){
 				result.add(new SNConstraint(assoc.getObject().asResource()));
-			} else if (RBSchema.HAS_TYPE_CONSTRAINT.equals(assoc.getPredicate())){
+			} else if (RBSchema.HAS_RESOURCE_CONSTRAINT.equals(assoc.getPredicate())){
 				result.add(new SNConstraint(assoc.getObject().asResource()));
 			} else if (RBSchema.HAS_CONSTRAINT.equals(assoc.getPredicate())){
 				result.add(new SNConstraint(assoc.getObject().asResource()));

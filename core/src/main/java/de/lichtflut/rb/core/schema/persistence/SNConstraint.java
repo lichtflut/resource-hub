@@ -24,6 +24,7 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
@@ -80,21 +81,21 @@ public class SNConstraint extends ResourceView {
 			SNOPS.associate(this, RDF.TYPE, RBSchema.PROPERTY_CONSTRAINT, ctx);
 			SNOPS.associate(this, RBSchema.HAS_CONSTRAINT_VALUE, new SNText(literalConstraint), ctx);
 			SNOPS.assure(this, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(false), ctx);
-			SNOPS.assure(this, RBSchema.RESOURCE_CONSTRAINT, new SNBoolean(false), ctx);
+			SNOPS.assure(this, RBSchema.IS_RESOURCE_CONSTRAINT, new SNBoolean(false), RBSchema.CONTEXT);
 			setApplicableDatatypes(datatypes, ctx);
 		}
 	}
 	
 	/**
-	 * Creates a new type constraint.
-	 * @param typeConstraint The type constraint.
+	 * Creates a new resource-type constraint.
+	 * @param resource The type constraint.
 	 * @param ctx The context.
 	 */
-	public SNConstraint(final ResourceID typeConstraint, final Context ctx) {
+	public SNConstraint(final ResourceID resource, final Context ctx) {
 		SNOPS.associate(this, RDF.TYPE, RBSchema.PROPERTY_CONSTRAINT, ctx);
-		SNOPS.associate(this, RBSchema.HAS_CONSTRAINT_VALUE, typeConstraint, ctx);
+		SNOPS.associate(this, RBSchema.HAS_CONSTRAINT_VALUE, resource, ctx);
 		SNOPS.assure(this, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(false), ctx);
-		SNOPS.assure(this, RBSchema.RESOURCE_CONSTRAINT, new SNBoolean(true), ctx);
+		SNOPS.assure(this, RBSchema.IS_RESOURCE_CONSTRAINT, new SNBoolean(true), ctx);
 		setApplicableDatatypes(Collections.singletonList(Datatype.RESOURCE), ctx);
 	}
 
@@ -105,7 +106,7 @@ public class SNConstraint extends ResourceView {
 	 * @return boolean
 	 */
 	public boolean isResourceConstraint() {
-		boolean node = SNOPS.singleObject(this, RBSchema.RESOURCE_CONSTRAINT).asValue().getBooleanValue();
+		boolean node = SNOPS.singleObject(this, RBSchema.IS_RESOURCE_CONSTRAINT).asValue().getBooleanValue();
 		return node;
 	}
 
@@ -277,7 +278,7 @@ public class SNConstraint extends ResourceView {
 	 * @return
 	 */
 	private Constraint getPrivateConstraint(ResourceNode resource) {
-		boolean isResource = SNOPS.singleObject(resource, RBSchema.RESOURCE_CONSTRAINT).asValue().getBooleanValue();
+		boolean isResource = SNOPS.singleObject(resource, RBSchema.IS_RESOURCE_CONSTRAINT).asValue().getBooleanValue();
 		if(isResource){
 			return getPrivateResourceConstraint(resource);
 		}
@@ -307,7 +308,7 @@ public class SNConstraint extends ResourceView {
 	 * @return
 	 */
 	private Constraint getPublicConstraint(ResourceNode constraintNode) {
-		Boolean isResource = SNOPS.singleObject(constraintNode, RBSchema.RESOURCE_CONSTRAINT).asValue().getBooleanValue();
+		Boolean isResource = SNOPS.singleObject(constraintNode, RBSchema.IS_RESOURCE_CONSTRAINT).asValue().getBooleanValue();
 		if(isResource){
 			return getResourceConstraint(constraintNode);
 		}

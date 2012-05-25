@@ -12,9 +12,14 @@ import static org.mockito.Mockito.mock;
 
 import java.util.Set;
 
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.Statement;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.SNValue;
+import org.arastreju.sge.model.nodes.views.SNBoolean;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.junit.Before;
@@ -24,9 +29,12 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.mock.RBMock;
+import de.lichtflut.rb.mock.schema.ConstraintsFactory;
 import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 
 /**
@@ -63,7 +71,7 @@ public class Schema2GraphBindingTest {
 	 * Test method for {@link de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding#toModelObject(de.lichtflut.rb.core.schema.persistence.SNResourceSchema)}.
 	 */
 	@Test
-	public void testToModelObject() {
+	public void testToModelObjectSchema() {
 		ResourceSchema schema = ResourceSchemaFactory.buildPersonSchema();
 
 		SNResource node = new SNResource();
@@ -114,6 +122,37 @@ public class Schema2GraphBindingTest {
 		assertThat(converted.getPropertyDeclarations().size(), is(schema.getPropertyDeclarations().size()));
 	}
 
+	@Test
+	public void toModelObjectPrivateLiteralConstraint(){
+		Constraint constraint = ConstraintsFactory.buildPrivateLiteralConstraint();
+		
+		SNConstraint snConstraint = getBinding().toSemanticNode(constraint);
+		assertLiteralSNConstraint(constraint, snConstraint);
+	}
+	
+	@Test
+	public void toModelObjectPublicLiteralConstraint(){
+		Constraint constraint = ConstraintsFactory.buildPublicEmailConstraint();
+		SNConstraint retrieved = getBinding().toSemanticNode(constraint);
+		assertLiteralSNConstraint(constraint, retrieved);
+	}
+
+	@Test
+	public void toModelObjectPrivateResourceConstraint(){
+		Constraint constraint = ConstraintsFactory.buildPrivatePersonConstraint();
+		
+		SNConstraint snConstraint = getBinding().toSemanticNode(constraint);
+		assertResourceSNConstraint(constraint, snConstraint);
+	}
+	
+	@Test
+	public void toModelObjectPublicResourceConstraint(){
+		Constraint constraint = ConstraintsFactory.buildPublicPersonConstraint();
+		
+		SNConstraint snConstraint = getBinding().toSemanticNode(constraint);
+		assertResourceSNConstraint(constraint, snConstraint);
+	}
+	
 	/**
 	 * Test method for
 	 * {@link de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding#toSemanticNode(de.lichtflut.rb.core.schema.model.ResourceSchema)}.
@@ -160,4 +199,25 @@ public class Schema2GraphBindingTest {
 		return new Schema2GraphBinding(resolver);
 	}
 	
+	private void assertLiteralSNConstraint(Constraint original, SNConstraint retrieved){
+		assertThat(original.getApplicableDatatypes().size(), is(retrieved.getApplicableDatatypes().size()));
+		if(original.isPublicConstraint()){
+			assertThat(original.getID(), equalTo(retrieved.getID()));
+			assertThat(original.getName(), equalTo(retrieved.getName()));
+		}else{
+			assertThat(retrieved.getName(), equalTo(null));
+		}
+		assertThat(original.getLiteralConstraint(), equalTo(retrieved.getConstraintValue().asValue().getStringValue()));
+	}
+	
+	private void assertResourceSNConstraint(Constraint original, SNConstraint retrieved){
+		assertThat(original.getApplicableDatatypes().size(), is(retrieved.getApplicableDatatypes().size()));
+		if(original.isPublicConstraint()){
+			assertThat(original.getID(), equalTo(retrieved.getID()));
+			assertThat(original.getName(), equalTo(retrieved.getName()));
+		}else{
+			assertThat(retrieved.getName(), equalTo(null));
+		}
+		assertThat(original.getResourceConstraint().asResource(), equalTo(retrieved.getConstraintValue().asResource()));
+	}
 }

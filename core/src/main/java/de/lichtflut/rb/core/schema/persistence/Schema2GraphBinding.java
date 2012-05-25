@@ -132,8 +132,8 @@ public class Schema2GraphBinding {
 			setFieldLabels(snDecl, decl.getFieldLabelDefinition());
 			if(decl.hasConstraint()){
 //				setConstraint(snDecl, decl.getConstraint(), RBSchema.CONTEXT);
-				SNConstraint constraint =  new SNConstraint().toSemanticNode(decl.getConstraint(), RBSchema.CONTEXT);
-				SNOPS.associate(snDecl, RBSchema.HAS_CONSTRAINT, constraint, RBSchema.CONTEXT);
+				SNConstraint snConstraint =  new SNConstraint().toSemanticNode(decl.getConstraint(), RBSchema.CONTEXT);
+				SNOPS.associate(snDecl, RBSchema.HAS_CONSTRAINT, snConstraint, RBSchema.CONTEXT);
 			}
 			if (null != predecessor) {
 				predecessor.setSuccessor(snDecl, RBSchema.CONTEXT);

@@ -62,6 +62,7 @@ public class EditPropertyDeclPanel extends Panel {
 		addProperties(form, decl);
 		add(form);
 		addButtonBar(form);
+		setOutputMarkupId(true);
 	}
 
 	// ------------------------------------------------------
@@ -146,11 +147,10 @@ public class EditPropertyDeclPanel extends Panel {
 	private void addProperties(Form<?> form, IModel<PropertyRow> decl) {
 		addInfo(Model.of(""));
 		IModel<PropertyRow> constraintsModel = new PropertyModel<PropertyRow>(decl, "literalConstraint");
-		if(decl.getObject().hasConstraint()){
-			
-		if(null != decl.getObject().getResourceConstraint()){
-			constraintsModel = new PropertyModel<PropertyRow>(decl, "resourceReference");
-		}
+		if (decl.getObject().hasConstraint()) {
+			if (null != decl.getObject().getResourceConstraint()) {
+				constraintsModel = new PropertyModel<PropertyRow>(decl, "resourceReference");
+			}
 		}
 		Component propertyDescriptorField = new PropertyPickerField("propertyDescriptor", new PropertyModel<ResourceID>(decl, "propertyDescriptor"));
 		
@@ -162,7 +162,7 @@ public class EditPropertyDeclPanel extends Panel {
 				 Arrays.asList(Datatype.values()), new EnumChoiceRenderer<Datatype>(form));
 		
 		ConstraintsEditorPanel	constraintsDPicker = new ConstraintsEditorPanel("constraints", decl);
-		
+		constraintsDPicker.setOutputMarkupId(true);
 		form.add(propertyDescriptorField, fieldLabelTField, cardinalityTField, datatypeDDC, constraintsDPicker);
 	}
 

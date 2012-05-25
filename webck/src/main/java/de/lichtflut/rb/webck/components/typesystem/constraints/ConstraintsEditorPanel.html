@@ -9,15 +9,18 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
-
-	   <div wicket:id="resourceConstraint"></div>
-	 <!-- <wicket:container wicket:id="literalConstraintsList">
-	       <input wicket:id="literalConstraint" size="40"/>
-	   </wicket:container>
-	    -->  
-		<span><input wicket:id="constraintSwitch" type="checkbox" />
-		<wicket:container wicket:id="switchToLiteral"></wicket:container>
-		<wicket:container wicket:id="switchToResource"></wicket:container>
-		</span>
+	<div>
+		<form wicket:id="form">
+		   <div wicket:id="resourceConstraint"></div>
+		
+			<span>
+		       <input wicket:id="literalConstraint" size="40"/>
+		   </span>
+		   
+			
+			<a wicket:id="switchToLiteral"><span wicket:id="switchToLiteral"></span></a>
+			<a wicket:id="switchToResource"><span wicket:id="switchToResource"></span></a>
+		</form>
+	</div>
 </wicket:panel>
 </html>

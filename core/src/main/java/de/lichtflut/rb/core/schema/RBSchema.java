@@ -58,11 +58,6 @@ public interface RBSchema {
 	 */
 	ResourceID PROPERTY_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "PropertyConstraint");
 	
-	/**
-	 * Each Resource-Constraint has to be a type of this.
-	 */
-	ResourceID RESOURCE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "ResourceConstraint");
-	
 	// -- PROPERTIES --------------------------------------
 
 	/**
@@ -133,8 +128,9 @@ public interface RBSchema {
 
 	// -- CONSTRAINTS -------------------------------------
 
+	ResourceID IS_RESOURCE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "isResourceConstraint");
 	ResourceID HAS_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasConstraint");
-	ResourceID HAS_TYPE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasTypeConstraint");
+	ResourceID HAS_RESOURCE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasTypeConstraint");
 	ResourceID HAS_LITERAL_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasLiteralConstraint");
 	ResourceID HAS_CONSTRAINT_VALUE = new SimpleResourceID(NAMESPACE_URI, "hasConstraintValue");
 	ResourceID MIN_OCCURS = new SimpleResourceID(NAMESPACE_URI, "minOccurs");
