@@ -72,16 +72,18 @@ public interface UserManager {
 	/**
 	 * Get the user's roles.
 	 * @param user The user who's roles are requested.
+	 * @param domain The domain.
 	 * @return The list of roles.
 	 */
-	List<String> getUserRoles(RBUser user);
+	List<String> getUserRoles(RBUser user, String domain);
 	
 	/**
 	 * Get the user's permissions.
 	 * @param user The user who's permissions are requested.
+	 * @param domain The domain.
 	 * @return The list of permissions.
 	 */
-	Set<String> getUserPermissions(RBUser user);
+	Set<String> getUserPermissions(RBUser user, String domain);
 	
 	/**
 	 * Assure that the user has exactly the given roles for a domain.

@@ -28,18 +28,26 @@ public class ServiceContext {
 	// ----------------------------------------------------
 	
 	/**
-	 * @param config
+	 * @param config The config.
 	 */
 	public ServiceContext(RBConfig config) {
 		this.config = config;
 	}
 	
 	/**
-	 * @param config
+	 * @param config The config.
+	 * @param domain The current domain.
 	 */
 	public ServiceContext(RBConfig config, String domain) {
 		this(config);
 		this.domain = domain;
+	}
+	
+	/**
+	 *  Special constructor for spring.
+	 */
+	protected ServiceContext() {
+		this.config = null;
 	}
 	
 	// ----------------------------------------------------
@@ -83,6 +91,16 @@ public class ServiceContext {
 	 */
 	public RBConfig getConfig() {
 		return config;
+	}
+	
+	// ----------------------------------------------------
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return user + " | " + domain;
 	}
 	
 }

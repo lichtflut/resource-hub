@@ -1,14 +1,13 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
 	<groupId>de.lichtflut</groupId>
 	<artifactId>lf.resource-browser</artifactId>
 	<name>Resource Browser</name>
 	<version>0.4-SNAPSHOT</version>
 	<description>lichtflut Resource Browser Project</description>
 	<packaging>pom</packaging>
-	
 	<modules>
 		<module>core</module>
 		<module>tools</module>
@@ -17,11 +16,9 @@
 		<module>websample</module>
 		<module>mock</module>
   </modules>
-	
 	<properties>
-		<arastreju.version>0.7.0-SNAPSHOT</arastreju.version>
+		<arastreju.version>0.7.1-SNAPSHOT</arastreju.version>
 	</properties>
-	
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -119,6 +116,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<tagNameFormat>RELEASE_{project.version}</tagNameFormat>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -227,4 +232,8 @@
 			<url>http://nexus.lichtflut.de/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
+	<scm>
+		<developerConnection>scm:git:git@github.com:lichtflut/rb-prototype.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
 </project>

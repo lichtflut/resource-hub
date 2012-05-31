@@ -22,7 +22,6 @@ public class RBAuthException extends RBException {
 	 */
 	public RBAuthException(long errorCode, String msg) {
 		super(errorCode, msg);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

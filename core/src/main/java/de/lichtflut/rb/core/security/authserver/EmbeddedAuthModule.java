@@ -47,7 +47,11 @@ public class EmbeddedAuthModule implements AuthModule {
 	 * @param gate The Arastreju Gate.
 	 */
 	public EmbeddedAuthModule(ArastrejuGate gate, DomainInitializer initializer) {
-		logger.info("Creating new Embedded Auth Module.");
+		if (initializer != null) {
+			logger.info("Creating new Embedded Auth Module with initializer " + initializer.getClass().getSimpleName());
+		} else {
+			logger.info("Creating new Embedded Auth Module without initializer.");
+		}
 		this.domainManager = new EmbeddedAuthDomainManager(gate, initializer);
 		this.userManager = new EmbeddedAuthUserManager(gate, domainManager);
 	}

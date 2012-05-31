@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ElementaryDataType;
@@ -18,6 +19,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
@@ -56,6 +58,41 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	}
 	
 	// ----------------------------------------------------
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public List<Namespace> getNamespaces() {
+		return new ArrayList<Namespace>(arasOrganizer().getNamespaces());
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	public void registerNamespace(NamespaceDeclaration decl) {
+		arasOrganizer().registerNamespace(decl.getUri(), decl.getPrefix());
+	};
+	
+	// ----------------------------------------------------
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public List<Context> getContexts() {
+		return new ArrayList<Context>(arasOrganizer().getContexts());
+	}
+	
+	/** 
+	* {@inheritDoc}
+	*/
+	@Override
+	public void registerContext(ContextDeclaration decl) {
+		arasOrganizer().registerContext(decl.getQualifiedName());
+	}
+	
+	// ----------------------------------------------------
 
 	/** 
 	 * {@inheritDoc}
@@ -90,38 +127,27 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	// ----------------------------------------------------
 	
 	/** 
-	* {@inheritDoc}
-	*/
+	 * {@inheritDoc}
+	 */
 	@Override
-	public List<Namespace> getNamespaces() {
-		return new ArrayList<Namespace>(arasOrganizer().getNamespaces());
-	}
-	
-	/** 
-	* {@inheritDoc}
-	*/
-	public void registerNamespace(NamespaceDeclaration decl) {
-		arasOrganizer().registerNamespace(decl.getUri(), decl.getPrefix());
+	public ResourceID getUsersPerson() {
+		ResourceNode user = currentUser();
+		SemanticNode person = SNOPS.singleObject(user, RBSystem.IS_RESPRESENTED_BY);
+		if (person != null) {
+			return person.asResource();
+		} else {
+			return null;
+		}
 	};
-	
-	// ----------------------------------------------------
-	
-	/** 
-	* {@inheritDoc}
-	*/
-	@Override
-	public List<Context> getContexts() {
-		return new ArrayList<Context>(arasOrganizer().getContexts());
-	}
-	
-	/** 
-	* {@inheritDoc}
-	*/
-	@Override
-	public void registerContext(ContextDeclaration decl) {
-		arasOrganizer().registerContext(decl.getQualifiedName());
-	}
 
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setUsersPerson(ResourceID person) {
+		// TODO Auto-generated method stub
+		
+	}
 	// ----------------------------------------------------
 	
 	protected Organizer arasOrganizer() {

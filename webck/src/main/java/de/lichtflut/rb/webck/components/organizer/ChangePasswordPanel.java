@@ -18,7 +18,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.PatternValidator;
-import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.security.RBUser;
@@ -56,7 +55,7 @@ public class ChangePasswordPanel extends Panel {
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
-	 * @param model - a {@link IModel} wrapping a {@link User}
+	 * @param model - a {@link IModel} wrapping a {@link RBUser}
 	 */
 	public ChangePasswordPanel(String id) {
 		super(id);

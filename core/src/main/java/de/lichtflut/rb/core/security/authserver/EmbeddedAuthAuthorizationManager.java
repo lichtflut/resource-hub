@@ -16,8 +16,10 @@ import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.naming.QualifiedName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.eh.RBAuthException;
@@ -36,6 +38,8 @@ import de.lichtflut.rb.core.security.RBUser;
  */
 public class EmbeddedAuthAuthorizationManager {
 	
+	private final static Logger logger = LoggerFactory.getLogger(EmbeddedAuthAuthorizationManager.class);
+	
 	private final ArastrejuGate masterGate;
 
 	private final EmbeddedAuthDomainManager domainManager;
@@ -44,7 +48,7 @@ public class EmbeddedAuthAuthorizationManager {
 	
 	/**
 	 * Constructor.
-	 * @param domainManager TODO
+	 * @param domainManager The domain manager.
 	 */
 	public EmbeddedAuthAuthorizationManager(ArastrejuGate masterGate, EmbeddedAuthDomainManager domainManager) {
 		this.masterGate = masterGate;
@@ -77,9 +81,9 @@ public class EmbeddedAuthAuthorizationManager {
 	 * @param domain The domain.
 	 * @return The list of permissions.
 	 */
-	public Set<String> getUserPermissions(RBUser user, String domain) {
+	public Set<String> getUserPermissions(QualifiedName userQN, String domain) {
 		final Set<String> result = new HashSet<String>();
-		final ResourceNode userNode = mc().findResource(user.getQualifiedName());
+		final ResourceNode userNode = mc().findResource(userQN);
 		for(SemanticNode roleNode : SNOPS.objects(userNode, Aras.HAS_ROLE)) {
 			String roleDomain = getDomain(roleNode);
 			if (Infra.equals(roleDomain, domain) && roleNode.isResourceNode()) {
@@ -102,7 +106,7 @@ public class EmbeddedAuthAuthorizationManager {
 	public void setUserRoles(RBUser user, String domain, List<String> roles) throws RBAuthException {
 		ResourceNode userNode = mc().findResource(user.getQualifiedName());
 		if (userNode == null) {
-			userNode = new SNResource(user.getQualifiedName());
+			throw new RBAuthException(0, "User not found: " + user.getEmail() + " in domain" + domain);
 		}
 		SNOPS.remove(userNode, Aras.HAS_ROLE);
 		
@@ -115,6 +119,7 @@ public class EmbeddedAuthAuthorizationManager {
 				throw new RBAuthException(0, "Role not found: " + current + "@" + domain);
 			}
 		}
+		logger.info("Added roles {} to user {}.", roles, user + "#" + domain);
 	}
 	
 	// ----------------------------------------------------

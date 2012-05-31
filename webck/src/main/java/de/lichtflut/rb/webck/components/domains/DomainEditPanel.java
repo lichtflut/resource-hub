@@ -91,7 +91,6 @@ public class DomainEditPanel extends TypedPanel<RBDomain> {
 		setOutputMarkupPlaceholderTag(true);
 		
 		final Form<RBDomain> form = new Form<RBDomain>("form", new CompoundPropertyModel<RBDomain>(domainModel));
-
 		form.setOutputMarkupId(true);
 		
 		form.add(new FeedbackPanel("feedback"));

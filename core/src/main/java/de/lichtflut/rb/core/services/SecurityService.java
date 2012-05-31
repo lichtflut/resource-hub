@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.arastreju.sge.security.User;
-
 import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
@@ -72,7 +70,7 @@ public interface SecurityService {
 	// ----------------------------------------------------
 
 	/**
-	 * Sets a new Password for a {@link User}.
+	 * Sets a new Password for a {@link RBUser}.
 	 * @param user
 	 * @param currentPassword
 	 * @param newPassword
@@ -94,16 +92,18 @@ public interface SecurityService {
 	/**
 	 * Get the user's roles.
 	 * @param user The user who's roles are requested.
+	 * @param domain The domain.
 	 * @return The list of roles.
 	 */
-	List<String> getUserRoles(RBUser user);
+	List<String> getUserRoles(RBUser user, String domain);
 	
 	/**
 	 * Get the user's permissions.
 	 * @param user The user who's permissions are requested.
+	 * @param domain The domain.
 	 * @return The list of permissions.
 	 */
-	Set<String> getUserPermissions(RBUser user);
+	Set<String> getUserPermissions(RBUser user, String domain);
 	
 	/**
 	 * Assure that the user has exactly the given roles.
