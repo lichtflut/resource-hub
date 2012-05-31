@@ -38,8 +38,6 @@ import de.lichtflut.rb.rest.api.security.RBOperation;
 
 /**
  * <p>
- * 
- * 
  * </p>
  * 
  * 
@@ -73,7 +71,7 @@ public class GraphOps extends RBServiceEndpoint{
 	@Path("/node")
 	@Produces({MediaType.APPLICATION_XML })
 	@RBOperation(type = TYPE.GRAPH_NODE_READ)
-	public Response getGraphNode(@QueryParam(NODE_ID_PARAM) String resourceID, @QueryParam(AUTH_TOKEN) String token,	@PathParam(DOMAIN_ID_PARAM) String domainID) {
+	public Response getGraphNode(@QueryParam(NODE_ID_PARAM) String resourceID, @QueryParam(AUTH_TOKEN) String token, @PathParam(DOMAIN_ID_PARAM) String domainID) {
 		RBUser user = authenticateUser(token);
 		if(!getAuthHandler().isAuthorized(user, domainID)){
 			return Response.status(Status.UNAUTHORIZED).build();
@@ -87,6 +85,8 @@ public class GraphOps extends RBServiceEndpoint{
 		ResourceID id = new SimpleResourceID(resourceID);
 		ResourceNode node = null;
 		node = provider.getArastejuGate().startConversation().findResource(id.getQualifiedName());
+		node = provider.getArastejuGate().startConversation().resolve(node);
+		
 		//If the resource does not exist, return a 404 response
 		if (node == null) {
 			rsp = Response.status(Response.Status.NOT_FOUND).build();
@@ -155,7 +155,6 @@ public class GraphOps extends RBServiceEndpoint{
 							+ "An internal server error will be returned", e);
 			rsp = Response.serverError().build();
 		}
-
 		return rsp;
 	}
 
@@ -170,14 +169,11 @@ public class GraphOps extends RBServiceEndpoint{
 		final SemanticGraphIO io = new RdfXmlBinding();
 		ServiceProvider provider = getProvider(domainID, user);
 		ModelingConversation mc = provider.getArastejuGate().startConversation();
-		
 		TransactionControl tx=null;
 		try {
 			tx = mc.beginTransaction();
 			SemanticGraph graph = io.read(xmlBody);
-			for(Statement stmt : graph.getStatements()){
-				mc.addStatement(stmt);
-			}
+			mc.attach(graph);
 			tx.success();
 			tx.commit();
 		}catch(Exception any){
@@ -186,10 +182,7 @@ public class GraphOps extends RBServiceEndpoint{
 			tx.rollback();
 			return Response.serverError().build();
 		}
-
 		return Response.ok().build();
 	}
-	
-
 	
 }

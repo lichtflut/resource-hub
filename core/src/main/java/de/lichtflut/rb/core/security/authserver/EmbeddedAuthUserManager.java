@@ -150,11 +150,11 @@ public class EmbeddedAuthUserManager implements AuthenticationService, UserManag
 	public String createRememberMeToken(RBUser user, LoginData loginData) {
 		final String email = user.getEmail();
 		final String id = normalize(loginData.getId());
-		final Credential credential = toCredential(loginData.getPassword(), findUserNode(id));
+		//final Credential credential = toCredential(loginData.getPassword(), findUserNode(id));
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, 30);
 		final String raw = email + ":" + DATE_FORMAT.format(cal.getTime()); 
-		return raw + ":" + Crypt.md5Hex(raw + credential);
+		return raw + ":" + Crypt.md5Hex(raw); //+ credential);
 	}
 
 	
@@ -197,6 +197,10 @@ public class EmbeddedAuthUserManager implements AuthenticationService, UserManag
 		if (user.getUsername() != null) {
 			SNOPS.assure(userNode, RBSystem.HAS_USERNAME, user.getUsername());
 			SNOPS.associate(userNode, Aras.IDENTIFIED_BY, new SNText(user.getUsername()), Aras.IDENT);
+			SNOPS.associate(userNode, RBSystem.HAS_USERNAME, new SNText(user.getUsername()), Aras.IDENT);
+		}
+		if(user.getEmail()!=null){
+			SNOPS.associate(userNode, RBSystem.HAS_EMAIL, new SNText(user.getEmail()), Aras.IDENT);
 		}
 		
 		mc.attach(userNode);
@@ -355,12 +359,12 @@ public class EmbeddedAuthUserManager implements AuthenticationService, UserManag
 				logger.info("Login token has been expired: " + token);
 				return false;
 			}
-			final SemanticNode credential = SNOPS.singleObject(user, Aras.HAS_CREDENTIAL);
-			if (credential != null) {
+			//final SemanticNode credential = SNOPS.singleObject(user, Aras.HAS_CREDENTIAL);
+			//if (credential != null) {
 				final String raw = id + ":" + validUntil; 
-				final String crypted = Crypt.md5Hex(raw + credential.asValue().getStringValue());
+				final String crypted = Crypt.md5Hex(raw);// + credential.asValue().getStringValue());
 				return crypted.equals(token);
-			}
+			//}
 		} catch (ParseException e) {
 			logger.info("Login token could not be parsed: " + token);
 		}

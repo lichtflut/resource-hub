@@ -13,9 +13,9 @@ import javax.ws.rs.core.Response;
 import org.arastreju.sge.security.LoginException;
 import org.springframework.stereotype.Component;
 
+import de.lichtflut.rb.core.security.AuthenticationService;
 import de.lichtflut.rb.core.security.LoginData;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.AuthenticationService;
 import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
 
 /**
@@ -38,7 +38,7 @@ public class AuthOps extends RBServiceEndpoint {
 		loginData.setPassword(loginUser.getPassword());
 		Response rsp;
 		try {
-			AuthenticationService authService = providerFactory.getAuthenitcationService();
+			AuthenticationService authService = providerFactory.createAuthenticationService();
 			RBUser user = authService.login(loginData);
 			String token = authService.createRememberMeToken(user, loginData);
 			rsp = Response.status(Response.Status.OK).entity(token).build();

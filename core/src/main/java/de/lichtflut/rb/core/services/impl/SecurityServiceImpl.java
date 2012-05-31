@@ -71,7 +71,9 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		rbUser.setUsername(username);
 		final String crypted = RBCrypt.encryptWithRandomSalt(password);
 		authServer.getUserManagement().registerUser(rbUser, crypted, getProvider().getContext().getDomain());
-		getProvider().getMessagingService().getEmailService().sendRegistrationConfirmation(rbUser, conf, locale);
+		if(conf!=null){
+			getProvider().getMessagingService().getEmailService().sendRegistrationConfirmation(rbUser, conf, locale);
+		}
 		return rbUser;
 	}
 	

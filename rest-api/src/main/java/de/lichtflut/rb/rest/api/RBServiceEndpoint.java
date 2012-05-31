@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import de.lichtflut.rb.core.security.AuthenticationService;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.AuthenticationService;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.ServiceProviderFactory;
 import de.lichtflut.rb.rest.api.security.AuthorizationHandler;
@@ -66,7 +66,7 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	protected RBUser authenticateUser(String token) {
 		RBUser user=null;
 		if (token != null) {
-			AuthenticationService authService = providerFactory.getAuthenitcationService();
+			AuthenticationService authService = providerFactory.createAuthenticationService();
 			user = authService.loginByToken(token);
 		}
 		if (user == null) {
