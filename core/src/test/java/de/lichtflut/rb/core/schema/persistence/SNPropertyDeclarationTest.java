@@ -69,12 +69,8 @@ public class SNPropertyDeclarationTest {
 	@Test
 	public void testGetPublicResourceConstraint() {
 		Constraint constraint = ConstraintsFactory.buildPublicPersonConstraint();
-		SNConstraint snConstraint = new SNConstraint(constraint.getResourceConstraint(), ctx);
-		snConstraint.setID(constraint.getID(), ctx);
-		snConstraint.setName(constraint.getName(), ctx);
-		snConstraint.setPublic(constraint.isPublicConstraint(), ctx);
 		
-		snDecl.setConstraint(snConstraint, ctx);
+		snDecl.setConstraint(constraint, ctx);
 		Constraint retrieved = snDecl.getConstraint();
 		
 		assertConstraints(retrieved, constraint);
@@ -87,9 +83,8 @@ public class SNPropertyDeclarationTest {
 	@Test
 	public void testGetPrivateResourceConstraint() {
 		Constraint constraint = ConstraintsFactory.buildPrivatePersonConstraint();
-		SNConstraint snConstraint = new SNConstraint(constraint.getResourceConstraint(), ctx);
 		
-		snDecl.setConstraint(snConstraint, ctx);
+		snDecl.setConstraint(constraint, ctx);
 		
 		assertConstraints(snDecl.getConstraint(), constraint);
 	}
@@ -100,12 +95,8 @@ public class SNPropertyDeclarationTest {
 	@Test
 	public void testGetPublicLiteralConstraint() {
 		Constraint constraint = ConstraintsFactory.buildPublicEmailConstraint();
-		SNConstraint snConstraint = new SNConstraint(constraint.getLiteralConstraint(), constraint.getApplicableDatatypes(), ctx);
-		snConstraint.setID(constraint.getID(), ctx);
-		snConstraint.setName(constraint.getName(), ctx);
-		snConstraint.setPublic(constraint.isPublicConstraint(), ctx);
 		
-		snDecl.setConstraint(snConstraint, ctx);
+		snDecl.setConstraint(constraint, ctx);
 		Constraint retrieved = snDecl.getConstraint();
 		
 		assertConstraints(retrieved, constraint);
@@ -117,9 +108,8 @@ public class SNPropertyDeclarationTest {
 	@Test
 	public void testGetPrivateLiteralConstraint() {
 		Constraint constraint = ConstraintsFactory.buildPrivateLiteralConstraint();
-		SNConstraint snConstraint = new SNConstraint(constraint.getLiteralConstraint(), constraint.getApplicableDatatypes(), ctx);
 		
-		snDecl.setConstraint(snConstraint, ctx);
+		snDecl.setConstraint(constraint, ctx);
 		
 		assertConstraints(snDecl.getConstraint(), constraint);
 	}
@@ -179,11 +169,15 @@ public class SNPropertyDeclarationTest {
 	 */
 	private void assertConstraints(Constraint retrieved, Constraint constraint) {
 		assertThat(retrieved.getApplicableDatatypes().size(), is(constraint.getApplicableDatatypes().size()));
-		if(retrieved.isPublicConstraint()){
-			assertThat(retrieved.getID(), equalTo(constraint.getID()));
+		if(constraint.isPublic()){
+			if(constraint.holdsReference()){
+				assertThat(retrieved.getReference(), equalTo(constraint.getReference()));
+			}
 		}
-		assertThat(retrieved.getLiteralConstraint(), equalTo(constraint.getLiteralConstraint()));
+		if(constraint.isLiteral() && !constraint.holdsReference()){
+			assertThat(retrieved.getLiteralConstraint(), equalTo(constraint.getLiteralConstraint()));
+		}
 		assertThat(retrieved.getName(), equalTo(constraint.getName()));
-		assertThat(retrieved.getResourceConstraint(), equalTo(constraint.getResourceConstraint()));
+		assertThat(retrieved.getReference(), equalTo(constraint.getReference()));
 	}
 }

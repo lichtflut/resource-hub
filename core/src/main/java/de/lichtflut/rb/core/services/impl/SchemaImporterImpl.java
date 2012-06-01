@@ -94,7 +94,7 @@ public class SchemaImporterImpl implements SchemaImporter {
 	}
 	
 	private boolean resolveTypeDefReference(Constraint ref) {
-		final Constraint existing = manager.findConstraint(ref.getID());
+		final Constraint existing = manager.findConstraint(ref.asResourceNode());
 		if (existing != null) {
 			ref = existing;
 			return true;

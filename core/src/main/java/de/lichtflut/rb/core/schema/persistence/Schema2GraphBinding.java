@@ -8,6 +8,7 @@ import java.util.Set;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -24,11 +25,12 @@ import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
+import de.lichtflut.rb.core.schema.model.impl.LiteralConstraint;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 
 /**
@@ -92,18 +94,6 @@ public class Schema2GraphBinding {
 		return schema;
 	}
 	
-	/**
-	 * Convert a constraint node to a model element.
-	 * @param snConstraint - The constraint node.
-	 * @return the constraint model element.
-	 */
-	public Constraint toModelObject(final SNConstraint snConstraint) {
-		if(snConstraint == null) {
-			return null;
-		}
-		return new SNConstraint().toConstraintModel(snConstraint);
-	}
-	
 	// -----------------------------------------------------
 	
 	/**
@@ -131,9 +121,7 @@ public class Schema2GraphBinding {
 			snDecl.setDatatype(decl.getDatatype(), RBSchema.CONTEXT);
 			setFieldLabels(snDecl, decl.getFieldLabelDefinition());
 			if(decl.hasConstraint()){
-//				setConstraint(snDecl, decl.getConstraint(), RBSchema.CONTEXT);
-				SNConstraint snConstraint =  new SNConstraint().toSemanticNode(decl.getConstraint(), RBSchema.CONTEXT);
-				SNOPS.associate(snDecl, RBSchema.HAS_CONSTRAINT, snConstraint, RBSchema.CONTEXT);
+				SNOPS.associate(snDecl, RBSchema.HAS_CONSTRAINT, decl.getConstraint().asResourceNode(), RBSchema.CONTEXT);
 			}
 			if (null != predecessor) {
 				predecessor.setSuccessor(snDecl, RBSchema.CONTEXT);
@@ -144,26 +132,6 @@ public class Schema2GraphBinding {
 		return sn;
 	}
 	
-	/**
-	 * Creates a new semantic node for a given {@link Constraint}
-	 * @param constraint
-	 * @return
-	 */
-	public SNConstraint toSemanticNode(final Constraint constraint) {
-		SNConstraint snConstraint = new SNConstraint().toSemanticNode(constraint, RBSchema.CONTEXT);
-		return snConstraint;
-		
-	}
-	/**
-	 * @param snDecl
-	 * @param constraint 
-	 * @param context
-	 */
-	private void setConstraint(SNPropertyDeclaration snDecl, Constraint constraint, Context ctx) {
-		SNConstraint snConstraint = new SNConstraint().toSemanticNode(constraint, ctx);
-		SNOPS.associate(snDecl, RBSchema.HAS_CONSTRAINT, snConstraint, ctx);
-	}
-
 	protected Cardinality buildCardinality(final SNPropertyDeclaration snDecl) {
 		int min = snDecl.getMinOccurs().getIntegerValue().intValue();
 		int max = snDecl.getMaxOccurs().getIntegerValue().intValue();
@@ -178,23 +146,6 @@ public class Schema2GraphBinding {
 		}
 	}
 
-	protected Constraint toModelConstraint(final SNConstraint snConst) {
-		if (!snConst.isResourceConstraint()){
-			final String value = snConst.getConstraintValue().asValue().getStringValue();
-			return ConstraintBuilder.buildLiteralConstraint(value);
-		} else if (snConst.isResourceConstraint()) {
-			SemanticNode node = snConst.getConstraintValue();
-			if (node != null) {
-				final ResourceID type = snConst.getConstraintValue().asResource();
-				return ConstraintBuilder.buildResourceConstraint(type);
-			} else {
-				return null;
-			}
-		} else {
-			throw new IllegalStateException();
-		}
-	}
-	
 	protected SNScalar minAsScalar(final Cardinality cardinality) {
 		return new SNScalar(cardinality.getMinOccurs());
 	}

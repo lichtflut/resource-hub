@@ -24,7 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
@@ -77,56 +76,38 @@ public class JsonSchemaParserTest {
 
 	// ------------------------------------------------------
 	
-	/**
-	 * @param list
-	 */
 	private void assertConstraints(List<Constraint> list) {
 		assertLiteralConstraint(list.get(0));
 		assertResourceConstraint(list.get(1));
 	}
 
-	/**
-	 * @param constraint
-	 */
 	private void assertLiteralConstraint(Constraint constraint) {
 		String literalConstr = ".*@.*";
 		String name = "Email-Constraint";
-		ResourceID constraintID = new SimpleResourceID("http://test.com/public-constraints#Email-Constraint");
 		
-		assertTrue("Constraint is not public.", constraint.isPublicConstraint());
-		assertThat(constraint.getID(), equalTo(constraintID));
+		assertTrue("Constraint is not public.", constraint.isPublic());
 		assertThat(constraint.getApplicableDatatypes(), notNullValue());
 		assertThat(constraint.getApplicableDatatypes(), not(Collections.EMPTY_LIST));
 		assertThat(constraint.getApplicableDatatypes().size(), is(3));
 		assertThat(constraint.getName(), equalTo(name));
 		assertThat(constraint.getLiteralConstraint(), equalTo(literalConstr));
-		assertThat(constraint.getResourceConstraint(), nullValue());
-		assertThat(constraint.isPublicConstraint(), is(Boolean.TRUE));
+		assertThat(constraint.getReference(), nullValue());
+		assertThat(constraint.isPublic(), is(Boolean.TRUE));
 	}
 	
-	/**
-	 * @param constraint
-	 */
 	private void assertResourceConstraint(Constraint constraint) {
 		ResourceID resourceConstr = new SimpleResourceID("http://test.com/common#Person");
 		String name = "Person-Constraint";
-		ResourceID resID = new SimpleResourceID("http://test.com/public-constraints#Person");
 		
-		assertThat(constraint.isPublicConstraint(), is(Boolean.TRUE));
-		assertThat(constraint.getID(), equalTo(resID ));
+		assertThat(constraint.isPublic(), is(Boolean.TRUE));
+		assertThat(constraint.getReference(), notNullValue());
 		assertThat(constraint.getApplicableDatatypes(), notNullValue());
-		assertThat(constraint.getApplicableDatatypes(), not(Collections.EMPTY_LIST));
-		assertThat(constraint.getApplicableDatatypes().size(), is(1));
-		assertThat(constraint.getApplicableDatatypes().get(0), is(Datatype.RESOURCE));
-		assertThat(constraint.getName(), equalTo(name));
-		assertThat(constraint.getResourceConstraint(), equalTo(resourceConstr));
-		assertThat(constraint.getLiteralConstraint(), nullValue());
-		assertThat(constraint.isPublicConstraint(), is(Boolean.TRUE));
+		assertThat(constraint.getName(), equalTo(resourceConstr.getQualifiedName().toURI()));
+		assertThat(constraint.getReference(), equalTo(resourceConstr));
+		assertThat(constraint.getLiteralConstraint(), equalTo(""));
+		assertThat(constraint.isPublic(), is(Boolean.TRUE));
 	}
 
-	/**
-	 * @param schema
-	 */
 	private void assertSchema(ResourceSchema schema) {
 		ResourceID describedType = new SimpleResourceID("http://test.com/common#City");
 
@@ -137,9 +118,6 @@ public class JsonSchemaParserTest {
 		assertPropertyDeclaration(schema.getPropertyDeclarations().get(1));
 	}
 
-	/**
-	 * @param propertyDeclaration
-	 */
 	private void assertPropertyDeclaration(PropertyDeclaration propertyDeclaration) {
 		String literalConstr = "[a-z || A-Z]";
 		String fieldLabelDef = "Country";

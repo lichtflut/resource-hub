@@ -7,13 +7,14 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>
  *  Constraint for a property. In general there are two types of constraints:
  *  <ol>
  *   <li>Pattern constraints for literal value properties</li>
- *   <li>Type-Of constraints for resource references</li>
+ *   <li>Resource-constraints for resource references</li>
  *  </ol>
  * </p>
  *
@@ -25,7 +26,6 @@ import org.arastreju.sge.model.ResourceID;
  *  	if (X rdf:type Y) is true
  *   </pre>
  * </p>
- *
  *
  * <p>
  * Please note, that cardinality (min occurs, max occurs) are not constraints.
@@ -40,20 +40,9 @@ import org.arastreju.sge.model.ResourceID;
 public interface Constraint extends Serializable {
 
 	/**
-	 * @return the ID of a Constraint.
-	 */
-	ResourceID getID();
-	
-	/**
 	 * Returns the name of a public constraint.
 	 */
 	String getName();
-	
-	/**
-	 * Check if this constraint is a type-of constraint for resources.
-	 * @return true if this constraint is for resources.
-	 */
-	boolean isResourceReference();
 
 	/**
 	 * Get the literal constraint, a regular expression pattern. If this constraint is a resource type constraint
@@ -68,16 +57,34 @@ public interface Constraint extends Serializable {
 	 * (isResourceTypeConstraint() returns false) null will be returned;
 	 * @return The resource type or null.
 	 */
-	ResourceID getResourceConstraint();
-
+	ResourceID getReference();
+	
 	/**
 	 * Returns wether this constraint can be re-used by other {@link PropertyDeclaration}s or not.
 	 * @return true if Constraint is public, false if not
 	 */
-	boolean isPublicConstraint();
+	boolean isPublic();
+	
+	/**
+	 * Returns whether this constraint references a public constraint.
+	 * @return true if yes, false if it hold a literal pattern
+	 */
+	boolean holdsReference();
 	
 	/**
 	 * @return a list of applicable {@link Datatype}s for this {@link Constraint}.
 	 */
 	List<Datatype> getApplicableDatatypes();
+	
+	/**
+	 * @return true if constraint is literal OR references a literal Constraint, 
+	 * returns false if references a resource
+	 */
+	boolean isLiteral();
+	
+	/**
+	 * Returns the constraint as a ResourceNode.
+	 * @return
+	 */
+	ResourceNode asResourceNode();
 }

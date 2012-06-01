@@ -84,7 +84,7 @@ public class ParsedElements {
 	@Override
 	public String toString() {
 		return schemas.size() + " schema(s) and " 
-				+ constraints.size() + " type definition(s) with "
+				+ constraints.size() + " constraint(s) with "
 				+ statements.size() + " additional statement(s)"; 
 	}
 	

@@ -129,11 +129,13 @@ public interface RBSchema {
 	// -- CONSTRAINTS -------------------------------------
 
 	ResourceID IS_RESOURCE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "isResourceConstraint");
+	ResourceID IS_LITERAL_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "isLiteralConstraint");;
 	ResourceID HAS_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasConstraint");
 	ResourceID HAS_RESOURCE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasTypeConstraint");
 	ResourceID HAS_LITERAL_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasLiteralConstraint");
 	ResourceID HAS_CONSTRAINT_VALUE = new SimpleResourceID(NAMESPACE_URI, "hasConstraintValue");
 	ResourceID MIN_OCCURS = new SimpleResourceID(NAMESPACE_URI, "minOccurs");
 	ResourceID MAX_OCCURS = new SimpleResourceID(NAMESPACE_URI, "maxOccurs");
+
 
 }

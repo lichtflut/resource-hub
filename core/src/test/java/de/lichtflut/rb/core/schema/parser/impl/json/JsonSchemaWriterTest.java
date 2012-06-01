@@ -67,11 +67,10 @@ public class JsonSchemaWriterTest {
 		
 		Constraint parsedConstraint = parsedElements.getConstraints().get(0);
 		assertThat(parsedElements.getConstraints().size(), is(1));
-		assertThat(parsedConstraint.getID(), equalTo(emailConstraint.getID()));
-		assertThat(parsedConstraint.getApplicableDatatypes(), equalTo(emailConstraint.getApplicableDatatypes()));
+		assertThat(parsedConstraint.getReference(), equalTo(emailConstraint.getReference()));
+		assertThat(parsedConstraint.getApplicableDatatypes().size(), is(emailConstraint.getApplicableDatatypes().size()));
 		assertThat(parsedConstraint.getLiteralConstraint(), equalTo(parsedConstraint.getLiteralConstraint()));
-		assertThat(parsedConstraint.getResourceConstraint(), nullValue());
-		assertThat(parsedConstraint, equalTo(emailConstraint));
+		assertThat(parsedConstraint.getReference(), nullValue());
 	}
 
 	@Test
@@ -94,13 +93,11 @@ public class JsonSchemaWriterTest {
 		assertThat(parsedSchema.getPropertyDeclarations().size(), is(schema.getPropertyDeclarations().size()));
 		assertPropertyDeclaration(parsedSchema.getPropertyDeclarations().get(5), schema.getPropertyDeclarations().get(5));
 	}
-	/**
-	 * @param propertyDeclaration
-	 */
+
 	private void assertPropertyDeclaration(PropertyDeclaration propertyDeclaration,PropertyDeclaration original) {
 		assertThat(propertyDeclaration.getCardinality().getMinOccurs(), is(original.getCardinality().getMinOccurs()));
 		assertThat(propertyDeclaration.getCardinality().getMaxOccurs(), is(original.getCardinality().getMaxOccurs()));
-		assertThat(propertyDeclaration.getConstraint().getResourceConstraint(), equalTo(original.getConstraint().getResourceConstraint()));
+		assertThat(propertyDeclaration.getConstraint().getReference(), equalTo(original.getConstraint().getReference()));
 		assertThat(propertyDeclaration.getFieldLabelDefinition().getDefaultLabel(), equalTo(original.getFieldLabelDefinition().getDefaultLabel()));
 		assertThat(propertyDeclaration.getPropertyDescriptor().toURI(), equalTo(original.getPropertyDescriptor().toURI()));
 	}

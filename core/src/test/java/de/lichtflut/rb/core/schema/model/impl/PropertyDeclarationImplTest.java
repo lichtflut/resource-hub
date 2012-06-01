@@ -8,9 +8,10 @@ import static org.junit.Assert.assertNotNull;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 
@@ -35,7 +36,8 @@ public class PropertyDeclarationImplTest {
 		String label = "field1";
 		String pattern = "htp://lf.de/person#123456-lki8";
 		ResourceID resID = new SimpleResourceID("http://lf.de/test#" + label);
-		Constraint constr = ConstraintBuilder.buildLiteralConstraint(pattern);
+		LiteralConstraint constr = new LiteralConstraint((ResourceNode)new SNResource());
+		constr.setLiteralPattern(pattern);
 		
 		PropertyDeclaration pdec = new PropertyDeclarationImpl(resID, Datatype.STRING, constr);
 		

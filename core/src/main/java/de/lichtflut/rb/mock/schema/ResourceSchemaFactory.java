@@ -9,7 +9,6 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
@@ -37,9 +36,9 @@ public class ResourceSchemaFactory {
 		PropertyDeclaration	email = new PropertyDeclarationImpl(RBMock.HAS_EMAIL, Datatype.STRING);
 		PropertyDeclaration children = new PropertyDeclarationImpl(RBMock.HAS_CHILD_NODE, Datatype.RESOURCE);
 
-		address.setConstraint(ConstraintBuilder.buildResourceConstraint(RBMock.ADDRESS));
+		address.setConstraint(ConstraintsFactory.buildPublicTypeConstraint(RBMock.ADDRESS));
 		email.setConstraint(ConstraintsFactory.buildPublicEmailConstraint());
-		children.setConstraint(ConstraintBuilder.buildResourceConstraint(RBMock.PERSON));
+		children.setConstraint(ConstraintsFactory.buildPublicTypeConstraint(RBMock.PERSON));
 
 		firstname.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		lastname.setCardinality(CardinalityBuilder.hasExcactlyOne());

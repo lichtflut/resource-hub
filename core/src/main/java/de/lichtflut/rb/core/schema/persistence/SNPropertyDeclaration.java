@@ -35,6 +35,7 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
+import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
 
 
 /**
@@ -82,7 +83,7 @@ public class SNPropertyDeclaration extends ResourceView {
 		Constraint constraint = null;
 		SemanticNode constraintNode = SNOPS.singleObject(this, RBSchema.HAS_CONSTRAINT);
 		if(null != constraintNode){
-			constraint = new SNConstraint().toConstraintModel(constraintNode.asResource());
+			constraint = new ReferenceConstraint(constraintNode.asResource());
 		}
 		return constraint;
 	}
@@ -199,8 +200,8 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * @param constraint
 	 * @param context
 	 */
-	public void setConstraint(final SNConstraint constraint, Context context){
-		SNOPS.assure(this, RBSchema.HAS_CONSTRAINT, constraint, context);
+	public void setConstraint(final Constraint constraint, Context context){
+		SNOPS.assure(this, RBSchema.HAS_CONSTRAINT, constraint.asResourceNode(), context);
 	}
 
 	/**

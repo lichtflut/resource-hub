@@ -119,12 +119,19 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 			g.writeStringField(CARDINALITY, buildCardinalityString(decl.getCardinality()));
 			writeFieldLabelDef(g, decl.getFieldLabelDefinition());
 			if (decl.hasConstraint()) {
-
-				if (decl.getConstraint().isPublicConstraint()) {
-					g.writeStringField(CONSTRAINT_REFERENCE, uri(decl.getConstraint().getID()));
+				if (decl.getConstraint().isPublic()) {
+					if(decl.getConstraint().isLiteral()){
+						if(decl.getConstraint().holdsReference()){
+							g.writeStringField(CONSTRAINT_REFERENCE, uri(decl.getConstraint().getReference()));
+						}else{
+							g.writeStringField(CONSTRAINT_REFERENCE, uri(decl.getConstraint().asResourceNode()));
+						}
+					}else{
+						g.writeStringField(RESOURCE_CONSTRAINT, uri(decl.getConstraint().getReference()));
+					}
 				} else {
-					if (decl.getConstraint().isResourceReference()) {
-						g.writeStringField(RESOURCE_CONSTRAINT, uri(decl.getConstraint().getResourceConstraint()));
+					if (decl.getConstraint().holdsReference()) {
+						g.writeStringField(RESOURCE_CONSTRAINT, uri(decl.getConstraint().getReference()));
 					} else {
 						g.writeStringField(LITERAL_CONSTRAINT, decl.getConstraint().getLiteralConstraint());
 					}
@@ -136,8 +143,7 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	}
 
 	private void writePublicConstraint(final JsonGenerator g, final Constraint constr) throws JsonGenerationException, IOException {
-		if (constr.isPublicConstraint()) {
-			g.writeStringField(ID, uri(constr.getID()));
+		if (constr.isPublic()) {
 			g.writeStringField(NAME, constr.getName());
 			g.writeStringField(APPLICABLE_DATATYPES, prepareApplicableDatatypes(constr.getApplicableDatatypes()));
 		}
@@ -156,8 +162,12 @@ public class JsonSchemaWriter implements ResourceSchemaWriter, IOConstants {
 	}
 	
 	private void writeConstraints(final JsonGenerator g, final Constraint constraint) throws JsonGenerationException, IOException {
-			if (constraint.isResourceReference()) {
-				g.writeStringField(RESOURCE_CONSTRAINT, uri(constraint.getResourceConstraint()));
+			if (constraint.holdsReference()) {
+				if(constraint.isLiteral()){
+					g.writeStringField(LITERAL_CONSTRAINT, constraint.getLiteralConstraint());
+				} else{
+					g.writeStringField(RESOURCE_CONSTRAINT, uri(constraint.getReference()));
+				}
 			} else {
 				if(QualifiedName.isUri(constraint.getLiteralConstraint())){
 					g.writeStringField(CONSTRAINT_REFERENCE, constraint.getLiteralConstraint());

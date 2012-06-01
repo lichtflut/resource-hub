@@ -60,7 +60,7 @@ public abstract class ConstraintsBrowserPanel extends Panel {
 				};
 				item.add(link);
 				link.add(new Label("constraint", constraint.getName()));
-				link.add(new AttributeAppender("title", constraint.getID().getQualifiedName()));
+				link.add(new AttributeAppender("title", constraint.asResourceNode().getQualifiedName()));
 			}
 		});
 		

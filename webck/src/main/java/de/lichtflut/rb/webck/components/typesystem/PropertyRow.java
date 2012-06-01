@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
@@ -17,9 +19,10 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
+import de.lichtflut.rb.core.schema.model.impl.LiteralConstraint;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
 
 /**
  * <p>
@@ -210,7 +213,7 @@ public class PropertyRow implements Serializable {
 			return "";
 		}
 		String constraint = "";
-		if (!decl.getConstraint().isResourceReference()) {
+		if (!decl.getConstraint().holdsReference()) {
 			constraint = decl.getConstraint().getLiteralConstraint();
 		}
 		return constraint;
@@ -220,7 +223,9 @@ public class PropertyRow implements Serializable {
 	 * @param literalConstraint
 	 */
 	public void setLiteralConstraint(final String literalConstraint) {
-		decl.setConstraint(ConstraintBuilder.buildLiteralConstraint(literalConstraint));
+		LiteralConstraint constraint = new LiteralConstraint((ResourceNode)new SNResource());
+		constraint.setLiteralPattern(literalConstraint);
+		decl.setConstraint(constraint);
 	}
 
 	/**
@@ -230,8 +235,8 @@ public class PropertyRow implements Serializable {
 		if (!hasConstraint()) {
 			return null;
 		}
-		if (decl.getConstraint().isResourceReference()) {
-			return decl.getConstraint().getResourceConstraint();
+		if (decl.getConstraint().holdsReference()) {
+			return decl.getConstraint().getReference();
 		}
 		return null;
 	}
@@ -241,14 +246,17 @@ public class PropertyRow implements Serializable {
 	 *            the resourceConstraint to set
 	 */
 	public void setResourceConstraint(ResourceID resourceConstraint) {
-		decl.setConstraint(ConstraintBuilder.buildResourceConstraint(resourceConstraint));
+		//TODO RESOLVE CONSTRAINT - get ID
+		ReferenceConstraint constraint = new ReferenceConstraint(new SNResource());
+		constraint.setReference(resourceConstraint);
+		decl.setConstraint(constraint);
 	}
 	
 	/**
 	 * @return true if the Type Definition is public, false if it is private.
 	 */
 	public boolean hasPublicConstraint() {
-		return decl.getConstraint().isPublicConstraint();
+		return decl.getConstraint().isPublic();
 	}
 
 	public boolean hasConstraint() {

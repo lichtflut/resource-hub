@@ -55,7 +55,7 @@ public class AggregatePublicConstraintsEditorPanel extends Panel {
 	// ------------------------------------------------------
 	
 	protected void displayConstraintEditor(final Constraint constraint) {
-		final Constraint reloaded = schemaManager().findConstraint(constraint.getID());
+		final Constraint reloaded = schemaManager().findConstraint(constraint.asResourceNode());
 		final IModel<PropertyRow> model = Model.of(new PropertyRow(reloaded));
 		final ConstraintEditorPanel editor = new ConstraintEditorPanel("editor", model) {
 			@Override
