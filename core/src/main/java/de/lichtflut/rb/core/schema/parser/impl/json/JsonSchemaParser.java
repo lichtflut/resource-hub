@@ -37,7 +37,6 @@ import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
-import de.lichtflut.rb.core.schema.model.impl.LiteralConstraint;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
@@ -156,14 +155,14 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				name = p.getText();
 			} else if(APPLICABLE_DATATYPES.equals(field)){
 					datatypes.addAll(extractDatatypes(p));
-			} else if (RESOURCE_CONSTRAINT.equals(field)) {
-				referenceHolder = getConstraintFromString(p, field);
-				ReferenceConstraint refConstr = new ReferenceConstraint(new SNResource(id.getQualifiedName()));
-//				refConstr.isLiteral(false);
-				refConstr.setName(name);
-				refConstr.setReference(referenceHolder.getReference());
-				refConstr.setIsPublic(true);
-				result.add(refConstr);
+//			} else if (RESOURCE_CONSTRAINT.equals(field)) {
+//				referenceHolder = getConstraintFromString(p, field);
+//				ReferenceConstraint refConstr = new ReferenceConstraint(new SNResource(id.getQualifiedName()));
+////				refConstr.isLiteral(false);
+//				refConstr.setName(name);
+//				refConstr.setReference(referenceHolder.getReference());
+//				refConstr.setIsPublic(true);
+//				result.add(refConstr);
 			} else if (LITERAL_CONSTRAINT.equals(field)) {
 				referenceHolder = getConstraintFromString(p, field);
 				ReferenceConstraint refConstr = new ReferenceConstraint(new SNResource(id.getQualifiedName()));
@@ -172,7 +171,6 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				refConstr.setName(name);
 				refConstr.setIsPublic(true);
 //				refConstr.holdsReference(false);
-				refConstr.setIsPublic(true);
 				refConstr.setLiteralConstraint(referenceHolder.getLiteralConstraint());
 				result.add(refConstr);
 			} else {
@@ -219,11 +217,17 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 			} else if (DATATYPE.equals(field)) {
 				decl.setDatatype(Datatype.valueOf(p.getText().toUpperCase()));
 			} else if (RESOURCE_CONSTRAINT.equals(field)) {
-				decl.setConstraint(getConstraintFromString(p, field));
+				ReferenceConstraint ref = new ReferenceConstraint();
+				ref.buildReferenceConstraint(getConstraintFromString(p, field).getReference(), false);
+//				ref.setReference(getConstraintFromString(p, field).getReference());
+//				decl.setConstraint(getConstraintFromString(p, field));
+				decl.setConstraint(ref);
 			} else if (LITERAL_CONSTRAINT.equals(field)) {
 				decl.setConstraint(getConstraintFromString(p, field));
 			} else if (CONSTRAINT_REFERENCE.equals(field)) {
-				decl.setConstraint(getConstraintFromString(p, field));
+				ReferenceConstraint ref = new ReferenceConstraint();
+				ref.buildReferenceConstraint(getConstraintFromString(p, field).getReference(), true);
+				decl.setConstraint(ref);
 			} else if (FIELD_LABEL.equals(field)) {
 				decl.setFieldLabelDefinition(readFieldLabel(p));
 			}else {
@@ -251,16 +255,21 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	private Constraint getConstraintFromString(final JsonParser p, final String field) throws IOException, JsonParseException {
 		Constraint c = null;
 		if (LITERAL_CONSTRAINT.equals(field)) {
-			LiteralConstraint constr = new LiteralConstraint(new SNResource());
-			constr.setLiteralPattern(p.getText());
-			c = constr;
+//			LiteralConstraint constr = new LiteralConstraint(new SNResource());
+//			constr.setLiteralPattern(p.getText());
+			ReferenceConstraint constraint = new ReferenceConstraint();
+			constraint.buildLiteralConstraint(p.getText());
+			c = constraint;
 		} else if (RESOURCE_CONSTRAINT.equals(field)){
-			ReferenceConstraint ref = new ReferenceConstraint(new SNResource(toResourceID(p.getText()).getQualifiedName()));
-			ref.setReference(toResourceID(p.getText()));
+			ReferenceConstraint ref = new ReferenceConstraint(new SNResource());
+			ref.buildReferenceConstraint(toResourceID(p.getText()), false);
+//			ref.setReference(toResourceID(p.getText()));
 			c = ref;
 		}else if (CONSTRAINT_REFERENCE.equals(field)){
-			ReferenceConstraint ref = new ReferenceConstraint(new SNResource(toResourceID(p.getText()).getQualifiedName()));
-			ref.setIsPublic(true);
+			ReferenceConstraint ref = new ReferenceConstraint(new SNResource());
+			ref.buildReferenceConstraint(toResourceID(p.getText()), true);
+//			ReferenceConstraint ref = new ReferenceConstraint(new SNResource(toResourceID(p.getText()).getQualifiedName()));
+//			ref.setIsPublic(true);
 			c = ref;
 		}
 		return c;

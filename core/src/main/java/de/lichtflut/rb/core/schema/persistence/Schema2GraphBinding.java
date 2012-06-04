@@ -121,7 +121,7 @@ public class Schema2GraphBinding {
 			snDecl.setDatatype(decl.getDatatype(), RBSchema.CONTEXT);
 			setFieldLabels(snDecl, decl.getFieldLabelDefinition());
 			if(decl.hasConstraint()){
-				SNOPS.associate(snDecl, RBSchema.HAS_CONSTRAINT, decl.getConstraint().asResourceNode(), RBSchema.CONTEXT);
+				snDecl.setConstraint(decl.getConstraint(), RBSchema.CONTEXT);
 			}
 			if (null != predecessor) {
 				predecessor.setSuccessor(snDecl, RBSchema.CONTEXT);

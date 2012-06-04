@@ -209,12 +209,19 @@ public class PropertyRow implements Serializable {
 	 * @return the literalConstraint
 	 */
 	public String getLiteralConstraint() {
-		if (!hasConstraint()) {
+		if(decl.getConstraint() == null || !hasConstraint()){
 			return "";
 		}
+//		if (!hasConstraint()) {
+//			return "";
+//		}
 		String constraint = "";
 		if (!decl.getConstraint().holdsReference()) {
-			constraint = decl.getConstraint().getLiteralConstraint();
+			if(decl.getConstraint().isLiteral()){
+				constraint = decl.getConstraint().getLiteralConstraint();
+			}else{
+				constraint = decl.getConstraint().getReference().getQualifiedName().getSimpleName();
+			}
 		}
 		return constraint;
 	}

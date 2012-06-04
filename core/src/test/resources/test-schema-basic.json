@@ -13,12 +13,7 @@
     "applicable-datatypes" : "string, RICH_TEXT, text",
     "literal-constraint" : ".*@.*",
     "unknown-token-constraints" : "log me"
-  }, {
-    "id" : "constraints:Person",
-    "name" : "Person-Constraint",
-    "applicable-datatypes" : "resource",
-    "resource-constraint" : "common:Person"
-  } ]
+  }]
 }
 {
 	"ignore me" : "for I am unknown..."

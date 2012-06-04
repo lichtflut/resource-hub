@@ -21,7 +21,23 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 
 /**
  * <p>
- * Implementation of {@link Constraint} for resource- and public-literal-references.
+ * Implementation of {@link Constraint}.
+ * </p><p>
+ * All but public constraints shuold be constructed by using the appropriate <code>buildXXX</code> -methods
+ * to ensure integrity
+ * </p><p>
+ * Public-constraints must set the following properties:
+ * <ul><li>
+ * 	Name
+ * </li><li>
+ * 	literal constraint
+ * </li><li>
+ * 	isPublic
+ * </li><li>
+ * 	applicable Datatypes
+ * </li></ul>
+ * </p>
+ * 
  * 
  * </p>
  * Created: May 25, 2012
@@ -55,6 +71,16 @@ public class ReferenceConstraint implements Constraint {
 
 	// ------------------------------------------------------
 
+	public void buildReferenceConstraint(ResourceID reference, boolean isLiteralReference){
+		this.setIsPublic(false);
+		this.setReference(reference);
+	}
+	
+	public void buildLiteralConstraint(String pattern){
+		this.setIsPublic(false);
+		this.setLiteralConstraint(pattern);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -84,6 +110,9 @@ public class ReferenceConstraint implements Constraint {
 		if(!isFirstLvlLiteral){
 			if(holdsReference()){
 				return new ReferenceConstraint(getReference().asResource()).getLiteralConstraint();
+			}
+			if(!isLiteral()){
+				return getReference().toURI();
 			}
 		}
 		if(isLiteral()){

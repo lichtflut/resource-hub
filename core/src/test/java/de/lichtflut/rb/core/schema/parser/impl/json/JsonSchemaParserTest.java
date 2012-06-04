@@ -68,7 +68,7 @@ public class JsonSchemaParserTest {
 	@Test
 	public void testParse() throws IOException {
 		ParsedElements elements = parser.parse(in);
-		assertEquals("Number of public-constraints is not as expected", 2, elements.getConstraints().size());
+		assertEquals("Number of public-constraints is not as expected", 1, elements.getConstraints().size());
 		assertEquals("Number of ResourceSChemas not as expected.", 1, elements.getSchemas().size());
 		assertSchema(elements.getSchemas().get(0));
 		assertConstraints(elements.getConstraints());
@@ -78,7 +78,6 @@ public class JsonSchemaParserTest {
 	
 	private void assertConstraints(List<Constraint> list) {
 		assertLiteralConstraint(list.get(0));
-		assertResourceConstraint(list.get(1));
 	}
 
 	private void assertLiteralConstraint(Constraint constraint) {
@@ -95,19 +94,6 @@ public class JsonSchemaParserTest {
 		assertThat(constraint.isPublic(), is(Boolean.TRUE));
 	}
 	
-	private void assertResourceConstraint(Constraint constraint) {
-		ResourceID resourceConstr = new SimpleResourceID("http://test.com/common#Person");
-		String name = "Person-Constraint";
-		
-		assertThat(constraint.isPublic(), is(Boolean.TRUE));
-		assertThat(constraint.getReference(), notNullValue());
-		assertThat(constraint.getApplicableDatatypes(), notNullValue());
-		assertThat(constraint.getName(), equalTo(resourceConstr.getQualifiedName().toURI()));
-		assertThat(constraint.getReference(), equalTo(resourceConstr));
-		assertThat(constraint.getLiteralConstraint(), equalTo(""));
-		assertThat(constraint.isPublic(), is(Boolean.TRUE));
-	}
-
 	private void assertSchema(ResourceSchema schema) {
 		ResourceID describedType = new SimpleResourceID("http://test.com/common#City");
 

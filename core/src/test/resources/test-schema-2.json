@@ -12,12 +12,7 @@
     "name" : "Email-Constraint",
     "applicable-datatypes" : "string, RICH_TEXT, text",
     "literal-constraint" : ".*@.*"
-  }, {
-    "id" : "constraints:Person",
-    "name" : "Person-Constraint",
-    "applicable-datatypes" : "resource",
-    "resource-constraint" : "common:Person"
-  } ]
+  }]
 }
 {
   "resource-schemas" : [ {
