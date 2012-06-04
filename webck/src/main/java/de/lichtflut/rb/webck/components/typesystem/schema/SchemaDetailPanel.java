@@ -29,6 +29,7 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
@@ -62,6 +63,7 @@ public class SchemaDetailPanel extends Panel{
 
 	private IModel<ResourceSchema> schema;
 	private PropertyRowListModel listModel;
+	
 
 	@SpringBean
 	private ServiceProvider provider;
@@ -98,7 +100,13 @@ public class SchemaDetailPanel extends Panel{
 	}
 	
 	protected void saveSchema(){
-		provider.getSchemaManager().store(schema.getObject());
+		ResourceSchemaImpl copy = new ResourceSchemaImpl();
+		copy.setDescribedType(schema.getObject().getDescribedType());
+		copy.setLabelBuilder(schema.getObject().getLabelBuilder());
+		for (PropertyRow row : listModel.getObject()) {
+			copy.addPropertyDeclaration(row.asPropertyDeclaration());
+		}
+		provider.getSchemaManager().store(copy);
 	}
 
 	// ------------------------------------------------------
