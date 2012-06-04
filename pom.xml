@@ -4,7 +4,7 @@
 	<groupId>de.lichtflut</groupId>
 	<artifactId>lf.resource-browser</artifactId>
 	<name>Resource Browser</name>
-	<version>0.4.0</version>
+	<version>0.4.1-SNAPSHOT</version>
 	<description>lichtflut Resource Browser Project</description>
 	<packaging>pom</packaging>
 	<modules>
@@ -232,6 +232,6 @@
 	</distributionManagement>
 	<scm>
 		<developerConnection>scm:git:git@github.com:lichtflut/rb-prototype.git</developerConnection>
-		<tag>RELEASE_0.4.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 </project>
