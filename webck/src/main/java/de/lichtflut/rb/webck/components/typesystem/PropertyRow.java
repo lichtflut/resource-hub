@@ -230,8 +230,10 @@ public class PropertyRow implements Serializable {
 	 * @param literalConstraint
 	 */
 	public void setLiteralConstraint(final String literalConstraint) {
-		LiteralConstraint constraint = new LiteralConstraint((ResourceNode)new SNResource());
-		constraint.setLiteralPattern(literalConstraint);
+		ReferenceConstraint constraint = new ReferenceConstraint();
+		constraint.buildLiteralConstraint(literalConstraint);
+//		LiteralConstraint constraint = new LiteralConstraint((ResourceNode)new SNResource());
+//		constraint.setLiteralPattern(literalConstraint);
 		decl.setConstraint(constraint);
 	}
 

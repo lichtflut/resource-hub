@@ -38,6 +38,7 @@ public class ConstraintsFactory {
 		constraint.setDatatypes(datatypes);
 		constraint.setName("Email-Address");
 		constraint.setLiteralConstraint(".*@.*");
+		constraint.setIsPublic(true);
 		return constraint;
 	}
 	
@@ -56,9 +57,9 @@ public class ConstraintsFactory {
 	}
 	
 	
-	public static Constraint buildPublicTypeConstraint(ResourceID type){
-		ReferenceConstraint constraint = new ReferenceConstraint((ResourceNode) new SNResource());
-		constraint.setReference(type);
+	public static Constraint buildTypeConstraint(ResourceID type){
+		ReferenceConstraint constraint = new ReferenceConstraint();
+		constraint.buildReferenceConstraint(type, false);
 		return constraint;
 	}
 	

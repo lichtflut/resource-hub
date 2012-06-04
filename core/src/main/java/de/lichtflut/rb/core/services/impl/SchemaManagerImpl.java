@@ -131,7 +131,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	@Override
 	public Collection<Constraint> findPublicConstraints() {
 		final List<Constraint> result = new ArrayList<Constraint>();
-		final List<ResourceNode> nodes = gate().createQueryManager().findByType(RBSchema.PROPERTY_CONSTRAINT);
+		final List<ResourceNode> nodes = gate().createQueryManager().findByType(RBSchema.PUBLIC_CONSTRAINT);
 		for (ResourceNode node : nodes) {
 			final Constraint constraint = new ReferenceConstraint(node);
 			if (constraint.isPublic()) {

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -58,11 +59,11 @@ public class ReferenceConstraint implements Constraint {
 	public ReferenceConstraint(ResourceNode node) {
 		this.node = node;
 		// SET public default false
-		if(0 == node.getAssociations().size()){
-			setIsPublic(true);
-//			isLiteral(false);
-//			holdsReference(true);
-		}
+//		if(0 == node.getAssociations().size()){
+//			setIsPublic(true);
+////			isLiteral(false);
+////			holdsReference(true);
+//		}
 	}
 	
 	public ReferenceConstraint() {
@@ -169,6 +170,11 @@ public class ReferenceConstraint implements Constraint {
 
 	public void setIsPublic(boolean isPublic) {
 		SNOPS.assure(node, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(isPublic), ctx);
+		if(isPublic){
+			SNOPS.assure(node, RDF.TYPE, RBSchema.PUBLIC_CONSTRAINT, ctx);
+		}else{
+			SNOPS.remove(node, RDF.TYPE);
+		}
 	}
 	
 	/**

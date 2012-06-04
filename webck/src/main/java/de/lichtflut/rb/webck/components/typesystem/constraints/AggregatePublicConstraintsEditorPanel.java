@@ -4,7 +4,6 @@
 package de.lichtflut.rb.webck.components.typesystem.constraints;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -17,7 +16,6 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 import de.lichtflut.rb.webck.components.typesystem.TypeSystemHelpPanel;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.types.PublicConstraintsListModel;
 
 /**
@@ -57,14 +55,15 @@ public class AggregatePublicConstraintsEditorPanel extends Panel {
 	protected void displayConstraintEditor(final Constraint constraint) {
 		final Constraint reloaded = schemaManager().findConstraint(constraint.asResourceNode());
 		final IModel<PropertyRow> model = Model.of(new PropertyRow(reloaded));
-		final ConstraintEditorPanel editor = new ConstraintEditorPanel("editor", model) {
-			@Override
-			public void onSave(final AjaxRequestTarget target) {
-				final Constraint constraint = PropertyRow.toPublicConstraint(model.getObject());
-				schemaManager().store(constraint);
-				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Constraint>(constraint, ModelChangeEvent.PUBLIC_TYPE_DEFINITION));
-			}
-		};
+//		final ConstraintEditorPanel editor = new ConstraintEditorPanel("editor", model) {
+//			@Override
+//			public void onSave(final AjaxRequestTarget target) {
+//				final Constraint constraint = PropertyRow.toPublicConstraint(model.getObject());
+//				schemaManager().store(constraint);
+//				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Constraint>(constraint, ModelChangeEvent.PUBLIC_TYPE_DEFINITION));
+//			}
+//		};
+		final Panel editor = new ConstraintsEditorPanel("editor", model);
 		replace(editor);
 		RBAjaxTarget.add(editor);
 	}

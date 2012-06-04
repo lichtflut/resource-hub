@@ -97,7 +97,11 @@ public class JsonSchemaWriterTest {
 	private void assertPropertyDeclaration(PropertyDeclaration propertyDeclaration,PropertyDeclaration original) {
 		assertThat(propertyDeclaration.getCardinality().getMinOccurs(), is(original.getCardinality().getMinOccurs()));
 		assertThat(propertyDeclaration.getCardinality().getMaxOccurs(), is(original.getCardinality().getMaxOccurs()));
-		assertThat(propertyDeclaration.getConstraint().getReference(), equalTo(original.getConstraint().getReference()));
+		if(propertyDeclaration.getConstraint().isLiteral()){
+			assertThat(propertyDeclaration.getConstraint().getLiteralConstraint(), equalTo(original.getConstraint().getLiteralConstraint()));
+		}else{
+			assertThat(propertyDeclaration.getConstraint().getReference(), equalTo(original.getConstraint().getReference()));
+		}
 		assertThat(propertyDeclaration.getFieldLabelDefinition().getDefaultLabel(), equalTo(original.getFieldLabelDefinition().getDefaultLabel()));
 		assertThat(propertyDeclaration.getPropertyDescriptor().toURI(), equalTo(original.getPropertyDescriptor().toURI()));
 	}

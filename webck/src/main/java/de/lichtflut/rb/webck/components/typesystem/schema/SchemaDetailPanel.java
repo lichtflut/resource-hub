@@ -12,6 +12,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableChoiceLabel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
+import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableMultiLineLabel;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -29,6 +30,9 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
+import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
@@ -75,11 +79,13 @@ public class SchemaDetailPanel extends Panel{
 		Form form = new Form("form");
 		add(createTitleLabel("title"));
 		add(new TypeHierarchyPanel("typeHierarchy", Model.of(schema.getObject().getDescribedType())));
+		form.add(createLabelExpressionBuilder());
 		form.add(createListView("listView", this.schema));
 		addButtonBar(form);
 		add(form);
 	}
 	
+
 	// ------------------------------------------------------
 	
 	protected void saveAndUpdate() {
@@ -104,6 +110,28 @@ public class SchemaDetailPanel extends Panel{
 	 */
 	private Component createTitleLabel(String id) {
 		return new Label(id, Model.of(schema.getObject().getDescribedType()));
+	}
+	
+	private Component createLabelExpressionBuilder() {
+		final Model<String> model = Model.of(schema.getObject().getLabelBuilder().getExpression());
+		AjaxEditableMultiLineLabel<String> editor = new AjaxEditableMultiLineLabel<String>("labelExpression", model){
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target)
+			{
+				ResourceSchemaImpl copy = (ResourceSchemaImpl) schema.getObject();
+				try {
+					copy.setLabelBuilder(new ExpressionBasedLabelBuilder(model.getObject()));
+				} catch (LabelExpressionParseException e) {
+					error(getString("error-label-exception"));
+				}
+				schema.setObject(copy);
+				getLabel().setVisible(true);
+				getEditor().setVisible(false);
+				target.add(this);
+				target.appendJavaScript("window.status='';");
+			}
+		};
+		return editor;
 	}
 	
 	/**

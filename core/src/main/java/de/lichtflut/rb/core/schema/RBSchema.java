@@ -56,7 +56,7 @@ public interface RBSchema {
 	/**
 	 * Each PropertyDeclaration has to be a type of this.
 	 */
-	ResourceID PROPERTY_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "PropertyConstraint");
+	ResourceID PUBLIC_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "PublicConstraint");
 	
 	// -- PROPERTIES --------------------------------------
 

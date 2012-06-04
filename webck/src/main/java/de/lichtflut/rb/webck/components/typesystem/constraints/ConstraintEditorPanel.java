@@ -21,7 +21,7 @@ import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 /**
  * 
  * <p>
- *  Panel for editing a Type Definition.
+ *  Panel for editing a Constraint.
  * </p>
  *
  * <p>

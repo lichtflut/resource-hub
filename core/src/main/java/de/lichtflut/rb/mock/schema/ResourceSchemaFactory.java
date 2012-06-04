@@ -36,9 +36,9 @@ public class ResourceSchemaFactory {
 		PropertyDeclaration	email = new PropertyDeclarationImpl(RBMock.HAS_EMAIL, Datatype.STRING);
 		PropertyDeclaration children = new PropertyDeclarationImpl(RBMock.HAS_CHILD_NODE, Datatype.RESOURCE);
 
-		address.setConstraint(ConstraintsFactory.buildPublicTypeConstraint(RBMock.ADDRESS));
+		address.setConstraint(ConstraintsFactory.buildTypeConstraint(RBMock.ADDRESS));
 		email.setConstraint(ConstraintsFactory.buildPublicEmailConstraint());
-		children.setConstraint(ConstraintsFactory.buildPublicTypeConstraint(RBMock.PERSON));
+		children.setConstraint(ConstraintsFactory.buildTypeConstraint(RBMock.PERSON));
 
 		firstname.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		lastname.setCardinality(CardinalityBuilder.hasExcactlyOne());
