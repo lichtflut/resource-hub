@@ -127,8 +127,7 @@ public class ConstraintsEditorPanel extends Panel {
 	 * Adds a {@link ClassPickerField} for resource-constraints.
 	 */
 	private void addClassPicker(final IModel<PropertyRow> model, Form<?> form) {
-		final ClassPickerField resourceConstraint = new ClassPickerField("resourceConstraint",
-				new PropertyModel<ResourceID>(model, "resourceConstraint"));
+		final ClassPickerField resourceConstraint = new ClassPickerField("resourceConstraint", new PropertyModel<ResourceID>(model, "resourceConstraint"));
 		resourceConstraint.add(visibleIf(areEqual(constraintType, ConstraintType.RESOURCE)));
 		form.add(resourceConstraint);
 	}
