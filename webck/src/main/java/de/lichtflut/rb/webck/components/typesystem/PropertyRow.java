@@ -210,9 +210,6 @@ public class PropertyRow implements Serializable {
 		if(decl.getConstraint() == null || !hasConstraint()){
 			return "";
 		}
-//		if (!hasConstraint()) {
-//			return "";
-//		}
 		String constraint = "";
 		if (!decl.getConstraint().holdsReference()) {
 			if(decl.getConstraint().isLiteral()){
@@ -230,11 +227,13 @@ public class PropertyRow implements Serializable {
 	public void setLiteralConstraint(final String literalConstraint) {
 		ReferenceConstraint constraint = new ReferenceConstraint();
 		constraint.buildLiteralConstraint(literalConstraint);
-//		LiteralConstraint constraint = new LiteralConstraint((ResourceNode)new SNResource());
-//		constraint.setLiteralPattern(literalConstraint);
 		decl.setConstraint(constraint);
 	}
 
+	public void clearConstraint(){
+		decl.setConstraint(null);
+	}
+	
 	/**
 	 * @return the resourceConstraint
 	 */

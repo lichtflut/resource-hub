@@ -297,6 +297,7 @@ public class SchemaDetailPanel extends Panel{
 				Arrays.asList(Datatype.values())) {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target) {
+				item.getModelObject().clearConstraint();
 				updatePanel();
 				super.onSubmit(target);
 			}
@@ -403,7 +404,7 @@ public class SchemaDetailPanel extends Panel{
 	}
 
 	/**
-	 * Adds a colorcode to the table for better usability.
+	 * Adds a color-code to the table for better usability.
 	 * @param item
 	 */
 	private void addColorCode(ListItem<PropertyRow> item) {
