@@ -38,7 +38,7 @@ public class ConstraintsFactory {
 		constraint.setApplicableDatatypes(datatypes);
 		constraint.setName("Email-Address");
 		constraint.setLiteralConstraint(".*@.*");
-		constraint.setIsPublic(true);
+		constraint.isPublic(true);
 		return constraint;
 	}
 	

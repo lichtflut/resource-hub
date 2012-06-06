@@ -129,7 +129,6 @@ public class EditPropertyDeclPanel extends Panel {
 	
 	/**
 	 * Add Infopanel
-	 * @param form
 	 */
 	private void addInfo(IModel<String> model) {
 		Label label = new Label("info", model);
@@ -141,12 +140,7 @@ public class EditPropertyDeclPanel extends Panel {
 	 */
 	private void addProperties(Form<?> form, IModel<PropertyRow> decl) {
 		addInfo(Model.of(""));
-		IModel<PropertyRow> constraintsModel = new PropertyModel<PropertyRow>(decl, "literalConstraint");
-		if (decl.getObject().hasConstraint()) {
-			if (null != decl.getObject().getResourceConstraint()) {
-				constraintsModel = new PropertyModel<PropertyRow>(decl, "resourceReference");
-			}
-		}
+		
 		Component propertyDescriptorField = new PropertyPickerField("propertyDescriptor", new PropertyModel<ResourceID>(decl, "propertyDescriptor"));
 		
 		TextField<String> fieldLabelTField = new TextField<String>("fieldLabel", new PropertyModel<String>(decl, "defaultLabel"));

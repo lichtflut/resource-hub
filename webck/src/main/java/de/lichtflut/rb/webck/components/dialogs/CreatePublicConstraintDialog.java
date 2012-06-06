@@ -44,7 +44,7 @@ public class CreatePublicConstraintDialog extends AbstractCreateResourceDialog {
 		final Constraint constraint = provider.getSchemaManager().
 				prepareConstraint(qn, qn.getSimpleName());
 		send(getPage(), Broadcast.BREADTH, 
-				new ModelChangeEvent<Constraint>(constraint, ModelChangeEvent.PUBLIC_TYPE_DEFINITION));
+				new ModelChangeEvent<Constraint>(constraint, ModelChangeEvent.PUBLIC_CONSTRAINT));
 	}
 
 }

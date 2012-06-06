@@ -33,7 +33,7 @@ public class ModelChangeEvent<T> {
 	
 	public static final String PROPERTY = "property";
 	
-	public static final String PUBLIC_TYPE_DEFINITION = "public-type-def";
+	public static final String PUBLIC_CONSTRAINT = "public-type-def";
 	
 	public static final String ENTITY = "entity";
 	

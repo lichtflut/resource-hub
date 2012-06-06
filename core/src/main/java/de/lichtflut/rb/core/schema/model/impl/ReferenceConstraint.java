@@ -58,12 +58,6 @@ public class ReferenceConstraint implements Constraint {
 	 */
 	public ReferenceConstraint(ResourceNode node) {
 		this.node = node;
-		// SET public default false
-//		if(0 == node.getAssociations().size()){
-//			setIsPublic(true);
-////			isLiteral(false);
-////			holdsReference(true);
-//		}
 	}
 	
 	public ReferenceConstraint() {
@@ -73,12 +67,12 @@ public class ReferenceConstraint implements Constraint {
 	// ------------------------------------------------------
 
 	public void buildReferenceConstraint(ResourceID reference, boolean isLiteralReference){
-		this.setIsPublic(false);
+		this.isPublic(false);
 		this.setReference(reference);
 	}
 	
 	public void buildLiteralConstraint(String pattern){
-		this.setIsPublic(false);
+		this.isPublic(false);
 		this.setLiteralConstraint(pattern);
 	}
 	
@@ -117,19 +111,15 @@ public class ReferenceConstraint implements Constraint {
 			}
 		}
 		if(isLiteral()){
+			SemanticNode constraint = SNOPS.singleObject(node, RBSchema.HAS_CONSTRAINT_VALUE);
+			if(constraint == null){
+				return "";
+			}
 			return SNOPS.singleObject(node, RBSchema.HAS_CONSTRAINT_VALUE).asValue().getStringValue();
 		} else{
 			return "";
 		}
 		
-		
-//		if(holdsReference() && isLiteral()){
-//			Constraint c = resolveReference();
-//			if(c != null){
-//				return c.getLiteralConstraint();
-//			}
-//		}
-//		return SNOPS.singleObject(node, RBSchema.HAS_CONSTRAINT_VALUE).asValue().getStringValue();
 	}
 
 	public void setLiteralConstraint(String pattern){
@@ -168,7 +158,7 @@ public class ReferenceConstraint implements Constraint {
 		return isPublicNode.asValue().getBooleanValue();
 	}
 
-	public void setIsPublic(boolean isPublic) {
+	public void isPublic(boolean isPublic) {
 		SNOPS.assure(node, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(isPublic), ctx);
 		if(isPublic){
 			SNOPS.assure(node, RDF.TYPE, RBSchema.PUBLIC_CONSTRAINT, ctx);
@@ -186,13 +176,8 @@ public class ReferenceConstraint implements Constraint {
 		if(isReferenceNode == null){
 			return false;
 		}
-//		return isReferenceNode.asValue().getBooleanValue();
 		return true;
 	}
-//
-//	public void holdsReference(boolean holdsReference) {
-//		SNOPS.assure(node, RBSchema.IS_RESOURCE_CONSTRAINT, new SNBoolean(holdsReference), ctx);
-//	}
 	
 	/**
 	 * {@inheritDoc}
@@ -230,7 +215,6 @@ public class ReferenceConstraint implements Constraint {
 			return true;
 		}
 		return false;
-		//return SNOPS.singleObject(node, RBSchema.IS_LITERAL_CONSTRAINT).asValue().getBooleanValue();
 	}
 	
 	/**
@@ -241,9 +225,4 @@ public class ReferenceConstraint implements Constraint {
 		return node;
 	}
 	
-	// ------------------------------------------------------
-	
-	private Constraint resolveReference() {
-		return null;
-	}
 }

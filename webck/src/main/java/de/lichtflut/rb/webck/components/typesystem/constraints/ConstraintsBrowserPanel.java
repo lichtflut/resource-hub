@@ -81,7 +81,7 @@ public abstract class ConstraintsBrowserPanel extends Panel {
 	@Override
 	public void onEvent(final IEvent<?> event) {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
-		if (mce.isAbout(ModelChangeEvent.PUBLIC_TYPE_DEFINITION)) {
+		if (mce.isAbout(ModelChangeEvent.PUBLIC_CONSTRAINT)) {
 			model.reset();
 			RBAjaxTarget.add(this);
 		}

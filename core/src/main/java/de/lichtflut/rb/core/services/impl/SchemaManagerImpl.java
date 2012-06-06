@@ -212,6 +212,8 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 		final ReferenceConstraint constraint = new ReferenceConstraint(new SNResource(qn));
 		constraint.setApplicableDatatypes(Collections.singletonList(Datatype.STRING));
 		constraint.setName(displayName);
+		constraint.isPublic(true);
+		constraint.setLiteralConstraint("*");
 		store(constraint);
 		return constraint;
 	}

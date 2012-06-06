@@ -169,7 +169,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 //				refConstr.isLiteral(true);
 				refConstr.setApplicableDatatypes(datatypes);
 				refConstr.setName(name);
-				refConstr.setIsPublic(true);
+				refConstr.isPublic(true);
 //				refConstr.holdsReference(false);
 				refConstr.setLiteralConstraint(referenceHolder.getLiteralConstraint());
 				result.add(refConstr);
