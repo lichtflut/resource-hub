@@ -307,7 +307,7 @@ public class SchemaDetailPanel extends Panel{
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void addContraintsDecl(ListItem<PropertyRow> item) {
+	private void addContraintsDecl(final ListItem<PropertyRow> item) {
 		IModel model = null;
 		AjaxEditableLabel field = null;
 		if(null != item.getModelObject().getResourceConstraint()) {
@@ -317,6 +317,11 @@ public class SchemaDetailPanel extends Panel{
 				protected WebComponent newLabel(final MarkupContainer parent, final String componentId,
 						final IModel model) {
 					Label label = buildFieldLabelFromResourceID(componentId, model);
+//					if(null == item.getModelObject().getLiteralConstraint()){
+//						addTitleAttribute(Model.of(item.getModel().getObject().getResourceConstraint()), label);
+//					}else{
+//						addTitleAttribute(Model.of(item.getModelObject().getLiteralConstraint()), label);
+//					}
 					label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
 					label.setOutputMarkupId(true);
 					return label;

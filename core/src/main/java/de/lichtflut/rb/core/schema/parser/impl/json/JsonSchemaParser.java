@@ -167,7 +167,7 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				referenceHolder = getConstraintFromString(p, field);
 				ReferenceConstraint refConstr = new ReferenceConstraint(new SNResource(id.getQualifiedName()));
 //				refConstr.isLiteral(true);
-				refConstr.setDatatypes(datatypes);
+				refConstr.setApplicableDatatypes(datatypes);
 				refConstr.setName(name);
 				refConstr.setIsPublic(true);
 //				refConstr.holdsReference(false);

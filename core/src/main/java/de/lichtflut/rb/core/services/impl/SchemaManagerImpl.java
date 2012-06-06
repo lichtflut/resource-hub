@@ -178,6 +178,8 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 			logger.info("Removed schema for type {}.", type);
 		}
 	}
+	
+	
 
 	/** 
 	 * {@inheritDoc}
@@ -186,11 +188,20 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	public void store(final Constraint constraint) {
 		Validate.isTrue(constraint.isPublic(), "Only public type definition may be stopred explicitly.");
 		final ModelingConversation mc = mc();
+		remove(constraint);
+		mc.attach(constraint.asResourceNode());
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void remove(Constraint constraint){
+		final ModelingConversation mc = mc();
 		final ResourceNode existing = mc.findResource(constraint.asResourceNode().getQualifiedName());
-		if (existing != null) {
+		if(null != existing){
 			mc.remove(existing);
 		}
-		mc.attach(constraint.asResourceNode());
 	}
 	
 	/** 
@@ -199,7 +210,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	@Override
 	public Constraint prepareConstraint(final QualifiedName qn, final String displayName) {
 		final ReferenceConstraint constraint = new ReferenceConstraint(new SNResource(qn));
-		constraint.setDatatypes(Collections.singletonList(Datatype.STRING));
+		constraint.setApplicableDatatypes(Collections.singletonList(Datatype.STRING));
 		constraint.setName(displayName);
 		store(constraint);
 		return constraint;

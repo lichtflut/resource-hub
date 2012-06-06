@@ -63,7 +63,8 @@ public class AggregatePublicConstraintsEditorPanel extends Panel {
 //				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Constraint>(constraint, ModelChangeEvent.PUBLIC_TYPE_DEFINITION));
 //			}
 //		};
-		final Panel editor = new ConstraintsEditorPanel("editor", model);
+//		final Panel editor = new ConstraintsEditorPanel("editor", model);
+		final Panel editor = new PublicConstraintsDetailPanel("editor", Model.of(model.getObject().asPropertyDeclaration().getConstraint()));
 		replace(editor);
 		RBAjaxTarget.add(editor);
 	}

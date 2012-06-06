@@ -73,6 +73,11 @@ public interface SchemaManager {
 	void store(Constraint constraint);
 	
 	/**
+	 * Remove the given {@link Constraint}.
+	 * @param constraint - the Constraint to be removed
+	 */
+	void remove(Constraint constraint);
+	/**
 	 * Prepare a transient Type Definition.
 	 * @param qn The qualified name.
 	 * @param displayName The display name.

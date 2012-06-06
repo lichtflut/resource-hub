@@ -35,7 +35,7 @@ public class ConstraintsFactory {
 		datatypes.add(Datatype.TEXT);
 		datatypes.add(Datatype.RICH_TEXT);
 		ReferenceConstraint constraint= new ReferenceConstraint(new SNResource(qn));
-		constraint.setDatatypes(datatypes);
+		constraint.setApplicableDatatypes(datatypes);
 		constraint.setName("Email-Address");
 		constraint.setLiteralConstraint(".*@.*");
 		constraint.setIsPublic(true);

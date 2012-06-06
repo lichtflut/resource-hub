@@ -206,7 +206,10 @@ public class ReferenceConstraint implements Constraint {
 		return datatypes;
 	}
 
-	public void setDatatypes(List<Datatype> datatypes) {
+	public void setApplicableDatatypes(List<Datatype> datatypes) {
+		for (SemanticNode snType : SNOPS.objects(node, RBSchema.HAS_DATATYPE)) {
+			SNOPS.remove(this.asResourceNode(), RBSchema.HAS_DATATYPE, snType);
+		}
 		for (Datatype datatype : datatypes) {
 			SNOPS.associate(node, RBSchema.HAS_DATATYPE, new SNText(datatype.name()), ctx);
 		}

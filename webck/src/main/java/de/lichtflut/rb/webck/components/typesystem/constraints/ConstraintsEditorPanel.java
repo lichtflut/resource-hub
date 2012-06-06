@@ -38,7 +38,7 @@ import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
  */
 public class ConstraintsEditorPanel extends Panel {
 
-	private IModel<ConstraintType> constraintType = Model.of(ConstraintType.LITERAL);
+	private IModel<ConstraintType> constraintType;
 
 	// ---------------- Constructor -------------------------
 
@@ -47,12 +47,8 @@ public class ConstraintsEditorPanel extends Panel {
 	 */
 	public ConstraintsEditorPanel(final String id, final IModel<PropertyRow> model) {
 		super(id, model);
+		initConstraintType(model);
 
-		if (model.getObject().isResourceReference()) {
-			constraintType.setObject(ConstraintType.RESOURCE);
-		}
-
-		
 		Form<?> form = new Form<Void>("form");
 		addComponents(model, form);
 		
@@ -76,6 +72,16 @@ public class ConstraintsEditorPanel extends Panel {
 		// // .add(visibleIf(isFalse(isResourceReferenceModel))));
 		setOutputMarkupId(true);
 	}
+	
+	// ------------------------------------------------------
+
+	private void initConstraintType(final IModel<PropertyRow> model) {
+		if (null == model.getObject().getLiteralConstraint()) {
+			constraintType = Model.of(ConstraintType.RESOURCE);
+		}else{
+			constraintType = Model.of(ConstraintType.LITERAL);
+		}
+	}
 
 	// ------------------------------------------------------
 	
@@ -96,8 +102,8 @@ public class ConstraintsEditorPanel extends Panel {
 				RBAjaxTarget.add(ConstraintsEditorPanel.this);
 			}
 		};
-		switchToLiteralLink.add(visibleIf(areEqual(constraintType, ConstraintType.LITERAL)));
-		switchToLiteralLink.add(new Label("switchToLiteral", new ResourceModel("switch-to-resource")));
+		switchToLiteralLink.add(visibleIf(areEqual(constraintType, ConstraintType.RESOURCE)));
+		switchToLiteralLink.add(new Label("switchToLiteral", new ResourceModel("switch-to-literal")));
 
 		AjaxLink<String> switchToResourceLink = new AjaxLink<String>("switchToResource") {
 			@Override
@@ -106,8 +112,8 @@ public class ConstraintsEditorPanel extends Panel {
 				RBAjaxTarget.add(ConstraintsEditorPanel.this);
 			}
 		};
-		switchToResourceLink.add(visibleIf(areEqual(constraintType, ConstraintType.RESOURCE)));
-		switchToResourceLink.add(new Label("switchToResource", new ResourceModel("switch-to-literal")));
+		switchToResourceLink.add(visibleIf(areEqual(constraintType, ConstraintType.LITERAL)));
+		switchToResourceLink.add(new Label("switchToResource", new ResourceModel("switch-to-resource")));
 		
 		form.add(switchToLiteralLink);
 		form.add(switchToResourceLink);
