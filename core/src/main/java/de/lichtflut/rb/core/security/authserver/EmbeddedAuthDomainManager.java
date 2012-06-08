@@ -18,6 +18,7 @@ import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -79,7 +80,10 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	@Override
 	public RBDomain findDomain(String domain) {
 		final ResourceNode domainNode = findDomainNode(domain);
-		return new RBDomain(domainNode);
+		if(domainNode!=null){
+			return new RBDomain(domainNode);
+		}
+		return null;
 	}
 
 	/** 
@@ -122,7 +126,11 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	 */
 	@Override
 	public void deleteDomain(RBDomain domain) {
-		throw new NotYetImplementedException();
+		ModelingConversation mc = mc();
+		ResourceID domainNode = findDomainNode(domain.getName());
+		if(domainNode!=null){
+			mc.remove(domainNode);
+		}
 	}
 	
 	// ----------------------------------------------------

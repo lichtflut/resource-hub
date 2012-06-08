@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.AuthenticationService;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.core.services.ServiceProviderFactory;
 import de.lichtflut.rb.rest.api.security.AuthorizationHandler;
 import de.lichtflut.rb.rest.api.security.OperationTypes;
 
@@ -45,7 +45,10 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	 * RB-Services to get this service running.
 	 */
 	@Autowired
-	protected ServiceProviderFactory providerFactory;
+	protected ServiceProvider provider;
+	
+	@Autowired
+	protected AuthModule authModule;
 
 	/**
 	 * 
@@ -53,7 +56,6 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	 * @return
 	 */
 	protected ServiceProvider getProvider(String domainID, RBUser user) {
-		ServiceProvider provider = providerFactory.create();
 		provider.getContext().setDomain(domainID);
 		provider.getContext().setUser(user);
 		return provider;
@@ -66,7 +68,7 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	protected RBUser authenticateUser(String token) {
 		RBUser user=null;
 		if (token != null) {
-			AuthenticationService authService = providerFactory.createAuthenticationService();
+			AuthenticationService authService = authModule.getAuthenticationService();
 			user = authService.loginByToken(token);
 		}
 		if (user == null) {

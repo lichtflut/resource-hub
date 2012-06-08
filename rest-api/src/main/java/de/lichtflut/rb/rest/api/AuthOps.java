@@ -38,7 +38,7 @@ public class AuthOps extends RBServiceEndpoint {
 		loginData.setPassword(loginUser.getPassword());
 		Response rsp;
 		try {
-			AuthenticationService authService = providerFactory.createAuthenticationService();
+			AuthenticationService authService = authModule.getAuthenticationService();
 			RBUser user = authService.login(loginData);
 			String token = authService.createRememberMeToken(user, loginData);
 			rsp = Response.status(Response.Status.OK).entity(token).build();

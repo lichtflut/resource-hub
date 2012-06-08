@@ -1,29 +1,29 @@
 Manifest-Version: 1.0
 Class-Path: activation-1.1.jar antisamy-1.4.5.jar antlr-2.7.7.jar antl
  r-3.1.3.jar antlr-runtime-3.1.3.jar aopalliance-1.0.jar arastreju.neo
- 4j.jar arastreju.ogm.jar arastreju.sge.jar asm-3.1.jar batik-css-1.7.
- jar batik-ext-1.7.jar batik-util-1.7.jar cglib-2.2.2.jar commons-code
- c-1.2.jar commons-httpclient-3.1.jar commons-lang3-3.0.1.jar commons-
- logging-1.1.1.jar geronimo-jta_1.1_spec-1.1.1.jar jackson-core-asl-1.
- 9.0.jar jackson-jaxrs-1.7.1.jar jackson-mapper-asl-1.9.3.jar jackson-
- xc-1.7.1.jar jaxb-api-2.2.2.jar jaxb-impl-2.2.3-1.jar jersey-core-1.8
- .jar jersey-json-1.8.jar jersey-server-1.8.jar jersey-spring-1.8.jar 
- jettison-1.1.jar js-1.7R2.jar jxl-2.6.12.jar lf.foundation.infra-1.1.
- 1.jar lf.resource-browser.core.jar lf.resource-browser.rest-api.jar l
- f.resource-browser.webck.jar log4j-1.2.14.jar lucene-core-3.5.0.jar m
- ail-1.4.jar nekohtml-1.9.12.jar neo4j-1.6.jar neo4j-cypher-1.6.jar ne
- o4j-graph-algo-1.6.jar neo4j-graph-matching-1.6.jar neo4j-jmx-1.6.jar
-  neo4j-kernel-1.6.jar neo4j-lucene-index-1.6.jar neo4j-udc-1.6.jar sc
- ala-library-2.9.0-1.jar servlet-api-2.5.jar sesame-model-2.6.1.jar se
- same-rio-api-2.6.1.jar sesame-rio-n3-2.6.1.jar sesame-rio-rdfxml-2.6.
- 1.jar sesame-rio-turtle-2.6.1.jar sesame-util-2.6.1.jar slf4j-api-1.6
- .1.jar slf4j-log4j12-1.6.1.jar spring-aop-2.5.6.SEC03.jar spring-asm-
- 3.1.0.RELEASE.jar spring-beans-3.1.0.RELEASE.jar spring-context-3.1.0
- .RELEASE.jar spring-core-3.1.0.RELEASE.jar spring-expression-3.1.0.RE
- LEASE.jar spring-web-3.1.0.RELEASE.jar stax-api-1.0-2.jar stax-api-1.
- 0.1.jar stringtemplate-3.2.jar wicket-core-1.5.4.jar wicket-extension
- s-1.5.4.jar wicket-ioc-1.5.4.jar wicket-request-1.5.4.jar wicket-spri
- ng-1.5.4.jar wicket-util-1.5.4.jar wiquery-core-1.5.4.jar wiquery-jqu
- ery-ui-1.5.4.jar xercesImpl-2.8.1.jar xml-apis-1.3.03.jar xml-apis-ex
- t-1.3.04.jar
+ 4j-0.7.1-SNAPSHOT.jar arastreju.ogm-0.7.1-SNAPSHOT.jar arastreju.sge-
+ 0.7.1-SNAPSHOT.jar asm-3.1.jar batik-css-1.7.jar batik-ext-1.7.jar ba
+ tik-util-1.7.jar cglib-2.2.2.jar commons-codec-1.2.jar commons-httpcl
+ ient-3.1.jar commons-lang3-3.0.1.jar commons-logging-1.1.1.jar geroni
+ mo-jta_1.1_spec-1.1.1.jar jackson-core-asl-1.9.0.jar jackson-jaxrs-1.
+ 7.1.jar jackson-mapper-asl-1.9.3.jar jackson-xc-1.7.1.jar jaxb-api-2.
+ 2.2.jar jaxb-impl-2.2.3-1.jar jersey-core-1.8.jar jersey-json-1.8.jar
+  jersey-server-1.8.jar jersey-spring-1.8.jar jettison-1.1.jar js-1.7R
+ 2.jar jxl-2.6.12.jar lf.foundation.infra-1.1.1.jar lf.resource-browse
+ r.core.jar lf.resource-browser.rest-api.jar lf.resource-browser.webck
+ .jar log4j-1.2.14.jar lucene-core-3.5.0.jar mail-1.4.jar nekohtml-1.9
+ .12.jar neo4j-1.6.jar neo4j-cypher-1.6.jar neo4j-graph-algo-1.6.jar n
+ eo4j-graph-matching-1.6.jar neo4j-jmx-1.6.jar neo4j-kernel-1.6.jar ne
+ o4j-lucene-index-1.6.jar neo4j-udc-1.6.jar scala-library-2.9.0-1.jar 
+ servlet-api-2.5.jar sesame-model-2.6.1.jar sesame-rio-api-2.6.1.jar s
+ esame-rio-n3-2.6.1.jar sesame-rio-rdfxml-2.6.1.jar sesame-rio-turtle-
+ 2.6.1.jar sesame-util-2.6.1.jar slf4j-api-1.6.1.jar slf4j-log4j12-1.6
+ .1.jar spring-aop-2.5.6.SEC03.jar spring-asm-3.1.0.RELEASE.jar spring
+ -beans-3.1.0.RELEASE.jar spring-context-3.1.0.RELEASE.jar spring-core
+ -3.1.0.RELEASE.jar spring-expression-3.1.0.RELEASE.jar spring-web-3.1
+ .0.RELEASE.jar stax-api-1.0-2.jar stax-api-1.0.1.jar stringtemplate-3
+ .2.jar wicket-core-1.5.4.jar wicket-extensions-1.5.4.jar wicket-ioc-1
+ .5.4.jar wicket-request-1.5.4.jar wicket-spring-1.5.4.jar wicket-util
+ -1.5.4.jar wiquery-core-1.5.4.jar wiquery-jquery-ui-1.5.4.jar xercesI
+ mpl-2.8.1.jar xml-apis-1.3.03.jar xml-apis-ext-1.3.04.jar
 

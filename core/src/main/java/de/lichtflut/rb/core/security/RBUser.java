@@ -9,6 +9,7 @@ import java.util.Date;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.infra.Infra;
@@ -47,8 +48,11 @@ public class RBUser implements Serializable {
 		this(userNode.getQualifiedName());
 		email = SNOPS.string(SNOPS.singleObject(userNode, RBSystem.HAS_EMAIL));
 		username = SNOPS.string(SNOPS.singleObject(userNode, RBSystem.HAS_USERNAME));
-		final RBDomain domain = new RBDomain(SNOPS.singleObject(userNode, Aras.BELONGS_TO_DOMAIN).asResource());
-		domesticDomain = domain.getName();
+		SemanticNode domain = SNOPS.singleObject(userNode, Aras.BELONGS_TO_DOMAIN);
+		if(domain!=null){
+			new RBDomain(domain.asResource()).getName();
+			domesticDomain = new RBDomain(domain.asResource()).getName();
+		}
 		lastLogin = SNOPS.date(SNOPS.singleObject(userNode, RBSystem.HAS_LAST_LOGIN));
 	}
 	

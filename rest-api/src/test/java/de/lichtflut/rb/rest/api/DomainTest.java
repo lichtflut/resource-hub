@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.RBDomain;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.rest.api.models.generate.ObjectFactory;
 import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
 import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
 
@@ -25,6 +27,7 @@ import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
 public class DomainTest extends TestBase {
 
 	private static final SystemIdentity TEST_USER = new SystemIdentity();
+	private static final SystemIdentity ROOT_USER = new SystemIdentity();
 	private static final SystemDomain TEST_DOMAIN = new SystemDomain();
 
 	
@@ -35,6 +38,9 @@ public class DomainTest extends TestBase {
 		TEST_USER.setPassword("test");
 		TEST_USER.setUsername("test");
 		
+		ROOT_USER.setId("root");
+		ROOT_USER.setPassword("root");
+		ROOT_USER.setUsername("root");
 		
 		TEST_DOMAIN.setDescription("test");
 		TEST_DOMAIN.setDomainIdentifier("test");
@@ -60,7 +66,7 @@ public class DomainTest extends TestBase {
 		RBDomain domain = manager.findDomain(TEST_DOMAIN.getDomainIdentifier());
 		//Domain must be present
 		assertNotNull("Domain " + TEST_DOMAIN.getDomainIdentifier() + " has to be present", domain);
-		
+
 		String path = "domain/" + TEST_DOMAIN.getDomainIdentifier();
 		
 		getWebResource(true).path(path).delete();
@@ -69,11 +75,15 @@ public class DomainTest extends TestBase {
 		//Domain doesnt exist
 		assertNull("Domain " + TEST_DOMAIN.getDomainIdentifier() + " has to be absent", domain);
 		
-		getWebResource(true).path(TEST_DOMAIN.getDomainIdentifier()).entity(TEST_DOMAIN,MediaType.APPLICATION_JSON).post();
+		assertNotNull(getAuthModule().getUserManagement().findUser(ROOT_USER.getId()));
+		
+		setCurrentSystemUser(ROOT_USER);
+		
+		getWebResource(true).path(path).entity(new ObjectFactory().createSystemDomain(TEST_DOMAIN),MediaType.APPLICATION_JSON).post();
 		
 		domain = manager.findDomain(TEST_DOMAIN.getDomainIdentifier());
 		//Domain must be present
-		assertNull("Domain " + TEST_DOMAIN.getDomainIdentifier() + " has to be present", domain);
+		assertNotNull("Domain " + TEST_DOMAIN.getDomainIdentifier() + " has to be present", domain);
 	}
 
 }

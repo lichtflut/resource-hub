@@ -11,14 +11,16 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.spi.GateContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.eh.RBAuthException;
+import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBCrypt;
+import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.security.authserver.EmbeddedAuthModule;
 import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
 
 /**
@@ -31,15 +33,18 @@ import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
  */
 public class TestServiceProvider extends DefaultRBServiceProvider {
 
+	@Autowired
+	private AuthModule module;
+	
 	/**
 	 * @param config
 	 */
-	public TestServiceProvider(RBConfig config) {
-		super(config);
-		initializeDomain(this.getArastejuGate(), GateContext.MASTER_DOMAIN);
+	public TestServiceProvider(RBConfig config, AuthModule module) {
+		super(config, module);
 	}
 
 	protected void initializeDomain(ArastrejuGate gate, String domainName) {
+
 		final Organizer organizer = gate.getOrganizer();
 		organizer.registerContext(Aras.IDENT.getQualifiedName());
 		organizer.registerContext(Aras.TYPES.getQualifiedName());
@@ -53,8 +58,15 @@ public class TestServiceProvider extends DefaultRBServiceProvider {
 		organizer.registerNamespace(DC.NAMESPACE_URI, "dc");
 		organizer.registerNamespace(RBSystem.SYS_NAMESPACE_URI, "rb");
 		organizer.registerNamespace(RB.COMMON_NAMESPACE_URI, "common");
-		EmbeddedAuthModule module = new EmbeddedAuthModule(
-				this.getArastejuGate());
+
+
+		//If there is no master domain, create one
+		if (module.getDomainManager().findDomain(GateContext.MASTER_DOMAIN)==null) {
+			RBDomain domain = new RBDomain();
+			domain.setName(GateContext.MASTER_DOMAIN);
+			module.getDomainManager().registerDomain(domain);
+		}
+
 		RBUser root = module.getUserManagement().findUser("root");
 		if (root == null) {
 			root = new RBUser(new SimpleResourceID().getQualifiedName());
@@ -62,7 +74,7 @@ public class TestServiceProvider extends DefaultRBServiceProvider {
 			root.setEmail("root@root.de");
 			try {
 				module.getUserManagement().registerUser(root,
-						RBCrypt.encrypt("root"), GateContext.MASTER_DOMAIN);
+						RBCrypt.encrypt("root"),GateContext.MASTER_DOMAIN);
 			} catch (RBAuthException e) {
 				e.printStackTrace();
 			}
@@ -70,14 +82,14 @@ public class TestServiceProvider extends DefaultRBServiceProvider {
 		// module.getUserManagement().setUserRoles(root, null, roles);
 
 	}
+//
+//	public ArastrejuGate getArastejuGate() {
+//		if (getContext().getDomain() != null) {
+//			return openGate(getContext().getDomain());
+//		} else {
+//			return super.getArastejuGate();
+//		}
+//	}
+	
 
-	
-	public ArastrejuGate getArastejuGate() {
-		if (getContext().getDomain() != null) {
-			return openGate(getContext().getDomain());
-		}else{
-			return super.getArastejuGate();
-		}
-	}
-	
 }

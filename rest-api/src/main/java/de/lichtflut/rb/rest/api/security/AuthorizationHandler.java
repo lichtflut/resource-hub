@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.rest.api.security;
 
-import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.core.security.RBUser;
 
@@ -38,6 +37,7 @@ public interface AuthorizationHandler {
 	 * @throws MissingOperationTypeException
 	 *             if no {@link OperationTypes.Type} is annotated
 	 */
+	@Deprecated
 	public boolean isAuthorized(RBUser user, String domainID)
 			throws MissingOperationTypeException;
 

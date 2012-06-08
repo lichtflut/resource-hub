@@ -39,7 +39,7 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	
 	private final Logger logger = LoggerFactory.getLogger(AbstractServiceProvider.class);
 
-	private final Set<String> initializedDomains = new HashSet<String>();
+	protected final Set<String> initializedDomains = new HashSet<String>();
 	
 	private final ServiceContext ctx;
 	
@@ -218,8 +218,8 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		} else {
 			final ArastrejuGate gate = aras.rootContext(domain);
 			if (!initializedDomains.contains(domain)) {
-				initializeDomain(gate, domain);
 				initializedDomains.add(domain);
+				initializeDomain(gate, domain);
 			}
 			return gate;	
 		}

@@ -20,6 +20,7 @@ import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.spi.GateContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -42,9 +43,7 @@ import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.core.services.ServiceProviderFactory;
 import de.lichtflut.rb.rest.api.models.generate.ObjectFactory;
 import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
 import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
@@ -78,13 +77,14 @@ public abstract class TestBase extends junit.framework.TestCase {
 
 	private String authToken;
 
-
-	private Stack<SystemIdentity> identityStack = new Stack<SystemIdentity>();
-	
+	@Autowired
+	private ServiceProvider provider;
 	
 	@Autowired
-	protected ServiceProviderFactory factory;
-
+	private AuthModule authmodule;
+	
+	private Stack<SystemIdentity> identityStack = new Stack<SystemIdentity>();
+	
 	private SystemIdentity currentIdentity;
 
 	private SystemDomain currentDomain;
@@ -102,6 +102,8 @@ public abstract class TestBase extends junit.framework.TestCase {
 	
 	@Before
 	public void init(){
+		//Initializing gate
+		getProvider().getArastejuGate();
 		initTestCase();
 		loadFixtures();
 	}
@@ -122,7 +124,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 			}
 			deleteSystemDomains();
 			//Is not necessary anymore, still creating problems with multiple test classes
-			//FileUtils.deleteRecursively(new File("target/test/storage/"));
+			FileUtils.deleteRecursively(new File("target/test/storage/"));
 		} catch (Exception any) {
 			throw new RuntimeException(any);
 		}
@@ -170,7 +172,6 @@ public abstract class TestBase extends junit.framework.TestCase {
 				throw new RuntimeException("could not load fixtures " + (fixture==null ?  "" : fixture.getAbsolutePath()), e);
 			}
 		}
-		
 		throw new RuntimeException("could not load fixtures " + (fixture==null ? "" : fixture.getAbsolutePath()));
 	}
 	
@@ -275,7 +276,6 @@ public abstract class TestBase extends junit.framework.TestCase {
 					return new StringKeyObjectValueIgnoreCaseMultivaluedMap();
 
 				}
-
 			};
 		}
 		return rsp;
@@ -329,16 +329,14 @@ public abstract class TestBase extends junit.framework.TestCase {
 	 * @return the provider
 	 */
 	protected ServiceProvider getProvider() {
-		ServiceProvider provider = factory.create();
-		ServiceContext ctx = provider.getContext();
 		if(currentDomain!=null){
-			ctx.setDomain(currentDomain.getDomainIdentifier());
+			provider.getContext().setDomain(currentDomain.getDomainIdentifier());
 		}
 		return provider;
 	}
 
 	protected AuthModule getAuthModule(){
-		return factory.createAuthModule();
+		return authmodule;
 	}
 	
 	/**
@@ -346,6 +344,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 	 * @param identity
 	 */
 	public void setCurrentSystemUser(SystemIdentity identity) {
+		this.authToken = null;
 		this.currentIdentity = identity;
 	}
 
@@ -361,46 +360,46 @@ public abstract class TestBase extends junit.framework.TestCase {
 	}
 
 	private void deleteSystemUser(SystemIdentity identity){
-		AuthModule authModule = factory.createAuthModule();
 		final RBUser rbUser = new RBUser(
 				new SimpleResourceID().getQualifiedName());
 		rbUser.setEmail(identity.getId());
 		rbUser.setUsername(identity.getUsername());
-		authModule.getUserManagement().deleteUser(rbUser);
+		authmodule.getUserManagement().deleteUser(rbUser);
 	}
 	
 	public void deleteSystemDomains(){
-		ServiceProvider rootProvider = factory.create();
-		List<ResourceNode> domains = rootProvider.getArastejuGate().createQueryManager().findByType(Aras.DOMAIN);
+		List<ResourceNode> domains = getProvider().getArastejuGate().createQueryManager().findByType(Aras.DOMAIN);
 		for (ResourceNode resourceNode : domains) {
-			rootProvider.getArastejuGate().startConversation().remove(resourceNode);
+			//Dont delete the root domain to prevent some errors in loading system identities
+			if(!new RBDomain(resourceNode).getName().equals(GateContext.MASTER_DOMAIN)){
+				getProvider().getArastejuGate().startConversation().remove(resourceNode);
+			}
 		}
 	}
 	
 	public void registerSystemUser(SystemIdentity identity) {
-		AuthModule authModule = factory.createAuthModule();
 		final RBUser rbUser = new RBUser(
 				new SimpleResourceID().getQualifiedName());
 		rbUser.setEmail(identity.getId());
 		rbUser.setUsername(identity.getUsername());
 		try {
-			authModule.getUserManagement().registerUser(rbUser,
+			authmodule.getUserManagement().registerUser(rbUser,
 					RBCrypt.encryptWithRandomSalt(identity.getPassword()),
 					currentDomain.getDomainIdentifier());
 		} catch (RBAuthException e) {
-			throw new RuntimeException("Wasnt able to create the user: "
-					+ identity.toString(), e);
+			throw new RuntimeException("Wasnt able to create the user: " + identity.toString(), e);
 		}
 		identityStack.push(identity);
 	}
 
 	public void registerDomain(SystemDomain domain) {
-		AuthModule authModule = factory.createAuthModule();
 		RBDomain rbDomain = new RBDomain();
 		rbDomain.setDescription(domain.getDescription());
 		rbDomain.setName(domain.getTitle());
 		rbDomain.setTitle(domain.getTitle());
-		authModule.getDomainManager().registerDomain(rbDomain);
+		if(authmodule.getDomainManager().findDomain(domain.getDomainIdentifier())==null){
+			authmodule.getDomainManager().registerDomain(rbDomain);
+		}
 	}
 
 	

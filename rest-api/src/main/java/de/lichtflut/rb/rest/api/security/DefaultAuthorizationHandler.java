@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.arastreju.sge.security.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,15 +23,13 @@ import de.lichtflut.rb.core.security.RBUser;
  */
 public class DefaultAuthorizationHandler implements AuthorizationHandler, OperationTypes{
 
-	
 	private static final String ROOT_USER = "root";
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	private HashMap<OperationTypes.TYPE, AuthConstraint> opRequirementsMapping = new HashMap<OperationTypes.TYPE, AuthConstraint>();
 
-	
 	{
-		AuthConstraint c = new AuthConstraint(true, Collections.<Role> emptyList());
+		AuthConstraint c = new AuthConstraint(true, Collections.<String> emptyList());
 		for(TYPE type : TYPE.values()){
 			opRequirementsMapping.put(type, c);
 		}
@@ -67,13 +64,13 @@ public class DefaultAuthorizationHandler implements AuthorizationHandler, Operat
 			return true;
 		}
 		if(isDomainRequired(type)){
-			if(!user.getDomesticDomain().equals(domainID)){
+			if(user.getDomesticDomain()==null || (!user.getDomesticDomain().equals(domainID))){
 				return false;
 			}
 		}
 		
-		Collection<Role> roles = getRequiredRoles(type);
-		for(@SuppressWarnings("unused") Role role : roles){
+		Collection<String> permissions = getRequiredPermissions(type);
+		for(@SuppressWarnings("unused") String permission : permissions){
 			//TODO: to implement
 			break;
 		}
@@ -83,12 +80,12 @@ public class DefaultAuthorizationHandler implements AuthorizationHandler, Operat
 	/**
 	 * @param type
 	 */
-	private Collection<Role> getRequiredRoles(TYPE type) {
+	private Collection<String> getRequiredPermissions(TYPE type) {
 		AuthConstraint c = opRequirementsMapping.get(type);
 		if(c==null){
 			return Collections.emptyList();
 		}
-		return c.getRoles();
+		return c.getPermissions();
 	}
 
 	/**
@@ -166,24 +163,24 @@ public class DefaultAuthorizationHandler implements AuthorizationHandler, Operat
 	
 	class AuthConstraint{
 		boolean isDomainRequired;
-		Collection<Role> roles;
+		Collection<String> permissions;
 		
-		public AuthConstraint(boolean isDomainRequired, Collection<Role> roles){
+		public AuthConstraint(boolean isDomainRequired, Collection<String> permissions){
 			this.isDomainRequired = isDomainRequired;
-			this.roles = roles;
+			this.permissions = permissions;
 		}
 		
 		public boolean isDomainRequired() {
 			return isDomainRequired;
 		}
-		public Collection<Role> getRoles() {
-			return roles;
+		public Collection<String> getPermissions() {
+			return permissions;
 		}
 		public void setDomainRequired(boolean isDomainRequired) {
 			this.isDomainRequired = isDomainRequired;
 		}
-		public void setRoles(Collection<Role> roles) {
-			this.roles = roles;
+		public void setRoles(Collection<String> permissions) {
+			this.permissions = permissions;
 		}
 	}
 

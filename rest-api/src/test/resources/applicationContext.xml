@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
 	http://www.springframework.org/schema/context
@@ -11,25 +10,31 @@
 		<constructor-arg value="test"></constructor-arg>
 	</bean>
 
-	<bean id="serviceProviderFactory"
-		class="de.lichtflut.rb.core.services.impl.DefaultServiceProviderFactory">
-		<constructor-arg ref="rbConfig" />
-	</bean>
-
-	<bean id="provider" class="de.lichtflut.rb.rest.api.TestServiceProvider">
-		<constructor-arg ref="rbConfig" />
-	</bean>
-
 	<bean id="authorizationHandler" class="de.lichtflut.rb.rest.api.security.DefaultAuthorizationHandler" />
 
-	<bean id="authService" class="de.lichtflut.rb.core.security.AuthenticationService"
-		factory-bean="serviceProviderFactory" factory-method="createAuthenticationService">
+	<bean id="provider" class="de.lichtflut.rb.rest.api.TestServiceProvider">
+		<constructor-arg index="0" ref="rbConfig" />
+		<constructor-arg index="1" ref="authModule" />
 	</bean>
 
-    <context:annotation-config/>
-    
+	<bean id="gateFactory" class="de.lichtflut.rb.core.services.GateFactory">
+		<constructor-arg ref="rbConfig"></constructor-arg>
+	</bean>
+
+	<bean id="masterGate" class="org.arastreju.sge.ArastrejuGate"
+		factory-bean="gateFactory" factory-method="createMasterGate">
+	</bean>
+
+	<bean id="authModule"
+		class="de.lichtflut.rb.core.security.authserver.EmbeddedAuthModule">
+		<constructor-arg index="0" ref="masterGate"></constructor-arg>
+	</bean>
+
+	<context:annotation-config />
+
 	<context:component-scan base-package="de.lichtflut.rb.rest.api" />
-    
+
 	<!-- Added to get 'autowiring' support -->
-	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+	<bean
+		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
 </beans>

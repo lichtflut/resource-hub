@@ -14,12 +14,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.arastreju.sge.persistence.TransactionControl;
 import org.springframework.stereotype.Component;
+
+import scala.actors.threadpool.Arrays;
 
 import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.security.UserManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
 import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
@@ -47,15 +51,18 @@ public class DomainOps extends RBServiceEndpoint {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
 		try {
-			DomainManager domainManager = this.providerFactory.createAuthModule().getDomainManager();
+			DomainManager domainManager = this.authModule.getDomainManager();
 			RBDomain rbDomain = domainManager.findDomain(domainID);
-			if(rbDomain!=null){
+			if (rbDomain != null) {
 				domainManager.deleteDomain(rbDomain);
 			}
 			return Response.status(Status.CREATED).build();
 		} catch (Exception any) {
 			getLog().error(
-					"The domain " + domainID + " couldnt be deleted tue to the following exception", any);
+					"The domain "
+							+ domainID
+							+ " couldnt be deleted tue to the following exception",
+					any);
 			return Response.serverError().build();
 		}
 
@@ -106,9 +113,9 @@ public class DomainOps extends RBServiceEndpoint {
 		}
 		// Check that the domain does not exists
 		ServiceProvider provider = getProvider(domainID, user);
-		
-		DomainManager domainManager = this.providerFactory.createAuthModule().getDomainManager();
-		
+
+		DomainManager domainManager = this.authModule.getDomainManager();
+
 		RBDomain rbDomain = domainManager.findDomain(domainID);
 		if (rbDomain != null) {
 			return Response.status(Status.CONFLICT).build();
@@ -117,25 +124,48 @@ public class DomainOps extends RBServiceEndpoint {
 		rbDomain.setDescription(domain.getDescription());
 		rbDomain.setTitle(domain.getTitle());
 		rbDomain.setName(domain.getDomainIdentifier());
-		
+
 		SystemIdentity admin = domain.getDomainAdministrator();
 		if (admin != null
 				&& (admin.getId() == null || admin.getPassword() == null)) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-
+		TransactionControl tx = provider.getArastejuGate().startConversation().beginTransaction();
 		// Lets process the create
-		rbDomain = domainManager.registerDomain(rbDomain);
-		if (admin != null) {
-			try {
-				provider.getSecurityService().createDomainAdmin(rbDomain,
-						admin.getId(), admin.getUsername(), admin.getPassword());
-			} catch (RBAuthException e) {
-				getLog().error("Domain admin couldnt be created due to the following exception", e);
+		try {
+			rbDomain = domainManager.registerDomain(rbDomain);
+			if (admin != null) {
+				try {
+					addDomainAdmin(rbDomain, admin);
+				} catch (RBAuthException e) {
+					getLog().error("Domain admin couldnt be created due to the following exception", e);
+					tx.fail();
+				}
 			}
+		} catch (Exception any) {
+			getLog().error("Domain admin couldnt be created due to the following exception",any);
+			tx.fail();
 		}
-
+		tx.finish();
 		return Response.status(Status.CREATED).build();
+	}
+
+	/**
+	 * @param rbDomain
+	 * @param admin
+	 * @throws RBAuthException
+	 */
+	private void addDomainAdmin(RBDomain rbDomain, SystemIdentity admin)
+			throws RBAuthException {
+		UserManager uManager = authModule.getUserManagement();
+		RBUser user = uManager.findUser(admin.getId());
+		if (user == null) {
+			provider.getSecurityService().createDomainAdmin(rbDomain,
+					admin.getId(), admin.getUsername(), admin.getPassword());
+		} else {
+			uManager.setUserRoles(user, rbDomain.getName(),
+					Arrays.asList(new String[0]));
+		}
 	}
 
 	/**
@@ -180,7 +210,7 @@ public class DomainOps extends RBServiceEndpoint {
 		if (!getAuthHandler().isAuthorized(user, domainID)) {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
-		DomainManager domainManager = this.providerFactory.createAuthModule().getDomainManager();
+		DomainManager domainManager = this.authModule.getDomainManager();
 		ServiceProvider provider = getProvider(domainID, user);
 		RBDomain rbDomain = domainManager.findDomain(domainID);
 		if (rbDomain == null) {
@@ -190,19 +220,23 @@ public class DomainOps extends RBServiceEndpoint {
 		rbDomain.setTitle(domain.getTitle());
 		rbDomain.setName(domain.getDomainIdentifier());
 		SystemIdentity admin = domain.getDomainAdministrator();
-		if (admin != null && (admin.getId() == null || admin.getPassword() == null)) {
+		if (admin != null
+				&& (admin.getId() == null || admin.getPassword() == null)) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 
 		domainManager.updateDomain(rbDomain);
-		
-		// Lets process the 
+
+		// Lets process the
 		if (admin != null) {
 			try {
-				provider.getSecurityService().createDomainAdmin(rbDomain,
-						admin.getId(), admin.getUsername(), admin.getPassword());
+				provider.getSecurityService()
+						.createDomainAdmin(rbDomain, admin.getId(),
+								admin.getUsername(), admin.getPassword());
 			} catch (RBAuthException e) {
-				getLog().error("Domain admin couldnt be created due to the following exception", e);
+				getLog().error(
+						"Domain admin couldnt be created due to the following exception",
+						e);
 			}
 		}
 
