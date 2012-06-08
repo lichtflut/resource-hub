@@ -26,6 +26,8 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 import de.lichtflut.rb.webck.components.form.RBButtonBar;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
@@ -69,15 +71,15 @@ public class PublicConstraintsDetailPanel extends Panel{
 		send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Constraint>(constraint.getObject(), ModelChangeEvent.PUBLIC_CONSTRAINT));
 	}
 	
-	protected void delete(IModel<Constraint> constraint) {
+	protected void delete(final IModel<Constraint> constraint) {
 		getProvider().getSchemaManager().remove(constraint.getObject());
-		info(getString("deleted-successfully"));
 	}
 	
 	// ------------------------------------------------------
 	
 	private void addTitle(Form<?> form, IModel<Constraint> model) {
-		form.add(new Label("title", new ResourceModel("constraint-title", "Edit Constraint").getObject() + model.getObject().getName()));
+		String title = new ResourceModel("constraint-title", "Edit Constraint").getObject();
+		form.add(new Label("title", title + ": " + model.getObject().getName()));
 	}
 	
 	protected void addButtonBar(Form<?> form, final IModel<Constraint> model) {
@@ -89,8 +91,17 @@ public class PublicConstraintsDetailPanel extends Panel{
 			}
 			@Override
 			protected void onDelete(AjaxRequestTarget target, Form<?> form){
-				delete(model);
-				updatePanel();
+				DialogHoster hoster = findParent(DialogHoster.class);
+				ConfirmationDialog dialog = new ConfirmationDialog(hoster.getDialogID(), Model.of(getString("delete-confirmation"))){
+					@Override
+					public void onConfirm(){
+						delete(model);
+						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.PUBLIC_CONSTRAINT));
+						PublicConstraintsDetailPanel.this.setVisible(false);
+						updatePanel();
+					}
+				};
+				hoster.openDialog(dialog);
 			}
 			@Override
 			protected void onCancel(AjaxRequestTarget target, Form<?> form) {

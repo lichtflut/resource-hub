@@ -48,7 +48,7 @@ public abstract class ConstraintsBrowserPanel extends Panel {
 		
 		setOutputMarkupId(true);
 		
-		add(new ListView<Constraint>("listview", model) {
+		add(new ListView<Constraint>("listview", this.model) {
 			@Override
 			protected void populateItem(final ListItem<Constraint> item) {
 				final Constraint constraint = item.getModelObject();
@@ -67,7 +67,6 @@ public abstract class ConstraintsBrowserPanel extends Panel {
 		add(new AjaxFallbackLink("createConstraint") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				target.add(ConstraintsBrowserPanel.this);
 				onCreateConstraint(target);
 			}
 		});

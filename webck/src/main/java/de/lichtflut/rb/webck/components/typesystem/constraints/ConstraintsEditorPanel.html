@@ -13,13 +13,13 @@
 		<form wicket:id="form">
 		   <div wicket:id="resourceConstraint"></div>
 		
-			<span>
-		       <input wicket:id="literalConstraint" size="40"/>
-		   </span>
-		   
+			<div wicket:id="container">
+				<div wicket:id="constraintPicker"></div>			
+			   	<input wicket:id="literalConstraint" size="40"/>
 			
-			<a wicket:id="switchToLiteral"><span wicket:id="switchToLiteral"></span></a>
-			<a wicket:id="switchToResource"><span wicket:id="switchToResource"></span></a>
+				<a wicket:id="switchToLiteral"><span wicket:id="switchToLiteral"></span></a>
+				<a wicket:id="switchToResource"><span wicket:id="switchToResource"></span></a>
+			</div>
 		</form>
 	</div>
 </wicket:panel>

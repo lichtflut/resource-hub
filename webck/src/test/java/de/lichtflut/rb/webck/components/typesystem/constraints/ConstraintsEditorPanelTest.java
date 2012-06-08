@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.typesystem.constraints;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -12,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.mock.schema.ConstraintsFactory;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 
@@ -20,24 +20,28 @@ import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
  * [TODO Insert description here.]
  * </p>
  * Created: May 14, 2012
- *
+ * 
  * @author Ravi Knox
  */
 public class ConstraintsEditorPanelTest {
 
 	private WicketTester tester;
-	
+
 	@Before
-	public void setUp(){
+	public void setUp() {
 		tester = new WicketTester();
 	}
+
 	/**
-	 * Test method for {@link de.lichtflut.rb.webck.components.typesystem.constraints.ConstraintsEditorPanel#ConstraintsEditorPanel(java.lang.String, org.apache.wicket.model.IModel)}.
+	 * Test method for
+	 * {@link de.lichtflut.rb.webck.components.typesystem.constraints.ConstraintsEditorPanel#ConstraintsEditorPanel(java.lang.String, org.apache.wicket.model.IModel)}
+	 * .
 	 */
 	@Test
 	public void testConstraintsEditorPanel() {
-		Constraint constraint= ConstraintsFactory.buildPublicEmailConstraint();
+		Constraint constraint = ConstraintsFactory.buildPublicEmailConstraint();
 		IModel<PropertyRow> model = Model.of(new PropertyRow(constraint));
+		model.getObject().setDataType(Datatype.STRING);
 		Panel panel = new ConstraintsEditorPanel("test", model);
 		tester.startComponentInPage(panel);
 		tester.assertNoErrorMessage();

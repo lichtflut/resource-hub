@@ -10,6 +10,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableChoiceLabel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableMultiLineLabel;
@@ -38,100 +39,100 @@ import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
 import de.lichtflut.rb.webck.components.fields.AjaxEditablePanelLabel;
 import de.lichtflut.rb.webck.components.fields.AjaxUpdateDataPickerField;
+import de.lichtflut.rb.webck.components.fields.ClassPickerField;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 import de.lichtflut.rb.webck.components.typesystem.TypeHierarchyPanel;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
 
 /**
  * <p>
- *  This {@link Panel} lists all Properties for a given {@link ResourceSchema}.
+ * This {@link Panel} lists all Properties, FieldlabelExpression and Type Hierarchy for a given
+ * {@link ResourceSchema}.
  * </p>
- *
+ * 
  * <p>
- * 	Created Feb 27, 2012
+ * Created Feb 27, 2012
  * </p>
- *
+ * 
  * @author Ravi Knox
  */
-public class SchemaDetailPanel extends Panel{
-
-	private IModel<ResourceSchema> schema;
-	private PropertyRowListModel listModel;
-	
+public class SchemaDetailPanel extends Panel {
 
 	@SpringBean
 	private ServiceProvider provider;
-	
+
+	private final IModel<ResourceSchema> schema;
+	private PropertyRowListModel listModel;
+
 	// ---------------- Constructor -------------------------
-	
+
 	/**
+	 * Constructor.
+	 * 
 	 * @param id - wicket:id
-	 * @param model to display
+	 * @param model - to display
 	 */
 	public SchemaDetailPanel(String id, IModel<ResourceSchema> schema) {
 		super(id);
 		this.schema = schema;
-		@SuppressWarnings("rawtypes")
-		Form form = new Form("form");
+
 		add(createTitleLabel("title"));
 		add(new TypeHierarchyPanel("typeHierarchy", Model.of(schema.getObject().getDescribedType())));
+
+		@SuppressWarnings("rawtypes")
+		Form form = new Form("form");
 		form.add(createLabelExpressionBuilder());
 		form.add(createListView("listView", this.schema));
+
 		addButtonBar(form);
+
 		add(form);
+		setOutputMarkupPlaceholderTag(true);
 	}
-	
 
 	// ------------------------------------------------------
-	
+
+	/**
+	 * Action to execute when <code>save</code>-Button is clicked.
+	 */
 	protected void saveAndUpdate() {
 		saveSchema();
 		updatePanel();
 	}
 
-	protected void updatePanel() {
-		RBAjaxTarget.add(SchemaDetailPanel.this);
-	}
-	
-	protected void saveSchema(){
-		ResourceSchemaImpl copy = new ResourceSchemaImpl();
-		copy.setDescribedType(schema.getObject().getDescribedType());
-		copy.setLabelBuilder(schema.getObject().getLabelBuilder());
-		for (PropertyRow row : listModel.getObject()) {
-			copy.addPropertyDeclaration(row.asPropertyDeclaration());
-		}
-		provider.getSchemaManager().store(copy);
-	}
-
 	// ------------------------------------------------------
-	
+
 	/**
-	 * Create Title.
-	 * @param id - wicket:id
-	 * @return
+	 * Create a Component to display the described-type.
 	 */
 	private Component createTitleLabel(String id) {
 		return new Label(id, Model.of(schema.getObject().getDescribedType()));
 	}
-	
+
+	/**
+	 * Create a Component to display & edit the Label-builder.
+	 */
 	private Component createLabelExpressionBuilder() {
 		final Model<String> model = Model.of(schema.getObject().getLabelBuilder().getExpression());
-		AjaxEditableMultiLineLabel<String> editor = new AjaxEditableMultiLineLabel<String>("labelExpression", model){
+		AjaxEditableMultiLineLabel<String> editor = new AjaxEditableMultiLineLabel<String>("labelExpression", model) {
 			@Override
-			protected void onSubmit(final AjaxRequestTarget target)
-			{
-				ResourceSchemaImpl copy = (ResourceSchemaImpl) schema.getObject();
-				try {
-					copy.setLabelBuilder(new ExpressionBasedLabelBuilder(model.getObject()));
-				} catch (LabelExpressionParseException e) {
-					error(getString("error-label-exception"));
+			protected void onSubmit(final AjaxRequestTarget target) {
+				if ((model.getObject() != null) && !model.getObject().isEmpty()) {
+					ResourceSchemaImpl copy = (ResourceSchemaImpl) schema.getObject();
+					try {
+						copy.setLabelBuilder(new ExpressionBasedLabelBuilder(model.getObject()));
+					} catch (LabelExpressionParseException e) {
+						error(getString("error-label-exception"));
+					}
+					schema.setObject(copy);
 				}
-				schema.setObject(copy);
 				getLabel().setVisible(true);
 				getEditor().setVisible(false);
 				target.add(this);
@@ -140,13 +141,18 @@ public class SchemaDetailPanel extends Panel{
 		};
 		return editor;
 	}
-	
+
 	/**
-	 * Create {@link ListView} of PrepertyDecls.
-	 * @param id
-	 * @param schema
-	 * @return
+	 * Adds Delete, Add, Edit Buttons to the component
 	 */
+	private void addButtonBar(Form<?> form) {
+		form.add(createSaveButton("saveButton"));
+		form.add(createAddbutton("addButton"));
+		form.add(createDeleteButton("deleteButton"));
+	}
+
+	// ------------------------------------------------------
+
 	private Component createListView(String id, IModel<ResourceSchema> schema) {
 		listModel = new PropertyRowListModel(schema);
 		ListView<PropertyRow> view = new ListView<PropertyRow>(id, listModel) {
@@ -160,17 +166,31 @@ public class SchemaDetailPanel extends Panel{
 		return view;
 	}
 
-	/**
-	 * Adds Delete, Add, Edit Buttons to the component
-	 * @param form 
-	 */
-	private void addButtonBar(Form<?> form) {
-		form.add(createSaveButton("saveButton"));
-		form.add(createAddbutton("addButton"));
+	private Component createDeleteButton(String id) {
+		Button button = new RBStandardButton(id) {
+			@Override
+			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+				DialogHoster hoster = findParent(DialogHoster.class);
+				ConfirmationDialog dialog = new ConfirmationDialog(hoster.getDialogID(), Model.of(getString("confirmation-delete"))) {
+					@Override
+					public void onConfirm() {
+						provider.getSchemaManager().removeSchemaForType(schema.getObject().getDescribedType());
+						SchemaDetailPanel.this.setVisible(false);
+						updatePanel();
+						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
+					}
+
+					@Override
+					public void onCancel() {
+						setDefaultFormProcessing(false);
+					}
+				};
+				hoster.openDialog(dialog);
+			}
+		};
+		return button;
 	}
 
-	// ------------------------------------------------------
-	
 	private Component createAddbutton(String id) {
 		Button button = new RBStandardButton(id) {
 			@Override
@@ -189,6 +209,7 @@ public class SchemaDetailPanel extends Panel{
 						updatePanel();
 						close(target);
 					}
+
 					@Override
 					protected void onCancel(AjaxRequestTarget target, Form<?> form) {
 						setDefaultFormProcessing(false);
@@ -213,6 +234,7 @@ public class SchemaDetailPanel extends Panel{
 
 	/**
 	 * Fills a {@link ListItem} with all the informations provided by a PropertyRow.
+	 * 
 	 * @param item
 	 */
 	private void fillRow(ListItem<PropertyRow> item) {
@@ -228,36 +250,37 @@ public class SchemaDetailPanel extends Panel{
 
 	/**
 	 * Adds the PropertyDescriptor.
+	 * 
 	 * @param item
 	 */
 	private void addPropertyDecl(final ListItem<PropertyRow> item) {
-		final IModel<ResourceID> model =   new PropertyModel<ResourceID>(item.getModel(), "propertyDescriptor");
-		AjaxEditablePanelLabel<ResourceID> field = new AjaxEditablePanelLabel<ResourceID>("property", model){
+		final IModel<ResourceID> model = new PropertyModel<ResourceID>(item.getModel(), "propertyDescriptor");
+		AjaxEditablePanelLabel<ResourceID> field = new AjaxEditablePanelLabel<ResourceID>("property", model) {
 			@Override
-			protected WebComponent newLabel(final MarkupContainer parent, final String componentId,
-					final IModel<ResourceID> model){
+			protected WebComponent newLabel(final MarkupContainer parent, final String componentId, final IModel<ResourceID> model) {
 				Label label = buildFieldLabelFromResourceID(componentId, model);
 				label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
 				label.setOutputMarkupId(true);
 				return label;
 			}
-			
+
 			@Override
 			protected FormComponent<ResourceID> newEditor(final MarkupContainer parent, final String componentId,
-					final IModel<ResourceID> model)	{
+					final IModel<ResourceID> model) {
 				PropertyPickerField picker = new PropertyPickerField(componentId, model);
 				picker.setOutputMarkupId(true);
 				picker.setVisible(false);
 				picker.add(new AjaxUpdateDataPickerField() {
+					@Override
 					public void onSubmit(AjaxRequestTarget target) {
 						updatePanel();
-					}; 
+					};
 				});
 				return picker;
 			}
-			
+
 			@Override
-			protected void onSubmit(final AjaxRequestTarget target){
+			protected void onSubmit(final AjaxRequestTarget target) {
 				updatePanel();
 				super.onSubmit(target);
 			}
@@ -265,11 +288,12 @@ public class SchemaDetailPanel extends Panel{
 		addTitleAttribute(model, field);
 		item.add(field);
 	}
-	
+
 	private void addLabelDecl(final ListItem<PropertyRow> item) {
-		IModel<ResourceID> model =  new PropertyModel<ResourceID>(item.getModel(), "defaultLabel");
-		AjaxEditableLabel<ResourceID> label = new AjaxEditableLabel<ResourceID>("label", model){
-			protected void onSubmit(final AjaxRequestTarget target){
+		IModel<ResourceID> model = new PropertyModel<ResourceID>(item.getModel(), "defaultLabel");
+		AjaxEditableLabel<ResourceID> label = new AjaxEditableLabel<ResourceID>("label", model) {
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target) {
 				updatePanel();
 				super.onSubmit(target);
 			}
@@ -277,12 +301,12 @@ public class SchemaDetailPanel extends Panel{
 		addTitleAttribute(model, label);
 		item.add(label);
 	}
-	
+
 	private void addCardinality(final ListItem<PropertyRow> item) {
 		IModel<String> model = new PropertyModel<String>(item.getModelObject(), "cardinality");
-		AjaxEditableLabel<String> label = new AjaxEditableLabel<String>("cardinality", model){
+		AjaxEditableLabel<String> label = new AjaxEditableLabel<String>("cardinality", model) {
 			@Override
-			protected void onSubmit(final AjaxRequestTarget target){
+			protected void onSubmit(final AjaxRequestTarget target) {
 				updatePanel();
 				super.onSubmit(target);
 			}
@@ -293,8 +317,7 @@ public class SchemaDetailPanel extends Panel{
 
 	private void addDatatypeDecl(final ListItem<PropertyRow> item) {
 		final IModel<Datatype> model = new PropertyModel<Datatype>(item.getModel(), "dataType");
-		AjaxEditableChoiceLabel<Datatype> field = new AjaxEditableChoiceLabel<Datatype>("datatype", model,
-				Arrays.asList(Datatype.values())) {
+		AjaxEditableChoiceLabel<Datatype> field = new AjaxEditableChoiceLabel<Datatype>("datatype", model, Arrays.asList(Datatype.values())) {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target) {
 				item.getModelObject().clearConstraint();
@@ -305,36 +328,56 @@ public class SchemaDetailPanel extends Panel{
 		addTitleAttribute(model, field);
 		item.add(field);
 	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
 	private void addContraintsDecl(final ListItem<PropertyRow> item) {
-		IModel model = null;
-		AjaxEditableLabel field = null;
-		if(null != item.getModelObject().getResourceConstraint()) {
-			model = createModelForResourceContraint(item);
-			field = new AjaxEditableLabel<String>("constraints", model) {
-				@Override
-				protected WebComponent newLabel(final MarkupContainer parent, final String componentId,
-						final IModel model) {
-					Label label = buildFieldLabelFromResourceID(componentId, model);
-//					if(null == item.getModelObject().getLiteralConstraint()){
-//						addTitleAttribute(Model.of(item.getModel().getObject().getResourceConstraint()), label);
-//					}else{
-//						addTitleAttribute(Model.of(item.getModelObject().getLiteralConstraint()), label);
-//					}
-					label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
-					label.setOutputMarkupId(true);
-					return label;
-				}
-			};
+		AjaxEditablePanelLabel<ResourceID> resourceField = createResourceConstraintField(item);
+		AjaxEditableLabel<String> patternField = createStringPatternField(item);
+		if (null != item.getModelObject().getResourceConstraint()) {
+			String title = item.getModelObject().getResourceConstraint().getQualifiedName().toURI();
+			addTitleAttribute(Model.of(title), resourceField);
+			patternField.setVisible(false);
 		} else {
-			model = createModelForLiteralConstraint(item);
-			field = new AjaxEditableLabel<String>("constraints", model);
+			addTitleAttribute(Model.of(item.getModelObject().getLiteralConstraint()), patternField);
+			resourceField.setVisible(false);
 		}
-		addTitleAttribute(model, field);
-		item.add(field);
+		item.add(resourceField, patternField);
 	}
-	
+
+	private AjaxEditableLabel<String> createStringPatternField(final ListItem<PropertyRow> item) {
+		IModel<String> patternModel = createModelForLiteralConstraint(item);
+		AjaxEditableLabel<String> patternField = new AjaxEditableLabel<String>("pattern", patternModel);
+		return patternField;
+	}
+
+	private AjaxEditablePanelLabel<ResourceID> createResourceConstraintField(final ListItem<PropertyRow> item) {
+		IModel<ResourceID> resourceModel = createModelForResourceContraint(item);
+		AjaxEditablePanelLabel<ResourceID> reference = new AjaxEditablePanelLabel<ResourceID>("resource", resourceModel) {
+			@Override
+			protected WebComponent newLabel(final MarkupContainer parent, final String componentId, final IModel<ResourceID> model) {
+				Label label = buildFieldLabelFromResourceID(componentId, model);
+				label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
+				label.setOutputMarkupId(true);
+				return label;
+			}
+
+			@Override
+			protected FormComponent<ResourceID> newEditor(final MarkupContainer parent, final String componentId,
+					final IModel<ResourceID> model) {
+				ClassPickerField picker = new ClassPickerField(componentId, model);
+				picker.setOutputMarkupId(true);
+				picker.setVisible(false);
+				picker.add(new AjaxUpdateDataPickerField() {
+					@Override
+					public void onSubmit(AjaxRequestTarget target) {
+						updatePanel();
+					};
+				});
+				return picker;
+			}
+		};
+		return reference;
+	}
+
 	private void addUpDownButton(final ListItem<PropertyRow> item) {
 		item.add(new AjaxLink<Void>("up") {
 			@Override
@@ -343,7 +386,7 @@ public class SchemaDetailPanel extends Panel{
 				updatePanel();
 			}
 		});
-		
+
 		item.add(new AjaxLink<Void>("down") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
@@ -368,6 +411,7 @@ public class SchemaDetailPanel extends Panel{
 						updatePanel();
 						close(target);
 					}
+
 					@Override
 					protected void onCancel(AjaxRequestTarget target, Form<?> form) {
 						close(target);
@@ -386,9 +430,9 @@ public class SchemaDetailPanel extends Panel{
 			}
 		});
 	}
-	
+
 	// ------------------------------------------------------
-	
+
 	private IModel<ResourceID> createModelForResourceContraint(ListItem<PropertyRow> item) {
 		final IModel<ResourceID> model = new PropertyModel<ResourceID>(item.getModel(), "resourceConstraint");
 		return model;
@@ -410,28 +454,43 @@ public class SchemaDetailPanel extends Panel{
 
 	/**
 	 * Adds a color-code to the table for better usability.
+	 * 
 	 * @param item
 	 */
 	private void addColorCode(ListItem<PropertyRow> item) {
 		switch (item.getModelObject().getDataType()) {
-			case DATE:
-			case TIME_OF_DAY:
-			case TIMESTAMP:
-				item.add(CssModifier.appendClass(Model.of("key-time")));
-				break;
-			case RICH_TEXT:
-			case STRING:
-			case TEXT:
-			case BOOLEAN:
-			case INTEGER:
-			case DECIMAL:
-				item.add(CssModifier.appendClass(Model.of("key-text")));
-				break;
-			case RESOURCE:
-				item.add(CssModifier.appendClass(Model.of("key-resource")));
-			default:
-				break;
+		case DATE:
+		case TIME_OF_DAY:
+		case TIMESTAMP:
+			item.add(CssModifier.appendClass(Model.of("key-time")));
+			break;
+		case RICH_TEXT:
+		case STRING:
+		case TEXT:
+		case BOOLEAN:
+		case INTEGER:
+		case DECIMAL:
+			item.add(CssModifier.appendClass(Model.of("key-text")));
+			break;
+		case RESOURCE:
+			item.add(CssModifier.appendClass(Model.of("key-resource")));
+		default:
+			break;
 		}
+	}
+
+	private void updatePanel() {
+		RBAjaxTarget.add(SchemaDetailPanel.this);
+	}
+
+	private void saveSchema() {
+		ResourceSchemaImpl copy = new ResourceSchemaImpl();
+		copy.setDescribedType(schema.getObject().getDescribedType());
+		copy.setLabelBuilder(schema.getObject().getLabelBuilder());
+		for (PropertyRow row : listModel.getObject()) {
+			copy.addPropertyDeclaration(row.asPropertyDeclaration());
+		}
+		provider.getSchemaManager().store(copy);
 	}
 
 }

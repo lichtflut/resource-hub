@@ -39,7 +39,10 @@
 			<div class="cell"><span wicket:id="label">[LABEL]</span></div>
 			<div class="cell"><span wicket:id="cardinality" >[CARDINALITY]</span></div>
 			<div class="cell"><span  wicket:id="datatype" >[DATATYPE]</span></div>
-			<div class="cell"><span  wicket:id="constraints">[CONSTRAINTS]</span></div>
+			<div class="cell">
+				<span wicket:id="pattern">[RESOURCE CONSTRAINTS]</span>
+				<div wicket:id="resource">[PATTERN CONSTRAINTS]</div>
+			</div>
 			<div class="cell">
 				<a wicket:id="up" class="action-move-up">[up]</a>
 				<a wicket:id="down" class="action-move-down">[down]</a>
@@ -50,6 +53,7 @@
 	</div>
 		
 	<div class="button-bar">
+		<Button wicket:id="deleteButton" ><wicket:message key="button.delete" /></Button>
 		<Button wicket:id="addButton"><wicket:message key="button.add" /></Button>
 		<Button wicket:id="saveButton" class="default-button"><wicket:message key="button.save" /></Button>
 	</div>

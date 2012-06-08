@@ -23,25 +23,27 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 /**
  * <p>
  * Implementation of {@link Constraint}.
- * </p><p>
- * All but public constraints shuold be constructed by using the appropriate <code>buildXXX</code> -methods
- * to ensure integrity
- * </p><p>
+ * </p>
+ * <p>
+ * All but public constraints shuold be constructed by using the appropriate <code>buildXXX</code>
+ * -methods to ensure integrity
+ * </p>
+ * <p>
  * Public-constraints must set the following properties:
- * <ul><li>
- * 	Name
- * </li><li>
- * 	literal constraint
- * </li><li>
- * 	isPublic
- * </li><li>
- * 	applicable Datatypes
- * </li></ul>
+ * <ul>
+ * <li>
+ * Name</li>
+ * <li>
+ * literal constraint</li>
+ * <li>
+ * isPublic</li>
+ * <li>
+ * applicable Datatypes</li>
+ * </ul>
  * </p>
  * 
  * 
- * </p>
- * Created: May 25, 2012
+ * </p> Created: May 25, 2012
  * 
  * @author Ravi Knox
  */
@@ -49,43 +51,43 @@ public class ReferenceConstraint implements Constraint {
 
 	private static Context ctx = RBSchema.CONTEXT;
 
-	private ResourceNode node;
+	private final ResourceNode node;
 
 	// ---------------- Constructor -------------------------
-	
+
 	/**
 	 * Constructor.
 	 */
 	public ReferenceConstraint(ResourceNode node) {
 		this.node = node;
 	}
-	
+
 	public ReferenceConstraint() {
 		this(new SNResource());
 	}
 
 	// ------------------------------------------------------
 
-	public void buildReferenceConstraint(ResourceID reference, boolean isLiteralReference){
+	public void buildReferenceConstraint(ResourceID reference, boolean isLiteralReference) {
 		this.isPublic(false);
 		this.setReference(reference);
 	}
-	
-	public void buildLiteralConstraint(String pattern){
+
+	public void buildLiteralConstraint(String pattern) {
 		this.isPublic(false);
 		this.setLiteralConstraint(pattern);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String getName() {
-		if(!isLiteral()){
+		if (!isLiteral()) {
 			return getReference().getQualifiedName().toURI();
 		}
 		SemanticNode nameNode = SNOPS.singleObject(node, RBSchema.HAS_NAME);
-		if(null == nameNode){
+		if (null == nameNode) {
 			return getLiteralConstraint();
 		}
 		return nameNode.asValue().getStringValue();
@@ -94,65 +96,66 @@ public class ReferenceConstraint implements Constraint {
 	public void setName(String name) {
 		SNOPS.assure(node, RBSchema.HAS_NAME, new SNText(name), ctx);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String getLiteralConstraint() {
-		
+
 		boolean isFirstLvlLiteral = (node.getAssociations(RBSchema.HAS_CONSTRAINT_VALUE).size() > 0);
-		if(!isFirstLvlLiteral){
-			if(holdsReference()){
+		if (!isFirstLvlLiteral) {
+			if (holdsReference()) {
 				return new ReferenceConstraint(getReference().asResource()).getLiteralConstraint();
 			}
-			if(!isLiteral()){
+			if (!isLiteral()) {
 				return getReference().toURI();
 			}
 		}
-		if(isLiteral()){
+		if (isLiteral()) {
 			SemanticNode constraint = SNOPS.singleObject(node, RBSchema.HAS_CONSTRAINT_VALUE);
-			if(constraint == null){
+			if (constraint == null) {
 				return "";
 			}
 			return SNOPS.singleObject(node, RBSchema.HAS_CONSTRAINT_VALUE).asValue().getStringValue();
-		} else{
+		} else {
 			return "";
 		}
-		
+
 	}
 
-	public void setLiteralConstraint(String pattern){
-		SNOPS.assure(node, RBSchema.HAS_CONSTRAINT_VALUE, new SNText(pattern), ctx);
+	public void setLiteralConstraint(String pattern) {
+		if ((pattern != null) && !pattern.isEmpty()) {
+			SNOPS.assure(node, RBSchema.HAS_CONSTRAINT_VALUE, new SNText(pattern), ctx);
+		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public ResourceID getReference() {
 		SemanticNode referenceNode = SNOPS.singleObject(node, RBSchema.HAS_RESOURCE_CONSTRAINT);
-		if(null == referenceNode){
+		if (null == referenceNode) {
 			return null;
 		}
 		return referenceNode.asResource();
 	}
 
 	/**
-	 * @param reference
-	 *            the reference to set
+	 * @param reference the reference to set
 	 */
 	public void setReference(ResourceID reference) {
 		SNOPS.assure(node, RBSchema.HAS_RESOURCE_CONSTRAINT, reference, ctx);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean isPublic() {
 		SemanticNode isPublicNode = SNOPS.singleObject(node, RBSchema.IS_PUBLIC_CONSTRAINT);
-		if(isPublicNode == null){
+		if (isPublicNode == null) {
 			return false;
 		}
 		return isPublicNode.asValue().getBooleanValue();
@@ -160,25 +163,25 @@ public class ReferenceConstraint implements Constraint {
 
 	public void isPublic(boolean isPublic) {
 		SNOPS.assure(node, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(isPublic), ctx);
-		if(isPublic){
+		if (isPublic) {
 			SNOPS.assure(node, RDF.TYPE, RBSchema.PUBLIC_CONSTRAINT, ctx);
-		}else{
+		} else {
 			SNOPS.remove(node, RDF.TYPE);
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean holdsReference() {
-		SemanticNode isReferenceNode = SNOPS.singleObject(node, RBSchema.IS_RESOURCE_CONSTRAINT);
-		if(isReferenceNode == null){
+		SemanticNode isReferenceNode = SNOPS.singleObject(node, RBSchema.HAS_RESOURCE_CONSTRAINT);
+		if (isReferenceNode == null) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -206,17 +209,17 @@ public class ReferenceConstraint implements Constraint {
 	@Override
 	public boolean isLiteral() {
 		boolean isFirstLvlLiteral = (node.getAssociations(RBSchema.HAS_CONSTRAINT_VALUE).size() > 0);
-		if(!isFirstLvlLiteral){
-			if(holdsReference()){
+		if (!isFirstLvlLiteral) {
+			if (holdsReference()) {
 				return new ReferenceConstraint(getReference().asResource()).isLiteral();
 			}
 		}
-		if(null == getReference()){
+		if (null == getReference()) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -224,5 +227,5 @@ public class ReferenceConstraint implements Constraint {
 	public ResourceNode asResourceNode() {
 		return node;
 	}
-	
+
 }

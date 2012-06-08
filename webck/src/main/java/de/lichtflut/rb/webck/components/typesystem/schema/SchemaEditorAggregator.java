@@ -4,10 +4,8 @@
 package de.lichtflut.rb.webck.components.typesystem.schema;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
@@ -15,6 +13,8 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.CreateTypeDialog;
 import de.lichtflut.rb.webck.components.typesystem.TypeBrowserPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeSystemHelpPanel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
@@ -22,27 +22,25 @@ import de.lichtflut.rb.webck.models.types.SNClassListModel;
 
 /**
  * This Panel aggregates all components necessary for editing
- * {@link ResourceSchema}s.
- * <br>
+ * {@link ResourceSchema}s. <br>
  * Created: Apr 23, 2012
  * 
  * @author Ravi Knox
  */
-public class AggregateSchemaEditor extends Panel {
+public class SchemaEditorAggregator extends Panel {
 
 	@SpringBean
-	ServiceProvider provider;
-	
+	private ServiceProvider provider;
+
 	// ---------------- Constructor -------------------------
-	
+
 	/**
-	 * @param id
+	 * Constructor.
 	 */
-	public AggregateSchemaEditor(String id) {
+	public SchemaEditorAggregator(String id) {
 		super(id);
 		createTypesPanel();
 		add(new TypeSystemHelpPanel("schemaDetails").setOutputMarkupId(true));
-
 	}
 
 	// ------------------------------------------------------
@@ -51,10 +49,16 @@ public class AggregateSchemaEditor extends Panel {
 	 * display all RDF:TYPES that exist.
 	 */
 	private void createTypesPanel() {
+		// TODO: Add search Panel
 		// IModel<ResourceID> type = new Model<ResourceID>();
 		// this.add(new ResourcePickerField("typePicker", type, RBSystem.TYPE));
-		this.add(new Label("typePicker", Model.of("Search...")));
 		this.add(new TypeBrowserPanel("typeBrowser", new SNClassListModel()) {
+			@Override
+			protected void onCreate(AjaxRequestTarget target) {
+				DialogHoster hoster = findParent(DialogHoster.class);
+				hoster.openDialog(new CreateTypeDialog(hoster.getDialogID()));
+			}
+
 			@Override
 			public void onTypeSelected(SNClass type, AjaxRequestTarget target) {
 				displaySchema(type);
@@ -64,16 +68,12 @@ public class AggregateSchemaEditor extends Panel {
 
 	/**
 	 * Displays a detailed view for a type.
-	 * 
-	 * @param type
-	 *            to display
 	 */
 	private void displaySchema(final SNClass type) {
 		final IModel<ResourceSchema> model = new AbstractLoadableModel<ResourceSchema>() {
 			@Override
 			public ResourceSchema load() {
-				final ResourceSchema existing = provider.getSchemaManager()
-						.findSchemaForType(type);
+				final ResourceSchema existing = provider.getSchemaManager().findSchemaForType(type);
 				if (existing != null) {
 					return existing;
 				} else {
@@ -81,8 +81,7 @@ public class AggregateSchemaEditor extends Panel {
 				}
 			}
 		};
-		SchemaDetailPanel schemaDetails = new SchemaDetailPanel(
-				"schemaDetails", model);
+		SchemaDetailPanel schemaDetails = new SchemaDetailPanel("schemaDetails", model);
 		replace(schemaDetails);
 		RBAjaxTarget.add(schemaDetails);
 	}

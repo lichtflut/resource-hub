@@ -8,27 +8,39 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.CreatePropertyDialog;
 import de.lichtflut.rb.webck.components.typesystem.TypeSystemHelpPanel;
 import de.lichtflut.rb.webck.models.types.SNPropertyListModel;
 import de.lichtflut.rb.webck.models.types.SNPropertyModel;
 
 /**
- * [TODO Insert description here.]
- * <br>
+ * <p>
+ * Aggregator Panel for all operations on a {@link PropertyDeclaration}.
+ * </p>
+ * <p>
  * Created: Apr 23, 2012
- *
+ * </p>
+ * 
  * @author Ravi Knox
  */
-public class AggregatePropertyDeclEditorPanel extends Panel {
+public class PropertyDeclEditorPanelAggregator extends Panel {
 
-	// ---------------- Constructor -------------------------
-	
 	/**
+	 * Constructor.
+	 * 
 	 * @param id - wicket:id
 	 */
-	public AggregatePropertyDeclEditorPanel(String id) {
+	public PropertyDeclEditorPanelAggregator(String id) {
 		super(id);
+		addComponents();
+	}
+
+	// ------------------------------------------------------
+
+	private void addComponents() {
 		add(new TypeSystemHelpPanel("editor").setOutputMarkupId(true));
 		add(new Label("searchbox", "Search..."));
 		add(new SNPropertyBrowserPanel("propertyBrowser", new SNPropertyListModel()) {
@@ -39,11 +51,12 @@ public class AggregatePropertyDeclEditorPanel extends Panel {
 
 			@Override
 			public void onCreateProperty(AjaxRequestTarget target) {
-				// TODO Auto-generated method stub
+				DialogHoster hoster = findParent(DialogHoster.class);
+				hoster.openDialog(new CreatePropertyDialog(hoster.getDialogID()));
 			}
 		});
 	}
-	
+
 	protected void displayPropertyEditor(final SNProperty property) {
 		final SNPropertyEditorPanel editor = new SNPropertyEditorPanel("editor", new SNPropertyModel(property));
 		replace(editor);

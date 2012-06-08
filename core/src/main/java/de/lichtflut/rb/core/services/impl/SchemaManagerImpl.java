@@ -13,6 +13,7 @@ import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
@@ -190,6 +191,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 		final ModelingConversation mc = mc();
 		remove(constraint);
 		mc.attach(constraint.asResourceNode());
+		logger.info("Stored public constraint for {}.", constraint.getName());
 	}
 	
 	/**
@@ -293,6 +295,9 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 		final Set<SemanticNode> clazzes = SNOPS.objects(attached, RDF.TYPE);
 		if (!clazzes.contains(RBSystem.TYPE)) {
 			SNOPS.associate(attached, RDF.TYPE, RBSystem.TYPE);
+		}
+		if (!clazzes.contains(RDFS.CLASS)) {
+			SNOPS.associate(attached, RDF.TYPE, RDFS.CLASS);
 		}
 		// 2nd: check properties
 		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {

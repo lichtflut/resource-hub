@@ -5,10 +5,11 @@ package de.lichtflut.rb.webck.components.typesystem.constraints;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteBehavior;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -19,9 +20,12 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.fields.ClassPickerField;
+import de.lichtflut.rb.webck.components.fields.ResourcePickerField;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 
 /**
@@ -29,7 +33,6 @@ import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
  * <p>
  * Panel for editing of Constraints.
  * </p>
- * 
  * <p>
  * Created May, 2012
  * </p>
@@ -39,6 +42,7 @@ import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 public class ConstraintsEditorPanel extends Panel {
 
 	private IModel<ConstraintType> constraintType;
+	private final IModel<Boolean> isPublic;
 
 	// ---------------- Constructor -------------------------
 
@@ -47,94 +51,86 @@ public class ConstraintsEditorPanel extends Panel {
 	 */
 	public ConstraintsEditorPanel(final String id, final IModel<PropertyRow> model) {
 		super(id, model);
+		isPublic = Model.of(model.getObject().isConstraintPublic());
+
 		initConstraintType(model);
 
 		Form<?> form = new Form<Void>("form");
 		addComponents(model, form);
-		
+
 		add(form);
-		// final IModel<Boolean> isResourceReferenceModel =
-		// Model.of(model.getObject().isResourceReference());
-		//
-		// final ClassPickerField resourceConstraint =
-		// new ClassPickerField("resourceConstraint", new
-		// PropertyModel<ResourceID>(model, "resourceConstraint"));
-		// //
-		// resourceConstraint.add(visibleIf(isTrue(isResourceReferenceModel)));
-		// resourceConstraint.setVisible(model.getObject().isResourceReference());
-		// add(resourceConstraint);
-		//
-		// MarkupContainer literalConstraints = new
-		// TextField("literalConstraint", new PropertyModel<ResourceID>(model,
-		// "literalConstraint"));
-		// literalConstraints.setVisible(model.getObject().isResourceReference());
-		// add(literalConstraints);
-		// // .add(visibleIf(isFalse(isResourceReferenceModel))));
 		setOutputMarkupId(true);
 	}
-	
+
 	// ------------------------------------------------------
 
 	private void initConstraintType(final IModel<PropertyRow> model) {
-		if (null == model.getObject().getLiteralConstraint()) {
+		if (Datatype.RESOURCE.name().equals(model.getObject().getDataType().name())) {
 			constraintType = Model.of(ConstraintType.RESOURCE);
-		}else{
+		} else {
 			constraintType = Model.of(ConstraintType.LITERAL);
 		}
 	}
 
-	// ------------------------------------------------------
-	
 	private void addComponents(final IModel<PropertyRow> model, Form<?> form) {
-		addClassPicker(model,form);
-		addLiteralConstraintTextField(model,form);
-		addConstraintTypeSwitch(form);
+		addClassPicker(model, form);
+
+		WebMarkupContainer container = new WebMarkupContainer("container");
+		addLiteralConstraintComponents(model, container);
+		addConstraintPicker(model, container);
+		addConstraintTypeSwitch(model, container);
+		container.add(visibleIf(not(areEqual(Model.of(Datatype.RESOURCE), model.getObject().getDataType()))));
+
+		form.add(container);
 	}
 
-	/**
-	 * Adds a {@link AjaxLink} to switch between Literal and Resource Constraints.
-	 */
-	private void addConstraintTypeSwitch(Form<?> form) {
+	private void addConstraintTypeSwitch(IModel<PropertyRow> model, WebMarkupContainer container) {
 		AjaxLink<String> switchToLiteralLink = new AjaxLink<String>("switchToLiteral") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
+				isPublic.setObject(false);
 				updateConstraintType();
 				RBAjaxTarget.add(ConstraintsEditorPanel.this);
 			}
 		};
-		switchToLiteralLink.add(visibleIf(areEqual(constraintType, ConstraintType.RESOURCE)));
-		switchToLiteralLink.add(new Label("switchToLiteral", new ResourceModel("switch-to-literal")));
-
 		AjaxLink<String> switchToResourceLink = new AjaxLink<String>("switchToResource") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
+				isPublic.setObject(true);
 				updateConstraintType();
 				RBAjaxTarget.add(ConstraintsEditorPanel.this);
 			}
 		};
-		switchToResourceLink.add(visibleIf(areEqual(constraintType, ConstraintType.LITERAL)));
+		switchToLiteralLink.add(visibleIf(areEqual(isPublic, true)));
+		switchToLiteralLink.add(new Label("switchToLiteral", new ResourceModel("switch-to-literal")));
+
+		switchToResourceLink.add(visibleIf(areEqual(isPublic, false)));
 		switchToResourceLink.add(new Label("switchToResource", new ResourceModel("switch-to-resource")));
-		
-		form.add(switchToLiteralLink);
-		form.add(switchToResourceLink);
+		// switchToLiteralLink.add(visibleIf(not(areEqual(Model.of(Datatype.RESOURCE),
+		// model.getObject().getDataType()))));
+
+		container.add(switchToLiteralLink);
+		container.add(switchToResourceLink);
 	}
 
-	/**
-	 * Adds a {@link TextField} with {@link AutoCompleteBehavior} for private and public literal-constraints.
-	 */
-	private void addLiteralConstraintTextField(final IModel<PropertyRow> model, Form<?> form) {
-		final TextField<String> literalConstraint = new TextField<String>("literalConstraint",
-				new PropertyModel<String>(model, "literalConstraint"));
-		literalConstraint.add(visibleIf(areEqual(constraintType, ConstraintType.LITERAL)));
-		form.add(literalConstraint);
+	private void addLiteralConstraintComponents(final IModel<PropertyRow> model, WebMarkupContainer container) {
+		final TextField<String> literalConstraint = new TextField<String>("literalConstraint", new PropertyModel<String>(model,
+				"literalConstraint"));
+		literalConstraint.add(visibleIf(areEqual(isPublic, false)));
+		container.add(literalConstraint);
 	}
 
-	/**
-	 * Adds a {@link ClassPickerField} for resource-constraints.
-	 */
+	private void addConstraintPicker(IModel<PropertyRow> model, WebMarkupContainer container) {
+		ResourcePickerField picker = new ResourcePickerField("constraintPicker",
+				new PropertyModel<ResourceID>(model, "resourceConstraint"), RBSchema.PUBLIC_CONSTRAINT);
+		picker.add(visibleIf(areEqual(isPublic, true)));
+		container.add(picker);
+	}
+
 	private void addClassPicker(final IModel<PropertyRow> model, Form<?> form) {
-		final ClassPickerField resourceConstraint = new ClassPickerField("resourceConstraint", new PropertyModel<ResourceID>(model, "resourceConstraint"));
-		resourceConstraint.add(visibleIf(areEqual(constraintType, ConstraintType.RESOURCE)));
+		final ClassPickerField resourceConstraint = new ClassPickerField("resourceConstraint", new PropertyModel<ResourceID>(model,
+				"resourceConstraint"));
+		resourceConstraint.add(visibleIf(areEqual(Model.of(Datatype.RESOURCE), model.getObject().getDataType())));
 		form.add(resourceConstraint);
 	}
 
@@ -145,9 +141,9 @@ public class ConstraintsEditorPanel extends Panel {
 			constraintType.setObject(ConstraintType.RESOURCE);
 		}
 	}
-	
+
 	// ------------------------------------------------------
-	
+
 	/**
 	 * Enum for classifying if the {@link Constraint} is of a resource-reference or a literal.
 	 */
