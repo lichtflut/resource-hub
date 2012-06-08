@@ -126,7 +126,7 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, 30);
 		final String raw = email + ":" + DATE_FORMAT.format(cal.getTime()); 
-		return raw + ":" + Crypt.md5Hex(raw + credential);
+		return raw + ":" + Crypt.md5Hex(raw + credential.stringRepesentation());
 	}
 
 	// ----------------------------------------------------
