@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://rb.lichtflut.de/ns#ServiceAPI" xmlns="http://rb.lichtflut.de/ns#ServiceAPI">
+
+	<xs:element name="systemDomain" type="systemDomain" />
+
+	<xs:element name="systemIdentity" type="systemIdentity" />
+
+	<xs:complexType name="systemDomain">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0" />
+			<xs:element name="domainAdministrator" type="systemIdentity"
+				minOccurs="0" />
+			<xs:element name="domainIdentifier" type="xs:string"
+				minOccurs="0" />
+			<xs:element name="domesticDomain" type="xs:boolean" />
+			<xs:element name="title" type="xs:string" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="systemIdentity">
+		<xs:sequence>
+			<xs:element name="id" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="password" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="username" type="xs:string" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
+

@@ -3,18 +3,19 @@
  */
 package de.lichtflut.rb.webck.models;
 
+import java.util.Set;
+
 import org.apache.wicket.Session;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.security.User;
 
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.user.UserPermissionModel;
 
 /**
  * <p>
@@ -43,25 +44,29 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 		};
 	}
 
-	public static ConditionalModel<User> isLoggedIn() {
-		return new ConditionalModel<User>() {
+	public static ConditionalModel<RBUser> isLoggedIn() {
+		return new ConditionalModel<RBUser>() {
 			@Override
 			public boolean isFulfilled() {
 				 return Session.exists() && RBWebSession.get().isAuthenticated();
 			}
 		};
 	}
-
-	public static ConditionalModel<User> hasPermission(final String permission) {
-		return new ConditionalModel<User>(new CurrentUserModel()) {
+	
+	/**
+	 * Creates a new model for testing if a user has a specific permission.
+	 * @param name The permission's name.
+	 * @return True if the current user has this permission.
+	 */
+	public static ConditionalModel<?> hasPermission(final String name) {
+		return new ConditionalModel<Set<String>>(new UserPermissionModel(new CurrentUserModel())) {
 			@Override
 			public boolean isFulfilled() {
-				final User user = getObject();
-				return user != null && user.hasPermission(permission);
+				return getObject().contains(name);
 			}
 		};
 	}
-	
+
 	// ----------------------------------------------------
 
 	@SpringBean
@@ -82,12 +87,7 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 	 * {@inheritDoc}
 	 */
 	public RBUser load() {
-		final ResourceID userID = provider.getContext().getUser();
-		if (userID != null) {
-			return new RBUser(provider.getResourceResolver().resolve(userID));
-		} else {
-			return null;
-		}
+		return provider.getContext().getUser();
 	}
-	
+
 }

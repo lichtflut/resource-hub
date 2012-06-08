@@ -13,6 +13,7 @@ import org.arastreju.sge.spi.GateContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.MessagingService;
@@ -38,7 +39,7 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	
 	private final Logger logger = LoggerFactory.getLogger(AbstractServiceProvider.class);
 
-	private final Set<String> initializedDomains = new HashSet<String>();
+	protected final Set<String> initializedDomains = new HashSet<String>();
 	
 	private final ServiceContext ctx;
 	
@@ -51,20 +52,21 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	private MessagingService messagingService;
 	private ViewSpecificationService viewSpecService;
 	private DomainOrganizer domainOrganizer;
+
 	
 	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
 	 */
-	public AbstractServiceProvider(ServiceContext ctx) {
+	public AbstractServiceProvider(ServiceContext ctx, AuthModule authModule) {
 		this.ctx = ctx;
 		schemaManager = new SchemaManagerImpl(this);
 		entityManager = new EntityManagerImpl(this);
 		typeManager = new TypeManagerImpl(this);
 		messagingService = new MessagingServiceImpl(this);
 		domainOrganizer = newDomainOrganizer();
-		securityService = newSecurityService();
+		securityService = newSecurityService(authModule);
 		viewSpecService = newViewSpecificationServiceImpl();
 	}
 
@@ -82,14 +84,14 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	 */
 	@Override
 	public ArastrejuGate getArastejuGate() {
-		if (openGate != null) {
+		if (openGate != null && openGate.getContext().getDomain().equals(ctx.getDomain())) {
 			return openGate;
 		}
-		if (ctx.isAuthenticated()) {
+		if (ctx.getDomain() != null) {
 			openGate = openGate(ctx.getDomain());
 			return openGate;
 		} else {
-			logger.info("Creating default Arastreju Gate for unauthenticated user.");
+			logger.warn("Creating default Arastreju Gate for unauthenticated user.");
 			return openGate = openGate(GateContext.MASTER_DOMAIN);
 		}
 	}
@@ -192,10 +194,11 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	// ----------------------------------------------------
 	
 	/**
+	 * @param authModule
 	 * @return The security service.
 	 */
-	protected SecurityService newSecurityService() {
-		return new SecurityServiceImpl(this);
+	protected SecurityService newSecurityService(AuthModule authModule) {
+		return new SecurityServiceImpl(this, authModule);
 	}
 	
 	/**
@@ -215,8 +218,8 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		} else {
 			final ArastrejuGate gate = aras.rootContext(domain);
 			if (!initializedDomains.contains(domain)) {
-				initializeDomain(gate, domain);
 				initializedDomains.add(domain);
+				initializeDomain(gate, domain);
 			}
 			return gate;	
 		}

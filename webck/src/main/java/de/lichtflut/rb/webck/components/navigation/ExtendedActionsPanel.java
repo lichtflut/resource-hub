@@ -9,28 +9,23 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.query.QueryResult;
-import org.odlabs.wiquery.ui.autocomplete.AutocompleteJavaScriptResourceReference;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -59,15 +54,10 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
  */
 public class ExtendedActionsPanel extends Panel {
 	
-	public static final ResourceReference REF = new JavaScriptResourceReference(ExtendedActionsPanel.class, "lfrb-contextmenu.js");
-			
-	// ----------------------------------------------------
-			
-
 	@SpringBean 
 	private ServiceProvider provider;
 	
-	private MarkupContainer linkContainer;
+	private ContextMenu ctxMenu;
 
 	private IModel<RBEntity> entityModel = null;
 	private IModel<QueryResult> dataModel = null;
@@ -97,8 +87,7 @@ public class ExtendedActionsPanel extends Panel {
 	@Override
 	public void renderHead(final IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(AutocompleteJavaScriptResourceReference.get());
-		response.renderJavaScriptReference(REF);
+		//response.renderJavaScriptReference(AutocompleteJavaScriptResourceReference.get());
 	}
 	
 	// ----------------------------------------------------
@@ -107,18 +96,16 @@ public class ExtendedActionsPanel extends Panel {
 	 * General ExtendedActionsPanel initialization.
 	 */
 	private void init() {
-		linkContainer = new WebMarkupContainer("extendedActionsContainer");
-		linkContainer.setOutputMarkupId(true);
-		linkContainer.setOutputMarkupPlaceholderTag(true);
-		add(linkContainer);
+		ctxMenu = new ContextMenu("extendedActionsContainer");
+		add(ctxMenu);
 		
 		final Label openMenuLink = new Label("showExtendedActionsLink", new ResourceModel("link.extended-actions"));
-		openMenuLink.add(new AttributeModifier("onclick", "LFRB.ContextMenu.toggle('#"+ linkContainer.getMarkupId() + "')"));
+		openMenuLink.add(ctxMenu.createToggleBehavior("onclick"));
 		add(openMenuLink);
 
 		/*TODO: RB-7 - Sichtbarkeitssteuerung des Links funktioniert nicht! Der Link ist IMMER sichtbar, auch wenn sich im
 		 * 		Container keine	sichtbaren Links befinden!! */		
-		openMenuLink.add(visibleIf(isTrue(new HasVisibleLinksModel(new Model<MarkupContainer>(linkContainer)))));
+		openMenuLink.add(visibleIf(isTrue(new HasVisibleLinksModel(new Model<MarkupContainer>(ctxMenu)))));
 		
 		// adding the action links
 		addDeleteEntityLink();
@@ -136,11 +123,11 @@ public class ExtendedActionsPanel extends Panel {
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
 			    hoster.openDialog(new VCardExportDialog(hoster.getDialogID(), entityModel));
-			    closeContextMenu(target);
+			    ctxMenu.close(target);
 			}
 		};
 		exportVCardLink.add(visibleIf(areEqual(new EntityTypeModel(entityModel), Model.of(RB.PERSON))));
-		linkContainer.add(exportVCardLink);
+		ctxMenu.add(exportVCardLink);
 	}
 	
 	private void addDeleteEntityLink() {
@@ -158,11 +145,11 @@ public class ExtendedActionsPanel extends Panel {
 							}
 			    };
 			    hoster.openDialog(confirmDialog);
-			    closeContextMenu(target);
+			    ctxMenu.close(target);
 			}
 		};
 		deleteEntityLink.add(visibleIf(isNotNull(entityModel)));
-		linkContainer.add(deleteEntityLink);
+		ctxMenu.add(deleteEntityLink);
 	}
 	
 	private void addExportExcelEntityLink() {
@@ -171,11 +158,11 @@ public class ExtendedActionsPanel extends Panel {
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
 			    hoster.openDialog(new EntityExcelExportDialog(hoster.getDialogID(), entityModel));
-			    closeContextMenu(target);
+			    ctxMenu.close(target);
 			}
 		};
 		exportExcelEntityLink.add(visibleIf(isNotNull(entityModel)));
-		linkContainer.add(exportExcelEntityLink);
+		ctxMenu.add(exportExcelEntityLink);
 	}
 	
 	private void addExportExcelListLink() {
@@ -184,17 +171,11 @@ public class ExtendedActionsPanel extends Panel {
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
 			    hoster.openDialog(new ResourceListExportDialog(hoster.getDialogID(), dataModel, configModel));
-			    closeContextMenu(target);
+			    ctxMenu.close(target);
 			}
 		};
 		exportExcelListLink.add(visibleIf(and(isNotNull(dataModel), isNotNull(configModel))));
-		linkContainer.add(exportExcelListLink);
-	}
-	
-	// ----------------------------------------------------
-	
-	private void closeContextMenu(AjaxRequestTarget target) {
-		target.appendJavaScript("LFRB.ContextMenu.close('#"+ linkContainer.getMarkupId() + "')");
+		ctxMenu.add(exportExcelListLink);
 	}
 	
 	// ----------------------------------------------------

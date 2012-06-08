@@ -87,6 +87,7 @@ public abstract class UserCreationPanel extends Panel {
 		final AjaxButton create = new RBDefaultButton("create") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+				RBAjaxTarget.add(form);
 				onCreate(normalize(emailID.getObject()), 
 						normalize(username.getObject()), 
 						password.getObject());

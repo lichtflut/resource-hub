@@ -3,13 +3,11 @@
  */
 package de.lichtflut.rb.core.services;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.naming.Namespace;
-import org.arastreju.sge.security.Domain;
 
 import de.lichtflut.rb.core.organizer.ContextDeclaration;
 import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
@@ -28,49 +26,6 @@ import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
 public interface DomainOrganizer {
 	
 	/**
-	 * Get the master domain or null if not initialized.
-	 * @return The master domain or null.
-	 */
-	Domain getDomesticDomain();
-	
-	/**
-	 * Get all registered domains.
-	 * @return The domains.
-	 */
-	Collection<Domain> getDomains();
-	
-	/**
-	 * Register a new domain, known by this domain.
-	 * @param domain The domain object.
-	 * @return The domain.
-	 */
-	Domain registerDomain(Domain domain);
-
-	/**
-	 * Update info for given domain.
-	 * @param domain The domain.
-	 */
-	void updateDomain(Domain domain);
-	
-	/**
-	 * Delete a domain.
-	 * @param domain The domain.
-	 */
-	void deleteDomain(Domain domain);
-	
-	// ----------------------------------------------------
-	
-	/**
-	 * Link the domain to it's organisation.
-	 * @param organization
-	 */
-	void setDomainOrganization(final ResourceID organization);
-	
-	ResourceID getDomainOrganization();
-	
-	// ----------------------------------------------------
-
-	/**
 	 * @return
 	 */
 	List<Namespace> getNamespaces();
@@ -80,14 +35,41 @@ public interface DomainOrganizer {
 	// ----------------------------------------------------
 	
 	/**
-	 * @return
+	 * @return The contexts for the domain.
 	 */
 	List<Context> getContexts();
 
 	/**
-	 * @param object
+	 * @param context The context to be registered.
 	 */
-	void registerContext(ContextDeclaration object);
-
-
+	void registerContext(ContextDeclaration context);
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Link the domain to it's organisation.
+	 * @param organization
+	 */
+	void setDomainOrganization(final ResourceID organization);
+	
+	/**
+	 * Get the organization linked to the domain.
+	 * @return The Organization.
+	 */
+	ResourceID getDomainOrganization();
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Link the current user to the person representing him.
+	 * @param person
+	 */
+	void setUsersPerson(final ResourceID person);
+	
+	/**
+	 * Get the person representing the current user.
+	 * @return The person.
+	 */
+	ResourceID getUsersPerson();
+	
 }

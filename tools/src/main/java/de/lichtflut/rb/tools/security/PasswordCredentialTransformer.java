@@ -14,12 +14,13 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.security.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.security.RBCrypt;
+import de.lichtflut.rb.core.security.RBDomain;
+import de.lichtflut.rb.core.security.authserver.EmbeddedAuthDomainManager;
 
 /**
  * <p>
@@ -78,9 +79,11 @@ public class PasswordCredentialTransformer {
 		Arastreju aras = Arastreju.getInstance(profile);
 		ArastrejuGate masterGate = aras.rootContext();
 		
-		for(Domain domain : masterGate.getOrganizer().getDomains()) {
-			logger.info("current domain: " +domain.getUniqueName());
-			ArastrejuGate gate = aras.rootContext(domain.getUniqueName());
+		final EmbeddedAuthDomainManager domainManager = new EmbeddedAuthDomainManager(masterGate);
+		
+		for(RBDomain domain : domainManager.getAllDomains()) {
+			logger.info("current domain: " +domain.getName());
+			ArastrejuGate gate = aras.rootContext(domain.getName());
 			changePasswordsInDomain(gate);
 		}
 	}
