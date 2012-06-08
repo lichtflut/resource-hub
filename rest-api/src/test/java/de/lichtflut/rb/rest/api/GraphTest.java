@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.rest.api;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -32,7 +33,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 import com.sun.jersey.api.client.WebResource;
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
@@ -92,7 +92,8 @@ public class GraphTest extends TestBase {
 		assertNotNull(responseMsg);
 		final SemanticGraphIO io = new RdfXmlBinding();
 		try {
-			SemanticGraph graph = io.read(new ByteInputStream(responseMsg.getBytes(), responseMsg.getBytes().length));
+			
+			SemanticGraph graph = io.read(new ByteArrayInputStream(responseMsg.getBytes()));
 
 			// Compare if the graph retrieved from the response is  equal to the rb - internally provided graph
 			final List<SNClass> types = getProvider().getTypeManager().findAllTypes();
@@ -152,7 +153,7 @@ public class GraphTest extends TestBase {
 		assertNotNull(responseMsg);
 		final SemanticGraphIO io = new RdfXmlBinding();
 		try {
-			SemanticGraph graph = io.read(new ByteInputStream(responseMsg.getBytes(), responseMsg.getBytes().length));
+			SemanticGraph graph = io.read(new ByteArrayInputStream(responseMsg.getBytes()));
 			assertEquals(1, graph.getSubjects().size());
 			assertEquals(7, graph.getStatements().size());
 
