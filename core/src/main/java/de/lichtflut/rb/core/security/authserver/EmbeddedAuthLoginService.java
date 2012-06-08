@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
-import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.eh.ArastrejuRuntimeException;
@@ -52,16 +52,18 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	
 	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthLoginService.class);
 	
-	private final ArastrejuGate masterGate;
+	private final ModelingConversation conversation;
 	
 	// ----------------------------------------------------
 	
 	/**
 	 * Constructor.
-	 * @param gate The Arastreju Gate.
+	 * @param conversation The Arastreju conversation.
 	 */
-	public EmbeddedAuthLoginService(ArastrejuGate gate) {
-		this.masterGate = gate;
+	public EmbeddedAuthLoginService(ModelingConversation conversation) {
+		this.conversation = conversation;
+		this.conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
+		this.conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
 	}
 	
 	// -- LOGIN -------------------------------------------
@@ -139,7 +141,7 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	}
 	
 	protected ResourceNode findUserNode(final String id) {
-		return EmbeddedAuthFunctions.findUserNode(masterGate.createQueryManager(), id);
+		return EmbeddedAuthFunctions.findUserNode(conversation, id);
 	}
 	
 	private void setLastLogin(final ResourceNode user) {

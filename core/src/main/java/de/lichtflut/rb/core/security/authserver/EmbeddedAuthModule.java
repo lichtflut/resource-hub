@@ -4,6 +4,8 @@
 package de.lichtflut.rb.core.security.authserver;
 
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.context.Context;
+import org.arastreju.sge.context.SimpleContextID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +27,16 @@ import de.lichtflut.rb.core.security.UserManager;
  * @author Oliver Tigges
  */
 public class EmbeddedAuthModule implements AuthModule {
+	
+	public static final String CTX_NAMESPACE_URI = "http://rb.lichtflut.de/embedded-auth/contexts";
+	
+	public static final String ROOT_USER = "root";
+	
+	public static final Context IDENT = new SimpleContextID(CTX_NAMESPACE_URI, "IdentityManagement");
+	
+	// ----------------------------------------------------
 
-	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthUserManager.class);
+	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthModule.class);
 	
 	private final EmbeddedAuthDomainManager domainManager;
 	
@@ -56,7 +66,7 @@ public class EmbeddedAuthModule implements AuthModule {
 		}
 		this.domainManager = new EmbeddedAuthDomainManager(gate, initializer);
 		this.userManager = new EmbeddedAuthUserManager(gate, domainManager);
-		this.loginService = new EmbeddedAuthLoginService(gate);
+		this.loginService = new EmbeddedAuthLoginService(gate.startConversation());
 	}
 	
 	// ----------------------------------------------------

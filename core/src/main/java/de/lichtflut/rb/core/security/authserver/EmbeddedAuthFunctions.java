@@ -3,11 +3,11 @@
  */
 package de.lichtflut.rb.core.security.authserver;
 
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryManager;
 import org.arastreju.sge.query.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +39,8 @@ public class EmbeddedAuthFunctions {
 		return RBCrypt.extractSalt(credential);
 	}
 	
-	public static ResourceNode findUserNode(QueryManager qm, String id) {
-		final Query query = qm.buildQuery();
+	public static ResourceNode findUserNode(ModelingConversation conversation, String id) {
+		final Query query = conversation.createQuery();
 		query.addField(Aras.IDENTIFIED_BY, id);
 		final QueryResult result = query.getResult();
 		if (result.size() > 1) {

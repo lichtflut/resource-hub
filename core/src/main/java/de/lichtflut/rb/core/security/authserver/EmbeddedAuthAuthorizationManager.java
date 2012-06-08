@@ -40,7 +40,7 @@ public class EmbeddedAuthAuthorizationManager {
 	
 	private final static Logger logger = LoggerFactory.getLogger(EmbeddedAuthAuthorizationManager.class);
 	
-	private final ArastrejuGate masterGate;
+	private final ModelingConversation conversation;
 
 	private final EmbeddedAuthDomainManager domainManager;
 	
@@ -50,9 +50,11 @@ public class EmbeddedAuthAuthorizationManager {
 	 * Constructor.
 	 * @param domainManager The domain manager.
 	 */
-	public EmbeddedAuthAuthorizationManager(ArastrejuGate masterGate, EmbeddedAuthDomainManager domainManager) {
-		this.masterGate = masterGate;
+	public EmbeddedAuthAuthorizationManager(ArastrejuGate gate, EmbeddedAuthDomainManager domainManager) {
 		this.domainManager = domainManager;
+		this.conversation = gate.startConversation();
+		this.conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
+		this.conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
 	}
 	
 	// -- ROLE ASSIGNMENT ---------------------------------
@@ -144,7 +146,7 @@ public class EmbeddedAuthAuthorizationManager {
 	}
 	
 	private ModelingConversation mc() {
-		return masterGate.startConversation();
+		return conversation;
 	}
 	
 }
