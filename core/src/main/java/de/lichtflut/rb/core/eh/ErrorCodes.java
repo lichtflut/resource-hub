@@ -23,6 +23,8 @@ public interface ErrorCodes {
 	public static final Long SECURITYSERVICE_EMAIL_ALREADY_IN_USE = 1201L;
 	public static final Long SECURITYSERVICE_USERNAME_ALREADY_IN_USE = 1202L;
 	
-	public static final Long EMAIL_SERVICE_EXCEPTIO = 1300L;
+	public static final Long SECURITYSERVICE_DOMAIN_NOT_FOUND = 1301L;
+	
+	public static final Long EMAIL_SERVICE_EXCEPTIO = 3000L;
 	
 }

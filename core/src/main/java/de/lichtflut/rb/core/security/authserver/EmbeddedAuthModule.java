@@ -32,6 +32,8 @@ public class EmbeddedAuthModule implements AuthModule {
 	
 	private final EmbeddedAuthUserManager userManager;
 	
+	private final EmbeddedAuthLoginService loginService;
+	
 	// ----------------------------------------------------
 	
 	/**
@@ -54,6 +56,7 @@ public class EmbeddedAuthModule implements AuthModule {
 		}
 		this.domainManager = new EmbeddedAuthDomainManager(gate, initializer);
 		this.userManager = new EmbeddedAuthUserManager(gate, domainManager);
+		this.loginService = new EmbeddedAuthLoginService(gate);
 	}
 	
 	// ----------------------------------------------------
@@ -63,7 +66,7 @@ public class EmbeddedAuthModule implements AuthModule {
 	 */
 	@Override
 	public AuthenticationService getAuthenticationService() {
-		return userManager;
+		return loginService;
 	}
 
 	/** 

@@ -8,6 +8,7 @@ import java.util.Date;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.QualifiedName;
@@ -57,11 +58,18 @@ public class RBUser implements Serializable {
 	}
 	
 	/**
-	 * Constructor.
+	 * Creates a new user with given URI.
 	 * @param userNode The node representing the user.
 	 */
 	public RBUser(final QualifiedName qn) {
 		this.qn = qn;
+	}
+	
+	/**
+	 * Creates a new user with a random URI.
+	 */
+	public RBUser() {
+		this(new SimpleResourceID().getQualifiedName());
 	}
 	
 	// ----------------------------------------------------

@@ -161,7 +161,7 @@ public class EmbeddedAuthUserManager implements AuthenticationService,
 	public String createRememberMeToken(RBUser user, LoginData loginData) {
 		final String email = user.getEmail();
 		final String id = normalize(loginData.getId());
-		final String credential = toCredential(loginData.getPassword(), findUserNode(id)).stringRepesentation();
+		final String credential = toCredential(loginData.getPassword(), findUserNode(id)).toString();
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, 30);
 		final String raw = email + ":" + DATE_FORMAT.format(cal.getTime());
