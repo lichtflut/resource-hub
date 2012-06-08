@@ -46,8 +46,8 @@ public class InformationImportDialog extends AbstractRBDialog {
 
 	private static Logger logger = LoggerFactory.getLogger(InformationImportDialog.class);
 	
-	@SpringBean
-	private ServiceProvider provider;
+	@SpringBean(name="conversation")
+	private ModelingConversation conversation;
 	
 	// ----------------------------------------------------
 	
@@ -93,14 +93,12 @@ public class InformationImportDialog extends AbstractRBDialog {
 		boolean isFirstReport = true;
 		IOReport endReport = null;
 		
-		final ModelingConversation mc = provider.getArastejuGate().startConversation();
-		
 		for (FileUpload upload : uploadList) {
 			final IOReport report = new IOReport();
 			final SemanticGraphIO io = new RdfXmlBinding();
 			
-			final TransactionControl tx = mc.beginTransaction();
-			final ReportingStatementImporter importer = new ReportingStatementImporter(mc);
+			final TransactionControl tx = conversation.beginTransaction();
+			final ReportingStatementImporter importer = new ReportingStatementImporter(conversation);
 			try {	
 				io.read(upload.getInputStream(), importer);
 				report.merge(importer.createReport());

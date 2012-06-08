@@ -46,8 +46,6 @@ public class TestServiceProvider extends DefaultRBServiceProvider {
 	protected void initializeDomain(ArastrejuGate gate, String domainName) {
 
 		final Organizer organizer = gate.getOrganizer();
-		organizer.registerContext(Aras.IDENT.getQualifiedName());
-		organizer.registerContext(Aras.TYPES.getQualifiedName());
 		organizer.registerContext(RB.DOMAIN_CONTEXT.getQualifiedName());
 		organizer.registerContext(RB.SCHEMA_CONTEXT.getQualifiedName());
 		organizer.registerContext(RB.PRIVATE_CONTEXT.getQualifiedName());

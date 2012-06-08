@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.services;
 
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.persistence.ResourceResolver;
 
 
@@ -27,6 +28,11 @@ public interface ServiceProvider {
 	 * @return an instance of {@link ArastrejuGate} which depends on the specific ServiceProvider
 	 */
 	ArastrejuGate getArastejuGate();
+	
+	/**
+	 * @return An active Arastreju conversation.
+	 */
+	ModelingConversation getConversation();
 	
 	// -----------------------------------------------------
 

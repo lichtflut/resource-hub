@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.security.authserver;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +23,6 @@ import org.arastreju.sge.query.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import scala.actors.threadpool.Arrays;
 import de.lichtflut.infra.Infra;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RB;
@@ -54,7 +54,7 @@ public class EmbeddedAuthUserManager implements UserManager {
 	
 	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthUserManager.class);
 	
-	private final ArastrejuGate masterGate;
+	private final ModelingConversation conversation;
 	
 	private final EmbeddedAuthAuthorizationManager authorization;
 
@@ -68,9 +68,10 @@ public class EmbeddedAuthUserManager implements UserManager {
 	 * @param domainManager The domain manager.
 	 */
 	public EmbeddedAuthUserManager(ArastrejuGate gate, EmbeddedAuthDomainManager domainManager) {
-		this.masterGate = gate;
 		this.domainManager = domainManager;
-		this.authorization = new EmbeddedAuthAuthorizationManager(masterGate, domainManager);
+		this.authorization = new EmbeddedAuthAuthorizationManager(gate, domainManager);
+		this.conversation = gate.startConversation();
+		this.conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
 	}
 	
 	// -- USER MANAGEMENT ---------------------------------
@@ -103,23 +104,21 @@ public class EmbeddedAuthUserManager implements UserManager {
 		if (domain == null) {
 			throw new RBAuthException(ErrorCodes.SECURITYSERVICE_DOMAIN_NOT_FOUND, "Domain unknown: " + domainName);
 	}
-		final ModelingConversation mc = masterGate.startConversation();
 		final ResourceNode userNode = new SNResource(user.getQualifiedName());
-		userNode.addAssociation(RDF.TYPE, Aras.USER, Aras.IDENT);
-		userNode.addAssociation(Aras.BELONGS_TO_DOMAIN, domain, Aras.IDENT);
-		userNode.addAssociation(Aras.HAS_CREDENTIAL, new SNText(credential), Aras.IDENT);
+		userNode.addAssociation(RDF.TYPE, Aras.USER);
+		userNode.addAssociation(Aras.BELONGS_TO_DOMAIN, domain);
+		userNode.addAssociation(Aras.HAS_CREDENTIAL, new SNText(credential));
 
 		SNOPS.assure(userNode, RBSystem.HAS_EMAIL, user.getEmail());
-		SNOPS.associate(userNode, Aras.IDENTIFIED_BY, new SNText(user.getEmail()), Aras.IDENT);
-		SNOPS.associate(userNode, Aras.IDENTIFIED_BY, new SNText(user.getQualifiedName().toURI()), Aras.IDENT);
+		SNOPS.associate(userNode, Aras.IDENTIFIED_BY, new SNText(user.getEmail()));
+		SNOPS.associate(userNode, Aras.IDENTIFIED_BY, new SNText(user.getQualifiedName().toURI()));
 		if (user.getUsername() != null) {
 			SNOPS.assure(userNode, RBSystem.HAS_USERNAME, user.getUsername());
-			SNOPS.associate(userNode, Aras.IDENTIFIED_BY, new SNText(user.getUsername()), Aras.IDENT);
+			SNOPS.associate(userNode, Aras.IDENTIFIED_BY, new SNText(user.getUsername()));
 		}
 		
-		mc.attach(userNode);
+		conversation.attach(userNode);
 		logger.info("Registered user: " + user + " --> " + domain);
-		mc.close();
 	}
 	
 	/** 
@@ -127,7 +126,7 @@ public class EmbeddedAuthUserManager implements UserManager {
 	 */
 	@Override
 	public void updateUser(RBUser updated) throws RBAuthException {
-		final ResourceNode attachedUser = masterGate.startConversation().findResource(updated.getQualifiedName());
+		final ResourceNode attachedUser = conversation.findResource(updated.getQualifiedName());
 		final RBUser existing = new RBUser(attachedUser);
 		if (!Infra.equals(existing.getEmail(), updated.getEmail())) {
 			if (isIdentifierInUse(updated.getEmail())) {
@@ -139,18 +138,16 @@ public class EmbeddedAuthUserManager implements UserManager {
 				throw new UsernameAlreadyInUseException("Username already in use.");
 			}
 		}
+		final List<SNText> identifiers = new ArrayList<SNText>();
 		SNOPS.assure(attachedUser, RBSystem.HAS_EMAIL, updated.getEmail());
+		identifiers.add(new SNText(updated.getEmail()));
 		if (updated.getUsername() != null) {
-			SNOPS.assure(attachedUser, RBSystem.HAS_USERNAME, updated.getUsername());	
+			SNOPS.assure(attachedUser, RBSystem.HAS_USERNAME, updated.getUsername());
+			identifiers.add(new SNText(updated.getUsername()));
 		} else {
 			SNOPS.remove(attachedUser, RBSystem.HAS_USERNAME);
 		}
-		@SuppressWarnings("unchecked")
-		final List<SNText> identifiers = Arrays.asList(new SNText[] {
-				new SNText(updated.getEmail()), 
-				new SNText(updated.getUsername())
-			});
-		SNOPS.assure(attachedUser, Aras.IDENTIFIED_BY, identifiers, Aras.IDENT);
+		SNOPS.assure(attachedUser, Aras.IDENTIFIED_BY, identifiers);
 	}
 	
 	/** 
@@ -158,20 +155,19 @@ public class EmbeddedAuthUserManager implements UserManager {
 	 */
 	@Override
 	public void deleteUser(RBUser user) {
-		final Query query = masterGate.createQueryManager().buildQuery()
+		final Query query = conversation.createQuery()
 				.addField(Aras.IDENTIFIED_BY, user.getEmail())
 				.or()
 				.addField(Aras.IDENTIFIED_BY, user.getUsername());
 		final QueryResult result = query.getResult();
 		if (!result.isEmpty()) {
 			for (ResourceNode id : result) {
-				masterGate.startConversation().remove(id);
+				conversation.remove(id);
 				logger.info("User deleted user {} from master domain; ID: {} ", user, id);	
 			}
 		} else {
 			logger.warn("User could not be deleted from master domain: " + user);
 		}
-		masterGate.close();
 	}
 	
 	// -- PASSWORD HANDLING -------------------------------
@@ -242,11 +238,11 @@ public class EmbeddedAuthUserManager implements UserManager {
 	// ----------------------------------------------------
 	
 	protected ResourceNode findUserNode(final String id) {
-		return EmbeddedAuthFunctions.findUserNode(masterGate.createQueryManager(), id);
+		return EmbeddedAuthFunctions.findUserNode(conversation, id);
 	}
 	
 	private boolean isIdentifierInUse(String identifier) {
-		final Query query = masterGate.createQueryManager().buildQuery();
+		final Query query = conversation.createQuery();
 		query.addField(Aras.IDENTIFIED_BY, identifier);
 		if (query.getResult().isEmpty()) {
 			return false;
