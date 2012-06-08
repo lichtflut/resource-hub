@@ -26,8 +26,6 @@ public class AbstractService {
 	
 	private final ServiceProvider provider;
 	
-	private ModelingConversation conversation;
-	
 	// ----------------------------------------------------
 	
 	/**
@@ -61,14 +59,11 @@ public class AbstractService {
 	// ----------------------------------------------------
 	
 	protected Query query() {
-		return gate().createQueryManager().buildQuery();
+		return mc().createQuery();
 	}
 	
 	protected ModelingConversation mc() {
-		if (conversation == null) {
-			conversation = gate().startConversation();
-		}
-		return conversation;
+		return provider.getConversation();
 	}
 	
 	// ----------------------------------------------------

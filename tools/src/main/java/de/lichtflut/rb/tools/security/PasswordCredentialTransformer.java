@@ -92,11 +92,11 @@ public class PasswordCredentialTransformer {
 		for (String password : PASSWORD_LIST) {
 			String oldCredential = Crypt.md5Hex(password);
 			
-			Query query = gate.createQueryManager().buildQuery();
+			Query query = gate.startConversation().createQuery();
 			query.addField(Aras.HAS_CREDENTIAL, oldCredential);
 			
 			for(ResourceNode node : query.getResult()) {
-				SNOPS.assure(node, Aras.HAS_CREDENTIAL, RBCrypt.encrypt(password), Aras.IDENT);
+				SNOPS.assure(node, Aras.HAS_CREDENTIAL, RBCrypt.encrypt(password));
 				logger.info("A password credential for " +password +" was changed!");
 			}
 		}

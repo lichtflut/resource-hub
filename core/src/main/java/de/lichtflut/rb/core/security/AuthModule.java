@@ -22,6 +22,10 @@ package de.lichtflut.rb.core.security;
  */
 public interface AuthModule {
 	
+	String MASTER_DOMAIN = "root";
+	
+	// ----------------------------------------------------
+	
 	/**
 	 * Get the service for authentication of users.
 	 * @return The authentication service.

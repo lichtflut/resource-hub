@@ -48,7 +48,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	
 	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthDomainManager.class);
 	
-	private final ArastrejuGate masterGate;
+	private final ModelingConversation conversation;
 
 	private final DomainInitializer initializer;
 	
@@ -68,7 +68,9 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	 * @param initializer The initializer for new domains.
 	 */
 	public EmbeddedAuthDomainManager(ArastrejuGate gate, DomainInitializer initializer) {
-		this.masterGate = gate;
+		this.conversation = gate.startConversation();
+		this.conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
+		this.conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
 		this.initializer = initializer;
 	}
 	
@@ -80,10 +82,10 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	@Override
 	public RBDomain findDomain(String domain) {
 		final ResourceNode domainNode = findDomainNode(domain);
-		if(domainNode!=null){
-			return new RBDomain(domainNode);
+		if (domainNode == null) {
+			return null;
 		}
-		return null;
+		return new RBDomain(domainNode);
 	}
 
 	/** 
@@ -92,14 +94,14 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	@Override
 	public RBDomain registerDomain(RBDomain domain) {
 		final ResourceNode node = new SNResource();
-		node.addAssociation(Aras.HAS_UNIQUE_NAME, new SNText(domain.getName()), Aras.IDENT);
+		node.addAssociation(Aras.HAS_UNIQUE_NAME, new SNText(domain.getName()));
 		if (domain.getTitle() != null) {
-			node.addAssociation(Aras.HAS_TITLE, new SNText(domain.getTitle()), Aras.IDENT);
+			node.addAssociation(Aras.HAS_TITLE, new SNText(domain.getTitle()));
 		}
 		if (domain.getDescription() != null) {
-			node.addAssociation(Aras.HAS_DESCRIPTION, new SNText(domain.getDescription()), Aras.IDENT);
+			node.addAssociation(Aras.HAS_DESCRIPTION, new SNText(domain.getDescription()));
 		}
-		node.addAssociation(RDF.TYPE, Aras.DOMAIN, Aras.IDENT);
+		node.addAssociation(RDF.TYPE, Aras.DOMAIN);
 		final RBDomain created = new RBDomain(node);
 		
 		final ModelingConversation mc = mc();
@@ -107,8 +109,6 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		if (initializer != null) {
 			initializer.initialize(created, this);
 		}
-		mc.close();
-		
 		logger.info("Created new domain: " + created);
 		return created;
 	}
@@ -251,11 +251,11 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	}
 	
 	private ModelingConversation mc() {
-		return masterGate.startConversation();
+		return conversation;
 	}
 	
 	private Query query() {
-		return masterGate.createQueryManager().buildQuery();
+		return mc().createQuery();
 	}
 	
 }

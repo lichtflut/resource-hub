@@ -3,6 +3,9 @@
  */
 package de.lichtflut.rb.core.apriori.migrations;
 
+import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
+
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
@@ -48,12 +51,12 @@ public class Migration_0001_ExternalAuthServer {
 		assertDomain(masterGate, GateContext.MASTER_DOMAIN);
 		
 		final ModelingConversation mc = masterGate.startConversation();
-		final Query query = masterGate.createQueryManager().buildQuery();
+		final Query query = masterGate.startConversation().createQuery();
 		query.addField(RDF.TYPE, Aras.USER);
 		final QueryResult result = query.getResult();
 		for (ResourceNode userNode : result) {
 			final SemanticNode credential = SNOPS.fetchObject(userNode, Aras.HAS_CREDENTIAL);
-			final String domain =  SNOPS.string(SNOPS.fetchObject(userNode, Aras.BELONGS_TO_DOMAIN));
+			final String domain =  uniqueName(SNOPS.fetchObject(userNode, Aras.BELONGS_TO_DOMAIN));
 			final String identifier = SNOPS.string(SNOPS.fetchObject(userNode, Aras.IDENTIFIED_BY));
 			if (credential == null && domain != null) {
 				mc.remove(userNode);
@@ -66,13 +69,14 @@ public class Migration_0001_ExternalAuthServer {
 
 	// ----------------------------------------------------
 
-	private void moveToMasterDomain(String identifier, String domain, ArastrejuGate masterGate, ServiceProvider sp) {
+	private void moveToMasterDomain(String identifier, String domainName, ArastrejuGate masterGate, ServiceProvider sp) {
 		logger.info("Migrating user " + identifier);
 		
-		sp.getContext().setDomain(domain);
+		sp.getContext().setDomain(domainName);
 		final ArastrejuGate domainGate = sp.getArastejuGate();
-		assertDomain(domainGate, domain);
+		assertDomain(domainGate, domainName);
 		
+		final ResourceNode domain = findDomainNode(domainName, masterGate);
 		
 		final UserManager um = new EmbeddedAuthUserManager(domainGate, null);
 		
@@ -90,7 +94,7 @@ public class Migration_0001_ExternalAuthServer {
 			masterUser.addAssociation(Aras.IDENTIFIED_BY, new SNText(username));
 		}
 		masterUser.addAssociation(Aras.HAS_CREDENTIAL, new SNText(credential));
-		masterUser.addAssociation(Aras.BELONGS_TO_DOMAIN, new SNText(domain));
+		masterUser.addAssociation(Aras.BELONGS_TO_DOMAIN, domain);
 		masterGate.startConversation().attach(masterUser);
 		
 		SNOPS.remove(user, Aras.IDENTIFIED_BY);
@@ -104,6 +108,26 @@ public class Migration_0001_ExternalAuthServer {
 		if (!domain.equals(gate.getContext().getDomain())) {
 			throw new IllegalStateException("Not in expected domain '" + domain + "' - it is '" + gate.getContext().getDomain());
 		}
+	}
+	
+	private String uniqueName(SemanticNode node) {
+		if (node != null && node.isResourceNode()) {
+			return string(singleObject(node.asResource(), Aras.HAS_UNIQUE_NAME));
+		} else {
+			return null;
+		}
+	}
+	
+	private ResourceNode findDomainNode(String domain, ArastrejuGate masterGate) {
+		if (domain == null) {
+			throw new IllegalArgumentException("Domain name may not be null.");
+		}
+		final Query query = masterGate.startConversation().createQuery()
+				.addField(RDF.TYPE, Aras.DOMAIN)
+				.and()
+				.addField(Aras.HAS_UNIQUE_NAME, domain);
+		final ResourceNode domainNode = query.getResult().getSingleNode();
+		return domainNode;
 	}
 
 }

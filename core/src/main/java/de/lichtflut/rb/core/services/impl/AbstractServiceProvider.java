@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.persistence.ResourceResolver;
 import org.arastreju.sge.spi.GateContext;
 import org.slf4j.Logger;
@@ -44,6 +45,8 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	private final ServiceContext ctx;
 	
 	private ArastrejuGate openGate;
+	
+	private ModelingConversation conversation;
 	
 	private SchemaManager schemaManager;
 	private EntityManager entityManager;
@@ -94,6 +97,17 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 			logger.warn("Creating default Arastreju Gate for unauthenticated user.");
 			return openGate = openGate(GateContext.MASTER_DOMAIN);
 		}
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ModelingConversation getConversation() {
+		if (conversation == null) {
+			conversation = getArastejuGate().startConversation();
+		} 
+		return conversation;
 	}
 	
 	// ----------------------------------------------------
@@ -176,8 +190,9 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	 */
 	@Override
 	public void onDetach() {
-		if (openGate != null) {
-			openGate.startConversation().close();
+		if (conversation != null) {
+			conversation.close();
+			conversation = null;
 		}
 	}
 	
