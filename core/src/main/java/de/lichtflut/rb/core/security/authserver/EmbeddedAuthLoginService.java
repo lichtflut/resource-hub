@@ -1,84 +1,91 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.services.impl;
+package de.lichtflut.rb.core.security.authserver;
+
+import static org.arastreju.sge.SNOPS.singleObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 import org.arastreju.sge.ArastrejuGate;
-import org.arastreju.sge.IdentityManagement;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.eh.ArastrejuRuntimeException;
+import org.arastreju.sge.eh.ErrorCodes;
 import org.arastreju.sge.model.TimeMask;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
-import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.security.Credential;
-import org.arastreju.sge.security.Domain;
 import org.arastreju.sge.security.LoginException;
 import org.arastreju.sge.security.PasswordCredential;
-import org.arastreju.sge.security.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.security.AuthenticationService;
 import de.lichtflut.rb.core.security.LoginData;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.AuthenticationService;
-import de.lichtflut.rb.core.services.SecurityService;
-import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
- *  Implementation of {@link SecurityService}.
+ *  This is the login service of the embedded auth module.
  * </p>
  *
  * <p>
- * 	Created Jan 2, 2012
+ * 	Created May 4, 2012
  * </p>
  *
  * @author Oliver Tigges
  */
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class EmbeddedAuthLoginService implements AuthenticationService {
 	
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ssZ");
 	
-	private final Logger logger = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthLoginService.class);
 	
-	private final AbstractServiceProvider provider;
+	private final ArastrejuGate masterGate;
 	
 	// ----------------------------------------------------
 	
 	/**
-	 * @param provider
+	 * Constructor.
+	 * @param gate The Arastreju Gate.
 	 */
-	public AuthenticationServiceImpl(AbstractServiceProvider provider) {
-		this.provider = provider;
+	public EmbeddedAuthLoginService(ArastrejuGate gate) {
+		this.masterGate = gate;
 	}
-
-	// ----------------------------------------------------
-
+	
+	// -- LOGIN -------------------------------------------
+	
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
 	public RBUser login(LoginData loginData) throws LoginException {
 		final String id = normalize(loginData.getId());
-		final IdentityManagement im = getGateForUser(id).getIdentityManagement();
-		final Credential credential = toCredential(loginData.getPassword(), im.findUser(id));
-		final User user = im.login(id, credential);
+		if (id == null) {
+			throw new LoginException(ErrorCodes.LOGIN_INVALID_DATA, "No username given");	
+		}
+		
+		logger.info("Trying to login user '" + id + "'.");
+
+		final ResourceNode user = findUserNode(id);
+		if (user == null){
+			throw new LoginException(ErrorCodes.LOGIN_USER_NOT_FOUND, "User does not exist: " + id);	
+		}
+		
+		verifyPassword(user, loginData.getPassword());
 		setLastLogin(user);
+		
 		logger.info("User {} logged in. ", user);
 		return new RBUser(user);
 	}
@@ -94,7 +101,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 		try {
 			final String id = fields[0];
-			final User arasUser = getGateForUser(id).getIdentityManagement().findUser(id);
+			final ResourceNode arasUser = findUserNode(id);
 			if (arasUser != null && isValid(arasUser, id, fields[1], fields[2])) {
 				final RBUser user = new RBUser(arasUser);
 				logger.info("User {} logged in by token.", user);
@@ -115,48 +122,31 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	public String createRememberMeToken(RBUser user, LoginData loginData) {
 		final String email = user.getEmail();
 		final String id = normalize(loginData.getId());
-		final IdentityManagement im = getGateForUser(id).getIdentityManagement();
-		final Credential credential = toCredential(loginData.getPassword(), im.findUser(id));
+		final Credential credential = toCredential(loginData.getPassword(), findUserNode(id));
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, 30);
 		final String raw = email + ":" + DATE_FORMAT.format(cal.getTime()); 
-		return raw + ":" + Crypt.md5Hex(raw + credential);
+		return raw + ":" + Crypt.md5Hex(raw + credential.stringRepesentation());
 	}
 
 	// ----------------------------------------------------
 	
-	/**
-	 * @return the provider
-	 */
-	protected ServiceProvider getProvider() {
-		return provider;
-	}
-	
-	protected ArastrejuGate getGateForUser(String userID) {
-		final ArastrejuGate masterGate = provider.getArastejuGate();
-		final Query query = masterGate.createQueryManager().buildQuery().addField(Aras.IDENTIFIED_BY, userID);
-		final QueryResult result = query.getResult();
-		if (!result.isEmpty()) {
-			final SemanticNode domainNode = SNOPS.fetchObject(result.getSingleNode(), Aras.BELONGS_TO_DOMAIN);
-			if (domainNode != null && domainNode.isValueNode()) {
-				String domain = domainNode.asValue().getStringValue();
-				final Collection<Domain> allDomains = masterGate.getOrganizer().getDomains();
-				assertContains(allDomains, domain);
-				return provider.openGate(domain);
-			}
-		} else {
-			logger.info("Login ID unknown: " + userID);
+	protected void verifyPassword(final ResourceNode user, String password) throws LoginException {
+		final Credential credential = toCredential(password, user);
+		if (!credential.applies(singleObject(user, Aras.HAS_CREDENTIAL))){
+			throw new LoginException(ErrorCodes.LOGIN_USER_CREDENTIAL_NOT_MATCH, "Wrong credential");
 		}
-		return masterGate;
 	}
 	
-	// ----------------------------------------------------
+	protected ResourceNode findUserNode(final String id) {
+		return EmbeddedAuthFunctions.findUserNode(masterGate.createQueryManager(), id);
+	}
 	
-	private void setLastLogin(final User user) {
+	private void setLastLogin(final ResourceNode user) {
 		SNOPS.assure(user, RBSystem.HAS_LAST_LOGIN, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
 	}
 	
-	private boolean isValid(User user, String id, String validUntil, String token) {
+	private boolean isValid(ResourceNode user, String id, String validUntil, String token) {
 		try {
 			final Date date = DATE_FORMAT.parse(validUntil);
 			if (date.before(new Date())){
@@ -175,9 +165,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return false;
 	}
 	
-	private Credential toCredential(final String password, final User user) {
+	private Credential toCredential(final String password, final ResourceNode user) {
 		if (password != null) {
-			String salt = provider.getSecurityService().getSalt(user);
+			String salt = EmbeddedAuthFunctions.getSalt(user);
 			if (salt == null || salt.isEmpty()) {
 				logger.warn("User has no salt, will use old password crypter.");
 				return new PasswordCredential(Crypt.md5Hex(password));
@@ -196,13 +186,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 	}
 	
-	private void assertContains(Collection<Domain> allDomains, String domain) {
-		for (Domain current : allDomains) {
-			if (current.getUniqueName().equals(domain)) {
-				return;
-			}
-		}
-		throw new IllegalStateException("Domain is not registered: " + domain);
-	}
-
 }

@@ -13,8 +13,8 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
-import org.arastreju.sge.security.Domain;
 
+import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 
 /**
@@ -28,7 +28,7 @@ import de.lichtflut.rb.webck.components.common.TypedPanel;
  *
  * @author Oliver Tigges
  */
-public abstract class DomainBrowserPanel extends TypedPanel<List<Domain>> {
+public abstract class DomainBrowserPanel extends TypedPanel<List<RBDomain>> {
 
 	/**
 	 * Constructor.
@@ -36,24 +36,24 @@ public abstract class DomainBrowserPanel extends TypedPanel<List<Domain>> {
 	 * @param model The model of domains.
 	 */
 	@SuppressWarnings("rawtypes")
-	public DomainBrowserPanel(String id, IModel<List<Domain>> model) {
+	public DomainBrowserPanel(String id, IModel<List<RBDomain>> model) {
 		super(id, model);
 		
 		setOutputMarkupId(true);
 		
-		add(new ListView<Domain>("listview", model) {
+		add(new ListView<RBDomain>("listview", model) {
 			@Override
-			protected void populateItem(final ListItem<Domain> item) {
-				final Domain domain = item.getModelObject();
+			protected void populateItem(final ListItem<RBDomain> item) {
+				final RBDomain domain = item.getModelObject();
 				
 				final Link link = new AjaxFallbackLink("link") {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						onDomainSelected(domain);
+						onDomainSelected(item.getModel());
 					}
 				};
 				item.add(link);
-				link.add(new Label("domain", domain.getUniqueName()));
+				link.add(new Label("domain", domain.getName()));
 				link.add(new AttributeAppender("title", domain.getTitle()));
 			}
 		});
@@ -62,6 +62,6 @@ public abstract class DomainBrowserPanel extends TypedPanel<List<Domain>> {
 	
 	// ----------------------------------------------------
 	
-	public abstract void onDomainSelected(Domain domain);
+	public abstract void onDomainSelected(IModel<RBDomain> domain);
 
 }

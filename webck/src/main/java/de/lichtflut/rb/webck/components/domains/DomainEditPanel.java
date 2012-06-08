@@ -14,7 +14,6 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -23,9 +22,9 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.security.Domain;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
@@ -38,7 +37,7 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
 
 /**
  * <p>
- *  Edit panel for {@link Domain}s.
+ *  Edit panel for {@link RBDomain}s.
  * </p>
  *
  * <p>
@@ -48,10 +47,10 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
  * @author Oliver Tigges
  */
 @SuppressWarnings("rawtypes")
-public class DomainEditPanel extends TypedPanel<Domain> {
+public class DomainEditPanel extends TypedPanel<RBDomain> {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private AuthModule authModule;
 	
 	private final IModel<DisplayMode> modeModel;
 	
@@ -69,7 +68,7 @@ public class DomainEditPanel extends TypedPanel<Domain> {
 	 * @param domainModel The model containing the domain.
 	 * @param mode The initial mode.
 	 */
-	public DomainEditPanel(final String id, final IModel<Domain> domainModel, final DisplayMode mode) {
+	public DomainEditPanel(final String id, final IModel<RBDomain> domainModel, final DisplayMode mode) {
 		this(id, domainModel, Model.of(mode));
 	}
 	
@@ -79,7 +78,7 @@ public class DomainEditPanel extends TypedPanel<Domain> {
 	 * @param domainModel The model containing the domain.
 	 * @param mode The initial mode.
 	 */
-	public DomainEditPanel(final String id, final IModel<Domain> domainModel, final IModel<DisplayMode> mode) {
+	public DomainEditPanel(final String id, final IModel<RBDomain> domainModel, final IModel<DisplayMode> mode) {
 		super(id, domainModel);
 		
 		this.modeModel = mode;
@@ -91,13 +90,12 @@ public class DomainEditPanel extends TypedPanel<Domain> {
 		setOutputMarkupId(true);
 		setOutputMarkupPlaceholderTag(true);
 		
-		final Form<Domain> form = new Form<Domain>("form", new CompoundPropertyModel<Domain>(domainModel));
-
+		final Form<RBDomain> form = new Form<RBDomain>("form", new CompoundPropertyModel<RBDomain>(domainModel));
 		form.setOutputMarkupId(true);
 		
 		form.add(new FeedbackPanel("feedback"));
 		
-		final TextField<String> nameField = new TextField<String>("uniqueName");
+		final TextField<String> nameField = new TextField<String>("name");
 		nameField.add(enableIf(isCreateMode));
 		form.add(nameField);
 		
@@ -108,10 +106,6 @@ public class DomainEditPanel extends TypedPanel<Domain> {
 		final TextArea<String> descField = new TextArea<String>("description");
 		descField.add(enableIf(not(isViewMode)));
 		form.add(descField);
-		
-		final CheckBox cb = new CheckBox("domesticDomain");
-		cb.setEnabled(false);
-		form.add(cb);
 		
 		form.add(createSaveButton());
 		form.add(createEditButton());
@@ -211,20 +205,16 @@ public class DomainEditPanel extends TypedPanel<Domain> {
 	}
 	
 	private void onModelChange(DisplayMode newMode) {
-		if (getModelObject().isDomesticDomain()) {
-			send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.DOMESTIC_DOMAIN));
-		} else {
-			send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.DOMAIN));
-		}
+		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.DOMAIN));
 		modeModel.setObject(newMode);
 	}
 	
 	protected void register() {
-		provider.getDomainOrganizer().registerDomain(getModelObject());
+		authModule.getDomainManager().registerDomain(getModelObject());
 	}
 	
 	protected void store() {
-		provider.getDomainOrganizer().updateDomain(getModelObject());
+		authModule.getDomainManager().updateDomain(getModelObject());
 	}
 	
 }

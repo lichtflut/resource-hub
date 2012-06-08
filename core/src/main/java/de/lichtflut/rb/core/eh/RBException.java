@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.eh;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Basic exception for Resource Browser.
  * </p>
  *
  * <p>

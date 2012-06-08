@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.webck.models;
 
+import java.util.Set;
+
 import org.apache.wicket.Session;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
@@ -13,6 +15,7 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.user.UserPermissionModel;
 
 /**
  * <p>
@@ -49,17 +52,21 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 			}
 		};
 	}
-
-	public static ConditionalModel<RBUser> hasPermission(final String permission) {
-		return new ConditionalModel<RBUser>(new CurrentUserModel()) {
+	
+	/**
+	 * Creates a new model for testing if a user has a specific permission.
+	 * @param name The permission's name.
+	 * @return True if the current user has this permission.
+	 */
+	public static ConditionalModel<?> hasPermission(final String name) {
+		return new ConditionalModel<Set<String>>(new UserPermissionModel(new CurrentUserModel())) {
 			@Override
 			public boolean isFulfilled() {
-				final RBUser user = getObject();
-				return user != null && user.hasPermission(permission);
+				return getObject().contains(name);
 			}
 		};
 	}
-	
+
 	// ----------------------------------------------------
 
 	@SpringBean
@@ -82,5 +89,5 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 	public RBUser load() {
 		return provider.getContext().getUser();
 	}
-	
+
 }
