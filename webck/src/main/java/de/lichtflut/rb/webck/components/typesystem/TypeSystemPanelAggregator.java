@@ -34,8 +34,7 @@ public class TypeSystemPanelAggregator extends Panel {
 	/**
 	 * Constructor.
 	 * 
-	 * @param id
-	 *            - wicket:id
+	 * @param id - wicket:id
 	 */
 	public TypeSystemPanelAggregator(String id) {
 		super(id);
@@ -74,5 +73,7 @@ public class TypeSystemPanelAggregator extends Panel {
 		});
 		return tabs;
 	}
+
+	// ------------------------------------------------------
 
 }
