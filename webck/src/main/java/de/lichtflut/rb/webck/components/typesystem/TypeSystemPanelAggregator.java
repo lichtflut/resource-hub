@@ -28,7 +28,7 @@ import de.lichtflut.rb.webck.components.typesystem.schema.AggregateSchemaEditor;
  *
  * @author Ravi Knox
  */
-public class AggregateTypeSystemPanel extends Panel{
+public class TypeSystemPanelAggregator extends Panel{
 
 	// ---------------- Constructor -------------------------
 	
@@ -36,7 +36,7 @@ public class AggregateTypeSystemPanel extends Panel{
 	 * Constructor.
 	 * @param id - wicket:id
 	 */
-	public AggregateTypeSystemPanel(String id) {
+	public TypeSystemPanelAggregator(String id) {
 		super(id);
 		add(new AjaxTabbedPanel("tabs", getTabs()));
 	}
