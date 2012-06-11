@@ -71,8 +71,9 @@ assigment : k=key COLON v=value -> ^(ASSIGMENT $k $v);
 // Definition of an assigments' key
 key : FIELD_LABEL
 	| INT_LABEL 
-	| TYPE_DEF 
-	| RESOURCE_CONSTRAINT 
+	| DATATYPE 
+	| RESOURCE_CONSTRAINT
+	| CONSTRAINT_REFERENCE
 	;
 
 value : STRING ;
@@ -87,9 +88,11 @@ PROPERTY_DECL : 'property';
 
 FIELD_LABEL : 'field-label';
 
-TYPE_DEF:'type-definition';
+DATATYPE:'datatype';
 
 RESOURCE_CONSTRAINT:'resource-constraint';
+
+CONSTRAINT_REFERENCE: 'constraint-reference';
 
 CONSTRAINT:'literal-constraint';
 	

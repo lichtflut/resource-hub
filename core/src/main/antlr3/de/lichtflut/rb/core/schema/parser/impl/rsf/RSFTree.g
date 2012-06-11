@@ -33,7 +33,8 @@ import java.util.HashMap;
 }
 @members{
 
-	private static final String TYPE_DEF_CONST = "type-definition";
+	private static final String DATATYPE_CONST = "datatype";
+	private static final String CONSTRAINT_REFERENCE = "constraint-reference";
 	private static final String RESOURCE_CONSTRAINT_CONST = "resource-constraint";
 	private static final String FIELD_LABEL_CONST = "field-label";
 	private static final String FIELD_LABEL_INT_CONST = "field-label\\[..\\]";
@@ -170,7 +171,7 @@ key returns [String s]
 }
 	: FIELD_LABEL 
 	| INT_LABEL 
-	| TYPE_DEF 
+	| DATATYPE 
 	| RESOURCE_CONSTRAINT 
 	
 	;
