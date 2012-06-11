@@ -18,6 +18,7 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.NamespaceHandle;
 
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
@@ -26,7 +27,6 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 
-
 import java.util.Locale;
 import java.util.HashMap;
 
@@ -34,7 +34,8 @@ import java.util.HashMap;
 @members{
 
 	private static final String DATATYPE_CONST = "datatype";
-	private static final String CONSTRAINT_REFERENCE = "constraint-reference";
+	private static final String LITERAL_CONSTRAINT_CONST = "literal-constraint";
+	private static final String CONSTRAINT_REFERENCE_CONST = "reference-constraint";
 	private static final String RESOURCE_CONSTRAINT_CONST = "resource-constraint";
 	private static final String FIELD_LABEL_CONST = "field-label";
 	private static final String FIELD_LABEL_INT_CONST = "field-label\\[..\\]";
@@ -62,6 +63,35 @@ import java.util.HashMap;
 	}
 	
 	private void buildTypeDef(String key, String value){
+		String ns = $schema_decl::currentNS.getUri();
+		PropertyDeclarationImpl pDec = $property_decl::pDec;
+		if(DATATYPE_CONST.equals(key)){
+			pDec.setDatatype(Datatype.valueOf(value.toUpperCase()));
+		}
+		if(LITERAL_CONSTRAINT_CONST.equals(key)){
+			ReferenceConstraint constraint = new ReferenceConstraint();
+			constraint.buildLiteralConstraint(value);
+			pDec.setConstraint(constraint);
+		}
+		if(RESOURCE_CONSTRAINT_CONST.equals(key) || CONSTRAINT_REFERENCE_CONST.equals(key)){
+			ReferenceConstraint constraint = new ReferenceConstraint();
+			constraint.buildReferenceConstraint(toResourceID(value), CONSTRAINT_REFERENCE_CONST.equals(key));
+			pDec.setConstraint(constraint);
+		}
+		if(FIELD_LABEL_CONST.equals(key)){
+			if(pDec.getFieldLabelDefinition() == null){
+				pDec.setFieldLabelDefinition(new FieldLabelDefinitionImpl(value));
+			}else{
+				pDec.getFieldLabelDefinition().setDefaultLabel(value);
+			}
+		}
+		if(key.matches(FIELD_LABEL_INT_CONST)){
+			if(pDec.getFieldLabelDefinition() == null){
+				pDec.setFieldLabelDefinition(new FieldLabelDefinitionImpl(value));
+			}
+			String locale = key.substring(12, 14);
+			pDec.getFieldLabelDefinition().setLabel(new Locale(locale), value);
+		}
 	}
 	
 	public ResourceID toResourceID(final String name) {
@@ -172,7 +202,8 @@ key returns [String s]
 	: FIELD_LABEL 
 	| INT_LABEL 
 	| DATATYPE 
-	| RESOURCE_CONSTRAINT 
+	| RESOURCE_CONSTRAINT
+	| REFERENCE_CONSTRAINT
 	
 	;
 

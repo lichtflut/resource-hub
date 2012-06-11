@@ -65,7 +65,7 @@ property_decl : PROPERTY_DECL id=STRING cardinal_decl '{'
 // Definition of a cardinality-declaration
 cardinal_decl : e=CARDINALITY_DECL	-> ^(CARDINALITY $e);
 
-//Definition of an assigment within a preoperty-declaration
+//Definition of an assigment within a property-declaration
 assigment : k=key COLON v=value -> ^(ASSIGMENT $k $v);
 
 // Definition of an assigments' key
@@ -74,6 +74,7 @@ key : FIELD_LABEL
 	| DATATYPE 
 	| RESOURCE_CONSTRAINT
 	| CONSTRAINT_REFERENCE
+	| LITERAL_CONSTRAINT
 	;
 
 value : STRING ;
@@ -92,10 +93,10 @@ DATATYPE:'datatype';
 
 RESOURCE_CONSTRAINT:'resource-constraint';
 
-CONSTRAINT_REFERENCE: 'constraint-reference';
+CONSTRAINT_REFERENCE: 'reference-constraint';
 
-CONSTRAINT:'literal-constraint';
-	
+LITERAL_CONSTRAINT: 'literal-constraint';
+
 PREFIX : 'prefix';
 
 COLON : ':';
@@ -104,6 +105,6 @@ INT_LABEL : 'field-label[' (('a' .. 'z' | 'A' .. 'Z')+ )']'*;
 
 CARDINALITY_DECL  : '['('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+'..'('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+']';
 
-STRING 	: '"' ('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | ' ' | '_' | '-' | '#' | '/' | ':' | '.' | '<' | '>' | ',')+ '"';
+STRING 	: '"' ('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | ' ' | '_' | '-' | '#' | '/' | ':' | '.' | '<' | '>' | ',' | '@' | '*')+ '"';
 
 WS: (' '|'\n'|'\r'|'\t')+ {$channel=HIDDEN;} ;
