@@ -16,6 +16,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -24,7 +25,6 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.ColumnDef;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
@@ -52,7 +52,7 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 public class ColumnsConfigPanel extends TypedPanel<WidgetSpec> {
 	
 	@SpringBean
-	protected ServiceProvider provider;
+	protected ModelingConversation conversation;
 	
 	private ColumnDefsModel columnsModel;
 	
@@ -127,7 +127,7 @@ public class ColumnsConfigPanel extends TypedPanel<WidgetSpec> {
 	private void removeColumn(final ColumnDef columnDef) {
 		final WidgetSpec widgetSpec = getModelObject();
 		SNOPS.remove(widgetSpec, WDGT.DEFINES_COLUMN, columnDef);
-		provider.getArastejuGate().startConversation().remove(columnDef);
+		conversation.remove(columnDef);
 		update();
 	}
 	
