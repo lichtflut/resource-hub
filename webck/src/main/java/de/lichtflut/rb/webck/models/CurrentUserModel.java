@@ -11,7 +11,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
@@ -69,8 +69,8 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 
 	// ----------------------------------------------------
 
-	@SpringBean
-	private ServiceProvider provider;
+	@SpringBean 
+	private ServiceContext context;
 
 	// ----------------------------------------------------
 
@@ -87,7 +87,7 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 	 * {@inheritDoc}
 	 */
 	public RBUser load() {
-		return provider.getContext().getUser();
+		return context.getUser();
 	}
 
 }

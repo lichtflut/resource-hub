@@ -24,6 +24,7 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.Statement;
@@ -189,7 +190,7 @@ public class CurrentNodeInfoPanel extends Panel {
 	private static class ContextModel extends AbstractLoadableDetachableModel<ResourceNode> {
 		
 		@SpringBean
-		private ServiceProvider provider;
+		private ModelingConversation conversation;
 		
 		private IModel<? extends ResourceID> id;
 		
@@ -212,7 +213,7 @@ public class CurrentNodeInfoPanel extends Panel {
 		public ResourceNode load() {
 			if (id.getObject() != null) {
 				final QualifiedName qn = id.getObject().getQualifiedName();
-				return provider.getArastejuGate().startConversation().findResource(qn);
+				return conversation.findResource(qn);
 			} else {
 				return null;
 			}
