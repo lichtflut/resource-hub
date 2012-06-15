@@ -3,9 +3,9 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
+import de.lichtflut.rb.core.messaging.EmailConfiguration;
 import de.lichtflut.rb.core.services.EmailService;
 import de.lichtflut.rb.core.services.MessagingService;
-import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
@@ -21,8 +21,8 @@ public class MessagingServiceImpl implements MessagingService {
 	
 	// ---------------- Constructor -------------------------
 	
-	public MessagingServiceImpl(ServiceProvider provider){
-		this.emailService = new EmailServiceImpl();
+	public MessagingServiceImpl(EmailConfiguration emailConf){
+		this.emailService = new EmailServiceImpl(emailConf);
 	}
 	
 	// ------------------------------------------------------

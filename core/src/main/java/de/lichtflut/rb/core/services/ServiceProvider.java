@@ -67,11 +67,6 @@ public interface ServiceProvider {
 	DomainOrganizer getDomainOrganizer();
 	
 	/**
-	 * @return The messaging service
-	 */
-	MessagingService getMessagingService();
-	
-	/**
 	 * The service for view specifications, perspectives and widgets.
 	 * @return The service.
 	 */

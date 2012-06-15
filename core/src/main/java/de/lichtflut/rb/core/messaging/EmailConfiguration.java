@@ -21,23 +21,23 @@ public interface EmailConfiguration {
 	/**
 	 * @return the smtpServer
 	 */
-	public String getSmtpServer();
+	String getSmtpServer();
 
 	/**
 	 * @return the smtpUser
 	 */
-	public String getSmtpUser();
+	String getSmtpUser();
 
 	/**
 	 * @return the smtpPassword
 	 */
-	public String getSmtpPassword();
+	String getSmtpPassword();
 	
-	public String getApplicationSupportName();
+	String getApplicationSupportName();
 	
-	public String getApplicationSupportEmail();
+	String getApplicationSupportEmail();
 	
-	public String getApplicationName();
+	String getApplicationName();
 	
-	public String getApplicationEmail();
+	String getApplicationEmail();
 }

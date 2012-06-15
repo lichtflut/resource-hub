@@ -21,6 +21,7 @@ import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.security.UserManager;
+import de.lichtflut.rb.core.services.MessagingService;
 import de.lichtflut.rb.core.services.SecurityService;
 
 /**
@@ -39,6 +40,8 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	private final Logger logger = LoggerFactory.getLogger(SecurityServiceImpl.class);
 	
 	private final AuthModule authServer;
+	
+	private MessagingService messagingService;
 	
 	// ----------------------------------------------------
 	
@@ -71,8 +74,8 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		rbUser.setUsername(username);
 		final String crypted = RBCrypt.encryptWithRandomSalt(password);
 		authServer.getUserManagement().registerUser(rbUser, crypted, getProvider().getContext().getDomain());
-		if(conf!=null){
-			getProvider().getMessagingService().getEmailService().sendRegistrationConfirmation(rbUser, conf, locale);
+		if(messagingService != null){
+			messagingService.getEmailService().sendRegistrationConfirmation(rbUser, locale);
 		}
 		return rbUser;
 	}
@@ -163,11 +166,23 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 * @throws RBException 
 	 */
 	@Override
-	public void resetPasswordForUser(RBUser user, EmailConfiguration conf, Locale locale) throws RBException {
+	public void resetPasswordForUser(RBUser user, Locale locale) throws RBException {
 		final String generatedPwd = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 		authServer.getUserManagement().changePassword(user, generatedPwd);
 		logGeneratedPwd(generatedPwd);
-		getProvider().getMessagingService().getEmailService().sendPasswordInformation(user, generatedPwd, conf, locale);
+		if (messagingService != null) {
+			messagingService.getEmailService().sendPasswordInformation(user, generatedPwd, locale);	
+		}
+	}
+	
+	// ----------------------------------------------------
+
+	/**
+	 * Inject messaging service.
+	 * @param messagingService the messagingService to set
+	 */
+	public void setMessagingService(MessagingService messagingService) {
+		this.messagingService = messagingService;
 	}
 	
 	// ----------------------------------------------------

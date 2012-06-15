@@ -89,7 +89,7 @@ public abstract class ResetPasswordPanel extends Panel {
 			error(getString("message.no-user-found"));
 		} else {
 			try {
-				provider.getSecurityService().resetPasswordForUser(existing, getEmailConfig(), getLocale());
+				provider.getSecurityService().resetPasswordForUser(existing, getLocale());
 				info(getString("message.password-changed"));
 			} catch (RBException e) {
 				error(getString("error.send.email"));

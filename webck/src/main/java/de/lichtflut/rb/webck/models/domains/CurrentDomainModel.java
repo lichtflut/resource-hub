@@ -11,7 +11,6 @@ import org.arastreju.sge.spi.GateContext;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
@@ -29,9 +28,6 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
  */
 public class CurrentDomainModel extends AbstractLoadableDetachableModel<RBDomain> {
 
-	@SpringBean
-	private ServiceProvider provider;
-	
 	@SpringBean
 	private AuthModule authModule;
 	
@@ -55,7 +51,11 @@ public class CurrentDomainModel extends AbstractLoadableDetachableModel<RBDomain
 	@Override
 	public RBDomain load() {
 		final String domain = context.getDomain();
-		return authModule.getDomainManager().findDomain(domain);
+		if (domain != null) {
+			return authModule.getDomainManager().findDomain(domain);
+		} else {
+			return null;
+		}
 	}
 
 	/**

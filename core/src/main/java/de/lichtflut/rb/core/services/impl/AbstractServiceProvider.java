@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.MessagingService;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
@@ -51,7 +50,6 @@ public abstract class AbstractServiceProvider implements ServiceProvider {
 	private EntityManager entityManager;
 	private TypeManager typeManager;
 	private SecurityService securityService;
-	private MessagingService messagingService;
 	private ViewSpecificationService viewSpecService;
 	private DomainOrganizer domainOrganizer;
 	
@@ -65,7 +63,6 @@ public abstract class AbstractServiceProvider implements ServiceProvider {
 		schemaManager = new SchemaManagerImpl(this);
 		entityManager = new EntityManagerImpl(this);
 		typeManager = new TypeManagerImpl(this);
-		messagingService = new MessagingServiceImpl(this);
 		domainOrganizer = newDomainOrganizer();
 		securityService = newSecurityService(authModule);
 		viewSpecService = newViewSpecificationServiceImpl();
@@ -157,14 +154,6 @@ public abstract class AbstractServiceProvider implements ServiceProvider {
 		return securityService;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public MessagingService getMessagingService(){
-		return messagingService;
-	}
-	
 	/** 
 	 * {@inheritDoc}
 	 */
