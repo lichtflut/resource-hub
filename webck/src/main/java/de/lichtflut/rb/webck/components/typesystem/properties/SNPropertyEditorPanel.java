@@ -57,6 +57,9 @@ public class SNPropertyEditorPanel extends Panel {
 	@SpringBean
 	private ServiceProvider provider;
 	
+	@SpringBean
+	private ModelingConversation conversation;
+	
 	// ----------------------------------------------------
 	
 	/**
@@ -134,8 +137,7 @@ public class SNPropertyEditorPanel extends Panel {
 	}
 	
 	void assureLabel(final ResourceID properyID, final String label) {
-		final ModelingConversation mc = newMC();
-		final SNProperty property = mc.resolve(properyID).asProperty();
+		final SNProperty property = conversation.resolve(properyID).asProperty();
 		if (StringUtils.isBlank(label)) {
 			SNOPS.remove(property, RBSystem.HAS_FIELD_LABEL);
 			info("Label has been removed");
@@ -143,10 +145,6 @@ public class SNPropertyEditorPanel extends Panel {
 			assure(property, RBSystem.HAS_FIELD_LABEL, new SNText(label), RB.TYPE_SYSTEM_CONTEXT);
 			info("Label has been saved");
 		}
-	}
-	
-	ModelingConversation newMC() {
-		return provider.getArastejuGate().startConversation();
 	}
 	
 	// ----------------------------------------------------

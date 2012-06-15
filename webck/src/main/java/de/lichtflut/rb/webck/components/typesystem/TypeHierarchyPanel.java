@@ -20,6 +20,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
@@ -49,6 +50,9 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 	
 	@SpringBean
 	private ServiceProvider provider;
+	
+	@SpringBean
+	private ModelingConversation conversation;
 	
 	// ----------------------------------------------------
 
@@ -130,7 +134,7 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 		 */
 		@Override
 		protected List<SNClass> derive(ResourceID base) {
-			final ResourceNode typeNode = provider.getResourceResolver().resolve(base);
+			final ResourceNode typeNode = conversation.resolve(base);
 			final List<SNClass> result = new ArrayList<SNClass>();
 			result.addAll(typeNode.asClass().getDirectSuperClasses());
 			return result;

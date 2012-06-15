@@ -50,11 +50,9 @@ public class EmbeddedAuthAuthorizationManager {
 	 * Constructor.
 	 * @param domainManager The domain manager.
 	 */
-	public EmbeddedAuthAuthorizationManager(ArastrejuGate gate, EmbeddedAuthDomainManager domainManager) {
+	public EmbeddedAuthAuthorizationManager(ModelingConversation conversation, EmbeddedAuthDomainManager domainManager) {
 		this.domainManager = domainManager;
-		this.conversation = gate.startConversation();
-		this.conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
-		this.conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
+		this.conversation = conversation;
 	}
 	
 	// -- ROLE ASSIGNMENT ---------------------------------

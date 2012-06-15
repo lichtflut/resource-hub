@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.io.ReportingStatementImporter;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**

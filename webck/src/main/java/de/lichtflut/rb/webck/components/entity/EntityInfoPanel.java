@@ -22,7 +22,7 @@ import org.arastreju.sge.model.nodes.views.SNClass;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.common.ImageReference;
@@ -55,7 +55,7 @@ import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
 public class EntityInfoPanel extends Panel {
 	
 	@SpringBean
-	private ServiceProvider serviceProvider;
+	private TypeManager typeManager;
 	
 	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;
@@ -108,7 +108,7 @@ public class EntityInfoPanel extends Panel {
 		return new DerivedDetachableModel<List<VisualizationLink>, RBEntity>(model) {
 			@Override
 			protected List<VisualizationLink> derive(final RBEntity entity) {
-				final SNClass type = serviceProvider.getTypeManager().findType(entity.getType());
+				final SNClass type = typeManager.findType(entity.getType());
 				final List<VisualizationLink> result = new ArrayList<VisualizationLink>();
 				result.add(createLink(entity.getID(), VisualizationMode.DETAILS));
 				result.add(createLink(entity.getID(), VisualizationMode.PERIPHERY));

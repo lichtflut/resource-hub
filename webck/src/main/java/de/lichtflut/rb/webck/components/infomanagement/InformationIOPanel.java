@@ -12,10 +12,13 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.DefaultSemanticGraph;
 import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
+import org.arastreju.sge.query.Query;
 
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
@@ -38,6 +41,9 @@ public class InformationIOPanel extends Panel {
 	@SpringBean
 	private ServiceProvider provider;
 	
+	@SpringBean
+	private ModelingConversation conversation;
+
 	// ----------------------------------------------------
 	
 	/**
@@ -75,8 +81,8 @@ public class InformationIOPanel extends Panel {
 				final List<SNClass> types = provider.getTypeManager().findAllTypes();
 				final SemanticGraph graph = new DefaultSemanticGraph();
 				for (SNClass type : types) {
-					final List<ResourceNode> entities = provider.getArastejuGate().createQueryManager().findByType(type);
-					for (ResourceNode entity : entities) {
+					final Query query = conversation.createQuery().addField(RDF.TYPE, type);
+					for (ResourceNode entity : query.getResult()) {
 						graph.merge(new DefaultSemanticGraph(entity));
 					}
 				}

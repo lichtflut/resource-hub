@@ -51,7 +51,7 @@ public class Migration_0001_ExternalAuthServer {
 		assertDomain(masterGate, GateContext.MASTER_DOMAIN);
 		
 		final ModelingConversation mc = masterGate.startConversation();
-		final Query query = masterGate.startConversation().createQuery();
+		final Query query = mc.createQuery();
 		query.addField(RDF.TYPE, Aras.USER);
 		final QueryResult result = query.getResult();
 		for (ResourceNode userNode : result) {
@@ -60,7 +60,7 @@ public class Migration_0001_ExternalAuthServer {
 			final String identifier = SNOPS.string(SNOPS.fetchObject(userNode, Aras.IDENTIFIED_BY));
 			if (credential == null && domain != null) {
 				mc.remove(userNode);
-				moveToMasterDomain(identifier, domain, masterGate, sp);
+				moveToMasterDomain(identifier, domain, mc, sp);
 			}
 		}
 		mc.close();
@@ -69,19 +69,21 @@ public class Migration_0001_ExternalAuthServer {
 
 	// ----------------------------------------------------
 
-	private void moveToMasterDomain(String identifier, String domainName, ArastrejuGate masterGate, ServiceProvider sp) {
+	private void moveToMasterDomain(String identifier, String domainName, ModelingConversation masterConversation, ServiceProvider sp) {
 		logger.info("Migrating user " + identifier);
 		
 		sp.getContext().setDomain(domainName);
 		final ArastrejuGate domainGate = sp.getArastejuGate();
 		assertDomain(domainGate, domainName);
 		
-		final ResourceNode domain = findDomainNode(domainName, masterGate);
+		final ResourceNode domain = findDomainNode(domainName, masterConversation);
 		
-		final UserManager um = new EmbeddedAuthUserManager(domainGate, null);
+		final ModelingConversation domainConversation = domainGate.startConversation();
+		
+		final UserManager um = new EmbeddedAuthUserManager(domainConversation, null);
 		
 		final RBUser domainUser = um.findUser(identifier);
-		final ResourceNode user = domainGate.startConversation().findResource(domainUser.getQualifiedName());
+		final ResourceNode user = domainConversation.findResource(domainUser.getQualifiedName());
 		final String credential = SNOPS.string(SNOPS.fetchObject(user, Aras.HAS_CREDENTIAL));
 		final String email = SNOPS.string(SNOPS.fetchObject(user, RBSystem.HAS_EMAIL));
 		final String username = SNOPS.string(SNOPS.fetchObject(user, RBSystem.HAS_USERNAME));
@@ -95,13 +97,14 @@ public class Migration_0001_ExternalAuthServer {
 		}
 		masterUser.addAssociation(Aras.HAS_CREDENTIAL, new SNText(credential));
 		masterUser.addAssociation(Aras.BELONGS_TO_DOMAIN, domain);
-		masterGate.startConversation().attach(masterUser);
+		masterConversation.attach(masterUser);
+		
+		domainConversation.close();
 		
 		SNOPS.remove(user, Aras.IDENTIFIED_BY);
 		SNOPS.remove(user, Aras.HAS_CREDENTIAL);
 		SNOPS.remove(user, RBSystem.HAS_EMAIL);
 		SNOPS.remove(user, RBSystem.HAS_USERNAME);
-		
 	}
 	
 	private void assertDomain(final ArastrejuGate gate, String domain) {
@@ -118,11 +121,11 @@ public class Migration_0001_ExternalAuthServer {
 		}
 	}
 	
-	private ResourceNode findDomainNode(String domain, ArastrejuGate masterGate) {
+	private ResourceNode findDomainNode(String domain, ModelingConversation conversation) {
 		if (domain == null) {
 			throw new IllegalArgumentException("Domain name may not be null.");
 		}
-		final Query query = masterGate.startConversation().createQuery()
+		final Query query = conversation.createQuery()
 				.addField(RDF.TYPE, Aras.DOMAIN)
 				.and()
 				.addField(Aras.HAS_UNIQUE_NAME, domain);

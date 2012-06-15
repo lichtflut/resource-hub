@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.models;
 
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -13,8 +14,8 @@ import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
@@ -31,10 +32,13 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 public class CurrentOrganizationModel extends AbstractLoadableDetachableModel<RBEntity> {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private EntityManager entityManager;
 	
 	@SpringBean 
 	private ServiceContext context;
+	
+	@SpringBean
+	private ModelingConversation conversation;
 	
 	// ----------------------------------------------------
 	
@@ -54,7 +58,7 @@ public class CurrentOrganizationModel extends AbstractLoadableDetachableModel<RB
 			return null;
 		}
 		
-		final ResourceNode userNode = provider.getResourceResolver().resolve(SNOPS.id(user.getQualifiedName()));
+		final ResourceNode userNode = conversation.resolve(SNOPS.id(user.getQualifiedName()));
 		final SemanticNode person = SNOPS.fetchObject(userNode, RBSystem.IS_RESPRESENTED_BY);
 		if (person == null || !person.isResourceNode()) {
 			return null;
@@ -64,7 +68,7 @@ public class CurrentOrganizationModel extends AbstractLoadableDetachableModel<RB
 		if (org == null || !org.isResourceNode()) {
 			return null;
 		} else {
-			return provider.getEntityManager().find(org.asResource());
+			return entityManager.find(org.asResource());
 		}
 	}
 	

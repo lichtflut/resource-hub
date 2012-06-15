@@ -9,7 +9,6 @@ import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryManager;
 
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
 
@@ -47,8 +46,7 @@ public class TermSearcher {
 	 * @param type An optional rdf:type criteria. 
 	 * @return The query result.
 	 */
-	public Query prepareQuery(final QueryManager qm, final String term, final Mode mode, final String type) {
-		final Query query = qm.buildQuery();
+	public Query prepareQuery(Query query, final String term, final Mode mode, final String type) {
 		switch (mode){
 		case URI:
 			query.addURI(prepareTerm(term));

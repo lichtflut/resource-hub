@@ -9,7 +9,6 @@ import java.util.Set;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.persistence.ResourceResolver;
 import org.arastreju.sge.spi.GateContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,7 @@ import de.lichtflut.rb.core.services.ViewSpecificationService;
  *
  * @author Oliver Tigges
  */
-public abstract class AbstractServiceProvider implements ServiceProvider{
+public abstract class AbstractServiceProvider implements ServiceProvider {
 	
 	private final Logger logger = LoggerFactory.getLogger(AbstractServiceProvider.class);
 
@@ -55,7 +54,6 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	private MessagingService messagingService;
 	private ViewSpecificationService viewSpecService;
 	private DomainOrganizer domainOrganizer;
-
 	
 	// ----------------------------------------------------
 
@@ -159,14 +157,6 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		return securityService;
 	}
 
-	/** 
-	* {@inheritDoc}
-	*/
-	@Override
-	public ResourceResolver getResourceResolver() {
-		return getArastejuGate().startConversation();
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */

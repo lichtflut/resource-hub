@@ -3,6 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isFalse;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
+
 import java.util.List;
 
 import org.apache.wicket.markup.html.form.TextField;
@@ -15,8 +19,6 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.webck.components.fields.ClassPickerField;
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.*;
-import static de.lichtflut.rb.webck.models.ConditionalModel.*;
 
 /**
  * 

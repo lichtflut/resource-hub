@@ -17,7 +17,6 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.query.QueryManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +90,7 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 	@Override
 	public List<SNClass> findAllTypes() {
 		final List<SNClass> result = new ArrayList<SNClass>();
-		final List<ResourceNode> nodes = queryManager().findByType(RBSystem.TYPE);
+		final List<ResourceNode> nodes = findResourcesByType(RBSystem.TYPE);
 		for (ResourceNode current : nodes) {
 			result.add(current.asClass());
 		}
@@ -180,17 +179,11 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 	@Override
 	public List<SNProperty> findAllProperties() {
 		final List<SNProperty> result = new ArrayList<SNProperty>();
-		final List<ResourceNode> nodes = queryManager().findByType(RDF.PROPERTY);
+		final List<ResourceNode> nodes = findResourcesByType(RDF.PROPERTY);
 		for (ResourceNode current : nodes) {
 			result.add(current.asProperty());
 		}
 		return result;
-	}
-	
-	// ----------------------------------------------------
-	
-	private QueryManager queryManager() {
-		return getProvider().getArastejuGate().createQueryManager();
 	}
 	
 }

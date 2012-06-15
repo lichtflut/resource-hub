@@ -16,7 +16,6 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
 import de.lichtflut.rb.webck.components.listview.ReferenceLink;
@@ -46,12 +45,7 @@ public class EntityOverviewPage extends EntitySamplesBasePage {
 		super("Entity Overview");
 		
 		final ResourceID type = getResourceID(params);
-		final ResourceListModel model = new ResourceListModel(type) {
-			@Override
-			protected ServiceProvider getServiceProvider() {
-				return EntityOverviewPage.this.getServiceProvider();
-			}
-		};
+		final ResourceListModel model = new ResourceListModel(type);
 		
 		final ResourceSchema schema = getServiceProvider().getSchemaManager().findSchemaForType(type);
 		final ColumnConfiguration config = ColumnConfiguration.defaultConfig();

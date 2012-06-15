@@ -5,8 +5,9 @@ package de.lichtflut.rb.webck.components.listview;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.enableIf;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.and;
+import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
 import static de.lichtflut.rb.webck.models.ConditionalModel.greaterThan;
-import static de.lichtflut.rb.webck.models.ConditionalModel.*;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;

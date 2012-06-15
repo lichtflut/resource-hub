@@ -5,7 +5,8 @@ package de.lichtflut.rb.webck.components.entity;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.BrowsingContextModel.isInCreateReferenceMode;
-import static de.lichtflut.rb.webck.models.ConditionalModel.*;
+import static de.lichtflut.rb.webck.models.ConditionalModel.and;
+import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -13,10 +14,10 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
@@ -39,7 +40,10 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
 public class BrowsingButtonBar extends TypedPanel<RBEntity> {
 
 	@SpringBean
-	private ServiceProvider provider;
+	private EntityManager entityManager;
+	
+	@SpringBean
+	private ModelingConversation conversation;
 	
 	// ----------------------------------------------------
 
@@ -59,9 +63,9 @@ public class BrowsingButtonBar extends TypedPanel<RBEntity> {
 	
 	public void onSaveAndBack() {
 		final RBEntity createdEntity = getModelObject();
-		getEntityManager().store(createdEntity);
+		entityManager.store(createdEntity);
 		for(ReferenceReceiveAction action : RBWebSession.get().getHistory().getCurrentStep().getActions()) {
-			action.execute(provider, createdEntity);
+			action.execute(conversation, createdEntity);
 		}
 		RBWebSession.get().getHistory().back();
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
@@ -91,12 +95,6 @@ public class BrowsingButtonBar extends TypedPanel<RBEntity> {
 			}
 		};
 		return cancel;
-	}
-	
-	// ----------------------------------------------------
-	
-	protected EntityManager getEntityManager() {
-		return provider.getEntityManager();
 	}
 	
 }

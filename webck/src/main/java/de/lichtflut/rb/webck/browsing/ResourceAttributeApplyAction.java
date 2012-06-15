@@ -3,12 +3,12 @@
  */
 package de.lichtflut.rb.webck.browsing;
 
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
@@ -43,8 +43,8 @@ public class ResourceAttributeApplyAction implements ReferenceReceiveAction<Reso
 	* {@inheritDoc}
 	*/
 	@Override
-	public void execute(final ServiceProvider sp, final RBEntity createdEntity) {
-		sp.getArastejuGate().startConversation().attach(subject);
+	public void execute(final ModelingConversation conversation, final RBEntity createdEntity) {
+		conversation.attach(subject);
 		SNOPS.assure(subject, predicate, createdEntity.getID());
 	}
 	

@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
@@ -67,11 +66,12 @@ public class EmbeddedAuthUserManager implements UserManager {
 	 * @param gate The Arastreju Gate.
 	 * @param domainManager The domain manager.
 	 */
-	public EmbeddedAuthUserManager(ArastrejuGate gate, EmbeddedAuthDomainManager domainManager) {
+	public EmbeddedAuthUserManager(ModelingConversation conversation, EmbeddedAuthDomainManager domainManager) {
 		this.domainManager = domainManager;
-		this.authorization = new EmbeddedAuthAuthorizationManager(gate, domainManager);
-		this.conversation = gate.startConversation();
+		this.conversation = conversation;
 		this.conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
+		this.conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
+		this.authorization = new EmbeddedAuthAuthorizationManager(conversation, domainManager);
 	}
 	
 	// -- USER MANAGEMENT ---------------------------------

@@ -40,5 +40,9 @@ public class ArastrejuResourceFactory {
 		logger.info("Conversation has been requested.");
 		return provider.getConversation();
 	}
+	
+	// ----------------------------------------------------
+	
+	
 
 }

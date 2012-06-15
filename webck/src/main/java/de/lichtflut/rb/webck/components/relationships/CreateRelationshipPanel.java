@@ -20,13 +20,14 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
@@ -49,7 +50,10 @@ import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 public class CreateRelationshipPanel extends Panel {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private ModelingConversation conversation;
+	
+	@SpringBean
+	private EntityManager entityManager;
 
 	private final IModel<RBEntity> subjectModel;
 	
@@ -134,7 +138,7 @@ public class CreateRelationshipPanel extends Panel {
 	protected void createRelationshipTo(ResourceID object, ResourceID predicate) {
 		final ResourceNode subject = subjectModel.getObject().getNode();
 		SNOPS.associate(subject, predicate, object);
-		provider.getEntityManager().store(subjectModel.getObject());
+		entityManager.store(subjectModel.getObject());
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
 	}
 
@@ -147,7 +151,7 @@ public class CreateRelationshipPanel extends Panel {
 	}
 	
 	private void resolve(IModel<ResourceID> objectModel) {
-		final ResourceNode resolved = provider.getResourceResolver().resolve(objectModel.getObject());
+		final ResourceNode resolved = conversation.resolve(objectModel.getObject());
 		objectModel.setObject(resolved);
 	}
 	

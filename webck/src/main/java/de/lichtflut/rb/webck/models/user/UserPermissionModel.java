@@ -61,4 +61,12 @@ public class UserPermissionModel extends DerivedDetachableModel<Set<String>, RBU
 		}
 	}
 	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<String> getDefault() {
+		return Collections.emptySet();
+	}
+	
 }

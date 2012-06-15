@@ -13,10 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.util.crypt.Base64;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryManager;
 import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.query.SimpleQueryResult;
 import org.codehaus.jackson.JsonGenerationException;
@@ -134,14 +134,16 @@ public class ResourceQueryServlet extends HttpServlet {
 	 */
 	protected QueryResult searchNodes(final String term, final Mode mode, final String type) throws ServletException {
 		final TermSearcher searcher = new TermSearcher();
-		final QueryManager qm = getServiceProvider().getArastejuGate().createQueryManager();
-		final Query query = searcher.prepareQuery(qm, term, mode, type);
+		final ModelingConversation conversation = getServiceProvider().getArastejuGate().startConversation();
+		final Query query = searcher.prepareQuery(conversation.createQuery(), term, mode, type);
 		logger.info("Query: " + query);
 		try {
 			return query.getResult();
 		} catch (RuntimeException e) {
 			logger.warn("failed to execute query: " + query.toString());
 			return SimpleQueryResult.EMPTY;
+		} finally {
+			conversation.close();
 		}
 	}
 	

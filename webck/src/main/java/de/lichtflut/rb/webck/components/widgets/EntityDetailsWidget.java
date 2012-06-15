@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.query.Query;
@@ -19,11 +20,11 @@ import org.arastreju.sge.query.QueryResult;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.webck.components.entity.EntityPanel;
 import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
+import de.lichtflut.rb.webck.components.entity.EntityPanel;
 import de.lichtflut.rb.webck.components.widgets.config.EntityDetailsWidgetConfigPanel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
@@ -42,7 +43,10 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 public class EntityDetailsWidget extends ConfigurableWidget {
 	
 	@SpringBean
-	protected ServiceProvider provider;
+	protected EntityManager entityManager;
+	
+	@SpringBean
+	protected ModelingConversation conversation;
 
 	// ----------------------------------------------------
 	
@@ -80,7 +84,7 @@ public class EntityDetailsWidget extends ConfigurableWidget {
 			public RBEntity load() {
 				final Selection selection = spec.getObject().getSelection();
 				if (selection != null && selection.isDefined()) {
-					final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
+					final Query query = conversation.createQuery();
 					query.beginAnd().addField(RDF.TYPE, RBSystem.ENTITY);
 					selection.adapt(query);
 					query.end();
@@ -102,7 +106,7 @@ public class EntityDetailsWidget extends ConfigurableWidget {
 				if (id == null) {
 					return null;
 				} else {
-					return provider.getEntityManager().find(id);
+					return entityManager.find(id);
 				}
 			}
 		};

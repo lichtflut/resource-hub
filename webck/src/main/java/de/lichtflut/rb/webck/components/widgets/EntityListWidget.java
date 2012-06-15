@@ -16,6 +16,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -28,7 +29,6 @@ import org.arastreju.sge.query.SortCriteria;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
@@ -67,7 +67,7 @@ public class EntityListWidget extends ConfigurableWidget {
 	public static final int MAX_RESULTS = 15;
 	
 	@SpringBean
-	protected ServiceProvider provider;
+	private ModelingConversation conversation;
 	
 	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;
@@ -128,7 +128,7 @@ public class EntityListWidget extends ConfigurableWidget {
 			public QueryResult load() {
 				final Selection selection = spec.getObject().getSelection();
 				if (selection != null && selection.isDefined()) {
-					final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
+					final Query query = conversation.createQuery();
 					query.beginAnd().addField(RDF.TYPE, RBSystem.ENTITY);
 					selection.adapt(query);
 					query.end();
@@ -163,7 +163,7 @@ public class EntityListWidget extends ConfigurableWidget {
 	}
 	
 	private ResourceNode resolve(SemanticNode node) {
-		return provider.getResourceResolver().resolve(node.asResource());
+		return conversation.resolve(node.asResource());
 	}
 	
 	private String[] getSortCriteria(WidgetSpec spec) {

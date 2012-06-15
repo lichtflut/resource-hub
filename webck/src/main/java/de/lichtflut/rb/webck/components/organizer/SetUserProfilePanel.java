@@ -20,6 +20,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
@@ -66,6 +67,9 @@ public abstract class SetUserProfilePanel extends Panel {
 
 	@SpringBean
 	private ServiceProvider provider;
+	
+	@SpringBean
+	private ModelingConversation conversation;
 	
 	// ---------------- Constructor -------------------------
 	
@@ -149,9 +153,7 @@ public abstract class SetUserProfilePanel extends Panel {
 		this.userModel = new AbstractLoadableModel<ResourceNode>() {
 			@Override
 			public ResourceNode load() {
-				final ResourceNode node = provider.getArastejuGate().startConversation()
-						.findResource(user.getObject().getQualifiedName());
-				return node;
+				return conversation.findResource(user.getObject().getQualifiedName());
 			}
 		};
 	}

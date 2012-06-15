@@ -37,7 +37,11 @@ public abstract class AbstractLoadableModel<T> implements LoadableModel<T> {
 		if (loaded == null) {
 			loaded = load();
 		}
-		return loaded;
+		if (loaded != null) {
+			return loaded;	
+		} else {
+			return getDefault();
+		}
 	}
 	
 	/** 
@@ -53,6 +57,10 @@ public abstract class AbstractLoadableModel<T> implements LoadableModel<T> {
 	*/
 	@Override
 	public void detach() {
+	}
+	
+	public T getDefault() {
+		return null;
 	}
 	
 	// ----------------------------------------------------

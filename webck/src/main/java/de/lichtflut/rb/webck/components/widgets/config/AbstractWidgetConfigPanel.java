@@ -17,7 +17,6 @@ import org.arastreju.sge.model.SemanticGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
 import de.lichtflut.rb.webck.components.common.DialogHoster;

@@ -79,7 +79,7 @@ public class PasswordCredentialTransformer {
 		Arastreju aras = Arastreju.getInstance(profile);
 		ArastrejuGate masterGate = aras.rootContext();
 		
-		final EmbeddedAuthDomainManager domainManager = new EmbeddedAuthDomainManager(masterGate);
+		final EmbeddedAuthDomainManager domainManager = new EmbeddedAuthDomainManager(masterGate.startConversation());
 		
 		for(RBDomain domain : domainManager.getAllDomains()) {
 			logger.info("current domain: " +domain.getName());

@@ -16,17 +16,17 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.entity.BrowsingButtonBar;
 import de.lichtflut.rb.webck.components.entity.ClassifyEntityPanel;
+import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
 import de.lichtflut.rb.webck.components.entity.EntityPanel;
 import de.lichtflut.rb.webck.components.entity.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.entity.LocalButtonBar;
-import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
 import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
@@ -49,7 +49,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	private final RBEntityModel model = new RBEntityModel();
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private EntityManager entityManager;
 	
 	// ----------------------------------------------------
 
@@ -90,7 +90,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	public void createReferencedEntity(EntityHandle handle, ResourceID predicate) {
 		// store current entity 
 		// TODO: this should be stored transient in session / browsing history.
-		provider.getEntityManager().store(model.getObject());
+		entityManager.store(model.getObject());
 		
 		// navigate to sub entity
 		final ReferenceReceiveAction action = new EntityAttributeApplyAction(model.getObject(), predicate);

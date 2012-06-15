@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.security.authserver;
 
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.context.SimpleContextID;
 import org.slf4j.Logger;
@@ -64,9 +65,14 @@ public class EmbeddedAuthModule implements AuthModule {
 		} else {
 			logger.info("Creating new Embedded Auth Module without initializer.");
 		}
-		this.domainManager = new EmbeddedAuthDomainManager(gate, initializer);
-		this.userManager = new EmbeddedAuthUserManager(gate, domainManager);
-		this.loginService = new EmbeddedAuthLoginService(gate.startConversation());
+		
+		final ModelingConversation conversation = gate.startConversation();
+		conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
+		conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
+		
+		this.domainManager = new EmbeddedAuthDomainManager(conversation, initializer);
+		this.userManager = new EmbeddedAuthUserManager(conversation, domainManager);
+		this.loginService = new EmbeddedAuthLoginService(conversation);
 	}
 	
 	// ----------------------------------------------------
