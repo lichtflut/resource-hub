@@ -12,6 +12,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
@@ -31,6 +32,9 @@ public class CurrentPersonModel extends AbstractLoadableDetachableModel<RBEntity
 	@SpringBean
 	private ServiceProvider provider;
 	
+	@SpringBean 
+	private ServiceContext context;
+	
 	// ----------------------------------------------------
 	
 	public CurrentPersonModel() {
@@ -44,7 +48,7 @@ public class CurrentPersonModel extends AbstractLoadableDetachableModel<RBEntity
 	 */
 	@Override
 	public RBEntity load() {
-		RBUser user = provider.getContext().getUser();
+		RBUser user = context.getUser();
 		if (user == null) {
 			return null;
 		}

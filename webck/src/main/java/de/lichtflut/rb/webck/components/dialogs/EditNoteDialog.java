@@ -20,7 +20,7 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 
 import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
@@ -39,8 +39,11 @@ import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
  */
 public class EditNoteDialog extends AbstractRBDialog {
 	
+	@SpringBean 
+	private ServiceContext context;
+	
 	@SpringBean
-	private ServiceProvider provider;
+	private ModelingConversation conversation;
 	
 	// ----------------------------------------------------
 
@@ -57,11 +60,10 @@ public class EditNoteDialog extends AbstractRBDialog {
 		form.add(new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				final ModelingConversation mc = provider.getArastejuGate().startConversation();
 				final ResourceNode noteResource = model.getObject();
 				SNOPS.assure(noteResource, DC.CREATED, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
-				SNOPS.assure(noteResource, DC.CREATOR, provider.getContext().getUser());
-				mc.attach(noteResource);
+				SNOPS.assure(noteResource, DC.CREATOR, context.getUser());
+				conversation.attach(noteResource);
 				onSave(noteResource);
 				close(target);
 			}
