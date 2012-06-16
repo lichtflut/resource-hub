@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.Infra;
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
@@ -33,6 +34,7 @@ import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.eh.UsernameAlreadyInUseException;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.security.SearchResult;
 import de.lichtflut.rb.core.security.UserManager;
 
 /**
@@ -168,6 +170,14 @@ public class EmbeddedAuthUserManager implements UserManager {
 		} else {
 			logger.warn("User could not be deleted from master domain: " + user);
 		}
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SearchResult<RBUser> searchUsers(String term) {
+		throw new NotYetImplementedException();
 	}
 	
 	// -- PASSWORD HANDLING -------------------------------

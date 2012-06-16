@@ -3,12 +3,14 @@
  */
 package de.lichtflut.rb.rest.api.query;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Component;
 
@@ -32,9 +34,14 @@ public class UserQueryService extends RBServiceEndpoint {
 	public UserQueryService(){}
 	
 	@GET
-	@Produces({MediaType.APPLICATION_JSON})
-	public Response search(@QueryParam(value="term") String term){
-		return Response.ok(new ResultItemRVO(), MediaType.APPLICATION_JSON).build();
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<ResultItemRVO> search(@QueryParam(value="term") String term){
+		//authModule.getUserManagement().searchUsers(term);
+		final ResultItemRVO item = new ResultItemRVO();
+		item.setId("abc");
+		item.setLabel("Abc");
+		item.setInfo("This is just a test.");
+		return Collections.singletonList(item);
 	}
 	
 }

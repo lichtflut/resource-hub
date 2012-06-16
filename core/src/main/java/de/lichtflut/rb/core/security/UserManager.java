@@ -101,5 +101,12 @@ public interface UserManager {
 	 * @throws RBAuthException 
 	 */
 	void removeAllUserRoles(RBUser user, String domain) throws RBAuthException;
+
+	/**
+	 * Search a user by a term.
+	 * @param term The term.
+	 * @return The search result containing the matching users.
+	 */
+	SearchResult<RBUser> searchUsers(String term);
 	
 }

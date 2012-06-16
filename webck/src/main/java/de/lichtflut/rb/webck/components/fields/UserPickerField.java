@@ -36,7 +36,7 @@ public class UserPickerField extends DataPickerField<RBUser> {
 	
 	public static AutocompleteSource findUser() {
 		final String ctx = RequestCycle.get().getRequest().getContextPath();
-		final StringBuilder sb = new StringBuilder(ctx + "/internal/query/users");
+		final StringBuilder sb = new StringBuilder(ctx + "/service/query/users");
 		return new AutocompleteSource(sb.toString());
 	}
 	
