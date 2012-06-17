@@ -62,12 +62,17 @@ public class UserSearchPanel extends Panel {
 		form.setOutputMarkupId(true);
 		form.add(new FeedbackPanel("feedback"));
 		
-		form.add(new UserPickerField("userpicker", model).setRequired(true));
+		final UserPickerField picker = new UserPickerField("userpicker", model);
+		picker.setRequired(true);
+		
+		form.add(picker);
 		
 		form.add(new RBDefaultButton("add") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				RBUser user = authModule.getUserManagement().findUser(model.getObject().toURI());
+				model.setObject(null);
+				target.add(form);
 				logger.info("Selected user {} for import.", user.getName());
 				userSelected(user);
 			}
