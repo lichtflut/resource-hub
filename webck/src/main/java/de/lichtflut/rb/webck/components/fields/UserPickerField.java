@@ -5,9 +5,8 @@ package de.lichtflut.rb.webck.components.fields;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.arastreju.sge.naming.QualifiedName;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
-
-import de.lichtflut.rb.core.security.RBUser;
 
 /**
  * <p>
@@ -20,16 +19,16 @@ import de.lichtflut.rb.core.security.RBUser;
  *
  * @author Oliver Tigges
  */
-public class UserPickerField extends DataPickerField<RBUser> {
+public class UserPickerField extends DataPickerField<QualifiedName> {
 
 	/**
 	 * Query users.
 	 * @param id The component ID.
 	 * @param model The model.
 	 */
-	public UserPickerField(final String id, final IModel<RBUser> model) {
+	public UserPickerField(final String id, final IModel<QualifiedName> model) {
 		super(id, model, findUser());
-		setType(RBUser.class);
+		setType(QualifiedName.class);
 	}
 	
 	// -----------------------------------------------------

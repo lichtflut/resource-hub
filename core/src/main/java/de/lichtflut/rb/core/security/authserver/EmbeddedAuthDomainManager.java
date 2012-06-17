@@ -153,9 +153,14 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		RBDomain domain = findDomain(domainName);
 		final List<RBUser> result = new ArrayList<RBUser>();
 		final Query query = query();
-		query.addField(RDF.TYPE, Aras.USER);
-		query.and();
-		query.addField(Aras.BELONGS_TO_DOMAIN, domain.getQualifiedName());
+		query.beginAnd();
+			query.addField(RDF.TYPE, Aras.USER);
+			query.beginOr();
+				query.addField(Aras.BELONGS_TO_DOMAIN, domain.getQualifiedName());
+				query.addField(Aras.HAS_ALTERNATE_DOMAIN, domain.getQualifiedName());
+				query.end();
+			query.end();
+		query.end();
 		for (ResourceNode userNode : query.getResult().toList(offset, max)) {
 			result.add(new RBUser(userNode));
 		}

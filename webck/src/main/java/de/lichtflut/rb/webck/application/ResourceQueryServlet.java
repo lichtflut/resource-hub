@@ -28,9 +28,9 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.core.common.TermSearcher;
+import de.lichtflut.rb.core.common.TermSearcher.Mode;
 import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.webck.common.TermSearcher;
-import de.lichtflut.rb.webck.common.TermSearcher.Mode;
 
 /**
  * <p>

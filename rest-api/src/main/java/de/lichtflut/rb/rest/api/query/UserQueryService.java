@@ -3,7 +3,7 @@
  */
 package de.lichtflut.rb.rest.api.query;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -14,6 +14,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.stereotype.Component;
 
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.security.SearchResult;
 import de.lichtflut.rb.rest.api.RBServiceEndpoint;
 
 /**
@@ -36,12 +38,17 @@ public class UserQueryService extends RBServiceEndpoint {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ResultItemRVO> search(@QueryParam(value="term") String term){
-		//authModule.getUserManagement().searchUsers(term);
-		final ResultItemRVO item = new ResultItemRVO();
-		item.setId("abc");
-		item.setLabel("Abc");
-		item.setInfo("This is just a test.");
-		return Collections.singletonList(item);
+		final SearchResult<RBUser> searchResult = authModule.getUserManagement().searchUsers(term);
+		final List<RBUser> subList = searchResult.toList(20);
+		final List<ResultItemRVO> rvoList = new ArrayList<ResultItemRVO>(subList.size());
+		for (RBUser rbUser : subList) {
+			final ResultItemRVO item = new ResultItemRVO();
+			item.setId(rbUser.getQualifiedName().toURI());
+			item.setLabel(rbUser.getName());
+			item.setInfo(rbUser.getName());
+			rvoList.add(item);
+		}
+		return rvoList;
 	}
 	
 }

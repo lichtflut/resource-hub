@@ -31,8 +31,18 @@ public interface UserManager {
 	RBUser findUser(String identifier);
 	
 	/**
-	 * Register user with his domain.
+	 * Search a user by a term.
+	 * @param term The term.
+	 * @return The search result containing the matching users.
+	 */
+	SearchResult<RBUser> searchUsers(String term);
+	
+	// ----------------------------------------------------
+	
+	/**
+	 * Register a new user with his domain.
 	 * @param user The user.
+	 * @param credential The new user's credential.
 	 * @param domain The user's domain.
 	 */
 	void registerUser(RBUser user, String credential, String domain) throws RBAuthException;
@@ -49,6 +59,13 @@ public interface UserManager {
 	 * @param user The user.
 	 */
 	void deleteUser(RBUser user);
+	
+	/**
+	 * Grant an existing user access to another domain.
+	 * @param user The user.
+	 * @param domain The user's domain.
+	 */
+	void grantAccessToDomain(RBUser user, String domain) throws RBAuthException;
 	
 	// ----------------------------------------------------
 	
@@ -102,11 +119,4 @@ public interface UserManager {
 	 */
 	void removeAllUserRoles(RBUser user, String domain) throws RBAuthException;
 
-	/**
-	 * Search a user by a term.
-	 * @param term The term.
-	 * @return The search result containing the matching users.
-	 */
-	SearchResult<RBUser> searchUsers(String term);
-	
 }
