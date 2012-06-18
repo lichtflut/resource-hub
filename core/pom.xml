@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>de.lichtflut</groupId>
 		<artifactId>lf.resource-browser</artifactId>
 		<version>0.4.1-SNAPSHOT</version>
 	</parent>
-	
+
 	<groupId>de.lichtflut.rb</groupId>
 	<artifactId>lf.resource-browser.core</artifactId>
 	<packaging>jar</packaging>
 	<name>RB Core</name>
-	
+
 	<build>
 		<resources>
 			<resource>
@@ -109,6 +109,11 @@
 			<groupId>org.arastreju</groupId>
 			<artifactId>arastreju.ogm</artifactId>
 		</dependency>
+		<!-- <dependency>
+			<groupId>de.lichtflut.rb</groupId>
+			<artifactId>mock</artifactId>
+			<version>0.4-SNAPSHOT</version>
+		</dependency> -->
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr</artifactId>
@@ -119,29 +124,29 @@
 			<artifactId>jackson-core-asl</artifactId>
 			<version>1.9.0</version>
 		</dependency>
-		
-	<!-- JAVA EXCEL PARSING -->
+
+		<!-- JAVA EXCEL PARSING -->
 		<dependency>
 			<groupId>net.sourceforge.jexcelapi</groupId>
 			<artifactId>jxl</artifactId>
 			<version>2.6.12</version>
 		</dependency>
 
-	<!-- JAVAX MAIL -->
+		<!-- JAVAX MAIL -->
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>1.4</version>
 		</dependency>
-		
-	<!-- MAIL TESTING -->
+
+		<!-- MAIL TESTING -->
 		<dependency>
 			<groupId>org.jvnet.mock-javamail</groupId>
 			<artifactId>mock-javamail</artifactId>
 			<version>1.9</version>
 			<scope>test</scope>
 		</dependency>
-	<!-- MOCKITO -->
+		<!-- MOCKITO -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>

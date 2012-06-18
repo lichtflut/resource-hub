@@ -26,11 +26,10 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
 public class CreateTypeDialog extends AbstractCreateResourceDialog {
 
 	/**
-	 * @param id
+	 * Constructor.
 	 */
 	public CreateTypeDialog(String id) {
 		super(id);
-		
 		add(TitleModifier.title(new ResourceModel("global.dialogs.create-type.title")));
 	}
 	

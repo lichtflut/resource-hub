@@ -3,7 +3,9 @@
  */
 package de.lichtflut.rb.core.schema.parser.rsf;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -18,7 +20,6 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.runtime.tree.Tree;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.Datatype;
@@ -42,8 +43,8 @@ import de.lichtflut.rb.core.schema.parser.impl.rsf.RSFTree;
  */
 public class RSFTreeTest {
 	
-	private String namespace = "http://rb.lichtflut.de/common#";
-	private String decl = 	"namespace \"" + namespace + "\" prefix \"common\"" +
+	private final String namespace = "http://rb.lichtflut.de/common#";
+	private final String decl = 	"namespace \"" + namespace + "\" prefix \"common\"" +
 							"namespace \"http://rb.lichtflut.de/common2#\" prefix \"common2\"" +
 							"" +
 							"schema for \"common:City\" { " +
@@ -53,12 +54,13 @@ public class RSFTreeTest {
 											"field-label : \"Mayor\"" +
 											"field-label[de] : \"Buergermeister\"" +
 											"field-label[fr] : \"Maire\"" +
-											"type-definition : \"date\"" +
+											"datatype : \"resource\"" +
+											"resource-constraint : \"common:Person\"" +
 											"}" +
 										"" +
 										"property \"common:hasCountry\" [1..1] {" +
 											"field-label[en] : \"Name\"" +
-											"type-definition : \"String\"" +
+											"datatype : \"String\"" +
 											"resource-constraint : \"common:Country\"" +
 											"}" +
 										"}" +
@@ -66,7 +68,7 @@ public class RSFTreeTest {
 									"label-rule : \"common:hasName\"" +
 										"property \"common:hasName\" [1..n] {" +
 											"field-label[en] : \"Name\"" +
-											"type-definition : \"String\"" +
+											"datatype : \"String\"" +
 										"}" +
 									"}";
 	
@@ -78,21 +80,16 @@ public class RSFTreeTest {
 		assertTrue(new SimpleResourceID(namespace, "City").equals(city.getDescribedType()));
 		assertTrue("http://rb.lichtflut.de/common#hasName <,> http://rb.lichtflut.de/common#hasCountry".equals(city.getLabelBuilder().getExpression()));
 		assertTrue(2 == city.getPropertyDeclarations().size());
-		System.out.println(city.getLabelBuilder().getExpression());
 		PropertyDeclaration pdec = city.getPropertyDeclarations().get(0);
 		assertEquals(new SimpleResourceID("http://rb.lichtflut.de/common#hasMayor"), pdec.getPropertyDescriptor());
 		assertEquals(1000, pdec.getCardinality().getMinOccurs());
 		assertEquals(Integer.MAX_VALUE, pdec.getCardinality().getMaxOccurs());
 		assertEquals("Mayor", pdec.getFieldLabelDefinition().getDefaultLabel());
 		assertEquals("Buergermeister", pdec.getFieldLabelDefinition().getLabel(Locale.GERMAN));
-		assertEquals(Datatype.DATE, pdec.getTypeDefinition().getElementaryDataType());
+		assertEquals(Datatype.RESOURCE, pdec.getDatatype());
+		assertThat(pdec.getConstraint().isLiteral(), is(false));
 	}
 
-	/**
-	 * @param decl 
-	 * @return
-	 * @throws RecognitionException
-	 */
 	protected List<ResourceSchemaImpl> extractSchemas(String decl) throws RecognitionException {
 		// Create an input character stream from standard in
 		CharStream input = new ANTLRStringStream(decl);
@@ -111,7 +108,6 @@ public class RSFTreeTest {
 	}
 	
 	@Test
-	@Ignore(value="For developing purposes...")
 	public void testTree() throws RecognitionException{
 		CommonTree t = (CommonTree) createTree(decl);
 		System.out.println(t.toStringTree());

@@ -1,0 +1,230 @@
+{ "namespace-declarations" : [ {
+	"namespace": "http://test.com/common#", 
+	"prefix" : "common"
+  }, {
+	"namespace": "http://test.com/public-constraints#", 
+	"prefix" : "constraints"
+  } ] 
+}
+{
+  "public-constraints" : [ {
+    "id" : "constraints:Email-Constraint",
+    "name" : "Email-Constraint",
+    "applicable-datatypes" : "string, RICH_TEXT, text",
+    "literal-constraint" : ".*@.*"
+  }]
+}
+{
+  "resource-schemas" : [ {
+    "for-type" : "common:City",
+	"label-rule" : "common:hasName <(> common:isInCountry <)>",
+    "property-declaration" : {
+      "property-type" : "common:hasName",
+      "cardinality" : "[1..n]",
+      "field-label" : {
+        "default" : "Name"
+      },
+      "datatype" : "string",
+      "cardinality" : "[1..1]"
+    },
+    "property-declaration" : {
+      "property-type" : "common:isInCountry",
+      "cardinality" : "[1..n]",
+      "field-label" : {
+        "default" : "Country"
+      },
+      "datatype" : "string",
+      "cardinality" : "[1..1]"
+      }
+  } , {
+    "for-type" : "common:Person",
+	"label-rule" : "common:hasFirstname common:hasLastname",
+    "property-declaration" : {
+      "property-type" : "common:hasFirstname",
+      "cardinality" : "[1..1]",
+      "field-label" : {
+        "default" : "First name"
+      },
+      "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasLastname",
+     "cardinality" : "[0..n]",
+      "field-label" : {
+        "default" : "Last name"
+      },
+      "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasAddress",
+      "cardinality" : "[1..n]",
+      "field-label" : {
+        "default" : "Address"
+      },
+      "datatype" : "resource",
+      "resource-constraint" : "common:Address"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasDateOfBirth",
+      "field-label" : {
+        "default" : "Birthdate"
+      },
+     "cardinality" : "[1..1]",
+     "datatype" : "date"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasPlaceOfBirth",
+      "field-label" : {
+        "default" : "Birthplace"
+      },
+      "cardinality" : "[0..1]",
+      "datatype" : "resource",
+      "resource-constraint" : "common:City"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasEmail",
+      "cardinality" : "[0..n]",
+      "field-label" : {
+        "default" : "E-Mail"
+      },
+      "datatype" : "string",
+      "constraint-reference" : "constraints:Email-Constraint"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasChildren",
+      "cardinality" : "[0..n]",
+      "field-label" : {
+        "default" : "Children"
+      },
+      "datatype" : "resource",
+      "resource-constraint" : "common:Person"
+    }
+  }, {
+    "for-type" : "common:Address",
+	"label-rule" : "common:hasStreet common:hasHouseNo <,> common:hasCity",
+    "property-declaration" : {
+      "property-type" : "common:hasStreet",
+      "field-label" : {
+        "default" : "Street"
+      },
+      "cardinality" : "[1..1]",
+      "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasHouseNo",
+      "field-label" : {
+        "default" : "House No."
+      },
+      "cardinality" : "[1..1]",
+      "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:Zipcode",
+      "field-label" : {
+        "default" : "ZIP code"
+      },
+      "cardinality" : "[1..1]",
+      "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasCity",
+      "field-label" : {
+        "default" : "City"
+      },
+      "cardinality" : "[1..1]",
+      "datatype" : "resource",
+      "resource-constraint" : "common:City"
+    }
+  }, {
+    "for-type" : "common:Organization",
+	"label-rule" : "<firma> common:hasName <von> common:hasGeneralManager",
+    "property-declaration" : {
+      "property-type" : "common:hasName",
+      "field-label" : {
+        "default" : "Name"
+      },
+     "cardinality" : "[1..1]",
+     "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasGeneralManager",
+      "cardinality" : "[1..n]",
+      "field-label" : {
+        "default" : "General Manager / CEO"
+      },
+      "datatype" : "resource",
+      "resource-constraint" : "common:Person"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasDomicile",
+      "field-label" : {
+        "default" : "Domicile"
+      },
+      "cardinality" : "[1..1]",
+      "datatype" : "resource",
+      "resource-constraint" : "common:City"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasAddress",
+      "cardinality" : "[1..1]",
+      "field-label" : {
+        "default" : "Address"
+      },
+      "datatype" : "resource",
+      "resource-constraint" : "common:Address"
+    },
+    "property-declaration" : {
+      "property-type" : "common:isIndependent",
+      "field-label" : {
+        "default" : "Is independent"
+      },
+      "cardinality" : "[1..1]",
+      "datatype" : "boolean"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasEmployees",
+      "cardinality" : "[1..n]",
+      "field-label" : {
+        "default" : "Has employees"
+      },
+      "datatype" : "resource",
+      "resource-constraint" : "common:Person"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasDescription",
+      "field-label" : {
+        "default" : "hasDescription"
+      },
+      "cardinality" : "[0..1]",
+      "datatype" : "string"
+    }
+  }, {
+    "for-type" : "common:Project",
+	"label-rule" : "common:hasTitle <(> common:hasID <)>",
+    "property-declaration" : {
+      "property-type" : "common:hasID",
+      "field-label" : {
+        "default" : "ID"
+      },
+      "cardinality" : "[1..1]",
+      "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasTitle",
+      "field-label" : {
+        "default" : "Name"
+      },
+      "cardinality" : "[1..1]",
+      "datatype" : "string"
+    },
+    "property-declaration" : {
+      "property-type" : "common:hasLead",
+      "cardinality" : "[0..n]",
+      "field-label" : {
+        "default" : "Project lead"
+      },
+      "datatype" : "resource",
+      "resource-constraint" : "common:Person"
+    }
+  } ]
+}

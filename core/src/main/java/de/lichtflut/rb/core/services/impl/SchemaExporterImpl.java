@@ -48,19 +48,18 @@ public class SchemaExporterImpl implements SchemaExporter {
 		IOReport report = new IOReport();
 		
 		final OutputElements elements = new OutputElements();
-		elements.addTypeDefs(manager.findPublicTypeDefinitions());
+		elements.addConstraint(manager.findPublicConstraints());
 		elements.addSchemas(manager.findAllResourceSchemas());
 		
 		try {
 			writer.write(out, elements);
-			report.add("TypeDefinitions", elements.getTypeDefs().size());
+			report.add("TypeDefinitions", elements.getConstraints().size());
 			report.add("Schemas", elements.getSchemas().size());
 			report.add("Statements", elements.getStatements().size());
 			report.success();
 		} catch (IOException e) {
 			report.setAdditionalInfo(e.getMessage());
 			report.error();
-//			e.printStackTrace();
 		}
 		return report;
 	}

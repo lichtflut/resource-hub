@@ -8,7 +8,7 @@ import java.util.Collection;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
@@ -32,11 +32,11 @@ public interface SchemaManager {
 	ResourceSchema findSchemaForType(ResourceID type);
 	
 	/**
-	 * Finds a Type Definition by it's ID.
+	 * Finds a {@link Constraint} by it's ID.
 	 * @param id The IT
 	 * @return the TypeDefinition or null.
 	 */
-	TypeDefinition findTypeDefinition(ResourceID id);
+	Constraint findConstraint(ResourceID id);
 
 	// -----------------------------------------------------
 
@@ -48,9 +48,9 @@ public interface SchemaManager {
 	// -----------------------------------------------------
 
 	/**
-	 * @return all public {@link TypeDefinition}s.
+	 * @return all public {@link Constraint}s.
 	 */
-	Collection<TypeDefinition> findPublicTypeDefinitions();
+	Collection<Constraint> findPublicConstraints();
 
 	// -----------------------------------------------------
 
@@ -68,17 +68,22 @@ public interface SchemaManager {
 	
 	/**
 	 * Stores the given Type Definition.
-	 * @param definition The Type Definition.
+	 * @param constraint The Type Definition.
 	 */
-	void store(TypeDefinition definition);
+	void store(Constraint constraint);
 	
+	/**
+	 * Remove the given {@link Constraint}.
+	 * @param constraint - the Constraint to be removed
+	 */
+	void remove(Constraint constraint);
 	/**
 	 * Prepare a transient Type Definition.
 	 * @param qn The qualified name.
 	 * @param displayName The display name.
 	 * @return The transient Type Definition.
 	 */
-	TypeDefinition prepareTypeDefinition(QualifiedName qn, String displayName);
+	Constraint prepareConstraint(QualifiedName qn, String displayName);
 
 	// -----------------------------------------------------
 

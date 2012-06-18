@@ -46,12 +46,22 @@ public interface IOConstants {
 
 	public static final String TYPE_DEFINITION = "type-definition";
 
-	public static final String PUBLIC_TYPE_DEFINITIONS = "public-type-definitions";
+	public static final String RESOURCE_CONSTRAINT = "resource-constraint";
+	
+	public static final String LITERAL_CONSTRAINT = "literal-constraint";
+	
+	public static final String CONSTRAINT_REFERENCE = "constraint-reference";
+	
+	public static final String PUBLIC_CONSTRAINTS = "public-constraints";
 
+	public static final String APPLICABLE_DATATYPES = "applicable-datatypes";
+	
 	public static final String MAX = "max";
 
 	public static final String MIN = "min";
 
+	public static final String CARDINALITY = "cardinality";
+	
 	public static final String TYPE_REFERENCE = "type-reference";
 
 	public static final String PROPERTY_TYPE = "property-type";
@@ -60,7 +70,7 @@ public interface IOConstants {
 
 	public static final String PROPERTY_DECLARATION = "property-declaration";
 	
-	public static final String CONSTRAINTS = "constraints";
+	public static final String CONSTRAINT = "constraint";
 	
 	public static final String LABEL_RULE = "label-rule";
 

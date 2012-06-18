@@ -40,6 +40,7 @@ import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.components.links.ConfirmedLink;
+import de.lichtflut.rb.webck.components.typesystem.constraints.ConstraintsEditorPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
@@ -168,7 +169,7 @@ public class SchemaEditorPanel extends Panel {
 						new ConstraintsEditorPanel("constraints", item.getModel());
 				item.add(constraintsEditor);
 				
-				final boolean isPrivateTD = !row.isTypeDefinitionPublic();
+				final boolean isPrivateTD = !row.hasPublicConstraint();
 				
 				final DropDownChoice<Datatype> dataTypeChoice = 
 						new DropDownChoice<Datatype>("dataType", new PropertyModel(item.getModel(), "dataType"),

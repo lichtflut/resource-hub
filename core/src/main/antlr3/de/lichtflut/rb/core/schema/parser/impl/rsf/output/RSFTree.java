@@ -121,7 +121,7 @@ public class RSFTree extends TreeParser {
     		}
     		if(RESOURCE_CONSTRAINT_CONST.equals(key)){
     			TypeDefinitionImpl def = ((property_decl_scope)property_decl_stack.peek()).def;
-    			def.addConstraint(ConstraintBuilder.buildConstraint(toResourceID(value)));
+    			def.addConstraint(ConstraintBuilder.buildResourceConstraint(toResourceID(value)));
     		}
     		if(FIELD_LABEL_CONST.equals(key)){
     			PropertyDeclarationImpl pDec = ((property_decl_scope)property_decl_stack.peek()).pDec;

@@ -22,17 +22,14 @@
 		<div class="row">
 			<div class="cell"><wicket:message key="cardinality-label"></wicket:message></div>
 			<div class="cell"><input wicket:id="cardinality" /></div>
-			<div class="cell"><input type="checkbox" wicket:id="cardinalityCheckBox" /></div>
 		</div>
 		<div class="row">
 			<div class="cell"><wicket:message key="datatype-label"></wicket:message></div>
 			<div class="cell"><select wicket:id="datatype"></select></div>
-			<div class="cell"><input type="checkbox" wicket:id="datatypeCheckBox" /></div>
 		</div>
 		<div class="row">
 			<div class="cell"><wicket:message key="constraints-label"></wicket:message></div>
-			<div class="cell"><wicket:container wicket:id="constraints"></wicket:container></div>
-			<div class="cell"><input type="checkbox" wicket:id="constraintsCheckBox" /></div>
+			<div class="cell" wicket:id="constraints"></div>
 		</div>
 	
 		<div class="button-bar">

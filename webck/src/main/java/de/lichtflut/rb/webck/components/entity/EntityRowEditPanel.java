@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.validation.validator.PatternValidator;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
@@ -199,6 +200,7 @@ public class EntityRowEditPanel extends Panel {
 	private TextField addTextField(final ListItem<RBFieldValueModel> item, Class<?> type) {
 		final TextField field = new TextField("valuefield", item.getModelObject());
 		field.setType(type);
+		addValidator(item, field);
 		item.add(new Fragment("valuefield", "textInput", this).add(field));
 		return field;
 	}
@@ -206,12 +208,14 @@ public class EntityRowEditPanel extends Panel {
 	private FormComponent<?> addTextArea(final ListItem<RBFieldValueModel> item) {
 		final TextArea<String> field = new TextArea<String>("valuefield", item.getModelObject());
 		field.setType(String.class);
+		addValidator(item, field);
 		item.add(new Fragment("valuefield", "textArea", this).add(field));
 		return field;
 	}
 	
 	private TextField addDateField(final ListItem<RBFieldValueModel> item) {
 		final DatePicker<Date> field = new DatePicker<Date>("valuefield", item.getModelObject(), Date.class);
+		addValidator(item, field);
 		item.add(new Fragment("valuefield", "textInput", this).add(field));
 		return field;
 	}
@@ -225,8 +229,16 @@ public class EntityRowEditPanel extends Panel {
 	private FormComponent<?> addRichTextArea(ListItem<RBFieldValueModel> item) {
 		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(item.getModelObject()));
 		field.add(new TinyMceBehavior());
+		addValidator(item, field);
 		item.add(new Fragment("valuefield", "textArea", this).add(field));
 		return field;
+	}
+
+	private void addValidator(final ListItem<RBFieldValueModel> item, final Component field) {
+		Constraint constraint = item.getModelObject().getField().getConstraint();
+		if((null != constraint) && (null != constraint.getLiteralConstraint())){
+			field.add(new PatternValidator(item.getModelObject().getField().getConstraint().getLiteralConstraint()));
+		}
 	}
 	
 	// ----------------------------------------------------
@@ -239,11 +251,7 @@ public class EntityRowEditPanel extends Panel {
 	private ResourceID getTypeConstraint() {
 		final RBField field = getField();
 		if(field.getDataType().equals(Datatype.RESOURCE)){
-			for (Constraint c : field.getConstraints()) {
-				if(c.isResourceTypeConstraint()){
-					return c.getResourceTypeConstraint().asResource();
-				}
-			}
+			return field.getConstraint().getReference().asResource();
 		}
 		return null;
 	}

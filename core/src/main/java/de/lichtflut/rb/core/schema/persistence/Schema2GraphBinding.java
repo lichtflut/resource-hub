@@ -3,15 +3,11 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.slf4j.Logger;
@@ -24,15 +20,12 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 
 /**
  * <p>
@@ -48,8 +41,8 @@ import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
 public class Schema2GraphBinding {
 	
 	private final Logger logger = LoggerFactory.getLogger(Schema2GraphBinding.class);
-	
-	private TypeDefinitionResolver resolver = new VoidTypeDefResovler();
+	// TODO resolve public constraint
+	private ConstraintResolver resolver = new VoidTypeDefResovler();
 	
 	// -----------------------------------------------------
 	
@@ -57,7 +50,7 @@ public class Schema2GraphBinding {
 	 * Constructor with special resolver.
 	 * @param resolver Resolver for persistent type definitions.
 	 */
-	public Schema2GraphBinding(final TypeDefinitionResolver resolver) {
+	public Schema2GraphBinding(final ConstraintResolver resolver) {
 		this.resolver = resolver;
 	}
 	
@@ -77,9 +70,9 @@ public class Schema2GraphBinding {
 			final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
 			decl.setPropertyDescriptor(snDecl.getPropertyDescriptor());
 			decl.setCardinality(buildCardinality(snDecl));
-			decl.setTypeDefinition(toModelObject(snDecl.getTypeDefinition()));
-			decl.setFieldLabelDefinition(createFieldLabelDef(snDecl));
-			
+			decl.setDatatype(snDecl.getDatatype());
+			decl.setFieldLabelDefinition(snDecl.getFieldLabelDefinition());
+			decl.setConstraint(snDecl.getConstraint());
 			schema.addPropertyDeclaration(decl);
 		}
 		if (snSchema.hasLabelExpression()) {
@@ -93,22 +86,6 @@ public class Schema2GraphBinding {
 		}
 
 		return schema;
-	}
-	
-	/**
-	 * Convert a property type definition node to a model element.
-	 * @param snTypeDef The type definition node.
-	 * @return The schema model element.
-	 */
-	public TypeDefinition toModelObject(final SNPropertyTypeDefinition snTypeDef) {
-		if(snTypeDef == null) {
-			return null;
-		}
-		final TypeDefinitionImpl typeDef = new TypeDefinitionImpl(SNOPS.id(snTypeDef), snTypeDef.isPublic());
-		typeDef.setElementaryDataType(snTypeDef.getDatatype());
-		typeDef.setName(snTypeDef.getDisplayName());
-		typeDef.setConstraints(buildConstraints(snTypeDef.getConstraints()));
-		return typeDef;
 	}
 	
 	// -----------------------------------------------------
@@ -135,8 +112,11 @@ public class Schema2GraphBinding {
 			snDecl.setPropertyDescriptor(decl.getPropertyDescriptor(), RBSchema.CONTEXT);
 			snDecl.setMinOccurs(minAsScalar(decl.getCardinality()), RBSchema.CONTEXT);
 			snDecl.setMaxOccurs(maxAsScalar(decl.getCardinality()), RBSchema.CONTEXT);
-			snDecl.setTypeDefinition(toSemanticNode(decl.getTypeDefinition()), RBSchema.CONTEXT);
+			snDecl.setDatatype(decl.getDatatype(), RBSchema.CONTEXT);
 			setFieldLabels(snDecl, decl.getFieldLabelDefinition());
+			if(decl.hasConstraint()){
+				snDecl.setConstraint(decl.getConstraint(), RBSchema.CONTEXT);
+			}
 			if (null != predecessor) {
 				predecessor.setSuccessor(snDecl, RBSchema.CONTEXT);
 			}
@@ -146,90 +126,20 @@ public class Schema2GraphBinding {
 		return sn;
 	}
 	
-	/**
-	 * Creates a new semantic node for given Type Definition.
-	 * @param typeDef The type definition model object.
-	 * @return A new semantic node representing this definition.
-	 */
-	public SNPropertyTypeDefinition toSemanticNode(final TypeDefinition typeDef) {
-		if(typeDef == null) {
-			return null;
-		} else if (typeDef.isPublicTypeDef()) {
-			final SNPropertyTypeDefinition resolved = resolver.resolve(typeDef);
-			if (resolved != null) {
-				return resolved;
-			}
-		}
-		return createSemanticNode(typeDef);	
-	}
-
-	// -----------------------------------------------------
-	
-	/**
-	 * Create a node corresponding to type definition.
-	 * @param typeDef The type definition.
-	 * @return The created node.
-	 */
-	protected SNPropertyTypeDefinition createSemanticNode(final TypeDefinition typeDef) {
-		final SNResource node = new SNResource(typeDef.getID().getQualifiedName());
-		final SNPropertyTypeDefinition sn = new SNPropertyTypeDefinition(node);
-		sn.setDatatype(typeDef.getElementaryDataType(), RBSchema.CONTEXT);
-		sn.setDisplayName(typeDef.getName(), RBSchema.CONTEXT);
-		if (typeDef.isPublicTypeDef()) {
-			sn.setPublic(RBSchema.CONTEXT);
-		} else {
-			sn.setPrivate(RBSchema.CONTEXT);
-		}
-		for(Constraint constraint : typeDef.getConstraints()) {
-			if (constraint.isLiteralConstraint()) {
-				sn.addLiteralConstraint(constraint.getLiteralConstraint(), RBSchema.CONTEXT);
-			} else {
-				sn.addTypeConstraint(constraint.getResourceTypeConstraint(), RBSchema.CONTEXT);
-			}
-		}
-		return sn;
-	}
-	
 	protected Cardinality buildCardinality(final SNPropertyDeclaration snDecl) {
 		int min = snDecl.getMinOccurs().getIntegerValue().intValue();
 		int max = snDecl.getMaxOccurs().getIntegerValue().intValue();
 		if (max > 0) {
-			return CardinalityBuilder.between(min, max);
+			if(max ==Integer.MAX_VALUE){
+				return CardinalityBuilder.hasAtLeast(min);
+			}else{
+				return CardinalityBuilder.between(min, max);
+			}
 		} else {
 			return CardinalityBuilder.hasAtLeast(min);
 		}
 	}
-	
-	/**
-	 * Build constraint objects from {@link SNConstraint} nodes.
-	 * @param src The source.
-	 * @return The constraints.
-	 */
-	protected Set<Constraint> buildConstraints(final Collection<SNConstraint> src) {
-		final Set<Constraint> result = new HashSet<Constraint>();
-		for (SNConstraint snConst : src){
-			result.add(toModelConstraint(snConst));
-		}
-		return result;
-	}
 
-	protected Constraint toModelConstraint(final SNConstraint snConst) {
-		if (snConst.isLiteralConstraint()){
-			final String value = snConst.getConstraintValue().asValue().getStringValue();
-			return ConstraintBuilder.buildConstraint(value);
-		} else if (snConst.isTypeConstraint()) {
-			SemanticNode node = snConst.getConstraintValue();
-			if (node != null) {
-				final ResourceID type = snConst.getConstraintValue().asResource();
-				return ConstraintBuilder.buildConstraint(type);
-			} else {
-				return null;
-			}
-		} else {
-			throw new IllegalStateException();
-		}
-	}
-	
 	protected SNScalar minAsScalar(final Cardinality cardinality) {
 		return new SNScalar(cardinality.getMinOccurs());
 	}
@@ -262,8 +172,9 @@ public class Schema2GraphBinding {
 	
 	// -----------------------------------------------------
 	
-	private static final class VoidTypeDefResovler implements TypeDefinitionResolver {
-		public SNPropertyTypeDefinition resolve(TypeDefinition typeDef) {
+	private static final class VoidTypeDefResovler implements ConstraintResolver {
+		@Override
+		public Constraint resolve(Constraint constraint) {
 			return null;
 		}
 	}

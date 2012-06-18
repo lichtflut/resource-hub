@@ -15,22 +15,32 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
+import java.util.Set;
+
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.model.nodes.views.SNScalar;
+import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.infra.Infra;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
+import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
+import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
 
 
 /**
  * <p>
- * Represents the assertion of a Property Declaration to a Class.
+ * Represents the Property Declaration to a Class.
  * <p>
  *
  * <p>
@@ -69,24 +79,24 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * Get the TypeDefinition.
 	 * @return The TypeDefinition.
 	 */
-	public SNPropertyTypeDefinition getTypeDefinition() {
-		SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_PROPERTY_TYPE_DEF);
-		if (node != null){
-			return new SNPropertyTypeDefinition(node.asResource());
-		} else {
-			return null;
+	public Constraint getConstraint() {
+		Constraint constraint = null;
+		SemanticNode constraintNode = SNOPS.singleObject(this, RBSchema.HAS_CONSTRAINT);
+		if(null != constraintNode){
+			constraint = new ReferenceConstraint(constraintNode.asResource());
 		}
+		return constraint;
 	}
-
+	
 	/**
-	 * Set the TypeDefinition.
-	 * @param typeDef The TypeDefinition
-	 * @param context The context.
+	 * @return true if the SNPropertyDeclaration has a {@link Constraint}, false if not.
 	 */
-	public void setTypeDefinition(final SNPropertyTypeDefinition typeDef, final Context context) {
-		if (!Infra.equals(getTypeDefinition(), typeDef)){
-			SNOPS.assure(this, RBSchema.HAS_PROPERTY_TYPE_DEF, typeDef, context);
+	public boolean hasConstraint(){
+		boolean hasConstraint = false;
+		if(getConstraint() != null){
+			hasConstraint = true;
 		}
+		return hasConstraint;
 	}
 
 	/**
@@ -101,7 +111,7 @@ public class SNPropertyDeclaration extends ResourceView {
 			return null;
 		}
 	}
-
+	
 	/**
 	 * Set the property declared by this property declaration.
 	 * @param property The property.
@@ -113,6 +123,30 @@ public class SNPropertyDeclaration extends ResourceView {
 		}
 	}
 
+	/**
+	 * Returns the {@link Datatype} declared by this property declaration.
+	 * @return The property.
+	 */
+	public Datatype getDatatype() {
+		final SemanticNode node = SNOPS.singleObject(this, RBSchema.HAS_DATATYPE);
+		if (node != null) {
+			return Datatype.valueOf(node.asValue().getStringValue());
+		} else {
+			throw new IllegalArgumentException("No Datatype found");
+		}
+	}
+
+	/**
+	 * Sets the {@link Datatype}
+	 * @param datatype
+	 * @param context
+	 */
+	public void setDatatype(final Datatype datatype, final Context context){
+		if(datatype != null){
+			SNOPS.assure(this, RBSchema.HAS_DATATYPE, datatype.name(), context);
+		}
+	}
+	
 	/**
 	 * Returns the min. occurrences.
 	 * @return {@link SNScalar}
@@ -161,6 +195,40 @@ public class SNPropertyDeclaration extends ResourceView {
 		}
 	}
 	
+	/**
+	 * Sets the constraint.
+	 * @param constraint
+	 * @param context
+	 */
+	public void setConstraint(final Constraint constraint, Context context){
+		SNOPS.assure(this, RBSchema.HAS_CONSTRAINT, constraint.asResourceNode(), context);
+	}
+
+	/**
+	 * Set the FieldLabel.
+	 * @param def
+	 * @param ctx
+	 */
+	public void setFieldLabelDefinition(final FieldLabelDefinition def, Context ctx){
+		SNOPS.associate(this, RBSystem.HAS_FIELD_LABEL, new SNText(def.getDefaultLabel()));
+	}
+	
+	/**
+	 * Set the FieldLabel.
+	 * @param def
+	 * @param ctx
+	 */
+	public FieldLabelDefinition getFieldLabelDefinition(){
+		final String defaultName = getPropertyDescriptor().getQualifiedName().getSimpleName();
+		final FieldLabelDefinition def = new FieldLabelDefinitionImpl(defaultName);
+		final Set<? extends Statement> assocs = getAssociations(RBSystem.HAS_FIELD_LABEL);
+		for (Statement current : assocs) {
+			// TODO: Evaluate context to locale
+			def.setDefaultLabel(current.getObject().asValue().getStringValue());
+		}
+		return def;
+	}
+	
 	// -- ORDER -------------------------------------------
 	
 	/**
@@ -173,8 +241,8 @@ public class SNPropertyDeclaration extends ResourceView {
 		SNOPS.assure(this, Aras.IS_PREDECESSOR_OF, successor, contexts);
 	}
 	
-	//-----------------------------------------------------
-
+	// ------------------------------------------------------
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -185,7 +253,7 @@ public class SNPropertyDeclaration extends ResourceView {
 			sb.append(getPropertyDescriptor().getQualifiedName().toURI());
 		}
 		sb.append(" " + getMinOccurs() + ".." + getMaxOccurs());
-		sb.append("\n\t\t" + getTypeDefinition());
+		sb.append("\n\t\t" + getConstraint());
 		return sb.toString();
 	}
 

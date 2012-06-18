@@ -56,18 +56,8 @@ public interface RBSchema {
 	/**
 	 * Each PropertyDeclaration has to be a type of this.
 	 */
-	ResourceID PROPERTY_TYPE_DEF = new SimpleResourceID(NAMESPACE_URI, "PropertyTypeDefinition");
+	ResourceID PUBLIC_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "PublicConstraint");
 	
-	/**
-	 * Each TypeConstraint has to be a type of this.
-	 */
-	ResourceID TYPE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "TypeConstraint");
-	
-	/**
-	 * Each LiteralConstraint has to be a type of this.
-	 */
-	ResourceID LITERAL_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "LiteralConstraint");
-
 	// -- PROPERTIES --------------------------------------
 
 	/**
@@ -119,7 +109,7 @@ public interface RBSchema {
 	/**
 	 * Boolean expression if a Property Type Definition is public or private.
 	 */
-	ResourceID IS_PUBLIC_TYPE_DEF = new SimpleResourceID(NAMESPACE_URI, "isPublicTypeDefinition");
+	ResourceID IS_PUBLIC_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "isPublicConstraint");
 	
 	/**
 	 * Text expression for building a label for an entity.
@@ -138,11 +128,14 @@ public interface RBSchema {
 
 	// -- CONSTRAINTS -------------------------------------
 
+	ResourceID IS_RESOURCE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "isResourceConstraint");
+	ResourceID IS_LITERAL_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "isLiteralConstraint");;
 	ResourceID HAS_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasConstraint");
-	ResourceID HAS_TYPE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasTypeConstraint");
+	ResourceID HAS_RESOURCE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasTypeConstraint");
 	ResourceID HAS_LITERAL_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasLiteralConstraint");
 	ResourceID HAS_CONSTRAINT_VALUE = new SimpleResourceID(NAMESPACE_URI, "hasConstraintValue");
 	ResourceID MIN_OCCURS = new SimpleResourceID(NAMESPACE_URI, "minOccurs");
 	ResourceID MAX_OCCURS = new SimpleResourceID(NAMESPACE_URI, "maxOccurs");
+
 
 }

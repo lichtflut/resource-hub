@@ -10,10 +10,8 @@ import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.Statement;
 
 import de.lichtflut.rb.core.io.IOReport;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionReference;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
 import de.lichtflut.rb.core.services.SchemaImporter;
@@ -60,9 +58,9 @@ public class SchemaImporterImpl implements SchemaImporter {
 		
 		ParsedElements elements;
 		elements = parser.parse(in);
-	
-		for(TypeDefinition def : elements.getTypeDefs()) {
-			manager.store(def);
+		
+		for(Constraint constr : elements.getConstraints()) {
+			manager.store(constr);
 		}
 		for(ResourceSchema schema : elements.getSchemas()) {
 			resolveTypeDefReferences(schema);
@@ -73,7 +71,7 @@ public class SchemaImporterImpl implements SchemaImporter {
 			mc.addStatement(stmt);
 		}
 		
-		report.add("TypeDefinitions", elements.getTypeDefs().size());
+		report.add("TypeDefinitions", elements.getConstraints().size());
 		report.add("Schemas", elements.getSchemas().size());
 		report.add("Statements", elements.getStatements().size());
 		report.success();
@@ -84,21 +82,21 @@ public class SchemaImporterImpl implements SchemaImporter {
 	// -----------------------------------------------------
 
 	private void resolveTypeDefReferences(final ResourceSchema schema) {
-		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
-			final TypeDefinition typeDef = decl.getTypeDefinition();
-			if (typeDef instanceof TypeDefinitionReference) {
-				final TypeDefinitionReference ref = (TypeDefinitionReference) typeDef;
-				if (!resolveTypeDefReference(ref)) {
-					throw new IllegalStateException("Could not resolve type def " + ref);
-				}
-			}
-		}
+//		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+//			final TypeDefinition typeDef = decl.getTypeDefinition();
+//			if (typeDef instanceof TypeDefinitionReference) {
+//				final TypeDefinitionReference ref = (TypeDefinitionReference) typeDef;
+//				if (!resolveTypeDefReference(ref)) {
+//					throw new IllegalStateException("Could not resolve type def " + ref);
+//				}
+//			}
+//		}
 	}
 	
-	private boolean resolveTypeDefReference(final TypeDefinitionReference ref) {
-		final TypeDefinition existing = manager.findTypeDefinition(ref.getID());
+	private boolean resolveTypeDefReference(Constraint ref) {
+		final Constraint existing = manager.findConstraint(ref.asResourceNode());
 		if (existing != null) {
-			ref.setDelegate(existing);
+			ref = existing;
 			return true;
 		} else {
 			return false;

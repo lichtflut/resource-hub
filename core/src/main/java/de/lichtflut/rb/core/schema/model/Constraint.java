@@ -4,15 +4,17 @@
 package de.lichtflut.rb.core.schema.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>
  *  Constraint for a property. In general there are two types of constraints:
  *  <ol>
  *   <li>Pattern constraints for literal value properties</li>
- *   <li>Type-Of constraints for resource references</li>
+ *   <li>Resource-constraints for resource references</li>
  *  </ol>
  * </p>
  *
@@ -24,7 +26,6 @@ import org.arastreju.sge.model.ResourceID;
  *  	if (X rdf:type Y) is true
  *   </pre>
  * </p>
- *
  *
  * <p>
  * Please note, that cardinality (min occurs, max occurs) are not constraints.
@@ -39,16 +40,9 @@ import org.arastreju.sge.model.ResourceID;
 public interface Constraint extends Serializable {
 
 	/**
-	 * Check if this constraint is for literal values.
-	 * @return true if this constraint is for literal values.
+	 * Returns the name of a public constraint.
 	 */
-	boolean isLiteralConstraint();
-
-	/**
-	 * Check if this constraint is a type-of constraint for resources.
-	 * @return true if this constraint is for resources.
-	 */
-	boolean isResourceTypeConstraint();
+	String getName();
 
 	/**
 	 * Get the literal constraint, a regular expression pattern. If this constraint is a resource type constraint
@@ -63,6 +57,36 @@ public interface Constraint extends Serializable {
 	 * (isResourceTypeConstraint() returns false) null will be returned;
 	 * @return The resource type or null.
 	 */
-	ResourceID getResourceTypeConstraint();
-
+	ResourceID getReference();
+	
+	/**
+	 * Returns wether this constraint can be re-used by other {@link PropertyDeclaration}s or not.
+	 * @return true if Constraint is public, false if not
+	 */
+	boolean isPublic();
+	
+	/**
+	 * Returns whether this constraint references a public constraint.
+	 * @return true if yes, false if it hold a literal pattern
+	 */
+	boolean holdsReference();
+	
+	/**
+	 * This property can be empty. Do not decide on how to treat a {@link PropertyDeclaration} based on this.
+	 * If you want to check for {@link Datatype}.Resource use <code>isLiteral</code>
+	 * @return a list of applicable {@link Datatype}s for this {@link Constraint}.
+	 */
+	List<Datatype> getApplicableDatatypes();
+	
+	/**
+	 * @return true if constraint is literal OR references a literal Constraint, 
+	 * returns false if references a resource
+	 */
+	boolean isLiteral();
+	
+	/**
+	 * Returns the constraint as a ResourceNode.
+	 * @return
+	 */
+	ResourceNode asResourceNode();
 }

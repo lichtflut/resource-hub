@@ -16,7 +16,6 @@ import org.arastreju.sge.naming.SimpleNamespace;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
 
 /**
  * <p>
@@ -33,7 +32,7 @@ public class OutputElements {
 
 	private final List<ResourceSchema> schemas = new ArrayList<ResourceSchema>();
 	
-	private final List<TypeDefinition> typeDefs = new ArrayList<TypeDefinition>();
+	private final List<Constraint> constraints = new ArrayList<Constraint>();
 	
 	private final List<Statement> statements = new ArrayList<Statement>();
 	
@@ -52,13 +51,12 @@ public class OutputElements {
 	}
 
 	/**
-	 * @param typeDefs
+	 * @param constraints
 	 */
-	public void addTypeDefs(final Collection<TypeDefinition> typeDefs) {
-		this.typeDefs.addAll(typeDefs);
-		for (TypeDefinition def : typeDefs) {
-			this.typeDefs.add(def);
-			register(def);
+	public void addConstraint(final Collection<Constraint> constraints) {
+		for (Constraint constr : constraints) {
+			this.constraints.add(constr);
+			register(constr);
 		}
 	}
 	
@@ -88,8 +86,8 @@ public class OutputElements {
 	/**
 	 * @return the typeDefs
 	 */
-	public List<TypeDefinition> getTypeDefs() {
-		return typeDefs;
+	public List<Constraint> getConstraints() {
+		return constraints;
 	}
 	
 	/**
@@ -107,7 +105,7 @@ public class OutputElements {
 	@Override
 	public String toString() {
 		return schemas.size() + " schema(s) and " 
-				+ typeDefs.size() + " type definition(s) with "
+				+ constraints.size() + " type definition(s) with "
 				+ statements.size() + " additional statement(s)"; 
 	}
 	
@@ -117,18 +115,16 @@ public class OutputElements {
 		register(schema.getDescribedType());
 		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 			register(decl.getPropertyDescriptor());
-			register(decl.getTypeDefinition());
+			register(decl.getConstraint());
 		}
 	}
 	
-	private void register(final TypeDefinition def) {
-		if (def.isPublicTypeDef()) {
-			register(def.getID());
-		} else {
-			for (Constraint constraint : def.getConstraints()) {
-				if (constraint.isResourceTypeConstraint()) {
-					register(constraint.getResourceTypeConstraint());
-				}
+	private void register(final Constraint constr) {
+		if (constr != null && constr.isPublic()) {
+			if(constr.isLiteral()){
+				register(constr.asResourceNode().getQualifiedName());
+			}else{
+				register(constr.getReference());
 			}
 		}
 	}

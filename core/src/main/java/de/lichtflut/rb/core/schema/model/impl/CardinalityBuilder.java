@@ -24,20 +24,6 @@ import de.lichtflut.rb.core.schema.model.Cardinality;
 
 public final class CardinalityBuilder implements Serializable {
 
-	//Let's instance of this class be a Singleton
-
-	private static final CardinalityBuilder INSTANCE =  new CardinalityBuilder();
-
-	/**
-	 * For future uses.
-	 * @return the singleton-instance of this builder
-	 */
-	public static CardinalityBuilder getInstance(){
-		return INSTANCE;
-	}
-
-	// -----------------------------------------------------
-
 	/**
 	 * @return a 1:1-Cardinality
 	 */
@@ -136,14 +122,14 @@ public final class CardinalityBuilder implements Serializable {
 	 */
 	public static Cardinality extractFromString(String string){
 		// Check RegEx and null String
-		if((!string.matches("\\[.*\\.\\..*\\]")) || (string == null)){
+		if(((string == null) || (!string.matches("\\[.*\\.\\..*\\]")))){
 			return hasOptionalOneToMany();
 		}
 		int min, max;
 		String clean = string.replace("[", "").replace("]", "");
 		String[] temp = clean.split("\\.\\.");
-		min = convertToInt(temp[0], false);
-		max = convertToInt(temp[1], true);
+		min = convertToInt(temp[0].trim(), false);
+		max = convertToInt(temp[1].trim(), true);
 		return between(min, max);
 	}
 
@@ -173,7 +159,8 @@ public final class CardinalityBuilder implements Serializable {
      */
     private CardinalityBuilder(){}
 
-
+    // ------------------------------------------------------
+    
     /**
      * Default implementation of Cardinality.
      * if max == -1 it will be handled as unbounded.
@@ -188,21 +175,24 @@ public final class CardinalityBuilder implements Serializable {
 		}
 
 		/**
-		 * Max should be greater than Min, otherwise, an {@link IllegalArgumentException} will be raised.
-		 * @param min - a negative value is interpreted as a positive one.
-		 * @param max - unbound could be set up with -1.
+		 * Max should be greater than Min, otherwise, an
+		 * {@link IllegalArgumentException} will be raised.
+		 * 
+		 * @param min
+		 * @param max
 		 */
-		public SimpleCardinalityImpl(final int min,final int max){
+		public SimpleCardinalityImpl(final int min, final int max) {
 			int minimum = min;
-			minimum = Math.abs(min);
-			if((max < min) && (max!=-1)){
-				throw new IllegalArgumentException(
-						"The minimum count of " + minimum + " must be less than the maximum count of " + max);
+			if (min < 0) {
+				throw new IllegalArgumentException("The minimum count of " + minimum + " must notbe negativ");
+			}
+			if ((max < min) && (max != -1)) {
+				throw new IllegalArgumentException("The minimum count of " + minimum
+						+ " must be less than the maximum count of " + max);
 			}
 			setMax(max);
 			setMin(minimum);
 		}
-
 
 		//Define inner members and fields
 		private int max=-1, min=0;
@@ -221,15 +211,6 @@ public final class CardinalityBuilder implements Serializable {
 		 */
 		public int getMinOccurs() {
 			return Math.abs(getMin());
-		}
-
-		// -----------------------------------------------------
-
-		/**
-		 * @return true if is single cardinality
-		 */
-		public boolean isSingle() {
-			return (getMax()==1);
 		}
 
 		// -----------------------------------------------------

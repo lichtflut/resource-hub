@@ -4,7 +4,6 @@
 package de.lichtflut.rb.core.schema.model;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 
@@ -25,7 +24,7 @@ public interface PropertyDeclaration extends Serializable {
 
 	/**
 	 * The property type. Usually this descriptor will be of type rdf:Property. 
-	 * In a concrete RDF statement corresponding to this PropertyAssertion this 
+	 * In a concrete RDF statement corresponding to this PropertyDeclaration this 
 	 * will be the predicate.
 	 * @return The resource identifier representing the descriptor.
 	 */
@@ -37,20 +36,6 @@ public interface PropertyDeclaration extends Serializable {
 	 */
 	void setPropertyDescriptor(ResourceID property); 
 	
-	// -----------------------------------------------------
-
-	/**
-	 * The concrete property of this assertion.
-	 * @return The property.
-	 */
-	TypeDefinition getTypeDefinition();
-	
-	/**
-	 * Assign an implicit/private oder an standalone/public TypeDefinition.
-	 * @param def The type definition.
-	 */
-	void setTypeDefinition(TypeDefinition def);
-
 	// -----------------------------------------------------
 
 	/**
@@ -83,12 +68,29 @@ public interface PropertyDeclaration extends Serializable {
 
 	/**
 	 * The constraints for this property assertion.
-	 * There are to levels where constraints can be defined. Either for the property (First lvl)
-	 * or directly for the assertion (Second lvl) . The set of constraints returned by
-	 * this method contains them all.
 	 * @return Set the constraints.
 	 */
-	@Deprecated
-	Set<Constraint> getConstraints();
+	Constraint getConstraint();
 	
+	/**
+	 * Set the Constraint for this PropertyDeclaration.
+	 */
+	void setConstraint(Constraint constraint);
+	
+	/**
+	 * @return true if this PropertyDeclaration has a {@link Constraint}, flase if not.
+	 */
+	boolean hasConstraint();
+	
+	// ------------------------------------------------------
+	
+	/**
+	 * Get the {@link Datatype} for this PropertyDeclaration.
+	 */
+	void setDatatype(Datatype datatype);
+	
+	/**
+	 * Get the {@link Datatype} for this PropertyDeclaration.
+	 */
+	Datatype getDatatype();
 }

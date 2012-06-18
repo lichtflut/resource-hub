@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -12,9 +13,10 @@ import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
@@ -28,18 +30,18 @@ import org.slf4j.LoggerFactory;
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
+import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
 import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
+import de.lichtflut.rb.core.schema.persistence.ConstraintResolver;
 import de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration;
-import de.lichtflut.rb.core.schema.persistence.SNPropertyTypeDefinition;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 import de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding;
-import de.lichtflut.rb.core.schema.persistence.TypeDefinitionResolver;
 import de.lichtflut.rb.core.services.SchemaExporter;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
@@ -57,13 +59,11 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  */
 public class SchemaManagerImpl extends AbstractService implements SchemaManager {
 
-	// -------------MEMBER-FIELDS--------------------------
-
-	private Schema2GraphBinding binding;
+	private final Schema2GraphBinding binding;
 	
-	private Logger logger = LoggerFactory.getLogger(SchemaManagerImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(SchemaManagerImpl.class);
 
-	// -----------------------------------------------------
+	// ---------------- Constructor -------------------------
 
 	/**
 	 * Constructor.
@@ -71,7 +71,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 */
 	public SchemaManagerImpl(final ServiceProvider provider) {
 		super(provider);
-		this.binding = new Schema2GraphBinding(new TypeDefResolverImpl());
+		this.binding = new Schema2GraphBinding(new ConstraintResolverImpl());
 	}
 	
 	// -----------------------------------------------------
@@ -102,11 +102,11 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public TypeDefinition findTypeDefinition(final ResourceID id) {
+	public Constraint findConstraint(final ResourceID id) {
 		final ModelingConversation mc = mc();
 		final ResourceNode node = mc.findResource(id.getQualifiedName());
 		if (node != null) {
-			return binding.toModelObject(new SNPropertyTypeDefinition(node));
+			return new ReferenceConstraint(node);
 		} else {
 			return null;
 		}
@@ -130,13 +130,13 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<TypeDefinition> findPublicTypeDefinitions() {
-		final List<TypeDefinition> result = new ArrayList<TypeDefinition>();
-		final List<ResourceNode> nodes = findResourcesByType(RBSchema.PROPERTY_TYPE_DEF);
+	public Collection<Constraint> findPublicConstraints() {
+		final List<Constraint> result = new ArrayList<Constraint>();
+		final List<ResourceNode> nodes = gate().createQueryManager().findByType(RBSchema.PUBLIC_CONSTRAINT);
 		for (ResourceNode node : nodes) {
-			final TypeDefinition typeDef = binding.toModelObject(new SNPropertyTypeDefinition(node));
-			if (typeDef.isPublicTypeDef()) {
-				result.add(typeDef);
+			final Constraint constraint = new ReferenceConstraint(node);
+			if (constraint.isPublic()) {
+				result.add(constraint);
 			}
 		}
 		return result;
@@ -179,31 +179,45 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 			logger.info("Removed schema for type {}.", type);
 		}
 	}
+	
+	
 
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void store(final TypeDefinition definition) {
-		Validate.isTrue(definition.isPublicTypeDef(), "Only public type definition may be stopred explicitly.");
+	public void store(final Constraint constraint) {
+		Validate.isTrue(constraint.isPublic(), "Only public type definition may be stopred explicitly.");
 		final ModelingConversation mc = mc();
-		final ResourceNode existing = mc.findResource(definition.getID().getQualifiedName());
-		if (existing != null) {
+		remove(constraint);
+		mc.attach(constraint.asResourceNode());
+		logger.info("Stored public constraint for {}.", constraint.getName());
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void remove(Constraint constraint){
+		final ModelingConversation mc = mc();
+		final ResourceNode existing = mc.findResource(constraint.asResourceNode().getQualifiedName());
+		if(null != existing){
 			mc.remove(existing);
 		}
-		final SNPropertyTypeDefinition node = binding.toSemanticNode(definition);
-		mc.attach(node);
 	}
 	
 	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public TypeDefinition prepareTypeDefinition(final QualifiedName qn, final String displayName) {
-		final TypeDefinitionImpl typeDef = new TypeDefinitionImpl(new SimpleResourceID(qn), true);
-		typeDef.setName(displayName);
-		store(typeDef);
-		return typeDef;
+	public Constraint prepareConstraint(final QualifiedName qn, final String displayName) {
+		final ReferenceConstraint constraint = new ReferenceConstraint(new SNResource(qn));
+		constraint.setApplicableDatatypes(Collections.singletonList(Datatype.STRING));
+		constraint.setName(displayName);
+		constraint.isPublic(true);
+		constraint.setLiteralConstraint("*");
+		store(constraint);
+		return constraint;
 	}
 	
 	// -----------------------------------------------------
@@ -259,8 +273,8 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 */
 	protected void removeSchema(final ModelingConversation mc, final SNResourceSchema schemaNode) {
 		for(SNPropertyDeclaration decl : schemaNode.getPropertyDeclarations()) {
-			if (!decl.getTypeDefinition().isPublic()) {
-				mc.remove(decl.getTypeDefinition());
+			if (decl.hasConstraint() && !decl.getConstraint().isPublic()) {
+				mc.remove(decl.getConstraint().asResourceNode());
 			}
 			mc.remove(decl);
 		}
@@ -282,6 +296,9 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 		if (!clazzes.contains(RBSystem.TYPE)) {
 			SNOPS.associate(attached, RDF.TYPE, RBSystem.TYPE);
 		}
+		if (!clazzes.contains(RDFS.CLASS)) {
+			SNOPS.associate(attached, RDF.TYPE, RDFS.CLASS);
+		}
 		// 2nd: check properties
 		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 			final SNProperty property = mc.resolve(decl.getPropertyDescriptor()).asResource().asProperty();
@@ -294,15 +311,15 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	// -----------------------------------------------------
 	
 	/**
-	 * Simple implementation of {@link TypeDefinitionResolver}.
+	 * Simple implementation of {@link ConstraintResolver}.
 	 */
-	private class TypeDefResolverImpl implements TypeDefinitionResolver {
+	private class ConstraintResolverImpl implements ConstraintResolver {
 		@Override
-		public SNPropertyTypeDefinition resolve(final TypeDefinition typeDef) {
+		public Constraint resolve(final Constraint constraint) {
 			final ModelingConversation mc = mc();
-			final ResourceNode node = mc.findResource(typeDef.getID().getQualifiedName());
+			final ResourceNode node = mc.findResource(constraint.asResourceNode().getQualifiedName());
 			if (node != null) {
-				return new SNPropertyTypeDefinition(node);
+				return new ReferenceConstraint(node);
 			} else {
 				return null;
 			}

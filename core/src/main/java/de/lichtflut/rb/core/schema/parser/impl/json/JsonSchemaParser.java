@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -16,37 +15,38 @@ import java.util.Map;
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.naming.NamespaceHandle;
 import org.arastreju.sge.naming.QualifiedName;
 import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import scala.actors.threadpool.Arrays;
 import de.lichtflut.infra.logging.StopWatch;
+import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.TypeDefinition;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionImpl;
-import de.lichtflut.rb.core.schema.model.impl.TypeDefinitionReference;
 import de.lichtflut.rb.core.schema.parser.IOConstants;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
 
 /**
  * <p>
- *  Schema importer from JSON formart.
+ *  Schema importer from JSON format.
  * </p>
  *
  * <p>
@@ -95,11 +95,10 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 					final ResourceSchema schema = readSchema(p, result);
 					result.add(schema);
 				}
-			} else if (PUBLIC_TYPE_DEFINITIONS.equals(p.getCurrentName())) {
+			} else if (PUBLIC_CONSTRAINTS.equals(p.getCurrentName())) {
 				assertStartArray(p);
 				while (p.nextToken() != JsonToken.END_ARRAY) {
-					final TypeDefinition typeDef = readPublicTypeDef(p, result);
-					result.add(typeDef);
+					readPublicConstraints(p, result);
 				}
 			} else if (NAMESPACE_DECLS.equals(p.getCurrentName())) {
 				assertStartArray(p);
@@ -136,35 +135,54 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				} catch (LabelExpressionParseException e) {
 					throw new RuntimeException(e);
 				}
+			}else {
+ 				logger.warn("unkown token : " + p.getCurrentName() + " - " + p.getText());
 			}
 		}
 		return schema;
 	}
 	
-	private TypeDefinition readPublicTypeDef(final JsonParser p, final ParsedElements result) throws IOException {
+	private void readPublicConstraints(final JsonParser p, final ParsedElements result) throws IOException {
 		ResourceID id = new SimpleResourceID();
-		String name = id.getQualifiedName().getSimpleName();
-		Datatype datatype = Datatype.STRING;
-		Collection<Constraint> constraints = Collections.emptySet();
+		String name = "";
+		List<Datatype> datatypes = new ArrayList<Datatype>();
+		Constraint referenceHolder;
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (ID.equals(field)) {
 				id = toResourceID(p.getText());
 			} else if (NAME.equals(field)) {
 				name = p.getText();
-			} else if (DATATYPE.equals(field)) {
-				 datatype = Datatype.valueOf(p.getText().toUpperCase());
-			} else if (CONSTRAINTS.equals(field)) {
-				constraints = readConstraints(p);
+			} else if(APPLICABLE_DATATYPES.equals(field)){
+					datatypes.addAll(extractDatatypes(p));
+			} else if (RESOURCE_CONSTRAINT.equals(field)) {
+				referenceHolder = getConstraintFromString(p, field);
+				ReferenceConstraint refConstr = new ReferenceConstraint(new SNResource(id.getQualifiedName()));
+				refConstr.setName(name);
+				refConstr.setReference(referenceHolder.getReference());
+				result.add(refConstr);
+			} else if (LITERAL_CONSTRAINT.equals(field)) {
+				referenceHolder = getConstraintFromString(p, field);
+				ReferenceConstraint refConstr = new ReferenceConstraint(new SNResource(id.getQualifiedName()));
+				refConstr.setApplicableDatatypes(datatypes);
+				refConstr.setName(name);
+				refConstr.isPublic(true);
+				refConstr.setLiteralConstraint(referenceHolder.getLiteralConstraint());
+				result.add(refConstr);
+			} else {
+ 				logger.warn("unkown token : " + p.getCurrentName() + " - " + p.getText());
 			}
 		}
-		final TypeDefinitionImpl def = new TypeDefinitionImpl(id, true);
-		def.setName(name);
-		def.setElementaryDataType(datatype);
-		def.setConstraints(constraints);
-		return def;
 	}
 	
+	private Collection<Datatype> extractDatatypes(JsonParser p) throws JsonParseException, IOException {
+		List<Datatype> list = new ArrayList<Datatype>();
+			for (Object string : Arrays.asList(p.getText().split(","))) {
+				list.add(Datatype.valueOf(((String) string).trim().toUpperCase()));
+			}
+		return list;
+	}
+
 	private void readNamespaces(final JsonParser p) throws IOException {
 		String uri = null;
 		String prefix = null;
@@ -185,41 +203,35 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	
 	private PropertyDeclaration readPropertyDecl(final JsonParser p, final ParsedElements result) throws IOException {
 		final PropertyDeclarationImpl decl = new PropertyDeclarationImpl();
-		int min = 0;
-		int max = -1;
+		Cardinality cardinality = CardinalityBuilder.hasOptionalOneToMany();
 		while (p.nextToken() != JsonToken.END_OBJECT) {
 			final String field = nextField(p);
 			if (PROPERTY_TYPE.equals(field)) {
 				decl.setPropertyDescriptor(toResourceID(p.getText()));
-			} else if (MIN.equals(field)) {
-				min = p.getIntValue();
-			} else if (MAX.equals(field)) {
-				max = p.getIntValue();
-			} else if (TYPE_REFERENCE.equals(field)) {
-				final ResourceID ref = toResourceID(p.getText());
-				decl.setTypeDefinition(new TypeDefinitionReference(ref));
-			} else if (TYPE_DEFINITION.equals(field)) {
-				decl.setTypeDefinition(readTypeDef(p));
+			} else if (CARDINALITY.equals(field)) {
+				cardinality = CardinalityBuilder.extractFromString(p.getText());
+			} else if (DATATYPE.equals(field)) {
+				decl.setDatatype(Datatype.valueOf(p.getText().toUpperCase()));
+			} else if (RESOURCE_CONSTRAINT.equals(field)) {
+				ReferenceConstraint ref = new ReferenceConstraint();
+				ref.buildReferenceConstraint(getConstraintFromString(p, field).getReference(), false);
+				decl.setConstraint(ref);
+			} else if (LITERAL_CONSTRAINT.equals(field)) {
+				decl.setConstraint(getConstraintFromString(p, field));
+			} else if (CONSTRAINT_REFERENCE.equals(field)) {
+				ReferenceConstraint ref = new ReferenceConstraint();
+				ref.buildReferenceConstraint(getConstraintFromString(p, field).getReference(), true);
+				decl.setConstraint(ref);
 			} else if (FIELD_LABEL.equals(field)) {
 				decl.setFieldLabelDefinition(readFieldLabel(p));
+			}else {
+ 				logger.warn("unkown token : " + p.getCurrentName() + " - " + p.getText());
 			}
 		}
-		decl.setCardinality(CardinalityBuilder.between(min, max));
+		decl.setCardinality(cardinality);
 		return decl;
 	}
 	
-	private TypeDefinition readTypeDef(final JsonParser p) throws IOException {
-		final TypeDefinitionImpl def = new TypeDefinitionImpl();
-		while (p.nextToken() != JsonToken.END_OBJECT) {
-			final String field = nextField(p);
-			if (DATATYPE.equals(field)) {
-				def.setElementaryDataType(Datatype.valueOf(p.getText().toUpperCase()));
-			} else if (CONSTRAINTS.equals(field)) {
-				def.setConstraints(readConstraints(p));
-			}
-		}
-		return def;
-	}
 	
 	private FieldLabelDefinition readFieldLabel(final JsonParser p) throws IOException {
 		final FieldLabelDefinitionImpl def = new FieldLabelDefinitionImpl();
@@ -234,17 +246,22 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 		return def;
 	}
 	
-	private Collection<Constraint> readConstraints(final JsonParser p) throws IOException {
-		final List<Constraint> result = new ArrayList<Constraint>();
-		while (p.nextToken() != JsonToken.END_OBJECT) {
-			final String field = nextField(p);
-			if (LITERAL.equals(field)) {
-				result.add(ConstraintBuilder.buildConstraint(p.getText()));
-			} else if (RESOURCE_TYPE.equals(field)){
-				result.add(ConstraintBuilder.buildConstraint(toResourceID(p.getText())));
-			}
+	private Constraint getConstraintFromString(final JsonParser p, final String field) throws IOException, JsonParseException {
+		Constraint c = null;
+		if (LITERAL_CONSTRAINT.equals(field)) {
+			ReferenceConstraint constraint = new ReferenceConstraint();
+			constraint.buildLiteralConstraint(p.getText());
+			c = constraint;
+		} else if (RESOURCE_CONSTRAINT.equals(field)){
+			ReferenceConstraint ref = new ReferenceConstraint(new SNResource());
+			ref.buildReferenceConstraint(toResourceID(p.getText()), false);
+			c = ref;
+		}else if (CONSTRAINT_REFERENCE.equals(field)){
+			ReferenceConstraint ref = new ReferenceConstraint(new SNResource());
+			ref.buildReferenceConstraint(toResourceID(p.getText()), true);
+			c = ref;
 		}
-		return result;
+		return c;
 	}
 	
 	// -----------------------------------------------------
@@ -262,6 +279,11 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	
 	// ----------------------------------------------------
 	
+	/**
+	 * Convert a String to a {@link ResourceID}.
+	 * @param name
+	 * @return a {@link ResourceID} representation of a String.
+	 */
 	public ResourceID toResourceID(final String name) {
 		if (QualifiedName.isUri(name)) {
 			logger.debug("found uri " + name);

@@ -70,6 +70,9 @@ public class RBFieldValueModel<T> implements IModel<T> {
 		return index;
 	}
 
+	public RBField getField(){
+		return field;
+	}
 	// -----------------------------------------------------
 	
 	@Override

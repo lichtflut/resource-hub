@@ -177,7 +177,7 @@ public class RBEntityImpl implements RBEntity {
 		String s = node.getQualifiedName() + ", ";
 		for(RBField field : getAllFields()) {
 			if(field.isResourceReference()) {
-				s += field.getLabel(Locale.getDefault()) + ": " + field.getConstraints() + ", ";
+				s += field.getLabel(Locale.getDefault()) + ": " + field.getConstraint() + ", ";
 			} else{
 				s += (field.getLabel(Locale.getDefault()) + ": " + field.getValues() + ", ");
 			}
