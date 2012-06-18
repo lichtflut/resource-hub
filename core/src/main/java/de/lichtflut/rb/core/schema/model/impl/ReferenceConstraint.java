@@ -78,6 +78,8 @@ public class ReferenceConstraint implements Constraint {
 		this.setLiteralConstraint(pattern);
 	}
 
+	// ------------------------------------------------------
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -102,7 +104,6 @@ public class ReferenceConstraint implements Constraint {
 	 */
 	@Override
 	public String getLiteralConstraint() {
-
 		boolean isFirstLvlLiteral = (node.getAssociations(RBSchema.HAS_CONSTRAINT_VALUE).size() > 0);
 		if (!isFirstLvlLiteral) {
 			if (holdsReference()) {
@@ -210,8 +211,10 @@ public class ReferenceConstraint implements Constraint {
 	public boolean isLiteral() {
 		boolean isFirstLvlLiteral = (node.getAssociations(RBSchema.HAS_CONSTRAINT_VALUE).size() > 0);
 		if (!isFirstLvlLiteral) {
-			if (holdsReference()) {
+			if (!holdsReference()) {
 				return new ReferenceConstraint(getReference().asResource()).isLiteral();
+			}else{
+				return false;
 			}
 		}
 		if (null == getReference()) {

@@ -155,22 +155,18 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 				name = p.getText();
 			} else if(APPLICABLE_DATATYPES.equals(field)){
 					datatypes.addAll(extractDatatypes(p));
-//			} else if (RESOURCE_CONSTRAINT.equals(field)) {
-//				referenceHolder = getConstraintFromString(p, field);
-//				ReferenceConstraint refConstr = new ReferenceConstraint(new SNResource(id.getQualifiedName()));
-////				refConstr.isLiteral(false);
-//				refConstr.setName(name);
-//				refConstr.setReference(referenceHolder.getReference());
-//				refConstr.setIsPublic(true);
-//				result.add(refConstr);
+			} else if (RESOURCE_CONSTRAINT.equals(field)) {
+				referenceHolder = getConstraintFromString(p, field);
+				ReferenceConstraint refConstr = new ReferenceConstraint(new SNResource(id.getQualifiedName()));
+				refConstr.setName(name);
+				refConstr.setReference(referenceHolder.getReference());
+				result.add(refConstr);
 			} else if (LITERAL_CONSTRAINT.equals(field)) {
 				referenceHolder = getConstraintFromString(p, field);
 				ReferenceConstraint refConstr = new ReferenceConstraint(new SNResource(id.getQualifiedName()));
-//				refConstr.isLiteral(true);
 				refConstr.setApplicableDatatypes(datatypes);
 				refConstr.setName(name);
 				refConstr.isPublic(true);
-//				refConstr.holdsReference(false);
 				refConstr.setLiteralConstraint(referenceHolder.getLiteralConstraint());
 				result.add(refConstr);
 			} else {
@@ -219,8 +215,6 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 			} else if (RESOURCE_CONSTRAINT.equals(field)) {
 				ReferenceConstraint ref = new ReferenceConstraint();
 				ref.buildReferenceConstraint(getConstraintFromString(p, field).getReference(), false);
-//				ref.setReference(getConstraintFromString(p, field).getReference());
-//				decl.setConstraint(getConstraintFromString(p, field));
 				decl.setConstraint(ref);
 			} else if (LITERAL_CONSTRAINT.equals(field)) {
 				decl.setConstraint(getConstraintFromString(p, field));
@@ -255,21 +249,16 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	private Constraint getConstraintFromString(final JsonParser p, final String field) throws IOException, JsonParseException {
 		Constraint c = null;
 		if (LITERAL_CONSTRAINT.equals(field)) {
-//			LiteralConstraint constr = new LiteralConstraint(new SNResource());
-//			constr.setLiteralPattern(p.getText());
 			ReferenceConstraint constraint = new ReferenceConstraint();
 			constraint.buildLiteralConstraint(p.getText());
 			c = constraint;
 		} else if (RESOURCE_CONSTRAINT.equals(field)){
 			ReferenceConstraint ref = new ReferenceConstraint(new SNResource());
 			ref.buildReferenceConstraint(toResourceID(p.getText()), false);
-//			ref.setReference(toResourceID(p.getText()));
 			c = ref;
 		}else if (CONSTRAINT_REFERENCE.equals(field)){
 			ReferenceConstraint ref = new ReferenceConstraint(new SNResource());
 			ref.buildReferenceConstraint(toResourceID(p.getText()), true);
-//			ReferenceConstraint ref = new ReferenceConstraint(new SNResource(toResourceID(p.getText()).getQualifiedName()));
-//			ref.setIsPublic(true);
 			c = ref;
 		}
 		return c;

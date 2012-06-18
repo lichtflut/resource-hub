@@ -26,14 +26,14 @@ import de.lichtflut.rb.core.schema.parser.impl.rsf.RSFParser;
  */
 public class RSFTest {
 
-	private String decl = 	"namespace \"http://rb.lichtflut.de/common#\" prefix \"common\"" +
+	private final String decl = 	"namespace \"http://rb.lichtflut.de/common#\" prefix \"common\"" +
 							"namespace \"http://rb.lichtflut.de/common2#\" prefix \"common2\"" +
 							"" +
 							"schema for \"commonCity\" { " +
 									"label-rule : \"common:hasName <,> common:hasCountry\"" +
 										"property \"common:assignedTo\" [1..n] {" +
 										"field-label[klingonian] : \"Kaaargh\"" +
-										"type-definition : \"date\"" +
+										"datatype : \"date\"" +
 										"}" +
 									"}";
 
@@ -60,7 +60,7 @@ public class RSFTest {
 	
 	@Test
 	public void readKey() throws RecognitionException{
-		String key = "type-definition";
+		String key = "datatype";
 		RSFParser parser = createParser(key);
 		parser.key();
 	}
@@ -92,10 +92,13 @@ public class RSFTest {
 	public void readMultiplePropertyDecl() throws RecognitionException{
 		String property = "property \"common:assignedTo\" [1..n] {" +
 				"field-label[klingonian] : \"Kaaargh\"" +
-				"type-definition : \"date\"" +
+				"datatype : \"date\"" +
+				"resource-constraint : \"http://lichtflut.de/common/Person\"" +
+				"literal-constraint : \".*@.*\"" +
+				"reference-constraint : \"http://lichtflut.de/constraint/Person\"" +
 				"}";
-		RSFParser parser = createParser(property);
-		parser.property_decl();
+		
+		createParser(property).property_decl();
 	}
 	
 	@Test
@@ -104,12 +107,11 @@ public class RSFTest {
 				"label-rule : \"common:hasName common:hasCountry\"" +
 					"property \"common:assignedTo\" [1..n] {" +
 					"field-label[klingonian] : \"Kaaargh\"" +
-					"type-definition : \"date\"" +
+					"datatype : \"date\"" +
 					"}" +
 				"}";
 		RSFParser parser = createParser(schema);
 		parser.schema_decl();
-		
 	}
 	@Test
 	public void readRSF() throws RecognitionException{

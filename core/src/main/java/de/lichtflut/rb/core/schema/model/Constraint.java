@@ -72,6 +72,8 @@ public interface Constraint extends Serializable {
 	boolean holdsReference();
 	
 	/**
+	 * This property can be empty. Do not decide on how to treat a {@link PropertyDeclaration} based on this.
+	 * If you want to check for {@link Datatype}.Resource use <code>isLiteral</code>
 	 * @return a list of applicable {@link Datatype}s for this {@link Constraint}.
 	 */
 	List<Datatype> getApplicableDatatypes();
