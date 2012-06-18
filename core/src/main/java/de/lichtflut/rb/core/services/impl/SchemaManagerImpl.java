@@ -118,7 +118,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	@Override
 	public Collection<ResourceSchema> findAllResourceSchemas() {
 		final List<ResourceSchema> result = new ArrayList<ResourceSchema>();
-		final List<ResourceNode> nodes = gate().createQueryManager().findByType(RBSchema.RESOURCE_SCHEMA);
+		final List<ResourceNode> nodes = findResourcesByType(RBSchema.RESOURCE_SCHEMA);
 		for (ResourceNode node : nodes) {
 			final ResourceSchema schema = binding.toModelObject(SNResourceSchema.view(node));
 			result.add(schema);
@@ -132,7 +132,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	@Override
 	public Collection<TypeDefinition> findPublicTypeDefinitions() {
 		final List<TypeDefinition> result = new ArrayList<TypeDefinition>();
-		final List<ResourceNode> nodes = gate().createQueryManager().findByType(RBSchema.PROPERTY_TYPE_DEF);
+		final List<ResourceNode> nodes = findResourcesByType(RBSchema.PROPERTY_TYPE_DEF);
 		for (ResourceNode node : nodes) {
 			final TypeDefinition typeDef = binding.toModelObject(new SNPropertyTypeDefinition(node));
 			if (typeDef.isPublicTypeDef()) {
@@ -241,7 +241,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 * Find the persistent node representing the schema of the given type.
 	 */
 	private SNResourceSchema findSchemaNodeByType(final ResourceID type) {
-		final Query query = query().add(new FieldParam(RBSchema.DESCRIBES, type));
+		final Query query = mc().createQuery().add(new FieldParam(RBSchema.DESCRIBES, type));
 		final QueryResult result = query.getResult();
 		if (result.isEmpty()) {
 			return null;

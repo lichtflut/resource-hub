@@ -12,8 +12,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.webck.components.entity.EntityPanel;
 import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
+import de.lichtflut.rb.webck.components.entity.EntityPanel;
 import de.lichtflut.rb.webck.components.widgets.PredefinedWidget;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.CurrentPersonModel;

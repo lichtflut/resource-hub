@@ -27,7 +27,9 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryManager;
+import org.arastreju.sge.query.SimpleQueryResult;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -63,7 +65,7 @@ public class EntityManagerImplTest {
 	private TypeManager tm;
 	private ModelingConversation mc;
 	private ArastrejuGate gate;
-	private QueryManager qm;
+	private Query query;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -74,10 +76,10 @@ public class EntityManagerImplTest {
 		sm = mock(SchemaManager.class);
 		mc = mock(ModelingConversation.class);
 		gate = mock(ArastrejuGate.class);
-		qm = mock(QueryManager.class);
+		query = mock(Query.class);
 		tm = mock(TypeManager.class);
 		
-		when(gate.createQueryManager()).thenReturn(qm);
+		when(mc.createQuery()).thenReturn(query);
 		when(provider.getSchemaManager()).thenReturn(sm);
 		when(provider.getTypeManager()).thenReturn(tm);
 		when(provider.getArastejuGate()).thenReturn(gate);
@@ -163,7 +165,7 @@ public class EntityManagerImplTest {
 		List<ResourceNode> list = new ArrayList<ResourceNode>();
 		list.add(getUser());
 		when(sm.findSchemaForType(type)).thenReturn(new ResourceSchemaImpl(RB.PERSON));
-		when(qm.findByType(type)).thenReturn(list);
+		when(query.getResult()).thenReturn(new SimpleQueryResult(list));
 
 		List<RBEntity> found = em.findByType(type);
 

@@ -24,6 +24,7 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.Statement;
@@ -33,7 +34,7 @@ import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.entity.VisualizationLink;
@@ -62,10 +63,10 @@ public class CurrentNodeInfoPanel extends Panel {
 	private final AbstractDefaultAjaxBehavior updateBehavior;
 	
 	@SpringBean
-	private ServiceProvider serviceProvider;
-
-	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;
+	
+	@SpringBean
+	private TypeManager typeManager;
 
 	// ----------------------------------------------------
 	
@@ -156,7 +157,7 @@ public class CurrentNodeInfoPanel extends Panel {
 		final IModel<List<VisualizationLink>> visLinkModel = new DerivedDetachableModel<List<VisualizationLink>, ResourceNode>(model) {
 			protected List<VisualizationLink> derive(ResourceNode node) {
 				final List<VisualizationLink> result = new ArrayList<VisualizationLink>();
-				final SNClass type = serviceProvider.getTypeManager().getTypeOfResource(node);
+				final SNClass type = typeManager.getTypeOfResource(node);
 				result.add(createLink(node, VisualizationMode.DETAILS));
 				result.add(createLink(node, VisualizationMode.PERIPHERY));
 				if (type.isSpecializationOf(RB.ORGANIZATIONAL_UNIT)) {
@@ -189,7 +190,7 @@ public class CurrentNodeInfoPanel extends Panel {
 	private static class ContextModel extends AbstractLoadableDetachableModel<ResourceNode> {
 		
 		@SpringBean
-		private ServiceProvider provider;
+		private ModelingConversation conversation;
 		
 		private IModel<? extends ResourceID> id;
 		
@@ -212,7 +213,7 @@ public class CurrentNodeInfoPanel extends Panel {
 		public ResourceNode load() {
 			if (id.getObject() != null) {
 				final QualifiedName qn = id.getObject().getQualifiedName();
-				return provider.getArastejuGate().startConversation().findResource(qn);
+				return conversation.findResource(qn);
 			} else {
 				return null;
 			}

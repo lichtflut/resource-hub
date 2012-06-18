@@ -68,7 +68,7 @@ public class SchemaImporterImpl implements SchemaImporter {
 			resolveTypeDefReferences(schema);
 			manager.store(schema);
 		}
-		final ModelingConversation mc = provider.getArastejuGate().startConversation();
+		final ModelingConversation mc = provider.getConversation();
 		for(Statement stmt : elements.getStatements()) {
 			mc.addStatement(stmt);
 		}

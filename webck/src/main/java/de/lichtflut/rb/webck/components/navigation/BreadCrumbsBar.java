@@ -14,11 +14,11 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
@@ -45,7 +45,7 @@ import de.lichtflut.rb.webck.models.entity.EntityHistoryModel;
 public class BreadCrumbsBar extends Panel {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private ModelingConversation conversation;
 	
 	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;
@@ -149,7 +149,7 @@ public class BreadCrumbsBar extends Panel {
 		if (rid.asResource().isAttached()) {
 			return rid;
 		}
-		return provider.getResourceResolver().resolve(rid);
+		return conversation.resolve(rid);
 	}
 	
 	private final String getCroppedLabel(ResourceID id, int max) {

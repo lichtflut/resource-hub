@@ -44,9 +44,13 @@ public class EmailServiceImpl implements EmailService {
 
 	private final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 	
+	private final EmailConfiguration conf;
+	
 	// ---------------- Constructor -------------------------
 	
-	public EmailServiceImpl(){}
+	public EmailServiceImpl(EmailConfiguration conf){
+		this.conf = conf;
+	}
 	
 	// ------------------------------------------------------
 
@@ -55,7 +59,7 @@ public class EmailServiceImpl implements EmailService {
 	 * @throws RBException 
 	 */
 	@Override
-	public void sendPasswordInformation(RBUser user, String password, EmailConfiguration conf, Locale locale) throws RBException {
+	public void sendPasswordInformation(RBUser user, String password, Locale locale) throws RBException {
 		MessageDescription desc = new MessageDescription(locale);
 		desc.setType(MessageType.PASSWORD_INFORMATION_MAIL);
 		desc.setRecipient(user.getEmail());
@@ -73,7 +77,7 @@ public class EmailServiceImpl implements EmailService {
 	 * @throws RBException 
 	 */
 	@Override
-	public void sendRegistrationConfirmation(RBUser user, EmailConfiguration conf, Locale locale) throws RBException {
+	public void sendRegistrationConfirmation(RBUser user, Locale locale) throws RBException {
 		MessageDescription desc = new MessageDescription(locale);
 		desc.setType(MessageType.REGISTRATION_CONFIRMATION_MAIL);
 		desc.setRecipient(user.getEmail());
@@ -89,7 +93,7 @@ public class EmailServiceImpl implements EmailService {
 	 * @throws RBException 
 	 */
 	@Override
-	public void sendAccountActivatedInformation(RBUser user, EmailConfiguration conf, Locale locale) throws RBException {
+	public void sendAccountActivatedInformation(RBUser user, Locale locale) throws RBException {
 		MessageDescription desc = new MessageDescription(locale);
 		desc.setType(MessageType.ACCOUNT_ACTIVATED_MAIL);
 		desc.setRecipient(user.getEmail());

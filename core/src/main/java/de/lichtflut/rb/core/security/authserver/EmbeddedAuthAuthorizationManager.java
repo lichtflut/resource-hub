@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
@@ -50,11 +49,9 @@ public class EmbeddedAuthAuthorizationManager {
 	 * Constructor.
 	 * @param domainManager The domain manager.
 	 */
-	public EmbeddedAuthAuthorizationManager(ArastrejuGate gate, EmbeddedAuthDomainManager domainManager) {
+	public EmbeddedAuthAuthorizationManager(ModelingConversation conversation, EmbeddedAuthDomainManager domainManager) {
 		this.domainManager = domainManager;
-		this.conversation = gate.startConversation();
-		this.conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
-		this.conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
+		this.conversation = conversation;
 	}
 	
 	// -- ROLE ASSIGNMENT ---------------------------------

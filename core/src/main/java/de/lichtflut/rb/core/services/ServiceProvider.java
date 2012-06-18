@@ -5,7 +5,6 @@ package de.lichtflut.rb.core.services;
 
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.persistence.ResourceResolver;
 
 
 /**
@@ -68,23 +67,12 @@ public interface ServiceProvider {
 	DomainOrganizer getDomainOrganizer();
 	
 	/**
-	 * @return The messaging service
-	 */
-	MessagingService getMessagingService();
-	
-	/**
 	 * The service for view specifications, perspectives and widgets.
 	 * @return The service.
 	 */
 	ViewSpecificationService getViewSpecificationService();
 	
 	// ----------------------------------------------------
-
-	/**
-	 * Obtain a resolver for ResourceIDs 
-	 * @return A resource resolver.
-	 */
-	ResourceResolver getResourceResolver();
 
 	/**
 	 * Called in detach phase, when the provider shall release resources.

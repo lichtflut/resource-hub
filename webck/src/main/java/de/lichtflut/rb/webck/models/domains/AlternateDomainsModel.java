@@ -14,7 +14,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.models.CurrentUserModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
@@ -32,10 +32,10 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 public class AlternateDomainsModel extends DerivedDetachableModel<List<RBDomain>, RBUser> {
 
 	@SpringBean
-	private ServiceProvider provider;
-	
-	@SpringBean
 	private AuthModule authModule;
+	
+	@SpringBean 
+	private ServiceContext context;
 	
 	// ----------------------------------------------------
 	
@@ -61,7 +61,7 @@ public class AlternateDomainsModel extends DerivedDetachableModel<List<RBDomain>
 	 */
 	@Override
 	protected List<RBDomain> derive(final RBUser user) {
-		final String currentDomain = provider.getContext().getDomain();
+		final String currentDomain = context.getDomain();
 		
 		final List<RBDomain> domains = new ArrayList<RBDomain>();
 		final Collection<RBDomain> all = authModule.getDomainManager().getAllDomains();

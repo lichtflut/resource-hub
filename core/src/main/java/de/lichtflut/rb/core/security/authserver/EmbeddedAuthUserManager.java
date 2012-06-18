@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
@@ -27,6 +26,7 @@ import de.lichtflut.infra.Infra;
 import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.common.SearchTerm;
 import de.lichtflut.rb.core.eh.EmailAlreadyInUseException;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.InvalidPasswordException;
@@ -34,6 +34,7 @@ import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.eh.UsernameAlreadyInUseException;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.security.SearchResult;
 import de.lichtflut.rb.core.security.UserManager;
 
 /**
@@ -67,11 +68,12 @@ public class EmbeddedAuthUserManager implements UserManager {
 	 * @param gate The Arastreju Gate.
 	 * @param domainManager The domain manager.
 	 */
-	public EmbeddedAuthUserManager(ArastrejuGate gate, EmbeddedAuthDomainManager domainManager) {
+	public EmbeddedAuthUserManager(ModelingConversation conversation, EmbeddedAuthDomainManager domainManager) {
 		this.domainManager = domainManager;
-		this.authorization = new EmbeddedAuthAuthorizationManager(gate, domainManager);
-		this.conversation = gate.startConversation();
+		this.conversation = conversation;
 		this.conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
+		this.conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
+		this.authorization = new EmbeddedAuthAuthorizationManager(conversation, domainManager);
 	}
 	
 	// -- USER MANAGEMENT ---------------------------------
@@ -93,6 +95,23 @@ public class EmbeddedAuthUserManager implements UserManager {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public SearchResult<RBUser> searchUsers(String term) {
+		final SearchTerm searchTerm = new SearchTerm(term);
+		final Query query = conversation.createQuery()
+				.addField(Aras.IDENTIFIED_BY, searchTerm.prepareTerm());
+		return new QueryBasedSearchResult<RBUser>(query.getResult()) {
+			@Override
+			protected RBUser map(ResourceNode node) {
+				return new RBUser(node);
+			}
+			
+		};
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void registerUser(RBUser user, String credential, String domainName) throws RBAuthException {
 		if (isIdentifierInUse(user.getEmail())) {
 				throw new EmailAlreadyInUseException("Email already in use.");
@@ -103,7 +122,7 @@ public class EmbeddedAuthUserManager implements UserManager {
 		final ResourceNode domain = domainManager.findDomainNode(domainName);
 		if (domain == null) {
 			throw new RBAuthException(ErrorCodes.SECURITYSERVICE_DOMAIN_NOT_FOUND, "Domain unknown: " + domainName);
-	}
+		}
 		final ResourceNode userNode = new SNResource(user.getQualifiedName());
 		userNode.addAssociation(RDF.TYPE, Aras.USER);
 		userNode.addAssociation(Aras.BELONGS_TO_DOMAIN, domain);
@@ -168,6 +187,16 @@ public class EmbeddedAuthUserManager implements UserManager {
 		} else {
 			logger.warn("User could not be deleted from master domain: " + user);
 		}
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void grantAccessToDomain(RBUser user, String domain) throws RBAuthException {
+		final ResourceNode attachedUser = conversation.findResource(user.getQualifiedName());
+		final ResourceNode attachedDomain = domainManager.findDomainNode(domain);
+		attachedUser.addAssociation(Aras.HAS_ALTERNATE_DOMAIN, attachedDomain);
 	}
 	
 	// -- PASSWORD HANDLING -------------------------------

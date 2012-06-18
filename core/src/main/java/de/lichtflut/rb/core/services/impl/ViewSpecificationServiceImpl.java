@@ -189,7 +189,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	protected List<MenuItem> initializeDashboards(ResourceNode user) {
 		final List<MenuItem> result = new ArrayList<MenuItem>();
-		final ResourceNode defaultMenu = getProvider().getResourceResolver().resolve(WDGT.DEFAULT_MENU);
+		final ResourceNode defaultMenu = mc().resolve(WDGT.DEFAULT_MENU);
 		for(Statement stmt : defaultMenu.getAssociations()) {
 			if (WDGT.HAS_MENU_ITEM.equals(stmt.getPredicate()) && stmt.getObject().isResourceNode()) {
 				final ResourceNode item = stmt.getObject().asResource();

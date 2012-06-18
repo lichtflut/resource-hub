@@ -70,7 +70,7 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 	public List<RBEntity> findByType(final ResourceID type) {
 		final List<RBEntity> result = new ArrayList<RBEntity>();
 		final ResourceSchema schema = getProvider().getSchemaManager().findSchemaForType(type);
-		final List<ResourceNode> nodes = getProvider().getArastejuGate().createQueryManager().findByType(type);
+		final List<ResourceNode> nodes = findResourcesByType(type);
 		for (ResourceNode n : nodes) {
 			n.getAssociations();
 			RBEntityImpl entity = new RBEntityImpl(n, schema);
@@ -200,7 +200,7 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 		for(int i=0; i < field.getSlots(); i++) {
 			final ResourceID id = (ResourceID) field.getValue(i);
 			if (id != null) {
-				field.setValue(i, getProvider().getResourceResolver().resolve(id));
+				field.setValue(i, mc().resolve(id));
 			}
 		}
 	}

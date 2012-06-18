@@ -9,7 +9,6 @@ import java.util.Set;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.persistence.ResourceResolver;
 import org.arastreju.sge.spi.GateContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.MessagingService;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
@@ -36,7 +34,7 @@ import de.lichtflut.rb.core.services.ViewSpecificationService;
  *
  * @author Oliver Tigges
  */
-public abstract class AbstractServiceProvider implements ServiceProvider{
+public abstract class AbstractServiceProvider implements ServiceProvider {
 	
 	private final Logger logger = LoggerFactory.getLogger(AbstractServiceProvider.class);
 
@@ -52,10 +50,8 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 	private EntityManager entityManager;
 	private TypeManager typeManager;
 	private SecurityService securityService;
-	private MessagingService messagingService;
 	private ViewSpecificationService viewSpecService;
 	private DomainOrganizer domainOrganizer;
-
 	
 	// ----------------------------------------------------
 
@@ -67,7 +63,6 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		schemaManager = new SchemaManagerImpl(this);
 		entityManager = new EntityManagerImpl(this);
 		typeManager = new TypeManagerImpl(this);
-		messagingService = new MessagingServiceImpl(this);
 		domainOrganizer = newDomainOrganizer();
 		securityService = newSecurityService(authModule);
 		viewSpecService = newViewSpecificationServiceImpl();
@@ -159,22 +154,6 @@ public abstract class AbstractServiceProvider implements ServiceProvider{
 		return securityService;
 	}
 
-	/** 
-	* {@inheritDoc}
-	*/
-	@Override
-	public ResourceResolver getResourceResolver() {
-		return getArastejuGate().startConversation();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public MessagingService getMessagingService(){
-		return messagingService;
-	}
-	
 	/** 
 	 * {@inheritDoc}
 	 */

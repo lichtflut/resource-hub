@@ -3,11 +3,14 @@
  */
 package de.lichtflut.rb.webck.browsing;
 
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.EntityManager;
 
 /**
  * <p>
@@ -26,6 +29,9 @@ public class EntityAttributeApplyAction implements ReferenceReceiveAction<Object
 	
 	private final RBEntity subject;
 	
+	@SpringBean
+	private EntityManager entityManager;
+	
 	// ----------------------------------------------------
 	
 	/**
@@ -34,6 +40,7 @@ public class EntityAttributeApplyAction implements ReferenceReceiveAction<Object
 	public EntityAttributeApplyAction(final RBEntity subject, final ResourceID predicate) {
 		this.subject = subject;
 		this.predicate = predicate;
+		Injector.get().inject(this);
 	}
 
 	// ----------------------------------------------------
@@ -42,14 +49,14 @@ public class EntityAttributeApplyAction implements ReferenceReceiveAction<Object
 	* {@inheritDoc}
 	*/
 	@Override
-	public void execute(final ServiceProvider sp, final RBEntity createdEntity) {
+	public void execute(final ModelingConversation sp, final RBEntity createdEntity) {
 		final RBField field = subject.getField(predicate);
 		if (field.getValues().isEmpty()) {
 			field.setValue(0, createdEntity.getID());
 		} else {
 			field.addValue(createdEntity.getID());
 		}
-		sp.getEntityManager().store(subject);
+		entityManager.store(subject);
 	}
 	
 	/** 

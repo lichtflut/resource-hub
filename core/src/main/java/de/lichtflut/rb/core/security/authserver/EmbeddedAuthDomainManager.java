@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
@@ -56,21 +55,19 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	
 	/**
 	 * Constructor.
-	 * @param gate The gate to Arastreju. 
+	 * @param conversation The conversation.. 
 	 */
-	public EmbeddedAuthDomainManager(ArastrejuGate gate) {
-		this(gate, null);
+	public EmbeddedAuthDomainManager(ModelingConversation conversation) {
+		this(conversation, null);
 	}
 	
 	/**
 	 * Constructor.
-	 * @param gate The gate to Arastreju.
+	 * @param conversation The conversation..
 	 * @param initializer The initializer for new domains.
 	 */
-	public EmbeddedAuthDomainManager(ArastrejuGate gate, DomainInitializer initializer) {
-		this.conversation = gate.startConversation();
-		this.conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
-		this.conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
+	public EmbeddedAuthDomainManager(ModelingConversation conversation, DomainInitializer initializer) {
+		this.conversation = conversation;
 		this.initializer = initializer;
 	}
 	
@@ -156,9 +153,14 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		RBDomain domain = findDomain(domainName);
 		final List<RBUser> result = new ArrayList<RBUser>();
 		final Query query = query();
-		query.addField(RDF.TYPE, Aras.USER);
-		query.and();
-		query.addField(Aras.BELONGS_TO_DOMAIN, domain.getQualifiedName());
+		query.beginAnd();
+			query.addField(RDF.TYPE, Aras.USER);
+			query.beginOr();
+				query.addField(Aras.BELONGS_TO_DOMAIN, domain.getQualifiedName());
+				query.addField(Aras.HAS_ALTERNATE_DOMAIN, domain.getQualifiedName());
+				query.end();
+			query.end();
+		query.end();
 		for (ResourceNode userNode : query.getResult().toList(offset, max)) {
 			result.add(new RBUser(userNode));
 		}

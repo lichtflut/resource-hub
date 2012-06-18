@@ -5,8 +5,9 @@ package de.lichtflut.rb.webck.browsing;
 
 import java.io.Serializable;
 
+import org.arastreju.sge.ModelingConversation;
+
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
@@ -21,6 +22,6 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  */
 public interface ReferenceReceiveAction<T> extends Serializable {
 	
-	void execute(ServiceProvider serviceProvider, RBEntity target);
+	void execute(ModelingConversation conversation, RBEntity target);
 	
 }

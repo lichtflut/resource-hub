@@ -9,12 +9,12 @@ import java.util.List;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
@@ -33,7 +33,7 @@ import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 public class PerspectiveListModel extends LoadableDetachableModel<List<Perspective>> {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private ModelingConversation conversation;
 	
 	// ----------------------------------------------------
 	
@@ -51,7 +51,7 @@ public class PerspectiveListModel extends LoadableDetachableModel<List<Perspecti
 	 */
 	@Override
 	public List<Perspective> load() {
-		final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
+		final Query query = conversation.createQuery();
 		query.addField(RDF.TYPE, WDGT.PERSPECTIVE);
 		final QueryResult result = query.getResult();
 		final List<Perspective> perspectives = new ArrayList<Perspective>(result.size());

@@ -20,6 +20,11 @@
 	<bean id="gateFactory" class="de.lichtflut.rb.core.services.GateFactory">
 		<constructor-arg ref="rbConfig"></constructor-arg>
 	</bean>
+	
+	<bean id="providerFactory" class="de.lichtflut.rb.core.services.DefaultServiceProviderFactory">
+		<constructor-arg index="1" ref="rbConfig" />
+		<constructor-arg index="0" ref="authModule" />
+	</bean>
 
 	<bean id="masterGate" class="org.arastreju.sge.ArastrejuGate"
 		factory-bean="gateFactory" factory-method="createMasterGate">

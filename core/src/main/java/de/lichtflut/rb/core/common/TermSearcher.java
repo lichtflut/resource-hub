@@ -1,15 +1,12 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.common;
-
-import java.util.regex.Pattern;
+package de.lichtflut.rb.core.common;
 
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryManager;
 
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
 
@@ -35,10 +32,6 @@ public class TermSearcher {
 		SUB_CLASS
 	}
 	
-	private static final Pattern ESCAPE_CHARS = Pattern.compile("[\\\\+\\-\\!\\(\\)\\:\\^\\]\\{\\}\\~\\*\\?\\s]");
-	
-	private static final String VERBATIM_PREFIX = "#!";
-	
 	// ----------------------------------------------------
 	
 	/**
@@ -47,8 +40,7 @@ public class TermSearcher {
 	 * @param type An optional rdf:type criteria. 
 	 * @return The query result.
 	 */
-	public Query prepareQuery(final QueryManager qm, final String term, final Mode mode, final String type) {
-		final Query query = qm.buildQuery();
+	public Query prepareQuery(final Query query, final String term, final Mode mode, final String type) {
 		switch (mode){
 		case URI:
 			query.addURI(prepareTerm(term));
@@ -92,8 +84,8 @@ public class TermSearcher {
 	// ----------------------------------------------------
 
 	protected void addValues(final Query query, final String term) {
-		if (term.startsWith(VERBATIM_PREFIX)) {
-			query.addValue(term.substring(VERBATIM_PREFIX.length()));
+		if (term.startsWith(SearchTerm.VERBATIM_PREFIX)) {
+			query.addValue(term.substring(SearchTerm.VERBATIM_PREFIX.length()));
 		} else {
 			addValues(query, term.split("\\s+"));	
 		}
@@ -107,8 +99,8 @@ public class TermSearcher {
 	}
 	
 	protected String prepareTerm(final String orig) {
-		if (orig.startsWith(VERBATIM_PREFIX)) {
-			return orig.substring(VERBATIM_PREFIX.length());
+		if (orig.startsWith(SearchTerm.VERBATIM_PREFIX)) {
+			return orig.substring(SearchTerm.VERBATIM_PREFIX.length());
 		} else {
 			return escape(orig);	
 		}
@@ -123,7 +115,7 @@ public class TermSearcher {
 		if (!orig.startsWith("*")) {
 			sb.append("*");
 		}
-		sb.append(ESCAPE_CHARS.matcher(orig).replaceAll("\\\\$0"));
+		sb.append(SearchTerm.ESCAPE_CHARS.matcher(orig).replaceAll("\\\\$0"));
 		if (!orig.endsWith("*")) {
 			sb.append("*");
 		}

@@ -8,6 +8,7 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 
@@ -30,6 +31,9 @@ public class RBWebSession extends WebSession {
 	@SpringBean
 	private transient ServiceProvider provider;
 	
+	@SpringBean 
+	private ServiceContext context;
+	
 	// ----------------------------------------------------
 
 	public RBWebSession(final Request request) {
@@ -49,11 +53,11 @@ public class RBWebSession extends WebSession {
 	}
 	
 	public boolean isAuthenticated() {
-		return provider != null && provider.getContext().getUser() != null;
+		return context != null && context.getUser() != null;
 	}
 	
 	public void onLogout() {
-		provider = null;
+		context = null;
 	}
 	
 	// ----------------------------------------------------

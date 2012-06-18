@@ -5,6 +5,9 @@ package de.lichtflut.rb.webck.models.resources;
 
 import java.util.List;
 
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
@@ -12,7 +15,6 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.SortCriteria;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
@@ -26,8 +28,11 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
  *
  * @author Oliver Tigges
  */
-public abstract class ResourceListModel extends AbstractLoadableDetachableModel<List<ResourceNode>> {
+public class ResourceListModel extends AbstractLoadableDetachableModel<List<ResourceNode>> {
 
+	@SpringBean
+	private ModelingConversation conversation;
+	
 	private final ResourceID type;
 	
 	private final String[] sortColumns;
@@ -40,6 +45,7 @@ public abstract class ResourceListModel extends AbstractLoadableDetachableModel<
 	public ResourceListModel(final ResourceID type, final String... sortColumns) {
 		this.type = type;
 		this.sortColumns = sortColumns;
+		Injector.get().inject(this);
 	}
 
 	// -----------------------------------------------------
@@ -48,7 +54,7 @@ public abstract class ResourceListModel extends AbstractLoadableDetachableModel<
 	 * {@inheritDoc}
 	 */
 	public List<ResourceNode> load() {
-		final Query query = getServiceProvider().getArastejuGate().createQueryManager().buildQuery();
+		final Query query = conversation.createQuery();
 		query.addField(RDF.TYPE, SNOPS.uri(type));
 		if (sortColumns != null && sortColumns.length > 0) {
 			query.setSortCriteria(new SortCriteria(sortColumns));
@@ -56,8 +62,4 @@ public abstract class ResourceListModel extends AbstractLoadableDetachableModel<
 		return query.getResult().toList(500);
 	}
 	
-	// -----------------------------------------------------
-	
-	protected abstract ServiceProvider getServiceProvider();
-
 }

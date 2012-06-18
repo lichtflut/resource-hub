@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.AuthenticationService;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.ServiceProviderFactory;
 import de.lichtflut.rb.rest.api.security.AuthorizationHandler;
 import de.lichtflut.rb.rest.api.security.OperationTypes;
 
@@ -45,7 +47,7 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	 * RB-Services to get this service running.
 	 */
 	@Autowired
-	protected ServiceProvider provider;
+	private ServiceProviderFactory factory;
 	
 	@Autowired
 	protected AuthModule authModule;
@@ -56,9 +58,10 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	 * @return
 	 */
 	protected ServiceProvider getProvider(String domainID, RBUser user) {
-		provider.getContext().setDomain(domainID);
-		provider.getContext().setUser(user);
-		return provider;
+		ServiceContext context = new ServiceContext(null);
+		context.setDomain(domainID);
+		context.setUser(user);
+		return factory.createServiceProvider(context);
 	}
 
 	protected Logger getLog() {

@@ -5,8 +5,9 @@ package de.lichtflut.rb.webck.components.entity;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonIf;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.and;
 import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
-import static de.lichtflut.rb.webck.models.ConditionalModel.*;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -18,7 +19,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -43,7 +44,7 @@ public class LocalButtonBar extends Panel {
 	private final ConditionalModel viewMode = BrowsingContextModel.isInViewMode();
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private EntityManager entityManager;
 	
 	// ----------------------------------------------------
 	
@@ -69,7 +70,7 @@ public class LocalButtonBar extends Panel {
 		final RBStandardButton save = new RBStandardButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				provider.getEntityManager().store(model.getObject());
+				entityManager.store(model.getObject());
 				RBWebSession.get().getHistory().finishEditing();
 				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 			}

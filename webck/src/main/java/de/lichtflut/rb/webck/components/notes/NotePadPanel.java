@@ -26,7 +26,6 @@ import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
 
 import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
@@ -49,7 +48,7 @@ import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
 public class NotePadPanel extends TypedPanel<ResourceID> {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private ModelingConversation conversation;
 	
 	// ----------------------------------------------------
 
@@ -115,8 +114,7 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 	}
 	
 	protected void deleteNote(IModel<ResourceNode> mezzle) {
-		ModelingConversation mc = provider.getArastejuGate().startConversation();
-		mc.remove(mezzle.getObject());
+		conversation.remove(mezzle.getObject());
 		RBAjaxTarget.add(this);
 	}
 	
@@ -138,8 +136,7 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 		@Override
 		protected void onSave(ResourceNode note) {
 			SNOPS.assure(note, RBSystem.IS_ATTACHED_TO, target.getObject());
-			ModelingConversation mc = provider.getArastejuGate().startConversation();
-			mc.attach(note);
+			conversation.attach(note);
 			RBAjaxTarget.add(NotePadPanel.this);
 		}
 	}
@@ -174,7 +171,7 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 		*/
 		@Override
 		protected QueryResult derive(ResourceID original) {
-			final Query query = provider.getArastejuGate().createQueryManager().buildQuery();
+			final Query query = conversation.createQuery();
 			query.addField(RBSystem.IS_ATTACHED_TO, original.getQualifiedName().toURI());
 			return query.getResult();
 		}

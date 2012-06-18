@@ -84,7 +84,7 @@ public interface SecurityService {
 	 * @return the new password
 	 * @throws RBException 
 	 */
-	void resetPasswordForUser(RBUser user, EmailConfiguration conf, Locale locale) throws RBException;
+	void resetPasswordForUser(RBUser user, Locale locale) throws RBException;
 
 	// ----------------------------------------------------
 	

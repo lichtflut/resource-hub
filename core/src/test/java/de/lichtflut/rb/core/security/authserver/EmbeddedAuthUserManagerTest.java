@@ -54,7 +54,7 @@ public class EmbeddedAuthUserManagerTest {
 	@Test
 	public void blackBoxTest() throws RBAuthException {
 		initDomainZ();
-		EmbeddedAuthUserManager userManager = new EmbeddedAuthUserManager(gate, domainManager);
+		EmbeddedAuthUserManager userManager = new EmbeddedAuthUserManager(gate.startConversation(), domainManager);
 		Assert.assertNull(userManager.findUser("x"));
 		
 		final RBUser user = new RBUser();

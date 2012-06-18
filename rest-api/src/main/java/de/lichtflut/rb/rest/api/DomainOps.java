@@ -18,7 +18,6 @@ import org.arastreju.sge.persistence.TransactionControl;
 import org.springframework.stereotype.Component;
 
 import scala.actors.threadpool.Arrays;
-
 import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.RBDomain;
@@ -136,7 +135,7 @@ public class DomainOps extends RBServiceEndpoint {
 			rbDomain = domainManager.registerDomain(rbDomain);
 			if (admin != null) {
 				try {
-					addDomainAdmin(rbDomain, admin);
+					addDomainAdmin(rbDomain, admin, provider);
 				} catch (RBAuthException e) {
 					getLog().error("Domain admin couldnt be created due to the following exception", e);
 					tx.fail();
@@ -155,7 +154,7 @@ public class DomainOps extends RBServiceEndpoint {
 	 * @param admin
 	 * @throws RBAuthException
 	 */
-	private void addDomainAdmin(RBDomain rbDomain, SystemIdentity admin)
+	private void addDomainAdmin(RBDomain rbDomain, SystemIdentity admin, ServiceProvider provider)
 			throws RBAuthException {
 		UserManager uManager = authModule.getUserManagement();
 		RBUser user = uManager.findUser(admin.getId());

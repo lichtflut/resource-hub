@@ -1,0 +1,34 @@
+<!--
+
+    Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+	<h4>
+		<wicket:message key="header.search-and-add-user">[search user]</wicket:message>
+	</h4>
+
+	<form wicket:id="form">
+	
+		<div wicket:id="feedback"></div>
+		
+		<div class="form-field">
+			<div class="user-picker" wicket:id="userpicker"></div>
+		</div>
+		
+		<div class="section button-bar right">
+			<button type="button" wicket:id="add" class="default-button">
+				<wicket:message key="button.add-user">[add user]</wicket:message>
+			</button>
+		</div>
+	
+	</form>
+
+</wicket:panel>
+</html>

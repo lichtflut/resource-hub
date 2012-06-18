@@ -117,7 +117,7 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	 */
 	@Override
 	public ResourceNode getDomainOrganization() {
-		final Query query = gate().createQueryManager().buildQuery();
+		final Query query = mc().createQuery();
 		query.addField(RDF.TYPE, RB.ORGANIZATION);
 		query.and();
 		query.addField(RBSystem.IS_DOMAIN_ORGANIZATION, "true");

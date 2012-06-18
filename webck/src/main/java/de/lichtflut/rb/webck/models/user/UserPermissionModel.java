@@ -11,6 +11,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
@@ -29,6 +30,9 @@ public class UserPermissionModel extends DerivedDetachableModel<Set<String>, RBU
 	
 	@SpringBean
 	private ServiceProvider provider;
+	
+	@SpringBean 
+	private ServiceContext context;
 	
 	// ----------------------------------------------------
 	
@@ -50,11 +54,19 @@ public class UserPermissionModel extends DerivedDetachableModel<Set<String>, RBU
 	@Override
 	protected Set<String> derive(RBUser user) {
 		if (user != null) {
-			String domain = provider.getContext().getDomain();
+			String domain = context.getDomain();
 			return provider.getSecurityService().getUserPermissions(user, domain);
 		} else {
 			return Collections.emptySet();
 		}
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<String> getDefault() {
+		return Collections.emptySet();
 	}
 	
 }

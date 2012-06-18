@@ -44,18 +44,31 @@ public class RBEntityImageUrlModel extends DerivedDetachableModel<String, RBEnti
 		final ResourceID type = entity.getType();
 		// TODO: check direct image URL rb:hasImage
 		if (RB.PERSON.equals(type)) {
-			final RBField field = entity.getField(RB.HAS_EMAIL);
-			Object value = field.getValue(0);
-			if (value instanceof String) {
-				final String email = ((String) value).trim().toLowerCase();
-				final String md5 = md5Hex(email);
-				return "http://www.gravatar.com/avatar/" + md5 + "?d=retro&s=48";
-			}
+			return getEmailHash(entity);
+		} else {
+			return null;	
 		}
-		return null;
+	}
+	
+	// ----------------------------------------------------
+	
+	private String getEmailHash(RBEntity entity) {
+		final RBField field = entity.getField(RB.HAS_EMAIL);
+		if (field == null) {
+			return null;
+		}
+		Object value = field.getValue(0);
+		if (value instanceof String) {
+			final String email = ((String) value).trim().toLowerCase();
+			final String md5 = md5Hex(email);
+			return "http://www.gravatar.com/avatar/" + md5 + "?d=retro&s=48";
+		} else {
+			return null;
+		}
+		
 	}
 
-	public static String hex(byte[] array) {
+	private String hex(byte[] array) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < array.length; ++i) {
 			sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1, 3));
@@ -63,7 +76,7 @@ public class RBEntityImageUrlModel extends DerivedDetachableModel<String, RBEnti
 		return sb.toString();
 	}
 
-	public static String md5Hex(String message) {
+	private String md5Hex(String message) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			return hex(md.digest(message.getBytes()));
