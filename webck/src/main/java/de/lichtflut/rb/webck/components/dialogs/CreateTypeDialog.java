@@ -6,9 +6,11 @@ package de.lichtflut.rb.webck.components.dialogs;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.naming.QualifiedName;
 
+import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
@@ -25,6 +27,9 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
  */
 public class CreateTypeDialog extends AbstractCreateResourceDialog {
 
+	@SpringBean
+	private TypeManager typeManager;
+	
 	/**
 	 * Constructor.
 	 */
@@ -40,7 +45,7 @@ public class CreateTypeDialog extends AbstractCreateResourceDialog {
 	 */
 	@Override
 	public void onCreate(QualifiedName qn, AjaxRequestTarget target) {
-		final SNClass type = provider.getTypeManager().createType(qn);
+		final SNClass type = typeManager.createType(qn);
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<SNClass>(type, ModelChangeEvent.TYPE));
 	}
 
