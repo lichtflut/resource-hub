@@ -56,6 +56,14 @@ public interface SecurityService {
 	RBUser createDomainAdmin(RBDomain domain, String email, String username, String password) throws RBAuthException;
 	
 	/**
+	 * Grant this user access to the domain and the domain admin permission.
+	 * @param domain The domain.
+	 * @param user The user.
+	 * @throws RBAuthException 
+	 */
+	void makeDomainAdmin(RBDomain domain, RBUser user) throws RBAuthException;
+	
+	/**
 	 * @param user The existing user to update.
 	 * @throws RBException 
 	 */

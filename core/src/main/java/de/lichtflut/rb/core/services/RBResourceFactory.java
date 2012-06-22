@@ -49,5 +49,10 @@ public class RBResourceFactory {
 		logger.info("SecurityService has been requested.");
 		return provider.getSecurityService();
 	}
+	
+	public ViewSpecificationService createViewSpecificationService() {
+		logger.info("ViewSpecificationService has been requested.");
+		return provider.getViewSpecificationService();
+	}
 
 }

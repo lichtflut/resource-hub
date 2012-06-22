@@ -64,7 +64,7 @@ public class AlternateDomainsModel extends DerivedDetachableModel<List<RBDomain>
 		final String currentDomain = context.getDomain();
 		
 		final List<RBDomain> domains = new ArrayList<RBDomain>();
-		final Collection<RBDomain> all = authModule.getDomainManager().getAllDomains();
+		final Collection<RBDomain> all = authModule.getDomainManager().getDomainsForUser(user);
 		for (RBDomain current : all) {
 			if (!current.getName().equals(currentDomain)) {
 				domains.add(current);

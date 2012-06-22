@@ -18,6 +18,7 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -82,7 +83,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		if (domainNode == null) {
 			return null;
 		}
-		return new RBDomain(domainNode);
+		return toRBDomain(domainNode);
 	}
 
 	/** 
@@ -99,7 +100,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 			node.addAssociation(Aras.HAS_DESCRIPTION, new SNText(domain.getDescription()));
 		}
 		node.addAssociation(RDF.TYPE, Aras.DOMAIN);
-		final RBDomain created = new RBDomain(node);
+		final RBDomain created = toRBDomain(node);
 		
 		final ModelingConversation mc = mc();
 		mc.attach(node);
@@ -140,8 +141,25 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		final List<RBDomain> result = new ArrayList<RBDomain>();
 		final Query query = query().addField(RDF.TYPE, Aras.DOMAIN);
 		for (ResourceNode domainNode : query.getResult()) {
-			result.add(new RBDomain(domainNode));
+			result.add(toRBDomain(domainNode));
 		}
+		return result;
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<RBDomain> getDomainsForUser(RBUser user) {
+		final List<RBDomain> result = new ArrayList<RBDomain>();
+		ResourceNode userNode = conversation.findResource(user.getQualifiedName());
+		if (userNode == null) {
+			throw new IllegalArgumentException("User not found");
+		}
+		for (Statement stmt : userNode.getAssociations(Aras.HAS_ALTERNATE_DOMAIN)) {
+			result.add(toRBDomain(stmt.getObject()));
+		}
+		result.add(findDomain(user.getDomesticDomain()));
 		return result;
 	}
 	
@@ -225,6 +243,18 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	}
 	
 	// ----------------------------------------------------
+	
+	private RBDomain toRBDomain(SemanticNode node) {
+		if (!node.isResourceNode()) {
+			throw new IllegalArgumentException("Value nodes can not represent a domain: " + node);
+		} 
+		ResourceNode resource = node.asResource();
+		RBDomain domain = new RBDomain(resource.getQualifiedName());
+		domain.setName(uniqueName(resource));
+		domain.setTitle(string(singleObject(resource, Aras.HAS_TITLE)));
+		domain.setDescription(string(singleObject(resource, Aras.HAS_DESCRIPTION)));
+		return domain;
+	}
 	
 	private Set<SNText> toSemanticNodes(Collection<String> values) {
 		final Set<SNText> result = new HashSet<SNText>();

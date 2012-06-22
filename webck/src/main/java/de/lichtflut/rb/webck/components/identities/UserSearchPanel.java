@@ -4,7 +4,6 @@
 package de.lichtflut.rb.webck.components.identities;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -15,15 +14,10 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 import de.lichtflut.rb.webck.components.fields.UserPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
  * <p>
@@ -36,15 +30,12 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
  *
  * @author Oliver Tigges
  */
-public class UserSearchPanel extends Panel {
+public abstract class UserSearchPanel extends Panel {
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserSearchPanel.class);
 	
 	@SpringBean
 	private AuthModule authModule;
-	
-	@SpringBean
-	private ServiceContext serviceContext;
 	
 	// ----------------------------------------------------
 	
@@ -67,7 +58,7 @@ public class UserSearchPanel extends Panel {
 		
 		form.add(picker);
 		
-		form.add(new RBDefaultButton("add") {
+		form.add(new RBDefaultButton("select") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				RBUser user = authModule.getUserManagement().findUser(model.getObject().toURI());
@@ -83,26 +74,7 @@ public class UserSearchPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	public void userSelected(final RBUser user) {
-		IModel<String> msgModel = new Model<String>(getString("label.confirm.add-user"));
-		DialogHoster hoster = findParent(DialogHoster.class);
-		hoster.openDialog(new ConfirmationDialog(hoster.getDialogID(), msgModel) {
-			@Override
-			public void onConfirm() {
-				addUserToDomain(user);
-			}
-		});
-	}
+	public abstract void userSelected(RBUser user);
 	
-	public void addUserToDomain(RBUser user) {
-		String domain = serviceContext.getDomain();
-		try {
-			authModule.getUserManagement().grantAccessToDomain(user, domain);
-		} catch (RBAuthException e) {
-			logger.error("Failed to add user '" + user.getEmail() + "' to domain " + domain, e);
-			error(getString("error.add-user-failed"));
-		}
-		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.USER));
-	}
 
 }

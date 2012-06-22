@@ -58,6 +58,7 @@ public abstract class UserListPanel extends Panel {
 				final RBUser user = item.getModelObject();
 				item.add(new Label("id", user.getName()));
 				item.add(new Label("lastLogin", getLastLogin(user)));
+				item.add(new Label("origin", user.getDomesticDomain()));
 				item.add(new AjaxLink("edit") {
 					@Override
 					public void onClick(AjaxRequestTarget target) {

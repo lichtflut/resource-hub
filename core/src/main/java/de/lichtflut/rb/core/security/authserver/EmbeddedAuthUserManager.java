@@ -33,6 +33,7 @@ import de.lichtflut.rb.core.eh.InvalidPasswordException;
 import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.eh.UsernameAlreadyInUseException;
 import de.lichtflut.rb.core.security.RBCrypt;
+import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.security.SearchResult;
 import de.lichtflut.rb.core.security.UserManager;
@@ -193,9 +194,9 @@ public class EmbeddedAuthUserManager implements UserManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void grantAccessToDomain(RBUser user, String domain) throws RBAuthException {
+	public void grantAccessToDomain(RBUser user, RBDomain domain) throws RBAuthException {
 		final ResourceNode attachedUser = conversation.findResource(user.getQualifiedName());
-		final ResourceNode attachedDomain = domainManager.findDomainNode(domain);
+		final ResourceNode attachedDomain = domainManager.findDomainNode(domain.getName());
 		attachedUser.addAssociation(Aras.HAS_ALTERNATE_DOMAIN, attachedDomain);
 	}
 	

@@ -53,6 +53,12 @@ public interface DomainManager {
 	Collection<RBDomain> getAllDomains();
 	
 	/**
+	 * Get all domains this user may access.
+	 * @return All domains for this user.
+	 */
+	Collection<RBDomain> getDomainsForUser(RBUser user);
+	
+	/**
 	 * Get all registered domain.
 	 * @return All domains.
 	 */

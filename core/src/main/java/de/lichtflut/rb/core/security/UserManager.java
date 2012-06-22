@@ -65,7 +65,7 @@ public interface UserManager {
 	 * @param user The user.
 	 * @param domain The user's domain.
 	 */
-	void grantAccessToDomain(RBUser user, String domain) throws RBAuthException;
+	void grantAccessToDomain(RBUser user, RBDomain domain) throws RBAuthException;
 	
 	// ----------------------------------------------------
 	

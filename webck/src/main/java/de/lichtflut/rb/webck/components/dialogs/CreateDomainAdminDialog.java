@@ -5,13 +5,20 @@ package de.lichtflut.rb.webck.components.dialogs;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.eh.RBAuthException;
+import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBDomain;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.SecurityService;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.identities.UserCreationPanel;
+import de.lichtflut.rb.webck.components.identities.UserSearchPanel;
 
 /**
  * <p>
@@ -26,8 +33,13 @@ import de.lichtflut.rb.webck.components.identities.UserCreationPanel;
  */
 public class CreateDomainAdminDialog extends AbstractRBDialog {
 	
+	private final Logger logger = LoggerFactory.getLogger(CreateDomainAdminDialog.class);
+	
 	@SpringBean
-	private ServiceProvider provider;
+	private SecurityService securityService;
+	
+	@SpringBean
+	private AuthModule authModule;
 	
 	// ----------------------------------------------------
 
@@ -39,11 +51,18 @@ public class CreateDomainAdminDialog extends AbstractRBDialog {
 		
 		setTitle(new ResourceModel("dialog.title"));
 		
-		add(new UserCreationPanel(CONTENT) {
+		add(new UserSearchPanel("searcher") {
+			@Override
+			public void userSelected(final RBUser user) {
+				userSelectedAsDomainAdmin(user, model.getObject());
+			}
+		});
+		
+		add(new UserCreationPanel("creator") {
 			@Override
 			public void onCreate(String email, String username, String password) {
 				try {
-					provider.getSecurityService().createDomainAdmin(model.getObject(), email, username, password);
+					securityService.createDomainAdmin(model.getObject(), email, username, password);
 					close(AjaxRequestTarget.get());
 				} catch (RBAuthException e) {
 					error(e.getMessage());
@@ -57,6 +76,29 @@ public class CreateDomainAdminDialog extends AbstractRBDialog {
 		});
 		
 		setModal(true);
+	}
+	
+	// ----------------------------------------------------
+	
+	private void userSelectedAsDomainAdmin(final RBUser user, final RBDomain domain) {
+		IModel<String> msgModel = new Model<String>(getString("label.confirm.add-user-as-admin"));
+		DialogHoster hoster = findParent(DialogHoster.class);
+		hoster.openDialog(new ConfirmationDialog(hoster.getDialogID(), msgModel) {
+			@Override
+			public void onConfirm() {
+				addUserToDomain(user, domain);
+			}
+		});
+	}
+	
+	public void addUserToDomain(RBUser user, RBDomain domain) {
+		try {
+			authModule.getUserManagement().grantAccessToDomain(user, domain);
+			securityService.makeDomainAdmin(domain, user);
+		} catch (RBAuthException e) {
+			logger.error("Failed to add user '" + user.getEmail() + "' to domain " + domain, e);
+			error(getString("error.add-user-failed"));
+		}
 	}
 	
 }

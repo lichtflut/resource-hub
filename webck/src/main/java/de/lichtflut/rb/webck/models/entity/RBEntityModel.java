@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
@@ -28,6 +29,9 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 public class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 	
 	private final Logger logger = LoggerFactory.getLogger(RBEntityModel.class);
+	
+	@SpringBean
+	private EntityManager entityManager;
 	
 	@SpringBean
 	private ServiceProvider provider;
@@ -51,11 +55,11 @@ public class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 		final EntityHandle handle = RBWebSession.get().getHistory().getCurrentStep().getHandle();
 		if (handle.hasId()) {
 			logger.debug("Loading RB Entity: " + handle.getId());
-			final RBEntity loaded = provider.getEntityManager().find(handle.getId());
+			final RBEntity loaded = entityManager.find(handle.getId());
 			return loaded;
 		} else if (handle.hasType()){
 			logger.debug("Creating new RB Entity");
-			final RBEntity loaded = provider.getEntityManager().create(handle.getType());
+			final RBEntity loaded = entityManager.create(handle.getType());
 			handle.setId(loaded.getID());
 			return loaded;
 		} else {

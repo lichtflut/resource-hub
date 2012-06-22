@@ -17,7 +17,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.fields.ClassPickerField;
@@ -43,8 +43,8 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
 public class ClassifyEntityPanel extends TypedPanel<RBEntity> {
 	
 	@SpringBean
-	private ServiceProvider provider;
-
+	private EntityManager entityManager;
+	
 	private final IModel<ResourceID> targetModel = new Model<ResourceID>();
 	
 	private final IModel<ResourceID> superClassModel;
@@ -78,7 +78,7 @@ public class ClassifyEntityPanel extends TypedPanel<RBEntity> {
 	// ----------------------------------------------------
 	
 	public void onClassify() {
-		provider.getEntityManager().changeType(getModelObject(), targetModel.getObject());
+		entityManager.changeType(getModelObject(), targetModel.getObject());
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 	}
 	

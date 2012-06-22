@@ -10,7 +10,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
@@ -27,7 +27,7 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 public class RBEntityListModel extends AbstractLoadableDetachableModel<List<RBEntity>> {
 
 	@SpringBean
-	private ServiceProvider provider;
+	private EntityManager entityManager;
 	
 	private ResourceID type;
 	
@@ -47,7 +47,7 @@ public class RBEntityListModel extends AbstractLoadableDetachableModel<List<RBEn
 	 * {@inheritDoc}
 	 */
 	public List<RBEntity> load() {
-		return provider.getEntityManager().findByType(type);
+		return entityManager.findByType(type);
 	}
 	
 }

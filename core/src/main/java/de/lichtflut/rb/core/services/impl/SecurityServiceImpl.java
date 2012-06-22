@@ -90,12 +90,22 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		rbUser.setEmail(email);
 		rbUser.setUsername(username);
 		final String crypted = RBCrypt.encryptWithRandomSalt(password);
+		
 		authServer.getUserManagement().registerUser(rbUser, crypted, domain.getName());
 		
-		final List<String> roles = Arrays.asList(rolesOfDomainAdmin());
-		logger.info("Adding roles {} to user {}.", roles, email);
-		setUserRoles(rbUser, domain.getName(), roles);
+		makeDomainAdmin(domain, rbUser);
+		
 		return rbUser;
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void makeDomainAdmin(RBDomain domain, RBUser user) throws RBAuthException {
+		final List<String> roles = Arrays.asList(rolesOfDomainAdmin());
+		logger.info("Adding roles {} to user {}.", roles, user);
+		setUserRoles(user, domain.getName(), roles);
 	}
 	
 	/** 
