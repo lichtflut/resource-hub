@@ -137,7 +137,7 @@ public class UserDetailPanel extends TypedPanel<RBUser> {
 	public void onSave() {
 		try {
 			securityService.storeUser(getModelObject());
-			securityService.setUserRoles(getModelObject(), null, currentRolesModel.getObject());
+			securityService.setUserRoles(getModelObject(), context.getDomain(), currentRolesModel.getObject());
 			mode.setObject(DisplayMode.VIEW);
 		} catch (RBException e) {
 			long code = e.getErrorCode();
