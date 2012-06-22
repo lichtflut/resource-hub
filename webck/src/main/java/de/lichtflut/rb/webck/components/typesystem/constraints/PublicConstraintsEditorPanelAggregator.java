@@ -4,7 +4,6 @@
 package de.lichtflut.rb.webck.components.typesystem.constraints;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -43,7 +42,7 @@ public class PublicConstraintsEditorPanelAggregator extends Panel {
 	public PublicConstraintsEditorPanelAggregator(String id) {
 		super(id);
 		add(new TypeSystemHelpPanel("editor").setOutputMarkupId(true));
-		add(new Label("searchbox", Model.of("Search...")));
+//		add(new Label("searchbox", Model.of("Search...")));
 		add(new ConstraintsBrowserPanel("publicConstraintsBrowser", new PublicConstraintsListModel()) {
 			@Override
 			public void onCreateConstraint(AjaxRequestTarget target) {

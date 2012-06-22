@@ -4,7 +4,6 @@
 package de.lichtflut.rb.webck.components.typesystem.properties;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 
@@ -42,7 +41,7 @@ public class PropertyDeclEditorPanelAggregator extends Panel {
 
 	private void addComponents() {
 		add(new TypeSystemHelpPanel("editor").setOutputMarkupId(true));
-		add(new Label("searchbox", "Search..."));
+//		add(new Label("searchbox", "Search..."));
 		add(new SNPropertyBrowserPanel("propertyBrowser", new SNPropertyListModel()) {
 			@Override
 			public void onPropertySelected(final SNProperty property, final AjaxRequestTarget target) {

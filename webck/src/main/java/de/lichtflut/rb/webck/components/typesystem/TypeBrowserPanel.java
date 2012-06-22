@@ -98,6 +98,14 @@ public abstract class TypeBrowserPanel extends Panel {
 	protected void onCreate(AjaxRequestTarget target) {
 
 	}
+	
+	/**
+	 * Sets whether the create {@link Link} is visible or not.
+	 * @return
+	 */
+	protected boolean isCreateLinkVisible(){
+		return true;
+	}
 
 	// ------------------------------------------------------
 
@@ -111,6 +119,7 @@ public abstract class TypeBrowserPanel extends Panel {
 			}
 		};
 		link.add(new Label("label", new ResourceModel("link-create")));
+		link.setVisible(isCreateLinkVisible());
 		add(link);
 	}
 
