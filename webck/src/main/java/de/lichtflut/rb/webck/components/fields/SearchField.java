@@ -4,9 +4,13 @@
 package de.lichtflut.rb.webck.components.fields;
 
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.odlabs.wiquery.ui.autocomplete.Autocomplete;
+import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 
 /**
  * <p>
@@ -21,13 +25,22 @@ import de.lichtflut.rb.core.RBSystem;
  */
 public class SearchField extends Autocomplete<String> {
 
+	@SpringBean
+	private QueryServicePathBuilder pathBuilder;
+	
+	@SpringBean
+	private ServiceContext serviceContext;
+	
+	// ----------------------------------------------------
+
 	/**
 	 * @param id
 	 * @param model
 	 */
 	public SearchField(final String id, final IModel<String> model) {
 		super(id, model);
-		setSource(EntityPickerField.findEntity(RBSystem.ENTITY));
+		setSource(new AutocompleteSource(
+				pathBuilder.queryEntities(serviceContext.getDomain(), RBSystem.ENTITY.toURI())));
 	}
-
+	
 }

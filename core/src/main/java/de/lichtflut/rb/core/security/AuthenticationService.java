@@ -5,7 +5,6 @@ package de.lichtflut.rb.core.security;
 
 import org.arastreju.sge.security.LoginException;
 
-
 /**
  * <p>
  * 	Interface for login related operations.
@@ -33,6 +32,13 @@ public interface AuthenticationService {
 	 * @return The logged in user or null if not valid.
 	 */
 	RBUser loginByToken(String token);
+	
+	/**
+	 * Create the cookie token for the 'remember me' feature.
+	 * @param user The user.
+	 * @return The token to be saved as cookie.
+	 */
+	String createSessionToken(RBUser user);
 	
 	/**
 	 * Create the cookie token for the 'remember me' feature.

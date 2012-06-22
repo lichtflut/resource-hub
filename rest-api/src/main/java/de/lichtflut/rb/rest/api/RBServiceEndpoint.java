@@ -31,7 +31,6 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	 */
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
-
 	/**
 	 * An instance of {@link AuthorizationHandler} which is required to
 	 * handle all the authorization-stuff
@@ -39,9 +38,6 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	@Autowired
 	private AuthorizationHandler handler;
 	
-	
-
-
 	/**
 	 * An instance of {@link ServiceProvider} which offers several necessary
 	 * RB-Services to get this service running.
@@ -51,6 +47,8 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	
 	@Autowired
 	protected AuthModule authModule;
+	
+	// ----------------------------------------------------
 
 	/**
 	 * 

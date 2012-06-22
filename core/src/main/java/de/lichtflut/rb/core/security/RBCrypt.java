@@ -111,4 +111,20 @@ public abstract class RBCrypt {
 		}
 		return checkCredential.equals(encrypt(password, salt));
 	}
+
+	/**
+	 * Generates a random sequence of characters.
+	 * @param length The length of the random.
+	 * @return The sequence.
+	 */
+	public static String random(int length) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < length; i++) {
+			char c = (char) (65 + (Math.random() * 50));
+			sb.append(c);
+		}
+		return sb.toString();
+		
+		
+	}
 }

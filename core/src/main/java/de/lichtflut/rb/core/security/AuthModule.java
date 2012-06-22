@@ -24,6 +24,10 @@ public interface AuthModule {
 	
 	String MASTER_DOMAIN = "root";
 	
+	String COOKIE_REMEMBER_ME = "glasnost-remember-me-id";
+	
+	String COOKIE_SESSION_AUTH = "glasnost-session-auth";
+	
 	// ----------------------------------------------------
 	
 	/**

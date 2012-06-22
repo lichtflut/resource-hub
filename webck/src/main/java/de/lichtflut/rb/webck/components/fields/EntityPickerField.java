@@ -4,12 +4,13 @@
 package de.lichtflut.rb.webck.components.fields;
 
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.util.crypt.Base64;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 import de.lichtflut.rb.webck.models.resources.ResourceDisplayModel;
 
 /**
@@ -24,6 +25,14 @@ import de.lichtflut.rb.webck.models.resources.ResourceDisplayModel;
  * @author Oliver Tigges
  */
 public class EntityPickerField extends DataPickerField<ResourceID> {
+	
+	@SpringBean
+	private QueryServicePathBuilder pathBuilder;
+	
+	@SpringBean
+	private ServiceContext serviceContext;
+	
+	// ----------------------------------------------------
 
 	/**
 	 * Query any resource of type system:entity
@@ -41,20 +50,21 @@ public class EntityPickerField extends DataPickerField<ResourceID> {
 	 * @param type The type (should be a sub class of system:entity).
 	 */
 	public EntityPickerField(final String id, final IModel<ResourceID> model, final ResourceID type) {
-		super(id, model, new ResourceDisplayModel(model), findEntity(type));
+		super(id, model, new ResourceDisplayModel(model), null);
 		setType(ResourceID.class);
+		getDisplayComponent().setSource(findEntity(type));
 	}
 
 	// -----------------------------------------------------
 	
-	public static AutocompleteSource findEntity(final ResourceID type) {
-		final String ctx = RequestCycle.get().getRequest().getContextPath();
-		final StringBuilder sb = new StringBuilder(ctx + "/internal/query/entity");
-		if (type != null) {
-			sb.append("?type=");
-			sb.append(Base64.encodeBase64URLSafeString(type.getQualifiedName().toURI().getBytes()));
-		}
-		return new AutocompleteSource(sb.toString());
+	public AutocompleteSource findEntity(final ResourceID type) {
+//		final String ctx = RequestCycle.get().getRequest().getContextPath();
+//		final StringBuilder sb = new StringBuilder(ctx + "/internal/query/entity");
+//		if (type != null) {
+//			sb.append("?type=");
+//			sb.append(Base64.encodeBase64URLSafeString(type.getQualifiedName().toURI().getBytes()));
+//		}
+		return new AutocompleteSource(pathBuilder.queryEntities(serviceContext.getDomain(), type.toURI()));
 	}
 	
 }

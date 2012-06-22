@@ -50,6 +50,12 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ssZ");
 	
+	private static final String SESSION_TOKEN_PREFIX = "s:";
+	
+	private static final String REMEMBER_TOKEN_PREFIX = "r:";
+	
+	private static final String randomSecret = RBCrypt.random(20);
+	
 	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthLoginService.class);
 	
 	private final ModelingConversation conversation;
@@ -97,24 +103,30 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	 */
 	@Override
 	public RBUser loginByToken(String token) {
-		final String[] fields = token.split(":");
-		if (fields.length != 3 || StringUtils.isBlank(fields[0])) {
+		if (token == null) {
 			return null;
 		}
-		try {
-			final String id = fields[0];
-			final ResourceNode arasUser = findUserNode(id);
-			if (arasUser != null && isValid(arasUser, id, fields[1], fields[2])) {
-				final RBUser user = new RBUser(arasUser);
-				logger.info("User {} logged in by token.", user);
-				setLastLogin(arasUser);
-				return user;
-			}
-		} catch (ArastrejuRuntimeException e) {
-			logger.error("Failed to login by token " + Arrays.toString(fields), e);
+		final String[] fields = token.split(":");
+		if (!isValid(fields)) {
+			return null;
 		}
-		logger.info("Login token is invalid: " + token);
-		return null;
+		if (token.startsWith(SESSION_TOKEN_PREFIX)) {
+			return loginBySessionToken(fields);
+		} else {
+			return loginByRembemberMeToken(fields);
+		}
+	}
+	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String createSessionToken(RBUser user) {
+		final String email = user.getEmail();
+		final Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR_OF_DAY, 12);
+		final String raw = SESSION_TOKEN_PREFIX + email + ":" + DATE_FORMAT.format(cal.getTime()); 
+		return raw + ":" + Crypt.md5Hex(raw + randomSecret);
 	}
 
 	/** 
@@ -127,7 +139,7 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 		final Credential credential = toCredential(loginData.getPassword(), findUserNode(id));
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, 30);
-		final String raw = email + ":" + DATE_FORMAT.format(cal.getTime()); 
+		final String raw = REMEMBER_TOKEN_PREFIX + email + ":" + DATE_FORMAT.format(cal.getTime()); 
 		return raw + ":" + Crypt.md5Hex(raw + credential.stringRepesentation());
 	}
 
@@ -143,28 +155,97 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	protected ResourceNode findUserNode(final String id) {
 		return EmbeddedAuthFunctions.findUserNode(conversation, id);
 	}
+
+	protected RBUser loginByRembemberMeToken(String[] fields) {
+		try {
+			final String id = fields[1];
+			final ResourceNode arasUser = findUserNode(id);
+			if (arasUser == null ) {
+				logger.info("User with id {} not found.", id);
+			} else if (!isValid(arasUser, id, fields[2], fields[3])){
+				logger.info("RememberMe ticket for user {} is not valid.", arasUser);
+			} else {
+				final RBUser user = new RBUser(arasUser);
+				logger.info("User {} logged in by remember me token.", user);
+				setLastLogin(arasUser);
+				return user;
+			}
+		} catch (ArastrejuRuntimeException e) {
+			logger.error("Failed to login by token " + Arrays.toString(fields), e);
+			return null;
+		}
+		return null;
+	}
+
+	protected RBUser loginBySessionToken(String[] fields) {
+		try {
+			final String id = fields[1];
+			if (isValid(id, fields[2], fields[3])) {
+				final ResourceNode arasUser = findUserNode(id);
+				logger.info("User {} logged in by session token.", id);
+				return new RBUser(arasUser);
+			} else {
+				logger.info("Session token is invalid: " + StringUtils.join(fields, ":"));
+			}
+		} catch (ArastrejuRuntimeException e) {
+			logger.error("Failed to login by token " + Arrays.toString(fields), e);
+		}
+		return null;
+	}
+	
+	// ----------------------------------------------------
 	
 	private void setLastLogin(final ResourceNode user) {
 		SNOPS.assure(user, RBSystem.HAS_LAST_LOGIN, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
 	}
 	
-	private boolean isValid(ResourceNode user, String id, String validUntil, String token) {
+	/**
+	 * Check if ticket structure is O.K. and date not expired.
+	 */
+	private boolean isValid(String[] fields) {
+		if (fields.length != 4) {
+			logger.info("Login token has wrong structure: " + StringUtils.join(fields, ":"));
+			return false;
+		} else if (StringUtils.isBlank(fields[1])) {
+			logger.info("Login token has no user ID: " + StringUtils.join(fields, ":"));
+			return false;
+		} else if (isExpired(fields[2])){
+			logger.info("Login token has expired: " + StringUtils.join(fields, ":"));
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	private boolean isValid(ResourceNode user, String id, String validUntil, String fingerprint) {
+		final SemanticNode credential = SNOPS.singleObject(user, Aras.HAS_CREDENTIAL);
+		if (credential != null) {
+			final String raw = REMEMBER_TOKEN_PREFIX + id + ":" + validUntil; 
+			final String crypted = Crypt.md5Hex(raw + credential.asValue().getStringValue());
+			return crypted.equals(fingerprint);
+		} else {
+			return false;	
+		}
+	}
+	
+	private boolean isValid(String id, String validUntil, String fingerprint) {
+		if (isExpired(validUntil)) {
+			logger.info("Login token has been expired: " + fingerprint);
+			return false;
+		}
+		final String raw = SESSION_TOKEN_PREFIX + id + ":" + validUntil; 
+		final String crypted = Crypt.md5Hex(raw + randomSecret);
+		return crypted.equals(fingerprint);
+	}
+
+	protected boolean isExpired(String validUntil) {
 		try {
 			final Date date = DATE_FORMAT.parse(validUntil);
-			if (date.before(new Date())){
-				logger.info("Login token has been expired: " + token);
-				return false;
-			}
-			final SemanticNode credential = SNOPS.singleObject(user, Aras.HAS_CREDENTIAL);
-			if (credential != null) {
-				final String raw = id + ":" + validUntil; 
-				final String crypted = Crypt.md5Hex(raw + credential.asValue().getStringValue());
-				return crypted.equals(token);
-			}
+			return date.before(new Date());
 		} catch (ParseException e) {
-			logger.info("Login token could not be parsed: " + token);
+			logger.info("Login token date info could not be parsed: " + validUntil);
+			return false;
 		}
-		return false;
 	}
 	
 	private Credential toCredential(final String password, final ResourceNode user) {

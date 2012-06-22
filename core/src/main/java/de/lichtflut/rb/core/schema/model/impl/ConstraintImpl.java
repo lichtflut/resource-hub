@@ -211,7 +211,7 @@ public class ConstraintImpl implements Constraint {
 	public boolean isLiteral() {
 		boolean isFirstLvlLiteral = (node.getAssociations(RBSchema.HAS_CONSTRAINT_VALUE).size() > 0);
 		if (!isFirstLvlLiteral) {
-			if (!holdsReference()) {
+			if (!holdsReference() && getReference() != null) {
 				return new ConstraintImpl(getReference().asResource()).isLiteral();
 			}else{
 				return false;
