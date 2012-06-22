@@ -28,7 +28,6 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryManager;
 import org.arastreju.sge.query.SimpleQueryResult;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -85,9 +84,11 @@ public class EntityManagerImplTest {
 		when(provider.getArastejuGate()).thenReturn(gate);
 
 		em = new EntityManagerImpl(provider){
+			@Override
 			protected ModelingConversation mc(){
 				return mc;
 			}
+			@Override
 			protected ServiceProvider getProvider() {
 				return provider;
 			}

@@ -40,7 +40,7 @@ public class RSFTest {
 
 	@Test
 	public void  readLabelDecl() throws RecognitionException{
-		String label = "label-rule : \"common:hasName <,> common:hasCountry\"";
+		String label = "label-rule : \"common:hasName <(> common:hasCountry\"";
 		RSFParser parser = createParser(label);
 		parser.label_decl();
 	}
@@ -138,7 +138,7 @@ public class RSFTest {
 				"" +
 				getPublicConstraintDeclaration() + 
 				"schema for \"commonCity\" { " +
-						"label-rule : \"common:hasName <,> common:hasCountry\"" +
+						"label-rule : \"common:hasName <(> common:hasCountry\"" +
 							"property \"common:assignedTo\" [1..n] {" +
 							"field-label[klingonian] : \"Kaaargh\"" +
 							"datatype : \"date\"" +

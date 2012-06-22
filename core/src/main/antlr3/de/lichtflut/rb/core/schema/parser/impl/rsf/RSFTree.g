@@ -43,7 +43,7 @@ import java.util.HashMap;
 	private static final String APPLICABLE_DATATYPES_CONST = "applicable-datatypes";
 	private static final String DATATYPE_CONST = "datatype";
 	private static final String LITERAL_CONSTRAINT_CONST = "literal-constraint";
-	private static final String CONSTRAINT_REFERENCE_CONST = "reference-constraint";
+	private static final String REFERENCE_CONSTRAINT_CONST = "reference-constraint";
 	private static final String RESOURCE_CONSTRAINT_CONST = "resource-constraint";
 	private static final String FIELD_LABEL_CONST = "field-label";
 	private static final String FIELD_LABEL_INT_CONST = "field-label\\[..\\]";
@@ -78,9 +78,9 @@ import java.util.HashMap;
 			constraint.buildLiteralConstraint(value);
 			pDec.setConstraint(constraint);
 		}
-		if(RESOURCE_CONSTRAINT_CONST.equals(key) || CONSTRAINT_REFERENCE_CONST.equals(key)){
+		if(RESOURCE_CONSTRAINT_CONST.equals(key) || REFERENCE_CONSTRAINT_CONST.equals(key)){
 			ConstraintImpl constraint = new ConstraintImpl();
-			constraint.buildReferenceConstraint(toResourceID(value), CONSTRAINT_REFERENCE_CONST.equals(key));
+			constraint.buildReferenceConstraint(toResourceID(value), REFERENCE_CONSTRAINT_CONST.equals(key));
 			pDec.setConstraint(constraint);
 		}
 		if(FIELD_LABEL_CONST.equals(key)){

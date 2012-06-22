@@ -153,12 +153,17 @@ public class RSFTreeTest {
 								"datatype : \"String\"" +
 								"resource-constraint : \"common:Country\"" +
 								"}" +
-							"}" +
+						"}" +
 				"schema for \"common:Person\" { " +
 						"label-rule : \"common:hasName\"" +
 							"property \"common:hasName\" [1..n] {" +
 								"field-label[en] : \"Name\"" +
 								"datatype : \"String\"" +
+							"}" +
+							"property \"common:hasEmail\" [0..n] {" +
+								"field-label : \"E-Mail\"" +
+								"datatype : \"string\"" +
+								"reference-constraint : \"common:Email-Constraint\"" +
 							"}" +
 						"}";
 

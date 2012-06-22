@@ -81,7 +81,7 @@ key : FIELD_LABEL
 	| INT_LABEL 
 	| DATATYPE 
 	| RESOURCE_CONSTRAINT
-	| CONSTRAINT_REFERENCE
+	| REFERENCE_CONSTRAINT
 	| LITERAL_CONSTRAINT
 	| APPLICABLE_DATATYPES
 	| NAME
@@ -105,7 +105,7 @@ DATATYPE :'datatype';
 
 RESOURCE_CONSTRAINT : 'resource-constraint';
 
-CONSTRAINT_REFERENCE : 'reference-constraint';
+REFERENCE_CONSTRAINT : 'reference-constraint';
 
 LITERAL_CONSTRAINT : 'literal-constraint';
 
@@ -121,6 +121,6 @@ INT_LABEL : 'field-label[' (('a' .. 'z' | 'A' .. 'Z')+ )']'*;
 
 CARDINALITY_DECL  : '['('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+'..'('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+']';
 
-STRING 	: '"' ('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | ' ' | '_' | '-' | '#' | '/' | ':' | '.' | '<' | '>' | ',' | '@' | '*')+ '"';
+STRING 	: '"' .* '"';
 
 WS: (' '|'\n'|'\r'|'\t')+ {$channel=HIDDEN;} ;
