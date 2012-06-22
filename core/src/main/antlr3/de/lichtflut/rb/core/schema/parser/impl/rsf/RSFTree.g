@@ -16,9 +16,12 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.NamespaceHandle;
+import org.arastreju.sge.model.nodes.SNResource;
 
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
@@ -26,6 +29,8 @@ import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
+import de.lichtflut.rb.core.schema.parser.RSParsingResult;
+import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
 
 import java.util.Locale;
 import java.util.HashMap;
@@ -33,6 +38,9 @@ import java.util.HashMap;
 }
 @members{
 
+	private static final String ID_CONST = "id";
+	private static final String NAME_CONST = "name";
+	private static final String APPLICABLE_DATATYPES_CONST = "applicable-datatypes";
 	private static final String DATATYPE_CONST = "datatype";
 	private static final String LITERAL_CONSTRAINT_CONST = "literal-constraint";
 	private static final String CONSTRAINT_REFERENCE_CONST = "reference-constraint";
@@ -40,16 +48,13 @@ import java.util.HashMap;
 	private static final String FIELD_LABEL_CONST = "field-label";
 	private static final String FIELD_LABEL_INT_CONST = "field-label\\[..\\]";
 	
-	private List<ResourceSchemaImpl> schemaList = new ArrayList<ResourceSchemaImpl>();
+	private List<ResourceSchema> schemaList = new ArrayList<ResourceSchema>();
+	private List<Constraint> publicConstraints = new ArrayList<Constraint>();
 	private HashMap<String, NamespaceHandle> nsMap = new HashMap<String, NamespaceHandle>();
 	private RSErrorReporter errorReporter;
 
 	public void setErrorReporter(RSErrorReporter errorReporter) {
        	this.errorReporter = errorReporter;
-    }
-    
-    public void emitErrorMessage(String msg) {
-       	errorReporter.reportError(msg);
     }
     
 	private String removeAll(String s, String remove){
@@ -62,19 +67,19 @@ import java.util.HashMap;
 		return array[pos];
 	}
 	
-	private void buildTypeDef(String key, String value){
+	private void buildDeclProperties(String key, String value){
 		String ns = $schema_decl::currentNS.getUri();
 		PropertyDeclarationImpl pDec = $property_decl::pDec;
 		if(DATATYPE_CONST.equals(key)){
 			pDec.setDatatype(Datatype.valueOf(value.toUpperCase()));
 		}
 		if(LITERAL_CONSTRAINT_CONST.equals(key)){
-			ReferenceConstraint constraint = new ReferenceConstraint();
+			ConstraintImpl constraint = new ConstraintImpl();
 			constraint.buildLiteralConstraint(value);
 			pDec.setConstraint(constraint);
 		}
 		if(RESOURCE_CONSTRAINT_CONST.equals(key) || CONSTRAINT_REFERENCE_CONST.equals(key)){
-			ReferenceConstraint constraint = new ReferenceConstraint();
+			ConstraintImpl constraint = new ConstraintImpl();
 			constraint.buildReferenceConstraint(toResourceID(value), CONSTRAINT_REFERENCE_CONST.equals(key));
 			pDec.setConstraint(constraint);
 		}
@@ -91,6 +96,25 @@ import java.util.HashMap;
 			}
 			String locale = key.substring(12, 14);
 			pDec.getFieldLabelDefinition().setLabel(new Locale(locale), value);
+		}
+	}
+	
+	public void buildPublicConstraint(String key, String value){
+		ConstraintImpl constraint = $public_constraint::constraint;
+		
+		if(NAME_CONST.equals(key)){
+			constraint.setName(value);
+		}
+		if(APPLICABLE_DATATYPES_CONST.equals(key)){
+			List<Datatype> list = new ArrayList<Datatype>();
+			String[] array = value.split(",");
+			for(String s : array){
+				list.add(Datatype.valueOf(s.trim().toUpperCase()));
+			}
+			constraint.setApplicableDatatypes(list);
+		}
+		if(LITERAL_CONSTRAINT_CONST.equals(key)){
+			constraint.setLiteralConstraint(value);
 		}
 	}
 	
@@ -111,17 +135,22 @@ import java.util.HashMap;
 		}
 	}
 }
-// TODO: SWITCH TO  INTERFACES
 // Input contains 1 or more statements
-statements returns [ List<ResourceSchemaImpl> list ]
-    @init
-    {
-    	$list = new ArrayList<ResourceSchemaImpl>();
+statements returns [ RSParsingResult parsed ] scope{
+	RSParsingResultImpl elements;
+}
+@init {
+    	$statements::elements = new RSParsingResultImpl();
     }
-	:   ^(STATEMENTS statement +) {$list.addAll(schemaList); };
+	:   ^(STATEMENTS statement +) {
+									$parsed = $statements::elements;
+									//$elements.addSchemas(schemaList);
+									//$elements.addConstraints(publicConstraints);
+								 };
 	
-// A statement is either a namespace or a schema
+// A statement is either a namespace, a public constraint or a schema
 statement : 	namespace_decl 
+			|	public_constraint
 			| 	schema_decl 
 			;
 
@@ -135,6 +164,27 @@ namespace_decl: ^(NAMESPACE (ns=STRING qn=STRING
 		
 )) ;
 
+//Declaration of public constraints
+public_constraint scope{
+	ConstraintImpl constraint;
+}
+				: ^(PUBLIC_CONSTRAINT
+					(id=STRING {
+						String cleaned = removeAll($id.text, "\"");
+						NamespaceHandle currentNs = nsMap.get(extract(cleaned, ":", 0));
+						String described = extract(cleaned, ":", 1);
+						SNResource snResource = new SNResource(new QualifiedName(currentNs.getUri() + described));
+						$public_constraint::constraint = new ConstraintImpl(snResource);
+						$public_constraint::constraint.isPublic(true);
+						//publicConstraints.add($public_constraint::constraint);
+						$statements::elements.addConstraint($public_constraint::constraint);
+					})
+						constraint + );
+
+constraint: ^(ASSIGMENT ( key value {
+							buildPublicConstraint($key.text, removeAll($value.text, "\""));
+						}));
+						
 // Definition of a schema
 schema_decl scope{
 	ResourceSchemaImpl schema;
@@ -146,7 +196,8 @@ schema_decl scope{
 				$schema_decl::currentNS = nsMap.get(extract(cleaned, ":", 0));
 				String described = extract(cleaned, ":", 1);
 				$schema_decl::schema = new ResourceSchemaImpl(new SimpleResourceID($schema_decl::currentNS.getUri() + described));
-				schemaList.add($schema_decl::schema);
+				//schemaList.add($schema_decl::schema);
+				$statements::elements.addResourceSchema($schema_decl::schema);
 			})
 	 		decl + )
 	 			 ;
@@ -189,9 +240,8 @@ cardinal_decl returns [String s]
 } :  ^(CARDINALITY CARDINALITY_DECL) ;
 
 //Definition of an assigment within a property-declaration
-assigment :
-					^(ASSIGMENT (key value {
-					buildTypeDef($key.text, removeAll($value.text, "\""));
+assigment : ^(ASSIGMENT ( key value {
+					buildDeclProperties($key.text, removeAll($value.text, "\""));
 				}));
 
 // Definition of an assigments' key
@@ -204,6 +254,9 @@ key returns [String s]
 	| DATATYPE 
 	| RESOURCE_CONSTRAINT
 	| REFERENCE_CONSTRAINT
+	| NAME
+	| APPLICABLE_DATATYPES
+	| LITERAL_CONSTRAINT
 	
 	;
 

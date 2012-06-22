@@ -47,7 +47,7 @@ import de.lichtflut.rb.core.schema.model.Datatype;
  * 
  * @author Ravi Knox
  */
-public class ReferenceConstraint implements Constraint {
+public class ConstraintImpl implements Constraint {
 
 	private static Context ctx = RBSchema.CONTEXT;
 
@@ -58,11 +58,11 @@ public class ReferenceConstraint implements Constraint {
 	/**
 	 * Constructor.
 	 */
-	public ReferenceConstraint(ResourceNode node) {
+	public ConstraintImpl(ResourceNode node) {
 		this.node = node;
 	}
 
-	public ReferenceConstraint() {
+	public ConstraintImpl() {
 		this(new SNResource());
 	}
 
@@ -107,7 +107,7 @@ public class ReferenceConstraint implements Constraint {
 		boolean isFirstLvlLiteral = (node.getAssociations(RBSchema.HAS_CONSTRAINT_VALUE).size() > 0);
 		if (!isFirstLvlLiteral) {
 			if (holdsReference()) {
-				return new ReferenceConstraint(getReference().asResource()).getLiteralConstraint();
+				return new ConstraintImpl(getReference().asResource()).getLiteralConstraint();
 			}
 			if (!isLiteral()) {
 				return getReference().toURI();
@@ -212,7 +212,7 @@ public class ReferenceConstraint implements Constraint {
 		boolean isFirstLvlLiteral = (node.getAssociations(RBSchema.HAS_CONSTRAINT_VALUE).size() > 0);
 		if (!isFirstLvlLiteral) {
 			if (!holdsReference()) {
-				return new ReferenceConstraint(getReference().asResource()).isLiteral();
+				return new ConstraintImpl(getReference().asResource()).isLiteral();
 			}else{
 				return false;
 			}
@@ -231,4 +231,15 @@ public class ReferenceConstraint implements Constraint {
 		return node;
 	}
 
+	// ------------------------------------------------------
+	
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("Constraint id: " + node.getQualifiedName());
+		sb.append("name: " + getName());
+		sb.append("is public: " + isPublic());
+		sb.append("is Reference: " + holdsReference());
+		return sb.toString();
+	}
 }

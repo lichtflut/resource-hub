@@ -53,7 +53,7 @@ public class OutputElements {
 	/**
 	 * @param constraints
 	 */
-	public void addConstraint(final Collection<Constraint> constraints) {
+	public void addConstraints(final Collection<Constraint> constraints) {
 		for (Constraint constr : constraints) {
 			this.constraints.add(constr);
 			register(constr);
@@ -105,7 +105,7 @@ public class OutputElements {
 	@Override
 	public String toString() {
 		return schemas.size() + " schema(s) and " 
-				+ constraints.size() + " type definition(s) with "
+				+ constraints.size() + " constraint(s) with "
 				+ statements.size() + " additional statement(s)"; 
 	}
 	

@@ -84,7 +84,7 @@ public class ConstraintsEditorPanel extends Panel {
 		form.add(container);
 	}
 
-	private void addConstraintTypeSwitch(IModel<PropertyRow> model, WebMarkupContainer container) {
+	private void addConstraintTypeSwitch(final IModel<PropertyRow> model, WebMarkupContainer container) {
 		AjaxLink<String> switchToLiteralLink = new AjaxLink<String>("switchToLiteral") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
@@ -106,8 +106,6 @@ public class ConstraintsEditorPanel extends Panel {
 
 		switchToResourceLink.add(visibleIf(areEqual(isPublic, false)));
 		switchToResourceLink.add(new Label("switchToResource", new ResourceModel("switch-to-resource")));
-		// switchToLiteralLink.add(visibleIf(not(areEqual(Model.of(Datatype.RESOURCE),
-		// model.getObject().getDataType()))));
 
 		container.add(switchToLiteralLink);
 		container.add(switchToResourceLink);

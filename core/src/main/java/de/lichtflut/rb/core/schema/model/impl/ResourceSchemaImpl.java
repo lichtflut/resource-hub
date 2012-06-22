@@ -96,6 +96,9 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 */
 	@Override
 	public void addPropertyDeclaration(final PropertyDeclaration decl) {
+		if(decl.getPropertyDescriptor() == null){
+			throw new IllegalArgumentException("PropertyDescriptor must not be null " + decl.toString());
+		}
 		if (propertyDescriptors.contains(decl.getPropertyDescriptor())) {
 			throw new IllegalArgumentException("Schema has already declaration for " + decl.getPropertyDescriptor());
 		}

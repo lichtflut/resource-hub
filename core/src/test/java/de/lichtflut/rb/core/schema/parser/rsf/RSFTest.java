@@ -26,24 +26,18 @@ import de.lichtflut.rb.core.schema.parser.impl.rsf.RSFParser;
  */
 public class RSFTest {
 
-	private final String decl = 	"namespace \"http://rb.lichtflut.de/common#\" prefix \"common\"" +
-							"namespace \"http://rb.lichtflut.de/common2#\" prefix \"common2\"" +
-							"" +
-							"schema for \"commonCity\" { " +
-									"label-rule : \"common:hasName <,> common:hasCountry\"" +
-										"property \"common:assignedTo\" [1..n] {" +
-										"field-label[klingonian] : \"Kaaargh\"" +
-										"datatype : \"date\"" +
-										"}" +
-									"}";
-
 	@Test
 	public void readNamespace() throws RecognitionException{
-		String namespaces = "namespace \"http://rb.lichtflut.de/common#\" prefix \"common\"";
-		RSFParser parser = createParser(namespaces );
+		RSFParser parser = createParser(getNamespaces() );
 		parser.namespace_decl();
 	}
 	
+	@Test
+	public void readPublicConstraintDefinition() throws RecognitionException{
+		RSFParser parser = createParser(getPublicConstraintDeclaration());
+		parser.public_constraint();
+	}
+
 	@Test
 	public void  readLabelDecl() throws RecognitionException{
 		String label = "label-rule : \"common:hasName <,> common:hasCountry\"";
@@ -115,7 +109,7 @@ public class RSFTest {
 	}
 	@Test
 	public void readRSF() throws RecognitionException{
-		RSFParser parser = createParser(decl );
+		RSFParser parser = createParser(getRSFString() );
 		parser.statements();
 	}
 	/**
@@ -137,4 +131,35 @@ public class RSFTest {
 
 	}
 
+	// ------------------------------------------------------
+	
+	private String getRSFString(){
+		return 	getNamespaces() +
+				"" +
+				getPublicConstraintDeclaration() + 
+				"schema for \"commonCity\" { " +
+						"label-rule : \"common:hasName <,> common:hasCountry\"" +
+							"property \"common:assignedTo\" [1..n] {" +
+							"field-label[klingonian] : \"Kaaargh\"" +
+							"datatype : \"date\"" +
+							"literal-constraint : \".*@.*\"" +
+							"}" +
+						"}";
+	}
+	
+	private String getNamespaces() {
+		String namespaces = "namespace \"http://rb.lichtflut.de/common#\" prefix \"common\"" +
+				"namespace \"http://rb.lichtflut.de/common2#\" prefix \"common2\"";
+		return namespaces;
+	}
+
+	private String getPublicConstraintDeclaration() {
+		String constraint = "constraint definition for \"common:EmailConstraint\" {" +
+				"name : \"Email-Constraint\"" +
+				"applicable-datatypes : \"string, text\"" +
+				"literal-constraint : \".*@.*\"" +
+			"}}";
+		return constraint;
+	}
+	
 }

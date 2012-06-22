@@ -3,14 +3,11 @@
  */
 package de.lichtflut.rb.core.schema.parser.impl;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
+
 
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
@@ -28,44 +25,8 @@ import de.lichtflut.rb.core.schema.parser.RSParsingResult;
  */
 public class RSParsingResultImpl implements RSParsingResult{
 
-	/**
-	 *
-	 */
-	private Collection<Error> errorMessages = new LinkedList<Error>();
-	/**
-	 *
-	 */
-	private Collection<Constraint> propertiesDeclarations = new LinkedHashSet<Constraint>();
-	/**
-	 *
-	 */
-	private Collection<ResourceSchema> resourceSchemas = new LinkedHashSet<ResourceSchema>();
-	/**
-	 *
-	 */
-	//This is the default error level
-	private RSErrorLevel level = RSErrorLevel.ALL;
-
-	// -----------------------------------------------------
-
-	/**
-	 * Sets property declarations.
-	 * @param propertiesDeclarations -
-	 */
-	public void setPropertyDeclarations(
-			final Collection<Constraint> propertiesDeclarations) {
-		this.propertiesDeclarations = propertiesDeclarations;
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * Adds a proppertydeclaration.
-	 * @param property -
-	 */
-	public void addPropertyDeclaration(final Constraint property) {
-		this.propertiesDeclarations.add(property);
-	}
+	private final List<Constraint> constraints = new ArrayList<Constraint>();
+	private final List<ResourceSchema> schemas = new ArrayList<ResourceSchema>();
 
 	// -----------------------------------------------------
 
@@ -74,242 +35,61 @@ public class RSParsingResultImpl implements RSParsingResult{
 	 * @param schema -
 	 */
 	public void addResourceSchema(final ResourceSchema schema) {
-		this.resourceSchemas.add(schema);
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * Sets the Errorlevel.
-	 * @param lvl - Errorlevel
-	 */
-	public void setErrorLevel(final RSErrorLevel lvl){
-		this.level = lvl;
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * Logs this message with the pre-defined ErrorLevel.
-	 * @param errorMessages -
-	 */
-	public void setErrorMessages(final Collection<String> errorMessages) {
-		this.setErrorMessages(errorMessages, this.level);
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * Logs this message with the explicit given ErrorLevel.
-	 * @param message -
-	 * @param lvl - Errorlevel
-	 */
-	public void addErrorMessage(final String message, final RSErrorLevel lvl){
-		this.errorMessages.add(new Error(lvl, message));
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * Logs this messages with the explicit given ErrorLevel.
-	 * @param errorMessages -
-	 * @param lvl - Errorlevel
-	 */
-	public void setErrorMessages(final Collection<String> errorMessages, final RSErrorLevel lvl) {
-		this.errorMessages = new LinkedList<Error>();
-		for (String message : errorMessages) {
-			this.errorMessages.add(new Error(lvl,message));
+		if(!schemas.contains(schema)){
+			this.schemas.add(schema);
 		}
 	}
 
-	// -----------------------------------------------------
 	/**
-	 * Logs this message with the pre-defined ErrorLevel.
-	 * @param message -
+	 * {@inheritDoc}
 	 */
-	public void addErrorMessage(final String message){
-		this.addErrorMessage(message, this.level);
+	@Override
+	public List<ResourceSchema> getResourceSchemas() {
+		return schemas;
 	}
-
+	
 	// -----------------------------------------------------
 
 	/**
-	 * Set Resourceschemas.
-	 * @param resourceSchemas -
+	 * Adds a public-constraint.
+	 * @param schema -
 	 */
-	public void setResourceSchemas(final Collection<ResourceSchema> resourceSchemas) {
-		this.resourceSchemas = resourceSchemas;
+	public void addConstraint(final Constraint constraint) {
+		if(!constraints.contains(constraint)){
+			this.constraints.add(constraint);
+		}
 	}
-
-	// -----------------------------------------------------
-
+	
 	/**
-	 * Returns all Propertydeclarations.
+	 * Returns all {@link Constraint}s.
 	 * @return Propertydeclarationsgit check
 	 */
-	public Collection<Constraint> getPublicConstraints() {
-		//return an empty collection if an error is occured
-		if(isErrorOccured()){
-			return Collections.emptySet();
-		}
-		return getPropertyDeclarationsIgnoreErrors();
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public Collection<Constraint> getPropertyDeclarationsIgnoreErrors() {
-		return this.propertiesDeclarations;
+	public List<Constraint> getPublicConstraints() {
+		return constraints;
 	}
+
+
 
 	// -----------------------------------------------------
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<Constraint> getPropertyDeclarationsWithoutResourceAssocIgnoreErrors(){
-		Collection<Constraint> output = new HashSet<Constraint>();
-		//Get all propertyDecs assigned to the ResourceSchema
-		for (ResourceSchema rSchema : this.resourceSchemas) {
-			for (PropertyDeclaration assertion : rSchema.getPropertyDeclarations()) {
-				output.add(assertion.getConstraint());
-			}
-		}//End of outer for
-
-		for (Constraint pDec : this.propertiesDeclarations) {
-			if(output.contains(pDec)) {output.remove(pDec);}
-		}
-		return output;
-	}
-
-	// -----------------------------------------------------
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Collection<Constraint> getPropertyDeclarationsWithoutResourceAssoc() {
-		//return an empty collection if an error is occured
-		if(isErrorOccured()){ return Collections.emptySet();}
-		return getPropertyDeclarationsWithoutResourceAssocIgnoreErrors();
-	}
-
-	// -----------------------------------------------------
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Collection<ResourceSchema> getResourceSchemasIgnoreErrors() {
-		return this.resourceSchemas;
-	}
-
-	// -----------------------------------------------------
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Collection<ResourceSchema> getResourceSchemas() {
-		//return an empty collection if an error is occured
-		if(isErrorOccured()) {return Collections.emptySet();}
-		return getResourceSchemasIgnoreErrors();
-	}
-
-	// -----------------------------------------------------
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
+	// TODO: Introduce error-functionality
 	public boolean isErrorOccured() {
-		if(this.errorMessages.size()!=0) {return true;}
 		return false;
 	}
 
-	// -----------------------------------------------------
-
-	/**
-	 * duplicated properties has to be eliminated while merging. Therefore, both Collections are LinkedHashSets
-	 * and PropertyDeclaration and ResourceSchema have to override the equals-method.
-	 * @param result -
-	 */
-	public void merge(final RSParsingResult result) {
-
-		if(!result.getErrorMessages().equals("")) {this.errorMessages.addAll(((RSParsingResultImpl) result).errorMessages);}
-		this.getPropertyDeclarationsIgnoreErrors().addAll(result.getPropertyDeclarationsIgnoreErrors());
-		this.getResourceSchemasIgnoreErrors().addAll(result.getResourceSchemasIgnoreErrors());
-	}
-
-	// -----------------------------------------------------
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getErrorMessagesAsString() {
-		return getErrorMessagesAsString(this.level);
-	}
-
-	// -----------------------------------------------------
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Collection<String> getErrorMessages(){
-		return getErrorMessages(this.level);
-	}
-
-	// -----------------------------------------------------
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Collection<String> getErrorMessages(final RSErrorLevel filter) {
-		Collection<String> output = new LinkedList<String>();
-		for (Error error : this.errorMessages) {
-			//Check for filter
-			if(filter.contains(error.getErrorLevel())){
-				output.add(error.message);
-			}
-		}
-		return output;
-	}
-
-	// -----------------------------------------------------
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getErrorMessagesAsString(final RSErrorLevel filter) {
-		return this.getErrorMessagesAsString("\n", filter);
-	}
-
-	// -----------------------------------------------------
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getErrorMessagesAsString(final String delim, final RSErrorLevel filter) {
-		Collection<String> messages = getErrorMessages(filter);
-		StringBuilder sBuilder = new StringBuilder();
-		for (String error : messages) {
-			sBuilder.append(error).append(delim);
-		}
-		return sBuilder.toString();
-	}
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getErrorMessagesAsString(final String delim) {
-		return this.getErrorMessagesAsString(delim, this.level);
-	}
-
+	// ------------------------------------------------------
+	
 	/**
 	 * Awesome tuple class, acts as tuple and is just needed here.
 	 */
+	// TODO: Introduce error-functionality
 	class Error {
-		  private RSErrorLevel lvl;
-		  private String message;
+		  private final RSErrorLevel lvl;
+		  private final String message;
 		  /**
 		   * Constructor.
 		   * @param lvl -

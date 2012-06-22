@@ -34,7 +34,7 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
 import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
 import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
@@ -106,7 +106,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 		final ModelingConversation mc = mc();
 		final ResourceNode node = mc.findResource(id.getQualifiedName());
 		if (node != null) {
-			return new ReferenceConstraint(node);
+			return new ConstraintImpl(node);
 		} else {
 			return null;
 		}
@@ -134,7 +134,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 		final List<Constraint> result = new ArrayList<Constraint>();
 		final List<ResourceNode> nodes = gate().createQueryManager().findByType(RBSchema.PUBLIC_CONSTRAINT);
 		for (ResourceNode node : nodes) {
-			final Constraint constraint = new ReferenceConstraint(node);
+			final Constraint constraint = new ConstraintImpl(node);
 			if (constraint.isPublic()) {
 				result.add(constraint);
 			}
@@ -211,7 +211,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 */
 	@Override
 	public Constraint prepareConstraint(final QualifiedName qn, final String displayName) {
-		final ReferenceConstraint constraint = new ReferenceConstraint(new SNResource(qn));
+		final ConstraintImpl constraint = new ConstraintImpl(new SNResource(qn));
 		constraint.setApplicableDatatypes(Collections.singletonList(Datatype.STRING));
 		constraint.setName(displayName);
 		constraint.isPublic(true);
@@ -319,7 +319,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 			final ModelingConversation mc = mc();
 			final ResourceNode node = mc.findResource(constraint.asResourceNode().getQualifiedName());
 			if (node != null) {
-				return new ReferenceConstraint(node);
+				return new ConstraintImpl(node);
 			} else {
 				return null;
 			}

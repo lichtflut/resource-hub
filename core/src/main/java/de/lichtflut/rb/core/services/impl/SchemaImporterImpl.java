@@ -11,6 +11,7 @@ import org.arastreju.sge.model.Statement;
 
 import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
@@ -63,7 +64,7 @@ public class SchemaImporterImpl implements SchemaImporter {
 			manager.store(constr);
 		}
 		for(ResourceSchema schema : elements.getSchemas()) {
-			resolveTypeDefReferences(schema);
+			resolvePublicConstraints(schema);
 			manager.store(schema);
 		}
 		final ModelingConversation mc = provider.getConversation();
@@ -71,7 +72,7 @@ public class SchemaImporterImpl implements SchemaImporter {
 			mc.addStatement(stmt);
 		}
 		
-		report.add("TypeDefinitions", elements.getConstraints().size());
+		report.add("Constraints", elements.getConstraints().size());
 		report.add("Schemas", elements.getSchemas().size());
 		report.add("Statements", elements.getStatements().size());
 		report.success();
@@ -81,26 +82,29 @@ public class SchemaImporterImpl implements SchemaImporter {
 	
 	// -----------------------------------------------------
 
-	private void resolveTypeDefReferences(final ResourceSchema schema) {
-//		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
-//			final TypeDefinition typeDef = decl.getTypeDefinition();
-//			if (typeDef instanceof TypeDefinitionReference) {
-//				final TypeDefinitionReference ref = (TypeDefinitionReference) typeDef;
-//				if (!resolveTypeDefReference(ref)) {
-//					throw new IllegalStateException("Could not resolve type def " + ref);
-//				}
-//			}
-//		}
+	/**
+	 * Checks whether a Public Constraint is existent or not.
+	 * If it is not, a {@link IllegalStateException} will be thrown.
+	 * @param schema
+	 */
+	private void resolvePublicConstraints(final ResourceSchema schema) {
+		for(PropertyDeclaration decl : schema.getPropertyDeclarations()){
+			if(decl.hasConstraint() && decl.getConstraint().isPublic()){
+				ensureExistenceOf(decl.getConstraint());
+			}
+		}
 	}
 	
-	private boolean resolveTypeDefReference(Constraint ref) {
-		final Constraint existing = manager.findConstraint(ref.asResourceNode());
-		if (existing != null) {
-			ref = existing;
-			return true;
-		} else {
-			return false;
+	/**
+	 * Ensures the existence of a {@link Constraint}.
+	 * @param constraint
+	 */
+	private void ensureExistenceOf(Constraint constraint) {
+		final Constraint existing = manager.findConstraint(constraint.asResourceNode());
+		if (existing == null){
+			throw new IllegalStateException("Could not resolve constraint " + constraint.getName());
 		}
+		
 	}
 
 }

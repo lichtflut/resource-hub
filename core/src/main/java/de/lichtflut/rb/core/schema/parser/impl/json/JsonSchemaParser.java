@@ -38,7 +38,7 @@ import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.schema.parser.IOConstants;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
@@ -157,13 +157,13 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 					datatypes.addAll(extractDatatypes(p));
 			} else if (RESOURCE_CONSTRAINT.equals(field)) {
 				referenceHolder = getConstraintFromString(p, field);
-				ReferenceConstraint refConstr = new ReferenceConstraint(new SNResource(id.getQualifiedName()));
+				ConstraintImpl refConstr = new ConstraintImpl(new SNResource(id.getQualifiedName()));
 				refConstr.setName(name);
 				refConstr.setReference(referenceHolder.getReference());
 				result.add(refConstr);
 			} else if (LITERAL_CONSTRAINT.equals(field)) {
 				referenceHolder = getConstraintFromString(p, field);
-				ReferenceConstraint refConstr = new ReferenceConstraint(new SNResource(id.getQualifiedName()));
+				ConstraintImpl refConstr = new ConstraintImpl(new SNResource(id.getQualifiedName()));
 				refConstr.setApplicableDatatypes(datatypes);
 				refConstr.setName(name);
 				refConstr.isPublic(true);
@@ -213,13 +213,13 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 			} else if (DATATYPE.equals(field)) {
 				decl.setDatatype(Datatype.valueOf(p.getText().toUpperCase()));
 			} else if (RESOURCE_CONSTRAINT.equals(field)) {
-				ReferenceConstraint ref = new ReferenceConstraint();
+				ConstraintImpl ref = new ConstraintImpl();
 				ref.buildReferenceConstraint(getConstraintFromString(p, field).getReference(), false);
 				decl.setConstraint(ref);
 			} else if (LITERAL_CONSTRAINT.equals(field)) {
 				decl.setConstraint(getConstraintFromString(p, field));
 			} else if (CONSTRAINT_REFERENCE.equals(field)) {
-				ReferenceConstraint ref = new ReferenceConstraint();
+				ConstraintImpl ref = new ConstraintImpl();
 				ref.buildReferenceConstraint(getConstraintFromString(p, field).getReference(), true);
 				decl.setConstraint(ref);
 			} else if (FIELD_LABEL.equals(field)) {
@@ -249,15 +249,15 @@ public class JsonSchemaParser implements ResourceSchemaParser, IOConstants {
 	private Constraint getConstraintFromString(final JsonParser p, final String field) throws IOException, JsonParseException {
 		Constraint c = null;
 		if (LITERAL_CONSTRAINT.equals(field)) {
-			ReferenceConstraint constraint = new ReferenceConstraint();
+			ConstraintImpl constraint = new ConstraintImpl();
 			constraint.buildLiteralConstraint(p.getText());
 			c = constraint;
 		} else if (RESOURCE_CONSTRAINT.equals(field)){
-			ReferenceConstraint ref = new ReferenceConstraint(new SNResource());
+			ConstraintImpl ref = new ConstraintImpl(new SNResource());
 			ref.buildReferenceConstraint(toResourceID(p.getText()), false);
 			c = ref;
 		}else if (CONSTRAINT_REFERENCE.equals(field)){
-			ReferenceConstraint ref = new ReferenceConstraint(new SNResource());
+			ConstraintImpl ref = new ConstraintImpl(new SNResource());
 			ref.buildReferenceConstraint(toResourceID(p.getText()), true);
 			c = ref;
 		}

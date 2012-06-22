@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
 			<artifactId>lf.resource-browser.webck</artifactId>
-			<version>0.4-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>

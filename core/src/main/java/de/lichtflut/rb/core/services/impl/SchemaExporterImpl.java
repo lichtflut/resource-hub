@@ -48,7 +48,7 @@ public class SchemaExporterImpl implements SchemaExporter {
 		IOReport report = new IOReport();
 		
 		final OutputElements elements = new OutputElements();
-		elements.addConstraint(manager.findPublicConstraints());
+		elements.addConstraints(manager.findPublicConstraints());
 		elements.addSchemas(manager.findAllResourceSchemas());
 		
 		try {

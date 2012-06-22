@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
-import de.lichtflut.rb.core.schema.parser.RSErrorLevel;
 /**
  * Reference-Implementation of {@link RSErrorReporter}.
  *
@@ -19,7 +18,7 @@ public class RSParsingResultErrorReporter implements RSErrorReporter{
 
 	private final Logger logger = LoggerFactory.getLogger(RSParsingResultErrorReporter.class);
 	
-	private RSParsingResultImpl result;
+	private final RSParsingResultImpl result;
 
 	// -----------------------------------------------------
 
@@ -37,15 +36,18 @@ public class RSParsingResultErrorReporter implements RSErrorReporter{
 	 * Adds Error to Result.
 	 * @param error that has occured
 	 */
+	@Override
 	public void reportError(final String error) {
 		logger.info("ErrorReporter has added the following error: " + error);
-		result.addErrorMessage(error, RSErrorLevel.GRAMMAR);
+//		TODO: introduce error-functionality
+//		result.addErrorMessage(error, RSErrorLevel.GRAMMAR);
 	}
 
 	/**
 	 * Returns if an error is occured.
 	 * @return true if error is occured, false if not
 	 */
+	@Override
 	public boolean hasErrorReported() {
 		return result.isErrorOccured();
 	}

@@ -1,0 +1,1058 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:aras="http://arastreju.org/kernel#"
+	xmlns:ns1="http://arasteju.org/uuid#"
+	xmlns:ns2="http://www.w3.org/2000/01/"
+	xmlns:ns3="http://rb.lichtflut.de/common#"
+	xmlns:ns4="http://www.w3.org/2002/07/owl#"
+	xmlns:ns5="http://rb.lichtflut.de/system#"
+	xmlns:ns6="http://purl.org/dc/elements/1.1/"
+	xmlns:ns7="http://l2r.info/geonames#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#45ef3f34-5358-4f89-bec8-ab4eb30adfc7">
+	<ns3:hasAddress rdf:resource="http://arasteju.org/uuid#82baea10-1c74-4346-8eb3-e1db88a5fba1"/>
+	<ns3:hasContactData rdf:resource="http://arasteju.org/uuid#c8f64a5d-4d78-4a59-a917-ced56af307dd"/>
+	<ns3:hasDateOfBirth rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1986-11-12</ns3:hasDateOfBirth>
+	<ns3:hasEmail>rknox@lichtflut.de</ns3:hasEmail>
+	<ns3:hasFirstname>Ravi</ns3:hasFirstname>
+	<ns3:hasLastname>Knox</ns3:hasLastname>
+	<ns3:hasPlaceOfBirth rdf:resource="http://arasteju.org/uuid#c817d4d8-bc1b-4d57-9604-fa66357be44a"/>
+	<ns3:isEmployedBy rdf:resource="http://arasteju.org/uuid#4c95d586-3718-4138-9511-2032cc8cd1aa"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Person"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ravi Knox</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#4c95d586-3718-4138-9511-2032cc8cd1aa">
+	<ns3:hasAddress rdf:resource="http://arasteju.org/uuid#711ea380-f6c5-4d16-9325-0d11ccef0d91"/>
+	<ns3:hasDescription>Wir betreiben Grundlagenforschung im Bereich der semantischen Informationsverarbeitung, helfen unseren Kunden bei der Erstellung von Meta-Modellen ihrer Unternehmen und entwickeln Produkte für ontologiebasierte Informationsverwaltung.</ns3:hasDescription>
+	<ns3:hasDomicile rdf:resource="http://l2r.info/geonames#BergischGladbach_2950349"/>
+	<ns3:hasEmployee rdf:resource="http://arasteju.org/uuid#45ef3f34-5358-4f89-bec8-ab4eb30adfc7"/>
+	<ns3:hasEmployee rdf:resource="http://arasteju.org/uuid#522e68ea-872b-4a6a-bee5-a2dc138ea22b"/>
+	<ns3:hasEmployee rdf:resource="http://arasteju.org/uuid#53298afa-f16d-4b7c-8d26-2145d96a2995"/>
+	<ns3:hasEmployee rdf:resource="http://arasteju.org/uuid#679a0b53-96d8-46be-befe-79126fdb4d44"/>
+	<ns3:hasEmployee rdf:resource="http://arasteju.org/uuid#6bf28b29-673c-49f5-8434-0d104f8173a7"/>
+	<ns3:hasEmployee rdf:resource="http://arasteju.org/uuid#ebf25b48-37f3-4bb8-80a0-0917102ae614"/>
+	<ns3:hasGeneralManager rdf:resource="http://arasteju.org/uuid#679a0b53-96d8-46be-befe-79126fdb4d44"/>
+	<ns3:hasGeneralManager rdf:resource="http://arasteju.org/uuid#ebf25b48-37f3-4bb8-80a0-0917102ae614"/>
+	<ns3:hasName>lichtflut Forschungs- und Entwicklungsges. mbH</ns3:hasName>
+	<ns3:isNPO>false</ns3:isNPO>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Organization"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>lichtflut Forschungs- und Entwicklungsges. mbH</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#522e68ea-872b-4a6a-bee5-a2dc138ea22b">
+	<ns3:hasDateOfBirth rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1980-05-21</ns3:hasDateOfBirth>
+	<ns3:hasEmail>eaderhold@lichtflut.de</ns3:hasEmail>
+	<ns3:hasFirstname>Erik</ns3:hasFirstname>
+	<ns3:hasLastname>Aderhold</ns3:hasLastname>
+	<ns3:isEmployedBy rdf:resource="http://arasteju.org/uuid#4c95d586-3718-4138-9511-2032cc8cd1aa"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Person"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Erik Aderhold</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#53298afa-f16d-4b7c-8d26-2145d96a2995">
+	<ns3:hasEmail>nbleisch@lichtflut.de</ns3:hasEmail>
+	<ns3:hasFirstname>Nils</ns3:hasFirstname>
+	<ns3:hasLastname>Bleisch</ns3:hasLastname>
+	<ns3:isEmployedBy rdf:resource="http://arasteju.org/uuid#4c95d586-3718-4138-9511-2032cc8cd1aa"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Person"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Nils Bleisch</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#679a0b53-96d8-46be-befe-79126fdb4d44">
+	<ns3:hasAddress rdf:resource="http://arasteju.org/uuid#a5f28710-dc26-4f43-a24e-fc2dbdc35b6d"/>
+	<ns3:hasDateOfBirth rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1980-03-04</ns3:hasDateOfBirth>
+	<ns3:hasEmail>avaesch@lichtflut.de</ns3:hasEmail>
+	<ns3:hasFirstname>Alexander</ns3:hasFirstname>
+	<ns3:hasLastname>von Aesch</ns3:hasLastname>
+	<ns3:hasPlaceOfBirth rdf:resource="http://l2r.info/geonames#Koeln_2886242"/>
+	<ns3:isEmployedBy rdf:resource="http://arasteju.org/uuid#4c95d586-3718-4138-9511-2032cc8cd1aa"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Person"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Alexander von Aesch</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#6bf28b29-673c-49f5-8434-0d104f8173a7">
+	<ns3:hasEmail>resterle@lichtflut.de</ns3:hasEmail>
+	<ns3:hasFirstname>Raphael</ns3:hasFirstname>
+	<ns3:hasLastname>Esterle</ns3:hasLastname>
+	<ns3:isEmployedBy rdf:resource="http://arasteju.org/uuid#4c95d586-3718-4138-9511-2032cc8cd1aa"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Person"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Raphael Esterle</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#70dc7dda-ac61-40ab-a063-b03540c35819">
+	<ns3:hasHouseNo>12</ns3:hasHouseNo>
+	<ns3:hasStreet>Erikastr.</ns3:hasStreet>
+	<ns3:hasZipcode>51427</ns3:hasZipcode>
+	<ns3:isInCity rdf:resource="http://l2r.info/geonames#BergischGladbach_2950349"/>
+	<ns3:isLocatedHere rdf:resource="http://arasteju.org/uuid#ebf25b48-37f3-4bb8-80a0-0917102ae614"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Address"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Erikastr. 12 , Bergisch Gladbach</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#711ea380-f6c5-4d16-9325-0d11ccef0d91">
+	<ns3:hasHouseNo>85</ns3:hasHouseNo>
+	<ns3:hasStreet>Lustheide</ns3:hasStreet>
+	<ns3:hasZipcode>51427</ns3:hasZipcode>
+	<ns3:isInCity rdf:resource="http://l2r.info/geonames#BergischGladbach_2950349"/>
+	<ns3:isLocatedHere rdf:resource="http://arasteju.org/uuid#4c95d586-3718-4138-9511-2032cc8cd1aa"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Address"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Lustheide 85 , Bergisch Gladbach</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#82baea10-1c74-4346-8eb3-e1db88a5fba1">
+	<ns3:hasHouseNo>13</ns3:hasHouseNo>
+	<ns3:hasStreet>Untersteinbach</ns3:hasStreet>
+	<ns3:hasZipcode>51429</ns3:hasZipcode>
+	<ns3:isInCity rdf:resource="http://l2r.info/geonames#BergischGladbach_2950349"/>
+	<ns3:isLocatedHere rdf:resource="http://arasteju.org/uuid#45ef3f34-5358-4f89-bec8-ab4eb30adfc7"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Address"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Untersteinbach 13 , Bergisch Gladbach</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#a5f28710-dc26-4f43-a24e-fc2dbdc35b6d">
+	<ns3:hasHouseNo>4</ns3:hasHouseNo>
+	<ns3:hasStreet>Gemarkenstr.</ns3:hasStreet>
+	<ns3:hasZipcode>51069</ns3:hasZipcode>
+	<ns3:isInCity rdf:resource="http://l2r.info/geonames#Koeln_2886242"/>
+	<ns3:isLocatedHere rdf:resource="http://arasteju.org/uuid#679a0b53-96d8-46be-befe-79126fdb4d44"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Address"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Gemarkenstr. 4 , Cologne</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#c817d4d8-bc1b-4d57-9604-fa66357be44a">
+	<ns3:hasName>Offenbach</ns3:hasName>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Offenbach ( Federal Republic of Germany )</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#c8f64a5d-4d78-4a59-a917-ced56af307dd">
+	<ns3:hasCategory rdf:resource="http://rb.lichtflut.de/common#MobilePhoneNumber"/>
+	<ns3:hasValue>017628249</ns3:hasValue>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#ContactData"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>017628249 ( mobile )</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://arasteju.org/uuid#ebf25b48-37f3-4bb8-80a0-0917102ae614">
+	<ns3:hasAddress rdf:resource="http://arasteju.org/uuid#70dc7dda-ac61-40ab-a063-b03540c35819"/>
+	<ns3:hasDateOfBirth rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1978-11-06</ns3:hasDateOfBirth>
+	<ns3:hasEmail>Oliver.Tigges@lichtflut.de</ns3:hasEmail>
+	<ns3:hasFirstname>Oliver</ns3:hasFirstname>
+	<ns3:hasLastname>Tigges</ns3:hasLastname>
+	<ns3:hasPlaceOfBirth rdf:resource="http://l2r.info/geonames#BergischGladbach_2950349"/>
+	<ns3:isEmployedBy rdf:resource="http://arasteju.org/uuid#4c95d586-3718-4138-9511-2032cc8cd1aa"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Person"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Oliver Tigges</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#ACoruna_3119841">
+	<ns3:hasName>A Coruña</ns3:hasName>
+	<ns3:hasPopulationSize>246056</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Spain_2510769"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>A Coruña</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aach_2959944">
+	<ns3:hasName>Aach</ns3:hasName>
+	<ns3:hasPopulationSize>1151</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aach</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aach_2959946">
+	<ns3:hasName>Aach</ns3:hasName>
+	<ns3:hasPopulationSize>2248</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aach</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aachen_3247449">
+	<ns3:hasName>Aachen</ns3:hasName>
+	<ns3:hasPopulationSize>265208</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aachen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aalen_2959927">
+	<ns3:hasName>Aalen</ns3:hasName>
+	<ns3:hasPopulationSize>67085</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aalen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aba_2353151">
+	<ns3:hasName>Aba</ns3:hasName>
+	<ns3:hasPopulationSize>897560</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Nigeria_2328926"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aba</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Abadan_145459">
+	<ns3:hasName>Ābādān</ns3:hasName>
+	<ns3:hasPopulationSize>370180</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Iran_130758"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label xml:lang="en">Abadan</rdfs:label>
+	<rdfs:label>Ābādān</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Abenberg_2959855">
+	<ns3:hasName>Abenberg</ns3:hasName>
+	<ns3:hasPopulationSize>5484</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Abenberg</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Abensberg_2959842">
+	<ns3:hasName>Abensberg</ns3:hasName>
+	<ns3:hasPopulationSize>12570</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Abensberg</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Abeokuta_2352947">
+	<ns3:hasName>Abeokuta</ns3:hasName>
+	<ns3:hasPopulationSize>593100</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Nigeria_2328926"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Abeokuta</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Abha_110690">
+	<ns3:hasName>Abhā</ns3:hasName>
+	<ns3:hasPopulationSize>210886</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#SaudiArabia_102358"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label xml:lang="en">Abha</rdfs:label>
+	<rdfs:label>Abhā</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Abidjan_2293538">
+	<ns3:hasName>Abidjan</ns3:hasName>
+	<ns3:hasPopulationSize>3677115</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#IvoryCoast_2287781"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Abidjan</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Abobo_2293521">
+	<ns3:hasName>Abobo</ns3:hasName>
+	<ns3:hasPopulationSize>900000</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#IvoryCoast_2287781"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Abobo</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Abomey-Calavi_2395914">
+	<ns3:hasName>Abomey-Calavi</ns3:hasName>
+	<ns3:hasPopulationSize>385755</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Benin_2395170"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Abomey-Calavi</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Absberg_2959803">
+	<ns3:hasName>Absberg</ns3:hasName>
+	<ns3:hasPopulationSize>1336</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Absberg</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Abstatt_2959793">
+	<ns3:hasName>Abstatt</ns3:hasName>
+	<ns3:hasPopulationSize>4456</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Abstatt</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Abtsdorf_2959771">
+	<ns3:hasName>Abtsdorf</ns3:hasName>
+	<ns3:hasPopulationSize>1457</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Abtsdorf</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Abtsgmund_2959766">
+	<ns3:hasName>Abtsgmünd</ns3:hasName>
+	<ns3:hasPopulationSize>7381</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label xml:lang="en">Abtsgmuend</rdfs:label>
+	<rdfs:label>Abtsgmünd</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#AbuDhabi_292968">
+	<ns3:hasName>Abu Dhabi</ns3:hasName>
+	<ns3:hasPopulationSize>603492</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#UnitedArabEmirates_290557"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Abu Dhabi</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#AbuGhurayb_100077">
+	<ns3:hasName>Abū Ghurayb</ns3:hasName>
+	<ns3:hasPopulationSize>900000</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Iraq_99237"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label xml:lang="en">Abu Ghraib</rdfs:label>
+	<rdfs:label xml:lang="de">Abu Ghuraib</rdfs:label>
+	<rdfs:label>Abū Ghurayb</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Abuja_2352778">
+	<ns3:hasName>Abuja</ns3:hasName>
+	<ns3:hasPopulationSize>590400</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Nigeria_2328926"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Abuja</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#AcapulcoDeJuarez_3533462">
+	<ns3:hasName>Acapulco de Juárez</ns3:hasName>
+	<ns3:hasPopulationSize>652136</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Mexico_3996063"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label xml:lang="en">Acapulco</rdfs:label>
+	<rdfs:label>Acapulco de Juárez</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Accra_2306104">
+	<ns3:hasName>Accra</ns3:hasName>
+	<ns3:hasPopulationSize>1963264</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Ghana_2300660"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Accra</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Achern_2959686">
+	<ns3:hasName>Achern</ns3:hasName>
+	<ns3:hasPopulationSize>24478</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Achern</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Achiaman_2306079">
+	<ns3:hasName>Achiaman</ns3:hasName>
+	<ns3:hasPopulationSize>202932</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Ghana_2300660"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Achiaman</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Achim_2959681">
+	<ns3:hasName>Achim</ns3:hasName>
+	<ns3:hasPopulationSize>30013</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Achim</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Achslach_2959660">
+	<ns3:hasName>Achslach</ns3:hasName>
+	<ns3:hasPopulationSize>1089</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Achslach</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Achstetten_2959659">
+	<ns3:hasName>Achstetten</ns3:hasName>
+	<ns3:hasPopulationSize>3978</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Achstetten</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Achtrup_2959621">
+	<ns3:hasName>Achtrup</ns3:hasName>
+	<ns3:hasPopulationSize>1557</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Achtrup</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#AdDammam_110336">
+	<ns3:hasName>Ad Dammām</ns3:hasName>
+	<ns3:hasPopulationSize>768602</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#SaudiArabia_102358"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ad Dammām</rdfs:label>
+	<rdfs:label xml:lang="en">Dammam</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#AdDiwaniyah_99762">
+	<ns3:hasName>Ad Dīwānīyah</ns3:hasName>
+	<ns3:hasPopulationSize>318801</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Iraq_99237"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ad Dīwānīyah</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adana_325363">
+	<ns3:hasName>Adana</ns3:hasName>
+	<ns3:hasPopulationSize>1248988</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Turkey_298795"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adana</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adapazari_752850">
+	<ns3:hasName>Adapazarı</ns3:hasName>
+	<ns3:hasPopulationSize>286787</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Turkey_298795"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adapazarı</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#AddisAbaba_344979">
+	<ns3:hasName>Addis Ababa</ns3:hasName>
+	<ns3:hasPopulationSize>2757729</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Ethiopia_337996"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Addis Ababa</rdfs:label>
+	<rdfs:label xml:lang="de">Addis Abeba</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adelaide_2078025">
+	<ns3:hasName>Adelaide</ns3:hasName>
+	<ns3:hasPopulationSize>1074159</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Australia_2077456"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adelaide</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adelberg_2959553">
+	<ns3:hasName>Adelberg</ns3:hasName>
+	<ns3:hasPopulationSize>2065</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adelberg</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adelebsen_2959548">
+	<ns3:hasName>Adelebsen</ns3:hasName>
+	<ns3:hasPopulationSize>6968</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adelebsen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adelheidsdorf_2959538">
+	<ns3:hasName>Adelheidsdorf</ns3:hasName>
+	<ns3:hasPopulationSize>2489</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adelheidsdorf</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adelmannsfelden_2959530">
+	<ns3:hasName>Adelmannsfelden</ns3:hasName>
+	<ns3:hasPopulationSize>1871</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adelmannsfelden</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adelsdorf_2959514">
+	<ns3:hasName>Adelsdorf</ns3:hasName>
+	<ns3:hasPopulationSize>7245</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adelsdorf</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adelsheim_2959508">
+	<ns3:hasName>Adelsheim</ns3:hasName>
+	<ns3:hasPopulationSize>5536</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adelsheim</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adelshofen_2959504">
+	<ns3:hasName>Adelshofen</ns3:hasName>
+	<ns3:hasPopulationSize>1568</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adelshofen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adelsried_2959498">
+	<ns3:hasName>Adelsried</ns3:hasName>
+	<ns3:hasPopulationSize>2240</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adelsried</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adelzhausen_2959492">
+	<ns3:hasName>Adelzhausen</ns3:hasName>
+	<ns3:hasPopulationSize>1498</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adelzhausen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aden_415189">
+	<ns3:hasName>Aden</ns3:hasName>
+	<ns3:hasPopulationSize>550602</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Yemen_69543"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aden</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adenau_2959489">
+	<ns3:hasName>Adenau</ns3:hasName>
+	<ns3:hasPopulationSize>2995</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adenau</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adenbuttel_2959482">
+	<ns3:hasName>Adenbüttel</ns3:hasName>
+	<ns3:hasPopulationSize>1754</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adenbüttel</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adendorf_2959479">
+	<ns3:hasName>Adendorf</ns3:hasName>
+	<ns3:hasPopulationSize>9865</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adendorf</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adenstedt_2959475">
+	<ns3:hasName>Adenstedt</ns3:hasName>
+	<ns3:hasPopulationSize>1098</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adenstedt</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adiyaman_325330">
+	<ns3:hasName>Adıyaman</ns3:hasName>
+	<ns3:hasPopulationSize>223744</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Turkey_298795"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adıyaman</rdfs:label>
+	<rdfs:label xml:lang="en">Adıyaman Province</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adlkofen_2959422">
+	<ns3:hasName>Adlkofen</ns3:hasName>
+	<ns3:hasPopulationSize>3934</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adlkofen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Admannshagen-Bargeshagen_3209174">
+	<ns3:hasName>Admannshagen-Bargeshagen</ns3:hasName>
+	<ns3:hasPopulationSize>2855</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Admannshagen-Bargeshagen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Adorf_2959390">
+	<ns3:hasName>Adorf</ns3:hasName>
+	<ns3:hasPopulationSize>5806</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Adorf</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aerzen_2959374">
+	<ns3:hasName>Aerzen</ns3:hasName>
+	<ns3:hasPopulationSize>11801</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aerzen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Affalterbach_2959368">
+	<ns3:hasName>Affalterbach</ns3:hasName>
+	<ns3:hasPopulationSize>4623</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Affalterbach</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Affing_2959343">
+	<ns3:hasName>Affing</ns3:hasName>
+	<ns3:hasPopulationSize>5171</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Affing</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Afghanistan_1149361">
+	<ns3:hasIsoAplpha2Code>AF</ns3:hasIsoAplpha2Code>
+	<ns3:hasIsoAplpha3Code>AFG</ns3:hasIsoAplpha3Code>
+	<ns3:hasName>Afghanistan</ns3:hasName>
+	<ns3:hasPopulationSize>32738000</ns3:hasPopulationSize>
+	<ns3:isInContinent rdf:resource="http://l2r.info/geonames#Asia"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Country"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Afghanistan</rdfs:label>
+	<rdfs:label xml:lang="en">Islamic Republic of Afghanistan</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Africa">
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#Continent"/>
+	<rdfs:label>Africa</rdfs:label>
+	<rdfs:label xml:lang="de">Afrika</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Agadir_2561668">
+	<ns3:hasName>Agadir</ns3:hasName>
+	<ns3:hasPopulationSize>698310</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Morocco_2542007"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Agadir</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Agartala_1279290">
+	<ns3:hasName>Agartala</ns3:hasName>
+	<ns3:hasPopulationSize>203264</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#India_1269750"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Agartala</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Agathenburg_2959318">
+	<ns3:hasName>Agathenburg</ns3:hasName>
+	<ns3:hasPopulationSize>1120</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Agathenburg</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ageo_1865714">
+	<ns3:hasName>Ageo</ns3:hasName>
+	<ns3:hasPopulationSize>219401</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Japan_1861060"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ageo</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aglasterhausen_2959296">
+	<ns3:hasName>Aglasterhausen</ns3:hasName>
+	<ns3:hasPopulationSize>4983</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aglasterhausen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Agra_1279259">
+	<ns3:hasName>Āgra</ns3:hasName>
+	<ns3:hasPopulationSize>1430055</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#India_1269750"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label xml:lang="en">Agra</rdfs:label>
+	<rdfs:label>Āgra</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aguascalientes_4019233">
+	<ns3:hasName>Aguascalientes</ns3:hasName>
+	<ns3:hasPopulationSize>658179</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Mexico_3996063"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aguascalientes</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aham_2959283">
+	<ns3:hasName>Aham</ns3:hasName>
+	<ns3:hasPopulationSize>1957</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aham</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahaus_2959279">
+	<ns3:hasName>Ahaus</ns3:hasName>
+	<ns3:hasPopulationSize>38165</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahaus</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahausen_2959272">
+	<ns3:hasName>Ahausen</ns3:hasName>
+	<ns3:hasPopulationSize>1769</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahausen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahlbeck_2959244">
+	<ns3:hasName>Ahlbeck</ns3:hasName>
+	<ns3:hasPopulationSize>3444</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahlbeck</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahlden_2959237">
+	<ns3:hasName>Ahlden</ns3:hasName>
+	<ns3:hasPopulationSize>1573</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahlden</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahlen_2959223">
+	<ns3:hasName>Ahlen</ns3:hasName>
+	<ns3:hasPopulationSize>55280</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahlen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahlerstedt_2959205">
+	<ns3:hasName>Ahlerstedt</ns3:hasName>
+	<ns3:hasPopulationSize>5063</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahlerstedt</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahlsdorf_2959181">
+	<ns3:hasName>Ahlsdorf</ns3:hasName>
+	<ns3:hasPopulationSize>1912</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahlsdorf</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahmadabad_1279233">
+	<ns3:hasName>Ahmadābād</ns3:hasName>
+	<ns3:hasPopulationSize>3719710</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#India_1269750"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahmadābād</rdfs:label>
+	<rdfs:label xml:lang="en">Ahmedabad</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahmadnagar_1279228">
+	<ns3:hasName>Ahmadnagar</ns3:hasName>
+	<ns3:hasPopulationSize>367140</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#India_1269750"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahmadnagar</rdfs:label>
+	<rdfs:label xml:lang="en">Ahmednagar</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahnsbeck_2959150">
+	<ns3:hasName>Ahnsbeck</ns3:hasName>
+	<ns3:hasPopulationSize>1667</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahnsbeck</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahnsen_2959146">
+	<ns3:hasName>Ahnsen</ns3:hasName>
+	<ns3:hasPopulationSize>1233</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahnsen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aholfing_2959143">
+	<ns3:hasName>Aholfing</ns3:hasName>
+	<ns3:hasPopulationSize>1735</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aholfing</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aholming_2959142">
+	<ns3:hasName>Aholming</ns3:hasName>
+	<ns3:hasPopulationSize>2234</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aholming</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahorn_2959140">
+	<ns3:hasName>Ahorn</ns3:hasName>
+	<ns3:hasPopulationSize>4624</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahorn</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahrbruck_3207679">
+	<ns3:hasName>Ahrbrück</ns3:hasName>
+	<ns3:hasPopulationSize>1228</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahrbrück</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahrensbok_2959084">
+	<ns3:hasName>Ahrensbök</ns3:hasName>
+	<ns3:hasPopulationSize>8643</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahrensbök</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahrensburg_2959083">
+	<ns3:hasName>Ahrensburg</ns3:hasName>
+	<ns3:hasPopulationSize>30103</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahrensburg</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahsen-Oetzen_2959043">
+	<ns3:hasName>Ahsen-Oetzen</ns3:hasName>
+	<ns3:hasPopulationSize>1384</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ahsen-Oetzen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ahvaz_144448">
+	<ns3:hasName>Ahvāz</ns3:hasName>
+	<ns3:hasPopulationSize>841145</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Iran_130758"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label xml:lang="en">Ahvaz</rdfs:label>
+	<rdfs:label>Ahvāz</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aichach_2958975">
+	<ns3:hasName>Aichach</ns3:hasName>
+	<ns3:hasPopulationSize>21042</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aichach</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aichelberg_2958956">
+	<ns3:hasName>Aichelberg</ns3:hasName>
+	<ns3:hasPopulationSize>1245</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aichelberg</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aichen_2958951">
+	<ns3:hasName>Aichen</ns3:hasName>
+	<ns3:hasPopulationSize>1171</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aichen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aichhalden_2958937">
+	<ns3:hasName>Aichhalden</ns3:hasName>
+	<ns3:hasPopulationSize>4184</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aichhalden</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aichstetten_2958917">
+	<ns3:hasName>Aichstetten</ns3:hasName>
+	<ns3:hasPopulationSize>2757</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aichstetten</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aidenbach_2958908">
+	<ns3:hasName>Aidenbach</ns3:hasName>
+	<ns3:hasPopulationSize>3038</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aidenbach</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aidhausen_2958906">
+	<ns3:hasName>Aidhausen</ns3:hasName>
+	<ns3:hasPopulationSize>1934</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aidhausen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aidlingen_2958904">
+	<ns3:hasName>Aidlingen</ns3:hasName>
+	<ns3:hasPopulationSize>9285</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aidlingen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aiglsbach_2958887">
+	<ns3:hasName>Aiglsbach</ns3:hasName>
+	<ns3:hasPopulationSize>1677</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aiglsbach</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aindling_2958835">
+	<ns3:hasName>Aindling</ns3:hasName>
+	<ns3:hasPopulationSize>4451</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aindling</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Ainring_2958831">
+	<ns3:hasName>Ainring</ns3:hasName>
+	<ns3:hasPopulationSize>10028</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Ainring</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aislingen_2958813">
+	<ns3:hasName>Aislingen</ns3:hasName>
+	<ns3:hasPopulationSize>1455</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aislingen</rdfs:label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://l2r.info/geonames#Aitrach_2958798">
+	<ns3:hasName>Aitrach</ns3:hasName>
+	<ns3:hasPopulationSize>2580</ns3:hasPopulationSize>
+	<ns3:isInCountry rdf:resource="http://l2r.info/geonames#Germany_2921044"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/common#City"/>
+	<rdf:type rdf:resource="http://rb.lichtflut.de/system#Entity"/>
+	<rdfs:label>Aitrach</rdfs:label>
+</rdf:Description>
+</rdf:RDF>

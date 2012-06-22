@@ -20,7 +20,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 
 /**
  * <p>
@@ -215,9 +215,11 @@ public class PropertyRow implements Serializable {
 	 * @param literalConstraint
 	 */
 	public void setLiteralConstraint(final String literalConstraint) {
-		ReferenceConstraint constraint = new ReferenceConstraint();
-		constraint.buildLiteralConstraint(literalConstraint);
-		decl.setConstraint(constraint);
+		if(literalConstraint != null && !literalConstraint.isEmpty()){
+			ConstraintImpl constraint = new ConstraintImpl();
+			constraint.buildLiteralConstraint(literalConstraint);
+			decl.setConstraint(constraint);
+		}
 	}
 
 	public void clearConstraint() {
@@ -238,6 +240,9 @@ public class PropertyRow implements Serializable {
 	}
 
 	public boolean isConstraintPublic() {
+		if(decl.getConstraint() == null){
+			return false;
+		}
 		return decl.getConstraint().isPublic();
 	}
 
@@ -246,7 +251,7 @@ public class PropertyRow implements Serializable {
 	 */
 	public void setResourceConstraint(ResourceID resourceConstraint) {
 		// TODO RESOLVE CONSTRAINT - get ID
-		ReferenceConstraint constraint = new ReferenceConstraint(new SNResource());
+		ConstraintImpl constraint = new ConstraintImpl(new SNResource());
 		constraint.setReference(resourceConstraint);
 		decl.setConstraint(constraint);
 	}

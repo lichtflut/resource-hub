@@ -23,7 +23,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
@@ -113,7 +113,7 @@ public class PublicConstraintsDetailPanel extends Panel{
 	}
 
 	private void addFields(Form<?> form, IModel<Constraint> model) {
-		final ReferenceConstraint constraint = (ReferenceConstraint) model.getObject();
+		final ConstraintImpl constraint = (ConstraintImpl) model.getObject();
 		AjaxEditableLabel<String> name = new AjaxEditableLabel<String>("name", new PropertyModel<String>(constraint, "name"));
 		final IModel<List<Datatype>> chosen = new PropertyModel<List<Datatype>>(constraint, "applicableDatatypes");
 		@SuppressWarnings("unchecked")

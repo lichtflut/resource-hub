@@ -1,6 +1,12 @@
 namespace "http://rb.lichtflut.de/common#" prefix "common"
 namespace "http://rb.lichtflut.de/common2#" prefix "common2"
-			
+
+constraint definition for "common:EmailConstraint" {
+ 		name : "Email-Constraint"
+		applicable-datatypes : "string, text"
+		literal-constraint : ".*@.*"
+}
+
 schema for "common:City" {
 	label-rule : "common:hasName <,> common:hasCountry"
 					

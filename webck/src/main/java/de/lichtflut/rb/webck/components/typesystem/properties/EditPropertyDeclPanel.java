@@ -5,7 +5,6 @@ package de.lichtflut.rb.webck.components.typesystem.properties;
 
 import java.util.Arrays;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
@@ -14,9 +13,9 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.ResourceID;
@@ -40,19 +39,20 @@ import de.lichtflut.rb.webck.components.typesystem.constraints.ConstraintsEditor
  * 
  * @author Ravi Knox
  */
-// TODO Introduce FeedbackPanel, replace infoBox and change test accordingly
 public class EditPropertyDeclPanel extends Panel {
 
 	// ---------------- Constructor -------------------------
 
 	/**
-	 * @param id
+	 * Constructor
+	 * @param id - wicket:id
 	 * @param decl
 	 */
 	public EditPropertyDeclPanel(String id, IModel<PropertyRow> decl) {
 		super(id, decl);
 		@SuppressWarnings("rawtypes")
 		Form<?> form = new Form("form");
+		addFeedbackpanel("feedback", form);
 		addProperties(form, decl);
 		add(form);
 		addButtonBar(form);
@@ -103,21 +103,20 @@ public class EditPropertyDeclPanel extends Panel {
 	}
 
 	/**
-	 * Add Infopanel
+	 * Add {@link FeedbackPanel}
+	 * @param form 
 	 */
-	private void addInfo(IModel<String> model) {
-		Label label = new Label("info", model);
-		this.add(label);
+	private void addFeedbackpanel(String id, Form<?> form) {
+		form.add(new FeedbackPanel(id));
 	}
 
 	/**
 	 * All PropertyDecls can be edited.
 	 */
 	private void addProperties(Form<?> form, final IModel<PropertyRow> decl) {
-		addInfo(Model.of(""));
-
-		Component propertyDescriptorField = new PropertyPickerField("propertyDescriptor", new PropertyModel<ResourceID>(decl,
+		PropertyPickerField propertyDescriptorField = new PropertyPickerField("propertyDescriptor", new PropertyModel<ResourceID>(decl,
 				"propertyDescriptor"));
+		propertyDescriptorField.getDisplayComponent().setRequired(true);
 
 		TextField<String> fieldLabelTField = new TextField<String>("fieldLabel", new PropertyModel<String>(decl, "defaultLabel"));
 
@@ -134,10 +133,10 @@ public class EditPropertyDeclPanel extends Panel {
 				RBAjaxTarget.add(EditPropertyDeclPanel.this);
 			}
 		});
+		
 		ConstraintsEditorPanel constraintsDPicker = new ConstraintsEditorPanel("constraints", decl);
-		String s = constraintsDPicker.getPageRelativePath();
-		System.out.println(s);
 		constraintsDPicker.setOutputMarkupId(true);
+		
 		form.add(propertyDescriptorField, fieldLabelTField, cardinalityTField, datatypeDDC, constraintsDPicker);
 	}
 }

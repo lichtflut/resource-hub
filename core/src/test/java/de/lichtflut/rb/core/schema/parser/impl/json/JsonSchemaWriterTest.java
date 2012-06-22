@@ -57,7 +57,7 @@ public class JsonSchemaWriterTest {
 	public void testWritePublicConstraints() throws IOException {
 		final Constraint emailConstraint = ConstraintsFactory.buildPublicEmailConstraint();
 		
-		elements.addConstraint(Collections.singletonList(emailConstraint));
+		elements.addConstraints(Collections.singletonList(emailConstraint));
 		exporter.write(out, elements);
 		
 		final byte[] bytes = out.toByteArray();

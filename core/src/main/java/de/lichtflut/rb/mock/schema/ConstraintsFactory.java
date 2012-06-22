@@ -15,7 +15,7 @@ import org.arastreju.sge.naming.QualifiedName;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.LiteralConstraint;
-import de.lichtflut.rb.core.schema.model.impl.ReferenceConstraint;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import de.lichtflut.rb.mock.RBMock;
 
 /**
@@ -34,7 +34,7 @@ public class ConstraintsFactory {
 		datatypes.add(Datatype.STRING);
 		datatypes.add(Datatype.TEXT);
 		datatypes.add(Datatype.RICH_TEXT);
-		ReferenceConstraint constraint= new ReferenceConstraint(new SNResource(qn));
+		ConstraintImpl constraint= new ConstraintImpl(new SNResource(qn));
 		constraint.setApplicableDatatypes(datatypes);
 		constraint.setName("Email-Address");
 		constraint.setLiteralConstraint(".*@.*");
@@ -50,7 +50,7 @@ public class ConstraintsFactory {
 	
 	public static Constraint buildPublicPersonConstraint(){
 		ResourceID resource = new SimpleResourceID(RBMock.COMMON_NAMESPACE_URI + "PersonConstraint");
-		ReferenceConstraint constraint = new ReferenceConstraint((ResourceNode)new SNResource());
+		ConstraintImpl constraint = new ConstraintImpl((ResourceNode)new SNResource());
 		constraint.setName("Person-Constraint");
 		constraint.setReference(resource);
 		return constraint;
@@ -58,14 +58,14 @@ public class ConstraintsFactory {
 	
 	
 	public static Constraint buildTypeConstraint(ResourceID type){
-		ReferenceConstraint constraint = new ReferenceConstraint();
+		ConstraintImpl constraint = new ConstraintImpl();
 		constraint.buildReferenceConstraint(type, false);
 		return constraint;
 	}
 	
 	public static Constraint buildPrivatePersonConstraint(){
 		ResourceID resource = new SimpleResourceID(RBMock.COMMON_NAMESPACE_URI + "PersonConstraint");
-		ReferenceConstraint constraint = new ReferenceConstraint((ResourceNode)new SNResource());
+		ConstraintImpl constraint = new ConstraintImpl((ResourceNode)new SNResource());
 		constraint.setReference(resource);
 		return constraint;
 	}

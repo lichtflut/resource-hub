@@ -56,14 +56,14 @@ public class ParsedElements {
 	// -----------------------------------------------------
 	
 	/**
-	 * @return the schemas
+	 * @return the {@link ResourceSchema}s
 	 */
 	public List<ResourceSchema> getSchemas() {
 		return schemas;
 	}
 	
 	/**
-	 * @return the typeDefs
+	 * @return the {@link Constraint}s
 	 */
 	public List<Constraint> getConstraints() {
 		return constraints;

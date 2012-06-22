@@ -7,6 +7,7 @@ options {
 
 tokens {
 	NAMESPACE;
+	PUBLIC_CONSTRAINT;
 	SCHEMA;
 	LABEL;
 	CARDINALITY;
@@ -36,11 +37,18 @@ statements : statement + -> ^(STATEMENTS statement+);
 
 // A statement is either a namespace or a schema
 statement : 	namespace_decl
+			|	public_constraint
 			| 	schema_decl 
 			;
 
 // Definition of a namespace
 namespace_decl: NS e=STRING PREFIX f=STRING -> ^(NAMESPACE $e $f) ;
+
+//Definition of a public constraint
+public_constraint : CONSTRAINT_FOR s=STRING '{'
+						assigment +
+					'}'
+					-> ^(PUBLIC_CONSTRAINT $s assigment+);
 
 // Definition of a schema
 schema_decl : SCHEMA_FOR s=STRING '{'
@@ -75,11 +83,15 @@ key : FIELD_LABEL
 	| RESOURCE_CONSTRAINT
 	| CONSTRAINT_REFERENCE
 	| LITERAL_CONSTRAINT
+	| APPLICABLE_DATATYPES
+	| NAME
 	;
 
 value : STRING ;
 
 NS : 'namespace';
+
+CONSTRAINT_FOR : 'constraint definition for';
 
 SCHEMA_FOR : 'schema for';
 
@@ -89,15 +101,19 @@ PROPERTY_DECL : 'property';
 
 FIELD_LABEL : 'field-label';
 
-DATATYPE:'datatype';
+DATATYPE :'datatype';
 
-RESOURCE_CONSTRAINT:'resource-constraint';
+RESOURCE_CONSTRAINT : 'resource-constraint';
 
-CONSTRAINT_REFERENCE: 'reference-constraint';
+CONSTRAINT_REFERENCE : 'reference-constraint';
 
-LITERAL_CONSTRAINT: 'literal-constraint';
+LITERAL_CONSTRAINT : 'literal-constraint';
+
+APPLICABLE_DATATYPES : 'applicable-datatypes';
 
 PREFIX : 'prefix';
+
+NAME : 'name';
 
 COLON : ':';
 

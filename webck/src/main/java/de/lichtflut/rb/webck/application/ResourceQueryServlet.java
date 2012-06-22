@@ -63,7 +63,7 @@ public class ResourceQueryServlet extends HttpServlet {
 	
 	// ----------------------------------------------------
 	
-	private Logger logger = LoggerFactory.getLogger(ResourceQueryServlet.class);
+	private final Logger logger = LoggerFactory.getLogger(ResourceQueryServlet.class);
 	
 	// -----------------------------------------------------
 	
@@ -143,7 +143,8 @@ public class ResourceQueryServlet extends HttpServlet {
 			logger.warn("failed to execute query: " + query.toString());
 			return SimpleQueryResult.EMPTY;
 		} finally {
-			conversation.close();
+//			TODO: FIX
+//			conversation.close();
 		}
 	}
 	
