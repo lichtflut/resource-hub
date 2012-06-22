@@ -17,8 +17,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import de.lichtflut.infra.Infra;
+import de.lichtflut.rb.core.eh.RBAuthException;
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.SecurityService;
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.listview.ActionLink;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
@@ -39,6 +44,12 @@ public abstract class UserListPanel extends Panel {
 	
 	@SpringBean
 	private SecurityService securityService;
+	
+	@SpringBean
+	private ServiceContext serviceContext;
+	
+	@SpringBean
+	private AuthModule authModule;
 	
 	// ----------------------------------------------------
 
@@ -65,15 +76,7 @@ public abstract class UserListPanel extends Panel {
 						onUserSelected(user);
 					}
 				});
-				final ActionLink deleteLink = new ActionLink("delete", new ResourceModel("link.delete")) {
-					@Override
-					public void onClick(AjaxRequestTarget target) {
-						deleteUser(user);
-					}
-				};
-				deleteLink.setLinkCssClass("action-delete");
-				deleteLink.needsConfirmation(new ResourceModel("message.delete-confirmation"));
-				item.add(deleteLink);
+				item.add(createRemoveLink(user));
 			}
 		};
 		
@@ -86,6 +89,26 @@ public abstract class UserListPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
+	protected ActionLink createRemoveLink(final RBUser user) {
+		final ActionLink deleteLink = new ActionLink("delete", new ResourceModel("link.delete")) {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				if (isDomestic(user)) {
+					deleteUser(user);
+				} else {
+					removeUserFromDomain(user);
+				}
+			}
+		};
+		deleteLink.setLinkCssClass("action-delete");
+		if (isDomestic(user)) {
+			deleteLink.needsConfirmation(new ResourceModel("message.delete-confirmation"));	
+		} else {
+			deleteLink.needsConfirmation(new ResourceModel("message.unassign-confirmation"));
+		}
+		return deleteLink;
+	}
+	
 	private String getLastLogin(RBUser user) {
 		if (user != null && user.getLastLogin() != null) {
 			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(user.getLastLogin());
@@ -93,10 +116,25 @@ public abstract class UserListPanel extends Panel {
 		return "-";
 	}
 	
-	private void deleteUser(final RBUser user) {
+	private void deleteUser(RBUser user) {
 		securityService.deleteUser(user);
 		RBAjaxTarget.add(this);
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.USER));
+	}
+	
+	private void removeUserFromDomain(RBUser user) {
+		RBDomain domain = authModule.getDomainManager().findDomain(serviceContext.getDomain());
+		try {
+			authModule.getUserManagement().revokeAccessToDomain(user, domain);
+		} catch (RBAuthException e) {
+			throw new RuntimeException(e);
+		}
+		RBAjaxTarget.add(this);
+		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.USER));
+	}
+	
+	private boolean isDomestic(RBUser user) {
+		return Infra.equals(serviceContext.getDomain(), user.getDomesticDomain());
 	}
 
 }

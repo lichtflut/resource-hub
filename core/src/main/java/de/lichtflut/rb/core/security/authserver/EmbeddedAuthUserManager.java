@@ -200,6 +200,16 @@ public class EmbeddedAuthUserManager implements UserManager {
 		attachedUser.addAssociation(Aras.HAS_ALTERNATE_DOMAIN, attachedDomain);
 	}
 	
+	/** 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void revokeAccessToDomain(RBUser user, RBDomain domain) throws RBAuthException {
+		final ResourceNode attachedUser = conversation.findResource(user.getQualifiedName());
+		final ResourceNode attachedDomain = domainManager.findDomainNode(domain.getName());
+		SNOPS.remove(attachedUser, Aras.HAS_ALTERNATE_DOMAIN, attachedDomain);
+	}
+	
 	// -- PASSWORD HANDLING -------------------------------
 	
 	/**
