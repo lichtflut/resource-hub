@@ -83,6 +83,7 @@ public class CreateDomainAdminDialog extends AbstractRBDialog {
 	private void userSelectedAsDomainAdmin(final RBUser user, final RBDomain domain) {
 		IModel<String> msgModel = new Model<String>(getString("label.confirm.add-user-as-admin"));
 		DialogHoster hoster = findParent(DialogHoster.class);
+		close(AjaxRequestTarget.get());
 		hoster.openDialog(new ConfirmationDialog(hoster.getDialogID(), msgModel) {
 			@Override
 			public void onConfirm() {
@@ -91,7 +92,7 @@ public class CreateDomainAdminDialog extends AbstractRBDialog {
 		});
 	}
 	
-	public void addUserToDomain(RBUser user, RBDomain domain) {
+	private void addUserToDomain(RBUser user, RBDomain domain) {
 		try {
 			authModule.getUserManagement().grantAccessToDomain(user, domain);
 			securityService.makeDomainAdmin(domain, user);

@@ -67,6 +67,13 @@ public interface UserManager {
 	 */
 	void grantAccessToDomain(RBUser user, RBDomain domain) throws RBAuthException;
 	
+	/**
+	 * Revoke users access to another domain.
+	 * @param user The user.
+	 * @param domain The user's domain.
+	 */
+	void revokeAccessToDomain(RBUser user, RBDomain domain) throws RBAuthException;
+	
 	// ----------------------------------------------------
 	
 	/**
