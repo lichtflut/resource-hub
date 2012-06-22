@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
@@ -26,7 +26,7 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 public class MenuItemListModel extends AbstractLoadableDetachableModel<List<MenuItem>>{
 
 	@SpringBean
-	private ServiceProvider provider;
+	private ViewSpecificationService viewSpecificationService;
 	
 	// ----------------------------------------------------
 	
@@ -44,7 +44,7 @@ public class MenuItemListModel extends AbstractLoadableDetachableModel<List<Menu
 	 */
 	@Override
 	public List<MenuItem> load() {
-		return provider.getViewSpecificationService().getUsersMenuItems();
+		return viewSpecificationService.getUsersMenuItems();
 	}
 	
 }

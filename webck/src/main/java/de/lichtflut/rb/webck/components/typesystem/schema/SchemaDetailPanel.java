@@ -34,7 +34,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -66,7 +66,7 @@ import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
 public class SchemaDetailPanel extends Panel {
 
 	@SpringBean
-	private ServiceProvider provider;
+	private SchemaManager schemaManager;
 
 	private final IModel<ResourceSchema> schema;
 	private PropertyRowListModel listModel;
@@ -174,7 +174,7 @@ public class SchemaDetailPanel extends Panel {
 				ConfirmationDialog dialog = new ConfirmationDialog(hoster.getDialogID(), Model.of(getString("confirmation-delete"))) {
 					@Override
 					public void onConfirm() {
-						provider.getSchemaManager().removeSchemaForType(schema.getObject().getDescribedType());
+						schemaManager.removeSchemaForType(schema.getObject().getDescribedType());
 						SchemaDetailPanel.this.setVisible(false);
 						updatePanel();
 						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
@@ -490,7 +490,7 @@ public class SchemaDetailPanel extends Panel {
 		for (PropertyRow row : listModel.getObject()) {
 			copy.addPropertyDeclaration(row.asPropertyDeclaration());
 		}
-		provider.getSchemaManager().store(copy);
+		schemaManager.store(copy);
 	}
 
 }

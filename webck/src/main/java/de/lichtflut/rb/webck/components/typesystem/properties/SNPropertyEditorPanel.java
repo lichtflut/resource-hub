@@ -31,7 +31,7 @@ import org.arastreju.sge.model.nodes.views.SNText;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -55,7 +55,7 @@ import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
 public class SNPropertyEditorPanel extends Panel {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private TypeManager typeManager;
 	
 	@SpringBean
 	private ModelingConversation conversation;
@@ -108,7 +108,7 @@ public class SNPropertyEditorPanel extends Panel {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				final SNProperty original = model.getObject();
-				provider.getTypeManager().removeProperty(original);
+				typeManager.removeProperty(original);
 				info("Property deleted.");
 				SNPropertyEditorPanel.this.setVisible(false);
 				target.add(SNPropertyEditorPanel.this);

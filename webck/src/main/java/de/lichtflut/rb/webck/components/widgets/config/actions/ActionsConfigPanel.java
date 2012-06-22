@@ -14,12 +14,10 @@ import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetAction;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
@@ -46,9 +44,6 @@ public class ActionsConfigPanel extends TypedPanel<WidgetSpec> {
 		NONE,
 		INSTANTIATE
 	}
-	
-	@SpringBean
-	protected ServiceProvider provider;
 	
 	// ----------------------------------------------------
 

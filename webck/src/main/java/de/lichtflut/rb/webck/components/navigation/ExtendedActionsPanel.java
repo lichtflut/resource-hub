@@ -29,7 +29,7 @@ import org.arastreju.sge.query.QueryResult;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
@@ -54,8 +54,8 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
  */
 public class ExtendedActionsPanel extends Panel {
 	
-	@SpringBean 
-	private ServiceProvider provider;
+	@SpringBean
+	private EntityManager entityManager;
 	
 	private ContextMenu ctxMenu;
 
@@ -120,6 +120,7 @@ public class ExtendedActionsPanel extends Panel {
 	private void addExportVCardLink() {
 		@SuppressWarnings("rawtypes")
 		final Link exportVCardLink = new AjaxFallbackLink("exportVCardLink") {
+			@Override
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
 			    hoster.openDialog(new VCardExportDialog(hoster.getDialogID(), entityModel));
@@ -133,13 +134,14 @@ public class ExtendedActionsPanel extends Panel {
 	private void addDeleteEntityLink() {
 		@SuppressWarnings("rawtypes")
 		final Link deleteEntityLink = new AjaxFallbackLink("deleteEntityLink") {
+			@Override
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
 			    ConfirmationDialog confirmDialog = new ConfirmationDialog(hoster.getDialogID(),
 			    		new Model<String>(getString("global.message.delete-confirmation"))) {
 							@Override
 							public void onConfirm() {
-								provider.getEntityManager().delete(entityModel.getObject().getID());
+								entityManager.delete(entityModel.getObject().getID());
 								RBWebSession.get().getHistory().back();
 								send(getPage(), Broadcast.BREADTH, new ModelChangeEvent(ModelChangeEvent.ENTITY));
 							}
@@ -155,6 +157,7 @@ public class ExtendedActionsPanel extends Panel {
 	private void addExportExcelEntityLink() {
 		@SuppressWarnings("rawtypes")
 		final Link exportExcelEntityLink = new AjaxFallbackLink("exportExcelEntityLink") {
+			@Override
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
 			    hoster.openDialog(new EntityExcelExportDialog(hoster.getDialogID(), entityModel));
@@ -168,6 +171,7 @@ public class ExtendedActionsPanel extends Panel {
 	private void addExportExcelListLink() {
 		@SuppressWarnings("rawtypes")
 		final Link exportExcelListLink = new AjaxFallbackLink("exportExcelListLink") {
+			@Override
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
 			    hoster.openDialog(new ResourceListExportDialog(hoster.getDialogID(), dataModel, configModel));
@@ -199,6 +203,7 @@ public class ExtendedActionsPanel extends Panel {
 		public Boolean load() {
 			final IModel<Boolean> retValModel = new Model<Boolean>(false);
 			containerModel.getObject().visitChildren(new IVisitor<Component, Void>() {
+				@Override
 				public void component(final Component component, final IVisit<Void> visit) {
 					if (component instanceof Link) {
 						if(component.isVisible()) {

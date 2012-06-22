@@ -16,6 +16,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.organizer.ContextDeclaration;
 import de.lichtflut.rb.core.services.DomainOrganizer;
@@ -36,6 +37,9 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
  * @author Oliver Tigges
  */
 public abstract class CreateContextPanel extends Panel {
+	
+	@SpringBean
+	private DomainOrganizer domainOrganizer;
 	
 	private final IModel<ContextDeclaration> model;
 	
@@ -74,7 +78,7 @@ public abstract class CreateContextPanel extends Panel {
 		form.add(new RBStandardButton("create") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				getOrganizer().registerContext(model.getObject());
+				domainOrganizer.registerContext(model.getObject());
 				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.NAMESPACE));
 				onSuccess(target);
 				resetModel();
@@ -101,8 +105,6 @@ public abstract class CreateContextPanel extends Panel {
 	
 	public void onSuccess(AjaxRequestTarget target){}
 
-	public abstract DomainOrganizer getOrganizer();
-	
 	// ----------------------------------------------------
 	
 

@@ -19,7 +19,7 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
@@ -48,7 +48,7 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetController {
 
 	@SpringBean
-	protected ServiceProvider provider;
+	private ViewSpecificationService viewSpecificationService;
 	
 	private SerialNumberOrderedNodesContainer orderedNodesContainer;
 	
@@ -117,7 +117,7 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 	public void remove(WidgetSpec widget) {
 		final ViewPort port = getModelObject();
 		port.removeWidget(widget);
-		provider.getViewSpecificationService().store(port);
+		viewSpecificationService.store(port);
 		send(this, Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
 	}
 	
@@ -147,7 +147,7 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 	public void addWidget(WidgetSpec widget) {
 		final ViewPort port = getModelObject();
 		port.addWidget(widget);
-		provider.getViewSpecificationService().store(port);
+		viewSpecificationService.store(port);
 		send(this, Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
 	}
 	

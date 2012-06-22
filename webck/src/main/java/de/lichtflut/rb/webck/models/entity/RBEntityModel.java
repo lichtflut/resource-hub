@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 
@@ -33,9 +32,6 @@ public class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 	@SpringBean
 	private EntityManager entityManager;
 	
-	@SpringBean
-	private ServiceProvider provider;
-
 	// -----------------------------------------------------
 	
 	/**

@@ -7,7 +7,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.services.DomainOrganizer;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.components.organizer.CreateContextPanel;
 
 /**
@@ -24,7 +23,7 @@ import de.lichtflut.rb.webck.components.organizer.CreateContextPanel;
 public class CreateContextDialog extends AbstractRBDialog {
 	
 	@SpringBean
-	protected ServiceProvider provider;
+	protected DomainOrganizer domainOrganizer;
 	
 	// ----------------------------------------------------
 	
@@ -35,11 +34,6 @@ public class CreateContextDialog extends AbstractRBDialog {
 		super(id);
 		
 		add(new CreateContextPanel(CONTENT) {
-			@Override
-			public DomainOrganizer getOrganizer() {
-				return provider.getDomainOrganizer();
-			}
-			
 			@Override
 			public void onCancel(AjaxRequestTarget target) {
 				close(target);

@@ -33,7 +33,8 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
@@ -59,7 +60,10 @@ import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
 public class SchemaEditorPanel extends Panel {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private SchemaManager schemaManager;
+	
+	@SpringBean
+	private TypeManager typeManager;
 	
 	// ----------------------------------------------------
 	
@@ -107,7 +111,7 @@ public class SchemaEditorPanel extends Panel {
 				for (PropertyRow row: rowModel.getObject()) {
 					schema.addPropertyDeclaration(row.asPropertyDeclaration());	
 				}
-				provider.getSchemaManager().store(schema);
+				schemaManager.store(schema);
 				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
 				info("Schema saved succesfully.");
 				target.add(form);
@@ -118,7 +122,7 @@ public class SchemaEditorPanel extends Panel {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				final ResourceSchema original = model.getObject();
-				provider.getTypeManager().removeType(original.getDescribedType());
+				typeManager.removeType(original.getDescribedType());
 				info("Schema deleted.");
 				SchemaEditorPanel.this.setVisible(false);
 				target.add(SchemaEditorPanel.this);

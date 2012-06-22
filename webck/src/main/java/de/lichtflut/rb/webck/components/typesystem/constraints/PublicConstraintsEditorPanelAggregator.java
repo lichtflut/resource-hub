@@ -12,7 +12,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.CreatePublicConstraintDialog;
@@ -32,7 +31,7 @@ import de.lichtflut.rb.webck.models.types.PublicConstraintsListModel;
 public class PublicConstraintsEditorPanelAggregator extends Panel {
 
 	@SpringBean
-	private ServiceProvider provider;
+	private SchemaManager schemaManager;
 
 	// ---------------- Constructor -------------------------
 
@@ -62,17 +61,11 @@ public class PublicConstraintsEditorPanelAggregator extends Panel {
 	// ------------------------------------------------------
 
 	protected void displayConstraintEditor(final Constraint constraint) {
-		final Constraint reloaded = schemaManager().findConstraint(constraint.asResourceNode());
+		final Constraint reloaded = schemaManager.findConstraint(constraint.asResourceNode());
 		final IModel<PropertyRow> model = Model.of(new PropertyRow(reloaded));
 		final Panel editor = new PublicConstraintsDetailPanel("editor", Model.of(model.getObject().asPropertyDeclaration().getConstraint()));
 		replace(editor);
 		RBAjaxTarget.add(editor);
-	}
-
-	// ------------------------------------------------------
-
-	private SchemaManager schemaManager() {
-		return provider.getSchemaManager();
 	}
 
 }

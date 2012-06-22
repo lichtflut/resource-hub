@@ -11,7 +11,7 @@ import org.arastreju.sge.model.nodes.views.SNClass;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.CreateTypeDialog;
@@ -30,7 +30,7 @@ import de.lichtflut.rb.webck.models.types.SNClassListModel;
 public class SchemaEditorAggregator extends Panel {
 
 	@SpringBean
-	private ServiceProvider provider;
+	private SchemaManager schemaManager;
 
 	// ---------------- Constructor -------------------------
 
@@ -73,7 +73,7 @@ public class SchemaEditorAggregator extends Panel {
 		final IModel<ResourceSchema> model = new AbstractLoadableModel<ResourceSchema>() {
 			@Override
 			public ResourceSchema load() {
-				final ResourceSchema existing = provider.getSchemaManager().findSchemaForType(type);
+				final ResourceSchema existing = schemaManager.findSchemaForType(type);
 				if (existing != null) {
 					return existing;
 				} else {

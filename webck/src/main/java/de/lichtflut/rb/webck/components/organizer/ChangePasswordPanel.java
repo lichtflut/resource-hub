@@ -21,7 +21,7 @@ import org.apache.wicket.validation.validator.PatternValidator;
 
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
@@ -42,13 +42,13 @@ public class ChangePasswordPanel extends Panel {
 	// Enforced RegEx for passwords
 	private final String PASSWORD_PATTERN = "^(?=.*[a-z]).{4,16}$";
 	
-	private IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
-	private IModel<String> newPassword;
-	private IModel<String> currentPassword;
-	private IModel<String> confirmedPassword;
+	private final IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
+	private final IModel<String> newPassword;
+	private final IModel<String> currentPassword;
+	private final IModel<String> confirmedPassword;
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private SecurityService securityService;
 	
 	// ---------------- Constructor -------------------------
 	
@@ -113,7 +113,7 @@ public class ChangePasswordPanel extends Panel {
 			}
 			
 			private void setNewPassword(RBUser user, String currentPassword, String newPassword) throws RBException {
-				provider.getSecurityService().changePassword(user, currentPassword, newPassword);
+				securityService.changePassword(user, currentPassword, newPassword);
 				info(getString("info.password-changed"));
 			}
 		};
@@ -128,6 +128,7 @@ public class ChangePasswordPanel extends Panel {
 	 */
 	private RBCancelButton createCancelButton(String id, Form form) {
 		RBCancelButton cancel = new RBCancelButton(id){
+			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				mode.setObject(DisplayMode.VIEW);
 				RBAjaxTarget.add(form);

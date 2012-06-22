@@ -17,7 +17,7 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 
@@ -34,10 +34,10 @@ import de.lichtflut.rb.webck.components.form.RBStandardButton;
  */
 public abstract class ResetPasswordPanel extends Panel {
 
-	private IModel<String> emailModel;
+	private final IModel<String> emailModel;
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private SecurityService securityService;
 
 	// ---------------- Constructor -------------------------
 
@@ -84,12 +84,12 @@ public abstract class ResetPasswordPanel extends Panel {
 	
 	protected void resetPassword() {
 		final String email = emailModel.getObject();
-		final RBUser existing = provider.getSecurityService().findUser(email);
+		final RBUser existing = securityService.findUser(email);
 		if(existing == null) {
 			error(getString("message.no-user-found"));
 		} else {
 			try {
-				provider.getSecurityService().resetPasswordForUser(existing, getLocale());
+				securityService.resetPasswordForUser(existing, getLocale());
 				info(getString("message.password-changed"));
 			} catch (RBException e) {
 				error(getString("error.send.email"));

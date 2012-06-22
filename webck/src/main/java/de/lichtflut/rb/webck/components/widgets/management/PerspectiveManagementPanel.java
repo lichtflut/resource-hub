@@ -12,7 +12,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
@@ -33,7 +33,7 @@ import de.lichtflut.rb.webck.models.viewspecs.PerspectiveListModel;
 public class PerspectiveManagementPanel extends Panel {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private ViewSpecificationService viewSpecificationService;
 	
 	// ----------------------------------------------------
 
@@ -95,7 +95,7 @@ public class PerspectiveManagementPanel extends Panel {
 	// ----------------------------------------------------
 
 	private void delete(Perspective perspective) {
-		provider.getViewSpecificationService().remove(perspective);
+		viewSpecificationService.remove(perspective);
 		RBAjaxTarget.add(this);
 	}
 

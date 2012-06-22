@@ -22,7 +22,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.services.SchemaImporter;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
@@ -39,9 +39,9 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
 public class SchemaImportDialog extends AbstractRBDialog {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private SchemaManager schemaManager;
 	
-	private IModel<String> format = new Model<String>("JSON");
+	private final IModel<String> format = new Model<String>("JSON");
 	
 	// ----------------------------------------------------
 
@@ -86,7 +86,7 @@ public class SchemaImportDialog extends AbstractRBDialog {
 		IOReport endReport = null;
 		
 		for (FileUpload upload : uploadList) {
-			final SchemaImporter importer = provider.getSchemaManager().getImporter(format.getObject());
+			final SchemaImporter importer = schemaManager.getImporter(format.getObject());
 			IOReport report;
 			try {
 				report = importer.read(upload.getInputStream());

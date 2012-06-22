@@ -17,7 +17,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -41,9 +41,9 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
 public class PerspectiveEditPanel extends TypedPanel<Perspective> {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private ViewSpecificationService viewSpecificationService;
 	
-	private IModel<DisplayMode> mode;
+	private final IModel<DisplayMode> mode;
 
 	// ----------------------------------------------------
 
@@ -82,7 +82,7 @@ public class PerspectiveEditPanel extends TypedPanel<Perspective> {
 		final AjaxButton save = new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				provider.getViewSpecificationService().store(model.getObject());
+				viewSpecificationService.store(model.getObject());
 				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
 				RBAjaxTarget.add(form);
 				onSuccess(target);
@@ -96,7 +96,7 @@ public class PerspectiveEditPanel extends TypedPanel<Perspective> {
 		final Button edit = new RBDefaultButton("create") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				provider.getViewSpecificationService().store(model.getObject());
+				viewSpecificationService.store(model.getObject());
 				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
 				RBAjaxTarget.add(form);
 				onSuccess(target);

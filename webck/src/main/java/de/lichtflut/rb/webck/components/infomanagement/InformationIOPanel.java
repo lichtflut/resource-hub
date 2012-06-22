@@ -20,7 +20,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.query.Query;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.InformationExportDialog;
 import de.lichtflut.rb.webck.components.dialogs.InformationImportDialog;
@@ -39,7 +39,7 @@ import de.lichtflut.rb.webck.components.dialogs.InformationImportDialog;
 public class InformationIOPanel extends Panel {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private TypeManager typeManager;
 	
 	@SpringBean
 	private ModelingConversation conversation;
@@ -78,7 +78,7 @@ public class InformationIOPanel extends Panel {
 		return new AbstractReadOnlyModel<SemanticGraph>() {
 			@Override
 			public SemanticGraph getObject() {
-				final List<SNClass> types = provider.getTypeManager().findAllTypes();
+				final List<SNClass> types = typeManager.findAllTypes();
 				final SemanticGraph graph = new DefaultSemanticGraph();
 				for (SNClass type : types) {
 					final Query query = conversation.createQuery().addField(RDF.TYPE, type);

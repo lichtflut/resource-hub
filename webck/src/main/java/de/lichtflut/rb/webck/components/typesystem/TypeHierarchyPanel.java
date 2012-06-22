@@ -27,7 +27,7 @@ import org.arastreju.sge.model.nodes.views.SNClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.fields.ClassPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
@@ -49,7 +49,7 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 	private static final Logger logger = LoggerFactory.getLogger(TypeHierarchyPanel.class);
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private TypeManager typeManager;
 	
 	@SpringBean
 	private ModelingConversation conversation;
@@ -111,13 +111,13 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 	protected void addSuperClass(ResourceID superClass) {
 		final ResourceID baseClass = getModelObject();
 		logger.info("adding super class to : " + baseClass);
-		provider.getTypeManager().addSuperClass(baseClass, superClass);
+		typeManager.addSuperClass(baseClass, superClass);
 	}
 
 	protected void removeSuperClass(ResourceID superClass) {
 		final ResourceID baseClass = getModelObject();
 		logger.info("removing super class to : " + baseClass);
-		provider.getTypeManager().removeSuperClass(baseClass, superClass);
+		typeManager.removeSuperClass(baseClass, superClass);
 	}
 
 	

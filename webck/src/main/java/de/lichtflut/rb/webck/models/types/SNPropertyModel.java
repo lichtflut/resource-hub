@@ -9,7 +9,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
@@ -26,7 +26,7 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 public class SNPropertyModel extends AbstractLoadableDetachableModel<SNProperty> {
 
 	@SpringBean
-	private ServiceProvider provider;
+	private TypeManager typeManager;
 	
 	private final QualifiedName qn;
 	
@@ -55,7 +55,7 @@ public class SNPropertyModel extends AbstractLoadableDetachableModel<SNProperty>
 	 */
 	@Override
 	public SNProperty load() {
-		return provider.getTypeManager().findProperty(qn);
+		return typeManager.findProperty(qn);
 	}
 	
 }

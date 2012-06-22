@@ -7,7 +7,7 @@ import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
@@ -24,7 +24,7 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 public class DomainOrganizationModel extends AbstractLoadableDetachableModel<ResourceID> {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private DomainOrganizer domainOrganizer;
 	
 	// ----------------------------------------------------
 	
@@ -39,7 +39,7 @@ public class DomainOrganizationModel extends AbstractLoadableDetachableModel<Res
 	*/
 	@Override
 	public ResourceID load() {
-		return provider.getDomainOrganizer().getDomainOrganization();
+		return domainOrganizer.getDomainOrganization();
 	}
 	
 }

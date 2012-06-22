@@ -30,7 +30,7 @@ import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.webck.application.RBWebSession;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import de.lichtflut.rb.webck.browsing.JumpTarget;
@@ -57,16 +57,13 @@ import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 public abstract class SetUserProfilePanel extends Panel {
 
 	private final IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
-	
 	private IModel<Boolean> hasProfile;
-	
 	private IModel<ResourceNode> userModel;
 	private IModel<ResourceID> profileModel;
-	
 	private IModel<ResourceID> entityPickerModel;
 
 	@SpringBean
-	private ServiceProvider provider;
+	private DomainOrganizer domainOrganizer;
 	
 	@SpringBean
 	private ModelingConversation conversation;
@@ -123,7 +120,7 @@ public abstract class SetUserProfilePanel extends Panel {
 		this.profileModel = new AbstractLoadableDetachableModel<ResourceID>() {
 			@Override
 			public ResourceID load() {
-				ResourceID person =  provider.getDomainOrganizer().getUsersPerson();
+				ResourceID person =  domainOrganizer.getUsersPerson();
 				if (person != null) {
 					return person;
 				} else {
@@ -140,7 +137,7 @@ public abstract class SetUserProfilePanel extends Panel {
 		this.hasProfile = new AbstractLoadableDetachableModel<Boolean>() {
 			@Override
 			public Boolean load() {
-				return provider.getDomainOrganizer().getUsersPerson() != null;
+				return domainOrganizer.getUsersPerson() != null;
 			}
 		};
 	}
@@ -293,7 +290,7 @@ public abstract class SetUserProfilePanel extends Panel {
 		final AjaxButton save = new RBDefaultButton(id) {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form){
-				provider.getDomainOrganizer().setUsersPerson(entityPickerModel.getObject());
+				domainOrganizer.setUsersPerson(entityPickerModel.getObject());
 				mode.setObject(DisplayMode.VIEW);
 				RBAjaxTarget.add(form);
 			}

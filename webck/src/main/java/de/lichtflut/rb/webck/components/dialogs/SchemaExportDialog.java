@@ -26,7 +26,7 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.services.SchemaExporter;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
@@ -43,9 +43,9 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
 public class SchemaExportDialog extends AbstractExportDialog {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private SchemaManager schemaManager;
 	
-	private IModel<String> format = new Model<String>("JSON");
+	private final IModel<String> format = new Model<String>("JSON");
 	private IOReport report;
 	
 	// ----------------------------------------------------
@@ -113,7 +113,7 @@ public class SchemaExportDialog extends AbstractExportDialog {
 		 */
 		@Override
 		public InputStream getInputStream()	throws ResourceStreamNotFoundException {
-			final SchemaExporter exporter = provider.getSchemaManager().getExporter(format.getObject());
+			final SchemaExporter exporter = schemaManager.getExporter(format.getObject());
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			try {
 				report = exporter.exportAll(out);

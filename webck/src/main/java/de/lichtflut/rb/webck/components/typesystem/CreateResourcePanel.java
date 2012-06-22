@@ -12,10 +12,11 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
 import de.lichtflut.rb.webck.components.common.ComponentFactory;
 
@@ -32,8 +33,11 @@ import de.lichtflut.rb.webck.components.common.ComponentFactory;
  */
 public abstract class CreateResourcePanel extends Panel {
 
-	private IModel<Namespace> nsModel;
-	private IModel<String> nameModel;
+	@SpringBean
+	private DomainOrganizer domainOrganizer;
+	
+	private final IModel<Namespace> nsModel;
+	private final IModel<String> nameModel;
 	
 	// -----------------------------------------------------
 
@@ -78,8 +82,6 @@ public abstract class CreateResourcePanel extends Panel {
 	
 	public abstract void onCreate(final QualifiedName qn, final AjaxRequestTarget target);
 	
-	public abstract ServiceProvider getServiceProvider();
-	
 	// -----------------------------------------------------
 	
 	/** 
@@ -98,7 +100,7 @@ public abstract class CreateResourcePanel extends Panel {
 	}
 	
 	protected List<Namespace> getAvailableNamespaces() {
-		return getServiceProvider().getDomainOrganizer().getNamespaces();
+		return domainOrganizer.getNamespaces();
 	}
 
 }

@@ -11,7 +11,7 @@ import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
@@ -28,7 +28,7 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 public class SNPropertyListModel extends AbstractLoadableDetachableModel<List<SNProperty>> {
 
 	@SpringBean
-	private ServiceProvider provider;
+	private TypeManager typeManager;
 	
 	// ----------------------------------------------------
 	
@@ -46,7 +46,7 @@ public class SNPropertyListModel extends AbstractLoadableDetachableModel<List<SN
 	 */
 	@Override
 	public List<SNProperty> load() {
-		final List<SNProperty> properties = provider.getTypeManager().findAllProperties();
+		final List<SNProperty> properties = typeManager.findAllProperties();
 		Collections.sort(properties, new Comparator<SNProperty>() {
 			@Override
 			public int compare(SNProperty t1, SNProperty t2) {

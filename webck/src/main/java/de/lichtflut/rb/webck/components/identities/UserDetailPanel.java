@@ -27,8 +27,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -54,16 +54,16 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 public class UserDetailPanel extends TypedPanel<RBUser> {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private SecurityService securityService;
 	
 	@SpringBean 
 	private ServiceContext context;
 	
-	private IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
+	private final IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
 
-	private CurrentRolesModel currentRolesModel;
+	private final CurrentRolesModel currentRolesModel;
 	
-	private IModel<List<String>> allRolesModel;
+	private final IModel<List<String>> allRolesModel;
 
 	// ----------------------------------------------------
 
@@ -120,7 +120,7 @@ public class UserDetailPanel extends TypedPanel<RBUser> {
 					@Override
 					public void onConfirm() {
 						try {
-							provider.getSecurityService().resetPasswordForUser(UserDetailPanel.this.getModelObject(), null);
+							securityService.resetPasswordForUser(UserDetailPanel.this.getModelObject(), null);
 						} catch (RBException e) {
 							error(getString("error.send.email"));
 						}
@@ -136,8 +136,8 @@ public class UserDetailPanel extends TypedPanel<RBUser> {
 	
 	public void onSave() {
 		try {
-			provider.getSecurityService().storeUser(getModelObject());
-			provider.getSecurityService().setUserRoles(getModelObject(), null, currentRolesModel.getObject());
+			securityService.storeUser(getModelObject());
+			securityService.setUserRoles(getModelObject(), null, currentRolesModel.getObject());
 			mode.setObject(DisplayMode.VIEW);
 		} catch (RBException e) {
 			long code = e.getErrorCode();
@@ -208,7 +208,7 @@ public class UserDetailPanel extends TypedPanel<RBUser> {
 		@Override
 		protected List<String> derive(RBUser user) {
 			String domain = context.getDomain();
-			return provider.getSecurityService().getUserRoles(user, domain);
+			return securityService.getUserRoles(user, domain);
 		}
 		
 	}

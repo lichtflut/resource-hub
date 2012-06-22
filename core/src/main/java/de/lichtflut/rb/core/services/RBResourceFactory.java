@@ -40,6 +40,11 @@ public class RBResourceFactory {
 		return provider.getEntityManager();
 	}
 	
+	public SchemaManager createSchemaManager(){
+		logger.info("SchemaManager has been requested");
+		return provider.getSchemaManager();
+	}
+	
 	public TypeManager createTypeManager() {
 		logger.info("TypeManager has been requested.");
 		return provider.getTypeManager();
@@ -53,6 +58,11 @@ public class RBResourceFactory {
 	public ViewSpecificationService createViewSpecificationService() {
 		logger.info("ViewSpecificationService has been requested.");
 		return provider.getViewSpecificationService();
+	}
+	
+	public DomainOrganizer createDomainOrganizer(){
+		logger.info("DomainOrganizer has been requested");
+		return provider.getDomainOrganizer();
 	}
 
 }

@@ -22,7 +22,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
@@ -43,7 +43,7 @@ import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 public class SetDomainOrganizationPanel extends TypedPanel<ResourceID> {
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private DomainOrganizer domainOrganizer;
 
 	private final IModel<Boolean> readonly;
 	
@@ -110,7 +110,7 @@ public class SetDomainOrganizationPanel extends TypedPanel<ResourceID> {
 		return new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				provider.getDomainOrganizer().setDomainOrganization(getOrganizationModel() .getObject());
+				domainOrganizer.setDomainOrganization(getOrganizationModel() .getObject());
 				readonly.setObject(true);
 				target.add(SetDomainOrganizationPanel.this);
 			}

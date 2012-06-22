@@ -24,7 +24,7 @@ import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
@@ -42,7 +42,7 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
 public class PublicConstraintsDetailPanel extends Panel{
 
 	@SpringBean
-	private ServiceProvider provider;
+	private SchemaManager schemaManager;
 	
 	// ---------------- Constructor -------------------------
 	
@@ -66,13 +66,13 @@ public class PublicConstraintsDetailPanel extends Panel{
 	// ------------------------------------------------------
 	
 	protected void save(IModel<Constraint> constraint) {
-		getProvider().getSchemaManager().store(constraint.getObject());
+		schemaManager.store(constraint.getObject());
 		info(getString("saved-successfully"));
 		send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent<Constraint>(constraint.getObject(), ModelChangeEvent.PUBLIC_CONSTRAINT));
 	}
 	
 	protected void delete(final IModel<Constraint> constraint) {
-		getProvider().getSchemaManager().remove(constraint.getObject());
+		schemaManager.remove(constraint.getObject());
 	}
 	
 	// ------------------------------------------------------
@@ -123,10 +123,6 @@ public class PublicConstraintsDetailPanel extends Panel{
 		form.add(name, datatypes, pattern);
 	}
 	
-	private ServiceProvider getProvider(){
-		return provider;
-	}
-
 	private void updatePanel() {
 		RBAjaxTarget.add(PublicConstraintsDetailPanel.this);
 	}

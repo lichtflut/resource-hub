@@ -7,7 +7,7 @@ import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
@@ -27,7 +27,7 @@ public class PerspectiveModel extends AbstractLoadableDetachableModel<Perspectiv
 	private final ResourceID perspectiveID;
 	
 	@SpringBean
-	private ServiceProvider provider;
+	private ViewSpecificationService viewSpecificationService;
 	
 	// ----------------------------------------------------
 	
@@ -46,7 +46,7 @@ public class PerspectiveModel extends AbstractLoadableDetachableModel<Perspectiv
 	 */
 	@Override
 	public Perspective load() {
-		return provider.getViewSpecificationService().findPerspective(perspectiveID);
+		return viewSpecificationService.findPerspective(perspectiveID);
 	}
 
 }

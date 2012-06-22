@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
@@ -35,6 +36,9 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
  * @author Oliver Tigges
  */
 public abstract class CreateNamespacePanel extends Panel {
+	
+	@SpringBean
+	private DomainOrganizer domainOrganizer;
 	
 	private final IModel<NamespaceDeclaration> model;
 	
@@ -78,7 +82,7 @@ public abstract class CreateNamespacePanel extends Panel {
 		form.add(new RBStandardButton("create") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				getOrganizer().registerNamespace(model.getObject());
+				domainOrganizer.registerNamespace(model.getObject());
 				send(getPage(), Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.NAMESPACE));
 				onSuccess(target, model.getObject());
 				resetModel();
@@ -107,10 +111,6 @@ public abstract class CreateNamespacePanel extends Panel {
 	
 	// ----------------------------------------------------
 
-	public abstract DomainOrganizer getOrganizer();
-	
-	// ----------------------------------------------------
-	
 	/** 
 	* {@inheritDoc}
 	*/
