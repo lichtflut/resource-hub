@@ -25,7 +25,7 @@ import de.lichtflut.rb.core.schema.model.Datatype;
  * Implementation of {@link Constraint}.
  * </p>
  * <p>
- * All but public constraints shuold be constructed by using the appropriate <code>buildXXX</code>
+ * All but public constraints should be constructed by using the appropriate <code>buildXXX</code>
  * -methods to ensure integrity
  * </p>
  * <p>
@@ -49,7 +49,7 @@ import de.lichtflut.rb.core.schema.model.Datatype;
  */
 public class ConstraintImpl implements Constraint {
 
-	private static Context ctx = RBSchema.CONTEXT;
+	private final static Context ctx = RBSchema.CONTEXT;
 
 	private final ResourceNode node;
 

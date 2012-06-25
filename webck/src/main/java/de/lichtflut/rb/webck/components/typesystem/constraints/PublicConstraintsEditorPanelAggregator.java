@@ -5,7 +5,6 @@ package de.lichtflut.rb.webck.components.typesystem.constraints;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -14,7 +13,6 @@ import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.CreatePublicConstraintDialog;
-import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 import de.lichtflut.rb.webck.components.typesystem.TypeSystemHelpPanel;
 import de.lichtflut.rb.webck.models.types.PublicConstraintsListModel;
 
@@ -61,8 +59,7 @@ public class PublicConstraintsEditorPanelAggregator extends Panel {
 
 	protected void displayConstraintEditor(final Constraint constraint) {
 		final Constraint reloaded = schemaManager.findConstraint(constraint.asResourceNode());
-		final IModel<PropertyRow> model = Model.of(new PropertyRow(reloaded));
-		final Panel editor = new PublicConstraintsDetailPanel("editor", Model.of(model.getObject().asPropertyDeclaration().getConstraint()));
+		final Panel editor = new PublicConstraintsDetailPanel("editor", Model.of(reloaded));
 		replace(editor);
 		RBAjaxTarget.add(editor);
 	}

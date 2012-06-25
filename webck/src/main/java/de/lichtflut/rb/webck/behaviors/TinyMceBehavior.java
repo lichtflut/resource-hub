@@ -60,7 +60,7 @@ public class TinyMceBehavior extends Behavior{
 					"theme : 'rb'" +
 				"});");
 		// Copies content from TinyMce field into Component
-		response.renderOnLoadJavaScript("$('#" + c.getMarkupId()+"_ifr').contents().find('#tinymce').bind('blur', function() { " +
+		response.renderOnLoadJavaScript("$('#" + c.getMarkupId()+"_ifr').contents().find('#tinymce').bind('onblur', function() { " +
 				"var val = $(this).html();"+
 				"$('#"+ c.getMarkupId() + "').html(val);" +
 				"})");

@@ -124,7 +124,7 @@ public class EditPropertyDeclPanel extends Panel {
 
 		final PropertyModel<Datatype> datatypeModel = new PropertyModel<Datatype>(decl, "dataType");
 		DropDownChoice<Datatype> datatypeDDC = new DropDownChoice<Datatype>("datatype", datatypeModel, Arrays.asList(Datatype.values()),
-				new EnumChoiceRenderer<Datatype>(form));
+				new EnumChoiceRenderer<Datatype>(this));
 		datatypeDDC.add(new AjaxFormComponentUpdatingBehavior("onchange") {
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {

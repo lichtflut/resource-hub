@@ -30,6 +30,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.validation.validator.PatternValidator;
+import org.apache.wicket.validation.validator.UrlValidator;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
@@ -137,6 +138,8 @@ public class EntityRowEditPanel extends Panel {
 			return addTextArea(item);
 		case RICH_TEXT:
 			return addRichTextArea(item);
+		case URI:
+			return addURIField(item);
 		default:
 			throw new NotYetImplementedException("Datatype: " + dataType);
 		}
@@ -234,6 +237,13 @@ public class EntityRowEditPanel extends Panel {
 		return field;
 	}
 
+	private FormComponent<?> addURIField(ListItem<RBFieldValueModel> item){
+		final TextField field = new TextField("valuefield", item.getModelObject());
+		field.add(new UrlValidator());
+		item.add(new Fragment("valuefield", "textInput", this).add(field));
+		return field;
+	}
+	
 	private void addValidator(final ListItem<RBFieldValueModel> item, final Component field) {
 		Constraint constraint = item.getModelObject().getField().getConstraint();
 		if((null != constraint) && (null != constraint.getLiteralConstraint())){

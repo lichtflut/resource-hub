@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -106,6 +107,8 @@ public class EntityRowDisplayPanel extends Panel {
 		case RICH_TEXT:
 			addHTMLOutput(item);
 			break;
+		case URI:
+			addLink(item);
 		}
 	}
 
@@ -135,6 +138,12 @@ public class EntityRowDisplayPanel extends Panel {
 		final Label field = new Label("valuefield", new HTMLSafeModel(item.getModelObject()));
 		field.setEscapeModelStrings(false);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
+	}
+	
+	private void addLink(ListItem<RBFieldValueModel> item) {
+		@SuppressWarnings("unchecked")
+		ExternalLink link = new ExternalLink("target", item.getModelObject(), item.getModelObject());
+		item.add(new Fragment("valuefield", "link", this).add(link));
 	}
 	
 	private void addBooleanField(ListItem<RBFieldValueModel> item) {
