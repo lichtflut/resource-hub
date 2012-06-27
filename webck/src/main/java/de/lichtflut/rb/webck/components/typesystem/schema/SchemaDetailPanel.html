@@ -15,11 +15,11 @@
 	<div class="input-panel">
 	
 	<div style="margin-top: 10px; margin-bottom: 10px">
-		<h2>Resource-schema: <wicket:container wicket:id="title" ></wicket:container></h2>
+		<h2>Type: <wicket:container wicket:id="title" ></wicket:container></h2>
 	</div>
 
 	<form wicket:id="form">
-	
+	<div wicket:id="feedback-top"></div>
 	<div class="input-panel margin-bottom-10">
 		<span class="bold"><wicket:message key="field-label-expression" />:</span>
 		<div wicket:id="labelExpression"></div>
@@ -57,6 +57,7 @@
 		<Button wicket:id="addButton"><wicket:message key="button.add" /></Button>
 		<Button wicket:id="saveButton" class="default-button"><wicket:message key="button.save" /></Button>
 	</div>
+	<div wicket:id="feedback-bottom"></div>
 	</form>
 </div>
 </wicket:panel>

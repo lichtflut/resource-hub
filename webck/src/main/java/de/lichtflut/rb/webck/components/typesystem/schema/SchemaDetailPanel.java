@@ -21,6 +21,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -82,7 +83,7 @@ public class SchemaDetailPanel extends Panel {
 	public SchemaDetailPanel(String id, IModel<ResourceSchema> schema) {
 		super(id);
 		this.schema = schema;
-
+		
 		add(createTitleLabel("title"));
 		add(new TypeHierarchyPanel("typeHierarchy", Model.of(schema.getObject().getDescribedType())));
 
@@ -90,6 +91,9 @@ public class SchemaDetailPanel extends Panel {
 		Form form = new Form("form");
 		form.add(createLabelExpressionBuilder());
 		form.add(createListView("listView", this.schema));
+
+		form.add(new FeedbackPanel("feedback-top"));
+		form.add(new FeedbackPanel("feedback-bottom"));
 
 		addButtonBar(form);
 
@@ -129,7 +133,7 @@ public class SchemaDetailPanel extends Panel {
 					try {
 						copy.setLabelBuilder(new ExpressionBasedLabelBuilder(model.getObject()));
 					} catch (LabelExpressionParseException e) {
-						error(getString("error-label-exception"));
+						error(getString("error.label-exception"));
 					}
 					schema.setObject(copy);
 				}
@@ -171,7 +175,7 @@ public class SchemaDetailPanel extends Panel {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				DialogHoster hoster = findParent(DialogHoster.class);
-				ConfirmationDialog dialog = new ConfirmationDialog(hoster.getDialogID(), Model.of(getString("confirmation-delete"))) {
+				ConfirmationDialog dialog = new ConfirmationDialog(hoster.getDialogID(), Model.of(getString("confirmation.deleted-successfull"))) {
 					@Override
 					public void onConfirm() {
 						schemaManager.removeSchemaForType(schema.getObject().getDescribedType());
@@ -192,10 +196,10 @@ public class SchemaDetailPanel extends Panel {
 	}
 
 	private Component createAddbutton(String id) {
+		final IModel<PropertyRow> row = Model.of(new PropertyRow());
 		Button button = new RBStandardButton(id) {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				IModel<PropertyRow> row = Model.of(new PropertyRow());
 				listModel.getObject().add(row.getObject());
 				openPropertyDeclDialog(row);
 			}
@@ -213,6 +217,7 @@ public class SchemaDetailPanel extends Panel {
 					@Override
 					protected void onCancel(AjaxRequestTarget target, Form<?> form) {
 						setDefaultFormProcessing(false);
+						listModel.getObject().remove(row.getObject());
 						close(target);
 					}
 				});
@@ -225,6 +230,7 @@ public class SchemaDetailPanel extends Panel {
 		Button button = new RBStandardButton(id) {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+				info(getString("confirmation.schema-saved-successful"));
 				saveAndUpdate();
 			}
 		};
@@ -273,6 +279,7 @@ public class SchemaDetailPanel extends Panel {
 				picker.add(new AjaxUpdateDataPickerField() {
 					@Override
 					public void onSubmit(AjaxRequestTarget target) {
+						 addTypeNotYetStoredInfo();
 						updatePanel();
 					};
 				});
@@ -281,6 +288,7 @@ public class SchemaDetailPanel extends Panel {
 
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target) {
+				addTypeNotYetStoredInfo();
 				updatePanel();
 				super.onSubmit(target);
 			}
@@ -294,6 +302,7 @@ public class SchemaDetailPanel extends Panel {
 		AjaxEditableLabel<ResourceID> label = new AjaxEditableLabel<ResourceID>("label", model) {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target) {
+				addTypeNotYetStoredInfo();
 				updatePanel();
 				super.onSubmit(target);
 			}
@@ -307,6 +316,7 @@ public class SchemaDetailPanel extends Panel {
 		AjaxEditableLabel<String> label = new AjaxEditableLabel<String>("cardinality", model) {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target) {
+				addTypeNotYetStoredInfo();
 				updatePanel();
 				super.onSubmit(target);
 			}
@@ -320,6 +330,7 @@ public class SchemaDetailPanel extends Panel {
 		AjaxEditableChoiceLabel<Datatype> field = new AjaxEditableChoiceLabel<Datatype>("datatype", model, Arrays.asList(Datatype.values())) {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target) {
+				addTypeNotYetStoredInfo();
 				item.getModelObject().clearConstraint();
 				updatePanel();
 				super.onSubmit(target);
@@ -345,7 +356,14 @@ public class SchemaDetailPanel extends Panel {
 
 	private AjaxEditableLabel<String> createStringPatternField(final ListItem<PropertyRow> item) {
 		IModel<String> patternModel = createModelForLiteralConstraint(item);
-		AjaxEditableLabel<String> patternField = new AjaxEditableLabel<String>("pattern", patternModel);
+		AjaxEditableLabel<String> patternField = new AjaxEditableLabel<String>("pattern", patternModel){
+				@Override
+				protected void onSubmit(final AjaxRequestTarget target) {
+					addTypeNotYetStoredInfo();
+					updatePanel();
+					super.onSubmit(target);
+				}
+		};
 		return patternField;
 	}
 
@@ -369,6 +387,7 @@ public class SchemaDetailPanel extends Panel {
 				picker.add(new AjaxUpdateDataPickerField() {
 					@Override
 					public void onSubmit(AjaxRequestTarget target) {
+						addTypeNotYetStoredInfo();
 						updatePanel();
 					};
 				});
@@ -433,6 +452,9 @@ public class SchemaDetailPanel extends Panel {
 
 	// ------------------------------------------------------
 
+	private void addTypeNotYetStoredInfo(){
+		error(getString("error.schema-not-yet-saved"));
+	}
 	private IModel<ResourceID> createModelForResourceContraint(ListItem<PropertyRow> item) {
 		final IModel<ResourceID> model = new PropertyModel<ResourceID>(item.getModel(), "resourceConstraint");
 		return model;
@@ -470,6 +492,7 @@ public class SchemaDetailPanel extends Panel {
 		case BOOLEAN:
 		case INTEGER:
 		case DECIMAL:
+		case URI:
 			item.add(CssModifier.appendClass(Model.of("key-text")));
 			break;
 		case RESOURCE:

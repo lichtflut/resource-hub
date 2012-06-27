@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -67,6 +68,8 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 		
 		setOutputMarkupId(true);
 		
+		add(new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this)));
+		
 		final SuperClassModel superClassModel = new SuperClassModel(model);
 		
 		final ListView<SNClass> view = new ListView<SNClass>("superClasses", superClassModel) {
@@ -78,6 +81,7 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 					public void onClick(AjaxRequestTarget target) {
 						removeSuperClass(item.getModelObject());
 						superClassModel.reset();
+						info(getString("confirmation.deleted-successful"));
 						target.add(TypeHierarchyPanel.this);
 					}
 				});
@@ -90,7 +94,6 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 		add(hint);
 		
 		final Form<?> form = new Form<Void>("form");
-		form.add(new FeedbackPanel("feedback"));
 		
 		final IModel<ResourceID> newSuperClass = new Model<ResourceID>();
 		
@@ -100,6 +103,7 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				addSuperClass(newSuperClass.getObject());
 				newSuperClass.setObject(null);
+				info(getString("confirmation.saved-successful"));
 				target.add(TypeHierarchyPanel.this);
 			}
 		});

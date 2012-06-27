@@ -29,6 +29,7 @@ public enum Datatype {
 	TIMESTAMP,
 	DATE,
 	TIME_OF_DAY,
+	URI,
 	
 	RESOURCE;
 	
@@ -54,6 +55,8 @@ public enum Datatype {
 		case TEXT:
 		case RICH_TEXT:
 			return ElementaryDataType.STRING;
+		case URI:
+			return ElementaryDataType.URI;
 		default:
 			throw new NotYetSupportedException(type);
 		}
