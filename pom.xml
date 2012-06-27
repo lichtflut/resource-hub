@@ -17,7 +17,7 @@
 		<module>mock</module>
   </modules>
 	<properties>
-		<arastreju.version>0.7.2-SNAPSHOT</arastreju.version>
+		<arastreju.version>0.7.3-SNAPSHOT</arastreju.version>
 	</properties>
 	<build>
 		<pluginManagement>

@@ -14,6 +14,7 @@ import java.util.Set;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.QualifiedName;
@@ -107,9 +108,17 @@ public class EmbeddedAuthAuthorizationManager {
 		if (userNode == null) {
 			throw new RBAuthException(0, "User not found: " + user.getEmail() + " in domain" + domain);
 		}
-		SNOPS.remove(userNode, Aras.HAS_ROLE);
 		
 		final ResourceNode domainNode = domainManager.findDomainNode(domain);
+		// Remove old roles
+		Set<Statement> oldRoles = userNode.getAssociations(Aras.HAS_ROLE);
+		for (Statement stmt : oldRoles) {
+			if (domainNode.equals(stmt.getObject())) {
+				userNode.removeAssociation(stmt);
+			}
+		}
+
+		// add new roles
 		for (String current : roles) {
 			final ResourceNode roleNode = domainManager.getOrCreateRole(domainNode, current);
 			if (roleNode != null) {
