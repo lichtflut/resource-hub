@@ -43,6 +43,7 @@ public class TestServiceProvider extends DefaultRBServiceProvider {
 		super(config, module);
 	}
 
+	@Override
 	protected void initializeDomain(ArastrejuGate gate, String domainName) {
 
 		final Organizer organizer = gate.getOrganizer();
