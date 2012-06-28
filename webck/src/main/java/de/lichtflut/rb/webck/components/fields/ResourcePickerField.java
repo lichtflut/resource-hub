@@ -31,15 +31,6 @@ public class ResourcePickerField extends DataPickerField<ResourceID> {
 	 * @param id The component ID.
 	 * @param model The model.
 	 */
-	public ResourcePickerField(final String id, final IModel<ResourceID> model) {
-		this(id, model, findByURI());
-	}
-	
-	/**
-	 * Constructor.
-	 * @param id The component ID.
-	 * @param model The model.
-	 */
 	public ResourcePickerField(final String id, final IModel<ResourceID> model, final ResourceID type) {
 		this(id, model, findByType(type));
 	}
@@ -48,7 +39,7 @@ public class ResourcePickerField extends DataPickerField<ResourceID> {
 	 *Constructor.
 	 * @param id The component ID.
 	 * @param model The model.
-	 * @param source The source for auto completion.
+	 * @param src The source for auto completion.
 	 */
 	public ResourcePickerField(final String id, final IModel<ResourceID> model, final AutocompleteSource src) {
 		super(id, model, new ResourceDisplayModel(model), src);

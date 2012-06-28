@@ -5,7 +5,7 @@ package de.lichtflut.rb.webck.config;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Provider for URIs of the query service.
  * </p>
  *
  * <p>
@@ -17,5 +17,7 @@ package de.lichtflut.rb.webck.config;
 public interface QueryServicePathBuilder {
 	
 	String queryEntities(String domain, String type);
-	
+
+    String queryClasses(String domain, String superClass);
+
 }

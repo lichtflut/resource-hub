@@ -20,9 +20,7 @@ import org.apache.wicket.util.crypt.Base64;
 public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
 	
 	public String queryEntities(String domain, String type) {
-		final String ctx = RequestCycle.get().getRequest().getContextPath();
-		final StringBuilder sb = new StringBuilder(ctx + "/service/query");
-		sb.append("/domains/" + domain);
+		final StringBuilder sb = preparePathBuilder(domain);
 		sb.append("/entities");
 		if (type != null) {
 			sb.append("?type=");
@@ -30,5 +28,26 @@ public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
 		}
 		return sb.toString();
 	}
-	
+
+    @Override
+    public String queryClasses(String domain, String superClass) {
+        final StringBuilder sb = preparePathBuilder(domain);
+        sb.append("/classes");
+        if (superClass != null) {
+            sb.append("?superclass=");
+            sb.append(Base64.encodeBase64URLSafeString(superClass.getBytes()));
+        }
+        return sb.toString();
+    }
+
+    // ----------------------------------------------------
+
+    private StringBuilder preparePathBuilder(String domain) {
+        final String ctx = RequestCycle.get().getRequest().getContextPath();
+        final StringBuilder sb = new StringBuilder(ctx + "/service/query");
+        sb.append("/domains/" + domain);
+        return sb;
+    }
+
+
 }

@@ -53,7 +53,8 @@ public class EmbeddedAuthUserManagerTest {
 	
 	@Test
 	public void blackBoxTest() throws RBAuthException {
-		initDomainZ();
+		givenDomainZ();
+
 		EmbeddedAuthUserManager userManager = new EmbeddedAuthUserManager(gate.startConversation(), domainManager);
 		Assert.assertNull(userManager.findUser("x"));
 		
@@ -65,11 +66,11 @@ public class EmbeddedAuthUserManagerTest {
 		
 		Assert.assertNotNull(userManager.findUser("x"));
 	}
-	
+
 	// ----------------------------------------------------
 	
-	private void initDomainZ() {
-		Mockito.when(domainManager.findDomainNode("z")).thenReturn(new SNResource());
+	private void givenDomainZ() {
+        Mockito.when(domainManager.findDomainNode("z")).thenReturn(new SNResource());
 	}
 
 }

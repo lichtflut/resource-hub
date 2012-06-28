@@ -47,7 +47,7 @@ import de.lichtflut.rb.rest.api.RBServiceEndpoint;
  */
 @Component
 @Path("query/domains/{domain}/entities")
-public class EntityQueryService extends RBServiceEndpoint {
+public class EntityQueryService extends AbstractQueryService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EntityQueryService.class); 
 
@@ -86,34 +86,9 @@ public class EntityQueryService extends RBServiceEndpoint {
 	// ----------------------------------------------------
 	
 	private List<ResultItemRVO> performQuery(Query query, String term, String type) {
-		new TermSearcher().prepareQuery(query, term, Mode.ENTITY, type);
+		new TermSearcher().prepareQuery(query, term, Mode.SUB_CLASS, type);
 
-		final List<ResultItemRVO> rvoList = new ArrayList<ResultItemRVO>();
-		for (ResourceNode node : query.getResult()) {
-			ResultItemRVO item = new ResultItemRVO();
-			item.setId(node.toURI());
-			item.setLabel(ResourceLabelBuilder.getInstance().getLabel(node, Locale.getDefault()));
-			item.setInfo(ResourceLabelBuilder.getInstance().getLabel(node, Locale.getDefault()));
-			rvoList.add(item);
-		}
-		return rvoList;
-	}
-	
-	private Query createQuery(String domain, RBUser user) {
-		return conversation(domain, user).createQuery();
-	}
-	
-	private ModelingConversation conversation(String domain, RBUser user) {
-		final ServiceProvider provider = getProvider(domain, user);
-		return provider.getConversation();
-	}
-	
-	private String decodeBase64(String encoded) {
-		if (encoded == null) {
-			return null;
-		}
-		byte[] decoded = Base64.decode(encoded);
-		return new String(decoded);
+        return buildResult(query.getResult());
 	}
 	
 }

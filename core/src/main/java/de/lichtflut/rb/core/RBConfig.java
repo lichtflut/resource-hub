@@ -25,11 +25,6 @@ public class RBConfig {
 	 */
 	public static final String DOMAIN_WORK_DIRECTORY = "de.lichtflut.rb.workdir";
 	
-	/**
-	 * Default directory.
-	 */
-	public static final String DEFAULT_WORK_DIRECTORY = "root";
-	
 	// ----------------------------------------------------
 	
 	/**
@@ -55,7 +50,7 @@ public class RBConfig {
 
 	/**
 	 * Constructor.
-	 * @param domain The domain to be used.
+	 * @param profileName The arastreju profile to be used.
 	 */
 	public RBConfig(final String profileName) {
 		this.profileName = profileName;

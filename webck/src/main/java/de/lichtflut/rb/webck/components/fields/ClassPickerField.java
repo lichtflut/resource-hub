@@ -3,14 +3,13 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.util.crypt.Base64;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
-
-import de.lichtflut.rb.webck.application.ResourceQueryServlet;
 
 /**
  * <p>
@@ -25,9 +24,13 @@ import de.lichtflut.rb.webck.application.ResourceQueryServlet;
  */
 public class ClassPickerField extends DataPickerField<ResourceID> {
 	
-	public static final String BASE_URI = "/internal/query" + ResourceQueryServlet.QUERY_SUB_CLASS;
-	
 	private final IModel<ResourceID> superClass;
+
+    @SpringBean
+    private QueryServicePathBuilder pathBuilder;
+
+    @SpringBean
+    private ServiceContext serviceContext;
 	
 	// ----------------------------------------------------
 
@@ -46,7 +49,7 @@ public class ClassPickerField extends DataPickerField<ResourceID> {
 	 * @param model The model.
 	 */
 	public ClassPickerField(final String id, final IModel<ResourceID> model, final IModel<ResourceID> superClass) {
-		super(id, model, findSubClasses(null));
+		super(id, model, null);
 		this.superClass = superClass;
 		setType(ResourceID.class);
 	}
@@ -64,14 +67,10 @@ public class ClassPickerField extends DataPickerField<ResourceID> {
 	
 	// ----------------------------------------------------
 	
-	public static AutocompleteSource findSubClasses(ResourceID superClass) {
-		final String ctx = RequestCycle.get().getRequest().getContextPath();
-		final StringBuilder sb = new StringBuilder(ctx + BASE_URI);
-		if (superClass != null) {
-			sb.append("?type=");
-			sb.append(Base64.encodeBase64URLSafeString(superClass.getQualifiedName().toURI().getBytes()));
-		}
-		return new AutocompleteSource(sb.toString());
+	public AutocompleteSource findSubClasses(ResourceID superClass) {
+        String uri = superClass != null ? superClass.toURI() : null;
+        return new AutocompleteSource(
+                pathBuilder.queryClasses(serviceContext.getDomain(), uri));
 	}
 	
 }

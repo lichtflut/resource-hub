@@ -58,12 +58,6 @@ public class EntityPickerField extends DataPickerField<ResourceID> {
 	// -----------------------------------------------------
 	
 	public AutocompleteSource findEntity(final ResourceID type) {
-//		final String ctx = RequestCycle.get().getRequest().getContextPath();
-//		final StringBuilder sb = new StringBuilder(ctx + "/internal/query/entity");
-//		if (type != null) {
-//			sb.append("?type=");
-//			sb.append(Base64.encodeBase64URLSafeString(type.getQualifiedName().toURI().getBytes()));
-//		}
 		return new AutocompleteSource(pathBuilder.queryEntities(serviceContext.getDomain(), type.toURI()));
 	}
 	
