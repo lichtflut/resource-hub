@@ -3,12 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
-import de.lichtflut.rb.webck.components.form.RBCancelButton;
-import de.lichtflut.rb.webck.components.form.RBDefaultButton;
-import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
+import java.util.Date;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -23,7 +19,12 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 
-import java.util.Date;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
+import de.lichtflut.rb.webck.components.form.RBDefaultButton;
+import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
 
 /**
  * <p>
@@ -61,7 +62,7 @@ public class EditNoteDialog extends AbstractRBDialog {
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				final ResourceNode noteResource = model.getObject();
 				SNOPS.assure(noteResource, DC.CREATED, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
-				SNOPS.assure(noteResource, DC.CREATOR, context.getUser());
+				SNOPS.assure(noteResource, DC.CREATOR, context.getUser().getName());
 				conversation.attach(noteResource);
 				onSave(noteResource);
 				close(target);

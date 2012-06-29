@@ -3,12 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.notes;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
-import de.lichtflut.rb.webck.models.resources.ResourcePropertyModel;
-import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
+import java.text.DateFormat;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -17,7 +13,11 @@ import org.arastreju.sge.apriori.DC;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import java.text.DateFormat;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
+import de.lichtflut.rb.webck.models.resources.ResourcePropertyModel;
+import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
 
 /**
  * <p>
@@ -47,7 +47,7 @@ public abstract class MezzlePanel extends TypedPanel<ResourceNode> {
 				new ResourcePropertyModel<SemanticNode>(model, DC.CREATOR)) {
 			@Override
 			protected String derive(SemanticNode userNode) {
-				return new RBUser(userNode.asResource()).getName();
+				return userNode.asValue().getStringValue();
 			}
 		}));
 		
