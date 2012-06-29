@@ -67,6 +67,14 @@ public class ArastrejuResourceFactory {
         return gate().getOrganizer();
     }
 
+    public void closeConversation() {
+        if (conversation != null) {
+            logger.info("Closing conversation {}.", conversation.getConversationContext());
+            conversation.close();
+            conversation = null;
+        }
+    }
+
     // ----------------------------------------------------
 
     /**
