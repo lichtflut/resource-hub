@@ -33,6 +33,8 @@ public class TinyMceBehavior extends Behavior{
 	private final static ResourceReference CONTENT_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/rb/skins/default/content.css");
 	private final static ResourceReference DIALOG_CSS = new CssResourceReference(TinyMceBehavior.class, "tiny_mce/themes/rb/skins/default/dialog.css");
 
+	private final static ResourceReference LFRB_RICHT_TEXT_JS = new JavaScriptResourceReference(TinyMceBehavior.class, "lfrb-richtext.js");
+	
 	
 	// ------------------------------------------------------
 	
@@ -50,6 +52,7 @@ public class TinyMceBehavior extends Behavior{
 		response.renderJavaScriptReference(TINY_MCE);
 		response.renderJavaScriptReference(TINY_THEME);
 		response.renderJavaScriptReference(TINY_EN);
+		response.renderJavaScriptReference(LFRB_RICHT_TEXT_JS);
 		response.renderCSSReference(UI_CSS);
 		response.renderCSSReference(CONTENT_CSS);
 		response.renderCSSReference(DIALOG_CSS);
@@ -60,10 +63,16 @@ public class TinyMceBehavior extends Behavior{
 					"theme : 'rb'" +
 				"});");
 		// Copies content from TinyMce field into Component
-		response.renderOnLoadJavaScript("$('#" + c.getMarkupId()+"_ifr').contents().find('#tinymce').bind('onblur', function() { " +
-				"var val = $(this).html();"+
-				"$('#"+ c.getMarkupId() + "').html(val);" +
-				"})");
+//		response.renderOnLoadJavaScript("$('#" + c.getMarkupId()+"_ifr').contents().find('#tinymce').bind('onblur', function() { " +
+//				"var val = $(this).html();"+
+//				"$('#"+ c.getMarkupId() + "').html(val);" +
+//				"})");
+		response.renderOnLoadJavaScript("LFRB.RichText.init('" + c.getMarkupId() + "');");
+//		response.renderOnLoadJavaScript("$('#" + c.getMarkupId() + "_ifr').contents().find('#tinymce').bind('onblur', function(){" +
+//					"alert('active');" +
+//					"$('#"+ c.getMarkupId() + "').html(tinyMCE.activeEditor.getContent({format : 'raw'}));" +
+//				"})");
+
 		super.renderHead(c, response);
 	}
 }
