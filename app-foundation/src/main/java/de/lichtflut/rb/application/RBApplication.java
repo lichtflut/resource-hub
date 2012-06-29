@@ -43,7 +43,7 @@ public abstract class RBApplication extends WebApplication {
 
     // ----------------------------------------------------
 
-    public abstract Class<Page> getLoginPage();
+    public abstract Class<? extends Page> getLoginPage();
 
     // ----------------------------------------------------
 

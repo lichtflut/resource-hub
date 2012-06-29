@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.services.impl;
 
 import java.util.List;
 
+import de.lichtflut.rb.core.services.ServiceContext;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.apriori.RDF;
@@ -30,6 +31,8 @@ import de.lichtflut.rb.core.services.ServiceProvider;
 public class AbstractService {
 	
 	private final ServiceProvider provider;
+
+    private final ServiceContext context;
 	
 	// ----------------------------------------------------
 	
@@ -39,6 +42,7 @@ public class AbstractService {
 	 */
 	public AbstractService(ServiceProvider provider) {
 		this.provider = provider;
+        this.context = provider.getContext();
 	}
 	
 	// ----------------------------------------------------
@@ -53,7 +57,7 @@ public class AbstractService {
 	// ----------------------------------------------------
 	
 	protected ResourceNode currentUser() {
-		final RBUser user = getProvider().getContext().getUser();
+		final RBUser user = context.getUser();
 		if (user == null) {
 			return null;
 		} else {
