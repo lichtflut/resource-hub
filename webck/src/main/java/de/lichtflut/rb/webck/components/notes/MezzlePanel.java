@@ -9,15 +9,17 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.DC;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.resources.ResourcePropertyModel;
-import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
 
 /**
  * <p>
@@ -41,7 +43,7 @@ public abstract class MezzlePanel extends TypedPanel<ResourceNode> {
 	public MezzlePanel(final String id, final IModel<ResourceNode> model) {
 		super(id, model);
 		
-		add(new Label("content", new ResourceTextPropertyModel(model, RBSystem.HAS_CONTENT)));
+		add(new Label("content", new HTMLSafeModel(Model.of(getNoteContent(model)))).setEscapeModelStrings(false));
 		
 		add(new Label("creator", new DerivedModel<String, SemanticNode>(
 				new ResourcePropertyModel<SemanticNode>(model, DC.CREATOR)) {
@@ -76,6 +78,19 @@ public abstract class MezzlePanel extends TypedPanel<ResourceNode> {
 	}
 	
 	// ----------------------------------------------------
+
+	/**
+	 * @return the content of a Note as a String.
+	 */
+	private String getNoteContent(IModel<ResourceNode> model) {
+		final SemanticNode node = SNOPS.singleObject(model.getObject(), RBSystem.HAS_CONTENT);
+		if (node != null) {
+			return node.asValue().getStringValue();
+		} else {
+			return null;
+		}
+	}
+
 	
 	/**
 	 * Hook for editing of notes.
