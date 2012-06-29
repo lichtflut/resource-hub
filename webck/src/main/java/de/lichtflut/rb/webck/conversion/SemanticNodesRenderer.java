@@ -3,6 +3,14 @@
  */
 package de.lichtflut.rb.webck.conversion;
 
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import org.apache.wicket.Application;
+import org.apache.wicket.IConverterLocator;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.ValueNode;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -10,15 +18,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import org.apache.wicket.Application;
-import org.apache.wicket.IConverterLocator;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.model.nodes.ValueNode;
-
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 
 /**
  * <p>

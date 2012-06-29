@@ -3,14 +3,13 @@
  */
 package de.lichtflut.rb.webck.models.viewspecs;
 
-import java.util.List;
-
-import org.apache.wicket.injection.Injector;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-
 import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
+import java.util.List;
 
 /**
  * <p>

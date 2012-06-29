@@ -3,14 +3,22 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.and;
-import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Date;
-
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.entity.EntityHandle;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
+import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.HTMLSafeModel;
+import de.lichtflut.rb.webck.models.fields.FieldCardinalityModel;
+import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
+import de.lichtflut.rb.webck.models.fields.FieldSizeModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -34,22 +42,13 @@ import org.apache.wicket.validation.validator.UrlValidator;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
-import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
-import de.lichtflut.rb.webck.components.fields.EntityPickerField;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.HTMLSafeModel;
-import de.lichtflut.rb.webck.models.fields.FieldCardinalityModel;
-import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
-import de.lichtflut.rb.webck.models.fields.FieldSizeModel;
-import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
-import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
+
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.and;
+import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
 
 /**
  * <p>

@@ -3,18 +3,17 @@
  */
 package de.lichtflut.rb.webck.components.common;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
 
 /**
  * <p>

@@ -3,8 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.domains;
 
-import java.util.List;
-
+import de.lichtflut.rb.core.security.RBDomain;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -14,8 +14,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 
-import de.lichtflut.rb.core.security.RBDomain;
-import de.lichtflut.rb.webck.components.common.TypedPanel;
+import java.util.List;
 
 /**
  * <p>

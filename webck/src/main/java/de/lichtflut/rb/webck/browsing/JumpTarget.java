@@ -3,11 +3,11 @@
  */
 package de.lichtflut.rb.webck.browsing;
 
-import java.io.Serializable;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import java.io.Serializable;
 
 /**
  * <p>

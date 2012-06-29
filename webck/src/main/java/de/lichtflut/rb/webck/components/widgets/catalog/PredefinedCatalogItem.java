@@ -3,13 +3,12 @@
  */
 package de.lichtflut.rb.webck.components.widgets.catalog;
 
-import org.apache.wicket.model.IModel;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.nodes.views.SNText;
-
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
+import org.apache.wicket.model.IModel;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.nodes.views.SNText;
 
 /**
  * <p>

@@ -3,17 +3,16 @@
  */
 package de.lichtflut.rb.webck.models.resources;
 
-import java.util.Collections;
-import java.util.List;
-
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
+import de.lichtflut.rb.webck.models.basic.PageableModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.QueryResult;
 
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
-import de.lichtflut.rb.webck.models.basic.PageableModel;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>

@@ -3,10 +3,9 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
+import de.lichtflut.rb.webck.components.typesystem.CreateResourcePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.arastreju.sge.naming.QualifiedName;
-
-import de.lichtflut.rb.webck.components.typesystem.CreateResourcePanel;
 
 /**
  * <p>

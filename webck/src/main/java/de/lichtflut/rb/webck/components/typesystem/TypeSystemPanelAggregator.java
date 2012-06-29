@@ -3,9 +3,12 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.webck.components.typesystem.constraints.PublicConstraintsEditorPanelAggregator;
+import de.lichtflut.rb.webck.components.typesystem.properties.PropertyDeclEditorPanelAggregator;
+import de.lichtflut.rb.webck.components.typesystem.schema.SchemaEditorAggregator;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
@@ -13,12 +16,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
-import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.webck.components.typesystem.constraints.PublicConstraintsEditorPanelAggregator;
-import de.lichtflut.rb.webck.components.typesystem.properties.PropertyDeclEditorPanelAggregator;
-import de.lichtflut.rb.webck.components.typesystem.schema.SchemaEditorAggregator;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Aggregation of all components necessary to edit {@link ResourceSchema}s,

@@ -3,12 +3,11 @@
  */
 package de.lichtflut.rb.webck.browsing;
 
+import de.lichtflut.rb.core.entity.RBEntity;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
-
-import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
  * <p>

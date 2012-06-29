@@ -4,16 +4,15 @@
 package de.lichtflut.rb.webck.components.listview;
 
 
+import de.lichtflut.rb.webck.behaviors.TitleModifier;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
+import de.lichtflut.rb.webck.components.links.LabeledLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
-
-import de.lichtflut.rb.webck.behaviors.TitleModifier;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
-import de.lichtflut.rb.webck.components.links.LabeledLink;
 
 /**
  * <p>

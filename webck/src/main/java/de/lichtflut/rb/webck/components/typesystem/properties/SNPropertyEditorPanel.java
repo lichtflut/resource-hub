@@ -3,14 +3,17 @@
  */
 package de.lichtflut.rb.webck.components.typesystem.properties;
 
-import static org.arastreju.sge.SNOPS.assure;
-import static org.arastreju.sge.SNOPS.singleObject;
-import static org.arastreju.sge.SNOPS.string;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
+import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
@@ -29,17 +32,13 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.model.nodes.views.SNText;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.TypeManager;
-import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
-import de.lichtflut.rb.webck.components.form.RBCancelButton;
-import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
-import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
-import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import static org.arastreju.sge.SNOPS.assure;
+import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
 
 /**
  * <p>

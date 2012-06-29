@@ -3,10 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.typesystem.properties;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.arastreju.sge.model.nodes.views.SNProperty;
-
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
@@ -14,6 +10,9 @@ import de.lichtflut.rb.webck.components.dialogs.CreatePropertyDialog;
 import de.lichtflut.rb.webck.components.typesystem.TypeSystemHelpPanel;
 import de.lichtflut.rb.webck.models.types.SNPropertyListModel;
 import de.lichtflut.rb.webck.models.types.SNPropertyModel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.arastreju.sge.model.nodes.views.SNProperty;
 
 /**
  * <p>

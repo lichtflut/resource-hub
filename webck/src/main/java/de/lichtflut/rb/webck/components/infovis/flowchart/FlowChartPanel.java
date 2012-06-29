@@ -3,16 +3,15 @@
  */
 package de.lichtflut.rb.webck.components.infovis.flowchart;
 
-import java.util.Collection;
-
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
+import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
+import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
-import de.lichtflut.rb.webck.components.entity.VisualizationMode;
-import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
-import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
+import java.util.Collection;
 
 /**
  * <p>

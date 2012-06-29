@@ -3,11 +3,9 @@
  */
 package de.lichtflut.rb.webck.components.relationships;
 
-import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
-import static de.lichtflut.rb.webck.models.ConditionalModel.not;
-
-import java.util.List;
-
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.components.listview.ActionLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -19,9 +17,10 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
-import de.lichtflut.rb.webck.components.listview.ActionLink;
+import java.util.List;
+
+import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 /**
  * <p>

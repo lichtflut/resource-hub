@@ -3,22 +3,21 @@
  */
 package de.lichtflut.rb.webck.components.listview;
 
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.webck.components.listview.ColumnHeader.ColumnType;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.arastreju.sge.model.ResourceID;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.arastreju.sge.model.ResourceID;
-
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.webck.components.listview.ColumnHeader.ColumnType;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
  * <p>

@@ -3,11 +3,11 @@
  */
 package de.lichtflut.rb.webck.events;
 
+import org.apache.wicket.event.IEvent;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.apache.wicket.event.IEvent;
 
 /**
  * <p>

@@ -3,15 +3,14 @@
  */
 package de.lichtflut.rb.webck.models.entity;
 
-import java.util.List;
-
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import java.util.List;
 
 /**
  * <p>

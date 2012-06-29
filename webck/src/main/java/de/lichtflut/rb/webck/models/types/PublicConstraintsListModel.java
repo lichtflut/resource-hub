@@ -3,15 +3,14 @@
  */
 package de.lichtflut.rb.webck.models.types;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.wicket.injection.Injector;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>

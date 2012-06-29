@@ -3,13 +3,12 @@
  */
 package de.lichtflut.rb.webck.models.types;
 
-import java.util.List;
-
-import org.apache.wicket.model.IModel;
-
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
+import org.apache.wicket.model.IModel;
+
+import java.util.List;
 
 /**
  * <p>

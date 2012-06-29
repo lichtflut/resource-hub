@@ -3,10 +3,10 @@
  */
 package de.lichtflut.rb.webck.browsing;
 
-import java.io.Serializable;
-
-import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.core.entity.EntityHandle;
+import scala.actors.threadpool.Arrays;
+
+import java.io.Serializable;
 
 /**
  * <p>

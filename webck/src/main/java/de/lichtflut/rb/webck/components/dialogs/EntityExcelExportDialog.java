@@ -4,11 +4,9 @@
 package de.lichtflut.rb.webck.components.dialogs;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.ExcelExporter;
+import de.lichtflut.rb.core.services.impl.EntityExcelExporter;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -23,9 +21,10 @@ import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.ExcelExporter;
-import de.lichtflut.rb.core.services.impl.EntityExcelExporter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * <p>

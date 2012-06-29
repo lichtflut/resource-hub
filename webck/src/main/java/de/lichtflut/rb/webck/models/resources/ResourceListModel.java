@@ -3,8 +3,7 @@
  */
 package de.lichtflut.rb.webck.models.resources;
 
-import java.util.List;
-
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.ModelingConversation;
@@ -15,7 +14,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.SortCriteria;
 
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import java.util.List;
 
 /**
  * <p>

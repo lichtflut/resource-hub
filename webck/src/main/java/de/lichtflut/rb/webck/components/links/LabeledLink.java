@@ -3,14 +3,13 @@
  */
 package de.lichtflut.rb.webck.components.links;
 
+import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-
-import de.lichtflut.rb.webck.behaviors.CssModifier;
-import de.lichtflut.rb.webck.behaviors.TitleModifier;
 
 /**
  * <p>

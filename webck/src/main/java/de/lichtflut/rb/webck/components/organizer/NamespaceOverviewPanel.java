@@ -3,8 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.organizer;
 
-import java.util.List;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -13,6 +11,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.naming.Namespace;
+
+import java.util.List;
 
 /**
  * <p>

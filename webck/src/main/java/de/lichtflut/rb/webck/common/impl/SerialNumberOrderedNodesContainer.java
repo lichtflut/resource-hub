@@ -3,9 +3,7 @@
  */
 package de.lichtflut.rb.webck.common.impl;
 
-import java.util.Collections;
-import java.util.List;
-
+import de.lichtflut.rb.webck.common.OrderedNodesContainer;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
@@ -13,7 +11,8 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
-import de.lichtflut.rb.webck.common.OrderedNodesContainer;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>

@@ -12,8 +12,7 @@
 		<module>tools</module>
 		<module>webck</module>
         <module>rest-api</module>
-		<module>websample</module>
-		<module>mock</module>
+		<module>app-foundation</module>
   </modules>
 	<properties>
 		<arastreju.version>0.7.3-SNAPSHOT</arastreju.version>

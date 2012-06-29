@@ -3,11 +3,11 @@
  */
 package de.lichtflut.rb.webck.conversion;
 
-import java.util.Locale;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.util.convert.IConverter;
 import org.arastreju.sge.naming.QualifiedName;
+
+import java.util.Locale;
 
 /**
  * <p>

@@ -3,8 +3,16 @@
  */
 package de.lichtflut.rb.webck.components.widgets.management;
 
-import java.util.List;
-
+import de.lichtflut.rb.core.services.ViewSpecificationService;
+import de.lichtflut.rb.core.viewspec.MenuItem;
+import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.webck.common.OrderedNodesContainer;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.common.impl.SerialNumberOrderedNodesContainer;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.basic.CastingModel;
+import de.lichtflut.rb.webck.models.viewspecs.MenuItemListModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -18,16 +26,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
-import de.lichtflut.rb.core.services.ViewSpecificationService;
-import de.lichtflut.rb.core.viewspec.MenuItem;
-import de.lichtflut.rb.core.viewspec.Perspective;
-import de.lichtflut.rb.webck.common.OrderedNodesContainer;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.common.impl.SerialNumberOrderedNodesContainer;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.basic.CastingModel;
-import de.lichtflut.rb.webck.models.viewspecs.MenuItemListModel;
+import java.util.List;
 
 /**
  * <p>

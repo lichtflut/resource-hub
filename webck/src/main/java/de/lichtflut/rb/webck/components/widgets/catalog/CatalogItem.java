@@ -3,11 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.widgets.catalog;
 
-import java.io.Serializable;
-
+import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import org.apache.wicket.model.IModel;
 
-import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import java.io.Serializable;
 
 /**
  * <p>

@@ -3,8 +3,15 @@
  */
 package de.lichtflut.rb.webck.components.typesystem.constraints;
 
-import java.util.List;
-
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
+import de.lichtflut.rb.webck.components.form.RBButtonBar;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
@@ -19,17 +26,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-
 import scala.actors.threadpool.Arrays;
-import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
-import de.lichtflut.rb.webck.components.form.RBButtonBar;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
+
+import java.util.List;
 
 /**
  * <p>

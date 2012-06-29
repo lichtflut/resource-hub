@@ -3,14 +3,14 @@
  */
 package de.lichtflut.rb.webck.components.navigation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>

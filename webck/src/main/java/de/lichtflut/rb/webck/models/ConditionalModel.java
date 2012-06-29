@@ -3,15 +3,14 @@
  */
 package de.lichtflut.rb.webck.models;
 
-import java.util.Collection;
-
+import de.lichtflut.infra.Infra;
+import de.lichtflut.rb.core.entity.RBEntity;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 
-import de.lichtflut.infra.Infra;
-import de.lichtflut.rb.core.entity.RBEntity;
+import java.util.Collection;
 
 /**
  * <p>

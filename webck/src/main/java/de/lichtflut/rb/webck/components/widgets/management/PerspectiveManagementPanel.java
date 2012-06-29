@@ -3,6 +3,12 @@
  */
 package de.lichtflut.rb.webck.components.widgets.management;
 
+import de.lichtflut.rb.core.services.ViewSpecificationService;
+import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.viewspecs.PerspectiveListModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
@@ -11,13 +17,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-
-import de.lichtflut.rb.core.services.ViewSpecificationService;
-import de.lichtflut.rb.core.viewspec.Perspective;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.viewspecs.PerspectiveListModel;
 
 /**
  * <p>

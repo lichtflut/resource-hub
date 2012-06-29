@@ -3,23 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.views.SNClass;
-
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.TypeManager;
@@ -35,6 +18,22 @@ import de.lichtflut.rb.webck.models.entity.RBEntityImageUrlModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.views.SNClass;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
 
 /**
  * This Panel represents an {@link RBEntity}.

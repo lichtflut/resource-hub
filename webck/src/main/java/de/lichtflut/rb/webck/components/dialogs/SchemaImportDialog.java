@@ -3,10 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
+import de.lichtflut.rb.core.io.IOReport;
+import de.lichtflut.rb.core.services.SchemaImporter;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -20,10 +20,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.core.io.IOReport;
-import de.lichtflut.rb.core.services.SchemaImporter;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>

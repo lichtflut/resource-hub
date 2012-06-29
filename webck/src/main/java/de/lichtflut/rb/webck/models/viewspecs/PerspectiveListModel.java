@@ -3,9 +3,9 @@
  */
 package de.lichtflut.rb.webck.models.viewspecs;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.core.viewspec.WDGT;
+import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -15,9 +15,8 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
 
-import de.lichtflut.rb.core.viewspec.Perspective;
-import de.lichtflut.rb.core.viewspec.WDGT;
-import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>

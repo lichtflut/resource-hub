@@ -3,8 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.widgets.config;
 
-import org.apache.wicket.model.IModel;
-
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.components.widgets.EntityListWidget;
@@ -12,6 +10,7 @@ import de.lichtflut.rb.webck.components.widgets.config.actions.ActionsConfigPane
 import de.lichtflut.rb.webck.components.widgets.config.columns.ColumnsConfigPanel;
 import de.lichtflut.rb.webck.components.widgets.config.selection.SelectionConfigPanel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * <p>

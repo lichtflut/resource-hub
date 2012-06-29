@@ -3,9 +3,9 @@
  */
 package de.lichtflut.rb.webck.common;
 
-import java.io.Serializable;
-
 import org.arastreju.sge.model.nodes.ResourceNode;
+
+import java.io.Serializable;
 
 /**
  * <p>

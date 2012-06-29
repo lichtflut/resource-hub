@@ -3,14 +3,13 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
+import de.lichtflut.rb.webck.components.dialogs.SchemaExportDialog;
+import de.lichtflut.rb.webck.components.dialogs.SchemaImportDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.odlabs.wiquery.ui.dialog.Dialog;
-
-import de.lichtflut.rb.webck.components.dialogs.SchemaExportDialog;
-import de.lichtflut.rb.webck.components.dialogs.SchemaImportDialog;
 
 /**
  * <p>

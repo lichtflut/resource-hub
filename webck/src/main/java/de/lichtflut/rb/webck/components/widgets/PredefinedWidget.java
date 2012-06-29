@@ -3,17 +3,16 @@
  */
 package de.lichtflut.rb.webck.components.widgets;
 
-import java.lang.reflect.Constructor;
-
+import de.lichtflut.rb.core.viewspec.WDGT;
+import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.models.ConditionalModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import de.lichtflut.rb.core.viewspec.WDGT;
-import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.webck.models.ConditionalModel;
+import java.lang.reflect.Constructor;
 
 /**
  * <p>

@@ -3,17 +3,16 @@
  */
 package de.lichtflut.rb.webck.models.fields;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.lichtflut.rb.core.entity.ResourceField;
+import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
-import de.lichtflut.rb.core.entity.ResourceField;
-import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>

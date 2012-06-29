@@ -3,12 +3,11 @@
  */
 package de.lichtflut.rb.webck.models.resources;
 
-import java.util.Locale;
-
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import java.util.Locale;
 
 /**
  * <p>

@@ -3,18 +3,17 @@
  */
 package de.lichtflut.rb.webck.browsing;
 
-import java.io.Serializable;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.concurrent.LinkedBlockingDeque;
-
+import de.lichtflut.rb.core.entity.EntityHandle;
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.entity.EntityHandle;
+import java.io.Serializable;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * <p>

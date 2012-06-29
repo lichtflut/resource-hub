@@ -3,31 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.widgets;
 
-import static de.lichtflut.rb.webck.models.ConditionalModel.not;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryException;
-import org.arastreju.sge.query.QueryResult;
-import org.arastreju.sge.query.SimpleQueryResult;
-import org.arastreju.sge.query.SortCriteria;
-import org.arastreju.sge.structure.OrderBySerialNumber;
-
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WDGT;
@@ -50,6 +25,30 @@ import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.basic.PageableModel;
 import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.query.Query;
+import org.arastreju.sge.query.QueryException;
+import org.arastreju.sge.query.QueryResult;
+import org.arastreju.sge.query.SimpleQueryResult;
+import org.arastreju.sge.query.SortCriteria;
+import org.arastreju.sge.structure.OrderBySerialNumber;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 /**
  * <p>

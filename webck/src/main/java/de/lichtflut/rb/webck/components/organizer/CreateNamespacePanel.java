@@ -3,8 +3,12 @@
  */
 package de.lichtflut.rb.webck.components.organizer;
 
-import static de.lichtflut.rb.webck.components.common.ComponentFactory.addTextField;
-
+import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
+import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
@@ -17,12 +21,7 @@ import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
 
-import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
-import de.lichtflut.rb.core.services.DomainOrganizer;
-import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
-import de.lichtflut.rb.webck.components.form.RBCancelButton;
-import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import static de.lichtflut.rb.webck.components.common.ComponentFactory.addTextField;
 
 /**
  * <p>

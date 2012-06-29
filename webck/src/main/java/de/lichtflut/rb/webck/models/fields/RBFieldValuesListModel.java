@@ -3,12 +3,11 @@
  */
 package de.lichtflut.rb.webck.models.fields;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.lichtflut.rb.core.entity.RBField;
 import org.apache.wicket.model.IModel;
 
-import de.lichtflut.rb.core.entity.RBField;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 

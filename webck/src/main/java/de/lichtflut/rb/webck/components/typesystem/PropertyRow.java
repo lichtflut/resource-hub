@@ -3,13 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.SNResource;
-
 import de.lichtflut.infra.Infra;
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.model.Cardinality;
@@ -18,9 +11,15 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.SNResource;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>

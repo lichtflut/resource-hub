@@ -3,8 +3,12 @@
  */
 package de.lichtflut.rb.webck.components.notes;
 
-import java.text.DateFormat;
-
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
+import de.lichtflut.rb.webck.models.resources.ResourcePropertyModel;
+import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -13,12 +17,7 @@ import org.arastreju.sge.apriori.DC;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
-import de.lichtflut.rb.webck.models.resources.ResourcePropertyModel;
-import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
+import java.text.DateFormat;
 
 /**
  * <p>

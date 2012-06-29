@@ -3,9 +3,7 @@
  */
 package de.lichtflut.rb.webck.components.identities;
 
-import java.util.List;
-import java.util.MissingResourceException;
-
+import de.lichtflut.rb.core.security.RBUser;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -13,7 +11,8 @@ import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.security.RBUser;
+import java.util.List;
+import java.util.MissingResourceException;
 
 /**
  * <p>

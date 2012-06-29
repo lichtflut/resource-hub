@@ -3,14 +3,14 @@
  */
 package de.lichtflut.rb.webck.models.entity;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * <p>

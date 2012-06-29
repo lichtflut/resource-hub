@@ -3,11 +3,10 @@
  */
 package de.lichtflut.rb.webck.browsing;
 
-import java.io.Serializable;
-
+import de.lichtflut.rb.core.entity.RBEntity;
 import org.arastreju.sge.ModelingConversation;
 
-import de.lichtflut.rb.core.entity.RBEntity;
+import java.io.Serializable;
 
 /**
  * <p>

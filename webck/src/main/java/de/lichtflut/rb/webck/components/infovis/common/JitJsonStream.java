@@ -3,14 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.infovis.common;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.webck.components.infovis.AbstractJsonStream;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.Statement;
@@ -20,8 +14,13 @@ import org.arastreju.sge.structure.OrderBySerialNumber;
 import org.arastreju.sge.traverse.NotPredicateFilter;
 import org.arastreju.sge.traverse.TraversalFilter;
 
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.webck.components.infovis.AbstractJsonStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>

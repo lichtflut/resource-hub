@@ -3,15 +3,14 @@
  */
 package de.lichtflut.rb.webck.models;
 
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
-import org.arastreju.sge.model.ResourceID;
-
 import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.webck.application.RBWebSession;
+import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import de.lichtflut.rb.webck.browsing.BrowsingState;
 import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
+import org.arastreju.sge.model.ResourceID;
 
 /**
  * <p>

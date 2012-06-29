@@ -9,7 +9,7 @@
 	</parent>
 	
 	<groupId>de.lichtflut.rb</groupId>
-	<artifactId>tools</artifactId>
+	<artifactId>lf.resource-browser.tools</artifactId>
 	<packaging>jar</packaging>
 	<name>RB Tools</name>
 	

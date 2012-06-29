@@ -3,6 +3,15 @@
  */
 package de.lichtflut.rb.webck.components.widgets.config;
 
+import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.components.dialogs.InformationExportDialog;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
+import de.lichtflut.rb.webck.components.form.RBDefaultButton;
+import de.lichtflut.rb.webck.components.widgets.ConfigurableWidget;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.form.Form;
@@ -16,16 +25,6 @@ import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.SemanticGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.components.dialogs.InformationExportDialog;
-import de.lichtflut.rb.webck.components.form.RBCancelButton;
-import de.lichtflut.rb.webck.components.form.RBDefaultButton;
-import de.lichtflut.rb.webck.components.widgets.ConfigurableWidget;
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
 
 /**
  * <p>

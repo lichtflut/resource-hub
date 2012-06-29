@@ -3,11 +3,10 @@
  */
 package de.lichtflut.rb.webck.models.fields;
 
+import de.lichtflut.rb.core.entity.RBField;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
-
-import de.lichtflut.rb.core.entity.RBField;
 
 /**
  * <p>

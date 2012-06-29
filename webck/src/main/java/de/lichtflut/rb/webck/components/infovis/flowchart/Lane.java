@@ -3,12 +3,11 @@
  */
 package de.lichtflut.rb.webck.components.infovis.flowchart;
 
-import java.util.Locale;
-
-import org.arastreju.sge.model.nodes.ResourceNode;
-
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import org.arastreju.sge.model.nodes.ResourceNode;
+
+import java.util.Locale;
 
 /**
  * <p>

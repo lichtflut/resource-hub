@@ -3,12 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-
+import de.lichtflut.rb.core.io.IOReport;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -32,8 +28,11 @@ import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.model.SemanticGraph;
 
-import de.lichtflut.rb.core.io.IOReport;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 
 /**
  * <p>

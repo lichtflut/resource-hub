@@ -3,11 +3,18 @@
  */
 package de.lichtflut.rb.webck.components.widgets.config.columns;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
+import de.lichtflut.rb.core.viewspec.ColumnDef;
+import de.lichtflut.rb.core.viewspec.WDGT;
+import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.core.viewspec.impl.SNColumnDef;
+import de.lichtflut.rb.webck.common.OrderedNodesContainer;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.common.impl.SerialNumberOrderedNodesContainer;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.components.links.ConfirmedLink;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.basic.CastingModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
@@ -25,18 +32,10 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
-import de.lichtflut.rb.core.viewspec.ColumnDef;
-import de.lichtflut.rb.core.viewspec.WDGT;
-import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.core.viewspec.impl.SNColumnDef;
-import de.lichtflut.rb.webck.common.OrderedNodesContainer;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.common.impl.SerialNumberOrderedNodesContainer;
-import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.components.links.ConfirmedLink;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.basic.CastingModel;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>

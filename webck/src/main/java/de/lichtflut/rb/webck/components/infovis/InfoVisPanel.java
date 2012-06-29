@@ -3,6 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.infovis;
 
+import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
+import de.lichtflut.rb.webck.components.infovis.common.CurrentNodeInfoPanel;
+import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
@@ -12,11 +16,6 @@ import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.arastreju.sge.model.nodes.ResourceNode;
-
-import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.components.entity.VisualizationMode;
-import de.lichtflut.rb.webck.components.infovis.common.CurrentNodeInfoPanel;
-import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
 
 /**
  * <p>

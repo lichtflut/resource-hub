@@ -4,17 +4,9 @@
 package de.lichtflut.rb.webck.components.dialogs;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.MissingResourceException;
-import java.util.Set;
-
+import de.lichtflut.rb.core.services.ExcelExporter;
+import de.lichtflut.rb.core.services.impl.ResourceListExcelExporter;
+import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -39,9 +31,16 @@ import org.arastreju.sge.query.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.services.ExcelExporter;
-import de.lichtflut.rb.core.services.impl.ResourceListExcelExporter;
-import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.MissingResourceException;
+import java.util.Set;
 
 /**
  * <p>

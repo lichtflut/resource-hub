@@ -3,11 +3,24 @@
  */
 package de.lichtflut.rb.webck.components.organizer;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.enableIf;
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
-
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.entity.EntityHandle;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.browsing.BrowsingHistory;
+import de.lichtflut.rb.webck.browsing.JumpTarget;
+import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
+import de.lichtflut.rb.webck.browsing.ResourceAttributeApplyAction;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.components.form.RBDefaultButton;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -26,24 +39,10 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.DomainOrganizer;
-import de.lichtflut.rb.webck.application.RBWebSession;
-import de.lichtflut.rb.webck.browsing.BrowsingHistory;
-import de.lichtflut.rb.webck.browsing.JumpTarget;
-import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
-import de.lichtflut.rb.webck.browsing.ResourceAttributeApplyAction;
-import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.fields.EntityPickerField;
-import de.lichtflut.rb.webck.components.form.RBDefaultButton;
-import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
-import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.enableIf;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
 
 /**
  * <p>
@@ -73,7 +72,7 @@ public abstract class SetUserProfilePanel extends Panel {
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
-	 * @param model
+	 * @param user The user.
 	 */
 	public SetUserProfilePanel(String id, final IModel<RBUser> user) {
 		super(id, user);
@@ -97,7 +96,7 @@ public abstract class SetUserProfilePanel extends Panel {
 	
 	/**
 	 * Action to perform when resourcelink is clicked.
-	 * @param resourceNode
+	 * @param node
 	 */
 	protected abstract void onResourceLinkClicked(ResourceNode node);
 	
@@ -114,7 +113,6 @@ public abstract class SetUserProfilePanel extends Panel {
 
 	/**
 	 * Initialize variable profileModel.
-	 * @param user
 	 */
 	private void initProfileModel() {
 		this.profileModel = new AbstractLoadableDetachableModel<ResourceID>() {
@@ -171,7 +169,6 @@ public abstract class SetUserProfilePanel extends Panel {
 	// ------------------------------------------------------
 
 	/**
-	 * @param label - {@link IModel}
 	 * @return a {@link Link}
 	 */
 	private Link createResourceLink() {
@@ -188,7 +185,6 @@ public abstract class SetUserProfilePanel extends Panel {
 	}
 
 	/**
-	 * @param ref - {@link ResourceID}
 	 * @return a {@link IModel} that represents the resource label.
 	 */
 	private IModel<String> getResourceLabel() {
@@ -264,9 +260,6 @@ public abstract class SetUserProfilePanel extends Panel {
 
 	/**
 	 * Create edit-button.
-	 * @param form 
-	 * @param string
-	 * @return
 	 */
 	private AjaxButton createEditButton(String id, Form form) {
 		AjaxButton edit = new RBStandardButton(id) {
@@ -282,9 +275,6 @@ public abstract class SetUserProfilePanel extends Panel {
 
 	/**
 	 * Create save-button.
-	 * @param string - wicket:id
-	 * @param form
-	 * @return
 	 */
 	protected AjaxButton createSaveButton(String id, final Form<?> form) {
 		final AjaxButton save = new RBDefaultButton(id) {

@@ -3,10 +3,10 @@
  */
 package de.lichtflut.rb.webck.conversion;
 
-import java.util.Locale;
-
 import org.apache.wicket.util.convert.converter.AbstractConverter;
 import org.arastreju.sge.model.nodes.views.SNText;
+
+import java.util.Locale;
 
 /**
  * <p>

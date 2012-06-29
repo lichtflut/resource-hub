@@ -3,11 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.typesystem.constraints;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -15,6 +10,10 @@ import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.CreatePublicConstraintDialog;
 import de.lichtflut.rb.webck.components.typesystem.TypeSystemHelpPanel;
 import de.lichtflut.rb.webck.models.types.PublicConstraintsListModel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
  * <p>

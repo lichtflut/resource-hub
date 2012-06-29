@@ -3,18 +3,17 @@
  */
 package de.lichtflut.rb.webck.components.widgets.config.columns;
 
+import de.lichtflut.rb.core.viewspec.ColumnDef;
+import de.lichtflut.rb.webck.common.OrderedNodesContainer;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ResourceID;
-
-import de.lichtflut.rb.core.viewspec.ColumnDef;
-import de.lichtflut.rb.webck.common.OrderedNodesContainer;
-import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
  * <p>

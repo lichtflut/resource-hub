@@ -3,8 +3,7 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
-import java.io.Serializable;
-
+import de.lichtflut.rb.core.entity.RBEntity;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -21,7 +20,7 @@ import org.odlabs.wiquery.ui.autocomplete.AutocompleteJavaScriptResourceReferenc
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 
-import de.lichtflut.rb.core.entity.RBEntity;
+import java.io.Serializable;
 
 /**
  * <p>

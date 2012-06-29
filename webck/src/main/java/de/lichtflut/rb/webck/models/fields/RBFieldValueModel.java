@@ -3,9 +3,8 @@
  */
 package de.lichtflut.rb.webck.models.fields;
 
-import org.apache.wicket.model.IModel;
-
 import de.lichtflut.rb.core.entity.RBField;
+import org.apache.wicket.model.IModel;
 
 /**
  * <p>

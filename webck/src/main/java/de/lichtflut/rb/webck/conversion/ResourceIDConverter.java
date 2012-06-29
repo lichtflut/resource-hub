@@ -3,12 +3,12 @@
  */
 package de.lichtflut.rb.webck.conversion;
 
-import java.util.Locale;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.util.convert.IConverter;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+
+import java.util.Locale;
 
 /**
  * Converter for {@link ResourceID}s.

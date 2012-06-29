@@ -3,9 +3,7 @@
  */
 package de.lichtflut.rb.webck.components.navigation;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.lichtflut.rb.webck.components.common.TypedPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
@@ -14,7 +12,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import de.lichtflut.rb.webck.components.common.TypedPanel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>

@@ -3,11 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.model.ResourceModel;
-
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.components.widgets.catalog.WidgetCatalogPanel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.model.ResourceModel;
 
 /**
  * <p>

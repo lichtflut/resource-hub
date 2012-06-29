@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.components.listview;
 
 
+import de.lichtflut.rb.webck.components.links.LabeledLink;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -11,8 +12,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.model.ResourceID;
-
-import de.lichtflut.rb.webck.components.links.LabeledLink;
 
 /**
  * <p>

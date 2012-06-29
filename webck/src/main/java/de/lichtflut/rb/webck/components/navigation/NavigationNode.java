@@ -3,10 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.navigation;
 
+import org.apache.wicket.Component;
+
 import java.io.Serializable;
 import java.util.List;
-
-import org.apache.wicket.Component;
 
 /**
  * <p>

@@ -3,11 +3,18 @@
  */
 package de.lichtflut.rb.webck.components.infovis.common;
 
-import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.components.entity.VisualizationLink;
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
+import de.lichtflut.rb.webck.components.links.CrossLink;
+import de.lichtflut.rb.webck.components.links.LabeledLink;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -32,18 +39,10 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.core.services.TypeManager;
-import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
-import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.components.entity.VisualizationLink;
-import de.lichtflut.rb.webck.components.entity.VisualizationMode;
-import de.lichtflut.rb.webck.components.links.CrossLink;
-import de.lichtflut.rb.webck.components.links.LabeledLink;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
-import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
+import java.util.ArrayList;
+import java.util.List;
+
+import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
 
 /**
  * <p>

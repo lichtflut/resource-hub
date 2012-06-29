@@ -3,18 +3,17 @@
  */
 package de.lichtflut.rb.webck.components.infovis.flowchart;
 
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.webck.components.infovis.AbstractJsonStream;
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonGenerator;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonGenerator;
-
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.webck.components.infovis.AbstractJsonStream;
 
 /**
  * <p>

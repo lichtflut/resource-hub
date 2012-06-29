@@ -3,6 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.identities;
 
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.webck.components.fields.UserPickerField;
+import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -13,11 +17,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.naming.QualifiedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.lichtflut.rb.core.security.AuthModule;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.webck.components.fields.UserPickerField;
-import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 
 /**
  * <p>

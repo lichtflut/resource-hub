@@ -3,12 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.typesystem.schema;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.model.nodes.views.SNClass;
-
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.SchemaManager;
@@ -19,6 +13,11 @@ import de.lichtflut.rb.webck.components.typesystem.TypeBrowserPanel;
 import de.lichtflut.rb.webck.components.typesystem.TypeSystemHelpPanel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 import de.lichtflut.rb.webck.models.types.SNClassListModel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.model.nodes.views.SNClass;
 
 /**
  * This Panel aggregates all components necessary for editing

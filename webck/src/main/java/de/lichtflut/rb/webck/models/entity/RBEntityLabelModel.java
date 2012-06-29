@@ -3,11 +3,10 @@
  */
 package de.lichtflut.rb.webck.models.entity;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.wicket.model.IModel;
-
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.wicket.model.IModel;
 
 /**
  * <p>

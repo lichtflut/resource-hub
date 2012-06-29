@@ -3,8 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.widgets;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-
+import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -12,10 +14,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 
-import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 
 /**
  * <p>

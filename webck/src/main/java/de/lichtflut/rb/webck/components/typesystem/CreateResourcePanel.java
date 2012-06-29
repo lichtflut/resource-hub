@@ -3,8 +3,9 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
-import java.util.List;
-
+import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
+import de.lichtflut.rb.webck.components.common.ComponentFactory;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
 import org.apache.wicket.markup.html.form.Form;
@@ -16,9 +17,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.services.DomainOrganizer;
-import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
-import de.lichtflut.rb.webck.components.common.ComponentFactory;
+import java.util.List;
 
 /**
  * <p>

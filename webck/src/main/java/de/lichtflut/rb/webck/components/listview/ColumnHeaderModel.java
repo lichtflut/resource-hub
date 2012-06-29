@@ -3,11 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.listview;
 
-import java.util.List;
-
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.model.IModel;
 
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import java.util.List;
 
 /**
  * <p>

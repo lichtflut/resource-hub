@@ -3,10 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.infovis.flowchart;
 
+import org.arastreju.sge.model.nodes.ResourceNode;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>

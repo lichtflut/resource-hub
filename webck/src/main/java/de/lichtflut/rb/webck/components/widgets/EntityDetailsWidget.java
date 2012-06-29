@@ -3,9 +3,16 @@
  */
 package de.lichtflut.rb.webck.components.widgets;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
-
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.viewspec.Selection;
+import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
+import de.lichtflut.rb.webck.components.entity.EntityPanel;
+import de.lichtflut.rb.webck.components.widgets.config.EntityDetailsWidgetConfigPanel;
+import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -18,16 +25,8 @@ import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryException;
 import org.arastreju.sge.query.QueryResult;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.viewspec.Selection;
-import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
-import de.lichtflut.rb.webck.components.entity.EntityPanel;
-import de.lichtflut.rb.webck.components.widgets.config.EntityDetailsWidgetConfigPanel;
-import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
 
 /**
  * <p>

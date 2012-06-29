@@ -3,12 +3,15 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonIf;
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.and;
-import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
-import static de.lichtflut.rb.webck.models.ConditionalModel.not;
-
+import de.lichtflut.rb.core.entity.EntityHandle;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.BrowsingContextModel;
+import de.lichtflut.rb.webck.models.ConditionalModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
@@ -17,15 +20,11 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.webck.application.RBWebSession;
-import de.lichtflut.rb.webck.components.form.RBCancelButton;
-import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.BrowsingContextModel;
-import de.lichtflut.rb.webck.models.ConditionalModel;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonIf;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.and;
+import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 /**
  * <p>

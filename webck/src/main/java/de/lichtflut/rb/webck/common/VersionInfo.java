@@ -3,14 +3,13 @@
  */
 package de.lichtflut.rb.webck.common;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
+import de.lichtflut.rb.webck.models.infra.VersionInfoModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.webck.models.infra.VersionInfoModel;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * <p>

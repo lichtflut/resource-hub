@@ -3,14 +3,13 @@
  */
 package de.lichtflut.rb.webck.conversion;
 
-import java.util.Locale;
-
+import de.lichtflut.rb.core.common.EntityLabelBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.AbstractConverter;
 
-import de.lichtflut.rb.core.common.EntityLabelBuilder;
-import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
+import java.util.Locale;
 
 /**
  * <p>

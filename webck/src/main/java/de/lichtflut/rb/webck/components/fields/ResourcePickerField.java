@@ -4,13 +4,12 @@
 package de.lichtflut.rb.webck.components.fields;
 
 
+import de.lichtflut.rb.webck.models.resources.ResourceDisplayModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.crypt.Base64;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
-
-import de.lichtflut.rb.webck.models.resources.ResourceDisplayModel;
 
 
 /**

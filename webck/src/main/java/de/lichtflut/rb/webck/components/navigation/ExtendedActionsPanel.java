@@ -3,12 +3,19 @@
  */
 package de.lichtflut.rb.webck.components.navigation;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.and;
-import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
-
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
+import de.lichtflut.rb.webck.components.dialogs.EntityExcelExportDialog;
+import de.lichtflut.rb.webck.components.dialogs.ResourceListExportDialog;
+import de.lichtflut.rb.webck.components.dialogs.VCardExportDialog;
+import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -27,19 +34,11 @@ import org.apache.wicket.util.visit.IVisitor;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.query.QueryResult;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.webck.application.RBWebSession;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
-import de.lichtflut.rb.webck.components.dialogs.EntityExcelExportDialog;
-import de.lichtflut.rb.webck.components.dialogs.ResourceListExportDialog;
-import de.lichtflut.rb.webck.components.dialogs.VCardExportDialog;
-import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.and;
+import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
 
 /**
  * <p>

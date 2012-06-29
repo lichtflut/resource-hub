@@ -3,16 +3,15 @@
  */
 package de.lichtflut.rb.webck.models.entity;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import org.apache.wicket.model.IModel;
-import org.arastreju.sge.model.ResourceID;
-
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import org.apache.wicket.model.IModel;
+import org.arastreju.sge.model.ResourceID;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * <p>

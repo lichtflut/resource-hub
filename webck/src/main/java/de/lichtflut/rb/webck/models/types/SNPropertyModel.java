@@ -3,14 +3,13 @@
  */
 package de.lichtflut.rb.webck.models.types;
 
+import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
-
-import de.lichtflut.rb.core.services.TypeManager;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 
 /**
  * <p>

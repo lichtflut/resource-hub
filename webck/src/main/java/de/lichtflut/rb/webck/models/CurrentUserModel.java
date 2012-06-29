@@ -3,19 +3,18 @@
  */
 package de.lichtflut.rb.webck.models;
 
-import java.util.Set;
-
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.user.UserPermissionModel;
 import org.apache.wicket.Session;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.webck.application.RBWebSession;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
-import de.lichtflut.rb.webck.models.user.UserPermissionModel;
+import java.util.Set;
 
 /**
  * <p>

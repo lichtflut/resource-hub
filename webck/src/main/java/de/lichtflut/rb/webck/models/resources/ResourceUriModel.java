@@ -3,10 +3,9 @@
  */
 package de.lichtflut.rb.webck.models.resources;
 
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.ResourceID;
-
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
 
 /**
  * <p>

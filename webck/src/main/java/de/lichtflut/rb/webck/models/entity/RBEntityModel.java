@@ -3,16 +3,15 @@
  */
 package de.lichtflut.rb.webck.models.entity;
 
+import de.lichtflut.rb.core.entity.EntityHandle;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.webck.application.RBWebSession;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 
 /**
  * <p>

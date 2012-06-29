@@ -3,9 +3,9 @@
  */
 package de.lichtflut.rb.webck.models.basic;
 
-import java.util.List;
-
 import org.apache.wicket.model.IModel;
+
+import java.util.List;
 
 /**
  * <p>

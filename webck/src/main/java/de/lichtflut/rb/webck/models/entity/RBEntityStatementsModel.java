@@ -3,15 +3,14 @@
  */
 package de.lichtflut.rb.webck.models.entity;
 
-import java.util.List;
-
-import org.apache.wicket.model.IModel;
-import org.arastreju.sge.model.Statement;
-
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.webck.common.RelationshipAccess;
 import de.lichtflut.rb.webck.common.RelationshipFilter;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import org.apache.wicket.model.IModel;
+import org.arastreju.sge.model.Statement;
+
+import java.util.List;
 
 /**
  * <p>

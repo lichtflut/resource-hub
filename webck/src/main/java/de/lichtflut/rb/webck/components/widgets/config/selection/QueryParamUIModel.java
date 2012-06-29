@@ -3,15 +3,14 @@
  */
 package de.lichtflut.rb.webck.components.widgets.config.selection;
 
-import java.io.Serializable;
-
+import de.lichtflut.rb.core.viewspec.impl.SNSelectionParameter;
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import de.lichtflut.rb.core.viewspec.impl.SNSelectionParameter;
+import java.io.Serializable;
 
 /**
  * <p>

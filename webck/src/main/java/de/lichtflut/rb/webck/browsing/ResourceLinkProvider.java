@@ -3,10 +3,9 @@
  */
 package de.lichtflut.rb.webck.browsing;
 
-import org.arastreju.sge.model.ResourceID;
-
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.entity.VisualizationMode;
+import org.arastreju.sge.model.ResourceID;
 
 /**
  * <p>

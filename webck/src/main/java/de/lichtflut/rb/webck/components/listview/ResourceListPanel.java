@@ -3,10 +3,9 @@
  */
 package de.lichtflut.rb.webck.components.listview;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-
+import de.lichtflut.rb.core.entity.ResourceField;
+import de.lichtflut.rb.webck.conversion.SemanticNodesRenderer;
+import de.lichtflut.rb.webck.models.fields.UndeclaredFieldsListModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
@@ -17,11 +16,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
-
 import scala.actors.threadpool.Arrays;
-import de.lichtflut.rb.core.entity.ResourceField;
-import de.lichtflut.rb.webck.conversion.SemanticNodesRenderer;
-import de.lichtflut.rb.webck.models.fields.UndeclaredFieldsListModel;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * <p>

@@ -3,13 +3,12 @@
  */
 package de.lichtflut.rb.webck.behaviors;
 
+import de.lichtflut.rb.webck.models.ConditionalModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
-
-import de.lichtflut.rb.webck.models.ConditionalModel;
 
 /**
  * <p>

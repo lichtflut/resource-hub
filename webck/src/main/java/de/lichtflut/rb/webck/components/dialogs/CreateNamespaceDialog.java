@@ -3,10 +3,9 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-
 import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
 import de.lichtflut.rb.webck.components.organizer.CreateNamespacePanel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**
  * <p>

@@ -3,8 +3,7 @@
  */
 package de.lichtflut.rb.webck.models;
 
-import java.net.URL;
-
+import de.lichtflut.rb.core.eh.RBException;
 import org.apache.wicket.model.IModel;
 import org.owasp.validator.html.AntiSamy;
 import org.owasp.validator.html.CleanResults;
@@ -12,7 +11,7 @@ import org.owasp.validator.html.Policy;
 import org.owasp.validator.html.PolicyException;
 import org.owasp.validator.html.ScanException;
 
-import de.lichtflut.rb.core.eh.RBException;
+import java.net.URL;
 
 /**
  * <p>

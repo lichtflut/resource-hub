@@ -3,10 +3,7 @@
  */
 package de.lichtflut.rb.webck.components.infovis.flowchart;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
+import de.lichtflut.rb.core.RB;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -14,7 +11,9 @@ import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RB;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>

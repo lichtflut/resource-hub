@@ -3,11 +3,11 @@
  */
 package de.lichtflut.rb.webck.common;
 
-import java.io.Serializable;
-
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
+
+import java.io.Serializable;
 
 /**
  * <p>

@@ -3,11 +3,10 @@
  */
 package de.lichtflut.rb.webck.models.infra;
 
+import de.lichtflut.rb.webck.common.VersionInfo;
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-
-import de.lichtflut.rb.webck.common.VersionInfo;
 
 /**
  * <p>

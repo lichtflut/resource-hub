@@ -3,6 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.domains;
 
+import de.lichtflut.rb.core.security.RBDomain;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.webck.components.navigation.ContextMenu;
+import de.lichtflut.rb.webck.models.domains.AlternateDomainsModel;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -11,11 +15,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-
-import de.lichtflut.rb.core.security.RBDomain;
-import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.webck.components.navigation.ContextMenu;
-import de.lichtflut.rb.webck.models.domains.AlternateDomainsModel;
 
 /**
  * <p>
