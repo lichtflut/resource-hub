@@ -3,16 +3,10 @@
  */
 package de.lichtflut.rb.rest.api.query;
 
-import com.sun.jersey.core.util.Base64;
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.common.TermSearcher;
 import de.lichtflut.rb.core.common.TermSearcher.Mode;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.rest.api.RBServiceEndpoint;
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +21,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * <p>

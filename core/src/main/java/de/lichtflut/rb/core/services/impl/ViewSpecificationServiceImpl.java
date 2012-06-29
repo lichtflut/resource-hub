@@ -3,20 +3,8 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SemanticGraph;
-import org.arastreju.sge.model.Statement;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.persistence.TransactionControl;
-import org.arastreju.sge.structure.OrderBySerialNumber;
-
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.core.viewspec.Perspective;
@@ -27,6 +15,19 @@ import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
 import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SemanticGraph;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.Statement;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.persistence.TransactionControl;
+import org.arastreju.sge.structure.OrderBySerialNumber;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>
@@ -39,16 +40,25 @@ import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
  *
  * @author Oliver Tigges
  */
-public class ViewSpecificationServiceImpl extends AbstractService implements ViewSpecificationService {
+public class ViewSpecificationServiceImpl implements ViewSpecificationService {
+
+    private ServiceContext context;
+
+    private ModelingConversation conversation;
+
+    // ----------------------------------------------------
 
 	/**
-	 * @param provider
+	 * Default constructor.
 	 */
-	public ViewSpecificationServiceImpl(final ServiceProvider provider) {
-		super(provider);
-	}
-	
-	// -- MENU ITEMS --------------------------------------
+	public ViewSpecificationServiceImpl() { }
+
+    public ViewSpecificationServiceImpl(ServiceContext context, ModelingConversation conversation) {
+        this.context = context;
+        this.conversation = conversation;
+    }
+
+    // -- MENU ITEMS --------------------------------------
 
 	/** 
 	 * {@inheritDoc}
@@ -89,7 +99,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public void store(MenuItem item) {
-		mc().attach(item);
+		conversation.attach(item);
 	}
 	
 	/** 
@@ -100,7 +110,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 		final ResourceNode user = currentUser();
 		SNOPS.remove(user, WDGT.HAS_MENU_ITEM, item);
 		//TODO: Remove item if private one.
-		//mc().remove(item);
+		//conversation.remove(item);
 	}
 	
 	// -- PERSPECTIVES ------------------------------------
@@ -110,7 +120,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public Perspective findPerspective(ResourceID id) {
-		final ResourceNode existing = mc().findResource(id.getQualifiedName());
+		final ResourceNode existing = conversation.findResource(id.getQualifiedName());
 		if (existing != null) {
 			return new SNPerspective(existing);
 		} else {
@@ -123,7 +133,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public void store(Perspective perspective) {
-		mc().attach(perspective);
+		conversation.attach(perspective);
 		if (perspective.getViewPorts().isEmpty()) {
 			// add two default view ports.
 			perspective.addViewPort();
@@ -137,7 +147,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	@Override
 	public void remove(Perspective perspective) {
 		final SemanticGraph graph = new ViewSpecTraverser().toGraph(perspective);
-		final ModelingConversation mc = mc();
+		final ModelingConversation mc = conversation;
 		final TransactionControl tx = mc.beginTransaction();
 		try {
 			for (Statement stmt : graph.getStatements()) {
@@ -156,7 +166,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public WidgetSpec findWidgetSpec(ResourceID id) {
-		final ResourceNode existing = mc().findResource(id.getQualifiedName());
+		final ResourceNode existing = conversation.findResource(id.getQualifiedName());
 		if (existing != null) {
 			return new SNWidgetSpec(existing);
 		} else {
@@ -169,7 +179,7 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public void store(WidgetSpec widgetSpec) {
-		mc().attach(widgetSpec);
+		conversation.attach(widgetSpec);
 	}
 	
 	// ----------------------------------------------------
@@ -179,17 +189,28 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 	 */
 	@Override
 	public void store(ViewPort viewPort) {
-		mc().attach(viewPort);
+		conversation.attach(viewPort);
 	}
 	
 	// ----------------------------------------------------
+
+    public void setContext(ServiceContext context) {
+        this.context = context;
+    }
+
+    public void setConversation(ModelingConversation conversation) {
+        this.conversation = conversation;
+    }
+
+
+    // ----------------------------------------------------
 	
 	/**
 	 * Initialize the (probably new) user's menu items and dashboards.
 	 */
 	protected List<MenuItem> initializeDashboards(ResourceNode user) {
 		final List<MenuItem> result = new ArrayList<MenuItem>();
-		final ResourceNode defaultMenu = mc().resolve(WDGT.DEFAULT_MENU);
+		final ResourceNode defaultMenu = conversation.resolve(WDGT.DEFAULT_MENU);
 		for(Statement stmt : defaultMenu.getAssociations()) {
 			if (WDGT.HAS_MENU_ITEM.equals(stmt.getPredicate()) && stmt.getObject().isResourceNode()) {
 				final ResourceNode item = stmt.getObject().asResource();
@@ -199,5 +220,14 @@ public class ViewSpecificationServiceImpl extends AbstractService implements Vie
 		}
 		return result;
 	}
+
+    protected ResourceNode currentUser() {
+        final RBUser user = context.getUser();
+        if (user == null) {
+            return null;
+        } else {
+            return conversation.resolve(new SimpleResourceID(user.getQualifiedName()));
+        }
+    }
 	
 }

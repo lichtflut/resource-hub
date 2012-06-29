@@ -1,11 +1,17 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.services.impl;
+package de.lichtflut.rb.rest.delegate.providers;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.SecurityService;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
+import de.lichtflut.rb.core.services.impl.SecurityServiceImpl;
+import de.lichtflut.rb.core.services.impl.TypeManagerImpl;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
@@ -13,15 +19,8 @@ import org.arastreju.sge.spi.GateContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.security.AuthModule;
-import de.lichtflut.rb.core.services.DomainOrganizer;
-import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.SecurityService;
-import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.core.services.TypeManager;
-import de.lichtflut.rb.core.services.ViewSpecificationService;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>
@@ -34,48 +33,38 @@ import de.lichtflut.rb.core.services.ViewSpecificationService;
  *
  * @author Oliver Tigges
  */
-public abstract class AbstractServiceProvider implements ServiceProvider {
+public class RBServiceProvider implements ServiceProvider {
 	
-	private final Logger logger = LoggerFactory.getLogger(AbstractServiceProvider.class);
+	private final Logger logger = LoggerFactory.getLogger(RBServiceProvider.class);
 
 	protected final Set<String> initializedDomains = new HashSet<String>();
+
+    // ----------------------------------------------------
 	
 	private final ServiceContext ctx;
+
+    private final AuthModule authModule;
+
+    private final ArastrejuResourceFactory arastrejuResourceFactory;
+
+    // ----------------------------------------------------
 	
 	private ArastrejuGate openGate;
 	
 	private ModelingConversation conversation;
-	
-	private SchemaManager schemaManager;
-	private EntityManager entityManager;
-	private TypeManager typeManager;
-	private SecurityService securityService;
-	private ViewSpecificationService viewSpecService;
-	private DomainOrganizer domainOrganizer;
 	
 	// ----------------------------------------------------
 
 	/**
 	 * Constructor.
 	 */
-	public AbstractServiceProvider(ServiceContext ctx, AuthModule authModule) {
+	public RBServiceProvider(ServiceContext ctx, AuthModule authModule) {
 		this.ctx = ctx;
-		schemaManager = new SchemaManagerImpl(this);
-		entityManager = new EntityManagerImpl(this);
-		typeManager = new TypeManagerImpl(this);
-		domainOrganizer = newDomainOrganizer();
-		securityService = newSecurityService(authModule);
-		viewSpecService = newViewSpecificationServiceImpl();
+        this.authModule = authModule;
+        this.arastrejuResourceFactory = new ArastrejuResourceFactory(ctx);
 	}
 
 	// ----------------------------------------------------
-	
-	/**
-	 * @return
-	 */
-	protected DomainOrganizer newDomainOrganizer() {
-		return new DomainOrganizerImpl(this);
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -112,14 +101,6 @@ public abstract class AbstractServiceProvider implements ServiceProvider {
 	 */
 	public ServiceContext getContext() {
 		return ctx;
-	};
-	
-	/**
-	 *{@inheritDoc}
-	 */
-	@Override
-	public EntityManager getEntityManager() {
- 	    return entityManager;
 	}
 
 	/**
@@ -127,55 +108,23 @@ public abstract class AbstractServiceProvider implements ServiceProvider {
 	 */
 	@Override
 	public SchemaManager getSchemaManager() {
-	    return schemaManager;
+	    return new SchemaManagerImpl(getConversation());
 	}
 
 	/**
-	 *{@inheritDoc}
-	 */
-	@Override
-	public TypeManager getTypeManager() {
-		return typeManager;
-	}
-
-	/** 
-	* {@inheritDoc}
-	*/
-	@Override
-	public DomainOrganizer getDomainOrganizer() {
-		return domainOrganizer;
-	}
-
-	/** 
 	* {@inheritDoc}
 	*/
 	@Override
 	public SecurityService getSecurityService() {
-		return securityService;
+		return new SecurityServiceImpl(getContext(), getConversation(), authModule);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ViewSpecificationService getViewSpecificationService() {
-		return viewSpecService;
-	}
-	
-	// ----------------------------------------------------
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void onDetach() {
-		if (conversation != null) {
-			conversation.close();
-			conversation = null;
-		}
-	}
-	
-	// ----------------------------------------------------
+    @Override
+    public TypeManager getTypeManager() {
+        return new TypeManagerImpl(getConversation(), getSchemaManager());
+    }
+
+    // ----------------------------------------------------
 
 	/**
 	 * Hook for domain initialization.
@@ -192,16 +141,9 @@ public abstract class AbstractServiceProvider implements ServiceProvider {
 	 * @return The security service.
 	 */
 	protected SecurityService newSecurityService(AuthModule authModule) {
-		return new SecurityServiceImpl(this, authModule);
+		return new SecurityServiceImpl(getContext(), getConversation(), authModule);
 	}
-	
-	/**
-	 * @return The view specification service.
-	 */
-	protected ViewSpecificationService newViewSpecificationServiceImpl() {
-		return new ViewSpecificationServiceImpl(this);
-	}
-	
+
 	// ----------------------------------------------------
 	
 	protected synchronized ArastrejuGate openGate(String domain) {

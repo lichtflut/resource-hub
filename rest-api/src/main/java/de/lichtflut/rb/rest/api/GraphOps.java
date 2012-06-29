@@ -33,7 +33,7 @@ import org.arastreju.sge.persistence.TransactionControl;
 import org.springframework.stereotype.Component;
 
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 import de.lichtflut.rb.rest.api.security.RBOperation;
 
 /**
@@ -84,8 +84,8 @@ public class GraphOps extends RBServiceEndpoint{
 		}
 		ResourceID id = new SimpleResourceID(resourceID);
 		ResourceNode node = null;
-		node = provider.getArastejuGate().startConversation().findResource(id.getQualifiedName());
-		node = provider.getArastejuGate().startConversation().resolve(node);
+		node = provider.getConversation().findResource(id.getQualifiedName());
+		node = provider.getConversation().resolve(node);
 		
 		//If the resource does not exist, return a 404 response
 		if (node == null) {
@@ -168,7 +168,7 @@ public class GraphOps extends RBServiceEndpoint{
 		}
 		final SemanticGraphIO io = new RdfXmlBinding();
 		ServiceProvider provider = getProvider(domainID, user);
-		ModelingConversation mc = provider.getArastejuGate().startConversation();
+		ModelingConversation mc = provider.getConversation();
 		TransactionControl tx=null;
 		try {
 			tx = mc.beginTransaction();

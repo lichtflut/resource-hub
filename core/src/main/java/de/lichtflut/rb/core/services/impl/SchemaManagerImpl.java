@@ -3,30 +3,6 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.lang3.Validate;
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.apriori.RDFS;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.model.nodes.views.SNProperty;
-import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.persistence.TransactionControl;
-import org.arastreju.sge.query.FieldParam;
-import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.RBSchema;
@@ -45,7 +21,29 @@ import de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding;
 import de.lichtflut.rb.core.services.SchemaExporter;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import org.apache.commons.lang3.Validate;
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNProperty;
+import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.persistence.TransactionControl;
+import org.arastreju.sge.query.FieldParam;
+import org.arastreju.sge.query.Query;
+import org.arastreju.sge.query.QueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -57,20 +55,22 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  * @author Nils Bleisch
  * @author Oliver Tigges
  */
-public class SchemaManagerImpl extends AbstractService implements SchemaManager {
+public class SchemaManagerImpl implements SchemaManager {
 
 	private final Schema2GraphBinding binding;
 	
 	private final Logger logger = LoggerFactory.getLogger(SchemaManagerImpl.class);
 
+    private ModelingConversation conversation;
+
 	// ---------------- Constructor -------------------------
 
 	/**
 	 * Constructor.
-	 * @param provider The service provider.
+	 * @param conversation The current conversation.
 	 */
-	public SchemaManagerImpl(final ServiceProvider provider) {
-		super(provider);
+	public SchemaManagerImpl(final ModelingConversation conversation) {
+        this.conversation = conversation;
 		this.binding = new Schema2GraphBinding(new ConstraintResolverImpl());
 	}
 	
@@ -103,7 +103,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 */
 	@Override
 	public Constraint findConstraint(final ResourceID id) {
-		final ModelingConversation mc = mc();
+		final ModelingConversation mc = conversation;
 		final ResourceNode node = mc.findResource(id.getQualifiedName());
 		if (node != null) {
 			return new ConstraintImpl(node);
@@ -150,7 +150,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	@Override
 	public void store(final ResourceSchema schema) {
 		Validate.isTrue(schema.getDescribedType() != null, "The type described by this schema is not defined.");
-		final ModelingConversation mc = mc();
+		final ModelingConversation mc = conversation;
 		final TransactionControl tx = mc.beginTransaction();
 		try {
 			final SNResourceSchema existing = findSchemaNodeByType(schema.getDescribedType());
@@ -172,7 +172,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	*/
 	@Override
 	public void removeSchemaForType(final ResourceID type) {
-		final ModelingConversation mc = mc();
+		final ModelingConversation mc = conversation;
 		final SNResourceSchema existing = findSchemaNodeByType(type);
 		if (existing != null) {
 			removeSchema(mc, existing);
@@ -188,7 +188,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	@Override
 	public void store(final Constraint constraint) {
 		Validate.isTrue(constraint.isPublic(), "Only public type definition may be stopred explicitly.");
-		final ModelingConversation mc = mc();
+		final ModelingConversation mc = conversation;
 		remove(constraint);
 		mc.attach(constraint.asResourceNode());
 		logger.info("Stored public constraint for {}.", constraint.getName());
@@ -199,7 +199,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 */
 	@Override
 	public void remove(Constraint constraint){
-		final ModelingConversation mc = mc();
+		final ModelingConversation mc = conversation;
 		final ResourceNode existing = mc.findResource(constraint.asResourceNode().getQualifiedName());
 		if(null != existing){
 			mc.remove(existing);
@@ -228,10 +228,10 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	@Override
 	public SchemaImporter getImporter(final String format) {
 		if ("JSON".equalsIgnoreCase(format.trim())) {
-			return new SchemaImporterImpl(getProvider(), new JsonSchemaParser());
+			return new SchemaImporterImpl(this, conversation, new JsonSchemaParser());
 		} 
 		if ("RSF".equalsIgnoreCase(format.trim())) {
-			return new SchemaImporterImpl(getProvider(), new RsfSchemaParser());
+			return new SchemaImporterImpl(this, conversation, new RsfSchemaParser());
 		} else {
 			throw new NotYetSupportedException("Unsupported format: " + format);
 		}
@@ -250,12 +250,18 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	}
 
 	// -----------------------------------------------------
+
+    protected List<ResourceNode> findResourcesByType(ResourceID type) {
+        final Query query = conversation.createQuery();
+        query.addField(RDF.TYPE, type);
+        return query.getResult().toList(2000);
+    }
 	
 	/**
 	 * Find the persistent node representing the schema of the given type.
 	 */
 	private SNResourceSchema findSchemaNodeByType(final ResourceID type) {
-		final Query query = mc().createQuery().add(new FieldParam(RBSchema.DESCRIBES, type));
+		final Query query = conversation.createQuery().add(new FieldParam(RBSchema.DESCRIBES, type));
 		final QueryResult result = query.getResult();
 		if (result.isEmpty()) {
 			return null;
@@ -269,7 +275,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	/**
 	 * Removes the schema graph.
 	 * @param mc The existing conversation.
-	 * @param existing The schema node.
+	 * @param schemaNode The schema node.
 	 */
 	protected void removeSchema(final ModelingConversation mc, final SNResourceSchema schemaNode) {
 		for(SNPropertyDeclaration decl : schemaNode.getPropertyDeclarations()) {
@@ -287,7 +293,6 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	 * 	<li>Described Type</li>
 	 * 	<li>Properties of Property Declarations</li>
 	 * </ul>
-	 * @param type The type.
 	 */
 	private void ensureReferencedResourcesExist(final ModelingConversation mc, final ResourceSchema schema) {
 		// 1st: check described type
@@ -316,7 +321,7 @@ public class SchemaManagerImpl extends AbstractService implements SchemaManager 
 	private class ConstraintResolverImpl implements ConstraintResolver {
 		@Override
 		public Constraint resolve(final Constraint constraint) {
-			final ModelingConversation mc = mc();
+			final ModelingConversation mc = conversation;
 			final ResourceNode node = mc.findResource(constraint.asResourceNode().getQualifiedName());
 			if (node != null) {
 				return new ConstraintImpl(node);

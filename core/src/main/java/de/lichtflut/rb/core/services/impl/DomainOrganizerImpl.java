@@ -3,12 +3,13 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import static org.arastreju.sge.SNOPS.assure;
-import static org.arastreju.sge.SNOPS.singleAssociation;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.organizer.ContextDeclaration;
+import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.core.services.ServiceContext;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
 import org.arastreju.sge.SNOPS;
@@ -16,6 +17,7 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNValue;
@@ -25,12 +27,11 @@ import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.organizer.ContextDeclaration;
-import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
-import de.lichtflut.rb.core.services.DomainOrganizer;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.arastreju.sge.SNOPS.assure;
+import static org.arastreju.sge.SNOPS.singleAssociation;
 
 /**
  * <p>
@@ -43,19 +44,26 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public class DomainOrganizerImpl extends AbstractService implements DomainOrganizer {
+public class DomainOrganizerImpl implements DomainOrganizer {
 	
 	private final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
-	
-	// -----------------------------------------------------
+
+    private ServiceContext context;
+
+    private Organizer organizer;
+
+    private ModelingConversation conversation;
+
+    // -----------------------------------------------------
 
 	/**
 	 * Constructor.
-	 * @param provider The service provider.
 	 */
-	public DomainOrganizerImpl(final ServiceProvider provider) {
-		super(provider);
-	}
+	public DomainOrganizerImpl(ServiceContext context, ModelingConversation conversation, Organizer organizer) {
+        this.context = context;
+		this.conversation = conversation;
+        this.organizer = organizer;
+    }
 	
 	// ----------------------------------------------------
 	
@@ -64,15 +72,15 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	*/
 	@Override
 	public List<Namespace> getNamespaces() {
-		return new ArrayList<Namespace>(arasOrganizer().getNamespaces());
+		return new ArrayList<Namespace>(organizer.getNamespaces());
 	}
 	
 	/** 
 	* {@inheritDoc}
 	*/
 	public void registerNamespace(NamespaceDeclaration decl) {
-		arasOrganizer().registerNamespace(decl.getUri(), decl.getPrefix());
-	};
+        organizer.registerNamespace(decl.getUri(), decl.getPrefix());
+    }
 	
 	// ----------------------------------------------------
 	
@@ -81,7 +89,7 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	*/
 	@Override
 	public List<Context> getContexts() {
-		return new ArrayList<Context>(arasOrganizer().getContexts());
+		return new ArrayList<Context>(organizer.getContexts());
 	}
 	
 	/** 
@@ -89,7 +97,7 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	*/
 	@Override
 	public void registerContext(ContextDeclaration decl) {
-		arasOrganizer().registerContext(decl.getQualifiedName());
+        organizer.registerContext(decl.getQualifiedName());
 	}
 	
 	// ----------------------------------------------------
@@ -100,7 +108,7 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	@Override
 	public void setDomainOrganization(final ResourceID organization) {
 		logger.info("Setting domain organization to: " + organization);
-		final ModelingConversation mc = mc();
+		final ModelingConversation mc = conversation;
 		final ResourceNode previous = getDomainOrganization();
 		if (previous != null) {
 			ResourceNode attached = mc.resolve(previous);
@@ -117,7 +125,7 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 	 */
 	@Override
 	public ResourceNode getDomainOrganization() {
-		final Query query = mc().createQuery();
+		final Query query = conversation.createQuery();
 		query.addField(RDF.TYPE, RB.ORGANIZATION);
 		query.and();
 		query.addField(RBSystem.IS_DOMAIN_ORGANIZATION, "true");
@@ -138,7 +146,7 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 		} else {
 			return null;
 		}
-	};
+	}
 
 	/** 
 	 * {@inheritDoc}
@@ -148,10 +156,16 @@ public class DomainOrganizerImpl extends AbstractService implements DomainOrgani
 		// TODO Auto-generated method stub
 		
 	}
-	// ----------------------------------------------------
-	
-	protected Organizer arasOrganizer() {
-		return gate().getOrganizer();
-	}
+
+    // ----------------------------------------------------
+
+    protected ResourceNode currentUser() {
+        final RBUser user = context.getUser();
+        if (user == null) {
+            return null;
+        } else {
+            return conversation.resolve(new SimpleResourceID(user.getQualifiedName()));
+        }
+    }
 
 }

@@ -3,16 +3,6 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.UUID;
-
-import org.arastreju.sge.model.SimpleResourceID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
@@ -23,6 +13,17 @@ import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.security.UserManager;
 import de.lichtflut.rb.core.services.MessagingService;
 import de.lichtflut.rb.core.services.SecurityService;
+import de.lichtflut.rb.core.services.ServiceContext;
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * <p>
@@ -35,22 +36,32 @@ import de.lichtflut.rb.core.services.SecurityService;
  *
  * @author Oliver Tigges
  */
-public class SecurityServiceImpl extends AbstractService implements SecurityService {
+public class SecurityServiceImpl implements SecurityService {
 	
 	private final Logger logger = LoggerFactory.getLogger(SecurityServiceImpl.class);
 	
-	private final AuthModule authServer;
+	private AuthModule authServer;
+
+    private ModelingConversation conversation;
 	
 	private MessagingService messagingService;
+
+    private ServiceContext serviceContext;
 	
 	// ----------------------------------------------------
-	
-	/**
+
+    /**
+     * Default constructor.
+     */
+    public SecurityServiceImpl() {
+    }
+
+    /**
 	 * Constructor.
-	 * @param The service provider
 	 */
-	public SecurityServiceImpl(AbstractServiceProvider provider, AuthModule authServer) {
-		super(provider);
+	public SecurityServiceImpl(ServiceContext context, ModelingConversation conversation, AuthModule authServer) {
+		this.conversation = conversation;
+        this.serviceContext = context;
 		this.authServer = authServer;
 	}
 
@@ -73,7 +84,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		rbUser.setEmail(email);
 		rbUser.setUsername(username);
 		final String crypted = RBCrypt.encryptWithRandomSalt(password);
-		authServer.getUserManagement().registerUser(rbUser, crypted, getProvider().getContext().getDomain());
+		authServer.getUserManagement().registerUser(rbUser, crypted, serviceContext.getDomain());
 		if(messagingService != null){
 			messagingService.getEmailService().sendRegistrationConfirmation(rbUser, locale);
 		}
@@ -121,7 +132,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	 */
 	@Override
 	public void deleteUser(RBUser user) {
-		mc().remove(new SimpleResourceID(user.getQualifiedName()));
+		conversation.remove(new SimpleResourceID(user.getQualifiedName()));
 		authServer.getUserManagement().deleteUser(user);
 		logger.info("Deleted user: " + user);
 	}
@@ -185,7 +196,7 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 		}
 	}
 	
-	// ----------------------------------------------------
+	// -- DEPENDENCIES ------------------------------------
 
 	/**
 	 * Inject messaging service.
@@ -194,8 +205,20 @@ public class SecurityServiceImpl extends AbstractService implements SecurityServ
 	public void setMessagingService(MessagingService messagingService) {
 		this.messagingService = messagingService;
 	}
-	
-	// ----------------------------------------------------
+
+    public void setConversation(ModelingConversation conversation) {
+        this.conversation = conversation;
+    }
+
+    public void setServiceContext(ServiceContext serviceContext) {
+        this.serviceContext = serviceContext;
+    }
+
+    public void setAuthServer(AuthModule authServer) {
+        this.authServer = authServer;
+    }
+
+    // ----------------------------------------------------
 	
 	/**
 	 * Can be implemented by sub classes.

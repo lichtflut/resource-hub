@@ -43,7 +43,7 @@ import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 import de.lichtflut.rb.rest.api.models.generate.ObjectFactory;
 import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
 import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
@@ -167,7 +167,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 		if (fixture!=null && fixture.exists()) {
 			try {
 				FileInputStream stream = new FileInputStream(fixture);
-				getProvider().getArastejuGate().startConversation().attach(semanticIO.read(stream));
+				getProvider().getConversation().attach(semanticIO.read(stream));
 				return;
 			} catch (Exception e) {
 				throw new RuntimeException("could not load fixtures " + (fixture==null ?  "" : fixture.getAbsolutePath()), e);
@@ -374,7 +374,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 		for (ResourceNode resourceNode : domains) {
 			//Dont delete the root domain to prevent some errors in loading system identities
 			if(!new RBDomain(resourceNode).getName().equals(GateContext.MASTER_DOMAIN)){
-				getProvider().getArastejuGate().startConversation().remove(resourceNode);
+				getProvider().getConversation().remove(resourceNode);
 			}
 		}
 	}

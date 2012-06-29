@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.core.services.TypeManager;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -16,6 +19,7 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNText;
+import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +30,6 @@ import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.ServiceProvider;
 
 /**
  * <p>
@@ -39,21 +42,30 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  *
  * @author Oliver Tigges
  */
-public class EntityManagerImpl extends AbstractService implements EntityManager {
+public class EntityManagerImpl implements EntityManager {
 
 	private final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
-	
-	// -----------------------------------------------------
 
-	/**
-	 * Constructor.
-	 * @param provider The service provider.
-	 */
-	public EntityManagerImpl(final ServiceProvider provider) {
-		super(provider);
-	}
-	
-	// -----------------------------------------------------
+    private TypeManager typeManager;
+
+    private SchemaManager schemaManager;
+
+    private ModelingConversation conversation;
+
+    // -----------------------------------------------------
+
+    /**
+     * Default constructor.
+     */
+    public EntityManagerImpl() { }
+
+    public EntityManagerImpl(TypeManager typeManager, SchemaManager schemaManager, ModelingConversation conversation) {
+        this.typeManager = typeManager;
+        this.schemaManager = schemaManager;
+        this.conversation = conversation;
+    }
+
+    // -----------------------------------------------------
 
 	/** 
 	 * {@inheritDoc}
@@ -69,7 +81,7 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 	@Override
 	public List<RBEntity> findByType(final ResourceID type) {
 		final List<RBEntity> result = new ArrayList<RBEntity>();
-		final ResourceSchema schema = getProvider().getSchemaManager().findSchemaForType(type);
+		final ResourceSchema schema = schemaManager.findSchemaForType(type);
 		final List<ResourceNode> nodes = findResourcesByType(type);
 		for (ResourceNode n : nodes) {
 			n.getAssociations();
@@ -86,7 +98,7 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 	 */
 	@Override
 	public RBEntity create(final ResourceID type) {
-		final ResourceSchema schema = getProvider().getSchemaManager().findSchemaForType(type);
+		final ResourceSchema schema = schemaManager.findSchemaForType(type);
 		if (schema != null) {
 			return new RBEntityImpl(new SNResource(), schema);	
 		} else {
@@ -100,7 +112,7 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 	 */
 	@Override
     public void store(final RBEntity entity) {
-		final ModelingConversation mc = mc();
+		final ModelingConversation mc = conversation;
 		final ResourceNode node = entity.getNode();
 		SNOPS.associate(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
@@ -121,7 +133,7 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 	*/
 	@Override
 	public void changeType(RBEntity entity, ResourceID type) {
-		final ModelingConversation mc = mc();
+		final ModelingConversation mc = conversation;
 		final ResourceNode node = mc.resolve(entity.getID());
 		SNOPS.remove(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, type);
@@ -132,28 +144,42 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 	 */
 	@Override
 	public void delete(final ResourceID entityID) {
-		final ModelingConversation mc = mc();
+		final ModelingConversation mc = conversation;
 		final ResourceNode node = mc.resolve(entityID);
 		mc.remove(node);
 	}
-	
-	// -----------------------------------------------------
+
+    // -- DEPENDENCIES ------------------------------------
+
+    public void setTypeManager(TypeManager typeManager) {
+        this.typeManager = typeManager;
+    }
+
+    public void setSchemaManager(SchemaManager schemaManager) {
+        this.schemaManager = schemaManager;
+    }
+
+    public void setConversation(ModelingConversation conversation) {
+        this.conversation = conversation;
+    }
+
+    // ----------------------------------------------------
 	
 	/** 
 	 * {@inheritDoc}
 	 */
 	private RBEntityImpl find(final ResourceID resourceID, final boolean cascadeEager) {
-		final ModelingConversation mc = mc();
+		final ModelingConversation mc = conversation;
 		final ResourceNode node = mc.findResource(resourceID.getQualifiedName());
 		if (node == null) {
 			return null;
 		}
-		final ResourceID type = getProvider().getTypeManager().getTypeOfResource(node);
+		final ResourceID type = typeManager.getTypeOfResource(node);
 		final RBEntityImpl entity;
 		if (type == null) {
 			entity = new RBEntityImpl(node);
 		} else {
-			final ResourceSchema schema = getProvider().getSchemaManager().findSchemaForType(type.asResource());
+			final ResourceSchema schema = schemaManager.findSchemaForType(type.asResource());
 			if (schema != null) {
 				entity = new RBEntityImpl(node, schema);
 			} else {
@@ -200,9 +226,15 @@ public class EntityManagerImpl extends AbstractService implements EntityManager 
 		for(int i=0; i < field.getSlots(); i++) {
 			final ResourceID id = (ResourceID) field.getValue(i);
 			if (id != null) {
-				field.setValue(i, mc().resolve(id));
+				field.setValue(i, conversation.resolve(id));
 			}
 		}
 	}
+
+    private List<ResourceNode> findResourcesByType(ResourceID type) {
+        final Query query = conversation.createQuery();
+        query.addField(RDF.TYPE, type);
+        return query.getResult().toList(2000);
+    }
 	
 }

@@ -3,6 +3,16 @@
  */
 package de.lichtflut.rb.rest.api;
 
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.eh.RBAuthException;
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.RBCrypt;
+import de.lichtflut.rb.core.security.RBDomain;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.rest.delegate.providers.RBServiceProvider;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.Organizer;
 import org.arastreju.sge.apriori.Aras;
@@ -13,16 +23,6 @@ import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.spi.GateContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.eh.RBAuthException;
-import de.lichtflut.rb.core.security.AuthModule;
-import de.lichtflut.rb.core.security.RBCrypt;
-import de.lichtflut.rb.core.security.RBDomain;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
-
 /**
  * <p>
  * TODO: To document
@@ -31,7 +31,7 @@ import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
  * @author Nils Bleisch (nbleisch@lichtflut.de)
  * @created May 11, 2012
  */
-public class TestServiceProvider extends DefaultRBServiceProvider {
+public class TestServiceProvider extends RBServiceProvider {
 
 	@Autowired
 	private AuthModule module;
@@ -40,7 +40,7 @@ public class TestServiceProvider extends DefaultRBServiceProvider {
 	 * @param config
 	 */
 	public TestServiceProvider(RBConfig config, AuthModule module) {
-		super(config, module);
+        super(new ServiceContext(config, GateContext.MASTER_DOMAIN), module);
 	}
 
 	@Override

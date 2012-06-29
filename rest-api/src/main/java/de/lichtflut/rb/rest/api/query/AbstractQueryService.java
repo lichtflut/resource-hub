@@ -2,9 +2,8 @@ package de.lichtflut.rb.rest.api.query;
 
 import com.sun.jersey.core.util.Base64;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.core.common.TermSearcher;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 import de.lichtflut.rb.rest.api.RBServiceEndpoint;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.nodes.ResourceNode;

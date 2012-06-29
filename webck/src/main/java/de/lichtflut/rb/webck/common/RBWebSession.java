@@ -1,7 +1,7 @@
 package de.lichtflut.rb.webck.common;
 
+import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
 import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
@@ -24,7 +24,7 @@ public class RBWebSession extends WebSession {
     private final BrowsingHistory history = new BrowsingHistory();
 
     @SpringBean
-    private transient ServiceProvider provider;
+    private transient ArastrejuResourceFactory factory;
 
     @SpringBean
     private ServiceContext context;
@@ -63,8 +63,8 @@ public class RBWebSession extends WebSession {
     @Override
     public void detach() {
         super.detach();
-        if (provider != null) {
-            provider.onDetach();
+        if (factory != null) {
+            factory.getConversation().close();
         }
     }
 

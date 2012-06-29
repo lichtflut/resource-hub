@@ -190,7 +190,7 @@ public class GraphTest extends TestBase {
 		}
 		
 		//Check that this graph is not persisted in store
-		ModelingConversation mc = getProvider().getArastejuGate().startConversation();
+		ModelingConversation mc = getProvider().getConversation();
 		ResourceNode rs1 = mc.findResource(node1.getQualifiedName());
 		assertNull(rs1);
 		

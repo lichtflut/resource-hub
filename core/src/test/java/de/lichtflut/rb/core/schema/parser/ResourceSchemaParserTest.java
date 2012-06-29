@@ -3,19 +3,18 @@
  */
 package de.lichtflut.rb.core.schema.parser;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.impl.AbstractServiceProvider;
-import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
+import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
+import junit.framework.Assert;
+import org.arastreju.sge.Arastreju;
+import org.arastreju.sge.ModelingConversation;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * <p>
@@ -31,14 +30,15 @@ import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
  */
 public class ResourceSchemaParserTest {
 
-	private AbstractServiceProvider serviceProvider;
+    private ModelingConversation conversation;
 
-	// -----------------------------------------------------
-	
-	@Before
-	public void setUp() {
-		serviceProvider = new DefaultRBServiceProvider(new RBConfig());
-	}
+    // -----------------------------------------------------
+
+    @Before
+    public void setUp() {
+        final Arastreju aras = Arastreju.getInstance(new RBConfig().getArastrejuConfiguration());
+        this.conversation = aras.rootContext().startConversation();
+    }
 	
 	// ----------------------------------------------------
 	
@@ -47,8 +47,8 @@ public class ResourceSchemaParserTest {
 		final InputStream in = 
 				getClass().getClassLoader().getResourceAsStream("test-schema.json");
 
-		final SchemaManager manager = serviceProvider.getSchemaManager();
-		final SchemaImporter importer = manager.getImporter("json");
+        final SchemaManager manager = new SchemaManagerImpl(conversation);
+        final SchemaImporter importer = manager.getImporter("json");
 		importer.read(in);
 		
 		Assert.assertEquals(5, manager.findAllResourceSchemas().size());
@@ -60,8 +60,8 @@ public class ResourceSchemaParserTest {
 	public void testRsfImport() throws IOException {
 		final InputStream in = 
 				getClass().getClassLoader().getResourceAsStream("test-schema.rsf");
-		
-		final SchemaManager manager = serviceProvider.getSchemaManager();
+
+        final SchemaManager manager = new SchemaManagerImpl(conversation);
 		final SchemaImporter importer = manager.getImporter("rsf");
 		importer.read(in);
 		Assert.assertEquals(2, manager.findAllResourceSchemas().size());
