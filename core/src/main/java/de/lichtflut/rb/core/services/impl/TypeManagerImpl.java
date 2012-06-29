@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.ServiceContext;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
@@ -17,12 +20,12 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.ServiceProvider;
 import de.lichtflut.rb.core.services.TypeManager;
 
 /**
@@ -36,21 +39,28 @@ import de.lichtflut.rb.core.services.TypeManager;
  *
  * @author Oliver Tigges
  */
-public class TypeManagerImpl extends AbstractService implements TypeManager {
+public class TypeManagerImpl implements TypeManager {
 	
 	final Logger logger = LoggerFactory.getLogger(TypeManagerImpl.class);
+
+    private ModelingConversation conversation;
+
+    private SchemaManager schemaManager;
 	
 	// -----------------------------------------------------
 	
 	/**
-	 * Constructor.
-	 * @param provider The service provider.
+	 * Default Constructor.
 	 */
-	public TypeManagerImpl(final ServiceProvider provider) {
-		super(provider);
+	public TypeManagerImpl() {
 	}
-	
-	// -----------------------------------------------------
+
+    public TypeManagerImpl(ModelingConversation conversation, SchemaManager schemaManager) {
+        this.conversation = conversation;
+        this.schemaManager = schemaManager;
+    }
+
+    // -----------------------------------------------------
 	
 	/**
 	 * {@inheritDoc}
@@ -60,7 +70,7 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 		if (type == null) { 
 			return null;
 		}
-		final ResourceNode existing = mc().findResource(type.getQualifiedName());
+		final ResourceNode existing = conversation.findResource(type.getQualifiedName());
 		if (existing != null) {
 			return existing.asClass();
 		} else {
@@ -73,7 +83,7 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 	 */
 	@Override
 	public SNClass getTypeOfResource(final ResourceID resource) {
-		final ResourceNode node = mc().resolve(resource);
+		final ResourceNode node = conversation.resolve(resource);
 		final Set<SemanticNode> objects = SNOPS.objects(node, RDF.TYPE);
 		for (SemanticNode sn : objects) {
 			if (RBSystem.ENTITY.equals(sn)) {
@@ -105,7 +115,7 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 		final SNClass type = new SNResource(qn).asClass();
 		SNOPS.associate(type, RDF.TYPE, RDFS.CLASS, RB.TYPE_SYSTEM_CONTEXT);
 		SNOPS.associate(type, RDF.TYPE, RBSystem.TYPE, RB.TYPE_SYSTEM_CONTEXT);
-		mc().attach(type);
+		conversation.attach(type);
 		return type;
 	}
 
@@ -114,8 +124,8 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 	 */
 	@Override
 	public void removeType(final ResourceID type) {
-		getProvider().getSchemaManager().removeSchemaForType(type);
-		mc().remove(type);
+		schemaManager.removeSchemaForType(type);
+		conversation.remove(type);
 	}
 	
 	/** 
@@ -123,7 +133,7 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 	 */
 	@Override
 	public void addSuperClass(ResourceID type, ResourceID superClass) {
-		mc().resolve(type).addAssociation(RDFS.SUB_CLASS_OF, superClass, RB.TYPE_SYSTEM_CONTEXT);
+		conversation.resolve(type).addAssociation(RDFS.SUB_CLASS_OF, superClass, RB.TYPE_SYSTEM_CONTEXT);
 	}
 	
 	/** 
@@ -131,7 +141,7 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 	 */
 	@Override
 	public void removeSuperClass(ResourceID type, ResourceID superClass) {
-		final ResourceNode typeNode = mc().findResource(type.getQualifiedName());
+		final ResourceNode typeNode = conversation.findResource(type.getQualifiedName());
 		if (typeNode != null) {
 			SNOPS.remove(typeNode, RDFS.SUB_CLASS_OF, superClass);
 		} else {
@@ -146,7 +156,7 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 		if (qn == null) { 
 			return null;
 		}
-		final ResourceNode existing = mc().findResource(qn);
+		final ResourceNode existing = conversation.findResource(qn);
 		if (existing != null) {
 			return existing.asProperty();
 		} else {
@@ -161,7 +171,7 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 	public SNProperty createProperty(QualifiedName qn) {
 		final SNProperty property = new SNProperty(qn).asProperty();
 		SNOPS.associate(property, RDF.TYPE, RDF.PROPERTY, RB.TYPE_SYSTEM_CONTEXT);
-		mc().attach(property);
+		conversation.attach(property);
 		return property;
 	}
 
@@ -170,7 +180,7 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 	*/
 	@Override
 	public void removeProperty(SNProperty property) {
-		mc().remove(property);
+		conversation.remove(property);
 	}
 
 	/** 
@@ -185,5 +195,13 @@ public class TypeManagerImpl extends AbstractService implements TypeManager {
 		}
 		return result;
 	}
+
+    // ----------------------------------------------------
+
+    protected List<ResourceNode> findResourcesByType(ResourceID type) {
+        final Query query = conversation.createQuery();
+        query.addField(RDF.TYPE, type);
+        return query.getResult().toList(2000);
+    }
 	
 }

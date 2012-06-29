@@ -3,12 +3,6 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.model.Statement;
-
 import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -17,7 +11,11 @@ import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.model.Statement;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * <p>
@@ -32,20 +30,20 @@ import de.lichtflut.rb.core.services.ServiceProvider;
  */
 public class SchemaImporterImpl implements SchemaImporter {
 
-	private final ResourceSchemaParser parser;
+    private final ModelingConversation conversation;
+    private final ResourceSchemaParser parser;
 	private final SchemaManager manager;
-	private final ServiceProvider provider;
+
 	
 	// -----------------------------------------------------
 	
 	/**
-	 * @param provider The service provider.
-	 * @param parser The parser.
+	 * Constructor.
 	 */
-	public SchemaImporterImpl(final ServiceProvider provider, final ResourceSchemaParser parser) {
-		this.provider = provider;
-		this.manager = provider.getSchemaManager();
-		this.parser = parser;
+	public SchemaImporterImpl(SchemaManager manager, ModelingConversation conversation, ResourceSchemaParser parser) {
+		this.manager = manager;
+        this.conversation = conversation;
+        this.parser = parser;
 	}
 	
 	// -----------------------------------------------------
@@ -67,9 +65,9 @@ public class SchemaImporterImpl implements SchemaImporter {
 			resolvePublicConstraints(schema);
 			manager.store(schema);
 		}
-		final ModelingConversation mc = provider.getConversation();
+
 		for(Statement stmt : elements.getStatements()) {
-			mc.addStatement(stmt);
+			conversation.addStatement(stmt);
 		}
 		
 		report.add("Constraints", elements.getConstraints().size());

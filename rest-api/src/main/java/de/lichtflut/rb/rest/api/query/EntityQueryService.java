@@ -3,9 +3,14 @@
  */
 package de.lichtflut.rb.rest.api.query;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import de.lichtflut.rb.core.common.TermSearcher;
+import de.lichtflut.rb.core.common.TermSearcher.Mode;
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.RBUser;
+import org.arastreju.sge.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
@@ -16,23 +21,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.query.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
-import com.sun.jersey.core.util.Base64;
-
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.core.common.TermSearcher;
-import de.lichtflut.rb.core.common.TermSearcher.Mode;
-import de.lichtflut.rb.core.security.AuthModule;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.rest.api.RBServiceEndpoint;
+import java.util.List;
 
 /**
  * <p>
@@ -63,7 +52,7 @@ public class EntityQueryService extends AbstractQueryService {
 			@PathParam(value = "domain") String domain,
 			@CookieParam(value=AuthModule.COOKIE_SESSION_AUTH) String token)
 	{
-		RBUser user = authModule.getAuthenticationService().loginByToken(token);
+		RBUser user = authenticateUser(token);
 		if (user == null) {
 			logger.info("Unauthenticated entity query.");
 			return Response.status(Status.FORBIDDEN).build();
@@ -72,7 +61,6 @@ public class EntityQueryService extends AbstractQueryService {
 			logger.info("Invalid entity query (term is null).");
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		
 		
 		Query query = createQuery(domain, user);
 		String typeDecoded = decodeBase64(type);

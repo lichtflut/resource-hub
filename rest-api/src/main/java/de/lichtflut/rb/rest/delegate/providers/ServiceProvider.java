@@ -1,8 +1,12 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.services;
+package de.lichtflut.rb.rest.delegate.providers;
 
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.SecurityService;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.core.services.TypeManager;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 
@@ -36,22 +40,15 @@ public interface ServiceProvider {
 	// -----------------------------------------------------
 
 	/**
-	 * {@link EntityManager} provides the ability to manage,
-	 * persist and store RB-Entities.
-	 * @return {@link EntityManager}
-	 */
-	EntityManager getEntityManager();
-	
-	/**
-	 * {@link SchemaManager} provides the ability to generate, manipulate, maintain,
+	 * {@link de.lichtflut.rb.core.services.SchemaManager} provides the ability to generate, manipulate, maintain,
 	 * persist and store an ResourceSchema through several I/O sources.
 	 * It's also interpreting the schema, checks for consistency and contains powerful error-processing mechanisms.
-	 * @return {@link SchemaManager}
+	 * @return {@link de.lichtflut.rb.core.services.SchemaManager}
 	 */
 	SchemaManager getSchemaManager();
 
 	/**
-	 * The {@link TypeManager} is used for resolving of types.
+	 * The {@link de.lichtflut.rb.core.services.TypeManager} is used for resolving of types.
 	 * @return The type manager.
 	 */
 	TypeManager getTypeManager();
@@ -60,24 +57,5 @@ public interface ServiceProvider {
 	 * @return The security service.
 	 */
 	SecurityService getSecurityService();
-	
-	/**
-	 * @return The organizer for this domain.
-	 */
-	DomainOrganizer getDomainOrganizer();
-	
-	/**
-	 * The service for view specifications, perspectives and widgets.
-	 * @return The service.
-	 */
-	ViewSpecificationService getViewSpecificationService();
-	
-	// ----------------------------------------------------
 
-	/**
-	 * Called in detach phase, when the provider shall release resources.
-	 */
-	void onDetach();
-
-	
 }

@@ -23,7 +23,7 @@ import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.security.UserManager;
-import de.lichtflut.rb.core.services.ServiceProvider;
+import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
 import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
 import de.lichtflut.rb.rest.api.security.RBOperation;
@@ -129,7 +129,7 @@ public class DomainOps extends RBServiceEndpoint {
 				&& (admin.getId() == null || admin.getPassword() == null)) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		TransactionControl tx = provider.getArastejuGate().startConversation().beginTransaction();
+		TransactionControl tx = provider.getConversation().beginTransaction();
 		// Lets process the create
 		try {
 			rbDomain = domainManager.registerDomain(rbDomain);

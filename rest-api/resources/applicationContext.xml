@@ -21,7 +21,7 @@
 		<constructor-arg ref="rbConfig"></constructor-arg>
 	</bean>
 	
-	<bean id="providerFactory" class="de.lichtflut.rb.core.services.DefaultServiceProviderFactory">
+	<bean id="providerFactory" class="de.lichtflut.rb.rest.delegate.providers.DefaultServiceProviderFactory">
 		<constructor-arg index="1" ref="rbConfig" />
 		<constructor-arg index="0" ref="authModule" />
 	</bean>

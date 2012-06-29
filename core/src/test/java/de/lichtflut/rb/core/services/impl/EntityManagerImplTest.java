@@ -3,20 +3,13 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.arastreju.sge.ArastrejuGate;
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.TypeManager;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
@@ -35,14 +28,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
-import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.ServiceProvider;
-import de.lichtflut.rb.core.services.TypeManager;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * <p>
@@ -58,12 +55,10 @@ import de.lichtflut.rb.core.services.TypeManager;
 @RunWith(MockitoJUnitRunner.class)
 public class EntityManagerImplTest {
 
-	private ServiceProvider provider;
 	private EntityManager em;
 	private SchemaManager sm;
 	private TypeManager tm;
 	private ModelingConversation mc;
-	private ArastrejuGate gate;
 	private Query query;
 	
 	/**
@@ -71,38 +66,15 @@ public class EntityManagerImplTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		provider = mock(ServiceProvider.class);
 		sm = mock(SchemaManager.class);
 		mc = mock(ModelingConversation.class);
-		gate = mock(ArastrejuGate.class);
 		query = mock(Query.class);
 		tm = mock(TypeManager.class);
 		
 		when(mc.createQuery()).thenReturn(query);
-		when(provider.getSchemaManager()).thenReturn(sm);
-		when(provider.getTypeManager()).thenReturn(tm);
-		when(provider.getArastejuGate()).thenReturn(gate);
 
-		em = new EntityManagerImpl(provider){
-			@Override
-			protected ModelingConversation mc(){
-				return mc;
-			}
-			@Override
-			protected ServiceProvider getProvider() {
-				return provider;
-			}
-		};
+		em = new EntityManagerImpl(tm, sm, mc);
 
-	}
-
-	/**
-	 * Test method for {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#EntityManagerImpl(de.lichtflut.rb.core.services.ServiceProvider)}.
-	 */
-	@Test
-	public void testEntityManagerImpl() {
-		em = new EntityManagerImpl(provider);
-		assertNotNull(em);
 	}
 
 	/**
@@ -128,7 +100,7 @@ public class EntityManagerImplTest {
 		// find entity with type
 		when(tm.getTypeOfResource(user)).thenReturn(RB.PERSON.asResource().asClass());
 		when(mc.findResource(user.getQualifiedName())).thenReturn(user);
-		when(provider.getSchemaManager().findSchemaForType(RB.PERSON)).thenReturn(null);
+		when(sm.findSchemaForType(RB.PERSON)).thenReturn(null);
 
 		RBEntity e = em.find(new SimpleResourceID(user.getQualifiedName()));
 
@@ -138,7 +110,7 @@ public class EntityManagerImplTest {
 		
 		// find entity with type, schema
 		when(mc.findResource(user.getQualifiedName())).thenReturn(user);
-		when(provider.getSchemaManager().findSchemaForType(RB.PERSON)).thenReturn(new ResourceSchemaImpl(RB.PERSON));
+		when(sm.findSchemaForType(RB.PERSON)).thenReturn(new ResourceSchemaImpl(RB.PERSON));
 
 		RBEntity e1 = em.find(new SimpleResourceID(user.getQualifiedName()));
 
@@ -202,7 +174,7 @@ public class EntityManagerImplTest {
 	 * {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#changeType(de.lichtflut.rb.core.entity.RBEntity, org.arastreju.sge.model.ResourceID)}.
 	 */
 	@Test
-	@Ignore("Fix")
+    @Ignore
 	public void testChangeType() {
 		RBEntity entity = new RBEntityImpl(getUser(), RB.PERSON);
 		when(mc.resolve(entity.getID())).thenReturn(entity.getNode());

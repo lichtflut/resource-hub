@@ -3,6 +3,19 @@
  */
 package de.lichtflut.rb.core.api.impl;
 
+import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
+import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
+import org.arastreju.sge.Arastreju;
+import org.arastreju.sge.ModelingConversation;
+import org.junit.Before;
+import org.junit.Test;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -10,19 +23,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.impl.DefaultRBServiceProvider;
-import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
-import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 
 /**
  * <p>
@@ -37,20 +37,21 @@ import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
  */
 public class SchemaManagerImplTest {
 
-	private DefaultRBServiceProvider serviceProvider;
+	private ModelingConversation conversation;
 
 	// -----------------------------------------------------
 
 	@Before
 	public void setUp() {
-		serviceProvider = new DefaultRBServiceProvider(new RBConfig());
+        final Arastreju aras = Arastreju.getInstance(new RBConfig().getArastrejuConfiguration());
+        this.conversation = aras.rootContext().startConversation();
 	}
 
 	// -----------------------------------------------------
 
 	@Test
 	public void testStoreAndRetrieve() {
-		final SchemaManager manager = new SchemaManagerImpl(serviceProvider);
+		final SchemaManager manager = new SchemaManagerImpl(conversation);
 		final ResourceSchema original = ResourceSchemaFactory.buildPersonSchema();
 		manager.store(original);
 
@@ -70,7 +71,7 @@ public class SchemaManagerImplTest {
 
 	@Test
 	public void testReplacing() {
-		final SchemaManager manager = new SchemaManagerImpl(serviceProvider);
+		final SchemaManager manager = new SchemaManagerImpl(conversation);
 		final ResourceSchema original = ResourceSchemaFactory.buildPersonSchema();
 		manager.store(original);
 

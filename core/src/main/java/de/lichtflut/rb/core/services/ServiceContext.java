@@ -42,6 +42,17 @@ public class ServiceContext {
 		this(config);
 		this.domain = domain;
 	}
+
+    /**
+     * @param config The config.
+     * @param domain The current domain.
+     * @param user The user.
+     */
+    public ServiceContext(RBConfig config, String domain, RBUser user) {
+        this(config);
+        this.domain = domain;
+        this.user = user;
+    }
 	
 	/**
 	 *  Special constructor for spring.
