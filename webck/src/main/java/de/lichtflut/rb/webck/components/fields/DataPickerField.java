@@ -45,10 +45,9 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	 * Constructor.
 	 * @param id The component ID.
 	 * @param model The model.
-	 * @param source The {@link AutocompleteSource}
 	 */
-	public DataPickerField(final String id, final IModel<T> model, final AutocompleteSource source) {
-		this(id, model, toDisplayModel(model), source);
+	public DataPickerField(final String id, final IModel<T> model) {
+		this(id, model, toDisplayModel(model));
 	}
 	
 	/**
@@ -56,9 +55,8 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	 * @param id The component ID.
 	 * @param model The model for the internal value.
 	 * @param displayModel The model for the display value.
-	 * @param source The {@link AutocompleteSource}
 	 */
-	public DataPickerField(final String id, final IModel<T> model, final IModel<String> displayModel, final AutocompleteSource source) {
+	public DataPickerField(final String id, final IModel<T> model, final IModel<String> displayModel) {
 		super(id, model);
 		
 		final IModel<T> hiddenModel = toHiddenModel(model);
@@ -71,7 +69,6 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		display.setType(String.class);
 		display.setOutputMarkupId(true);
 		final String displayMarkupID = display.getMarkupId();
-		display.setSource(source);
 		display.setSearchEvent(new JsScopeUiEvent() {
 			protected void execute(final JsScopeContext ctx) {
 				ctx.append("LFRB.Datapicker.onSearch('#" +  displayMarkupID + "');");

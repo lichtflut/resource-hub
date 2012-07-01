@@ -136,7 +136,7 @@ public class GraphOps extends RBServiceEndpoint{
 		final List<SNClass> types = provider.getTypeManager().findAllTypes();
 		final SemanticGraph graph = new DefaultSemanticGraph();
 		for (SNClass type : types) {
-			final List<ResourceNode> entities = provider.getArastejuGate().createQueryManager().findByType(type);
+			final List<ResourceNode> entities = findResourcesByType(provider.getConversation(), type);
 			for (ResourceNode entity : entities) {
 				graph.merge(new DefaultSemanticGraph(entity));
 			}

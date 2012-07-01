@@ -10,6 +10,7 @@ import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.security.SecurityConfiguration;
 import de.lichtflut.rb.core.security.UserManager;
 import de.lichtflut.rb.core.services.MessagingService;
 import de.lichtflut.rb.core.services.SecurityService;
@@ -40,14 +41,16 @@ public class SecurityServiceImpl implements SecurityService {
 	
 	private final Logger logger = LoggerFactory.getLogger(SecurityServiceImpl.class);
 	
-	private AuthModule authServer;
+	private AuthModule authModule;
 
     private ModelingConversation conversation;
 	
 	private MessagingService messagingService;
 
     private ServiceContext serviceContext;
-	
+
+    private SecurityConfiguration securityConfiguration;
+
 	// ----------------------------------------------------
 
     /**
@@ -59,10 +62,10 @@ public class SecurityServiceImpl implements SecurityService {
     /**
 	 * Constructor.
 	 */
-	public SecurityServiceImpl(ServiceContext context, ModelingConversation conversation, AuthModule authServer) {
+	public SecurityServiceImpl(ServiceContext context, ModelingConversation conversation, AuthModule authModule) {
 		this.conversation = conversation;
         this.serviceContext = context;
-		this.authServer = authServer;
+		this.authModule = authModule;
 	}
 
 	// ----------------------------------------------------
@@ -72,7 +75,7 @@ public class SecurityServiceImpl implements SecurityService {
 	 */
 	@Override
 	public RBUser findUser(String identifier) {
-		return authServer.getUserManagement().findUser(identifier);
+		return authModule.getUserManagement().findUser(identifier);
 	}
 	
 	/** 
@@ -84,7 +87,7 @@ public class SecurityServiceImpl implements SecurityService {
 		rbUser.setEmail(email);
 		rbUser.setUsername(username);
 		final String crypted = RBCrypt.encryptWithRandomSalt(password);
-		authServer.getUserManagement().registerUser(rbUser, crypted, serviceContext.getDomain());
+		authModule.getUserManagement().registerUser(rbUser, crypted, serviceContext.getDomain());
 		if(messagingService != null){
 			messagingService.getEmailService().sendRegistrationConfirmation(rbUser, locale);
 		}
@@ -102,7 +105,7 @@ public class SecurityServiceImpl implements SecurityService {
 		rbUser.setUsername(username);
 		final String crypted = RBCrypt.encryptWithRandomSalt(password);
 		
-		authServer.getUserManagement().registerUser(rbUser, crypted, domain.getName());
+		authModule.getUserManagement().registerUser(rbUser, crypted, domain.getName());
 		
 		makeDomainAdmin(domain, rbUser);
 		
@@ -124,7 +127,7 @@ public class SecurityServiceImpl implements SecurityService {
 	 */
 	@Override
 	public void storeUser(RBUser updated) throws RBException {
-		authServer.getUserManagement().updateUser(updated);
+		authModule.getUserManagement().updateUser(updated);
 	}
 	
 	/** 
@@ -133,7 +136,7 @@ public class SecurityServiceImpl implements SecurityService {
 	@Override
 	public void deleteUser(RBUser user) {
 		conversation.remove(new SimpleResourceID(user.getQualifiedName()));
-		authServer.getUserManagement().deleteUser(user);
+		authModule.getUserManagement().deleteUser(user);
 		logger.info("Deleted user: " + user);
 	}
 	
@@ -144,7 +147,7 @@ public class SecurityServiceImpl implements SecurityService {
 	 */
 	@Override
 	public List<String> getUserRoles(RBUser user, String domain) {
-		return authServer.getUserManagement().getUserRoles(user, domain);
+		return authModule.getUserManagement().getUserRoles(user, domain);
 	}
 
 	/** 
@@ -152,7 +155,7 @@ public class SecurityServiceImpl implements SecurityService {
 	 */
 	@Override
 	public Set<String> getUserPermissions(RBUser user, String domain) {
-		return authServer.getUserManagement().getUserPermissions(user, domain);
+		return authModule.getUserManagement().getUserPermissions(user, domain);
 	}
 	
 	/**
@@ -160,7 +163,7 @@ public class SecurityServiceImpl implements SecurityService {
 	 */
 	@Override
 	public void setUserRoles(RBUser user, String domain, List<String> roles) throws RBAuthException {
-		authServer.getUserManagement().setUserRoles(user, domain, roles);
+		authModule.getUserManagement().setUserRoles(user, domain, roles);
 	}
 	
 	/**
@@ -168,7 +171,7 @@ public class SecurityServiceImpl implements SecurityService {
 	 */
 	@Override
 	public void removeAllUserRoles(RBUser user) throws RBAuthException {
-		authServer.getUserManagement().removeAllUserRoles(user, null);
+		authModule.getUserManagement().removeAllUserRoles(user, null);
 	}
 	
 	// ----------------------------------------------------
@@ -178,8 +181,8 @@ public class SecurityServiceImpl implements SecurityService {
 	 */
 	@Override
 	public void changePassword(RBUser user, String currentPassword, String newPassword) throws RBException{
-		authServer.getUserManagement().verifyPassword(user, currentPassword);
-		authServer.getUserManagement().changePassword(user, newPassword);
+		authModule.getUserManagement().verifyPassword(user, currentPassword);
+		authModule.getUserManagement().changePassword(user, newPassword);
 	}
 
 	/** 
@@ -189,7 +192,7 @@ public class SecurityServiceImpl implements SecurityService {
 	@Override
 	public void resetPasswordForUser(RBUser user, Locale locale) throws RBException {
 		final String generatedPwd = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-		authServer.getUserManagement().changePassword(user, generatedPwd);
+		authModule.getUserManagement().changePassword(user, generatedPwd);
 		logGeneratedPwd(generatedPwd);
 		if (messagingService != null) {
 			messagingService.getEmailService().sendPasswordInformation(user, generatedPwd, locale);	
@@ -214,8 +217,12 @@ public class SecurityServiceImpl implements SecurityService {
         this.serviceContext = serviceContext;
     }
 
-    public void setAuthServer(AuthModule authServer) {
-        this.authServer = authServer;
+    public void setAuthModule(AuthModule authServer) {
+        this.authModule = authServer;
+    }
+
+    public void setSecurityConfiguration(SecurityConfiguration securityConfiguration) {
+        this.securityConfiguration = securityConfiguration;
     }
 
     // ----------------------------------------------------

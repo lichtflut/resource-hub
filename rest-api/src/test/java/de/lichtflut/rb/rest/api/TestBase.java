@@ -15,11 +15,15 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.apriori.Aras;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.query.Query;
 import org.arastreju.sge.spi.GateContext;
 import org.junit.After;
 import org.junit.Before;
@@ -43,7 +47,6 @@ import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 import de.lichtflut.rb.rest.api.models.generate.ObjectFactory;
 import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
 import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
@@ -78,7 +81,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 	private String authToken;
 
 	@Autowired
-	private ServiceProvider provider;
+	private TestServiceProvider provider;
 	
 	@Autowired
 	private AuthModule authmodule;
@@ -103,7 +106,6 @@ public abstract class TestBase extends junit.framework.TestCase {
 	@Before
 	public void init(){
 		//Initializing gate
-		getProvider().getArastejuGate();
 		initTestCase();
 		loadFixtures();
 	}
@@ -117,7 +119,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 	public void tearDown() {
 		try {
 			connector.tearDown();
-			getProvider().getArastejuGate().close();
+			getProvider().closeGate();
 			Thread.sleep(1000);
 			//Lets delete all systemIdentities
 			while(!identityStack.empty()){
@@ -330,7 +332,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 	/**
 	 * @return the provider
 	 */
-	protected ServiceProvider getProvider() {
+	protected TestServiceProvider getProvider() {
 		if(currentDomain!=null){
 			provider.getContext().setDomain(currentDomain.getDomainIdentifier());
 		}
@@ -370,7 +372,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 	}
 	
 	public void deleteSystemDomains(){
-		List<ResourceNode> domains = getProvider().getArastejuGate().createQueryManager().findByType(Aras.DOMAIN);
+		List<ResourceNode> domains = findResourcesByType(provider.getConversation(), Aras.DOMAIN);
 		for (ResourceNode resourceNode : domains) {
 			//Dont delete the root domain to prevent some errors in loading system identities
 			if(!new RBDomain(resourceNode).getName().equals(GateContext.MASTER_DOMAIN)){
@@ -404,7 +406,6 @@ public abstract class TestBase extends junit.framework.TestCase {
 		}
 	}
 
-	
 	private File getFileFromClasspath(String path){
 		URL url = getClass().getResource(path);
 		if(url!=null){
@@ -412,5 +413,13 @@ public abstract class TestBase extends junit.framework.TestCase {
 		}
 		return null;
 	}
+
+    // ----------------------------------------------------
+
+    protected List<ResourceNode> findResourcesByType(ModelingConversation conversation, ResourceID type) {
+        final Query query = conversation.createQuery();
+        query.addField(RDF.TYPE, type);
+        return query.getResult().toList(2000);
+    }
 	
 }

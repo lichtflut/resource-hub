@@ -25,7 +25,6 @@ public class TermSearcher {
 	
 	public enum Mode {
 		UNKNOWN,
-		URI,
 		VALUES,
 		ENTITY,
 		PROPERTY,
@@ -42,9 +41,6 @@ public class TermSearcher {
 	 */
 	public Query prepareQuery(final Query query, final String term, final Mode mode, final String type) {
 		switch (mode){
-		case URI:
-			query.addURI(prepareTerm(term));
-			break;
 		case ENTITY:
 		case VALUES:
 			query.beginAnd();

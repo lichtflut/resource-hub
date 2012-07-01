@@ -11,6 +11,7 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -50,9 +51,6 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 	
 	@SpringBean
 	private TypeManager typeManager;
-	
-	@SpringBean
-	private ModelingConversation conversation;
 	
 	// ----------------------------------------------------
 
@@ -126,10 +124,16 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 	
 	// ----------------------------------------------------
 	
-	private class SuperClassModel extends DerivedDetachableModel<List<SNClass>, ResourceID> {
-		
+	private static class SuperClassModel extends DerivedDetachableModel<List<SNClass>, ResourceID> {
+
+        @SpringBean
+        private ModelingConversation conversation;
+
+        // ----------------------------------------------------
+
 		public SuperClassModel(IModel<ResourceID> base) {
 			super(base);
+            Injector.get().inject(this);
 		}
 
 		/** 

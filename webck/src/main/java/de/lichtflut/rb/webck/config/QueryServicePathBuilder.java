@@ -15,9 +15,15 @@ package de.lichtflut.rb.webck.config;
  * @author Oliver Tigges
  */
 public interface QueryServicePathBuilder {
-	
+
+    String queryResources(String domain, String type);
+
 	String queryEntities(String domain, String type);
 
     String queryClasses(String domain, String superClass);
+
+    String queryProperties(String domain, String superProperty);
+
+    String queryUsers(String domain);
 
 }

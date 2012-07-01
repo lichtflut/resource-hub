@@ -5,6 +5,11 @@ package de.lichtflut.rb.rest.api;
 
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.rest.delegate.providers.RBServiceProviderFactory;
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +21,8 @@ import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 import de.lichtflut.rb.rest.api.security.AuthorizationHandler;
 import de.lichtflut.rb.rest.api.security.OperationTypes;
+
+import java.util.List;
 
 /**
  * @author nbleisch
@@ -83,4 +90,12 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	protected AuthorizationHandler getAuthHandler() {
 		return handler;
 	}
+
+    // ----------------------------------------------------
+
+    protected List<ResourceNode> findResourcesByType(ModelingConversation conversation, ResourceID type) {
+        final Query query = conversation.createQuery();
+        query.addField(RDF.TYPE, type);
+        return query.getResult().toList(2000);
+    }
 }

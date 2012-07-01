@@ -19,7 +19,17 @@ import org.apache.wicket.util.crypt.Base64;
  */
 public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
 	
-	public String queryEntities(String domain, String type) {
+	public String queryResources(String domain, String type) {
+		final StringBuilder sb = preparePathBuilder(domain);
+		sb.append("/resources");
+		if (type != null) {
+			sb.append("?type=");
+			sb.append(Base64.encodeBase64URLSafeString(type.getBytes()));
+		}
+		return sb.toString();
+	}
+
+    public String queryEntities(String domain, String type) {
 		final StringBuilder sb = preparePathBuilder(domain);
 		sb.append("/entities");
 		if (type != null) {
@@ -37,6 +47,24 @@ public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
             sb.append("?superclass=");
             sb.append(Base64.encodeBase64URLSafeString(superClass.getBytes()));
         }
+        return sb.toString();
+    }
+
+    @Override
+    public String queryProperties(String domain, String superProperty) {
+        final StringBuilder sb = preparePathBuilder(domain);
+        sb.append("/properties");
+        if (superProperty != null) {
+            sb.append("?superproperty=");
+            sb.append(Base64.encodeBase64URLSafeString(superProperty.getBytes()));
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String queryUsers(String domain) {
+        final StringBuilder sb = preparePathBuilder(domain);
+        sb.append("/users");
         return sb.toString();
     }
 
