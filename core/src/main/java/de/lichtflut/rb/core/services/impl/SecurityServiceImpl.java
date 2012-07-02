@@ -3,6 +3,17 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
+
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.messaging.EmailConfiguration;
@@ -15,16 +26,6 @@ import de.lichtflut.rb.core.security.UserManager;
 import de.lichtflut.rb.core.services.MessagingService;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.model.SimpleResourceID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * <p>

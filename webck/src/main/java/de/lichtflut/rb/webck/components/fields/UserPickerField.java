@@ -3,13 +3,13 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
-import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.naming.QualifiedName;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
+
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 
 /**
  * <p>

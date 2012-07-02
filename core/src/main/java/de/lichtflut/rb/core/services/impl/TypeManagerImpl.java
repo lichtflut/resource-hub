@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.ServiceContext;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -26,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.TypeManager;
 
 /**
@@ -152,6 +151,7 @@ public class TypeManagerImpl implements TypeManager {
 	
 	// ----------------------------------------------------
 	
+	@Override
 	public SNProperty findProperty(QualifiedName qn) {
 		if (qn == null) { 
 			return null;
