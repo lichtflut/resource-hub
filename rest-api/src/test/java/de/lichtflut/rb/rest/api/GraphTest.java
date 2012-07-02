@@ -99,7 +99,7 @@ public class GraphTest extends TestBase {
 			final List<SNClass> types = getProvider().getTypeManager().findAllTypes();
 			final SemanticGraph specifiedGraph = new DefaultSemanticGraph();
 			for (SNClass type : types) {
-				final List<ResourceNode> entities = getProvider().getArastejuGate().createQueryManager().findByType(type);
+				final List<ResourceNode> entities = findResourcesByType(getProvider().getConversation(), type);
 				for (ResourceNode entity : entities) {
 					specifiedGraph.merge(new DefaultSemanticGraph(entity));
 				}

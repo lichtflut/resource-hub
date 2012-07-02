@@ -49,9 +49,9 @@ public class EntityPickerField extends DataPickerField<ResourceID> {
 	 * @param type The type (should be a sub class of system:entity).
 	 */
 	public EntityPickerField(final String id, final IModel<ResourceID> model, final ResourceID type) {
-		super(id, model, new ResourceDisplayModel(model), null);
+		super(id, model, new ResourceDisplayModel(model));
 		setType(ResourceID.class);
-		getDisplayComponent().setSource(findEntity(type));
+		setSource(findEntity(type));
 	}
 
 	// -----------------------------------------------------

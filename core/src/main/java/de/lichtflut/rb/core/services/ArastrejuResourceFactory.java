@@ -11,9 +11,6 @@ import org.arastreju.sge.spi.GateContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * <p>
  *  Factory used by Spring to create Arastreju resources.
@@ -29,13 +26,13 @@ public class ArastrejuResourceFactory {
 	
 	private final static Logger logger = LoggerFactory.getLogger(ArastrejuResourceFactory.class);
 
-    protected final Set<String> initializedDomains = new HashSet<String>();
-
 	private ServiceContext context;
 
     private ArastrejuGate openGate;
 
     private ModelingConversation conversation;
+
+    private DomainInitializer initializer;
 
 	// ----------------------------------------------------
 	
@@ -69,13 +66,29 @@ public class ArastrejuResourceFactory {
 
     // ----------------------------------------------------
 
-    /**
-     * Hook for domain initialization.
-     * @param gate The gate to this domain.
-     * @param domainName The domain name.
-     */
-    protected void initializeDomain(ArastrejuGate gate, String domainName) {
+    public void closeConversation() {
+        if (conversation != null) {
+            logger.info("Closing conversation {}.", conversation.getConversationContext());
+            conversation.close();
+            conversation = null;
+        }
     }
+
+    public void closeGate() {
+        closeConversation();
+        if (openGate == null) {
+            openGate.close();
+            openGate = null;
+        }
+    }
+
+    // ----------------------------------------------------
+
+    public void setDomainInitializer(DomainInitializer initializer) {
+        this.initializer = initializer;
+    }
+
+    // ----------------------------------------------------
 
     protected synchronized ArastrejuGate gate() {
         if (openGate == null) {
@@ -95,9 +108,8 @@ public class ArastrejuResourceFactory {
             return aras.rootContext();
         } else {
             final ArastrejuGate gate = aras.rootContext(domain);
-            if (!initializedDomains.contains(domain)) {
-                initializedDomains.add(domain);
-                initializeDomain(gate, domain);
+            if (initializer != null) {
+                initializer.initializeDomain(gate, domain);
             }
             return gate;
         }

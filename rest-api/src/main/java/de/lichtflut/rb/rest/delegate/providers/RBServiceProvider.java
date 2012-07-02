@@ -4,6 +4,7 @@
 package de.lichtflut.rb.rest.delegate.providers;
 
 import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.SecurityConfiguration;
 import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
@@ -37,32 +38,30 @@ public class RBServiceProvider implements ServiceProvider {
 	
 	private final Logger logger = LoggerFactory.getLogger(RBServiceProvider.class);
 
-	protected final Set<String> initializedDomains = new HashSet<String>();
-
-    // ----------------------------------------------------
-	
-	private final ServiceContext ctx;
-
-    private final AuthModule authModule;
-
-    private final ArastrejuResourceFactory arastrejuResourceFactory;
-
-    // ----------------------------------------------------
-	
-	private ArastrejuGate openGate;
-	
-	private ModelingConversation conversation;
-	
 	// ----------------------------------------------------
+
+    private ArastrejuResourceFactory arastrejuResourceFactory;
+
+	private ServiceContext ctx;
+
+    private AuthModule authModule;
+
+    private SecurityConfiguration securityConfiguration;
+
+    // ----------------------------------------------------
 
 	/**
 	 * Constructor.
 	 */
-	public RBServiceProvider(ServiceContext ctx, AuthModule authModule) {
+	public RBServiceProvider(ServiceContext ctx, ArastrejuResourceFactory factory,
+                             AuthModule authModule, SecurityConfiguration securityConfiguration) {
 		this.ctx = ctx;
+        this.arastrejuResourceFactory = factory;
         this.authModule = authModule;
-        this.arastrejuResourceFactory = new ArastrejuResourceFactory(ctx);
+        this.securityConfiguration = securityConfiguration;
 	}
+
+    protected RBServiceProvider() { }
 
 	// ----------------------------------------------------
 
@@ -70,28 +69,8 @@ public class RBServiceProvider implements ServiceProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ArastrejuGate getArastejuGate() {
-		if (openGate != null && openGate.getContext().getDomain().equals(ctx.getDomain())) {
-			return openGate;
-		}
-		if (ctx.getDomain() != null) {
-			openGate = openGate(ctx.getDomain());
-			return openGate;
-		} else {
-			logger.warn("Creating default Arastreju Gate for unauthenticated user.");
-			return openGate = openGate(GateContext.MASTER_DOMAIN);
-		}
-	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
 	public ModelingConversation getConversation() {
-		if (conversation == null) {
-			conversation = getArastejuGate().startConversation();
-		} 
-		return conversation;
+        return arastrejuResourceFactory.getConversation();
 	}
 	
 	// ----------------------------------------------------
@@ -116,7 +95,9 @@ public class RBServiceProvider implements ServiceProvider {
 	*/
 	@Override
 	public SecurityService getSecurityService() {
-		return new SecurityServiceImpl(getContext(), getConversation(), authModule);
+        final SecurityServiceImpl service = new SecurityServiceImpl(getContext(), getConversation(), authModule);
+        service.setSecurityConfiguration(securityConfiguration);
+        return service;
 	}
 
     @Override
@@ -126,39 +107,20 @@ public class RBServiceProvider implements ServiceProvider {
 
     // ----------------------------------------------------
 
-	/**
-	 * Hook for domain initialization.
-	 * @param gate The gate to this domain.
-	 * @param domainName The domain name.
-	 */
-	protected void initializeDomain(ArastrejuGate gate, String domainName) {
-	}
-	
-	// ----------------------------------------------------
-	
-	/**
-	 * @param authModule
-	 * @return The security service.
-	 */
-	protected SecurityService newSecurityService(AuthModule authModule) {
-		return new SecurityServiceImpl(getContext(), getConversation(), authModule);
-	}
 
-	// ----------------------------------------------------
-	
-	protected synchronized ArastrejuGate openGate(String domain) {
-		final Arastreju aras = Arastreju.getInstance(getContext().getConfig().getArastrejuConfiguration());
-		logger.debug("Opening Arastreju Gate for domain {} ", domain);
-		if (domain == null || GateContext.MASTER_DOMAIN.equals(domain)) {
-			return aras.rootContext();
-		} else {
-			final ArastrejuGate gate = aras.rootContext(domain);
-			if (!initializedDomains.contains(domain)) {
-				initializedDomains.add(domain);
-				initializeDomain(gate, domain);
-			}
-			return gate;	
-		}
-	}
-	
+    public void setArastrejuResourceFactory(ArastrejuResourceFactory arastrejuResourceFactory) {
+        this.arastrejuResourceFactory = arastrejuResourceFactory;
+    }
+
+    public void setServiceContext(ServiceContext ctx) {
+        this.ctx = ctx;
+    }
+
+    public void setAuthModule(AuthModule authModule) {
+        this.authModule = authModule;
+    }
+
+    public void setSecurityConfiguration(SecurityConfiguration securityConfiguration) {
+        this.securityConfiguration = securityConfiguration;
+    }
 }

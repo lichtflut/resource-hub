@@ -3,9 +3,12 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 import de.lichtflut.rb.webck.models.resources.ResourceDisplayModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 
@@ -22,21 +25,30 @@ import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
  */
 public class PropertyPickerField extends DataPickerField<ResourceID> {
 
+    @SpringBean
+    private QueryServicePathBuilder pathBuilder;
+
+    @SpringBean
+    private ServiceContext serviceContext;
+
+    // ----------------------------------------------------
+
 	/**
 	 * Constructor.
 	 * @param id The component ID.
 	 * @param model The model.
 	 */
 	public PropertyPickerField(final String id, final IModel<ResourceID> model) {
-		super(id, model, new ResourceDisplayModel(model), findProperty());
+		super(id, model, new ResourceDisplayModel(model));
 		setType(ResourceID.class);
+        setSource(findProperty());
 	}
 	
 	// -----------------------------------------------------
 	
-	public static AutocompleteSource findProperty() {
-		final String ctx = RequestCycle.get().getRequest().getContextPath();
-		return new AutocompleteSource(ctx +"/internal/query/property");
+	public AutocompleteSource findProperty() {
+        return new AutocompleteSource(
+                pathBuilder.queryProperties(serviceContext.getDomain(), null));
 	}
 	
 }

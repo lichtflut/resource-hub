@@ -24,9 +24,6 @@ public class RBWebSession extends WebSession {
     private final BrowsingHistory history = new BrowsingHistory();
 
     @SpringBean
-    private transient ArastrejuResourceFactory factory;
-
-    @SpringBean
     private ServiceContext context;
 
     // ----------------------------------------------------
@@ -53,19 +50,6 @@ public class RBWebSession extends WebSession {
 
     public void onLogout() {
         context = null;
-    }
-
-    // ----------------------------------------------------
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void detach() {
-        super.detach();
-        if (factory != null) {
-            factory.getConversation().close();
-        }
     }
 
 }
