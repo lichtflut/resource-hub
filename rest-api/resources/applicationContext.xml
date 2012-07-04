@@ -17,7 +17,7 @@
 		<constructor-arg index="1" ref="authModule" />
 	</bean>
 
-	<bean id="gateFactory" class="de.lichtflut.rb.core.services.GateFactory">
+	<bean id="gateFactory" class="de.lichtflut.rb.core.services.MasterGateFactory">
 		<constructor-arg ref="rbConfig"></constructor-arg>
 	</bean>
 	
