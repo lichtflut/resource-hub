@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.fields;
 
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
+import de.lichtflut.rb.webck.models.resources.ResourceDisplayModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -49,7 +50,7 @@ public class ClassPickerField extends DataPickerField<ResourceID> {
 	 * @param model The model.
 	 */
 	public ClassPickerField(final String id, final IModel<ResourceID> model, final IModel<ResourceID> superClass) {
-		super(id, model, null);
+		super(id, model, new ResourceDisplayModel(model));
 		this.superClass = superClass;
 		setType(ResourceID.class);
 	}

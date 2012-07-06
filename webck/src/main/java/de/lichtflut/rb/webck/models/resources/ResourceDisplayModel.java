@@ -56,7 +56,5 @@ public final class ResourceDisplayModel implements IModel<String> {
 	public void detach() {
 		resourceModel.detach();
 	}
-
-
 	
 }
