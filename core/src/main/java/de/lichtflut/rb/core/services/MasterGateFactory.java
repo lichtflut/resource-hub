@@ -12,7 +12,7 @@ import de.lichtflut.rb.core.RBConfig;
 
 /**
  * <p>
- *  Factory for Arastreju Gates.
+ *  Factory for Arastreju Master Gates.
  * </p>
  *
  * <p>
@@ -21,9 +21,9 @@ import de.lichtflut.rb.core.RBConfig;
  *
  * @author Oliver Tigges
  */
-public class GateFactory {
+public class MasterGateFactory {
 
-	private final Logger logger = LoggerFactory.getLogger(GateFactory.class);
+	private final Logger logger = LoggerFactory.getLogger(MasterGateFactory.class);
 	
 	private final RBConfig config;
 	
@@ -32,9 +32,9 @@ public class GateFactory {
 	/** Constructor.
 	 * @param config The RB configuration.
 	 */
-	public GateFactory(RBConfig config) {
+	public MasterGateFactory(RBConfig config) {
 		this.config = config;
-		logger.info("The GateFactory has been created.");
+		logger.info("The MasterGateFactory has been created.");
 	}
 	
 	// ----------------------------------------------------
