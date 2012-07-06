@@ -63,6 +63,13 @@
             <artifactId>spring-web</artifactId>
             <version>${springframework.version}</version>
         </dependency>
+
+        <!-- JERSEY NEEDED for correct Base64 -->
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
 		
 		<!-- JETTY DEPENDENCIES FOR TESTING -->
 		<dependency>

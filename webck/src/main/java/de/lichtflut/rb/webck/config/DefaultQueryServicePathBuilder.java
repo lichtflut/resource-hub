@@ -3,8 +3,8 @@
  */
 package de.lichtflut.rb.webck.config;
 
+import com.sun.jersey.core.util.Base64;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.util.crypt.Base64;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
 		sb.append("/resources");
 		if (type != null) {
 			sb.append("?type=");
-			sb.append(Base64.encodeBase64URLSafeString(type.getBytes()));
+			sb.append(encode(type));
 		}
 		return sb.toString();
 	}
@@ -34,7 +34,7 @@ public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
 		sb.append("/entities");
 		if (type != null) {
 			sb.append("?type=");
-			sb.append(Base64.encodeBase64URLSafeString(type.getBytes()));
+			sb.append(encode(type));
 		}
 		return sb.toString();
 	}
@@ -45,7 +45,7 @@ public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
         sb.append("/classes");
         if (superClass != null) {
             sb.append("?superclass=");
-            sb.append(Base64.encodeBase64URLSafeString(superClass.getBytes()));
+            sb.append(encode(superClass));
         }
         return sb.toString();
     }
@@ -56,7 +56,7 @@ public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
         sb.append("/properties");
         if (superProperty != null) {
             sb.append("?superproperty=");
-            sb.append(Base64.encodeBase64URLSafeString(superProperty.getBytes()));
+            sb.append(encode(superProperty));
         }
         return sb.toString();
     }
@@ -75,6 +75,10 @@ public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
         final StringBuilder sb = new StringBuilder(ctx + "/service/query");
         sb.append("/domains/" + domain);
         return sb;
+    }
+
+    String encode(String orig) {
+        return new String(Base64.encode(orig));
     }
 
 
