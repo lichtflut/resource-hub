@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+      "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+    Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<head>
+	<title>Glasnost Information Server</title>
+	<link rel="stylesheet" type="text/css" href="css/glasnost-main.css" media="screen" />
+</head>
+<body>
+
+    <div id="wrapper" class="restricted">
+
+		<div id="site-header">
+			<div id="application-logo"></div>
+			<div id="header-top-line">
+				<div id="header-search">
+				</div>
+				<div id="user-info">
+					<wicket:enclosure> 
+						|
+						<a wicket:id="logout">
+							<wicket:message key="global.link.logout">[logout]</wicket:message>
+						</a>
+					</wicket:enclosure>
+				</div>
+				<div id="langage-select">
+					<a wicket:id="switchToEnglish">
+						<wicket:message key="global.link.switch-english">[english]</wicket:message>
+					</a>
+					|
+					<a wicket:id="switchToGerman">
+						<wicket:message key="global.link.switch-german">[german]</wicket:message>
+					</a>
+				</div>
+			</div>
+			<div id="header-middle-line">
+				<div id="header-teaser"></div>
+			</div>
+			<div id="header-bottom-line">
+			</div>
+		</div>
+		
+		<div id="site-main" class="shadowed">
+			<div id="sidebar-left"></div>
+			<div id="column-center">
+				<div id="main-content">
+					<div class="error-message">
+						<h2>
+							<wicket:message key="message.header">[header]</wicket:message>
+						</h2>
+						<h4>
+							<wicket:message key="message.info">[info]</wicket:message>
+						</h4>
+					</div>
+
+					<div class="section">
+						<code wicket:id="detail">[detail]</code>
+					</div>
+				</div>
+			</div>
+			<div id="sidebar-right"></div>
+		</div>
+				
+		<div id="site-footer">
+		  <wicket:message key="global.copyright-hint"/>
+    	</div>
+    	
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<head>
+<title></title>
+</head>
+<body>
+	<wicket:extend>
+
+		<div id="site-main" class="layout-1-3-1">
+			
+			<div id="sidebar-left" class="column">
+			
+				<div class="column">
+					<div class="section">
+						<h4>
+							<wicket:message key="title.domestic-domain">[domestic]</wicket:message>
+						</h4>
+						<a wicket:id="showDomestic">[show domestic]</a>
+					</div>
+					<div class="section">				
+						<h4>
+							<wicket:message key="title.other-domains">[other]</wicket:message>
+						</h4>
+						<div wicket:id="otherDomains"></div>
+						<a wicket:id="create"><wicket:message key="link.create">[create]</wicket:message></a>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div id="column-center">
+				<div id="main-content">
+				
+					<h2>
+						<wicket:message key="header">[header]</wicket:message>
+					</h2>
+
+					<div wicket:id="editor"></div>
+
+				</div>
+			</div>
+			
+			<div id="sidebar-right"></div>
+			
+		</div>
+
+	</wicket:extend>
+</body>
+</html>
+

@@ -1,0 +1,48 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<head>
+<title></title>
+</head>
+<body>
+	<wicket:extend>
+
+		<div id="site-main">
+			<div id="sidebar-left"></div>
+			<div id="column-center">
+				<div id="main-content">
+					<h2>Import and export information from semantic graph
+						database.</h2>
+
+					<div class="section">
+						<p>On this page you can export all domain data, i.e. the
+							entities with their attributes and relationships. And you can
+							import any RDF data into the store.</p>
+
+						<div wicket:id="infoIO"></div>
+					</div>
+
+
+					<div class="section">
+						<p>Additionally you can export and import the resource
+							schemas.</p>
+
+						<div wicket:id="schemaIO"></div>
+					</div>
+					
+					<div wicket:id="messageContainer" class="messageContainer">
+						<span wicket:id="ioreport">[ioReport]</span>
+					</div>
+				</div>
+			</div>
+			<div id="sidebar-right"></div>
+		</div>
+
+	</wicket:extend>
+</body>
+</html>
+

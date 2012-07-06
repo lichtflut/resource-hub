@@ -3,13 +3,8 @@
  */
 package de.lichtflut.rb.application.pages;
 
-import de.lichtflut.rb.application.RBApplication;
-import de.lichtflut.rb.webck.common.RBWebSession;
-import de.lichtflut.rb.core.security.AuthModule;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.models.CurrentUserModel;
+import java.util.Locale;
+
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -23,7 +18,13 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.cookies.CookieUtils;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
-import java.util.Locale;
+import de.lichtflut.rb.application.RBApplication;
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.models.CurrentUserModel;
 
 /**
  * <p>
