@@ -1,0 +1,40 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<head>
+<title></title>
+</head>
+<body>
+	<wicket:extend>
+
+		<div id="site-main" class="shadowed">
+			<div id="sidebar-left"></div>
+			<div id="column-center">
+				<div id="main-content">
+					<div class="error-message">
+						<h3>
+							<wicket:message key="message.header">[header]</wicket:message>
+						</h3>
+					</div>
+
+					<div class="error-message">
+						<h1>404</h1>
+					</div>
+
+					<div class="error-message">
+						<p>
+							<wicket:message key="message.content">[content]</wicket:message>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div id="sidebar-right"></div>
+		</div>
+
+	</wicket:extend>
+</body>
+</html>

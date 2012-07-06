@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+      "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+    Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<head>
+	<title>Glasnost Information Server</title>
+	<link rel="stylesheet" type="text/css" href="css/glasnost-main.css" media="screen" />
+</head>
+<body>
+
+    <div id="wrapper" class="restricted">
+
+		<div id="site-header">
+			<div id="application-logo"></div>
+			<div id="header-top-line">
+				<div id="header-search">
+					<form wicket:id="inlineSearchForm">
+			       		<div>
+					       	<input type="text" wicket:id="search" class="searchbar-short">
+					       	<a wicket:id="submit">
+								<wicket:message key="global.button.search">[save]</wicket:message>
+							</a>
+						</div>
+					</form>
+				</div>
+				<div id="user-info">
+					Domain: <wicket:container wicket:id="domain">[domain]</wicket:container>
+						|
+					<wicket:container wicket:id="username">[username]</wicket:container>
+					<wicket:enclosure> 
+						|
+						<a wicket:id="adminAreaLink"></a>
+					</wicket:enclosure>
+					<wicket:enclosure> 
+						|
+						<a wicket:id="logout">
+							<wicket:message key="global.link.logout">[logout]</wicket:message>
+						</a>
+					</wicket:enclosure>
+				</div>
+				<div id="langage-select">
+					<a wicket:id="switchToEnglish">
+						<wicket:message key="global.link.switch-english">[english]</wicket:message>
+					</a>
+					|
+					<a wicket:id="switchToGerman">
+						<wicket:message key="global.link.switch-german">[german]</wicket:message>
+					</a>
+				</div>
+			</div>
+			<div id="header-middle-line">
+				<div id="header-teaser"></div>
+			</div>
+			<div id="header-bottom-line">
+				<div id="first-level-nav">
+				   <div wicket:id="mainNavigation" class="navigation-bar horizontal"></div>
+				</div>
+				<div id="second-level-nav">
+				 	<div wicket:id="secondLevelNav"></div>
+				</div>
+			</div>
+		</div>
+		
+		<wicket:child />
+		
+		<div id="site-footer">
+		  <wicket:message key="global.copyright-hint"/>
+    	</div>
+    	
+    </div>
+    
+    <div wicket:id="modaldialog"></div>
+
+</body>
+</html>

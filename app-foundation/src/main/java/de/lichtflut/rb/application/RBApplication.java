@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.application;
 
-import de.lichtflut.rb.webck.common.RBWebSession;
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
@@ -17,7 +16,18 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 import org.arastreju.sge.naming.QualifiedName;
 
+import de.lichtflut.rb.application.base.LoginPage;
+import de.lichtflut.rb.application.base.LogoutPage;
+import de.lichtflut.rb.application.custom.BrowseAndSearchPage;
+import de.lichtflut.rb.application.custom.PerspectivePage;
+import de.lichtflut.rb.application.custom.UserProfilePage;
+import de.lichtflut.rb.application.custom.WelcomePage;
+import de.lichtflut.rb.application.graphvis.FlowChartInfoVisPage;
+import de.lichtflut.rb.application.graphvis.HierarchyInfoVisPage;
+import de.lichtflut.rb.application.graphvis.PeripheryViewPage;
+import de.lichtflut.rb.application.resourceview.EntityDetailPage;
 import de.lichtflut.rb.core.common.EntityLabelBuilder;
+import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.conversion.LabelBuilderConverter;
 import de.lichtflut.rb.webck.conversion.QualifiedNameConverter;
 import de.lichtflut.rb.webck.conversion.ResourceIDConverter;
@@ -43,7 +53,46 @@ public abstract class RBApplication extends WebApplication {
 
     // ----------------------------------------------------
 
-    public abstract Class<? extends Page> getLoginPage();
+    @Override
+    public Class<? extends Page> getHomePage(){
+    	return WelcomePage.class;
+    }
+    
+    public Class<? extends Page> getLoginPage(){
+    	return LoginPage.class;
+    }
+    
+    public Class<? extends Page> getLogoutPage(){
+    	return LogoutPage.class;
+    }
+    
+    public Class<? extends Page> getEntityDetailPage(){
+    	return EntityDetailPage.class;
+    }
+    
+    public Class<? extends Page> getPerspectivePage(){
+    	return PerspectivePage.class;
+    }
+    
+    public Class<? extends Page> getPeripheryVizPage(){
+    	return PeripheryViewPage.class;
+    }
+    
+    public Class<? extends Page> getHierarchyVizPage(){
+    	return HierarchyInfoVisPage.class;
+    }
+    
+    public Class<? extends Page> getFlowChartVizPage(){
+    	return FlowChartInfoVisPage.class;
+    }
+    
+    public Class<? extends Page> getBrowseAndSearchPage(){
+    	return BrowseAndSearchPage.class;
+    }
+    
+    public Class<?extends Page> getUserProfilePage(){
+    	return UserProfilePage.class;
+    }
 
     // ----------------------------------------------------
 

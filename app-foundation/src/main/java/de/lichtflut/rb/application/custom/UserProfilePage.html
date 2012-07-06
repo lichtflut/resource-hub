@@ -1,0 +1,54 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<head>
+<title></title>
+</head>
+<body>
+	<wicket:extend>
+
+		<div id="site-main" class="shadowed layout-0-3-2">
+			<div id="sidebar-left"></div>
+			<div id="column-center">
+				<div id="main-content">
+					<h2>
+						<wicket:message key="title" />
+						(<wicket:container wicket:id="name" />)
+					</h2>
+
+					<div class="input-panel">
+						<h3>
+							<wicket:message key="profile-label" />
+						</h3>
+						<div class="section">
+							<wicket:message key="profile-description" />
+						</div>
+						<div wicket:id="profile">
+						</div>
+					</div>
+
+					<div class="input-panel section">
+						<h3>
+							<wicket:message key="label.perspectives-and-menus" />
+						</h3>
+						<div wicket:id="perspectives" class="section">
+						</div>
+						<div wicket:id="menu" class="section">
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			<div id="sidebar-right">
+				<div wicket:id="changePassword" class="section input-panel">
+				</div>
+			</div>
+		</div>
+
+	</wicket:extend>
+</body>
+</html>

@@ -31,7 +31,6 @@ import de.lichtflut.rb.application.common.RBPermission;
 import de.lichtflut.rb.application.common.RBRole;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.RBException;
-import de.lichtflut.rb.core.messaging.EmailConfiguration;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.SecurityService;
@@ -79,9 +78,6 @@ public class IdentityManagementPage extends AdminBasePage {
 	
 	@SpringBean 
 	private ModelingConversation conversation;
-	
-	@SpringBean
-	private EmailConfiguration emailConf;
 	
 	// ----------------------------------------------------
 
@@ -151,8 +147,7 @@ public class IdentityManagementPage extends AdminBasePage {
 			@Override
 			public void onCreate(final String emailID, String username, String password) {
 				try {
-					RBUser registered = securityService.createUser(emailID, username, password,
-							emailConf, getLocale());
+					RBUser registered = securityService.createUser(emailID, username, password, getLocale());
 					securityService.setUserRoles(registered, context.getDomain(), DEFAULT_ROLES);
 					editUser(Model.of(registered));
 				} catch (RBException e) {

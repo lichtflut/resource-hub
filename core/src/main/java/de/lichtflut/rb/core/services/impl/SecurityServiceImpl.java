@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.eh.RBException;
-import de.lichtflut.rb.core.messaging.EmailConfiguration;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBDomain;
@@ -83,7 +82,7 @@ public class SecurityServiceImpl implements SecurityService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RBUser createUser(String email, String username, String password, EmailConfiguration conf, Locale locale) throws RBException {
+	public RBUser createUser(String email, String username, String password, Locale locale) throws RBException {
 		final RBUser rbUser = new RBUser(new SimpleResourceID().getQualifiedName());
 		rbUser.setEmail(email);
 		rbUser.setUsername(username);

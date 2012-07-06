@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.services;
 
+import java.io.Serializable;
+
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.security.RBUser;
 
@@ -17,7 +19,7 @@ import de.lichtflut.rb.core.security.RBUser;
  *
  * @author Oliver Tigges
  */
-public class ServiceContext {
+public class ServiceContext implements Serializable{
 	
 	private final RBConfig config;
 	

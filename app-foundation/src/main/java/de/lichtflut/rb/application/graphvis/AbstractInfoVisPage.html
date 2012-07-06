@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+    Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<head>
+	<title>Glasnost Information Server</title>
+	<link rel="stylesheet" type="text/css" href="css/glasnost-main.css" media="screen" />
+</head>
+<body>
+
+    <div id="wrapper" class="restricted">
+		<div id="site-header">
+			<div id="header-top-line">
+				<div id="user-info">
+					Domain: <wicket:container wicket:id="domain">[domain]</wicket:container>
+						|
+					<wicket:container wicket:id="username">[username]</wicket:container>
+					<wicket:enclosure> 
+							|
+							<a wicket:id="logout"> <wicket:message
+								key="global.link.logout">[logout]</wicket:message>
+						</a>
+					</wicket:enclosure>
+				</div>
+			</div>
+		</div>
+		
+		<div id="site-main">
+		
+			<div wicket:id="infovis"></div>
+			
+			<div id="node-details"></div>
+			
+		</div>
+	
+    </div>
+    
+    <div wicket:id="modaldialog"></div>
+
+</body>
+</html>

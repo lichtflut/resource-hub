@@ -3,12 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.organizer;
 
-import de.lichtflut.rb.core.eh.RBException;
-import de.lichtflut.rb.core.messaging.EmailConfiguration;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.SecurityService;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
@@ -19,6 +13,12 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
+
+import de.lichtflut.rb.core.eh.RBException;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.SecurityService;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
 
 /**
  * <p>
@@ -31,13 +31,13 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
  *
  * @author Ravi Knox
  */
-public abstract class ResetPasswordPanel extends Panel {
+public class ResetPasswordPanel extends Panel {
 
 	private final IModel<String> emailModel;
 	
 	@SpringBean
 	private SecurityService securityService;
-
+	
 	// ---------------- Constructor -------------------------
 
 	/**
@@ -59,11 +59,6 @@ public abstract class ResetPasswordPanel extends Panel {
 
 	// ------------------------------------------------------
 
-	/**
-	 * @return an instance of {@link EmailConfiguration}
-	 */
-	protected abstract EmailConfiguration getEmailConfig();
-	
 	/**
 	 * @param string
 	 * @return

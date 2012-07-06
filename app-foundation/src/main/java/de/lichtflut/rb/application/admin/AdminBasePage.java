@@ -6,11 +6,12 @@ package de.lichtflut.rb.application.admin;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.and;
 
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.application.admin.domains.DomainsManagementPage;
 import de.lichtflut.rb.application.admin.identitymanagment.IdentityManagementPage;
 import de.lichtflut.rb.application.admin.infomgmt.InformationManagementPage;
@@ -26,7 +27,7 @@ import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
 
 /**
  * <p>
- * Base page for all <strong>admin</strong> pages in Glasnost Information Server.
+ * Base page for all <strong>admin</strong> pages.
  * </p>
  * 
  * <p>
@@ -54,9 +55,10 @@ public class AdminBasePage extends AbstractBasePage {
 
 	// -----------------------------------------------------
 
-	protected Class<? extends WebPage> getWelcomePage(){
-		return null;
+	protected Class<? extends Page> getWelcomePage(){
+		return RBApplication.get().getHomePage();
 	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

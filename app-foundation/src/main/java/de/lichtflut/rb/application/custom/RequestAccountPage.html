@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+      "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+    Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<head>
+	<title>Glasnost Information Server</title>
+	<link rel="stylesheet" type="text/css" href="css/glasnost-main.css" media="screen" />
+</head>
+<body>
+
+    <div id="wrapper" class="restricted">
+
+		<div id="site-header">
+			<div id="application-logo"></div>
+			<div id="header-top-line">
+				<div id="langage-select">
+					<a wicket:id="switchToEnglish">
+						<wicket:message key="global.link.switch-english">[english]</wicket:message>
+					</a>
+					|
+					<a wicket:id="switchToGerman">
+						<wicket:message key="global.link.switch-german">[german]</wicket:message>
+					</a>
+				</div>
+			</div>
+			<div id="header-middle-line">
+				<div id="header-teaser"></div>
+			</div>
+			<div id="header-bottom-line">
+				
+			</div>
+		</div>
+		
+		<div id="site-main" class="shadowed">
+			<div id="sidebar-left">
+			</div>
+			<div id="column-center">
+				<div id="main-content">
+					<div class="teaser">
+						<h2>
+							<wicket:message key="label.header">[label]</wicket:message>
+						</h2>
+					</div>
+					<div wicket:id="registerPanel">
+					</div>
+				</div>
+			</div>
+			<div id="sidebar-right">
+			</div>
+		</div>
+	
+		<div id="site-footer">
+		  <wicket:message key="global.copyright-hint"/>
+    	</div>
+    	
+    </div>
+    
+    <div wicket:id="modaldialog"></div>
+
+</body>
+</html>
