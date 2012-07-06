@@ -32,9 +32,10 @@ public class ServiceContextInitializer {
 		Injector.get().inject(RBWebSession.get());
 	}
 
-	public void init(RBUser user, String domain) {
+	public void init(RBUser user, String domain, String token) {
 		context.setUser(user);
 		context.setDomain(domain);
+        RBWebSession.get().setToken(token);
 	}
 
 }

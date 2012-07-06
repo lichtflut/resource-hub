@@ -1,5 +1,6 @@
 package de.lichtflut.rb.webck.common;
 
+import de.lichtflut.rb.core.security.AuthModule;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
@@ -7,6 +8,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
+import org.apache.wicket.util.cookies.CookieUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -21,10 +25,14 @@ import de.lichtflut.rb.webck.browsing.BrowsingHistory;
  */
 public class RBWebSession extends WebSession {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(RBWebSession.class);
+
     private final BrowsingHistory history = new BrowsingHistory();
 
     @SpringBean
     private ServiceContext context;
+
+    private String token;
 
     // ----------------------------------------------------
 
@@ -40,12 +48,26 @@ public class RBWebSession extends WebSession {
 
     // ----------------------------------------------------
 
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    // ----------------------------------------------------
+
     public BrowsingHistory getHistory() {
         return history;
     }
 
     public boolean isAuthenticated() {
-        return context != null && context.getUser() != null;
+        boolean authenticated = context != null && context.getUser() != null;
+        if (authenticated) {
+            String currentToken = new CookieUtils().load(AuthModule.COOKIE_SESSION_AUTH);
+            if (currentToken == null)  {
+                LOGGER.warn("User is authenticated but has lost session token! Will set it again. " + token);
+                new CookieUtils().save(AuthModule.COOKIE_SESSION_AUTH, token);
+            }
+        }
+        return authenticated;
     }
 
     public void onLogout() {

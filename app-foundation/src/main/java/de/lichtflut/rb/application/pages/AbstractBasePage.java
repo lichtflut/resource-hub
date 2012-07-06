@@ -132,7 +132,7 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 		if (!isAuthorized(new CurrentUserModel())) {
 			throw new RuntimeException("Not authorized to access this page.");
 		}
-	}
+    }
 	
 	// -- DIALOG ------------------------------------------
 

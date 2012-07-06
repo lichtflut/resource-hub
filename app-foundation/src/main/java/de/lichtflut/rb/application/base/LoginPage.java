@@ -203,14 +203,15 @@ public class LoginPage extends AbstractBasePage {
 	}
 
 	private void initializeUserSession(RBUser user) {
-		new ServiceContextInitializer().init(user, user.getDomesticDomain());
-		cookieUtils().save(AuthModule.COOKIE_SESSION_AUTH, authService.createSessionToken(user));
+        String token = authService.createSessionToken(user);
+        new ServiceContextInitializer().init(user, user.getDomesticDomain(), token);
+		cookieUtils().save(AuthModule.COOKIE_SESSION_AUTH, token);
 	}
 	
 	private CookieUtils cookieUtils() {
-		boolean prodMode = RuntimeConfigurationType.DEPLOYMENT.equals(Application.get().getConfigurationType());
+		//boolean prodMode = RuntimeConfigurationType.DEPLOYMENT.equals(Application.get().getConfigurationType());
 		CookieUtils cu = new CookieUtils();
-		cu.getSettings().setSecure(prodMode);
+		//cu.getSettings().setSecure(prodMode);
 		return cu;
 	}
 
