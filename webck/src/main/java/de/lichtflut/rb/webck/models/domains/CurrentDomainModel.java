@@ -12,7 +12,7 @@ import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.spi.GateContext;
+import org.arastreju.sge.context.DomainIdentifier;
 
 /**
  * <p>
@@ -80,7 +80,7 @@ public class CurrentDomainModel extends AbstractLoadableDetachableModel<RBDomain
 		return new ConditionalModel<RBDomain>(new CurrentDomainModel()) {
 			@Override
 			public boolean isFulfilled() {
-				return GateContext.MASTER_DOMAIN.equals((getObject().getName()));
+				return DomainIdentifier.MASTER_DOMAIN.equals((getObject().getName()));
 			}
 		};
 	}

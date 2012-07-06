@@ -9,7 +9,7 @@ import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
 import de.lichtflut.rb.core.services.DomainInitializer;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.rest.delegate.providers.RBServiceProvider;
-import org.arastreju.sge.spi.GateContext;
+import org.arastreju.sge.context.DomainIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -33,7 +33,7 @@ public class TestServiceProvider extends RBServiceProvider {
 	 * @param config
 	 */
 	public TestServiceProvider(RBConfig config, AuthModule module, DomainInitializer initializer) {
-        ServiceContext ctx = new ServiceContext(config, GateContext.MASTER_DOMAIN);
+        ServiceContext ctx = new ServiceContext(config, DomainIdentifier.MASTER_DOMAIN);
         factory = new ArastrejuResourceFactory(ctx);
         factory.setDomainInitializer(initializer);
 

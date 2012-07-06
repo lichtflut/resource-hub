@@ -4,7 +4,13 @@
 package de.lichtflut.rb.rest.api;
 
 import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.AuthenticationService;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.rest.api.security.AuthorizationHandler;
+import de.lichtflut.rb.rest.api.security.OperationTypes;
 import de.lichtflut.rb.rest.delegate.providers.RBServiceProviderFactory;
+import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
@@ -13,14 +19,6 @@ import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import de.lichtflut.rb.core.security.AuthModule;
-import de.lichtflut.rb.core.security.AuthenticationService;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
-import de.lichtflut.rb.rest.api.security.AuthorizationHandler;
-import de.lichtflut.rb.rest.api.security.OperationTypes;
 
 import java.util.List;
 
@@ -34,10 +32,11 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	static final String ROOT_USER = "root";
 	static final String AUTH_TOKEN = "TOKEN";
 
-	/**
-	 * Instance of {@link Logger}
-	 */
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+    // ----------------------------------------------------
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(RBServiceEndpoint.class);
+
+    // ----------------------------------------------------
 
 	/**
 	 * An instance of {@link AuthorizationHandler} which is required to
@@ -70,10 +69,6 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 		return factory.createServiceProvider(domainID, user);
 	}
 
-	protected Logger getLog() {
-		return log;
-	}
-
 	protected RBUser authenticateUser(String token) {
 		RBUser user=null;
 		if (token != null) {
@@ -81,7 +76,8 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 			user = authService.loginByToken(token);
 		}
 		if (user == null) {
-			getLog().info("No user could be found for the following secure-token: " + token);
+            LOGGER.warn("Detected invalid token: {}", token);
+			throw new IllegalAccessError("token is invalid.");
 		}
 		return user;
 	}

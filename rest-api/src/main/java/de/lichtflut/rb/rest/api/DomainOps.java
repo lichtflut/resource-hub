@@ -15,6 +15,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.arastreju.sge.persistence.TransactionControl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import scala.actors.threadpool.Arrays;
@@ -41,6 +43,10 @@ import de.lichtflut.rb.rest.api.security.RBOperation;
 @Path("domain/{" + RBServiceEndpoint.DOMAIN_ID_PARAM + "}/")
 public class DomainOps extends RBServiceEndpoint {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DomainOps.class);
+
+    // ----------------------------------------------------
+
 	@DELETE
 	@RBOperation(type = TYPE.DOMAIN_DELETE)
 	public Response deleteDomain(@PathParam(DOMAIN_ID_PARAM) String domainID,
@@ -57,7 +63,7 @@ public class DomainOps extends RBServiceEndpoint {
 			}
 			return Response.status(Status.CREATED).build();
 		} catch (Exception any) {
-			getLog().error(
+			LOGGER.error(
 					"The domain "
 							+ domainID
 							+ " couldnt be deleted tue to the following exception",
@@ -137,12 +143,12 @@ public class DomainOps extends RBServiceEndpoint {
 				try {
 					addDomainAdmin(rbDomain, admin, provider);
 				} catch (RBAuthException e) {
-					getLog().error("Domain admin couldnt be created due to the following exception", e);
+					LOGGER.error("Domain admin couldnt be created due to the following exception", e);
 					tx.fail();
 				}
 			}
 		} catch (Exception any) {
-			getLog().error("Domain admin couldnt be created due to the following exception",any);
+			LOGGER.error("Domain admin couldnt be created due to the following exception",any);
 			tx.fail();
 		}
 		tx.finish();
@@ -233,7 +239,7 @@ public class DomainOps extends RBServiceEndpoint {
 						.createDomainAdmin(rbDomain, admin.getId(),
 								admin.getUsername(), admin.getPassword());
 			} catch (RBAuthException e) {
-				getLog().error(
+				LOGGER.error(
 						"Domain admin couldnt be created due to the following exception",
 						e);
 			}

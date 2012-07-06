@@ -5,7 +5,8 @@ import org.apache.wicket.injection.Injector;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -20,9 +21,18 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  */
 public class RBRequestCycleListener extends AbstractRequestCycleListener {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(RBRequestCycleListener.class);
+
+    // ----------------------------------------------------
+
     @Override
-    public void onDetach(RequestCycle cycle) {
-          new ConversationCloser().detach();
+    public void onEndRequest(RequestCycle cycle) {
+        try {
+            new ConversationCloser().detach();
+        } catch (Exception e) {
+            LOGGER.warn("Conversation could not be closed for request {} due to exception: {}",
+                    cycle.getRequest().getUrl(), e.getMessage());
+        }
     }
 
     // ----------------------------------------------------

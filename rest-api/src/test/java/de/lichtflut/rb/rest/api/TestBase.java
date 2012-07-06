@@ -24,7 +24,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.spi.GateContext;
+import org.arastreju.sge.context.DomainIdentifier;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -375,7 +375,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 		List<ResourceNode> domains = findResourcesByType(provider.getConversation(), Aras.DOMAIN);
 		for (ResourceNode resourceNode : domains) {
 			//Dont delete the root domain to prevent some errors in loading system identities
-			if(!new RBDomain(resourceNode).getName().equals(GateContext.MASTER_DOMAIN)){
+			if(!new RBDomain(resourceNode).getName().equals(DomainIdentifier.MASTER_DOMAIN)){
 				getProvider().getConversation().remove(resourceNode);
 			}
 		}

@@ -30,6 +30,8 @@ import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.persistence.TransactionControl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import de.lichtflut.rb.core.security.RBUser;
@@ -47,6 +49,10 @@ import de.lichtflut.rb.rest.api.security.RBOperation;
 @Component
 @Path("graph/{" + RBServiceEndpoint.DOMAIN_ID_PARAM + "}/")
 public class GraphOps extends RBServiceEndpoint{
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RBServiceEndpoint.class);
+
+    // ----------------------------------------------------
 	
 	//Constants (package visibility sufficient)
 	static final String NODE_ID_PARAM = "ID";
@@ -103,7 +109,7 @@ public class GraphOps extends RBServiceEndpoint{
 			String result = out.toString();
 			rsp = Response.ok(result).build();
 		} catch (Exception e) {
-			getLog().error(
+			LOGGER.error(
 					"An "
 							+ e.getClass().getName()
 							+ " has been occured while processing the request for getResource."
@@ -148,7 +154,7 @@ public class GraphOps extends RBServiceEndpoint{
 			String result = out.toString();
 			rsp = Response.ok(result).build();
 		} catch (Exception e) {
-			getLog().error(
+			LOGGER.error(
 					"An "
 							+ e.getClass().getName()
 							+ " has been occured while processing the request for getResources."
@@ -177,7 +183,7 @@ public class GraphOps extends RBServiceEndpoint{
 			tx.success();
 			tx.commit();
 		}catch(Exception any){
-			getLog().error("The graph couldnt be imported due to the following exception",any);
+			LOGGER.error("The graph couldnt be imported due to the following exception",any);
 			tx.fail();
 			tx.rollback();
 			return Response.serverError().build();

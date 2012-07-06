@@ -24,6 +24,8 @@ public class RBConfig {
 	 * Arastreju store directory.
 	 */
 	public static final String DOMAIN_WORK_DIRECTORY = "de.lichtflut.rb.workdir";
+
+    public static final String VIRTUAL_DOMAINS = "de.lichtflut.rb.virtual-domains";
 	
 	// ----------------------------------------------------
 	
@@ -90,22 +92,38 @@ public class RBConfig {
 			logger.info("Initialising Arastreju profile with name " + profileName);
 			profile = ArastrejuProfile.read(profileName);
 		}
-		final String workDir = getWorkDirecotry();
-		if (workDir != null) {
-			profile.setProperty(ArastrejuProfile.ARAS_STORE_DIRECTORY, workDir);
-		}
+        checkWorkDir();
+        checkVirtualDomains();
 	}
+
+    private void checkWorkDir() {
+        final String workDir = getWorkDirecotry();
+        if (workDir != null) {
+            logger.info("Using work directory {} for profile {}.", workDir, profileName);
+            profile.setProperty(ArastrejuProfile.ARAS_STORE_DIRECTORY, workDir);
+        } else {
+            logger.info("Using default directory for profile {}.", profileName);
+        }
+    }
 	
-	private String getWorkDirecotry() {
-		// 1st: check profile specific work directory
-		if (profileName != null) {
-			final String workDir = System.getProperty(DOMAIN_WORK_DIRECTORY + "." + profileName);
-			if (workDir != null) {
-				return workDir;
-			}
-		}
-		// 2nd: check global work directory
-		return System.getProperty(DOMAIN_WORK_DIRECTORY);
-	}
+    private void checkVirtualDomains() {
+        String vd = System.getProperty(VIRTUAL_DOMAINS, "off");
+        if ("default".equals(vd)) {
+            logger.info("Enabling virtual domains for profile {}. ", profileName);
+            profile.setProperty(ArastrejuProfile.ENABLE_VIRTUAL_DOMAINS, "yes");
+        }
+    }
+
+    private String getWorkDirecotry() {
+        // 1st: check profile specific work directory
+        if (profileName != null) {
+            final String workDir = System.getProperty(DOMAIN_WORK_DIRECTORY + "." + profileName);
+            if (workDir != null) {
+                return workDir;
+            }
+        }
+        // 2nd: check global work directory
+        return System.getProperty(DOMAIN_WORK_DIRECTORY);
+    }
 
 }

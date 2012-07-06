@@ -13,15 +13,9 @@ import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import de.lichtflut.rb.core.services.impl.SecurityServiceImpl;
 import de.lichtflut.rb.core.services.impl.TypeManagerImpl;
-import org.arastreju.sge.Arastreju;
-import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.spi.GateContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * <p>

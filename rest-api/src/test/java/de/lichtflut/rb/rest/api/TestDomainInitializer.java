@@ -15,7 +15,7 @@ import org.arastreju.sge.apriori.DC;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.spi.GateContext;
+import org.arastreju.sge.context.DomainIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -45,9 +45,9 @@ public class TestDomainInitializer implements DomainInitializer {
 
 
         //If there is no master domain, create one
-        if (module.getDomainManager().findDomain(GateContext.MASTER_DOMAIN)==null) {
+        if (module.getDomainManager().findDomain(DomainIdentifier.MASTER_DOMAIN)==null) {
             RBDomain domain = new RBDomain();
-            domain.setName(GateContext.MASTER_DOMAIN);
+            domain.setName(DomainIdentifier.MASTER_DOMAIN);
             module.getDomainManager().registerDomain(domain);
         }
 
@@ -58,7 +58,7 @@ public class TestDomainInitializer implements DomainInitializer {
             root.setEmail("root@root.de");
             try {
                 module.getUserManagement().registerUser(root,
-                        RBCrypt.encrypt("root"), GateContext.MASTER_DOMAIN);
+                        RBCrypt.encrypt("root"), DomainIdentifier.MASTER_DOMAIN);
             } catch (RBAuthException e) {
                 e.printStackTrace();
             }

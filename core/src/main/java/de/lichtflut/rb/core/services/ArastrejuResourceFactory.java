@@ -7,7 +7,7 @@ import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
-import org.arastreju.sge.spi.GateContext;
+import org.arastreju.sge.context.DomainIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,10 +37,9 @@ public class ArastrejuResourceFactory {
 	// ----------------------------------------------------
 	
 	/**
-	 * @param context
+	 * @param context The service context.
 	 */
 	public ArastrejuResourceFactory(ServiceContext context) {
-		logger.info("ArastrejuResourceFactory has been created for context {}." , context);
         this.context = context;
 	}
 
@@ -53,7 +52,6 @@ public class ArastrejuResourceFactory {
 	// ----------------------------------------------------
 	
 	public ModelingConversation getConversation() {
-		logger.info("Conversation has been requested.");
         if (conversation == null) {
             conversation = gate().startConversation();
         }
@@ -68,7 +66,6 @@ public class ArastrejuResourceFactory {
 
     public void closeConversation() {
         if (conversation != null) {
-            logger.info("Closing conversation {}.", conversation.getConversationContext());
             conversation.close();
             conversation = null;
         }
@@ -76,7 +73,7 @@ public class ArastrejuResourceFactory {
 
     public void closeGate() {
         closeConversation();
-        if (openGate == null) {
+        if (openGate != null) {
             openGate.close();
             openGate = null;
         }
@@ -104,10 +101,10 @@ public class ArastrejuResourceFactory {
         logger.debug("Opening Arastreju Gate for domain {} ", domain);
 
         final Arastreju aras = Arastreju.getInstance(context.getConfig().getArastrejuConfiguration());
-        if (domain == null || GateContext.MASTER_DOMAIN.equals(domain)) {
-            return aras.rootContext();
+        if (domain == null || DomainIdentifier.MASTER_DOMAIN.equals(domain)) {
+            return aras.openMasterGate();
         } else {
-            final ArastrejuGate gate = aras.rootContext(domain);
+            final ArastrejuGate gate = aras.openGate(domain);
             if (initializer != null) {
                 initializer.initializeDomain(gate, domain);
             }
