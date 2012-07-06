@@ -134,11 +134,4 @@ public class DomainsManagementPage extends AdminBasePage {
 		}
 	}
 
-	// ----------------------------------------------------
-
-	public RBDomain load() {
-		final String domain = context.getDomain();
-		return authModule.getDomainManager().findDomain(domain);
-	}
-
 }

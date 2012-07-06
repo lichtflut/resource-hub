@@ -18,6 +18,8 @@ import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.traverse.NodeSet;
+import org.arastreju.sge.traverse.ResourceNodeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +29,7 @@ import de.lichtflut.rb.core.security.RBUser;
 
 /**
  * <p>
- *  Implementation of {@link AuthorizationManagement}.
+ *  Implementation of AuthorizationManagement.
  * </p>
  *
  * <p>
@@ -77,7 +79,7 @@ public class EmbeddedAuthAuthorizationManager {
 
 	/**
 	 * Get the user's permissions.
-	 * @param user The user who's permissions are requested.
+	 * @param userQN The user who's permissions are requested.
 	 * @param domain The domain.
 	 * @return The list of permissions.
 	 */
@@ -113,9 +115,17 @@ public class EmbeddedAuthAuthorizationManager {
 		// Remove old roles
 		Set<Statement> oldRoles = userNode.getAssociations(Aras.HAS_ROLE);
 		for (Statement stmt : oldRoles) {
-			if (domainNode.equals(stmt.getObject())) {
+
+            SemanticNode role = stmt.getObject();
+
+            SemanticNode currentDomainNode = SNOPS.singleObject(role.asResource(), Aras.BELONGS_TO_DOMAIN);
+
+            if (domainNode.equals(currentDomainNode)) {
 				userNode.removeAssociation(stmt);
-			}
+                logger.info("Removing role {} from user {}.", role, user + "#" + domain);
+			} else {
+                logger.info("Keeping role {} to user {}.", role, user + "#" + domain);
+            }
 		}
 
 		// add new roles
