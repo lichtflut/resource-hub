@@ -51,6 +51,9 @@ import de.lichtflut.rb.rest.api.models.generate.ObjectFactory;
 import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
 import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
 
+import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
+
 /**
  * <p>
  *  This is the base class for all REST service-dependent test cases.
@@ -375,7 +378,8 @@ public abstract class TestBase extends junit.framework.TestCase {
 		List<ResourceNode> domains = findResourcesByType(provider.getConversation(), Aras.DOMAIN);
 		for (ResourceNode resourceNode : domains) {
 			//Dont delete the root domain to prevent some errors in loading system identities
-			if(!new RBDomain(resourceNode).getName().equals(DomainIdentifier.MASTER_DOMAIN)){
+            String domainName = string(singleObject(resourceNode, Aras.HAS_UNIQUE_NAME));
+            if(!DomainIdentifier.MASTER_DOMAIN.equals(domainName)){
 				getProvider().getConversation().remove(resourceNode);
 			}
 		}

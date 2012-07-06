@@ -3,7 +3,9 @@ package de.lichtflut.rb.core.services.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
+import de.lichtflut.rb.core.common.DomainNamespacesHandler;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -16,6 +18,7 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNText;
+import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +54,8 @@ public class EntityManagerImpl implements EntityManager {
 
     private ModelingConversation conversation;
 
+    private DomainNamespacesHandler dnsHandler;
+
     // -----------------------------------------------------
 
     /**
@@ -71,7 +76,25 @@ public class EntityManagerImpl implements EntityManager {
 	 */
 	@Override
 	public RBEntityImpl find(final ResourceID resourceID) {
-		return find(resourceID, true);
+        final ModelingConversation mc = conversation;
+        final ResourceNode node = mc.findResource(resourceID.getQualifiedName());
+        if (node == null) {
+            return null;
+        }
+        final ResourceID type = typeManager.getTypeOfResource(node);
+        final RBEntityImpl entity;
+        if (type == null) {
+            entity = new RBEntityImpl(node);
+        } else {
+            final ResourceSchema schema = schemaManager.findSchemaForType(type.asResource());
+            if (schema != null) {
+                entity = new RBEntityImpl(node, schema);
+            } else {
+                entity = new RBEntityImpl(node, type);
+            }
+        }
+        resolveEntityReferences(entity);
+        return entity;
 	}
 
 	/** 
@@ -85,7 +108,7 @@ public class EntityManagerImpl implements EntityManager {
 		for (ResourceNode n : nodes) {
 			n.getAssociations();
 			RBEntityImpl entity = new RBEntityImpl(n, schema);
-			result.add(resolveEntityReferences(entity, true));
+			result.add(resolveEntityReferences(entity));
 		}
 		return result;
 	}
@@ -99,9 +122,9 @@ public class EntityManagerImpl implements EntityManager {
 	public RBEntity create(final ResourceID type) {
 		final ResourceSchema schema = schemaManager.findSchemaForType(type);
 		if (schema != null) {
-			return new RBEntityImpl(new SNResource(), schema);	
+			return new RBEntityImpl(newEntityNode(), schema);
 		} else {
-			return new RBEntityImpl(new SNResource(), type);
+			return new RBEntityImpl(newEntityNode(), type);
 		}
 		
 	}
@@ -119,7 +142,7 @@ public class EntityManagerImpl implements EntityManager {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.assure(node, field.getPredicate(), nodes);
 			if (field.isResourceReference()) {
-				resolveEntityReferences(field, true);
+				resolveEntityReferences(field);
 			}
 		}
 		// Set label after all entity references have been resolved
@@ -162,32 +185,11 @@ public class EntityManagerImpl implements EntityManager {
         this.conversation = conversation;
     }
 
+    public void setDnsHandler(DomainNamespacesHandler dnsHandler) {
+        this.dnsHandler = dnsHandler;
+    }
+
     // ----------------------------------------------------
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	private RBEntityImpl find(final ResourceID resourceID, final boolean cascadeEager) {
-		final ModelingConversation mc = conversation;
-		final ResourceNode node = mc.findResource(resourceID.getQualifiedName());
-		if (node == null) {
-			return null;
-		}
-		final ResourceID type = typeManager.getTypeOfResource(node);
-		final RBEntityImpl entity;
-		if (type == null) {
-			entity = new RBEntityImpl(node);
-		} else {
-			final ResourceSchema schema = schemaManager.findSchemaForType(type.asResource());
-			if (schema != null) {
-				entity = new RBEntityImpl(node, schema);
-			} else {
-				entity = new RBEntityImpl(node, type);
-			}
-		}
-		resolveEntityReferences(entity, cascadeEager);
-		return entity;
-	}
 	
 	/**
 	 * @param field The field to be translated.
@@ -212,16 +214,16 @@ public class EntityManagerImpl implements EntityManager {
 	
 	// ----------------------------------------------------
 	
-	private RBEntityImpl resolveEntityReferences(final RBEntityImpl entity, final boolean eager) {
+	private RBEntityImpl resolveEntityReferences(final RBEntityImpl entity) {
 		for (RBField field : entity.getAllFields()) {
 			if (field.isResourceReference()) {
-				resolveEntityReferences(field, eager);
+				resolveEntityReferences(field);
 			}
 		}
 		return entity;
 	}
 	
-	private void resolveEntityReferences(final RBField field, final boolean eager) {
+	private void resolveEntityReferences(final RBField field) {
 		for(int i=0; i < field.getSlots(); i++) {
 			final ResourceID id = (ResourceID) field.getValue(i);
 			if (id != null) {
@@ -234,6 +236,16 @@ public class EntityManagerImpl implements EntityManager {
         final Query query = conversation.createQuery();
         query.addField(RDF.TYPE, type);
         return query.getResult().toList(2000);
+    }
+
+    private SNResource newEntityNode() {
+        if (dnsHandler != null) {
+            final QualifiedName qn = new QualifiedName(dnsHandler.getEntitiesNamespace(), UUID.randomUUID().toString());
+            return new SNResource(qn);
+        } else {
+            return new SNResource();
+        }
+
     }
 	
 }

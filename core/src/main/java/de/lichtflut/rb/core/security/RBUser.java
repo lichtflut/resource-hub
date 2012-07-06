@@ -16,6 +16,9 @@ import org.arastreju.sge.naming.QualifiedName;
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.RBSystem;
 
+import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
+
 /**
  * <p>
  *  RB specific decorator for user nodes.
@@ -51,15 +54,14 @@ public class RBUser implements Serializable {
 		username = SNOPS.string(SNOPS.singleObject(userNode, RBSystem.HAS_USERNAME));
 		SemanticNode domain = SNOPS.singleObject(userNode, Aras.BELONGS_TO_DOMAIN);
 		if(domain!=null){
-			new RBDomain(domain.asResource()).getName();
-			domesticDomain = new RBDomain(domain.asResource()).getName();
+            domesticDomain = string(singleObject(domain.asResource(), Aras.HAS_UNIQUE_NAME));
 		}
 		lastLogin = SNOPS.date(SNOPS.singleObject(userNode, RBSystem.HAS_LAST_LOGIN));
 	}
 	
 	/**
 	 * Creates a new user with given URI.
-	 * @param userNode The node representing the user.
+	 * @param qn The qualified name representing the user.
 	 */
 	public RBUser(final QualifiedName qn) {
 		this.qn = qn;

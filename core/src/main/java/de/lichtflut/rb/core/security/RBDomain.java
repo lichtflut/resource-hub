@@ -34,6 +34,8 @@ public class RBDomain implements Serializable {
 	
 	private String description;
 
+    private String domainNamespace;
+
 	// ----------------------------------------------------
 	
 	/**
@@ -49,17 +51,6 @@ public class RBDomain implements Serializable {
 	 */
 	public RBDomain(QualifiedName qn) {
 		this.qn = qn;
-	}
-	
-	/**
-	 * Create a domain object based on a domain node.
-	 * @param domainNode The node.
-	 */
-	public RBDomain(ResourceNode domainNode) {
-		this.qn = domainNode.getQualifiedName();
-		this.name = string(singleObject(domainNode, Aras.HAS_UNIQUE_NAME));
-		this.title = string(singleObject(domainNode, Aras.HAS_TITLE));
-		this.description = string(singleObject(domainNode, Aras.HAS_DESCRIPTION));
 	}
 	
 	// ----------------------------------------------------
@@ -112,8 +103,16 @@ public class RBDomain implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	// ----------------------------------------------------
+
+    public String getDomainNamespace() {
+        return domainNamespace;
+    }
+
+    public void setDomainNamespace(String domainNamespace) {
+        this.domainNamespace = domainNamespace;
+    }
+
+    // ----------------------------------------------------
 
 	/** 
 	 * {@inheritDoc}

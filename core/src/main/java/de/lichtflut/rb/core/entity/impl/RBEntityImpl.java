@@ -88,7 +88,7 @@ public class RBEntityImpl implements RBEntity {
 	 * Creates an entity based on node and type.
 	 *
 	 * @param node The node.
-	 * @param schema The schema.
+	 * @param type The type of this entity.
 	 */
 	public RBEntityImpl(final ResourceNode node, final ResourceID type) {
 		super();

@@ -71,7 +71,7 @@ public class EntityQueryService extends AbstractQueryService {
 	// ----------------------------------------------------
 	
 	private List<ResultItemRVO> performQuery(Query query, String term, String type) {
-		new TermSearcher().prepareQuery(query, term, Mode.SUB_CLASS, type);
+		new TermSearcher().prepareQuery(query, term, Mode.ENTITY, type);
 
         return buildResult(query.getResult());
 	}
