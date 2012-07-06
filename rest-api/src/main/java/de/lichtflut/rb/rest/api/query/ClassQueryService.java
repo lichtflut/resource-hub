@@ -5,6 +5,7 @@ package de.lichtflut.rb.rest.api.query;
 
 import de.lichtflut.rb.core.common.TermSearcher;
 import de.lichtflut.rb.core.common.TermSearcher.Mode;
+import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
 import org.arastreju.sge.query.Query;
@@ -50,18 +51,13 @@ public class ClassQueryService extends AbstractQueryService {
 			@QueryParam(value="term") String term, 
 			@QueryParam(value="superclass") String superclass,
 			@PathParam(value = "domain") String domain,
-			@CookieParam(value=AuthModule.COOKIE_SESSION_AUTH) String token)
-	{
-		RBUser user = authModule.getAuthenticationService().loginByToken(token);
-		if (user == null) {
-			logger.info("Unauthenticated class query.");
-			return Response.status(Status.FORBIDDEN).build();
-		}
+			@CookieParam(value=AuthModule.COOKIE_SESSION_AUTH) String token) throws UnauthenticatedUserException
+    {
+        RBUser user = authenticateUser(token);
 		if (term == null) {
 			logger.info("Invalid class query (term is null).");
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		
 		
 		Query query = createQuery(domain, user);
 		String superclassDecoded = decodeBase64(superclass);

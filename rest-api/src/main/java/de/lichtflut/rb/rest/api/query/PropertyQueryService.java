@@ -5,6 +5,7 @@ package de.lichtflut.rb.rest.api.query;
 
 import de.lichtflut.rb.core.common.TermSearcher;
 import de.lichtflut.rb.core.common.TermSearcher.Mode;
+import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
 import org.arastreju.sge.query.Query;
@@ -50,9 +51,9 @@ public class PropertyQueryService extends AbstractQueryService {
 			@QueryParam(value="term") String term, 
 			@QueryParam(value="type") String type,
 			@PathParam(value = "domain") String domain,
-			@CookieParam(value=AuthModule.COOKIE_SESSION_AUTH) String token)
-	{
-		RBUser user = authenticateUser(token);
+			@CookieParam(value=AuthModule.COOKIE_SESSION_AUTH) String token) throws UnauthenticatedUserException
+    {
+        RBUser user = authenticateUser(token);
 		if (user == null) {
 			logger.info("Unauthenticated property query.");
 			return Response.status(Status.FORBIDDEN).build();

@@ -140,9 +140,9 @@ public class UserDetailPanel extends TypedPanel<RBUser> {
 			mode.setObject(DisplayMode.VIEW);
 		} catch (RBException e) {
 			long code = e.getErrorCode();
-			if (ErrorCodes.SECURITYSERVICE_EMAIL_ALREADY_IN_USE == code) {
+			if (ErrorCodes.SECURITY_EMAIL_ALREADY_IN_USE == code) {
 				error(getString("global.message.duplicate.email"));
-			} else if (ErrorCodes.SECURITYSERVICE_USERNAME_ALREADY_IN_USE == code) {
+			} else if (ErrorCodes.SECURITY_USERNAME_ALREADY_IN_USE == code) {
 				error(getString("global.message.duplicate.username"));
 			} else {
 				throw new RuntimeException(e);

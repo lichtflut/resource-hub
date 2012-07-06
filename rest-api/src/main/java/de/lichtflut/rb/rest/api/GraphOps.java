@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
@@ -77,7 +78,7 @@ public class GraphOps extends RBServiceEndpoint{
 	@Path("/node")
 	@Produces({MediaType.APPLICATION_XML })
 	@RBOperation(type = TYPE.GRAPH_NODE_READ)
-	public Response getGraphNode(@QueryParam(NODE_ID_PARAM) String resourceID, @QueryParam(AUTH_TOKEN) String token, @PathParam(DOMAIN_ID_PARAM) String domainID) {
+	public Response getGraphNode(@QueryParam(NODE_ID_PARAM) String resourceID, @QueryParam(AUTH_TOKEN) String token, @PathParam(DOMAIN_ID_PARAM) String domainID) throws UnauthenticatedUserException {
 		RBUser user = authenticateUser(token);
 		if(!getAuthHandler().isAuthorized(user, domainID)){
 			return Response.status(Status.UNAUTHORIZED).build();
@@ -131,7 +132,7 @@ public class GraphOps extends RBServiceEndpoint{
 	@GET
 	@Produces({MediaType.APPLICATION_XML })
 	@RBOperation(type = TYPE.GRAPH_READ)
-	public Response getGraph(@PathParam(DOMAIN_ID_PARAM) String domainID, @QueryParam(AUTH_TOKEN) String token) {
+	public Response getGraph(@PathParam(DOMAIN_ID_PARAM) String domainID, @QueryParam(AUTH_TOKEN) String token) throws UnauthenticatedUserException {
 		RBUser user = authenticateUser(token);
 		if(!getAuthHandler().isAuthorized(user, domainID)){
 			return Response.status(Status.UNAUTHORIZED).build();
@@ -167,7 +168,7 @@ public class GraphOps extends RBServiceEndpoint{
 	@PUT
 	@Consumes({MediaType.APPLICATION_XML})
 	@RBOperation(type = TYPE.GRAPH_UPDATE)
-	public Response importGraph(@PathParam(DOMAIN_ID_PARAM) String domainID, InputStream xmlBody, @QueryParam(AUTH_TOKEN) String token){
+	public Response importGraph(@PathParam(DOMAIN_ID_PARAM) String domainID, InputStream xmlBody, @QueryParam(AUTH_TOKEN) String token) throws UnauthenticatedUserException {
 		RBUser user = authenticateUser(token);
 		if(!getAuthHandler().isAuthorized(user, domainID)){
 			return Response.status(Status.UNAUTHORIZED).build();

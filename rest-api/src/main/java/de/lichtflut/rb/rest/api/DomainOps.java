@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,7 @@ public class DomainOps extends RBServiceEndpoint {
 	@DELETE
 	@RBOperation(type = TYPE.DOMAIN_DELETE)
 	public Response deleteDomain(@PathParam(DOMAIN_ID_PARAM) String domainID,
-			@QueryParam(AUTH_TOKEN) String token) {
+			@QueryParam(AUTH_TOKEN) String token) throws UnauthenticatedUserException {
 		RBUser user = authenticateUser(token);
 		if (!getAuthHandler().isAuthorized(user, domainID)) {
 			return Response.status(Status.UNAUTHORIZED).build();
@@ -103,7 +104,7 @@ public class DomainOps extends RBServiceEndpoint {
 	@RBOperation(type = TYPE.DOMAIN_CREATE)
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response createDomain(@PathParam(DOMAIN_ID_PARAM) String domainID,
-			@QueryParam(AUTH_TOKEN) String token, SystemDomain domain) {
+			@QueryParam(AUTH_TOKEN) String token, SystemDomain domain) throws UnauthenticatedUserException {
 
 		// Check the equality of domainID's
 		if (domain != null && domain.getDomainIdentifier() != null
@@ -199,7 +200,7 @@ public class DomainOps extends RBServiceEndpoint {
 	@RBOperation(type = TYPE.DOMAIN_UPDATE)
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response updateDomain(@PathParam(DOMAIN_ID_PARAM) String domainID,
-			@QueryParam(AUTH_TOKEN) String token, SystemDomain domain) {
+			@QueryParam(AUTH_TOKEN) String token, SystemDomain domain) throws UnauthenticatedUserException {
 		// Check if domain is not null
 		if (domain == null) {
 			return Response.status(Status.BAD_REQUEST).build();

@@ -122,7 +122,7 @@ public class EmbeddedAuthUserManager implements UserManager {
 		}
 		final ResourceNode domain = domainManager.findDomainNode(domainName);
 		if (domain == null) {
-			throw new RBAuthException(ErrorCodes.SECURITYSERVICE_DOMAIN_NOT_FOUND, "Domain unknown: " + domainName);
+			throw new RBAuthException(ErrorCodes.SECURITY_DOMAIN_NOT_FOUND, "Domain unknown: " + domainName);
 		}
 		final ResourceNode userNode = new SNResource(user.getQualifiedName());
 		userNode.addAssociation(RDF.TYPE, Aras.USER);

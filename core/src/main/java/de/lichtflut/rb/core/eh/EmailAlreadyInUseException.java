@@ -17,7 +17,7 @@ package de.lichtflut.rb.core.eh;
 public class EmailAlreadyInUseException extends RBAuthException {
 
 	public EmailAlreadyInUseException(String msg) {
-		super(ErrorCodes.SECURITYSERVICE_EMAIL_ALREADY_IN_USE, msg);
+		super(ErrorCodes.SECURITY_EMAIL_ALREADY_IN_USE, msg);
 	}
 
 }

@@ -20,7 +20,7 @@ public class RBAuthException extends RBException {
 	 * @param errorCode
 	 * @param msg
 	 */
-	public RBAuthException(long errorCode, String msg) {
+	public RBAuthException(int errorCode, String msg) {
 		super(errorCode, msg);
 	}
 
@@ -29,7 +29,7 @@ public class RBAuthException extends RBException {
 	 * @param msg
 	 * @param e
 	 */
-	public RBAuthException(long errorCode, String msg, Throwable e) {
+	public RBAuthException(int errorCode, String msg, Throwable e) {
 		super(errorCode, msg, e);
 	}
 

@@ -17,7 +17,7 @@ package de.lichtflut.rb.core.eh;
 public class UsernameAlreadyInUseException extends RBAuthException {
 
 	public UsernameAlreadyInUseException(String msg) {
-		super(ErrorCodes.SECURITYSERVICE_USERNAME_ALREADY_IN_USE, msg);
+		super(ErrorCodes.SECURITY_USERNAME_ALREADY_IN_USE, msg);
 	}
 
 }

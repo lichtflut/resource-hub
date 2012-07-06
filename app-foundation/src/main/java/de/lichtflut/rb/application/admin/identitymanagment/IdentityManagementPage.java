@@ -156,7 +156,7 @@ public class IdentityManagementPage extends AdminBasePage {
 					securityService.setUserRoles(registered, context.getDomain(), DEFAULT_ROLES);
 					editUser(Model.of(registered));
 				} catch (RBException e) {
-					if (e.getErrorCode() == ErrorCodes.SECURITYSERVICE_EMAIL_ALREADY_IN_USE) {
+					if (e.getErrorCode() == ErrorCodes.SECURITY_EMAIL_ALREADY_IN_USE) {
 						error(getString("global.message.duplicate.ID"));
 					} else {
 						error(getString("global.message.duplicate.username"));

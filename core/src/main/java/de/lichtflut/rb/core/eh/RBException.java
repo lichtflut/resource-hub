@@ -16,7 +16,7 @@ package de.lichtflut.rb.core.eh;
  */
 public class RBException extends Exception {
 
-	private long errorCode;
+	private int errorCode;
 
 	// ---------------- Constructor -------------------------
 
@@ -28,12 +28,12 @@ public class RBException extends Exception {
 	 * @param errorCode
 	 * @param msg
 	 */
-	public RBException(long errorCode, String msg) {
+	public RBException(int errorCode, String msg) {
 		super(msg);
 		this.errorCode = errorCode;
 	}
 	
-	public RBException(long errorCode, String msg, Throwable e){
+	public RBException(int errorCode, String msg, Throwable e){
 		super(msg, e);
 		this.errorCode = errorCode;
 	}
@@ -43,7 +43,7 @@ public class RBException extends Exception {
 	/**
 	 * @return the errorCode
 	 */
-	public long getErrorCode() {
+	public int getErrorCode() {
 		return errorCode;
 	}
 	
