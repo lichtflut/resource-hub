@@ -233,6 +233,9 @@ public class SecurityServiceImpl implements SecurityService {
 	 * @return The roles to be added to domain admin.
 	 */
 	protected String[] rolesOfDomainAdmin() {
+        if (securityConfiguration != null) {
+            return securityConfiguration.getRolesOfDomainAdmin();
+        }
 		return new String[0];
 	}
 	
