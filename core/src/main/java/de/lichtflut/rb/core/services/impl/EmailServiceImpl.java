@@ -44,12 +44,12 @@ public class EmailServiceImpl implements EmailService {
 
 	private final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 	
-	private final EmailConfiguration conf;
+	private final EmailConfiguration emailConf;
 	
 	// ---------------- Constructor -------------------------
 	
 	public EmailServiceImpl(EmailConfiguration conf){
-		this.conf = conf;
+		this.emailConf = conf;
 	}
 	
 	// ------------------------------------------------------
@@ -64,11 +64,11 @@ public class EmailServiceImpl implements EmailService {
 		desc.setType(MessageType.PASSWORD_INFORMATION_MAIL);
 		desc.setRecipient(user.getEmail());
 		desc.setRecipientName(user.getName());
-		desc.setSender(conf.getApplicationEmail());
-		desc.setSenderName(conf.getApplicationSupportName());
+		desc.setSender(emailConf.getApplicationEmail());
+		desc.setSenderName(emailConf.getApplicationSupportName());
 		desc.setPassword(password);
 		new TextModules().insertMailFor(desc);
-		sendMail(desc, conf);
+		sendMail(desc, emailConf);
 	}
 
 
@@ -82,10 +82,10 @@ public class EmailServiceImpl implements EmailService {
 		desc.setType(MessageType.REGISTRATION_CONFIRMATION_MAIL);
 		desc.setRecipient(user.getEmail());
 		desc.setRecipientName(user.getName());
-		desc.setSender(conf.getApplicationSupportEmail());
-		desc.setSenderName(conf.getApplicationSupportName());
+		desc.setSender(emailConf.getApplicationSupportEmail());
+		desc.setSenderName(emailConf.getApplicationSupportName());
 		new TextModules().insertMailFor(desc);
-		sendMail(desc, conf);
+		sendMail(desc, emailConf);
 	}
 
 	/** 
@@ -99,7 +99,7 @@ public class EmailServiceImpl implements EmailService {
 		desc.setRecipient(user.getEmail());
 		desc.setRecipientName(user.getName());
 		new TextModules().insertMailFor(desc);
-		sendMail(desc, conf);
+		sendMail(desc, emailConf);
 	}
 	
 	// ------------------------------------------------------

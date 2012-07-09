@@ -3,28 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.typesystem.schema;
 
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
-import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
-import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.webck.behaviors.CssModifier;
-import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
-import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
-import de.lichtflut.rb.webck.components.fields.AjaxEditablePanelLabel;
-import de.lichtflut.rb.webck.components.fields.AjaxUpdateDataPickerField;
-import de.lichtflut.rb.webck.components.fields.ClassPickerField;
-import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
-import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
-import de.lichtflut.rb.webck.components.typesystem.TypeHierarchyPanel;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
+import java.util.Arrays;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -49,7 +29,29 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
-import java.util.Arrays;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
+import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.behaviors.DefaultButtonBehavior;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
+import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
+import de.lichtflut.rb.webck.components.fields.AjaxEditablePanelLabel;
+import de.lichtflut.rb.webck.components.fields.AjaxUpdateDataPickerField;
+import de.lichtflut.rb.webck.components.fields.ClassPickerField;
+import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
+import de.lichtflut.rb.webck.components.typesystem.TypeHierarchyPanel;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
 
 /**
  * <p>
@@ -68,6 +70,9 @@ public class SchemaDetailPanel extends Panel {
 	@SpringBean
 	private SchemaManager schemaManager;
 
+	@SpringBean
+	private TypeManager typeManager;
+	
 	private final IModel<ResourceSchema> schema;
 	private PropertyRowListModel listModel;
 
@@ -178,6 +183,8 @@ public class SchemaDetailPanel extends Panel {
 					@Override
 					public void onConfirm() {
 						schemaManager.removeSchemaForType(schema.getObject().getDescribedType());
+						typeManager.removeType(schema.getObject().getDescribedType());
+//						typemanager.remove // aufrufen
 						SchemaDetailPanel.this.setVisible(false);
 						updatePanel();
 						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
