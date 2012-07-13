@@ -1,0 +1,210 @@
+
+/* INITIALIZATION */
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td
+{
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    margin: 8px 0 0;
+}
+
+li {
+    margin-left: 17px;
+}
+
+/* WRAPPER */
+
+div#wrapper {
+	float:none;
+	min-width: 981px;
+	margin: 0 auto;
+	height:100%;
+}
+
+div#wrapper.restricted {
+	max-width: 1250px;
+}
+
+/* HEADER */
+
+div#site-header {
+	float: none;
+	clear: both;
+	margin-left:27px;
+}
+
+div#site-header.login {
+	margin-left:0;
+}
+
+div#application-logo {
+
+}
+
+div#header-top-line {
+	float: none;
+	clear: both;
+	height: 16px;	
+	font-size: 7pt;
+	font-weight: bold;
+	padding-top: 2px;
+}
+
+div#langage-select{
+	float: left;
+	padding-left: 90px;
+}
+
+div#langage-select.login{
+	padding-left: 10px;
+}
+
+div#user-info {
+	float: right;
+	text-align:right;
+	padding: 0 10px;
+	min-width: 200px;
+}
+
+div#header-middle-line{
+	float: none;
+	clear: both;
+	height: 16px;
+}
+
+div#header-teaser{
+	float:left;
+	font-size: 14pt;
+	margin-top: -2px;
+	margin-left: 300px;
+}
+
+div#header-search{
+	float:right;
+	padding: 0 10px 0 5px; 
+}
+
+div#header-bottom-line {
+	float: none;
+	clear: both;
+	height: 40px;
+}
+
+div#first-level-nav {
+	height: 22px;
+	margin-left:75px;
+}
+
+div#second-level-nav {
+	background-repeat: repeat-x;
+	height: 18px;
+	width: 100%;
+}
+
+/* MAIN */
+
+div#site-main {
+	float: none;
+	clear: both;
+	min-height: 400px;
+	padding: 10px 0 20px;
+}
+
+div#site-main.shadowed {
+	padding: 20px 0;
+    background: no-repeat 50px -20px;
+}
+
+div#sidebar-left {
+	padding:0;
+	margin: 0;
+	min-height: 400px;
+	float:left;
+}
+
+div#column-center {
+	float:left;
+	width:100%;
+}
+	
+div#main-content {
+	padding: 0 12px;
+}
+
+div#sidebar-right {
+	min-height: 400px;
+	float:left;
+}
+
+/* MAIN LAYOUTS */
+
+.layout-1-3-1 div#sidebar-left {
+	width: 20%;
+}
+
+.layout-1-3-1 div#column-center {
+	width: 60%;
+}
+
+.layout-1-3-1 div#sidebar-right {
+	width: 20%;
+}
+
+.layout-1-4-0 div#sidebar-left {
+	width: 20%;
+}
+
+.layout-1-4-0 div#column-center {
+	width: 80%;
+}
+
+.layout-1-4-0 div#sidebar-right {
+	width: 0;
+}
+
+.layout-2-3-0 div#sidebar-left {
+	width: 40%;
+}
+
+.layout-2-3-0 div#column-center {
+	width: 60%;
+}
+
+.layout-2-3-0 div#sidebar-right {
+	width: 0;
+}
+
+.layout-0-3-2 div#sidebar-left {
+	width: 0;
+}
+
+.layout-0-3-2 div#column-center {
+	width: 60%;
+}
+
+.layout-0-3-2 div#sidebar-right {
+	width: 40%;
+}
+
+.margin-bottom-10 {
+	margin-bottom: 10px;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+/* FOOTER */
+
+div#site-footer {
+	float: none;
+	clear: both;
+	text-align: center;
+	padding:40px 0 20px;
+	font-size: 7pt;
+}
+		
+	

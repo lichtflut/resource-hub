@@ -1,0 +1,98 @@
+/* WIDGETS */
+
+div.perspective {
+	width: 100%;
+}
+
+div.perspective-header {
+	width: 100%;
+	text-align: right;
+	min-height: 20px;	
+}
+
+div.view-port.configuration-mode > div {
+	border: 1px dashed #999;
+	margin: 0 5px;
+	background-color: #EEE; 
+	min-height: 100px;
+	padding-top:5px;
+}
+
+div.view-port.configuration-mode > div > a {
+	padding-left: 5px;
+}
+
+div.view-ports-container.layout-100 div.view-port {
+	width:100%;
+}
+
+div.view-ports-container.layout-50-50 div.view-port {
+	width:50%;
+}
+
+div.view-ports-container.layout-33-33-33 div.view-port {
+	width:33%;
+}
+
+div.view-port {
+	float:left;
+}
+
+div.rb-widget {
+	border: 1px solid #e6e8e3;
+	background-color: #f6f8f3;
+	border-radius: 5px;
+	padding: 8px;
+	margin: 5px 6px 18px;
+}
+
+div.view-port.configuration-mode div.widget-overlay  {
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+
+div.rb-widget-header  {
+	clear: both;
+	float: none;
+	min-height: 22px;
+	margin-left: 5px;
+}
+
+div.rb-widget-header div.title {
+	float:left;
+}
+
+div.rb-widget-header div.action-links {
+	float:right;
+	margin-top: -5px;
+	margin-right: -5px;
+}
+
+div.rb-widget .entity-list{
+	width: 100%;
+}
+
+/* CATALOG */
+
+div.widget-catalog-item {
+	width: 560px;
+	padding:5px;
+	float: none;
+	clear: both;
+	display: inline-block;
+	background: white;
+}
+				
+div.widget-catalog-item-link {
+	width: 200px;
+	float:left;
+}
+
+div.widget-catalog-item-description {
+	width: 350px;
+	float:left;
+}
+
+
+

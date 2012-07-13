@@ -3,6 +3,10 @@
  */
 package de.lichtflut.rb.application;
 
+import de.lichtflut.rb.application.layout.Layout;
+import de.lichtflut.rb.application.layout.frugal.FrugalLayout;
+import de.lichtflut.rb.application.styles.Style;
+import de.lichtflut.rb.application.styles.frugal.FrugalStyle;
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
@@ -11,6 +15,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
@@ -96,12 +101,23 @@ public abstract class RBApplication extends WebApplication {
 
     // ----------------------------------------------------
 
-
-    @Override
-    protected void init() {
-        super.init();
-        getRequestCycleListeners().add(new RBRequestCycleListener());
+    /**
+     * The layout for this application.
+     * @return The layout.
+     */
+    public Layout getLayout() {
+        return new FrugalLayout();
     }
+
+    /**
+     * The style for this application.
+     * @return The style.
+     */
+    public Style getStyle() {
+        return new FrugalStyle();
+    }
+
+    // ----------------------------------------------------
 
     /**
      * {@inheritDoc}
@@ -109,6 +125,21 @@ public abstract class RBApplication extends WebApplication {
     @Override
     public Session newSession(Request request, Response response) {
         return new RBWebSession(request);
+    }
+
+
+
+    @Override
+    protected void init() {
+        super.init();
+
+        getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+
+        getMarkupSettings().setStripWicketTags(true);
+        getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
+
+        getRequestCycleListeners().add(new RBRequestCycleListener());
+        getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
     }
 
 	/**

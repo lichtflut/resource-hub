@@ -5,17 +5,18 @@ package de.lichtflut.rb.application.pages;
 
 import java.util.Locale;
 
+import de.lichtflut.rb.webck.common.CookieAccess;
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.cookies.CookieUtils;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import de.lichtflut.rb.application.RBApplication;
@@ -79,8 +80,7 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 			@Override
 			public void onClick() {
 				WebSession.get().invalidate();
-				new CookieUtils().remove(AuthModule.COOKIE_REMEMBER_ME);
-				new CookieUtils().remove(AuthModule.COOKIE_SESSION_AUTH);
+                CookieAccess.getInstance().removeAuthCookies();
 				setResponsePage(RBApplication.get().getLoginPage());
 			}
 		}.add(ConditionalBehavior.visibleIf(CurrentUserModel.isLoggedIn())));
@@ -89,8 +89,15 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 		
 		add(emptyDialog());
 	}
-	
-	// ----------------------------------------------------
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        RBApplication.get().getLayout().addLayout(response);
+        RBApplication.get().getStyle().addStyle(response);
+    }
+
+    // ----------------------------------------------------
 	
 	@SuppressWarnings("rawtypes")
 	protected void addLanguageLinks() {

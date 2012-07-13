@@ -5,6 +5,7 @@ package de.lichtflut.rb.application.base;
 
 import java.util.Set;
 
+import de.lichtflut.rb.webck.common.CookieAccess;
 import org.apache.wicket.Application;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.RuntimeConfigurationType;
@@ -66,7 +67,7 @@ public class LoginPage extends AbstractBasePage {
 	/**
 	 * Constructor.
 	 */
-	public LoginPage(final PageParameters params) {
+	public LoginPage() {
 
 		checkCookies();
 
@@ -115,6 +116,7 @@ public class LoginPage extends AbstractBasePage {
 			@Override
 			public void onSubmit() {
 				tryLogin(loginData);
+                loginData.setPassword(null);
 			}
 		};
 		form.add(button);
@@ -162,7 +164,7 @@ public class LoginPage extends AbstractBasePage {
 			}
 			if (loginData.getStayLoggedIn()) {
 				final String token = authService.createRememberMeToken(user, loginData);
-				cookieUtils().save(AuthModule.COOKIE_REMEMBER_ME, token);
+                CookieAccess.getInstance().setRememberMeToken(token);
 				logger.info("Added 'remember-me' cookie for {}", user.getName());
 			}
 		} catch (LoginException e) {
@@ -171,7 +173,7 @@ public class LoginPage extends AbstractBasePage {
 	}
 	
 	private void checkCookies() {
-		final String cookie = new CookieUtils().load(AuthModule.COOKIE_REMEMBER_ME);
+        final String cookie = CookieAccess.getInstance().getRememberMeToken();
 		if (cookie != null) {
 			final RBUser user = authService.loginByToken(cookie);
 			if (user != null) {
@@ -205,14 +207,7 @@ public class LoginPage extends AbstractBasePage {
 	private void initializeUserSession(RBUser user) {
         String token = authService.createSessionToken(user);
         new ServiceContextInitializer().init(user, user.getDomesticDomain(), token);
-		cookieUtils().save(AuthModule.COOKIE_SESSION_AUTH, token);
-	}
-	
-	private CookieUtils cookieUtils() {
-		//boolean prodMode = RuntimeConfigurationType.DEPLOYMENT.equals(Application.get().getConfigurationType());
-		CookieUtils cu = new CookieUtils();
-		//cu.getSettings().setSecure(prodMode);
-		return cu;
+        CookieAccess.getInstance().setSessionToken(token);
 	}
 
 }
