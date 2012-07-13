@@ -68,8 +68,6 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	 */
 	public EmbeddedAuthLoginService(ModelingConversation conversation) {
 		this.conversation = conversation;
-		this.conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
-		this.conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
 	}
 	
 	// -- LOGIN -------------------------------------------

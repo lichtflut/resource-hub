@@ -40,7 +40,7 @@ public class SchemaImportDialog extends AbstractRBDialog {
 	@SpringBean
 	private SchemaManager schemaManager;
 	
-	private final IModel<String> format = new Model<String>("JSON");
+	private final IModel<String> format = new Model<String>("RSF");
 	
 	// ----------------------------------------------------
 

@@ -141,7 +141,7 @@ public class SNPropertyEditorPanel extends Panel {
 			SNOPS.remove(property, RBSystem.HAS_FIELD_LABEL);
 			info("Label has been removed");
 		} else {
-			assure(property, RBSystem.HAS_FIELD_LABEL, new SNText(label), RB.TYPE_SYSTEM_CONTEXT);
+			assure(property, RBSystem.HAS_FIELD_LABEL, new SNText(label));
 			info("Label has been saved");
 		}
 	}

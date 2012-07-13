@@ -32,10 +32,7 @@ public class TestDomainInitializer implements DomainInitializer {
     public void initializeDomain(ArastrejuGate gate, String domainName) {
 
         final Organizer organizer = gate.getOrganizer();
-        organizer.registerContext(RB.DOMAIN_CONTEXT.getQualifiedName());
-        organizer.registerContext(RB.SCHEMA_CONTEXT.getQualifiedName());
-        organizer.registerContext(RB.PRIVATE_CONTEXT.getQualifiedName());
-        organizer.registerContext(RB.PUBLIC_CONTEXT.getQualifiedName());
+
         organizer.registerNamespace(RDF.NAMESPACE_URI, "rdf");
         organizer.registerNamespace(RDFS.NAMESPACE_URI, "rdfs");
         organizer.registerNamespace(Aras.NAMESPACE_URI, "aras");

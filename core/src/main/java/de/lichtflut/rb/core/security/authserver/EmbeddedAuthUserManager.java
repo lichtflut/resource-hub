@@ -66,14 +66,12 @@ public class EmbeddedAuthUserManager implements UserManager {
 	
 	/**
 	 * Constructor.
-	 * @param gate The Arastreju Gate.
+	 * @param conversation The conversation.
 	 * @param domainManager The domain manager.
 	 */
 	public EmbeddedAuthUserManager(ModelingConversation conversation, EmbeddedAuthDomainManager domainManager) {
 		this.domainManager = domainManager;
 		this.conversation = conversation;
-		this.conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
-		this.conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
 		this.authorization = new EmbeddedAuthAuthorizationManager(conversation, domainManager);
 	}
 	
@@ -222,7 +220,7 @@ public class EmbeddedAuthUserManager implements UserManager {
 		String newCrypt = RBCrypt.encryptWithRandomSalt(newPassword);
 		SNValue credential = new SNValue(ElementaryDataType.STRING, newCrypt);
 		ResourceNode arasUser = findUserNode(user.getEmail());
-		SNOPS.assure(arasUser, Aras.HAS_CREDENTIAL, credential, RB.PRIVATE_CONTEXT);
+		SNOPS.assure(arasUser, Aras.HAS_CREDENTIAL, credential);
 	}
 	
 	/** 

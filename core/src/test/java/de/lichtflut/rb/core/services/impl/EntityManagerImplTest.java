@@ -187,9 +187,9 @@ public class EntityManagerImplTest {
 
 	private ResourceNode getUser() {
 		ResourceNode node = new SNResource(new QualifiedName("http://test/user"));
-		node.addAssociation(Aras.IDENTIFIED_BY, new SNValue(ElementaryDataType.STRING, "TestUser"), RB.PRIVATE_CONTEXT);
-		node.addAssociation(Aras.HAS_CREDENTIAL, new SNValue(ElementaryDataType.STRING, "pwd"), RB.PRIVATE_CONTEXT);
-		node.addAssociation(RDF.TYPE, RB.PERSON, RB.TYPE_SYSTEM_CONTEXT);
+		node.addAssociation(Aras.IDENTIFIED_BY, new SNValue(ElementaryDataType.STRING, "TestUser"));
+		node.addAssociation(Aras.HAS_CREDENTIAL, new SNValue(ElementaryDataType.STRING, "pwd"));
+		node.addAssociation(RDF.TYPE, RB.PERSON);
 		return node;
 	}
 	

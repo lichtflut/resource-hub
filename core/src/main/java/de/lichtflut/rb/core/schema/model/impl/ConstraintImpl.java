@@ -49,8 +49,6 @@ import de.lichtflut.rb.core.schema.model.Datatype;
  */
 public class ConstraintImpl implements Constraint {
 
-	private final static Context ctx = RBSchema.CONTEXT;
-
 	private final ResourceNode node;
 
 	// ---------------- Constructor -------------------------
@@ -96,7 +94,7 @@ public class ConstraintImpl implements Constraint {
 	}
 
 	public void setName(String name) {
-		SNOPS.assure(node, RBSchema.HAS_NAME, new SNText(name), ctx);
+		SNOPS.assure(node, RBSchema.HAS_NAME, new SNText(name));
 	}
 
 	/**
@@ -127,7 +125,7 @@ public class ConstraintImpl implements Constraint {
 
 	public void setLiteralConstraint(String pattern) {
 		if ((pattern != null) && !pattern.isEmpty()) {
-			SNOPS.assure(node, RBSchema.HAS_CONSTRAINT_VALUE, new SNText(pattern), ctx);
+			SNOPS.assure(node, RBSchema.HAS_CONSTRAINT_VALUE, new SNText(pattern));
 		}
 	}
 
@@ -147,7 +145,7 @@ public class ConstraintImpl implements Constraint {
 	 * @param reference the reference to set
 	 */
 	public void setReference(ResourceID reference) {
-		SNOPS.assure(node, RBSchema.HAS_RESOURCE_CONSTRAINT, reference, ctx);
+		SNOPS.assure(node, RBSchema.HAS_RESOURCE_CONSTRAINT, reference);
 	}
 
 	/**
@@ -163,9 +161,9 @@ public class ConstraintImpl implements Constraint {
 	}
 
 	public void isPublic(boolean isPublic) {
-		SNOPS.assure(node, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(isPublic), ctx);
+		SNOPS.assure(node, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(isPublic));
 		if (isPublic) {
-			SNOPS.assure(node, RDF.TYPE, RBSchema.PUBLIC_CONSTRAINT, ctx);
+			SNOPS.assure(node, RDF.TYPE, RBSchema.PUBLIC_CONSTRAINT);
 		} else {
 			SNOPS.remove(node, RDF.TYPE);
 		}
@@ -200,7 +198,7 @@ public class ConstraintImpl implements Constraint {
 			SNOPS.remove(this.asResourceNode(), RBSchema.HAS_DATATYPE, snType);
 		}
 		for (Datatype datatype : datatypes) {
-			SNOPS.associate(node, RBSchema.HAS_DATATYPE, new SNText(datatype.name()), ctx);
+			SNOPS.associate(node, RBSchema.HAS_DATATYPE, new SNText(datatype.name()));
 		}
 	}
 
@@ -217,11 +215,8 @@ public class ConstraintImpl implements Constraint {
 				return false;
 			}
 		}
-		if (null == getReference()) {
-			return true;
-		}
-		return false;
-	}
+        return null == getReference();
+    }
 
 	/**
 	 * {@inheritDoc}

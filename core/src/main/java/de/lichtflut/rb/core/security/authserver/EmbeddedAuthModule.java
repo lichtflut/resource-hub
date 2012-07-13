@@ -29,11 +29,9 @@ import de.lichtflut.rb.core.security.UserManager;
  */
 public class EmbeddedAuthModule implements AuthModule {
 	
-	public static final String CTX_NAMESPACE_URI = "http://rb.lichtflut.de/embedded-auth/contexts";
+	private static final String CTX_NAMESPACE_URI = "http://rb.lichtflut.de/embedded-auth/contexts/";
 	
-	public static final String ROOT_USER = "root";
-	
-	public static final Context IDENT = new SimpleContextID(CTX_NAMESPACE_URI, "IdentityManagement");
+	private static final Context IDENT = new SimpleContextID(CTX_NAMESPACE_URI, "IdentityManagement");
 	
 	// ----------------------------------------------------
 
@@ -67,7 +65,7 @@ public class EmbeddedAuthModule implements AuthModule {
 		}
 		
 		final ModelingConversation conversation = gate.startConversation();
-		conversation.getConversationContext().setWriteContext(EmbeddedAuthModule.IDENT);
+		conversation.getConversationContext().setPrimaryContext(EmbeddedAuthModule.IDENT);
 		conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
 		
 		this.domainManager = new EmbeddedAuthDomainManager(conversation, initializer);

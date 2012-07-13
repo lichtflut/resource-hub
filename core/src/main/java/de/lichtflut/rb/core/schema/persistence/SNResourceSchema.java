@@ -44,19 +44,18 @@ public class SNResourceSchema extends ResourceView {
 
 	/**
 	 * Constructor for new Resource Schemas.
-	 * @param ctx The contexts.
 	 */
-	public SNResourceSchema(final Context... ctx) {
-		this(new SNResource(), ctx);
+	public SNResourceSchema() {
+		this(new SNResource());
 	}
 	
 	/**
 	 * Constructor.
 	 * @param resource -
 	 */
-	public SNResourceSchema(final ResourceNode resource, final Context... ctx) {
+	public SNResourceSchema(final ResourceNode resource) {
 		super(resource);
-		SNOPS.associate(this, RDF.TYPE, RBSchema.RESOURCE_SCHEMA, ctx);
+		SNOPS.associate(this, RDF.TYPE, RBSchema.RESOURCE_SCHEMA);
 	}
 
 	// -----------------------------------------------------
@@ -106,19 +105,17 @@ public class SNResourceSchema extends ResourceView {
 	/**
 	 * Set the textual expression for label building.
 	 * @param expression The expression.
-	 * @param ctx The context.
 	 */
-	public void setLabelExpression(final SNText expression, final Context... ctx) {
-		SNOPS.assure(this, RBSchema.HAS_LABEL_EXPRESSION, expression, ctx);
+	public void setLabelExpression(final SNText expression) {
+		SNOPS.assure(this, RBSchema.HAS_LABEL_EXPRESSION, expression);
 	}
 
 	/**
 	 * Adds the given PropertyAssertion to this class.
 	 * @param decl The declaration to be added.
-	 * @param ctx The context.
 	 */
-	public void addPropertyDeclaration(final SNPropertyDeclaration decl, final Context... ctx){
-		SNOPS.associate(this, RBSchema.HAS_PROPERTY_DECL, decl, ctx);
+	public void addPropertyDeclaration(final SNPropertyDeclaration decl){
+		SNOPS.associate(this, RBSchema.HAS_PROPERTY_DECL, decl);
 	}
 
 	/**
@@ -139,9 +136,7 @@ public class SNResourceSchema extends ResourceView {
 	}
 
 	/**
-	 * @see org.arastreju.api.model.semantic.ResourceClassifier#removePropertyDeclaration.
-	 * (org.arastreju.api.model.semantic.SNPropertyDeclaration)
-	 * @param decl -
+	 * @param decl The declaration to be removed.
 	 */
 	public void removePropertyDeclaration(final SNPropertyDeclaration decl) {
 		Set<? extends Statement> assocs = getAssociations(RBSchema.HAS_PROPERTY_DECL);

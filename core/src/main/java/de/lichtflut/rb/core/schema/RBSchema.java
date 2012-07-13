@@ -26,14 +26,6 @@ public interface RBSchema {
 
 	String NAMESPACE_URI = "http://rb.lichtflut.de/schema#";
 
-	// -- CONTEXT -----------------------------------------
-
-	/**
-	 * Represents the schema context. Each schema.based expression has to be applied to this context.
-	 */
-	Context CONTEXT = new SimpleContextID(NAMESPACE_URI, "SchemaContext");
-
-
 	// -- ROOT-NODE ---------------------------------------
 
 	/**

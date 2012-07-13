@@ -112,8 +112,8 @@ public class TypeManagerImpl implements TypeManager {
 	@Override
 	public SNClass createType(final QualifiedName qn) {
 		final SNClass type = new SNResource(qn).asClass();
-		SNOPS.associate(type, RDF.TYPE, RDFS.CLASS, RB.TYPE_SYSTEM_CONTEXT);
-		SNOPS.associate(type, RDF.TYPE, RBSystem.TYPE, RB.TYPE_SYSTEM_CONTEXT);
+		SNOPS.associate(type, RDF.TYPE, RDFS.CLASS);
+		SNOPS.associate(type, RDF.TYPE, RBSystem.TYPE);
 		conversation.attach(type);
 		return type;
 	}
@@ -132,7 +132,7 @@ public class TypeManagerImpl implements TypeManager {
 	 */
 	@Override
 	public void addSuperClass(ResourceID type, ResourceID superClass) {
-		conversation.resolve(type).addAssociation(RDFS.SUB_CLASS_OF, superClass, RB.TYPE_SYSTEM_CONTEXT);
+		conversation.resolve(type).addAssociation(RDFS.SUB_CLASS_OF, superClass);
 	}
 	
 	/** 
@@ -170,7 +170,7 @@ public class TypeManagerImpl implements TypeManager {
 	@Override
 	public SNProperty createProperty(QualifiedName qn) {
 		final SNProperty property = new SNProperty(qn).asProperty();
-		SNOPS.associate(property, RDF.TYPE, RDF.PROPERTY, RB.TYPE_SYSTEM_CONTEXT);
+		SNOPS.associate(property, RDF.TYPE, RDF.PROPERTY);
 		conversation.attach(property);
 		return property;
 	}
