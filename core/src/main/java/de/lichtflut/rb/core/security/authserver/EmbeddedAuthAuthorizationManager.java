@@ -18,8 +18,6 @@ import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.traverse.NodeSet;
-import org.arastreju.sge.traverse.ResourceNodeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,8 +100,7 @@ public class EmbeddedAuthAuthorizationManager {
 	 * @param user The user who's roles are set.
 	 * @param domain The domain.
 	 * @param roles The roles.
-	 * @return The list of permissions.
-	 * @throws RBAuthException 
+	 * @throws RBAuthException
 	 */
 	public void setUserRoles(RBUser user, String domain, List<String> roles) throws RBAuthException {
 		ResourceNode userNode = mc().findResource(user.getQualifiedName());

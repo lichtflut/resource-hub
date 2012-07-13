@@ -33,11 +33,11 @@
 //	// Testcase initializing
 //	static {
 //		// Init test-user identity
-//		TEST_USER.setId("test@test.de");
+//		TEST_USER.setLoginID("test@test.de");
 //		TEST_USER.setPassword("test");
 //		TEST_USER.setUsername("test");
 //		
-//		ROOT_USER.setId("root");
+//		ROOT_USER.setLoginID("root");
 //		ROOT_USER.setPassword("root");
 //		ROOT_USER.setUsername("root");
 //		
@@ -74,7 +74,7 @@
 //		//Domain doesnt exist
 //		assertNull("Domain " + TEST_DOMAIN.getDomainIdentifier() + " has to be absent", domain);
 //		
-//		assertNotNull(getAuthModule().getUserManagement().findUser(ROOT_USER.getId()));
+//		assertNotNull(getAuthModule().getUserManagement().findUser(ROOT_USER.getLoginID()));
 //		
 //		setCurrentSystemUser(ROOT_USER);
 //		

@@ -77,13 +77,13 @@ public class PasswordCredentialTransformer {
 		ArastrejuProfile profile = ArastrejuProfile.read();
 		profile.setProperty(ArastrejuProfile.ARAS_STORE_DIRECTORY, storeDir.getAbsolutePath());
 		Arastreju aras = Arastreju.getInstance(profile);
-		ArastrejuGate masterGate = aras.rootContext();
+		ArastrejuGate masterGate = aras.openMasterGate();
 		
 		final EmbeddedAuthDomainManager domainManager = new EmbeddedAuthDomainManager(masterGate.startConversation());
 		
 		for(RBDomain domain : domainManager.getAllDomains()) {
 			logger.info("current domain: " +domain.getName());
-			ArastrejuGate gate = aras.rootContext(domain.getName());
+			ArastrejuGate gate = aras.openGate(domain.getName());
 			changePasswordsInDomain(gate);
 		}
 	}

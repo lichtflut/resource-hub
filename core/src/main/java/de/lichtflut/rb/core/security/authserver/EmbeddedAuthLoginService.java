@@ -79,7 +79,7 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	 */
 	@Override
 	public RBUser login(LoginData loginData) throws LoginException {
-		final String id = normalize(loginData.getId());
+		final String id = normalize(loginData.getLoginID());
 		if (id == null) {
 			throw new LoginException(ErrorCodes.LOGIN_INVALID_DATA, "No username given");	
 		}
@@ -135,7 +135,7 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	@Override
 	public String createRememberMeToken(RBUser user, LoginData loginData) {
 		final String email = user.getEmail();
-		final String id = normalize(loginData.getId());
+		final String id = normalize(loginData.getLoginID());
 		final Credential credential = toCredential(loginData.getPassword(), findUserNode(id));
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, 30);

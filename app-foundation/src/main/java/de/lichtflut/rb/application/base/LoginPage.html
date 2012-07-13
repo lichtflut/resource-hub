@@ -48,87 +48,31 @@
 			</div>
 			<div id="column-center">
 				<div id="main-content" class="teaser central">
-					<div class="teaser">
-						<h2>
-							<wicket:message key="label.header">[label]</wicket:message>
-						</h2>
-					</div>
-					<div class="teaser section">
-						<h4>Schall und Rauch - Glasnost steht für Transparenz</h4>
-						
-						<p>Wir wollen Überblick und Durchblick verschaffen. 
-							In komplexen Organisationen mit ihren Linien und Hierarchien. 
-							Den übergreifenden Projekten und Prozessen. 
-							Den geographischen Gliederungen von Organisationen. 
-							Und vor allem natürlich den informellen Netzwerken, die in keinem
-							Organigramm auftauchen.
-						</p>
-						<div class="teaser-logo"></div>
-						<p>	
-						 	In Glasnost werden diese Strukturen transparent
-							und konsistent abgebildet - um sie allen Mitarbeitern verständlich zu
-							machen und auch, um sie stetig zu verbessern.
-						</p>
-					</div>
+
+                    <h3>
+                        <wicket:message key="label.login">[label]</wicket:message>
+                    </h3>
+
+                    <div class="input-panel login">
+
+                        <wicket:container wicket:id="loginPanel"/>
+
+                        <div class="section left">
+                            <a wicket:id="resetEmail" href="#">
+                                <wicket:message key="link.reset-password">[reset-Email]</wicket:message>
+                            </a>
+                            |
+                            <a wicket:id="requestAccount" href="#">
+                                <wicket:message key="link.request-account">[request-account]</wicket:message>
+                            </a>
+                        </div>
+                    </div>
+
+
 				</div>
 			</div>
-			<div id="sidebar-right" style="padding-top:16px">
-				<h3>
-						<wicket:message key="label.login">[label]</wicket:message>
-				</h3>
-				<div class="input-panel login">
-					<form wicket:id="form">
-		
-						<div wicket:id="feedback"></div>
-		
-						<div class="form-field">
-							<label for="id"><wicket:container wicket:id="idLabel"/></label>
-							<input type="text" wicket:id="id" />
-						</div>
-		
-						<div class="form-field">
-							<label for="password"><wicket:container wicket:id="passwordLabel"/></label>
-							<input type="password" wicket:id="password" />
-						</div>
-						
-						<div class="form-field" style="padding:6px 4px 0">
-							<input type="checkbox" wicket:id="stayLoggedIn" style="margin-right:8px"/>
-							<label for="stayLoggedIn"><wicket:message key="label.remember-me">[remember me]</wicket:message></label>
-						</div>
-						
-						<div class="button-bar left">
-							<button wicket:id="login" class="default-button">
-								<wicket:message key="button.login">[login]</wicket:message>
-							</button>
-						</div>
-		
-					</form>
-					
-					<div class="section left">
-						<a wicket:id="resetEmail" href="#">
-							<wicket:message key="link.reset-password">[reset-Email]</wicket:message>
-						</a>
-						|
-						<a wicket:id="requestAccount" href="#">
-							<wicket:message key="link.request-account">[request-account]</wicket:message>
-						</a>
-					</div>
-					
-				</div>
-				
-				<div class="section teaser small">
-					<h4>Wie gehts weiter?</h4>
-					<p>
-						Schaut euch ruhig alles an. 
-						Wenn ihr möchtet, könnt ihr gerne euch und/oder euer Unternehmen 
-						hier erfassen und verlinken. Nach dem Ende der F&amp;F Phase werden natürlich 
-						alle Daten gelöscht.
-					</p>	
-					<p>
-						Auch den Admin-Bereich darf jeder gerne einsehen. Allein um mal eine Vorstellung davon
-						zu bekommen, was diese "Schemas" sind.
-					</p>	
-				</div>
+			<div id="sidebar-right">
+
 			</div>
 		</div>
 	

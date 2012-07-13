@@ -33,7 +33,6 @@ div#wrapper.restricted {
 div#site-header {
 	float: none;
 	clear: both;
-	margin-left:27px;
 }
 
 div#site-header.login {
@@ -55,11 +54,7 @@ div#header-top-line {
 
 div#langage-select{
 	float: left;
-	padding-left: 90px;
-}
-
-div#langage-select.login{
-	padding-left: 10px;
+	padding-left: 15px;
 }
 
 div#user-info {
@@ -95,7 +90,7 @@ div#header-bottom-line {
 
 div#first-level-nav {
 	height: 22px;
-	margin-left:75px;
+	margin-left:5px;
 }
 
 div#second-level-nav {

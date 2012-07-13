@@ -37,7 +37,7 @@ public class ResourceSchemaParserTest {
     @Before
     public void setUp() {
         final Arastreju aras = Arastreju.getInstance(new RBConfig().getArastrejuConfiguration());
-        this.conversation = aras.rootContext().startConversation();
+        this.conversation = aras.openMasterGate().startConversation();
     }
 	
 	// ----------------------------------------------------
