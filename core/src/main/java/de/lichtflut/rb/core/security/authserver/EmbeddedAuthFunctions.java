@@ -3,16 +3,22 @@
  */
 package de.lichtflut.rb.core.security.authserver;
 
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.security.RBCrypt;
+import de.lichtflut.rb.core.security.RBDomain;
+import de.lichtflut.rb.core.security.RBUser;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.security.RBCrypt;
+import static org.arastreju.sge.SNOPS.date;
+import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
 
 /**
  * <p>
@@ -35,13 +41,13 @@ public class EmbeddedAuthFunctions {
 		if (user == null) {
 			return null;
 		}
-		final String credential = SNOPS.string(SNOPS.singleObject(user, Aras.HAS_CREDENTIAL));
+		final String credential = SNOPS.string(SNOPS.singleObject(user, EmbeddedAuthModule.HAS_CREDENTIAL));
 		return RBCrypt.extractSalt(credential);
 	}
 	
 	public static ResourceNode findUserNode(ModelingConversation conversation, String id) {
 		final Query query = conversation.createQuery();
-		query.addField(Aras.IDENTIFIED_BY, id);
+		query.addField(EmbeddedAuthModule.IDENTIFIED_BY, id);
 		final QueryResult result = query.getResult();
 		if (result.size() > 1) {
 			logger.error("More than one user with name '" + id + "' found.");
@@ -52,5 +58,37 @@ public class EmbeddedAuthFunctions {
 			return result.getSingleNode();
 		}
 	}
+
+    public static RBDomain toRBDomain(SemanticNode node) {
+        if (!node.isResourceNode()) {
+            throw new IllegalArgumentException("Value nodes can not represent a domain: " + node);
+        }
+        ResourceNode resource = node.asResource();
+        RBDomain domain = new RBDomain(resource.getQualifiedName());
+        domain.setName(uniqueName(resource));
+        domain.setTitle(string(singleObject(resource, EmbeddedAuthModule.HAS_TITLE)));
+        domain.setDescription(string(singleObject(resource, EmbeddedAuthModule.HAS_DESCRIPTION)));
+        return domain;
+    }
+
+    public static RBUser toRBUser(final ResourceNode userNode) {
+        RBUser user = new RBUser(userNode.getQualifiedName());
+        user.setEmail(string(SNOPS.singleObject(userNode, RBSystem.HAS_EMAIL)));
+        user.setUsername(string(SNOPS.singleObject(userNode, RBSystem.HAS_USERNAME)));
+        user.setLastLogin(date(SNOPS.singleObject(userNode, RBSystem.HAS_LAST_LOGIN)));
+        SemanticNode domain = SNOPS.singleObject(userNode, EmbeddedAuthModule.BELONGS_TO_DOMAIN);
+        if(domain!=null){
+            user.setDomesticDomain(string(singleObject(domain.asResource(), EmbeddedAuthModule.HAS_UNIQUE_NAME)));
+        }
+        return user;
+    }
+
+    public static String uniqueName(SemanticNode node) {
+        if (node != null && node.isResourceNode()) {
+            return string(singleObject(node.asResource(), EmbeddedAuthModule.HAS_UNIQUE_NAME));
+        } else {
+            return null;
+        }
+    }
 
 }

@@ -66,7 +66,7 @@ public class EmbeddedAuthAuthorizationManager {
 	public List<String> getUserRoles(RBUser user, String domain) {
 		final List<String> result = new ArrayList<String>();
 		final ResourceNode userNode = mc().findResource(user.getQualifiedName());
-		for(SemanticNode roleNode : SNOPS.objects(userNode, Aras.HAS_ROLE)) {
+		for(SemanticNode roleNode : SNOPS.objects(userNode, EmbeddedAuthModule.HAS_ROLE)) {
 			String roleDomain = getDomain(roleNode);
 			if (Infra.equals(roleDomain, domain)) {
 				result.add(uniqueName(roleNode));
@@ -84,10 +84,10 @@ public class EmbeddedAuthAuthorizationManager {
 	public Set<String> getUserPermissions(QualifiedName userQN, String domain) {
 		final Set<String> result = new HashSet<String>();
 		final ResourceNode userNode = mc().findResource(userQN);
-		for(SemanticNode roleNode : SNOPS.objects(userNode, Aras.HAS_ROLE)) {
+		for(SemanticNode roleNode : SNOPS.objects(userNode, EmbeddedAuthModule.HAS_ROLE)) {
 			String roleDomain = getDomain(roleNode);
 			if (Infra.equals(roleDomain, domain) && roleNode.isResourceNode()) {
-				for (SemanticNode permission : SNOPS.objects(roleNode.asResource(), Aras.HAS_PERMISSION)) {
+				for (SemanticNode permission : SNOPS.objects(roleNode.asResource(), EmbeddedAuthModule.HAS_PERMISSION)) {
 					result.add(permission.toString());
 				}
 			}
@@ -110,12 +110,12 @@ public class EmbeddedAuthAuthorizationManager {
 		
 		final ResourceNode domainNode = domainManager.findDomainNode(domain);
 		// Remove old roles
-		Set<Statement> oldRoles = userNode.getAssociations(Aras.HAS_ROLE);
+		Set<Statement> oldRoles = userNode.getAssociations(EmbeddedAuthModule.HAS_ROLE);
 		for (Statement stmt : oldRoles) {
 
             SemanticNode role = stmt.getObject();
 
-            SemanticNode currentDomainNode = SNOPS.singleObject(role.asResource(), Aras.BELONGS_TO_DOMAIN);
+            SemanticNode currentDomainNode = SNOPS.singleObject(role.asResource(), EmbeddedAuthModule.BELONGS_TO_DOMAIN);
 
             if (domainNode.equals(currentDomainNode)) {
 				userNode.removeAssociation(stmt);
@@ -129,7 +129,7 @@ public class EmbeddedAuthAuthorizationManager {
 		for (String current : roles) {
 			final ResourceNode roleNode = domainManager.getOrCreateRole(domainNode, current);
 			if (roleNode != null) {
-				userNode.addAssociation(Aras.HAS_ROLE, roleNode);
+				userNode.addAssociation(EmbeddedAuthModule.HAS_ROLE, roleNode);
 			} else {
 				throw new RBAuthException(0, "Role not found: " + current + "@" + domain);
 			}
@@ -141,7 +141,7 @@ public class EmbeddedAuthAuthorizationManager {
 	
 	protected String getDomain(SemanticNode node) {
 		if (node != null && node.isResourceNode()) {
-			final SemanticNode domain = singleObject(node.asResource(), Aras.BELONGS_TO_DOMAIN);
+			final SemanticNode domain = singleObject(node.asResource(), EmbeddedAuthModule.BELONGS_TO_DOMAIN);
 			return uniqueName(domain);
 		} else {
 			return null;
@@ -152,7 +152,7 @@ public class EmbeddedAuthAuthorizationManager {
 	
 	private String uniqueName(SemanticNode node) {
 		if (node != null && node.isResourceNode()) {
-			return string(singleObject(node.asResource(), Aras.HAS_UNIQUE_NAME));
+			return string(singleObject(node.asResource(), EmbeddedAuthModule.HAS_UNIQUE_NAME));
 		} else {
 			return null;
 		}

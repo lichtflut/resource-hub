@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.security;
 import java.io.Serializable;
 import java.util.Date;
 
+import de.lichtflut.rb.core.security.authserver.EmbeddedAuthModule;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.SimpleResourceID;
@@ -44,36 +45,21 @@ public class RBUser implements Serializable {
 	
 	// ----------------------------------------------------
 
-	/**
-	 * Constructor.
-	 * @param userNode The node representing the user.
-	 */
-	public RBUser(final ResourceNode userNode) {
-		this(userNode.getQualifiedName());
-		email = SNOPS.string(SNOPS.singleObject(userNode, RBSystem.HAS_EMAIL));
-		username = SNOPS.string(SNOPS.singleObject(userNode, RBSystem.HAS_USERNAME));
-		SemanticNode domain = SNOPS.singleObject(userNode, Aras.BELONGS_TO_DOMAIN);
-		if(domain!=null){
-            domesticDomain = string(singleObject(domain.asResource(), Aras.HAS_UNIQUE_NAME));
-		}
-		lastLogin = SNOPS.date(SNOPS.singleObject(userNode, RBSystem.HAS_LAST_LOGIN));
-	}
-	
-	/**
+    /**
+     * Creates a new user with a random URI.
+     */
+    public RBUser() {
+        this(new SimpleResourceID().getQualifiedName());
+    }
+
+    /**
 	 * Creates a new user with given URI.
 	 * @param qn The qualified name representing the user.
 	 */
 	public RBUser(final QualifiedName qn) {
 		this.qn = qn;
 	}
-	
-	/**
-	 * Creates a new user with a random URI.
-	 */
-	public RBUser() {
-		this(new SimpleResourceID().getQualifiedName());
-	}
-	
+
 	// ----------------------------------------------------
 	
 	/**
@@ -106,6 +92,10 @@ public class RBUser implements Serializable {
 	public String getDomesticDomain() {
 		return domesticDomain;
 	}
+
+    public void setDomesticDomain(String domesticDomain) {
+        this.domesticDomain = domesticDomain;
+    }
 	
 	public Date getLastLogin() {
 		return lastLogin;
