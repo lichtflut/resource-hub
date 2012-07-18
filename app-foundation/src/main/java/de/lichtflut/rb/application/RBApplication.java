@@ -11,10 +11,15 @@ import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 import org.arastreju.sge.naming.QualifiedName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import de.lichtflut.rb.application.base.LoginPage;
 import de.lichtflut.rb.application.base.LogoutPage;
@@ -26,6 +31,7 @@ import de.lichtflut.rb.application.graphvis.FlowChartInfoVisPage;
 import de.lichtflut.rb.application.graphvis.HierarchyInfoVisPage;
 import de.lichtflut.rb.application.graphvis.PeripheryViewPage;
 import de.lichtflut.rb.application.resourceview.EntityDetailPage;
+import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.conversion.LabelBuilderConverter;
@@ -47,6 +53,10 @@ import de.lichtflut.rb.webck.conversion.SNTimeSpecConverter;
  */
 public abstract class RBApplication extends WebApplication {
 
+	private final Logger logger = LoggerFactory.getLogger(RBApplication.class);
+
+	// ------------------------------------------------------
+	
     public static RBApplication get() {
         return (RBApplication) Application.get();
     }
@@ -100,6 +110,9 @@ public abstract class RBApplication extends WebApplication {
     @Override
     protected void init() {
         super.init();
+
+        getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+
         getRequestCycleListeners().add(new RBRequestCycleListener());
     }
 
@@ -125,4 +138,19 @@ public abstract class RBApplication extends WebApplication {
 		return locator;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		logger.info("Application is beeing destroyed. Free all resources.");
+		
+		final WebApplicationContext wac = 
+			WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+		
+		final RBConfig rbc = (RBConfig) wac.getBean("rbConfig");
+		rbc.getArastrejuConfiguration().close();
+	}
 }
