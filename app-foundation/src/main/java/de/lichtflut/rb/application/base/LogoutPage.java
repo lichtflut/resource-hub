@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.application.base;
 
+import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.application.pages.AbstractBasePage;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -25,13 +26,13 @@ public class LogoutPage extends AbstractBasePage {
 	/**
 	 * Constructor. 
 	 */
-	public LogoutPage(final PageParameters params) {
+	public LogoutPage() {
 		if (WebSession.exists()) {
 			RBWebSession.get().onLogout();
 			WebSession.get().invalidate();
 		}
 		
-		setResponsePage(LoginPage.class);
+		setResponsePage(RBApplication.get().getLoginPage());
 	}
 	
 }

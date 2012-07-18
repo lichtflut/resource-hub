@@ -7,6 +7,7 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.and;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -24,6 +25,8 @@ import de.lichtflut.rb.webck.components.navigation.NavigationBar;
 import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.webck.models.CurrentUserModel;
 import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * <p>
@@ -38,6 +41,11 @@ import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
  */
 @SuppressWarnings("serial")
 public class AdminBasePage extends AbstractBasePage {
+
+    public static ResourceReference ADMIN_CSS =
+            new JavaScriptResourceReference(AdminBasePage.class, "admin-0.1.css");
+
+    // ----------------------------------------------------
 
 	/**
 	 * Default Constructor.
@@ -58,8 +66,14 @@ public class AdminBasePage extends AbstractBasePage {
 	protected Class<? extends Page> getWelcomePage(){
 		return RBApplication.get().getHomePage();
 	}
-	
-	/**
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        response.renderCSSReference(ADMIN_CSS);
+    }
+
+    /**
 	 * {@inheritDoc}
 	 */
 	@Override

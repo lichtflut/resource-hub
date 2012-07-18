@@ -25,8 +25,6 @@ import de.lichtflut.rb.core.schema.model.Datatype;
  */
 public class LiteralConstraint implements Constraint {
 
-	private static final Context ctx = RBSchema.CONTEXT;
-	
 	private ResourceNode node;
 	
 	// ---------------- Constructor -------------------------
@@ -57,7 +55,7 @@ public class LiteralConstraint implements Constraint {
 	}
 
 	public void setLiteralPattern(String pattern) {
-		SNOPS.assure(node, RBSchema.HAS_CONSTRAINT_VALUE, pattern, ctx);
+		SNOPS.assure(node, RBSchema.HAS_CONSTRAINT_VALUE, pattern);
 	}
 	
 	/**

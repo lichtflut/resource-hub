@@ -61,10 +61,10 @@ public class RBWebSession extends WebSession {
     public boolean isAuthenticated() {
         boolean authenticated = context != null && context.getUser() != null;
         if (authenticated) {
-            String currentToken = new CookieUtils().load(AuthModule.COOKIE_SESSION_AUTH);
+            String currentToken = CookieAccess.getInstance().getSessionToken();
             if (currentToken == null)  {
                 LOGGER.warn("User is authenticated but has lost session token! Will set it again. " + token);
-                new CookieUtils().save(AuthModule.COOKIE_SESSION_AUTH, token);
+                CookieAccess.getInstance().setSessionToken(token);
             }
         }
         return authenticated;

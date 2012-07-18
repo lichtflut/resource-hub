@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.application.custom;
 
+import de.lichtflut.rb.application.RBApplication;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
 import de.lichtflut.rb.application.base.LoginPage;
@@ -24,7 +25,7 @@ public class ResetPasswordPage extends AbstractBasePage {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ResetPasswordPage(){
 		this.add(new ResetPasswordPanel("resetPassword"));
-		this.add(new BookmarkablePageLink("backLink", LoginPage.class));
+		this.add(new BookmarkablePageLink("backLink", RBApplication.get().getLoginPage()));
 	}
 	
 	// ------------------------------------------------------

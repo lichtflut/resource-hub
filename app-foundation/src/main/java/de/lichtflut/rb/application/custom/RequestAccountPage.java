@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.application.custom;
 
+import de.lichtflut.rb.application.RBApplication;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -66,7 +67,7 @@ public class RequestAccountPage extends AbstractBasePage {
 
 			@Override
 			public void onCancel() {
-				setResponsePage(LoginPage.class);
+				setResponsePage(RBApplication.get().getLoginPage());
 			}
 		};
 		this.add(registerPanel);

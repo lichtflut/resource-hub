@@ -34,7 +34,7 @@ public class AuthOps extends RBServiceEndpoint {
 	@Produces({MediaType.TEXT_PLAIN})
 	public Response createToken(SystemIdentity loginUser){
 		LoginData loginData = new LoginData();
-		loginData.setId(loginUser.getId());
+		loginData.setLoginID(loginUser.getId());
 		loginData.setPassword(loginUser.getPassword());
 		Response rsp;
 		try {

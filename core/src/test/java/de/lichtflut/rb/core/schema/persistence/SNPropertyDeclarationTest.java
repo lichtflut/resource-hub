@@ -35,11 +35,9 @@ import de.lichtflut.rb.mock.schema.ConstraintsFactory;
 public class SNPropertyDeclarationTest {
 
 	private SNPropertyDeclaration snDecl;
-	private Context ctx;
-	
+
 	@Before
 	public void setUp(){
-		ctx= RBSchema.CONTEXT;
 		snDecl = new SNPropertyDeclaration();
 	}
 
@@ -70,7 +68,7 @@ public class SNPropertyDeclarationTest {
 	public void testGetPublicResourceConstraint() {
 		Constraint constraint = ConstraintsFactory.buildPublicPersonConstraint();
 		
-		snDecl.setConstraint(constraint, ctx);
+		snDecl.setConstraint(constraint);
 		Constraint retrieved = snDecl.getConstraint();
 		
 		assertConstraints(retrieved, constraint);
@@ -84,7 +82,7 @@ public class SNPropertyDeclarationTest {
 	public void testGetPrivateResourceConstraint() {
 		Constraint constraint = ConstraintsFactory.buildPrivatePersonConstraint();
 		
-		snDecl.setConstraint(constraint, ctx);
+		snDecl.setConstraint(constraint);
 		
 		assertConstraints(snDecl.getConstraint(), constraint);
 	}
@@ -96,7 +94,7 @@ public class SNPropertyDeclarationTest {
 	public void testGetPublicLiteralConstraint() {
 		Constraint constraint = ConstraintsFactory.buildPublicEmailConstraint();
 		
-		snDecl.setConstraint(constraint, ctx);
+		snDecl.setConstraint(constraint);
 		Constraint retrieved = snDecl.getConstraint();
 		
 		assertConstraints(retrieved, constraint);
@@ -109,7 +107,7 @@ public class SNPropertyDeclarationTest {
 	public void testGetPrivateLiteralConstraint() {
 		Constraint constraint = ConstraintsFactory.buildPrivateLiteralConstraint();
 		
-		snDecl.setConstraint(constraint, ctx);
+		snDecl.setConstraint(constraint);
 		
 		assertConstraints(snDecl.getConstraint(), constraint);
 	}
@@ -120,7 +118,7 @@ public class SNPropertyDeclarationTest {
 	@Test
 	public void testGetPropertyDescriptor() {
 		ResourceID descriptor = new SimpleResourceID("http://test.lf.de/common#Descriptor");
-		snDecl.setPropertyDescriptor(descriptor, ctx);
+		snDecl.setPropertyDescriptor(descriptor);
 		assertThat(snDecl.getPropertyDescriptor(), equalTo(descriptor));
 	}
 
@@ -129,7 +127,7 @@ public class SNPropertyDeclarationTest {
 	 */
 	@Test
 	public void testGetDatatype() {
-		snDecl.setDatatype(Datatype.RESOURCE, ctx);
+		snDecl.setDatatype(Datatype.RESOURCE);
 		assertThat(snDecl.getDatatype(), equalTo(Datatype.RESOURCE));
 	}
 
@@ -139,7 +137,7 @@ public class SNPropertyDeclarationTest {
 	@Test
 	public void testGetMinOccurs() {
 		int min = 3;
-		snDecl.setMinOccurs(new SNScalar(min), ctx);
+		snDecl.setMinOccurs(new SNScalar(min));
 		assertThat(snDecl.getMinOccurs().getIntegerValue().intValue(), is(min));
 	}
 
@@ -149,7 +147,7 @@ public class SNPropertyDeclarationTest {
 	@Test
 	public void testGetMaxOccurs() {
 		int max = 3;
-		snDecl.setMaxOccurs(new SNScalar(max), ctx);
+		snDecl.setMaxOccurs(new SNScalar(max));
 		assertThat(snDecl.getMaxOccurs().getIntegerValue().intValue(), is(max));
 	}
 

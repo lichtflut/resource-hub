@@ -19,24 +19,7 @@ import org.arastreju.sge.model.SimpleResourceID;
  */
 public interface RB {
 
-	String CTX_NAMESPACE_URI = "http://rb.lichtflut.de/contexts#";
-	
 	String COMMON_NAMESPACE_URI = "http://rb.lichtflut.de/common#";
-	
-	// -- CONTEXTS ----------------------------------------
-	
-	/**
-	 * Represents the schema context. Each schema.based expression has to be applied to this context.
-	 */
-	Context TYPE_SYSTEM_CONTEXT = new SimpleContextID(CTX_NAMESPACE_URI, "TypeSystem");
-	
-	Context SCHEMA_CONTEXT = new SimpleContextID(CTX_NAMESPACE_URI, "Schema");
-	
-	Context DOMAIN_CONTEXT = new SimpleContextID(CTX_NAMESPACE_URI, "Domain");
-	
-	Context PUBLIC_CONTEXT = new SimpleContextID(CTX_NAMESPACE_URI, "Public");
-	
-	Context PRIVATE_CONTEXT = new SimpleContextID(CTX_NAMESPACE_URI, "Private");
 	
 	// ----------------------------------------------------
 

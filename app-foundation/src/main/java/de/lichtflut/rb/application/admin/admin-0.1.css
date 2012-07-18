@@ -1,0 +1,53 @@
+
+div#site-header.admin {
+	background-color: #622;
+	margin-left:0;
+}
+
+table.schema-editor {
+	min-width: 900px;
+}
+
+table.schema-editor div.data-picker {
+	width: 270px;
+}
+
+table.schema-editor input.data-picker-field {
+	width: 200px;
+}
+
+table.schema-editor td {
+	padding: 2px 1px;
+}
+
+li.action-list {	
+	float:none;
+	clear:both;
+	padding: 3px 5px;
+	font-size: 1.1em;
+}
+
+li.action-list a {
+	vertical-align: middle;
+	margin-left: 10px;
+	margin-top: -3px;
+}
+
+li.action-list > span {
+	min-width:250px;
+	padding: 2px 10px 2px 2px;
+	height: 20px; 
+}
+
+li.action-list > span * {
+	float:left; 
+}
+
+div.user-picker {
+	display: inline;
+}
+
+div.user-picker input {
+	width: 220px;
+}
+

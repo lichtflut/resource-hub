@@ -3,29 +3,6 @@
  */
 package de.lichtflut.rb.application.admin.identitymanagment;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.apriori.Aras;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.DefaultSemanticGraph;
-import org.arastreju.sge.model.SemanticGraph;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.query.Query;
-
 import de.lichtflut.rb.application.admin.AdminBasePage;
 import de.lichtflut.rb.application.common.RBPermission;
 import de.lichtflut.rb.application.common.RBRole;
@@ -36,7 +13,6 @@ import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.dialogs.InformationExportDialog;
 import de.lichtflut.rb.webck.components.identities.AddUserToDomainPanel;
 import de.lichtflut.rb.webck.components.identities.UserCreationPanel;
 import de.lichtflut.rb.webck.components.identities.UserDetailPanel;
@@ -44,6 +20,20 @@ import de.lichtflut.rb.webck.components.identities.UserListPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * <p>
@@ -76,9 +66,6 @@ public class IdentityManagementPage extends AdminBasePage {
 	@SpringBean 
 	private ServiceContext context;
 	
-	@SpringBean 
-	private ModelingConversation conversation;
-	
 	// ----------------------------------------------------
 
 	/**
@@ -110,7 +97,7 @@ public class IdentityManagementPage extends AdminBasePage {
 		final Link exportLink = new AjaxFallbackLink("exportLink") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				openDialog(new InformationExportDialog(getDialogID(), createExportModel()));
+				warn("Export has been deactivated.");
 			}
 		};
 		add(exportLink);
@@ -186,22 +173,6 @@ public class IdentityManagementPage extends AdminBasePage {
 			public List<RBUser> load() {
 				final Collection<RBUser> users = authModule.getDomainManager().loadUsers(context.getDomain(), 0, 1000);
 				return new ArrayList<RBUser>(users);
-			}
-		};
-	}
-
-	private IModel<SemanticGraph> createExportModel() {
-		return new AbstractReadOnlyModel<SemanticGraph>() {
-			@Override
-			public SemanticGraph getObject() {
-				final Query query = conversation.createQuery();
-				query.addField(RDF.TYPE, Aras.USER);
-				
-				final SemanticGraph graph = new DefaultSemanticGraph();
-				for (ResourceNode user : query.getResult()) {
-					graph.addStatements(user.getAssociations());
-				}
-				return graph;
 			}
 		};
 	}

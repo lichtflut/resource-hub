@@ -83,8 +83,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	public ResourceSchema findSchemaForType(final ResourceID type) {
 		final SNResourceSchema schemaNode = findSchemaNodeByType(type);
 		if (schemaNode != null) {
-			final ResourceSchema schema = binding.toModelObject(schemaNode);
-			return schema;
+            return binding.toModelObject(schemaNode);
 		} else {
 			return null;
 		}
@@ -187,7 +186,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	 */
 	@Override
 	public void store(final Constraint constraint) {
-		Validate.isTrue(constraint.isPublic(), "Only public type definition may be stopred explicitly.");
+		Validate.isTrue(constraint.isPublic(), "Only public type definition may be stored explicitly.");
 		final ModelingConversation mc = conversation;
 		remove(constraint);
 		mc.attach(constraint.asResourceNode());

@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -142,7 +143,7 @@ public class RBBasePage extends AbstractBasePage {
 		return form;
 	}
 
-	// -----------------------------------------------------
+    // ----------------------------------------------------
 
 	protected NavigationNode createPageNode(final Class<? extends Page> pageClass, final String key) {
 		return new NavigationNodePanel(new ReferenceLink("link", pageClass, new ResourceModel(key)));

@@ -39,11 +39,11 @@ public class LoginData implements Serializable {
 		return password;
 	}
 
-	public String getId() {
+	public String getLoginID() {
 		return id;
 	}
 
-	public void setId(final String id) {
+	public void setLoginID(final String id) {
 		this.id = id;
 	}
 

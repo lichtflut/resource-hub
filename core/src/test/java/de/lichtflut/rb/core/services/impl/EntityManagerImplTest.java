@@ -11,14 +11,11 @@ import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.TypeManager;
 import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.SimpleQueryResult;
@@ -187,9 +184,7 @@ public class EntityManagerImplTest {
 
 	private ResourceNode getUser() {
 		ResourceNode node = new SNResource(new QualifiedName("http://test/user"));
-		node.addAssociation(Aras.IDENTIFIED_BY, new SNValue(ElementaryDataType.STRING, "TestUser"), RB.PRIVATE_CONTEXT);
-		node.addAssociation(Aras.HAS_CREDENTIAL, new SNValue(ElementaryDataType.STRING, "pwd"), RB.PRIVATE_CONTEXT);
-		node.addAssociation(RDF.TYPE, RB.PERSON, RB.TYPE_SYSTEM_CONTEXT);
+		node.addAssociation(RDF.TYPE, RB.PERSON);
 		return node;
 	}
 	

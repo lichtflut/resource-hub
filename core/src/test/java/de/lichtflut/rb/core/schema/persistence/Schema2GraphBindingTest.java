@@ -38,11 +38,9 @@ public class Schema2GraphBindingTest {
 
 	private Schema2GraphBinding binding;
 	private ConstraintResolver resolver;
-	private Context ctx;
 
 	@Before
 	public void setUp(){
-		ctx = RBSchema.CONTEXT;
 		resolver = mock(ConstraintResolver.class);
 	}
 
@@ -63,23 +61,23 @@ public class Schema2GraphBindingTest {
 		ResourceSchema schema = ResourceSchemaFactory.buildPersonSchema();
 
 		SNResource node = new SNResource();
-		SNResourceSchema snSchema = new SNResourceSchema(node, RBSchema.CONTEXT);
-		snSchema.setDescribedType(schema.getDescribedType(), RBSchema.CONTEXT);		
-		snSchema.setLabelExpression(new SNText(schema.getLabelBuilder().getExpression()), RBSchema.CONTEXT);
+		SNResourceSchema snSchema = new SNResourceSchema(node);
+		snSchema.setDescribedType(schema.getDescribedType());
+		snSchema.setLabelExpression(new SNText(schema.getLabelBuilder().getExpression()));
 		
 		SNPropertyDeclaration predecessor = null;
 		for(PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration();
-			snDecl.setPropertyDescriptor(decl.getPropertyDescriptor(), RBSchema.CONTEXT);
-			snDecl.setMinOccurs(new SNScalar(decl.getCardinality().getMinOccurs()), RBSchema.CONTEXT);
-			snDecl.setMaxOccurs(new SNScalar(decl.getCardinality().getMaxOccurs()), RBSchema.CONTEXT);
-			snDecl.setDatatype(decl.getDatatype(), RBSchema.CONTEXT);
-			snDecl.setFieldLabelDefinition(decl.getFieldLabelDefinition(), RBSchema.CONTEXT);
+			snDecl.setPropertyDescriptor(decl.getPropertyDescriptor());
+			snDecl.setMinOccurs(new SNScalar(decl.getCardinality().getMinOccurs()));
+			snDecl.setMaxOccurs(new SNScalar(decl.getCardinality().getMaxOccurs()));
+			snDecl.setDatatype(decl.getDatatype());
+			snDecl.setFieldLabelDefinition(decl.getFieldLabelDefinition());
 			if(decl.hasConstraint()){
-				snDecl.setConstraint(decl.getConstraint(), RBSchema.CONTEXT);
+				snDecl.setConstraint(decl.getConstraint());
 			}
 			if (null != predecessor) {
-				predecessor.setSuccessor(snDecl, RBSchema.CONTEXT);
+				predecessor.setSuccessor(snDecl);
 			}
 			predecessor = snDecl;
 			snSchema.addPropertyDeclaration(snDecl);

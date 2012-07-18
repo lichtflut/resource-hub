@@ -115,11 +115,10 @@ public class SNPropertyDeclaration extends ResourceView {
 	/**
 	 * Set the property declared by this property declaration.
 	 * @param property The property.
-	 * @param context The context.
 	 */
-	public void setPropertyDescriptor(final ResourceID property, final Context context) {
+	public void setPropertyDescriptor(final ResourceID property) {
 		if (!Infra.equals(getPropertyDescriptor(), property)){
-			SNOPS.assure(this, RBSchema.HAS_DESCRIPTOR, property, context);
+			SNOPS.assure(this, RBSchema.HAS_DESCRIPTOR, property);
 		}
 	}
 
@@ -139,11 +138,10 @@ public class SNPropertyDeclaration extends ResourceView {
 	/**
 	 * Sets the {@link Datatype}
 	 * @param datatype
-	 * @param context
 	 */
-	public void setDatatype(final Datatype datatype, final Context context){
+	public void setDatatype(final Datatype datatype){
 		if(datatype != null){
-			SNOPS.assure(this, RBSchema.HAS_DATATYPE, datatype.name(), context);
+			SNOPS.assure(this, RBSchema.HAS_DATATYPE, datatype.name());
 		}
 	}
 	
@@ -163,11 +161,10 @@ public class SNPropertyDeclaration extends ResourceView {
 	/**
 	 * Sets the min. occurrences
 	 * @param minOccurs -
-	 * @param context -
 	 */
-	public void setMinOccurs(final SNScalar minOccurs, final Context context) {
+	public void setMinOccurs(final SNScalar minOccurs) {
 		if (!Infra.equals(getMinOccurs(), minOccurs)){
-			SNOPS.assure(this, RBSchema.MIN_OCCURS, minOccurs, context);
+			SNOPS.assure(this, RBSchema.MIN_OCCURS, minOccurs);
 		}
 	}
 
@@ -187,36 +184,31 @@ public class SNPropertyDeclaration extends ResourceView {
 	/**
 	 * Sets the max. occurrences
 	 * @param maxOccurs -
-	 * @param context -
 	 */
-	public void setMaxOccurs(final SNScalar maxOccurs, final Context context) {
+	public void setMaxOccurs(final SNScalar maxOccurs) {
 		if (!Infra.equals(getMaxOccurs(), maxOccurs)){
-			SNOPS.assure(this, RBSchema.MAX_OCCURS, maxOccurs, context);
+			SNOPS.assure(this, RBSchema.MAX_OCCURS, maxOccurs);
 		}
 	}
 	
 	/**
 	 * Sets the constraint.
 	 * @param constraint
-	 * @param context
 	 */
-	public void setConstraint(final Constraint constraint, Context context){
-		SNOPS.assure(this, RBSchema.HAS_CONSTRAINT, constraint.asResourceNode(), context);
+	public void setConstraint(final Constraint constraint){
+		SNOPS.assure(this, RBSchema.HAS_CONSTRAINT, constraint.asResourceNode());
 	}
 
 	/**
 	 * Set the FieldLabel.
-	 * @param def
-	 * @param ctx
+	 * @param def The field label definition
 	 */
-	public void setFieldLabelDefinition(final FieldLabelDefinition def, Context ctx){
+	public void setFieldLabelDefinition(final FieldLabelDefinition def){
 		SNOPS.associate(this, RBSystem.HAS_FIELD_LABEL, new SNText(def.getDefaultLabel()));
 	}
 	
 	/**
-	 * Set the FieldLabel.
-	 * @param def
-	 * @param ctx
+	 * Get the FieldLabel.
 	 */
 	public FieldLabelDefinition getFieldLabelDefinition(){
 		final String defaultName = getPropertyDescriptor().getQualifiedName().getSimpleName();

@@ -56,7 +56,7 @@
 //	// Testcase initializing
 //	static {
 //		// Init test-user identity
-//		TEST_USER.setId("test@test.de");
+//		TEST_USER.setLoginID("test@test.de");
 //		TEST_USER.setPassword("test");
 //		TEST_USER.setUsername("test");
 //		

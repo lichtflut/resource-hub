@@ -48,12 +48,12 @@ public abstract class RBCrypt {
 			} else {
 				crypted = checkedSalt + crypted;
 			}
-			crypted = Crypt.md5Hex(crypted);
+			crypted = md5Hex(crypted);
 		}
 		return buildCredentialString(crypted, checkedSalt);
 	}
-	
-	/**
+
+    /**
 	 * Encrypts a password with a default-salt.
 	 * @param password The password to encrypt.
 	 * @return credential-String: crypt with the salt included (separated by delimiter '#').
@@ -124,7 +124,9 @@ public abstract class RBCrypt {
 			sb.append(c);
 		}
 		return sb.toString();
-		
-		
 	}
+
+    public static String md5Hex(String plain) {
+        return Crypt.md5Hex(plain);
+    }
 }

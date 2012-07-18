@@ -100,25 +100,25 @@ public class Schema2GraphBinding {
 			return null;
 		}
 		final SNResource node = new SNResource();
-		final SNResourceSchema sn = new SNResourceSchema(node, RBSchema.CONTEXT);
-		sn.setDescribedType(schema.getDescribedType(), RBSchema.CONTEXT);
+		final SNResourceSchema sn = new SNResourceSchema(node);
+		sn.setDescribedType(schema.getDescribedType());
 		if (schema.getLabelBuilder() != null && schema.getLabelBuilder().getExpression() != null) {
-			sn.setLabelExpression(new SNText(schema.getLabelBuilder().getExpression()), RBSchema.CONTEXT);
+			sn.setLabelExpression(new SNText(schema.getLabelBuilder().getExpression()));
 		}
 		
 		SNPropertyDeclaration predecessor = null;
 		for(PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration();
-			snDecl.setPropertyDescriptor(decl.getPropertyDescriptor(), RBSchema.CONTEXT);
-			snDecl.setMinOccurs(minAsScalar(decl.getCardinality()), RBSchema.CONTEXT);
-			snDecl.setMaxOccurs(maxAsScalar(decl.getCardinality()), RBSchema.CONTEXT);
-			snDecl.setDatatype(decl.getDatatype(), RBSchema.CONTEXT);
+			snDecl.setPropertyDescriptor(decl.getPropertyDescriptor());
+			snDecl.setMinOccurs(minAsScalar(decl.getCardinality()));
+			snDecl.setMaxOccurs(maxAsScalar(decl.getCardinality()));
+			snDecl.setDatatype(decl.getDatatype());
 			setFieldLabels(snDecl, decl.getFieldLabelDefinition());
 			if(decl.hasConstraint()){
-				snDecl.setConstraint(decl.getConstraint(), RBSchema.CONTEXT);
+				snDecl.setConstraint(decl.getConstraint());
 			}
 			if (null != predecessor) {
-				predecessor.setSuccessor(snDecl, RBSchema.CONTEXT);
+				predecessor.setSuccessor(snDecl);
 			}
 			predecessor = snDecl;
 			sn.addPropertyDeclaration(snDecl);

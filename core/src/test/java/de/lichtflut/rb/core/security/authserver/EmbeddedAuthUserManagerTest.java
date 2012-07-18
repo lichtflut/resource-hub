@@ -41,7 +41,7 @@ public class EmbeddedAuthUserManagerTest {
 	@Before
 	public void initMocks() {
 		MockitoAnnotations.initMocks(this);
-		gate = Arastreju.getInstance().rootContext();
+		gate = Arastreju.getInstance().openMasterGate();
 	}
 
 	@After

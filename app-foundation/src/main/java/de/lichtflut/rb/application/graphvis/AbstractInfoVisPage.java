@@ -50,18 +50,7 @@ public abstract class AbstractInfoVisPage extends AbstractBasePage {
 		add(createInfoVisPanel("infovis", new SimpleResourceID(ridParam.toString())));
 		
 	}
-	
-	// ----------------------------------------------------
-	
-	/** 
-	* {@inheritDoc}
-	*/
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		super.renderHead(response);
-		response.renderCSSReference("css/infovis.css");
-	}
-	
+
 	// ----------------------------------------------------
 	
 	/**

@@ -128,7 +128,6 @@ public abstract class TestBase extends junit.framework.TestCase {
 			while(!identityStack.empty()){
 				deleteSystemUser(identityStack.pop());
 			}
-			deleteSystemDomains();
 			//Is not necessary anymore, still creating problems with multiple test classes
 			FileUtils.deleteRecursively(new File("target/test/storage/"));
 		} catch (Exception any) {
@@ -372,17 +371,6 @@ public abstract class TestBase extends junit.framework.TestCase {
 		rbUser.setEmail(identity.getId());
 		rbUser.setUsername(identity.getUsername());
 		authmodule.getUserManagement().deleteUser(rbUser);
-	}
-	
-	public void deleteSystemDomains(){
-		List<ResourceNode> domains = findResourcesByType(provider.getConversation(), Aras.DOMAIN);
-		for (ResourceNode resourceNode : domains) {
-			//Dont delete the root domain to prevent some errors in loading system identities
-            String domainName = string(singleObject(resourceNode, Aras.HAS_UNIQUE_NAME));
-            if(!DomainIdentifier.MASTER_DOMAIN.equals(domainName)){
-				getProvider().getConversation().remove(resourceNode);
-			}
-		}
 	}
 	
 	public void registerSystemUser(SystemIdentity identity) {

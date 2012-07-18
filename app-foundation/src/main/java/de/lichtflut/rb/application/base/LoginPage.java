@@ -3,29 +3,6 @@
  */
 package de.lichtflut.rb.application.base;
 
-import java.util.Set;
-
-import org.apache.wicket.Application;
-import org.apache.wicket.RestartResponseException;
-import org.apache.wicket.RuntimeConfigurationType;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.PasswordTextField;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.cookies.CookieUtils;
-import org.arastreju.sge.security.LoginException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.application.common.RBPermission;
 import de.lichtflut.rb.application.custom.RequestAccountPage;
@@ -36,13 +13,24 @@ import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.AuthenticationService;
 import de.lichtflut.rb.core.security.LoginData;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.webck.common.CookieAccess;
 import de.lichtflut.rb.webck.common.RBWebSession;
-import de.lichtflut.rb.webck.components.fields.FieldLabel;
+import de.lichtflut.rb.webck.components.login.LoginPanel;
 import de.lichtflut.rb.webck.models.infra.VersionInfoModel;
+import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.security.LoginException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 /**
  * <p>
- * Login page.
+ *  Standard login page for RB applications.
  * </p>
  * 
  * <p>
@@ -66,13 +54,18 @@ public class LoginPage extends AbstractBasePage {
 	/**
 	 * Constructor.
 	 */
-	public LoginPage(final PageParameters params) {
+	public LoginPage() {
 
 		checkCookies();
 
 		redirectIfAlreadyLoggedIn();
 
-		add(createLoginForm());
+		add(new LoginPanel("loginPanel") {
+            @Override
+            public void onLogin(LoginData loginData) {
+                tryLogin(loginData);
+            }
+        });
 
 		add(new Link<String>("resetEmail") {
 			@Override
@@ -91,37 +84,6 @@ public class LoginPage extends AbstractBasePage {
 		addVersionInfo();
 	}
 
-	// ----------------------------------------------------
-	
-	protected Form<LoginData> createLoginForm() {
-		final LoginData loginData = new LoginData();
-		final Form<LoginData> form = new Form<LoginData>("form", new CompoundPropertyModel<LoginData>(loginData));
-
-		form.add(new FeedbackPanel("feedback"));
-
-		final TextField<String> idField = new TextField<String>("id");
-		idField.setRequired(true);
-		idField.setLabel(new ResourceModel("label.id"));
-		form.add(idField, new FieldLabel(idField));
-
-		final PasswordTextField passwordField = new PasswordTextField("password");
-		passwordField.setRequired(true);
-		passwordField.setLabel(new ResourceModel("label.password"));
-		form.add(passwordField, new FieldLabel(passwordField));
-
-		form.add(new CheckBox("stayLoggedIn"));
-
-		final Button button = new Button("login") {
-			@Override
-			public void onSubmit() {
-				tryLogin(loginData);
-			}
-		};
-		form.add(button);
-		form.setDefaultButton(button);
-		return form;
-	}
-	
 	// ----------------------------------------------------
 
 	/**
@@ -162,7 +124,7 @@ public class LoginPage extends AbstractBasePage {
 			}
 			if (loginData.getStayLoggedIn()) {
 				final String token = authService.createRememberMeToken(user, loginData);
-				cookieUtils().save(AuthModule.COOKIE_REMEMBER_ME, token);
+                CookieAccess.getInstance().setRememberMeToken(token);
 				logger.info("Added 'remember-me' cookie for {}", user.getName());
 			}
 		} catch (LoginException e) {
@@ -171,7 +133,7 @@ public class LoginPage extends AbstractBasePage {
 	}
 	
 	private void checkCookies() {
-		final String cookie = new CookieUtils().load(AuthModule.COOKIE_REMEMBER_ME);
+        final String cookie = CookieAccess.getInstance().getRememberMeToken();
 		if (cookie != null) {
 			final RBUser user = authService.loginByToken(cookie);
 			if (user != null) {
@@ -205,14 +167,7 @@ public class LoginPage extends AbstractBasePage {
 	private void initializeUserSession(RBUser user) {
         String token = authService.createSessionToken(user);
         new ServiceContextInitializer().init(user, user.getDomesticDomain(), token);
-		cookieUtils().save(AuthModule.COOKIE_SESSION_AUTH, token);
-	}
-	
-	private CookieUtils cookieUtils() {
-		//boolean prodMode = RuntimeConfigurationType.DEPLOYMENT.equals(Application.get().getConfigurationType());
-		CookieUtils cu = new CookieUtils();
-		//cu.getSettings().setSecure(prodMode);
-		return cu;
+        CookieAccess.getInstance().setSessionToken(token);
 	}
 
 }

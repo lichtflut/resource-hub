@@ -3,19 +3,13 @@
  */
 package de.lichtflut.rb.core.security.authserver;
 
-import static org.arastreju.sge.SNOPS.singleObject;
-import static org.arastreju.sge.SNOPS.string;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.security.DomainInitializer;
+import de.lichtflut.rb.core.security.DomainManager;
+import de.lichtflut.rb.core.security.RBDomain;
+import de.lichtflut.rb.core.security.RBUser;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
@@ -27,11 +21,17 @@ import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.security.DomainInitializer;
-import de.lichtflut.rb.core.security.DomainManager;
-import de.lichtflut.rb.core.security.RBDomain;
-import de.lichtflut.rb.core.security.RBUser;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static de.lichtflut.rb.core.security.authserver.EmbeddedAuthFunctions.toRBDomain;
+import static de.lichtflut.rb.core.security.authserver.EmbeddedAuthFunctions.toRBUser;
+import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
 
 /**
  * <p>
@@ -83,7 +83,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		if (domainNode == null) {
 			return null;
 		}
-		return toRBDomain(domainNode);
+		return EmbeddedAuthFunctions.toRBDomain(domainNode);
 	}
 
 	/** 
@@ -92,14 +92,14 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	@Override
 	public RBDomain registerDomain(RBDomain domain) {
 		final ResourceNode node = new SNResource();
-		node.addAssociation(Aras.HAS_UNIQUE_NAME, new SNText(domain.getName()));
+		node.addAssociation(EmbeddedAuthModule.HAS_UNIQUE_NAME, new SNText(domain.getName()));
 		if (domain.getTitle() != null) {
-			node.addAssociation(Aras.HAS_TITLE, new SNText(domain.getTitle()));
+			node.addAssociation(EmbeddedAuthModule.HAS_TITLE, new SNText(domain.getTitle()));
 		}
 		if (domain.getDescription() != null) {
-			node.addAssociation(Aras.HAS_DESCRIPTION, new SNText(domain.getDescription()));
+			node.addAssociation(EmbeddedAuthModule.HAS_DESCRIPTION, new SNText(domain.getDescription()));
 		}
-		node.addAssociation(RDF.TYPE, Aras.DOMAIN);
+		node.addAssociation(RDF.TYPE, EmbeddedAuthModule.DOMAIN);
 		final RBDomain created = toRBDomain(node);
 		
 		final ModelingConversation mc = mc();
@@ -139,7 +139,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	@Override
 	public Collection<RBDomain> getAllDomains() {
 		final List<RBDomain> result = new ArrayList<RBDomain>();
-		final Query query = query().addField(RDF.TYPE, Aras.DOMAIN);
+		final Query query = query().addField(RDF.TYPE, EmbeddedAuthModule.DOMAIN);
 		for (ResourceNode domainNode : query.getResult()) {
 			result.add(toRBDomain(domainNode));
 		}
@@ -156,8 +156,8 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		if (userNode == null) {
 			throw new IllegalArgumentException("User not found");
 		}
-		for (Statement stmt : userNode.getAssociations(Aras.HAS_ALTERNATE_DOMAIN)) {
-			result.add(toRBDomain(stmt.getObject()));
+		for (Statement stmt : userNode.getAssociations(EmbeddedAuthModule.HAS_ALTERNATE_DOMAIN)) {
+			result.add(EmbeddedAuthFunctions.toRBDomain(stmt.getObject()));
 		}
 		result.add(findDomain(user.getDomesticDomain()));
 		return result;
@@ -172,15 +172,15 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		final List<RBUser> result = new ArrayList<RBUser>();
 		final Query query = query();
 		query.beginAnd();
-			query.addField(RDF.TYPE, Aras.USER);
+			query.addField(RDF.TYPE, EmbeddedAuthModule.USER);
 			query.beginOr();
-				query.addField(Aras.BELONGS_TO_DOMAIN, domain.getQualifiedName());
-				query.addField(Aras.HAS_ALTERNATE_DOMAIN, domain.getQualifiedName());
+				query.addField(EmbeddedAuthModule.BELONGS_TO_DOMAIN, domain.getQualifiedName());
+				query.addField(EmbeddedAuthModule.HAS_ALTERNATE_DOMAIN, domain.getQualifiedName());
 				query.end();
 			query.end();
 		query.end();
 		for (ResourceNode userNode : query.getResult().toList(offset, max)) {
-			result.add(new RBUser(userNode));
+			result.add(toRBUser(userNode));
 		}
 		return result;
 	}
@@ -190,7 +190,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	public Collection<String> getRoles(String domain) {
 		final ResourceNode domainNode = findDomainNode(domain);
 		Collection<String> result = new ArrayList<String>();
-		for (SemanticNode current : SNOPS.objects(domainNode, Aras.DEFINES_ROLE)) {
+		for (SemanticNode current : SNOPS.objects(domainNode, EmbeddedAuthModule.DEFINES_ROLE)) {
 			result.add(uniqueName(current));
 		}
 		return result;
@@ -203,7 +203,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 			return Collections.emptyList();
 		}
 		Collection<String> result = new ArrayList<String>();
-		for (SemanticNode current : SNOPS.objects(roleNode, Aras.HAS_PERMISSION)) {
+		for (SemanticNode current : SNOPS.objects(roleNode, EmbeddedAuthModule.HAS_PERMISSION)) {
 			result.add(current.asValue().getStringValue());
 		}
 		return result;
@@ -212,7 +212,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	public void registerRole(String domain, String role, Set<String> permissions) {
 		final ResourceNode domainNode = findDomainNode(domain);
 		final ResourceNode roleNode = getOrCreateRole(domainNode, role);
-		SNOPS.assure(roleNode, Aras.HAS_PERMISSION, toSemanticNodes(permissions));
+		SNOPS.assure(roleNode, EmbeddedAuthModule.HAS_PERMISSION, toSemanticNodes(permissions));
 		logger.info("Registered permissions {} for role {}.", permissions, role + "@" + uniqueName(domainNode));
 	}
 	
@@ -223,9 +223,9 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 			throw new IllegalArgumentException("Domain name may not be null.");
 		}
 		final Query query = query()
-				.addField(RDF.TYPE, Aras.DOMAIN)
+				.addField(RDF.TYPE, EmbeddedAuthModule.DOMAIN)
 				.and()
-				.addField(Aras.HAS_UNIQUE_NAME, domain);
+				.addField(EmbeddedAuthModule.HAS_UNIQUE_NAME, domain);
 		final ResourceNode domainNode = query.getResult().getSingleNode();
 		return domainNode;
 	}
@@ -234,27 +234,15 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		ResourceNode roleNode = getRole(domainNode, role);
 		if (roleNode == null) {
 			roleNode = new SNResource();
-			domainNode.addAssociation(Aras.DEFINES_ROLE, roleNode);
-			roleNode.addAssociation(Aras.BELONGS_TO_DOMAIN, domainNode);
-			roleNode.addAssociation(Aras.HAS_UNIQUE_NAME, new SNText(role));
+			domainNode.addAssociation(EmbeddedAuthModule.DEFINES_ROLE, roleNode);
+			roleNode.addAssociation(EmbeddedAuthModule.BELONGS_TO_DOMAIN, domainNode);
+			roleNode.addAssociation(EmbeddedAuthModule.HAS_UNIQUE_NAME, new SNText(role));
 			logger.info("Registered role {} for domain {}.", role, uniqueName(domainNode));
 		}
 		return roleNode;
 	}
 	
 	// ----------------------------------------------------
-	
-	private RBDomain toRBDomain(SemanticNode node) {
-		if (!node.isResourceNode()) {
-			throw new IllegalArgumentException("Value nodes can not represent a domain: " + node);
-		} 
-		ResourceNode resource = node.asResource();
-		RBDomain domain = new RBDomain(resource.getQualifiedName());
-		domain.setName(uniqueName(resource));
-		domain.setTitle(string(singleObject(resource, Aras.HAS_TITLE)));
-		domain.setDescription(string(singleObject(resource, Aras.HAS_DESCRIPTION)));
-		return domain;
-	}
 	
 	private Set<SNText> toSemanticNodes(Collection<String> values) {
 		final Set<SNText> result = new HashSet<SNText>();
@@ -265,7 +253,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	}
 	
 	private ResourceNode getRole(ResourceNode domainNode, String role) {
-		for (SemanticNode current : SNOPS.objects(domainNode, Aras.DEFINES_ROLE)) {
+		for (SemanticNode current : SNOPS.objects(domainNode, EmbeddedAuthModule.DEFINES_ROLE)) {
 			String currentName = uniqueName(current);
 			if (role.equals(currentName)) {
 				return current.asResource();
@@ -276,7 +264,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	
 	private String uniqueName(SemanticNode node) {
 		if (node != null && node.isResourceNode()) {
-			return string(singleObject(node.asResource(), Aras.HAS_UNIQUE_NAME));
+			return string(singleObject(node.asResource(), EmbeddedAuthModule.HAS_UNIQUE_NAME));
 		} else {
 			return null;
 		}

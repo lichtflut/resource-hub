@@ -6,10 +6,7 @@ package de.lichtflut.rb.core.security.authserver;
 import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.security.RBUser;
 import junit.framework.Assert;
-import org.arastreju.sge.Arastreju;
-import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.naming.QualifiedName;
@@ -82,7 +79,7 @@ public class EmbeddedAuthAuthorizationManagerTest {
 
         authManager.setUserRoles(user, "domain-z", Arrays.asList(ROLE_A, ROLE_C));
 
-        Assert.assertEquals(4, userNode.getAssociations(Aras.HAS_ROLE).size());
+        Assert.assertEquals(4, userNode.getAssociations(EmbeddedAuthModule.HAS_ROLE).size());
 
 	}
 
