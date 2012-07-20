@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.dialogs;
 
 import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.io.ReportingStatementImporter;
+import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -18,6 +19,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.context.Context;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.io.SemanticIOException;
@@ -42,11 +44,14 @@ import java.util.List;
  */
 public class InformationImportDialog extends AbstractRBDialog {
 
-	private static Logger logger = LoggerFactory.getLogger(InformationImportDialog.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(InformationImportDialog.class);
 	
-	@SpringBean(name="conversation")
+	@SpringBean
 	private ModelingConversation conversation;
-	
+
+    @SpringBean
+    private DomainOrganizer organizer;
+
 	// ----------------------------------------------------
 	
 	/**
@@ -57,13 +62,20 @@ public class InformationImportDialog extends AbstractRBDialog {
 		super(id);
 		
 		final Form form = new Form("form");
-		final IModel<String> format = new Model<String>("RDF-XML");
+
+        final IModel<String> format = new Model<String>("RDF-XML");
 		form.add(new DropDownChoice<String>("format", format, getChoices()));
 
-		final FileUploadField uploadField = new FileUploadField("file");
+        final IModel<Context> targetContext = new Model<Context>();
+        form.add(new DropDownChoice<Context>("targetContext", targetContext, getAvailableContexts()));
+
+
+
+        final FileUploadField uploadField = new FileUploadField("file");
 		uploadField.setRequired(true);
 		form.add(uploadField);
-		form.add(new AjaxButton("upload", form) {
+
+        form.add(new AjaxButton("upload", form) {
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				importUpload(uploadField.getFileUploads(), format);
@@ -84,7 +96,7 @@ public class InformationImportDialog extends AbstractRBDialog {
 	// ----------------------------------------------------
 	
 	private ListModel<String> getChoices() {
-		return new ListModel<String>(Arrays.asList(new String [] {"RDF-XML", "JSON", "N3"}));
+		return new ListModel<String>(Arrays.asList("RDF-XML", "JSON", "N3"));
 	}
 	
 	private void importUpload(final List<FileUpload> uploadList, final IModel<String> format) {
@@ -103,12 +115,12 @@ public class InformationImportDialog extends AbstractRBDialog {
 				tx.success();
 				report.success();
 			} catch (IOException e) {
-				logger.error("Import failed.", e);
+				LOGGER.error("Import failed.", e);
 				report.setAdditionalInfo("[" +upload.getClientFileName() +"] " +e.getMessage());
 				report.error();
 				tx.fail();
 			} catch (SemanticIOException e) {
-				logger.error("Import failed.", e);
+				LOGGER.error("Import failed.", e);
 				report.setAdditionalInfo("[" +upload.getClientFileName() +"] " +e.getMessage());
 				report.error();
 				tx.fail();
@@ -125,5 +137,8 @@ public class InformationImportDialog extends AbstractRBDialog {
 		}
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<IOReport>(endReport, ModelChangeEvent.IO_REPORT));
 	}
-	
+
+    public List<Context> getAvailableContexts() {
+        return organizer.getContexts();
+    }
 }

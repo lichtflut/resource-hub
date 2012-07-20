@@ -133,7 +133,7 @@
 		<dependencies>
 			<dependency>
 				<groupId>org.arastreju</groupId>
-				<artifactId>arastreju.neo4j</artifactId>
+				<artifactId>arastreju-neo4j</artifactId>
 				<version>${arastreju.version}</version>
 			</dependency>
 			<dependency>

@@ -3,11 +3,10 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
-import java.util.List;
-
-import org.arastreju.ogm.annotations.EntityNode;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+
+import java.util.List;
 
 /**
  * <p>
@@ -20,7 +19,6 @@ import org.arastreju.sge.model.nodes.ResourceNode;
  *
  * @author Oliver Tigges
  */
-@EntityNode()
 public interface Perspective extends ResourceNode {
 
 	ResourceID getID();
