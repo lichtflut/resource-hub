@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.components.dialogs;
 import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.io.ReportingStatementImporter;
 import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -63,27 +64,21 @@ public class InformationImportDialog extends AbstractRBDialog {
 		
 		final Form form = new Form("form");
 
-        final IModel<String> format = new Model<String>("RDF-XML");
-		form.add(new DropDownChoice<String>("format", format, getChoices()));
-
         final IModel<Context> targetContext = new Model<Context>();
         form.add(new DropDownChoice<Context>("targetContext", targetContext, getAvailableContexts()));
 
-
+        final IModel<String> format = new Model<String>("RDF-XML");
+		form.add(new DropDownChoice<String>("format", format, getChoices()));
 
         final FileUploadField uploadField = new FileUploadField("file");
 		uploadField.setRequired(true);
 		form.add(uploadField);
 
-        form.add(new AjaxButton("upload", form) {
-			@Override
-			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+        form.add(new RBDefaultButton("upload") {
+            @Override
+            protected void applyActions(AjaxRequestTarget target, Form<?> form) {
 				importUpload(uploadField.getFileUploads(), format);
 				close(target);
-			}
-			@Override
-			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
-				target.add(form);
 			}
 		});
 		

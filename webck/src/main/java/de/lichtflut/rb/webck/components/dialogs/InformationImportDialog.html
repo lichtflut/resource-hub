@@ -9,12 +9,36 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
-	
-	   <form wicket:id="form">
-           <select wicket:id="format"></select>
-           <input type="file" multiple wicket:id="file" />
-           <button wicket:id="upload"><wicket:message key="button.upload"></wicket:message></button>
-       </form>
+
+    <form wicket:id="form">
+
+        <div class="input-panel">
+
+           <div class="form-field">
+               <label for="targetContext"><wicket:message key="label.target-context"/></label>
+               <select wicket:id="targetContext"></select>
+           </div>
+
+           <div class="form-field">
+               <label for="format"><wicket:message key="label.format"/></label>
+               <select wicket:id="format"></select>
+           </div>
+
+           <div class="form-field">
+               <div>
+                    <label for="file"><wicket:message key="label.files"/></label>
+               </div>
+               <input type="file" multiple wicket:id="file" />
+           </div>
+
+           <div class="button-bar">
+                <button wicket:id="upload" class="default-button">
+                    <wicket:message key="button.upload"></wicket:message>
+                </button>
+           </div>
+
+        </div>
+    </form>
 	
 </wicket:panel>
 </html>
