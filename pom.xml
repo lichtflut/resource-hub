@@ -15,7 +15,7 @@
 		<module>app-foundation</module>
   </modules>
 	<properties>
-		<arastreju.version>0.7.3-SNAPSHOT</arastreju.version>
+		<arastreju.version>0.7.3</arastreju.version>
         <jersey.version>1.8</jersey.version>
 	</properties>
 	<build>
