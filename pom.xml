@@ -4,7 +4,7 @@
 	<groupId>de.lichtflut</groupId>
 	<artifactId>lf.resource-browser</artifactId>
 	<name>Resource Browser</name>
-	<version>0.4.2-SNAPSHOT</version>
+	<version>0.4.3-SNAPSHOT</version>
 	<description>lichtflut Resource Browser Project</description>
 	<packaging>pom</packaging>
 	<modules>
@@ -119,9 +119,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.3</version>
-				<configuration>
-					<tagNameFormat>RELEASE_${project.version}</tagNameFormat>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
