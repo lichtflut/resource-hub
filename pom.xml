@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
-	<groupId>de.lichtflut</groupId>
+	<groupId>de.lichtflut.rb</groupId>
 	<artifactId>lf.resource-browser</artifactId>
 	<name>Resource Browser</name>
-	<version>0.4.4-SNAPSHOT</version>
+	<version>0.4.6-SNAPSHOT</version>
 	<description>lichtflut Resource Browser Project</description>
 	<packaging>pom</packaging>
 	
@@ -24,11 +24,11 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				<plugin>
+				<!--plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.3.2</version>
-				</plugin>
+				</plugin-->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
