@@ -103,11 +103,7 @@ public class EntityPanel extends Panel {
 	
 	private boolean isInViewMode() {
 		final EntityBrowsingStep step = RBWebSession.get().getHistory().getCurrentStep();
-		if (step != null) {
-			return BrowsingState.VIEW.equals(step.getState());
-		} else {
-			return true;
-		}
+        return step == null || BrowsingState.VIEW.equals(step.getState());
 	}
 	
 }

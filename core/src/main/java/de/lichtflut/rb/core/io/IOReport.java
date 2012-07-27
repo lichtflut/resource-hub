@@ -96,30 +96,31 @@ public class IOReport implements Serializable{
 	 * @param additionalReport
 	 */
 	public void merge(IOReport additionalReport) {
-		if(additionalReport != null) {
-			if(!this.getStatus().equals(additionalReport.getStatus())) {
-				this.status = ReportStatus.UNDEFINED;
-			}
-			if(!additionalReport.getAdditionalInfo().isEmpty()) {
-				if(this.additionalInfo.isEmpty()) {
-					this.additionalInfo = additionalReport.getAdditionalInfo();
-				} else {
-					this.additionalInfo += INFO_SEPERATOR +additionalReport.getAdditionalInfo();
-				}
-			}
-			for (Entry<String, Integer> newEntry : additionalReport.getQuantityMap().entrySet()) {
-				String key = newEntry.getKey();
-				Integer value = newEntry.getValue();
-				if(this.getQuantityMap().containsKey(key)) {
-					Integer oldValue = this.getQuantityMap().get(key);
-					this.getQuantityMap().put(key, oldValue + value);
-				} else {
-					this.getQuantityMap().put(key, value);
-				}
-			}
-			stopTimer();
-		}
-	}
+        if (additionalReport == null) {
+            return;
+        }
+        if(ReportStatus.ERROR.equals(additionalReport.getStatus())) {
+            this.status = ReportStatus.ERROR;
+        }
+        if(!additionalReport.getAdditionalInfo().isEmpty()) {
+            if(this.additionalInfo.isEmpty()) {
+                this.additionalInfo = additionalReport.getAdditionalInfo();
+            } else {
+                this.additionalInfo += INFO_SEPERATOR +additionalReport.getAdditionalInfo();
+            }
+        }
+        for (Entry<String, Integer> newEntry : additionalReport.getQuantityMap().entrySet()) {
+            String key = newEntry.getKey();
+            Integer value = newEntry.getValue();
+            if(this.getQuantityMap().containsKey(key)) {
+                Integer oldValue = this.getQuantityMap().get(key);
+                this.getQuantityMap().put(key, oldValue + value);
+            } else {
+                this.getQuantityMap().put(key, value);
+            }
+        }
+        stopTimer();
+    }
 	
 	// -- GET-THE-INFOS ------------------------------------
 	
@@ -151,7 +152,7 @@ public class IOReport implements Serializable{
 		if(getStatus().equals(ReportStatus.SUCCESS)) {
 			color = "#00D900";
 		}
-		sb.append("<span style='background-color:" +color +";'>Status: <b>" +getStatus() +"</b></span><br/>");
+		sb.append("<span style='background-color:").append(color).append(";'>Status: <b>").append(getStatus()).append("</b></span><br/>");
 
 		sb.append("<span>Duration: " +getDuration() +"ms</span><br/>");
 		

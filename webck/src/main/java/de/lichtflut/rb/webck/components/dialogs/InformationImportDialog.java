@@ -6,10 +6,10 @@ package de.lichtflut.rb.webck.components.dialogs;
 import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.io.ReportingStatementImporter;
 import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.core.services.InformationManager;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -53,10 +53,13 @@ public class InformationImportDialog extends AbstractRBDialog {
     @SpringBean
     private DomainOrganizer organizer;
 
+    @SpringBean
+    private InformationManager informationManager;
+
 	// ----------------------------------------------------
 	
 	/**
-	 * @param id
+	 * @param id The component ID.
 	 */
 	@SuppressWarnings("rawtypes")
 	public InformationImportDialog(final String id) {
@@ -65,7 +68,9 @@ public class InformationImportDialog extends AbstractRBDialog {
 		final Form form = new Form("form");
 
         final IModel<Context> targetContext = new Model<Context>();
-        form.add(new DropDownChoice<Context>("targetContext", targetContext, getAvailableContexts()));
+        final DropDownChoice<Context> ctxChooser = new DropDownChoice<Context>("targetContext", targetContext, getAvailableContexts());
+        ctxChooser.setRequired(true);
+        form.add(ctxChooser);
 
         final IModel<String> format = new Model<String>("RDF-XML");
 		form.add(new DropDownChoice<String>("format", format, getChoices()));
@@ -77,7 +82,7 @@ public class InformationImportDialog extends AbstractRBDialog {
         form.add(new RBDefaultButton("upload") {
             @Override
             protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				importUpload(uploadField.getFileUploads(), format);
+				importUpload(uploadField.getFileUploads(), format, targetContext);
 				close(target);
 			}
 		});
@@ -91,44 +96,27 @@ public class InformationImportDialog extends AbstractRBDialog {
 	// ----------------------------------------------------
 	
 	private ListModel<String> getChoices() {
-		return new ListModel<String>(Arrays.asList("RDF-XML", "JSON", "N3"));
+		return new ListModel<String>(Arrays.asList("RDF-XML"));
 	}
 	
-	private void importUpload(final List<FileUpload> uploadList, final IModel<String> format) {
-		boolean isFirstReport = true;
-		IOReport endReport = null;
-		
+	private void importUpload(List<FileUpload> uploadList, IModel<String> format, IModel<Context> targetContext) {
+
+        final IOReport endReport = new IOReport();
+
 		for (FileUpload upload : uploadList) {
-			final IOReport report = new IOReport();
-			final SemanticGraphIO io = new RdfXmlBinding();
-			
-			final TransactionControl tx = conversation.beginTransaction();
-			final ReportingStatementImporter importer = new ReportingStatementImporter(conversation);
-			try {	
-				io.read(upload.getInputStream(), importer);
-				report.merge(importer.createReport());
-				tx.success();
-				report.success();
-			} catch (IOException e) {
-				LOGGER.error("Import failed.", e);
-				report.setAdditionalInfo("[" +upload.getClientFileName() +"] " +e.getMessage());
-				report.error();
-				tx.fail();
-			} catch (SemanticIOException e) {
-				LOGGER.error("Import failed.", e);
-				report.setAdditionalInfo("[" +upload.getClientFileName() +"] " +e.getMessage());
-				report.error();
-				tx.fail();
-			} finally {
-				tx.finish();
-			}
-			upload.closeStreams();
-			if(isFirstReport) {
-				endReport = report;
-				isFirstReport = false;
-			} else {
-				endReport.merge(report);
-			}
+            final String fileName = upload.getClientFileName();
+            try {
+                final IOReport report = informationManager.importInformation(
+                        upload.getInputStream(), targetContext.getObject(), fileName);
+
+                endReport.merge(report);
+
+                upload.closeStreams();
+
+            } catch (IOException e) {
+                endReport.error();
+                endReport.setAdditionalInfo("Technical failure while importing '" + fileName + "'.");
+            }
 		}
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<IOReport>(endReport, ModelChangeEvent.IO_REPORT));
 	}

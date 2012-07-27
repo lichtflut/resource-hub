@@ -7,6 +7,7 @@ import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
+import org.arastreju.sge.context.Context;
 import org.arastreju.sge.context.DomainIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,16 @@ public class ArastrejuResourceFactory {
             conversation = gate().startConversation();
         }
         return conversation;
+    }
+
+    public ModelingConversation startConversation() {
+        return gate().startConversation();
+    }
+
+    public ModelingConversation startConversation(Context context) {
+        ModelingConversation conv = gate().startConversation();
+        conv.getConversationContext().setPrimaryContext(context);
+        return conv;
     }
 
     public Organizer getOrganizer() {
