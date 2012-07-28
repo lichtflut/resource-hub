@@ -10,6 +10,7 @@ import org.arastreju.sge.context.Context;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.io.SemanticIOException;
+import org.arastreju.sge.io.StatementContainer;
 import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.slf4j.Logger;
@@ -80,10 +81,11 @@ public class InformationManagerImpl implements InformationManager {
     }
 
     @Override
-    public SemanticGraph exportInformation(Context... ctx) {
+    public StatementContainer exportInformation(Context ctx) {
         ModelingConversation conversation = factory.startConversation();
         conversation.getConversationContext().setReadContexts(ctx);
-        throw new NotYetImplementedException();
+
+        return factory.getOrganizer().getStatements(ctx);
     }
 
 }

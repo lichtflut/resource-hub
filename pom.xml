@@ -18,7 +18,7 @@
 	</modules>
 
 	<properties>
-		<arastreju.version>0.7.3</arastreju.version>
+		<arastreju.version>0.8.0-SNAPSHOT</arastreju.version>
 		<jersey.version>1.8</jersey.version>
 	</properties>
 	<build>

@@ -2,6 +2,7 @@ package de.lichtflut.rb.core.services;
 
 import de.lichtflut.rb.core.io.IOReport;
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.io.StatementContainer;
 import org.arastreju.sge.model.SemanticGraph;
 
 import java.io.InputStream;
@@ -21,5 +22,5 @@ public interface InformationManager {
 
     IOReport importInformation(InputStream in, Context targetContext, String reportContext);
 
-    SemanticGraph exportInformation(Context... srcContexts);
+    StatementContainer exportInformation(Context srcContexts);
 }

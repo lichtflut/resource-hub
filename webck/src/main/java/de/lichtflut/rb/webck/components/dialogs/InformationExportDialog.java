@@ -32,7 +32,7 @@ import org.arastreju.sge.io.JsonBinding;
 import org.arastreju.sge.io.N3Binding;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticIOException;
-import org.arastreju.sge.model.SemanticGraph;
+import org.arastreju.sge.io.StatementContainer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -60,7 +60,7 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 
 	private final ResourceStreamResource resource;
 	
-	private final IModel<SemanticGraph> graphModel;
+	private final IModel<? extends StatementContainer> graphModel;
 
     // ----------------------------------------------------
 
@@ -78,7 +78,7 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
      * @param model The model to export.
 	 */
 	@SuppressWarnings("rawtypes")
-	public InformationExportDialog(final String id, final IModel<SemanticGraph> model) {
+	public InformationExportDialog(final String id, final IModel<? extends StatementContainer> model) {
 		super(id);
 		this.graphModel = model;
 		
@@ -179,10 +179,10 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
         if (srcContext.getObject() == null) {
 		    sb.append("export-");
 		    sb.append(System.currentTimeMillis());
-		    sb.append(".");
         } else {
             sb.append(srcContext.getObject().getQualifiedName().getSimpleName());
         }
+        sb.append(".");
 		if ("RDF-XML".equals(format.getObject())) {
 			sb.append("rdf.xml");
 		} else {
@@ -191,10 +191,10 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 		return sb.toString();
 	}
 
-    private IModel<SemanticGraph> createContextExportModel() {
-        return new AbstractReadOnlyModel<SemanticGraph>() {
+    private IModel<StatementContainer> createContextExportModel() {
+        return new AbstractReadOnlyModel<StatementContainer>() {
             @Override
-            public SemanticGraph getObject() {
+            public StatementContainer getObject() {
                 return informationManager.exportInformation(srcContext.getObject());
             }
         };
@@ -224,14 +224,14 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 			IOReport report = new IOReport();
 			final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			try {
-				final SemanticGraph graph = graphModel.getObject();
+				final StatementContainer stmtContainer = graphModel.getObject();
 				
 				if ("RDF-XML".equalsIgnoreCase(format.getObject())){
-					new RdfXmlBinding().write(graph, buffer);
+					new RdfXmlBinding().write(stmtContainer, buffer);
 				} else if ("JSON".equals(format.getObject())) {
-					new JsonBinding().write(graph, buffer);
+					new JsonBinding().write(stmtContainer, buffer);
 				} else if ("N3".equals(format.getObject())) {
-					new N3Binding().write(graph, buffer);
+					new N3Binding().write(stmtContainer, buffer);
 				} else {
 					throw new IllegalArgumentException("Format not yet supported: " + format.getObject());
 				}
@@ -239,10 +239,7 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 				length = Bytes.bytes(buffer.size());
 				in = new ByteArrayInputStream(buffer.toByteArray());
 				
-				report.add("Namespaces", graph.getNamespaces().size());
-				report.add("Nodes", graph.getNodes().size());
-				report.add("Subjects", graph.getSubjects().size());
-				report.add("Statements", graph.getStatements().size());
+				report.add("Namespaces", stmtContainer.getNamespaces().size());
 				report.success();
 				buffer.close();
 			} catch (IOException e) {
