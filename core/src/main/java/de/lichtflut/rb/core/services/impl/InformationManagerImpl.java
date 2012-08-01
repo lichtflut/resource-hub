@@ -1,6 +1,5 @@
 package de.lichtflut.rb.core.services.impl;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.io.ReportingStatementImporter;
 import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
@@ -11,14 +10,12 @@ import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.io.StatementContainer;
-import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * <p>
@@ -51,7 +48,7 @@ public class InformationManagerImpl implements InformationManager {
     @Override
     public IOReport importInformation(InputStream in, Context targetContext, String reportContext) {
 
-        ModelingConversation conversation = factory.startConversation(targetContext);
+        ModelingConversation conversation = factory.getConversation(targetContext);
 
         final IOReport report = new IOReport();
         final SemanticGraphIO io = new RdfXmlBinding();
@@ -82,9 +79,6 @@ public class InformationManagerImpl implements InformationManager {
 
     @Override
     public StatementContainer exportInformation(Context ctx) {
-        ModelingConversation conversation = factory.startConversation();
-        conversation.getConversationContext().setReadContexts(ctx);
-
         return factory.getOrganizer().getStatements(ctx);
     }
 

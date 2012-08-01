@@ -46,7 +46,7 @@ public class TestServiceProvider extends RBServiceProvider {
     // ----------------------------------------------------
 
     public void closeConservation() {
-        factory.closeConversation();
+        factory.closeConversations();
     }
 
     public void closeGate() {

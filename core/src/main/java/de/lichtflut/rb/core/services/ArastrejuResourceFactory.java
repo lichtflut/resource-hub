@@ -12,6 +12,9 @@ import org.arastreju.sge.context.DomainIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <p>
  *  Factory used by Spring to create Arastreju resources.
@@ -23,7 +26,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Oliver Tigges
  */
-public class ArastrejuResourceFactory {
+public class ArastrejuResourceFactory implements ConversationFactory {
 	
 	private final static Logger logger = LoggerFactory.getLogger(ArastrejuResourceFactory.class);
 
@@ -33,11 +36,14 @@ public class ArastrejuResourceFactory {
 
     private ModelingConversation conversation;
 
+    private Map<Context, ModelingConversation> conversationMap = new HashMap<Context, ModelingConversation>();
+
     private DomainInitializer initializer;
 
 	// ----------------------------------------------------
 	
 	/**
+     * Constructor.
 	 * @param context The service context.
 	 */
 	public ArastrejuResourceFactory(ServiceContext context) {
@@ -50,24 +56,61 @@ public class ArastrejuResourceFactory {
     public ArastrejuResourceFactory() {
     }
 	
-	// ----------------------------------------------------
-	
-	public ModelingConversation getConversation() {
+	// -- CONVERSATIONS -----------------------------------
+
+    /**
+     * Get the current conversation managed by this factory. This conversations is shared.
+     * The caller may not change this conversation's state or close this conversation.
+     * @return The current conversation.
+     */
+	@Override
+    public ModelingConversation getConversation() {
         if (conversation == null) {
             conversation = gate().startConversation();
         }
         return conversation;
     }
 
-    public ModelingConversation startConversation() {
-        return gate().startConversation();
-    }
-
-    public ModelingConversation startConversation(Context context) {
+    /**
+     * Get a conversation for the given context managed by this factory. This conversations may be shared.
+     * The caller may not change this conversation's state or close this conversation.
+     * @param primary The primary context of this conversation.
+     * @return The current conversation.
+     */
+    @Override
+    public ModelingConversation getConversation(Context primary) {
         ModelingConversation conv = gate().startConversation();
-        conv.getConversationContext().setPrimaryContext(context);
+        conv.getConversationContext().setPrimaryContext(primary);
+        conv.getConversationContext().setReadContexts(primary);
+        conversationMap.put(primary, conv);
         return conv;
     }
+
+    /**
+     * Start a new conversation. This conversations is not shared and has to be managed by the caller.
+     * @return The new conversation.
+     */
+    @Override
+    public ModelingConversation startConversation() {
+        return conversation = gate().startConversation();
+    }
+
+    /**
+     * Start a new conversation for the given context . This conversations is not shared and has to be managed by
+     * the caller.
+     * @param primary The primary context of this conversation.
+     * @return The new conversation.
+     */
+    @Override
+    public ModelingConversation startConversation(Context primary) {
+        ModelingConversation conv = gate().startConversation();
+        conv.getConversationContext().setPrimaryContext(primary);
+        conv.getConversationContext().setReadContexts(primary);
+        conversationMap.put(primary, conv);
+        return conv;
+    }
+
+    // ----------------------------------------------------
 
     public Organizer getOrganizer() {
         return gate().getOrganizer();
@@ -75,15 +118,19 @@ public class ArastrejuResourceFactory {
 
     // ----------------------------------------------------
 
-    public void closeConversation() {
+    public void closeConversations() {
         if (conversation != null) {
             conversation.close();
             conversation = null;
         }
+        for (Context ctx : conversationMap.keySet()) {
+            conversationMap.get(ctx).close();
+        }
+
     }
 
     public void closeGate() {
-        closeConversation();
+        closeConversations();
         if (openGate != null) {
             openGate.close();
             openGate = null;

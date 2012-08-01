@@ -18,6 +18,7 @@ import de.lichtflut.rb.core.schema.persistence.ConstraintResolver;
 import de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 import de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding;
+import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SchemaExporter;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
@@ -57,20 +58,20 @@ import java.util.Set;
  */
 public class SchemaManagerImpl implements SchemaManager {
 
-	private final Schema2GraphBinding binding;
-	
-	private final Logger logger = LoggerFactory.getLogger(SchemaManagerImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SchemaManagerImpl.class);
 
-    private ModelingConversation conversation;
+	private final Schema2GraphBinding binding;
+
+    private final ConversationFactory conversationFactory;
 
 	// ---------------- Constructor -------------------------
 
 	/**
 	 * Constructor.
-	 * @param conversation The current conversation.
+	 * @param arastrejuFactory The factory for conversations.
 	 */
-	public SchemaManagerImpl(final ModelingConversation conversation) {
-        this.conversation = conversation;
+	public SchemaManagerImpl(final ConversationFactory arastrejuFactory) {
+        this.conversationFactory = arastrejuFactory;
 		this.binding = new Schema2GraphBinding(new ConstraintResolverImpl());
 	}
 	
@@ -102,8 +103,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	 */
 	@Override
 	public Constraint findConstraint(final ResourceID id) {
-		final ModelingConversation mc = conversation;
-		final ResourceNode node = mc.findResource(id.getQualifiedName());
+		final ResourceNode node = conversation().findResource(id.getQualifiedName());
 		if (node != null) {
 			return new ConstraintImpl(node);
 		} else {
@@ -149,7 +149,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	@Override
 	public void store(final ResourceSchema schema) {
 		Validate.isTrue(schema.getDescribedType() != null, "The type described by this schema is not defined.");
-		final ModelingConversation mc = conversation;
+		final ModelingConversation mc = conversation();
 		final TransactionControl tx = mc.beginTransaction();
 		try {
 			final SNResourceSchema existing = findSchemaNodeByType(schema.getDescribedType());
@@ -159,7 +159,7 @@ public class SchemaManagerImpl implements SchemaManager {
 			ensureReferencedResourcesExist(mc, schema);
 			final SNResourceSchema node = binding.toSemanticNode(schema);
 			mc.attach(node);
-			logger.info("Stored schema for type {}.", schema.getDescribedType());
+			LOGGER.info("Stored schema for type {}.", schema.getDescribedType());
 			tx.success();
 		} finally {
 			tx.finish();
@@ -171,11 +171,10 @@ public class SchemaManagerImpl implements SchemaManager {
 	*/
 	@Override
 	public void removeSchemaForType(final ResourceID type) {
-		final ModelingConversation mc = conversation;
 		final SNResourceSchema existing = findSchemaNodeByType(type);
 		if (existing != null) {
-			removeSchema(mc, existing);
-			logger.info("Removed schema for type {}.", type);
+			removeSchema(conversation(), existing);
+			LOGGER.info("Removed schema for type {}.", type);
 		}
 	}
 	
@@ -187,10 +186,9 @@ public class SchemaManagerImpl implements SchemaManager {
 	@Override
 	public void store(final Constraint constraint) {
 		Validate.isTrue(constraint.isPublic(), "Only public type definition may be stored explicitly.");
-		final ModelingConversation mc = conversation;
 		remove(constraint);
-		mc.attach(constraint.asResourceNode());
-		logger.info("Stored public constraint for {}.", constraint.getName());
+        conversation().attach(constraint.asResourceNode());
+		LOGGER.info("Stored public constraint for {}.", constraint.getName());
 	}
 	
 	/**
@@ -198,7 +196,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	 */
 	@Override
 	public void remove(Constraint constraint){
-		final ModelingConversation mc = conversation;
+		final ModelingConversation mc = conversation();
 		final ResourceNode existing = mc.findResource(constraint.asResourceNode().getQualifiedName());
 		if(null != existing){
 			mc.remove(existing);
@@ -227,10 +225,10 @@ public class SchemaManagerImpl implements SchemaManager {
 	@Override
 	public SchemaImporter getImporter(final String format) {
 		if ("JSON".equalsIgnoreCase(format.trim())) {
-			return new SchemaImporterImpl(this, conversation, new JsonSchemaParser());
+			return new SchemaImporterImpl(this, conversation(), new JsonSchemaParser());
 		} 
 		if ("RSF".equalsIgnoreCase(format.trim())) {
-			return new SchemaImporterImpl(this, conversation, new RsfSchemaParser());
+			return new SchemaImporterImpl(this, conversation(), new RsfSchemaParser());
 		} else {
 			throw new NotYetSupportedException("Unsupported format: " + format);
 		}
@@ -251,8 +249,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	// -----------------------------------------------------
 
     protected List<ResourceNode> findResourcesByType(ResourceID type) {
-        final Query query = conversation.createQuery();
-        query.addField(RDF.TYPE, type);
+        final Query query = query().addField(RDF.TYPE, type);
         return query.getResult().toList(2000);
     }
 	
@@ -260,7 +257,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	 * Find the persistent node representing the schema of the given type.
 	 */
 	private SNResourceSchema findSchemaNodeByType(final ResourceID type) {
-		final Query query = conversation.createQuery().add(new FieldParam(RBSchema.DESCRIBES, type));
+		final Query query = query().addField(RBSchema.DESCRIBES, type);
 		final QueryResult result = query.getResult();
 		if (result.isEmpty()) {
 			return null;
@@ -311,7 +308,15 @@ public class SchemaManagerImpl implements SchemaManager {
 			}
 		}
 	}
-	
+
+    private ModelingConversation conversation() {
+        return conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX);
+    }
+
+    private Query query() {
+        return conversation().createQuery();
+    }
+
 	// -----------------------------------------------------
 	
 	/**
@@ -320,7 +325,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	private class ConstraintResolverImpl implements ConstraintResolver {
 		@Override
 		public Constraint resolve(final Constraint constraint) {
-			final ModelingConversation mc = conversation;
+			final ModelingConversation mc = conversation();
 			final ResourceNode node = mc.findResource(constraint.asResourceNode().getQualifiedName());
 			if (node != null) {
 				return new ConstraintImpl(node);
