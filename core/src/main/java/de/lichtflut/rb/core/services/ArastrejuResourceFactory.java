@@ -79,11 +79,13 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      */
     @Override
     public ModelingConversation getConversation(Context primary) {
-        ModelingConversation conv = gate().startConversation();
-        conv.getConversationContext().setPrimaryContext(primary);
-        conv.getConversationContext().setReadContexts(primary);
-        conversationMap.put(primary, conv);
-        return conv;
+        if (conversationMap.containsKey(primary)) {
+            return conversationMap.get(primary);
+        } else {
+            ModelingConversation conversation = gate().startConversation(primary);
+            conversationMap.put(primary, conversation);
+            return conversation;
+        }
     }
 
     /**
@@ -92,7 +94,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      */
     @Override
     public ModelingConversation startConversation() {
-        return conversation = gate().startConversation();
+        return gate().startConversation();
     }
 
     /**
@@ -103,11 +105,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      */
     @Override
     public ModelingConversation startConversation(Context primary) {
-        ModelingConversation conv = gate().startConversation();
-        conv.getConversationContext().setPrimaryContext(primary);
-        conv.getConversationContext().setReadContexts(primary);
-        conversationMap.put(primary, conv);
-        return conv;
+        return gate().startConversation(primary);
     }
 
     // ----------------------------------------------------
