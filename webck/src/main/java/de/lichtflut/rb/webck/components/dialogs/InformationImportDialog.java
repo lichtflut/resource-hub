@@ -15,6 +15,7 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
@@ -66,6 +67,7 @@ public class InformationImportDialog extends AbstractRBDialog {
 		super(id);
 		
 		final Form form = new Form("form");
+        form.add(new FeedbackPanel("feedback"));
 
         final IModel<Context> targetContext = new Model<Context>();
         final DropDownChoice<Context> ctxChooser = new DropDownChoice<Context>("targetContext", targetContext, getAvailableContexts());
