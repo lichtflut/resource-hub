@@ -8,7 +8,7 @@ constraint definition for "common:EmailConstraint" {
 }
 
 schema for "common:City" {
-	label-rule : "common:hasName <(> common:isInCountry <)>"
+	label-rule : "common:hasName <(> common:hasCountry <)>"
 					
 	property "common:hasName" [1..n] {
 		field-label[en] : "Name"
@@ -23,7 +23,7 @@ schema for "common:City" {
 	}
 
 	property "common:hasCountry" [1..1] {
-		field-label[en] : "Name"
+		field-label[en] : "Country"
 		datatype : "Resource"
 		resource-constraint : "common:Country"
 	}

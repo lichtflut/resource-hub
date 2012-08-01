@@ -3,11 +3,18 @@
  */
 package de.lichtflut.rb.core.security.authserver;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.security.DomainInitializer;
-import de.lichtflut.rb.core.security.DomainManager;
-import de.lichtflut.rb.core.security.RBDomain;
-import de.lichtflut.rb.core.security.RBUser;
+import static de.lichtflut.rb.core.security.authserver.EmbeddedAuthFunctions.toRBDomain;
+import static de.lichtflut.rb.core.security.authserver.EmbeddedAuthFunctions.toRBUser;
+import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -21,17 +28,11 @@ import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static de.lichtflut.rb.core.security.authserver.EmbeddedAuthFunctions.toRBDomain;
-import static de.lichtflut.rb.core.security.authserver.EmbeddedAuthFunctions.toRBUser;
-import static org.arastreju.sge.SNOPS.singleObject;
-import static org.arastreju.sge.SNOPS.string;
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.security.DomainInitializer;
+import de.lichtflut.rb.core.security.DomainManager;
+import de.lichtflut.rb.core.security.RBDomain;
+import de.lichtflut.rb.core.security.RBUser;
 
 /**
  * <p>
@@ -209,6 +210,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		return result;
 	}
 	
+	@Override
 	public void registerRole(String domain, String role, Set<String> permissions) {
 		final ResourceNode domainNode = findDomainNode(domain);
 		final ResourceNode roleNode = getOrCreateRole(domainNode, role);

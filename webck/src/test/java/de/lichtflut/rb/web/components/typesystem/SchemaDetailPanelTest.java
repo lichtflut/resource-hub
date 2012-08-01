@@ -4,17 +4,17 @@
 package de.lichtflut.rb.web.components.typesystem;
 
 
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
-import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.components.typesystem.schema.SchemaDetailPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.components.typesystem.schema.SchemaDetailPanel;
 
 /**
  * <p>
@@ -28,16 +28,18 @@ import org.junit.Test;
  * @author Ravi Knox
  */
 public class SchemaDetailPanelTest{
-	
+
 	private WicketTester tester;
-	
+
 	@Before
 	public void setUp() {
 		tester = new WicketTester();
 	}
 
+	/**
+	 * TODO: OT 28.6.2012 - reactivate when problem with spring beans is solved
+	 */
 	@Test
-	@Ignore(value="Fix me")
 	public void testPanel(){
 		ResourceSchema schema = ResourceSchemaFactory.buildPersonSchema();
 		IModel<ResourceSchema> model = Model.of(schema);
@@ -45,7 +47,7 @@ public class SchemaDetailPanelTest{
 		tester.startComponentInPage(panel);
 		tester.assertNoErrorMessage();
 		tester.assertNoInfoMessage();
-		tester.assertComponent("test:form:deleteButton", RBStandardButton.class); 
+		tester.assertComponent("test:form:deleteButton", RBStandardButton.class);
 		tester.assertComponent("test:form:addButton", RBStandardButton.class);
 		tester.assertComponent("test:form:editButton", RBStandardButton.class);
 		tester.assertContains(">http://lichtflut.de#Person");

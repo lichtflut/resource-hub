@@ -13,6 +13,7 @@
 		<module>webck</module>
         <module>rest-api</module>
 		<module>app-foundation</module>
+		<module>content-repo-jr</module>
   </modules>
 	<properties>
 		<arastreju.version>0.7.3-SNAPSHOT</arastreju.version>
