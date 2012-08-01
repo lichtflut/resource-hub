@@ -3,18 +3,13 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
-import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
-import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.form.RBSubmitLink;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.fields.FieldCardinalityModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.FieldSizeModel;
@@ -27,25 +22,13 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.validation.validator.PatternValidator;
-import org.apache.wicket.validation.validator.UrlValidator;
 import org.arastreju.sge.model.ResourceID;
-import org.odlabs.wiquery.ui.datepicker.DatePicker;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Date;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.and;
@@ -80,13 +63,16 @@ public class EntityRowEditPanel extends Panel {
 		
 		setOutputMarkupId(true);
 		add(new Label("label", new FieldLabelModel(model)));
-		
-		final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
+
+        final FieldEditorFactory factory = new FieldEditorFactory(this, model);
+
+        final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
 		final ListView<RBFieldValueModel> view = new ListView<RBFieldValueModel>("values", listModel) {
 			@Override
 			protected void populateItem(final ListItem<RBFieldValueModel> item) {
-				addValueField(item, model.getObject().getDataType());
-				final int idx = item.getModelObject().getIndex();
+                final Component field = factory.createField(item, model.getObject().getDataType());
+                item.add(field);
+                final int idx = item.getModelObject().getIndex();
 				item.add(createRemoveLink(idx));
 				item.add(createCreateLink(idx));
 			}
@@ -109,31 +95,6 @@ public class EntityRowEditPanel extends Panel {
 	}
 	
 	// ----------------------------------------------------
-
-	protected FormComponent<?> addValueField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
-		switch(dataType) {
-		case BOOLEAN:
-			return addBooleanField(item);
-		case RESOURCE:
-			return addResourceField(item);
-		case DATE:
-			return addDateField(item);
-		case INTEGER:
-			return addTextField(item, BigInteger.class);
-		case DECIMAL:
-			return addTextField(item, BigDecimal.class);
-		case STRING:
-			return addTextField(item, String.class);
-		case TEXT:
-			return addTextArea(item);
-		case RICH_TEXT:
-			return addRichTextArea(item);
-		case URI:
-			return addURIField(item);
-		default:
-			throw new NotYetImplementedException("Datatype: " + dataType);
-		}
-	}
 
 	protected AjaxSubmitLink createRemoveLink(final int index) {
 		final AjaxSubmitLink link = new AjaxSubmitLink("removeLink") {
@@ -183,66 +144,6 @@ public class EntityRowEditPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	private EntityPickerField addResourceField(final ListItem<RBFieldValueModel> item) {
-		final ResourceID typeConstraint = getTypeConstraint();
-		final EntityPickerField field = new EntityPickerField("valuefield", item.getModelObject(), typeConstraint);
-		item.add(field);
-		return field;
-	}
-	
-	private TextField addTextField(final ListItem<RBFieldValueModel> item, Class<?> type) {
-		final TextField field = new TextField("valuefield", item.getModelObject());
-		field.setType(type);
-		addValidator(item, field);
-		item.add(new Fragment("valuefield", "textInput", this).add(field));
-		return field;
-	}
-	
-	private FormComponent<?> addTextArea(final ListItem<RBFieldValueModel> item) {
-		final TextArea<String> field = new TextArea<String>("valuefield", item.getModelObject());
-		field.setType(String.class);
-		addValidator(item, field);
-		item.add(new Fragment("valuefield", "textArea", this).add(field));
-		return field;
-	}
-	
-	private TextField addDateField(final ListItem<RBFieldValueModel> item) {
-		final DatePicker<Date> field = new DatePicker<Date>("valuefield", item.getModelObject(), Date.class);
-		addValidator(item, field);
-		item.add(new Fragment("valuefield", "textInput", this).add(field));
-		return field;
-	}
-	
-	private CheckBox addBooleanField(ListItem<RBFieldValueModel> item) {
-		final CheckBox cb = new CheckBox("valuefield", item.getModelObject());
-		item.add(new Fragment("valuefield", "checkbox", this).add(cb));
-		return cb;
-	}
-	
-	private FormComponent<?> addRichTextArea(ListItem<RBFieldValueModel> item) {
-		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(item.getModelObject()));
-		field.add(new TinyMceBehavior());
-		addValidator(item, field);
-		item.add(new Fragment("valuefield", "textArea", this).add(field));
-		return field;
-	}
-
-	private FormComponent<?> addURIField(ListItem<RBFieldValueModel> item){
-		final TextField field = new TextField("valuefield", item.getModelObject());
-		field.add(new UrlValidator());
-		item.add(new Fragment("valuefield", "textInput", this).add(field));
-		return field;
-	}
-	
-	private void addValidator(final ListItem<RBFieldValueModel> item, final Component field) {
-		Constraint constraint = item.getModelObject().getField().getConstraint();
-		if((null != constraint) && (null != constraint.getLiteralConstraint())){
-			field.add(new PatternValidator(item.getModelObject().getField().getConstraint().getLiteralConstraint()));
-		}
-	}
-	
-	// ----------------------------------------------------
-
 	/**
 	 * Extracts the resourceTypeConstraint of this {@link RBField}.
 	 * @return the resourceTypeConstraint as an {@link ResourceID}
