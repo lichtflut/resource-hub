@@ -20,6 +20,8 @@ import org.junit.Test;
 import de.lichtflut.rb.core.security.LoginData;
 import de.lichtflut.rb.webck.components.login.LoginPanel;
 
+import java.util.Locale;
+
 public class LoginPanelTest {
 
 	private WicketTester tester;
@@ -39,6 +41,7 @@ public class LoginPanelTest {
 	@Before
 	public void setUp() {
 		tester = new WicketTester();
+        tester.getSession().setLocale(Locale.GERMAN);
 	}
 
 	private Panel createPanel(){

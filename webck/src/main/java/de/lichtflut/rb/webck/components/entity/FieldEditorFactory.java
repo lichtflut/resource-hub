@@ -9,16 +9,13 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
-import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.validation.validator.PatternValidator;
@@ -62,26 +59,26 @@ public class FieldEditorFactory implements Serializable {
 
     // ----------------------------------------------------
 
-    public Component createField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
+    public Component createField(RBFieldValueModel model, Datatype dataType) {
         switch(dataType) {
             case BOOLEAN:
-                return createBooleanField(item);
+                return createBooleanField(model);
             case RESOURCE:
-                return createResourceField(item);
+                return createResourceField(model);
             case DATE:
-                return createDateField(item);
+                return createDateField(model);
             case INTEGER:
-                return createTextField(item, BigInteger.class);
+                return createTextField(model, BigInteger.class);
             case DECIMAL:
-                return createTextField(item, BigDecimal.class);
+                return createTextField(model, BigDecimal.class);
             case STRING:
-                return createTextField(item, String.class);
+                return createTextField(model, String.class);
             case TEXT:
-                return createTextArea(item);
+                return createTextArea(model);
             case RICH_TEXT:
-                return createRichTextArea(item);
+                return createRichTextArea(model);
             case URI:
-                return createURIField(item);
+                return createURIField(model);
             default:
                 throw new NotYetImplementedException("Datatype: " + dataType);
         }
@@ -89,55 +86,55 @@ public class FieldEditorFactory implements Serializable {
 
     // ----------------------------------------------------
 
-    public Component createResourceField(final ListItem<RBFieldValueModel> item) {
+    public Component createResourceField(RBFieldValueModel model) {
 		final ResourceID typeConstraint = getTypeConstraint();
-		return new EntityPickerField("valuefield", item.getModelObject(), typeConstraint);
+		return new EntityPickerField("valuefield", model, typeConstraint);
 	}
 
-    public Component createTextField(final ListItem<RBFieldValueModel> item, Class<?> type) {
-		final TextField field = new TextField("valuefield", item.getModelObject());
+    public Component createTextField(RBFieldValueModel model, Class<?> type) {
+		final TextField field = new TextField("valuefield", model);
 		field.setType(type);
-		addValidator(item, field);
+		addValidator(model, field);
 		return new Fragment("valuefield", "textInput", container).add(field);
 	}
 
-    public Component createTextArea(final ListItem<RBFieldValueModel> item) {
-		final TextArea<String> field = new TextArea<String>("valuefield", item.getModelObject());
+    public Component createTextArea(RBFieldValueModel model) {
+		final TextArea<String> field = new TextArea<String>("valuefield", model);
 		field.setType(String.class);
-		addValidator(item, field);
+		addValidator(model, field);
 		return new Fragment("valuefield", "textArea", container).add(field);
 	}
 
-    public Component createDateField(final ListItem<RBFieldValueModel> item) {
-		final DatePicker<Date> field = new DatePicker<Date>("valuefield", item.getModelObject(), Date.class);
-		addValidator(item, field);
+    public Component createDateField(RBFieldValueModel model) {
+		final DatePicker<Date> field = new DatePicker<Date>("valuefield", model, Date.class);
+		addValidator(model, field);
 		return new Fragment("valuefield", "textInput", container).add(field);
 	}
 
-    public Component createBooleanField(ListItem<RBFieldValueModel> item) {
-		final CheckBox cb = new CheckBox("valuefield", item.getModelObject());
+    public Component createBooleanField(RBFieldValueModel model) {
+		final CheckBox cb = new CheckBox("valuefield", model);
 		return new Fragment("valuefield", "checkbox", container).add(cb);
 	}
 
-    public Component createRichTextArea(ListItem<RBFieldValueModel> item) {
-		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(item.getModelObject()));
+    public Component createRichTextArea(RBFieldValueModel model) {
+		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(model));
 		field.add(new TinyMceBehavior());
-		addValidator(item, field);
+		addValidator(model, field);
 		return new Fragment("valuefield", "textArea", container).add(field);
 	}
 
-    public Component createURIField(ListItem<RBFieldValueModel> item){
-		final TextField field = new TextField("valuefield", item.getModelObject());
+    public Component createURIField(RBFieldValueModel model){
+		final TextField field = new TextField("valuefield", model);
 		field.add(new UrlValidator());
 		return new Fragment("valuefield", "textInput", container).add(field);
 	}
 
     // ----------------------------------------------------
 
-    private void addValidator(final ListItem<RBFieldValueModel> item, final Component field) {
-		Constraint constraint = item.getModelObject().getField().getConstraint();
+    private void addValidator(RBFieldValueModel model, final Component field) {
+		Constraint constraint = model.getField().getConstraint();
 		if((null != constraint) && (null != constraint.getLiteralConstraint())){
-			field.add(new PatternValidator(item.getModelObject().getField().getConstraint().getLiteralConstraint()));
+			field.add(new PatternValidator(model.getField().getConstraint().getLiteralConstraint()));
 		}
 	}
 
@@ -155,15 +152,6 @@ public class FieldEditorFactory implements Serializable {
 	
 	private RBField getField() {
 		return fieldModel.getObject();
-	}
-	
-	// -- INNER CLASSES -----------------------------------
-	
-	private class IsBeneathFormConditional extends ConditionalModel {
-		@Override
-		public boolean isFulfilled() {
-			return container.findParent(Form.class) != null;
-		}
 	}
 
 }
