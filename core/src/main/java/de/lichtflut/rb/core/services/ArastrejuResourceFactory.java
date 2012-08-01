@@ -124,7 +124,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
         for (Context ctx : conversationMap.keySet()) {
             conversationMap.get(ctx).close();
         }
-
+        conversationMap.clear();
     }
 
     public void closeGate() {

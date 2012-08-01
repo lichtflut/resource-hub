@@ -5,16 +5,17 @@ import org.arastreju.sge.context.Context;
 
 /**
  * <p>
- * DESCRITPION.
+ *  Factory for conversations.
  * </p>
- * <p/>
+ *
  * <p>
- * Created 01.08.12
+ *  Created 01.08.12
  * </p>
  *
  * @author Oliver Tigges
  */
 public interface ConversationFactory {
+
     ModelingConversation getConversation();
 
     ModelingConversation getConversation(Context primary);

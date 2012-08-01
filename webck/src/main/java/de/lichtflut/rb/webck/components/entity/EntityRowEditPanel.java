@@ -11,6 +11,7 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.components.form.RBSubmitLink;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
@@ -72,7 +73,7 @@ public class EntityRowEditPanel extends Panel {
 	/**
 	 * Constructor.
 	 * @param id The ID.
-	 * @param model The model.
+	 * @param model The field model.
 	 */
 	public EntityRowEditPanel(final String id, final IModel<RBField> model) {
 		super(id, model);
@@ -92,19 +93,14 @@ public class EntityRowEditPanel extends Panel {
 		};
 		view.setReuseItems(true);
 		add(view);
-		
-		final AjaxSubmitLink link = new AjaxSubmitLink("addValueLink") {
-			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				getField().addValue(null);
-				target.add(EntityRowEditPanel.this);
-			}
-			
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				target.add(form);
-			}
-		};
+
+        final RBSubmitLink link = new RBSubmitLink("addValueLink") {
+            @Override
+            protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+                getField().addValue(null);
+                target.add(EntityRowEditPanel.this);
+            }
+        };
 		link.add(new AttributeModifier("title", new ResourceModel("link.title.add-field-value")));
 		link.add(visibleIf(and(
 				new IsBeneathFormConditional(), 
@@ -113,12 +109,7 @@ public class EntityRowEditPanel extends Panel {
 	}
 	
 	// ----------------------------------------------------
-	
-	/**
-	 * @param item
-	 * @param dataType
-	 * @return 
-	 */
+
 	protected FormComponent<?> addValueField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
 		switch(dataType) {
 		case BOOLEAN:
@@ -254,7 +245,6 @@ public class EntityRowEditPanel extends Panel {
 
 	/**
 	 * Extracts the resourceTypeConstraint of this {@link RBField}.
-	 * @param field - IRBField
 	 * @return the resourceTypeConstraint as an {@link ResourceID}
 	 */
 	private ResourceID getTypeConstraint() {

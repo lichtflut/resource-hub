@@ -230,7 +230,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
     // ----------------------------------------------------
 
     private ModelingConversation conversation() {
-        return arasFactory.startConversation(RBSystem.VIEW_SPEC_CTX);
+        return arasFactory.getConversation(RBSystem.VIEW_SPEC_CTX);
     }
 	
 }
