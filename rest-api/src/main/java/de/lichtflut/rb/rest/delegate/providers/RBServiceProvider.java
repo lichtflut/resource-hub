@@ -90,7 +90,7 @@ public class RBServiceProvider implements ServiceProvider {
 
     @Override
     public TypeManager getTypeManager() {
-        return new TypeManagerImpl(getConversation(), getSchemaManager());
+        return new TypeManagerImpl(arastrejuResourceFactory, getSchemaManager());
     }
 
     // ----------------------------------------------------
