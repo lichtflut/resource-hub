@@ -73,7 +73,7 @@ public class InformationManagerImpl implements InformationManager {
             tx.finish();
         }
 
-        return importer.createReport();
+        return report;
 
     }
 

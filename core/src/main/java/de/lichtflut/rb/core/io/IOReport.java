@@ -99,9 +99,6 @@ public class IOReport implements Serializable{
         if (additionalReport == null) {
             return;
         }
-        if(ReportStatus.ERROR.equals(additionalReport.getStatus())) {
-            this.status = ReportStatus.ERROR;
-        }
         if(!additionalReport.getAdditionalInfo().isEmpty()) {
             if(this.additionalInfo.isEmpty()) {
                 this.additionalInfo = additionalReport.getAdditionalInfo();
@@ -119,10 +116,11 @@ public class IOReport implements Serializable{
                 this.getQuantityMap().put(key, value);
             }
         }
+        mergeStatus(additionalReport.getStatus());
         stopTimer();
     }
-	
-	// -- GET-THE-INFOS ------------------------------------
+
+    // -- GET-THE-INFOS ------------------------------------
 	
 	public ReportStatus getStatus() {
 		return status;
@@ -172,4 +170,14 @@ public class IOReport implements Serializable{
 		
 		return sb.toString();
 	}
+
+    // ----------------------------------------------------
+
+    private void mergeStatus(ReportStatus other) {
+        if (ReportStatus.ERROR.equals(other)) {
+            this.status = ReportStatus.ERROR;
+        } else if (ReportStatus.UNDEFINED.equals(this.status)) {
+            this.status = other;
+        }
+    }
 }
