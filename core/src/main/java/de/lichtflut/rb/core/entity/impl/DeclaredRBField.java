@@ -66,22 +66,17 @@ public class DeclaredRBField extends AbstractRBField {
 	}
 
 	@Override
-	public boolean isKnownToSchema() {
-		return true;
-	}
-
-	@Override
 	public boolean isResourceReference() {
-//		if(declaration.hasConstraint() && declaration.getConstraint().holdsReference()){
-//			return declaration.getConstraint().isLiteral();
-//		}
-//		if(null == declaration.getConstraint()){
-//			
-//		}
 		return (declaration.getDatatype() == Datatype.RESOURCE);
 	}
 
-	@Override
+    @Override
+    public boolean isEmbedded() {
+        // for testing: embed all resource references.
+        return isResourceReference();
+    }
+
+    @Override
 	public Constraint getConstraint() {
 		return declaration.getConstraint();
 	}

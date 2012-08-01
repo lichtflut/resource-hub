@@ -4,7 +4,6 @@
 package de.lichtflut.rb.webck.components.dialogs;
 
 import de.lichtflut.rb.core.io.IOReport;
-import de.lichtflut.rb.core.io.ReportingStatementImporter;
 import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.core.services.InformationManager;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
@@ -20,12 +19,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
-import org.arastreju.sge.io.RdfXmlBinding;
-import org.arastreju.sge.io.SemanticGraphIO;
-import org.arastreju.sge.io.SemanticIOException;
-import org.arastreju.sge.persistence.TransactionControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,9 +43,6 @@ public class InformationImportDialog extends AbstractRBDialog {
 	private static final Logger LOGGER = LoggerFactory.getLogger(InformationImportDialog.class);
 	
 	@SpringBean
-	private ModelingConversation conversation;
-
-    @SpringBean
     private DomainOrganizer organizer;
 
     @SpringBean

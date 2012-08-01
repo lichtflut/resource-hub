@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.dialogs;
 
 import java.util.Date;
 
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -43,13 +44,14 @@ public class EditNoteDialog extends AbstractRBDialog {
 	private ServiceContext context;
 	
 	@SpringBean
-	private ModelingConversation conversation;
+	private SemanticNetworkService semanticNetwork;
 	
 	// ----------------------------------------------------
 
 	/**
 	 * Constrcutor.
-	 * @param id
+	 * @param id The component ID.
+     * @param model The model containing the node.
 	 */
 	@SuppressWarnings("rawtypes")
 	public EditNoteDialog(final String id, final IModel<ResourceNode> model) {
@@ -63,7 +65,7 @@ public class EditNoteDialog extends AbstractRBDialog {
 				final ResourceNode noteResource = model.getObject();
 				SNOPS.assure(noteResource, DC.CREATED, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
 				SNOPS.assure(noteResource, DC.CREATOR, context.getUser().getName());
-				conversation.attach(noteResource);
+                semanticNetwork.attach(noteResource);
 				onSave(noteResource);
 				close(target);
 			}

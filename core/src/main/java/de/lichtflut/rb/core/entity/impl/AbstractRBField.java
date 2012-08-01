@@ -3,16 +3,15 @@
  */
 package de.lichtflut.rb.core.entity.impl;
 
+import de.lichtflut.rb.core.entity.RBField;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.structure.OrderBySerialNumber;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.structure.OrderBySerialNumber;
-
-import de.lichtflut.rb.core.entity.RBField;
 
 /**
  * <p>
@@ -47,7 +46,7 @@ public abstract class AbstractRBField implements RBField, Serializable {
 	 */
 	public int getSlots() {
 		return slots;
-	};
+	}
 	
 	/** 
 	 * {@inheritDoc}
@@ -111,15 +110,6 @@ public abstract class AbstractRBField implements RBField, Serializable {
 		return copy;
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setValues(final List<Object> fieldValues) {
-		this.values.clear();
-		this.values.addAll(fieldValues);
-	}
-
 	// -----------------------------------------------------
 
 	/**
@@ -134,8 +124,9 @@ public abstract class AbstractRBField implements RBField, Serializable {
 	// -----------------------------------------------------
 	
 	/**
-	 * @param givenValues
-	 * @param isResourceReference 
+     * Initialize the slots of this field.
+	 * @param givenValues The existing values.
+	 * @param isResourceReference flag indicating if it's a resource reference.
 	 */
 	protected void initSlots(final Set<SemanticNode> givenValues, boolean isResourceReference) {
 		this.slots = givenValues.size();	

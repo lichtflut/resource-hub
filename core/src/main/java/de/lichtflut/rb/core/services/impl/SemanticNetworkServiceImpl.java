@@ -5,6 +5,7 @@ import de.lichtflut.rb.core.services.SemanticNetworkService;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -32,6 +33,16 @@ public class SemanticNetworkServiceImpl implements SemanticNetworkService {
     @Override
     public ResourceNode resolve(ResourceID rid) {
         return conversation().resolve(rid);
+    }
+
+    @Override
+    public ResourceNode find(QualifiedName qn) {
+        return conversation().findResource(qn);
+    }
+
+    @Override
+    public void attach(ResourceNode node) {
+        conversation().attach(node);
     }
 
     // ----------------------------------------------------

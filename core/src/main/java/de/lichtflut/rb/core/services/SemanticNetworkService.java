@@ -2,6 +2,7 @@ package de.lichtflut.rb.core.services;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -17,5 +18,9 @@ import org.arastreju.sge.model.nodes.ResourceNode;
  */
 public interface SemanticNetworkService {
 
-    public ResourceNode resolve(ResourceID rid);
+    ResourceNode resolve(ResourceID rid);
+
+    ResourceNode find(QualifiedName qn);
+
+    void attach(ResourceNode node);
 }

@@ -7,6 +7,7 @@ import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import org.apache.wicket.injection.Injector;
@@ -36,7 +37,7 @@ public class CurrentPersonModel extends AbstractLoadableDetachableModel<RBEntity
 	private ServiceContext context;
 	
 	@SpringBean
-	private ModelingConversation conversation;
+	private SemanticNetworkService semanticNetwork;
 	
 	// ----------------------------------------------------
 	
@@ -56,7 +57,7 @@ public class CurrentPersonModel extends AbstractLoadableDetachableModel<RBEntity
 			return null;
 		}
 		
-		final ResourceNode userNode = conversation.resolve(SNOPS.id(user.getQualifiedName()));
+		final ResourceNode userNode = semanticNetwork.resolve(SNOPS.id(user.getQualifiedName()));
 		final SemanticNode person = SNOPS.fetchObject(userNode, RBSystem.IS_RESPRESENTED_BY);
 		if (person != null && person.isResourceNode()) {
 			return entityManager.find(person.asResource());
