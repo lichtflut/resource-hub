@@ -310,12 +310,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	}
 
     private ModelingConversation conversation() {
-        ModelingConversation conversation = conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX);
-        ConversationContext cc = conversation.getConversationContext();
-        if (!cc.isActive()) {
-            throw new IllegalStateException("Got inactive conversation from factory: " + cc);
-        }
-        return conversation;
+        return conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX);
     }
 
     private Query query() {

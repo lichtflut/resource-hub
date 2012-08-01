@@ -5,6 +5,7 @@ package de.lichtflut.rb.core.services;
 
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.ConversationContext;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
 import org.arastreju.sge.context.Context;
@@ -68,6 +69,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
         if (conversation == null) {
             conversation = gate().startConversation();
         }
+        assureActive(conversation);
         return conversation;
     }
 
@@ -80,7 +82,9 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     @Override
     public ModelingConversation getConversation(Context primary) {
         if (conversationMap.containsKey(primary)) {
-            return conversationMap.get(primary);
+            ModelingConversation conversation = conversationMap.get(primary);
+            assureActive(conversation);
+            return conversation;
         } else {
             ModelingConversation conversation = gate().startConversation(primary);
             conversationMap.put(primary, conversation);
@@ -165,6 +169,13 @@ public class ArastrejuResourceFactory implements ConversationFactory {
                 initializer.initializeDomain(gate, domain);
             }
             return gate;
+        }
+    }
+
+    private void assureActive(ModelingConversation conversation) {
+        ConversationContext cc = conversation.getConversationContext();
+        if (!cc.isActive()) {
+            throw new IllegalStateException("Got inactive conversation from factory: " + cc);
         }
     }
 
