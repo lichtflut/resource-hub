@@ -100,13 +100,13 @@ public class EntityListWidget extends ConfigurableWidget {
 				return new LabeledLink(componentId, link, new ResourceModel("action.view"))
 					.setLinkCssClass("action-view")
 					.setLinkTitle(new ResourceModel("action.view"));
-			};
+			}
 		});
 		
 		getDisplayPane().add(new ListPagerPanel("pager", content.getResultSize(), content.getOffset(), content.getPageSize()) {
 			public void onPage() {
 				RBAjaxTarget.add(EntityListWidget.this);
-			};
+			}
 		});
 		
 		getDisplayPane().add(new WidgetActionsPanel("actions", spec));

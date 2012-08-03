@@ -14,8 +14,6 @@ import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import de.lichtflut.rb.core.services.impl.SecurityServiceImpl;
 import de.lichtflut.rb.core.services.impl.TypeManagerImpl;
 import org.arastreju.sge.ModelingConversation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -30,10 +28,6 @@ import org.slf4j.LoggerFactory;
  */
 public class RBServiceProvider implements ServiceProvider {
 	
-	private final Logger logger = LoggerFactory.getLogger(RBServiceProvider.class);
-
-	// ----------------------------------------------------
-
     private ArastrejuResourceFactory arastrejuResourceFactory;
 
 	private ServiceContext ctx;
@@ -81,7 +75,7 @@ public class RBServiceProvider implements ServiceProvider {
 	 */
 	@Override
 	public SchemaManager getSchemaManager() {
-	    return new SchemaManagerImpl(getConversation());
+	    return new SchemaManagerImpl(arastrejuResourceFactory);
 	}
 
 	/**
@@ -96,7 +90,7 @@ public class RBServiceProvider implements ServiceProvider {
 
     @Override
     public TypeManager getTypeManager() {
-        return new TypeManagerImpl(getConversation(), getSchemaManager());
+        return new TypeManagerImpl(arastrejuResourceFactory, getSchemaManager());
     }
 
     // ----------------------------------------------------

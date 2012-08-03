@@ -54,17 +54,16 @@ public interface RBField {
 	Cardinality getCardinality();
 
 	/**
-	 * Returns whether this field is known to the RBSchema.
-	 * If it is not known, it is a 'custom-' attribute which is always of type String.
-	 * @return True if yes, false if not.
-	 */
-	boolean isKnownToSchema();
-
-	/**
 	 * Returns whether this field contains a resource reference.
 	 * @return True if this field is a resource reference, false if not
 	 */
 	boolean isResourceReference();
+
+    /**
+     * Resource references may be embedded.
+     * @return True if the referenced resources shall be embedded.
+     */
+    boolean isEmbedded();
 
 	/**
 	 * Returns this field's constraint according to the RBSchema.
@@ -113,12 +112,5 @@ public interface RBField {
 	 * @return Value of this field as a list
 	 */
 	<T> List<T> getValues();
-	
-	/**
-	 * Sets the value for this RBField.
-	 * @param values - this fields value as a list
-	 */
-	@Deprecated
-	void setValues(List<Object> values);
 	
 }

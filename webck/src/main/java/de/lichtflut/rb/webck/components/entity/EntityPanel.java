@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.components.entity;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.behaviors.FocusFirstFormElementBehavior;
 import de.lichtflut.rb.webck.browsing.BrowsingState;
@@ -42,7 +43,7 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
 public class EntityPanel extends Panel {
 	
 	@SpringBean
-	private ModelingConversation conversation;
+	private SemanticNetworkService semanticNetwork;
 	
 	// ----------------------------------------------------
 	
@@ -63,7 +64,7 @@ public class EntityPanel extends Panel {
 		add(new GoogleMapsPanel("map", new DerivedModel<String, RBEntity>(model) {
 			@Override
 			protected String derive(RBEntity original) {
-				final ResourceID type = conversation.resolve(original.getType());
+				final ResourceID type = semanticNetwork.resolve(original.getType());
 				if (type.asResource().asClass().isSpecializationOf(RB.LOCATION)) {
 					return original.getLabel();
 				} else {
@@ -103,11 +104,7 @@ public class EntityPanel extends Panel {
 	
 	private boolean isInViewMode() {
 		final EntityBrowsingStep step = RBWebSession.get().getHistory().getCurrentStep();
-		if (step != null) {
-			return BrowsingState.VIEW.equals(step.getState());
-		} else {
-			return true;
-		}
+        return step == null || BrowsingState.VIEW.equals(step.getState());
 	}
 	
 }

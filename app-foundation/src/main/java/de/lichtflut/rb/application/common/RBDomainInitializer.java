@@ -12,6 +12,8 @@ import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.DC;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
+import org.arastreju.sge.naming.Namespace;
+import org.arastreju.sge.naming.QualifiedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +46,13 @@ public class RBDomainInitializer implements DomainInitializer {
 
         logger.info("Running apriori initialization for domain " + domainName);
 		final Organizer organizer = gate.getOrganizer();
+
+        // The protected context of this domain
+        organizer.registerContext(new QualifiedName(Namespace.LOCAL_CONTEXTS, domainName));
+
+        organizer.registerContext(RBSystem.VIEW_SPEC_CTX.getQualifiedName());
+
+        organizer.registerContext(RBSystem.TYPE_SYSTEM_CTX.getQualifiedName());
 		
 		organizer.registerNamespace(RDF.NAMESPACE_URI, "rdf");
 		organizer.registerNamespace(RDFS.NAMESPACE_URI, "rdfs");

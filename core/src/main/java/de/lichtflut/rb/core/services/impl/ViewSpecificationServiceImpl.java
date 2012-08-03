@@ -3,7 +3,10 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.MenuItem;
@@ -44,7 +47,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
     private ServiceContext context;
 
-    private ModelingConversation conversation;
+    private ArastrejuResourceFactory arasFactory;
 
     // ----------------------------------------------------
 
@@ -53,9 +56,14 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	 */
 	public ViewSpecificationServiceImpl() { }
 
-    public ViewSpecificationServiceImpl(ServiceContext context, ModelingConversation conversation) {
+    /**
+     * Constructor.
+     * @param context The service context.
+     * @param arasFactory The Arastreju resource factory providing conversations.
+     */
+    public ViewSpecificationServiceImpl(ServiceContext context, ArastrejuResourceFactory arasFactory) {
         this.context = context;
-        this.conversation = conversation;
+        this.arasFactory = arasFactory;
     }
 
     // -- MENU ITEMS --------------------------------------
@@ -99,7 +107,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	 */
 	@Override
 	public void store(MenuItem item) {
-		conversation.attach(item);
+        conversation().attach(item);
 	}
 	
 	/** 
@@ -120,7 +128,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	 */
 	@Override
 	public Perspective findPerspective(ResourceID id) {
-		final ResourceNode existing = conversation.findResource(id.getQualifiedName());
+		final ResourceNode existing = conversation().findResource(id.getQualifiedName());
 		if (existing != null) {
 			return new SNPerspective(existing);
 		} else {
@@ -133,7 +141,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	 */
 	@Override
 	public void store(Perspective perspective) {
-		conversation.attach(perspective);
+        conversation().attach(perspective);
 		if (perspective.getViewPorts().isEmpty()) {
 			// add two default view ports.
 			perspective.addViewPort();
@@ -147,7 +155,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	@Override
 	public void remove(Perspective perspective) {
 		final SemanticGraph graph = new ViewSpecTraverser().toGraph(perspective);
-		final ModelingConversation mc = conversation;
+		final ModelingConversation mc = conversation();
 		final TransactionControl tx = mc.beginTransaction();
 		try {
 			for (Statement stmt : graph.getStatements()) {
@@ -166,7 +174,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	 */
 	@Override
 	public WidgetSpec findWidgetSpec(ResourceID id) {
-		final ResourceNode existing = conversation.findResource(id.getQualifiedName());
+		final ResourceNode existing = conversation().findResource(id.getQualifiedName());
 		if (existing != null) {
 			return new SNWidgetSpec(existing);
 		} else {
@@ -179,7 +187,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	 */
 	@Override
 	public void store(WidgetSpec widgetSpec) {
-		conversation.attach(widgetSpec);
+        conversation().attach(widgetSpec);
 	}
 	
 	// ----------------------------------------------------
@@ -189,20 +197,9 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	 */
 	@Override
 	public void store(ViewPort viewPort) {
-		conversation.attach(viewPort);
+        conversation().attach(viewPort);
 	}
 	
-	// ----------------------------------------------------
-
-    public void setContext(ServiceContext context) {
-        this.context = context;
-    }
-
-    public void setConversation(ModelingConversation conversation) {
-        this.conversation = conversation;
-    }
-
-
     // ----------------------------------------------------
 	
 	/**
@@ -210,7 +207,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	 */
 	protected List<MenuItem> initializeDashboards(ResourceNode user) {
 		final List<MenuItem> result = new ArrayList<MenuItem>();
-		final ResourceNode defaultMenu = conversation.resolve(WDGT.DEFAULT_MENU);
+		final ResourceNode defaultMenu = conversation().resolve(WDGT.DEFAULT_MENU);
 		for(Statement stmt : defaultMenu.getAssociations()) {
 			if (WDGT.HAS_MENU_ITEM.equals(stmt.getPredicate()) && stmt.getObject().isResourceNode()) {
 				final ResourceNode item = stmt.getObject().asResource();
@@ -226,8 +223,14 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
         if (user == null) {
             return null;
         } else {
-            return conversation.resolve(new SimpleResourceID(user.getQualifiedName()));
+            return conversation().resolve(new SimpleResourceID(user.getQualifiedName()));
         }
+    }
+
+    // ----------------------------------------------------
+
+    private ModelingConversation conversation() {
+        return arasFactory.getConversation(RBSystem.VIEW_SPEC_CTX);
     }
 	
 }

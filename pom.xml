@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.lichtflut</groupId>
+	
+	<groupId>de.lichtflut.rb</groupId>
 	<artifactId>lf.resource-browser</artifactId>
 	<name>Resource Browser</name>
-	<version>0.4.1-SNAPSHOT</version>
+	<version>0.5.0-SNAPSHOT</version>
 	<description>lichtflut Resource Browser Project</description>
 	<packaging>pom</packaging>
+	
 	<modules>
 		<module>core</module>
 		<module>tools</module>
@@ -16,12 +18,17 @@
 		<module>content-repo-jr</module>
   </modules>
 	<properties>
-		<arastreju.version>0.7.3-SNAPSHOT</arastreju.version>
-        <jersey.version>1.8</jersey.version>
+		<arastreju.version>0.8.0-SNAPSHOT</arastreju.version>
+		<jersey.version>1.8</jersey.version>
 	</properties>
 	<build>
 		<pluginManagement>
 			<plugins>
+				<!--plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.3.2</version>
+				</plugin-->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
@@ -119,10 +126,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<tagNameFormat>RELEASE_{project.version}</tagNameFormat>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -134,7 +137,7 @@
 		<dependencies>
 			<dependency>
 				<groupId>org.arastreju</groupId>
-				<artifactId>arastreju.neo4j</artifactId>
+				<artifactId>arastreju-neo4j</artifactId>
 				<version>${arastreju.version}</version>
 			</dependency>
 			<dependency>

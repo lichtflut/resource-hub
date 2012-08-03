@@ -72,7 +72,7 @@ public class CurrentNodeInfoPanel extends Panel {
 	/**
 	 * Constructor.
 	 * @param id The component ID.
-	 * @param model Model containing the initially selected node.
+	 * @param initial Model containing the initially selected node.
 	 */
 	public CurrentNodeInfoPanel(String id, IModel<ResourceNode> initial, VisualizationMode mode) {
 		super(id, initial);

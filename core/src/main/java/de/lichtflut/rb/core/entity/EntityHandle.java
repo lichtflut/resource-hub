@@ -8,6 +8,7 @@ import java.io.Serializable;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.infra.Infra;
+import org.arastreju.sge.model.SimpleResourceID;
 
 /**
  * <p>
@@ -42,6 +43,7 @@ public class EntityHandle implements Serializable {
 	}
 	
 	/**
+     * Constructor.
 	 * @param id
 	 * @param type
 	 */
@@ -54,11 +56,11 @@ public class EntityHandle implements Serializable {
 	// ----------------------------------------------------
 	
 	public ResourceID getType() {
-		return type;
+		return new SimpleResourceID(type.getQualifiedName());
 	}
 	
 	public ResourceID getId() {
-		return id;
+		return new SimpleResourceID(id.getQualifiedName());
 	}
 	
 	public EntityHandle setType(ResourceID type) {

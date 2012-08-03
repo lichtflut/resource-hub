@@ -64,16 +64,16 @@ public class UndeclaredRBField extends AbstractRBField {
 	}
 
 	@Override
-	public boolean isKnownToSchema() {
-		return false;
-	}
-
-	@Override
 	public boolean isResourceReference() {
 		return false;
 	}
 
-	@Override
+    @Override
+    public boolean isEmbedded() {
+        return false;
+    }
+
+    @Override
 	public Constraint getConstraint() {
 		return null;
 	}

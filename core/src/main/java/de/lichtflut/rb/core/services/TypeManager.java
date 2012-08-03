@@ -88,8 +88,7 @@ public interface TypeManager {
 	
 	/**
 	 * Create a new rdf:Property with given name.
-	 * @param namespace The namespace.
-	 * @param name The simple name.
+	 * @param property The property to be removed.
 	 */
 	void removeProperty(SNProperty property);
 	
