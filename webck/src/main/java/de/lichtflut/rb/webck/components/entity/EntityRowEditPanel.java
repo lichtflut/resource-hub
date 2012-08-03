@@ -3,18 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
-import de.lichtflut.rb.webck.components.form.RBSubmitLink;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.fields.FieldCardinalityModel;
-import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
-import de.lichtflut.rb.webck.models.fields.FieldSizeModel;
-import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
-import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.and;
+import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -30,9 +22,18 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.ResourceID;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.and;
-import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
+import de.lichtflut.rb.core.entity.EntityHandle;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.components.form.RBSubmitLink;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.fields.FieldCardinalityModel;
+import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
+import de.lichtflut.rb.webck.models.fields.FieldSizeModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
 
 /**
  * <p>
@@ -64,13 +65,13 @@ public class EntityRowEditPanel extends Panel {
 		setOutputMarkupId(true);
 		add(new Label("label", new FieldLabelModel(model)));
 
-        final FieldEditorFactory factory = new FieldEditorFactory(this, model);
+        final FieldEditorFactory factory = new FieldEditorFactory(this);
 
         final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
 		final ListView<RBFieldValueModel> view = new ListView<RBFieldValueModel>("values", listModel) {
 			@Override
 			protected void populateItem(final ListItem<RBFieldValueModel> item) {
-                final Component field = factory.createField(item.getModelObject(), model.getObject().getDataType());
+                final Component field = factory.createField(item.getModelObject());
                 item.add(field);
                 final int idx = item.getModelObject().getIndex();
 				item.add(createRemoveLink(idx));

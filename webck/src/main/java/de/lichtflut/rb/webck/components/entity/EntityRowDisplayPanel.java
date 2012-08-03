@@ -3,7 +3,20 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import java.math.BigDecimal;
+import java.util.Date;
+
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.model.ResourceID;
+
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
@@ -12,22 +25,11 @@ import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
+import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.model.ResourceID;
-
-import java.math.BigDecimal;
-import java.util.Date;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
 /**
  * <p>
@@ -79,8 +81,9 @@ public class EntityRowDisplayPanel extends Panel {
 	// ----------------------------------------------------
 	
 	/**
-	 * @param item
-	 * @param dataType
+     * Add a value field to the list item.
+	 * @param item The list item.
+	 * @param dataType The datatype
 	 */
 	protected void addValueField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
 		switch(dataType) {
@@ -112,10 +115,10 @@ public class EntityRowDisplayPanel extends Panel {
 	}
 
 	private void addResourceField(final ListItem<RBFieldValueModel> item) {
-		final ResourceID ref = (ResourceID) item.getModelObject().getObject();
+        final ResourceID ref = getResourceID(item.getModelObject());
 		if (ref != null) {
 			final CrossLink link = new CrossLink("link", getUrlTo(ref).toString());
-			link.add(new Label("label", Model.of(ResourceLabelBuilder.getInstance().getLabel(ref, getLocale()))));
+			link.add(new Label("label", getLabelModel(item.getModelObject())));
 			item.add(new Fragment("valuefield", "referenceLink", this).add(link));
 		} else {
 			addTextOutput(item, ResourceID.class);
@@ -153,13 +156,40 @@ public class EntityRowDisplayPanel extends Panel {
 		final Label field = new Label("valuefield", label);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
 	}
+
+    private ResourceID getResourceID(RBFieldValueModel model) {
+        Object object = model.getObject();
+        if (object == null) {
+            return null;
+        } else if (object instanceof ResourceID) {
+            return (ResourceID) object;
+        } else if (object instanceof RBEntity) {
+            RBEntity entity = (RBEntity) object;
+            return entity.getID();
+        } else {
+            throw new IllegalArgumentException("Cannot retrieve resource ID from object of type " + object.getClass());
+        }
+    }
+
+    private IModel<String> getLabelModel(RBFieldValueModel model) {
+        Object object = model.getObject();
+        if (object == null) {
+            return null;
+        } else if (object instanceof ResourceID) {
+            return new ResourceLabelModel((ResourceID) object);
+        } else if (object instanceof RBEntity) {
+            return new RBEntityLabelModel((RBEntity) object);
+        } else {
+            throw new IllegalArgumentException("Cannot retrieve resource ID from object of type " + object.getClass());
+        }
+    }
 	
 	// ----------------------------------------------------
 	
 	private class NotEmptyCondition extends ConditionalModel<RBField> {
 
 		/**
-		 * @param model
+		 * @param model The model to check.
 		 */
 		public NotEmptyCondition(IModel<RBField> model) {
 			super(model);

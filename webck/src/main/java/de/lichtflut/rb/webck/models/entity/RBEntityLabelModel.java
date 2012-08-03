@@ -29,7 +29,15 @@ public class RBEntityLabelModel extends DerivedModel<String, RBEntity> {
 		super(model);
 	}
 
-	// ----------------------------------------------------
+    /**
+     * Constructor
+     * @param entity The entity.
+     */
+    public RBEntityLabelModel(RBEntity entity) {
+        super(entity);
+    }
+
+    // ----------------------------------------------------
 	
 	/** 
 	* {@inheritDoc}

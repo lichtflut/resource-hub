@@ -46,7 +46,7 @@ import de.lichtflut.rb.core.services.TypeManager;
  */
 public class EntityManagerImpl implements EntityManager {
 
-	private final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EntityManagerImpl.class);
 
     private TypeManager typeManager;
 
@@ -76,43 +76,9 @@ public class EntityManagerImpl implements EntityManager {
 	 */
 	@Override
 	public RBEntityImpl find(final ResourceID resourceID) {
-        final ModelingConversation mc = conversation;
-        final ResourceNode node = mc.findResource(resourceID.getQualifiedName());
-        if (node == null) {
-            return null;
-        }
-        final ResourceID type = typeManager.getTypeOfResource(node);
-        final RBEntityImpl entity;
-        if (type == null) {
-            entity = new RBEntityImpl(node);
-        } else {
-            final ResourceSchema schema = schemaManager.findSchemaForType(type.asResource());
-            if (schema != null) {
-                entity = new RBEntityImpl(node, schema);
-            } else {
-                entity = new RBEntityImpl(node, type);
-            }
-        }
-        resolveEntityReferences(entity);
-        return entity;
+        return find(resourceID, true);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<RBEntity> findByType(final ResourceID type) {
-		final List<RBEntity> result = new ArrayList<RBEntity>();
-		final ResourceSchema schema = schemaManager.findSchemaForType(type);
-		final List<ResourceNode> nodes = findResourcesByType(type);
-		for (ResourceNode n : nodes) {
-			n.getAssociations();
-			RBEntityImpl entity = new RBEntityImpl(n, schema);
-			result.add(resolveEntityReferences(entity));
-		}
-		return result;
-	}
-	
 	// -----------------------------------------------------
 	
 	/** 
@@ -134,23 +100,24 @@ public class EntityManagerImpl implements EntityManager {
 	 */
 	@Override
     public void store(final RBEntity entity) {
-		final ModelingConversation mc = conversation;
 		final ResourceNode node = entity.getNode();
 		SNOPS.associate(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
 		for (RBField field :entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.assure(node, field.getPredicate(), nodes);
-			if (field.isResourceReference()) {
-				resolveEntityReferences(field);
-			}
+            if (field.isEmbedded()) {
+                storeEmbeddeds(field);
+            } else if (field.isResourceReference()) {
+                resolveEntityReferences(field);
+            }
 		}
 		// Set label after all entity references have been resolved
 		SNOPS.assure(node, RDFS.LABEL, new SNText(entity.getLabel()));
-		mc.attach(node);
+		conversation.attach(node);
     }
-	
-	/** 
+
+    /**
 	* {@inheritDoc}
 	*/
 	@Override
@@ -190,6 +157,27 @@ public class EntityManagerImpl implements EntityManager {
     }
 
     // ----------------------------------------------------
+
+    private RBEntityImpl find(final ResourceID resourceID, boolean resolveEmbeddeds) {
+        final ResourceNode node = conversation.findResource(resourceID.getQualifiedName());
+        if (node == null) {
+            return null;
+        }
+        final ResourceID type = typeManager.getTypeOfResource(node);
+        final RBEntityImpl entity;
+        if (type == null) {
+            entity = new RBEntityImpl(node);
+        } else {
+            final ResourceSchema schema = schemaManager.findSchemaForType(type.asResource());
+            if (schema != null) {
+                entity = new RBEntityImpl(node, schema);
+            } else {
+                entity = new RBEntityImpl(node, type);
+            }
+        }
+        resolveEntityReferences(entity, resolveEmbeddeds);
+        return entity;
+    }
 	
 	/**
 	 * @param field The field to be translated.
@@ -198,10 +186,13 @@ public class EntityManagerImpl implements EntityManager {
 	private Collection<SemanticNode> toSemanticNodes(final RBField field) {
 		final Collection<SemanticNode> result = new ArrayList<SemanticNode>();
 		for (Object value : field.getValues()) {
-			logger.info(field.getPredicate() + " : " + value);
+			LOGGER.info(field.getPredicate() + " : " + value);
 			if (value == null) {
 				// ignore
-			} else if (field.isResourceReference()) {
+			} else if (field.isEmbedded() && value instanceof RBEntity) {
+                final RBEntity ref = (RBEntity) value;
+                result.add(ref.getID());
+            } else if (field.isResourceReference()) {
 				final ResourceID ref = (ResourceID) value;
 				result.add(new SimpleResourceID(ref.getQualifiedName()));
 			} else {
@@ -214,28 +205,46 @@ public class EntityManagerImpl implements EntityManager {
 	
 	// ----------------------------------------------------
 	
-	private RBEntityImpl resolveEntityReferences(final RBEntityImpl entity) {
+	private RBEntityImpl resolveEntityReferences(final RBEntityImpl entity, boolean resolveEmbeddeds) {
 		for (RBField field : entity.getAllFields()) {
-			if (field.isResourceReference()) {
-				resolveEntityReferences(field);
-			}
+            if (resolveEmbeddeds && field.isEmbedded()) {
+                resolveEmbeddedEntityReferences(field);
+            } else if (field.isResourceReference()) {
+                resolveEntityReferences(field);
+            }
 		}
 		return entity;
 	}
 	
-	private void resolveEntityReferences(final RBField field) {
-		for(int i=0; i < field.getSlots(); i++) {
-			final ResourceID id = (ResourceID) field.getValue(i);
-			if (id != null) {
-				field.setValue(i, conversation.resolve(id));
-			}
-		}
-	}
+    private void resolveEntityReferences(final RBField field) {
+        for (int i=0; i < field.getSlots(); i++) {
+            ResourceID id = (ResourceID) field.getValue(i);
+            if (id != null) {
+                field.setValue(i, conversation.resolve(id));
+            }
+        }
+    }
 
-    private List<ResourceNode> findResourcesByType(ResourceID type) {
-        final Query query = conversation.createQuery();
-        query.addField(RDF.TYPE, type);
-        return query.getResult().toList(2000);
+    private void resolveEmbeddedEntityReferences(final RBField field) {
+        for (int i=0; i < field.getSlots(); i++) {
+            final Object value = field.getValue(i);
+            if (value instanceof RBEntity) {
+                // everything O.K.
+            } else if (value instanceof ResourceID) {
+                ResourceID id = (ResourceID) value;
+                field.setValue(i, find(id, false));
+            }
+        }
+    }
+
+
+    private void storeEmbeddeds(RBField field) {
+        for (Object value : field.getValues()) {
+            if (value instanceof RBEntity) {
+                RBEntity entity = (RBEntity) value;
+                store(entity);
+            }
+        }
     }
 
     private SNResource newEntityNode() {
