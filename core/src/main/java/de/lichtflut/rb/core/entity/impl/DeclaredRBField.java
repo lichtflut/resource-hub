@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.entity.impl;
 import java.util.Locale;
 import java.util.Set;
 
+import de.lichtflut.rb.core.RB;
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -72,8 +73,11 @@ public class DeclaredRBField extends AbstractRBField {
 
     @Override
     public boolean isEmbedded() {
-        // for testing: embed all resource references.
-        return isResourceReference();
+        if (getConstraint() == null || getConstraint().isLiteral()) {
+            return false;
+        }
+        // for testing always embed addresses
+        return RB.ADDRESS.equals(getConstraint().getReference());
     }
 
     @Override
