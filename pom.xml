@@ -13,10 +13,10 @@
 		<module>core</module>
 		<module>tools</module>
 		<module>webck</module>
-		<module>rest-api</module>
+      		<module>rest-api</module>
 		<module>app-foundation</module>
-	</modules>
-
+		<module>content-repo-jr</module>
+  </modules>
 	<properties>
 		<arastreju.version>0.8.0-SNAPSHOT</arastreju.version>
 		<jersey.version>1.8</jersey.version>
