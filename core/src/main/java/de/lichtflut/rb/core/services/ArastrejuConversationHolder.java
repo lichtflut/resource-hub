@@ -10,6 +10,8 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.arastreju.sge.query.Query;
 
+import java.util.Set;
+
 /**
  * <p>
  *  Holder of the current Arastreju conversation.
@@ -71,6 +73,10 @@ public class ArastrejuConversationHolder implements ModelingConversation {
 
     public Query createQuery() {
         return delegate().createQuery();
+    }
+
+    public Set<Statement> findIncomingStatements(ResourceID object) {
+        return delegate().findIncomingStatements(object);
     }
 
     public void reset(ResourceNode node) {
