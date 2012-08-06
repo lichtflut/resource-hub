@@ -4,7 +4,6 @@ derby.log
 .classpath
 .settings
 .idea
-.gitignore
 *.iml
 *.ipr
 *.iws
