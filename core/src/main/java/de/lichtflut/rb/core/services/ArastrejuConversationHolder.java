@@ -12,8 +12,6 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.arastreju.sge.query.Query;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
-
 /**
  * <p>
  *  Holder of the current Arastreju conversation.
@@ -88,6 +86,11 @@ public class ArastrejuConversationHolder implements ModelingConversation {
 	}
 
 	@Override
+	public Set<Statement> findIncomingStatements(final ResourceID object) {
+		return delegate().findIncomingStatements(object);
+	}
+
+	@Override
 	public void reset(final ResourceNode node) {
 		delegate().reset(node);
 	}
@@ -111,13 +114,5 @@ public class ArastrejuConversationHolder implements ModelingConversation {
 
 	private ModelingConversation delegate() {
 		return factory.getConversation();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<Statement> findIncomingStatements(final ResourceID object) {
-		throw new NotYetImplementedException();
 	}
 }
