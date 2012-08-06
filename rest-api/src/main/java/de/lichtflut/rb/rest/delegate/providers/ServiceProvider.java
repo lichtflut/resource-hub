@@ -3,16 +3,19 @@
  */
 package de.lichtflut.rb.rest.delegate.providers;
 
+import java.io.File;
+
+import org.arastreju.sge.ModelingConversation;
+
+import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
-import org.arastreju.sge.ArastrejuGate;
-import org.arastreju.sge.ModelingConversation;
 
 
 /**
-  * <p>
+ * <p>
  * The ServiceProvider which provides all existing RB-Services.
  * </p>
  *
@@ -21,17 +24,17 @@ import org.arastreju.sge.ModelingConversation;
  * @author Ravi Knox
  */
 public interface ServiceProvider {
-	
+
 	/**
 	 * @return The context of this service provider.
 	 */
 	ServiceContext getContext();
-	
+
 	/**
 	 * @return An active Arastreju conversation.
 	 */
 	ModelingConversation getConversation();
-	
+
 	// -----------------------------------------------------
 
 	/**
@@ -47,10 +50,15 @@ public interface ServiceProvider {
 	 * @return The type manager.
 	 */
 	TypeManager getTypeManager();
-	
+
 	/**
 	 * @return The security service.
 	 */
 	SecurityService getSecurityService();
+
+	/**
+	 * @return the file service to store and retrieve {@link File}s
+	 */
+	FileService getFileService();
 
 }

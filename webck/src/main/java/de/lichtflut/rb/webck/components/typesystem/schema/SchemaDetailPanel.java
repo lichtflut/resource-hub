@@ -72,7 +72,7 @@ public class SchemaDetailPanel extends Panel {
 
 	@SpringBean
 	private TypeManager typeManager;
-	
+
 	private final IModel<ResourceSchema> schema;
 	private PropertyRowListModel listModel;
 
@@ -84,10 +84,10 @@ public class SchemaDetailPanel extends Panel {
 	 * @param id - wicket:id
 	 * @param model - to display
 	 */
-	public SchemaDetailPanel(String id, IModel<ResourceSchema> schema) {
+	public SchemaDetailPanel(final String id, final IModel<ResourceSchema> schema) {
 		super(id);
 		this.schema = schema;
-		
+
 		add(createTitleLabel("title"));
 		add(new TypeHierarchyPanel("typeHierarchy", Model.of(schema.getObject().getDescribedType())));
 
@@ -120,7 +120,7 @@ public class SchemaDetailPanel extends Panel {
 	/**
 	 * Create a Component to display the described-type.
 	 */
-	private Component createTitleLabel(String id) {
+	private Component createTitleLabel(final String id) {
 		return new Label(id, Model.of(schema.getObject().getDescribedType()));
 	}
 
@@ -153,7 +153,7 @@ public class SchemaDetailPanel extends Panel {
 	/**
 	 * Adds Delete, Add, Edit Buttons to the component
 	 */
-	private void addButtonBar(Form<?> form) {
+	private void addButtonBar(final Form<?> form) {
 		form.add(createSaveButton("saveButton"));
 		form.add(createAddbutton("addButton"));
 		form.add(createDeleteButton("deleteButton"));
@@ -161,11 +161,11 @@ public class SchemaDetailPanel extends Panel {
 
 	// ------------------------------------------------------
 
-	private Component createListView(String id, IModel<ResourceSchema> schema) {
+	private Component createListView(final String id, final IModel<ResourceSchema> schema) {
 		listModel = new PropertyRowListModel(schema);
 		ListView<PropertyRow> view = new ListView<PropertyRow>(id, listModel) {
 			@Override
-			protected void populateItem(ListItem<PropertyRow> item) {
+			protected void populateItem(final ListItem<PropertyRow> item) {
 				fillRow(item);
 				addColorCode(item);
 			}
@@ -174,17 +174,17 @@ public class SchemaDetailPanel extends Panel {
 		return view;
 	}
 
-	private Component createDeleteButton(String id) {
+	private Component createDeleteButton(final String id) {
 		Button button = new RBStandardButton(id) {
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				DialogHoster hoster = findParent(DialogHoster.class);
 				ConfirmationDialog dialog = new ConfirmationDialog(hoster.getDialogID(), Model.of(getString("confirmation.deleted-successfull"))) {
 					@Override
 					public void onConfirm() {
 						schemaManager.removeSchemaForType(schema.getObject().getDescribedType());
 						typeManager.removeType(schema.getObject().getDescribedType());
-//						typemanager.remove // aufrufen
+						//						typemanager.remove // aufrufen
 						SchemaDetailPanel.this.setVisible(false);
 						updatePanel();
 						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
@@ -201,11 +201,11 @@ public class SchemaDetailPanel extends Panel {
 		return button;
 	}
 
-	private Component createAddbutton(String id) {
+	private Component createAddbutton(final String id) {
 		final IModel<PropertyRow> row = Model.of(new PropertyRow());
 		Button button = new RBStandardButton(id) {
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				listModel.getObject().add(row.getObject());
 				openPropertyDeclDialog(row);
 			}
@@ -214,14 +214,14 @@ public class SchemaDetailPanel extends Panel {
 				DialogHoster hoster = findParent(DialogHoster.class);
 				hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), row) {
 					@Override
-					protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+					protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 						schema.getObject().addPropertyDeclaration(row.getObject().asPropertyDeclaration());
 						updatePanel();
 						close(target);
 					}
 
 					@Override
-					protected void onCancel(AjaxRequestTarget target, Form<?> form) {
+					protected void onCancel(final AjaxRequestTarget target, final Form<?> form) {
 						setDefaultFormProcessing(false);
 						listModel.getObject().remove(row.getObject());
 						close(target);
@@ -232,10 +232,10 @@ public class SchemaDetailPanel extends Panel {
 		return button;
 	}
 
-	private Component createSaveButton(String id) {
+	private Component createSaveButton(final String id) {
 		Button button = new RBStandardButton(id) {
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				info(getString("confirmation.schema-saved-successful"));
 				saveAndUpdate();
 			}
@@ -249,7 +249,7 @@ public class SchemaDetailPanel extends Panel {
 	 * 
 	 * @param item
 	 */
-	private void fillRow(ListItem<PropertyRow> item) {
+	private void fillRow(final ListItem<PropertyRow> item) {
 		addPropertyDecl(item);
 		addLabelDecl(item);
 		addCardinality(item);
@@ -284,8 +284,8 @@ public class SchemaDetailPanel extends Panel {
 				picker.setVisible(false);
 				picker.add(new AjaxUpdateDataPickerField() {
 					@Override
-					public void onSubmit(AjaxRequestTarget target) {
-						 addTypeNotYetStoredInfo();
+					public void onSubmit(final AjaxRequestTarget target) {
+						addTypeNotYetStoredInfo();
 						updatePanel();
 					};
 				});
@@ -363,12 +363,12 @@ public class SchemaDetailPanel extends Panel {
 	private AjaxEditableLabel<String> createStringPatternField(final ListItem<PropertyRow> item) {
 		IModel<String> patternModel = createModelForLiteralConstraint(item);
 		AjaxEditableLabel<String> patternField = new AjaxEditableLabel<String>("pattern", patternModel){
-				@Override
-				protected void onSubmit(final AjaxRequestTarget target) {
-					addTypeNotYetStoredInfo();
-					updatePanel();
-					super.onSubmit(target);
-				}
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target) {
+				addTypeNotYetStoredInfo();
+				updatePanel();
+				super.onSubmit(target);
+			}
 		};
 		return patternField;
 	}
@@ -392,7 +392,7 @@ public class SchemaDetailPanel extends Panel {
 				picker.setVisible(false);
 				picker.add(new AjaxUpdateDataPickerField() {
 					@Override
-					public void onSubmit(AjaxRequestTarget target) {
+					public void onSubmit(final AjaxRequestTarget target) {
 						addTypeNotYetStoredInfo();
 						updatePanel();
 					};
@@ -406,7 +406,7 @@ public class SchemaDetailPanel extends Panel {
 	private void addUpDownButton(final ListItem<PropertyRow> item) {
 		item.add(new AjaxLink<Void>("up") {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				listModel.moveUp(item.getIndex());
 				updatePanel();
 			}
@@ -414,7 +414,7 @@ public class SchemaDetailPanel extends Panel {
 
 		item.add(new AjaxLink<Void>("down") {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				listModel.moveDown(item.getIndex());
 				updatePanel();
 			}
@@ -424,7 +424,7 @@ public class SchemaDetailPanel extends Panel {
 	private void addEditButton(final ListItem<PropertyRow> item) {
 		item.add(new AjaxLink<Void>("edit") {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				openPropertyDeclDialog(item);
 			}
 
@@ -432,13 +432,13 @@ public class SchemaDetailPanel extends Panel {
 				DialogHoster hoster = findParent(DialogHoster.class);
 				hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), item.getModel()) {
 					@Override
-					protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+					protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 						updatePanel();
 						close(target);
 					}
 
 					@Override
-					protected void onCancel(AjaxRequestTarget target, Form<?> form) {
+					protected void onCancel(final AjaxRequestTarget target, final Form<?> form) {
 						close(target);
 					}
 				});
@@ -449,7 +449,7 @@ public class SchemaDetailPanel extends Panel {
 	private void addDeleteButton(final ListItem<PropertyRow> item) {
 		item.add(new AjaxLink<Void>("delete") {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				schema.getObject().getPropertyDeclarations().remove(item.getIndex());
 				updatePanel();
 			}
@@ -461,12 +461,13 @@ public class SchemaDetailPanel extends Panel {
 	private void addTypeNotYetStoredInfo(){
 		error(getString("error.schema-not-yet-saved"));
 	}
-	private IModel<ResourceID> createModelForResourceContraint(ListItem<PropertyRow> item) {
+
+	private IModel<ResourceID> createModelForResourceContraint(final ListItem<PropertyRow> item) {
 		final IModel<ResourceID> model = new PropertyModel<ResourceID>(item.getModel(), "resourceConstraint");
 		return model;
 	}
 
-	private IModel<String> createModelForLiteralConstraint(ListItem<PropertyRow> item) {
+	private IModel<String> createModelForLiteralConstraint(final ListItem<PropertyRow> item) {
 		final IModel<String> model = new PropertyModel<String>(item.getModel(), "literalConstraint");
 		return model;
 	}
@@ -476,7 +477,7 @@ public class SchemaDetailPanel extends Panel {
 		return new Label(componentId, s);
 	}
 
-	private void addTitleAttribute(IModel<?> model, Component c) {
+	private void addTitleAttribute(final IModel<?> model, final Component c) {
 		c.add(new AttributeAppender("title", model));
 	}
 
@@ -485,7 +486,7 @@ public class SchemaDetailPanel extends Panel {
 	 * 
 	 * @param item
 	 */
-	private void addColorCode(ListItem<PropertyRow> item) {
+	private void addColorCode(final ListItem<PropertyRow> item) {
 		switch (item.getModelObject().getDataType()) {
 		case DATE:
 		case TIME_OF_DAY:

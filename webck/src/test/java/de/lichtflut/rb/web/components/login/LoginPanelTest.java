@@ -54,7 +54,7 @@ public class LoginPanelTest {
 	 */
 	@Test
 	public void testComponentsInPanel(){
-
+		System.out.println(System.getProperty("java.io.tmpdir"));
 		Panel panel = createPanel();
 		tester.startComponentInPage(panel);
 		tester.assertComponent("panel:form:loginID", TextField.class );

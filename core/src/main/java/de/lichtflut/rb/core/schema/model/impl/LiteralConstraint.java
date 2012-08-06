@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
@@ -25,19 +24,19 @@ import de.lichtflut.rb.core.schema.model.Datatype;
  */
 public class LiteralConstraint implements Constraint {
 
-	private ResourceNode node;
-	
+	private final ResourceNode node;
+
 	// ---------------- Constructor -------------------------
-	
+
 	/**
 	 * Constructor.
 	 */
-	public LiteralConstraint(ResourceNode node) {
+	public LiteralConstraint(final ResourceNode node) {
 		this.node = node;
 	}
 
 	// ------------------------------------------------------
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -54,10 +53,10 @@ public class LiteralConstraint implements Constraint {
 		return SNOPS.singleObject(node, RBSchema.HAS_CONSTRAINT_VALUE).asValue().getStringValue();
 	}
 
-	public void setLiteralPattern(String pattern) {
+	public void setLiteralPattern(final String pattern) {
 		SNOPS.assure(node, RBSchema.HAS_CONSTRAINT_VALUE, pattern);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

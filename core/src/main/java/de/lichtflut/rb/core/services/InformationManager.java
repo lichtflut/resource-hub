@@ -1,11 +1,11 @@
 package de.lichtflut.rb.core.services;
 
-import de.lichtflut.rb.core.io.IOReport;
+import java.io.InputStream;
+
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.io.StatementContainer;
-import org.arastreju.sge.model.SemanticGraph;
 
-import java.io.InputStream;
+import de.lichtflut.rb.core.io.IOReport;
 
 /**
  * <p>
@@ -20,7 +20,7 @@ import java.io.InputStream;
  */
 public interface InformationManager {
 
-    IOReport importInformation(InputStream in, Context targetContext, String reportContext);
+	IOReport importInformation(InputStream in, Context targetContext, String reportContext);
 
-    StatementContainer exportInformation(Context srcContexts);
+	StatementContainer exportInformation(Context srcContexts);
 }

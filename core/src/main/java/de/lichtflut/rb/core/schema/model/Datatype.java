@@ -19,7 +19,7 @@ import de.lichtflut.infra.exceptions.NotYetSupportedException;
  * @author Oliver Tigges
  */
 public enum Datatype {
-	
+
 	BOOLEAN,
 	INTEGER,
 	DECIMAL,
@@ -30,12 +30,13 @@ public enum Datatype {
 	DATE,
 	TIME_OF_DAY,
 	URI,
-	
+	FILE,
+
 	RESOURCE;
-	
+
 	// ----------------------------------------------------
-	
-	public static ElementaryDataType getCorrespondingArastrejuType(Datatype type) {
+
+	public static ElementaryDataType getCorrespondingArastrejuType(final Datatype type) {
 		switch(type) {
 		case BOOLEAN:
 			return ElementaryDataType.BOOLEAN;
@@ -57,6 +58,8 @@ public enum Datatype {
 			return ElementaryDataType.STRING;
 		case URI:
 			return ElementaryDataType.URI;
+		case FILE:
+			return ElementaryDataType.File;
 		default:
 			throw new NotYetSupportedException(type);
 		}
