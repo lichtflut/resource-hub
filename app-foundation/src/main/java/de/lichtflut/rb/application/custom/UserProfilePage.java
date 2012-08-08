@@ -39,14 +39,8 @@ import de.lichtflut.rb.webck.models.CurrentUserModel;
  */
 public class UserProfilePage extends RBBasePage {
 
-	@SpringBean
-	private SchemaManager schemaManager;
-	
-	// ---------------- Constructor -------------------------
-
 	/**
 	 * Default constructor.
-	 * @param user
 	 */
 	public UserProfilePage(){
 		add(createTitle());
@@ -80,18 +74,16 @@ public class UserProfilePage extends RBBasePage {
 			@Override
 			protected void onResourceLinkClicked(ResourceNode node) {
 				final PageParameters params = new PageParameters();
-				ResourceSchema schema = schemaManager.findSchemaForType(RB.PERSON);
-				RBEntity user = new RBEntityImpl(node.asResource(), schema);
-				params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, user.getType());
-				params.add(EntityDetailPage.PARAM_RESOURCE_ID, user.getID());
+				params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, RB.PERSON);
+				params.add(EntityDetailPage.PARAM_RESOURCE_ID, node.getQualifiedName());
 				setResponsePage(EntityDetailPage.class, params);
 			}
 
 			@Override
 			protected void jumpToResourceEditorPage(EntityHandle handle) {
 				PageParameters params = new PageParameters();
+                params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, RB.PERSON);
 				params.set(DisplayMode.PARAMETER, DisplayMode.EDIT);
-				params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, RB.PERSON);
 				setResponsePage(new EntityDetailPage(handle));
 			}
 
