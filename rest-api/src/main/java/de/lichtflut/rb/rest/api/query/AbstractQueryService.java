@@ -62,7 +62,7 @@ public class AbstractQueryService extends RBServiceEndpoint {
 
     private ModelingConversation conversation(String domain, RBUser user, Context context) {
         final ServiceProvider provider = getProvider(domain, user);
-        return provider.getConversation();
+        return provider.getConversation(context);
     }
 
     protected String decodeBase64(String encoded) {
