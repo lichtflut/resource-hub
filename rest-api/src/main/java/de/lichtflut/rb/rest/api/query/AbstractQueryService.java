@@ -30,13 +30,20 @@ public class AbstractQueryService extends RBServiceEndpoint {
 
     protected List<ResultItemRVO> buildResult(QueryResult result) {
         final List<ResultItemRVO> rvoList = new ArrayList<ResultItemRVO>();
+        int count = 0;
         for (ResourceNode node : result) {
             ResultItemRVO item = new ResultItemRVO();
             item.setId(node.toURI());
             item.setLabel(ResourceLabelBuilder.getInstance().getLabel(node, Locale.getDefault()));
             item.setInfo(ResourceLabelBuilder.getInstance().getLabel(node, Locale.getDefault()));
             rvoList.add(item);
+            count++;
+            if (count >= 20) {
+                break;
+            }
+
         }
+        result.close();
         return rvoList;
     }
 
