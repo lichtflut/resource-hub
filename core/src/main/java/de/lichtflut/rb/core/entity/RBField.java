@@ -34,10 +34,17 @@ public interface RBField {
 
 	/**
 	 * Returns the field's display label.
-	 * @param locale TODO
+	 * @param locale The locale to use.
 	 * @return The label of the field.
 	 */
 	String getLabel(Locale locale);
+
+    /**
+     * Get additional information about the visualization of the field.
+     * @return The visualization info.
+     */
+    FieldVisualizationInfo getVisualizationInfo();
+
 
 	// -----------------------------------------------------
 
@@ -58,12 +65,6 @@ public interface RBField {
 	 * @return True if this field is a resource reference, false if not
 	 */
 	boolean isResourceReference();
-
-    /**
-     * Resource references may be embedded.
-     * @return True if the referenced resources shall be embedded.
-     */
-    boolean isEmbedded();
 
 	/**
 	 * Returns this field's constraint according to the RBSchema.

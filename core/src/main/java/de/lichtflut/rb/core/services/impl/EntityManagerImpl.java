@@ -2,7 +2,6 @@ package de.lichtflut.rb.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 import de.lichtflut.rb.core.common.DomainNamespacesHandler;
@@ -19,7 +18,6 @@ import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +104,7 @@ public class EntityManagerImpl implements EntityManager {
 		for (RBField field :entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.assure(node, field.getPredicate(), nodes);
-            if (field.isEmbedded()) {
+            if (field.getVisualizationInfo().isEmbedded()) {
                 storeEmbeddeds(field);
             } else if (field.isResourceReference()) {
                 resolveEntityReferences(field);
@@ -189,7 +187,7 @@ public class EntityManagerImpl implements EntityManager {
 			LOGGER.info(field.getPredicate() + " : " + value);
 			if (value == null) {
 				// ignore
-			} else if (field.isEmbedded() && value instanceof RBEntity) {
+			} else if (field.getVisualizationInfo().isEmbedded() && value instanceof RBEntity) {
                 final RBEntity ref = (RBEntity) value;
                 result.add(ref.getID());
             } else if (field.isResourceReference()) {
@@ -207,7 +205,7 @@ public class EntityManagerImpl implements EntityManager {
 	
 	private RBEntityImpl resolveEntityReferences(final RBEntityImpl entity, boolean resolveEmbeddeds) {
 		for (RBField field : entity.getAllFields()) {
-            if (resolveEmbeddeds && field.isEmbedded()) {
+            if (resolveEmbeddeds && field.getVisualizationInfo().isEmbedded()) {
                 resolveEmbeddedEntityReferences(field);
             } else if (field.isResourceReference()) {
                 resolveEntityReferences(field);

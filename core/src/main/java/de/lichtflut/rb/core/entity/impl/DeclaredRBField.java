@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.entity.FieldVisualizationInfo;
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -55,7 +56,7 @@ public class DeclaredRBField extends AbstractRBField {
 	public ResourceID getPredicate() {
 		return declaration.getPropertyDescriptor();
 	}
-	
+
 	@Override
 	public Datatype getDataType() {
 		return declaration.getDatatype();
@@ -72,12 +73,13 @@ public class DeclaredRBField extends AbstractRBField {
 	}
 
     @Override
-    public boolean isEmbedded() {
-        if (getConstraint() == null || getConstraint().isLiteral()) {
-            return false;
+    public FieldVisualizationInfo getVisualizationInfo() {
+        PlainFieldVisualizationInfo info =  new PlainFieldVisualizationInfo();
+        if (getConstraint() != null && RB.ADDRESS.equals(getConstraint().getReference())) {
+            // for testing always embed addresses
+            info.setEmbedded(true);
         }
-        // for testing always embed addresses
-        return RB.ADDRESS.equals(getConstraint().getReference());
+        return info;
     }
 
     @Override

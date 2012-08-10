@@ -95,7 +95,7 @@ public class FieldEditorFactory implements Serializable {
 
     public Component createResourceField(RBFieldValueModel model, boolean allowEmbedding) {
         RBField fieldDefinition = model.getField();
-        if (allowEmbedding && fieldDefinition.isEmbedded()) {
+        if (allowEmbedding && fieldDefinition.getVisualizationInfo().isEmbedded()) {
             return new EmbeddedReferencePanel("valuefield", model, this);
         } else {
             Object object = model.getObject();

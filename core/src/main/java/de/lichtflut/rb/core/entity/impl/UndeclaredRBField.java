@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.entity.impl;
 import java.util.Locale;
 import java.util.Set;
 
+import de.lichtflut.rb.core.entity.FieldVisualizationInfo;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
@@ -69,8 +70,8 @@ public class UndeclaredRBField extends AbstractRBField {
 	}
 
     @Override
-    public boolean isEmbedded() {
-        return false;
+    public FieldVisualizationInfo getVisualizationInfo() {
+        return new PlainFieldVisualizationInfo();
     }
 
     @Override
