@@ -247,10 +247,6 @@ div.form-field {
     text-align: left;
 }
 
-div.form-field * {
-	float:left;
-}
-
 div.form-field label {
 	display: block;
 	min-width: 140px;
@@ -301,45 +297,73 @@ div.entity-display {
 	border-top: 0;
 }
 
-div.entity-display-fields {
+div.entity-fields {
 }
 
 div.entity-field {
     width: 100%;
     clear: both;
     float: none;
-    text-align: left;
     min-height: 26px;
     display: inline-block;
 }
 
 div.entity-field .field-label {
-    width:145px;
-    padding: 2px 5px 0 0;
+    width:20%;
     float:left;
 }
 
+/* The values of one field */
 div.entity-field .field-values {
     float:left;
-    margin: 0 5px 2px 0;
-    max-width: 420px;
+    margin: 0 0 2px 0;
+    width:77%;
 }
 
-div.entity-field .field-values input[type='text'] {
-	width:230px;
+/* The single value of one field */
+div.entity-field div.field-value-input {
+    float: left;
+    min-width: 350px;
 }
 
-div.entity-field .field-values textarea {
-	width:350px;
-	height:50px;
+div.entity-field a.field-value-operation {
+    float:left;
 }
 
-div.entity-field .field-operations {
-    float: right;
+div.entity-field textarea {
+    width:350px;
+    height:50px;
+}
+
+div.entity-field input[type='text'] {
+	width:260px;
 }
 
 div.entity-field div.data-picker {
     padding-right: 10px;
+}
+
+div.entity-field .field-operations {
+    width:3%;
+    float: left;
+}
+
+/* embedded references */
+
+div.embedded-reference {
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+div.embedded-entity-field {
+    padding: 1px;
+    float: left;
+}
+
+div.embedded-entity-field input[type='text'] {
+    height:14px;
+    width: 200px;
+    font-size: 0.9em;
 }
 
 /* RESOURCE INFO PANEL */

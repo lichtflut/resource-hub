@@ -18,7 +18,6 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
-import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.validation.validator.PatternValidator;
@@ -85,6 +84,8 @@ public class FieldEditorFactory implements Serializable {
                 return createRichTextArea(field, valueModel);
             case URI:
                 return createURIField(field, valueModel);
+            case FILE:
+                return createFileChooser(field, valueModel);
             default:
                 throw new NotYetImplementedException("Datatype: " + field.getDataType());
         }
@@ -145,8 +146,8 @@ public class FieldEditorFactory implements Serializable {
 		return new Fragment("valuefield", "textInput", container).add(field);
 	}
 
-	public Component createFileChooser(final ListItem<RBFieldValueModel> item){
-		FileUploadField fileUploadField = new FileUploadField("valuefield", item.getModelObject());
+	public Component createFileChooser(RBField fieldDefinition, IModel model){
+		FileUploadField fileUploadField = new FileUploadField("valuefield", model);
 		return new Fragment("valuefield", "fileUpload", container).add(fileUploadField);
 	}
 

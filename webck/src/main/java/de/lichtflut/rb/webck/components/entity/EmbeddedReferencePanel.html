@@ -10,9 +10,12 @@
 </wicket:head>
 <wicket:panel>
 
-    <wicket:container wicket:id="columns">
-		<wicket:container wicket:id="valuefield" class="embedded-entity-field"></wicket:container>
-	</wicket:container>
+    <div class="embedded-reference">
+    <div wicket:id="columns" class="embedded-entity-field">
+        <span wicket:id="label" class="embedded-entity-field-label"></span>
+		<wicket:container wicket:id="valuefield"></wicket:container>
+	</div>
+    </div>
 
 </wicket:panel>
 </html>

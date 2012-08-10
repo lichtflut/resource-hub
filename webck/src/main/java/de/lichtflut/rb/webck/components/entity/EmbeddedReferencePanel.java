@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.lichtflut.rb.webck.models.basic.CastingModel;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -61,6 +62,7 @@ public class EmbeddedReferencePanel extends Panel {
             protected void populateItem(ListItem<RBField> item) {
                 RBField field = item.getModelObject();
                 RBFieldValueModel valueModel = new RBFieldValueModel(field, 0);
+                item.add(new Label("label", field.getLabel(getLocale())));
                 item.add(factory.createField(valueModel, false));
             }
         };

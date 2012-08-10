@@ -56,7 +56,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	 * Besides the given values, the PropertyDeclaration's default values for Cardinality will be <code>[n..n]</code>
 	 * and the PropertyDescriptor will be used as a default label. No Constraints will be set.
 	 * @param propertyDescriptor
-	 * @param typeDefinition
+	 * @param dataType
 	 */
 	public PropertyDeclarationImpl(ResourceID propertyDescriptor, Datatype dataType) {
 		this(propertyDescriptor, dataType, null);
@@ -67,7 +67,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	 * Besides the given values, the PropertyDeclaration's default values for Cardinality will be <code>[n..n]</code>
 	 * and the PropertyDescriptor will be used as a default label.
 	 * @param propertyDescriptor
-	 * @param typeDefinition
+	 * @param dataType
 	 * @param constraint
 	 */
 	public PropertyDeclarationImpl(ResourceID propertyDescriptor, Datatype dataType, Constraint constraint) {

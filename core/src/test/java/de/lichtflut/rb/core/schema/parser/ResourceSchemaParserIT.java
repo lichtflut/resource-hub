@@ -12,8 +12,6 @@ import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import junit.framework.Assert;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.persistence.TransactionControl;
-import org.arastreju.sge.query.Query;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
