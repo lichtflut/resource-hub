@@ -28,7 +28,7 @@ import de.lichtflut.rb.core.services.ServiceContext;
 
 /**
  * <p>
- *  Implementation of {@link SecurityService}. 
+ *  Implementation of {@link SecurityService}.
  *  This service wrapps the {@link UserManager}.
  *
  * <p>
@@ -38,51 +38,51 @@ import de.lichtflut.rb.core.services.ServiceContext;
  * @author Oliver Tigges
  */
 public class SecurityServiceImpl implements SecurityService {
-	
+
 	private final Logger logger = LoggerFactory.getLogger(SecurityServiceImpl.class);
-	
+
 	private AuthModule authModule;
 
-    private ModelingConversation conversation;
-	
+	private ModelingConversation conversation;
+
 	private MessagingService messagingService;
 
-    private ServiceContext serviceContext;
+	private ServiceContext serviceContext;
 
-    private SecurityConfiguration securityConfiguration;
+	private SecurityConfiguration securityConfiguration;
 
 	// ----------------------------------------------------
 
-    /**
-     * Default constructor.
-     */
-    public SecurityServiceImpl() {
-    }
+	/**
+	 * Default constructor.
+	 */
+	public SecurityServiceImpl() {
+	}
 
-    /**
+	/**
 	 * Constructor.
 	 */
-	public SecurityServiceImpl(ServiceContext context, ModelingConversation conversation, AuthModule authModule) {
+	public SecurityServiceImpl(final ServiceContext context, final ModelingConversation conversation, final AuthModule authModule) {
 		this.conversation = conversation;
-        this.serviceContext = context;
+		this.serviceContext = context;
 		this.authModule = authModule;
 	}
 
 	// ----------------------------------------------------
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RBUser findUser(String identifier) {
+	public RBUser findUser(final String identifier) {
 		return authModule.getUserManagement().findUser(identifier);
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RBUser createUser(String email, String username, String password, Locale locale) throws RBException {
+	public RBUser createUser(final String email, final String username, final String password, final Locale locale) throws RBException {
 		final RBUser rbUser = new RBUser(new SimpleResourceID().getQualifiedName());
 		rbUser.setEmail(email);
 		rbUser.setUsername(username);
@@ -93,158 +93,158 @@ public class SecurityServiceImpl implements SecurityService {
 		}
 		return rbUser;
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RBUser createDomainAdmin(final RBDomain domain, String email, String username, String password) throws RBAuthException {
+	public RBUser createDomainAdmin(final RBDomain domain, final String email, final String username, final String password) throws RBAuthException {
 		logger.info("Creating domain admin {} for domain {}.", email, domain.getName());
 		final RBUser rbUser = new RBUser(new SimpleResourceID().getQualifiedName());
 		rbUser.setEmail(email);
 		rbUser.setUsername(username);
 		final String crypted = RBCrypt.encryptWithRandomSalt(password);
-		
+
 		authModule.getUserManagement().registerUser(rbUser, crypted, domain.getName());
-		
+
 		makeDomainAdmin(domain, rbUser);
-		
+
 		return rbUser;
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void makeDomainAdmin(RBDomain domain, RBUser user) throws RBAuthException {
+	public void makeDomainAdmin(final RBDomain domain, final RBUser user) throws RBAuthException {
 		final List<String> roles = Arrays.asList(rolesOfDomainAdmin());
 		logger.info("Adding roles {} to user {}.", roles, user);
 		setUserRoles(user, domain.getName(), roles);
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void storeUser(RBUser updated) throws RBException {
+	public void storeUser(final RBUser updated) throws RBException {
 		authModule.getUserManagement().updateUser(updated);
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deleteUser(RBUser user) {
+	public void deleteUser(final RBUser user) {
 		conversation.remove(new SimpleResourceID(user.getQualifiedName()));
 		authModule.getUserManagement().deleteUser(user);
 		logger.info("Deleted user: " + user);
 	}
-	
+
 	// -- AUTHORIZATON ------------------------------------
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<String> getUserRoles(RBUser user, String domain) {
+	public List<String> getUserRoles(final RBUser user, final String domain) {
 		return authModule.getUserManagement().getUserRoles(user, domain);
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getUserPermissions(RBUser user, String domain) {
+	public Set<String> getUserPermissions(final RBUser user, final String domain) {
 		return authModule.getUserManagement().getUserPermissions(user, domain);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setUserRoles(RBUser user, String domain, List<String> roles) throws RBAuthException {
+	public void setUserRoles(final RBUser user, final String domain, final List<String> roles) throws RBAuthException {
 		authModule.getUserManagement().setUserRoles(user, domain, roles);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void removeAllUserRoles(RBUser user) throws RBAuthException {
+	public void removeAllUserRoles(final RBUser user) throws RBAuthException {
 		authModule.getUserManagement().removeAllUserRoles(user, null);
 	}
-	
+
 	// ----------------------------------------------------
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void changePassword(RBUser user, String currentPassword, String newPassword) throws RBException{
+	public void changePassword(final RBUser user, final String currentPassword, final String newPassword) throws RBException{
 		authModule.getUserManagement().verifyPassword(user, currentPassword);
 		authModule.getUserManagement().changePassword(user, newPassword);
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
-	 * @throws RBException 
+	 * @throws RBException
 	 */
 	@Override
-	public void resetPasswordForUser(RBUser user, Locale locale) throws RBException {
+	public void resetPasswordForUser(final RBUser user, final Locale locale) throws RBException {
 		final String generatedPwd = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 		authModule.getUserManagement().changePassword(user, generatedPwd);
 		logGeneratedPwd(generatedPwd);
 		if (messagingService != null) {
-			messagingService.getEmailService().sendPasswordInformation(user, generatedPwd, locale);	
+			messagingService.getEmailService().sendPasswordInformation(user, generatedPwd, locale);
 		}
 	}
-	
+
 	// -- DEPENDENCIES ------------------------------------
 
 	/**
 	 * Inject messaging service.
 	 * @param messagingService the messagingService to set
 	 */
-	public void setMessagingService(MessagingService messagingService) {
+	public void setMessagingService(final MessagingService messagingService) {
 		this.messagingService = messagingService;
 	}
 
-    public void setConversation(ModelingConversation conversation) {
-        this.conversation = conversation;
-    }
+	public void setConversation(final ModelingConversation conversation) {
+		this.conversation = conversation;
+	}
 
-    public void setServiceContext(ServiceContext serviceContext) {
-        this.serviceContext = serviceContext;
-    }
+	public void setServiceContext(final ServiceContext serviceContext) {
+		this.serviceContext = serviceContext;
+	}
 
-    public void setAuthModule(AuthModule authServer) {
-        this.authModule = authServer;
-    }
+	public void setAuthModule(final AuthModule authServer) {
+		this.authModule = authServer;
+	}
 
-    public void setSecurityConfiguration(SecurityConfiguration securityConfiguration) {
-        this.securityConfiguration = securityConfiguration;
-    }
+	public void setSecurityConfiguration(final SecurityConfiguration securityConfiguration) {
+		this.securityConfiguration = securityConfiguration;
+	}
 
-    // ----------------------------------------------------
-	
+	// ----------------------------------------------------
+
 	/**
 	 * Can be implemented by sub classes.
 	 * @return The roles to be added to domain admin.
 	 */
 	protected String[] rolesOfDomainAdmin() {
-        if (securityConfiguration != null) {
-            return securityConfiguration.getRolesOfDomainAdmin();
-        }
+		if (securityConfiguration != null) {
+			return securityConfiguration.getRolesOfDomainAdmin();
+		}
 		return new String[0];
 	}
-	
+
 	/**
 	 * Can be implemented by sub classes to log the generated password.
 	 * <p><b>!!WARNING!!<br/>
 	 * <i>Implementation should check for DEVELOPMENT-Mode</i>
 	 * <br/>!!WARNING!!</b></p>
 	 */
-	protected void logGeneratedPwd(String generatedPwd) {
+	protected void logGeneratedPwd(final String generatedPwd) {
 	}
-	
+
 }

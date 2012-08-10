@@ -3,8 +3,6 @@
  */
 package de.lichtflut.repository.impl;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -23,6 +21,7 @@ import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 import javax.jcr.nodetype.NodeType;
 
+import org.apache.jackrabbit.core.RepositoryImpl;
 import org.apache.jackrabbit.core.config.ConfigurationException;
 import org.apache.jackrabbit.core.config.RepositoryConfig;
 import org.apache.jackrabbit.value.BinaryImpl;
@@ -42,7 +41,8 @@ import de.lichtflut.repository.RepositoryDelegator;
  */
 public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 
-	protected static final String CONTENT_NODE = "contentNode";
+	protected static final String CONTENT_NODE = "lichtflut.content-repository.contentNode";
+	protected static final String NODE_NAME = "lichtflut.content-repository.nodeName";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryDelegator.class);
 
@@ -67,9 +67,12 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 		Node node;
 		InputStream retrievedStream = null;
 		String mimeType = "";
+		String name  = "";
 		try {
 			node = getRoot().getNode(path);
-			Node resNode = node.getNode(RepositoryDelegatorImpl.CONTENT_NODE).getNode(Node.JCR_CONTENT);
+			Node resNode = node.getNode(CONTENT_NODE).getNode(Node.JCR_CONTENT);
+
+			name = node.getName();
 			mimeType = resNode.getProperty(Property.JCR_MIMETYPE).getString();
 			Binary binary = resNode.getProperty(Property.JCR_DATA).getBinary();
 			retrievedStream = binary.getStream();
@@ -80,7 +83,7 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 			e.printStackTrace();
 		}
 		LOGGER.info("Retrieved Data: {}", path);
-		return new ContentDescriptorBuilder().data(retrievedStream).path(path).mimeType(mimeType).build();
+		return new ContentDescriptorBuilder().data(retrievedStream).path(path).mimeType(mimeType).name(name).build();
 	}
 
 	/**
@@ -130,11 +133,10 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 	 */
 	protected Repository getRepository() throws RepositoryException{
 		try {
-			InputStream in = new FileInputStream(getConfig().getConfig());
-			return (Repository) RepositoryConfig.create(in, getConfig().getPath());
+			InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(getConfig().getConfig());
+			RepositoryConfig repoConfig = RepositoryConfig.create(in, getConfig().getPath());
+			return RepositoryImpl.create(repoConfig);
 		} catch (ConfigurationException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		return null;

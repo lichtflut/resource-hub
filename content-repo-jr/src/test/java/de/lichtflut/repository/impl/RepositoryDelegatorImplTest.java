@@ -31,7 +31,6 @@ import javax.jcr.nodetype.NodeType;
 
 import org.apache.jackrabbit.core.TransientRepository;
 import org.apache.jackrabbit.core.fs.local.FileUtil;
-import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -69,20 +68,23 @@ public class RepositoryDelegatorImplTest {
 	 */
 	@Test
 	public void testGetData() throws RepositoryException, IOException {
-		String path = "lichtflut1/common/person/alice/hasDocument/file.txt";
-		String name = "test-content";
+		String fileName = "test-content";
+		String path = "lichtflut1/common/person/alice/hasDocument/" + fileName;
 		String mimeType = "txt";
-		File file = new File("src/test/resources/" + name + "." + mimeType);
+		File file = new File("src/test/resources/" + fileName + "." + mimeType);
 		InputStream in = new FileInputStream(file);
 
-		ContentDescriptor descriptor = new ContentDescriptorBuilder().name(name).path(path).mimeType(mimeType).data(in).build();
+		ContentDescriptor descriptor = new ContentDescriptorBuilder().path(path).mimeType(mimeType).data(in).build();
 		startSession();
 		putFileInRepo(descriptor, session.getRootNode());
 
 		ContentDescriptor retrievedDescriptor = repoDelegator.getData(path);
 		retrieved = getFileFromStream(retrievedDescriptor.getData());
+
 		assertThat(retrieved, notNullValue());
 		assertThat(retrieved.length(), equalTo(file.length()));
+
+		assertThat(retrievedDescriptor.getName(), equalTo(fileName));
 		assertThat(retrievedDescriptor.getMimeType(), equalTo(mimeType));
 		assertThat(retrievedDescriptor.getPath(), equalTo(path));
 	}
@@ -93,26 +95,26 @@ public class RepositoryDelegatorImplTest {
 	 */
 	@Test
 	public void testStoreFile() throws IOException, RepositoryException {
-		String path = "lichtflut2/common/person/alice/hasDocument/file2.txt";
-		String name = "test-content";
+		String fileName = "test-content.txt";
+		String path = "lichtflut2/common/person/alice/hasDocument/" + fileName;
 		String mimeType = "txt";
-		File file = new File("src/test/resources/" + name + "." + mimeType);
+		File file = new File("src/test/resources/" + fileName);
 		InputStream in = new FileInputStream(file);
 
 		assertThat(file, notNullValue());
-		assertThat(repoDelegator, CoreMatchers.notNullValue());
+		assertThat(repoDelegator, notNullValue());
 
-		repoDelegator.storeFile(new ContentDescriptorBuilder().name(name).path(path).mimeType(mimeType).data(in).build());
+		repoDelegator.storeFile(new ContentDescriptorBuilder().path(path).mimeType(mimeType).data(in).build());
 		startSession();
 
 		Node node = session.getRootNode().getNode(path);
 		assertThat(node, notNullValue());
-
 		Node resNode = node.getNode(RepositoryDelegatorImpl.CONTENT_NODE).getNode(Node.JCR_CONTENT);
 
 		InputStream retrievedStream = resNode.getProperty(Property.JCR_DATA).getBinary().getStream();
 		retrieved = getFileFromStream(retrievedStream);
 
+		assertThat(node.getName(), equalTo(fileName));
 		assertThat(resNode.getProperty(Property.JCR_MIMETYPE).getString(), equalTo(mimeType));
 		assertThat(retrieved.length(), is(file.length()));
 	}
@@ -132,7 +134,7 @@ public class RepositoryDelegatorImplTest {
 		File file = new File("src/test/resources/" + name + "." + mimeType);
 		InputStream in = new FileInputStream(file);
 
-		ContentDescriptor descriptor = new ContentDescriptorBuilder().name(name).path(path).mimeType(mimeType).data(in).build();
+		ContentDescriptor descriptor = new ContentDescriptorBuilder().path(path).mimeType(mimeType).data(in).build();
 		startSession();
 		putFileInRepo(descriptor, session.getRootNode());
 

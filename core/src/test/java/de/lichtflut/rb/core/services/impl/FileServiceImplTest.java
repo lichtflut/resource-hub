@@ -50,7 +50,7 @@ public class FileServiceImplTest {
 
 	private FileService fileService;
 
-	private final String propertiesFile = "src/test/resources/fileService/test-repo-config.properties";
+	private final String propertiesFilePath = "fileService/test-repo-config.properties";
 	private final String path = "lichtflut/test/person/mueller";
 
 	/**
@@ -58,7 +58,7 @@ public class FileServiceImplTest {
 	 */
 	@Test
 	public void testFileServiceImpl() {
-		fileService = new FileServiceImpl(propertiesFile){
+		fileService = new FileServiceImpl(propertiesFilePath){
 			@Override
 			protected void initRepository(){
 			}
@@ -122,7 +122,7 @@ public class FileServiceImplTest {
 	private void startMockRepositoryDelegator() {
 		mock(RepositoryDelegator.class);
 
-		fileService = new FileServiceImpl("src/test/resources/fileService/test-repo-config.properties"){
+		fileService = new FileServiceImpl(propertiesFilePath){
 			@Override
 			protected void initRepository(){
 				this.delegator = mockDelegator;
