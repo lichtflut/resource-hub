@@ -59,6 +59,12 @@ public interface ViewSpecificationService {
 	 * @return The perspective specification or null if not found.
 	 */
 	Perspective findPerspective(ResourceID id);
+
+    /**
+     * Find all perspectives accessible for the current user.
+     * @return Alle perspectives.
+     */
+    List<Perspective> findPerspectives();
 	
 	/**
 	 * Remove a perspective.

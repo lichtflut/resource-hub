@@ -122,7 +122,7 @@ public class OutputElements {
 	private void register(final Constraint constr) {
 		if (constr != null && constr.isPublic()) {
 			if(constr.isLiteral()){
-				register(constr.asResourceNode().getQualifiedName());
+				register(constr.getQualifiedName());
 			}else{
 				register(constr.getReference());
 			}

@@ -6,6 +6,7 @@ import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 import de.lichtflut.rb.rest.api.RBServiceEndpoint;
 import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
@@ -29,13 +30,20 @@ public class AbstractQueryService extends RBServiceEndpoint {
 
     protected List<ResultItemRVO> buildResult(QueryResult result) {
         final List<ResultItemRVO> rvoList = new ArrayList<ResultItemRVO>();
+        int count = 0;
         for (ResourceNode node : result) {
             ResultItemRVO item = new ResultItemRVO();
             item.setId(node.toURI());
             item.setLabel(ResourceLabelBuilder.getInstance().getLabel(node, Locale.getDefault()));
             item.setInfo(ResourceLabelBuilder.getInstance().getLabel(node, Locale.getDefault()));
             rvoList.add(item);
+            count++;
+            if (count >= 20) {
+                break;
+            }
+
         }
+        result.close();
         return rvoList;
     }
 
@@ -43,9 +51,18 @@ public class AbstractQueryService extends RBServiceEndpoint {
         return conversation(domain, user).createQuery();
     }
 
+    protected Query createQuery(String domain, RBUser user, Context context) {
+        return conversation(domain, user, context).createQuery();
+    }
+
     private ModelingConversation conversation(String domain, RBUser user) {
         final ServiceProvider provider = getProvider(domain, user);
         return provider.getConversation();
+    }
+
+    private ModelingConversation conversation(String domain, RBUser user, Context context) {
+        final ServiceProvider provider = getProvider(domain, user);
+        return provider.getConversation(context);
     }
 
     protected String decodeBase64(String encoded) {

@@ -197,7 +197,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	@Override
 	public void remove(final Constraint constraint){
 		final ModelingConversation mc = conversation();
-		final ResourceNode existing = mc.findResource(constraint.asResourceNode().getQualifiedName());
+		final ResourceNode existing = mc.findResource(constraint.getQualifiedName());
 		if(null != existing){
 			mc.remove(existing);
 		}
@@ -326,7 +326,7 @@ public class SchemaManagerImpl implements SchemaManager {
 		@Override
 		public Constraint resolve(final Constraint constraint) {
 			final ModelingConversation mc = conversation();
-			final ResourceNode node = mc.findResource(constraint.asResourceNode().getQualifiedName());
+			final ResourceNode node = mc.findResource(constraint.getQualifiedName());
 			if (node != null) {
 				return new ConstraintImpl(node);
 			} else {

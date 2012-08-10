@@ -17,6 +17,7 @@ import de.lichtflut.rb.core.services.impl.FileServiceImpl;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import de.lichtflut.rb.core.services.impl.SecurityServiceImpl;
 import de.lichtflut.rb.core.services.impl.TypeManagerImpl;
+import org.arastreju.sge.context.Context;
 
 /**
  * <p>
@@ -56,15 +57,17 @@ public class RBServiceProvider implements ServiceProvider {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ModelingConversation getConversation() {
 		return arastrejuResourceFactory.getConversation();
 	}
 
-	// ----------------------------------------------------
+    @Override
+    public ModelingConversation getConversation(Context context) {
+        return arastrejuResourceFactory.getConversation(context);
+    }
+
+    // ----------------------------------------------------
 
 	/**
 	 *{@inheritDoc}

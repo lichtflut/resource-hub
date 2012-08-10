@@ -242,7 +242,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	public String toString(){
 		StringBuffer sb = new StringBuffer("PropertyDecl[" + super.toString() + "] ");
 		if (getPropertyDescriptor() != null){
-			sb.append(getPropertyDescriptor().getQualifiedName().toURI());
+			sb.append(getPropertyDescriptor().toURI());
 		}
 		sb.append(" " + getMinOccurs() + ".." + getMaxOccurs());
 		sb.append("\n\t\t" + getConstraint());

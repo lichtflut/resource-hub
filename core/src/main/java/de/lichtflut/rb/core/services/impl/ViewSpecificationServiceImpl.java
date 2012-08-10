@@ -9,12 +9,15 @@ import java.util.List;
 
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.persistence.TransactionControl;
+import org.arastreju.sge.query.Query;
+import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import de.lichtflut.rb.core.RBSystem;
@@ -136,7 +139,19 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 		}
 	}
 
-	/**
+    @Override
+    public List<Perspective> findPerspectives() {
+        final Query query = conversation().createQuery();
+        query.addField(RDF.TYPE, WDGT.PERSPECTIVE);
+        final QueryResult result = query.getResult();
+        final List<Perspective> perspectives = new ArrayList<Perspective>(result.size());
+        for (ResourceNode node : result) {
+            perspectives.add(new SNPerspective(node));
+        }
+        return perspectives;
+    }
+
+    /**
 	 * {@inheritDoc}
 	 */
 	@Override

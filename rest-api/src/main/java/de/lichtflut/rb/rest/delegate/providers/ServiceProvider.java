@@ -12,6 +12,7 @@ import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
+import org.arastreju.sge.context.Context;
 
 
 /**
@@ -34,6 +35,11 @@ public interface ServiceProvider {
 	 * @return An active Arastreju conversation.
 	 */
 	ModelingConversation getConversation();
+
+    /**
+     * @return An active Arastreju conversation.
+     */
+    ModelingConversation getConversation(Context context);
 
 	// -----------------------------------------------------
 

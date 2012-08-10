@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -38,6 +39,12 @@ import org.arastreju.sge.model.nodes.ResourceNode;
  * @author Oliver Tigges
  */
 public interface Constraint extends Serializable {
+
+    /**
+     * Each constraint has a unique qualified name.
+     * @return The qualified name of this constraint.
+     */
+    QualifiedName getQualifiedName();
 
 	/**
 	 * Returns the name of a public constraint.
@@ -87,6 +94,9 @@ public interface Constraint extends Serializable {
 	/**
 	 * Returns the constraint as a ResourceNode.
 	 * @return
+     * @deprecated This constraint may not contain it's representing node.
 	 */
+    @Deprecated
 	ResourceNode asResourceNode();
+
 }

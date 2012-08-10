@@ -120,7 +120,7 @@ public class Schema2GraphBindingTest {
 		assertThat(converted.getMinOccurs(), equalTo(new SNScalar(decl.getCardinality().getMinOccurs())));
 		assertThat(converted.getDatatype(), equalTo(decl.getDatatype()));
 		if(converted.hasConstraint()){
-			assertThat(converted.getConstraint().asResourceNode(), equalTo(decl.getConstraint().asResourceNode()));
+			assertThat(converted.getConstraint().getQualifiedName(), equalTo(decl.getConstraint().getQualifiedName()));
 		}
 		// Implement I18n in Fieldlabel-mapping
 		// assertThat(snDecl.getFieldLabelDefinition().getSupportedLocales().size(),

@@ -18,6 +18,7 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -77,7 +78,13 @@ public class ConstraintImpl implements Constraint {
 
 	// ------------------------------------------------------
 
-	/**
+
+    @Override
+    public QualifiedName getQualifiedName() {
+        return node.getQualifiedName();
+    }
+
+    /**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -231,9 +238,9 @@ public class ConstraintImpl implements Constraint {
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("Constraint id: " + node.getQualifiedName());
-		sb.append("name: " + getName());
-		sb.append("is public: " + isPublic());
-		sb.append("is Reference: " + holdsReference());
+		sb.append(" name: " + getName());
+		sb.append(" is public: " + isPublic());
+		sb.append(" is Reference: " + holdsReference());
 		return sb.toString();
 	}
 }

@@ -15,6 +15,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import static org.arastreju.sge.SNOPS.id;
+
 /**
  * <p>
  * This is an aggregator {@link Panel} that contains everything necessary to manage public
@@ -57,7 +59,7 @@ public class PublicConstraintsEditorPanelAggregator extends Panel {
 	// ------------------------------------------------------
 
 	protected void displayConstraintEditor(final Constraint constraint) {
-		final Constraint reloaded = schemaManager.findConstraint(constraint.asResourceNode());
+		final Constraint reloaded = schemaManager.findConstraint(id(constraint.getQualifiedName()));
 		final Panel editor = new PublicConstraintsDetailPanel("editor", Model.of(reloaded));
 		replace(editor);
 		RBAjaxTarget.add(editor);
