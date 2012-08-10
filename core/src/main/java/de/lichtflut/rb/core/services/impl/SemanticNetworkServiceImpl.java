@@ -1,8 +1,10 @@
 package de.lichtflut.rb.core.services.impl;
 
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
 import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
@@ -36,6 +38,11 @@ public class SemanticNetworkServiceImpl implements SemanticNetworkService {
     }
 
     @Override
+    public ResourceNode resolve(ResourceID rid, Context... contexts) {
+        return conversation(contexts).resolve(rid);
+    }
+
+    @Override
     public ResourceNode find(QualifiedName qn) {
         return conversation().findResource(qn);
     }
@@ -49,5 +56,11 @@ public class SemanticNetworkServiceImpl implements SemanticNetworkService {
 
     private ModelingConversation conversation() {
         return conversationFactory.getConversation();
+    }
+
+    private ModelingConversation conversation(Context... readContexts) {
+        ModelingConversation conversation = conversationFactory.startConversation();
+        conversation.getConversationContext().setReadContexts(readContexts);
+        return conversation;
     }
 }

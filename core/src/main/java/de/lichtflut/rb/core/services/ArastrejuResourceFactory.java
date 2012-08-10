@@ -86,7 +86,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
             assureActive(conversation);
             return conversation;
         } else {
-            ModelingConversation conversation = gate().startConversation(primary);
+            ModelingConversation conversation = gate().startConversation(primary, context.getReadContexts());
             conversationMap.put(primary, conversation);
             return conversation;
         }
@@ -108,8 +108,8 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      * @return The new conversation.
      */
     @Override
-    public ModelingConversation startConversation(Context primary) {
-        return gate().startConversation(primary);
+    public ModelingConversation startConversation(Context primary, Context... readContexts) {
+        return gate().startConversation(primary, readContexts);
     }
 
     // ----------------------------------------------------
