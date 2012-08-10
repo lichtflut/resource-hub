@@ -13,6 +13,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -36,6 +37,11 @@ public class LiteralConstraint implements Constraint {
 	}
 
 	// ------------------------------------------------------
+
+    @Override
+    public QualifiedName getQualifiedName() {
+        return node.getQualifiedName();
+    }
 
 	/**
 	 * {@inheritDoc}
