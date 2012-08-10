@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
@@ -29,7 +28,7 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 
 /**
  * <p>
- *  Binding class for elements of schema model (plain java) and elements of schema semantic graph. 
+ *  Binding class for elements of schema model (plain java) and elements of schema semantic graph.
  * </p>
  *
  * <p>
@@ -39,13 +38,13 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
  * @author Oliver Tigges
  */
 public class Schema2GraphBinding {
-	
+
 	private final Logger logger = LoggerFactory.getLogger(Schema2GraphBinding.class);
 	// TODO resolve public constraint
 	private ConstraintResolver resolver = new VoidTypeDefResovler();
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * Constructor with special resolver.
 	 * @param resolver Resolver for persistent type definitions.
@@ -53,9 +52,9 @@ public class Schema2GraphBinding {
 	public Schema2GraphBinding(final ConstraintResolver resolver) {
 		this.resolver = resolver;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * Convert a schema node to a model element.
 	 * @param snSchema The schema node.
@@ -80,16 +79,16 @@ public class Schema2GraphBinding {
 			try {
 				schema.setLabelBuilder(new ExpressionBasedLabelBuilder(exp));
 			} catch (LabelExpressionParseException e) {
-				logger.error("label expression for {} could not be parsed: '{}'", 
+				logger.error("label expression for {} could not be parsed: '{}'",
 						snSchema.getDescribedType(), exp);
 			}
 		}
 
 		return schema;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * Creates a new semantic node for given Resource Schema.
 	 * @param schema The schema model object.
@@ -105,7 +104,7 @@ public class Schema2GraphBinding {
 		if (schema.getLabelBuilder() != null && schema.getLabelBuilder().getExpression() != null) {
 			sn.setLabelExpression(new SNText(schema.getLabelBuilder().getExpression()));
 		}
-		
+
 		SNPropertyDeclaration predecessor = null;
 		for(PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration();
@@ -125,7 +124,7 @@ public class Schema2GraphBinding {
 		}
 		return sn;
 	}
-	
+
 	protected Cardinality buildCardinality(final SNPropertyDeclaration snDecl) {
 		int min = snDecl.getMinOccurs().getIntegerValue().intValue();
 		int max = snDecl.getMaxOccurs().getIntegerValue().intValue();
@@ -148,10 +147,10 @@ public class Schema2GraphBinding {
 		if (cardinality.isUnbound()) {
 			return new SNScalar(-1);
 		} else {
-			return new SNScalar(cardinality.getMaxOccurs());	
+			return new SNScalar(cardinality.getMaxOccurs());
 		}
 	}
-	
+
 	protected FieldLabelDefinition createFieldLabelDef(final SNPropertyDeclaration snDecl) {
 		final String defaultName = snDecl.getPropertyDescriptor().getQualifiedName().getSimpleName();
 		final FieldLabelDefinition def = new FieldLabelDefinitionImpl(defaultName);
@@ -162,19 +161,19 @@ public class Schema2GraphBinding {
 		}
 		return def;
 	}
-	
+
 	protected void setFieldLabels(final SNPropertyDeclaration snDecl, final FieldLabelDefinition def) {
 		if (def != null && def.getDefaultLabel() != null) {
 			SNOPS.associate(snDecl, RBSystem.HAS_FIELD_LABEL, new SNText(def.getDefaultLabel()));
 		}
 		// TODO: set i18n labels.
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	private static final class VoidTypeDefResovler implements ConstraintResolver {
 		@Override
-		public Constraint resolve(Constraint constraint) {
+		public Constraint resolve(final Constraint constraint) {
 			return null;
 		}
 	}

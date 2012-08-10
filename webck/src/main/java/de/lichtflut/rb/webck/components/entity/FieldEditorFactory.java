@@ -3,25 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Date;
-
-import de.lichtflut.rb.core.entity.RBEntity;
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.validation.validator.PatternValidator;
-import org.apache.wicket.validation.validator.UrlValidator;
-import org.arastreju.sge.model.ResourceID;
-import org.odlabs.wiquery.ui.datepicker.DatePicker;
-
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
@@ -29,6 +12,24 @@ import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.validation.validator.PatternValidator;
+import org.apache.wicket.validation.validator.UrlValidator;
+import org.arastreju.sge.model.ResourceID;
+import org.odlabs.wiquery.ui.datepicker.DatePicker;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * <p>
@@ -144,7 +145,12 @@ public class FieldEditorFactory implements Serializable {
 		return new Fragment("valuefield", "textInput", container).add(field);
 	}
 
-    // ----------------------------------------------------
+	public Component createFileChooser(final ListItem<RBFieldValueModel> item){
+		FileUploadField fileUploadField = new FileUploadField("valuefield", item.getModelObject());
+		return new Fragment("valuefield", "fileUpload", container).add(fileUploadField);
+	}
+
+	// ----------------------------------------------------
 
     private void addValidator(Component component, RBField fieldDefinition) {
 		Constraint constraint = fieldDefinition.getConstraint();
@@ -163,5 +169,5 @@ public class FieldEditorFactory implements Serializable {
 		}
 		return null;
 	}
-	
+
 }

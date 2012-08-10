@@ -3,8 +3,24 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SemanticGraph;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.Statement;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.persistence.TransactionControl;
+import org.arastreju.sge.query.Query;
+import org.arastreju.sge.query.QueryResult;
+import org.arastreju.sge.structure.OrderBySerialNumber;
+
 import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
 import de.lichtflut.rb.core.services.ServiceContext;
@@ -18,19 +34,6 @@ import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
 import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SemanticGraph;
-import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.Statement;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.persistence.TransactionControl;
-import org.arastreju.sge.structure.OrderBySerialNumber;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * <p>
@@ -45,30 +48,30 @@ import java.util.List;
  */
 public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
-    private ServiceContext context;
+	private ServiceContext context;
 
-    private ArastrejuResourceFactory arasFactory;
+	private ArastrejuResourceFactory arasFactory;
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
 	/**
 	 * Default constructor.
 	 */
 	public ViewSpecificationServiceImpl() { }
 
-    /**
-     * Constructor.
-     * @param context The service context.
-     * @param arasFactory The Arastreju resource factory providing conversations.
-     */
-    public ViewSpecificationServiceImpl(ServiceContext context, ArastrejuResourceFactory arasFactory) {
-        this.context = context;
-        this.arasFactory = arasFactory;
-    }
+	/**
+	 * Constructor.
+	 * @param context The service context.
+	 * @param arasFactory The Arastreju resource factory providing conversations.
+	 */
+	public ViewSpecificationServiceImpl(final ServiceContext context, final ArastrejuResourceFactory arasFactory) {
+		this.context = context;
+		this.arasFactory = arasFactory;
+	}
 
-    // -- MENU ITEMS --------------------------------------
+	// -- MENU ITEMS --------------------------------------
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -89,45 +92,45 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 		Collections.sort(result, new OrderBySerialNumber());
 		return result;
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addUsersMenuItem(MenuItem item) {
+	public void addUsersMenuItem(final MenuItem item) {
 		final ResourceNode user = currentUser();
 		if (user != null) {
 			store(item);
 			user.addAssociation(WDGT.HAS_MENU_ITEM, item);
 		}
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void store(MenuItem item) {
-        conversation().attach(item);
+	public void store(final MenuItem item) {
+		conversation().attach(item);
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void removeUsersItem(MenuItem item) {
+	public void removeUsersItem(final MenuItem item) {
 		final ResourceNode user = currentUser();
 		SNOPS.remove(user, WDGT.HAS_MENU_ITEM, item);
 		//TODO: Remove item if private one.
 		//conversation.remove(item);
 	}
-	
+
 	// -- PERSPECTIVES ------------------------------------
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Perspective findPerspective(ResourceID id) {
+	public Perspective findPerspective(final ResourceID id) {
 		final ResourceNode existing = conversation().findResource(id.getQualifiedName());
 		if (existing != null) {
 			return new SNPerspective(existing);
@@ -135,25 +138,37 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 			return null;
 		}
 	}
-	
-	/** 
+
+    @Override
+    public List<Perspective> findPerspectives() {
+        final Query query = conversation().createQuery();
+        query.addField(RDF.TYPE, WDGT.PERSPECTIVE);
+        final QueryResult result = query.getResult();
+        final List<Perspective> perspectives = new ArrayList<Perspective>(result.size());
+        for (ResourceNode node : result) {
+            perspectives.add(new SNPerspective(node));
+        }
+        return perspectives;
+    }
+
+    /**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void store(Perspective perspective) {
-        conversation().attach(perspective);
+	public void store(final Perspective perspective) {
+		conversation().attach(perspective);
 		if (perspective.getViewPorts().isEmpty()) {
 			// add two default view ports.
 			perspective.addViewPort();
 			perspective.addViewPort();
 		}
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void remove(Perspective perspective) {
+	public void remove(final Perspective perspective) {
 		final SemanticGraph graph = new ViewSpecTraverser().toGraph(perspective);
 		final ModelingConversation mc = conversation();
 		final TransactionControl tx = mc.beginTransaction();
@@ -169,11 +184,11 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	// -- WIDGETS -----------------------------------------
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public WidgetSpec findWidgetSpec(ResourceID id) {
+	public WidgetSpec findWidgetSpec(final ResourceID id) {
 		final ResourceNode existing = conversation().findResource(id.getQualifiedName());
 		if (existing != null) {
 			return new SNWidgetSpec(existing);
@@ -182,30 +197,30 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 		}
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void store(WidgetSpec widgetSpec) {
-        conversation().attach(widgetSpec);
+	public void store(final WidgetSpec widgetSpec) {
+		conversation().attach(widgetSpec);
 	}
-	
+
 	// ----------------------------------------------------
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void store(ViewPort viewPort) {
-        conversation().attach(viewPort);
+	public void store(final ViewPort viewPort) {
+		conversation().attach(viewPort);
 	}
-	
-    // ----------------------------------------------------
-	
+
+	// ----------------------------------------------------
+
 	/**
 	 * Initialize the (probably new) user's menu items and dashboards.
 	 */
-	protected List<MenuItem> initializeDashboards(ResourceNode user) {
+	protected List<MenuItem> initializeDashboards(final ResourceNode user) {
 		final List<MenuItem> result = new ArrayList<MenuItem>();
 		final ResourceNode defaultMenu = conversation().resolve(WDGT.DEFAULT_MENU);
 		for(Statement stmt : defaultMenu.getAssociations()) {
@@ -218,19 +233,19 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 		return result;
 	}
 
-    protected ResourceNode currentUser() {
-        final RBUser user = context.getUser();
-        if (user == null) {
-            return null;
-        } else {
-            return conversation().resolve(new SimpleResourceID(user.getQualifiedName()));
-        }
-    }
+	protected ResourceNode currentUser() {
+		final RBUser user = context.getUser();
+		if (user == null) {
+			return null;
+		} else {
+			return conversation().resolve(new SimpleResourceID(user.getQualifiedName()));
+		}
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    private ModelingConversation conversation() {
-        return arasFactory.getConversation(RBSystem.VIEW_SPEC_CTX);
-    }
-	
+	private ModelingConversation conversation() {
+		return arasFactory.getConversation(RBSystem.VIEW_SPEC_CTX);
+	}
+
 }

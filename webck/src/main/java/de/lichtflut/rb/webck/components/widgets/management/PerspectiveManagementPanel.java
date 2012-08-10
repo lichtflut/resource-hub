@@ -37,7 +37,8 @@ public class PerspectiveManagementPanel extends Panel {
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id The component ID.
 	 */
 	@SuppressWarnings("rawtypes")
 	public PerspectiveManagementPanel(String id) {

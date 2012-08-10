@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.webck.models.viewspecs;
 
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
@@ -20,7 +21,7 @@ import java.util.List;
 
 /**
  * <p>
- *  Model for loading of perspectives by their ID.
+ *  Model for loading of all available perspectives.
  * </p>
  *
  * <p>
@@ -30,34 +31,24 @@ import java.util.List;
  * @author Oliver Tigges
  */
 public class PerspectiveListModel extends LoadableDetachableModel<List<Perspective>> {
-	
-	@SpringBean
-	private ModelingConversation conversation;
-	
-	// ----------------------------------------------------
-	
-	/**
-	 * Constructor. 
-	 */
-	public PerspectiveListModel() {
-		Injector.get().inject(this);
-	}
-	
-	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Perspective> load() {
-		final Query query = conversation.createQuery();
-		query.addField(RDF.TYPE, WDGT.PERSPECTIVE);
-		final QueryResult result = query.getResult();
-		final List<Perspective> perspectives = new ArrayList<Perspective>(result.size());
-		for (ResourceNode node : result) {
-			perspectives.add(new SNPerspective(node));
-		}
-		return perspectives;
-	}
+    @SpringBean
+    private ViewSpecificationService viewSpecificationService;
+
+    // ----------------------------------------------------
+
+    /**
+     * Constructor.
+     */
+    public PerspectiveListModel() {
+        Injector.get().inject(this);
+    }
+
+    // ----------------------------------------------------
+
+    @Override
+    public List<Perspective> load() {
+        return viewSpecificationService.findPerspectives();
+    }
 
 }

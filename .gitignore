@@ -1,10 +1,10 @@
 target
-repository
 derby.log
 .project
 .classpath
 .settings
 .idea
+.gitignore
 *.iml
 *.ipr
 *.iws
@@ -15,4 +15,3 @@ webapp/bin
 webck/bin
 */.checkstyle
 *~
-

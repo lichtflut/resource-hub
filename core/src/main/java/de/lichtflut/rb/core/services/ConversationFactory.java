@@ -20,7 +20,9 @@ public interface ConversationFactory {
 
     ModelingConversation getConversation(Context primary);
 
+    // ----------------------------------------------------
+
     ModelingConversation startConversation();
 
-    ModelingConversation startConversation(Context primary);
+    ModelingConversation startConversation(Context primary, Context... readContexts);
 }

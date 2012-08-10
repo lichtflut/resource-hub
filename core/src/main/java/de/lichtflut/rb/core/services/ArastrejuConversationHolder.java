@@ -1,5 +1,7 @@
 package de.lichtflut.rb.core.services;
 
+import java.util.Set;
+
 import org.arastreju.sge.ConversationContext;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
@@ -23,75 +25,94 @@ import org.arastreju.sge.query.Query;
  */
 public class ArastrejuConversationHolder implements ModelingConversation {
 
-    private ArastrejuResourceFactory factory;
+	private final ArastrejuResourceFactory factory;
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    public ArastrejuConversationHolder(ArastrejuResourceFactory factory) {
-        this.factory = factory;
-    }
+	public ArastrejuConversationHolder(final ArastrejuResourceFactory factory) {
+		this.factory = factory;
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    public void addStatement(Statement stmt) {
-        delegate().addStatement(stmt);
-    }
+	@Override
+	public void addStatement(final Statement stmt) {
+		delegate().addStatement(stmt);
+	}
 
-    public void attach(SemanticGraph graph) {
-        delegate().attach(graph);
-    }
+	@Override
+	public void attach(final SemanticGraph graph) {
+		delegate().attach(graph);
+	}
 
-    public ConversationContext getConversationContext() {
-        return delegate().getConversationContext();
-    }
+	@Override
+	public ConversationContext getConversationContext() {
+		return delegate().getConversationContext();
+	}
 
-    public void attach(ResourceNode node) {
-        delegate().attach(node);
-    }
+	@Override
+	public void attach(final ResourceNode node) {
+		delegate().attach(node);
+	}
 
-    public void detach(ResourceNode node) {
-        delegate().detach(node);
-    }
+	@Override
+	public void detach(final ResourceNode node) {
+		delegate().detach(node);
+	}
 
-    public void close() {
-        delegate().close();
-    }
+	@Override
+	public void close() {
+		delegate().close();
+	}
 
-    public ResourceNode resolve(ResourceID resourceID) {
-        return delegate().resolve(resourceID);
-    }
+	@Override
+	public ResourceNode resolve(final ResourceID resourceID) {
+		return delegate().resolve(resourceID);
+	}
 
-    public void detach(SemanticGraph graph) {
-        delegate().detach(graph);
-    }
+	@Override
+	public void detach(final SemanticGraph graph) {
+		delegate().detach(graph);
+	}
 
-    public TransactionControl beginTransaction() {
-        return delegate().beginTransaction();
-    }
+	@Override
+	public TransactionControl beginTransaction() {
+		return delegate().beginTransaction();
+	}
 
-    public Query createQuery() {
-        return delegate().createQuery();
-    }
+	@Override
+	public Query createQuery() {
+		return delegate().createQuery();
+	}
 
-    public void reset(ResourceNode node) {
-        delegate().reset(node);
-    }
+	@Override
+	public Set<Statement> findIncomingStatements(final ResourceID object) {
+		return delegate().findIncomingStatements(object);
+	}
 
-    public void remove(ResourceID id) {
-        delegate().remove(id);
-    }
+	@Override
+	public void reset(final ResourceNode node) {
+		delegate().reset(node);
+	}
 
-    public boolean removeStatement(Statement stmt) {
-        return delegate().removeStatement(stmt);
-    }
+	@Override
+	public void remove(final ResourceID id) {
+		delegate().remove(id);
+	}
 
-    public ResourceNode findResource(QualifiedName qn) {
-        return delegate().findResource(qn);
-    }
+	@Override
+	public boolean removeStatement(final Statement stmt) {
+		return delegate().removeStatement(stmt);
+	}
 
-    // ----------------------------------------------------
+	@Override
+	public ResourceNode findResource(final QualifiedName qn) {
+		return delegate().findResource(qn);
+	}
 
-    private ModelingConversation delegate() {
-        return factory.getConversation();
-    }
+	// ----------------------------------------------------
+
+	private ModelingConversation delegate() {
+		return factory.getConversation();
+	}
 }

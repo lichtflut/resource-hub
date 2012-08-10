@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.rest.api.query;
 
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.common.TermSearcher;
 import de.lichtflut.rb.core.common.TermSearcher.Mode;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
@@ -63,7 +64,7 @@ public class PropertyQueryService extends AbstractQueryService {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		Query query = createQuery(domain, user);
+		Query query = createQuery(domain, user, RBSystem.TYPE_SYSTEM_CTX);
 		String typeDecoded = decodeBase64(type);
 		
 		logger.info("Querying entity '{}' of type {}.", term, typeDecoded);

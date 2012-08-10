@@ -3,13 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.typesystem.properties;
 
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
-import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
-import de.lichtflut.rb.webck.components.typesystem.constraints.ConstraintsEditorPanel;
+import java.util.Arrays;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
@@ -24,8 +19,15 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 
-import java.util.Arrays;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
+import de.lichtflut.rb.webck.components.typesystem.constraints.ConstraintsEditorPanel;
 
 /**
  * <p>
@@ -47,7 +49,7 @@ public class EditPropertyDeclPanel extends Panel {
 	 * @param id - wicket:id
 	 * @param decl
 	 */
-	public EditPropertyDeclPanel(String id, IModel<PropertyRow> decl) {
+	public EditPropertyDeclPanel(final String id, final IModel<PropertyRow> decl) {
 		super(id, decl);
 		@SuppressWarnings("rawtypes")
 		Form<?> form = new Form("form");
@@ -66,7 +68,7 @@ public class EditPropertyDeclPanel extends Panel {
 	 * @param form
 	 * @param target
 	 */
-	protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+	protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 	}
 
 	/**
@@ -75,7 +77,7 @@ public class EditPropertyDeclPanel extends Panel {
 	 * @param form
 	 * @param target
 	 */
-	protected void onCancel(AjaxRequestTarget target, Form<?> form) {
+	protected void onCancel(final AjaxRequestTarget target, final Form<?> form) {
 	}
 
 	// ------------------------------------------------------
@@ -83,16 +85,16 @@ public class EditPropertyDeclPanel extends Panel {
 	/**
 	 * Adds 'save' and 'cancel' button
 	 */
-	private void addButtonBar(Form<?> form) {
+	private void addButtonBar(final Form<?> form) {
 		Button save = new RBStandardButton("save") {
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				EditPropertyDeclPanel.this.onSubmit(target, form);
 			}
 		};
 		Button cancel = new RBStandardButton("cancel") {
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				onCancel(target, form);
 			}
 		};
@@ -103,16 +105,19 @@ public class EditPropertyDeclPanel extends Panel {
 
 	/**
 	 * Add {@link FeedbackPanel}
-	 * @param form 
+	 * @param form
 	 */
-	private void addFeedbackpanel(String id, Form<?> form) {
+	private void addFeedbackpanel(final String id, final Form<?> form) {
 		form.add(new FeedbackPanel(id));
 	}
 
 	/**
 	 * All PropertyDecls can be edited.
 	 */
-	private void addProperties(Form<?> form, final IModel<PropertyRow> decl) {
+	private void addProperties(final Form<?> form, final IModel<PropertyRow> decl) {
+		if(decl.getObject().getPropertyDescriptor() == null){
+			decl.getObject().setPropertyDescriptor(new SimpleResourceID(""));
+		}
 		PropertyPickerField propertyDescriptorField = new PropertyPickerField("propertyDescriptor", new PropertyModel<ResourceID>(decl,
 				"propertyDescriptor"));
 		propertyDescriptorField.getDisplayComponent().setRequired(true);
@@ -126,16 +131,16 @@ public class EditPropertyDeclPanel extends Panel {
 				new EnumChoiceRenderer<Datatype>(this));
 		datatypeDDC.add(new AjaxFormComponentUpdatingBehavior("onchange") {
 			@Override
-			protected void onUpdate(AjaxRequestTarget target) {
+			protected void onUpdate(final AjaxRequestTarget target) {
 				decl.getObject().setDataType(datatypeModel.getObject());
 				get("form:constraints").replaceWith(new ConstraintsEditorPanel("constraints", decl));
 				RBAjaxTarget.add(EditPropertyDeclPanel.this);
 			}
 		});
-		
+
 		ConstraintsEditorPanel constraintsDPicker = new ConstraintsEditorPanel("constraints", decl);
 		constraintsDPicker.setOutputMarkupId(true);
-		
+
 		form.add(propertyDescriptorField, fieldLabelTField, cardinalityTField, datatypeDDC, constraintsDPicker);
 	}
 }

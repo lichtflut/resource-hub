@@ -36,4 +36,9 @@ schema for "common:Person" {
 		field-label[en] : "Name"
 		datatype : "String"
 	}
+	
+	property "common:hasFile" [n..n] {
+		field-label[en] : "Files"
+		datatype : "File"
+	}
 }
