@@ -9,27 +9,17 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.and;
 import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -56,9 +46,6 @@ public class LocalButtonBar extends Panel {
 	@SpringBean
 	private EntityManager entityManager;
 
-	@SpringBean
-	private FileService fileService;
-
 	// ----------------------------------------------------
 
 	/**
@@ -83,9 +70,7 @@ public class LocalButtonBar extends Panel {
 		final RBStandardButton save = new RBStandardButton("save") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				Map<String, File> map = prepareForFileService(model);
 				entityManager.store(model.getObject());
-				storeFiles(map);
 				RBWebSession.get().getHistory().finishEditing();
 				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 			}
@@ -117,38 +102,6 @@ public class LocalButtonBar extends Panel {
 		};
 		edit.add(visibleIf(not(not(viewMode))));
 		return edit;
-	}
-
-	// ------------------------------------------------------
-
-	protected static Map<String, File> prepareForFileService(final IModel<RBEntity> model){
-		Map<String, File> map = new HashMap<String, File>();
-		for (RBField field : model.getObject().getAllFields()) {
-			if(field.getDataType().equals(Datatype.FILE)){
-				int index = 0;
-				for (Object value : field.getValues()) {
-					String path = model.getObject().getType().toURI();
-					path = path + "/" + model.getObject().getID();
-					path = path.replace("http://", "").replace(".", "/").replace("#", "/");
-					value = ((List)value).get(0);
-					try {
-						map.put(path, ((FileUpload)value).writeToTempFile());
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					field.setValue(index, path);
-					index++;
-				}
-			}
-		}
-		return map;
-	}
-
-	private void storeFiles(final Map<String, File> map) {
-		for (String path : map.keySet()) {
-			fileService.storeFile(path, map.get(path));
-		}
 	}
 
 }

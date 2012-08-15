@@ -3,6 +3,22 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.model.ResourceID;
+
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Datatype;
@@ -15,19 +31,6 @@ import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.model.ResourceID;
-
-import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * <p>
@@ -47,10 +50,10 @@ import java.util.Date;
  */
 @SuppressWarnings("rawtypes")
 public class EntityRowDisplayPanel extends Panel {
-	
+
 	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;
-	
+
 	// ----------------------------------------------------
 
 	/**
@@ -60,10 +63,10 @@ public class EntityRowDisplayPanel extends Panel {
 	 */
 	public EntityRowDisplayPanel(final String id, final IModel<RBField> model) {
 		super(id, model);
-		
+
 		setOutputMarkupId(true);
 		add(new Label("label", new FieldLabelModel(model)));
-		
+
 		final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
 		final ListView<RBFieldValueModel> valueList = new ListView<RBFieldValueModel>("values", listModel) {
 			@Override
@@ -75,9 +78,9 @@ public class EntityRowDisplayPanel extends Panel {
 		add(valueList);
 		add(ConditionalBehavior.visibleIf(new NotEmptyCondition(model)));
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * @param item
 	 * @param dataType
@@ -107,7 +110,11 @@ public class EntityRowDisplayPanel extends Panel {
 			addHTMLOutput(item);
 			break;
 		case URI:
-			addLink(item);
+		case FILE:
+			addExternalLink(item);
+			break;
+		default:
+			throw new NotYetImplementedException("No displaycomponent specified for datatype: " + dataType);
 		}
 	}
 
@@ -125,27 +132,27 @@ public class EntityRowDisplayPanel extends Panel {
 	protected CharSequence getUrlTo(final ResourceID ref) {
 		return resourceLinkProvider.getUrlToResource(ref, VisualizationMode.DETAILS, DisplayMode.VIEW);
 	}
-	
-	private Label addTextOutput(final ListItem<RBFieldValueModel> item, Class<?> type) {
+
+	private Label addTextOutput(final ListItem<RBFieldValueModel> item, final Class<?> type) {
 		final Label field = new Label("valuefield", item.getModelObject());
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
 		return field;
 	}
-	
-	private void addHTMLOutput(ListItem<RBFieldValueModel> item) {
+
+	private void addHTMLOutput(final ListItem<RBFieldValueModel> item) {
 		@SuppressWarnings("unchecked")
 		final Label field = new Label("valuefield", new HTMLSafeModel(item.getModelObject()));
 		field.setEscapeModelStrings(false);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
 	}
-	
-	private void addLink(ListItem<RBFieldValueModel> item) {
+
+	private void addExternalLink(final ListItem<RBFieldValueModel> item) {
 		@SuppressWarnings("unchecked")
-		ExternalLink link = new ExternalLink("target", item.getModelObject(), item.getModelObject());
+		ExternalLink link = new ExternalLink("target", item.getModelObject(), getDisplayNameForLink(item));
 		item.add(new Fragment("valuefield", "link", this).add(link));
 	}
-	
-	private void addBooleanField(ListItem<RBFieldValueModel> item) {
+
+	private void addBooleanField(final ListItem<RBFieldValueModel> item) {
 		String label = "no";
 		if (Boolean.TRUE.equals(item.getModelObject().getObject())) {
 			label = "yes";
@@ -153,26 +160,37 @@ public class EntityRowDisplayPanel extends Panel {
 		final Label field = new Label("valuefield", label);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
 	}
-	
+
+	private IModel<String> getDisplayNameForLink(final ListItem<RBFieldValueModel> item) {
+		@SuppressWarnings("unchecked")
+		IModel<String> name = item.getModelObject();
+		RBField field = item.getModelObject().getField();
+		if(Datatype.FILE.name().equals(field.getDataType().name())) {
+			String s = (String) field.getValue(item.getModelObject().getIndex());
+			name.setObject(StringUtils.substringAfterLast(s, "/"));
+		}
+		return name;
+	}
+
 	// ----------------------------------------------------
-	
+
 	private class NotEmptyCondition extends ConditionalModel<RBField> {
 
 		/**
 		 * @param model
 		 */
-		public NotEmptyCondition(IModel<RBField> model) {
+		public NotEmptyCondition(final IModel<RBField> model) {
 			super(model);
 		}
 
-		/** 
-		* {@inheritDoc}
-		*/
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public boolean isFulfilled() {
 			return !getObject().getValues().isEmpty();
 		}
-		
+
 	}
-	
+
 }
