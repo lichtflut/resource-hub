@@ -3,6 +3,23 @@
  */
 package de.lichtflut.rb.core.api.impl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
+
+import org.arastreju.sge.Arastreju;
+import org.arastreju.sge.ModelingConversation;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
@@ -13,24 +30,6 @@ import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
-import org.arastreju.sge.Arastreju;
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.persistence.TransactionControl;
-import org.arastreju.sge.query.Query;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
 
 /**
  * <p>
@@ -48,22 +47,22 @@ import static org.mockito.Mockito.when;
  */
 public class SchemaManagerImplIT {
 
-    private ModelingConversation conversation;
+	private ModelingConversation conversation;
 
-    @Mock
-    private ConversationFactory conversationFactory;
+	@Mock
+	private ConversationFactory conversationFactory;
 
 	// -----------------------------------------------------
 
-    @Before
-    public void setUp() {
-        final Arastreju aras = Arastreju.getInstance(new RBConfig().getArastrejuConfiguration());
-        this.conversation = aras.openMasterGate().startConversation();
+	@Before
+	public void setUp() {
+		final Arastreju aras = Arastreju.getInstance(new RBConfig().getArastrejuConfiguration());
+		this.conversation = aras.openMasterGate().startConversation();
 
-        MockitoAnnotations.initMocks(this);
-        Mockito.reset(conversationFactory);
-        when(conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX)).thenReturn(conversation);
-    }
+		MockitoAnnotations.initMocks(this);
+		Mockito.reset(conversationFactory);
+		when(conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX)).thenReturn(conversation);
+	}
 
 	// -----------------------------------------------------
 
@@ -112,7 +111,7 @@ public class SchemaManagerImplIT {
 
 	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
 
 

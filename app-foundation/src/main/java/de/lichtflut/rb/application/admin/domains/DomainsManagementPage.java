@@ -19,7 +19,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import de.lichtflut.rb.application.admin.AdminBasePage;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBDomain;
-import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.domains.DomainBrowserPanel;
@@ -46,11 +45,8 @@ public class DomainsManagementPage extends AdminBasePage {
 	@SpringBean
 	private AuthModule authModule;
 
-	@SpringBean
-	private ServiceContext context;
-	
-	private final IModel<RBDomain> currentDomain = new Model<RBDomain>(); 
-	
+	private final IModel<RBDomain> currentDomain = new Model<RBDomain>();
+
 	private final IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
 
 	// ----------------------------------------------------
@@ -68,21 +64,21 @@ public class DomainsManagementPage extends AdminBasePage {
 
 		add(new ActionLink("showDomestic", CurrentDomainModel.displayNameModel()) {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				viewDomain(currentDomainModel);
 			}
 		});
 
 		add(new DomainBrowserPanel("otherDomains", otherDomainsModel(currentDomainModel)) {
 			@Override
-			public void onDomainSelected(IModel<RBDomain> domain) {
+			public void onDomainSelected(final IModel<RBDomain> domain) {
 				viewDomain(domain);
 			}
 		});
 
 		add(new AjaxLink("create") {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				createDomain();
 			}
 		});
@@ -90,7 +86,7 @@ public class DomainsManagementPage extends AdminBasePage {
 
 	// ----------------------------------------------------
 
-	protected void viewDomain(IModel<RBDomain> domain) {
+	protected void viewDomain(final IModel<RBDomain> domain) {
 		currentDomain.setObject(domain.getObject());
 		mode.setObject(DisplayMode.VIEW);
 		send(this, Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.DOMAIN));
@@ -127,7 +123,7 @@ public class DomainsManagementPage extends AdminBasePage {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void onEvent(IEvent<?> event) {
+	public void onEvent(final IEvent<?> event) {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
 		if (mce.isAbout(ModelChangeEvent.DOMAIN)) {
 			RBAjaxTarget.add(get("otherDomains"));

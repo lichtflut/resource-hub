@@ -7,18 +7,13 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.application.base.RBBasePage;
 import de.lichtflut.rb.application.resourceview.EntityDetailPage;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.organizer.ChangePasswordPanel;
 import de.lichtflut.rb.webck.components.organizer.SetUserProfilePanel;
@@ -46,12 +41,12 @@ public class UserProfilePage extends RBBasePage {
 		add(createTitle());
 		add(createChangeUserProfile());
 		add(createchangePasswordField());
-		
+
 		add(new PerspectiveManagementPanel("perspectives"));
-		
+
 		add(new MenuManagementPanel("menu"));
 	}
-	
+
 	// ----------------------------------------------------
 
 	/**
@@ -72,7 +67,7 @@ public class UserProfilePage extends RBBasePage {
 		return new SetUserProfilePanel("profile", new CurrentUserModel()){
 
 			@Override
-			protected void onResourceLinkClicked(ResourceNode node) {
+			protected void onResourceLinkClicked(final ResourceNode node) {
 				final PageParameters params = new PageParameters();
 				params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, RB.PERSON);
 				params.add(EntityDetailPage.PARAM_RESOURCE_ID, node.getQualifiedName());
@@ -80,9 +75,9 @@ public class UserProfilePage extends RBBasePage {
 			}
 
 			@Override
-			protected void jumpToResourceEditorPage(EntityHandle handle) {
+			protected void jumpToResourceEditorPage(final EntityHandle handle) {
 				PageParameters params = new PageParameters();
-                params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, RB.PERSON);
+				params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, RB.PERSON);
 				params.set(DisplayMode.PARAMETER, DisplayMode.EDIT);
 				setResponsePage(new EntityDetailPage(handle));
 			}
