@@ -13,6 +13,9 @@ import java.io.OutputStream;
 import java.util.Properties;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.repository.ContentDescriptor;
 import de.lichtflut.repository.RepositoryDelegator;
@@ -29,6 +32,8 @@ import de.lichtflut.repository.impl.RepositoryDelegatorImpl;
  * @author Ravi Knox
  */
 public class FileServiceImpl implements FileService {
+
+	private final static Logger LOGGER = LoggerFactory.getLogger(FileServiceImpl.class);
 
 	protected RepositoryDelegator delegator;
 
@@ -50,8 +55,6 @@ public class FileServiceImpl implements FileService {
 	public File getData(final String path) {
 		return getFileForStream(delegator.getData(path));
 	}
-
-
 
 	/**
 	 * {@inheritDoc}
@@ -88,7 +91,7 @@ public class FileServiceImpl implements FileService {
 				if(home == null || home.isEmpty()){
 					home = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + UUID.randomUUID().toString();
 				}
-				File config = new File(getProperty("config-file", ""));
+				String config = getProperty("config-file", "");
 				return new RepositoryConfigWrapper(home, config);
 			}
 		};
@@ -142,10 +145,13 @@ public class FileServiceImpl implements FileService {
 	private Properties getPropertiesFile(final String config) {
 		final Properties properties = new Properties();
 		try {
-			properties.load(new FileInputStream(config));
+			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(config));
+			LOGGER.debug("Propertyfile loaded from: {}", config);
 		} catch (final FileNotFoundException e) {
+			LOGGER.error("Could not find Propertiesfile from: {}", config);
 			e.printStackTrace();
 		} catch (final IOException e) {
+			LOGGER.error("Error while loading file from: {}", config);
 			e.printStackTrace();
 		}
 		return properties;

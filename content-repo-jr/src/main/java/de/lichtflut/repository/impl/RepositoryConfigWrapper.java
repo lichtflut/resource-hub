@@ -3,8 +3,6 @@
  */
 package de.lichtflut.repository.impl;
 
-import java.io.File;
-
 import org.apache.jackrabbit.core.config.RepositoryConfig;
 
 /**
@@ -18,7 +16,7 @@ import org.apache.jackrabbit.core.config.RepositoryConfig;
 public class RepositoryConfigWrapper {
 
 	private final String path;
-	private final File config;
+	private final String config;
 
 	// ---------------- Constructor -------------------------
 
@@ -26,7 +24,7 @@ public class RepositoryConfigWrapper {
 	 * @param home - path pointing to the content storage location
 	 * @param config - xml file representing the necessary configuration
 	 */
-	public RepositoryConfigWrapper(final String home, final File config) {
+	public RepositoryConfigWrapper(final String home, final String config) {
 		this.path = home;
 		this.config = config;
 	}
@@ -36,7 +34,7 @@ public class RepositoryConfigWrapper {
 	/**
 	 * @return the config
 	 */
-	public File getConfig() {
+	public String getConfig() {
 		return config;
 	}
 

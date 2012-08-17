@@ -17,9 +17,9 @@ import de.lichtflut.repository.ContentDescriptor;
  */
 public class ContentDescriptorBuilder {
 
-	private String name = "";
 	private String path = "";
 	private String mimeType = "";
+	private String name = "";
 	private InputStream in = null;
 
 	// ---------------- Constructor -------------------------
@@ -31,11 +31,6 @@ public class ContentDescriptorBuilder {
 	}
 
 	// ------------------------------------------------------
-
-	public ContentDescriptorBuilder name(final String name){
-		this.name = name;
-		return this;
-	}
 
 	public ContentDescriptorBuilder path(final String path){
 		this.path= path;
@@ -49,6 +44,11 @@ public class ContentDescriptorBuilder {
 
 	public ContentDescriptorBuilder data(final InputStream in){
 		this.in = in;
+		return this;
+	}
+
+	public ContentDescriptorBuilder name(final String name){
+		this.name = name;
 		return this;
 	}
 
@@ -70,14 +70,6 @@ public class ContentDescriptorBuilder {
 			 * {@inheritDoc}
 			 */
 			@Override
-			public String getName() {
-				return name;
-			}
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
 			public String getMimeType() {
 				return mimeType;
 			}
@@ -88,9 +80,13 @@ public class ContentDescriptorBuilder {
 			}
 
 			@Override
+			public String getName() {
+				return name;
+			}
+
+			@Override
 			public String toString(){
 				StringBuilder sb = new StringBuilder();
-				sb.append("Name: " + getName() + "\n");
 				sb.append("MimeType: " + getMimeType() + "\n");
 				sb.append("Data: " + getData().toString());
 				return sb.toString();
