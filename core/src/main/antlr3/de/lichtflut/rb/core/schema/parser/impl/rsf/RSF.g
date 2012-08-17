@@ -14,6 +14,7 @@ tokens {
 	ASSIGMENT;
 	PROPERTY;
 	STATEMENTS;
+	VISUALIZE;
 }
 
 @header{
@@ -66,7 +67,7 @@ label_decl: LABEL_RULE COLON e=STRING -> ^(LABEL $e);
 
 // Definition of a property-declaration
 property_decl : PROPERTY_DECL id=STRING cardinal_decl '{'
-					assigment+
+					assigment+ | visualization
 				'}'
 				-> ^(PROPERTY $id cardinal_decl assigment+)	;
 
@@ -75,6 +76,8 @@ cardinal_decl : e=CARDINALITY_DECL	-> ^(CARDINALITY $e);
 
 //Definition of an assigment within a property-declaration
 assigment : k=key COLON v=value -> ^(ASSIGMENT $k $v);
+
+visualization : VISUALIZE '{' '}';
 
 // Definition of an assigments' key
 key : FIELD_LABEL
@@ -110,6 +113,8 @@ REFERENCE_CONSTRAINT : 'reference-constraint';
 LITERAL_CONSTRAINT : 'literal-constraint';
 
 APPLICABLE_DATATYPES : 'applicable-datatypes';
+
+VISUALIZE : 'visualize';
 
 PREFIX : 'prefix';
 
