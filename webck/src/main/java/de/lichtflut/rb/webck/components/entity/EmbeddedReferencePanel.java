@@ -4,11 +4,13 @@ import java.util.List;
 
 import de.lichtflut.rb.webck.models.basic.CastingModel;
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 import org.slf4j.Logger;
@@ -64,6 +66,9 @@ public class EmbeddedReferencePanel extends Panel {
                 RBFieldValueModel valueModel = new RBFieldValueModel(field, 0);
                 item.add(new Label("label", field.getLabel(getLocale())));
                 item.add(factory.createField(valueModel, false));
+                if (field.getVisualizationInfo().isFloating()) {
+                    item.add(new AttributeAppender("class", Model.of("floating"), " "));
+                }
             }
         };
         return view;

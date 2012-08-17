@@ -34,7 +34,19 @@ public interface PropertyDeclaration extends Serializable {
 	 * Set the property.
 	 * @param property The property.
 	 */
-	void setPropertyDescriptor(ResourceID property); 
+	void setPropertyDescriptor(ResourceID property);
+
+    // ----------------------------------------------------
+
+    /**
+     * Get the {@link Datatype} for this PropertyDeclaration.
+     */
+    void setDatatype(Datatype datatype);
+
+    /**
+     * Get the {@link Datatype} for this PropertyDeclaration.
+     */
+    Datatype getDatatype();
 	
 	// -----------------------------------------------------
 
@@ -85,12 +97,12 @@ public interface PropertyDeclaration extends Serializable {
 	// ------------------------------------------------------
 	
 	/**
-	 * Get the {@link Datatype} for this PropertyDeclaration.
+	 * Set the {@link VisualizationInfo} for this PropertyDeclaration.
 	 */
-	void setDatatype(Datatype datatype);
+	void setVisualizationInfo(VisualizationInfo info);
 	
 	/**
-	 * Get the {@link Datatype} for this PropertyDeclaration.
+	 * Get the {@link VisualizationInfo} for this PropertyDeclaration.
 	 */
-	Datatype getDatatype();
+	VisualizationInfo getVisualizationInfo();
 }

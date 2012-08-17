@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.schema.parser;
 
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
 import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
@@ -98,6 +99,16 @@ public class ResourceSchemaParserTest {
 		final SchemaImporter importer = manager.getImporter("rsf");
 		importer.read(in);
 	}
+
+    @Test
+    public void testRsfParsing() throws IOException {
+        final InputStream in =
+                getClass().getClassLoader().getResourceAsStream("test-schema.rsf");
+
+        final RsfSchemaParser parser = new RsfSchemaParser();
+        ParsedElements parsedElements = parser.parse(in);
+        System.out.println(parsedElements.getSchemas());
+    }
 
     // -- GIVEN -------------------------------------------
 

@@ -24,13 +24,6 @@ public interface RBSchema {
 
 	String NAMESPACE_URI = "http://rb.lichtflut.de/schema#";
 
-	// -- ROOT-NODE ---------------------------------------
-
-	/**
-	 * Represents the "root-node" of the schema graph.
-	 */
-	ResourceNode ROOT_NODE = new SNResource(new QualifiedName(NAMESPACE_URI, "SystemRoot"));
-
 	// -- TYPES -------------------------------------------
 
 	/**
@@ -69,11 +62,6 @@ public interface RBSchema {
 	 * A Schema has one or more PropertyDeclarations.
 	 */
 	ResourceID HAS_PROPERTY_DECL = new SimpleResourceID(NAMESPACE_URI, "hasPropertyDeclaration");
-
-	/**
-	 * A PropertyDeclaration must have a Property Type Definition.
-	 */
-	ResourceID HAS_PROPERTY_TYPE_DEF = new SimpleResourceID(NAMESPACE_URI, "hasPropertyTypeDefinition");
 
 	/**
 	 * A PropertyAssertion can be have several Property-Descriptors to define the labels or sth. like that-
@@ -118,14 +106,20 @@ public interface RBSchema {
 
 	// -- CONSTRAINTS -------------------------------------
 
-	ResourceID IS_RESOURCE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "isResourceConstraint");
-	ResourceID IS_LITERAL_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "isLiteralConstraint");;
 	ResourceID HAS_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasConstraint");
 	ResourceID HAS_RESOURCE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasTypeConstraint");
-	ResourceID HAS_LITERAL_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasLiteralConstraint");
 	ResourceID HAS_CONSTRAINT_VALUE = new SimpleResourceID(NAMESPACE_URI, "hasConstraintValue");
 	ResourceID MIN_OCCURS = new SimpleResourceID(NAMESPACE_URI, "minOccurs");
 	ResourceID MAX_OCCURS = new SimpleResourceID(NAMESPACE_URI, "maxOccurs");
 
+    // -- VISUALIZATION -----------------------------------
+
+    ResourceID HAS_VISUALIZATION_INFO = new SimpleResourceID(NAMESPACE_URI, "hasVisualizationInfo");
+
+    ResourceID IS_EMBEDDED = new SimpleResourceID(NAMESPACE_URI, "isEmbedded");
+
+    ResourceID IS_FLOATING = new SimpleResourceID(NAMESPACE_URI, "isFloating");
+
+    ResourceID HAS_STYLE = new SimpleResourceID(NAMESPACE_URI, "hasStyle");
 
 }

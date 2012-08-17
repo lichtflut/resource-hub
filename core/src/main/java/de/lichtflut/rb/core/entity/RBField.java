@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.entity;
 import java.util.List;
 import java.util.Locale;
 
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
@@ -43,7 +44,7 @@ public interface RBField {
      * Get additional information about the visualization of the field.
      * @return The visualization info.
      */
-    FieldVisualizationInfo getVisualizationInfo();
+    VisualizationInfo getVisualizationInfo();
 
 
 	// -----------------------------------------------------

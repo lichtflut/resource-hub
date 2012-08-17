@@ -358,6 +358,15 @@ div.embedded-reference {
 div.embedded-entity-field {
     padding: 1px;
     float: left;
+    clear: left;
+}
+
+div.embedded-entity-field div {
+    float: left;
+}
+
+div.embedded-entity-field.floating {
+    clear: none;
 }
 
 div.embedded-entity-field input[type='text'] {

@@ -1,4 +1,4 @@
-package de.lichtflut.rb.core.entity;
+package de.lichtflut.rb.core.schema.model;
 
 /**
  * <p>
@@ -11,7 +11,24 @@ package de.lichtflut.rb.core.entity;
  *
  * @author Oliver Tigges
  */
-public interface FieldVisualizationInfo {
+public interface VisualizationInfo {
+
+    public static final VisualizationInfo DEFAULT = new VisualizationInfo() {
+        @Override
+        public boolean isEmbedded() {
+            return false;
+        }
+        @Override
+        public boolean isFloating() {
+            return false;
+        }
+        @Override
+        public String getStyle() {
+            return "";
+        }
+    };
+
+    // ----------------------------------------------------
 
     /**
      * Resource references may be embedded.

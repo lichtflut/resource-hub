@@ -8,11 +8,13 @@ import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -20,6 +22,8 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
 import org.arastreju.sge.model.ResourceID;
@@ -112,6 +116,7 @@ public class FieldEditorFactory implements Serializable {
 		final TextField field = new TextField("valuefield", model);
 		field.setType(type);
 		addValidator(field, fieldDefinition);
+        addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textInput", container).add(field);
 	}
 
@@ -119,17 +124,20 @@ public class FieldEditorFactory implements Serializable {
 		final TextArea<String> field = new TextArea<String>("valuefield", model);
 		field.setType(String.class);
 		addValidator(field, fieldDefinition);
+        addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textArea", container).add(field);
 	}
 
     public Component createDateField(RBField fieldDefinition, IModel model) {
 		final DatePicker<Date> field = new DatePicker<Date>("valuefield", model, Date.class);
 		addValidator(field, fieldDefinition);
+        addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textInput", container).add(field);
 	}
 
     public Component createBooleanField(RBField fieldDefinition, IModel model) {
 		final CheckBox cb = new CheckBox("valuefield", model);
+        addStyle(cb, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "checkbox", container).add(cb);
 	}
 
@@ -137,6 +145,7 @@ public class FieldEditorFactory implements Serializable {
 		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(model));
 		field.add(new TinyMceBehavior());
 		addValidator(field, fieldDefinition);
+        addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textArea", container).add(field);
 	}
 
@@ -148,6 +157,7 @@ public class FieldEditorFactory implements Serializable {
 
 	public Component createFileChooser(RBField fieldDefinition, IModel model){
 		FileUploadField fileUploadField = new FileUploadField("valuefield", model);
+        addStyle(fileUploadField, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "fileUpload", container).add(fileUploadField);
 	}
 
@@ -170,5 +180,11 @@ public class FieldEditorFactory implements Serializable {
 		}
 		return null;
 	}
+
+    private void addStyle(Component comp, VisualizationInfo visualizationInfo) {
+        if (!Strings.isEmpty(visualizationInfo.getStyle())) {
+            comp.add(new AttributeAppender("style", Model.of(visualizationInfo.getStyle()), " "));
+        }
+    }
 
 }

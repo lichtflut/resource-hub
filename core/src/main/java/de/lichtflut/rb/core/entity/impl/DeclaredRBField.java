@@ -6,8 +6,7 @@ package de.lichtflut.rb.core.entity.impl;
 import java.util.Locale;
 import java.util.Set;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.entity.FieldVisualizationInfo;
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -73,13 +72,12 @@ public class DeclaredRBField extends AbstractRBField {
 	}
 
     @Override
-    public FieldVisualizationInfo getVisualizationInfo() {
-        PlainFieldVisualizationInfo info =  new PlainFieldVisualizationInfo();
-        if (getConstraint() != null && RB.ADDRESS.equals(getConstraint().getReference())) {
-            // for testing always embed addresses
-            info.setEmbedded(true);
+    public VisualizationInfo getVisualizationInfo() {
+        if (declaration.getVisualizationInfo() != null) {
+            return declaration.getVisualizationInfo();
+        } else {
+            return VisualizationInfo.DEFAULT;
         }
-        return info;
     }
 
     @Override
