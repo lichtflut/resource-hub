@@ -59,7 +59,7 @@ public enum Datatype {
 		case URI:
 			return ElementaryDataType.URI;
 		case FILE:
-			return ElementaryDataType.File;
+			return ElementaryDataType.FILE;
 		default:
 			throw new NotYetSupportedException(type);
 		}
