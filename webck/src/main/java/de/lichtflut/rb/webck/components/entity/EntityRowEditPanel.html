@@ -16,13 +16,17 @@
                 <div class="field-value-input">
         		    <wicket:container wicket:id="valuefield"></wicket:container>
                 </div>
-        		<a wicket:id="removeLink" class="field-value-operation" tabindex="-1"><span class="remove-value-link">-</span></a>
-                <a wicket:id="createLink" class="field-value-operation" tabindex="-1"><span class="create-value-link">*</span></a>
+                <div class="field-operations">
+                    <a wicket:id="removeLink" class="field-value-operation" tabindex="-1"><span class="remove-value-link">-</span></a>
+                </div>
+                <div class="field-operations">
+                    <a wicket:id="addValueLink" tabindex="-1"><span class="add-value-link">+</span></a> &nbsp;
+                </div>
+                <div class="field-operations">
+                    <a wicket:id="createLink" tabindex="-1"><span class="create-value-link">*</span></a>
+                </div>
             </div>
         </wicket:container>
-    </div>
-    <div class="field-operations">
-    	<a wicket:id="addValueLink" tabindex="-1"><span class="add-value-link">+</span></a>
     </div>
     
     <wicket:fragment wicket:id="textInput">

@@ -304,7 +304,7 @@ div.entity-field {
     width: 100%;
     clear: both;
     float: none;
-    min-height: 26px;
+    min-height: 30px;
     display: inline-block;
 }
 
@@ -315,15 +315,15 @@ div.entity-field .field-label {
 
 /* The values of one field */
 div.entity-field .field-values {
-    float:left;
+    width: 80%;
+    float: left;
     margin: 0 0 2px 0;
-    width:77%;
 }
 
 /* The single value of one field */
 div.entity-field div.field-value-input {
     float: left;
-    min-width: 350px;
+    min-width: 330px;
 }
 
 div.entity-field a.field-value-operation {
@@ -331,7 +331,7 @@ div.entity-field a.field-value-operation {
 }
 
 div.entity-field textarea {
-    width:350px;
+    width:330px;
     height:50px;
 }
 
@@ -344,7 +344,7 @@ div.entity-field div.data-picker {
 }
 
 div.entity-field .field-operations {
-    width:3%;
+    min-width: 30px;
     float: left;
 }
 

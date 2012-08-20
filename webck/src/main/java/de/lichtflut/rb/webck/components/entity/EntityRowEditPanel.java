@@ -13,6 +13,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -75,12 +76,46 @@ public class EntityRowEditPanel extends Panel {
                 item.add(field);
                 final int idx = item.getModelObject().getIndex();
 				item.add(createRemoveLink(idx));
-				item.add(createCreateLink(idx));
+                item.add(createAddValueLink(model, idx));
+                item.add(createCreateLink(idx));
+
 			}
 		};
 		view.setReuseItems(true);
 		add(view);
 
+
+	}
+	
+	// ----------------------------------------------------
+
+    protected AjaxSubmitLink createRemoveLink(final int index) {
+        final AjaxSubmitLink link = new AjaxSubmitLink("removeLink") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                getField().removeSlot(index);
+                rebuildListView();
+                target.add(EntityRowEditPanel.this);
+            }
+
+            @Override
+            protected void onError(AjaxRequestTarget target, Form<?> form) {
+                target.add(EntityRowEditPanel.this);
+            }
+        };
+        link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));
+        if (Datatype.BOOLEAN.equals(getField().getDataType())) {
+            link.setVisible(false);
+        } else {
+            link.add(visibleIf(new IsBeneathFormConditional()));
+        }
+        return link;
+    }
+
+    protected Component createAddValueLink(final IModel<RBField> model, final int index) {
+        if (index > 0) {
+            return new WebComponent("addValueLink").setVisible(false);
+        }
         final RBSubmitLink link = new RBSubmitLink("addValueLink") {
             @Override
             protected void applyActions(AjaxRequestTarget target, Form<?> form) {
@@ -88,40 +123,19 @@ public class EntityRowEditPanel extends Panel {
                 target.add(EntityRowEditPanel.this);
             }
         };
-		link.add(new AttributeModifier("title", new ResourceModel("link.title.add-field-value")));
-		link.add(visibleIf(and(
-				new IsBeneathFormConditional(), 
-				lessThan(new FieldSizeModel(model), new FieldCardinalityModel(model)))));
-		add(link);
-	}
-	
-	// ----------------------------------------------------
+        link.add(new AttributeModifier("title", new ResourceModel("link.title.add-field-value")));
+        link.add(visibleIf(and(
+                new IsBeneathFormConditional(),
+                lessThan(new FieldSizeModel(model), new FieldCardinalityModel(model)))));
+        return link;
+    }
 
-	protected AjaxSubmitLink createRemoveLink(final int index) {
-		final AjaxSubmitLink link = new AjaxSubmitLink("removeLink") {
-			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				getField().removeSlot(index);
-				rebuildListView();
-				target.add(EntityRowEditPanel.this);
-			}
-			
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				target.add(EntityRowEditPanel.this);
-			}
-		};
-		link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));
-		if (Datatype.BOOLEAN.equals(getField().getDataType())) {
-			link.setVisible(false);
-		} else {
-			link.add(visibleIf(new IsBeneathFormConditional()));	
-		}
-		return link;
-	}
-	
 	protected Component createCreateLink(final int index) {
-		final AjaxSubmitLink link = new AjaxSubmitLink("createLink") {
+        if (index > 0) {
+            return new WebComponent("createLink").setVisible(false);
+        }
+
+        final AjaxSubmitLink link = new AjaxSubmitLink("createLink") {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				final EntityHandle handle = EntityHandle.forType(getTypeConstraint());

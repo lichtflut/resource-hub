@@ -2,18 +2,20 @@ package de.lichtflut.rb.core.schema.model.impl;
 
 import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 
+import java.io.Serializable;
+
 /**
  * <p>
  *  Simple implementation of a field's visualization information.
  * </p>
- * <p/>
+ *
  * <p>
- * Created 10.08.12
+ *  Created 10.08.12
  * </p>
  *
  * @author Oliver Tigges
  */
-public class PlainVisualizationInfo implements VisualizationInfo {
+public class PlainVisualizationInfo implements VisualizationInfo, Serializable {
 
     private boolean embedded = false;
     private boolean floating = false;
