@@ -3,12 +3,9 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
-import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.webck.components.typesystem.constraints.PublicConstraintsEditorPanelAggregator;
-import de.lichtflut.rb.webck.components.typesystem.properties.PropertyDeclEditorPanelAggregator;
-import de.lichtflut.rb.webck.components.typesystem.schema.SchemaEditorAggregator;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
@@ -16,8 +13,12 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
-import java.util.ArrayList;
-import java.util.List;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.webck.components.typesystem.constraints.PublicConstraintsEditorPanelAggregator;
+import de.lichtflut.rb.webck.components.typesystem.properties.PropertyDeclEditorPanelAggregator;
+import de.lichtflut.rb.webck.components.typesystem.schema.SchemaEditorAggregator;
 
 /**
  * Aggregation of all components necessary to edit {@link ResourceSchema}s,
@@ -35,7 +36,8 @@ public class TypeSystemPanelAggregator extends Panel {
 	 * 
 	 * @param id - wicket:id
 	 */
-	public TypeSystemPanelAggregator(String id) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public TypeSystemPanelAggregator(final String id) {
 		super(id);
 		add(new AjaxTabbedPanel("tabs", getTabs()));
 	}
@@ -52,21 +54,21 @@ public class TypeSystemPanelAggregator extends Panel {
 		tabs.add(new AbstractTab(Model.of("Types")) {
 
 			@Override
-			public WebMarkupContainer getPanel(String panelId) {
+			public WebMarkupContainer getPanel(final String panelId) {
 				return new SchemaEditorAggregator(panelId);
 			}
 		});
 		tabs.add(new AbstractTab(Model.of("Property Declaration")) {
 
 			@Override
-			public WebMarkupContainer getPanel(String panelId) {
+			public WebMarkupContainer getPanel(final String panelId) {
 				return new PropertyDeclEditorPanelAggregator(panelId);
 			}
 		});
 		tabs.add(new AbstractTab(Model.of("Public Constraints")) {
 
 			@Override
-			public WebMarkupContainer getPanel(String panelId) {
+			public WebMarkupContainer getPanel(final String panelId) {
 				return new PublicConstraintsEditorPanelAggregator(panelId);
 			}
 		});

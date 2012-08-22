@@ -52,7 +52,10 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 
 	public RepositoryDelegatorImpl(final String name, final String password) {
 		loginToRepository(new SimpleCredentials(name, password.toCharArray()));
+		setUpUser(session);
+
 	}
+
 
 	// ------------------------------------------------------
 
@@ -140,6 +143,10 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	protected void setUpUser(final Session session) {
+
 	}
 
 	/**

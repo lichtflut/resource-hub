@@ -3,10 +3,13 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
-import de.lichtflut.rb.core.io.IOReport;
-import de.lichtflut.rb.core.services.DomainOrganizer;
-import de.lichtflut.rb.core.services.InformationManager;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -34,12 +37,10 @@ import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.io.StatementContainer;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
+import de.lichtflut.rb.core.io.IOReport;
+import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.core.services.InformationManager;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
  * <p>
@@ -54,66 +55,66 @@ import java.util.List;
  */
 public class InformationExportDialog extends AbstractRBDialog implements IResourceListener {
 
-    private final IModel<Context> srcContext = new Model<Context>();
+	private final IModel<Context> srcContext = new Model<Context>();
 
-    private final IModel<String> format = new Model<String>("RDF-XML");
+	private final IModel<String> format = new Model<String>("RDF-XML");
 
 	private final ResourceStreamResource resource;
-	
+
 	private final IModel<? extends StatementContainer> graphModel;
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    @SpringBean
-    private DomainOrganizer organizer;
+	@SpringBean
+	private DomainOrganizer organizer;
 
-    @SpringBean
-    private InformationManager informationManager;
+	@SpringBean
+	private InformationManager informationManager;
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
 	/**
-     * Constructor for export dialog with an predefined export set.
+	 * Constructor for export dialog with an predefined export set.
 	 * @param id The wicket ID.
-     * @param model The model to export.
+	 * @param model The model to export.
 	 */
 	@SuppressWarnings("rawtypes")
 	public InformationExportDialog(final String id, final IModel<? extends StatementContainer> model) {
 		super(id);
 		this.graphModel = model;
-		
+
 		resource = prepareResource(format);
 
-        final Form form = createForm(true);
+		final Form form = createForm(true);
 		add(form);
-		
+
 		setModal(true);
 		setWidth(600);
 	}
 
-    /**
-     * Creates an export dialog, where the user chooses the context to export.
-     * @param id The wicket ID.
-     */
-    @SuppressWarnings("rawtypes")
-    public InformationExportDialog(final String id) {
-        super(id);
-        this.graphModel = createContextExportModel();
+	/**
+	 * Creates an export dialog, where the user chooses the context to export.
+	 * @param id The wicket ID.
+	 */
+	@SuppressWarnings("rawtypes")
+	public InformationExportDialog(final String id) {
+		super(id);
+		this.graphModel = createContextExportModel();
 
-        resource = prepareResource(format);
+		resource = prepareResource(format);
 
-        final Form form = createForm(false);
-        add(form);
+		final Form form = createForm(false);
+		add(form);
 
-        setModal(true);
-        setWidth(600);
-    }
+		setModal(true);
+		setWidth(600);
+	}
 
-    // -- IResourceListener -------------------------------
-	
-	/** 
-	* {@inheritDoc}
-	*/
+	// -- IResourceListener -------------------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onResourceRequested() {
 		final RequestCycle cycle = RequestCycle.get();
@@ -121,68 +122,68 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 		resource.setFileName(getFilename());
 		resource.respond(a);
 	}
-	
+
 	// ----------------------------------------------------
 
-    public List<Context> getAvailableContexts() {
-        return organizer.getContexts();
-    }
-	
+	public List<Context> getAvailableContexts() {
+		return organizer.getContexts();
+	}
+
 	protected ListModel<String> getChoices() {
 		return new ListModel<String>(Arrays.asList("RDF-XML", "JSON", "N3"));
 	}
-	
+
 	protected CharSequence getDownloadUrl() {
 		return urlFor(IResourceListener.INTERFACE, new PageParameters());
 	}
-	
+
 	protected ResourceStreamResource prepareResource(final IModel<String> format) {
-		 final ResourceStreamResource resource = new ResourceStreamResource(new ContentStream(format));
-		 resource.setContentDisposition(ContentDisposition.ATTACHMENT);
-		 return resource;
+		final ResourceStreamResource resource = new ResourceStreamResource(new ContentStream(format));
+		resource.setContentDisposition(ContentDisposition.ATTACHMENT);
+		return resource;
 	}
 
-    private Form createForm(boolean predefined) {
-        final Form form = new Form("form");
-        form.add(new FeedbackPanel("feedback"));
+	private Form<?> createForm(final boolean predefined) {
+		final Form<?> form = new Form<Void>("form");
+		form.add(new FeedbackPanel("feedback"));
 
-        final DropDownChoice<Context> ctxChooser = new DropDownChoice<Context>("srcContext", srcContext, getAvailableContexts());
-        if (predefined) {
-            ctxChooser.setVisible(false);
-        } else {
-            ctxChooser.setRequired(true);
-        }
-        form.add(ctxChooser);
+		final DropDownChoice<Context> ctxChooser = new DropDownChoice<Context>("srcContext", srcContext, getAvailableContexts());
+		if (predefined) {
+			ctxChooser.setVisible(false);
+		} else {
+			ctxChooser.setRequired(true);
+		}
+		form.add(ctxChooser);
 
-        form.add(new DropDownChoice<String>("format", format, getChoices()));
+		form.add(new DropDownChoice<String>("format", format, getChoices()));
 
 
-        form.add(new AjaxButton("exportButton", form) {
-            @Override
-            protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-                final String uid = "&uid" + System.nanoTime();
-                target.appendJavaScript("window.location.href='" +  getDownloadUrl() + uid + "'");
-                send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.START_TIMER_BEHAVIOR));
-                close(target);
-            }
-            @Override
-            protected void onError(final AjaxRequestTarget target, final Form<?> form) {
-                target.add(form);
-            }
+		form.add(new AjaxButton("exportButton", form) {
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+				final String uid = "&uid" + System.nanoTime();
+				target.appendJavaScript("window.location.href='" +  getDownloadUrl() + uid + "'");
+				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.START_TIMER_BEHAVIOR));
+				close(target);
+			}
+			@Override
+			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
+				target.add(form);
+			}
 
-        });
-        return form;
-    }
-	
+		});
+		return form;
+	}
+
 	private String getFilename() {
 		final StringBuilder sb = new StringBuilder(128);
-        if (srcContext.getObject() == null) {
-		    sb.append("export-");
-		    sb.append(System.currentTimeMillis());
-        } else {
-            sb.append(srcContext.getObject().getQualifiedName().getSimpleName());
-        }
-        sb.append(".");
+		if (srcContext.getObject() == null) {
+			sb.append("export-");
+			sb.append(System.currentTimeMillis());
+		} else {
+			sb.append(srcContext.getObject().getQualifiedName().getSimpleName());
+		}
+		sb.append(".");
 		if ("RDF-XML".equals(format.getObject())) {
 			sb.append("rdf.xml");
 		} else {
@@ -191,18 +192,18 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 		return sb.toString();
 	}
 
-    private IModel<StatementContainer> createContextExportModel() {
-        return new AbstractReadOnlyModel<StatementContainer>() {
-            @Override
-            public StatementContainer getObject() {
-                return informationManager.exportInformation(srcContext.getObject());
-            }
-        };
-    }
+	private IModel<StatementContainer> createContextExportModel() {
+		return new AbstractReadOnlyModel<StatementContainer>() {
+			@Override
+			public StatementContainer getObject() {
+				return informationManager.exportInformation(srcContext.getObject());
+			}
+		};
+	}
 
-	
+
 	// ----------------------------------------------------
-	
+
 	class ContentStream extends AbstractResourceStream {
 
 		private final IModel<String> format;
@@ -215,17 +216,17 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 		public ContentStream(final IModel<String> format) {
 			this.format = format;
 		}
-		
-		/** 
-		* {@inheritDoc}
-		*/
+
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public InputStream getInputStream() throws ResourceStreamNotFoundException {
 			IOReport report = new IOReport();
 			final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			try {
 				final StatementContainer stmtContainer = graphModel.getObject();
-				
+
 				if ("RDF-XML".equalsIgnoreCase(format.getObject())){
 					new RdfXmlBinding().write(stmtContainer, buffer);
 				} else if ("JSON".equals(format.getObject())) {
@@ -235,19 +236,19 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 				} else {
 					throw new IllegalArgumentException("Format not yet supported: " + format.getObject());
 				}
-				
+
 				length = Bytes.bytes(buffer.size());
 				in = new ByteArrayInputStream(buffer.toByteArray());
-				
+
 				report.add("Namespaces", stmtContainer.getNamespaces().size());
 				report.success();
 				buffer.close();
 			} catch (IOException e) {
-//				throw new RuntimeException(e);
+				//				throw new RuntimeException(e);
 				report.setAdditionalInfo(e.getMessage());
 				report.error();
 			} catch (SemanticIOException e) {
-//				throw new RuntimeException(e);
+				//				throw new RuntimeException(e);
 				report.setAdditionalInfo(e.getMessage());
 				report.error();
 			}
@@ -256,23 +257,23 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 			return in;
 		}
 
-		/** 
-		* {@inheritDoc}
-		*/
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void close() throws IOException {
 			in.close();
 			in = null;
 		}
-		
-		/** 
-		* {@inheritDoc}
-		*/
+
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public Bytes length() {
 			return length;
 		}
-		
+
 	}
 
 }

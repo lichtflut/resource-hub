@@ -11,7 +11,6 @@ import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -82,7 +81,7 @@ public class RBBasePage extends AbstractBasePage {
 		final IModel<List<NavigationNode>> navModel = new DerivedDetachableModel<List<NavigationNode>, List<MenuItem>>(
 				new MenuItemListModel()) {
 			@Override
-			protected List<NavigationNode> derive(List<MenuItem> menuItems) {
+			protected List<NavigationNode> derive(final List<MenuItem> menuItems) {
 				final List<NavigationNode> result = new ArrayList<NavigationNode>();
 				for (MenuItem item : menuItems) {
 					result.add(createPageNode(item));
@@ -95,7 +94,7 @@ public class RBBasePage extends AbstractBasePage {
 
 		add(new NavigationBar("mainNavigation", navModel) {
 			@Override
-			public void onEvent(IEvent<?> event) {
+			public void onEvent(final IEvent<?> event) {
 				if (ModelChangeEvent.from(event).isAbout(ModelChangeEvent.MENU)) {
 					RBAjaxTarget.add(this);
 				}
@@ -107,7 +106,7 @@ public class RBBasePage extends AbstractBasePage {
 		add(createSecondLevelNav("secondLevelNav"));
 
 		add(new ReferenceLink("adminAreaLink", AdminBasePage.class, new ResourceModel("global.link.admin-area"))
-				.add(visibleIf(CurrentUserModel.hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
+		.add(visibleIf(CurrentUserModel.hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
 
 		add(new Label("username", CurrentUserModel.displayNameModel()));
 
@@ -143,7 +142,7 @@ public class RBBasePage extends AbstractBasePage {
 		return form;
 	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
 	protected NavigationNode createPageNode(final Class<? extends Page> pageClass, final String key) {
 		return new NavigationNodePanel(new ReferenceLink("link", pageClass, new ResourceModel(key)));

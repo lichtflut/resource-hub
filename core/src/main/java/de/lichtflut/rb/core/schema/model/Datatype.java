@@ -57,9 +57,8 @@ public enum Datatype {
 		case RICH_TEXT:
 			return ElementaryDataType.STRING;
 		case URI:
-			return ElementaryDataType.URI;
 		case FILE:
-			return ElementaryDataType.File;
+			return ElementaryDataType.URI;
 		default:
 			throw new NotYetSupportedException(type);
 		}

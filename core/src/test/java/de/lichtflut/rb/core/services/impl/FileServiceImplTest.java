@@ -87,17 +87,18 @@ public class FileServiceImplTest {
 	}
 
 	/**
-	 * Test method for {@link de.lichtflut.rb.core.services.impl.FileServiceImpl#storeFile(java.lang.String, java.io.File)}.
+	 * Test method for {@link de.lichtflut.rb.core.services.impl.FileServiceImpl#storeFile(ContentDescriptor)}.
 	 * @throws IOException
 	 */
 	@Test
 	public void testStoreFile() throws IOException {
 		File original = tempFolder.newFile("test.doc");
+		ContentDescriptor descriptor = new ContentDescriptorBuilder().data(new FileInputStream(original)).build();
 		filllFile(original);
 
 		startMockRepositoryDelegator();
 
-		fileService.storeFile(path, original);
+		fileService.storeFile(descriptor);
 	}
 
 	/**

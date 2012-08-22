@@ -5,7 +5,6 @@ package de.lichtflut.rb.application.pages;
 
 import java.util.Locale;
 
-import de.lichtflut.rb.webck.common.CookieAccess;
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -20,9 +19,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import de.lichtflut.rb.application.RBApplication;
-import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.common.CookieAccess;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.models.CurrentUserModel;
@@ -39,9 +38,9 @@ import de.lichtflut.rb.webck.models.CurrentUserModel;
  * @author Oliver Tigges
  */
 public class AbstractBasePage extends WebPage implements DialogHoster {
-	
+
 	private static final String MODALDIALOG = "modaldialog";
-	
+
 	// ----------------------------------------------------
 
 	/**
@@ -54,13 +53,13 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 	/**
 	 * @param parameters
 	 */
-	public AbstractBasePage(PageParameters parameters) {
+	public AbstractBasePage(final PageParameters parameters) {
 		super(parameters);
 	}
 
 	// ----------------------------------------------------
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -75,30 +74,30 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
-		
+
 		add(new Link("logout") {
 			@Override
 			public void onClick() {
 				WebSession.get().invalidate();
-                CookieAccess.getInstance().removeAuthCookies();
+				CookieAccess.getInstance().removeAuthCookies();
 				setResponsePage(RBApplication.get().getLoginPage());
 			}
 		}.add(ConditionalBehavior.visibleIf(CurrentUserModel.isLoggedIn())));
 
 		addLanguageLinks();
-		
+
 		add(emptyDialog());
 	}
 
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
-        RBApplication.get().getLayout().addLayout(response);
-        RBApplication.get().getStyle().addStyle(response);
-    }
+	@Override
+	public void renderHead(final IHeaderResponse response) {
+		super.renderHead(response);
+		RBApplication.get().getLayout().addLayout(response);
+		RBApplication.get().getStyle().addStyle(response);
+	}
 
-    // ----------------------------------------------------
-	
+	// ----------------------------------------------------
+
 	@SuppressWarnings("rawtypes")
 	protected void addLanguageLinks() {
 		add(new Link("switchToEnglish") {
@@ -115,14 +114,14 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 			}
 		});
 	}
-	
+
 	// ----------------------------------------------------
 
 	protected boolean needsAuthentication() {
 		return true;
 	}
-	
-	protected boolean isAuthorized(IModel<RBUser> user) {
+
+	protected boolean isAuthorized(final IModel<RBUser> user) {
 		return true;
 	}
 
@@ -139,8 +138,8 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 		if (!isAuthorized(new CurrentUserModel())) {
 			throw new RuntimeException("Not authorized to access this page.");
 		}
-    }
-	
+	}
+
 	// -- DIALOG ------------------------------------------
 
 	/**
@@ -150,9 +149,9 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 	public String getDialogID() {
 		return MODALDIALOG;
 	}
-	
+
 	@Override
-	public void openDialog(Dialog dialog) {
+	public void openDialog(final Dialog dialog) {
 		setDialog(dialog);
 		final AjaxRequestTarget target = AjaxRequestTarget.get();
 		if (target != null) {
@@ -162,9 +161,9 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 			dialog.open();
 		}
 	}
-	
+
 	@Override
-	public void closeDialog(Dialog dialog) {
+	public void closeDialog(final Dialog dialog) {
 		setDialog(emptyDialog());
 		final AjaxRequestTarget target = AjaxRequestTarget.get();
 		if (target != null) {
@@ -174,12 +173,12 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 			dialog.close();
 		}
 	}
-	
-	protected void setDialog(Component dialog) {
+
+	protected void setDialog(final Component dialog) {
 		Validate.isTrue(MODALDIALOG.equals(dialog.getId()));
 		replace(dialog);
 	}
-	
+
 	private Component emptyDialog() {
 		return new WebMarkupContainer(MODALDIALOG).setOutputMarkupPlaceholderTag(true).setVisible(false);
 	}

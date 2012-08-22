@@ -141,9 +141,7 @@ public class RepositoryDelegatorImplTest {
 		exists = repoDelegator.exists(path);
 
 		assertThat(exists, equalTo(true));
-	}
-
-	// ------------- SetUp & TearDown -----------------------
+	}// ------------- SetUp & TearDown -----------------------
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
@@ -170,8 +168,6 @@ public class RepositoryDelegatorImplTest {
 			} finally {
 				session = null;
 			}
-		} else {
-			new Exception("Whoooo");
 		}
 		if (retrieved != null) {
 			retrieved.delete();

@@ -5,14 +5,12 @@ package de.lichtflut.rb.webck.components.dialogs;
 
 import java.util.Date;
 
-import de.lichtflut.rb.core.services.SemanticNetworkService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.DC;
 import org.arastreju.sge.model.TimeMask;
@@ -21,6 +19,7 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
@@ -39,47 +38,47 @@ import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
  * @author Oliver Tigges
  */
 public class EditNoteDialog extends AbstractRBDialog {
-	
-	@SpringBean 
+
+	@SpringBean
 	private ServiceContext context;
-	
+
 	@SpringBean
 	private SemanticNetworkService semanticNetwork;
-	
+
 	// ----------------------------------------------------
 
 	/**
 	 * Constrcutor.
 	 * @param id The component ID.
-     * @param model The model containing the node.
+	 * @param model The model containing the node.
 	 */
 	@SuppressWarnings("rawtypes")
 	public EditNoteDialog(final String id, final IModel<ResourceNode> model) {
 		super(id);
-		
+
 		final Form form = new Form("form");
 		form.add(createRichTextEditor(model));
 		form.add(new RBDefaultButton("save") {
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				final ResourceNode noteResource = model.getObject();
 				SNOPS.assure(noteResource, DC.CREATED, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
 				SNOPS.assure(noteResource, DC.CREATOR, context.getUser().getName());
-                semanticNetwork.attach(noteResource);
+				semanticNetwork.attach(noteResource);
 				onSave(noteResource);
 				close(target);
 			}
 		});
 		form.add(new RBCancelButton("cancel") {
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				onCancel();
 				close(target);
 			}
 		});
-		
+
 		add(form);
-		
+
 		setModal(true);
 		setWidth(600);
 	}
@@ -96,9 +95,9 @@ public class EditNoteDialog extends AbstractRBDialog {
 	}
 
 	// ----------------------------------------------------
-	
-	
-	protected void onSave(ResourceNode resourceNode) {
+
+
+	protected void onSave(final ResourceNode resourceNode) {
 	}
 
 	protected void onCancel() {

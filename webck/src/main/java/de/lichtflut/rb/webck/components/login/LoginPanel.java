@@ -3,10 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.login;
 
-import de.lichtflut.rb.core.security.AuthModule;
-import de.lichtflut.rb.core.security.AuthenticationService;
-import de.lichtflut.rb.core.security.LoginData;
-import de.lichtflut.rb.webck.components.fields.FieldLabel;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
@@ -16,9 +12,9 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import de.lichtflut.rb.core.security.LoginData;
+import de.lichtflut.rb.webck.components.fields.FieldLabel;
 
 /**
  * <p>
@@ -37,8 +33,8 @@ public abstract class LoginPanel extends Panel {
 	/**
 	 * Constructor.
 	 */
-	public LoginPanel(String id) {
-        super(id);
+	public LoginPanel(final String id) {
+		super(id);
 
 		add(createLoginForm());
 
@@ -46,10 +42,10 @@ public abstract class LoginPanel extends Panel {
 
 	// ----------------------------------------------------
 
-    public abstract void onLogin(LoginData loginData);
+	public abstract void onLogin(LoginData loginData);
 
-    // ----------------------------------------------------
-	
+	// ----------------------------------------------------
+
 	protected Form<LoginData> createLoginForm() {
 		final LoginData loginData = new LoginData();
 		final Form<LoginData> form = new Form<LoginData>("form", new CompoundPropertyModel<LoginData>(loginData));
@@ -72,7 +68,7 @@ public abstract class LoginPanel extends Panel {
 			@Override
 			public void onSubmit() {
 				onLogin(loginData);
-                loginData.setPassword(null);
+				loginData.setPassword(null);
 			}
 		};
 		form.add(button);

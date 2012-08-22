@@ -3,12 +3,11 @@
  */
 package de.lichtflut.rb.application.custom;
 
-import de.lichtflut.rb.application.RBApplication;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.application.base.LoginPage;
+import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.application.pages.AbstractBasePage;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.RBException;
@@ -32,13 +31,13 @@ public class RequestAccountPage extends AbstractBasePage {
 
 	@SpringBean
 	private SecurityService securityService;
-	
+
 	// ---------------- Constructor -------------------------
-	
+
 	public RequestAccountPage() {
 		final UserCreationPanel registerPanel = new UserCreationPanel("registerPanel") {
 			@Override
-			public void onCreate(String userID, String username, String password) {
+			public void onCreate(final String userID, final String username, final String password) {
 				try {
 					securityService.createUser(userID, username, password, getLocale());
 					info(getString("global.message.user-created"));
@@ -72,10 +71,10 @@ public class RequestAccountPage extends AbstractBasePage {
 		};
 		this.add(registerPanel);
 	}
-	
-	/** 
-	* {@inheritDoc}
-	*/
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected boolean needsAuthentication() {
 		return false;
