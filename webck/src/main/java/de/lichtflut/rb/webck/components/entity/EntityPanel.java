@@ -77,9 +77,6 @@ public class EntityPanel extends Panel {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onConfigure() {
 		super.onConfigure();

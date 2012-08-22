@@ -83,8 +83,6 @@ public class EntityRowEditPanel extends Panel {
 		};
 		view.setReuseItems(true);
 		add(view);
-
-
 	}
 	
 	// ----------------------------------------------------
