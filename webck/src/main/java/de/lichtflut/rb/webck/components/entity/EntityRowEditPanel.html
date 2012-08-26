@@ -9,24 +9,28 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
-    <div wicket:id="label" class="field-label">[Label]</div>
-    <div class="field-values">
-    	<wicket:container wicket:id="values">
-        	<div class="form-field">
-                <div class="field-value-input">
-        		    <wicket:container wicket:id="valuefield"></wicket:container>
+    <div class="entity-field">
+        <div class="field-label">
+            <label wicket:id="label">[Label]</label>
+        </div>
+        <div class="field-values">
+            <wicket:container wicket:id="values">
+                <div class="form-field">
+                    <div class="field-value-input">
+                        <wicket:container wicket:id="valuefield"></wicket:container>
+                    </div>
+                    <div class="field-operations">
+                        <a wicket:id="removeLink" class="field-value-operation" tabindex="-1"><span class="remove-value-link">-</span></a>
+                    </div>
+                    <div class="field-operations">
+                        <a wicket:id="addValueLink" tabindex="-1"><span class="add-value-link">+</span></a> &nbsp;
+                    </div>
+                    <div class="field-operations">
+                        <a wicket:id="createLink" tabindex="-1"><span class="create-value-link">*</span></a>
+                    </div>
                 </div>
-                <div class="field-operations">
-                    <a wicket:id="removeLink" class="field-value-operation" tabindex="-1"><span class="remove-value-link">-</span></a>
-                </div>
-                <div class="field-operations">
-                    <a wicket:id="addValueLink" tabindex="-1"><span class="add-value-link">+</span></a> &nbsp;
-                </div>
-                <div class="field-operations">
-                    <a wicket:id="createLink" tabindex="-1"><span class="create-value-link">*</span></a>
-                </div>
-            </div>
-        </wicket:container>
+            </wicket:container>
+        </div>
     </div>
     
     <wicket:fragment wicket:id="textInput">

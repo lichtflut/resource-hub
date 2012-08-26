@@ -91,6 +91,8 @@ public class EntityPanel extends Panel {
 			protected void populateItem(final ListItem<RBField> item) {
 				if (isInViewMode()) {
 					item.add(new EntityRowDisplayPanel("row", item.getModel()));
+                } else if (isEmbedded(item.getModel())) {
+                    item.add(new EmbeddedReferencePanel("row", item.getModel()));
 				} else {
 					item.add(new EntityRowEditPanel("row", item.getModel()));
 				}
@@ -99,9 +101,14 @@ public class EntityPanel extends Panel {
 		return view;
 	}
 
-	private boolean isInViewMode() {
+    private boolean isInViewMode() {
 		final EntityBrowsingStep step = RBWebSession.get().getHistory().getCurrentStep();
 		return step == null || BrowsingState.VIEW.equals(step.getState());
 	}
+
+
+    private boolean isEmbedded(IModel<RBField> model) {
+        return model.getObject().getVisualizationInfo().isEmbedded();
+    }
 
 }

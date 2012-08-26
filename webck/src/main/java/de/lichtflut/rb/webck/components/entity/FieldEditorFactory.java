@@ -99,17 +99,12 @@ public class FieldEditorFactory implements Serializable {
 
     public Component createResourceField(RBFieldValueModel model, boolean allowEmbedding) {
         RBField fieldDefinition = model.getField();
-        if (allowEmbedding && fieldDefinition.getVisualizationInfo().isEmbedded()) {
-            return new EmbeddedReferencePanel("valuefield", model, this);
-        } else {
-            Object object = model.getObject();
-            if (object instanceof RBEntity) {
-                throw new IllegalStateException("Unexpected class RBEntity for " + object);
-            }
-            final ResourceID typeConstraint = getTypeConstraint(fieldDefinition);
-            return new EntityPickerField("valuefield", model, typeConstraint);
-
+        Object object = model.getObject();
+        if (object instanceof RBEntity) {
+            throw new IllegalStateException("Unexpected class RBEntity for " + object);
         }
+        final ResourceID typeConstraint = getTypeConstraint(fieldDefinition);
+        return new EntityPickerField("valuefield", model, typeConstraint);
 	}
 
     public Component createTextField(RBField fieldDefinition, IModel model, Class<?> type) {

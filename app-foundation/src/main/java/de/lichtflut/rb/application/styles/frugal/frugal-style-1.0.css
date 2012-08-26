@@ -309,13 +309,12 @@ div.entity-field {
 }
 
 div.entity-field .field-label {
-    width:20%;
-    float:left;
+    width: 150px;
+    float: left;
 }
 
 /* The values of one field */
 div.entity-field .field-values {
-    width: 80%;
     float: left;
     margin: 0 0 2px 0;
 }
@@ -357,12 +356,14 @@ div.embedded-reference {
 
 div.embedded-entity-field {
     padding: 1px;
-    float: left;
-    clear: left;
 }
 
 div.embedded-entity-field div {
     float: left;
+}
+
+div.embedded-entity-field label {
+    padding-left: 20px;
 }
 
 div.embedded-entity-field.floating {

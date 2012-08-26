@@ -9,11 +9,13 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
-    <div wicket:id="label" class="field-label">[Label]</div>
-   	<div class="field-values">
-   		<wicket:container wicket:id="values">
-       		<wicket:container wicket:id="valuefield" ></wicket:container>
-       	</wicket:container>
+    <div class="entity-field">
+        <div wicket:id="label" class="field-label">[Label]</div>
+        <div class="field-values">
+            <wicket:container wicket:id="values">
+                <wicket:container wicket:id="valuefield" ></wicket:container>
+            </wicket:container>
+        </div>
     </div>
     
     <wicket:fragment wicket:id="textOutput">
