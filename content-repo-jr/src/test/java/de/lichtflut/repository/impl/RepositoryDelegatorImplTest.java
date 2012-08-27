@@ -141,7 +141,9 @@ public class RepositoryDelegatorImplTest {
 		exists = repoDelegator.exists(path);
 
 		assertThat(exists, equalTo(true));
-	}// ------------- SetUp & TearDown -----------------------
+	}
+
+	// ------------- SetUp & TearDown -----------------------
 
 	@BeforeClass
 	public static void setUpBeforeClass() {

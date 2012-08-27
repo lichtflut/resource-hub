@@ -34,7 +34,7 @@ public class RepositoryConfigWrapper {
 	/**
 	 * @return the config
 	 */
-	public String getConfig() {
+	public String getConfigPath() {
 		return config;
 	}
 

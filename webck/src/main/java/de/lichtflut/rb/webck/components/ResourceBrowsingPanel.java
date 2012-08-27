@@ -180,7 +180,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				int index = 0;
 				for (Object value : field.getValues()) {
 					value = ((List) value).get(0);
-					String path = new LinkProvider("http://glasnost.de/content/").getRepositoryLinkFor(model, value);
+					String path = new LinkProvider("localhost8080/glasnost.is/service/content/").getRepositoryLinkFor(model, value);
 					try {
 						String shortenedPath = path.replaceFirst("http://", "");
 						FileUpload fileUpload = (FileUpload) value;

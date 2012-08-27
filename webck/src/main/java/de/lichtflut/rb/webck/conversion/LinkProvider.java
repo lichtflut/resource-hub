@@ -44,8 +44,9 @@ public class LinkProvider {
 		if(!hostUrl.endsWith("/")){
 			path = "/" + path;
 		}
+		path = hostUrl + path;
 		path = path.concat("/" + fileName);
-		return hostUrl + path;
+		return path;
 	}
 
 }

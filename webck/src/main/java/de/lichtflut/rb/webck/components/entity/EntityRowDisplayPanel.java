@@ -28,6 +28,7 @@ import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
+import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
@@ -147,8 +148,12 @@ public class EntityRowDisplayPanel extends Panel {
 	}
 
 	private void addExternalLink(final ListItem<RBFieldValueModel> item) {
-		@SuppressWarnings("unchecked")
-		ExternalLink link = new ExternalLink("target", item.getModelObject(), getDisplayNameForLink(item));
+		IModel<String> hrefModel = new Model<String>(item.getModelObject().getField().getValue(0).toString());
+		if(Datatype.FILE.name().equals(item.getModelObject().getField().getDataType().name())){
+			String href = hrefModel.getObject() + "?domain=" + new CurrentDomainModel().getObject().getQualifiedName();
+			hrefModel.setObject(href);
+		}
+		ExternalLink link = new ExternalLink("target", hrefModel, getDisplayNameForLink(item));
 		item.add(new Fragment("valuefield", "link", this).add(link));
 	}
 
@@ -167,7 +172,7 @@ public class EntityRowDisplayPanel extends Panel {
 		RBField field = item.getModelObject().getField();
 		if(Datatype.FILE.name().equals(field.getDataType().name())) {
 			String s = (String) field.getValue(item.getModelObject().getIndex());
-			name.setObject(StringUtils.substringAfterLast(s, "/"));
+			return Model.of(StringUtils.substringAfterLast(s, "/"));
 		}
 		return name;
 	}

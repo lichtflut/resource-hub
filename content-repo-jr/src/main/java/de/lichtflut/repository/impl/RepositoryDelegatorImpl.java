@@ -51,9 +51,11 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 	// ---------------- Constructor -------------------------
 
 	public RepositoryDelegatorImpl(final String name, final String password) {
-		loginToRepository(new SimpleCredentials(name, password.toCharArray()));
-		setUpUser(session);
+		if(null == session || session.isLive()){
 
+			loginToRepository(new SimpleCredentials(name, password.toCharArray()));
+			setUpUser(session);
+		}
 	}
 
 
@@ -136,7 +138,7 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 	 */
 	protected Repository getRepository() throws RepositoryException{
 		try {
-			InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(getConfig().getConfig());
+			InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(getConfig().getConfigPath());
 			RepositoryConfig repoConfig = RepositoryConfig.create(in, getConfig().getPath());
 			return RepositoryImpl.create(repoConfig);
 		} catch (ConfigurationException e) {
