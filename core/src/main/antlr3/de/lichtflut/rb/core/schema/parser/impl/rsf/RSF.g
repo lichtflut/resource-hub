@@ -14,6 +14,7 @@ tokens {
 	ASSIGMENT;
 	PROPERTY;
 	STATEMENTS;
+	QUICK_INFO;
 }
 
 @header{
@@ -58,11 +59,18 @@ schema_decl : SCHEMA_FOR s=STRING '{'
 
 //Definition of a declaration within a schema
 decl : 		label_decl
+		|	quick_info
 		|	property_decl 
 		;
 
 //Definition of a label-declaration
 label_decl: LABEL_RULE COLON e=STRING -> ^(LABEL $e);
+
+// Definition of schema-quick-info
+quick_info: QUICK_INFO_DECL '{'
+				plain_string +
+			'}'
+			-> ^(QUICK_INFO plain_string +);
 
 // Definition of a property-declaration
 property_decl : PROPERTY_DECL id=STRING cardinal_decl '{'
@@ -89,6 +97,8 @@ key : FIELD_LABEL
 
 value : STRING ;
 
+plain_string : PLAIN_STRING;
+
 NS : 'namespace';
 
 CONSTRAINT_FOR : 'constraint definition for';
@@ -96,6 +106,8 @@ CONSTRAINT_FOR : 'constraint definition for';
 SCHEMA_FOR : 'schema for';
 
 LABEL_RULE : 'label-rule';
+
+QUICK_INFO_DECL : 'quick-info';
 
 PROPERTY_DECL : 'property';
 
@@ -117,10 +129,15 @@ NAME : 'name';
 
 COLON : ':';
 
+COMMA : ',';
+
 INT_LABEL : 'field-label[' (('a' .. 'z' | 'A' .. 'Z')+ )']'*;
 
 CARDINALITY_DECL  : '['('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+'..'('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+']';
 
 STRING 	: '"' .* '"';
+
+// TODO: refactor - remove quotations from STRING
+PLAIN_STRING : ('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '/' | ':' )+;
 
 WS: (' '|'\n'|'\r'|'\t')+ {$channel=HIDDEN;} ;

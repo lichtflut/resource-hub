@@ -31,7 +31,7 @@ public class RSFTest {
 		RSFParser parser = createParser(getNamespaces() );
 		parser.namespace_decl();
 	}
-	
+
 	@Test
 	public void readPublicConstraintDefinition() throws RecognitionException{
 		RSFParser parser = createParser(getPublicConstraintDeclaration());
@@ -44,35 +44,45 @@ public class RSFTest {
 		RSFParser parser = createParser(label);
 		parser.label_decl();
 	}
-	
+
+	@Test
+	public void readQuickinfo() throws RecognitionException{
+		String qInfo = "quick-info { " +
+				"common:hasName " +
+				"common:hasCountry" +
+				"}";
+		RSFParser parser = createParser(qInfo);
+		parser.quick_info();
+	}
+
 	@Test
 	public void readCardinalDecl() throws RecognitionException{
 		String cardinality = "[1..n]";
 		RSFParser parser = createParser(cardinality);
 		parser.cardinal_decl();
 	}
-	
+
 	@Test
 	public void readKey() throws RecognitionException{
 		String key = "datatype";
 		RSFParser parser = createParser(key);
 		parser.key();
 	}
-	
+
 	@Test
 	public void readValue() throws RecognitionException{
 		String value = "\"assigned to\"";
 		RSFParser parser = createParser(value);
 		parser.value();
 	}
-	
+
 	@Test
 	public void readAssigment() throws RecognitionException{
 		String assigment = "field-label[de] : \"gehoert zu\"";
 		RSFParser parser = createParser(assigment);
 		parser.assigment();
 	}
-	
+
 	@Test
 	public void readSinglePropertyDecl() throws RecognitionException{
 		String property = "property \"common:assignedTo\" [1..n] {" +
@@ -81,7 +91,7 @@ public class RSFTest {
 		RSFParser parser = createParser(property);
 		parser.property_decl();
 	}
-	
+
 	@Test
 	public void readMultiplePropertyDecl() throws RecognitionException{
 		String property = "property \"common:assignedTo\" [1..n] {" +
@@ -91,18 +101,22 @@ public class RSFTest {
 				"literal-constraint : \".*@.*\"" +
 				"reference-constraint : \"http://lichtflut.de/constraint/Person\"" +
 				"}";
-		
+
 		createParser(property).property_decl();
 	}
-	
+
 	@Test
 	public void readSchemaDecl() throws RecognitionException{
 		String schema = "schema for \"commonCity\" { " +
 				"label-rule : \"common:hasName common:hasCountry\"" +
-					"property \"common:assignedTo\" [1..n] {" +
-					"field-label[klingonian] : \"Kaaargh\"" +
-					"datatype : \"date\"" +
-					"}" +
+				"quick-info {" +
+				"common:hasName" +
+				"common:hasCountry " +
+				"}" +
+				"property \"common:assignedTo\" [1..n] {" +
+				"field-label[klingonian] : \"Kaaargh\"" +
+				"datatype : \"date\"" +
+				"}" +
 				"}";
 		RSFParser parser = createParser(schema);
 		parser.schema_decl();
@@ -117,7 +131,7 @@ public class RSFTest {
 	 * @throws IOException
 	 * @throws RecognitionException
 	 */
-	public RSFParser createParser(String string) {
+	public RSFParser createParser(final String string) {
 		// Create an input character stream from standard in
 		CharStream input = null;
 		input = new ANTLRStringStream(string);
@@ -132,21 +146,21 @@ public class RSFTest {
 	}
 
 	// ------------------------------------------------------
-	
+
 	private String getRSFString(){
 		return 	getNamespaces() +
 				"" +
-				getPublicConstraintDeclaration() + 
+				getPublicConstraintDeclaration() +
 				"schema for \"commonCity\" { " +
-						"label-rule : \"common:hasName <(> common:hasCountry\"" +
-							"property \"common:assignedTo\" [1..n] {" +
-							"field-label[klingonian] : \"Kaaargh\"" +
-							"datatype : \"date\"" +
-							"literal-constraint : \".*@.*\"" +
-							"}" +
-						"}";
+				"label-rule : \"common:hasName <(> common:hasCountry\"" +
+				"property \"common:assignedTo\" [1..n] {" +
+				"field-label[klingonian] : \"Kaaargh\"" +
+				"datatype : \"date\"" +
+				"literal-constraint : \".*@.*\"" +
+				"}" +
+				"}";
 	}
-	
+
 	private String getNamespaces() {
 		String namespaces = "namespace \"http://rb.lichtflut.de/common#\" prefix \"common\"" +
 				"namespace \"http://rb.lichtflut.de/common2#\" prefix \"common2\"";
@@ -158,8 +172,8 @@ public class RSFTest {
 				"name : \"Email-Constraint\"" +
 				"applicable-datatypes : \"string, text\"" +
 				"literal-constraint : \".*@.*\"" +
-			"}}";
+				"}}";
 		return constraint;
 	}
-	
+
 }

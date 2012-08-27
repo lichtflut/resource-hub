@@ -28,8 +28,14 @@ public interface ResourceSchema extends Serializable {
 	 * @return The ID of the described Resource Type.
 	 */
 	ResourceID getDescribedType();
-	
+
 	// -----------------------------------------------------
+
+	/**
+	 * Get all {@link PropertyDeclaration}s that represent the quickInfo.
+	 * @return a {@link List} of {@link PropertyDeclaration}s
+	 */
+	List<PropertyDeclaration> getQuickInfo();
 
 	/**
 	 * Get all the schema's {@link PropertyDeclaration} as list.
@@ -42,7 +48,7 @@ public interface ResourceSchema extends Serializable {
 	 * @param assertion -
 	 */
 	void addPropertyDeclaration(final PropertyDeclaration declaration);
-	
+
 	// -----------------------------------------------------
 
 	/**

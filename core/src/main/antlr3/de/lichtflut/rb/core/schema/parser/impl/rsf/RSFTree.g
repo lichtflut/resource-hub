@@ -119,6 +119,7 @@ import java.util.HashMap;
 	}
 	
 	public ResourceID toResourceID(final String name) {
+	System.out.prinln("IN toResourceID: " + name);
 		if (QualifiedName.isUri(name)) {
 			return new SimpleResourceID(name); 
 		} else if (!QualifiedName.isQname(name)) {
@@ -202,12 +203,13 @@ schema_decl scope{
 	 		decl + )
 	 			 ;
 
-//Definition of a declaration within a schema
+// Definition of a declaration within a schema
 decl : 		label_decl
+		|	quick_info
 		|	property_decl
 		;
 
-//Definition of a label-declaration
+// Definition of a label-declaration
 label_decl:  ^(LABEL (rule=STRING{
 						String cleaned = removeAll($rule.text, "\"");
 						try{
@@ -216,6 +218,12 @@ label_decl:  ^(LABEL (rule=STRING{
 							emitErrorMessage(e.getMessage());
 						}
 }));
+
+// Definition of quickInfo
+quick_info: ^(QUICK_INFO s=PLAIN_STRING{
+				ResourceID id = toResourceID($s.text);
+				$schema_decl::schema.addQuickInfo(id);
+});
 
 // Definition of a property-declaration
 property_decl scope{

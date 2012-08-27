@@ -19,7 +19,6 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.runtime.tree.Tree;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.Datatype;
@@ -42,7 +41,7 @@ import de.lichtflut.rb.core.schema.parser.impl.rsf.RSFTree;
  * @author Ravi Knox
  */
 public class RSFTreeTest {
-	
+
 	private final String namespace = "http://rb.lichtflut.de/common#";
 
 	@Test
@@ -54,6 +53,11 @@ public class RSFTreeTest {
 		assertTrue(new SimpleResourceID(namespace, "City").equals(city.getDescribedType()));
 		assertTrue("http://rb.lichtflut.de/common#hasName <,> http://rb.lichtflut.de/common#hasCountry".equals(city.getLabelBuilder().getExpression()));
 		assertTrue(2 == city.getPropertyDeclarations().size());
+
+
+		System.out.println(city.getQuickInfo());
+
+
 		PropertyDeclaration pdec = city.getPropertyDeclarations().get(0);
 		assertEquals(new SimpleResourceID("http://rb.lichtflut.de/common#hasMayor"), pdec.getPropertyDescriptor());
 		assertEquals(1000, pdec.getCardinality().getMinOccurs());
@@ -65,15 +69,15 @@ public class RSFTreeTest {
 	}
 
 	@Test
-	@Ignore("For debugging purposes..")
+	//	@Ignore("For debugging purposes..")
 	public void testTree() throws RecognitionException{
 		CommonTree t = (CommonTree) createTree(getRSFString());
 		System.out.println(t.toStringTree());
 	}
 
 	// ------------------------------------------------------
-	
-	private RSParsingResult extractElements(String decl) throws RecognitionException {
+
+	private RSParsingResult extractElements(final String decl) throws RecognitionException {
 		// Create an input character stream from standard in
 		CharStream input = new ANTLRStringStream(decl);
 		// Create an ExprLexer that feeds from that stream
@@ -89,13 +93,13 @@ public class RSFTreeTest {
 		RSParsingResult elements = walker.statements();
 		return elements;
 	}
-	
+
 	/**
 	 * @param args
 	 * @throws IOException
 	 * @throws RecognitionException
 	 */
-	public Tree createTree(String string) throws RecognitionException {
+	public Tree createTree(final String string) throws RecognitionException {
 		// Create an input character stream from standard in
 		CharStream input = null;
 		input = new ANTLRStringStream(string);
@@ -109,13 +113,13 @@ public class RSFTreeTest {
 
 		return (CommonTree) r.getTree();
 	}
-	
+
 	private String getRSFString(){
 		return 	getNamespaces() +
-				getPublicConstraintDeclaration() + 
+				getPublicConstraintDeclaration() +
 				getSchemas();
 	}
-	
+
 	private String getNamespaces() {
 		String namespaces = "namespace \"http://rb.lichtflut.de/common#\" prefix \"common\"" +
 				"namespace \"http://rb.lichtflut.de/common2#\" prefix \"common2\"";
@@ -127,45 +131,49 @@ public class RSFTreeTest {
 				"name : \"Email-Constraint\"\n" +
 				" applicable-datatypes : \"string, text\"\n" +
 				" literal-constraint : \".*@.*\"\n" +
-			"}" +
-			"constraint definition for \"common:URL\" {" +
+				"}" +
+				"constraint definition for \"common:URL\" {" +
 				"name : \"URL-Constraint-Simple\"" +
 				"applicable-datatypes : \"text\"" +
 				"literal-constraint : \"http://\"" +
-			"}";
+				"}";
 		return constraint;
 	}
-	
+
 	private String getSchemas(){
 		return 	"schema for \"common:City\" { " +
-						"label-rule : \"common:hasName <,> common:hasCountry\"" +
-						"" +
-							"property \"common:hasMayor\" [1000..xs] {" +
-								"field-label : \"Mayor\"" +
-								"field-label[de] : \"Buergermeister\"" +
-								"field-label[fr] : \"Maire\"" +
-								"datatype : \"resource\"" +
-								"resource-constraint : \"common:Person\"" +
-								"}" +
-							"" +
-							"property \"common:hasCountry\" [1..1] {" +
-								"field-label[en] : \"Name\"" +
-								"datatype : \"String\"" +
-								"resource-constraint : \"common:Country\"" +
-								"}" +
-						"}" +
+				"label-rule : \"common:hasName <,> common:hasCountry\"" +
+				"" +
+				"quick-info{" +
+				"common:hasMayor\n" +
+				"common:hasName\n" +
+				"}" +
+				"property \"common:hasMayor\" [1000..xs] {" +
+				"field-label : \"Mayor\"" +
+				"field-label[de] : \"Buergermeister\"" +
+				"field-label[fr] : \"Maire\"" +
+				"datatype : \"resource\"" +
+				"resource-constraint : \"common:Person\"" +
+				"}" +
+				"" +
+				"property \"common:hasCountry\" [1..1] {" +
+				"field-label[en] : \"Name\"" +
+				"datatype : \"String\"" +
+				"resource-constraint : \"common:Country\"" +
+				"}" +
+				"}" +
 				"schema for \"common:Person\" { " +
-						"label-rule : \"common:hasName\"" +
-							"property \"common:hasName\" [1..n] {" +
-								"field-label[en] : \"Name\"" +
-								"datatype : \"String\"" +
-							"}" +
-							"property \"common:hasEmail\" [0..n] {" +
-								"field-label : \"E-Mail\"" +
-								"datatype : \"string\"" +
-								"reference-constraint : \"common:Email-Constraint\"" +
-							"}" +
-						"}";
+				"label-rule : \"common:hasName\"" +
+				"property \"common:hasName\" [1..n] {" +
+				"field-label[en] : \"Name\"" +
+				"datatype : \"String\"" +
+				"}" +
+				"property \"common:hasEmail\" [0..n] {" +
+				"field-label : \"E-Mail\"" +
+				"datatype : \"string\"" +
+				"reference-constraint : \"common:Email-Constraint\"" +
+				"}" +
+				"}";
 
 	}
 }
