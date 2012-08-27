@@ -15,6 +15,7 @@ tokens {
 	PROPERTY;
 	STATEMENTS;
 	QUICK_INFO;
+	TEXT;
 }
 
 @header{
@@ -68,9 +69,10 @@ label_decl: LABEL_RULE COLON e=STRING -> ^(LABEL $e);
 
 // Definition of schema-quick-info
 quick_info: QUICK_INFO_DECL '{'
-				plain_string +
+				plain_string COMMA *
+				plain_string
 			'}'
-			-> ^(QUICK_INFO plain_string +);
+			-> ^(QUICK_INFO plain_string+);
 
 // Definition of a property-declaration
 property_decl : PROPERTY_DECL id=STRING cardinal_decl '{'
@@ -95,9 +97,9 @@ key : FIELD_LABEL
 	| NAME
 	;
 
-value : STRING ;
+plain_string : t=PLAIN_STRING -> ^(TEXT $t);
 
-plain_string : PLAIN_STRING;
+value : STRING ;
 
 NS : 'namespace';
 

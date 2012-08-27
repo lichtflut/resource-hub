@@ -145,8 +145,8 @@ public class RSFTreeTest {
 				"label-rule : \"common:hasName <,> common:hasCountry\"" +
 				"" +
 				"quick-info{" +
-				"common:hasMayor\n" +
-				"common:hasName\n" +
+				"common:hasMayor," +
+				"common:hasCountry" +
 				"}" +
 				"property \"common:hasMayor\" [1000..xs] {" +
 				"field-label : \"Mayor\"" +

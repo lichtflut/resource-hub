@@ -48,7 +48,7 @@ public class RSFTest {
 	@Test
 	public void readQuickinfo() throws RecognitionException{
 		String qInfo = "quick-info { " +
-				"common:hasName " +
+				"common:hasName, " +
 				"common:hasCountry" +
 				"}";
 		RSFParser parser = createParser(qInfo);
@@ -110,7 +110,7 @@ public class RSFTest {
 		String schema = "schema for \"commonCity\" { " +
 				"label-rule : \"common:hasName common:hasCountry\"" +
 				"quick-info {" +
-				"common:hasName" +
+				"common:hasName," +
 				"common:hasCountry " +
 				"}" +
 				"property \"common:assignedTo\" [1..n] {" +

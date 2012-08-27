@@ -11,7 +11,7 @@ schema for "common:City" {
 	label-rule : "common:hasName <(> common:hasCountry <)>"
 	
 	quick-info {
-		common:hasName
+		common:hasName,
 		common:hasCountry
 	}
 	
