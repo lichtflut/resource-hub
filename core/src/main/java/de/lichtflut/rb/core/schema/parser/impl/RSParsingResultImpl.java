@@ -32,7 +32,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 
 	/**
 	 * Adds a resource schema.
-	 * @param schema -
+	 * @param schema The schema to be added.
 	 */
 	public void addResourceSchema(final ResourceSchema schema) {
 		if(!schemas.contains(schema)){
@@ -52,7 +52,7 @@ public class RSParsingResultImpl implements RSParsingResult{
 
 	/**
 	 * Adds a public-constraint.
-	 * @param schema -
+	 * @param constraint The constraint.
 	 */
 	public void addConstraint(final Constraint constraint) {
 		if(!constraints.contains(constraint)){

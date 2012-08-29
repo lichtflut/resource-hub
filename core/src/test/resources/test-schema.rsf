@@ -26,6 +26,11 @@ schema for "common:City" {
 		field-label[en] : "Country"
 		datatype : "Resource"
 		resource-constraint : "common:Country"
+		visualize {
+		    embedded : "true"
+		    floating : "true"
+		    style : "width:200px"
+		}
 	}
 }
 

@@ -193,7 +193,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	
 	/**
 	 * Sets the constraint.
-	 * @param constraint
+	 * @param constraint The constraint
 	 */
 	public void setConstraint(final Constraint constraint){
 		SNOPS.assure(this, RBSchema.HAS_CONSTRAINT, constraint.asResourceNode());
@@ -220,6 +220,23 @@ public class SNPropertyDeclaration extends ResourceView {
 		}
 		return def;
 	}
+
+    /**
+     * Get the visualization info.
+     */
+    public SNVisualizationInfo getVisualizationInfo() {
+        SemanticNode visInfo = SNOPS.singleObject(this, RBSchema.HAS_VISUALIZATION_INFO);
+        if (visInfo != null && visInfo.isResourceNode()) {
+            return new SNVisualizationInfo(visInfo.asResource());
+        } else {
+            return null;
+        }
+    }
+
+    public SNPropertyDeclaration setVisualizationInfo(SNVisualizationInfo visualizationInfo) {
+        SNOPS.assure(this, RBSchema.HAS_VISUALIZATION_INFO, visualizationInfo);
+        return this;
+    }
 	
 	// -- ORDER -------------------------------------------
 	
@@ -235,17 +252,14 @@ public class SNPropertyDeclaration extends ResourceView {
 	
 	// ------------------------------------------------------
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString(){
-		StringBuffer sb = new StringBuffer("PropertyDecl[" + super.toString() + "] ");
+		StringBuilder sb = new StringBuilder("PropertyDecl[" + super.toString() + "] ");
 		if (getPropertyDescriptor() != null){
 			sb.append(getPropertyDescriptor().toURI());
 		}
-		sb.append(" " + getMinOccurs() + ".." + getMaxOccurs());
-		sb.append("\n\t\t" + getConstraint());
+		sb.append(" ").append(getMinOccurs()).append("..").append(getMaxOccurs());
+		sb.append("\n\t\t").append(getConstraint());
 		return sb.toString();
 	}
 

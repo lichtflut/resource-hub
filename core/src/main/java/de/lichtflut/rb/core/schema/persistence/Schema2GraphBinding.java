@@ -3,10 +3,9 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import java.util.Set;
-
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
+import de.lichtflut.rb.core.schema.model.impl.PlainVisualizationInfo;
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNText;
@@ -21,7 +20,6 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
-import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
@@ -39,7 +37,8 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
  */
 public class Schema2GraphBinding {
 
-	private final Logger logger = LoggerFactory.getLogger(Schema2GraphBinding.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Schema2GraphBinding.class);
+
 	// TODO resolve public constraint
 	private ConstraintResolver resolver = new VoidTypeDefResovler();
 
@@ -71,6 +70,7 @@ public class Schema2GraphBinding {
 			decl.setCardinality(buildCardinality(snDecl));
 			decl.setDatatype(snDecl.getDatatype());
 			decl.setFieldLabelDefinition(snDecl.getFieldLabelDefinition());
+            setVisualizationInfo(decl, snDecl.getVisualizationInfo());
 			decl.setConstraint(snDecl.getConstraint());
 			schema.addPropertyDeclaration(decl);
 		}
@@ -79,15 +79,23 @@ public class Schema2GraphBinding {
 			try {
 				schema.setLabelBuilder(new ExpressionBasedLabelBuilder(exp));
 			} catch (LabelExpressionParseException e) {
-				logger.error("label expression for {} could not be parsed: '{}'",
-						snSchema.getDescribedType(), exp);
+				LOGGER.error("label expression for {} could not be parsed: '{}'",
+                        snSchema.getDescribedType(), exp);
 			}
 		}
 
 		return schema;
 	}
 
-	// -----------------------------------------------------
+    protected VisualizationInfo toModelObject(SNVisualizationInfo snInfo) {
+        PlainVisualizationInfo info = new PlainVisualizationInfo();
+        info.setEmbedded(snInfo.isEmbedded());
+        info.setFloating(snInfo.isFloating());
+        info.setStyle(snInfo.getStyle());
+        return info;
+    }
+
+    // -----------------------------------------------------
 
 	/**
 	 * Creates a new semantic node for given Resource Schema.
@@ -112,6 +120,7 @@ public class Schema2GraphBinding {
 			snDecl.setMinOccurs(minAsScalar(decl.getCardinality()));
 			snDecl.setMaxOccurs(maxAsScalar(decl.getCardinality()));
 			snDecl.setDatatype(decl.getDatatype());
+            setVisualizationInfo(snDecl, decl.getVisualizationInfo());
 			setFieldLabels(snDecl, decl.getFieldLabelDefinition());
 			if(decl.hasConstraint()){
 				snDecl.setConstraint(decl.getConstraint());
@@ -125,7 +134,17 @@ public class Schema2GraphBinding {
 		return sn;
 	}
 
-	protected Cardinality buildCardinality(final SNPropertyDeclaration snDecl) {
+    protected SNVisualizationInfo toSemanticNode(VisualizationInfo info) {
+        SNVisualizationInfo snInfo = new SNVisualizationInfo();
+        snInfo.setEmbedded(info.isEmbedded());
+        snInfo.setFloating(info.isFloating());
+        snInfo.setStyle(info.getStyle());
+        return snInfo;
+    }
+
+    // ----------------------------------------------------
+
+    protected Cardinality buildCardinality(final SNPropertyDeclaration snDecl) {
 		int min = snDecl.getMinOccurs().getIntegerValue().intValue();
 		int max = snDecl.getMaxOccurs().getIntegerValue().intValue();
 		if (max > 0) {
@@ -151,23 +170,24 @@ public class Schema2GraphBinding {
 		}
 	}
 
-	protected FieldLabelDefinition createFieldLabelDef(final SNPropertyDeclaration snDecl) {
-		final String defaultName = snDecl.getPropertyDescriptor().getQualifiedName().getSimpleName();
-		final FieldLabelDefinition def = new FieldLabelDefinitionImpl(defaultName);
-		final Set<? extends Statement> assocs = snDecl.getAssociations(RBSystem.HAS_FIELD_LABEL);
-		for (Statement current : assocs) {
-			// TODO: Evaluate context to locale
-			def.setDefaultLabel(current.getObject().asValue().getStringValue());
-		}
-		return def;
-	}
-
 	protected void setFieldLabels(final SNPropertyDeclaration snDecl, final FieldLabelDefinition def) {
 		if (def != null && def.getDefaultLabel() != null) {
 			SNOPS.associate(snDecl, RBSystem.HAS_FIELD_LABEL, new SNText(def.getDefaultLabel()));
 		}
 		// TODO: set i18n labels.
 	}
+
+    protected void setVisualizationInfo(SNPropertyDeclaration snDecl, VisualizationInfo visualizationInfo) {
+        if (visualizationInfo != null) {
+            snDecl.setVisualizationInfo(toSemanticNode(visualizationInfo));
+        }
+    }
+
+    protected void setVisualizationInfo(PropertyDeclarationImpl decl, SNVisualizationInfo visualizationInfo) {
+        if (visualizationInfo != null) {
+            decl.setVisualizationInfo(toModelObject(visualizationInfo));
+        }
+    }
 
 	// -----------------------------------------------------
 

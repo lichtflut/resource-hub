@@ -1,0 +1,48 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+    <div wicket:id="label" class="field-label">[Label]</div>
+    <div class="field-values">
+    	<wicket:container wicket:id="values">
+        	<div class="form-field">
+                <div class="field-value-input">
+        		    <wicket:container wicket:id="valuefield"></wicket:container>
+                </div>
+                <div class="field-operations">
+                    <a wicket:id="removeLink" class="field-value-operation" tabindex="-1"><span class="remove-value-link">-</span></a>
+                </div>
+                <div class="field-operations">
+                    <a wicket:id="addValueLink" tabindex="-1"><span class="add-value-link">+</span></a> &nbsp;
+                </div>
+                <div class="field-operations">
+                    <a wicket:id="createLink" tabindex="-1"><span class="create-value-link">*</span></a>
+                </div>
+            </div>
+        </wicket:container>
+    </div>
+    
+    <wicket:fragment wicket:id="textInput">
+        <input type="text" wicket:id="valuefield" />
+    </wicket:fragment>
+    
+    <wicket:fragment wicket:id="textArea">
+        <textarea wicket:id="valuefield" ></textarea>
+    </wicket:fragment>
+    
+    <wicket:fragment wicket:id="checkbox">
+        <input type="checkbox" wicket:id="valuefield" />
+    </wicket:fragment>
+    
+    <wicket:fragment wicket:id="fileUpload">
+    	<input wicket:id="valuefield" type="file"/>
+    </wicket:fragment>
+</wicket:panel>
+</html>

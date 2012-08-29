@@ -127,23 +127,6 @@ public class EntityManagerImplTest {
 	}
 
 	/**
-	 * Test method for {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#findByType(org.arastreju.sge.model.ResourceID)}.
-	 */
-	@Test
-	public void testFindByType() {
-		ResourceID type = new SimpleResourceID(RB.PERSON.getQualifiedName());
-		List<ResourceNode> list = new ArrayList<ResourceNode>();
-		list.add(getUser());
-		when(sm.findSchemaForType(type)).thenReturn(new ResourceSchemaImpl(RB.PERSON));
-		when(query.getResult()).thenReturn(new SimpleQueryResult(list));
-
-		List<RBEntity> found = em.findByType(type);
-
-		assertTrue(found.size() == 1);
-		assertEquals(found.get(0).getNode(), getUser().asResource());
-	}
-
-	/**
 	 * Test method for {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#create(org.arastreju.sge.model.ResourceID)}.
 	 */
 	@Test

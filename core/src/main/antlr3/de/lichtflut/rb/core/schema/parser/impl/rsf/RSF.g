@@ -11,9 +11,11 @@ tokens {
 	SCHEMA;
 	LABEL;
 	CARDINALITY;
-	ASSIGMENT;
+	PROPERTY_ASSIGNMENT;
 	PROPERTY;
 	STATEMENTS;
+	VISUALIZATION;
+	VIS_ASSIGNMENT;
 }
 
 @header{
@@ -46,9 +48,9 @@ namespace_decl: NS e=STRING PREFIX f=STRING -> ^(NAMESPACE $e $f) ;
 
 //Definition of a public constraint
 public_constraint : CONSTRAINT_FOR s=STRING '{'
-						assigment +
+						assignment +
 					'}'
-					-> ^(PUBLIC_CONSTRAINT $s assigment+);
+					-> ^(PUBLIC_CONSTRAINT $s assignment+);
 
 // Definition of a schema
 schema_decl : SCHEMA_FOR s=STRING '{'
@@ -66,18 +68,28 @@ label_decl: LABEL_RULE COLON e=STRING -> ^(LABEL $e);
 
 // Definition of a property-declaration
 property_decl : PROPERTY_DECL id=STRING cardinal_decl '{'
-					assigment+
+					( assignment | visualization )+
 				'}'
-				-> ^(PROPERTY $id cardinal_decl assigment+)	;
+				-> ^(PROPERTY $id cardinal_decl assignment+ visualization?)	;
 
 // Definition of a cardinality-declaration
 cardinal_decl : e=CARDINALITY_DECL	-> ^(CARDINALITY $e);
 
-//Definition of an assigment within a property-declaration
-assigment : k=key COLON v=value -> ^(ASSIGMENT $k $v);
+// Definition of an assignment within a property-declaration
+assignment : k=property_key COLON v=value -> ^(PROPERTY_ASSIGNMENT $k $v);
 
-// Definition of an assigments' key
-key : FIELD_LABEL
+// Definition of visualization rules for a property declaration
+visualization :
+    VISUALIZE '{' (vis_assignment)+ '}'
+    -> ^(VISUALIZATION vis_assignment+ )
+;
+
+// Definition of a visualization assignment
+vis_assignment : k=visualization_key COLON v=value -> ^(VIS_ASSIGNMENT $k $v);
+
+
+// Definition of an assignments' key
+property_key : FIELD_LABEL
 	| INT_LABEL 
 	| DATATYPE 
 	| RESOURCE_CONSTRAINT
@@ -86,6 +98,13 @@ key : FIELD_LABEL
 	| APPLICABLE_DATATYPES
 	| NAME
 	;
+
+// Definition of a visualization' key
+visualization_key :
+  EMBEDDED |
+  FLOATING |
+  STYLE
+;
 
 value : STRING ;
 
@@ -110,6 +129,14 @@ REFERENCE_CONSTRAINT : 'reference-constraint';
 LITERAL_CONSTRAINT : 'literal-constraint';
 
 APPLICABLE_DATATYPES : 'applicable-datatypes';
+
+VISUALIZE : 'visualize';
+
+EMBEDDED : 'embedded';
+
+FLOATING : 'floating';
+
+STYLE : 'style';
 
 PREFIX : 'prefix';
 

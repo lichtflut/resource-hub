@@ -19,7 +19,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
@@ -29,9 +29,11 @@ import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
+import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
 /**
  * <p>
@@ -83,8 +85,9 @@ public class EntityRowDisplayPanel extends Panel {
 	// ----------------------------------------------------
 
 	/**
-	 * @param item
-	 * @param dataType
+	 * Add a value field to the list item.
+	 * @param item The list item.
+	 * @param dataType The datatype
 	 */
 	protected void addValueField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
 		switch(dataType) {
@@ -115,15 +118,15 @@ public class EntityRowDisplayPanel extends Panel {
 			addExternalLink(item);
 			break;
 		default:
-			throw new NotYetImplementedException("No displaycomponent specified for datatype: " + dataType);
+			throw new NotYetImplementedException("No display-component specified for datatype: " + dataType);
 		}
 	}
 
 	private void addResourceField(final ListItem<RBFieldValueModel> item) {
-		final ResourceID ref = (ResourceID) item.getModelObject().getObject();
+		final ResourceID ref = getResourceID(item.getModelObject());
 		if (ref != null) {
 			final CrossLink link = new CrossLink("link", getUrlTo(ref).toString());
-			link.add(new Label("label", Model.of(ResourceLabelBuilder.getInstance().getLabel(ref, getLocale()))));
+			link.add(new Label("label", getLabelModel(item.getModelObject())));
 			item.add(new Fragment("valuefield", "referenceLink", this).add(link));
 		} else {
 			addTextOutput(item, ResourceID.class);
@@ -157,6 +160,12 @@ public class EntityRowDisplayPanel extends Panel {
 		item.add(new Fragment("valuefield", "link", this).add(link));
 	}
 
+	//	private void addLink(final ListItem<RBFieldValueModel> item) {
+	//		@SuppressWarnings("unchecked")
+	//		ExternalLink link = new ExternalLink("target", item.getModelObject(), item.getModelObject());
+	//		item.add(new Fragment("valuefield", "link", this).add(link));
+	//	}
+
 	private void addBooleanField(final ListItem<RBFieldValueModel> item) {
 		String label = "no";
 		if (Boolean.TRUE.equals(item.getModelObject().getObject())) {
@@ -177,12 +186,39 @@ public class EntityRowDisplayPanel extends Panel {
 		return name;
 	}
 
+	private ResourceID getResourceID(final RBFieldValueModel model) {
+		Object object = model.getObject();
+		if (object == null) {
+			return null;
+		} else if (object instanceof ResourceID) {
+			return (ResourceID) object;
+		} else if (object instanceof RBEntity) {
+			RBEntity entity = (RBEntity) object;
+			return entity.getID();
+		} else {
+			throw new IllegalArgumentException("Cannot retrieve resource ID from object of type " + object.getClass());
+		}
+	}
+
+	private IModel<String> getLabelModel(final RBFieldValueModel model) {
+		Object object = model.getObject();
+		if (object == null) {
+			return null;
+		} else if (object instanceof ResourceID) {
+			return new ResourceLabelModel((ResourceID) object);
+		} else if (object instanceof RBEntity) {
+			return new RBEntityLabelModel((RBEntity) object);
+		} else {
+			throw new IllegalArgumentException("Cannot retrieve resource ID from object of type " + object.getClass());
+		}
+	}
+
 	// ----------------------------------------------------
 
 	private class NotEmptyCondition extends ConditionalModel<RBField> {
 
 		/**
-		 * @param model
+		 * @param model The model to check.
 		 */
 		public NotEmptyCondition(final IModel<RBField> model) {
 			super(model);

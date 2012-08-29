@@ -173,7 +173,7 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 		return null;
 	}
 
-	protected RBUser loginBySessionToken(String[] fields) {
+    protected RBUser loginBySessionToken(String[] fields) {
 		try {
 			final String id = fields[1];
 			if (isValid(id, fields[2], fields[3])) {
@@ -181,7 +181,7 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 				LOGGER.info("User {} logged in by session token.", id);
 				return toRBUser(arasUser);
 			} else {
-				LOGGER.info("Session token is invalid: " + StringUtils.join(fields, ":"));
+				LOGGER.info("Session token signature is invalid: " + StringUtils.join(fields, ":"));
 			}
 		} catch (ArastrejuRuntimeException e) {
 			LOGGER.error("Failed to login by token " + Arrays.toString(fields), e);
@@ -190,8 +190,8 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	}
 	
 	// ----------------------------------------------------
-	
-	private void setLastLogin(final ResourceNode user) {
+
+    private void setLastLogin(final ResourceNode user) {
 		SNOPS.assure(user, RBSystem.HAS_LAST_LOGIN, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
 	}
 	

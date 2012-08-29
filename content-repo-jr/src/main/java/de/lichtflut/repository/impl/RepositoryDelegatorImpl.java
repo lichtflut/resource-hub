@@ -52,7 +52,6 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 
 	public RepositoryDelegatorImpl(final String name, final String password) {
 		if(null == session || session.isLive()){
-
 			loginToRepository(new SimpleCredentials(name, password.toCharArray()));
 			setUpUser(session);
 		}

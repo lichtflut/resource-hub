@@ -56,7 +56,7 @@ public class RSFTest {
 	public void readKey() throws RecognitionException{
 		String key = "datatype";
 		RSFParser parser = createParser(key);
-		parser.key();
+		parser.property_key();
 	}
 	
 	@Test
@@ -68,9 +68,9 @@ public class RSFTest {
 	
 	@Test
 	public void readAssigment() throws RecognitionException{
-		String assigment = "field-label[de] : \"gehoert zu\"";
-		RSFParser parser = createParser(assigment);
-		parser.assigment();
+		String assignment = "field-label[de] : \"gehoert zu\"";
+		RSFParser parser = createParser(assignment);
+		parser.assignment();
 	}
 	
 	@Test
@@ -113,7 +113,7 @@ public class RSFTest {
 		parser.statements();
 	}
 	/**
-	 * @param args
+	 * @param string The input string
 	 * @throws IOException
 	 * @throws RecognitionException
 	 */

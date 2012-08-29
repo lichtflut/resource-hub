@@ -3,35 +3,36 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Date;
-
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
+import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
+import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.models.HTMLSafeModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
-import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
-import de.lichtflut.rb.webck.components.fields.EntityPickerField;
-import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.HTMLSafeModel;
-import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * <p>
@@ -52,101 +53,115 @@ import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class FieldEditorFactory implements Serializable {
 
-	private final WebMarkupContainer container;
-	private final IModel<RBField> fieldModel;
+    private final WebMarkupContainer container;
 
-	// ----------------------------------------------------
+    // ----------------------------------------------------
 
-	public FieldEditorFactory(final WebMarkupContainer container, final IModel<RBField> fieldModel) {
-		this.container = container;
-		this.fieldModel = fieldModel;
+    public FieldEditorFactory(WebMarkupContainer container) {
+        this.container = container;
+    }
+
+    // ----------------------------------------------------
+
+    public Component createField(RBFieldValueModel valueModel) {
+        return createField(valueModel, true);
+    }
+
+    public Component createField(RBFieldValueModel valueModel, boolean allowEmbedding) {
+        RBField field = valueModel.getField();
+        switch(field.getDataType()) {
+            case RESOURCE:
+                return createResourceField(valueModel, allowEmbedding);
+            case BOOLEAN:
+                return createBooleanField(field, valueModel);
+            case DATE:
+                return createDateField(field, valueModel);
+            case INTEGER:
+                return createTextField(field, valueModel, BigInteger.class);
+            case DECIMAL:
+                return createTextField(field, valueModel, BigDecimal.class);
+            case STRING:
+                return createTextField(field, valueModel, String.class);
+            case TEXT:
+                return createTextArea(field, valueModel);
+            case RICH_TEXT:
+                return createRichTextArea(field, valueModel);
+            case URI:
+                return createURIField(field, valueModel);
+            case FILE:
+                return createFileChooser(field, valueModel);
+            default:
+                throw new NotYetImplementedException("Datatype: " + field.getDataType());
+        }
+    }
+
+    // ----------------------------------------------------
+
+    public Component createResourceField(RBFieldValueModel model, boolean allowEmbedding) {
+        RBField fieldDefinition = model.getField();
+        Object object = model.getObject();
+        if (object instanceof RBEntity) {
+            throw new IllegalStateException("Unexpected class RBEntity for " + object);
+        }
+        final ResourceID typeConstraint = getTypeConstraint(fieldDefinition);
+        return new EntityPickerField("valuefield", model, typeConstraint);
 	}
 
-	// ----------------------------------------------------
-
-	public Component createField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
-		switch(dataType) {
-		case BOOLEAN:
-			return createBooleanField(item);
-		case RESOURCE:
-			return createResourceField(item);
-		case DATE:
-			return createDateField(item);
-		case INTEGER:
-			return createTextField(item, BigInteger.class);
-		case DECIMAL:
-			return createTextField(item, BigDecimal.class);
-		case STRING:
-			return createTextField(item, String.class);
-		case TEXT:
-			return createTextArea(item);
-		case RICH_TEXT:
-			return createRichTextArea(item);
-		case URI:
-			return createURIField(item);
-		case FILE:
-			return createFileChooser(item);
-		default:
-			throw new NotYetImplementedException("Datatype: " + dataType);
-		}
-	}
-
-	// ----------------------------------------------------
-
-	public Component createResourceField(final ListItem<RBFieldValueModel> item) {
-		final ResourceID typeConstraint = getTypeConstraint();
-		return new EntityPickerField("valuefield", item.getModelObject(), typeConstraint);
-	}
-
-	public Component createTextField(final ListItem<RBFieldValueModel> item, final Class<?> type) {
-		final TextField field = new TextField("valuefield", item.getModelObject());
+    public Component createTextField(RBField fieldDefinition, IModel model, Class<?> type) {
+		final TextField field = new TextField("valuefield", model);
 		field.setType(type);
-		addValidator(item, field);
+		addValidator(field, fieldDefinition);
+        addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textInput", container).add(field);
 	}
 
-	public Component createTextArea(final ListItem<RBFieldValueModel> item) {
-		final TextArea<String> field = new TextArea<String>("valuefield", item.getModelObject());
+    public Component createTextArea(RBField fieldDefinition, IModel model) {
+		final TextArea<String> field = new TextArea<String>("valuefield", model);
 		field.setType(String.class);
-		addValidator(item, field);
+		addValidator(field, fieldDefinition);
+        addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textArea", container).add(field);
 	}
 
-	public Component createDateField(final ListItem<RBFieldValueModel> item) {
-		final DatePicker<Date> field = new DatePicker<Date>("valuefield", item.getModelObject(), Date.class);
-		addValidator(item, field);
+    public Component createDateField(RBField fieldDefinition, IModel model) {
+		final DatePicker<Date> field = new DatePicker<Date>("valuefield", model, Date.class);
+		addValidator(field, fieldDefinition);
+        addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textInput", container).add(field);
 	}
 
-	public Component createBooleanField(final ListItem<RBFieldValueModel> item) {
-		final CheckBox cb = new CheckBox("valuefield", item.getModelObject());
+    public Component createBooleanField(RBField fieldDefinition, IModel model) {
+		final CheckBox cb = new CheckBox("valuefield", model);
+        addStyle(cb, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "checkbox", container).add(cb);
 	}
 
-	public Component createRichTextArea(final ListItem<RBFieldValueModel> item) {
-		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(item.getModelObject()));
+    public Component createRichTextArea(RBField fieldDefinition, IModel model) {
+		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(model));
 		field.add(new TinyMceBehavior());
-		addValidator(item, field);
+		addValidator(field, fieldDefinition);
+        addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textArea", container).add(field);
 	}
 
-	public Component createURIField(final ListItem<RBFieldValueModel> item){
-		final TextField field = new TextField("valuefield", item.getModelObject());
+    public Component createURIField(RBField fieldDefinition, IModel model){
+		final TextField field = new TextField("valuefield", model);
 		field.add(new UrlValidator());
 		return new Fragment("valuefield", "textInput", container).add(field);
 	}
 
-	public Component createFileChooser(final ListItem<RBFieldValueModel> item){
-		FileUploadField fileUploadField = new FileUploadField("valuefield", item.getModelObject());
+	public Component createFileChooser(RBField fieldDefinition, IModel model){
+		FileUploadField fileUploadField = new FileUploadField("valuefield", model);
+        addStyle(fileUploadField, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "fileUpload", container).add(fileUploadField);
 	}
 
 	// ----------------------------------------------------
 
-	private void addValidator(final ListItem<RBFieldValueModel> item, final Component field) {
-		Constraint constraint = item.getModelObject().getField().getConstraint();
+    private void addValidator(Component component, RBField fieldDefinition) {
+		Constraint constraint = fieldDefinition.getConstraint();
 		if((null != constraint) && (null != constraint.getLiteralConstraint())){
-			field.add(new PatternValidator(item.getModelObject().getField().getConstraint().getLiteralConstraint()));
+			component.add(new PatternValidator(fieldDefinition.getConstraint().getLiteralConstraint()));
 		}
 	}
 
@@ -154,25 +169,17 @@ public class FieldEditorFactory implements Serializable {
 	 * Extracts the resourceTypeConstraint of this {@link de.lichtflut.rb.core.entity.RBField}.
 	 * @return the resourceTypeConstraint as an {@link org.arastreju.sge.model.ResourceID}
 	 */
-	private ResourceID getTypeConstraint() {
-		final RBField field = getField();
-		if(field.getDataType().equals(Datatype.RESOURCE)){
-			return field.getConstraint().getReference().asResource();
+	private ResourceID getTypeConstraint(RBField fieldDefinition) {
+		if(fieldDefinition.getDataType().equals(Datatype.RESOURCE)){
+			return fieldDefinition.getConstraint().getReference().asResource();
 		}
 		return null;
 	}
 
-	private RBField getField() {
-		return fieldModel.getObject();
-	}
-
-	// -- INNER CLASSES -----------------------------------
-
-	private class IsBeneathFormConditional extends ConditionalModel {
-		@Override
-		public boolean isFulfilled() {
-			return container.findParent(Form.class) != null;
-		}
-	}
+    private void addStyle(Component comp, VisualizationInfo visualizationInfo) {
+        if (!Strings.isEmpty(visualizationInfo.getStyle())) {
+            comp.add(new AttributeAppender("style", Model.of(visualizationInfo.getStyle()), " "));
+        }
+    }
 
 }

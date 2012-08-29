@@ -158,7 +158,7 @@ public class BrowsingHistory implements Serializable {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("Browsing History\n");
-		sb.append("  stack: " + stack + "\n");
+		sb.append("  stack: ").append(stack).append("\n");
 		return sb.toString();
 	}
 	

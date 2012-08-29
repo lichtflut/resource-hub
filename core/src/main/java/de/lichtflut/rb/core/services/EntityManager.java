@@ -22,13 +22,6 @@ public interface EntityManager {
      */
     RBEntity find(ResourceID resourceID);
 
-    /**
-     * Finds all {@link RBEntity}s for a given type.
-     * @param type - id of the Resource Type
-     * @return a list of {@link RBEntity}
-     */
-    List<RBEntity> findByType(ResourceID type);
-    
     // -----------------------------------------------------
     
     /**

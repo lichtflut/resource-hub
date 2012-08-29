@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.schema.model.impl;
 
 import java.io.Serializable;
 
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.schema.model.Cardinality;
@@ -41,9 +42,11 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	private FieldLabelDefinition labelDefinition;
 	
 	private Cardinality cardinality = CardinalityBuilder.hasOptionalOneToMany();
+
+    private VisualizationInfo visualizationInfo;
 	
 	private Constraint constraint;
-	
+
 	// -----------------------------------------------------
 	
 	/**
@@ -55,8 +58,8 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	 * Constructor.
 	 * Besides the given values, the PropertyDeclaration's default values for Cardinality will be <code>[n..n]</code>
 	 * and the PropertyDescriptor will be used as a default label. No Constraints will be set.
-	 * @param propertyDescriptor
-	 * @param typeDefinition
+	 * @param propertyDescriptor The descriptor.
+	 * @param dataType The data type.
 	 */
 	public PropertyDeclarationImpl(ResourceID propertyDescriptor, Datatype dataType) {
 		this(propertyDescriptor, dataType, null);
@@ -66,9 +69,9 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	 * Constructor.
 	 * Besides the given values, the PropertyDeclaration's default values for Cardinality will be <code>[n..n]</code>
 	 * and the PropertyDescriptor will be used as a default label.
-	 * @param propertyDescriptor
-	 * @param typeDefinition
-	 * @param constraint
+	 * @param propertyDescriptor The descriptor.
+	 * @param dataType The datatype.
+	 * @param constraint The constraint.
 	 */
 	public PropertyDeclarationImpl(ResourceID propertyDescriptor, Datatype dataType, Constraint constraint) {
 		this.propertyDescriptor = propertyDescriptor;
@@ -167,7 +170,7 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	@Override
 	public FieldLabelDefinition getFieldLabelDefinition() {
 		return labelDefinition;
-	};
+	}
 	
 	/**
 	 * {@inheritDoc}
@@ -176,8 +179,20 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 	public void setFieldLabelDefinition(FieldLabelDefinition def) {
 		this.labelDefinition = def;
 	}
-	
-	// ----------------------------------------------------
+
+    // ----------------------------------------------------
+
+    @Override
+    public VisualizationInfo getVisualizationInfo() {
+        return visualizationInfo;
+    }
+
+    @Override
+    public void setVisualizationInfo(VisualizationInfo visualizationInfo) {
+        this.visualizationInfo = visualizationInfo;
+    }
+
+    // ----------------------------------------------------
 
 	/**
 	 * {@inheritDoc}
@@ -189,6 +204,9 @@ public class PropertyDeclarationImpl implements PropertyDeclaration, Serializabl
 					? propertyDescriptor.getQualifiedName().toURI() : ""));
 		sb.append(" " + cardinality.toString());
 		sb.append(", " + datatype);
+        if (null != visualizationInfo) {
+            sb.append(", ").append(visualizationInfo);
+        }
 		if(null!=constraint){
 			sb.append(" "+constraint.toString());
 		}
