@@ -37,6 +37,10 @@ public class ResourceSchemaFactory {
 		PropertyDeclaration children = new PropertyDeclarationImpl(RBMock.HAS_CHILD_NODE, Datatype.RESOURCE);
 		PropertyDeclaration file = new PropertyDeclarationImpl(RBMock.HAS_FILE, Datatype.FILE);
 
+		schema.addQuickInfo(RBMock.HAS_FIRST_NAME);
+		schema.addQuickInfo(RBMock.HAS_LAST_NAME);
+		schema.addQuickInfo(RBMock.HAS_EMAIL);
+
 		address.setConstraint(ConstraintsFactory.buildTypeConstraint(RBMock.ADDRESS));
 		email.setConstraint(ConstraintsFactory.buildPublicEmailConstraint());
 		children.setConstraint(ConstraintsFactory.buildTypeConstraint(RBMock.PERSON));
@@ -68,6 +72,7 @@ public class ResourceSchemaFactory {
 		schema.addPropertyDeclaration(email);
 		schema.addPropertyDeclaration(children);
 		schema.addPropertyDeclaration(file);
+
 
 		try {
 			schema.setLabelBuilder(new ExpressionBasedLabelBuilder(RBMock.PERSON.toURI()));

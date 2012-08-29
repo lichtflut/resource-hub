@@ -69,10 +69,10 @@ label_decl: LABEL_RULE COLON e=STRING -> ^(LABEL $e);
 
 // Definition of schema-quick-info
 quick_info: QUICK_INFO_DECL '{'
-				plain_string COMMA *
-				plain_string
+				qInfo_string COMMA *
+				qInfo_string
 			'}'
-			-> ^(QUICK_INFO plain_string+);
+			-> ^(QUICK_INFO qInfo_string+);
 
 // Definition of a property-declaration
 property_decl : PROPERTY_DECL id=STRING cardinal_decl '{'
@@ -97,7 +97,7 @@ key : FIELD_LABEL
 	| NAME
 	;
 
-plain_string : t=PLAIN_STRING -> ^(TEXT $t);
+qInfo_string : t=PLAIN_STRING -> ^(TEXT $t);
 
 value : STRING ;
 

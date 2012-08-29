@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.schema.persistence;
 import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNScalar;
@@ -40,7 +41,7 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 public class Schema2GraphBinding {
 
 	private final Logger logger = LoggerFactory.getLogger(Schema2GraphBinding.class);
-	// TODO resolve public constraint
+	// TODO resolve public constraint?!
 	private ConstraintResolver resolver = new VoidTypeDefResovler();
 
 	// -----------------------------------------------------
@@ -74,6 +75,9 @@ public class Schema2GraphBinding {
 			decl.setConstraint(snDecl.getConstraint());
 			schema.addPropertyDeclaration(decl);
 		}
+		for (ResourceID resourceID : snSchema.getQuickInfo()) {
+			schema.addQuickInfo(resourceID);
+		}
 		if (snSchema.hasLabelExpression()) {
 			final String exp = snSchema.getLabelExpression().getStringValue();
 			try {
@@ -83,7 +87,6 @@ public class Schema2GraphBinding {
 						snSchema.getDescribedType(), exp);
 			}
 		}
-
 		return schema;
 	}
 
@@ -103,6 +106,10 @@ public class Schema2GraphBinding {
 		sn.setDescribedType(schema.getDescribedType());
 		if (schema.getLabelBuilder() != null && schema.getLabelBuilder().getExpression() != null) {
 			sn.setLabelExpression(new SNText(schema.getLabelBuilder().getExpression()));
+		}
+		for (PropertyDeclaration decl : schema.getQuickInfo()) {
+			// TODO order resourceIds
+			sn.addQuickInfo(decl.getPropertyDescriptor());
 		}
 
 		SNPropertyDeclaration predecessor = null;

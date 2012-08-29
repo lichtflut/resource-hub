@@ -48,6 +48,10 @@ public interface RBSchema {
 	 */
 	ResourceID PUBLIC_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "PublicConstraint");
 
+	// -- Quick-Info --------------------------------------
+
+	ResourceID HAS_QUICK_INFO = new SimpleResourceID(NAMESPACE_URI, "hasQuickInfo");
+
 	// -- PROPERTIES --------------------------------------
 
 	/**

@@ -19,6 +19,7 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.runtime.tree.Tree;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.Datatype;
@@ -53,11 +54,7 @@ public class RSFTreeTest {
 		assertTrue(new SimpleResourceID(namespace, "City").equals(city.getDescribedType()));
 		assertTrue("http://rb.lichtflut.de/common#hasName <,> http://rb.lichtflut.de/common#hasCountry".equals(city.getLabelBuilder().getExpression()));
 		assertTrue(2 == city.getPropertyDeclarations().size());
-
-
-		System.out.println(city.getQuickInfo());
-
-
+		assertThat(city.getQuickInfo().size(), is(2));
 		PropertyDeclaration pdec = city.getPropertyDeclarations().get(0);
 		assertEquals(new SimpleResourceID("http://rb.lichtflut.de/common#hasMayor"), pdec.getPropertyDescriptor());
 		assertEquals(1000, pdec.getCardinality().getMinOccurs());
@@ -69,7 +66,7 @@ public class RSFTreeTest {
 	}
 
 	@Test
-	//	@Ignore("For debugging purposes..")
+	@Ignore("For debugging purposes..")
 	public void testTree() throws RecognitionException{
 		CommonTree t = (CommonTree) createTree(getRSFString());
 		System.out.println(t.toStringTree());

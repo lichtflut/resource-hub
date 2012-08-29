@@ -219,11 +219,11 @@ label_decl:  ^(LABEL (rule=STRING{
 }));
 
 // Definition of quickInfo
-quick_info: ^(QUICK_INFO (plain_string +){
+quick_info: ^(QUICK_INFO (qInfo_string +){
 				
 });
 
-plain_string : ^(TEXT ( s=PLAIN_STRING {
+qInfo_string : ^(TEXT ( s=PLAIN_STRING {
 	ResourceID id = toResourceID($s.text);
 				$schema_decl::schema.addQuickInfo(id);
 }));
