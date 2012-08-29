@@ -78,8 +78,14 @@ public class Schema2GraphBindingTest {
 			predecessor = snDecl;
 			snSchema.addPropertyDeclaration(snDecl);
 		}
+		SNQuickInfo predecessorQuickInfo = null;
 		for (PropertyDeclaration decl : schema.getQuickInfo()) {
-			snSchema.addQuickInfo(decl.getPropertyDescriptor());
+			SNQuickInfo current = new SNQuickInfo(decl.getPropertyDescriptor());
+			if(null != predecessorQuickInfo){
+				predecessorQuickInfo.addSuccessor(current);
+			}
+			predecessorQuickInfo = current;
+			snSchema.addQuickInfo(current);
 		}
 		ResourceSchema converted = getBinding().toModelObject(snSchema);
 		assertThat(converted.getDescribedType(), equalTo(schema.getDescribedType()));
@@ -106,6 +112,11 @@ public class Schema2GraphBindingTest {
 		while (counter < schema.getPropertyDeclarations().size()){
 			assertDeclaration(snr.getPropertyDeclarations().get(counter), schema.getPropertyDeclarations().get(counter));
 			counter++;
+		}
+		counter = 0;
+		while(counter < schema.getQuickInfo().size()){
+			assertThat(snr.getQuickInfo().get(counter).toURI(), equalTo(schema.getQuickInfo().get(counter).getPropertyDescriptor().toURI()));
+			counter ++;
 		}
 	}
 

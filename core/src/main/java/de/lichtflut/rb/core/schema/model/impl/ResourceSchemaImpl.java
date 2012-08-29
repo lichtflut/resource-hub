@@ -44,7 +44,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 
 	private final List<PropertyDeclaration> declarations = new LinkedList<PropertyDeclaration>();
 
-	private final List<ResourceID> quickInfo = new LinkedList<ResourceID>();
+	private final List<ResourceID> quickInfos = new LinkedList<ResourceID>();
 
 	private EntityLabelBuilder labelBuilder = EntityLabelBuilder.DEFAULT;
 
@@ -98,13 +98,14 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	@Override
 	public List<PropertyDeclaration> getQuickInfo() {
 		List<PropertyDeclaration> list = new ArrayList<PropertyDeclaration>();
-		for (ResourceID id : quickInfo) {
+		for (ResourceID id : quickInfos) {
 			if(propertyDescriptors.contains(id)){
 				PropertyDeclaration declaration = getPropertyDeclarationFor(id);
 				if(null != declaration){
 					list.add(declaration);
+				}else{
+					LOGGER.debug("No PropertyDeclaration found for: {} while getting quickInfo", id.toURI());
 				}
-				LOGGER.debug("No PropertyDeclaration found for: {} while getting quickInfo", id.toURI());
 			}
 		}
 		return list;
@@ -115,7 +116,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 * @param resourceID
 	 */
 	public void addQuickInfo(final ResourceID resourceID){
-		this.quickInfo.add(resourceID);
+		this.quickInfos.add(resourceID);
 	}
 
 	/**
@@ -178,7 +179,9 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	// ------------------------------------------------------
 
 	/**
-	 * @param id
+	 * Searches for a {@link PropertyDeclaration} within the current schema.
+	 * @param id - The {@link ResourceID} of an existing property-declaration
+	 * @return a PropertyDeclaration if it exists for the resourceId, returns <code>null</code> if none is found
 	 */
 	private PropertyDeclaration getPropertyDeclarationFor(final ResourceID id) {
 		for (PropertyDeclaration pdec : declarations) {

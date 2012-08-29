@@ -107,9 +107,15 @@ public class Schema2GraphBinding {
 		if (schema.getLabelBuilder() != null && schema.getLabelBuilder().getExpression() != null) {
 			sn.setLabelExpression(new SNText(schema.getLabelBuilder().getExpression()));
 		}
+
+		SNQuickInfo predecessorQuickInfo = null;
 		for (PropertyDeclaration decl : schema.getQuickInfo()) {
-			// TODO order resourceIds
-			sn.addQuickInfo(decl.getPropertyDescriptor());
+			SNQuickInfo current = new SNQuickInfo(decl.getPropertyDescriptor());
+			if(null != predecessorQuickInfo){
+				predecessorQuickInfo.addSuccessor(current);
+			}
+			predecessorQuickInfo = current;
+			sn.addQuickInfo(current);
 		}
 
 		SNPropertyDeclaration predecessor = null;

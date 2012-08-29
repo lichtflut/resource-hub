@@ -115,16 +115,21 @@ public class SNResourceSchema extends ResourceView {
 	 * Set one or more {@link ResourceID}s of {@link PropertyDeclaration}s that act as quick-info view.
 	 * @param resourceID The ResourceId
 	 */
-	public void addQuickInfo(final ResourceID resourceID){
-		SNOPS.associate(this, RBSchema.HAS_QUICK_INFO, resourceID);
+	public void addQuickInfo(final SNQuickInfo quickInfo){
+		SNOPS.associate(this, RBSchema.HAS_QUICK_INFO, quickInfo);
 	}
 
 	public List<ResourceID> getQuickInfo(){
-		final List<ResourceID> unsorted = new ArrayList<ResourceID>();
+		final List<ResourceNode> unsorted = new ArrayList<ResourceNode>();
 		for (Statement current : getAssociations(RBSchema.HAS_QUICK_INFO)) {
 			unsorted.add(current.getObject().asResource());
 		}
-		return unsorted;
+		List<ResourceID> result = new ArrayList<ResourceID>(unsorted.size());
+		List<ResourceNode> sorted = LinkedOrderedNodes.sortBySuccessors(unsorted);
+		for (ResourceNode resourceNode : sorted) {
+			result.add(SNOPS.fetchObject(resourceNode, RBSchema.HAS_QUICK_INFO).asResource());
+		}
+		return result;
 	}
 
 	/**
