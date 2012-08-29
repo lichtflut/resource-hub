@@ -3,9 +3,8 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import de.lichtflut.rb.core.schema.model.VisualizationInfo;
-import de.lichtflut.rb.core.schema.model.impl.PlainVisualizationInfo;
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNText;
@@ -18,9 +17,11 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
+import de.lichtflut.rb.core.schema.model.impl.PlainVisualizationInfo;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 
@@ -39,7 +40,7 @@ public class Schema2GraphBinding {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Schema2GraphBinding.class);
 
-	// TODO resolve public constraint
+	// TODO resolve public constraint?!
 	private ConstraintResolver resolver = new VoidTypeDefResovler();
 
 	// -----------------------------------------------------
@@ -70,9 +71,12 @@ public class Schema2GraphBinding {
 			decl.setCardinality(buildCardinality(snDecl));
 			decl.setDatatype(snDecl.getDatatype());
 			decl.setFieldLabelDefinition(snDecl.getFieldLabelDefinition());
-            setVisualizationInfo(decl, snDecl.getVisualizationInfo());
+			setVisualizationInfo(decl, snDecl.getVisualizationInfo());
 			decl.setConstraint(snDecl.getConstraint());
 			schema.addPropertyDeclaration(decl);
+		}
+		for (ResourceID resourceID : snSchema.getQuickInfo()) {
+			schema.addQuickInfo(resourceID);
 		}
 		if (snSchema.hasLabelExpression()) {
 			final String exp = snSchema.getLabelExpression().getStringValue();
@@ -80,22 +84,21 @@ public class Schema2GraphBinding {
 				schema.setLabelBuilder(new ExpressionBasedLabelBuilder(exp));
 			} catch (LabelExpressionParseException e) {
 				LOGGER.error("label expression for {} could not be parsed: '{}'",
-                        snSchema.getDescribedType(), exp);
+						snSchema.getDescribedType(), exp);
 			}
 		}
-
 		return schema;
 	}
 
-    protected VisualizationInfo toModelObject(SNVisualizationInfo snInfo) {
-        PlainVisualizationInfo info = new PlainVisualizationInfo();
-        info.setEmbedded(snInfo.isEmbedded());
-        info.setFloating(snInfo.isFloating());
-        info.setStyle(snInfo.getStyle());
-        return info;
-    }
+	protected VisualizationInfo toModelObject(final SNVisualizationInfo snInfo) {
+		PlainVisualizationInfo info = new PlainVisualizationInfo();
+		info.setEmbedded(snInfo.isEmbedded());
+		info.setFloating(snInfo.isFloating());
+		info.setStyle(snInfo.getStyle());
+		return info;
+	}
 
-    // -----------------------------------------------------
+	// -----------------------------------------------------
 
 	/**
 	 * Creates a new semantic node for given Resource Schema.
@@ -113,6 +116,16 @@ public class Schema2GraphBinding {
 			sn.setLabelExpression(new SNText(schema.getLabelBuilder().getExpression()));
 		}
 
+		SNQuickInfo predecessorQuickInfo = null;
+		for (PropertyDeclaration decl : schema.getQuickInfo()) {
+			SNQuickInfo current = new SNQuickInfo(decl.getPropertyDescriptor());
+			if(null != predecessorQuickInfo){
+				predecessorQuickInfo.addSuccessor(current);
+			}
+			predecessorQuickInfo = current;
+			sn.addQuickInfo(current);
+		}
+
 		SNPropertyDeclaration predecessor = null;
 		for(PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration();
@@ -120,7 +133,7 @@ public class Schema2GraphBinding {
 			snDecl.setMinOccurs(minAsScalar(decl.getCardinality()));
 			snDecl.setMaxOccurs(maxAsScalar(decl.getCardinality()));
 			snDecl.setDatatype(decl.getDatatype());
-            setVisualizationInfo(snDecl, decl.getVisualizationInfo());
+			setVisualizationInfo(snDecl, decl.getVisualizationInfo());
 			setFieldLabels(snDecl, decl.getFieldLabelDefinition());
 			if(decl.hasConstraint()){
 				snDecl.setConstraint(decl.getConstraint());
@@ -134,17 +147,17 @@ public class Schema2GraphBinding {
 		return sn;
 	}
 
-    protected SNVisualizationInfo toSemanticNode(VisualizationInfo info) {
-        SNVisualizationInfo snInfo = new SNVisualizationInfo();
-        snInfo.setEmbedded(info.isEmbedded());
-        snInfo.setFloating(info.isFloating());
-        snInfo.setStyle(info.getStyle());
-        return snInfo;
-    }
+	protected SNVisualizationInfo toSemanticNode(final VisualizationInfo info) {
+		SNVisualizationInfo snInfo = new SNVisualizationInfo();
+		snInfo.setEmbedded(info.isEmbedded());
+		snInfo.setFloating(info.isFloating());
+		snInfo.setStyle(info.getStyle());
+		return snInfo;
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    protected Cardinality buildCardinality(final SNPropertyDeclaration snDecl) {
+	protected Cardinality buildCardinality(final SNPropertyDeclaration snDecl) {
 		int min = snDecl.getMinOccurs().getIntegerValue().intValue();
 		int max = snDecl.getMaxOccurs().getIntegerValue().intValue();
 		if (max > 0) {
@@ -177,17 +190,17 @@ public class Schema2GraphBinding {
 		// TODO: set i18n labels.
 	}
 
-    protected void setVisualizationInfo(SNPropertyDeclaration snDecl, VisualizationInfo visualizationInfo) {
-        if (visualizationInfo != null) {
-            snDecl.setVisualizationInfo(toSemanticNode(visualizationInfo));
-        }
-    }
+	protected void setVisualizationInfo(final SNPropertyDeclaration snDecl, final VisualizationInfo visualizationInfo) {
+		if (visualizationInfo != null) {
+			snDecl.setVisualizationInfo(toSemanticNode(visualizationInfo));
+		}
+	}
 
-    protected void setVisualizationInfo(PropertyDeclarationImpl decl, SNVisualizationInfo visualizationInfo) {
-        if (visualizationInfo != null) {
-            decl.setVisualizationInfo(toModelObject(visualizationInfo));
-        }
-    }
+	protected void setVisualizationInfo(final PropertyDeclarationImpl decl, final SNVisualizationInfo visualizationInfo) {
+		if (visualizationInfo != null) {
+			decl.setVisualizationInfo(toModelObject(visualizationInfo));
+		}
+	}
 
 	// -----------------------------------------------------
 

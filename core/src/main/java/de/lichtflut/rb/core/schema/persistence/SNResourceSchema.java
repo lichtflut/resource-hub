@@ -21,6 +21,7 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.structure.LinkedOrderedNodes;
 
 import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 
 /**
  * <p>
@@ -39,7 +40,7 @@ public class SNResourceSchema extends ResourceView {
 	 * Generated serial number.
 	 */
 	private static final long serialVersionUID = -2376213727456721748L;
-	
+
 	// -----------------------------------------------------
 
 	/**
@@ -48,7 +49,7 @@ public class SNResourceSchema extends ResourceView {
 	public SNResourceSchema() {
 		this(new SNResource());
 	}
-	
+
 	/**
 	 * Constructor.
 	 * @param resource -
@@ -81,14 +82,14 @@ public class SNResourceSchema extends ResourceView {
 	public void setDescribedType(final ResourceID type, final Context... ctx) {
 		SNOPS.assure(this, RBSchema.DESCRIBES, type, ctx);
 	}
-	
+
 	/**
 	 * @return true if there is a label expression.
 	 */
 	public boolean hasLabelExpression() {
 		return null != SNOPS.singleAssociation(this, RBSchema.HAS_LABEL_EXPRESSION);
 	}
-	
+
 	/**
 	 * Returns the textual expression for label building.
 	 * @return The class node.
@@ -108,6 +109,27 @@ public class SNResourceSchema extends ResourceView {
 	 */
 	public void setLabelExpression(final SNText expression) {
 		SNOPS.assure(this, RBSchema.HAS_LABEL_EXPRESSION, expression);
+	}
+
+	/**
+	 * Set one or more {@link ResourceID}s of {@link PropertyDeclaration}s that act as quick-info view.
+	 * @param resourceID The ResourceId
+	 */
+	public void addQuickInfo(final SNQuickInfo quickInfo){
+		SNOPS.associate(this, RBSchema.HAS_QUICK_INFO, quickInfo);
+	}
+
+	public List<ResourceID> getQuickInfo(){
+		final List<ResourceNode> unsorted = new ArrayList<ResourceNode>();
+		for (Statement current : getAssociations(RBSchema.HAS_QUICK_INFO)) {
+			unsorted.add(current.getObject().asResource());
+		}
+		List<ResourceID> result = new ArrayList<ResourceID>(unsorted.size());
+		List<ResourceNode> sorted = LinkedOrderedNodes.sortBySuccessors(unsorted);
+		for (ResourceNode resourceNode : sorted) {
+			result.add(SNOPS.fetchObject(resourceNode, RBSchema.HAS_QUICK_INFO).asResource());
+		}
+		return result;
 	}
 
 	/**
@@ -151,7 +173,7 @@ public class SNResourceSchema extends ResourceView {
 	}
 
 	// -----------------------------------------------------
-	
+
 	public static SNResourceSchema view(final ResourceNode node) {
 		if (node instanceof SNResourceSchema) {
 			return (SNResourceSchema) node;
@@ -159,7 +181,7 @@ public class SNResourceSchema extends ResourceView {
 			return new SNResourceSchema(node);
 		}
 	}
-	
+
 	// -----------------------------------------------------
 
 	/**
@@ -174,5 +196,5 @@ public class SNResourceSchema extends ResourceView {
 		}
 		return sb.toString();
 	}
-	
+
 }

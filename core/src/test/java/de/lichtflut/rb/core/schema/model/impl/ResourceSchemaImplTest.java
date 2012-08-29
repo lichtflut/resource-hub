@@ -3,14 +3,15 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 import java.util.List;
-
 
 import org.arastreju.sge.model.ResourceID;
 import org.junit.Test;
@@ -35,8 +36,8 @@ import de.lichtflut.rb.mock.schema.PropertyDeclarationFactory;
 public class ResourceSchemaImplTest {
 
 	private ResourceSchema schema;
-	private ResourceID describedType = RBMock.PERSON;
-	
+	private final ResourceID describedType = RBMock.PERSON;
+
 	/**
 	 * Test method for {@link de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl#ResourceSchemaImpl()}.
 	 */
@@ -123,7 +124,7 @@ public class ResourceSchemaImplTest {
 		schema.addPropertyDeclaration(PropertyDeclarationFactory.buildHasNameProperty());
 		schema.addPropertyDeclaration(PropertyDeclarationFactory.buildHasNameProperty());
 	}
-	
+
 	/**
 	 * Test method for {@link de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl#getLabelBuilder()}.
 	 */
@@ -131,12 +132,27 @@ public class ResourceSchemaImplTest {
 	public void testGetLabelBuilder() {
 		ResourceSchemaImpl schema = new ResourceSchemaImpl(describedType);
 		assertNotNull("Default label shouldnot be null", schema.getLabelBuilder());
-		
+
 		EntityLabelBuilder builder = DefaultBuilder.DEFAULT;
 		schema.setLabelBuilder(builder);
 
 		assertNotNull("Labelbuilder should not be null.", schema.getLabelBuilder());
 		assertEquals("Labelbuilder is not asexpected.", builder, schema.getLabelBuilder());
+	}
+
+	@Test
+	public void testGetQuickInfo() {
+		ResourceSchemaImpl schema = new ResourceSchemaImpl(describedType);
+		PropertyDeclaration declHasName = PropertyDeclarationFactory.buildHasNameProperty();
+		PropertyDeclaration declHasChildren = PropertyDeclarationFactory.buildHasChildrenPropertyDecl();
+
+		schema.addPropertyDeclaration(declHasChildren);
+		schema.addPropertyDeclaration(declHasName);
+
+		schema.addQuickInfo(declHasName.getPropertyDescriptor());
+		schema.addQuickInfo(declHasChildren.getPropertyDescriptor());
+
+		assertThat(schema.getQuickInfo().size(), is(2));
 	}
 
 }

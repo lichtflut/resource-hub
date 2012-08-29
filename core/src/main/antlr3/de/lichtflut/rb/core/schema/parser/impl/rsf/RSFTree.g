@@ -208,12 +208,13 @@ schema_decl scope{
 	 		decl + )
 	 			 ;
 
-//Definition of a declaration within a schema
+// Definition of a declaration within a schema
 decl : 		label_decl
+		|	quick_info
 		|	property_decl
 		;
 
-//Definition of a label-declaration
+// Definition of a label-declaration
 label_decl:  ^(LABEL (rule=STRING{
 						String cleaned = removeAll($rule.text, "\"");
 						try{
@@ -221,6 +222,16 @@ label_decl:  ^(LABEL (rule=STRING{
 						}catch (LabelExpressionParseException e) {
 							emitErrorMessage(e.getMessage());
 						}
+}));
+
+// Definition of quickInfo
+quick_info: ^(QUICK_INFO (qInfo_string +){
+				
+});
+
+qInfo_string : ^(TEXT ( s=PLAIN_STRING {
+	ResourceID id = toResourceID($s.text);
+				$schema_decl::schema.addQuickInfo(id);
 }));
 
 // Definition of a property-declaration

@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -32,13 +35,19 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
  */
 @SuppressWarnings({ "serial" })
 public final class ResourceSchemaImpl implements ResourceSchema {
-	
+
+	private static Logger LOGGER = LoggerFactory.getLogger(ResourceSchemaImpl.class);
+
+	// ------------------------------------------------------
+
 	private final Set<ResourceID> propertyDescriptors = new HashSet<ResourceID>();
 
 	private final List<PropertyDeclaration> declarations = new LinkedList<PropertyDeclaration>();
 
+	private final List<ResourceID> quickInfos = new LinkedList<ResourceID>();
+
 	private EntityLabelBuilder labelBuilder = EntityLabelBuilder.DEFAULT;
-	
+
 	private ResourceID describedType;
 
 	// -----------------------------------------------------
@@ -50,7 +59,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	 */
 	public ResourceSchemaImpl() {
 	}
-	
+
 	/**
 	 * Constructor.
 	 * @param @param describedType The Resource Type defined by this schema
@@ -60,7 +69,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	}
 
 	// -----------------------------------------------------
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -80,8 +89,35 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 		this.describedType = describedType;
 		return this;
 	}
-	
+
 	// -----------------------------------------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<PropertyDeclaration> getQuickInfo() {
+		List<PropertyDeclaration> list = new ArrayList<PropertyDeclaration>();
+		for (ResourceID id : quickInfos) {
+			if(propertyDescriptors.contains(id)){
+				PropertyDeclaration declaration = getPropertyDeclarationFor(id);
+				if(null != declaration){
+					list.add(declaration);
+				}else{
+					LOGGER.debug("No PropertyDeclaration found for: {} while getting quickInfo", id.toURI());
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * Adds a new reference that will be displayed as a quickInfo.
+	 * @param resourceID
+	 */
+	public void addQuickInfo(final ResourceID resourceID){
+		this.quickInfos.add(resourceID);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -113,7 +149,7 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 	public EntityLabelBuilder getLabelBuilder() {
 		return labelBuilder;
 	}
-	
+
 	/**
 	 * Set the {@link EntityLabelBuilder}.
 	 * @param labelBuilder the labelBuilder to set
@@ -139,5 +175,20 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 		}
 		return sb.toString();
 	}
-	
+
+	// ------------------------------------------------------
+
+	/**
+	 * Searches for a {@link PropertyDeclaration} within the current schema.
+	 * @param id - The {@link ResourceID} of an existing property-declaration
+	 * @return a PropertyDeclaration if it exists for the resourceId, returns <code>null</code> if none is found
+	 */
+	private PropertyDeclaration getPropertyDeclarationFor(final ResourceID id) {
+		for (PropertyDeclaration pdec : declarations) {
+			if(pdec.getPropertyDescriptor().toURI().equals(id.toURI())){
+				return pdec;
+			}
+		}
+		return null;
+	}
 }

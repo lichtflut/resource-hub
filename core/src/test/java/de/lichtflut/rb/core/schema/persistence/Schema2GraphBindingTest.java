@@ -78,10 +78,20 @@ public class Schema2GraphBindingTest {
 			predecessor = snDecl;
 			snSchema.addPropertyDeclaration(snDecl);
 		}
+		SNQuickInfo predecessorQuickInfo = null;
+		for (PropertyDeclaration decl : schema.getQuickInfo()) {
+			SNQuickInfo current = new SNQuickInfo(decl.getPropertyDescriptor());
+			if(null != predecessorQuickInfo){
+				predecessorQuickInfo.addSuccessor(current);
+			}
+			predecessorQuickInfo = current;
+			snSchema.addQuickInfo(current);
+		}
 		ResourceSchema converted = getBinding().toModelObject(snSchema);
 		assertThat(converted.getDescribedType(), equalTo(schema.getDescribedType()));
 		assertThat(converted.getLabelBuilder().getExpression(), equalTo(schema.getLabelBuilder().getExpression()));
 		assertThat(converted.getPropertyDeclarations().size(), is(schema.getPropertyDeclarations().size()));
+		assertThat(converted.getQuickInfo().size(), is(schema.getQuickInfo().size()));
 	}
 
 	/**
@@ -97,10 +107,16 @@ public class Schema2GraphBindingTest {
 		assertThat(snr.getDescribedType(), equalTo(schema.getDescribedType()));
 		assertThat(snr.getPropertyDeclarations().size(), is(schema.getPropertyDeclarations().size()));
 		assertThat(snr.getLabelExpression().getStringValue(), equalTo(schema.getLabelBuilder().getExpression()));
+		assertThat(snr.getQuickInfo().size(), is(schema.getQuickInfo().size()));
 		int counter = 0;
 		while (counter < schema.getPropertyDeclarations().size()){
 			assertDeclaration(snr.getPropertyDeclarations().get(counter), schema.getPropertyDeclarations().get(counter));
 			counter++;
+		}
+		counter = 0;
+		while(counter < schema.getQuickInfo().size()){
+			assertThat(snr.getQuickInfo().get(counter).toURI(), equalTo(schema.getQuickInfo().get(counter).getPropertyDescriptor().toURI()));
+			counter ++;
 		}
 	}
 

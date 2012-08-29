@@ -14,7 +14,7 @@
 		<module>core</module>
 		<module>tools</module>
 		<module>webck</module>
-      		<module>rest-api</module>
+      	<module>rest-api</module>
 		<module>app-foundation</module>
   </modules>
 	<properties>
