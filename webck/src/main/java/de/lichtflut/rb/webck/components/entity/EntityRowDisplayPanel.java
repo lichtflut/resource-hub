@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -157,6 +158,7 @@ public class EntityRowDisplayPanel extends Panel {
 			hrefModel.setObject(href);
 		}
 		ExternalLink link = new ExternalLink("target", hrefModel, getDisplayNameForLink(item));
+		link.add(new AttributeModifier("target", "_blank"));
 		item.add(new Fragment("valuefield", "link", this).add(link));
 	}
 
