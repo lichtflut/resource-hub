@@ -17,9 +17,11 @@
       	<module>rest-api</module>
 		<module>app-foundation</module>
   </modules>
+
 	<properties>
 		<arastreju.version>0.8.0-SNAPSHOT</arastreju.version>
 		<jersey.version>1.8</jersey.version>
+    	<skipIntegrationTests>true</skipIntegrationTests>
 	</properties>
 	<build>
 		<pluginManagement>
@@ -29,6 +31,23 @@
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.3.2</version>
 				</plugin-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.12.3</version>
+					<configuration>
+						<skipTests>${skipIntegrationTests}</skipTests>
+					</configuration>
+					<executions>
+						<execution>
+							<id>integration-test</id>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>

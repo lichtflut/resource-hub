@@ -1,0 +1,45 @@
+{ "namespace-declarations" : [ {
+	"namespace": "http://test.com/common#", 
+	"prefix" : "common"
+  }, {
+	"namespace": "http://test.com/public-constraints#", 
+	"prefix" : "constraints"
+  } ] 
+}
+{
+  "public-constraints" : [ {
+    "id" : "constraints:Email-Constraint",
+    "name" : "Email-Constraint",
+    "applicable-datatypes" : "string, RICH_TEXT, text",
+    "literal-constraint" : ".*@.*",
+    "unknown-token-constraints" : "log me"
+  }]
+}
+{
+	"ignore me" : "for I am unknown..."
+}
+{
+  "resource-schemas" : [ {
+    "for-type" : "common:City",
+    "unknown-token-schema" : "log me",
+	"label-rule" : "common:hasName <(> common:isInCountry <)>",
+    "property-declaration" : {
+      "property-type" : "http://test.com/common#hasName",
+      "cardinality" : "[1..1]",
+      "field-label" : {
+        "default" : "Name"
+      },
+      "datatype" : "string",
+      "unknown-token-propDEcl" : "log me"
+    },
+    "property-declaration" : {
+      "property-type" : "common:isInCountry",
+      "field-label" : {
+        "default" : "Country"
+      },
+      "datatype" : "string",
+      "literal-constraint" : "[a-z || A-Z]",
+      "cardinality" : "[1..1]"
+    }
+  } ]
+  }

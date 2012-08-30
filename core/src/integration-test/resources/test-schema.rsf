@@ -1,0 +1,54 @@
+namespace "http://rb.lichtflut.de/common#" prefix "common"
+namespace "http://rb.lichtflut.de/common2#" prefix "common2"
+
+constraint definition for "common:EmailConstraint" {
+ 		name : "Email-Constraint"
+		applicable-datatypes : "string, text"
+		literal-constraint : ".*@.*"
+}
+
+schema for "common:City" {
+	label-rule : "common:hasName <(> common:hasCountry <)>"
+	
+	quick-info {
+		common:hasName,
+		common:hasCountry
+	}
+	
+	property "common:hasName" [1..n] {
+		field-label[en] : "Name"
+		datatype : "String"
+	}
+	
+	property "common:hasMayor" [1000..xs] {
+		field-label : "Mayor"
+		field-label[de] : "Buergermeister"
+		field-label[fr] : "Maire"
+		datatype : "string"
+	}
+
+	property "common:hasCountry" [1..1] {
+		field-label[en] : "Country"
+		datatype : "Resource"
+		resource-constraint : "common:Country"
+		visualize {
+		    embedded : "true"
+		    floating : "true"
+		    style : "width:200px"
+		}
+	}
+}
+
+schema for "common:Person" {
+	label-rule : "common:hasName"
+		
+	property "common:hasName" [1..n] {
+		field-label[en] : "Name"
+		datatype : "String"
+	}
+	
+	property "common:hasFile" [n..n] {
+		field-label[en] : "Files"
+		datatype : "File"
+	}
+}
