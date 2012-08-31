@@ -3,8 +3,6 @@
  */
 package de.lichtflut.rb.rest.api;
 
-import java.io.File;
-
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -56,8 +54,7 @@ public class FileOps extends RBServiceEndpoint {
 			e.printStackTrace();
 		}
 		FileService fileService = this.getProvider(domain, user).getFileService();
-		File data = fileService.getData(path);
-		ResponseBuilder rsb = Response.ok(data);
+		ResponseBuilder rsb = Response.ok(fileService.getData(path));
 		LOGGER.debug("Served File {} from domain{} with token {}", new Object[]{path, domain, token});
 		return rsb.build();
 	}

@@ -39,6 +39,8 @@ public class RBServiceProvider implements ServiceProvider {
 
 	private SecurityConfiguration securityConfiguration;
 
+	private FileService fileService;
+
 	// ----------------------------------------------------
 
 	/**
@@ -104,10 +106,10 @@ public class RBServiceProvider implements ServiceProvider {
 	 */
 	@Override
 	public FileService getFileService(){
-		return null;
+		return fileService;
 	}
-	// ----------------------------------------------------
 
+	// ----------------------------------------------------
 
 	public void setArastrejuResourceFactory(final ArastrejuResourceFactory arastrejuResourceFactory) {
 		this.arastrejuResourceFactory = arastrejuResourceFactory;
@@ -123,5 +125,9 @@ public class RBServiceProvider implements ServiceProvider {
 
 	public void setSecurityConfiguration(final SecurityConfiguration securityConfiguration) {
 		this.securityConfiguration = securityConfiguration;
+	}
+
+	public void setFileService(final FileService fileService){
+		this.fileService = fileService;
 	}
 }

@@ -153,6 +153,10 @@ public class RSFTest {
 				getPublicConstraintDeclaration() +
 				"schema for \"commonCity\" { " +
 				"label-rule : \"common:hasName <(> common:hasCountry\"" +
+				"quick-info{" +
+				"common:assignedTo," +
+				"common:hasName" +
+				"}" +
 				"property \"common:assignedTo\" [1..n] {" +
 				"field-label[klingonian] : \"Kaaargh\"" +
 				"datatype : \"date\"" +

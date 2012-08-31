@@ -30,6 +30,7 @@ import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
+import de.lichtflut.rb.core.services.impl.LinkProvider;
 import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -42,7 +43,6 @@ import de.lichtflut.rb.webck.components.entity.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.entity.LocalButtonBar;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
-import de.lichtflut.rb.webck.conversion.LinkProvider;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
@@ -180,12 +180,11 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				int index = 0;
 				for (Object value : field.getValues()) {
 					value = ((List) value).get(0);
-					String path = new LinkProvider("localhost8080/glasnost.is/service/content/").getRepositoryLinkFor(model, value);
+					String path = new LinkProvider().buildRepositoryStructureFor(model.getObject(), ((FileUpload) value).getClientFileName());
 					try {
-						String shortenedPath = path.replaceFirst("http://", "");
 						FileUpload fileUpload = (FileUpload) value;
 						descriptor = new ContentDescriptorBuilder().name(fileUpload.getClientFileName())
-								.mimeType(fileUpload.getContentType()).path(shortenedPath).data(fileUpload.getInputStream()).build();
+								.mimeType(fileUpload.getContentType()).path(path).data(fileUpload.getInputStream()).build();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

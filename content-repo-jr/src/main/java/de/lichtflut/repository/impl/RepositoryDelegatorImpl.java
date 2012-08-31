@@ -103,8 +103,6 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 			LOGGER.info("Stored File: {}", childNode.getPath());
 		} catch (RepositoryException e) {
 			e.printStackTrace();
-		} finally {
-			closeSession();
 		}
 	}
 

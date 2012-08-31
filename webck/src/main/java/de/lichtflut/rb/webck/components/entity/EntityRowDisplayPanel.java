@@ -115,8 +115,10 @@ public class EntityRowDisplayPanel extends Panel {
 			addHTMLOutput(item);
 			break;
 		case URI:
-		case FILE:
 			addExternalLink(item);
+			break;
+		case FILE:
+			addLink(item);
 			break;
 		default:
 			throw new NotYetImplementedException("No display-component specified for datatype: " + dataType);
@@ -152,21 +154,22 @@ public class EntityRowDisplayPanel extends Panel {
 	}
 
 	private void addExternalLink(final ListItem<RBFieldValueModel> item) {
-		IModel<String> hrefModel = new Model<String>(item.getModelObject().getField().getValue(0).toString());
-		if(Datatype.FILE.name().equals(item.getModelObject().getField().getDataType().name())){
-			String href = hrefModel.getObject() + "?domain=" + new CurrentDomainModel().getObject().getQualifiedName();
-			hrefModel.setObject(href);
-		}
-		ExternalLink link = new ExternalLink("target", hrefModel, getDisplayNameForLink(item));
+		@SuppressWarnings("unchecked")
+		ExternalLink link = new ExternalLink("target", item.getModelObject(), item.getModelObject());
 		link.add(new AttributeModifier("target", "_blank"));
 		item.add(new Fragment("valuefield", "link", this).add(link));
 	}
 
-	//	private void addLink(final ListItem<RBFieldValueModel> item) {
-	//		@SuppressWarnings("unchecked")
-	//		ExternalLink link = new ExternalLink("target", item.getModelObject(), item.getModelObject());
-	//		item.add(new Fragment("valuefield", "link", this).add(link));
-	//	}
+	private void addLink(final ListItem<RBFieldValueModel> item) {
+		IModel<String> hrefModel = new Model<String>(item.getModelObject().getField().getValue(0).toString());
+		String href = hrefModel.getObject() + "?domain=" + new CurrentDomainModel().getObject().getQualifiedName();
+		href = "service/content/" + href;
+		hrefModel.setObject(href);
+
+		ExternalLink link = new ExternalLink("target", hrefModel, getDisplayNameForLink(item));
+		link.add(new AttributeModifier("target", "_blank"));
+		item.add(new Fragment("valuefield", "link", this).add(link));
+	}
 
 	private void addBooleanField(final ListItem<RBFieldValueModel> item) {
 		String label = "no";

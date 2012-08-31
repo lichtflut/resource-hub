@@ -47,14 +47,9 @@ public class RBServiceProviderFactory {
 		ArastrejuResourceFactory factory = new ArastrejuResourceFactory(ctx);
 		factory.setDomainInitializer(domainInitializer);
 
-		return new RBServiceProvider(ctx, factory, authModule, securityConfiguration){
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public FileService getFileService() {
-				return fileService;
-			}
-		};
+		RBServiceProvider rbServiceProvider = new RBServiceProvider(ctx, factory, authModule, securityConfiguration);
+		rbServiceProvider.setFileService(fileService);
+
+		return rbServiceProvider;
 	}
 }

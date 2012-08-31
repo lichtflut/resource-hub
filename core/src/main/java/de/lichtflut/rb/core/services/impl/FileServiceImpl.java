@@ -3,12 +3,9 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -55,7 +52,9 @@ public class FileServiceImpl implements FileService {
 
 	public FileServiceImpl(final String config) {
 		properties = getPropertiesFile(config);
-		initRepository();
+		if(null == delegator){
+			initRepository();
+		}
 	}
 
 	// ------------------------------------------------------
@@ -64,8 +63,9 @@ public class FileServiceImpl implements FileService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public File getData(final String path) {
-		return getFileForStream(delegator.getData(path));
+	public InputStream getData(final String path) {
+		LOGGER.info("Retrieving file for path: {}", path);
+		return delegator.getData(path).getData();
 	}
 
 	/**
@@ -160,34 +160,6 @@ public class FileServiceImpl implements FileService {
 			return properties.getProperty(key, defaultValue);
 		}
 		return "";
-	}
-
-	private File getFileForStream(final ContentDescriptor descriptor) {
-		InputStream inputStream = descriptor.getData();
-		File retrieved = new File(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator")
-				+ UUID.randomUUID().toString() + "." + descriptor.getMimeType());
-		// write the inputStream to a FileOutputStream
-		OutputStream out;
-		try {
-			out = new FileOutputStream(retrieved);
-
-			int read = 0;
-			byte[] bytes = new byte[1024];
-
-			while ((read = inputStream.read(bytes)) != -1) {
-				out.write(bytes, 0, read);
-			}
-
-			inputStream.close();
-			out.flush();
-			out.close();
-			return retrieved;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	private Properties getPropertiesFile(final String config) {

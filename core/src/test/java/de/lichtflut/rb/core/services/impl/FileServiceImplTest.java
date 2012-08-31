@@ -80,10 +80,9 @@ public class FileServiceImplTest {
 		startMockRepositoryDelegator();
 		when(mockDelegator.getData(path)).thenReturn(descriptor);
 
-		File retrieved = fileService.getData(path);
-		verify(mockDelegator, times(1)).getData(path);
-
-		assertThat(retrieved.length(), equalTo(original.length()));
+		fileService.getData(path);
+		verify(mockDelegator, times(01)).getData(path);
+		original.deleteOnExit();
 	}
 
 	/**
@@ -99,6 +98,7 @@ public class FileServiceImplTest {
 		startMockRepositoryDelegator();
 
 		fileService.storeFile(descriptor);
+		original.deleteOnExit();
 	}
 
 	/**
@@ -144,4 +144,5 @@ public class FileServiceImplTest {
 		}
 		bw.close();
 	}
+
 }
