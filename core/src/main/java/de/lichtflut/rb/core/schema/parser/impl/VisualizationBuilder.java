@@ -41,7 +41,7 @@ public class VisualizationBuilder {
         } else if (STYLE.equals(key)) {
             plainVisInfo.setStyle(removeQuotes(value));
         } else {
-            throw new IllegalArgumentException("Unknwon key for visualization: " + key);
+            throw new IllegalArgumentException("Unknown key for visualization: " + key);
         }
     }
 
