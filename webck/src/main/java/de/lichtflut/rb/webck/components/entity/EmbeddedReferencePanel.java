@@ -89,7 +89,7 @@ public class EmbeddedReferencePanel extends Panel {
                 }
             }
             if (result.isEmpty()) {
-                final ResourceID type = field.getConstraint().getReference();
+                final ResourceID type = field.getConstraint().getTypeConstraint();
                 result.add(entityManager.create(type));
             }
             return result;

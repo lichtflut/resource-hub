@@ -59,7 +59,7 @@ public class PublicConstraintsEditorPanelAggregator extends Panel {
 	// ------------------------------------------------------
 
 	protected void displayConstraintEditor(final Constraint constraint) {
-		final Constraint reloaded = schemaManager.findConstraint(id(constraint.getQualifiedName()));
+		final Constraint reloaded = schemaManager.findConstraint(constraint.getQualifiedName());
 		final Panel editor = new PublicConstraintsDetailPanel("editor", Model.of(reloaded));
 		replace(editor);
 		RBAjaxTarget.add(editor);

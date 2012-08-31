@@ -14,7 +14,6 @@ import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.impl.LiteralConstraint;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import de.lichtflut.rb.mock.RBMock;
 
@@ -34,25 +33,25 @@ public class ConstraintsFactory {
 		datatypes.add(Datatype.STRING);
 		datatypes.add(Datatype.TEXT);
 		datatypes.add(Datatype.RICH_TEXT);
-		ConstraintImpl constraint= new ConstraintImpl(new SNResource(qn));
+		ConstraintImpl constraint= new ConstraintImpl(qn);
 		constraint.setApplicableDatatypes(datatypes);
 		constraint.setName("Email-Address");
 		constraint.setLiteralConstraint(".*@.*");
-		constraint.isPublic(true);
+		constraint.setPublic(true);
 		return constraint;
 	}
 	
 	public static Constraint buildPrivateLiteralConstraint(){
-		LiteralConstraint constraint = new LiteralConstraint(new SNResource());
-		constraint.setLiteralPattern(".*@.*");
+        ConstraintImpl constraint = new ConstraintImpl();
+		constraint.setLiteralConstraint(".*@.*");
 		return constraint;
 	}
 	
 	public static Constraint buildPublicPersonConstraint(){
 		ResourceID resource = new SimpleResourceID(RBMock.COMMON_NAMESPACE_URI + "PersonConstraint");
-		ConstraintImpl constraint = new ConstraintImpl((ResourceNode)new SNResource());
+		ConstraintImpl constraint = new ConstraintImpl();
 		constraint.setName("Person-Constraint");
-		constraint.setReference(resource);
+		constraint.setTypeConstraint(resource);
 		return constraint;
 	}
 	
@@ -65,8 +64,8 @@ public class ConstraintsFactory {
 	
 	public static Constraint buildPrivatePersonConstraint(){
 		ResourceID resource = new SimpleResourceID(RBMock.COMMON_NAMESPACE_URI + "PersonConstraint");
-		ConstraintImpl constraint = new ConstraintImpl((ResourceNode)new SNResource());
-		constraint.setReference(resource);
+		ConstraintImpl constraint = new ConstraintImpl();
+		constraint.setTypeConstraint(resource);
 		return constraint;
 	}
 }

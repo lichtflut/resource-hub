@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import de.lichtflut.rb.core.schema.persistence.SNConstraint;
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
@@ -16,7 +17,6 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
@@ -34,8 +34,6 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
-import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
-import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
 import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
 import de.lichtflut.rb.core.schema.persistence.ConstraintResolver;
 import de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration;
@@ -72,14 +70,11 @@ public class SchemaManagerImpl implements SchemaManager {
 	 */
 	public SchemaManagerImpl(final ConversationFactory arastrejuFactory) {
 		this.conversationFactory = arastrejuFactory;
-		this.binding = new Schema2GraphBinding(new ConstraintResolverImpl());
+		this.binding = new Schema2GraphBinding();
 	}
 
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ResourceSchema findSchemaForType(final ResourceID type) {
 		final SNResourceSchema schemaNode = findSchemaNodeByType(type);
@@ -90,30 +85,21 @@ public class SchemaManagerImpl implements SchemaManager {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isSchemaDefinedFor(final ResourceID type) {
 		return findSchemaNodeByType(type) != null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public Constraint findConstraint(final ResourceID id) {
-		final ResourceNode node = conversation().findResource(id.getQualifiedName());
+	public Constraint findConstraint(final QualifiedName qn) {
+		final ResourceNode node = conversation().findResource(qn);
 		if (node != null) {
-			return new ConstraintImpl(node);
+            return binding.toModelObject(new SNConstraint(node));
 		} else {
 			return null;
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Collection<ResourceSchema> findAllResourceSchemas() {
 		final List<ResourceSchema> result = new ArrayList<ResourceSchema>();
@@ -125,15 +111,12 @@ public class SchemaManagerImpl implements SchemaManager {
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Collection<Constraint> findPublicConstraints() {
 		final List<Constraint> result = new ArrayList<Constraint>();
 		final List<ResourceNode> nodes = findResourcesByType(RBSchema.PUBLIC_CONSTRAINT);
 		for (ResourceNode node : nodes) {
-			final Constraint constraint = new ConstraintImpl(node);
+			final Constraint constraint = binding.toModelObject(new SNConstraint(node));
 			if (constraint.isPublic()) {
 				result.add(constraint);
 			}
@@ -143,9 +126,6 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void store(final ResourceSchema schema) {
 		Validate.isTrue(schema.getDescribedType() != null, "The type described by this schema is not defined.");
@@ -187,13 +167,11 @@ public class SchemaManagerImpl implements SchemaManager {
 	public void store(final Constraint constraint) {
 		Validate.isTrue(constraint.isPublic(), "Only public type definition may be stored explicitly.");
 		remove(constraint);
-		conversation().attach(constraint.asResourceNode());
+        SNConstraint sn = binding.toSemanticNode(constraint);
+        conversation().attach(sn);
 		LOGGER.info("Stored public constraint for {}.", constraint.getName());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void remove(final Constraint constraint){
 		final ModelingConversation mc = conversation();
@@ -203,15 +181,12 @@ public class SchemaManagerImpl implements SchemaManager {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Constraint prepareConstraint(final QualifiedName qn, final String displayName) {
-		final ConstraintImpl constraint = new ConstraintImpl(new SNResource(qn));
+		final ConstraintImpl constraint = new ConstraintImpl(qn);
 		constraint.setApplicableDatatypes(Collections.singletonList(Datatype.STRING));
 		constraint.setName(displayName);
-		constraint.isPublic(true);
+		constraint.setPublic(true);
 		constraint.setLiteralConstraint("*");
 		store(constraint);
 		return constraint;
@@ -219,14 +194,8 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public SchemaImporter getImporter(final String format) {
-		if ("JSON".equalsIgnoreCase(format.trim())) {
-			return new SchemaImporterImpl(this, conversation(), new JsonSchemaParser());
-		}
 		if ("RSF".equalsIgnoreCase(format.trim())) {
 			return new SchemaImporterImpl(this, conversation(), new RsfSchemaParser());
 		} else {
@@ -234,16 +203,9 @@ public class SchemaManagerImpl implements SchemaManager {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public SchemaExporter getExporter(final String format) {
-		if ("JSON".equalsIgnoreCase(format.trim())) {
-			return new SchemaExporterImpl(this, new JsonSchemaWriter());
-		} else {
-			throw new NotYetSupportedException("Unsupported format: " + format);
-		}
+		throw new NotYetSupportedException("Unsupported format: " + format);
 	}
 
 	// -----------------------------------------------------
@@ -276,7 +238,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	protected void removeSchema(final ModelingConversation mc, final SNResourceSchema schemaNode) {
 		for(SNPropertyDeclaration decl : schemaNode.getPropertyDeclarations()) {
 			if (decl.hasConstraint() && !decl.getConstraint().isPublic()) {
-				mc.remove(decl.getConstraint().asResourceNode());
+				mc.remove(SNOPS.id(decl.getConstraint().getQualifiedName()));
 			}
 			mc.remove(decl);
 		}
@@ -328,7 +290,7 @@ public class SchemaManagerImpl implements SchemaManager {
 			final ModelingConversation mc = conversation();
 			final ResourceNode node = mc.findResource(constraint.getQualifiedName());
 			if (node != null) {
-				return new ConstraintImpl(node);
+                return binding.toModelObject(new SNConstraint(node));
 			} else {
 				return null;
 			}

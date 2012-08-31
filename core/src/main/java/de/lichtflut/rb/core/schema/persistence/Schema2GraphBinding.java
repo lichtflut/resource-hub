@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
+import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SNResource;
@@ -40,17 +41,12 @@ public class Schema2GraphBinding {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Schema2GraphBinding.class);
 
-	// TODO resolve public constraint?!
-	private ConstraintResolver resolver = new VoidTypeDefResovler();
-
 	// -----------------------------------------------------
 
 	/**
 	 * Constructor with special resolver.
-	 * @param resolver Resolver for persistent type definitions.
-	 */
-	public Schema2GraphBinding(final ConstraintResolver resolver) {
-		this.resolver = resolver;
+     */
+	public Schema2GraphBinding() {
 	}
 
 	// -----------------------------------------------------
@@ -72,7 +68,7 @@ public class Schema2GraphBinding {
 			decl.setDatatype(snDecl.getDatatype());
 			decl.setFieldLabelDefinition(snDecl.getFieldLabelDefinition());
 			setVisualizationInfo(decl, snDecl.getVisualizationInfo());
-			decl.setConstraint(snDecl.getConstraint());
+            setConstraint(decl, snDecl.getConstraint());
 			schema.addPropertyDeclaration(decl);
 		}
 		for (ResourceID resourceID : snSchema.getQuickInfo()) {
@@ -89,6 +85,16 @@ public class Schema2GraphBinding {
 		}
 		return schema;
 	}
+
+    public Constraint toModelObject(final SNConstraint snConstraint) {
+        ConstraintImpl constraint = new ConstraintImpl(snConstraint.getQualifiedName());
+        constraint.setName(snConstraint.getName());
+        constraint.setLiteralConstraint(snConstraint.getLiteralConstraint());
+        constraint.setTypeConstraint(snConstraint.getTypeConstraint());
+        constraint.setApplicableDatatypes(snConstraint.getApplicableDatatypes());
+        constraint.setPublic(snConstraint.isPublic());
+        return constraint;
+    }
 
 	protected VisualizationInfo toModelObject(final SNVisualizationInfo snInfo) {
 		PlainVisualizationInfo info = new PlainVisualizationInfo();
@@ -135,9 +141,7 @@ public class Schema2GraphBinding {
 			snDecl.setDatatype(decl.getDatatype());
 			setVisualizationInfo(snDecl, decl.getVisualizationInfo());
 			setFieldLabels(snDecl, decl.getFieldLabelDefinition());
-			if(decl.hasConstraint()){
-				snDecl.setConstraint(decl.getConstraint());
-			}
+			setConstraint(snDecl, decl.getConstraint());
 			if (null != predecessor) {
 				predecessor.setSuccessor(snDecl);
 			}
@@ -146,6 +150,21 @@ public class Schema2GraphBinding {
 		}
 		return sn;
 	}
+
+    public SNConstraint toSemanticNode(final Constraint constraint) {
+        SNConstraint snConstraint;
+        if (constraint.isPublic()) {
+            snConstraint = new SNConstraint(constraint.getQualifiedName());
+        } else {
+            snConstraint = new SNConstraint();
+        }
+        snConstraint.setName(constraint.getName());
+        snConstraint.setLiteralConstraint(constraint.getLiteralConstraint());
+        snConstraint.setTypeConstraint(constraint.getTypeConstraint());
+        snConstraint.setApplicableDatatypes(constraint.getApplicableDatatypes());
+        snConstraint.setPublic(constraint.isPublic());
+        return snConstraint;
+    }
 
 	protected SNVisualizationInfo toSemanticNode(final VisualizationInfo info) {
 		SNVisualizationInfo snInfo = new SNVisualizationInfo();
@@ -202,13 +221,16 @@ public class Schema2GraphBinding {
 		}
 	}
 
-	// -----------------------------------------------------
+    protected void setConstraint(final SNPropertyDeclaration snDecl, final Constraint constraint) {
+        if (constraint != null) {
+            snDecl.setConstraint(toSemanticNode(constraint));
+        }
+    }
 
-	private static final class VoidTypeDefResovler implements ConstraintResolver {
-		@Override
-		public Constraint resolve(final Constraint constraint) {
-			return null;
-		}
-	}
+    private void setConstraint(PropertyDeclarationImpl decl, SNConstraint constraint) {
+        if (constraint != null) {
+            decl.setConstraint(toModelObject(constraint));
+        }
+    }
 
 }

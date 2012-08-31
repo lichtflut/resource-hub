@@ -164,7 +164,7 @@ public class EntityRowEditPanel extends Panel {
 	private ResourceID getTypeConstraint() {
 		final RBField field = getField();
 		if(field.getDataType().equals(Datatype.RESOURCE)){
-			return field.getConstraint().getReference().asResource();
+			return field.getConstraint().getTypeConstraint().asResource();
 		}
 		return null;
 	}

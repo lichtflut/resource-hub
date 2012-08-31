@@ -73,20 +73,6 @@ public class ResourceSchemaParserIT {
 	// ----------------------------------------------------
 
 	@Test
-	public void testJsonImport() throws IOException {
-		final InputStream in =
-				getClass().getClassLoader().getResourceAsStream("test-schema.json");
-
-		final SchemaManager manager = new SchemaManagerImpl(conversationFactory);
-		final SchemaImporter importer = manager.getImporter("json");
-		importer.read(in);
-
-		Assert.assertEquals(5, manager.findAllResourceSchemas().size());
-
-		Assert.assertEquals(1, manager.findPublicConstraints().size());
-	}
-
-	@Test
 	public void testRsfImport() throws IOException {
 		final InputStream in =
 				getClass().getClassLoader().getResourceAsStream("test-schema.rsf");

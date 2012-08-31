@@ -74,31 +74,41 @@ public class SNPropertyDeclaration extends ResourceView {
 	}
 	
 	// -----------------------------------------------------
-	
+
+    /**
+     * @return true if the SNPropertyDeclaration has a {@link Constraint}, false if not.
+     */
+    public boolean hasConstraint(){
+        boolean hasConstraint = false;
+        if(getConstraint() != null){
+            hasConstraint = true;
+        }
+        return hasConstraint;
+    }
+
 	/**
 	 * Get the TypeDefinition.
 	 * @return The TypeDefinition.
 	 */
-	public Constraint getConstraint() {
-		Constraint constraint = null;
-		SemanticNode constraintNode = SNOPS.singleObject(this, RBSchema.HAS_CONSTRAINT);
-		if(null != constraintNode){
-			constraint = new ConstraintImpl(constraintNode.asResource());
-		}
-		return constraint;
-	}
-	
-	/**
-	 * @return true if the SNPropertyDeclaration has a {@link Constraint}, false if not.
-	 */
-	public boolean hasConstraint(){
-		boolean hasConstraint = false;
-		if(getConstraint() != null){
-			hasConstraint = true;
-		}
-		return hasConstraint;
+	public SNConstraint getConstraint() {
+        SemanticNode constraintNode = SNOPS.singleObject(this, RBSchema.HAS_CONSTRAINT);
+        if (constraintNode != null && constraintNode.isResourceNode()) {
+            return new SNConstraint(constraintNode.asResource());
+        } else {
+            return null;
+        }
 	}
 
+    /**
+     * Sets the constraint.
+     * @param constraint The constraint
+     */
+    public void setConstraint(final SNConstraint constraint){
+        SNOPS.assure(this, RBSchema.HAS_CONSTRAINT, constraint);
+    }
+
+    // ----------------------------------------------------
+	
 	/**
 	 * Returns the property declared by this property declaration.
 	 * @return The property.
@@ -191,14 +201,6 @@ public class SNPropertyDeclaration extends ResourceView {
 		}
 	}
 	
-	/**
-	 * Sets the constraint.
-	 * @param constraint The constraint
-	 */
-	public void setConstraint(final Constraint constraint){
-		SNOPS.assure(this, RBSchema.HAS_CONSTRAINT, constraint.asResourceNode());
-	}
-
 	/**
 	 * Set the FieldLabel.
 	 * @param def The field label definition

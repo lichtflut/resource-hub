@@ -172,8 +172,6 @@ public class PropertyRow implements Serializable {
 
 	/**
 	 * Get the cardinality as a String like <code>[1..n]</code>
-	 * 
-	 * @param string
 	 */
 	public String getCardinality() {
 		int min = decl.getCardinality().getMinOccurs();
@@ -197,17 +195,11 @@ public class PropertyRow implements Serializable {
 	 * @return the literalConstraint
 	 */
 	public String getLiteralConstraint() {
-		if (decl.getConstraint() == null || !hasConstraint()) {
-			return "";
-		}
-		if (!decl.getConstraint().holdsReference()) {
-			if (decl.getConstraint().isLiteral()) {
-				return decl.getConstraint().getLiteralConstraint();
-			} else {
-				return decl.getConstraint().getReference().getQualifiedName().getSimpleName();
-			}
-		}
-		return null;
+        if (hasConstraint() && decl.getConstraint().isLiteral()) {
+            return decl.getConstraint().getLiteralConstraint();
+        } else {
+            return "";
+        }
 	}
 
 	/**
@@ -229,11 +221,8 @@ public class PropertyRow implements Serializable {
 	 * @return the resourceConstraint
 	 */
 	public ResourceID getResourceConstraint() {
-		if (!hasConstraint()) {
-			return null;
-		}
-		if (decl.getConstraint().holdsReference()) {
-			return decl.getConstraint().getReference();
+		if (hasConstraint() && !decl.getConstraint().isLiteral()) {
+			return decl.getConstraint().getTypeConstraint();
 		}
 		return null;
 	}
@@ -250,8 +239,8 @@ public class PropertyRow implements Serializable {
 	 */
 	public void setResourceConstraint(ResourceID resourceConstraint) {
 		// TODO RESOLVE CONSTRAINT - get ID
-		ConstraintImpl constraint = new ConstraintImpl(new SNResource());
-		constraint.setReference(resourceConstraint);
+		ConstraintImpl constraint = new ConstraintImpl();
+		constraint.setTypeConstraint(resourceConstraint);
 		decl.setConstraint(constraint);
 	}
 

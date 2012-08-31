@@ -171,7 +171,7 @@ public class FieldEditorFactory implements Serializable {
 	 */
 	private ResourceID getTypeConstraint(RBField fieldDefinition) {
 		if(fieldDefinition.getDataType().equals(Datatype.RESOURCE)){
-			return fieldDefinition.getConstraint().getReference().asResource();
+			return fieldDefinition.getConstraint().getTypeConstraint().asResource();
 		}
 		return null;
 	}
