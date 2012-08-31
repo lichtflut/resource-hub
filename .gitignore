@@ -5,6 +5,8 @@ derby.log
 .settings
 .idea
 .gitignore
+.externalToolBuilders
+maven-eclipse.xml
 *.iml
 *.ipr
 *.iws
@@ -15,3 +17,4 @@ webapp/bin
 webck/bin
 */.checkstyle
 *~
+

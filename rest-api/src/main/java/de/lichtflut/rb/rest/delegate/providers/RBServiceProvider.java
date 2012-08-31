@@ -4,6 +4,7 @@
 package de.lichtflut.rb.rest.delegate.providers;
 
 import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.context.Context;
 
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.SecurityConfiguration;
@@ -13,11 +14,9 @@ import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
-import de.lichtflut.rb.core.services.impl.FileServiceImpl;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import de.lichtflut.rb.core.services.impl.SecurityServiceImpl;
 import de.lichtflut.rb.core.services.impl.TypeManagerImpl;
-import org.arastreju.sge.context.Context;
 
 /**
  * <p>
@@ -62,12 +61,12 @@ public class RBServiceProvider implements ServiceProvider {
 		return arastrejuResourceFactory.getConversation();
 	}
 
-    @Override
-    public ModelingConversation getConversation(Context context) {
-        return arastrejuResourceFactory.getConversation(context);
-    }
+	@Override
+	public ModelingConversation getConversation(final Context context) {
+		return arastrejuResourceFactory.getConversation(context);
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
 	/**
 	 *{@inheritDoc}
@@ -105,8 +104,7 @@ public class RBServiceProvider implements ServiceProvider {
 	 */
 	@Override
 	public FileService getFileService(){
-		return new FileServiceImpl("src/main/resources/content-repo/default-conf.properties");
-
+		return null;
 	}
 	// ----------------------------------------------------
 
