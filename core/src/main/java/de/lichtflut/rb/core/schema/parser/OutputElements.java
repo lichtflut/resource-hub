@@ -124,7 +124,7 @@ public class OutputElements {
 			if(constr.isLiteral()){
 				register(constr.getQualifiedName());
 			}else{
-				register(constr.getReference());
+				register(constr.getTypeConstraint());
 			}
 		}
 	}

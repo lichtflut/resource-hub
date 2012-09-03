@@ -121,11 +121,23 @@ public class RSFTest {
 		RSFParser parser = createParser(schema);
 		parser.schema_decl();
 	}
+
+    @Test
+    public void readVisualizationInfo() throws RecognitionException{
+        String schema = "visualize { \n" +
+                "  floating: \"yes\"\n" +
+                "  style : \"width:80px\"\n" +
+                "}";
+        RSFParser parser = createParser(schema);
+        parser.visualization();
+    }
+
 	@Test
 	public void readRSF() throws RecognitionException{
 		RSFParser parser = createParser(getRSFString() );
 		parser.statements();
 	}
+
 	/**
 	 * @param string The input string
 	 * @throws IOException

@@ -1,20 +1,22 @@
 package de.lichtflut.rb.webck.components.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldsListModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.model.ResourceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.webck.models.fields.RBFieldsListModel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -30,6 +32,9 @@ import de.lichtflut.rb.webck.models.fields.RBFieldsListModel;
 public class EmbeddedReferencePanel extends Panel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedReferencePanel.class);
+
+    @SpringBean
+    private EntityManager entityManager;
 
     // ----------------------------------------------------
 
@@ -67,7 +72,7 @@ public class EmbeddedReferencePanel extends Panel {
         return view;
     }
 
-    private static class ReferencedEntitiesModel extends DerivedDetachableModel<List<RBEntity>, RBField> {
+    private class ReferencedEntitiesModel extends DerivedDetachableModel<List<RBEntity>, RBField> {
 
         public ReferencedEntitiesModel(IModel<RBField> model) {
             super(model);
@@ -79,14 +84,13 @@ public class EmbeddedReferencePanel extends Panel {
             for (Object obj: field.getValues()) {
                 if (obj instanceof RBEntity) {
                     result.add((RBEntity) obj);
-                } else if (obj == null) {
-                    result.add(null);
                 } else {
                     throw new IllegalArgumentException("Expected an RBEntity but got: " + obj.getClass());
                 }
             }
             if (result.isEmpty()) {
-                result.add(null);
+                final ResourceID type = field.getConstraint().getTypeConstraint();
+                result.add(entityManager.create(type));
             }
             return result;
         }

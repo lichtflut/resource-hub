@@ -70,21 +70,6 @@ public class ResourceSchemaParserTest {
     }
 
     // -----------------------------------------------------
-
-	@Test
-	public void testJsonImport() throws IOException {
-
-        givenNoSchemasYet();
-        givenResolverReturnsNewResources();
-
-		final InputStream in = 
-				getClass().getClassLoader().getResourceAsStream("test-schema.json");
-
-        final SchemaManager manager = new SchemaManagerImpl(conversationFactory);
-        final SchemaImporter importer = manager.getImporter("json");
-		importer.read(in);
-		
-	}
 	
 	@Test
 	public void testRsfImport() throws IOException {

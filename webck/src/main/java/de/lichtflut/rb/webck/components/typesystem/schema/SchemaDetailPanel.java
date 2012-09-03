@@ -82,7 +82,7 @@ public class SchemaDetailPanel extends Panel {
 	 * Constructor.
 	 * 
 	 * @param id - wicket:id
-	 * @param model - to display
+	 * @param schema - to display
 	 */
 	public SchemaDetailPanel(final String id, final IModel<ResourceSchema> schema) {
 		super(id);

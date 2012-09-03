@@ -7,12 +7,10 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNText;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -33,19 +31,13 @@ import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 public class Schema2GraphBindingTest {
 
 	private Schema2GraphBinding binding;
-	private ConstraintResolver resolver;
-
-	@Before
-	public void setUp(){
-		resolver = mock(ConstraintResolver.class);
-	}
 
 	/**
-	 * Test method for {@link de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding#Schema2GraphBinding(de.lichtflut.rb.core.schema.persistence.ConstraintResolver)}.
+	 * Test method for {@link Schema2GraphBinding#Schema2GraphBinding()}.
 	 */
 	@Test
 	public void testSchema2GraphBinding() {
-		binding = new Schema2GraphBinding(resolver);
+		binding = new Schema2GraphBinding();
 		assertThat(binding, notNullValue());
 	}
 
@@ -69,10 +61,7 @@ public class Schema2GraphBindingTest {
 			snDecl.setMaxOccurs(new SNScalar(decl.getCardinality().getMaxOccurs()));
 			snDecl.setDatatype(decl.getDatatype());
 			snDecl.setFieldLabelDefinition(decl.getFieldLabelDefinition());
-			if(decl.hasConstraint()){
-				snDecl.setConstraint(decl.getConstraint());
-			}
-			if (null != predecessor) {
+            if (null != predecessor) {
 				predecessor.setSuccessor(snDecl);
 			}
 			predecessor = snDecl;
@@ -121,8 +110,8 @@ public class Schema2GraphBindingTest {
 	}
 
 	/**
-	 * @param converted
-	 * @param decl
+	 * @param converted The converted.
+	 * @param decl The original declaration.
 	 */
 	private void assertDeclaration(final SNPropertyDeclaration converted, final PropertyDeclaration decl) {
 		assertThat(converted.getPropertyDescriptor(), equalTo(decl.getPropertyDescriptor()));
@@ -135,7 +124,7 @@ public class Schema2GraphBindingTest {
 		}
 		assertThat(converted.getMinOccurs(), equalTo(new SNScalar(decl.getCardinality().getMinOccurs())));
 		assertThat(converted.getDatatype(), equalTo(decl.getDatatype()));
-		if(converted.hasConstraint()){
+		if(converted.hasConstraint() && converted.getConstraint().isPublic()) {
 			assertThat(converted.getConstraint().getQualifiedName(), equalTo(decl.getConstraint().getQualifiedName()));
 		}
 		// Implement I18n in Fieldlabel-mapping
@@ -145,6 +134,6 @@ public class Schema2GraphBindingTest {
 	}
 
 	private Schema2GraphBinding getBinding() {
-		return new Schema2GraphBinding(resolver);
+		return new Schema2GraphBinding();
 	}
 }

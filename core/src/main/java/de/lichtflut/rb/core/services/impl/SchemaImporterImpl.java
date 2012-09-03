@@ -98,7 +98,7 @@ public class SchemaImporterImpl implements SchemaImporter {
 	 * @param constraint
 	 */
 	private void ensureExistenceOf(Constraint constraint) {
-		final Constraint existing = manager.findConstraint(constraint.asResourceNode());
+		final Constraint existing = manager.findConstraint(constraint.getQualifiedName());
 		if (existing == null){
 			throw new IllegalStateException("Could not resolve constraint " + constraint.getName());
 		}

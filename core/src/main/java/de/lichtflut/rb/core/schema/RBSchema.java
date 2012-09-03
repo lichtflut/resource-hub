@@ -5,9 +5,6 @@ package de.lichtflut.rb.core.schema;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -48,19 +45,9 @@ public interface RBSchema {
 	// -- PROPERTIES --------------------------------------
 
 	/**
-	 * Still unused.
-	 */
-	ResourceID HAS_SCHEMA = new SimpleResourceID(NAMESPACE_URI, "hasSchema");
-
-	/**
 	 * A ResourceSchema describes a ResourceType.
 	 */
 	ResourceID DESCRIBES = new SimpleResourceID(NAMESPACE_URI, "describes");
-
-	/**
-	 * A ResourceType is described by a ResourceSchema.
-	 */
-	ResourceID DESCRIBED_BY = new SimpleResourceID(NAMESPACE_URI, "describedBy");
 
 	/**
 	 * A Schema has one or more PropertyDeclarations.
@@ -72,11 +59,6 @@ public interface RBSchema {
 	 * It's like a predicate
 	 */
 	ResourceID HAS_DESCRIPTOR = new SimpleResourceID(NAMESPACE_URI, "hasDescriptor");
-
-	/**
-	 * Still unused.
-	 */
-	ResourceID HAS_IDENTIFIER = new SimpleResourceID(NAMESPACE_URI, "hasIdentifier");
 
 	/**
 	 * A PropertyDeclaration can have an ElementaryDatatype if it's not a Resource-Reference.
@@ -98,21 +80,11 @@ public interface RBSchema {
 	 */
 	ResourceID HAS_LABEL_EXPRESSION = new SimpleResourceID(NAMESPACE_URI, "hasLabelExpression");
 
-	/**
-	 * A SystemRoot can have Schema-Representations.
-	 */
-	ResourceID HAS_SCHEMA_REPRESENTATION = new SimpleResourceID(NAMESPACE_URI, "hasSchemaRepresentation");
-
-	/**
-	 * A Schema-Representation must have a RS-Format.
-	 */
-	ResourceID HAS_RS_FORMAT = new SimpleResourceID(NAMESPACE_URI, "hasRSFormat");
-
 	// -- CONSTRAINTS -------------------------------------
 
 	ResourceID HAS_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasConstraint");
-	ResourceID HAS_RESOURCE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasTypeConstraint");
-	ResourceID HAS_CONSTRAINT_VALUE = new SimpleResourceID(NAMESPACE_URI, "hasConstraintValue");
+	ResourceID HAS_TYPE_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasTypeConstraint");
+    ResourceID HAS_LITERAL_CONSTRAINT = new SimpleResourceID(NAMESPACE_URI, "hasLiteralConstraint");
 	ResourceID MIN_OCCURS = new SimpleResourceID(NAMESPACE_URI, "minOccurs");
 	ResourceID MAX_OCCURS = new SimpleResourceID(NAMESPACE_URI, "maxOccurs");
 

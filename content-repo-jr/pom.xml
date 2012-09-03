@@ -43,4 +43,17 @@
 			<version>1.6.6</version>
 		</dependency>
 	</dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>lf-releases</id>
+            <name>lichtflut release repository</name>
+            <url>http://nexus.lichtflut.de/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>lf-snapshots</id>
+            <name>lichtflut snapshot repository</name>
+            <url>http://nexus.lichtflut.de/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

@@ -33,10 +33,10 @@ public interface SchemaManager {
 	
 	/**
 	 * Finds a {@link Constraint} by it's ID.
-	 * @param id The IT
+	 * @param qn The qualified name of the constraint.
 	 * @return the TypeDefinition or null.
 	 */
-	Constraint findConstraint(ResourceID id);
+	Constraint findConstraint(QualifiedName qn);
 
 	// -----------------------------------------------------
 
