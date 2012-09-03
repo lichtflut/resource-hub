@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SNResource;
@@ -20,6 +19,7 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.PlainVisualizationInfo;
@@ -45,7 +45,7 @@ public class Schema2GraphBinding {
 
 	/**
 	 * Constructor with special resolver.
-     */
+	 */
 	public Schema2GraphBinding() {
 	}
 
@@ -68,7 +68,7 @@ public class Schema2GraphBinding {
 			decl.setDatatype(snDecl.getDatatype());
 			decl.setFieldLabelDefinition(snDecl.getFieldLabelDefinition());
 			setVisualizationInfo(decl, snDecl.getVisualizationInfo());
-            setConstraint(decl, snDecl.getConstraint());
+			setConstraint(decl, snDecl.getConstraint());
 			schema.addPropertyDeclaration(decl);
 		}
 		for (ResourceID resourceID : snSchema.getQuickInfo()) {
@@ -86,15 +86,15 @@ public class Schema2GraphBinding {
 		return schema;
 	}
 
-    public Constraint toModelObject(final SNConstraint snConstraint) {
-        ConstraintImpl constraint = new ConstraintImpl(snConstraint.getQualifiedName());
-        constraint.setName(snConstraint.getName());
-        constraint.setLiteralConstraint(snConstraint.getLiteralConstraint());
-        constraint.setTypeConstraint(snConstraint.getTypeConstraint());
-        constraint.setApplicableDatatypes(snConstraint.getApplicableDatatypes());
-        constraint.setPublic(snConstraint.isPublic());
-        return constraint;
-    }
+	public Constraint toModelObject(final SNConstraint snConstraint) {
+		ConstraintImpl constraint = new ConstraintImpl(snConstraint.getQualifiedName());
+		constraint.setName(snConstraint.getName());
+		constraint.setLiteralConstraint(snConstraint.getLiteralConstraint());
+		constraint.setTypeConstraint(snConstraint.getTypeConstraint());
+		constraint.setApplicableDatatypes(snConstraint.getApplicableDatatypes());
+		constraint.setPublic(snConstraint.isPublic());
+		return constraint;
+	}
 
 	protected VisualizationInfo toModelObject(final SNVisualizationInfo snInfo) {
 		PlainVisualizationInfo info = new PlainVisualizationInfo();
@@ -151,20 +151,20 @@ public class Schema2GraphBinding {
 		return sn;
 	}
 
-    public SNConstraint toSemanticNode(final Constraint constraint) {
-        SNConstraint snConstraint;
-        if (constraint.isPublic()) {
-            snConstraint = new SNConstraint(constraint.getQualifiedName());
-        } else {
-            snConstraint = new SNConstraint();
-        }
-        snConstraint.setName(constraint.getName());
-        snConstraint.setLiteralConstraint(constraint.getLiteralConstraint());
-        snConstraint.setTypeConstraint(constraint.getTypeConstraint());
-        snConstraint.setApplicableDatatypes(constraint.getApplicableDatatypes());
-        snConstraint.setPublic(constraint.isPublic());
-        return snConstraint;
-    }
+	public SNConstraint toSemanticNode(final Constraint constraint) {
+		SNConstraint snConstraint;
+		if (constraint.isPublic()) {
+			snConstraint = new SNConstraint(constraint.getQualifiedName());
+		} else {
+			snConstraint = new SNConstraint();
+		}
+		snConstraint.setName(constraint.getName());
+		snConstraint.setLiteralConstraint(constraint.getLiteralConstraint());
+		snConstraint.setTypeConstraint(constraint.getTypeConstraint());
+		snConstraint.setApplicableDatatypes(constraint.getApplicableDatatypes());
+		snConstraint.setPublic(constraint.isPublic());
+		return snConstraint;
+	}
 
 	protected SNVisualizationInfo toSemanticNode(final VisualizationInfo info) {
 		SNVisualizationInfo snInfo = new SNVisualizationInfo();
@@ -221,16 +221,16 @@ public class Schema2GraphBinding {
 		}
 	}
 
-    protected void setConstraint(final SNPropertyDeclaration snDecl, final Constraint constraint) {
-        if (constraint != null) {
-            snDecl.setConstraint(toSemanticNode(constraint));
-        }
-    }
+	protected void setConstraint(final SNPropertyDeclaration snDecl, final Constraint constraint) {
+		if (constraint != null) {
+			snDecl.setConstraint(toSemanticNode(constraint));
+		}
+	}
 
-    private void setConstraint(PropertyDeclarationImpl decl, SNConstraint constraint) {
-        if (constraint != null) {
-            decl.setConstraint(toModelObject(constraint));
-        }
-    }
+	private void setConstraint(final PropertyDeclarationImpl decl, final SNConstraint constraint) {
+		if (constraint != null) {
+			decl.setConstraint(toModelObject(constraint));
+		}
+	}
 
 }
