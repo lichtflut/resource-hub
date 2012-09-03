@@ -227,22 +227,37 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 
 	/**
 	 * @param path - a String that represents the hierarchy
-	 * @param parent - parent {@link Node}
+	 * @param node - parent {@link Node}
 	 * @return the bottom most child Node
 	 */
 	private Node cascadeChildNodes(final String path, final Node parent) {
 		List<String> fragments = Arrays.asList(path.split("/"));
-		Node child = null;
+		Node node = parent;
 		try {
-			child = parent.addNode(fragments.get(0));
-			for (int i = 1; i < fragments.size(); i++) {
-				child = child.addNode(fragments.get(i), NodeType.NT_FOLDER);
+			for (int i = 0; i < fragments.size(); i++) {
+				Node existing = null;
+				try{
+					existing = node.getNode(fragments.get(i));
+				} catch (PathNotFoundException e){
+					LOGGER.debug("Node {} int path {} doesnot exist andwill be created.", path, fragments.get(i));
+				}
+				if(null == existing){
+					node = node.addNode(fragments.get(i), NodeType.NT_FOLDER);
+				} else{
+					node = node.getNode(fragments.get(i));
+				}
 			}
+
+
+			//			child = parent.addNode(fragments.get(0));
+			//			for (int i = 1; i < fragments.size(); i++) {
+			//				child = child.addNode(fragments.get(i), NodeType.NT_FOLDER);
+			//			}
 		} catch (Exception e) {
-			LOGGER.error("Error while adding node {} to path {}.", parent, path);
+			LOGGER.error("Error while adding node {} to path {}.", node, path);
 			throwRuntimeException(e);
 		}
-		return child;
+		return node;
 	}
 
 	/**
