@@ -209,6 +209,9 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 	 */
 	private void addFileToNode(final ContentDescriptor descriptor, final Node node) {
 		try {
+			if(node.hasNode(CONTENT_NODE)){
+				node.getNode(CONTENT_NODE).remove();
+			}
 			Node fileNode = node.addNode(CONTENT_NODE, NodeType.NT_FILE);
 
 			Node resNode = fileNode.addNode(Property.JCR_CONTENT, NodeType.NT_RESOURCE);
@@ -234,25 +237,13 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 		List<String> fragments = Arrays.asList(path.split("/"));
 		Node node = parent;
 		try {
-			for (int i = 0; i < fragments.size(); i++) {
-				Node existing = null;
-				try{
-					existing = node.getNode(fragments.get(i));
-				} catch (PathNotFoundException e){
-					LOGGER.debug("Node {} int path {} doesnot exist andwill be created.", path, fragments.get(i));
-				}
-				if(null == existing){
-					node = node.addNode(fragments.get(i), NodeType.NT_FOLDER);
+			for (int index = 0; index < fragments.size(); index++) {
+				if(!node.hasNode(fragments.get(index))){
+					node = node.addNode(fragments.get(index), NodeType.NT_FOLDER);
 				} else{
-					node = node.getNode(fragments.get(i));
+					node = node.getNode(fragments.get(index));
 				}
 			}
-
-
-			//			child = parent.addNode(fragments.get(0));
-			//			for (int i = 1; i < fragments.size(); i++) {
-			//				child = child.addNode(fragments.get(i), NodeType.NT_FOLDER);
-			//			}
 		} catch (Exception e) {
 			LOGGER.error("Error while adding node {} to path {}.", node, path);
 			throwRuntimeException(e);

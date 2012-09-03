@@ -9,23 +9,11 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.UUID;
 
-import javax.jcr.AccessDeniedException;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.UnsupportedRepositoryOperationException;
-import javax.jcr.security.AccessControlManager;
-import javax.jcr.security.Privilege;
-
-import org.apache.jackrabbit.api.JackrabbitSession;
-import org.apache.jackrabbit.api.security.user.Authorizable;
-import org.apache.jackrabbit.api.security.user.Group;
-import org.apache.jackrabbit.api.security.user.User;
-import org.apache.jackrabbit.api.security.user.UserManager;
-import org.apache.jackrabbit.commons.jackrabbit.authorization.AccessControlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.repository.ContentDescriptor;
 import de.lichtflut.repository.RepositoryDelegator;
@@ -47,6 +35,9 @@ public class FileServiceImpl implements FileService {
 	protected RepositoryDelegator delegator;
 
 	private final Properties properties;
+
+	@Autowired
+	private RBConfig rbConfig;
 
 	// ---------------- Constructor -------------------------
 
@@ -91,65 +82,11 @@ public class FileServiceImpl implements FileService {
 
 			@Override
 			protected RepositoryConfigWrapper getConfig() {
-				String home = getProperty("storage-location", "target");
-				if (home == null || home.isEmpty()) {
-					home = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + UUID.randomUUID().toString();
-				}
+				String home = getHomeDirectory();
 				String config = getProperty("config-file", "");
 				return new RepositoryConfigWrapper(home, config);
 			}
 
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			protected void setUpUser(final Session session) {
-				JackrabbitSession js = (JackrabbitSession) session;
-				UserManager um;
-				try {
-					LOGGER.debug("Attempting to set up JackRabbit user...");
-					um = js.getUserManager();
-
-					Authorizable grp = um.getAuthorizable("lichtflut-rb");
-					Group userGroup = null;
-					if (grp == null) {
-						userGroup = um.createGroup("lichtflut-rb");
-					} else {
-						userGroup = (Group) grp;
-					}
-					User user = um.createUser(getProperty("username", ""), getProperty("password", ""));
-					if (user.getID().isEmpty()) {
-						return;
-					}
-					userGroup.addMember(user);
-
-					Node node = session.getNode("/");
-
-					AccessControlManager acm = session.getAccessControlManager();
-
-					Privilege[] privileges = null;
-					privileges = new Privilege[] {
-							acm.privilegeFromName(Privilege.JCR_ALL),
-							acm.privilegeFromName(Privilege.JCR_READ),
-							acm.privilegeFromName(Privilege.JCR_WRITE),
-							acm.privilegeFromName(Privilege.JCR_ADD_CHILD_NODES),
-					};
-
-					AccessControlUtils.addAccessControlEntry(session, node.getPath(), user.getPrincipal(), privileges, true);
-
-					session.save();
-					LOGGER.debug("Successfully set up JackRabbit user...");
-				} catch (AccessDeniedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (UnsupportedRepositoryOperationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (RepositoryException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
 		};
 	}
 
@@ -160,6 +97,16 @@ public class FileServiceImpl implements FileService {
 			return properties.getProperty(key, defaultValue);
 		}
 		return "";
+	}
+
+	private String getHomeDirectory() {
+		// TODO inject via spring
+		String home = new RBConfig("glasnost").getWorkDirecotry();
+		if(null == home || home.isEmpty()){
+			home = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + UUID.randomUUID().toString();
+		}
+		home = home + System.getProperty("file.separator") + "content-repository";
+		return home;
 	}
 
 	private Properties getPropertiesFile(final String config) {
