@@ -11,7 +11,6 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.services.FileService;
@@ -35,9 +34,6 @@ public class FileServiceImpl implements FileService {
 	protected RepositoryDelegator delegator;
 
 	private final Properties properties;
-
-	@Autowired
-	private RBConfig rbConfig;
 
 	// ---------------- Constructor -------------------------
 
