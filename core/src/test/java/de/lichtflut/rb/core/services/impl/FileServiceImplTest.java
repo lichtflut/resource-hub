@@ -58,7 +58,7 @@ public class FileServiceImplTest {
 	 */
 	@Test
 	public void testFileServiceImpl() {
-		fileService = new FileServiceImpl(propertiesFilePath){
+		fileService = new FileServiceImpl(propertiesFilePath, null){
 			@Override
 			protected void initRepository(){
 			}
@@ -123,7 +123,7 @@ public class FileServiceImplTest {
 	private void startMockRepositoryDelegator() {
 		mock(RepositoryDelegator.class);
 
-		fileService = new FileServiceImpl(propertiesFilePath){
+		fileService = new FileServiceImpl(propertiesFilePath, null){
 			@Override
 			protected void initRepository(){
 				this.delegator = mockDelegator;

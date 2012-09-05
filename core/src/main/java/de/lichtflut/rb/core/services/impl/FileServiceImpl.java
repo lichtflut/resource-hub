@@ -34,10 +34,17 @@ public class FileServiceImpl implements FileService {
 	protected RepositoryDelegator delegator;
 
 	private final Properties properties;
+	private final RBConfig rbConfig;
 
 	// ---------------- Constructor -------------------------
 
-	public FileServiceImpl(final String config) {
+	/**
+	 * Constructor.
+	 * @param config - path to repository config file
+	 * @param rbConfig - {@link RBConfig} for storage directory
+	 */
+	public FileServiceImpl(final String config, final RBConfig rbConfig) {
+		this.rbConfig = rbConfig;
 		properties = getPropertiesFile(config);
 		if(null == delegator){
 			initRepository();
@@ -96,12 +103,12 @@ public class FileServiceImpl implements FileService {
 	}
 
 	private String getHomeDirectory() {
-		// TODO inject via spring
-		String home = new RBConfig("glasnost").getWorkDirecotry();
+		String home = rbConfig.getWorkDirecotry();
 		if(null == home || home.isEmpty()){
 			home = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + UUID.randomUUID().toString();
 		}
 		home = home + System.getProperty("file.separator") + "content-repository";
+		LOGGER.info("Using repository location: {}", home);
 		return home;
 	}
 
