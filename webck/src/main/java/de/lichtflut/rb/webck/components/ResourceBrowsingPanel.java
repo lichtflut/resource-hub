@@ -8,9 +8,7 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -29,7 +27,6 @@ import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.impl.LinkProvider;
 import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
@@ -68,9 +65,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 	@SpringBean
 	private EntityManager entityManager;
-
-	@SpringBean
-	private FileService fileService;
 
 	// ---------------- Constructor -------------------------
 
@@ -158,8 +152,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				final RBStandardButton save = new RBStandardButton("save") {
 					@Override
 					protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-						Map<String, ContentDescriptor> map = prepareForFileService(model);
-						storeFiles(map);
+						prepareForFileService(model);
 						entityManager.store(model.getObject());
 						RBWebSession.get().getHistory().finishEditing();
 						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
@@ -172,8 +165,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		};
 	}
 
-	protected Map<String, ContentDescriptor> prepareForFileService(final IModel<RBEntity> model) {
-		Map<String, ContentDescriptor> map = new HashMap<String, ContentDescriptor>();
+	protected void prepareForFileService(final IModel<RBEntity> model) {
 		for (RBField field : model.getObject().getAllFields()) {
 			ContentDescriptor descriptor = null;
 			if (field.getDataType().equals(Datatype.FILE)) {
@@ -188,19 +180,11 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					map.put(path, descriptor);
-					field.setValue(index, path);
+					field.setValue(index, descriptor);
 					index++;
 				}
 			}
 		}
-		return map;
 	}
 
-
-	private void storeFiles(final Map<String, ContentDescriptor> map) {
-		for (String path : map.keySet()) {
-			fileService.storeFile(map.get(path));
-		}
-	}
 }
