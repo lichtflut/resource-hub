@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.dialogs;
 
 import java.util.Date;
 
+import de.lichtflut.rb.webck.components.rteditor.RichTextBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -21,7 +22,6 @@ import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.models.resources.ResourceTextPropertyModel;
@@ -85,12 +85,12 @@ public class EditNoteDialog extends AbstractRBDialog {
 
 	/**
 	 * @param model
-	 * @return a {@link TextArea} with a {@link TinyMceBehavior}
+	 * @return a {@link TextArea} with a {@link RichTextBehavior}
 	 */
 	private FormComponent<SNText> createRichTextEditor(final IModel<ResourceNode> model) {
 		TextArea<SNText> textArea = new TextArea<SNText>("content", new ResourceTextPropertyModel(model, RBSystem.HAS_CONTENT));
 		textArea.setType(SNText.class);
-		textArea.add(new TinyMceBehavior());
+		textArea.add(new RichTextBehavior());
 		return textArea;
 	}
 

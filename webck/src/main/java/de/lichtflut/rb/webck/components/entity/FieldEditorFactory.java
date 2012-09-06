@@ -3,16 +3,11 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.VisualizationInfo;
-import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
-import de.lichtflut.rb.webck.components.fields.EntityPickerField;
-import de.lichtflut.rb.webck.models.HTMLSafeModel;
-import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -29,10 +24,16 @@ import org.apache.wicket.validation.validator.UrlValidator;
 import org.arastreju.sge.model.ResourceID;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Date;
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
+import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.components.rteditor.RichTextBehavior;
+import de.lichtflut.rb.webck.models.HTMLSafeModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 
 /**
  * <p>
@@ -138,7 +139,7 @@ public class FieldEditorFactory implements Serializable {
 
     public Component createRichTextArea(RBField fieldDefinition, IModel model) {
 		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(model));
-		field.add(new TinyMceBehavior());
+		field.add(new RichTextBehavior());
 		addValidator(field, fieldDefinition);
         addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textArea", container).add(field);
