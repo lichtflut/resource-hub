@@ -23,6 +23,7 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.services.impl.FileServiceImpl;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
@@ -118,7 +119,7 @@ public class EntityRowDisplayPanel extends Panel {
 			addExternalLink(item);
 			break;
 		case FILE:
-			addLink(item);
+			addRepoLink(item);
 			break;
 		default:
 			throw new NotYetImplementedException("No display-component specified for datatype: " + dataType);
@@ -160,13 +161,14 @@ public class EntityRowDisplayPanel extends Panel {
 		item.add(new Fragment("valuefield", "link", this).add(link));
 	}
 
-	private void addLink(final ListItem<RBFieldValueModel> item) {
+	private void addRepoLink(final ListItem<RBFieldValueModel> item) {
 		IModel<String> hrefModel = new Model<String>(item.getModelObject().getField().getValue(0).toString());
 		String href = hrefModel.getObject() + "?domain=" + new CurrentDomainModel().getObject().getQualifiedName();
 		href = "service/content/" + href;
 		hrefModel.setObject(href);
 
-		ExternalLink link = new ExternalLink("target", hrefModel, getDisplayNameForLink(item));
+		IModel<String> simpleName = Model.of(FileServiceImpl.getSimpleName(item.getModelObject().getObject().toString()));
+		ExternalLink link = new ExternalLink("target", hrefModel, simpleName);
 		link.add(new AttributeModifier("target", "_blank"));
 		item.add(new Fragment("valuefield", "link", this).add(link));
 	}

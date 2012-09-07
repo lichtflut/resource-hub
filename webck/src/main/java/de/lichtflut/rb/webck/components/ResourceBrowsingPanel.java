@@ -80,6 +80,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 		final Form form = new Form("form");
 		form.setOutputMarkupId(true);
+		form.setMultiPart(true);
 
 		form.add(new EntityPanel("entity", model));
 		form.add(new ClassifyEntityPanel("classifier", model));
@@ -167,23 +168,30 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 	protected void prepareForFileService(final IModel<RBEntity> model) {
 		for (RBField field : model.getObject().getAllFields()) {
-			ContentDescriptor descriptor = null;
 			if (field.getDataType().equals(Datatype.FILE)) {
 				int index = 0;
+				ContentDescriptor descriptor = null;
 				for (Object value : field.getValues()) {
-					value = ((List) value).get(0);
-					String path = new LinkProvider().buildRepositoryStructureFor(model.getObject(), ((FileUpload) value).getClientFileName());
-					try {
-						FileUpload fileUpload = (FileUpload) value;
-						descriptor = new ContentDescriptorBuilder().name(fileUpload.getClientFileName())
-								.mimeType(fileUpload.getContentType()).path(path).data(fileUpload.getInputStream()).build();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					field.setValue(index, descriptor);
-					index++;
+					buildContentDescriptorFor(model, field, index, descriptor, value);
 				}
 			}
+		}
+	}
+
+	private void buildContentDescriptorFor(final IModel<RBEntity> model, final RBField field, int index, ContentDescriptor descriptor,
+			final Object value) {
+		if(!(value instanceof String)){
+			//There will be only single file upload, so get first element.
+			FileUpload fileUpload = (FileUpload) ((List)value).get(0);
+			String path = new LinkProvider().buildRepositoryStructureFor(model.getObject(), fileUpload.getClientFileName());
+			try {
+				descriptor = new ContentDescriptorBuilder().name(fileUpload.getClientFileName())
+						.mimeType(fileUpload.getContentType()).path(path).data(fileUpload.getInputStream()).build();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			field.setValue(index, descriptor);
+			index++;
 		}
 	}
 

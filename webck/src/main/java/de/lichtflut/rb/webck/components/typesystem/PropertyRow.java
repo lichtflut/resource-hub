@@ -3,6 +3,12 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.arastreju.sge.model.ResourceID;
+
 import de.lichtflut.infra.Infra;
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.model.Cardinality;
@@ -14,12 +20,6 @@ import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.SNResource;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>
@@ -103,7 +103,7 @@ public class PropertyRow implements Serializable {
 	/**
 	 * @param propertyDescriptor the propertyDescriptor to set
 	 */
-	public void setPropertyDescriptor(ResourceID propertyDescriptor) {
+	public void setPropertyDescriptor(final ResourceID propertyDescriptor) {
 		decl.setPropertyDescriptor(propertyDescriptor);
 	}
 
@@ -111,7 +111,7 @@ public class PropertyRow implements Serializable {
 		return decl.getFieldLabelDefinition().getDefaultLabel();
 	}
 
-	public void setDefaultLabel(String label) {
+	public void setDefaultLabel(final String label) {
 		this.decl.getFieldLabelDefinition().setDefaultLabel(label);
 	}
 
@@ -125,7 +125,7 @@ public class PropertyRow implements Serializable {
 	/**
 	 * @param newDatatype the new data type to set
 	 */
-	public void setDataType(Datatype newDatatype) {
+	public void setDataType(final Datatype newDatatype) {
 		if (!Infra.equals(this.decl.getDatatype(), newDatatype)) {
 			decl.setDatatype(newDatatype);
 		}
@@ -141,7 +141,7 @@ public class PropertyRow implements Serializable {
 	/**
 	 * @param min the min to set
 	 */
-	public void setMin(int min) {
+	public void setMin(final int min) {
 		Cardinality c = CardinalityBuilder.between(min, decl.getCardinality().getMaxOccurs());
 		this.decl.setCardinality(c);
 	}
@@ -156,7 +156,7 @@ public class PropertyRow implements Serializable {
 	/**
 	 * @param max the max to set
 	 */
-	public void setMax(int max) {
+	public void setMax(final int max) {
 		Cardinality c = CardinalityBuilder.between(decl.getCardinality().getMinOccurs(), max);
 		this.decl.setCardinality(c);
 	}
@@ -166,7 +166,7 @@ public class PropertyRow implements Serializable {
 	 * 
 	 * @param string
 	 */
-	public void setCardinality(String string) {
+	public void setCardinality(final String string) {
 		this.decl.setCardinality(CardinalityBuilder.extractFromString(string));
 	}
 
@@ -195,11 +195,11 @@ public class PropertyRow implements Serializable {
 	 * @return the literalConstraint
 	 */
 	public String getLiteralConstraint() {
-        if (hasConstraint() && decl.getConstraint().isLiteral()) {
-            return decl.getConstraint().getLiteralConstraint();
-        } else {
-            return "";
-        }
+		if (hasConstraint() && decl.getConstraint().isLiteral()) {
+			return decl.getConstraint().getLiteralConstraint();
+		} else {
+			return "";
+		}
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class PropertyRow implements Serializable {
 	/**
 	 * @param resourceConstraint the resourceConstraint to set
 	 */
-	public void setResourceConstraint(ResourceID resourceConstraint) {
+	public void setResourceConstraint(final ResourceID resourceConstraint) {
 		// TODO RESOLVE CONSTRAINT - get ID
 		ConstraintImpl constraint = new ConstraintImpl();
 		constraint.setTypeConstraint(resourceConstraint);
@@ -269,7 +269,7 @@ public class PropertyRow implements Serializable {
 		return decl.getCardinality().isUnbound();
 	}
 
-	public void setUnbounded(boolean unbounded) {
+	public void setUnbounded(final boolean unbounded) {
 		int min = decl.getCardinality().getMinOccurs();
 		if (unbounded) {
 			decl.setCardinality(CardinalityBuilder.hasAtLeast(min));

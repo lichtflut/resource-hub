@@ -102,7 +102,7 @@ public class EntityManagerImpl implements EntityManager {
 	 */
 	@Override
 	public void store(final RBEntity entity) {
-		storeFiles(entity);
+		storeDateFilesToContentRepo(entity);
 		final ResourceNode node = entity.getNode();
 		SNOPS.associate(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
@@ -264,7 +264,7 @@ public class EntityManagerImpl implements EntityManager {
 
 	}
 
-	private void storeFiles(final RBEntity entity) {
+	private void storeDateFilesToContentRepo(final RBEntity entity) {
 		for (RBField field : entity.getAllFields()) {
 			if(Datatype.FILE.name().equals(field.getDataType().name())){
 				for (Object contentObject : field.getValues()) {
@@ -273,6 +273,8 @@ public class EntityManagerImpl implements EntityManager {
 						fileService.storeFile(descriptor);
 						int index = field.getValues().indexOf(contentObject);
 						field.setValue(index, descriptor.getPath());
+					} else if(!	fileService.exists(contentObject.toString())){
+						throw new IllegalArgumentException("Only objects ot type " + ContentDescriptor.class +" can be handled for Datatype.FILE");
 					}
 				}
 			}

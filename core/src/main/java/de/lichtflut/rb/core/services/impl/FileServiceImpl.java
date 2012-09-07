@@ -78,6 +78,19 @@ public class FileServiceImpl implements FileService {
 		return delegator.exists(path);
 	}
 
+	/**
+	 * Returns only the part after the last "/" of a path.
+	 * @param path
+	 * @return
+	 */
+	public static String getSimpleName(final String path){
+		String[] strings = path.split("/");
+		if(null == strings || strings.length == 0){
+			return path;
+		}
+		return strings[strings.length-1];
+	}
+
 	// ------------------------------------------------------
 
 	protected void initRepository() {
