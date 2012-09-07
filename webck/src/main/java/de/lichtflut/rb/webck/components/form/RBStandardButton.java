@@ -10,6 +10,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * <p>
@@ -78,7 +79,7 @@ public abstract class RBStandardButton extends AjaxButton {
 		hoster.openDialog(new ConfirmationDialog(hoster.getDialogID(), confirmationMessage) {
 			@Override
 			public void onConfirm() {
-				applyActions(AjaxRequestTarget.get(), form);
+				applyActions(RequestCycle.get().find(AjaxRequestTarget.class), form);
 			}
 		});
 	}

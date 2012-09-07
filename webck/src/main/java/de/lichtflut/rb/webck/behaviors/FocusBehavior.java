@@ -4,7 +4,7 @@
 package de.lichtflut.rb.webck.behaviors;
 
 import org.apache.wicket.Component;
-import org.odlabs.wiquery.core.behavior.WiQueryAbstractBehavior;
+import org.odlabs.wiquery.core.behavior.WiQueryAbstractAjaxBehavior;
 import org.odlabs.wiquery.core.javascript.JsStatement;
 
 /**
@@ -18,7 +18,7 @@ import org.odlabs.wiquery.core.javascript.JsStatement;
  *
  * @author Oliver Tigges
  */
-public class FocusBehavior extends WiQueryAbstractBehavior {
+public class FocusBehavior extends WiQueryAbstractAjaxBehavior {
 	
 	private boolean temporary = true;
 	

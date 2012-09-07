@@ -5,7 +5,8 @@ package de.lichtflut.rb.webck.components.fields;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.HiddenField;
@@ -141,21 +142,15 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		return super.setType(type);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void renderHead(final IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(AutocompleteJavaScriptResourceReference.get());
-		response.renderJavaScriptReference(REF);
+		response.render(JavaScriptHeaderItem.forReference(AutocompleteJavaScriptResourceReference.get()));
+		response.render(JavaScriptHeaderItem.forReference(REF));
 	}
 
 	// -----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void convertInput() {
 		final FormComponent<T> comp = getValueField();
@@ -175,8 +170,8 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	// -----------------------------------------------------
 	
 	/**
-	 * @param model
-	 * @return
+	 * @param model The data model.
+	 * @return A corresponding model for displaying the original's value.
 	 */
 	private static IModel<String> toDisplayModel(final IModel<?> model) {
 		return new IModel<String>() {
@@ -196,11 +191,11 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 			}
 		};
 	}
-	
-	/**
-	 * @param originalModel
-	 * @return
-	 */
+
+    /**
+     * @param originalModel The data model.
+     * @return A corresponding model for displaying the original's value.
+     */
 	private static <T> IModel<T> toHiddenModel(final IModel<T> originalModel) {
 		return new IModel<T>() {
 			

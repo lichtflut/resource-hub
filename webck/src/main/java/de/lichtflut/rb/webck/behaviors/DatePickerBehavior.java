@@ -5,12 +5,14 @@ package de.lichtflut.rb.webck.behaviors;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.odlabs.wiquery.ui.datepicker.DatePickerJavaScriptResourceReference;
 
 /**
  * <p>
- *  [DESCRIPTION].
+ *  Bahavior for making an input field a date picker.
  * </p>
  *
  * <p>
@@ -22,24 +24,15 @@ import org.odlabs.wiquery.ui.datepicker.DatePickerJavaScriptResourceReference;
 @SuppressWarnings("serial")
 public class DatePickerBehavior extends Behavior {
 
-
-	// -----------------------------------------------------
-
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.behavior.AbstractBehavior#bind(org.apache.wicket.Component)
-	 */
 	@Override
 	public void bind(final Component component) {
 		component.setOutputMarkupId(true);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.apache.wicket.behavior.AbstractBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
-	 */
 	@Override
 	public void renderHead(final Component c, final IHeaderResponse response) {
-		response.renderJavaScriptReference(DatePickerJavaScriptResourceReference.get());
-		response.renderOnLoadJavaScript("$('#" + c.getMarkupId()+ "').datepicker()");
+		response.render(JavaScriptHeaderItem.forReference(DatePickerJavaScriptResourceReference.get()));
+		response.render(OnLoadHeaderItem.forScript("$('#" + c.getMarkupId() + "').datepicker()"));
 	}
 
 }

@@ -19,7 +19,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.injection.Injector;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -112,13 +113,11 @@ public class CurrentNodeInfoPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderOnDomReadyJavaScript("LFRB.InfoVis.callbackURL = '" + updateBehavior.getCallbackUrl() + "';");
+		response.render(OnDomReadyHeaderItem.forScript(
+                "LFRB.InfoVis.callbackURL = '" + updateBehavior.getCallbackUrl() + "';"));
 	}
 	
 	// ----------------------------------------------------

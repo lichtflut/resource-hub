@@ -4,8 +4,8 @@
 package de.lichtflut.rb.webck.components.dialogs;
 
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.widgets.catalog.WidgetCatalogPanel;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.ResourceModel;
 
 /**
@@ -32,7 +32,7 @@ public abstract class SelectWidgetDialog extends AbstractRBDialog {
 		add(new WidgetCatalogPanel(CONTENT) {
 			@Override
 			public void onSelection(WidgetSpec selected) {
-				close(AjaxRequestTarget.get());
+				close(RBAjaxTarget.getAjaxTarget());
 				SelectWidgetDialog.this.onSelection(selected);
 			}
 		});

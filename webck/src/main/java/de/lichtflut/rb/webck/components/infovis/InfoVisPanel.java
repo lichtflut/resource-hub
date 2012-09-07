@@ -8,7 +8,9 @@ import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.common.CurrentNodeInfoPanel;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
 import org.apache.wicket.IResourceListener;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -44,20 +46,15 @@ public abstract class InfoVisPanel extends TypedPanel<ResourceNode> implements I
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.INFOVIS_JS);
-		response.renderJavaScriptReference(getScriptUrl());
-		response.renderOnDomReadyJavaScript("LFRB.InfoVis.contextPath='" + RequestCycle.get().getRequest().getContextPath() + "';");
+        response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.INFOVIS_JS));
+        response.render(JavaScriptHeaderItem.forUrl(getScriptUrl()));
+        response.render(OnDomReadyHeaderItem.forScript("LFRB.InfoVis.contextPath='"
+                + RequestCycle.get().getRequest().getContextPath() + "';"));
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onResourceRequested() {
 		final RequestCycle cycle = RequestCycle.get();
@@ -72,7 +69,7 @@ public abstract class InfoVisPanel extends TypedPanel<ResourceNode> implements I
 	// ----------------------------------------------------
 	
 	/**
-	 * @return
+	 * @return The URL providing the script.
 	 */
 	protected String getScriptUrl() {
 		final PageParameters params = new PageParameters();

@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.links;
 
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -57,7 +59,7 @@ public abstract class ConfirmedLink<T> extends AjaxLink<T> {
 		hoster.openDialog(new ConfirmationDialog(hoster.getDialogID(), confirmationMessage) {
 			@Override
 			public void onConfirm() {
-				applyActions(AjaxRequestTarget.get());
+				applyActions(RBAjaxTarget.getAjaxTarget());
 			}
 		});
 	}

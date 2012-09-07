@@ -3,11 +3,13 @@
  */
 package de.lichtflut.rb.webck.components.rteditor;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
@@ -72,20 +74,20 @@ public class RichTextBehavior extends Behavior {
 	@Override
 	public void renderHead(final Component c, final IHeaderResponse response) {
         super.renderHead(c, response);
-		response.renderJavaScriptReference(WYSIWYG_JS);
-		response.renderJavaScriptReference(LFRB_RICH_TEXT_JS);
-		response.renderCSSReference(WYSIWYG_CSS);
+		response.render(JavaScriptHeaderItem.forReference(WYSIWYG_JS));
+		response.render(JavaScriptHeaderItem.forReference(LFRB_RICH_TEXT_JS));
+		response.render(CssHeaderItem.forReference(WYSIWYG_CSS));
         switch (type) {
             case SIMPLE:
                 // This is a fix for RTEs displayed in modal dialogs.
                 // The dialog has to be completely rendered, before the RTE starts.
-                response.renderOnLoadJavaScript("LFRB.RichText.simple('#" + c.getMarkupId() + "');");
+                response.render(OnLoadHeaderItem.forScript("LFRB.RichText.simple('#" + c.getMarkupId() + "');"));
                 break;
             case STANDARD:
-                response.renderOnDomReadyJavaScript("LFRB.RichText.standard('#" + c.getMarkupId() + "');");
+                response.render(OnLoadHeaderItem.forScript("LFRB.RichText.standard('#" + c.getMarkupId() + "');"));
                 break;
             case FULL_FEATURED:
-                response.renderOnDomReadyJavaScript("LFRB.RichText.fullFeatured('#" + c.getMarkupId() + "');");
+                response.render(OnLoadHeaderItem.forScript("LFRB.RichText.fullFeatured('#" + c.getMarkupId() + "');"));
                 break;
         }
 	}

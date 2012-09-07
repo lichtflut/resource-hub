@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.listview;
 
 
 import de.lichtflut.rb.webck.behaviors.TitleModifier;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 import de.lichtflut.rb.webck.components.links.LabeledLink;
@@ -74,7 +75,7 @@ public abstract class ActionLink extends LabeledLink implements IAjaxLink {
 		hoster.openDialog(new ConfirmationDialog(hoster.getDialogID(), confirmationMessage) {
 			@Override
 			public void onConfirm() {
-				onClick(AjaxRequestTarget.get());
+				onClick(RBAjaxTarget.getAjaxTarget());
 			}
 		});
 	}

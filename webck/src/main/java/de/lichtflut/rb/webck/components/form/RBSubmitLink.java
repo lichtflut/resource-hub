@@ -76,7 +76,7 @@ public class RBSubmitLink extends AjaxSubmitLink {
         hoster.openDialog(new ConfirmationDialog(hoster.getDialogID(), confirmationMessage) {
             @Override
             public void onConfirm() {
-                applyActions(AjaxRequestTarget.get(), form);
+                applyActions(RBAjaxTarget.getAjaxTarget(), form);
             }
         });
     }

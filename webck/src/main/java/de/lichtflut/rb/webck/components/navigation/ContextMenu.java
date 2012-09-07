@@ -6,7 +6,8 @@ package de.lichtflut.rb.webck.components.navigation;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -30,7 +31,8 @@ public class ContextMenu extends WebMarkupContainer {
 	// ----------------------------------------------------
 	
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id The component ID.
 	 */
 	public ContextMenu(String id) {
 		super(id);
@@ -40,13 +42,10 @@ public class ContextMenu extends WebMarkupContainer {
 
 	// ----------------------------------------------------
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void renderHead(final IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(ContextMenu.JS_REF);
+		response.render(JavaScriptHeaderItem.forReference(ContextMenu.JS_REF));
 	}
 	
 	// ----------------------------------------------------

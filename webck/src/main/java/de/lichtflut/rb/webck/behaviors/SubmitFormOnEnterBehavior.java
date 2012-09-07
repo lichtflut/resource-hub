@@ -4,11 +4,12 @@
 package de.lichtflut.rb.webck.behaviors;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.odlabs.wiquery.core.behavior.WiQueryAbstractBehavior;
+import org.odlabs.wiquery.core.behavior.WiQueryAbstractAjaxBehavior;
 import org.odlabs.wiquery.core.javascript.JsStatement;
 
 /**
@@ -22,7 +23,7 @@ import org.odlabs.wiquery.core.javascript.JsStatement;
  * 
  * @author Oliver Tigges
  */
-public class SubmitFormOnEnterBehavior extends WiQueryAbstractBehavior {
+public class SubmitFormOnEnterBehavior extends WiQueryAbstractAjaxBehavior {
 	
 	public static final ResourceReference REF = new JavaScriptResourceReference(SubmitFormOnEnterBehavior.class, "lfrb-forms.js");
 
@@ -70,18 +71,12 @@ public class SubmitFormOnEnterBehavior extends WiQueryAbstractBehavior {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void renderHead(Component component, IHeaderResponse response) {
 		super.renderHead(component, response);
-		response.renderJavaScriptReference(REF);
+		response.render(JavaScriptHeaderItem.forReference(REF));
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onBind() {
 		super.onBind();

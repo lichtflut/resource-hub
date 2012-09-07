@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.common;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * <p>
@@ -24,7 +25,7 @@ public class RBAjaxTarget {
 	 * @param components The components to be added.
 	 */
 	public static void add(Component...components) {
-		AjaxRequestTarget target = AjaxRequestTarget.get();
+		AjaxRequestTarget target = getAjaxTarget();
 		if (target != null) {
 			target.add(components);
 		}
@@ -35,7 +36,7 @@ public class RBAjaxTarget {
 	 * @return The AjaxRequestTarget.
 	 */
 	public static AjaxRequestTarget getAjaxTarget() {
-		return AjaxRequestTarget.get();
+		return RequestCycle.get().find(AjaxRequestTarget.class);
 	}
 
 }

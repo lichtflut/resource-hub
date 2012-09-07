@@ -7,7 +7,9 @@ import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
 import de.lichtflut.rb.webck.components.infovis.common.JitJsonStream;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -36,20 +38,14 @@ public class PeripheryVisualizationPanel extends InfoVisPanel {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.JIT_JS);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.PERIPHERY_JS);
-		response.renderOnLoadJavaScript("initGraph()");
+		response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.JIT_JS));
+		response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.PERIPHERY_JS));
+		response.render(OnLoadHeaderItem.forScript("initGraph()"));
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected IResourceStream getJsonResource() {
 		return new JitJsonStream(getModelObject());
