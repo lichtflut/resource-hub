@@ -43,7 +43,7 @@ public abstract class MezzlePanel extends TypedPanel<ResourceNode> {
 	public MezzlePanel(final String id, final IModel<ResourceNode> model) {
 		super(id, model);
 		
-		add(new Label("content", new HTMLSafeModel(Model.of(getNoteContent(model)))).setEscapeModelStrings(false));
+		add(new Label("content", toHtmlSafeContentModel(model)).setEscapeModelStrings(false));
 		
 		add(new Label("creator", new DerivedModel<String, SemanticNode>(
 				new ResourcePropertyModel<SemanticNode>(model, DC.CREATOR)) {
@@ -79,17 +79,19 @@ public abstract class MezzlePanel extends TypedPanel<ResourceNode> {
 	
 	// ----------------------------------------------------
 
-	/**
-	 * @return the content of a Note as a String.
-	 */
-	private String getNoteContent(IModel<ResourceNode> model) {
-		final SemanticNode node = SNOPS.singleObject(model.getObject(), RBSystem.HAS_CONTENT);
-		if (node != null) {
-			return node.asValue().getStringValue();
-		} else {
-			return null;
-		}
-	}
+    private IModel<String> toHtmlSafeContentModel(IModel<ResourceNode> model) {
+        return new HTMLSafeModel(new DerivedModel<String, ResourceNode>(model) {
+            @Override
+            protected String derive(ResourceNode mezzle) {
+                final SemanticNode node = SNOPS.singleObject(mezzle, RBSystem.HAS_CONTENT);
+                if (node != null) {
+                    return node.asValue().getStringValue();
+                } else {
+                    return null;
+                }
+            }
+        });
+    }
 
 	
 	/**

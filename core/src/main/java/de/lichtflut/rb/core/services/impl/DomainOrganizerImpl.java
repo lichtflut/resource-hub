@@ -67,34 +67,23 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public List<Namespace> getNamespaces() {
 		return new ArrayList<Namespace>(organizer.getNamespaces());
 	}
-	
-	/** 
-	* {@inheritDoc}
-	*/
+
+    @Override
 	public void registerNamespace(NamespaceDeclaration decl) {
         organizer.registerNamespace(decl.getUri(), decl.getPrefix());
     }
 	
 	// ----------------------------------------------------
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public List<Context> getContexts() {
 		return new ArrayList<Context>(organizer.getContexts());
 	}
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void registerContext(ContextDeclaration decl) {
         organizer.registerContext(decl.getQualifiedName());
@@ -102,9 +91,6 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 	
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setDomainOrganization(final ResourceID organization) {
 		logger.info("Setting domain organization to: " + organization);
@@ -134,12 +120,12 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ResourceID getUsersPerson() {
 		ResourceNode user = currentUser();
+        if (user == null) {
+            return null;
+        }
 		SemanticNode person = SNOPS.singleObject(user, RBSystem.IS_RESPRESENTED_BY);
 		if (person != null) {
 			return person.asResource();
@@ -148,13 +134,14 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 		}
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setUsersPerson(ResourceID person) {
-		// TODO Auto-generated method stub
-		
+        ResourceNode user = currentUser();
+        if (user != null) {
+            SNOPS.assure(user, RBSystem.IS_RESPRESENTED_BY, person);
+        } else {
+            throw new IllegalStateException("Cannot set current user's 'person', no user in context.");
+        }
 	}
 
     // ----------------------------------------------------

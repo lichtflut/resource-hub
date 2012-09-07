@@ -129,9 +129,6 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 			setTitle(new ResourceModel("global.dialogs.create-note.title"));
 		}
 
-		/** 
-		* {@inheritDoc}
-		*/
 		@Override
 		protected void onSave(ResourceNode note) {
 			SNOPS.assure(note, RBSystem.IS_ATTACHED_TO, target.getObject());
@@ -147,9 +144,6 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 			setTitle(new ResourceModel("global.dialogs.edit-note.title"));
 		}
 
-		/** 
-		* {@inheritDoc}
-		*/
 		@Override
 		protected void onSave(ResourceNode note) {
 			RBAjaxTarget.add(NotePadPanel.this);
@@ -158,16 +152,10 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 
 	private class QueryModel extends DerivedModel<QueryResult, ResourceID> {
 
-		/**
-		 * @param original
-		 */
 		public QueryModel(IModel<ResourceID> original) {
 			super(original);
 		}
 
-		/** 
-		* {@inheritDoc}
-		*/
 		@Override
 		protected QueryResult derive(ResourceID original) {
 			final Query query = conversation.createQuery();

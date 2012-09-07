@@ -34,9 +34,9 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 import de.lichtflut.rb.core.services.impl.FileServiceImpl;
-import de.lichtflut.rb.webck.behaviors.TinyMceBehavior;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableDataField;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.components.rteditor.RichTextBehavior;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 
@@ -144,7 +144,7 @@ public class FieldEditorFactory implements Serializable {
 
 	public Component createRichTextArea(final RBField fieldDefinition, final IModel model) {
 		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(model));
-		field.add(new TinyMceBehavior());
+		field.add(new RichTextBehavior(RichTextBehavior.Type.STANDARD));
 		addValidator(field, fieldDefinition);
 		addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textArea", container).add(field);

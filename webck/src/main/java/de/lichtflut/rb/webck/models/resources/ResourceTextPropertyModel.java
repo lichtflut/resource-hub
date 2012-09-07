@@ -45,9 +45,6 @@ public class ResourceTextPropertyModel implements IModel<SNText> {
 	
 	// ----------------------------------------------------
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public SNText getObject() {
 		final SemanticNode node = SNOPS.singleObject(subject.getObject(), predicate);
@@ -58,17 +55,11 @@ public class ResourceTextPropertyModel implements IModel<SNText> {
 		}
 	}
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void setObject(SNText object) {
 		SNOPS.assure(subject.getObject(), predicate, object, ctx);
 	}
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void detach() {
 		subject.detach();
