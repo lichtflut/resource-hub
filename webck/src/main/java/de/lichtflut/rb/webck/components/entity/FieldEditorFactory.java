@@ -139,7 +139,7 @@ public class FieldEditorFactory implements Serializable {
 
     public Component createRichTextArea(RBField fieldDefinition, IModel model) {
 		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(model));
-		field.add(new RichTextBehavior());
+		field.add(new RichTextBehavior(RichTextBehavior.Type.STANDARD));
 		addValidator(field, fieldDefinition);
         addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textArea", container).add(field);

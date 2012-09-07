@@ -925,7 +925,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 
 						// IE needs to reget the document element (this.editorDoc) after designMode was set
 						if (self.innerDocument() !== self.editorDoc) {
-							self.ui.initFrame();
+							//self.ui.initFrame();
 						}
 
 						return;

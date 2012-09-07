@@ -84,13 +84,15 @@ public class EditNoteDialog extends AbstractRBDialog {
 	}
 
 	/**
-	 * @param model
+	 * @param model The model containing the rich text.
 	 * @return a {@link TextArea} with a {@link RichTextBehavior}
 	 */
 	private FormComponent<SNText> createRichTextEditor(final IModel<ResourceNode> model) {
 		TextArea<SNText> textArea = new TextArea<SNText>("content", new ResourceTextPropertyModel(model, RBSystem.HAS_CONTENT));
+        textArea.setOutputMarkupId(true);
+        textArea.setOutputMarkupPlaceholderTag(true);
 		textArea.setType(SNText.class);
-		textArea.add(new RichTextBehavior());
+		textArea.add(new RichTextBehavior(RichTextBehavior.Type.SIMPLE));
 		return textArea;
 	}
 
