@@ -54,7 +54,7 @@ public interface WDGT {
 	
 	ResourceID ENTITY_LIST = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "EnitityListWidget");
 	
-	ResourceID INVOVIS = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "InfoVisWidget");
+	ResourceID INFOVIS = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "InfoVisWidget");
 	
 	// -- PROPERTIES --------------------------------------
 	
@@ -82,6 +82,11 @@ public interface WDGT {
 	 * A Menu item shows a perspective.
 	 */
 	ResourceID SHOWS_PERSPECTIVE = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "showsPerspective");
+
+    /**
+     * A widget can display a content item. {@see ContentDisplayItem}
+     */
+    ResourceID DISPLAYS_CONTENT_ITEM = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "displaysContentItem");
 	
 	// -- SELECTION ---------------------------------------
 	

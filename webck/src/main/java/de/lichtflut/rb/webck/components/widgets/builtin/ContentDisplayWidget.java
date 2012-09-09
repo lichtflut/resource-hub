@@ -1,0 +1,162 @@
+package de.lichtflut.rb.webck.components.widgets.builtin;
+
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
+import de.lichtflut.rb.core.viewspec.WDGT;
+import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.components.rteditor.RichTextEditor;
+import de.lichtflut.rb.webck.components.widgets.PredefinedWidget;
+import de.lichtflut.rb.webck.models.ConditionalModel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.traverse.Walker;
+
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
+
+/**
+ * <p>
+ *  This a build-in widget for display of content.
+ * </p>
+ *
+ * <p>
+ *  Created 07.09.12
+ * </p>
+ *
+ * @author Oliver Tigges
+ */
+public class ContentDisplayWidget extends PredefinedWidget {
+
+    private IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
+
+    @SpringBean
+    private SemanticNetworkService semanticNetworkService;
+
+    // ----------------------------------------------------
+
+    /**
+     * Constructor.
+     *
+     * @param id   The component ID.
+     * @param spec The specification.
+     * @param perspectiveInConfigMode Conditional model for checking if this widget is in config mode.
+     */
+    public ContentDisplayWidget(final String id, final WidgetSpec spec, ConditionalModel<Boolean> perspectiveInConfigMode) {
+        super(id, spec, perspectiveInConfigMode);
+
+        setOutputMarkupId(true);
+
+        final IModel<String> contentModel = new ContentModel(spec);
+
+        final WebMarkupContainer display = new WebMarkupContainer("display");
+        display.add(new Label("content", contentModel).setEscapeModelStrings(false));
+        display.add(new AjaxLink("edit") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                mode.setObject(DisplayMode.EDIT);
+                target.add(ContentDisplayWidget.this);
+            }
+        });
+        display.add(visibleIf(areEqual(mode, DisplayMode.VIEW)));
+        add(display);
+
+        final Form form = new Form("form");
+        form.add(new FeedbackPanel("feedback"));
+
+        final RichTextEditor editor = new RichTextEditor("editor", contentModel) {
+            @Override
+            public void onSave() {
+                setContent(spec, contentModel.getObject());
+                mode.setObject(DisplayMode.VIEW);
+                RBAjaxTarget.add(ContentDisplayWidget.this);
+            }
+            @Override
+            public void onCancel() {
+                mode.setObject(DisplayMode.VIEW);
+                RBAjaxTarget.add(ContentDisplayWidget.this);
+            }
+        };
+        editor.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
+        form.add(editor);
+
+        add(form);
+
+    }
+
+    // ----------------------------------------------------
+
+    @Override
+    protected IModel<String> getTitleModel() {
+        return Model.of("Here will be a title soon...");
+    }
+
+    // ----------------------------------------------------
+
+    private static String getContent(WidgetSpec spec) {
+        final SemanticNode content = Walker.start(spec)
+                .walk(WDGT.DISPLAYS_CONTENT_ITEM)
+                .walk(RBSystem.HAS_CONTENT)
+                .getSingle();
+        return SNOPS.string(content);
+    }
+
+    private void setContent(WidgetSpec spec, String content) {
+        ResourceNode attached = semanticNetworkService.resolve(spec.asResource());
+        SemanticNode existing = SNOPS.fetchObject(attached, WDGT.DISPLAYS_CONTENT_ITEM);
+        if (existing == null) {
+            ResourceNode contentItem = new SNResource();
+            SNOPS.assure(attached, WDGT.DISPLAYS_CONTENT_ITEM, contentItem);
+            SNOPS.assure(contentItem, RBSystem.HAS_CONTENT, content);
+        } else if (existing.isResourceNode()) {
+            SNOPS.assure(existing.asResource(), RBSystem.HAS_CONTENT, content);
+        } else {
+            throw new IllegalStateException("Unexpected content item for content widget: " + existing);
+        }
+    }
+
+    private static class ContentModel implements IModel<String> {
+
+        private final WidgetSpec spec;
+        private String content;
+
+        public ContentModel(WidgetSpec spec) {
+            this.spec = spec;
+        }
+
+        @Override
+        public String getObject() {
+            if (content == null) {
+                content = getContent(spec);
+            }
+            return content;
+        }
+
+        @Override
+        public void setObject(String content) {
+            this.content = content;
+        }
+
+        @Override
+        public void detach() {
+            this.content = null;
+        }
+
+    }
+}

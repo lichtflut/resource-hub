@@ -40,13 +40,28 @@ public interface RBSystem {
 	 * rb:Entities are instances of rb:Type.
 	 */
 	ResourceID ENTITY = new SimpleResourceID(SYS_NAMESPACE_URI, "Entity");
+
+    /**
+     * A content item represents some content with meta-data (author, title, etc.).
+     */
+    ResourceID CONTENT_ITEM = new SimpleResourceID(SYS_NAMESPACE_URI, "ContentItem");
+
+    /**
+     * A special type of content representing a comment to something.
+     */
+    ResourceID COMMENT = new SimpleResourceID(SYS_NAMESPACE_URI, "Comment");
+
+    /**
+     * A special type of content representing a page (e.g. of a Wiki).
+     */
+    ResourceID PAGE = new SimpleResourceID(SYS_NAMESPACE_URI, "Page");
+
+    /**
+     * A special type of content representing a document.
+     */
+    ResourceID DOCUMENT = new SimpleResourceID(SYS_NAMESPACE_URI, "Document");
 	
 	// -- PROPERTIES --------------------------------------
-	
-	/**
-	 * The content. E.g. of an attachment.
-	 */
-	ResourceID HAS_CONTENT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasContent");
 	
 	/**
 	 * Users must provide an email address for identification.  
@@ -80,10 +95,18 @@ public interface RBSystem {
 	 * Boolean value indicating of an organization is the domain's owning one.
 	 */
 	ResourceID IS_DOMAIN_ORGANIZATION = new SimpleResourceID(SYS_NAMESPACE_URI, "isDomainOrganization");
-	
+
+    // -- CONTENT SPECIFICATION ------------------------------
+
 	/**
 	 * Each RBEntity may have a primary image URL/ID.
 	 */
 	ResourceID HAS_IMAGE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasImage");
+
+    /**
+     * The content. E.g. of an attachment.
+     */
+    ResourceID HAS_CONTENT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasContent");
+
 
 }

@@ -1,12 +1,11 @@
 package de.lichtflut.rb.webck.components.rteditor;
 
-import org.apache.wicket.markup.html.IHeaderResponse;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * <p>
@@ -19,18 +18,36 @@ import org.apache.wicket.request.resource.ResourceReference;
  *
  * @author Oliver Tigges
  */
-public class RichTextEditor extends TextArea {
+public class RichTextEditor extends Panel {
 
-    public RichTextEditor(String id) {
-        super(id);
-
-        add(new RichTextBehavior());
-    }
-
-    public RichTextEditor(String id, IModel<?> model) {
+    public RichTextEditor(String id, IModel<String> model) {
         super(id, model);
 
-        add(new RichTextBehavior());
+        final TextArea<String> area = new TextArea<String>("editingArea", model);
+        area.add(new RichTextBehavior());
+        add(area);
+
+        add(new RBStandardButton("save"){
+            @Override
+            protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+                onSave();
+            }
+        });
+
+        add(new RBStandardButton("cancel"){
+            @Override
+            protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+                onCancel();
+            }
+        });
+    }
+
+    // ----------------------------------------------------
+
+    public void onSave() {
+    }
+
+    public void onCancel() {
     }
 
 }

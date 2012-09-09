@@ -51,9 +51,6 @@ public class MyCompanyWidget extends PredefinedWidget {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected IModel<String> getTitleModel() {
 		return new ResourceModel("title");

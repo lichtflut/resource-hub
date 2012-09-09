@@ -9,6 +9,7 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
@@ -27,9 +28,19 @@ import java.lang.reflect.Constructor;
  */
 public class PredefinedWidget extends AbstractWidget {
 
+    /**
+     * Constructor.
+     * @param id The component ID.
+     * @param spec The specification.
+     */
+    public PredefinedWidget(String id, WidgetSpec spec, ConditionalModel<Boolean> perspectiveInConfigMode) {
+        super(id, Model.of(spec), perspectiveInConfigMode);
+    }
+
 	/**
-	 * @param id
-	 * @param title
+     * Constructor.
+	 * @param id The component ID.
+	 * @param spec The specification.
 	 */
 	public PredefinedWidget(String id, IModel<WidgetSpec> spec, ConditionalModel<Boolean> perspectiveInConfigMode) {
 		super(id, spec, perspectiveInConfigMode);
