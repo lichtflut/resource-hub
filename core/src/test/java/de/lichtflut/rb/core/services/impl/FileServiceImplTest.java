@@ -67,6 +67,21 @@ public class FileServiceImplTest {
 	}
 
 	/**
+	 * Test method for {@link de.lichtflut.rb.core.services.impl.FileServiceImpl#FileServiceImpl(java.lang.String)}
+	 * with invalid config path.
+	 */
+	@Test(expected=IllegalStateException.class)
+	public void testFileServiceImplWithWrongConfigPath(){
+		fileService = new FileServiceImpl("resource/nonsense.xml", null){
+			@Override
+			protected void initRepository(){
+			}
+		};
+		assertThat(fileService, notNullValue());
+
+	}
+
+	/**
 	 * Test method for {@link de.lichtflut.rb.core.services.impl.FileServiceImpl#getData(java.lang.String)}.
 	 * @throws IOException
 	 */

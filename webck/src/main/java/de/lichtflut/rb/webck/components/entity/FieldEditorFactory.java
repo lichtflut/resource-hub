@@ -10,6 +10,8 @@ import java.util.Date;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -33,11 +35,11 @@ import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.VisualizationInfo;
-import de.lichtflut.rb.core.services.impl.FileServiceImpl;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableDataField;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.rteditor.RichTextBehavior;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
+import de.lichtflut.rb.webck.models.fields.FileUploadModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 
 /**
@@ -157,17 +159,32 @@ public class FieldEditorFactory implements Serializable {
 	}
 
 	public Component createFileChooser(final RBField fieldDefinition, final IModel model){
-		AjaxEditableDataField dataField = new AjaxEditableDataField("valuefield", model){
-			/**
-			 * {@inheritDoc}
-			 */
+		FileUploadModel uploadModel = new FileUploadModel(model);
+		AjaxEditableDataField dataField = new AjaxEditableDataField("valuefield", uploadModel){
+
 			@Override
 			protected FormComponent newEditor(final MarkupContainer parent, final String componentId, final IModel model) {
-				FileUploadField uploadField = new FileUploadField(componentId, model);
+				final FileUploadField uploadField = new FileUploadField(componentId, model);
 				uploadField.add(super.newEditor(parent, componentId, model));
 				uploadField.setOutputMarkupId(true);
 				uploadField.setVisible(false);
-				//				uploadField.add(new EditorAjaxBehavior());
+				uploadField.add(new AjaxFormSubmitBehavior("onchange") {
+
+					@Override
+					protected void onSubmit(final AjaxRequestTarget target) {
+						getEditor().setVisible(false);
+						getLabel().setVisible(true);
+						target.add(getEditor());
+						target.appendJavaScript("window.status='';");
+					}
+
+					@Override
+					protected void onError(final AjaxRequestTarget target) {
+						onSubmit(target);
+
+					}
+				});
+
 				return uploadField;
 			}
 
@@ -177,14 +194,8 @@ public class FieldEditorFactory implements Serializable {
 			@Override
 			protected WebMarkupContainer newLabel(final MarkupContainer parent, final String componentId, final IModel model) {
 				WebMarkupContainer container = new WebMarkupContainer("container");
-				String simpleName = "";
-				if(!(null == model)){
-					if(!(null == model.getObject())){
-						simpleName = FileServiceImpl.getSimpleName(model.getObject().toString());
-					}
-				}
-				Label label = new Label(componentId, simpleName);
-				label.setEscapeModelStrings(false);
+				Label label = new Label(componentId, model);
+				//				label.setEscapeModelStrings(false);
 				container.add(label);
 				container.add(new Label("additionalInfo", Model.of(" (click to edit)")));
 

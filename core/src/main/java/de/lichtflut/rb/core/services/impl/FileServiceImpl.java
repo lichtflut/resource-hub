@@ -3,8 +3,6 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.UUID;
@@ -129,13 +127,10 @@ public class FileServiceImpl implements FileService {
 		final Properties properties = new Properties();
 		try {
 			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(config));
-			LOGGER.debug("Propertyfile loaded from: {}", config);
-		} catch (final FileNotFoundException e) {
-			LOGGER.error("Could not find Propertiesfile from: {}", config);
-			e.printStackTrace();
-		} catch (final IOException e) {
-			LOGGER.error("Error while loading file from: {}", config);
-			e.printStackTrace();
+			LOGGER.debug("PropertiesFile loaded from: {}", config);
+		} catch (final Exception e) {
+			LOGGER.error("Could not find PropertiesFile from: {}", config);
+			throw new IllegalStateException("Error while loading propertiesFile at path: " + config, e);
 		}
 		return properties;
 	}

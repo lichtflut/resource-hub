@@ -4,6 +4,7 @@
 package de.lichtflut.repository.impl;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 import de.lichtflut.repository.ContentDescriptor;
 
@@ -15,7 +16,7 @@ import de.lichtflut.repository.ContentDescriptor;
  * 
  * @author Ravi Knox
  */
-public class ContentDescriptorBuilder {
+public class ContentDescriptorBuilder implements Serializable {
 
 	private String path = "";
 	private String mimeType = "";
@@ -88,7 +89,11 @@ public class ContentDescriptorBuilder {
 			public String toString(){
 				StringBuilder sb = new StringBuilder();
 				sb.append("MimeType: " + getMimeType() + "\n");
-				sb.append("Data: " + getData().toString());
+				if(null != getData()){
+					sb.append("Data: " + getData().toString());
+				} else{
+					sb.append("Data: NO-DATA!");
+				}
 				return sb.toString();
 			}
 		};

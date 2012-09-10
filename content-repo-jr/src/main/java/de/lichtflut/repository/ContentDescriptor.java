@@ -4,6 +4,7 @@
 package de.lichtflut.repository;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  * <p>
@@ -14,7 +15,7 @@ import java.io.InputStream;
  *
  * @author Ravi Knox
  */
-public interface ContentDescriptor {
+public interface ContentDescriptor extends Serializable{
 
 	/**
 	 * @return the path under which an object shall be referenced.

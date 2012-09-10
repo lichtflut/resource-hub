@@ -7,16 +7,12 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonI
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -172,27 +168,19 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				int index = 0;
 				ContentDescriptor descriptor = null;
 				for (Object value : field.getValues()) {
-					buildContentDescriptorFor(model, field, index, descriptor, value);
+					buildContentDescriptorFor(model, field, index, descriptor, ((IModel<ContentDescriptor>) value).getObject());
 				}
 			}
 		}
 	}
 
 	private void buildContentDescriptorFor(final IModel<RBEntity> model, final RBField field, int index, ContentDescriptor descriptor,
-			final Object value) {
-		if(!(value instanceof String)){
-			//There will be only single file upload, so get first element.
-			FileUpload fileUpload = (FileUpload) ((List)value).get(0);
-			String path = new LinkProvider().buildRepositoryStructureFor(model.getObject(), fileUpload.getClientFileName());
-			try {
-				descriptor = new ContentDescriptorBuilder().name(fileUpload.getClientFileName())
-						.mimeType(fileUpload.getContentType()).path(path).data(fileUpload.getInputStream()).build();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			field.setValue(index, descriptor);
-			index++;
-		}
+			final ContentDescriptor value) {
+		String path = new LinkProvider().buildRepositoryStructureFor(model.getObject(), value.getName());
+		descriptor = new ContentDescriptorBuilder().name(value.getName())
+				.mimeType(value.getMimeType()).path(path).data(value.getData()).build();
+		field.setValue(index, descriptor);
+		index++;
 	}
 
 }
