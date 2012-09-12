@@ -119,6 +119,7 @@ public class EntityRowDisplayPanel extends Panel {
 			addExternalLink(item);
 			break;
 		case FILE:
+			// TODO: switch to FilePreviewPanel
 			addRepoLink(item);
 			break;
 		default:
