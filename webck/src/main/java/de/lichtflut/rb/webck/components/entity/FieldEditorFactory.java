@@ -9,17 +9,11 @@ import java.math.BigInteger;
 import java.util.Date;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -35,7 +29,7 @@ import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.VisualizationInfo;
-import de.lichtflut.rb.webck.components.fields.AjaxEditableDataField;
+import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.rteditor.RichTextBehavior;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
@@ -97,7 +91,7 @@ public class FieldEditorFactory implements Serializable {
 		case URI:
 			return createURIField(field, valueModel);
 		case FILE:
-			return createFileChooser(field, valueModel);
+			return createFileUploadField(field, valueModel);
 		default:
 			throw new NotYetImplementedException("Datatype: " + field.getDataType());
 		}
@@ -158,52 +152,9 @@ public class FieldEditorFactory implements Serializable {
 		return new Fragment("valuefield", "textInput", container).add(field);
 	}
 
-	public Component createFileChooser(final RBField fieldDefinition, final IModel model){
+	public Component createFileUploadField(final RBField fieldDefinition, final IModel model){
 		FileUploadModel uploadModel = new FileUploadModel(model, fieldDefinition);
-		AjaxEditableDataField dataField = new AjaxEditableDataField("valuefield", uploadModel){
-
-			@Override
-			protected FormComponent newEditor(final MarkupContainer parent, final String componentId, final IModel model) {
-				final FileUploadField uploadField = new FileUploadField(componentId, model);
-				uploadField.add(super.newEditor(parent, componentId, model));
-				uploadField.setOutputMarkupId(true);
-				uploadField.setVisible(false);
-				uploadField.add(new AjaxFormSubmitBehavior("onchange") {
-
-					@Override
-					protected void onSubmit(final AjaxRequestTarget target) {
-						getEditor().setVisible(false);
-						getLabel().setVisible(true);
-						target.add(getEditor());
-						target.appendJavaScript("window.status='';");
-					}
-
-					@Override
-					protected void onError(final AjaxRequestTarget target) {
-						onSubmit(target);
-
-					}
-				});
-
-				return uploadField;
-			}
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			protected WebMarkupContainer newLabel(final MarkupContainer parent, final String componentId, final IModel model) {
-				WebMarkupContainer container = new WebMarkupContainer("container");
-				Label label = new Label(componentId, model);
-
-				container.add(label);
-				container.add(new Label("additionalInfo", Model.of(" (click to edit)")));
-
-				container.setOutputMarkupId(true);
-				container.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
-				return container;
-			}
-		};
+		AjaxEditableUploadField dataField = new AjaxEditableUploadField("valuefield", uploadModel);
 		dataField.setOutputMarkupId(true);
 		addStyle(dataField, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "fileUpload", container).add(dataField);

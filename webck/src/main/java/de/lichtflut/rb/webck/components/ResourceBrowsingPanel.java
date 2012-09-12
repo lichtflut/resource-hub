@@ -144,7 +144,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				final RBStandardButton save = new RBStandardButton("save") {
 					@Override
 					protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-						//						prepareForFileService(model);
 						entityManager.store(model.getObject());
 						RBWebSession.get().getHistory().finishEditing();
 						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
@@ -156,26 +155,5 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 			}
 		};
 	}
-
-	//	protected void prepareForFileService(final IModel<RBEntity> model) {
-	//		for (RBField field : model.getObject().getAllFields()) {
-	//			if (field.getDataType().equals(Datatype.FILE)) {
-	//				int index = 0;
-	//				ContentDescriptor descriptor = null;
-	//				for (Object value : field.getValues()) {
-	//					buildContentDescriptorFor(model, field, index, descriptor, ((IModel<ContentDescriptor>) value).getObject());
-	//				}
-	//			}
-	//		}
-	//	}
-
-	//	private void buildContentDescriptorFor(final IModel<RBEntity> model, final RBField field, int index, ContentDescriptor descriptor,
-	//			final ContentDescriptor value) {
-	//		String path = new LinkProvider().buildRepositoryStructureFor(model.getObject(), value.getName());
-	//		descriptor = new ContentDescriptorBuilder().name(value.getName())
-	//				.mimeType(value.getMimeType()).path(path).data(value.getData()).build();
-	//		field.setValue(index, descriptor);
-	//		index++;
-	//	}
 
 }

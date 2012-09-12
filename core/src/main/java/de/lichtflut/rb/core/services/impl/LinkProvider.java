@@ -22,7 +22,7 @@ public class LinkProvider {
 	public static String buildRepositoryStructureFor(final RBEntity entity, final QualifiedName rbField, final String fileName) {
 		StringBuilder path = new StringBuilder();
 		path.append(entity.getType().toURI());
-		path.append(entity.getID().toURI());
+		path.append("/" + entity.getID().toURI());
 		path.append("/" + rbField);
 
 		String s = path.toString();

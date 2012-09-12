@@ -8,8 +8,6 @@ import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.naming.QualifiedName;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -40,13 +38,13 @@ public class ConstraintsFactory {
 		constraint.setPublic(true);
 		return constraint;
 	}
-	
+
 	public static Constraint buildPrivateLiteralConstraint(){
-        ConstraintImpl constraint = new ConstraintImpl();
+		ConstraintImpl constraint = new ConstraintImpl();
 		constraint.setLiteralConstraint(".*@.*");
 		return constraint;
 	}
-	
+
 	public static Constraint buildPublicPersonConstraint(){
 		ResourceID resource = new SimpleResourceID(RBMock.COMMON_NAMESPACE_URI + "PersonConstraint");
 		ConstraintImpl constraint = new ConstraintImpl();
@@ -54,14 +52,14 @@ public class ConstraintsFactory {
 		constraint.setTypeConstraint(resource);
 		return constraint;
 	}
-	
-	
-	public static Constraint buildTypeConstraint(ResourceID type){
+
+
+	public static Constraint buildTypeConstraint(final ResourceID type){
 		ConstraintImpl constraint = new ConstraintImpl();
 		constraint.buildReferenceConstraint(type, false);
 		return constraint;
 	}
-	
+
 	public static Constraint buildPrivatePersonConstraint(){
 		ResourceID resource = new SimpleResourceID(RBMock.COMMON_NAMESPACE_URI + "PersonConstraint");
 		ConstraintImpl constraint = new ConstraintImpl();

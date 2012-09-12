@@ -19,12 +19,13 @@ import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.impl.FileServiceImpl;
 import de.lichtflut.rb.core.services.impl.LinkProvider;
 import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
 import de.lichtflut.repository.ContentDescriptor;
 import de.lichtflut.repository.impl.ContentDescriptorBuilder;
 
 /**
  * <p>
- * [TODO Insert description here.]
+ * Model for {@link AjaxEditableUploadField}.
  * </p>
  * Created: Sep 10, 2012
  *
@@ -38,8 +39,8 @@ public class FileUploadModel implements IModel<Object>{
 	@SpringBean
 	private EntityManager entityManager;
 
-	private final IModel<Object> original;
 	private final ResourceID rbField;
+	private final IModel<Object> original;
 
 	// ---------------- Constructor -------------------------
 
@@ -85,10 +86,6 @@ public class FileUploadModel implements IModel<Object>{
 
 	// ------------------------------------------------------
 
-	/**
-	 * @param upload
-	 * @return
-	 */
 	private String saveFileToRepository(final FileUpload upload) {
 		ContentDescriptor descriptor = null;
 		descriptor = buildContentDescriptorFor(upload);
