@@ -20,10 +20,7 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.impl.LinkProvider;
 import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -40,8 +37,6 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityModel;
-import de.lichtflut.repository.ContentDescriptor;
-import de.lichtflut.repository.impl.ContentDescriptorBuilder;
 
 /**
  * <p>
@@ -149,7 +144,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				final RBStandardButton save = new RBStandardButton("save") {
 					@Override
 					protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-						prepareForFileService(model);
+						//						prepareForFileService(model);
 						entityManager.store(model.getObject());
 						RBWebSession.get().getHistory().finishEditing();
 						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
@@ -162,25 +157,25 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		};
 	}
 
-	protected void prepareForFileService(final IModel<RBEntity> model) {
-		for (RBField field : model.getObject().getAllFields()) {
-			if (field.getDataType().equals(Datatype.FILE)) {
-				int index = 0;
-				ContentDescriptor descriptor = null;
-				for (Object value : field.getValues()) {
-					buildContentDescriptorFor(model, field, index, descriptor, ((IModel<ContentDescriptor>) value).getObject());
-				}
-			}
-		}
-	}
+	//	protected void prepareForFileService(final IModel<RBEntity> model) {
+	//		for (RBField field : model.getObject().getAllFields()) {
+	//			if (field.getDataType().equals(Datatype.FILE)) {
+	//				int index = 0;
+	//				ContentDescriptor descriptor = null;
+	//				for (Object value : field.getValues()) {
+	//					buildContentDescriptorFor(model, field, index, descriptor, ((IModel<ContentDescriptor>) value).getObject());
+	//				}
+	//			}
+	//		}
+	//	}
 
-	private void buildContentDescriptorFor(final IModel<RBEntity> model, final RBField field, int index, ContentDescriptor descriptor,
-			final ContentDescriptor value) {
-		String path = new LinkProvider().buildRepositoryStructureFor(model.getObject(), value.getName());
-		descriptor = new ContentDescriptorBuilder().name(value.getName())
-				.mimeType(value.getMimeType()).path(path).data(value.getData()).build();
-		field.setValue(index, descriptor);
-		index++;
-	}
+	//	private void buildContentDescriptorFor(final IModel<RBEntity> model, final RBField field, int index, ContentDescriptor descriptor,
+	//			final ContentDescriptor value) {
+	//		String path = new LinkProvider().buildRepositoryStructureFor(model.getObject(), value.getName());
+	//		descriptor = new ContentDescriptorBuilder().name(value.getName())
+	//				.mimeType(value.getMimeType()).path(path).data(value.getData()).build();
+	//		field.setValue(index, descriptor);
+	//		index++;
+	//	}
 
 }

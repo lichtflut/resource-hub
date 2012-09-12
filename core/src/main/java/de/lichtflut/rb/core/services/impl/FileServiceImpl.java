@@ -82,6 +82,9 @@ public class FileServiceImpl implements FileService {
 	 * @return
 	 */
 	public static String getSimpleName(final String path){
+		if(null == path || path.isEmpty()){
+			return "";
+		}
 		String[] strings = path.split("/");
 		if(null == strings || strings.length == 0){
 			return path;

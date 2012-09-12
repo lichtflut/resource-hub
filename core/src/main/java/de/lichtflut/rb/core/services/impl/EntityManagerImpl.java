@@ -28,10 +28,8 @@ import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.TypeManager;
-import de.lichtflut.repository.ContentDescriptor;
 
 /**
  * <p>
@@ -55,8 +53,6 @@ public class EntityManagerImpl implements EntityManager {
 	private ModelingConversation conversation;
 
 	private DomainNamespacesHandler dnsHandler;
-
-	private FileService fileService;
 
 	// -----------------------------------------------------
 
@@ -102,7 +98,6 @@ public class EntityManagerImpl implements EntityManager {
 	 */
 	@Override
 	public void store(final RBEntity entity) {
-		storeDateFilesToContentRepo(entity);
 		final ResourceNode node = entity.getNode();
 		SNOPS.associate(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
@@ -157,10 +152,6 @@ public class EntityManagerImpl implements EntityManager {
 
 	public void setDnsHandler(final DomainNamespacesHandler dnsHandler) {
 		this.dnsHandler = dnsHandler;
-	}
-
-	public void setFileService(final FileService fileService){
-		this.fileService = fileService;
 	}
 
 	// ----------------------------------------------------
@@ -262,23 +253,6 @@ public class EntityManagerImpl implements EntityManager {
 			return new SNResource();
 		}
 
-	}
-
-	private void storeDateFilesToContentRepo(final RBEntity entity) {
-		for (RBField field : entity.getAllFields()) {
-			if(Datatype.FILE.name().equals(field.getDataType().name())){
-				for (Object contentObject : field.getValues()) {
-					if(contentObject instanceof ContentDescriptor){
-						ContentDescriptor descriptor = (ContentDescriptor) contentObject;
-						fileService.storeFile(descriptor);
-						int index = field.getValues().indexOf(contentObject);
-						field.setValue(index, descriptor.getPath());
-					} else if(!	fileService.exists(contentObject.toString())){
-						throw new IllegalArgumentException("Only objects ot type " + ContentDescriptor.class +" can be handled for Datatype.FILE");
-					}
-				}
-			}
-		}
 	}
 
 }

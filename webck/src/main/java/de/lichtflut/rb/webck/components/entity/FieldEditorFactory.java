@@ -159,7 +159,7 @@ public class FieldEditorFactory implements Serializable {
 	}
 
 	public Component createFileChooser(final RBField fieldDefinition, final IModel model){
-		FileUploadModel uploadModel = new FileUploadModel(model);
+		FileUploadModel uploadModel = new FileUploadModel(model, fieldDefinition);
 		AjaxEditableDataField dataField = new AjaxEditableDataField("valuefield", uploadModel){
 
 			@Override
@@ -195,7 +195,7 @@ public class FieldEditorFactory implements Serializable {
 			protected WebMarkupContainer newLabel(final MarkupContainer parent, final String componentId, final IModel model) {
 				WebMarkupContainer container = new WebMarkupContainer("container");
 				Label label = new Label(componentId, model);
-				//				label.setEscapeModelStrings(false);
+
 				container.add(label);
 				container.add(new Label("additionalInfo", Model.of(" (click to edit)")));
 
