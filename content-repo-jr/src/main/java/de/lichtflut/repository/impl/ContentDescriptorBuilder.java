@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 import de.lichtflut.repository.ContentDescriptor;
+import de.lichtflut.repository.Filetype;
 
 /**
  * <p>
@@ -19,7 +20,7 @@ import de.lichtflut.repository.ContentDescriptor;
 public class ContentDescriptorBuilder implements Serializable {
 
 	private String path = "";
-	private String mimeType = "";
+	private Filetype filetype = Filetype.OTHER;
 	private String name = "";
 	private InputStream in = null;
 
@@ -38,8 +39,8 @@ public class ContentDescriptorBuilder implements Serializable {
 		return this;
 	}
 
-	public ContentDescriptorBuilder mimeType(final String mimeType){
-		this.mimeType = mimeType;
+	public ContentDescriptorBuilder mimeType(final Filetype filetype){
+		this.filetype = filetype;
 		return this;
 	}
 
@@ -71,8 +72,8 @@ public class ContentDescriptorBuilder implements Serializable {
 			 * {@inheritDoc}
 			 */
 			@Override
-			public String getMimeType() {
-				return mimeType;
+			public Filetype getMimeType() {
+				return filetype;
 			}
 
 			@Override

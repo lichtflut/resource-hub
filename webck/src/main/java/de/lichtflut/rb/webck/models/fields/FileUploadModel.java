@@ -21,6 +21,7 @@ import de.lichtflut.rb.core.services.impl.LinkProvider;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
 import de.lichtflut.repository.ContentDescriptor;
+import de.lichtflut.repository.Filetype;
 import de.lichtflut.repository.impl.ContentDescriptorBuilder;
 
 /**
@@ -99,8 +100,9 @@ public class FileUploadModel implements IModel<Object>{
 		String path = LinkProvider.buildRepositoryStructureFor(entity, rbField.getQualifiedName(), upload.getClientFileName());
 		ContentDescriptor descriptor;
 		try {
+			Filetype filetype = Filetype.getCorrespondingFiletypeFor(upload.getContentType());
 			descriptor = new ContentDescriptorBuilder().name(upload.getClientFileName())
-					.mimeType(upload.getContentType()).path(path).data(upload.getInputStream()).build();
+					.mimeType(filetype).path(path).data(upload.getInputStream()).build();
 		} catch (IOException e) {
 			throw new IllegalStateException("Error while getting InputStream", e);
 		}

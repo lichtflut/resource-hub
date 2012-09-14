@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.io.InputStream;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -55,9 +54,9 @@ public class FileServiceImpl implements FileService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InputStream getData(final String path) {
+	public ContentDescriptor getData(final String path) {
 		LOGGER.info("Retrieving file for path: {}", path);
-		return delegator.getData(path).getData();
+		return delegator.getData(path);
 	}
 
 	/**

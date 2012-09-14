@@ -43,8 +43,6 @@ public class AjaxEditableUploadField extends AjaxEditableLabel<Object>{
 	protected FormComponent newEditor(final MarkupContainer parent, final String componentId, final IModel model) {
 		final FileUploadField uploadField = new FileUploadField(componentId, model);
 
-		uploadField.setOutputMarkupId(true);
-		uploadField.setVisible(false);
 		uploadField.add(new AjaxFormSubmitBehavior("onchange") {
 
 			@Override
@@ -61,6 +59,10 @@ public class AjaxEditableUploadField extends AjaxEditableLabel<Object>{
 
 			}
 		});
+
+		uploadField.setOutputMarkupId(true);
+		uploadField.setVisible(false);
+
 		return uploadField;
 	}
 
@@ -81,4 +83,5 @@ public class AjaxEditableUploadField extends AjaxEditableLabel<Object>{
 		container.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
 		return container;
 	}
+
 }

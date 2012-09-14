@@ -4,7 +4,6 @@
 package de.lichtflut.rb.core.services;
 
 import java.io.File;
-import java.io.InputStream;
 
 import de.lichtflut.repository.ContentDescriptor;
 
@@ -24,7 +23,7 @@ public interface FileService {
 	 * @param path - where the file is located
 	 * @return an File
 	 */
-	InputStream getData(String path);
+	ContentDescriptor getData(String path);
 
 	/**
 	 * Stores a {@link File} under a given path. If file already exists, it will be overwritten.

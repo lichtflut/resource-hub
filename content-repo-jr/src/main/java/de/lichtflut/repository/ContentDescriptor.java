@@ -30,7 +30,7 @@ public interface ContentDescriptor extends Serializable{
 	/**
 	 * @return the Mimetype foran Object.
 	 */
-	public String getMimeType();
+	public Filetype getMimeType();
 
 	/**
 	 * Returns the contained data as an {@link InputStream}

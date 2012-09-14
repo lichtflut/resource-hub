@@ -23,14 +23,13 @@ import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.services.impl.FileServiceImpl;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.components.fields.FilePreviewPanel;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
-import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
@@ -163,15 +162,10 @@ public class EntityRowDisplayPanel extends Panel {
 	}
 
 	private void addRepoLink(final ListItem<RBFieldValueModel> item) {
-		IModel<String> hrefModel = new Model<String>(item.getModelObject().getField().getValue(0).toString());
-		String href = hrefModel.getObject() + "?domain=" + new CurrentDomainModel().getObject().getQualifiedName();
-		href = "service/content/" + href;
-		hrefModel.setObject(href);
+		@SuppressWarnings("unchecked")
+		FilePreviewPanel filePreviewPanel = new FilePreviewPanel("previewPanel", item.getModelObject());
 
-		IModel<String> simpleName = Model.of(FileServiceImpl.getSimpleName(item.getModelObject().getObject().toString()));
-		ExternalLink link = new ExternalLink("target", hrefModel, simpleName);
-		link.add(new AttributeModifier("target", "_blank"));
-		item.add(new Fragment("valuefield", "link", this).add(link));
+		item.add(new Fragment("valuefield", "filePreview", this).add(filePreviewPanel));
 	}
 
 	private void addBooleanField(final ListItem<RBFieldValueModel> item) {
