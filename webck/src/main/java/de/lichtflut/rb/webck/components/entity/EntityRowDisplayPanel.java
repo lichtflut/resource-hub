@@ -6,7 +6,6 @@ package de.lichtflut.rb.webck.components.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -15,7 +14,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
@@ -118,7 +116,6 @@ public class EntityRowDisplayPanel extends Panel {
 			addExternalLink(item);
 			break;
 		case FILE:
-			// TODO: switch to FilePreviewPanel
 			addRepoLink(item);
 			break;
 		default:
@@ -162,9 +159,9 @@ public class EntityRowDisplayPanel extends Panel {
 	}
 
 	private void addRepoLink(final ListItem<RBFieldValueModel> item) {
+		IModel<RBFieldValueModel> model = item.getModel();
 		@SuppressWarnings("unchecked")
-		FilePreviewLink filePreviewPanel = new FilePreviewLink("previewPanel", item.getModelObject());
-
+		FilePreviewLink filePreviewPanel = new FilePreviewLink("previewPanel", model.getObject());
 		item.add(new Fragment("valuefield", "filePreview", this).add(filePreviewPanel));
 	}
 
@@ -175,17 +172,6 @@ public class EntityRowDisplayPanel extends Panel {
 		}
 		final Label field = new Label("valuefield", label);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
-	}
-
-	private IModel<String> getDisplayNameForLink(final ListItem<RBFieldValueModel> item) {
-		@SuppressWarnings("unchecked")
-		IModel<String> name = item.getModelObject();
-		RBField field = item.getModelObject().getField();
-		if(Datatype.FILE.name().equals(field.getDataType().name())) {
-			String s = (String) field.getValue(item.getModelObject().getIndex());
-			return Model.of(StringUtils.substringAfterLast(s, "/"));
-		}
-		return name;
 	}
 
 	private ResourceID getResourceID(final RBFieldValueModel model) {
