@@ -70,11 +70,10 @@ public class FilePreviewPanel<T> extends Panel {
 			Filetype mimeType = descriptor.getMimeType();
 			switch (mimeType) {
 			case JPEG:
-				return new Fragment("valuefield", "linkFragment", this).add(createThumbnailLink(descriptor));
 			case PNG:
-				return new Fragment("valuefield", "linkFragment", this).add(createThumbnailLink(descriptor));
+				return new Fragment("valuefield", "thumbnailFragment", this).add(createThumbnailLink(descriptor));
 			default:
-				return new Fragment("valuefield", "linkFragment", this).add(createThumbnailLink(descriptor));
+				return new Fragment("valuefield", "linkFragment", this).add(createLink(location));
 			}
 		}else{
 			return new Fragment("valuefield", "linkFragment", this).add(createLink(location));
@@ -101,12 +100,16 @@ public class FilePreviewPanel<T> extends Panel {
 				}
 			}
 		};
-		ThumbnailImageResource resource = new ThumbnailImageResource(unscaledResource, 100);
-		NonCachingImage thumbnail = new NonCachingImage(href, resource);
 		IModel<String> simpleName = Model.of(FileServiceImpl.getSimpleName(descriptor.getName()));
-		ExternalLink link = new ExternalLink("link", hrefModel, simpleName);
+
+		ExternalLink link = new ExternalLink("link", hrefModel);
 		link.add(new AttributeModifier("target", "_blank"));
+
+		ThumbnailImageResource resource = new ThumbnailImageResource(unscaledResource, 100);
+		NonCachingImage thumbnail = new NonCachingImage("thumbnail", resource);
+
 		link.add(thumbnail);
+
 		return link;
 	}
 

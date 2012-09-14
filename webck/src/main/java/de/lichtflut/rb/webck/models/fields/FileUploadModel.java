@@ -100,13 +100,23 @@ public class FileUploadModel implements IModel<Object>{
 		String path = LinkProvider.buildRepositoryStructureFor(entity, rbField.getQualifiedName(), upload.getClientFileName());
 		ContentDescriptor descriptor;
 		try {
-			Filetype filetype = Filetype.getCorrespondingFiletypeFor(upload.getContentType());
+			Filetype filetype = getFiletype(upload);
 			descriptor = new ContentDescriptorBuilder().name(upload.getClientFileName())
 					.mimeType(filetype).path(path).data(upload.getInputStream()).build();
 		} catch (IOException e) {
 			throw new IllegalStateException("Error while getting InputStream", e);
 		}
 		return descriptor;
+	}
+
+	/**
+	 * @param upload
+	 * @return
+	 */
+	private Filetype getFiletype(final FileUpload upload) {
+		String type = upload.getContentType();
+		type = type.substring(type.lastIndexOf("/")+1);
+		return Filetype.getCorrespondingFiletypeFor(type);
 	}
 
 }
