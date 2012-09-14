@@ -35,7 +35,7 @@ import de.lichtflut.rb.application.layout.frugal.FrugalLayout;
 import de.lichtflut.rb.application.resourceview.EntityDetailPage;
 import de.lichtflut.rb.application.styles.Style;
 import de.lichtflut.rb.application.styles.frugal.FrugalStyle;
-import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.conversion.LabelBuilderConverter;

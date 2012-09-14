@@ -2,7 +2,7 @@ package de.lichtflut.rb.rest.delegate.providers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.security.SecurityConfiguration;

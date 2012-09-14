@@ -12,7 +12,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.repository.ContentDescriptor;
 import de.lichtflut.repository.RepositoryDelegator;
@@ -116,7 +116,7 @@ public class FileServiceImpl implements FileService {
 	}
 
 	private String getHomeDirectory() {
-		String home = rbConfig.getWorkDirecotry();
+		String home = rbConfig.getWorkDirectory();
 		if(null == home || home.isEmpty()){
 			home = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + UUID.randomUUID().toString();
 		}
