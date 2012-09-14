@@ -34,6 +34,8 @@ import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
 import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -47,6 +49,8 @@ import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
  * @author Oliver Tigges
  */
 public class ViewSpecificationServiceImpl implements ViewSpecificationService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ViewSpecificationServiceImpl.class);
 
 	private ServiceContext context;
 
@@ -71,15 +75,9 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	// -- MENU ITEMS --------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<MenuItem> getUsersMenuItems() {
 		final ResourceNode user = currentUser();
-		if (user == null) {
-			return Collections.emptyList();
-		}
 		final List<MenuItem> result = new ArrayList<MenuItem>();
 		for(Statement stmt : user.getAssociations()) {
 			if (WDGT.HAS_MENU_ITEM.equals(stmt.getPredicate()) && stmt.getObject().isResourceNode()) {
@@ -90,45 +88,38 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 			result.addAll(initializeDashboards(user));
 		}
 		Collections.sort(result, new OrderBySerialNumber());
+        LOGGER.debug("Context: {}.", conversation().getConversationContext());
+        LOGGER.debug("{} has menu items: {}.", user, result);
+
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void addUsersMenuItem(final MenuItem item) {
 		final ResourceNode user = currentUser();
-		if (user != null) {
-			store(item);
-			user.addAssociation(WDGT.HAS_MENU_ITEM, item);
-		}
+		store(item);
+		user.addAssociation(WDGT.HAS_MENU_ITEM, item);
+        LOGGER.debug("Added item {} to user {}.", item, user);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void store(final MenuItem item) {
 		conversation().attach(item);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeUsersItem(final MenuItem item) {
 		final ResourceNode user = currentUser();
 		SNOPS.remove(user, WDGT.HAS_MENU_ITEM, item);
+        LOGGER.debug("Context: {}.", conversation().getConversationContext());
+        LOGGER.debug("Removed item {} from user {}.", item, user);
+        LOGGER.debug("Left items of user {}: ", getUsersMenuItems());
 		//TODO: Remove item if private one.
 		//conversation.remove(item);
 	}
 
 	// -- PERSPECTIVES ------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Perspective findPerspective(final ResourceID id) {
 		final ResourceNode existing = conversation().findResource(id.getQualifiedName());
@@ -151,9 +142,6 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
         return perspectives;
     }
 
-    /**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void store(final Perspective perspective) {
 		conversation().attach(perspective);
@@ -164,9 +152,6 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void remove(final Perspective perspective) {
 		final SemanticGraph graph = new ViewSpecTraverser().toGraph(perspective);
@@ -184,9 +169,6 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	// -- WIDGETS -----------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public WidgetSpec findWidgetSpec(final ResourceID id) {
 		final ResourceNode existing = conversation().findResource(id.getQualifiedName());
@@ -197,9 +179,6 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void store(final WidgetSpec widgetSpec) {
 		conversation().attach(widgetSpec);
@@ -207,9 +186,6 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void store(final ViewPort viewPort) {
 		conversation().attach(viewPort);
@@ -236,9 +212,9 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	protected ResourceNode currentUser() {
 		final RBUser user = context.getUser();
 		if (user == null) {
-			return null;
+            throw new IllegalStateException("No user context set.");
 		} else {
-			return conversation().resolve(new SimpleResourceID(user.getQualifiedName()));
+			return conversation().findResource(user.getQualifiedName());
 		}
 	}
 

@@ -7,6 +7,7 @@ import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import org.apache.wicket.injection.Injector;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.List;
  *
  * @author Oliver Tigges
  */
-public class MenuItemListModel extends AbstractLoadableDetachableModel<List<MenuItem>>{
+public class MenuItemListModel extends LoadableDetachableModel<List<MenuItem>> {
 
 	@SpringBean
 	private ViewSpecificationService viewSpecificationService;
@@ -38,9 +39,6 @@ public class MenuItemListModel extends AbstractLoadableDetachableModel<List<Menu
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<MenuItem> load() {
 		return viewSpecificationService.getUsersMenuItems();

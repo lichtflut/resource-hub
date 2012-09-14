@@ -8,6 +8,7 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.lichtflut.rb.webck.components.identities.SessionInfoPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.event.IEvent;
@@ -111,6 +112,8 @@ public class RBBasePage extends AbstractBasePage {
 		add(new Label("username", CurrentUserModel.displayNameModel()));
 
 		add(new DomainSwitcherPanel("domain", CurrentDomainModel.displayNameModel()));
+
+        add(new SessionInfoPanel("sessionInfo"));
 
 	}
 

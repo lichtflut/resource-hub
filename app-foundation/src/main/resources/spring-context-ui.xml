@@ -13,7 +13,7 @@
 
     <!-- Arastreju configuration for UI -->
 
-    <bean id="arasResourceFactory" class="de.lichtflut.rb.core.services.ArastrejuResourceFactory" scope="request">
+    <bean id="arasResourceFactory" class="de.lichtflut.rb.core.services.ArastrejuResourceFactory" scope="session">
         <constructor-arg index="0" ref="context"></constructor-arg>
         <property name="domainInitializer" ref="domainInitializer"/>
     </bean>

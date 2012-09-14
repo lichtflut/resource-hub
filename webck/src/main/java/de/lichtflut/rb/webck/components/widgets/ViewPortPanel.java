@@ -57,8 +57,8 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 	 * @param id
 	 */
 	@SuppressWarnings("rawtypes")
-	public ViewPortPanel(String id, IModel<ViewPort> spec, final ConditionalModel<Boolean> isConfigMode) {
-		super(id, spec);
+	public ViewPortPanel(String id, IModel<ViewPort> portModel, final ConditionalModel<Boolean> isConfigMode) {
+		super(id, portModel);
 		
 		
 		// Container needed for dynamic CSS class
@@ -90,7 +90,7 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 			}
 		}.add(ConditionalBehavior.visibleIf(isConfigMode)));
 		
-		final WidgetListModel listModel = new WidgetListModel(spec);
+		final WidgetListModel listModel = new WidgetListModel(portModel);
 		final IModel<List<? extends ResourceNode>> orderModel = 
 				new CastingModel<List<? extends ResourceNode>>(listModel);
 		

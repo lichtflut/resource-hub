@@ -27,6 +27,8 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.traverse.Walker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
@@ -43,6 +45,8 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
  * @author Oliver Tigges
  */
 public class ContentDisplayWidget extends PredefinedWidget {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContentDisplayWidget.class);
 
     private IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
 
@@ -109,8 +113,9 @@ public class ContentDisplayWidget extends PredefinedWidget {
 
     // ----------------------------------------------------
 
-    private static String getContent(WidgetSpec spec) {
-        final SemanticNode content = Walker.start(spec)
+    private String getContent(WidgetSpec spec) {
+        final ResourceNode attached = semanticNetworkService.resolve(spec);
+        final SemanticNode content = Walker.start(attached)
                 .walk(WDGT.DISPLAYS_CONTENT_ITEM)
                 .walk(RBSystem.HAS_CONTENT)
                 .getSingle();
@@ -118,20 +123,23 @@ public class ContentDisplayWidget extends PredefinedWidget {
     }
 
     private void setContent(WidgetSpec spec, String content) {
-        ResourceNode attached = semanticNetworkService.resolve(spec.asResource());
+        ResourceNode attached = semanticNetworkService.resolve(spec);
         SemanticNode existing = SNOPS.fetchObject(attached, WDGT.DISPLAYS_CONTENT_ITEM);
+
         if (existing == null) {
+            LOGGER.debug("Creating content of widget {} : {}", spec, content);
             ResourceNode contentItem = new SNResource();
             SNOPS.assure(attached, WDGT.DISPLAYS_CONTENT_ITEM, contentItem);
             SNOPS.assure(contentItem, RBSystem.HAS_CONTENT, content);
         } else if (existing.isResourceNode()) {
+            LOGGER.debug("Updating content of widget {} : {}", spec, content);
             SNOPS.assure(existing.asResource(), RBSystem.HAS_CONTENT, content);
         } else {
             throw new IllegalStateException("Unexpected content item for content widget: " + existing);
         }
     }
 
-    private static class ContentModel implements IModel<String> {
+    private class ContentModel implements IModel<String> {
 
         private final WidgetSpec spec;
         private String content;

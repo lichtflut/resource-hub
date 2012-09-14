@@ -17,7 +17,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -25,6 +24,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -40,16 +41,20 @@ import java.util.List;
  * @author Oliver Tigges
  */
 public class MenuManagementPanel extends Panel {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MenuManagementPanel.class);
 	
 	@SpringBean
 	private ViewSpecificationService viewSpecificationService;
+
+    private final MenuItemListModel listModel = new MenuItemListModel();
 	
 	private final OrderedNodesContainer container;
-	
+
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+	 * @param id The component ID
 	 */
 	@SuppressWarnings("rawtypes")
 	public MenuManagementPanel(String id) {
@@ -57,8 +62,7 @@ public class MenuManagementPanel extends Panel {
 		
 		setOutputMarkupId(true);
 		
-		final MenuItemListModel listModel = new MenuItemListModel();
-		final IModel<List<? extends ResourceNode>> orderModel = 
+		final IModel<List<? extends ResourceNode>> orderModel =
 				new CastingModel<List<? extends ResourceNode>>(listModel);
 		
 		container = new SerialNumberOrderedNodesContainer(orderModel);
@@ -77,22 +81,12 @@ public class MenuManagementPanel extends Panel {
 		};
 		add(view);
 		
-		final AjaxLink link = new AjaxLink("create") {
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				final DialogHoster hoster = findParent(DialogHoster.class);
-				hoster.openDialog(new CreateMenutItemDialog(hoster.getDialogID()));
-			}
-		};
-		add(link);
+		add(createAddLink());
 		
 	}
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onEvent(IEvent<?> event) {
 		if (ModelChangeEvent.from(event).isAbout(ModelChangeEvent.VIEW_SPEC)) {
@@ -103,16 +97,27 @@ public class MenuManagementPanel extends Panel {
 	// ----------------------------------------------------
 	
 	@SuppressWarnings("rawtypes")
-	private AjaxLink createDeleteLink(final MenuItem item) {
-		final AjaxLink link = new AjaxLink("delete") {
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				viewSpecificationService.removeUsersItem(item);
-				updatePanel();
-			}
-		};
+	private AjaxLink createAddLink() {
+		final AjaxLink link = new AjaxLink("create") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                final DialogHoster hoster = findParent(DialogHoster.class);
+                hoster.openDialog(new CreateMenuItemDialog(hoster.getDialogID()));
+            }
+        };
 		return link;
 	}
+
+    @SuppressWarnings("rawtypes")
+    private AjaxLink createDeleteLink(final MenuItem item) {
+        final AjaxLink link = new AjaxLink("delete") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                removeMenuItem(item);
+            }
+        };
+        return link;
+    }
 	
 	@SuppressWarnings("rawtypes")
 	private AjaxLink createEditLink(final IModel<MenuItem> item) {
@@ -159,14 +164,21 @@ public class MenuManagementPanel extends Panel {
 			return perspective.getName();
 		}
 	}
+
+    // ----------------------------------------------------
+
+    private void removeMenuItem(MenuItem item) {
+        viewSpecificationService.removeUsersItem(item);
+        updatePanel();
+    }
 	
 	// ----------------------------------------------------
 	
 	@SuppressWarnings("rawtypes")
 	protected void updatePanel() {
+        LOGGER.debug("Updating MenuManagementPanel: " + listModel.getObject());
+        listModel.detach();
 		RBAjaxTarget.add(this);
-		WebMarkupContainer listView = (WebMarkupContainer) get("list");
-		listView.removeAll();
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent(ModelChangeEvent.MENU));
 	}
 	

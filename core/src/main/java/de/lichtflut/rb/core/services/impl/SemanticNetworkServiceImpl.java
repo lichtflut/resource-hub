@@ -39,7 +39,13 @@ public class SemanticNetworkServiceImpl implements SemanticNetworkService {
 
 	@Override
 	public ResourceNode resolve(final ResourceID rid, final Context... contexts) {
-		return conversation(contexts).resolve(rid);
+        ModelingConversation conversation = conversationFactory.startConversation();
+        conversation.getConversationContext().setReadContexts(contexts);
+        try {
+            return conversation.resolve(rid);
+        } finally {
+            conversation.close();
+        }
 	}
 
 	@Override
@@ -58,9 +64,4 @@ public class SemanticNetworkServiceImpl implements SemanticNetworkService {
 		return conversationFactory.getConversation();
 	}
 
-	private ModelingConversation conversation(final Context... readContexts) {
-		ModelingConversation conversation = conversationFactory.startConversation();
-		conversation.getConversationContext().setReadContexts(readContexts);
-		return conversation;
-	}
 }

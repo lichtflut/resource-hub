@@ -5,10 +5,12 @@ package de.lichtflut.rb.webck.components.widgets.management;
 
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
+import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.dialogs.AbstractRBDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 
 /**
  * <p>
@@ -21,12 +23,12 @@ import org.apache.wicket.model.Model;
  *
  * @author Oliver Tigges
  */
-public class CreateMenutItemDialog extends AbstractRBDialog {
+public class CreateMenuItemDialog extends AbstractRBDialog {
 
 	/**
-	 * @param id
+	 * @param id The wicket id.
 	 */
-	public CreateMenutItemDialog(String id) {
+	public CreateMenuItemDialog(String id) {
 		super(id);
 		
 		add(new MenuItemEditPanel(CONTENT, new Model<MenuItem>(new SNMenuItem()), Model.of(DisplayMode.CREATE)) {
@@ -39,6 +41,8 @@ public class CreateMenutItemDialog extends AbstractRBDialog {
 				close(target);
 			}
 		});
+
+        add(TitleModifier.title(new ResourceModel("title.create-menu-item")));
 		
 		setWidth(600);
 	}
