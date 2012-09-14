@@ -54,7 +54,7 @@ public class FileOps extends RBServiceEndpoint {
 			e.printStackTrace();
 		}
 		FileService fileService = this.getProvider(domain, user).getFileService();
-		ResponseBuilder rsb = Response.ok(fileService.getData(path));
+		ResponseBuilder rsb = Response.ok(fileService.getData(path).getData());
 		LOGGER.debug("Served File {} from domain{} with token {}", new Object[]{path, domain, token});
 		return rsb.build();
 	}

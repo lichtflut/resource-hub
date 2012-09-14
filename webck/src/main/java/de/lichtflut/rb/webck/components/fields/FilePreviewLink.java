@@ -29,20 +29,23 @@ import de.lichtflut.repository.Filetype;
 
 /**
  * <p>
- * This Panel supports Thumbnails for:
+ * 
+ * This Link creates a link that provides Thumbnails for:
  * <ul>
  * <li>
- * .jpeg
+ * 	jpeg
+ * </li><li>
+ * 	png
  * </li>
  * </ul>
- * If the FileFormat is not supported, a link pointing to the resources is provided.
+ * If the File Format is not supported, a simple {@link ExternalLink} pointing to the resources is provided.
  * </p>
  * Created: Sep 12, 2012
  *
  * @author Ravi Knox
  * @param <T>
  */
-public class FilePreviewPanel<T> extends Panel {
+public class FilePreviewLink<T> extends Panel {
 
 	@SpringBean
 	private FileService fileService;
@@ -50,44 +53,40 @@ public class FilePreviewPanel<T> extends Panel {
 	// ---------------- Constructor -------------------------
 
 	/**
-	 * @param id
-	 * @param model
+	 * Constructor.
+	 * @param id - wicket:id
+	 * @param model - {@link IModel}&lt;{@link RBFieldValueModel}&gt;
 	 */
-	public FilePreviewPanel(final String id, final IModel<RBFieldValueModel<?>> model) {
+	public FilePreviewLink(final String id, final IModel<RBFieldValueModel<?>> model) {
 		super(id, model);
 		add(createPreview(model));
 	}
 
-	/**
-	 * @param model
-	 * @return
-	 */
+	// ------------------------------------------------------
+
 	private Component createPreview(final IModel<RBFieldValueModel<?>> model) {
-		Object locations = model.getObject();
-		String location = locations.toString();
+		String location = model.getObject().toString();
 		if(fileService.exists(location)){
 			ContentDescriptor descriptor = fileService.getData(location);
-			Filetype mimeType = descriptor.getMimeType();
-			switch (mimeType) {
-			case JPEG:
-			case PNG:
-				return new Fragment("valuefield", "thumbnailFragment", this).add(createThumbnailLink(descriptor));
-			default:
-				return new Fragment("valuefield", "linkFragment", this).add(createLink(location));
-			}
+			return createFragment(location, descriptor, descriptor.getMimeType());
 		}else{
 			return new Fragment("valuefield", "linkFragment", this).add(createLink(location));
 		}
 	}
 
-	/**
-	 * @param descriptor.getName()
-	 * @return
-	 */
+	private Component createFragment(final String location, final ContentDescriptor descriptor, final Filetype mimeType) {
+		switch (mimeType) {
+		case JPEG:
+		case PNG:
+			return new Fragment("valuefield", "thumbnailFragment", this).add(createThumbnailLink(descriptor));
+		default:
+			return new Fragment("valuefield", "linkFragment", this).add(createLink(location));
+		}
+	}
+
 	private Component createThumbnailLink(final ContentDescriptor descriptor) {
 		IModel<String> hrefModel = new Model<String>(descriptor.getPath());
-		String href = hrefModel.getObject() + "?domain=" + new CurrentDomainModel().getObject().getQualifiedName();
-		hrefModel.setObject("service/content/" + hrefModel.getObject());
+		hrefModel.setObject("service/content/" + hrefModel.getObject() + "?domain=" + new CurrentDomainModel().getObject().getQualifiedName());
 
 		IResource unscaledResource = new DynamicImageResource() {
 
@@ -96,12 +95,10 @@ public class FilePreviewPanel<T> extends Panel {
 				try {
 					return IOUtils.toByteArray(descriptor.getData());
 				} catch (IOException e) {
-					throw new RuntimeException("Error converting Inputstream to byte[] in " + FilePreviewPanel.class, e);
+					throw new RuntimeException("Error converting Inputstream to byte[] in " + FilePreviewLink.class, e);
 				}
 			}
 		};
-		IModel<String> simpleName = Model.of(FileServiceImpl.getSimpleName(descriptor.getName()));
-
 		ExternalLink link = new ExternalLink("link", hrefModel);
 		link.add(new AttributeModifier("target", "_blank"));
 

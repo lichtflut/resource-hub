@@ -113,6 +113,9 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 	 */
 	@Override
 	public boolean exists(final String path) {
+		if(null == path){
+			return false;
+		}
 		try {
 			return getRoot().hasNode(path);
 		} catch (RepositoryException e) {

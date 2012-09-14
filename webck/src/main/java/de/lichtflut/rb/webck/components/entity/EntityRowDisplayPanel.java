@@ -26,7 +26,7 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.components.fields.FilePreviewPanel;
+import de.lichtflut.rb.webck.components.fields.FilePreviewLink;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
@@ -163,7 +163,7 @@ public class EntityRowDisplayPanel extends Panel {
 
 	private void addRepoLink(final ListItem<RBFieldValueModel> item) {
 		@SuppressWarnings("unchecked")
-		FilePreviewPanel filePreviewPanel = new FilePreviewPanel("previewPanel", item.getModelObject());
+		FilePreviewLink filePreviewPanel = new FilePreviewLink("previewPanel", item.getModelObject());
 
 		item.add(new Fragment("valuefield", "filePreview", this).add(filePreviewPanel));
 	}
