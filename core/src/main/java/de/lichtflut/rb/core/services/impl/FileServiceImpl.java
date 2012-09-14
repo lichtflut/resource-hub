@@ -33,7 +33,7 @@ public class FileServiceImpl implements FileService {
 
 	protected RepositoryDelegator delegator;
 
-	private final Properties properties;
+	private final Properties properties = new Properties();
 	private final RBConfig rbConfig;
 
 	// ---------------- Constructor -------------------------
@@ -45,7 +45,7 @@ public class FileServiceImpl implements FileService {
 	 */
 	public FileServiceImpl(final String config, final RBConfig rbConfig) {
 		this.rbConfig = rbConfig;
-		properties = getPropertiesFile(config);
+		initPropertiesFile(config);
 		if(null == delegator){
 			initRepository();
 		}
@@ -94,12 +94,14 @@ public class FileServiceImpl implements FileService {
 	// ------------------------------------------------------
 
 	protected void initRepository() {
-		delegator = new RepositoryDelegatorImpl(getProperty("username", "anonymous"), getProperty("password", "anonymous")) {
+		delegator = new RepositoryDelegatorImpl(
+                properties.getProperty("username", "anonymous"),
+                properties.getProperty("password", "anonymous")) {
 
 			@Override
 			protected RepositoryConfigWrapper getConfig() {
 				String home = getHomeDirectory();
-				String config = getProperty("config-file", "");
+				String config = properties.getProperty("config-file", "");
 				return new RepositoryConfigWrapper(home, config);
 			}
 
@@ -107,13 +109,6 @@ public class FileServiceImpl implements FileService {
 	}
 
 	// ------------------------------------------------------
-
-	private String getProperty(final String key, final String defaultValue) {
-		if (properties != null) {
-			return properties.getProperty(key, defaultValue);
-		}
-		return "";
-	}
 
 	private String getHomeDirectory() {
 		String home = rbConfig.getWorkDirectory();
@@ -125,8 +120,7 @@ public class FileServiceImpl implements FileService {
 		return home;
 	}
 
-	private Properties getPropertiesFile(final String config) {
-		final Properties properties = new Properties();
+	private void initPropertiesFile(final String config) {
 		try {
 			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(config));
 			LOGGER.debug("Propertyfile loaded from: {}", config);
@@ -137,7 +131,6 @@ public class FileServiceImpl implements FileService {
 			LOGGER.error("Error while loading file from: {}", config);
 			e.printStackTrace();
 		}
-		return properties;
 	}
 
 }
