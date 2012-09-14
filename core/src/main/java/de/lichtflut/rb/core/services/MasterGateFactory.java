@@ -45,7 +45,7 @@ public class MasterGateFactory {
 	 */
 	public ArastrejuGate createMasterGate() {
 		logger.info("Creating the master gate.");
-		final Arastreju aras = Arastreju.getInstance(config.getArastrejuConfiguration());
+		final Arastreju aras = Arastreju.getInstance(config.getArastrejuProfile());
 		return aras.openMasterGate();
 	}
 	

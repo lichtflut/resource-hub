@@ -27,10 +27,14 @@ public class RBConfig {
 
 	public static final String VIRTUAL_DOMAINS = "de.lichtflut.rb.virtual-domains";
 
+    // ----------------------------------------------------
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(RBConfig.class);
+
 	// ----------------------------------------------------
 
 	/**
-	 * Profilename.
+	 * Name of the Arastreju profile.
 	 */
 	private final String profileName;
 
@@ -38,8 +42,6 @@ public class RBConfig {
 	 * Profile.
 	 */
 	private ArastrejuProfile profile;
-
-	private final Logger logger = LoggerFactory.getLogger(RBConfig.class);
 
 	// -----------------------------------------------------
 
@@ -60,11 +62,10 @@ public class RBConfig {
 
 	// -----------------------------------------------------
 
-
 	/**
 	 * @return The Arastreju configuration properties.
 	 */
-	public ArastrejuProfile getArastrejuConfiguration(){
+	public ArastrejuProfile getArastrejuProfile(){
 		if (profile == null) {
 			initProfile();
 		}
@@ -86,9 +87,8 @@ public class RBConfig {
 		return System.getProperty(DOMAIN_WORK_DIRECTORY);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+    // ----------------------------------------------------
+
 	@Override
 	public String toString() {
 		return profileName;
@@ -101,10 +101,10 @@ public class RBConfig {
 	 */
 	private void initProfile(){
 		if (profileName == null) {
-			logger.info("Initialising Arastreju default profile");
+			LOGGER.info("Initialising Arastreju default profile");
 			profile = ArastrejuProfile.read();
 		} else {
-			logger.info("Initialising Arastreju profile with name " + profileName);
+			LOGGER.info("Initialising Arastreju profile with name " + profileName);
 			profile = ArastrejuProfile.read(profileName);
 		}
 		checkWorkDir();
@@ -114,17 +114,17 @@ public class RBConfig {
 	private void checkWorkDir() {
 		final String workDir = getWorkDirecotry();
 		if (workDir != null) {
-			logger.info("Using work directory {} for profile {}.", workDir, profileName);
+			LOGGER.info("Using work directory {} for profile {}.", workDir, profileName);
 			profile.setProperty(ArastrejuProfile.ARAS_STORE_DIRECTORY, workDir);
 		} else {
-			logger.info("Using default directory for profile {}.", profileName);
+			LOGGER.info("Using default directory for profile {}.", profileName);
 		}
 	}
 
 	private void checkVirtualDomains() {
 		String vd = System.getProperty(VIRTUAL_DOMAINS, "off");
 		if ("default".equals(vd)) {
-			logger.info("Enabling virtual domains for profile {}. ", profileName);
+			LOGGER.info("Enabling virtual domains for profile {}. ", profileName);
 			profile.setProperty(ArastrejuProfile.ENABLE_VIRTUAL_DOMAINS, "yes");
 		}
 	}

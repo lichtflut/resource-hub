@@ -178,6 +178,6 @@ public abstract class RBApplication extends WebApplication {
 			WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 		
 		final RBConfig rbc = (RBConfig) wac.getBean("rbConfig");
-		rbc.getArastrejuConfiguration().close();
+		rbc.getArastrejuProfile().close();
 	}
 }

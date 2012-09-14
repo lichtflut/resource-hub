@@ -55,7 +55,7 @@ public class ResourceSchemaParserIT {
 
 	@Before
 	public void setUp() {
-		final Arastreju aras = Arastreju.getInstance(new RBConfig().getArastrejuConfiguration());
+		final Arastreju aras = Arastreju.getInstance(new RBConfig().getArastrejuProfile());
 		gate = aras.openMasterGate();
 		this.conversation = gate.startConversation();
 

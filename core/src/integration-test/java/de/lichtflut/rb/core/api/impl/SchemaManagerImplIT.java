@@ -56,7 +56,7 @@ public class SchemaManagerImplIT {
 
 	@Before
 	public void setUp() {
-		final Arastreju aras = Arastreju.getInstance(new RBConfig().getArastrejuConfiguration());
+		final Arastreju aras = Arastreju.getInstance(new RBConfig().getArastrejuProfile());
 		this.conversation = aras.openMasterGate().startConversation();
 
 		MockitoAnnotations.initMocks(this);

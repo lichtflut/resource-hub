@@ -160,7 +160,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
         final String domain = context.getDomain();
         logger.debug("Opening Arastreju Gate for domain {} ", domain);
 
-        final Arastreju aras = Arastreju.getInstance(context.getConfig().getArastrejuConfiguration());
+        final Arastreju aras = Arastreju.getInstance(context.getConfig().getArastrejuProfile());
         if (domain == null || DomainIdentifier.MASTER_DOMAIN.equals(domain)) {
             return aras.openMasterGate();
         } else {
