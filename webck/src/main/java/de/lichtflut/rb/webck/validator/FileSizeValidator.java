@@ -21,7 +21,7 @@ import org.apache.wicket.validation.validator.AbstractValidator;
  */
 public class FileSizeValidator extends AbstractValidator<List<FileUpload>> {
 
-	private final long maxlimit;
+	private final long maximum;
 
 	// ---------------- Constructor -------------------------
 
@@ -29,7 +29,7 @@ public class FileSizeValidator extends AbstractValidator<List<FileUpload>> {
 	 * Constructor
 	 */
 	public FileSizeValidator(final long bytes) {
-		this.maxlimit = bytes;
+		this.maximum = bytes;
 	}
 
 	// ------------------------------------------------------
@@ -39,8 +39,11 @@ public class FileSizeValidator extends AbstractValidator<List<FileUpload>> {
 	 */
 	@Override
 	protected void onValidate(final IValidatable<List<FileUpload>> validatable) {
-		if(maxlimit < getUploadSize(validatable)){
-			error(validatable);
+		Object object = validatable.getValue().get(0);
+		if(!(object instanceof String)){
+			if(maximum < getUploadSize(validatable)){
+				error(validatable);
+			}
 		}
 	}
 
@@ -50,7 +53,7 @@ public class FileSizeValidator extends AbstractValidator<List<FileUpload>> {
 	 * @return the total size of the upload
 	 */
 	protected long getUploadSize(final IValidatable<List<FileUpload>> validatable) {
-		// Suppurtsonly single upload by default
+		// Suppurts only single upload by default
 		return validatable.getValue().get(0).getSize();
 	}
 

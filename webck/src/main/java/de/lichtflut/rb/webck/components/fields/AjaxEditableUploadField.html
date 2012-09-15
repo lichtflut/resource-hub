@@ -9,7 +9,17 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
-	   <div wicket:id="container"><span wicket:id="label">[label]</span><span wicket:id="additionalInfo">clicke to change</span></div>
-	   <input wicket:id="editor" type="file"></input>
+
+		<div wicket:id="container">
+			<span wicket:id="label">[label]</span><span
+				wicket:id="additionalInfo">clicke to change</span>
+		</div>
+<div wicket:id="formComponent">
+	<form wicket:id="uploadForm">
+		<div wicket:id="feedbackpanel"></div>
+		<input wicket:id="editor" type="file"></input>
+
+	</form>
+	</div>
 </wicket:panel>
 </html>

@@ -5,12 +5,15 @@ package de.lichtflut.rb.webck.components.fields;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.ajax.form.AjaxFormValidatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
+import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -34,6 +37,7 @@ public class AjaxEditableUploadField extends AjaxEditableLabel<Object>{
 	public AjaxEditableUploadField(final String id, final IModel<Object> model) {
 		super(id, model);
 		setOutputMarkupId(true);
+
 	}
 
 	/**
@@ -44,7 +48,34 @@ public class AjaxEditableUploadField extends AjaxEditableLabel<Object>{
 	protected FormComponent newEditor(final MarkupContainer parent, final String componentId, final IModel model) {
 		final FileUploadField uploadField = new FileUploadField(componentId, model);
 
-		uploadField.add(new AjaxFormSubmitBehavior("onchange") {
+		//		uploadField.add(new AjaxFormSubmitBehavior("onchange") {
+		//
+		//			@Override
+		//			protected void onSubmit(final AjaxRequestTarget target) {
+		//				getEditor().setVisible(false);
+		//				getLabel().setVisible(true);
+		//				target.add(getEditor());
+		//				target.appendJavaScript("window.status='';");
+		//			}
+		//
+		//			@Override
+		//			protected void onError(final AjaxRequestTarget target) {
+		//				onSubmit(target);
+		//
+		//			}
+		//		});
+		Form<?> form = new Form<Void>("uploadForm");
+		//		form.setMaxSize(Bytes.bytes(10485760));
+		add(form);
+		form.add(uploadField);
+		uploadField.setOutputMarkupId(true);
+		uploadField.add(new FileSizeValidator(10485760));
+		final FormComponent<FileUploadField> formComponent = new FormComponent<FileUploadField>("formComponent", model) {
+		};
+		final FeedbackPanel feedbackPanel = new FeedbackPanel("feedbackpanel", new ContainerFeedbackMessageFilter(formComponent));
+		feedbackPanel.setOutputMarkupId(true);
+		form.add(feedbackPanel);
+		form.add(new AjaxFormValidatingBehavior(form, "onChange"){
 
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target) {
@@ -56,15 +87,16 @@ public class AjaxEditableUploadField extends AjaxEditableLabel<Object>{
 
 			@Override
 			protected void onError(final AjaxRequestTarget target) {
-				onSubmit(target);
-
+				setDefaultProcessing(false);
+				target.add(feedbackPanel);
 			}
-		});
 
-		uploadField.setOutputMarkupId(true);
-		uploadField.setVisible(false);
-		uploadField.add(new FileSizeValidator(10485760));
-		return uploadField;
+		});
+		//		uploadField.setVisible(formComponent.isVisible());
+		formComponent.setOutputMarkupId(true);
+		formComponent.add(form);
+		formComponent.setVisible(false);
+		return formComponent;
 	}
 
 	/**
