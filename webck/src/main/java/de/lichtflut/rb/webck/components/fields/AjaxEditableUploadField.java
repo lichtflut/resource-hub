@@ -7,7 +7,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormValidatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
-import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -30,15 +29,32 @@ import de.lichtflut.rb.webck.validator.FileSizeValidator;
  */
 public class AjaxEditableUploadField extends AjaxEditableLabel<Object>{
 
+	private final long maximum;
+
+	// ---------------- Constructor -------------------------
+
 	/**
+	 * Constructor.
 	 * @param id - wicket:id
 	 * @param model - {@link FileUploadModel}.
 	 */
 	public AjaxEditableUploadField(final String id, final IModel<Object> model) {
-		super(id, model);
-		setOutputMarkupId(true);
+		this(id, model, Long.MAX_VALUE);
 
 	}
+
+	/**
+	 * Constructor.
+	 * @param id - wicket:id
+	 * @param model - {@link FileUploadModel}.
+	 * @param maximum - maximum filesize in byte
+	 */
+	public AjaxEditableUploadField(final String id, final IModel<Object> model, final long maximum) {
+		super(id, model);
+		this.maximum = maximum;
+	}
+
+	// ------------------------------------------------------
 
 	/**
 	 * {@inheritDoc}
@@ -47,52 +63,15 @@ public class AjaxEditableUploadField extends AjaxEditableLabel<Object>{
 	@Override
 	protected FormComponent newEditor(final MarkupContainer parent, final String componentId, final IModel model) {
 		final FileUploadField uploadField = new FileUploadField(componentId, model);
-
-		//		uploadField.add(new AjaxFormSubmitBehavior("onchange") {
-		//
-		//			@Override
-		//			protected void onSubmit(final AjaxRequestTarget target) {
-		//				getEditor().setVisible(false);
-		//				getLabel().setVisible(true);
-		//				target.add(getEditor());
-		//				target.appendJavaScript("window.status='';");
-		//			}
-		//
-		//			@Override
-		//			protected void onError(final AjaxRequestTarget target) {
-		//				onSubmit(target);
-		//
-		//			}
-		//		});
-		Form<?> form = new Form<Void>("uploadForm");
-		//		form.setMaxSize(Bytes.bytes(10485760));
-		add(form);
-		form.add(uploadField);
 		uploadField.setOutputMarkupId(true);
-		uploadField.add(new FileSizeValidator(10485760));
-		final FormComponent<FileUploadField> formComponent = new FormComponent<FileUploadField>("formComponent", model) {
-		};
-		final FeedbackPanel feedbackPanel = new FeedbackPanel("feedbackpanel", new ContainerFeedbackMessageFilter(formComponent));
+		uploadField.add(new FileSizeValidator(maximum));
+
+		final FeedbackPanel feedbackPanel = new FeedbackPanel("feedbackpanel");
 		feedbackPanel.setOutputMarkupId(true);
-		form.add(feedbackPanel);
-		form.add(new AjaxFormValidatingBehavior(form, "onChange"){
 
-			@Override
-			protected void onSubmit(final AjaxRequestTarget target) {
-				getEditor().setVisible(false);
-				getLabel().setVisible(true);
-				target.add(getEditor());
-				target.appendJavaScript("window.status='';");
-			}
+		Form<?> form = createForm(uploadField, feedbackPanel);
 
-			@Override
-			protected void onError(final AjaxRequestTarget target) {
-				setDefaultProcessing(false);
-				target.add(feedbackPanel);
-			}
-
-		});
-		//		uploadField.setVisible(formComponent.isVisible());
+		final FormComponent<FileUploadField> formComponent = new FormComponent<FileUploadField>("formComponent", model) {};
 		formComponent.setOutputMarkupId(true);
 		formComponent.add(form);
 		formComponent.setVisible(false);
@@ -110,11 +89,45 @@ public class AjaxEditableUploadField extends AjaxEditableLabel<Object>{
 		Label label = new Label(componentId, model);
 
 		container.add(label);
-		container.add(new Label("additionalInfo", Model.of(" (click to edit)")));
+		container.add(new Label("additionalInfo", getAdditionalInfo()));
 
 		container.setOutputMarkupId(true);
 		container.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
 		return container;
+	}
+
+	/**
+	 * @return the String that will be appended to the Label
+	 */
+	protected Model<String> getAdditionalInfo() {
+		return Model.of(" (click to edit)");
+	}
+
+	// ------------------------------------------------------
+
+	private Form<?> createForm(final FileUploadField uploadField, final FeedbackPanel feedbackPanel) {
+		Form<?> form = new Form<Void>("uploadForm");
+		form.add(feedbackPanel);
+		form.add(uploadField);
+
+		form.add(new AjaxFormValidatingBehavior(form, "onChange"){
+
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target) {
+				getLabel().modelChanged();
+				getEditor().setVisible(false);
+				getLabel().setVisible(true);
+				target.add(getEditor());
+				target.appendJavaScript("window.status='';");
+			}
+
+			@Override
+			protected void onError(final AjaxRequestTarget target) {
+				target.add(feedbackPanel);
+			}
+
+		});
+		return form;
 	}
 
 }

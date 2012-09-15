@@ -39,11 +39,8 @@ public class FileSizeValidator extends AbstractValidator<List<FileUpload>> {
 	 */
 	@Override
 	protected void onValidate(final IValidatable<List<FileUpload>> validatable) {
-		Object object = validatable.getValue().get(0);
-		if(!(object instanceof String)){
-			if(maximum < getUploadSize(validatable)){
-				error(validatable);
-			}
+		if(maximum < getUploadSize(validatable)){
+			error(validatable);
 		}
 	}
 
@@ -53,7 +50,7 @@ public class FileSizeValidator extends AbstractValidator<List<FileUpload>> {
 	 * @return the total size of the upload
 	 */
 	protected long getUploadSize(final IValidatable<List<FileUpload>> validatable) {
-		// Suppurts only single upload by default
+		// Supports only single upload by default
 		return validatable.getValue().get(0).getSize();
 	}
 
