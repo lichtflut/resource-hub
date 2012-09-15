@@ -24,7 +24,7 @@ import de.lichtflut.rb.core.services.FileService;
 
 /**
  * <p>
- * This service provides RESTful access to the RB-Datastore.
+ * This service provides RESTful access to the FileService.
  * </p>
  * Created: Aug 20, 2012
  *
@@ -50,8 +50,7 @@ public class FileOps extends RBServiceEndpoint {
 		try {
 			user = authenticateUser(token);
 		} catch (UnauthenticatedUserException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("User can not be authenticated", e);
 		}
 		FileService fileService = this.getProvider(domain, user).getFileService();
 		ResponseBuilder rsb = Response.ok(fileService.getData(path).getData());

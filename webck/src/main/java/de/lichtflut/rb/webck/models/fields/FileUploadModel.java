@@ -69,7 +69,7 @@ public class FileUploadModel implements IModel<Object>{
 	 */
 	@Override
 	public void setObject(final Object object) {
-		if(null != object){
+		if(object != null){
 			@SuppressWarnings("unchecked")
 			FileUpload upload = ((List<FileUpload>) object).get(0);
 			String path = saveFileToRepository(upload);

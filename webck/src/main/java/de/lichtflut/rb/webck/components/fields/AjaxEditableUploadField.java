@@ -15,6 +15,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import de.lichtflut.rb.webck.models.fields.FileUploadModel;
+import de.lichtflut.rb.webck.validator.FileSizeValidator;
 
 /**
  * <p>
@@ -62,7 +63,7 @@ public class AjaxEditableUploadField extends AjaxEditableLabel<Object>{
 
 		uploadField.setOutputMarkupId(true);
 		uploadField.setVisible(false);
-
+		uploadField.add(new FileSizeValidator(10485760));
 		return uploadField;
 	}
 

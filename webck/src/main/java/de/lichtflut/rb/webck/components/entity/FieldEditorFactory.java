@@ -9,11 +9,15 @@ import java.math.BigInteger;
 import java.util.Date;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormValidatingBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -29,6 +33,7 @@ import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.VisualizationInfo;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.rteditor.RichTextBehavior;
@@ -153,11 +158,31 @@ public class FieldEditorFactory implements Serializable {
 	}
 
 	public Component createFileUploadField(final RBField fieldDefinition, final IModel model){
-		FileUploadModel uploadModel = new FileUploadModel(model, fieldDefinition);
-		AjaxEditableUploadField dataField = new AjaxEditableUploadField("valuefield", uploadModel);
+		final FileUploadModel uploadModel = new FileUploadModel(model, fieldDefinition);
+		final AjaxEditableUploadField dataField = new AjaxEditableUploadField("valuefield", uploadModel);
 		dataField.setOutputMarkupId(true);
-		addStyle(dataField, fieldDefinition.getVisualizationInfo());
-		return new Fragment("valuefield", "fileUpload", container).add(dataField);
+		Form form = new Form<Void>("uploadForm");
+		final FeedbackPanel feedbackPanel = new FeedbackPanel("feedbackpanel");
+		feedbackPanel.setOutputMarkupId(true);
+		form.add(feedbackPanel);
+		form.add(new AjaxFormValidatingBehavior(form, "onSubmit"){
+
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target) {
+				RBAjaxTarget.add(feedbackPanel, dataField);
+			}
+
+			@Override
+			protected void onError(final AjaxRequestTarget target) {
+				onSubmit(target);
+			}
+
+		});
+		// Max-filesize 10MB by default
+		//		form.setMaxSize(Bytes.bytes(10485760));
+		form.add(dataField);
+		addStyle(form, fieldDefinition.getVisualizationInfo());
+		return new Fragment("valuefield", "fileUpload", container).add(form);
 	}
 
 	// ----------------------------------------------------
