@@ -17,11 +17,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import de.lichtflut.rb.webck.models.fields.FileUploadModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import de.lichtflut.rb.webck.validator.FileSizeValidator;
 
 /**
  * <p>
- * This component displays the data's name and opens an {@link FileUploadField} when clicked.
+ * This component displays the data's name and opens an {@link FileUploadField} when clicked.<br>
+ * Works with {@link RBFieldValueModel} by default.
  * </p>
  * Created: Sep 5, 2012
  *

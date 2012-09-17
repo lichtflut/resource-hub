@@ -15,6 +15,7 @@ public enum Filetype {
 
 	// Image Types
 	JPEG,
+	JPG,
 	PNG,
 
 	// Text Types
@@ -26,12 +27,15 @@ public enum Filetype {
 	// ------------------------------------------------------
 
 	public static Filetype getCorrespondingFiletypeFor(final String filetype){
-		String s = filetype.replace(".", "").toUpperCase();
-		if(JPEG.name().equals(s)){
+		String original = filetype.replace(".", "").toUpperCase();
+		if(JPEG.name().equals(original)){
 			return Filetype.JPEG;
-		} else if (PNG.name().equals(s)){
+		} else if(JPG.name().equals(original)){
+			return Filetype.JPG;
+		}
+		else if (PNG.name().equals(original)){
 			return Filetype.PNG;
-		} else if(TXT.name().equals(s)){
+		} else if(TXT.name().equals(original)){
 			return Filetype.TXT;
 		}
 		else{

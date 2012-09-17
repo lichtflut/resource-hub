@@ -14,6 +14,8 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -22,7 +24,6 @@ import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.impl.FileServiceImpl;
 import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
 import de.lichtflut.repository.ContentDescriptor;
-import de.lichtflut.repository.Filetype;
 import de.lichtflut.repository.impl.ContentDescriptorBuilder;
 
 
@@ -64,19 +65,28 @@ public class FilePreviewLink extends Panel {
 	// ------------------------------------------------------
 
 	private Component createPreview(final IModel<String> model) {
-		String location = model.getObject();
+		final String location = model.getObject();
 		if(fileService.exists(location)){
-			ContentDescriptor descriptor = fileService.getData(location);
-			return createFragment(location, descriptor, descriptor.getMimeType());
+			IModel<ContentDescriptor> descriptor = new LoadableDetachableModel<ContentDescriptor>() {
+
+				@Override
+				protected ContentDescriptor load() {
+					return fileService.getData(location);
+				}
+			};
+
+			return createFragment(location, descriptor);
 		}else{
 			ContentDescriptor dummy = new ContentDescriptorBuilder().name(location).build();
-			return new Fragment("valuefield", "linkFragment", this).add(createLink(dummy));
+			IModel<ContentDescriptor> pathModel = Model.of(dummy);
+			return new Fragment("valuefield", "linkFragment", this).add(createLink(pathModel));
 		}
 	}
 
-	private Component createFragment(final String location, final ContentDescriptor descriptor, final Filetype mimeType) {
-		switch (mimeType) {
+	private Component createFragment(final String location, final IModel<ContentDescriptor> descriptor) {
+		switch (descriptor.getObject().getMimeType()) {
 		case JPEG:
+		case JPG:
 		case PNG:
 			return new Fragment("valuefield", "thumbnailFragment", this).add(createThumbnailLink(descriptor));
 		default:
@@ -84,8 +94,8 @@ public class FilePreviewLink extends Panel {
 		}
 	}
 
-	private Component createThumbnailLink(final ContentDescriptor descriptor) {
-		String href = getLinkLocation(descriptor.getPath());
+	private Component createThumbnailLink(final IModel<ContentDescriptor> descriptor) {
+		String href = getLinkLocation(descriptor.getObject().getPath());
 		IResource unscaledResource = getIResource(descriptor);
 
 		ThumbnailImageResource resource = new ThumbnailImageResource(unscaledResource, 100);
@@ -105,13 +115,13 @@ public class FilePreviewLink extends Panel {
 		return href;
 	}
 
-	private IResource getIResource(final ContentDescriptor descriptor) {
+	private IResource getIResource(final IModel<ContentDescriptor> descriptor) {
 		IResource unscaledResource = new DynamicImageResource() {
 
 			@Override
 			protected byte[] getImageData(final Attributes attributes) {
 				try {
-					return IOUtils.toByteArray(descriptor.getData());
+					return IOUtils.toByteArray(descriptor.getObject().getData());
 				} catch (IOException e) {
 					throw new RuntimeException("Error converting Inputstream to byte[] in " + FilePreviewLink.class, e);
 				}
@@ -120,12 +130,10 @@ public class FilePreviewLink extends Panel {
 		return unscaledResource;
 	}
 
-	// ------------------------------------------------------
+	private Component createLink(final IModel<ContentDescriptor> descriptor) {
+		String href = getLinkLocation(descriptor.getObject().getPath());
 
-	private Component createLink(final ContentDescriptor descriptor) {
-		String href = getLinkLocation(descriptor.getPath());
-
-		String simpleName = FileServiceImpl.getSimpleName(descriptor.getPath());
+		String simpleName = FileServiceImpl.getSimpleName(descriptor.getObject().getPath());
 
 		ExternalLink link = new ExternalLink("link", href, simpleName);
 		link.add(new AttributeModifier("target", "_blank"));
