@@ -16,10 +16,12 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import de.lichtflut.rb.core.schema.parser.impl.VisualizationBuilder;
 
 /**
  * <p>
@@ -276,5 +278,37 @@ public class PropertyRow implements Serializable {
 		} else {
 			decl.setCardinality(CardinalityBuilder.between(min, Math.max(min, 1)));
 		}
+	}
+
+	public boolean getEmbedded(){
+		return decl.getVisualizationInfo().isEmbedded();
+	}
+
+	public void setEmbedded(final boolean embedden){
+		new VisualizationBuilder().add((PropertyDeclarationImpl)decl, VisualizationBuilder.EMBEDDED, String.valueOf(embedden));
+	}
+
+	public boolean getFloating(){
+		return decl.getVisualizationInfo().isFloating();
+	}
+
+	public void setFloating(final boolean floating){
+		new VisualizationBuilder().add((PropertyDeclarationImpl)decl, VisualizationBuilder.FLOATING, String.valueOf(floating));
+	}
+
+	public String getStyle(){
+		return decl.getVisualizationInfo().getStyle();
+	}
+
+	public void setStyle(final String style){
+		new VisualizationBuilder().add((PropertyDeclarationImpl)decl, VisualizationBuilder.STYLE, style);
+	}
+
+	public VisualizationInfo getVisualizationInfo(){
+		return decl.getVisualizationInfo();
+	}
+
+	public void setVisualizationInfo(final VisualizationInfo info){
+		decl.setVisualizationInfo(info);
 	}
 }
