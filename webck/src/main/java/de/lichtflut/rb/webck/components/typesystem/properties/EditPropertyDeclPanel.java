@@ -25,6 +25,7 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.components.typesystem.EditVisualizationInfoPanel;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
@@ -94,7 +95,7 @@ public class EditPropertyDeclPanel extends Panel {
 				EditPropertyDeclPanel.this.onSubmit(target, form);
 			}
 		};
-		Button cancel = new RBStandardButton("cancel") {
+		Button cancel = new RBCancelButton("cancel") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				onCancel(target, form);

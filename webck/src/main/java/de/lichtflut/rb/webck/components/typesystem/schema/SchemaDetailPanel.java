@@ -433,7 +433,7 @@ public class SchemaDetailPanel extends Panel {
 				hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), item.getModel()) {
 					@Override
 					protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-						updatePanel();
+						saveAndUpdate();
 						close(target);
 					}
 
