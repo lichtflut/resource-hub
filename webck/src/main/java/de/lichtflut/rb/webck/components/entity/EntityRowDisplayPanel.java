@@ -6,7 +6,6 @@ package de.lichtflut.rb.webck.components.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -180,17 +179,6 @@ public class EntityRowDisplayPanel extends Panel {
 		}
 		final Label field = new Label("valuefield", label);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
-	}
-
-	private IModel<String> getDisplayNameForLink(final ListItem<RBFieldValueModel> item) {
-		@SuppressWarnings("unchecked")
-		IModel<String> name = item.getModelObject();
-		RBField field = item.getModelObject().getField();
-		if(Datatype.FILE.name().equals(field.getDataType().name())) {
-			String s = (String) field.getValue(item.getModelObject().getIndex());
-			return Model.of(StringUtils.substringAfterLast(s, "/"));
-		}
-		return name;
 	}
 
 	private ResourceID getResourceID(final RBFieldValueModel model) {

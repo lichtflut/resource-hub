@@ -3,31 +3,6 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
-import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.TypeManager;
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.SimpleQueryResult;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -37,6 +12,28 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.query.Query;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.TypeManager;
 
 /**
  * <p>
@@ -57,7 +54,7 @@ public class EntityManagerImplTest {
 	private TypeManager tm;
 	private ModelingConversation mc;
 	private Query query;
-	
+
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -67,7 +64,7 @@ public class EntityManagerImplTest {
 		mc = mock(ModelingConversation.class);
 		query = mock(Query.class);
 		tm = mock(TypeManager.class);
-		
+
 		when(mc.createQuery()).thenReturn(query);
 
 		em = new EntityManagerImpl(tm, sm, mc);
@@ -93,7 +90,7 @@ public class EntityManagerImplTest {
 		assertNotNull(entity);
 		assertNull(entity.getType());
 
-		
+
 		// find entity with type
 		when(tm.getTypeOfResource(user)).thenReturn(RB.PERSON.asResource().asClass());
 		when(mc.findResource(user.getQualifiedName())).thenReturn(user);
@@ -104,7 +101,7 @@ public class EntityManagerImplTest {
 		assertNotNull(e.getType());
 		assertFalse(e.hasSchema());
 
-		
+
 		// find entity with type, schema
 		when(mc.findResource(user.getQualifiedName())).thenReturn(user);
 		when(sm.findSchemaForType(RB.PERSON)).thenReturn(new ResourceSchemaImpl(RB.PERSON));
@@ -114,7 +111,7 @@ public class EntityManagerImplTest {
 		assertNotNull(e1.getType());
 		assertTrue(e1.hasSchema());
 
-		
+
 		// find non-existing Entity
 		ResourceID nullID = new SimpleResourceID();
 		when(mc.findResource(nullID.getQualifiedName())).thenReturn(null);
@@ -154,7 +151,7 @@ public class EntityManagerImplTest {
 	 * {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#changeType(de.lichtflut.rb.core.entity.RBEntity, org.arastreju.sge.model.ResourceID)}.
 	 */
 	@Test
-    @Ignore
+	@Ignore
 	public void testChangeType() {
 		RBEntity entity = new RBEntityImpl(getUser(), RB.PERSON);
 		when(mc.resolve(entity.getID())).thenReturn(entity.getNode());
@@ -170,5 +167,5 @@ public class EntityManagerImplTest {
 		node.addAssociation(RDF.TYPE, RB.PERSON);
 		return node;
 	}
-	
+
 }

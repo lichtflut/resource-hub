@@ -12,13 +12,14 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SemanticGraph;
-import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.structure.OrderBySerialNumber;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.security.RBUser;
@@ -34,8 +35,6 @@ import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
 import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -50,7 +49,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ViewSpecificationServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ViewSpecificationServiceImpl.class);
 
 	private ServiceContext context;
 
@@ -88,8 +87,8 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 			result.addAll(initializeDashboards(user));
 		}
 		Collections.sort(result, new OrderBySerialNumber());
-        LOGGER.debug("Context: {}.", conversation().getConversationContext());
-        LOGGER.debug("{} has menu items: {}.", user, result);
+		LOGGER.debug("Context: {}.", conversation().getConversationContext());
+		LOGGER.debug("{} has menu items: {}.", user, result);
 
 		return result;
 	}
@@ -99,7 +98,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 		final ResourceNode user = currentUser();
 		store(item);
 		user.addAssociation(WDGT.HAS_MENU_ITEM, item);
-        LOGGER.debug("Added item {} to user {}.", item, user);
+		LOGGER.debug("Added item {} to user {}.", item, user);
 	}
 
 	@Override
@@ -111,9 +110,9 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	public void removeUsersItem(final MenuItem item) {
 		final ResourceNode user = currentUser();
 		SNOPS.remove(user, WDGT.HAS_MENU_ITEM, item);
-        LOGGER.debug("Context: {}.", conversation().getConversationContext());
-        LOGGER.debug("Removed item {} from user {}.", item, user);
-        LOGGER.debug("Left items of user {}: ", getUsersMenuItems());
+		LOGGER.debug("Context: {}.", conversation().getConversationContext());
+		LOGGER.debug("Removed item {} from user {}.", item, user);
+		LOGGER.debug("Left items of user {}: ", getUsersMenuItems());
 		//TODO: Remove item if private one.
 		//conversation.remove(item);
 	}
@@ -130,17 +129,17 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 		}
 	}
 
-    @Override
-    public List<Perspective> findPerspectives() {
-        final Query query = conversation().createQuery();
-        query.addField(RDF.TYPE, WDGT.PERSPECTIVE);
-        final QueryResult result = query.getResult();
-        final List<Perspective> perspectives = new ArrayList<Perspective>(result.size());
-        for (ResourceNode node : result) {
-            perspectives.add(new SNPerspective(node));
-        }
-        return perspectives;
-    }
+	@Override
+	public List<Perspective> findPerspectives() {
+		final Query query = conversation().createQuery();
+		query.addField(RDF.TYPE, WDGT.PERSPECTIVE);
+		final QueryResult result = query.getResult();
+		final List<Perspective> perspectives = new ArrayList<Perspective>(result.size());
+		for (ResourceNode node : result) {
+			perspectives.add(new SNPerspective(node));
+		}
+		return perspectives;
+	}
 
 	@Override
 	public void store(final Perspective perspective) {
@@ -212,7 +211,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	protected ResourceNode currentUser() {
 		final RBUser user = context.getUser();
 		if (user == null) {
-            throw new IllegalStateException("No user context set.");
+			throw new IllegalStateException("No user context set.");
 		} else {
 			return conversation().findResource(user.getQualifiedName());
 		}
