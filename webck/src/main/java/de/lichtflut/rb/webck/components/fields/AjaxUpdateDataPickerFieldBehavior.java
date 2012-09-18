@@ -22,7 +22,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
  *
  * @author Oliver Tigges
  */
-public class AjaxUpdateDataPickerField extends Behavior {
+public class AjaxUpdateDataPickerFieldBehavior extends Behavior {
 	
 	private DataPickerField<?> picker;
 	
@@ -31,7 +31,7 @@ public class AjaxUpdateDataPickerField extends Behavior {
 	/**
 	 * Constructor.
 	 */
-	public AjaxUpdateDataPickerField() {
+	public AjaxUpdateDataPickerFieldBehavior() {
 	}
 	
 	// ----------------------------------------------------

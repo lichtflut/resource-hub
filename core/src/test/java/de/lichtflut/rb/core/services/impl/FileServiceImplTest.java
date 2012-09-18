@@ -28,6 +28,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.repository.ContentDescriptor;
+import de.lichtflut.repository.Filetype;
 import de.lichtflut.repository.RepositoryDelegator;
 import de.lichtflut.repository.impl.ContentDescriptorBuilder;
 
@@ -67,6 +68,21 @@ public class FileServiceImplTest {
 	}
 
 	/**
+	 * Test method for {@link de.lichtflut.rb.core.services.impl.FileServiceImpl#FileServiceImpl(java.lang.String)}
+	 * with invalid config path.
+	 */
+	@Test(expected=IllegalStateException.class)
+	public void testFileServiceImplWithWrongConfigPath(){
+		fileService = new FileServiceImpl("resource/nonsense.xml", null){
+			@Override
+			protected void initRepository(){
+			}
+		};
+		assertThat(fileService, notNullValue());
+
+	}
+
+	/**
 	 * Test method for {@link de.lichtflut.rb.core.services.impl.FileServiceImpl#getData(java.lang.String)}.
 	 * @throws IOException
 	 */
@@ -75,7 +91,7 @@ public class FileServiceImplTest {
 		File original = tempFolder.newFile("test");
 		filllFile(original);
 		InputStream in = new FileInputStream(original);
-		ContentDescriptor descriptor = new ContentDescriptorBuilder().data(in).mimeType("properties").build();
+		ContentDescriptor descriptor = new ContentDescriptorBuilder().data(in).mimeType(Filetype.getCorrespondingFiletypeFor("properties")).build();
 
 		startMockRepositoryDelegator();
 		when(mockDelegator.getData(path)).thenReturn(descriptor);

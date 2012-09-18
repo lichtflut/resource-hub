@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.repository.ContentDescriptor;
+import de.lichtflut.repository.Filetype;
 import de.lichtflut.repository.RepositoryDelegator;
 
 /**
@@ -87,7 +88,8 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 			e.printStackTrace();
 		}
 		LOGGER.info("Retrieved Data: {}", path);
-		return new ContentDescriptorBuilder().data(retrievedStream).path(path).mimeType(mimeType).name(name).build();
+		Filetype filetype = Filetype.getCorrespondingFiletypeFor(mimeType);
+		return new ContentDescriptorBuilder().data(retrievedStream).path(path).mimeType(filetype).name(name).build();
 	}
 
 	/**
@@ -111,6 +113,9 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 	 */
 	@Override
 	public boolean exists(final String path) {
+		if(null == path){
+			return false;
+		}
 		try {
 			return getRoot().hasNode(path);
 		} catch (RepositoryException e) {
@@ -215,7 +220,7 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 			Node fileNode = node.addNode(CONTENT_NODE, NodeType.NT_FILE);
 
 			Node resNode = fileNode.addNode(Property.JCR_CONTENT, NodeType.NT_RESOURCE);
-			resNode.setProperty(Property.JCR_MIMETYPE, descriptor.getMimeType());
+			resNode.setProperty(Property.JCR_MIMETYPE, descriptor.getMimeType().name());
 			resNode.setProperty(Property.JCR_LAST_MODIFIED, Calendar.getInstance().getTimeInMillis());
 
 			Binary binary = node.getSession().getValueFactory().createBinary(descriptor.getData());

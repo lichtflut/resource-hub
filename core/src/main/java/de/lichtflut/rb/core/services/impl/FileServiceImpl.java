@@ -3,9 +3,6 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -57,9 +54,9 @@ public class FileServiceImpl implements FileService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InputStream getData(final String path) {
+	public ContentDescriptor getData(final String path) {
 		LOGGER.info("Retrieving file for path: {}", path);
-		return delegator.getData(path).getData();
+		return delegator.getData(path);
 	}
 
 	/**
@@ -84,6 +81,9 @@ public class FileServiceImpl implements FileService {
 	 * @return
 	 */
 	public static String getSimpleName(final String path){
+		if(null == path || path.isEmpty()){
+			return "";
+		}
 		String[] strings = path.split("/");
 		if(null == strings || strings.length == 0){
 			return path;
@@ -123,13 +123,10 @@ public class FileServiceImpl implements FileService {
 	private void initPropertiesFile(final String config) {
 		try {
 			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(config));
-			LOGGER.debug("Propertyfile loaded from: {}", config);
-		} catch (final FileNotFoundException e) {
-			LOGGER.error("Could not find Propertiesfile from: {}", config);
-			e.printStackTrace();
-		} catch (final IOException e) {
-			LOGGER.error("Error while loading file from: {}", config);
-			e.printStackTrace();
+			LOGGER.debug("PropertiesFile loaded from: {}", config);
+		} catch (final Exception e) {
+			LOGGER.error("Could not find PropertiesFile from: {}", config);
+			throw new IllegalStateException("Error while loading propertiesFile at path: " + config, e);
 		}
 	}
 

@@ -9,15 +9,11 @@ import java.math.BigInteger;
 import java.util.Date;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -33,11 +29,11 @@ import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.VisualizationInfo;
-import de.lichtflut.rb.core.services.impl.FileServiceImpl;
-import de.lichtflut.rb.webck.components.fields.AjaxEditableDataField;
+import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.rteditor.RichTextBehavior;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
+import de.lichtflut.rb.webck.models.fields.FileUploadModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 
 /**
@@ -95,7 +91,7 @@ public class FieldEditorFactory implements Serializable {
 		case URI:
 			return createURIField(field, valueModel);
 		case FILE:
-			return createFileChooser(field, valueModel);
+			return createFileUploadField(field, valueModel);
 		default:
 			throw new NotYetImplementedException("Datatype: " + field.getDataType());
 		}
@@ -156,46 +152,15 @@ public class FieldEditorFactory implements Serializable {
 		return new Fragment("valuefield", "textInput", container).add(field);
 	}
 
-	public Component createFileChooser(final RBField fieldDefinition, final IModel model){
-		AjaxEditableDataField dataField = new AjaxEditableDataField("valuefield", model){
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			protected FormComponent newEditor(final MarkupContainer parent, final String componentId, final IModel model) {
-				FileUploadField uploadField = new FileUploadField(componentId, model);
-				uploadField.add(super.newEditor(parent, componentId, model));
-				uploadField.setOutputMarkupId(true);
-				uploadField.setVisible(false);
-				//				uploadField.add(new EditorAjaxBehavior());
-				return uploadField;
-			}
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			protected WebMarkupContainer newLabel(final MarkupContainer parent, final String componentId, final IModel model) {
-				WebMarkupContainer container = new WebMarkupContainer("container");
-				String simpleName = "";
-				if(!(null == model)){
-					if(!(null == model.getObject())){
-						simpleName = FileServiceImpl.getSimpleName(model.getObject().toString());
-					}
-				}
-				Label label = new Label(componentId, simpleName);
-				label.setEscapeModelStrings(false);
-				container.add(label);
-				container.add(new Label("additionalInfo", Model.of(" (click to edit)")));
-
-				container.setOutputMarkupId(true);
-				container.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
-				return container;
-			}
-		};
-		dataField.setOutputMarkupId(true);
-		addStyle(dataField, fieldDefinition.getVisualizationInfo());
-		return new Fragment("valuefield", "fileUpload", container).add(dataField);
+	public Component createFileUploadField(final RBField fieldDefinition, final IModel model){
+		final FileUploadModel uploadModel = new FileUploadModel(model, fieldDefinition);
+		// TODO get maximum from application
+		// Set maximum filesize 10MB
+		long maximum =  10485760;
+		final AjaxEditableUploadField uploadField = new AjaxEditableUploadField("valuefield", uploadModel, maximum);
+		uploadField.setOutputMarkupId(true);
+		addStyle(uploadField, fieldDefinition.getVisualizationInfo());
+		return new Fragment("valuefield", "fileUpload", container).add(uploadField);
 	}
 
 	// ----------------------------------------------------
