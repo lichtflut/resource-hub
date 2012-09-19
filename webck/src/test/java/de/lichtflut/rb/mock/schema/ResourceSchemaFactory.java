@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.mock.schema;
 
+import java.util.Locale;
+
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -13,8 +15,6 @@ import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.mock.RBMock;
-
-import java.util.Locale;
 
 /**
  * <p>
@@ -58,7 +58,7 @@ public class ResourceSchemaFactory {
 		email.getFieldLabelDefinition().setLabel(Locale.GERMAN, "Email");
 		children.setFieldLabelDefinition(new FieldLabelDefinitionImpl("Children"));
 		children.getFieldLabelDefinition().setLabel(Locale.GERMAN, "Kinder");
-		
+
 		schema.addPropertyDeclaration(firstname);
 		schema.addPropertyDeclaration(lastname);
 		schema.addPropertyDeclaration(address);
