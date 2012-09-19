@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <import resource="classpath:spring-context-base.xml"/>
+    <import resource="classpath:spring-context-rest.xml"/>
+    <import resource="classpath:spring-context-ui.xml"/>
+    <import resource="classpath:spring-context-auth.xml"/>
+
+    <bean id="rbConfig" class="de.lichtflut.rb.core.config.RBConfig">
+        <constructor-arg value="glasnost"></constructor-arg>
+    </bean>
+
+    <bean id="securityConfig" class="de.lichtflut.glasnost.is.conf.GlasnostSecurityConfiguration"/>
+
+    <!--  Application and paths -->
+
+    <bean id="wicketApplication" class="de.lichtflut.glasnost.is.GlasnostWebApplication" />
+
+    <bean id="queryServicePathBuilder" class="de.lichtflut.rb.webck.config.DefaultQueryServicePathBuilder">
+    </bean>
+
+    <bean id="resourceLinkProvider" class="de.lichtflut.rb.application.extensions.RBResourceLinkProvider">
+    </bean>
+
+    <bean id="domainInitializer" class="de.lichtflut.rb.application.common.RBDomainInitializer"/>
+
+    <bean id="emailConfiguration" class="de.lichtflut.glasnost.is.conf.GlasnostEmailConfiguration"/>
+
+    <bean id="fileService" class="de.lichtflut.rb.core.services.impl.FileServiceImpl" >
+        <constructor-arg index="0"><value>content-repo/glasnost-config.properties</value></constructor-arg>
+        <constructor-arg index="1" ref="rbConfig"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <import resource="spring-context-base.xml"/>
+
+<bean id="rbConfig" class="de.lichtflut.rb.core.config.RBConfig">
+        <constructor-arg value="test"></constructor-arg>
+    </bean>
+    <!-- The service context -->
+
+    <bean id="context" class="de.lichtflut.rb.core.services.ServiceContext" scope="session">
+        <constructor-arg index="0" ref="rbConfig"></constructor-arg>
+    </bean>
+
+    <bean id="schemaManager" class="de.lichtflut.rb.core.services.impl.SchemaManagerImpl" scope="request">
+        <constructor-arg index="0" ref="arasResourceFactory"></constructor-arg>
+    </bean>
+    
+    <bean id="typeManager" class="de.lichtflut.rb.core.services.impl.TypeManagerImpl" scope="request">
+        <constructor-arg index="0" ref="arasResourceFactory"></constructor-arg>
+        <constructor-arg index="1" ref="schemaManager"></constructor-arg>
+    </bean>
+    
+    <bean id="arasResourceFactory" class="de.lichtflut.rb.core.services.ArastrejuResourceFactory" scope="session">
+        <constructor-arg index="0" ref="context"></constructor-arg>
+    </bean>
+
+    <bean id="conversation" class="de.lichtflut.rb.core.services.ArastrejuConversationHolder" scope="test">
+        <constructor-arg index="0" ref="arasResourceFactory"></constructor-arg>
+    </bean>
+    
+</beans>

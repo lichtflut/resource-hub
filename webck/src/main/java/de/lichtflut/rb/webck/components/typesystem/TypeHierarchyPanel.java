@@ -3,11 +3,12 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
-import de.lichtflut.rb.core.services.TypeManager;
-import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.components.fields.ClassPickerField;
-import de.lichtflut.rb.webck.components.form.RBDefaultButton;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
@@ -28,11 +29,11 @@ import org.arastreju.sge.model.nodes.views.SNClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
+import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.components.fields.ClassPickerField;
+import de.lichtflut.rb.webck.components.form.RBDefaultButton;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
 /**
  * <p>
@@ -46,12 +47,12 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
  * @author Oliver Tigges
  */
 public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(TypeHierarchyPanel.class);
-	
+
 	@SpringBean
 	private TypeManager typeManager;
-	
+
 	// ----------------------------------------------------
 
 	/**
@@ -60,22 +61,22 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 	 * @param model The model containing the ID of the type.
 	 */
 	@SuppressWarnings("rawtypes")
-	public TypeHierarchyPanel(String id, IModel<ResourceID> model) {
+	public TypeHierarchyPanel(final String id, final IModel<ResourceID> model) {
 		super(id, model);
-		
+
 		setOutputMarkupId(true);
-		
+
 		add(new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this)));
-		
+
 		final SuperClassModel superClassModel = new SuperClassModel(model);
-		
+
 		final ListView<SNClass> view = new ListView<SNClass>("superClasses", superClassModel) {
 			@Override
 			protected void populateItem(final ListItem<SNClass> item) {
 				item.add(new Label("class", item.getModel()));
 				item.add(new AjaxLink("remove") {
 					@Override
-					public void onClick(AjaxRequestTarget target) {
+					public void onClick(final AjaxRequestTarget target) {
 						removeSuperClass(item.getModelObject());
 						superClassModel.reset();
 						info(getString("confirmation.deleted-successful"));
@@ -85,19 +86,19 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 			}
 		};
 		add(view);
-		
+
 		final Label hint = new Label("noSuperClassesHint", new ResourceModel("label.no-super-classes"));
 		hint.add(visibleIf(isEmpty(superClassModel)));
 		add(hint);
-		
+
 		final Form<?> form = new Form<Void>("form");
-		
+
 		final IModel<ResourceID> newSuperClass = new Model<ResourceID>();
-		
+
 		form.add(new ClassPickerField("classPicker", newSuperClass));
 		form.add(new RBDefaultButton("addClass") {
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				addSuperClass(newSuperClass.getObject());
 				newSuperClass.setObject(null);
 				info(getString("confirmation.saved-successful"));
@@ -106,47 +107,47 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 		});
 		add(form);
 	}
-	
+
 	// ----------------------------------------------------
-	
-	protected void addSuperClass(ResourceID superClass) {
+
+	protected void addSuperClass(final ResourceID superClass) {
 		final ResourceID baseClass = getModelObject();
 		logger.info("adding super class to : " + baseClass);
 		typeManager.addSuperClass(baseClass, superClass);
 	}
 
-	protected void removeSuperClass(ResourceID superClass) {
+	protected void removeSuperClass(final ResourceID superClass) {
 		final ResourceID baseClass = getModelObject();
 		logger.info("removing super class to : " + baseClass);
 		typeManager.removeSuperClass(baseClass, superClass);
 	}
 
-	
+
 	// ----------------------------------------------------
-	
+
 	private static class SuperClassModel extends DerivedDetachableModel<List<SNClass>, ResourceID> {
 
-        @SpringBean
-        private ModelingConversation conversation;
+		@SpringBean
+		private ModelingConversation conversation;
 
-        // ----------------------------------------------------
+		// ----------------------------------------------------
 
-		public SuperClassModel(IModel<ResourceID> base) {
+		public SuperClassModel(final IModel<ResourceID> base) {
 			super(base);
-            Injector.get().inject(this);
+			Injector.get().inject(this);
 		}
 
-		/** 
+		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		protected List<SNClass> derive(ResourceID base) {
+		protected List<SNClass> derive(final ResourceID base) {
 			final ResourceNode typeNode = conversation.resolve(base);
 			final List<SNClass> result = new ArrayList<SNClass>();
 			result.addAll(typeNode.asClass().getDirectSuperClasses());
 			return result;
 		}
-		
+
 	}
 
 }
