@@ -14,6 +14,7 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.impl.FileServiceImpl;
@@ -97,6 +98,9 @@ public class FileUploadModel implements IModel<Object>{
 	private ContentDescriptor buildContentDescriptorFor(final FileUpload upload) {
 		ResourceID id = RBWebSession.get().getHistory().getCurrentStep().getHandle().getId();
 		RBEntity entity = entityManager.find(id);
+		if(null == entity){
+			entity = new RBEntityImpl(id.asResource(), id);
+		}
 		String path = LinkProvider.buildRepositoryStructureFor(entity, rbField.getQualifiedName(), upload.getClientFileName());
 		ContentDescriptor descriptor;
 		try {
