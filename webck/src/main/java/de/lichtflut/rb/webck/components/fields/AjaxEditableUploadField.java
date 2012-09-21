@@ -119,7 +119,7 @@ public class AjaxEditableUploadField extends AjaxEditableLabel<Object>{
 				getLabel().modelChanged();
 				getEditor().setVisible(false);
 				getLabel().setVisible(true);
-				target.add(getEditor());
+				target.add(AjaxEditableUploadField.this);
 				target.appendJavaScript("window.status='';");
 			}
 
