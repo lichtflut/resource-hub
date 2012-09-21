@@ -25,6 +25,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import de.lichtflut.rb.AbstractBaseTest;
 import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.mock.RBMock;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
 
 /**
  * <p>
@@ -56,12 +58,18 @@ public class SNPropertyEditorPanelTest extends AbstractBaseTest {
 	public void testSNPropertyEditorPanel() {
 		initTestData();
 
+		// Assert Components
 		getTester().startComponentInPage(panel);
 		getTester().assertNoErrorMessage();
 		getTester().assertLabel("test:propertyUri", property.toURI());
 		getTester().assertLabel("test:propertyLabel", property.getSimpleName());
 		getTester().assertListView("test:superProps", Arrays.asList(new SNProperty(RBMock.HAS_CONTACT_DATA.asResource())));
+		getTester().assertComponent("test:form:save", RBStandardButton.class);
+		getTester().assertComponent("test:form:delete", RBStandardButton.class);
+		getTester().assertComponent("test:form:cancel", RBCancelButton.class);
 
+
+		// Assert Behavior
 		FormTester formTester = getTester().newFormTester("test:form");
 		formTester.submit();
 		getTester().executeAjaxEvent("test:form:save", "onCLick");
