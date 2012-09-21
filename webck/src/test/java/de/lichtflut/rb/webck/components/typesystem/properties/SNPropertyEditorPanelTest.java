@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import de.lichtflut.rb.AbstractBaseTest;
+import de.lichtflut.rb.AbstractRBWebTest;
 import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.mock.RBMock;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
@@ -37,7 +37,7 @@ import de.lichtflut.rb.webck.components.form.RBStandardButton;
  * @author Ravi Knox
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SNPropertyEditorPanelTest extends AbstractBaseTest {
+public class SNPropertyEditorPanelTest extends AbstractRBWebTest {
 
 	@Mock
 	private TypeManager typeManager;
