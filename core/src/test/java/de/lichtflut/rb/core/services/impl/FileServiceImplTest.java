@@ -51,7 +51,6 @@ public class FileServiceImplTest {
 
 	private FileService fileService;
 
-	private final String propertiesFilePath = "fileService/test-repo-config.properties";
 	private final String path = "lichtflut/test/person/mueller";
 
 	/**
@@ -59,27 +58,12 @@ public class FileServiceImplTest {
 	 */
 	@Test
 	public void testFileServiceImpl() {
-		fileService = new FileServiceImpl(propertiesFilePath, null){
+		fileService = new FileServiceImpl("pathToRepo.xml", null){
 			@Override
 			protected void initRepository(){
 			}
 		};
 		assertThat(fileService, notNullValue());
-	}
-
-	/**
-	 * Test method for {@link de.lichtflut.rb.core.services.impl.FileServiceImpl#FileServiceImpl(java.lang.String)}
-	 * with invalid config path.
-	 */
-	@Test(expected=IllegalStateException.class)
-	public void testFileServiceImplWithWrongConfigPath(){
-		fileService = new FileServiceImpl("resource/nonsense.xml", null){
-			@Override
-			protected void initRepository(){
-			}
-		};
-		assertThat(fileService, notNullValue());
-
 	}
 
 	/**
@@ -139,7 +123,7 @@ public class FileServiceImplTest {
 	private void startMockRepositoryDelegator() {
 		mock(RepositoryDelegator.class);
 
-		fileService = new FileServiceImpl(propertiesFilePath, null){
+		fileService = new FileServiceImpl("pathToRepo.xml", null){
 			@Override
 			protected void initRepository(){
 				this.delegator = mockDelegator;

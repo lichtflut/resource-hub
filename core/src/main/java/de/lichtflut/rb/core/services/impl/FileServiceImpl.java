@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.Properties;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -30,19 +29,19 @@ public class FileServiceImpl implements FileService {
 
 	protected RepositoryDelegator delegator;
 
-	private final Properties properties = new Properties();
 	private final RBConfig rbConfig;
+	private final String repositoryConf;
 
 	// ---------------- Constructor -------------------------
 
 	/**
 	 * Constructor.
-	 * @param config - path to repository config file
+	 * @param repository - path to repository.xml file
 	 * @param rbConfig - {@link RBConfig} for storage directory
 	 */
-	public FileServiceImpl(final String config, final RBConfig rbConfig) {
+	public FileServiceImpl(final String repository, final RBConfig rbConfig) {
 		this.rbConfig = rbConfig;
-		initPropertiesFile(config);
+		repositoryConf = repository;
 		if(null == delegator){
 			initRepository();
 		}
@@ -94,17 +93,13 @@ public class FileServiceImpl implements FileService {
 	// ------------------------------------------------------
 
 	protected void initRepository() {
-		delegator = new RepositoryDelegatorImpl(
-                properties.getProperty("username", "anonymous"),
-                properties.getProperty("password", "anonymous")) {
+		delegator = new RepositoryDelegatorImpl("admin","adminId") {
 
 			@Override
 			protected RepositoryConfigWrapper getConfig() {
 				String home = getHomeDirectory();
-				String config = properties.getProperty("config-file", "");
-				return new RepositoryConfigWrapper(home, config);
+				return new RepositoryConfigWrapper(home, repositoryConf);
 			}
-
 		};
 	}
 
@@ -118,16 +113,6 @@ public class FileServiceImpl implements FileService {
 		home = home + System.getProperty("file.separator") + "content-repository";
 		LOGGER.info("Using repository location: {}", home);
 		return home;
-	}
-
-	private void initPropertiesFile(final String config) {
-		try {
-			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(config));
-			LOGGER.debug("PropertiesFile loaded from: {}", config);
-		} catch (final Exception e) {
-			LOGGER.error("Could not find PropertiesFile from: {}", config);
-			throw new IllegalStateException("Error while loading propertiesFile at path: " + config, e);
-		}
 	}
 
 }
