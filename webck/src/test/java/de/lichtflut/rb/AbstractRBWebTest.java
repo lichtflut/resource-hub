@@ -9,7 +9,16 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.util.tester.WicketTester;
+import org.arastreju.sge.ModelingConversation;
 import org.junit.Before;
+import org.mockito.Mock;
+
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
+import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 
 /**
  * <p>
@@ -18,7 +27,7 @@ import org.junit.Before;
  * <ul><li>
  * add SpringBean annotation support in class under test
  * </li><li>
- * enable you to inject mock objects
+ * enable you to inject mock objects (services are injected by default)
  * </li><li>
  * instantiates {@link WicketTester}
  * </li><li>
@@ -33,9 +42,30 @@ import org.junit.Before;
  */
 public abstract class AbstractRBWebTest {
 
+	@Mock
+	protected SemanticNetworkService networkService;
+
+	@Mock
+	protected ModelingConversation conversation;
+
+	@Mock
+	protected ResourceLinkProvider resourceLinkProvider;
+
+	@Mock
+	protected EntityManager entityManager;
+
+	@Mock
+	protected QueryServicePathBuilder pathBuilder;
+
+	@Mock
+	protected ServiceContext serviceContext;
+
+	@Mock
+	protected TypeManager typeManager;
+
 	private ApplicationContextMock applicationContextMock;
 
-	private WicketTester tester;
+	protected WicketTester tester;
 
 	// ------------------------------------------------------
 
@@ -46,8 +76,11 @@ public abstract class AbstractRBWebTest {
 		tester = new WicketTester();
 		tester.getApplication().getComponentInstantiationListeners().add(new SpringComponentInjector(tester.getApplication(), applicationContextMock));
 		tester.getSession().setLocale(Locale.ENGLISH);
+		registerMocks();
 		setupTest();
 	}
+
+	// ------------------------------------------------------
 
 	/**
 	 * Override this method to add some custom configuration.
@@ -70,10 +103,16 @@ public abstract class AbstractRBWebTest {
 		return applicationContextMock;
 	}
 
-	/**
-	 * @return the {@link WicketTester}
-	 */
-	protected WicketTester getTester() {
-		return tester;
+	// ------------------------------------------------------
+
+	private void registerMocks() {
+		addMock("networkService", networkService);
+		addMock("conversation", conversation);
+		addMock("resourceLinkProvider", resourceLinkProvider);
+		addMock("entityManager", entityManager);
+		addMock("pathbuilder", pathBuilder);
+		addMock("serviceContext", serviceContext);
+		addMock("typeManager", typeManager);
 	}
+
 }

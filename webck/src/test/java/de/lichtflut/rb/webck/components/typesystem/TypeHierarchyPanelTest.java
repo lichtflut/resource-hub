@@ -6,18 +6,13 @@ package de.lichtflut.rb.webck.components.typesystem;
 import static org.mockito.Mockito.when;
 
 import org.apache.wicket.model.Model;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import de.lichtflut.rb.AbstractRBWebTest;
-import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.mock.RBMock;
-import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 
 /**
  * <p>
@@ -30,18 +25,6 @@ import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 @RunWith(MockitoJUnitRunner.class)
 public class TypeHierarchyPanelTest extends AbstractRBWebTest {
 
-	@Mock
-	private TypeManager typeManager;
-
-	@Mock
-	private ModelingConversation conversation;
-
-	@Mock
-	private QueryServicePathBuilder pathBuilder;
-
-	@Mock
-	private ServiceContext serviceContext;
-
 	private TypeHierarchyPanel panel;
 	private final ResourceID id = RBMock.PERSON;
 
@@ -53,9 +36,9 @@ public class TypeHierarchyPanelTest extends AbstractRBWebTest {
 		when(conversation.resolve(id)).thenReturn(id.asResource());
 		when(serviceContext.getDomain()).thenReturn("test");
 		when(pathBuilder.queryClasses("test", null)).thenReturn("blablabla");
-		getTester().startComponentInPage(panel);
+		tester.startComponentInPage(panel);
 
-		getTester().assertNoErrorMessage();
+		tester.assertNoErrorMessage();
 	}
 
 	/**
@@ -81,10 +64,6 @@ public class TypeHierarchyPanelTest extends AbstractRBWebTest {
 	 */
 	@Override
 	protected void setupTest() {
-		addMock("typeManager", typeManager);
-		addMock("conversation", conversation);
-		addMock("queryServicePathBuilder", pathBuilder);
-		addMock("context", serviceContext);
 		panel = new TypeHierarchyPanel("panel", new Model<ResourceID>(id));
 	}
 

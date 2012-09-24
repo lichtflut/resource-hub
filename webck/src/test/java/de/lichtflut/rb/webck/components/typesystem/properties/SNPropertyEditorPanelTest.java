@@ -12,18 +12,15 @@ import java.util.Arrays;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import de.lichtflut.rb.AbstractRBWebTest;
-import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.mock.RBMock;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -39,12 +36,6 @@ import de.lichtflut.rb.webck.components.form.RBStandardButton;
 @RunWith(MockitoJUnitRunner.class)
 public class SNPropertyEditorPanelTest extends AbstractRBWebTest {
 
-	@Mock
-	private TypeManager typeManager;
-
-	@Mock
-	private ModelingConversation conversation;
-
 	private QualifiedName property;
 
 	private SNPropertyEditorPanel panel;
@@ -59,20 +50,20 @@ public class SNPropertyEditorPanelTest extends AbstractRBWebTest {
 		initTestData();
 
 		// Assert Components
-		getTester().startComponentInPage(panel);
-		getTester().assertNoErrorMessage();
-		getTester().assertLabel("test:propertyUri", property.toURI());
-		getTester().assertLabel("test:propertyLabel", property.getSimpleName());
-		getTester().assertListView("test:superProps", Arrays.asList(new SNProperty(RBMock.HAS_CONTACT_DATA.asResource())));
-		getTester().assertComponent("test:form:save", RBStandardButton.class);
-		getTester().assertComponent("test:form:delete", RBStandardButton.class);
-		getTester().assertComponent("test:form:cancel", RBCancelButton.class);
+		tester.startComponentInPage(panel);
+		tester.assertNoErrorMessage();
+		tester.assertLabel("panel:propertyUri", property.toURI());
+		tester.assertLabel("panel:propertyLabel", property.getSimpleName());
+		tester.assertListView("panel:superProps", Arrays.asList(new SNProperty(RBMock.HAS_CONTACT_DATA.asResource())));
+		tester.assertComponent("panel:form:save", RBStandardButton.class);
+		tester.assertComponent("panel:form:delete", RBStandardButton.class);
+		tester.assertComponent("panel:form:cancel", RBCancelButton.class);
 
 
 		// Assert Behavior
-		FormTester formTester = getTester().newFormTester("test:form");
+		FormTester formTester = tester.newFormTester("panel:form");
 		formTester.submit();
-		getTester().executeAjaxEvent("test:form:save", "onCLick");
+		tester.executeAjaxEvent("panel:form:save", "onCLick");
 
 		verify(conversation, times(1)).resolve(RBMock.HAS_ADDRESS);
 	}
@@ -83,8 +74,6 @@ public class SNPropertyEditorPanelTest extends AbstractRBWebTest {
 	protected void setupTest() {
 		ResourceNode node = RBMock.HAS_ADDRESS.asResource();
 		when(conversation.resolve(RBMock.HAS_ADDRESS)).thenReturn(node);
-		addMock("typeManager", typeManager);
-		addMock("conversation", conversation);
 	}
 
 	// ------------------------------------------------------
@@ -95,7 +84,7 @@ public class SNPropertyEditorPanelTest extends AbstractRBWebTest {
 		prop.addAssociation(RDFS.SUB_PROPERTY_OF, RBMock.HAS_CONTACT_DATA);
 
 		IModel<SNProperty> snPropertyModel = new Model<SNProperty>(prop);
-		panel = new SNPropertyEditorPanel("test", snPropertyModel);
+		panel = new SNPropertyEditorPanel("panel", snPropertyModel);
 	}
 
 }
