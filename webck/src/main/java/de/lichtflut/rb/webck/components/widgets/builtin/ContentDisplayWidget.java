@@ -3,6 +3,7 @@ package de.lichtflut.rb.webck.components.widgets.builtin;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
 
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -13,6 +14,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -50,6 +52,9 @@ public class ContentDisplayWidget extends PredefinedWidget {
 	@SpringBean
 	private SemanticNetworkService semanticNetworkService;
 
+    @SpringBean
+    private ViewSpecificationService viewSpecService;
+
 	// ----------------------------------------------------
 
 	/**
@@ -63,6 +68,8 @@ public class ContentDisplayWidget extends PredefinedWidget {
 		super(id, spec, perspectiveInConfigMode);
 
 		setOutputMarkupId(true);
+
+        ResourceID contentItem = getContentItem(spec);
 
 		final IModel<String> contentModel = new ContentModel(spec);
 
@@ -135,6 +142,15 @@ public class ContentDisplayWidget extends PredefinedWidget {
 			throw new IllegalStateException("Unexpected content item for content widget: " + existing);
 		}
 	}
+
+    private ResourceID getContentItem(WidgetSpec spec) {
+        SemanticNode node = SNOPS.fetchObject(spec, WDGT.DISPLAYS_CONTENT_ITEM);
+        if (node != null && node.isResourceNode()) {
+            return SNOPS.id(node.asResource());
+        } else {
+            return null;
+        }
+    }
 
 	private class ContentModel implements IModel<String> {
 
