@@ -3,6 +3,9 @@ package de.lichtflut.rb.webck.components.widgets.builtin;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
 
+import de.lichtflut.rb.core.content.ContentItem;
+import de.lichtflut.rb.core.content.SNContentItem;
+import de.lichtflut.rb.core.services.ContentService;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -50,7 +53,7 @@ public class ContentDisplayWidget extends PredefinedWidget {
 	private final IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
 
 	@SpringBean
-	private SemanticNetworkService semanticNetworkService;
+	private ContentService contentService;
 
     @SpringBean
     private ViewSpecificationService viewSpecService;
@@ -68,8 +71,6 @@ public class ContentDisplayWidget extends PredefinedWidget {
 		super(id, spec, perspectiveInConfigMode);
 
 		setOutputMarkupId(true);
-
-        ResourceID contentItem = getContentItem(spec);
 
 		final IModel<String> contentModel = new ContentModel(spec);
 
@@ -118,23 +119,24 @@ public class ContentDisplayWidget extends PredefinedWidget {
 	// ----------------------------------------------------
 
 	private String getContent(final WidgetSpec spec) {
-		final ResourceNode attached = semanticNetworkService.resolve(spec);
-		final SemanticNode content = Walker.start(attached)
-				.walk(WDGT.DISPLAYS_CONTENT_ITEM)
-				.walk(RBSystem.HAS_CONTENT)
-				.getSingle();
-		return SNOPS.string(content);
+        ContentItem item = getContentItem(spec);
+        if (item != null) {
+            return item.getContentAsString();
+        } else {
+            return null;
+        }
 	}
 
 	private void setContent(final WidgetSpec spec, final String content) {
-		ResourceNode attached = semanticNetworkService.resolve(spec);
-		SemanticNode existing = SNOPS.fetchObject(attached, WDGT.DISPLAYS_CONTENT_ITEM);
+		SemanticNode existing = SNOPS.fetchObject(spec, WDGT.DISPLAYS_CONTENT_ITEM);
 
 		if (existing == null) {
 			LOGGER.debug("Creating content of widget {} : {}", spec, content);
-			ResourceNode contentItem = new SNResource();
-			SNOPS.assure(attached, WDGT.DISPLAYS_CONTENT_ITEM, contentItem);
-			SNOPS.assure(contentItem, RBSystem.HAS_CONTENT, content);
+			ContentItem contentItem = new SNContentItem();
+            contentItem.setContent(content);
+			SNOPS.assure(spec, WDGT.DISPLAYS_CONTENT_ITEM, contentItem);
+            viewSpecService.store(spec);
+			contentService.store(contentItem);
 		} else if (existing.isResourceNode()) {
 			LOGGER.debug("Updating content of widget {} : {}", spec, content);
 			SNOPS.assure(existing.asResource(), RBSystem.HAS_CONTENT, content);
@@ -143,10 +145,10 @@ public class ContentDisplayWidget extends PredefinedWidget {
 		}
 	}
 
-    private ResourceID getContentItem(WidgetSpec spec) {
+    private ContentItem getContentItem(WidgetSpec spec) {
         SemanticNode node = SNOPS.fetchObject(spec, WDGT.DISPLAYS_CONTENT_ITEM);
         if (node != null && node.isResourceNode()) {
-            return SNOPS.id(node.asResource());
+            return contentService.findById(node.asResource().toURI());
         } else {
             return null;
         }

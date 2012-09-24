@@ -19,5 +19,6 @@ public interface ContentService {
 
     ContentItem findById(String id);
 
+    void store(ContentItem item);
 
 }

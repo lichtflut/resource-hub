@@ -17,4 +17,7 @@ public interface ContentItem {
 
     String getID();
 
+    String getContentAsString();
+
+    void setContent(String content);
 }
