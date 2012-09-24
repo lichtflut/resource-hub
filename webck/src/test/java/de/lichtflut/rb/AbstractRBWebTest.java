@@ -11,9 +11,14 @@ import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.util.tester.WicketTester;
 import org.arastreju.sge.ModelingConversation;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
@@ -40,6 +45,7 @@ import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
  *
  * @author Ravi Knox
  */
+@RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractRBWebTest {
 
 	@Mock
@@ -62,6 +68,15 @@ public abstract class AbstractRBWebTest {
 
 	@Mock
 	protected TypeManager typeManager;
+
+	@Mock
+	protected FileService fileService;
+
+	@Mock
+	protected AuthModule authModule;
+
+	@Mock
+	protected DomainManager domainManager;
 
 	private ApplicationContextMock applicationContextMock;
 
@@ -113,6 +128,9 @@ public abstract class AbstractRBWebTest {
 		addMock("pathbuilder", pathBuilder);
 		addMock("serviceContext", serviceContext);
 		addMock("typeManager", typeManager);
+		addMock("fileService", fileService);
+		addMock("authModule", authModule);
+		addMock("domainManager", domainManager);
 	}
 
 }

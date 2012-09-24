@@ -3,11 +3,11 @@
  */
 package de.lichtflut.rb.mock;
 
+import java.util.Date;
+
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
-
-import java.util.Date;
 
 /**
  * <p>
@@ -18,14 +18,16 @@ import java.util.Date;
  * @author Ravi Knox
  */
 public class RBEntityFactory {
-	
+
 	public static RBEntity createPersonEntity(){
 		RBEntity entity = new RBEntityImpl(ResourceSchemaFactory.buildPersonSchema());
 		entity.getField(RBMock.HAS_FIRST_NAME).setValue(0, "Hans");
 		entity.getField(RBMock.HAS_LAST_NAME).setValue(0, "Müller");
 		entity.getField(RBMock.HAS_DATE_OF_BIRTH).setValue(0, new Date());
 		entity.getField(RBMock.HAS_EMAIL).setValue(0, "hmüller@google.de");
+		entity.getField(RBMock.HAS_AVATAR).setValue(0, "dummy-path.jpeg");
 		return entity;
 	}
+
 
 }
