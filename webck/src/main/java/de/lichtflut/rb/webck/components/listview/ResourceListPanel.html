@@ -17,8 +17,13 @@
 				</th>
 			</tr>
 			<tr wicket:id="rows" class="entity-list-row">
-				<td wicket:id="cells" class="entity-list-cell">
-					<wicket:container wicket:id="content">[content]</wicket:container>
+				<td class="entity-list-cell">
+					<div wicket:id="wrapper">
+						<div wicket:id="quickInfo"></div>
+						<wicket:container wicket:id="cells">
+							<span wicket:id="content">[content]</span>
+						</wicket:container>
+					</div>
 				</td>
 				<td wicket:id="actions" class="entity-list-action">
 					<wicket:container wicket:id="action">[action]</wicket:container>

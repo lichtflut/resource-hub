@@ -43,7 +43,6 @@ public class QuickInfoPanel extends Panel {
 		add(new Label("label", model.getObject().getLabel()));
 	}
 
-
 	/**
 	 * Add quick-info.
 	 * @param model
