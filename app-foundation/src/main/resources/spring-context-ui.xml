@@ -57,6 +57,11 @@
         <constructor-arg index="0" ref="arasResourceFactory"></constructor-arg>
     </bean>
 
+    <bean id="contentService" class="de.lichtflut.rb.core.services.impl.ContentServiceImpl" scope="request">
+        <constructor-arg index="0" ref="context"/>
+        <constructor-arg index="1" ref="arasResourceFactory"/>
+    </bean>
+
     <bean id="viewSpecificationService" class="de.lichtflut.rb.core.services.impl.ViewSpecificationServiceImpl" scope="request">
         <constructor-arg index="0" ref="context"></constructor-arg>
         <constructor-arg index="1" ref="arasResourceFactory"></constructor-arg>
