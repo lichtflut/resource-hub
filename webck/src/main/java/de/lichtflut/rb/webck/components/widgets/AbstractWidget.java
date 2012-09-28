@@ -36,16 +36,14 @@ public class AbstractWidget extends TypedPanel<WidgetSpec> {
 	/**
 	 * Constructor.
 	 * @param id The component ID.
-	 * @param perspectiveInConfigMode 
-	 * @param model The title model.
+	 * @param spec The widget specification..
+	 * @param perspectiveInConfigMode The model stating if in configuration mode.
 	 */
 	@SuppressWarnings("rawtypes")
 	public AbstractWidget(final String id, final IModel<WidgetSpec> spec, ConditionalModel<Boolean> perspectiveInConfigMode) {
 		super(id, spec);
 		this.perspectiveInConfigMode = perspectiveInConfigMode;
-		
-		add(new Label("title", getTitleModel()));
-		
+
 		add(new AjaxLink("removeWidget"){
 			@Override
 			public void onClick(AjaxRequestTarget target) {
@@ -53,7 +51,6 @@ public class AbstractWidget extends TypedPanel<WidgetSpec> {
 				controller.remove(spec.getObject());
 			}
 		}.add(visibleIf(perspectiveInConfigMode)));
-		
 		
 		add(new AjaxLink("up"){
 			@Override
@@ -75,13 +72,11 @@ public class AbstractWidget extends TypedPanel<WidgetSpec> {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
 		add(createConfigureLink("configureLink", perspectiveInConfigMode));
+        add(createTitle("title"));
 	}
 	
 	// ----------------------------------------------------
@@ -89,15 +84,23 @@ public class AbstractWidget extends TypedPanel<WidgetSpec> {
 	protected Component createConfigureLink(String componentID, ConditionalModel<Boolean> perspectiveInConfigMode) {
 		return new WebMarkupContainer(componentID).setVisible(false);
 	}
+
+    protected Component createTitle(String componentID) {
+        return new Label(componentID, getTitleModel());
+    }
 	
 	protected IModel<String> getTitleModel() {
 		return new DerivedDetachableModel<String, WidgetSpec>(getModel()) {
 			@Override
-			protected String derive(WidgetSpec original) {
-				return original.getTitle();
+			protected String derive(WidgetSpec spec) {
+				return spec.getTitle();
 			}
 		};
 	}
+
+    protected WidgetSpec getWidgetSpec() {
+        return getModel().getObject();
+    }
 	
 	// ----------------------------------------------------
 	

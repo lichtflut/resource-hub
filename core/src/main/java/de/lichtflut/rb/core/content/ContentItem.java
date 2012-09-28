@@ -2,6 +2,8 @@ package de.lichtflut.rb.core.content;
 
 import org.arastreju.sge.naming.QualifiedName;
 
+import java.io.Serializable;
+
 /**
  * <p>
  *  Represents a item of some content.
@@ -13,9 +15,13 @@ import org.arastreju.sge.naming.QualifiedName;
  *
  * @author Oliver Tigges
  */
-public interface ContentItem {
+public interface ContentItem extends Serializable {
 
     String getID();
+
+    String getTitle();
+
+    void setTitle(String title);
 
     String getContentAsString();
 

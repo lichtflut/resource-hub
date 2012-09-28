@@ -53,9 +53,6 @@ public enum DisplayMode {
 		this.token = token;
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return token;
