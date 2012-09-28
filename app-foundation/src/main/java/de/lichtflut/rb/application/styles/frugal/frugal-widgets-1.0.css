@@ -53,10 +53,11 @@ div.view-port.configuration-mode div.widget-overlay  {
 }
 
 div.rb-widget-header  {
+    display: inline-block;
+    width: 98%;
     margin-left: 5px;
 	clear: both;
 	float: none;
-	display: inline-block;
 }
 
 div.rb-widget-header div.title {

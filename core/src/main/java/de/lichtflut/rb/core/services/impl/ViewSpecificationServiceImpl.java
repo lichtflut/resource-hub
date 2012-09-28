@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.lichtflut.rb.core.common.SerialNumberOrderedNodesContainer;
+import de.lichtflut.rb.core.viewspec.impl.SNViewPort;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -183,7 +185,50 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 		conversation().attach(widgetSpec);
 	}
 
-	// ----------------------------------------------------
+    @Override
+    public void movePositionUp(final ViewPort port, WidgetSpec widgetSpec) {
+        final ResourceID portID = port.getID();
+        conversation().attach(widgetSpec);
+        new SerialNumberOrderedNodesContainer() {
+            @Override
+            protected List<? extends ResourceNode> getList() {
+                return findPort(portID).getWidgets();
+            }
+        }.moveUp(widgetSpec, 1);
+    }
+
+    @Override
+    public void movePositionDown(final ViewPort port, WidgetSpec widgetSpec) {
+        final ModelingConversation conversation = conversation();
+        conversation().attach(port);
+        conversation().attach(widgetSpec);
+        new SerialNumberOrderedNodesContainer() {
+            @Override
+            protected List<? extends ResourceNode> getList() {
+                return port.getWidgets();
+            }
+        }.moveDown(widgetSpec, 1);
+    }
+
+    @Override
+    public void removeWidget(ViewPort port, WidgetSpec widgetSpec) {
+        final ModelingConversation conversation = conversation();
+        conversation.attach(port);
+        port.removeWidget(widgetSpec);
+        conversation.remove(widgetSpec.getID());
+    }
+
+    // ----------------------------------------------------
+
+    @Override
+    public ViewPort findPort(final ResourceID id) {
+        final ResourceNode existing = conversation().findResource(id.getQualifiedName());
+        if (existing != null) {
+            return new SNViewPort(existing);
+        } else {
+            return null;
+        }
+    }
 
 	@Override
 	public void store(final ViewPort viewPort) {

@@ -36,7 +36,7 @@ public class AbstractWidget extends TypedPanel<WidgetSpec> {
 	/**
 	 * Constructor.
 	 * @param id The component ID.
-	 * @param spec The widget specification..
+	 * @param spec The widget specification.
 	 * @param perspectiveInConfigMode The model stating if in configuration mode.
 	 */
 	@SuppressWarnings("rawtypes")
@@ -47,24 +47,21 @@ public class AbstractWidget extends TypedPanel<WidgetSpec> {
 		add(new AjaxLink("removeWidget"){
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				WidgetController controller = findParent(WidgetController.class);
-				controller.remove(spec.getObject());
+                widgetController().remove(spec.getObject());
 			}
 		}.add(visibleIf(perspectiveInConfigMode)));
 		
 		add(new AjaxLink("up"){
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				WidgetController controller = findParent(WidgetController.class);
-				controller.moveUp(spec.getObject());
+                widgetController().moveUp(spec.getObject());
 			}
 		}.add(visibleIf(perspectiveInConfigMode)));
 		
 		add(new AjaxLink("down"){
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				WidgetController controller = findParent(WidgetController.class);
-				controller.moveDown(spec.getObject());
+                widgetController().moveDown(spec.getObject());
 			}
 		}.add(visibleIf(perspectiveInConfigMode)));
 		
@@ -101,17 +98,17 @@ public class AbstractWidget extends TypedPanel<WidgetSpec> {
     protected WidgetSpec getWidgetSpec() {
         return getModel().getObject();
     }
+
+    protected WidgetController widgetController() {
+        return findParent(WidgetController.class);
+    }
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onDetach() {
 		super.onDetach();
 		perspectiveInConfigMode.detach();
 	}
-	
-	
+
 }

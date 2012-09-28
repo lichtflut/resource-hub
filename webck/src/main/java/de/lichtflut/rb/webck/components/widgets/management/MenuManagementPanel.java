@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.widgets.management;
 
 import java.util.List;
 
+import de.lichtflut.rb.webck.common.impl.OrderedModelContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -24,7 +25,6 @@ import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.webck.common.OrderedNodesContainer;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.common.impl.SerialNumberOrderedNodesContainer;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.basic.CastingModel;
@@ -65,7 +65,7 @@ public class MenuManagementPanel extends Panel {
 		final IModel<List<? extends ResourceNode>> orderModel =
 				new CastingModel<List<? extends ResourceNode>>(listModel);
 
-		container = new SerialNumberOrderedNodesContainer(orderModel);
+		container = new OrderedModelContainer(orderModel);
 
 		final ListView<MenuItem> view = new ListView<MenuItem>("list", listModel) {
 			@Override
