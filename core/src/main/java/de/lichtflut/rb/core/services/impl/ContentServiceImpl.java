@@ -43,6 +43,9 @@ public class ContentServiceImpl implements ContentService {
 
     @Override
     public ContentItem findById(String id) {
+        if (id == null) {
+            return null;
+        }
         ResourceNode resource = conversation().findResource(new QualifiedName(id));
         return new SNContentItem(resource);
     }

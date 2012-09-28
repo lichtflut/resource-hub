@@ -87,8 +87,18 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	public void setSelection(Selection selection) {
 		setValue(WDGT.HAS_SELECTION, selection);
 	}
-	
-	@Override
+
+    @Override
+    public String getContentID() {
+        return stringValue(WDGT.DISPLAYS_CONTENT_ITEM);
+    }
+
+    @Override
+    public void setContentID(String contentID) {
+        setValue(WDGT.DISPLAYS_CONTENT_ITEM, contentID);
+    }
+
+    @Override
 	public Integer getPosition() {
 		return intValue(Aras.HAS_SERIAL_NUMBER);
 	}
@@ -114,7 +124,9 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("WidgetSpec[" + getQualifiedName().getSimpleName() + "]\n");
-		sb.append("  Selection: " + getSelection() + "\n");
+        if (getSelection() != null) {
+		    sb.append("  Selection: " + getSelection() + "\n");
+        }
 		return sb.toString();
 	}
 	

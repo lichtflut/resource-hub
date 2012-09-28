@@ -1,6 +1,7 @@
 package de.lichtflut.rb.core.content;
 
 import de.lichtflut.rb.core.RBSystem;
+import org.arastreju.sge.apriori.DC;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.naming.QualifiedName;
@@ -33,6 +34,16 @@ public class SNContentItem extends ResourceView implements ContentItem {
     @Override
     public String getID() {
         return getQualifiedName().toURI();
+    }
+
+    @Override
+    public String getTitle() {
+        return stringValue(DC.TITLE);
+    }
+
+    @Override
+    public void setTitle(String title) {
+        setValue(DC.TITLE, title);
     }
 
     @Override

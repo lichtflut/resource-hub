@@ -217,6 +217,8 @@ div.right-to-left > * {
 
 .full-width {
 	width:100%;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 div.messageContainer {
@@ -490,9 +492,9 @@ iframe.geo-map {
 div.rich-content {
     border: 1px solid #c2c2ad;
     border-radius: 3px;
-    background-color: #fff;
+    background-color: #fafbf9;
     padding: 5px;
-    margin: 10px 0;
+    margin: 8px 0 0;
 }
 
 /* NOTES */

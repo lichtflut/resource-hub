@@ -17,8 +17,17 @@ import de.lichtflut.rb.core.content.ContentItem;
  */
 public interface ContentService {
 
+    /**
+     * Find a content item by it's ID.
+     * @param id The unique content ID.
+     * @return The content item or null if not found.
+     */
     ContentItem findById(String id);
 
+    /**
+     * Store a content item.
+     * @param item The item to store.
+     */
     void store(ContentItem item);
 
 }

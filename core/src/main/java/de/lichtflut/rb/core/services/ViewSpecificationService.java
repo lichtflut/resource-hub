@@ -92,13 +92,42 @@ public interface ViewSpecificationService {
 	 * @param widgetSpec The specification to store.
 	 */
 	void store(WidgetSpec widgetSpec);
-	
+
 	// ----------------------------------------------------
+
+    /**
+     * Find a view port by it's ID.
+     * @param id The view port id
+     * @return The attached view port.
+     */
+    ViewPort findPort(ResourceID id);
 	
 	/**
 	 * Store a view port. Update or create.
 	 * @param viewPort The specification to store.
 	 */
 	void store(ViewPort viewPort);
+
+    /**
+     * Move this widget one position up in it's view port.
+     * @param port The port of the widget.
+     * @param widgetSpec The widget spec to move up.
+     */
+    void movePositionUp(ViewPort port, WidgetSpec widgetSpec);
+
+    /**
+     * Move this widget one position down in it's view port.
+     * @param port The port of the widget.
+     * @param widgetSpec The widget spec to move down.
+     */
+    void movePositionDown(ViewPort port, WidgetSpec widgetSpec);
+
+    /**
+     * Remove this widget from it's view port and delete it.
+     * @param port The port of the widget.
+     * @param widgetSpec The widget spec to move down.
+     */
+    void removeWidget(ViewPort port, WidgetSpec widgetSpec);
+
 
 }

@@ -10,16 +10,18 @@
 </wicket:head>
 <wicket:panel>
 
-    <div>
-        <textarea wicket:id="editingArea">[Content]</textarea>
+    <div class="input-panel">
+        <wicket:message key="label.richtext-editor.title">[title]</wicket:message>
+        <input wicket:id="title" size="80" maxlength="200"/>
+    </div>
+    <div class="section">
+        <textarea wicket:id="editingArea" class="full-width">[content]</textarea>
     </div>
 
     <div class="button-bar">
         <button type="button" wicket:id="cancel"><wicket:message key="button.cancel">[cancel]</wicket:message></button>
         <button type="button" wicket:id="save" class="default-button"><wicket:message key="button.save">[save]</wicket:message></button>
     </div>
-
-
 
 </wicket:panel>
 </html>
