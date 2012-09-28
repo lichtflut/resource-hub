@@ -3,9 +3,16 @@
  */
 package de.lichtflut.rb.webck.components.widgets.management;
 
-import java.util.List;
-
+import de.lichtflut.rb.core.services.ViewSpecificationService;
+import de.lichtflut.rb.core.viewspec.MenuItem;
+import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.webck.common.OrderedNodesContainer;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.common.impl.OrderedModelContainer;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.basic.CastingModel;
+import de.lichtflut.rb.webck.models.viewspecs.UsersMenuItemListModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -20,15 +27,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.services.ViewSpecificationService;
-import de.lichtflut.rb.core.viewspec.MenuItem;
-import de.lichtflut.rb.core.viewspec.Perspective;
-import de.lichtflut.rb.webck.common.OrderedNodesContainer;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.basic.CastingModel;
-import de.lichtflut.rb.webck.models.viewspecs.MenuItemListModel;
+import java.util.List;
 
 /**
  * <p>
@@ -48,7 +47,7 @@ public class MenuManagementPanel extends Panel {
 	@SpringBean
 	private ViewSpecificationService viewSpecificationService;
 
-	private final MenuItemListModel listModel = new MenuItemListModel();
+	private final UsersMenuItemListModel listModel = new UsersMenuItemListModel();
 
 	private final OrderedNodesContainer container;
 

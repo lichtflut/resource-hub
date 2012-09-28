@@ -5,6 +5,7 @@ package de.lichtflut.rb.application.pages;
 
 import java.util.Locale;
 
+import de.lichtflut.rb.webck.models.ConditionalModel;
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -25,6 +26,10 @@ import de.lichtflut.rb.webck.common.CookieAccess;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.models.CurrentUserModel;
+
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+import static de.lichtflut.rb.webck.models.CurrentUserModel.isLoggedIn;
 
 /**
  * <p>
@@ -59,17 +64,11 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onConfigure() {
 		securityCheck();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected void onInitialize() {
@@ -82,7 +81,16 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 				CookieAccess.getInstance().removeAuthCookies();
 				setResponsePage(RBApplication.get().getLoginPage());
 			}
-		}.add(ConditionalBehavior.visibleIf(CurrentUserModel.isLoggedIn())));
+		}.add(visibleIf(isLoggedIn())));
+
+        add(new Link("login") {
+            @Override
+            public void onClick() {
+                WebSession.get().invalidate();
+                CookieAccess.getInstance().removeAuthCookies();
+                setResponsePage(RBApplication.get().getLoginPage());
+            }
+        }.add(visibleIf(not(isLoggedIn()))));
 
 		addLanguageLinks();
 
@@ -118,7 +126,7 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 	// ----------------------------------------------------
 
 	protected boolean needsAuthentication() {
-		return true;
+		return !RBApplication.get().supportsUnauthenticatedAccess();
 	}
 
 	protected boolean isAuthorized(final IModel<RBUser> user) {

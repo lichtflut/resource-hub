@@ -26,6 +26,13 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
 public interface ViewSpecificationService {
 	
 	// -- MENU ITEMS --------------------------------------
+
+    /**
+     * Get the menu items to be displayed for current user context.
+     * Supports unauthenticated users.
+     * @return The menu items list.
+     */
+    List<MenuItem> getMenuItemsForDisplay();
 	
 	/**
 	 * Get the menu items of the current user.

@@ -180,4 +180,12 @@ public abstract class RBApplication extends WebApplication {
 		final RBConfig rbc = (RBConfig) wac.getBean("rbConfig");
 		rbc.getArastrejuProfile().close();
 	}
+
+    /**
+     * Configure if this application can be used without authentication.
+     * @return true if unauthenticated access is supported.
+     */
+    public boolean supportsUnauthenticatedAccess() {
+        return false;
+    }
 }

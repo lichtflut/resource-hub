@@ -8,6 +8,7 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.identities.SessionInfoPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -64,7 +65,8 @@ public class RBBasePage extends AbstractBasePage {
 	}
 
 	/**
-	 * @param parameters
+     * Constructor with parameters.
+	 * @param parameters The parameters.
 	 */
 	public RBBasePage(final PageParameters parameters) {
 		super(parameters);
@@ -72,9 +74,6 @@ public class RBBasePage extends AbstractBasePage {
 
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
@@ -88,7 +87,9 @@ public class RBBasePage extends AbstractBasePage {
 					result.add(createPageNode(item));
 				}
 				result.add(createPageNode(RBApplication.get().getBrowseAndSearchPage(), "navigation.browse-and-search"));
-				result.add(createPageNode(RBApplication.get().getUserProfilePage(), "navigation.user-profile-view"));
+                if (RBWebSession.exists() && RBWebSession.get().isAuthenticated()) {
+				    result.add(createPageNode(RBApplication.get().getUserProfilePage(), "navigation.user-profile-view"));
+                }
 				return result;
 			}
 		};
@@ -107,7 +108,7 @@ public class RBBasePage extends AbstractBasePage {
 		add(createSecondLevelNav("secondLevelNav"));
 
 		add(new ReferenceLink("adminAreaLink", AdminBasePage.class, new ResourceModel("global.link.admin-area"))
-		.add(visibleIf(CurrentUserModel.hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
+		    .add(visibleIf(CurrentUserModel.hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
 
 		add(new Label("username", CurrentUserModel.displayNameModel()));
 

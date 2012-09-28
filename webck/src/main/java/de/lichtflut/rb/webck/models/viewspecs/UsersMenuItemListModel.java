@@ -3,19 +3,17 @@
  */
 package de.lichtflut.rb.webck.models.viewspecs;
 
-import java.util.List;
-
+import de.lichtflut.rb.core.services.ViewSpecificationService;
+import de.lichtflut.rb.core.viewspec.MenuItem;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.core.services.ViewSpecificationService;
-import de.lichtflut.rb.core.viewspec.MenuItem;
+import java.util.List;
 
 /**
  * <p>
- *  Model providing the menu items to be displayed for current context.
- *  Supports authenticated and unauthenticated users.
+ *  Model providing the current user's menu items.
  * </p>
  *
  * <p>
@@ -24,7 +22,7 @@ import de.lichtflut.rb.core.viewspec.MenuItem;
  *
  * @author Oliver Tigges
  */
-public class MenuItemListModel extends LoadableDetachableModel<List<MenuItem>> {
+public class UsersMenuItemListModel extends LoadableDetachableModel<List<MenuItem>> {
 
 	@SpringBean
 	private ViewSpecificationService viewSpecificationService;
@@ -34,7 +32,7 @@ public class MenuItemListModel extends LoadableDetachableModel<List<MenuItem>> {
 	/**
 	 * Constructor.
 	 */
-	public MenuItemListModel() {
+	public UsersMenuItemListModel() {
 		Injector.get().inject(this);
 	}
 
@@ -42,7 +40,7 @@ public class MenuItemListModel extends LoadableDetachableModel<List<MenuItem>> {
 
 	@Override
 	public List<MenuItem> load() {
-		return viewSpecificationService.getMenuItemsForDisplay();
+		return viewSpecificationService.getUsersMenuItems();
 	}
 
 }

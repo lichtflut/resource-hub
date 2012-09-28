@@ -76,7 +76,16 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	// -- MENU ITEMS --------------------------------------
 
-	@Override
+    @Override
+    public List<MenuItem> getMenuItemsForDisplay() {
+        if (context.isAuthenticated()) {
+            return getUsersMenuItems();
+        } else {
+            return getDefaultMenu();
+        }
+    }
+
+    @Override
 	public List<MenuItem> getUsersMenuItems() {
 		final ResourceNode user = currentUser();
 		final List<MenuItem> result = new ArrayList<MenuItem>();
@@ -237,22 +246,6 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	// ----------------------------------------------------
 
-	/**
-	 * Initialize the (probably new) user's menu items and dashboards.
-	 */
-	protected List<MenuItem> initializeDashboards(final ResourceNode user) {
-		final List<MenuItem> result = new ArrayList<MenuItem>();
-		final ResourceNode defaultMenu = conversation().resolve(WDGT.DEFAULT_MENU);
-		for(Statement stmt : defaultMenu.getAssociations()) {
-			if (WDGT.HAS_MENU_ITEM.equals(stmt.getPredicate()) && stmt.getObject().isResourceNode()) {
-				final ResourceNode item = stmt.getObject().asResource();
-				user.addAssociation(WDGT.HAS_MENU_ITEM, item);
-				result.add(new SNMenuItem(item));
-			}
-		}
-		return result;
-	}
-
 	protected ResourceNode currentUser() {
 		final RBUser user = context.getUser();
 		if (user == null) {
@@ -261,6 +254,32 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 			return conversation().findResource(user.getQualifiedName());
 		}
 	}
+
+    /**
+     * Initialize the (probably new) user's menu items and dashboards.
+     */
+    protected List<MenuItem> initializeDashboards(final ResourceNode user) {
+        final List<MenuItem> menuItems = getDefaultMenu();
+        for (MenuItem item : menuItems) {
+            user.addAssociation(WDGT.HAS_MENU_ITEM, item);
+        }
+        return menuItems;
+    }
+
+    /**
+     * Get the default menu items.
+     */
+    protected List<MenuItem> getDefaultMenu() {
+        final List<MenuItem> result = new ArrayList<MenuItem>();
+        final ResourceNode defaultMenu = conversation().resolve(WDGT.DEFAULT_MENU);
+        for(Statement stmt : defaultMenu.getAssociations()) {
+            if (WDGT.HAS_MENU_ITEM.equals(stmt.getPredicate()) && stmt.getObject().isResourceNode()) {
+                final ResourceNode item = stmt.getObject().asResource();
+                result.add(new SNMenuItem(item));
+            }
+        }
+        return result;
+    }
 
 	// ----------------------------------------------------
 
