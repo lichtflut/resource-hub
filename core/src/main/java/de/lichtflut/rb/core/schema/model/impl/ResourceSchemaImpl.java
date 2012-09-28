@@ -173,6 +173,10 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 		for (PropertyDeclaration decl : getPropertyDeclarations()) {
 			sb.append(" + " + decl.toString() + "\n");
 		}
+		sb.append("Quickinfo:\n");
+		for (PropertyDeclaration decl : getQuickInfo()) {
+			sb.append(" + " + decl.toString() + "\n");
+		}
 		return sb.toString();
 	}
 

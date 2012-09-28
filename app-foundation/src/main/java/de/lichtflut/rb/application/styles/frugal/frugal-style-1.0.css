@@ -911,3 +911,12 @@ button.button.down div {
     height: 25px;
     width: 25px;
 }
+
+.quick-info {
+    background-color: #F6F3F8;
+    border: 1px solid #D3DCC7;
+    border-radius: 5px 5px 5px 5px;
+    max-width: 350px;
+    padding: 10px;
+    position: absolute;
+}
