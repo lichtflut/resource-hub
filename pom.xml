@@ -21,6 +21,7 @@
 	<properties>
 		<arastreju.version>0.8.0-SNAPSHOT</arastreju.version>
 		<jersey.version>1.8</jersey.version>
+        <jackson.version>1.9.10</jackson.version>
     	<skipIntegrationTests>true</skipIntegrationTests>
 	</properties>
 	<build>
@@ -174,6 +175,26 @@
 				<artifactId>arastreju.ogm</artifactId>
 				<version>${arastreju.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-core-asl</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-jaxrs</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-xc</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
