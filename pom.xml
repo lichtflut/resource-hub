@@ -20,6 +20,7 @@
 
 	<properties>
 		<arastreju.version>0.8.0-SNAPSHOT</arastreju.version>
+        <springframework.version>3.1.0.RELEASE</springframework.version>
 		<jersey.version>1.8</jersey.version>
         <jackson.version>1.9.10</jackson.version>
     	<skipIntegrationTests>true</skipIntegrationTests>
@@ -160,6 +161,9 @@
 	</reporting>
 	<dependencyManagement>
 		<dependencies>
+
+            <!-- Arastreju -->
+
 			<dependency>
 				<groupId>org.arastreju</groupId>
 				<artifactId>arastreju-neo4j</artifactId>
@@ -175,6 +179,37 @@
 				<artifactId>arastreju.ogm</artifactId>
 				<version>${arastreju.version}</version>
 			</dependency>
+
+            <!-- Spring Framework -->
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-expression</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+
+            <!-- Jackson JSON -->
+
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-core-asl</artifactId>
