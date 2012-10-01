@@ -7,6 +7,10 @@
 
     <!-- The service context -->
 
+    <bean id="serviceContextFactory" class="de.lichtflut.rb.core.services.ServiceContextFactory">
+        <constructor-arg index="0" ref="rbConfig"></constructor-arg>
+    </bean>
+
     <bean id="context" class="de.lichtflut.rb.core.services.ServiceContext" scope="session">
         <constructor-arg index="0" ref="rbConfig"></constructor-arg>
     </bean>

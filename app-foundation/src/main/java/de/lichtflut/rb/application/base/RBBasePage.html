@@ -27,8 +27,10 @@
 				</div>
 				<div id="user-info">
 					Domain: <wicket:container wicket:id="domain">[domain]</wicket:container>
-						|
-					<wicket:container wicket:id="username">[username]</wicket:container>
+                    <wicket:enclosure>
+						    |
+					    <span wicket:id="username">[username]</span>
+                    </wicket:enclosure>
 					<wicket:enclosure> 
 						|
 						<a wicket:id="adminAreaLink"></a>
