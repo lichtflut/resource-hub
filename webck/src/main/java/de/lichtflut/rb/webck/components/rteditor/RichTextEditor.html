@@ -10,10 +10,12 @@
 </wicket:head>
 <wicket:panel>
 
+    <wicket:enclosure child="title">
     <div class="input-panel">
         <wicket:message key="label.richtext-editor.title">[title]</wicket:message>
         <input wicket:id="title" size="80" maxlength="200"/>
     </div>
+    </wicket:enclosure>
     <div class="section">
         <textarea wicket:id="editingArea" class="full-width">[content]</textarea>
     </div>

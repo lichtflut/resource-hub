@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.odlabs.wiquery.ui.dialog.Dialog;
@@ -25,7 +26,8 @@ public class AbstractRBDialog extends Dialog {
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id The component ID.
 	 */
 	public AbstractRBDialog(final String id) {
 		super(id);
@@ -35,12 +37,15 @@ public class AbstractRBDialog extends Dialog {
 	
 	// ----------------------------------------------------
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected IMarkupSourcingStrategy newMarkupSourcingStrategy() {
 		return new PanelMarkupSourcingStrategy(false);
 	}
+
+    protected void closeDialog() {
+        close(RBAjaxTarget.getAjaxTarget());
+    }
+
+
 
 }

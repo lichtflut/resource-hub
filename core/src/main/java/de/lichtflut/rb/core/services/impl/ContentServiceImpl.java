@@ -8,10 +8,16 @@ import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
 import de.lichtflut.rb.core.services.ContentService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -60,10 +66,34 @@ public class ContentServiceImpl implements ContentService {
         }
     }
 
+    @Override
+    public void remove(String id) {
+        conversation().remove(new SimpleResourceID(id));
+    }
+
+    // ----------------------------------------------------
+
+    @Override
+    public List<ContentItem> getAttachedItems(ResourceID owner) {
+        final List<ContentItem> result = new ArrayList<ContentItem>();
+        final Query query = conversation().createQuery();
+        query.addField(RBSystem.IS_ATTACHED_TO, owner.toURI());
+        for(ResourceNode node : query.getResult()) {
+            result.add(new SNContentItem(node));
+        }
+        return result;
+    }
+
+    @Override
+    public void attachToResource(ContentItem contentItem, ResourceID target) {
+        ResourceNode resource = conversation().findResource(new QualifiedName(contentItem.getID()));
+        resource.addAssociation(RBSystem.IS_ATTACHED_TO, target);
+    }
+
     // ----------------------------------------------------
 
     private ModelingConversation conversation() {
-        return arasFactory.getConversation(RBSystem.VIEW_SPEC_CTX);
+        return arasFactory.getConversation();
     }
 
 }

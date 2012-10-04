@@ -1,6 +1,9 @@
 package de.lichtflut.rb.core.services;
 
 import de.lichtflut.rb.core.content.ContentItem;
+import org.arastreju.sge.model.ResourceID;
+
+import java.util.List;
 
 /**
  * <p>
@@ -30,4 +33,25 @@ public interface ContentService {
      */
     void store(ContentItem item);
 
+    /**
+     * Remove the content item with given ID.
+     * @param id The ID of the item to be removed.
+     */
+    void remove(String id);
+
+    // -- NOTES -------------------------------------------
+
+    /**
+     * Get all content items attached to owning resource.
+     * @param owner The resource, where the items have been attached.
+     * @return The content items.
+     */
+    List<ContentItem> getAttachedItems(ResourceID owner);
+
+    /**
+     * Attach the content item to the given target.
+     * @param contentItem The content item.
+     * @param target The target.
+     */
+    void attachToResource(ContentItem contentItem, ResourceID target);
 }

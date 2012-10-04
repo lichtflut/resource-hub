@@ -4,6 +4,7 @@ import de.lichtflut.rb.core.content.ContentItem;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -30,13 +31,16 @@ public class RichTextEditor extends Panel {
      * @param model The content model.
      */
     public RichTextEditor(String id, IModel<ContentItem> model) {
+        this(id, model, RichTextBehavior.Type.STANDARD);
+    }
+
+    public RichTextEditor(String id, IModel<ContentItem> model, RichTextBehavior.Type type) {
         super(id, model);
 
-        final TextField title = new TextField("title", titleModel(model));
-        add(title);
+        add(createTitleField("title", titleModel(model)));
 
         final TextArea<String> area = new TextArea<String>("editingArea", contentModel(model));
-        area.add(new RichTextBehavior());
+        area.add(new RichTextBehavior(type));
         add(area);
 
         add(new RBDefaultButton("save") {
@@ -66,6 +70,12 @@ public class RichTextEditor extends Panel {
      * Hook for cancel action.
      */
     public void onCancel() {
+    }
+
+    // ----------------------------------------------------
+
+    protected Component createTitleField(String componentID, IModel<String> titleModel) {
+        return new TextField(componentID, titleModel);
     }
 
     // ----------------------------------------------------

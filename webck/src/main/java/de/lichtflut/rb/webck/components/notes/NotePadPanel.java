@@ -3,14 +3,14 @@
  */
 package de.lichtflut.rb.webck.components.notes;
 
-import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.content.ContentItem;
+import de.lichtflut.rb.core.content.SNContentItem;
+import de.lichtflut.rb.core.services.ContentService;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.dialogs.EditNoteDialog;
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
-import de.lichtflut.rb.webck.models.basic.LoadableModel;
-import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -20,12 +20,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryResult;
 
 import java.util.List;
 
@@ -48,6 +44,9 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 	
 	@SpringBean
 	private ModelingConversation conversation;
+
+    @SpringBean
+    private ContentService contentService;
 	
 	// ----------------------------------------------------
 
@@ -62,18 +61,18 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 		
 		setOutputMarkupId(true);
 		
-		final LoadableModel<List<ResourceNode>> listModel = new ResourceQueryResultModel(new QueryModel(resource));
+		final AttachmentsModel listModel = new AttachmentsModel(resource);
 		
-		final ListView<ResourceNode> view = new ListView<ResourceNode>("notesList", listModel) {
+		final ListView<ContentItem> view = new ListView<ContentItem>("notesList", listModel) {
 			@Override
-			protected void populateItem(ListItem<ResourceNode> item) {
+			protected void populateItem(ListItem<ContentItem> item) {
 				item.add(new MezzlePanel("mezzle", item.getModel()){
 					@Override
-					public void edit(IModel<ResourceNode> mezzle) {
+					public void edit(IModel<ContentItem> mezzle) {
 						editNote(mezzle);
 					}
 					@Override
-					public void delete(IModel<ResourceNode> mezzle) {
+					public void delete(IModel<ContentItem> mezzle) {
 						deleteNote(mezzle);
 						removeAll();
 						listModel.reset();
@@ -102,18 +101,18 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 	// ----------------------------------------------------
 
 	protected void createNote(final IModel<ResourceID> resource) {
-		final IModel<ResourceNode> mezzleNode = new Model<ResourceNode>(new SNResource());
+		final IModel<ContentItem> mezzleNode = new Model<ContentItem>(new SNContentItem());
 		final DialogHoster hoster = findParent(DialogHoster.class);
 		hoster.openDialog(new CreateNoteDialog(hoster.getDialogID(), mezzleNode, resource));
 	}
 	
-	protected void editNote(IModel<ResourceNode> mezzle) {
+	protected void editNote(IModel<ContentItem> mezzle) {
 		final DialogHoster hoster = findParent(DialogHoster.class);
 		hoster.openDialog(new ExtendedEditNoteDialog(hoster.getDialogID(), mezzle));
 	}
 	
-	protected void deleteNote(IModel<ResourceNode> mezzle) {
-		conversation.remove(mezzle.getObject());
+	protected void deleteNote(IModel<ContentItem> mezzle) {
+        contentService.remove(mezzle.getObject().getID());
 		RBAjaxTarget.add(this);
 	}
 	
@@ -123,46 +122,42 @@ public class NotePadPanel extends TypedPanel<ResourceID> {
 
 		private final IModel<ResourceID> target;
 
-		private CreateNoteDialog(String id, IModel<ResourceNode> note, IModel<ResourceID> target) {
+		private CreateNoteDialog(String id, IModel<ContentItem> note, IModel<ResourceID> target) {
 			super(id, note);
 			this.target = target;
 			setTitle(new ResourceModel("global.dialogs.create-note.title"));
 		}
 
 		@Override
-		protected void onSave(ResourceNode note) {
-			SNOPS.assure(note, RBSystem.IS_ATTACHED_TO, target.getObject());
-			conversation.attach(note);
+		protected void onSave(ContentItem note) {
+			contentService.attachToResource(note, target.getObject());
 			RBAjaxTarget.add(NotePadPanel.this);
 		}
 	}
+
+    private class AttachmentsModel extends DerivedDetachableModel<List<ContentItem>, ResourceID> {
+
+        public AttachmentsModel(IModel<ResourceID> resourceID) {
+            super(resourceID);
+        }
+
+        @Override
+        protected List<ContentItem> derive(ResourceID resourceID) {
+            return contentService.getAttachedItems(resourceID);
+        }
+    }
 	
 	private final class ExtendedEditNoteDialog extends EditNoteDialog {
 
-		private ExtendedEditNoteDialog(String id, IModel<ResourceNode> note) {
+		private ExtendedEditNoteDialog(String id, IModel<ContentItem> note) {
 			super(id, note);
 			setTitle(new ResourceModel("global.dialogs.edit-note.title"));
 		}
 
 		@Override
-		protected void onSave(ResourceNode note) {
+		protected void onSave(ContentItem note) {
 			RBAjaxTarget.add(NotePadPanel.this);
 		}
-	}
-
-	private class QueryModel extends DerivedModel<QueryResult, ResourceID> {
-
-		public QueryModel(IModel<ResourceID> original) {
-			super(original);
-		}
-
-		@Override
-		protected QueryResult derive(ResourceID original) {
-			final Query query = conversation.createQuery();
-			query.addField(RBSystem.IS_ATTACHED_TO, original.getQualifiedName().toURI());
-			return query.getResult();
-		}
-		
 	}
 	
 }
