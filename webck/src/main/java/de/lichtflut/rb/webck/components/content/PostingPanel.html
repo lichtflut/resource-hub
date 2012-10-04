@@ -1,0 +1,22 @@
+<!--
+
+    Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd" >
+<wicket:panel>
+
+    <div>
+        <h2 wicket:id="title">[title]</h2>
+        <div>
+            [From] <span wicket:id="author" class="left"></span>
+            <span wicket:id="created" class="right"></span>
+        </div>
+        <div wicket:id="content" class="rich-content"></div>
+        <div class="button-bar right">
+            <a wicket:id="edit"><wicket:message key="link.edit">[Edit]</wicket:message></a>
+        </div>
+    </div>
+
+</wicket:panel>
+</html>
