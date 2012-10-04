@@ -42,9 +42,6 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.not;
  */
 public class NotePadPanel extends TypedPanel<ResourceID> {
 	
-	@SpringBean
-	private ModelingConversation conversation;
-
     @SpringBean
     private ContentService contentService;
 	
