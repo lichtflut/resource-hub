@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 
 import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * <p>
@@ -77,8 +78,13 @@ public class PostingPanel extends TypedPanel<ContentItem> {
         return new DerivedDetachableModel<String, ContentItem>(getContentItem()) {
             @Override
             protected String derive(ContentItem item) {
-                return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale()).format(
-                        item.getCreateDate());
+                Date date = item.getCreateDate();
+                if (date != null) {
+                    return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale())
+                            .format(date);
+                } else {
+                    return "";
+                }
             }
         };
     }

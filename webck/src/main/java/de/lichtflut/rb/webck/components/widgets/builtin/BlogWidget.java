@@ -9,8 +9,10 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.model.ResourceID;
 
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class BlogWidget extends PredefinedWidget {
 
         final IModel<List<ContentItem>> postingsModel = getPostingsModel(spec);
 
-        add(new PostingGroupPanel("postingGroup", postingsModel));
+        add(new PostingGroupPanel("postingGroup", postingsModel, new Model<ResourceID>(spec.getID())));
 
         add(new Label("noContentInfo", new ResourceModel("label.no-postings"))
                 .add(visibleIf(isEmpty(postingsModel))));

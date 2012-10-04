@@ -87,7 +87,11 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public void attachToResource(ContentItem contentItem, ResourceID target) {
         ResourceNode resource = conversation().findResource(new QualifiedName(contentItem.getID()));
-        resource.addAssociation(RBSystem.IS_ATTACHED_TO, target);
+        if (resource != null) {
+            resource.addAssociation(RBSystem.IS_ATTACHED_TO, target);
+        } else {
+            throw new IllegalStateException("ContentItem can not be attached. Not yet stored: " + contentItem);
+        }
     }
 
     // ----------------------------------------------------

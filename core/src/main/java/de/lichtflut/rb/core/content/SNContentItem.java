@@ -118,12 +118,12 @@ public class SNContentItem extends ResourceView implements ContentItem {
     // ----------------------------------------------------
 
     @Override
-    public Date getUpdateDate() {
+    public Date getModificationDate() {
         return timeValue(DC.MODIFIED);
     }
 
     @Override
-    public void setUpdateDate(Date date) {
+    public void setModificationDate(Date date) {
         setValue(DC.MODIFIED, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
     }
 

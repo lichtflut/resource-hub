@@ -67,9 +67,9 @@ public interface ContentItem extends Serializable {
 
     void setCreateDate(Date date);
 
-    Date getUpdateDate();
+    Date getModificationDate();
 
-    void setUpdateDate(Date date);
+    void setModificationDate(Date date);
 
 
 }

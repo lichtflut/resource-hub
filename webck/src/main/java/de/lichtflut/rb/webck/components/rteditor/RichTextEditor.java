@@ -14,7 +14,8 @@ import org.apache.wicket.model.IModel;
 
 /**
  * <p>
- *  This component represents a rich text editor.
+ *  This component represents a rich text editor. This editor does not bring it's own form.
+ *  So you have to place it in a form yourself.
  * </p>
 
  * <p>

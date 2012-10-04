@@ -54,7 +54,7 @@ public class EditNoteDialog extends AbstractRBDialog {
                 if (item.getCreateDate() == null) {
                     item.setCreateDate(new Date());
                 }
-                item.setUpdateDate(new Date());
+                item.setModificationDate(new Date());
                 item.setCreator(getCurrentUserName());
                 contentService.store(item);
                 EditNoteDialog.this.onSave(item);
