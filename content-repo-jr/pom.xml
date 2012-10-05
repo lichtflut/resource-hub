@@ -36,6 +36,13 @@
 			</exclusions>
 		</dependency>
 
+        <!-- LF infra -->
+        <dependency>
+            <groupId>de.lichtflut</groupId>
+            <artifactId>lf.foundation.infra</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
 		<!-- SLF4J - Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

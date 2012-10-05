@@ -23,9 +23,9 @@ import de.lichtflut.repository.impl.RepositoryDelegatorImpl;
  * 
  * @author Ravi Knox
  */
-public class FileServiceImpl implements FileService {
+public class JackRabbitFileService implements FileService {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(FileServiceImpl.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(JackRabbitFileService.class);
 
 	protected RepositoryDelegator delegator;
 
@@ -36,10 +36,10 @@ public class FileServiceImpl implements FileService {
 
 	/**
 	 * Constructor.
-	 * @param repository - path to repository.xml file
+	 * @param repository - id to repository.xml file
 	 * @param rbConfig - {@link RBConfig} for storage directory
 	 */
-	public FileServiceImpl(final String repository, final RBConfig rbConfig) {
+	public JackRabbitFileService(final String repository, final RBConfig rbConfig) {
 		this.rbConfig = rbConfig;
 		repositoryConf = repository;
 		if(null == delegator){
@@ -53,9 +53,9 @@ public class FileServiceImpl implements FileService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ContentDescriptor getData(final String path) {
-		LOGGER.info("Retrieving file for path: {}", path);
-		return delegator.getData(path);
+	public ContentDescriptor getData(final String id) {
+		LOGGER.info("Retrieving file for id: {}", id);
+		return delegator.getData(id);
 	}
 
 	/**
@@ -70,12 +70,12 @@ public class FileServiceImpl implements FileService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean exists(final String path) {
-		return delegator.exists(path);
+	public boolean exists(final String id) {
+		return delegator.exists(id);
 	}
 
 	/**
-	 * Returns only the part after the last "/" of a path.
+	 * Returns only the part after the last "/" of a id.
 	 * @param path
 	 * @return
 	 */

@@ -25,7 +25,7 @@ public class RBEntityFactory {
 		entity.getField(RBMock.HAS_LAST_NAME).setValue(0, "Müller");
 		entity.getField(RBMock.HAS_DATE_OF_BIRTH).setValue(0, new Date());
 		entity.getField(RBMock.HAS_EMAIL).setValue(0, "hmüller@google.de");
-		entity.getField(RBMock.HAS_AVATAR).setValue(0, "dummy-path.jpeg");
+		entity.getField(RBMock.HAS_AVATAR).setValue(0, "dummy-id.jpeg");
 		return entity;
 	}
 

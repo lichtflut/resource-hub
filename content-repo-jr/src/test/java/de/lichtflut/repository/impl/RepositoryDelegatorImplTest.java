@@ -75,7 +75,7 @@ public class RepositoryDelegatorImplTest {
 		File file = new File("src/test/resources/" + fileName + "." + filetype);
 		InputStream in = new FileInputStream(file);
 
-		ContentDescriptor descriptor = new ContentDescriptorBuilder().path(path).mimeType(filetype).data(in).build();
+		ContentDescriptor descriptor = new ContentDescriptorBuilder().id(path).mimeType(filetype).data(in).build();
 		startSession();
 		putFileInRepo(descriptor, session.getRootNode());
 
@@ -87,7 +87,7 @@ public class RepositoryDelegatorImplTest {
 
 		assertThat(retrievedDescriptor.getName(), equalTo(fileName));
 		assertThat(retrievedDescriptor.getMimeType(), equalTo(filetype));
-		assertThat(retrievedDescriptor.getPath(), equalTo(path));
+		assertThat(retrievedDescriptor.getID(), equalTo(path));
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class RepositoryDelegatorImplTest {
 		assertThat(file, notNullValue());
 		assertThat(repoDelegator, notNullValue());
 
-		repoDelegator.storeFile(new ContentDescriptorBuilder().path(path).mimeType(filetype).data(in).build());
+		repoDelegator.storeFile(new ContentDescriptorBuilder().id(path).mimeType(filetype).data(in).build());
 		startSession();
 
 		Node node = session.getRootNode().getNode(path);
@@ -135,7 +135,7 @@ public class RepositoryDelegatorImplTest {
 		File file = new File("src/test/resources/" + name + "." + filetype.name().toLowerCase());
 		InputStream in = new FileInputStream(file);
 
-		ContentDescriptor descriptor = new ContentDescriptorBuilder().path(path).mimeType(filetype).data(in).build();
+		ContentDescriptor descriptor = new ContentDescriptorBuilder().id(path).mimeType(filetype).data(in).build();
 		startSession();
 		putFileInRepo(descriptor, session.getRootNode());
 
@@ -204,7 +204,7 @@ public class RepositoryDelegatorImplTest {
 	}
 
 	private void putFileInRepo(final ContentDescriptor descriptor, final Node parent) {
-		List<String> fragments = Arrays.asList(descriptor.getPath().split("/"));
+		List<String> fragments = Arrays.asList(descriptor.getID().split("/"));
 		Node child = null;
 		try {
 			child = parent.addNode(fragments.get(0));

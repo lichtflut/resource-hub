@@ -41,7 +41,7 @@ import de.lichtflut.repository.impl.ContentDescriptorBuilder;
  * @author Ravi Knox
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FileServiceImplTest {
+public class JackRabbitFileServiceTest {
 
 	@Mock
 	private RepositoryDelegator mockDelegator;
@@ -54,11 +54,11 @@ public class FileServiceImplTest {
 	private final String path = "lichtflut/test/person/mueller";
 
 	/**
-	 * Test method for {@link de.lichtflut.rb.core.services.impl.FileServiceImpl#FileServiceImpl(java.lang.String)}.
+	 * Test method for {@link JackRabbitFileService#FileServiceImpl(java.lang.String)}.
 	 */
 	@Test
 	public void testFileServiceImpl() {
-		fileService = new FileServiceImpl("pathToRepo.xml", null){
+		fileService = new JackRabbitFileService("pathToRepo.xml", null){
 			@Override
 			protected void initRepository(){
 			}
@@ -67,7 +67,7 @@ public class FileServiceImplTest {
 	}
 
 	/**
-	 * Test method for {@link de.lichtflut.rb.core.services.impl.FileServiceImpl#getData(java.lang.String)}.
+	 * Test method for {@link JackRabbitFileService#getData(java.lang.String)}.
 	 * @throws IOException
 	 */
 	@Test
@@ -86,7 +86,7 @@ public class FileServiceImplTest {
 	}
 
 	/**
-	 * Test method for {@link de.lichtflut.rb.core.services.impl.FileServiceImpl#storeFile(ContentDescriptor)}.
+	 * Test method for {@link JackRabbitFileService#storeFile(ContentDescriptor)}.
 	 * @throws IOException
 	 */
 	@Test
@@ -102,7 +102,7 @@ public class FileServiceImplTest {
 	}
 
 	/**
-	 * Test method for {@link de.lichtflut.rb.core.services.impl.FileServiceImpl#exists(java.lang.String)}.
+	 * Test method for {@link JackRabbitFileService#exists(java.lang.String)}.
 	 */
 	@Test
 	public void testExists() {
@@ -123,7 +123,7 @@ public class FileServiceImplTest {
 	private void startMockRepositoryDelegator() {
 		mock(RepositoryDelegator.class);
 
-		fileService = new FileServiceImpl("pathToRepo.xml", null){
+		fileService = new JackRabbitFileService("pathToRepo.xml", null){
 			@Override
 			protected void initRepository(){
 				this.delegator = mockDelegator;
