@@ -66,7 +66,6 @@ public class EntityRowDisplayPanel extends Panel {
 	public EntityRowDisplayPanel(final String id, final IModel<RBField> model) {
 		super(id, model);
 
-		setOutputMarkupId(true);
 		add(new Label("label", new FieldLabelModel(model)));
 
 		final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);

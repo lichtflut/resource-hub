@@ -7,13 +7,18 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.and;
 import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
 
+import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -63,10 +68,16 @@ public class EntityRowEditPanel extends Panel {
 	public EntityRowEditPanel(final String id, final IModel<RBField> model) {
 		super(id, model);
 
-		setOutputMarkupId(true);
-		add(new Label("label", new FieldLabelModel(model)));
+        final WebMarkupContainer labelContainer = new WebMarkupContainer("labelContainer");
+        labelContainer.add(CssModifier.appendClass(new LabelCssClassModel(model)));
+        final Label label = new Label("label", new FieldLabelModel(model));
+        labelContainer.add(label);
+        add(labelContainer);
 
-		final FieldEditorFactory factory = new FieldEditorFactory(this);
+        final FieldEditorFactory factory = new FieldEditorFactory(this);
+
+        final WebMarkupContainer container = new WebMarkupContainer("container");
+        container.setOutputMarkupId(true);
 
 		final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
 		final ListView<RBFieldValueModel> view = new ListView<RBFieldValueModel>("values", listModel) {
@@ -82,7 +93,9 @@ public class EntityRowEditPanel extends Panel {
 			}
 		};
 		view.setReuseItems(true);
-		add(view);
+        container.add(view);
+
+        add(container);
 	}
 
 	// ----------------------------------------------------
@@ -93,12 +106,12 @@ public class EntityRowEditPanel extends Panel {
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				getField().removeSlot(index);
 				rebuildListView();
-				target.add(EntityRowEditPanel.this);
+
 			}
 
 			@Override
 			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
-				target.add(EntityRowEditPanel.this);
+                updateView();
 			}
 		};
 		link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));
@@ -118,7 +131,7 @@ public class EntityRowEditPanel extends Panel {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				getField().addValue(null);
-				target.add(EntityRowEditPanel.this);
+                updateView();
 			}
 		};
 		link.add(new AttributeModifier("title", new ResourceModel("link.title.add-field-value")));
@@ -143,7 +156,7 @@ public class EntityRowEditPanel extends Panel {
 
 			@Override
 			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
-				target.add(EntityRowEditPanel.this);
+                updateView();
 			}
 		};
 		link.add(new AttributeModifier("title", new ResourceModel("link.title.create-field-value")));
@@ -174,9 +187,13 @@ public class EntityRowEditPanel extends Panel {
 	}
 
 	private void rebuildListView() {
-		MarkupContainer view = (MarkupContainer) get("values");
+		MarkupContainer view = (MarkupContainer) get("container:values");
 		view.removeAll();
 	}
+
+    private void updateView() {
+        RBAjaxTarget.add(get("container"));
+    }
 
 	// -- INNER CLASSES -----------------------------------
 
@@ -186,5 +203,21 @@ public class EntityRowEditPanel extends Panel {
 			return findParent(Form.class) != null;
 		}
 	}
+
+    private class LabelCssClassModel extends DerivedDetachableModel<String, RBField> {
+
+        public LabelCssClassModel(IModel<RBField> original) {
+            super(original);
+        }
+
+        @Override
+        protected String derive(RBField original) {
+            if (original.getVisualizationInfo().isFloating()) {
+                return "floating";
+            } else {
+                return "breaking";
+            }
+        }
+    }
 
 }

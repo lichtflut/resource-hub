@@ -294,7 +294,13 @@ input.data-picker-field {
 
 div.entity-display {
 	border-radius: 0 0 3px 3px;
+    display: inline-block;
 	border-top: 0;
+}
+
+div.entity-display div {
+    float: left;
+    display: inline-block;
 }
 
 div.entity-fields {
@@ -308,42 +314,47 @@ div.entity-field {
     display: inline-block;
 }
 
-div.entity-field .field-label {
-    width: 150px;
+div.entity-display div.field-label {
+    width: 130px;
     float: left;
+    clear: left;
+}
+
+div.entity-display div.floating {
+    clear: none;
+    width: auto;
 }
 
 /* The values of one field */
-div.entity-field .field-values {
+div.entity-display .field-values {
     float: left;
     margin: 0 0 2px 0;
 }
 
 /* The single value of one field */
-div.entity-field div.field-value-input {
+div.entity-display .field-value-input {
     float: left;
-    min-width: 330px;
 }
 
-div.entity-field a.field-value-operation {
+div.entity-display a.field-value-operation {
     float:left;
 }
 
-div.entity-field textarea {
+div.entity-display textarea {
     width:330px;
     height:50px;
 }
 
-div.entity-field input[type='text'] {
-	width:260px;
+div.entity-display input[type='text'] {
+	width:200px;
 }
 
-div.entity-field div.data-picker {
+div.entity-display div.data-picker {
     padding-right: 10px;
 }
 
-div.entity-field .field-operations {
-    min-width: 30px;
+div.entity-display .field-operations {
+    min-width: 20px;
     float: left;
 }
 
@@ -358,16 +369,8 @@ div.embedded-entity-field {
     padding: 1px;
 }
 
-div.embedded-entity-field div {
-    float: left;
-}
-
 div.embedded-entity-field label {
     padding-left: 20px;
-}
-
-div.embedded-entity-field.floating {
-    clear: none;
 }
 
 div.embedded-entity-field input[type='text'] {
