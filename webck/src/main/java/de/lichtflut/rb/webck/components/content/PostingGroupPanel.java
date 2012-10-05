@@ -7,11 +7,13 @@ import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 import org.slf4j.Logger;
@@ -21,7 +23,9 @@ import java.util.Date;
 import java.util.List;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
 
 /**
  * <p>
@@ -83,14 +87,20 @@ public class PostingGroupPanel extends Panel {
                 });
             }
         };
+        view.add(visibleIf(isNull(editModel)));
         add(view);
 
-        add(new AjaxLink<Void>("addPosting") {
+        AjaxLink<Void> addLink = new AjaxLink<Void>("addPosting") {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 createPosting();
             }
-        });
+        };
+        addLink.add(visibleIf(isNull(editModel)));
+        add(addLink);
+
+        add(new Label("noContentInfo", new ResourceModel("label.no-postings"))
+                .add(visibleIf(isEmpty(model))));
     }
 
     // ----------------------------------------------------

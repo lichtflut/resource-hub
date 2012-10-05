@@ -43,10 +43,6 @@ public class BlogWidget extends PredefinedWidget {
         final IModel<List<ContentItem>> postingsModel = getPostingsModel(spec);
 
         add(new PostingGroupPanel("postingGroup", postingsModel, new Model<ResourceID>(spec.getID())));
-
-        add(new Label("noContentInfo", new ResourceModel("label.no-postings"))
-                .add(visibleIf(isEmpty(postingsModel))));
-
     }
 
     private IModel<List<ContentItem>> getPostingsModel(WidgetSpec widget) {
