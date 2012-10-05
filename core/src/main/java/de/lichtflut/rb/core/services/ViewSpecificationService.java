@@ -11,6 +11,7 @@ import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -66,6 +67,13 @@ public interface ViewSpecificationService {
 	 * @return The perspective specification or null if not found.
 	 */
 	Perspective findPerspective(ResourceID id);
+
+    /**
+     * Initialize a perspective (e.g. add the view ports).
+     * @param id The ID.
+     * @return The initialized perspective.
+     */
+    Perspective initializePerspective(ResourceID id);
 
     /**
      * Find all perspectives accessible for the current user.

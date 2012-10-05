@@ -140,7 +140,22 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 		}
 	}
 
-	@Override
+    @Override
+    public Perspective initializePerspective(ResourceID id) {
+        final ResourceNode existing = conversation().findResource(id.getQualifiedName());
+        if (existing != null) {
+            return new SNPerspective(existing);
+        } else {
+            SNPerspective perspective = new SNPerspective(id.getQualifiedName());
+            // add two default view ports.
+            perspective.addViewPort();
+            perspective.addViewPort();
+            store(perspective);
+            return perspective;
+        }
+    }
+
+    @Override
 	public List<Perspective> findPerspectives() {
 		final Query query = conversation().createQuery();
 		query.addField(RDF.TYPE, WDGT.PERSPECTIVE);
@@ -155,11 +170,6 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	@Override
 	public void store(final Perspective perspective) {
 		conversation().attach(perspective);
-		if (perspective.getViewPorts().isEmpty()) {
-			// add two default view ports.
-			perspective.addViewPort();
-			perspective.addViewPort();
-		}
 	}
 
 	@Override

@@ -51,6 +51,31 @@
 		</dependency>
 	</dependencies>
 
+    <repositories>
+        <repository>
+            <id>lf-releases</id>
+            <name>lichtflut nexus repository</name>
+            <url>http://nexus.lichtflut.de/nexus/content/repositories/releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>lf-snapshots</id>
+            <name>lichtflut snapshot repository</name>
+            <url>http://nexus.lichtflut.de/nexus/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
     <distributionManagement>
         <repository>
             <id>lf-releases</id>
@@ -63,4 +88,5 @@
             <url>http://nexus.lichtflut.de/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
+
 </project>

@@ -154,9 +154,6 @@ public class PerspectivePanel extends TypedPanel<Perspective> {
 			super(original);
 		}
 
-		/** 
-		 * {@inheritDoc}
-		 */
 		@Override
 		protected List<ViewPort> derive(Perspective original) {
 			return original.getViewPorts();
