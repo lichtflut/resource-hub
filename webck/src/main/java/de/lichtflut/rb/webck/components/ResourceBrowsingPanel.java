@@ -67,11 +67,11 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	public ResourceBrowsingPanel(final String id) {
 		super(id);
 
-		add(new EntityInfoPanel("resourceInfo", model));
-
 		final Form form = new Form("form");
 		form.setOutputMarkupId(true);
 		form.setMultiPart(true);
+
+        form.add(new EntityInfoPanel("resourceInfo", model));
 
 		form.add(new EntityPanel("entity", model));
 		form.add(new ClassifyEntityPanel("classifier", model));

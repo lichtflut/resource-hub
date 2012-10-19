@@ -106,7 +106,7 @@ public class EntityRowEditPanel extends Panel {
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				getField().removeSlot(index);
 				rebuildListView();
-
+                updateView();
 			}
 
 			@Override
