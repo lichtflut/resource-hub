@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.InputStream;
 
+import de.lichtflut.rb.core.schema.parser.exception.SchemaParsingException;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SNResource;
@@ -83,13 +84,12 @@ public class ResourceSchemaParserTest {
 	}
 
 	@Test
-	public void testRsfParsing() throws IOException {
+	public void testRsfParsing() throws IOException, SchemaParsingException {
 		final InputStream in =
 				getClass().getClassLoader().getResourceAsStream("test-schema.rsf");
 
 		final RsfSchemaParser parser = new RsfSchemaParser();
 		ParsedElements parsedElements = parser.parse(in);
-		System.out.println(parsedElements.getSchemas());
 	}
 
 	// -- GIVEN -------------------------------------------

@@ -90,7 +90,6 @@ public class SchemaImportDialog extends AbstractRBDialog {
 			try {
 				report = importer.read(upload.getInputStream());
 			} catch (IOException e) {
-//				throw new RuntimeException(e);
 				report = new IOReport();
 				report.setAdditionalInfo("[" +upload.getClientFileName() +"] " +e.getMessage());
 				report.error();

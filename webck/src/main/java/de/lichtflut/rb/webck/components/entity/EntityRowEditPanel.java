@@ -9,14 +9,13 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
 
 import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldLabelCssClassModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -69,7 +68,7 @@ public class EntityRowEditPanel extends Panel {
 		super(id, model);
 
         final WebMarkupContainer labelContainer = new WebMarkupContainer("labelContainer");
-        labelContainer.add(CssModifier.appendClass(new LabelCssClassModel(model)));
+        labelContainer.add(CssModifier.appendClass(new RBFieldLabelCssClassModel(model)));
         final Label label = new Label("label", new FieldLabelModel(model));
         labelContainer.add(label);
         add(labelContainer);
@@ -203,21 +202,5 @@ public class EntityRowEditPanel extends Panel {
 			return findParent(Form.class) != null;
 		}
 	}
-
-    private class LabelCssClassModel extends DerivedDetachableModel<String, RBField> {
-
-        public LabelCssClassModel(IModel<RBField> original) {
-            super(original);
-        }
-
-        @Override
-        protected String derive(RBField original) {
-            if (original.getVisualizationInfo().isFloating()) {
-                return "floating";
-            } else {
-                return "breaking";
-            }
-        }
-    }
 
 }

@@ -10,19 +10,22 @@
 </wicket:head>
 <wicket:panel>
 
-    <div wicket:id="label" class="field-label">[Label]</div>
+    <div wicket:id="labelContainer" class="field-label">
+        <label wicket:id="label">[Label]</label>
+    </div>
+
     <div class="field-values">
         <wicket:container wicket:id="values">
-            <wicket:container wicket:id="valuefield" ></wicket:container>
+            <wicket:container wicket:id="valuefield"></wicket:container>
         </wicket:container>
     </div>
 
     <wicket:fragment wicket:id="textOutput">
-        <span wicket:id="valuefield">[output]</span>
+        <span wicket:id="valuefield" class="entity-field-value">[output]</span>
     </wicket:fragment>
     
     <wicket:fragment wicket:id="referenceLink">
-        <a href="#" wicket:id="link">
+        <a href="#" wicket:id="link" class="entity-field-reference">
     		<wicket:container wicket:id="label">[link label]</wicket:container>
     	</a>
     	<br />
@@ -36,7 +39,7 @@
         <a wicket:id="target" href="#"></a>
     </wicket:fragment>
     
-   <wicket:fragment wicket:id="filePreview">
+    <wicket:fragment wicket:id="filePreview">
         <wicket:container wicket:id="previewPanel"></wicket:container>
     </wicket:fragment>
     

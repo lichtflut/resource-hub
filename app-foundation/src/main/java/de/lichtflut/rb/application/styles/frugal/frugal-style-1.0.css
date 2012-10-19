@@ -240,7 +240,7 @@ div.input-panel.login {
 }
 
 div.form-field {
-	padding: 2px 4px;
+	padding: 0 4px;
 	min-height: 22px;
 	clear: both;
     float: none;
@@ -362,28 +362,24 @@ div.entity-fields-wrapper {
     display: inline-block;
 }
 
-div.entity-fields-wrapper div {
-    float: left;
-    display: inline-block;
-}
-
 div.entity-display div.field-label {
-    width: 130px;
-    min-height: 30px;
     float: left;
-    clear: left;
+    padding-top: 2px;
 }
 
 div.entity-display div.field-label.floating {
     clear: none;
-    width: auto;
+}
+
+div.entity-display div.field-label.breaking {
+    width: 130px;
+    clear: left;
 }
 
 /* The values of one field */
 div.entity-display .field-values {
     float: left;
-    min-height: 30px;
-    margin: 0 0 2px 0;
+    margin: 0 0 10px 0;
 }
 
 /* The single value of one field */
@@ -413,6 +409,17 @@ div.entity-display .field-operations {
     float: left;
 }
 
+span.entity-field-value {
+    display: block;
+    font-weight: bold;
+    padding: 2px 10px 0 7px;
+}
+
+a.entity-field-reference {
+    font-weight: bold;
+    padding: 2px 10px 0 7px;
+}
+
 /* embedded references */
 
 div.embedded-reference {
@@ -420,11 +427,19 @@ div.embedded-reference {
     padding-bottom: 10px;
 }
 
-div.embedded-entity-field {
-    padding: 1px;
+div.embedded-entity-label {
+    display: block;
+    float: none;
+    clear: both;
+    font-style: italic;
+    margin: 0 0 10px;
 }
 
-div.embedded-entity-field label {
+div.embedded-entity-field {
+    padding: 2px 0;
+}
+
+div.embedded-entity-field div.breaking label {
     padding-left: 20px;
 }
 
