@@ -184,7 +184,7 @@
 //		ByteArrayOutputStream ouputStream = new ByteArrayOutputStream();
 //		
 //		try {
-//			io.write(graph, ouputStream);
+//			io.writeNamespaces(graph, ouputStream);
 //		} catch (Exception e) {
 //			throw new RuntimeException(e);
 //		}

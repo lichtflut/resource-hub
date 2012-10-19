@@ -15,6 +15,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.request.resource.ResourceStreamResource;
@@ -44,19 +45,21 @@ public class SchemaExportDialog extends AbstractExportDialog {
 	@SpringBean
 	private SchemaManager schemaManager;
 	
-	private final IModel<String> format = new Model<String>("JSON");
+	private final IModel<String> format = new Model<String>("RSF");
 	private IOReport report;
 	
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+	 * @param id The component ID
 	 */
 	@SuppressWarnings("rawtypes")
 	public SchemaExportDialog(String id) {
 		super(id);
 		setModal(true);
 		setWidth(600);
+
+        setTitle(new ResourceModel("title.schema-export-dialog"));
 		
 		final Form form = new Form("form");
 		form.add(new FeedbackPanel("feedback"));
@@ -76,7 +79,7 @@ public class SchemaExportDialog extends AbstractExportDialog {
 				close(target);
 			}
 		});
-		add(form); 
+		add(form);
 	}
 	
 	// ----------------------------------------------------
@@ -90,7 +93,7 @@ public class SchemaExportDialog extends AbstractExportDialog {
 	}
 	
 	private ListModel<String> getChoices() {
-		return new ListModel<String>(Arrays.asList(new String [] {"JSON", "RDF", "RSF"}));
+		return new ListModel<String>(Arrays.asList(new String [] {"RSF", "RDF"}));
 	}
 	
 	// ----------------------------------------------------
@@ -118,10 +121,11 @@ public class SchemaExportDialog extends AbstractExportDialog {
 				report = exporter.exportAll(out);
 				send(SchemaExportDialog.this.getPage(), Broadcast.BREADTH,
 						new ModelChangeEvent<IOReport>(report, ModelChangeEvent.IO_REPORT));
+                in = new ByteArrayInputStream(out.toByteArray());
+                out.close();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			in = new ByteArrayInputStream(out.toByteArray());
 			return in;
 		}
 

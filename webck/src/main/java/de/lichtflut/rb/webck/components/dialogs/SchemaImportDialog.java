@@ -17,6 +17,7 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -45,15 +46,18 @@ public class SchemaImportDialog extends AbstractRBDialog {
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+	 * @param id The component ID.
 	 */
 	@SuppressWarnings("rawtypes")
 	public SchemaImportDialog(String id) {
 		super(id);
 		setModal(true);
 		setWidth(600);
+
+        setTitle(new ResourceModel("title.schema-import-dialog"));
 		
 		final Form form = new Form("form");
+        form.setOutputMarkupId(true);
 		form.add(new FeedbackPanel("feedback"));
 		
 		form.add(new DropDownChoice<String>("format", format, getChoices()));
@@ -64,6 +68,7 @@ public class SchemaImportDialog extends AbstractRBDialog {
 		form.add(new AjaxButton("upload", form) {
 			@Override
 			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
+                target.add(form);
 			}
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
