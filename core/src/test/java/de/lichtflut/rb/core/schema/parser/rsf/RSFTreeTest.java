@@ -53,8 +53,8 @@ public class RSFTreeTest {
 		ResourceSchema city = elements.getResourceSchemas().get(0);
 		assertTrue(new SimpleResourceID(namespace, "City").equals(city.getDescribedType()));
 		assertTrue("http://rb.lichtflut.de/common#hasName <,> http://rb.lichtflut.de/common#hasCountry".equals(city.getLabelBuilder().getExpression()));
-		assertTrue(2 == city.getPropertyDeclarations().size());
-		assertThat(city.getQuickInfo().size(), is(2));
+		assertThat(city.getPropertyDeclarations().size(), is(4));
+		assertThat(city.getQuickInfo().size(), is(3));
 		PropertyDeclaration pdec = city.getPropertyDeclarations().get(0);
 		assertEquals(new SimpleResourceID("http://rb.lichtflut.de/common#hasMayor"), pdec.getPropertyDescriptor());
 		assertEquals(1000, pdec.getCardinality().getMinOccurs());
@@ -66,7 +66,7 @@ public class RSFTreeTest {
 	}
 
 	@Test
-	@Ignore("For debugging purposes..")
+	@Ignore("Monitor AST while developing...")
 	public void testTree() throws RecognitionException{
 		CommonTree t = (CommonTree) createTree(getRSFString());
 		System.out.println(t.toStringTree());
@@ -141,9 +141,11 @@ public class RSFTreeTest {
 		return 	"schema for \"common:City\" { " +
 				"label-rule : \"common:hasName <,> common:hasCountry\"" +
 				"" +
-				"quick-info{" +
+				"quick-info {" +
 				"common:hasMayor," +
-				"common:hasCountry" +
+				"common:hasPhonebooth," +
+				"common:hasClub," +
+				"common:invalidProperty" +
 				"}" +
 				"property \"common:hasMayor\" [1000..xs] {" +
 				"field-label : \"Mayor\"" +
@@ -154,6 +156,16 @@ public class RSFTreeTest {
 				"}" +
 				"" +
 				"property \"common:hasCountry\" [1..1] {" +
+				"field-label[en] : \"Name\"" +
+				"datatype : \"String\"" +
+				"resource-constraint : \"common:Country\"" +
+				"}" +
+				"property \"common:hasClub\" [1..1] {" +
+				"field-label[en] : \"Name\"" +
+				"datatype : \"String\"" +
+				"resource-constraint : \"common:Country\"" +
+				"}" +
+				"property \"common:hasPhonebooth\" [1..1] {" +
 				"field-label[en] : \"Name\"" +
 				"datatype : \"String\"" +
 				"resource-constraint : \"common:Country\"" +

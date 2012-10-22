@@ -17,7 +17,6 @@ tokens {
 	VISUALIZATION;
 	VIS_ASSIGNMENT;
 	QUICK_INFO;
-	TEXT;
 }
 
 @header{
@@ -71,10 +70,12 @@ label_decl: LABEL_RULE COLON e=STRING -> ^(LABEL $e);
 
 // Definition of schema-quick-info
 quick_info: QUICK_INFO_DECL '{'
-					(qInfo_string COMMA) *
-				|	qInfo_string
+					qInfo_string (COMMA qInfo_string)*
 			'}'
 			-> ^(QUICK_INFO qInfo_string+);
+
+qInfo_string : s=PLAIN_STRING -> ^(PROPERTY $s);
+
 
 // Definition of a property-declaration
 property_decl : PROPERTY_DECL id=STRING cardinal_decl '{'
@@ -115,8 +116,6 @@ visualization_key :
   FLOATING |
   STYLE
 ;
-
-qInfo_string : t=PLAIN_STRING -> ^(TEXT $t);
 
 value : STRING ;
 
