@@ -189,9 +189,10 @@ public class ResourceListPanel extends Panel {
 				infoPanel.setVisible(false);
 				infoPanel.add(visibleIf(isTrue(isVisible)));
 				container.add(infoPanel);
-				container.add(new AjaxEventBehavior("onMouseOver") {
+				container.add(new AjaxEventBehavior("onMouseEnter") {
 					@Override
 					protected void onEvent(final AjaxRequestTarget target) {
+						System.out.println("Mouse Enter");
 						if(false == isVisible.getObject()){
 							isVisible.setObject(true);
 							target.add(container);
@@ -199,9 +200,10 @@ public class ResourceListPanel extends Panel {
 					}
 				});
 
-				container.add(new AjaxEventBehavior("onMouseOut") {
+				container.add(new AjaxEventBehavior("onMouseLeave") {
 					@Override
 					protected void onEvent(final AjaxRequestTarget target) {
+						System.out.println("Mouse LEave");
 						if(true == isVisible.getObject()){
 							isVisible.setObject(false);
 							target.add(container);

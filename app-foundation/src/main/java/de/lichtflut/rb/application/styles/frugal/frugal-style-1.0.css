@@ -912,11 +912,18 @@ button.button.down div {
     width: 25px;
 }
 
-.quick-info {
-    background-color: #F6F3F8;
+div .quick-info {
+    background-color: #F6F8F3;
     border: 1px solid #D3DCC7;
     border-radius: 5px 5px 5px 5px;
     max-width: 350px;
     padding: 10px;
+    margin-top: 25px;
     position: absolute;
+    float: right;
+}
+
+.quick-info .title-row{
+	background-color: #D3DCC7;	
+}
 }

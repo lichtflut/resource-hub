@@ -15,7 +15,7 @@ import de.lichtflut.rb.core.entity.RBField;
 
 /**
  * <p>
- * This Panel display a {@link RBEntity}s' quick-info.
+ * This Panel displays a {@link RBEntity}s' quick-info.
  * </p>
  * Created: Sep 24, 2012
  *
