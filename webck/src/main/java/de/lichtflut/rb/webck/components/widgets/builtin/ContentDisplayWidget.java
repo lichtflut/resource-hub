@@ -7,6 +7,8 @@ import de.lichtflut.rb.core.content.ContentItem;
 import de.lichtflut.rb.core.content.SNContentItem;
 import de.lichtflut.rb.core.services.ContentService;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -16,18 +18,9 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.traverse.Walker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.SemanticNetworkService;
-import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -63,7 +56,7 @@ public class ContentDisplayWidget extends PredefinedWidget {
 	/**
 	 * Constructor.
 	 *
-	 * @param id   The component ID.
+	 * @param id The component ID.
 	 * @param spec The specification.
 	 * @param perspectiveInConfigMode Conditional model for checking if this widget is in config mode.
 	 */
@@ -72,10 +65,11 @@ public class ContentDisplayWidget extends PredefinedWidget {
 
 		setOutputMarkupId(true);
 
-		final IModel<String> contentModel = new ContentModel(spec);
+		final IModel<ContentItem> contentModel = Model.of(getContentItem());
+        final IModel<String> contentDisplayModel = getContentDisplayModel(contentModel);
 
 		final WebMarkupContainer display = new WebMarkupContainer("display");
-		display.add(new Label("content", contentModel).setEscapeModelStrings(false));
+		display.add(new Label("content", contentDisplayModel).setEscapeModelStrings(false));
 		display.add(new AjaxLink<Void>("edit") {
 			@Override
 			public void onClick(final AjaxRequestTarget target) {
@@ -92,7 +86,7 @@ public class ContentDisplayWidget extends PredefinedWidget {
 		final RichTextEditor editor = new RichTextEditor("editor", contentModel) {
 			@Override
 			public void onSave() {
-				setContent(spec, contentModel.getObject());
+				storeContent(spec, contentModel.getObject());
 				mode.setObject(DisplayMode.VIEW);
 				RBAjaxTarget.add(ContentDisplayWidget.this);
 			}
@@ -111,75 +105,50 @@ public class ContentDisplayWidget extends PredefinedWidget {
 
 	// ----------------------------------------------------
 
-	@Override
-	protected IModel<String> getTitleModel() {
-		return Model.of("Here will be a title soon...");
-	}
+    @Override
+    protected Component createTitle(String componentID) {
+        return super.createTitle(componentID).add(visibleIf(areEqual(mode, DisplayMode.VIEW)));
+    }
 
-	// ----------------------------------------------------
+    @Override
+    protected IModel<String> getTitleModel() {
+        return new DerivedDetachableModel<String, ContentItem>(getContentItem()) {
+            @Override
+            protected String derive(ContentItem item) {
+                return item.getTitle();
+            }
+        };
+    }
 
-	private String getContent(final WidgetSpec spec) {
-        ContentItem item = getContentItem(spec);
-        if (item != null) {
-            return item.getContentAsString();
+    // ----------------------------------------------------
+
+    private void storeContent(final WidgetSpec spec, final ContentItem item) {
+        contentService.store(item);
+        if (item.getID().equals(spec.getContentID())) {
+            LOGGER.debug("Updating content of widget {} : {}", spec, item);
         } else {
-            return null;
-        }
-	}
-
-	private void setContent(final WidgetSpec spec, final String content) {
-		SemanticNode existing = SNOPS.fetchObject(spec, WDGT.DISPLAYS_CONTENT_ITEM);
-
-		if (existing == null) {
-			LOGGER.debug("Creating content of widget {} : {}", spec, content);
-			ContentItem contentItem = new SNContentItem();
-            contentItem.setContent(content);
-			SNOPS.assure(spec, WDGT.DISPLAYS_CONTENT_ITEM, contentItem);
+            LOGGER.debug("Creating content of widget {} : {}", spec, item);
+            spec.setContentID(item.getID());
             viewSpecService.store(spec);
-			contentService.store(contentItem);
-		} else if (existing.isResourceNode()) {
-			LOGGER.debug("Updating content of widget {} : {}", spec, content);
-			SNOPS.assure(existing.asResource(), RBSystem.HAS_CONTENT, content);
-		} else {
-			throw new IllegalStateException("Unexpected content item for content widget: " + existing);
-		}
-	}
-
-    private ContentItem getContentItem(WidgetSpec spec) {
-        SemanticNode node = SNOPS.fetchObject(spec, WDGT.DISPLAYS_CONTENT_ITEM);
-        if (node != null && node.isResourceNode()) {
-            return contentService.findById(node.asResource().toURI());
-        } else {
-            return null;
         }
     }
 
-	private class ContentModel implements IModel<String> {
+    private ContentItem getContentItem() {
+        ContentItem existing = contentService.findById(getWidgetSpec().getContentID());
+        if (existing != null) {
+            return existing;
+        } else {
+            return new SNContentItem();
+        }
+    }
 
-		private final WidgetSpec spec;
-		private String content;
+    private IModel<String> getContentDisplayModel(IModel<ContentItem> model) {
+        return new DerivedDetachableModel<String, ContentItem>(model) {
+            @Override
+            protected String derive(ContentItem item) {
+                return item.getContentAsString();
+            }
+        };
+    }
 
-		public ContentModel(final WidgetSpec spec) {
-			this.spec = spec;
-		}
-
-		@Override
-		public String getObject() {
-			if (content == null) {
-				content = getContent(spec);
-			}
-			return content;
-		}
-
-		@Override
-		public void setObject(final String content) {
-			this.content = content;
-		}
-
-		@Override
-		public void detach() {
-			this.content = null;
-		}
-
-	}
 }

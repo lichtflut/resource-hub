@@ -59,7 +59,7 @@ import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
  *  The database will be destroyed after each test.
  *  There is a default behavior in loading fixtures before each test
  *  after calling the initTestCase Method.
- *  A fixture file, named "fixtures.rdf.xml" is expected under the following path:
+ *  A fixture file, named "fixtures.rdf.xml" is expected under the following id:
  *  src/test/resources/fixtures/TestClassName/fixtures.rdf.xml.
  *  If this file is not present, the default src/test/resources/fixtures/TestClassName/fixtures.rdf.xml is taken.
  * </p>

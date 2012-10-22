@@ -9,7 +9,7 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.SNColumnDef;
 import de.lichtflut.rb.webck.common.OrderedNodesContainer;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.common.impl.SerialNumberOrderedNodesContainer;
+import de.lichtflut.rb.webck.common.impl.OrderedModelContainer;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.links.ConfirmedLink;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
@@ -71,7 +71,7 @@ public class ColumnsConfigPanel extends TypedPanel<WidgetSpec> {
 		
 		final IModel<List<? extends ResourceNode>> orderModel = 
 				new CastingModel<List<? extends ResourceNode>>(columnsModel);
-		final OrderedNodesContainer container = new SerialNumberOrderedNodesContainer(orderModel);
+		final OrderedNodesContainer container = new OrderedModelContainer(orderModel);
 		
 		add(new ListView<ColumnDef>("columnList", columnsModel) {
 			@Override

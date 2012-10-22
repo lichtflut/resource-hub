@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.widgets.catalog;
 
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.components.widgets.builtin.BlogWidget;
 import de.lichtflut.rb.webck.components.widgets.builtin.ContentDisplayWidget;
 import de.lichtflut.rb.webck.components.widgets.builtin.MyCompanyWidget;
 import de.lichtflut.rb.webck.components.widgets.builtin.ThatsMeWidget;
@@ -108,6 +109,9 @@ public abstract class WidgetCatalogPanel extends Panel {
         list.add(new PredefinedCatalogItem(ContentDisplayWidget.class,
                 new ResourceModel("predefined.content-item.name"),
                 new ResourceModel("predefined.content-item.description")));
+        list.add(new PredefinedCatalogItem(BlogWidget.class,
+                new ResourceModel("predefined.blog.name"),
+                new ResourceModel("predefined.blog.description")));
 		return new ListModel<CatalogItem>(list);
 	}
 

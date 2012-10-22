@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.schema.parser;
 
+import de.lichtflut.rb.core.schema.parser.exception.SchemaParsingException;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -19,6 +21,6 @@ import java.io.InputStream;
  */
 public interface ResourceSchemaParser {
 
-	ParsedElements parse(InputStream in) throws IOException;
+	ParsedElements parse(InputStream in) throws IOException, SchemaParsingException;
 	
 }

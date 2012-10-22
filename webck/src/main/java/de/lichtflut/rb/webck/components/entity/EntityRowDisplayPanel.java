@@ -6,7 +6,10 @@ package de.lichtflut.rb.webck.components.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.models.fields.RBFieldLabelCssClassModel;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -66,8 +69,11 @@ public class EntityRowDisplayPanel extends Panel {
 	public EntityRowDisplayPanel(final String id, final IModel<RBField> model) {
 		super(id, model);
 
-		setOutputMarkupId(true);
-		add(new Label("label", new FieldLabelModel(model)));
+        final WebMarkupContainer labelContainer = new WebMarkupContainer("labelContainer");
+        labelContainer.add(CssModifier.appendClass(new RBFieldLabelCssClassModel(model)));
+        final Label label = new Label("label", new FieldLabelModel(model));
+        labelContainer.add(label);
+        add(labelContainer);
 
 		final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
 		final ListView<RBFieldValueModel> valueList = new ListView<RBFieldValueModel>("values", listModel) {

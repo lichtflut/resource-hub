@@ -38,10 +38,10 @@ public class ContentDescriptorBuilderTest {
 		Filetype filetype = Filetype.JPEG;
 		InputStream in = new FileInputStream(tempFolder.newFile());
 
-		ContentDescriptor descriptor = new ContentDescriptorBuilder().name(name).path(path).mimeType(filetype).data(in).build();
+		ContentDescriptor descriptor = new ContentDescriptorBuilder().name(name).id(path).mimeType(filetype).data(in).build();
 		assertThat(descriptor.getMimeType(), equalTo(filetype));
 		assertThat(descriptor.getName(), equalTo(name));
-		assertThat(descriptor.getPath(), equalTo(path));
+		assertThat(descriptor.getID(), equalTo(path));
 		assertThat(descriptor.getData(), equalTo(in));
 	}
 

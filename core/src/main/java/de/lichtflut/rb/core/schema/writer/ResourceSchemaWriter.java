@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema.parser;
+package de.lichtflut.rb.core.schema.writer;
 
 import java.io.IOException;
 import java.io.OutputStream;

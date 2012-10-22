@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.fields;
 
 import java.io.IOException;
 
+import de.lichtflut.rb.core.services.impl.JackRabbitFileService;
 import org.apache.commons.io.IOUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -21,7 +22,6 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.services.FileService;
-import de.lichtflut.rb.core.services.impl.FileServiceImpl;
 import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
 import de.lichtflut.repository.ContentDescriptor;
 import de.lichtflut.repository.impl.ContentDescriptorBuilder;
@@ -55,7 +55,7 @@ public class FilePreviewLink extends Panel {
 	 * Constructor.
 	 * The File will be fetched by through the {@link FileService}
 	 * @param id - wicket:id
-	 * @param model - the path pointing the file.
+	 * @param model - the id pointing the file.
 	 */
 	public FilePreviewLink(final String id, final IModel<String> model) {
 		super(id, model);
@@ -95,7 +95,7 @@ public class FilePreviewLink extends Panel {
 	}
 
 	private Component createThumbnailLink(final IModel<ContentDescriptor> descriptor) {
-		String href = getLinkLocation(descriptor.getObject().getPath());
+		String href = getLinkLocation(descriptor.getObject().getID());
 		IResource unscaledResource = getIResource(descriptor);
 
 		ThumbnailImageResource resource = new ThumbnailImageResource(unscaledResource, 100);
@@ -131,9 +131,9 @@ public class FilePreviewLink extends Panel {
 	}
 
 	private Component createLink(final IModel<ContentDescriptor> descriptor) {
-		String href = getLinkLocation(descriptor.getObject().getPath());
+		String href = getLinkLocation(descriptor.getObject().getID());
 
-		String simpleName = FileServiceImpl.getSimpleName(descriptor.getObject().getPath());
+		String simpleName = JackRabbitFileService.getSimpleName(descriptor.getObject().getID());
 
 		ExternalLink link = new ExternalLink("link", href, simpleName);
 		link.add(new AttributeModifier("target", "_blank"));

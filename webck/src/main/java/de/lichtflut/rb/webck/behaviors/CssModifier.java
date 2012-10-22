@@ -7,6 +7,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 /**
  * <p>
@@ -32,5 +33,9 @@ public class CssModifier {
 	public static Behavior appendClass(final IModel<String> cssClass) {
 		return new AttributeAppender("class", cssClass, " ");
 	}
+
+    public static Behavior appendStyle(String style) {
+        return new AttributeAppender("style", Model.of(style), ";");
+    }
 	
 }

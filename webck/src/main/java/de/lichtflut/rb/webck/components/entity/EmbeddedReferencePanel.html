@@ -10,10 +10,18 @@
 </wicket:head>
 <wicket:panel>
 
+    <div class="embedded-entity-label">
+        <span wicket:id="label">[embedded field label]</span>
+    </div>
 
     <div wicket:id="entities" class="embedded-entity-field">
+
+        <div class="embedded-entity-operations">
+
+        </div>
+
         <wicket:container wicket:id="rows">
-            <div wicket:id="row" class="entity-field"></div>
+            <wicket:container wicket:id="row"></wicket:container>
         </wicket:container>
 	</div>
 

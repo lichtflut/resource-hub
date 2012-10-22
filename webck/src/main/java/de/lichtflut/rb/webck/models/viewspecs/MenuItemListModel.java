@@ -14,7 +14,8 @@ import de.lichtflut.rb.core.viewspec.MenuItem;
 
 /**
  * <p>
- *  Model providing the current users menu items.
+ *  Model providing the menu items to be displayed for current context.
+ *  Supports authenticated and unauthenticated users.
  * </p>
  *
  * <p>
@@ -41,7 +42,7 @@ public class MenuItemListModel extends LoadableDetachableModel<List<MenuItem>> {
 
 	@Override
 	public List<MenuItem> load() {
-		return viewSpecificationService.getUsersMenuItems();
+		return viewSpecificationService.getMenuItemsForDisplay();
 	}
 
 }

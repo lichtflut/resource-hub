@@ -66,9 +66,9 @@
 //		//Domain must be present
 //		assertNotNull("Domain " + TEST_DOMAIN.getDomainIdentifier() + " has to be present", domain);
 //
-//		String path = "domain/" + TEST_DOMAIN.getDomainIdentifier();
+//		String id = "domain/" + TEST_DOMAIN.getDomainIdentifier();
 //		
-//		getWebResource(true).path(path).delete();
+//		getWebResource(true).id(id).delete();
 //		
 //		domain = manager.findDomain(TEST_DOMAIN.getDomainIdentifier());
 //		//Domain doesnt exist
@@ -78,7 +78,7 @@
 //		
 //		setCurrentSystemUser(ROOT_USER);
 //		
-//		getWebResource(true).path(path).entity(new ObjectFactory().createSystemDomain(TEST_DOMAIN),MediaType.APPLICATION_JSON).post();
+//		getWebResource(true).id(id).entity(new ObjectFactory().createSystemDomain(TEST_DOMAIN),MediaType.APPLICATION_JSON).post();
 //		
 //		domain = manager.findDomain(TEST_DOMAIN.getDomainIdentifier());
 //		//Domain must be present

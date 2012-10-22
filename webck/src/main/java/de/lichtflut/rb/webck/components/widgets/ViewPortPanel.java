@@ -9,13 +9,11 @@ import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
-import de.lichtflut.rb.webck.common.impl.SerialNumberOrderedNodesContainer;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.dialogs.SelectWidgetDialog;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.basic.CastingModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -28,7 +26,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import java.util.List;
@@ -49,8 +46,6 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 	@SpringBean
 	private ViewSpecificationService viewSpecificationService;
 	
-	private SerialNumberOrderedNodesContainer orderedNodesContainer;
-	
 	// ----------------------------------------------------
 	
 	/**
@@ -59,7 +54,6 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 	@SuppressWarnings("rawtypes")
 	public ViewPortPanel(String id, IModel<ViewPort> portModel, final ConditionalModel<Boolean> isConfigMode) {
 		super(id, portModel);
-		
 		
 		// Container needed for dynamic CSS class
 		final WebMarkupContainer container = new WebMarkupContainer("container"); 
@@ -91,11 +85,7 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 		}.add(ConditionalBehavior.visibleIf(isConfigMode)));
 		
 		final WidgetListModel listModel = new WidgetListModel(portModel);
-		final IModel<List<? extends ResourceNode>> orderModel = 
-				new CastingModel<List<? extends ResourceNode>>(listModel);
-		
-		orderedNodesContainer = new SerialNumberOrderedNodesContainer(orderModel);
-		
+
 		container.add(new ListView<WidgetSpec>("widgetList", listModel) {
 			@Override
 			protected void populateItem(ListItem<WidgetSpec> item) {
@@ -108,35 +98,24 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 	
 	// -- WidgetController --------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void remove(WidgetSpec widget) {
-		final ViewPort port = getModelObject();
-		port.removeWidget(widget);
-		viewSpecificationService.store(port);
+		viewSpecificationService.removeWidget(getViewPort(), widget);
 		send(this, Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void moveDown(WidgetSpec widget) {
-		orderedNodesContainer.moveDown(widget, 1);
+        viewSpecificationService.movePositionDown(getViewPort(), widget);
 		send(this, Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void moveUp(WidgetSpec widget) {
-		orderedNodesContainer.moveUp(widget, 1);
+        viewSpecificationService.movePositionUp(getViewPort(), widget);
 		send(this, Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
 	}
 	
@@ -144,12 +123,16 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 
 	@SuppressWarnings("rawtypes")
 	public void addWidget(WidgetSpec widget) {
-		final ViewPort port = getModelObject();
+		final ViewPort port = getViewPort();
 		port.addWidget(widget);
 		viewSpecificationService.store(port);
 		send(this, Broadcast.BUBBLE, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
 	}
-	
+
+    protected ViewPort getViewPort() {
+        return getModelObject();
+    }
+
 	// ----------------------------------------------------
 
 	private Component createWidgetPanel(IModel<WidgetSpec> model, ConditionalModel<Boolean> isConfigMode) {
@@ -177,9 +160,6 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 			super(original);
 		}
 
-		/** 
-		 * {@inheritDoc}
-		 */
 		@Override
 		protected List<WidgetSpec> derive(ViewPort original) {
 			return original.getWidgets();

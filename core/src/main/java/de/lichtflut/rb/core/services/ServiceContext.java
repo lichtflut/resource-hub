@@ -27,7 +27,7 @@ public class ServiceContext implements Serializable{
 	
 	private RBUser user;
 	
-	private String domain;
+	private String domain = "public";
 
     private Context[] readContexts = new Context[] {
             RBSystem.TYPE_SYSTEM_CTX, RBSystem.VIEW_SPEC_CTX

@@ -41,7 +41,7 @@ public class SNPerspective extends ResourceView implements Perspective {
 	}
 	
 	/**
-	 * @param resource
+	 * @param qn
 	 */
 	public SNPerspective(QualifiedName qn) {
 		super(qn);
@@ -49,7 +49,7 @@ public class SNPerspective extends ResourceView implements Perspective {
 	}
 
 	/**
-	 * Create a new perspeective.
+	 * Create a new perspective.
 	 */
 	public SNPerspective() {
 		setValue(RDF.TYPE, WDGT.PERSPECTIVE);

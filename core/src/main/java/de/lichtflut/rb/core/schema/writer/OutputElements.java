@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.schema.parser;
+package de.lichtflut.rb.core.schema.writer;
 
 import java.util.ArrayList;
 import java.util.Collection;

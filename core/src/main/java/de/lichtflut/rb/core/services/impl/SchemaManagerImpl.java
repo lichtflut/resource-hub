@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import de.lichtflut.rb.core.schema.writer.rsf.RsfWriter;
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
@@ -204,7 +205,11 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	@Override
 	public SchemaExporter getExporter(final String format) {
-		throw new NotYetSupportedException("Unsupported format: " + format);
+        if ("RSF".equalsIgnoreCase(format.trim())) {
+            return new SchemaExporterImpl(this, new RsfWriter());
+        } else {
+            throw new NotYetSupportedException("Unsupported format: " + format);
+        }
 	}
 
 	// -----------------------------------------------------

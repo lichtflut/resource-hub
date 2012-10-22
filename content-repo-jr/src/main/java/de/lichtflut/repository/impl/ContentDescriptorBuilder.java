@@ -19,7 +19,7 @@ import de.lichtflut.repository.Filetype;
  */
 public class ContentDescriptorBuilder implements Serializable {
 
-	private String path = "";
+	private String id = "";
 	private Filetype filetype = Filetype.OTHER;
 	private String name = "";
 	private InputStream in = null;
@@ -34,8 +34,8 @@ public class ContentDescriptorBuilder implements Serializable {
 
 	// ------------------------------------------------------
 
-	public ContentDescriptorBuilder path(final String path){
-		this.path= path;
+	public ContentDescriptorBuilder id(final String id){
+		this.id = id;
 		return this;
 	}
 
@@ -64,8 +64,8 @@ public class ContentDescriptorBuilder implements Serializable {
 			 * {@inheritDoc}
 			 */
 			@Override
-			public String getPath() {
-				return path;
+			public String getID() {
+				return id;
 			}
 
 			/**

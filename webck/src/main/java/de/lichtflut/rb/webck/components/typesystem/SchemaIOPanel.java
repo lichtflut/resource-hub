@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.InformationImportDialog;
 import de.lichtflut.rb.webck.components.dialogs.SchemaExportDialog;
 import de.lichtflut.rb.webck.components.dialogs.SchemaImportDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -31,24 +33,20 @@ public class SchemaIOPanel extends Panel {
 	public SchemaIOPanel(final String id) {
 		super(id);
 		
-		final Dialog exportDialog = new SchemaExportDialog("exportDialog");
-		add(exportDialog);
-		
 		final Link exportLink = new AjaxFallbackLink("exportLink") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				exportDialog.open(target);
+                DialogHoster hoster = findParent(DialogHoster.class);
+                hoster.openDialog(new SchemaExportDialog(hoster.getDialogID()));
 			}
 		};
 		add(exportLink);
 		
-		final Dialog importDialog = new SchemaImportDialog("importDialog");
-		add(importDialog);
-		
 		final Link importLink = new AjaxFallbackLink("importLink") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				importDialog.open(target);
+                DialogHoster hoster = findParent(DialogHoster.class);
+                hoster.openDialog(new SchemaImportDialog(hoster.getDialogID()));
 			}
 		};
 		add(importLink);

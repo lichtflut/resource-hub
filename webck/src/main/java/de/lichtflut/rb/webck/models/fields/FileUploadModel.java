@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.models.fields;
 import java.io.IOException;
 import java.util.List;
 
+import de.lichtflut.rb.core.services.impl.JackRabbitFileService;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.model.IModel;
@@ -17,7 +18,6 @@ import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
-import de.lichtflut.rb.core.services.impl.FileServiceImpl;
 import de.lichtflut.rb.core.services.impl.LinkProvider;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
@@ -62,7 +62,7 @@ public class FileUploadModel implements IModel<Object>{
 		if(null == original.getObject()){
 			return "";
 		}
-		return FileServiceImpl.getSimpleName(original.getObject().toString());
+		return JackRabbitFileService.getSimpleName(original.getObject().toString());
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class FileUploadModel implements IModel<Object>{
 		ContentDescriptor descriptor = null;
 		descriptor = buildContentDescriptorFor(upload);
 		fileService.storeFile(descriptor);
-		return descriptor.getPath();
+		return descriptor.getID();
 	}
 
 	private ContentDescriptor buildContentDescriptorFor(final FileUpload upload) {
@@ -106,7 +106,7 @@ public class FileUploadModel implements IModel<Object>{
 		try {
 			Filetype filetype = getFiletype(upload);
 			descriptor = new ContentDescriptorBuilder().name(upload.getClientFileName())
-					.mimeType(filetype).path(path).data(upload.getInputStream()).build();
+					.mimeType(filetype).id(path).data(upload.getInputStream()).build();
 		} catch (IOException e) {
 			throw new IllegalStateException("Error while getting InputStream", e);
 		}

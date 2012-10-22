@@ -18,24 +18,24 @@ import de.lichtflut.repository.ContentDescriptor;
 public interface FileService {
 
 	/**
-	 * This method returns an {@link File} for a given path.
+	 * This method returns an {@link File} for a given id.
 	 * 
-	 * @param path - where the file is located
+	 * @param id - where the file is located
 	 * @return an File
 	 */
-	ContentDescriptor getData(String path);
+	ContentDescriptor getData(String id);
 
 	/**
-	 * Stores a {@link File} under a given path. If file already exists, it will be overwritten.
+	 * Stores a {@link File} under a given id. If file already exists, it will be overwritten.
 	 * 
 	 * @param descriptor
 	 */
 	void storeFile(ContentDescriptor descriptor);
 
 	/**
-	 * @param path - where to look for a file
+	 * @param id - where to look for a file
 	 * @return true if file exists, false if not.
 	 */
-	boolean exists(String path);
+	boolean exists(String id);
 
 }

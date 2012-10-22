@@ -9,6 +9,7 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
+import de.lichtflut.rb.core.schema.parser.exception.SchemaParsingException;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
 import org.arastreju.sge.ModelingConversation;
@@ -34,7 +35,6 @@ public class SchemaImporterImpl implements SchemaImporter {
     private final ResourceSchemaParser parser;
 	private final SchemaManager manager;
 
-	
 	// -----------------------------------------------------
 	
 	/**
@@ -48,33 +48,34 @@ public class SchemaImporterImpl implements SchemaImporter {
 	
 	// -----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public IOReport read(final InputStream in) throws IOException {
 		IOReport report = new IOReport();
 		
-		ParsedElements elements;
-		elements = parser.parse(in);
-		
-		for(Constraint constr : elements.getConstraints()) {
-			manager.store(constr);
-		}
-		for(ResourceSchema schema : elements.getSchemas()) {
-			resolvePublicConstraints(schema);
-			manager.store(schema);
-		}
+        try {
+            ParsedElements elements = parser.parse(in);
+            for(Constraint constr : elements.getConstraints()) {
+                manager.store(constr);
+            }
+            for(ResourceSchema schema : elements.getSchemas()) {
+                resolvePublicConstraints(schema);
+                manager.store(schema);
+            }
 
-		for(Statement stmt : elements.getStatements()) {
-			conversation.addStatement(stmt);
-		}
-		
-		report.add("Constraints", elements.getConstraints().size());
-		report.add("Schemas", elements.getSchemas().size());
-		report.add("Statements", elements.getStatements().size());
-		report.success();
-		
+            for(Statement stmt : elements.getStatements()) {
+                conversation.addStatement(stmt);
+            }
+
+            report.add("Constraints", elements.getConstraints().size());
+            report.add("Schemas", elements.getSchemas().size());
+            report.add("Statements", elements.getStatements().size());
+
+            report.success();
+        } catch (SchemaParsingException e) {
+            report.setAdditionalInfo("Error while reading schema: " + e.getMessage());
+            report.error();
+        }
+
 		return report;
 	}
 	

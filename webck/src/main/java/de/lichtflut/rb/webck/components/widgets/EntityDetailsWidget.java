@@ -73,7 +73,7 @@ public class EntityDetailsWidget extends ConfigurableWidget {
 	
 	protected WebMarkupContainer createConfigurationPane(String componentID, IModel<WidgetSpec> spec) {
 		return new EntityDetailsWidgetConfigPanel(componentID, spec);
-	};
+	}
 	
 	// ----------------------------------------------------
 	
