@@ -1,5 +1,6 @@
 package de.lichtflut.rb.core.schema.parser.exception;
 
+
 /**
  * <p>
  *  For exceptions during parsing of schemas.
@@ -13,23 +14,19 @@ package de.lichtflut.rb.core.schema.parser.exception;
  */
 public class SchemaParsingException extends Exception {
 
-    public SchemaParsingException() {
-    }
+	public SchemaParsingException() {
+	}
 
-    public SchemaParsingException(String message) {
-        super(message);
-    }
+	public SchemaParsingException(final String message) {
+		super(message);
+	}
 
-    public SchemaParsingException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public SchemaParsingException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 
-    public SchemaParsingException(Throwable cause) {
-        super(cause);
-    }
-
-    public SchemaParsingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+	public SchemaParsingException(final Throwable cause) {
+		super(cause);
+	}
 
 }
