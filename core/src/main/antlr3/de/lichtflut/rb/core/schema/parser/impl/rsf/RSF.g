@@ -71,8 +71,8 @@ label_decl: LABEL_RULE COLON e=STRING -> ^(LABEL $e);
 
 // Definition of schema-quick-info
 quick_info: QUICK_INFO_DECL '{'
-				qInfo_string COMMA *
-				qInfo_string
+					(qInfo_string COMMA) *
+				|	qInfo_string
 			'}'
 			-> ^(QUICK_INFO qInfo_string+);
 
