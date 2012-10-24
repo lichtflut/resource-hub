@@ -176,40 +176,9 @@ public class ResourceListPanel extends Panel {
 		final ListView<ResourceNode> listView = new ListView<ResourceNode>("rows", model) {
 			@Override
 			protected void populateItem(final ListItem<ResourceNode> item) {
-				final IModel<Boolean> isVisible = new Model<Boolean>(false);
 				final ColumnConfiguration config = configModel.getObject();
 				WebMarkupContainer content = createCells(new UndeclaredFieldsListModel(item.getModel(), config), item);
-				final WebMarkupContainer container = new WebMarkupContainer("wrapper");
-				container.setOutputMarkupId(true);
-				container.add(content);
-
-				RBEntity entity = entityManager.find(item.getModelObject());
-				final QuickInfoPanel infoPanel = new QuickInfoPanel("quickInfo", new Model<RBEntity>(entity));
-				infoPanel.setOutputMarkupId(true);
-				infoPanel.setVisible(false);
-				infoPanel.add(visibleIf(isTrue(isVisible)));
-				container.add(infoPanel);
-				container.add(new AjaxEventBehavior("onMouseEnter") {
-					@Override
-					protected void onEvent(final AjaxRequestTarget target) {
-						System.out.println("Mouse Enter");
-						if(false == isVisible.getObject()){
-							isVisible.setObject(true);
-							target.add(container);
-						}
-					}
-				});
-
-				container.add(new AjaxEventBehavior("onMouseLeave") {
-					@Override
-					protected void onEvent(final AjaxRequestTarget target) {
-						System.out.println("Mouse LEave");
-						if(true == isVisible.getObject()){
-							isVisible.setObject(false);
-							target.add(container);
-						}
-					}
-				});
+				final WebMarkupContainer container = createQiuckInfoPanel(item, content);
 
 				item.add(container);
 				item.add(createActions(item.getModelObject(), config.getActions()));
@@ -226,6 +195,42 @@ public class ResourceListPanel extends Panel {
 			}
 		};
 		return columns;
+	}
+
+	private WebMarkupContainer createQiuckInfoPanel(final ListItem<ResourceNode> item, final WebMarkupContainer content) {
+		final IModel<Boolean> isVisible = new Model<Boolean>(false);
+		final WebMarkupContainer container = new WebMarkupContainer("wrapper");
+		container.setOutputMarkupId(true);
+		container.add(content);
+
+		RBEntity entity = entityManager.find(item.getModelObject());
+		final QuickInfoPanel infoPanel = new QuickInfoPanel("quickInfo", new Model<RBEntity>(entity));
+		infoPanel.setOutputMarkupId(true);
+		infoPanel.setVisible(false);
+		infoPanel.add(visibleIf(isTrue(isVisible)));
+		container.add(infoPanel);
+		container.add(new AjaxEventBehavior("onMouseEnter") {
+			@Override
+			protected void onEvent(final AjaxRequestTarget target) {
+				System.out.println("Mouse Enter");
+				if(false == isVisible.getObject()){
+					isVisible.setObject(true);
+					target.add(container);
+				}
+			}
+		});
+
+		container.add(new AjaxEventBehavior("onMouseLeave") {
+			@Override
+			protected void onEvent(final AjaxRequestTarget target) {
+				System.out.println("Mouse LEave");
+				if(true == isVisible.getObject()){
+					isVisible.setObject(false);
+					target.add(container);
+				}
+			}
+		});
+		return container;
 	}
 
 	@SuppressWarnings("unchecked")
