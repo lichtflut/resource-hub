@@ -177,17 +177,17 @@ public class ResourceListPanel extends Panel {
 			@Override
 			protected void populateItem(final ListItem<ResourceNode> item) {
 				final ColumnConfiguration config = configModel.getObject();
-				WebMarkupContainer content = createCells(new UndeclaredFieldsListModel(item.getModel(), config), item);
-				final WebMarkupContainer container = createQiuckInfoPanel(item, content);
-
-				item.add(container);
+				//				WebMarkupContainer content = createCells(new UndeclaredFieldsListModel(item.getModel(), config), item);
+				//				final WebMarkupContainer container = createQiuckInfoPanel(item, content);
+				item.add(createCells(new UndeclaredFieldsListModel(item.getModel(), config)));
+				//				item.add(container);
 				item.add(createActions(item.getModelObject(), config.getActions()));
 			}
 		};
 		return listView;
 	}
 
-	private WebMarkupContainer createCells(final IModel<List<ResourceField>> model, final ListItem<ResourceNode> nodeModel) {
+	private WebMarkupContainer createCells(final IModel<List<ResourceField>> model) {
 		final ListView<ResourceField> columns = new ListView<ResourceField>("cells", model) {
 			@Override
 			protected void populateItem(final ListItem<ResourceField> item) {
@@ -212,7 +212,6 @@ public class ResourceListPanel extends Panel {
 		container.add(new AjaxEventBehavior("onMouseEnter") {
 			@Override
 			protected void onEvent(final AjaxRequestTarget target) {
-				System.out.println("Mouse Enter");
 				if(false == isVisible.getObject()){
 					isVisible.setObject(true);
 					target.add(container);
@@ -223,7 +222,6 @@ public class ResourceListPanel extends Panel {
 		container.add(new AjaxEventBehavior("onMouseLeave") {
 			@Override
 			protected void onEvent(final AjaxRequestTarget target) {
-				System.out.println("Mouse LEave");
 				if(true == isVisible.getObject()){
 					isVisible.setObject(false);
 					target.add(container);
