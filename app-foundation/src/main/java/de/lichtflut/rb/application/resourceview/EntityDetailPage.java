@@ -5,6 +5,7 @@ package de.lichtflut.rb.application.resourceview;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 
+import de.lichtflut.rb.application.common.CommonParams;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -40,11 +41,6 @@ import de.lichtflut.rb.webck.models.BrowsingContextModel;
 @SuppressWarnings("serial")
 public class EntityDetailPage extends RBBasePage {
 
-	public static final String PARAM_RESOURCE_ID = "rid";
-	public static final String PARAM_RESOURCE_TYPE = "type";
-
-	// ----------------------------------------------------
-
 	/**
 	 * Constructor.
 	 * 
@@ -67,12 +63,10 @@ public class EntityDetailPage extends RBBasePage {
 	}
 
 	/**
-	 * Constructor. Displays a resource in edit mode.
-	 * @param handle
+	 * Constructor. Displays current entity in browsing context.
 	 */
-	public EntityDetailPage(final EntityHandle handle) {
+	public EntityDetailPage() {
 		add(new Browser("rb"));
-		
 		add(new NotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
 	}
 
@@ -89,8 +83,8 @@ public class EntityDetailPage extends RBBasePage {
 	// -----------------------------------------------------
 
 	private EntityHandle createHandle(PageParameters params) {
-		final StringValue idParam = params.get(PARAM_RESOURCE_ID);
-		final StringValue typeParam = params.get(PARAM_RESOURCE_TYPE);
+		final StringValue idParam = params.get(CommonParams.PARAM_RESOURCE_ID);
+		final StringValue typeParam = params.get(CommonParams.PARAM_RESOURCE_TYPE);
 
 		if (!idParam.isEmpty()) {
 			final ResourceID id = new SimpleResourceID(idParam.toString());
