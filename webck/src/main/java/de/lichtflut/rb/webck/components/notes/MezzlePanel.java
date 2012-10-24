@@ -3,23 +3,16 @@
  */
 package de.lichtflut.rb.webck.components.notes;
 
-import java.text.DateFormat;
-
+import de.lichtflut.rb.core.content.ContentItem;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.models.HTMLSafeModel;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.DC;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SemanticNode;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.models.HTMLSafeModel;
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
-import de.lichtflut.rb.webck.models.resources.ResourcePropertyModel;
+import java.text.DateFormat;
 
 /**
  * <p>
@@ -32,78 +25,71 @@ import de.lichtflut.rb.webck.models.resources.ResourcePropertyModel;
  *
  * @author Oliver Tigges
  */
-public abstract class MezzlePanel extends TypedPanel<ResourceNode> {
-	
+public abstract class MezzlePanel extends TypedPanel<ContentItem> {
+
 	/**
 	 * Constructor.
 	 * @param id The ID.
 	 * @param model The model containing the mezzle node.
 	 */
 	@SuppressWarnings("rawtypes")
-	public MezzlePanel(final String id, final IModel<ResourceNode> model) {
+	public MezzlePanel(final String id, final IModel<ContentItem> model) {
 		super(id, model);
-		
+
 		add(new Label("content", toHtmlSafeContentModel(model)).setEscapeModelStrings(false));
-		
-		add(new Label("creator", new DerivedModel<String, SemanticNode>(
-				new ResourcePropertyModel<SemanticNode>(model, DC.CREATOR)) {
+
+		add(new Label("creator", new DerivedModel<String, ContentItem>(model) {
 			@Override
-			protected String derive(SemanticNode userNode) {
-				return userNode.asValue().getStringValue();
+			protected String derive(final ContentItem contentItem) {
+				return contentItem.getCreatorName();
 			}
 		}));
-		
-		add(new Label("created", new DerivedModel<String, SemanticNode>(
-				new ResourcePropertyModel<SemanticNode>(model, DC.CREATED)) {
-			@Override
-			protected String derive(SemanticNode original) {
+
+		add(new Label("created", new DerivedModel<String, ContentItem>(model) {
+            @Override
+            protected String derive(final ContentItem contentItem) {
 				return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale()).format(
-						original.asValue().getTimeValue());
+                        contentItem.getCreateDate());
 			}
 		}));
-		
+
 		add(new AjaxLink("edit") {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				edit(model);
 			}
 		});
-		
+
 		add(new AjaxLink("delete") {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				delete(model);
 			}
 		});
 	}
-	
+
 	// ----------------------------------------------------
 
-    private IModel<String> toHtmlSafeContentModel(IModel<ResourceNode> model) {
-        return new HTMLSafeModel(new DerivedModel<String, ResourceNode>(model) {
-            @Override
-            protected String derive(ResourceNode mezzle) {
-                final SemanticNode node = SNOPS.singleObject(mezzle, RBSystem.HAS_CONTENT);
-                if (node != null) {
-                    return node.asValue().getStringValue();
-                } else {
-                    return null;
-                }
-            }
-        });
-    }
+	private IModel<String> toHtmlSafeContentModel(final IModel<ContentItem> model) {
+		return new HTMLSafeModel(new DerivedModel<String, ContentItem>(model) {
+			@Override
+			protected String derive(final ContentItem mezzle) {
+				return mezzle.getContentAsString();
+			}
+		});
+	}
 
-	
+
 	/**
 	 * Hook for editing of notes.
 	 * @param mezzle The node representing the mezzle.
 	 */
-	public abstract void edit(final IModel<ResourceNode> mezzle);
-	
+	public abstract void edit(final IModel<ContentItem> mezzle);
+
 	/**
 	 * Hook for deleting of notes.
 	 * @param mezzle The node representing the mezzle.
 	 */
-	public abstract void delete(final IModel<ResourceNode> mezzle);
-	
+	public abstract void delete(final IModel<ContentItem> mezzle);
+
 }

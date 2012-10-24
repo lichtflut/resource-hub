@@ -6,7 +6,7 @@ package de.lichtflut.rb.rest.api;
 import org.arastreju.sge.context.DomainIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
 import de.lichtflut.rb.core.services.DomainInitializer;

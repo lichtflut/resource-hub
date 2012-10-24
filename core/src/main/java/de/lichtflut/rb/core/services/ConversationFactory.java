@@ -24,5 +24,4 @@ public interface ConversationFactory {
 
     ModelingConversation startConversation();
 
-    ModelingConversation startConversation(Context primary, Context... readContexts);
 }

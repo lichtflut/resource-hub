@@ -55,8 +55,6 @@ public class EntityPanel extends Panel {
 	public EntityPanel(final String id, final IModel<RBEntity> model) {
 		super(id, model);
 
-		setOutputMarkupId(true);
-
 		add(new FeedbackPanel("feedbackPanel"));
 
 		add(createRows(new RBFieldsListModel(model)));

@@ -7,18 +7,12 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonI
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -26,11 +20,7 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.FileService;
-import de.lichtflut.rb.core.services.impl.LinkProvider;
 import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -47,8 +37,6 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityModel;
-import de.lichtflut.repository.ContentDescriptor;
-import de.lichtflut.repository.impl.ContentDescriptorBuilder;
 
 /**
  * <p>
@@ -69,9 +57,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	@SpringBean
 	private EntityManager entityManager;
 
-	@SpringBean
-	private FileService fileService;
-
 	// ---------------- Constructor -------------------------
 
 	/**
@@ -82,10 +67,11 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	public ResourceBrowsingPanel(final String id) {
 		super(id);
 
-		add(new EntityInfoPanel("resourceInfo", model));
-
 		final Form form = new Form("form");
 		form.setOutputMarkupId(true);
+		form.setMultiPart(true);
+
+        form.add(new EntityInfoPanel("resourceInfo", model));
 
 		form.add(new EntityPanel("entity", model));
 		form.add(new ClassifyEntityPanel("classifier", model));
@@ -158,8 +144,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				final RBStandardButton save = new RBStandardButton("save") {
 					@Override
 					protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-						Map<String, ContentDescriptor> map = prepareForFileService(model);
-						storeFiles(map);
 						entityManager.store(model.getObject());
 						RBWebSession.get().getHistory().finishEditing();
 						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
@@ -172,35 +156,4 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		};
 	}
 
-	protected Map<String, ContentDescriptor> prepareForFileService(final IModel<RBEntity> model) {
-		Map<String, ContentDescriptor> map = new HashMap<String, ContentDescriptor>();
-		for (RBField field : model.getObject().getAllFields()) {
-			ContentDescriptor descriptor = null;
-			if (field.getDataType().equals(Datatype.FILE)) {
-				int index = 0;
-				for (Object value : field.getValues()) {
-					value = ((List) value).get(0);
-					String path = new LinkProvider().buildRepositoryStructureFor(model.getObject(), ((FileUpload) value).getClientFileName());
-					try {
-						FileUpload fileUpload = (FileUpload) value;
-						descriptor = new ContentDescriptorBuilder().name(fileUpload.getClientFileName())
-								.mimeType(fileUpload.getContentType()).path(path).data(fileUpload.getInputStream()).build();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					map.put(path, descriptor);
-					field.setValue(index, path);
-					index++;
-				}
-			}
-		}
-		return map;
-	}
-
-
-	private void storeFiles(final Map<String, ContentDescriptor> map) {
-		for (String path : map.keySet()) {
-			fileService.storeFile(map.get(path));
-		}
-	}
 }

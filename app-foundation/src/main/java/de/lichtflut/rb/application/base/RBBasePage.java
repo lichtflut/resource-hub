@@ -8,6 +8,8 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.components.identities.SessionInfoPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.event.IEvent;
@@ -63,7 +65,8 @@ public class RBBasePage extends AbstractBasePage {
 	}
 
 	/**
-	 * @param parameters
+     * Constructor with parameters.
+	 * @param parameters The parameters.
 	 */
 	public RBBasePage(final PageParameters parameters) {
 		super(parameters);
@@ -71,9 +74,6 @@ public class RBBasePage extends AbstractBasePage {
 
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
@@ -81,14 +81,8 @@ public class RBBasePage extends AbstractBasePage {
 		final IModel<List<NavigationNode>> navModel = new DerivedDetachableModel<List<NavigationNode>, List<MenuItem>>(
 				new MenuItemListModel()) {
 			@Override
-			protected List<NavigationNode> derive(final List<MenuItem> menuItems) {
-				final List<NavigationNode> result = new ArrayList<NavigationNode>();
-				for (MenuItem item : menuItems) {
-					result.add(createPageNode(item));
-				}
-				result.add(createPageNode(RBApplication.get().getBrowseAndSearchPage(), "navigation.browse-and-search"));
-				result.add(createPageNode(RBApplication.get().getUserProfilePage(), "navigation.user-profile-view"));
-				return result;
+			protected List<NavigationNode> derive(List<MenuItem> menuItems) {
+				return RBApplication.get().getFirstLevelNavigation(menuItems);
 			}
 		};
 
@@ -101,16 +95,19 @@ public class RBBasePage extends AbstractBasePage {
 			}
 		}.setOutputMarkupId(true));
 
-		add(createSeachForm("inlineSearchForm"));
+		add(createSearchForm("inlineSearchForm"));
 
 		add(createSecondLevelNav("secondLevelNav"));
 
 		add(new ReferenceLink("adminAreaLink", AdminBasePage.class, new ResourceModel("global.link.admin-area"))
-		.add(visibleIf(CurrentUserModel.hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
+		    .add(visibleIf(CurrentUserModel.hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
 
-		add(new Label("username", CurrentUserModel.displayNameModel()));
+		add(new Label("username", CurrentUserModel.displayNameModel())
+             .add(visibleIf(CurrentUserModel.isLoggedIn())));
 
 		add(new DomainSwitcherPanel("domain", CurrentDomainModel.displayNameModel()));
+
+        add(new SessionInfoPanel("sessionInfo"));
 
 	}
 
@@ -119,7 +116,7 @@ public class RBBasePage extends AbstractBasePage {
 	}
 
 	@SuppressWarnings("rawtypes")
-	protected Form<?> createSeachForm(final String componentID) {
+	protected Form<?> createSearchForm(final String componentID) {
 		final IModel<String> searchModel = new Model<String>();
 		final Form<?> form = new Form(componentID) {
 			@Override
@@ -140,21 +137,6 @@ public class RBBasePage extends AbstractBasePage {
 		form.add(submitLink);
 		form.add(new SubmitFormOnEnterBehavior(submitLink));
 		return form;
-	}
-
-	// ----------------------------------------------------
-
-	protected NavigationNode createPageNode(final Class<? extends Page> pageClass, final String key) {
-		return new NavigationNodePanel(new ReferenceLink("link", pageClass, new ResourceModel(key)));
-	}
-
-	protected NavigationNode createPageNode(final MenuItem item) {
-		final PageParameters params = new PageParameters();
-		if (item.getPerspective() != null) {
-			params.add(PerspectivePage.VIEW_ID, item.getPerspective().getID().toURI());
-		}
-
-		return new NavigationNodePanel(new ReferenceLink("link", RBApplication.get().getPerspectivePage(), params, Model.of(item.getName())));
 	}
 
 }

@@ -29,6 +29,8 @@ public class ParsedElements {
 	private final List<Constraint> constraints = new ArrayList<Constraint>();
 	
 	private final List<Statement> statements = new ArrayList<Statement>();
+
+    private final List<String> messages = new ArrayList<String>();
 	
 	// -----------------------------------------------------
 
@@ -52,6 +54,13 @@ public class ParsedElements {
 	public void add(final Statement statement) {
 		this.statements.add(statement);
 	}
+
+    /**
+     * @param errorMsg The error message.
+     */
+    public void addError(final String errorMsg) {
+        this.messages.add(errorMsg);
+    }
 	
 	// -----------------------------------------------------
 	
@@ -75,8 +84,12 @@ public class ParsedElements {
 	public List<Statement> getStatements() {
 		return statements;
 	}
-	
-	// -----------------------------------------------------
+
+    public List<String> getErrorMessages() {
+        return messages;
+    }
+
+    // -----------------------------------------------------
 	
 	/** 
 	 * {@inheritDoc}

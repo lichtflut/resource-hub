@@ -20,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SchemaImporter;
@@ -55,7 +54,7 @@ public class ResourceSchemaParserIT {
 
 	@Before
 	public void setUp() {
-		final Arastreju aras = Arastreju.getInstance(new RBConfig().getArastrejuConfiguration());
+		final Arastreju aras = Arastreju.getInstance();
 		gate = aras.openMasterGate();
 		this.conversation = gate.startConversation();
 

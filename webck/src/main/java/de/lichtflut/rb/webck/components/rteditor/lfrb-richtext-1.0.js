@@ -5,7 +5,7 @@ LFRB.RichText = {
         jQuery(editorSelector).wysiwyg({
             rmUnusedControls:true,
             autoGrow:false,
-            initialContent:"<p></p>",
+            initialContent:"<p>&nbsp;</p>",
             removeHeadings:true,
             controls:{
                 bold:{ visible:true },
@@ -18,7 +18,7 @@ LFRB.RichText = {
         jQuery(editorSelector).wysiwyg({
             rmUnusedControls:true,
             autoGrow:false,
-            initialContent:"<p></p>",
+            initialContent:"<p>&nbsp;</p>",
             removeHeadings:true,
             controls:{
                 bold:{ visible:true },
@@ -44,7 +44,7 @@ LFRB.RichText = {
             rmUnusedControls:false,
             removeHeadings:true,
             autoGrow:false,
-            initialContent:"<p></p>"
+            initialContent:"<p>&nbsp;</p>"
         });
     }
 };

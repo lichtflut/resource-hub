@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import de.lichtflut.repository.ContentDescriptor;
+import de.lichtflut.repository.Filetype;
 
 
 /**
@@ -34,13 +35,13 @@ public class ContentDescriptorBuilderTest {
 	public void testContentDesriptorBuilder() throws IOException{
 		String name = "test.jpg";
 		String path = "test/folder/1/test.jpg";
-		String mimeType = "jpeg";
+		Filetype filetype = Filetype.JPEG;
 		InputStream in = new FileInputStream(tempFolder.newFile());
 
-		ContentDescriptor descriptor = new ContentDescriptorBuilder().name(name).path(path).mimeType(mimeType).data(in).build();
-		assertThat(descriptor.getMimeType(), equalTo(mimeType));
+		ContentDescriptor descriptor = new ContentDescriptorBuilder().name(name).id(path).mimeType(filetype).data(in).build();
+		assertThat(descriptor.getMimeType(), equalTo(filetype));
 		assertThat(descriptor.getName(), equalTo(name));
-		assertThat(descriptor.getPath(), equalTo(path));
+		assertThat(descriptor.getID(), equalTo(path));
 		assertThat(descriptor.getData(), equalTo(in));
 	}
 

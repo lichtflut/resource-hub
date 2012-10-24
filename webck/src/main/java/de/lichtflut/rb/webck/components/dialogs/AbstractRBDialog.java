@@ -3,6 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
+import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.odlabs.wiquery.ui.dialog.Dialog;
@@ -25,22 +29,39 @@ public class AbstractRBDialog extends Dialog {
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id The component ID.
 	 */
 	public AbstractRBDialog(final String id) {
 		super(id);
 		
 		setModal(true);
+
+        add(CssModifier.appendStyle("visibility:hidden"));
+
 	}
+
+    // ----------------------------------------------------
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        response.render(OnLoadHeaderItem.forScript(
+                "jQuery('#" + getMarkupId() + "').css('visibility', 'visible');"
+        ));
+    }
+
+    // ----------------------------------------------------
 	
-	// ----------------------------------------------------
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected IMarkupSourcingStrategy newMarkupSourcingStrategy() {
 		return new PanelMarkupSourcingStrategy(false);
 	}
+
+    protected void closeDialog() {
+        close(RBAjaxTarget.getAjaxTarget());
+    }
+
+
 
 }

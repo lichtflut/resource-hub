@@ -6,8 +6,10 @@ package de.lichtflut.rb.webck.components.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
+import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.models.fields.RBFieldLabelCssClassModel;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -15,7 +17,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
@@ -26,10 +27,10 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.components.fields.FilePreviewLink;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
-import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
@@ -68,8 +69,11 @@ public class EntityRowDisplayPanel extends Panel {
 	public EntityRowDisplayPanel(final String id, final IModel<RBField> model) {
 		super(id, model);
 
-		setOutputMarkupId(true);
-		add(new Label("label", new FieldLabelModel(model)));
+        final WebMarkupContainer labelContainer = new WebMarkupContainer("labelContainer");
+        labelContainer.add(CssModifier.appendClass(new RBFieldLabelCssClassModel(model)));
+        final Label label = new Label("label", new FieldLabelModel(model));
+        labelContainer.add(label);
+        add(labelContainer);
 
 		final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
 		final ListView<RBFieldValueModel> valueList = new ListView<RBFieldValueModel>("values", listModel) {
@@ -118,7 +122,7 @@ public class EntityRowDisplayPanel extends Panel {
 			addExternalLink(item);
 			break;
 		case FILE:
-			addLink(item);
+			addRepoLink(item);
 			break;
 		default:
 			throw new NotYetImplementedException("No display-component specified for datatype: " + dataType);
@@ -160,15 +164,11 @@ public class EntityRowDisplayPanel extends Panel {
 		item.add(new Fragment("valuefield", "link", this).add(link));
 	}
 
-	private void addLink(final ListItem<RBFieldValueModel> item) {
-		IModel<String> hrefModel = new Model<String>(item.getModelObject().getField().getValue(0).toString());
-		String href = hrefModel.getObject() + "?domain=" + new CurrentDomainModel().getObject().getQualifiedName();
-		href = "service/content/" + href;
-		hrefModel.setObject(href);
-
-		ExternalLink link = new ExternalLink("target", hrefModel, getDisplayNameForLink(item));
-		link.add(new AttributeModifier("target", "_blank"));
-		item.add(new Fragment("valuefield", "link", this).add(link));
+	private void addRepoLink(final ListItem<RBFieldValueModel> item) {
+		IModel<RBFieldValueModel> model = item.getModel();
+		@SuppressWarnings("unchecked")
+		FilePreviewLink filePreviewPanel = new FilePreviewLink("previewPanel", model.getObject());
+		item.add(new Fragment("valuefield", "filePreview", this).add(filePreviewPanel));
 	}
 
 	private void addBooleanField(final ListItem<RBFieldValueModel> item) {
@@ -178,17 +178,6 @@ public class EntityRowDisplayPanel extends Panel {
 		}
 		final Label field = new Label("valuefield", label);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
-	}
-
-	private IModel<String> getDisplayNameForLink(final ListItem<RBFieldValueModel> item) {
-		@SuppressWarnings("unchecked")
-		IModel<String> name = item.getModelObject();
-		RBField field = item.getModelObject().getField();
-		if(Datatype.FILE.name().equals(field.getDataType().name())) {
-			String s = (String) field.getValue(item.getModelObject().getIndex());
-			return Model.of(StringUtils.substringAfterLast(s, "/"));
-		}
-		return name;
 	}
 
 	private ResourceID getResourceID(final RBFieldValueModel model) {

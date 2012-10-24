@@ -44,7 +44,7 @@ import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
 import de.lichtflut.rb.webck.components.fields.AjaxEditablePanelLabel;
-import de.lichtflut.rb.webck.components.fields.AjaxUpdateDataPickerField;
+import de.lichtflut.rb.webck.components.fields.AjaxUpdateDataPickerFieldBehavior;
 import de.lichtflut.rb.webck.components.fields.ClassPickerField;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -282,7 +282,7 @@ public class SchemaDetailPanel extends Panel {
 				PropertyPickerField picker = new PropertyPickerField(componentId, model);
 				picker.setOutputMarkupId(true);
 				picker.setVisible(false);
-				picker.add(new AjaxUpdateDataPickerField() {
+				picker.add(new AjaxUpdateDataPickerFieldBehavior() {
 					@Override
 					public void onSubmit(final AjaxRequestTarget target) {
 						addTypeNotYetStoredInfo();
@@ -390,7 +390,7 @@ public class SchemaDetailPanel extends Panel {
 				ClassPickerField picker = new ClassPickerField(componentId, model);
 				picker.setOutputMarkupId(true);
 				picker.setVisible(false);
-				picker.add(new AjaxUpdateDataPickerField() {
+				picker.add(new AjaxUpdateDataPickerFieldBehavior() {
 					@Override
 					public void onSubmit(final AjaxRequestTarget target) {
 						addTypeNotYetStoredInfo();
@@ -433,7 +433,7 @@ public class SchemaDetailPanel extends Panel {
 				hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), item.getModel()) {
 					@Override
 					protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-						updatePanel();
+						saveAndUpdate();
 						close(target);
 					}
 

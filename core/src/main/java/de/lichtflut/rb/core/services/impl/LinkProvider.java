@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
+import org.arastreju.sge.naming.QualifiedName;
+
 import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
@@ -17,12 +19,16 @@ public class LinkProvider {
 
 	// ------------------------------------------------------
 
-	public String buildRepositoryStructureFor(final RBEntity entity, final String fileName) {
-		String path = entity.getType().toURI();
-		path = path + "/" + entity.getID();
-		path = path.replace("http://", "").replace(".", "/").replace("#", "/");
-		path = path.concat("/" + fileName);
-		return path;
+	public static String buildRepositoryStructureFor(final RBEntity entity, final QualifiedName rbField, final String fileName) {
+		StringBuilder path = new StringBuilder();
+		path.append(entity.getType().toURI());
+		path.append("/" + entity.getID().toURI());
+		path.append("/" + rbField);
+
+		String s = path.toString();
+		s = s.replace("http://", "").replace(".", "/").replace("#", "/");
+		s = s.concat("/" + fileName);
+		return s;
 	}
 
 }

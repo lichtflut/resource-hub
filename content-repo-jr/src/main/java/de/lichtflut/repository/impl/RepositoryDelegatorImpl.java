@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.repository.ContentDescriptor;
+import de.lichtflut.repository.Filetype;
 import de.lichtflut.repository.RepositoryDelegator;
 
 /**
@@ -64,8 +65,8 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ContentDescriptor getData(final String path) {
-		if(!exists(path)){
+	public ContentDescriptor getData(final String id) {
+		if(!exists(id)){
 			return null;
 		}
 		Node node;
@@ -73,7 +74,7 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 		String mimeType = "";
 		String name  = "";
 		try {
-			node = getRoot().getNode(path);
+			node = getRoot().getNode(id);
 			Node resNode = node.getNode(CONTENT_NODE).getNode(Node.JCR_CONTENT);
 
 			name = node.getName();
@@ -86,8 +87,9 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 		} catch (RepositoryException e) {
 			e.printStackTrace();
 		}
-		LOGGER.info("Retrieved Data: {}", path);
-		return new ContentDescriptorBuilder().data(retrievedStream).path(path).mimeType(mimeType).name(name).build();
+		LOGGER.info("Retrieved Data: {}", id);
+		Filetype filetype = Filetype.getCorrespondingFiletypeFor(mimeType);
+		return new ContentDescriptorBuilder().data(retrievedStream).id(id).mimeType(filetype).name(name).build();
 	}
 
 	/**
@@ -97,7 +99,7 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 	public void storeFile(final ContentDescriptor descriptor) {
 		Node root = getRoot();
 		try {
-			Node childNode = cascadeChildNodes(descriptor.getPath(), root);
+			Node childNode = cascadeChildNodes(descriptor.getID(), root);
 			addFileToNode(descriptor, childNode);
 			save();
 			LOGGER.info("Stored File: {}", childNode.getPath());
@@ -110,11 +112,14 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean exists(final String path) {
+	public boolean exists(final String id) {
+		if(null == id){
+			return false;
+		}
 		try {
-			return getRoot().hasNode(path);
+			return getRoot().hasNode(id);
 		} catch (RepositoryException e) {
-			LOGGER.error("Error while checking if path {} exists.", path);
+			LOGGER.error("Error while checking if id {} exists.", id);
 			throwRuntimeException(e);
 		}
 		return false;
@@ -215,7 +220,7 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 			Node fileNode = node.addNode(CONTENT_NODE, NodeType.NT_FILE);
 
 			Node resNode = fileNode.addNode(Property.JCR_CONTENT, NodeType.NT_RESOURCE);
-			resNode.setProperty(Property.JCR_MIMETYPE, descriptor.getMimeType());
+			resNode.setProperty(Property.JCR_MIMETYPE, descriptor.getMimeType().name());
 			resNode.setProperty(Property.JCR_LAST_MODIFIED, Calendar.getInstance().getTimeInMillis());
 
 			Binary binary = node.getSession().getValueFactory().createBinary(descriptor.getData());
@@ -245,7 +250,7 @@ public abstract class RepositoryDelegatorImpl implements RepositoryDelegator {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error while adding node {} to path {}.", node, path);
+			LOGGER.error("Error while adding node {} to id {}.", node, path);
 			throwRuntimeException(e);
 		}
 		return node;

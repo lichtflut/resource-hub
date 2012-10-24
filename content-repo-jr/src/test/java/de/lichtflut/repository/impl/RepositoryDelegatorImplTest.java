@@ -38,6 +38,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.lichtflut.repository.ContentDescriptor;
+import de.lichtflut.repository.Filetype;
 import de.lichtflut.repository.RepositoryDelegator;
 
 /**
@@ -70,11 +71,11 @@ public class RepositoryDelegatorImplTest {
 	public void testGetData() throws RepositoryException, IOException {
 		String fileName = "test-content";
 		String path = "lichtflut1/common/person/alice/hasDocument/" + fileName;
-		String mimeType = "txt";
-		File file = new File("src/test/resources/" + fileName + "." + mimeType);
+		Filetype filetype = Filetype.TXT;
+		File file = new File("src/test/resources/" + fileName + "." + filetype);
 		InputStream in = new FileInputStream(file);
 
-		ContentDescriptor descriptor = new ContentDescriptorBuilder().path(path).mimeType(mimeType).data(in).build();
+		ContentDescriptor descriptor = new ContentDescriptorBuilder().id(path).mimeType(filetype).data(in).build();
 		startSession();
 		putFileInRepo(descriptor, session.getRootNode());
 
@@ -85,8 +86,8 @@ public class RepositoryDelegatorImplTest {
 		assertThat(retrieved.length(), equalTo(file.length()));
 
 		assertThat(retrievedDescriptor.getName(), equalTo(fileName));
-		assertThat(retrievedDescriptor.getMimeType(), equalTo(mimeType));
-		assertThat(retrievedDescriptor.getPath(), equalTo(path));
+		assertThat(retrievedDescriptor.getMimeType(), equalTo(filetype));
+		assertThat(retrievedDescriptor.getID(), equalTo(path));
 	}
 
 	/**
@@ -97,14 +98,14 @@ public class RepositoryDelegatorImplTest {
 	public void testStoreFile() throws IOException, RepositoryException {
 		String fileName = "test-content.txt";
 		String path = "lichtflut2/common/person/alice/hasDocument/" + fileName;
-		String mimeType = "txt";
+		Filetype filetype = Filetype.PNG;
 		File file = new File("src/test/resources/" + fileName);
 		InputStream in = new FileInputStream(file);
 
 		assertThat(file, notNullValue());
 		assertThat(repoDelegator, notNullValue());
 
-		repoDelegator.storeFile(new ContentDescriptorBuilder().path(path).mimeType(mimeType).data(in).build());
+		repoDelegator.storeFile(new ContentDescriptorBuilder().id(path).mimeType(filetype).data(in).build());
 		startSession();
 
 		Node node = session.getRootNode().getNode(path);
@@ -115,7 +116,7 @@ public class RepositoryDelegatorImplTest {
 		retrieved = getFileFromStream(retrievedStream);
 
 		assertThat(node.getName(), equalTo(fileName));
-		assertThat(resNode.getProperty(Property.JCR_MIMETYPE).getString(), equalTo(mimeType));
+		assertThat(resNode.getProperty(Property.JCR_MIMETYPE).getString(), equalTo(filetype.name()));
 		assertThat(retrieved.length(), is(file.length()));
 	}
 
@@ -126,15 +127,15 @@ public class RepositoryDelegatorImplTest {
 	public void testExists() throws FileNotFoundException, LoginException, RepositoryException {
 		String path = "lichtflut3/common/person/alice/hasDocument/file3.txt";
 		String name = "test-content";
-		String mimeType = "txt";
+		Filetype filetype = Filetype.TXT;
 		boolean exists = repoDelegator.exists(path);
 
 		assertThat(exists, equalTo(false));
 
-		File file = new File("src/test/resources/" + name + "." + mimeType);
+		File file = new File("src/test/resources/" + name + "." + filetype.name().toLowerCase());
 		InputStream in = new FileInputStream(file);
 
-		ContentDescriptor descriptor = new ContentDescriptorBuilder().path(path).mimeType(mimeType).data(in).build();
+		ContentDescriptor descriptor = new ContentDescriptorBuilder().id(path).mimeType(filetype).data(in).build();
 		startSession();
 		putFileInRepo(descriptor, session.getRootNode());
 
@@ -203,7 +204,7 @@ public class RepositoryDelegatorImplTest {
 	}
 
 	private void putFileInRepo(final ContentDescriptor descriptor, final Node parent) {
-		List<String> fragments = Arrays.asList(descriptor.getPath().split("/"));
+		List<String> fragments = Arrays.asList(descriptor.getID().split("/"));
 		Node child = null;
 		try {
 			child = parent.addNode(fragments.get(0));
@@ -213,7 +214,7 @@ public class RepositoryDelegatorImplTest {
 			Node fileNode = child.addNode(RepositoryDelegatorImpl.CONTENT_NODE, NodeType.NT_FILE);
 
 			Node resNode = fileNode.addNode(Property.JCR_CONTENT, NodeType.NT_RESOURCE);
-			resNode.setProperty(Property.JCR_MIMETYPE, descriptor.getMimeType());
+			resNode.setProperty(Property.JCR_MIMETYPE, descriptor.getMimeType().name());
 			resNode.setProperty(Property.JCR_DATA, parent.getSession().getValueFactory().createBinary(descriptor.getData()));
 			resNode.setProperty(Property.JCR_LAST_MODIFIED, Calendar.getInstance().getTimeInMillis());
 			session.save();
@@ -222,12 +223,6 @@ public class RepositoryDelegatorImplTest {
 		}
 	}
 
-	/**
-	 * @param inputStream
-	 * @return
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 */
 	private File getFileFromStream(final InputStream inputStream) throws IOException, FileNotFoundException {
 		retrieved = new File("./target/testdata/jackrabbittest/" + UUID.randomUUID().toString());
 		// write the inputStream to a FileOutputStream

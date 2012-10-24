@@ -21,7 +21,7 @@ public class RepositoryConfigWrapper {
 	// ---------------- Constructor -------------------------
 
 	/**
-	 * @param home - path pointing to the content storage location
+	 * @param home - id pointing to the content storage location
 	 * @param config - xml file representing the necessary configuration
 	 */
 	public RepositoryConfigWrapper(final String home, final String config) {
@@ -39,7 +39,7 @@ public class RepositoryConfigWrapper {
 	}
 
 	/**
-	 * @return the path
+	 * @return the id
 	 */
 	public String getPath() {
 		return path;

@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * <p>
- *  A common navigation bar.
+ *  A common navigation bar. The bar is itself a node too and can be added as sub menu to another menu.
  * </p>
  *
  * <p>
@@ -70,49 +70,31 @@ public class NavigationBar extends TypedPanel<List<NavigationNode>> implements N
 	
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isExpandable() {
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isExpanded() {
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isActive() {
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean hasChildren() {
 		return !getChildren().isEmpty();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<NavigationNode> getChildren() {
 		return getModelObject();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public NavigationNode addChild(final NavigationNode node) {
 		this.getChildren().add(node);
@@ -121,9 +103,6 @@ public class NavigationBar extends TypedPanel<List<NavigationNode>> implements N
 	
 	// ----------------------------------------------------
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Component getComponent() {
 		return this;

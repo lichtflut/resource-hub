@@ -7,6 +7,7 @@ package de.lichtflut.rb.application.custom;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.application.base.RBBasePage;
@@ -39,14 +40,32 @@ public class PerspectivePage extends RBBasePage {
 	public PerspectivePage(PageParameters parameters) {
 		super(parameters);
 
-		RBWebSession.get().getHistory().clear(new JumpTarget(PerspectivePage.class, parameters));
+		RBWebSession.get().getHistory().clear(createJumpTarget(parameters));
 		
 		final StringValue viewParam = parameters.get(VIEW_ID);
 		
 		add(new PerspectivePanel("perspective", modelFor(viewParam)));
 	}
+
+    /**
+     * Constructor.
+     * @param perspectiveID The unique ID of the perspective..
+     */
+    public PerspectivePage(final ResourceID perspectiveID) {
+        super();
+        RBWebSession.get().getHistory().clear(createJumpTarget());
+        add(new PerspectivePanel("perspective", new PerspectiveModel(perspectiveID)));
+    }
 	
 	// ----------------------------------------------------
+
+    protected JumpTarget createJumpTarget() {
+        return new JumpTarget(getClass(), new PageParameters());
+    }
+
+    protected JumpTarget createJumpTarget(PageParameters parameters) {
+        return new JumpTarget(getClass(), parameters);
+    }
 	
 	private PerspectiveModel modelFor(final StringValue viewParam) {
 		if (viewParam.isEmpty()) {

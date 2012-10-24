@@ -86,7 +86,7 @@ public class ResourceListExcelExporter implements ExcelExporter {
 			workbook.write();
 			workbook.close();
 		} catch (WriteException e) {
-			throw new IOException("Could not write Excel Sheet", e);
+			throw new IOException("Could not writeNamespaces Excel Sheet", e);
 		}
 	}
 

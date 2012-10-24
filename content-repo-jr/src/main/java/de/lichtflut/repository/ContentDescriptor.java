@@ -4,6 +4,7 @@
 package de.lichtflut.repository;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  * <p>
@@ -14,12 +15,12 @@ import java.io.InputStream;
  *
  * @author Ravi Knox
  */
-public interface ContentDescriptor {
+public interface ContentDescriptor extends Serializable {
 
 	/**
-	 * @return the path under which an object shall be referenced.
+	 * @return the id under which an object shall be referenced.
 	 */
-	public String getPath();
+	public String getID();
 
 	/**
 	 * @return the name for an Object.
@@ -29,7 +30,7 @@ public interface ContentDescriptor {
 	/**
 	 * @return the Mimetype foran Object.
 	 */
-	public String getMimeType();
+	public Filetype getMimeType();
 
 	/**
 	 * Returns the contained data as an {@link InputStream}

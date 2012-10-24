@@ -20,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import de.lichtflut.rb.core.RBConfig;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -56,7 +55,7 @@ public class SchemaManagerImplIT {
 
 	@Before
 	public void setUp() {
-		final Arastreju aras = Arastreju.getInstance(new RBConfig().getArastrejuConfiguration());
+		final Arastreju aras = Arastreju.getInstance();
 		this.conversation = aras.openMasterGate().startConversation();
 
 		MockitoAnnotations.initMocks(this);

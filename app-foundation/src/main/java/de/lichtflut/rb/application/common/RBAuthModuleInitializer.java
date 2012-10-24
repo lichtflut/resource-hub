@@ -44,7 +44,7 @@ public class RBAuthModuleInitializer implements ApplicationListener<ContextRefre
 	 * Constructor.
 	 */
 	public RBAuthModuleInitializer() {
-		logger.info("GlasnostAuthModuleInitializer created.");
+		logger.info("RBAuthModuleInitializer created.");
 	}
 	
 	// ----------------------------------------------------

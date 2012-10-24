@@ -1169,7 +1169,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 				value = elements[i].getAttribute(attributeName);
 
 				if ($.browser.msie) {
-					/** IE add full path, so I check by the last chars. */
+					/** IE add full id, so I check by the last chars. */
 					value = value.substr(value.length - attributeValue.length);
 				}
 

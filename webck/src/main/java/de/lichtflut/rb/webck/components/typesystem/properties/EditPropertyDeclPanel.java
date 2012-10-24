@@ -25,7 +25,9 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.components.typesystem.EditVisualizationInfoPanel;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 import de.lichtflut.rb.webck.components.typesystem.constraints.ConstraintsEditorPanel;
 
@@ -54,7 +56,8 @@ public class EditPropertyDeclPanel extends Panel {
 		@SuppressWarnings("rawtypes")
 		Form<?> form = new Form("form");
 		addFeedbackpanel("feedback", form);
-		addProperties(form, decl);
+		addPropertiesInfo(form, decl);
+		addVisualizationInfo(form, decl);
 		add(form);
 		addButtonBar(form);
 		setOutputMarkupId(true);
@@ -92,7 +95,7 @@ public class EditPropertyDeclPanel extends Panel {
 				EditPropertyDeclPanel.this.onSubmit(target, form);
 			}
 		};
-		Button cancel = new RBStandardButton("cancel") {
+		Button cancel = new RBCancelButton("cancel") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				onCancel(target, form);
@@ -112,9 +115,9 @@ public class EditPropertyDeclPanel extends Panel {
 	}
 
 	/**
-	 * All PropertyDecls can be edited.
+	 * Add all attributes directly relating to a {@link PropertyDeclaration}.
 	 */
-	private void addProperties(final Form<?> form, final IModel<PropertyRow> decl) {
+	private void addPropertiesInfo(final Form<?> form, final IModel<PropertyRow> decl) {
 		if(decl.getObject().getPropertyDescriptor() == null){
 			decl.getObject().setPropertyDescriptor(new SimpleResourceID(""));
 		}
@@ -142,5 +145,12 @@ public class EditPropertyDeclPanel extends Panel {
 		constraintsDPicker.setOutputMarkupId(true);
 
 		form.add(propertyDescriptorField, fieldLabelTField, cardinalityTField, datatypeDDC, constraintsDPicker);
+	}
+
+	/**
+	 * Add all attributes relating to display-behavior of the {@link PropertyDeclaration}
+	 */
+	private void addVisualizationInfo(final Form<?> form, final IModel<PropertyRow> decl) {
+		form.add(new EditVisualizationInfoPanel("visualizationInfoPanel", decl));
 	}
 }

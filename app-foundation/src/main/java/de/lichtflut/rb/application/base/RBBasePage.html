@@ -27,18 +27,21 @@
 				</div>
 				<div id="user-info">
 					Domain: <wicket:container wicket:id="domain">[domain]</wicket:container>
-						|
-					<wicket:container wicket:id="username">[username]</wicket:container>
+                    <wicket:enclosure>
+						    |
+					    <span wicket:id="username">[username]</span>
+                    </wicket:enclosure>
 					<wicket:enclosure> 
 						|
 						<a wicket:id="adminAreaLink"></a>
 					</wicket:enclosure>
-					<wicket:enclosure> 
-						|
-						<a wicket:id="logout">
-							<wicket:message key="global.link.logout">[logout]</wicket:message>
-						</a>
-					</wicket:enclosure>
+                    |
+                    <a wicket:id="logout">
+                        <wicket:message key="global.link.logout">[logout]</wicket:message>
+                    </a>
+                    <a wicket:id="login">
+                        <wicket:message key="global.link.login">[login]</wicket:message>
+                    </a>
 				</div>
 				<div id="langage-select">
 					<a wicket:id="switchToEnglish">
@@ -67,6 +70,7 @@
 		
 		<div id="site-footer">
 		  <wicket:message key="global.copyright-hint"/>
+          <div wicket:id="sessionInfo"></div>
     	</div>
     	
     </div>

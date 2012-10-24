@@ -40,7 +40,7 @@ public class RBEntityImpl implements RBEntity {
 	private final ResourceNode node;
 	private final ResourceSchema schema;
 	private final ResourceID type;
-	
+
 	private List<RBField> fields;
 
 	// -----------------------------------------------------
@@ -52,7 +52,7 @@ public class RBEntityImpl implements RBEntity {
 	public RBEntityImpl(final ResourceSchema schema) {
 		this(new SNResource(), schema);
 	}
-	
+
 	/**
 	 * Creates an entity based on node only.
 	 *
@@ -83,7 +83,7 @@ public class RBEntityImpl implements RBEntity {
 		}
 		initializeFields();
 	}
-	
+
 	/**
 	 * Creates an entity based on node and type.
 	 *
@@ -120,7 +120,7 @@ public class RBEntityImpl implements RBEntity {
 	public ResourceID getType() {
 		return type;
 	}
-	
+
 	@Override
 	public String getLabel() {
 		if(null != schema){
@@ -158,17 +158,34 @@ public class RBEntityImpl implements RBEntity {
 	public boolean addField(final RBField field) {
 		return fields.add(field);
 	}
-	
-	/** 
-	* {@inheritDoc}
-	*/
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<RBField> getQuickInfo() {
+		List<RBField> list = new ArrayList<RBField>();
+		if(null == schema){
+			return list;
+		}
+
+		for (PropertyDeclaration pdec : schema.getQuickInfo()) {
+			list.add(getField(pdec.getPropertyDescriptor()));
+		}
+		return list;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean hasSchema() {
 		return schema != null;
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -184,9 +201,9 @@ public class RBEntityImpl implements RBEntity {
 		}
 		return s;
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * <p>
 	 * Initialized this {@link RBEntity}s {@link RBField}s
@@ -222,12 +239,12 @@ public class RBEntityImpl implements RBEntity {
 			}
 		}
 	}
-	
+
 	/**
 	 * @param objects
 	 * @return
 	 */
-	private Set<SemanticNode> filterValues(Set<SemanticNode> objects) {
+	private Set<SemanticNode> filterValues(final Set<SemanticNode> objects) {
 		final Set<SemanticNode> filtered = new HashSet<SemanticNode>();
 		for (SemanticNode node : filtered) {
 			if (node.isValueNode()) {

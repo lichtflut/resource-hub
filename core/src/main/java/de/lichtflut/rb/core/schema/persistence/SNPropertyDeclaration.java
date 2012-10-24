@@ -35,7 +35,6 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 
 
 /**
@@ -72,43 +71,43 @@ public class SNPropertyDeclaration extends ResourceView {
 	public SNPropertyDeclaration(final ResourceNode resource) {
 		super(resource);
 	}
-	
+
 	// -----------------------------------------------------
 
-    /**
-     * @return true if the SNPropertyDeclaration has a {@link Constraint}, false if not.
-     */
-    public boolean hasConstraint(){
-        boolean hasConstraint = false;
-        if(getConstraint() != null){
-            hasConstraint = true;
-        }
-        return hasConstraint;
-    }
+	/**
+	 * @return true if the SNPropertyDeclaration has a {@link Constraint}, false if not.
+	 */
+	public boolean hasConstraint(){
+		boolean hasConstraint = false;
+		if(getConstraint() != null){
+			hasConstraint = true;
+		}
+		return hasConstraint;
+	}
 
 	/**
 	 * Get the TypeDefinition.
 	 * @return The TypeDefinition.
 	 */
 	public SNConstraint getConstraint() {
-        SemanticNode constraintNode = SNOPS.singleObject(this, RBSchema.HAS_CONSTRAINT);
-        if (constraintNode != null && constraintNode.isResourceNode()) {
-            return new SNConstraint(constraintNode.asResource());
-        } else {
-            return null;
-        }
+		SemanticNode constraintNode = SNOPS.singleObject(this, RBSchema.HAS_CONSTRAINT);
+		if (constraintNode != null && constraintNode.isResourceNode()) {
+			return new SNConstraint(constraintNode.asResource());
+		} else {
+			return null;
+		}
 	}
 
-    /**
-     * Sets the constraint.
-     * @param constraint The constraint
-     */
-    public void setConstraint(final SNConstraint constraint){
-        SNOPS.assure(this, RBSchema.HAS_CONSTRAINT, constraint);
-    }
+	/**
+	 * Sets the constraint.
+	 * @param constraint The constraint
+	 */
+	public void setConstraint(final SNConstraint constraint){
+		SNOPS.assure(this, RBSchema.HAS_CONSTRAINT, constraint);
+	}
 
-    // ----------------------------------------------------
-	
+	// ----------------------------------------------------
+
 	/**
 	 * Returns the property declared by this property declaration.
 	 * @return The property.
@@ -121,7 +120,7 @@ public class SNPropertyDeclaration extends ResourceView {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Set the property declared by this property declaration.
 	 * @param property The property.
@@ -154,7 +153,7 @@ public class SNPropertyDeclaration extends ResourceView {
 			SNOPS.assure(this, RBSchema.HAS_DATATYPE, datatype.name());
 		}
 	}
-	
+
 	/**
 	 * Returns the min. occurrences.
 	 * @return {@link SNScalar}
@@ -200,7 +199,7 @@ public class SNPropertyDeclaration extends ResourceView {
 			SNOPS.assure(this, RBSchema.MAX_OCCURS, maxOccurs);
 		}
 	}
-	
+
 	/**
 	 * Set the FieldLabel.
 	 * @param def The field label definition
@@ -208,7 +207,7 @@ public class SNPropertyDeclaration extends ResourceView {
 	public void setFieldLabelDefinition(final FieldLabelDefinition def){
 		SNOPS.associate(this, RBSystem.HAS_FIELD_LABEL, new SNText(def.getDefaultLabel()));
 	}
-	
+
 	/**
 	 * Get the FieldLabel.
 	 */
@@ -223,25 +222,25 @@ public class SNPropertyDeclaration extends ResourceView {
 		return def;
 	}
 
-    /**
-     * Get the visualization info.
-     */
-    public SNVisualizationInfo getVisualizationInfo() {
-        SemanticNode visInfo = SNOPS.singleObject(this, RBSchema.HAS_VISUALIZATION_INFO);
-        if (visInfo != null && visInfo.isResourceNode()) {
-            return new SNVisualizationInfo(visInfo.asResource());
-        } else {
-            return null;
-        }
-    }
+	/**
+	 * Get the visualization info.
+	 */
+	public SNVisualizationInfo getVisualizationInfo() {
+		SemanticNode visInfo = SNOPS.singleObject(this, RBSchema.HAS_VISUALIZATION_INFO);
+		if (visInfo != null && visInfo.isResourceNode()) {
+			return new SNVisualizationInfo(visInfo.asResource());
+		} else {
+			return null;
+		}
+	}
 
-    public SNPropertyDeclaration setVisualizationInfo(SNVisualizationInfo visualizationInfo) {
-        SNOPS.assure(this, RBSchema.HAS_VISUALIZATION_INFO, visualizationInfo);
-        return this;
-    }
-	
+	public SNPropertyDeclaration setVisualizationInfo(final SNVisualizationInfo visualizationInfo) {
+		SNOPS.assure(this, RBSchema.HAS_VISUALIZATION_INFO, visualizationInfo);
+		return this;
+	}
+
 	// -- ORDER -------------------------------------------
-	
+
 	/**
 	 * Set the successor of this PropertyDeclaration in the ordered list.
 	 * @param successor The successor node.
@@ -251,9 +250,9 @@ public class SNPropertyDeclaration extends ResourceView {
 	public void setSuccessor(final SNPropertyDeclaration successor, final Context... contexts) {
 		SNOPS.assure(this, Aras.IS_PREDECESSOR_OF, successor, contexts);
 	}
-	
+
 	// ------------------------------------------------------
-	
+
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder("PropertyDecl[" + super.toString() + "] ");

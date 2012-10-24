@@ -4,8 +4,10 @@
 package de.lichtflut.repository.impl;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 import de.lichtflut.repository.ContentDescriptor;
+import de.lichtflut.repository.Filetype;
 
 /**
  * <p>
@@ -15,10 +17,10 @@ import de.lichtflut.repository.ContentDescriptor;
  * 
  * @author Ravi Knox
  */
-public class ContentDescriptorBuilder {
+public class ContentDescriptorBuilder implements Serializable {
 
-	private String path = "";
-	private String mimeType = "";
+	private String id = "";
+	private Filetype filetype = Filetype.OTHER;
 	private String name = "";
 	private InputStream in = null;
 
@@ -32,13 +34,13 @@ public class ContentDescriptorBuilder {
 
 	// ------------------------------------------------------
 
-	public ContentDescriptorBuilder path(final String path){
-		this.path= path;
+	public ContentDescriptorBuilder id(final String id){
+		this.id = id;
 		return this;
 	}
 
-	public ContentDescriptorBuilder mimeType(final String mimeType){
-		this.mimeType = mimeType;
+	public ContentDescriptorBuilder mimeType(final Filetype filetype){
+		this.filetype = filetype;
 		return this;
 	}
 
@@ -62,16 +64,16 @@ public class ContentDescriptorBuilder {
 			 * {@inheritDoc}
 			 */
 			@Override
-			public String getPath() {
-				return path;
+			public String getID() {
+				return id;
 			}
 
 			/**
 			 * {@inheritDoc}
 			 */
 			@Override
-			public String getMimeType() {
-				return mimeType;
+			public Filetype getMimeType() {
+				return filetype;
 			}
 
 			@Override
@@ -88,7 +90,11 @@ public class ContentDescriptorBuilder {
 			public String toString(){
 				StringBuilder sb = new StringBuilder();
 				sb.append("MimeType: " + getMimeType() + "\n");
-				sb.append("Data: " + getData().toString());
+				if(null != getData()){
+					sb.append("Data: " + getData().toString());
+				} else{
+					sb.append("Data: NO-DATA!");
+				}
 				return sb.toString();
 			}
 		};

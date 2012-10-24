@@ -5,7 +5,7 @@ package de.lichtflut.rb.core.services;
 
 import java.io.Serializable;
 
-import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.security.RBUser;
 import org.arastreju.sge.context.Context;
@@ -27,7 +27,7 @@ public class ServiceContext implements Serializable{
 	
 	private RBUser user;
 	
-	private String domain;
+	private String domain = "public";
 
     private Context[] readContexts = new Context[] {
             RBSystem.TYPE_SYSTEM_CTX, RBSystem.VIEW_SPEC_CTX

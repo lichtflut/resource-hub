@@ -48,33 +48,21 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ResourceID getID() {
 		return this;
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getTitle() {
 		return stringValue(RB.HAS_TITLE);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getDescription() {
 		return stringValue(RB.HAS_DESCRIPTION);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Selection getSelection() {
 		SemanticNode node = SNOPS.singleObject(this, WDGT.HAS_SELECTION);
@@ -85,41 +73,36 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 		}
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setTitle(String title) {
 		setValue(RB.HAS_TITLE, title);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setDescription(String desc) {
 		setValue(RB.HAS_DESCRIPTION, desc);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setSelection(Selection selection) {
 		setValue(WDGT.HAS_SELECTION, selection);
 	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
+
+    @Override
+    public String getContentID() {
+        return stringValue(WDGT.DISPLAYS_CONTENT_ITEM);
+    }
+
+    @Override
+    public void setContentID(String contentID) {
+        setValue(WDGT.DISPLAYS_CONTENT_ITEM, contentID);
+    }
+
+    @Override
 	public Integer getPosition() {
 		return intValue(Aras.HAS_SERIAL_NUMBER);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setPosition(Integer position) {
 		setValue(Aras.HAS_SERIAL_NUMBER, position);
@@ -127,9 +110,6 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<WidgetAction> getActions() {
 		final List<WidgetAction> result = new ArrayList<WidgetAction>();
@@ -141,13 +121,12 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("WidgetSpec[" + getQualifiedName().getSimpleName() + "]\n");
-		sb.append("  Selection: " + getSelection() + "\n");
+        if (getSelection() != null) {
+		    sb.append("  Selection: " + getSelection() + "\n");
+        }
 		return sb.toString();
 	}
 	

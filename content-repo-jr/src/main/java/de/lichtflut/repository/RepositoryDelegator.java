@@ -18,22 +18,22 @@ import java.io.InputStream;
 public interface RepositoryDelegator {
 
 	/**
-	 * This method returns an {@link ContentDescriptor} for a given path.
-	 * @param path - where the file is located
+	 * This method returns an {@link ContentDescriptor} for a given id.
+	 * @param id - where the file is located
 	 * @return an ContentDescriptor
 	 */
-	ContentDescriptor getData(String path);
+	ContentDescriptor getData(String id);
 
 	/**
-	 * Stores a {@link InputStream} under a given path.
-	 * If path already exists, data will be overwritten.
+	 * Stores a {@link InputStream} under a given id.
+	 * If id already exists, data will be overwritten.
 	 * @param descriptor
 	 */
 	void storeFile(ContentDescriptor descriptor);
 
 	/**
-	 * @param path - where to look for a file
+	 * @param id - where to look for a file
 	 * @return true if file exists, false if not.
 	 */
-	boolean exists(String path);
+	boolean exists(String id);
 }

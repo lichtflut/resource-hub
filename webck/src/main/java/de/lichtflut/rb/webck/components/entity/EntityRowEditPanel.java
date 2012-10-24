@@ -7,6 +7,9 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.and;
 import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
 
+import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.models.fields.RBFieldLabelCssClassModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -14,6 +17,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -52,7 +56,7 @@ import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
  *
  * @author Oliver Tigges
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({ "rawtypes" })
 public class EntityRowEditPanel extends Panel {
 
 	/**
@@ -62,101 +66,109 @@ public class EntityRowEditPanel extends Panel {
 	 */
 	public EntityRowEditPanel(final String id, final IModel<RBField> model) {
 		super(id, model);
-		
-		setOutputMarkupId(true);
-		add(new Label("label", new FieldLabelModel(model)));
+
+        final WebMarkupContainer labelContainer = new WebMarkupContainer("labelContainer");
+        labelContainer.add(CssModifier.appendClass(new RBFieldLabelCssClassModel(model)));
+        final Label label = new Label("label", new FieldLabelModel(model));
+        labelContainer.add(label);
+        add(labelContainer);
 
         final FieldEditorFactory factory = new FieldEditorFactory(this);
 
-        final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
+        final WebMarkupContainer container = new WebMarkupContainer("container");
+        container.setOutputMarkupId(true);
+
+		final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
 		final ListView<RBFieldValueModel> view = new ListView<RBFieldValueModel>("values", listModel) {
 			@Override
 			protected void populateItem(final ListItem<RBFieldValueModel> item) {
-                final Component field = factory.createField(item.getModelObject());
-                item.add(field);
-                final int idx = item.getModelObject().getIndex();
+				final Component field = factory.createField(item.getModelObject());
+				item.add(field);
+				final int idx = item.getModelObject().getIndex();
 				item.add(createRemoveLink(idx));
-                item.add(createAddValueLink(model, idx));
-                item.add(createCreateLink(idx));
-
+				item.add(createAddValueLink(model, idx));
+				item.add(createCreateLink(idx));
+				item.setOutputMarkupId(true);
 			}
 		};
 		view.setReuseItems(true);
-		add(view);
+        container.add(view);
+
+        add(container);
 	}
-	
+
 	// ----------------------------------------------------
 
-    protected AjaxSubmitLink createRemoveLink(final int index) {
-        final AjaxSubmitLink link = new AjaxSubmitLink("removeLink") {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                getField().removeSlot(index);
-                rebuildListView();
-                target.add(EntityRowEditPanel.this);
-            }
+	protected AjaxSubmitLink createRemoveLink(final int index) {
+		final AjaxSubmitLink link = new AjaxSubmitLink("removeLink") {
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+				getField().removeSlot(index);
+				rebuildListView();
+                updateView();
+			}
 
-            @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
-                target.add(EntityRowEditPanel.this);
-            }
-        };
-        link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));
-        if (Datatype.BOOLEAN.equals(getField().getDataType())) {
-            link.setVisible(false);
-        } else {
-            link.add(visibleIf(new IsBeneathFormConditional()));
-        }
-        return link;
-    }
+			@Override
+			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
+                updateView();
+			}
+		};
+		link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));
+		if (Datatype.BOOLEAN.equals(getField().getDataType())) {
+			link.setVisible(false);
+		} else {
+			link.add(visibleIf(new IsBeneathFormConditional()));
+		}
+		return link;
+	}
 
-    protected Component createAddValueLink(final IModel<RBField> model, final int index) {
-        if (index > 0) {
-            return new WebComponent("addValueLink").setVisible(false);
-        }
-        final RBSubmitLink link = new RBSubmitLink("addValueLink") {
-            @Override
-            protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-                getField().addValue(null);
-                target.add(EntityRowEditPanel.this);
-            }
-        };
-        link.add(new AttributeModifier("title", new ResourceModel("link.title.add-field-value")));
-        link.add(visibleIf(and(
-                new IsBeneathFormConditional(),
-                lessThan(new FieldSizeModel(model), new FieldCardinalityModel(model)))));
-        return link;
-    }
+	protected Component createAddValueLink(final IModel<RBField> model, final int index) {
+		if (index > 0) {
+			return new WebComponent("addValueLink").setVisible(false);
+		}
+		final RBSubmitLink link = new RBSubmitLink("addValueLink") {
+			@Override
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
+				getField().addValue(null);
+                updateView();
+			}
+		};
+		link.add(new AttributeModifier("title", new ResourceModel("link.title.add-field-value")));
+		link.add(visibleIf(and(
+				new IsBeneathFormConditional(),
+				lessThan(new FieldSizeModel(model), new FieldCardinalityModel(model)))));
+		return link;
+	}
 
 	protected Component createCreateLink(final int index) {
-        if (index > 0) {
-            return new WebComponent("createLink").setVisible(false);
-        }
+		if (index > 0) {
+			return new WebComponent("createLink").setVisible(false);
+		}
 
-        final AjaxSubmitLink link = new AjaxSubmitLink("createLink") {
+		final AjaxSubmitLink link = new AjaxSubmitLink("createLink") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				final EntityHandle handle = EntityHandle.forType(getTypeConstraint());
 				findParent(IBrowsingHandler.class).createReferencedEntity(handle, getField().getPredicate());
 				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
 			}
-			
+
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
-				target.add(EntityRowEditPanel.this);
+			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
+                updateView();
 			}
 		};
 		link.add(new AttributeModifier("title", new ResourceModel("link.title.create-field-value")));
 		if (getField().isResourceReference()){
-			link.add(ConditionalBehavior.visibleIf(new IsBeneathFormConditional()));		
+			link.add(ConditionalBehavior.visibleIf(new IsBeneathFormConditional()));
 		} else {
 			link.setVisible(false);
 		}
 		return link;
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * Extracts the resourceTypeConstraint of this {@link RBField}.
 	 * @return the resourceTypeConstraint as an {@link ResourceID}
@@ -168,18 +180,22 @@ public class EntityRowEditPanel extends Panel {
 		}
 		return null;
 	}
-	
+
 	private RBField getField() {
 		return (RBField) getDefaultModelObject();
 	}
-	
+
 	private void rebuildListView() {
-		MarkupContainer view = (MarkupContainer) get("values");
+		MarkupContainer view = (MarkupContainer) get("container:values");
 		view.removeAll();
 	}
-	
+
+    private void updateView() {
+        RBAjaxTarget.add(get("container"));
+    }
+
 	// -- INNER CLASSES -----------------------------------
-	
+
 	private class IsBeneathFormConditional extends ConditionalModel {
 		@Override
 		public boolean isFulfilled() {

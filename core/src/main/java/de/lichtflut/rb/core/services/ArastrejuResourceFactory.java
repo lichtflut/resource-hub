@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class ArastrejuResourceFactory implements ConversationFactory {
 	
-	private final static Logger logger = LoggerFactory.getLogger(ArastrejuResourceFactory.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(ArastrejuResourceFactory.class);
 
 	private ServiceContext context;
 
@@ -101,17 +101,6 @@ public class ArastrejuResourceFactory implements ConversationFactory {
         return gate().startConversation();
     }
 
-    /**
-     * Start a new conversation for the given context . This conversations is not shared and has to be managed by
-     * the caller.
-     * @param primary The primary context of this conversation.
-     * @return The new conversation.
-     */
-    @Override
-    public ModelingConversation startConversation(Context primary, Context... readContexts) {
-        return gate().startConversation(primary, readContexts);
-    }
-
     // ----------------------------------------------------
 
     public Organizer getOrganizer() {
@@ -123,10 +112,13 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     public void closeConversations() {
         if (conversation != null) {
             conversation.close();
+            LOGGER.debug("Closed conversation {}.", conversation.getConversationContext());
             conversation = null;
         }
         for (Context ctx : conversationMap.keySet()) {
-            conversationMap.get(ctx).close();
+            ModelingConversation conv = conversationMap.get(ctx);
+            conv.close();
+            LOGGER.debug("Closed conversation {}.", conv.getConversationContext());
         }
         conversationMap.clear();
     }
@@ -158,9 +150,9 @@ public class ArastrejuResourceFactory implements ConversationFactory {
 
     private ArastrejuGate openGate() {
         final String domain = context.getDomain();
-        logger.debug("Opening Arastreju Gate for domain {} ", domain);
+        LOGGER.debug("Opening Arastreju Gate for domain {} ", domain);
 
-        final Arastreju aras = Arastreju.getInstance(context.getConfig().getArastrejuConfiguration());
+        final Arastreju aras = Arastreju.getInstance(context.getConfig().getArastrejuProfile());
         if (domain == null || DomainIdentifier.MASTER_DOMAIN.equals(domain)) {
             return aras.openMasterGate();
         } else {

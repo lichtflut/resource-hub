@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import de.lichtflut.rb.core.schema.persistence.SNConstraint;
+import de.lichtflut.rb.core.schema.writer.rsf.RsfWriter;
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
@@ -35,7 +35,7 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
-import de.lichtflut.rb.core.schema.persistence.ConstraintResolver;
+import de.lichtflut.rb.core.schema.persistence.SNConstraint;
 import de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 import de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding;
@@ -94,7 +94,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	public Constraint findConstraint(final QualifiedName qn) {
 		final ResourceNode node = conversation().findResource(qn);
 		if (node != null) {
-            return binding.toModelObject(new SNConstraint(node));
+			return binding.toModelObject(new SNConstraint(node));
 		} else {
 			return null;
 		}
@@ -167,8 +167,8 @@ public class SchemaManagerImpl implements SchemaManager {
 	public void store(final Constraint constraint) {
 		Validate.isTrue(constraint.isPublic(), "Only public type definition may be stored explicitly.");
 		remove(constraint);
-        SNConstraint sn = binding.toSemanticNode(constraint);
-        conversation().attach(sn);
+		SNConstraint sn = binding.toSemanticNode(constraint);
+		conversation().attach(sn);
 		LOGGER.info("Stored public constraint for {}.", constraint.getName());
 	}
 
@@ -205,7 +205,11 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	@Override
 	public SchemaExporter getExporter(final String format) {
-		throw new NotYetSupportedException("Unsupported format: " + format);
+        if ("RSF".equalsIgnoreCase(format.trim())) {
+            return new SchemaExporterImpl(this, new RsfWriter());
+        } else {
+            throw new NotYetSupportedException("Unsupported format: " + format);
+        }
 	}
 
 	// -----------------------------------------------------
@@ -277,24 +281,6 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	private Query query() {
 		return conversation().createQuery();
-	}
-
-	// -----------------------------------------------------
-
-	/**
-	 * Simple implementation of {@link ConstraintResolver}.
-	 */
-	private class ConstraintResolverImpl implements ConstraintResolver {
-		@Override
-		public Constraint resolve(final Constraint constraint) {
-			final ModelingConversation mc = conversation();
-			final ResourceNode node = mc.findResource(constraint.getQualifiedName());
-			if (node != null) {
-                return binding.toModelObject(new SNConstraint(node));
-			} else {
-				return null;
-			}
-		}
 	}
 
 }

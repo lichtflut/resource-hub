@@ -33,6 +33,8 @@ public class InformationManagementPage extends AdminBasePage {
 	private final Model<String> model = new Model<String>();
 	private AjaxSelfUpdatingTimerBehavior timerBehavior;
 	private final WebMarkupContainer messageContainer;
+
+    // ----------------------------------------------------
 	
 	/**
 	 * Constructor.
@@ -53,6 +55,8 @@ public class InformationManagementPage extends AdminBasePage {
 		
 		add(messageContainer);
 	}
+
+    // ----------------------------------------------------
 	
 	@Override
 	public void onEvent(IEvent<?> event) {

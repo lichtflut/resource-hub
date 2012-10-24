@@ -225,14 +225,12 @@ label_decl:  ^(LABEL (rule=STRING{
 }));
 
 // Definition of quickInfo
-quick_info: ^(QUICK_INFO (qInfo_string +){
-				
-});
+quick_info: ^(QUICK_INFO (s=qInfo_string +));
 
-qInfo_string : ^(TEXT ( s=PLAIN_STRING {
+qInfo_string : ^(PROPERTY s=PLAIN_STRING {
 	ResourceID id = toResourceID($s.text);
 				$schema_decl::schema.addQuickInfo(id);
-}));
+});
 
 // Definition of a property-declaration
 property_decl scope{

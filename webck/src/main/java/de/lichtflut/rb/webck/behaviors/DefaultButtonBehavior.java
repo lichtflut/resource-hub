@@ -21,19 +21,26 @@ import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
  */
 public class DefaultButtonBehavior extends Behavior {
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void onConfigure(Component component) {
 		super.onConfigure(component);
 		if (component.isVisibleInHierarchy()) {
 			final Form<?> form = component.findParent(Form.class);
+            if (form == null) {
+                throwNotPlacedInFormException(component);
+            }
 			form.setDefaultButton((IFormSubmittingComponent) component);
 		}
 
 	}
 
+    // ----------------------------------------------------
 
-	
+    private void throwNotPlacedInFormException(Component component) {
+        throw new IllegalStateException("A 'DefaultButtonBehavior' has been added to a component that is not" +
+                " placed beneath a form: " + component);
+
+    }
+
+
 }

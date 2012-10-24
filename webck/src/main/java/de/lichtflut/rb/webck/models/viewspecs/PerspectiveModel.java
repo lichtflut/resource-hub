@@ -40,12 +40,13 @@ public class PerspectiveModel extends AbstractLoadableDetachableModel<Perspectiv
 	
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Perspective load() {
-		return viewSpecificationService.findPerspective(perspectiveID);
-	}
+        Perspective perspective = viewSpecificationService.findPerspective(perspectiveID);
+        if (perspective == null) {
+            viewSpecificationService.initializePerspective(perspectiveID);
+        }
+        return perspective;
+    }
 
 }
