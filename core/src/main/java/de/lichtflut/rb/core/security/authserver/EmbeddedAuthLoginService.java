@@ -22,11 +22,11 @@ import org.arastreju.sge.security.LoginException;
 import org.arastreju.sge.security.PasswordCredential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.actors.threadpool.Arrays;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -70,9 +70,6 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	
 	// -- LOGIN -------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBUser login(LoginData loginData) throws LoginException {
 		final String id = normalize(loginData.getLoginID());
@@ -94,9 +91,6 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 		return toRBUser(user);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBUser loginByToken(String token) {
 		if (token == null) {
@@ -113,9 +107,6 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 		}
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String createSessionToken(RBUser user) {
 		final String email = user.getEmail();
@@ -125,9 +116,6 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 		return raw + ":" + RBCrypt.md5Hex(raw + randomSecret);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String createRememberMeToken(RBUser user, LoginData loginData) {
 		final String email = user.getEmail();
