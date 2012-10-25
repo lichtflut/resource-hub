@@ -3,9 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.listview;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -22,6 +19,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
@@ -155,9 +153,9 @@ public class ResourceListPanel extends Panel {
 		return renderer.render(nodes, locale);
 	}
 
-	protected Component createCell(final IModel<ResourceField> model) {
+	protected String getDisplayValue(final IModel<ResourceField> model) {
 		final String rep = toString(model.getObject().getValues(), getLocale());
-		return new Label("content", rep);
+		return rep;
 	}
 
 	// ----------------------------------------------------
@@ -177,9 +175,8 @@ public class ResourceListPanel extends Panel {
 			@Override
 			protected void populateItem(final ListItem<ResourceNode> item) {
 				final ColumnConfiguration config = configModel.getObject();
-				//				WebMarkupContainer content = createCells(new UndeclaredFieldsListModel(item.getModel(), config), item);
-				//				final WebMarkupContainer container = createQiuckInfoPanel(item, content);
-				item.add(createCells(new UndeclaredFieldsListModel(item.getModel(), config)));
+				IModel<RBEntity> model = new Model<RBEntity>(entityManager.find(item.getModelObject()));
+				item.add(createCells(new UndeclaredFieldsListModel(item.getModel(), config), model));
 				//				item.add(container);
 				item.add(createActions(item.getModelObject(), config.getActions()));
 			}
@@ -187,48 +184,56 @@ public class ResourceListPanel extends Panel {
 		return listView;
 	}
 
-	private WebMarkupContainer createCells(final IModel<List<ResourceField>> model) {
+	private WebMarkupContainer createCells(final IModel<List<ResourceField>> model, final IModel<RBEntity> entity) {
 		final ListView<ResourceField> columns = new ListView<ResourceField>("cells", model) {
 			@Override
 			protected void populateItem(final ListItem<ResourceField> item) {
-				item.add(createCell(item.getModel()));
+				WebMarkupContainer container = new WebMarkupContainer("container");
+				Component placeholder = new WebMarkupContainer("quickInfo");
+
+				Label label = new Label("content",  getDisplayValue(item.getModel()));
+
+				if(RDFS.LABEL.getQualifiedName().equals(item.getModelObject().getPredicate().getQualifiedName())){
+					// TODO: create QuickInfo in AjaxEvent (lazyLoad-like)?
+					placeholder = new QuickInfoPanel("quickInfo", entity);
+				}
+
+				container.add(label);
+				container.add(placeholder);
+
+				addQuickInfoBehavior(container, placeholder);
+				item.add(container);
 			}
 		};
 		return columns;
 	}
 
-	private WebMarkupContainer createQiuckInfoPanel(final ListItem<ResourceNode> item, final WebMarkupContainer content) {
-		final IModel<Boolean> isVisible = new Model<Boolean>(false);
-		final WebMarkupContainer container = new WebMarkupContainer("wrapper");
-		container.setOutputMarkupId(true);
-		container.add(content);
+	protected void addQuickInfoBehavior(final Component parent, final Component popup) {
+		popup.setVisible(false);
 
-		RBEntity entity = entityManager.find(item.getModelObject());
-		final QuickInfoPanel infoPanel = new QuickInfoPanel("quickInfo", new Model<RBEntity>(entity));
-		infoPanel.setOutputMarkupId(true);
-		infoPanel.setVisible(false);
-		infoPanel.add(visibleIf(isTrue(isVisible)));
-		container.add(infoPanel);
-		container.add(new AjaxEventBehavior("onMouseEnter") {
+		parent.setOutputMarkupId(true);
+		parent.add(new AjaxEventBehavior("onMouseEnter") {
 			@Override
 			protected void onEvent(final AjaxRequestTarget target) {
-				if(false == isVisible.getObject()){
-					isVisible.setObject(true);
-					target.add(container);
+				System.out.println("IN MOUSE ENTER");
+				if(false == popup.isVisible()){
+					popup.setVisible(true);
+					target.add(parent);
 				}
 			}
 		});
 
-		container.add(new AjaxEventBehavior("onMouseLeave") {
+		parent.add(new AjaxEventBehavior("onMouseLeave") {
 			@Override
 			protected void onEvent(final AjaxRequestTarget target) {
-				if(true == isVisible.getObject()){
-					isVisible.setObject(false);
-					target.add(container);
+				System.out.println("OUT MOUSE ENTER");
+				if(true == popup.isVisible()){
+					popup.setVisible(false);
+					target.add(parent);
 				}
 			}
 		});
-		return container;
+
 	}
 
 	@SuppressWarnings("unchecked")

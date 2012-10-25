@@ -581,6 +581,9 @@ table.entity-list td.entity-list-cell {
 td.entity-list-action {
 	width: 25px;
 }
+div .entity-list-action {
+	width: 25px;
+}
 
 div.pager {
 	width:100%;
@@ -799,11 +802,37 @@ div.table {
 	margin-left: auto;
     margin-right: auto;
     width: 100%;
+
+	border-collapse: collapse;
+    border: 1px solid;
+    border-color: #BBB #DDD;
 }
 
-div.header {
-	font-weight: bold;
+th, td {
+    border-style: solid;
+    border-width: 1px 0 ;
+    text-align: left;
+    border-color: #c6c8c3;
 }
+
+th {
+    font-size: 9pt;
+    background-color: #e6e8e3;
+    padding: 3px 2px 3px 5px;
+}
+
+td {
+    font-size: 8pt;
+    background-color: #fff;
+    padding: 2px 2px 2px 5px;
+}
+
+div.table-header {
+	font-weight: bold;
+font-size: 9pt;
+    background-color: #e6e8e3;
+    padding: 3px 2px 3px 5px;
+    }
 
 div.row {
     display: table-row;
@@ -959,7 +988,6 @@ div .quick-info {
     border-radius: 5px 5px 5px 5px;
     max-width: 350px;
     padding: 10px;
-    margin-top: 20px;
     position: absolute;
     float: right;
 }
