@@ -48,6 +48,7 @@ public class QuickInfoPanel extends Panel {
 	 * @param model
 	 */
 	private void createListView(final IModel<RBEntity> model) {
+		// TODO: lazy-loading Images?
 		add(new ListView<RBField>("quickInfo", new ListModel<RBField>(model.getObject().getQuickInfo())) {
 
 			@Override

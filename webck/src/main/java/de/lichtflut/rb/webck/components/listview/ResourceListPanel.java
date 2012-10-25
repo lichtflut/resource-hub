@@ -158,6 +158,32 @@ public class ResourceListPanel extends Panel {
 		return rep;
 	}
 
+	protected void addQuickInfoBehavior(final Component parent, final Component popup) {
+		popup.setVisible(false);
+
+		parent.setOutputMarkupId(true);
+		parent.add(new AjaxEventBehavior("onMouseEnter") {
+			@Override
+			protected void onEvent(final AjaxRequestTarget target) {
+				if(false == popup.isVisible()){
+					popup.setVisible(true);
+					target.add(parent);
+				}
+			}
+		});
+
+		parent.add(new AjaxEventBehavior("onMouseLeave") {
+			@Override
+			protected void onEvent(final AjaxRequestTarget target) {
+				if(true == popup.isVisible()){
+					popup.setVisible(false);
+					target.add(parent);
+				}
+			}
+		});
+
+	}
+
 	// ----------------------------------------------------
 
 	private ListView<ColumnHeader> createHeaders(final IModel<ColumnConfiguration> configModel) {
@@ -176,8 +202,8 @@ public class ResourceListPanel extends Panel {
 			protected void populateItem(final ListItem<ResourceNode> item) {
 				final ColumnConfiguration config = configModel.getObject();
 				IModel<RBEntity> model = new Model<RBEntity>(entityManager.find(item.getModelObject()));
+
 				item.add(createCells(new UndeclaredFieldsListModel(item.getModel(), config), model));
-				//				item.add(container);
 				item.add(createActions(item.getModelObject(), config.getActions()));
 			}
 		};
@@ -194,7 +220,6 @@ public class ResourceListPanel extends Panel {
 				Label label = new Label("content",  getDisplayValue(item.getModel()));
 
 				if(RDFS.LABEL.getQualifiedName().equals(item.getModelObject().getPredicate().getQualifiedName())){
-					// TODO: create QuickInfo in AjaxEvent (lazyLoad-like)?
 					placeholder = new QuickInfoPanel("quickInfo", entity);
 				}
 
@@ -206,34 +231,6 @@ public class ResourceListPanel extends Panel {
 			}
 		};
 		return columns;
-	}
-
-	protected void addQuickInfoBehavior(final Component parent, final Component popup) {
-		popup.setVisible(false);
-
-		parent.setOutputMarkupId(true);
-		parent.add(new AjaxEventBehavior("onMouseEnter") {
-			@Override
-			protected void onEvent(final AjaxRequestTarget target) {
-				System.out.println("IN MOUSE ENTER");
-				if(false == popup.isVisible()){
-					popup.setVisible(true);
-					target.add(parent);
-				}
-			}
-		});
-
-		parent.add(new AjaxEventBehavior("onMouseLeave") {
-			@Override
-			protected void onEvent(final AjaxRequestTarget target) {
-				System.out.println("OUT MOUSE ENTER");
-				if(true == popup.isVisible()){
-					popup.setVisible(false);
-					target.add(parent);
-				}
-			}
-		});
-
 	}
 
 	@SuppressWarnings("unchecked")
