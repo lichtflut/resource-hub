@@ -76,7 +76,7 @@ public class CreateRelationshipPanel extends Panel {
 		final Form form = new Form("form");
 		form.add(new FeedbackPanel("feedback"));
 		
-		final EntityPickerField entityPicker = new EntityPickerField("objectPicker", objectModel, RBSystem.ENTITY);
+		final EntityPickerField entityPicker = new EntityPickerField("objectPicker", objectModel);
 		entityPicker.add(enableIf(isNull(objectModel)));
 		entityPicker.getSuggestLink().setVisible(false);
 		form.add(entityPicker);
