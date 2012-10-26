@@ -10,6 +10,7 @@ import java.util.List;
 import org.arastreju.sge.io.NamespaceMap;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
+import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.SimpleNamespace;
 
@@ -66,6 +67,31 @@ public class OutputElements {
 	public void add(final Statement statement) {
 		this.statements.add(statement);
 	}
+
+
+    /**
+     * @param schemas
+     */
+    public void addSchemas(final ResourceSchema... schemas) {
+        for (ResourceSchema schema : schemas) {
+            this.schemas.add(schema);
+            register(schema);
+        }
+    }
+
+    /**
+     * @param constraints
+     */
+    public void addConstraints(Constraint... constraints) {
+        for (Constraint constr : constraints) {
+            this.constraints.add(constr);
+            register(constr);
+        }
+    }
+
+    public void registerNamespace(String namespace, String prefix) {
+        namespaceMap.addNamespace(new SimpleNamespace(namespace, prefix));
+    }
 	
 	// -----------------------------------------------------
 	
@@ -120,12 +146,8 @@ public class OutputElements {
 	}
 	
 	private void register(final Constraint constr) {
-		if (constr != null && constr.isPublic()) {
-			if(constr.isLiteral()){
-				register(constr.getQualifiedName());
-			}else{
-				register(constr.getTypeConstraint());
-			}
+		if (constr != null && constr.isPublic() && !constr.isLiteral()) {
+		    register(constr.getQualifiedName());
 		}
 	}
 	

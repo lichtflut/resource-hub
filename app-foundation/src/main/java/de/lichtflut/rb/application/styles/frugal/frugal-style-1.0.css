@@ -868,8 +868,7 @@ div.table-cell{
     margin: 10px 0;
     padding: 10px 5px;
 }
-    
-    
+
 .color-legend{
 	border: 1px solid #D3DCC7;
     border-radius: 5px 5px 5px 5px;
@@ -881,9 +880,8 @@ div.tab-panel div div.input-panel div.table div.data-picker input.data-picker-fi
     width: 130px;
 }
 .type-system-wrapper{
-	margin-left: 20px;
-    width: 80%;
 }
+
 .tabpanel{
 	margin-top: 20px;
 }
