@@ -58,7 +58,7 @@ public class PredefinedWidget extends AbstractWidget {
 				return (Component) constructor.newInstance(componentID, spec, configMode);
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new Label(componentID, e.getMessage());
+				return new Label(componentID, e.getClass() + ": " + e.getMessage());
 			}
 		} else {
 			return new Label(componentID, "Widget class not specified.");

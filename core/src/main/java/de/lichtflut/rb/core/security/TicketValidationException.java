@@ -28,7 +28,4 @@ public class TicketValidationException extends Exception {
         super(cause);
     }
 
-    public TicketValidationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }
