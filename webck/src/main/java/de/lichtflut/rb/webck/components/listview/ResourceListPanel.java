@@ -158,6 +158,18 @@ public class ResourceListPanel extends Panel {
 		return rep;
 	}
 
+	/**
+	 * Defines when and how a info-pop-up shall appear.<br>
+	 * Default:
+	 * <ul>
+	 * <li>appears on: onMouseEnter</li>
+	 * <li>disappears on: onMouseLeave</li>
+	 * <li>show {@link QuickInfoPanel}</li>
+	 * </ul>
+	 * 
+	 * @param parent parent component for the pop-up
+	 * @param popup component that will appear on event
+	 */
 	protected void addQuickInfoBehavior(final Component parent, final Component popup) {
 		popup.setVisible(false);
 
@@ -181,7 +193,6 @@ public class ResourceListPanel extends Panel {
 				}
 			}
 		});
-
 	}
 
 	// ----------------------------------------------------
@@ -201,39 +212,51 @@ public class ResourceListPanel extends Panel {
 			@Override
 			protected void populateItem(final ListItem<ResourceNode> item) {
 				final ColumnConfiguration config = configModel.getObject();
-				IModel<RBEntity> model = new Model<RBEntity>(entityManager.find(item.getModelObject()));
-
-				item.add(createCells(new UndeclaredFieldsListModel(item.getModel(), config), model));
+				item.add(createCells(new UndeclaredFieldsListModel(item.getModel(), config), item.getModelObject()));
 				item.add(createActions(item.getModelObject(), config.getActions()));
 			}
 		};
 		return listView;
 	}
 
-	private WebMarkupContainer createCells(final IModel<List<ResourceField>> model, final IModel<RBEntity> entity) {
+	private WebMarkupContainer createCells(final IModel<List<ResourceField>> model, final ResourceNode entityNode) {
 		final ListView<ResourceField> columns = new ListView<ResourceField>("cells", model) {
 			@Override
 			protected void populateItem(final ListItem<ResourceField> item) {
+				WebMarkupContainer container = createQIComponent(entityNode, item);
+				item.add(container);
+			}
+
+			/**
+			 * Create a container that contains
+			 * <ul>
+			 * <li>child component</li>
+			 * <li>pop-up component</li>
+			 * </ul>
+			 * @param entityNode represents a RBEntity
+			 * @param item listItem
+			 * @return the container component
+			 */
+			private WebMarkupContainer createQIComponent(final ResourceNode entityNode, final ListItem<ResourceField> item) {
 				WebMarkupContainer container = new WebMarkupContainer("container");
 				Component placeholder = new WebMarkupContainer("quickInfo");
-
 				Label label = new Label("content",  getDisplayValue(item.getModel()));
 
 				if(RDFS.LABEL.getQualifiedName().equals(item.getModelObject().getPredicate().getQualifiedName())){
-					placeholder = new QuickInfoPanel("quickInfo", entity);
+					IModel<RBEntity> model = new Model<RBEntity>(entityManager.find(entityNode));
+					placeholder = new QuickInfoPanel("quickInfo", model);
 				}
 
 				container.add(label);
 				container.add(placeholder);
 
 				addQuickInfoBehavior(container, placeholder);
-				item.add(container);
+				return container;
 			}
 		};
 		return columns;
 	}
 
-	@SuppressWarnings("unchecked")
 	private Component createActions(final ResourceNode entity, final String... actions) {
 		final ListView<String> columns = new ListView<String>("actions", Arrays.asList(actions)) {
 			@Override
