@@ -69,9 +69,6 @@ public class EntityManagerImpl implements EntityManager {
 
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBEntityImpl find(final ResourceID resourceID) {
 		return find(resourceID, true);
@@ -79,9 +76,6 @@ public class EntityManagerImpl implements EntityManager {
 
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBEntity create(final ResourceID type) {
 		final ResourceSchema schema = schemaManager.findSchemaForType(type);
@@ -90,12 +84,8 @@ public class EntityManagerImpl implements EntityManager {
 		} else {
 			return new RBEntityImpl(newEntityNode(), type);
 		}
-
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void store(final RBEntity entity) {
 		final ResourceNode node = entity.getNode();
@@ -115,9 +105,6 @@ public class EntityManagerImpl implements EntityManager {
 		conversation.attach(node);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void changeType(final RBEntity entity, final ResourceID type) {
 		final ModelingConversation mc = conversation;
@@ -126,9 +113,6 @@ public class EntityManagerImpl implements EntityManager {
 		SNOPS.associate(node, RDF.TYPE, type);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void delete(final ResourceID entityID) {
 		final ModelingConversation mc = conversation;
@@ -136,7 +120,7 @@ public class EntityManagerImpl implements EntityManager {
 		mc.remove(node);
 	}
 
-	// -- DEPENDENCIES ------------------------------------
+	// -- INJECTED DEPENDENCIES ---------------------------
 
 	public void setTypeManager(final TypeManager typeManager) {
 		this.typeManager = typeManager;
