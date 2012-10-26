@@ -25,9 +25,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import scala.actors.threadpool.Arrays;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -115,9 +117,12 @@ public class PublicConstraintsDetailPanel extends Panel{
 		final ConstraintImpl constraint = (ConstraintImpl) model.getObject();
 		AjaxEditableLabel<String> name = new AjaxEditableLabel<String>("name", new PropertyModel<String>(constraint, "name"));
 		final IModel<List<Datatype>> chosen = new PropertyModel<List<Datatype>>(constraint, "applicableDatatypes");
-		@SuppressWarnings("unchecked")
-		ListMultipleChoice<Datatype> datatypes = new ListMultipleChoice<Datatype>("datatypes", chosen, Model.of(Arrays.asList(Datatype.values())),  new EnumChoiceRenderer<Datatype>(this));
-		AjaxEditableLabel<String> pattern = new AjaxEditableLabel<String>("pattern", new PropertyModel<String>(constraint, "literalConstraint"));
+        IModel<List<Datatype>> allDatatypes = new ListModel<Datatype>(Arrays.<Datatype>asList(Datatype.values()));
+
+        ListMultipleChoice<Datatype> datatypes =
+                new ListMultipleChoice<Datatype>("datatypes", chosen, allDatatypes, new EnumChoiceRenderer<Datatype>(this));
+
+        AjaxEditableLabel<String> pattern = new AjaxEditableLabel<String>("pattern", new PropertyModel<String>(constraint, "literalConstraint"));
 		datatypes.setMaxRows(10);
 		form.add(name, datatypes, pattern);
 	}

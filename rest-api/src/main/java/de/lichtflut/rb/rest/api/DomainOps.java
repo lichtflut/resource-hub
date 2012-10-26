@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.RBDomain;
@@ -30,6 +29,8 @@ import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
 import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
 import de.lichtflut.rb.rest.api.security.RBOperation;
+
+import java.util.Arrays;
 
 /**
  * <p>
@@ -183,7 +184,7 @@ public class DomainOps extends RBServiceEndpoint {
 	 * <li>Is processed when the given domainID does already exists</li>
 	 * <li>The user has to be domain-admin or root</li>
 	 * <li>A {@link SystemDomain} must be given to process the update</li>
-	 * <li>if {@link SystemDomain#getDomainID()} is not null, it must be equal
+	 * <li>if {@link de.lichtflut.rb.rest.api.models.generate.SystemDomain#getDomainIdentifier()} is not null, it must be equal
 	 * to the given domainID delivered as PathParam</li>
 	 * <li>If the given domain administrator does not exists, a new system user
 	 * will be created so long the password and email address is given</li>
