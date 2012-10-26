@@ -13,22 +13,19 @@ package de.lichtflut.rb.core.security;
  */
 public class TicketValidationException extends Exception {
 
-    public TicketValidationException() {
-    }
+	public TicketValidationException() {
+	}
 
-    public TicketValidationException(String message) {
-        super(message);
-    }
+	public TicketValidationException(final String message) {
+		super(message);
+	}
 
-    public TicketValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public TicketValidationException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 
-    public TicketValidationException(Throwable cause) {
-        super(cause);
-    }
+	public TicketValidationException(final Throwable cause) {
+		super(cause);
+	}
 
-    public TicketValidationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }
