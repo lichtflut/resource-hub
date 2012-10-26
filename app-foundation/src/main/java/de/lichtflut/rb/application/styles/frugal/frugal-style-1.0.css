@@ -995,11 +995,12 @@ button.button.down div {
 }
 
 div .quick-info {
-    background-color: #F6F8F3;
     border: 1px solid #D3DCC7;
     border-radius: 5px 5px 5px 5px;
+    background-color: #F6F8F3;
     max-width: 350px;
     padding: 10px;
+    margin-left: 100px;
     position: absolute;
     float: right;
 }

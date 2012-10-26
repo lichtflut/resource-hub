@@ -31,6 +31,7 @@ import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.impl.ExpressionBasedLabelBuilder;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
@@ -517,6 +518,9 @@ public class SchemaDetailPanel extends Panel {
 		ResourceSchemaImpl copy = new ResourceSchemaImpl();
 		copy.setDescribedType(schema.getObject().getDescribedType());
 		copy.setLabelBuilder(schema.getObject().getLabelBuilder());
+		for (PropertyDeclaration qInfo : schema.getObject().getQuickInfo()) {
+			copy.addQuickInfo(qInfo.getPropertyDescriptor());
+		}
 		for (PropertyRow row : listModel.getObject()) {
 			copy.addPropertyDeclaration(row.asPropertyDeclaration());
 		}
