@@ -3,12 +3,12 @@
  */
 package de.lichtflut.rb.application.extensions;
 
+import de.lichtflut.rb.application.common.CommonParams;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.application.RBApplication;
-import de.lichtflut.rb.application.resourceview.EntityDetailPage;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.entity.VisualizationMode;
@@ -26,16 +26,13 @@ import de.lichtflut.rb.webck.components.entity.VisualizationMode;
  */
 public class RBResourceLinkProvider implements ResourceLinkProvider {
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getUrlToResource(ResourceID id, VisualizationMode vis, DisplayMode mode) {
 		final PageParameters params = new PageParameters();
 		if (DisplayMode.CREATE.equals(mode)) {
-			params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, id.getQualifiedName().toURI());
+			params.add(CommonParams.PARAM_RESOURCE_TYPE, id.getQualifiedName().toURI());
 		} else {
-			params.add(EntityDetailPage.PARAM_RESOURCE_ID, id.getQualifiedName().toURI());
+			params.add(CommonParams.PARAM_RESOURCE_ID, id.getQualifiedName().toURI());
 		}
 		params.add(DisplayMode.PARAMETER, mode);
 		switch (vis) {

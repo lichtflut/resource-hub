@@ -23,7 +23,9 @@ import de.lichtflut.rb.webck.browsing.BrowsingHistory;
  */
 public class RBWebSession extends WebSession {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(RBWebSession.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RBWebSession.class);
+
+    // ----------------------------------------------------
 
 	private final BrowsingHistory history = new BrowsingHistory();
 

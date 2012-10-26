@@ -5,6 +5,8 @@ package de.lichtflut.rb.application.resourceview;
 
 import java.util.List;
 
+import de.lichtflut.rb.application.RBApplication;
+import de.lichtflut.rb.application.common.CommonParams;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -80,9 +82,6 @@ public class RelationshipOverviewPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	protected void detachModel() {
 		super.detachModel();
@@ -100,8 +99,8 @@ public class RelationshipOverviewPanel extends Panel {
 		public void onRelationshipSelected(Statement stmt) {
 			final ResourceID id = stmt.getObject().asResource();
 			final PageParameters params = new PageParameters();
-			params.add(EntityDetailPage.PARAM_RESOURCE_ID, id.getQualifiedName().toURI());
-			setResponsePage(EntityDetailPage.class, params);
+			params.add(CommonParams.PARAM_RESOURCE_ID, id.getQualifiedName().toURI());
+			setResponsePage(RBApplication.get().getEntityDetailPage(), params);
 		}
 		
 		/** 

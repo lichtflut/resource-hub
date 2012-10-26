@@ -18,7 +18,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNText;
-import scala.actors.threadpool.Arrays;
+
+import java.util.Arrays;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;

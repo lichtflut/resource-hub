@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.webck.components.listview;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -23,7 +24,6 @@ import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import scala.actors.threadpool.Arrays;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.ResourceField;
 import de.lichtflut.rb.core.services.EntityManager;

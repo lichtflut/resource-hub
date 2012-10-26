@@ -80,10 +80,8 @@ public class CookieAccess {
         return (WebResponse) RequestCycle.get().getResponse();
     }
 
-
     private WebRequest request() {
         return (WebRequest) RequestCycle.get().getRequest();
     }
-
 
 }

@@ -5,6 +5,7 @@ package de.lichtflut.rb.application.extensions;
 
 import java.util.List;
 
+import de.lichtflut.rb.application.common.CommonParams;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
@@ -14,7 +15,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.application.RBApplication;
-import de.lichtflut.rb.application.resourceview.EntityDetailPage;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
@@ -61,7 +61,7 @@ public final class RBResourceListPanel extends ResourceListPanel {
 	@Override
 	protected Component createEditAction(final String componentId, final ResourceNode entity) {
 		final PageParameters params = new PageParameters();
-		params.set(EntityDetailPage.PARAM_RESOURCE_ID, entity.getQualifiedName().toURI());
+		params.set(CommonParams.PARAM_RESOURCE_ID, entity.getQualifiedName().toURI());
 		params.set(DisplayMode.PARAMETER, DisplayMode.EDIT);
 		return new ReferenceLink(componentId, RBApplication.get().getEntityDetailPage(), params, new ResourceModel("action.edit"))
 			.setLinkCssClass("action-edit")
