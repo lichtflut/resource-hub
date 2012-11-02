@@ -5,13 +5,9 @@ package de.lichtflut.rb.application.base;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import de.lichtflut.rb.webck.common.RBWebSession;
-import de.lichtflut.rb.webck.components.identities.SessionInfoPanel;
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -26,17 +22,16 @@ import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.application.admin.AdminBasePage;
 import de.lichtflut.rb.application.common.RBPermission;
 import de.lichtflut.rb.application.custom.BrowseAndSearchPage;
-import de.lichtflut.rb.application.custom.PerspectivePage;
 import de.lichtflut.rb.application.pages.AbstractBasePage;
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.webck.behaviors.SubmitFormOnEnterBehavior;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.domains.DomainSwitcherPanel;
 import de.lichtflut.rb.webck.components.fields.SearchField;
+import de.lichtflut.rb.webck.components.identities.SessionInfoPanel;
 import de.lichtflut.rb.webck.components.listview.ReferenceLink;
 import de.lichtflut.rb.webck.components.navigation.NavigationBar;
 import de.lichtflut.rb.webck.components.navigation.NavigationNode;
-import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.CurrentUserModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
@@ -65,7 +60,7 @@ public class RBBasePage extends AbstractBasePage {
 	}
 
 	/**
-     * Constructor with parameters.
+	 * Constructor with parameters.
 	 * @param parameters The parameters.
 	 */
 	public RBBasePage(final PageParameters parameters) {
@@ -81,7 +76,7 @@ public class RBBasePage extends AbstractBasePage {
 		final IModel<List<NavigationNode>> navModel = new DerivedDetachableModel<List<NavigationNode>, List<MenuItem>>(
 				new MenuItemListModel()) {
 			@Override
-			protected List<NavigationNode> derive(List<MenuItem> menuItems) {
+			protected List<NavigationNode> derive(final List<MenuItem> menuItems) {
 				return RBApplication.get().getFirstLevelNavigation(menuItems);
 			}
 		};
@@ -100,14 +95,14 @@ public class RBBasePage extends AbstractBasePage {
 		add(createSecondLevelNav("secondLevelNav"));
 
 		add(new ReferenceLink("adminAreaLink", AdminBasePage.class, new ResourceModel("global.link.admin-area"))
-		    .add(visibleIf(CurrentUserModel.hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
+		.add(visibleIf(CurrentUserModel.hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
 
 		add(new Label("username", CurrentUserModel.displayNameModel())
-             .add(visibleIf(CurrentUserModel.isLoggedIn())));
+		.add(visibleIf(CurrentUserModel.isLoggedIn())));
 
 		add(new DomainSwitcherPanel("domain", CurrentDomainModel.displayNameModel()));
 
-        add(new SessionInfoPanel("sessionInfo"));
+		add(new SessionInfoPanel("sessionInfo"));
 
 	}
 
