@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.application.base;
 
+import de.lichtflut.rb.webck.common.CookieAccess;
 import org.apache.wicket.protocol.http.WebSession;
 
 import de.lichtflut.rb.application.RBApplication;
@@ -27,6 +28,7 @@ public class LogoutPage extends AbstractBasePage {
 	 */
 	public LogoutPage() {
 		if (WebSession.exists()) {
+            CookieAccess.getInstance().removeAuthCookies();
 			RBWebSession.get().onLogout();
 			WebSession.get().invalidate();
 		}

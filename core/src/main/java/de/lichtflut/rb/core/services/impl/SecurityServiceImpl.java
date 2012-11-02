@@ -72,17 +72,11 @@ public class SecurityServiceImpl implements SecurityService {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBUser findUser(final String identifier) {
 		return authModule.getUserManagement().findUser(identifier);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBUser createUser(final String email, final String username, final String password, final Locale locale) throws RBException {
 		final RBUser rbUser = new RBUser(new SimpleResourceID().getQualifiedName());
@@ -96,9 +90,6 @@ public class SecurityServiceImpl implements SecurityService {
 		return rbUser;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBUser createDomainAdmin(final RBDomain domain, final String email, final String username, final String password) throws RBAuthException {
 		logger.info("Creating domain admin {} for domain {}.", email, domain.getName());
@@ -114,9 +105,6 @@ public class SecurityServiceImpl implements SecurityService {
 		return rbUser;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void makeDomainAdmin(final RBDomain domain, final RBUser user) throws RBAuthException {
 		final List<String> roles = Arrays.asList(rolesOfDomainAdmin());
@@ -124,17 +112,11 @@ public class SecurityServiceImpl implements SecurityService {
 		setUserRoles(user, domain.getName(), roles);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void storeUser(final RBUser updated) throws RBException {
 		authModule.getUserManagement().updateUser(updated);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void deleteUser(final RBUser user) {
 		conversation.remove(new SimpleResourceID(user.getQualifiedName()));
@@ -144,33 +126,21 @@ public class SecurityServiceImpl implements SecurityService {
 
 	// -- AUTHORIZATON ------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<String> getUserRoles(final RBUser user, final String domain) {
 		return authModule.getUserManagement().getUserRoles(user, domain);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Set<String> getUserPermissions(final RBUser user, final String domain) {
 		return authModule.getUserManagement().getUserPermissions(user, domain);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setUserRoles(final RBUser user, final String domain, final List<String> roles) throws RBAuthException {
 		authModule.getUserManagement().setUserRoles(user, domain, roles);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeAllUserRoles(final RBUser user) throws RBAuthException {
 		authModule.getUserManagement().removeAllUserRoles(user, null);
@@ -178,19 +148,12 @@ public class SecurityServiceImpl implements SecurityService {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void changePassword(final RBUser user, final String currentPassword, final String newPassword) throws RBException{
 		authModule.getUserManagement().verifyPassword(user, currentPassword);
 		authModule.getUserManagement().changePassword(user, newPassword);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @throws RBException
-	 */
 	@Override
 	public void resetPasswordForUser(final RBUser user, final Locale locale) throws RBException {
 		final String generatedPwd = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
