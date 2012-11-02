@@ -19,7 +19,6 @@
 
     <bean id="arasResourceFactory" class="de.lichtflut.rb.core.services.ArastrejuResourceFactory" scope="session">
         <constructor-arg index="0" ref="context"></constructor-arg>
-        <property name="domainInitializer" ref="domainInitializer"/>
     </bean>
 
     <bean id="conversation" class="de.lichtflut.rb.core.services.ArastrejuConversationHolder" scope="request">
@@ -72,15 +71,15 @@
     </bean>
 
     <bean id="securityService" class="de.lichtflut.rb.core.services.impl.SecurityServiceImpl" scope="request">
+        <constructor-arg index="0" ref="rbConfig"/>
         <property name="authModule" ref="authModule"/>
         <property name="serviceContext" ref="context"/>
         <property name="conversation" ref="conversation"/>
         <property name="messagingService" ref="messagingService"/>
-        <property name="securityConfiguration" ref="securityConfig"/>
     </bean>
 
     <bean id="messagingService" class="de.lichtflut.rb.core.services.impl.MessagingServiceImpl">
-        <constructor-arg ref="emailConfiguration"/>
+        <constructor-arg ref="rbConfig"/>
     </bean>
     
 </beans>

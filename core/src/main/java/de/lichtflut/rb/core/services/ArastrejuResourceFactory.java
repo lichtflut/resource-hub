@@ -39,8 +39,6 @@ public class ArastrejuResourceFactory implements ConversationFactory {
 
     private Map<Context, ModelingConversation> conversationMap = new HashMap<Context, ModelingConversation>();
 
-    private DomainInitializer initializer;
-
 	// ----------------------------------------------------
 	
 	/**
@@ -54,7 +52,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     /**
      * Constructor for spring.
      */
-    public ArastrejuResourceFactory() {
+    protected ArastrejuResourceFactory() {
     }
 	
 	// -- CONVERSATIONS -----------------------------------
@@ -133,12 +131,6 @@ public class ArastrejuResourceFactory implements ConversationFactory {
 
     // ----------------------------------------------------
 
-    public void setDomainInitializer(DomainInitializer initializer) {
-        this.initializer = initializer;
-    }
-
-    // ----------------------------------------------------
-
     protected synchronized ArastrejuGate gate() {
         if (openGate == null) {
             openGate = openGate();
@@ -157,8 +149,8 @@ public class ArastrejuResourceFactory implements ConversationFactory {
             return aras.openMasterGate();
         } else {
             final ArastrejuGate gate = aras.openGate(domain);
-            if (initializer != null) {
-                initializer.initializeDomain(gate, domain);
+            if (context.getConfig().getDomainValidator() != null) {
+                context.getConfig().getDomainValidator().initializeDomain(gate, domain);
             }
             return gate;
         }

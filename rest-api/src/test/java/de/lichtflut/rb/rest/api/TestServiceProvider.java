@@ -3,13 +3,13 @@
  */
 package de.lichtflut.rb.rest.api;
 
+import de.lichtflut.rb.core.services.DomainValidator;
 import org.arastreju.sge.context.DomainIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
-import de.lichtflut.rb.core.services.DomainInitializer;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.rest.delegate.providers.RBServiceProvider;
 
@@ -33,10 +33,9 @@ public class TestServiceProvider extends RBServiceProvider {
 	/**
 	 * @param config
 	 */
-	public TestServiceProvider(final RBConfig config, final AuthModule module, final DomainInitializer initializer) {
+	public TestServiceProvider(final RBConfig config, final AuthModule module, final DomainValidator initializer) {
 		ServiceContext ctx = new ServiceContext(config, DomainIdentifier.MASTER_DOMAIN);
 		factory = new ArastrejuResourceFactory(ctx);
-		factory.setDomainInitializer(initializer);
 
 		setServiceContext(ctx);
 		setArastrejuResourceFactory(factory);

@@ -9,7 +9,7 @@ import org.arastreju.sge.ArastrejuGate;
  *
  * @author Oliver Tigges
  */
-public interface DomainInitializer {
+public interface DomainValidator {
 
     void initializeDomain(ArastrejuGate gate, String domainName);
 }

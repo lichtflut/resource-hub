@@ -1,5 +1,6 @@
 package de.lichtflut.rb.rest.delegate.providers;
 
+import de.lichtflut.rb.core.services.DomainValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.lichtflut.rb.core.config.RBConfig;
@@ -7,7 +8,6 @@ import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.security.SecurityConfiguration;
 import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
-import de.lichtflut.rb.core.services.DomainInitializer;
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.ServiceContext;
 
@@ -24,7 +24,7 @@ public class RBServiceProviderFactory {
 	private RBConfig config;
 
 	@Autowired
-	private DomainInitializer domainInitializer;
+	private DomainValidator domainInitializer;
 
 	@Autowired
 	private AuthModule authModule;
@@ -45,7 +45,6 @@ public class RBServiceProviderFactory {
 	public ServiceProvider createServiceProvider(final String domain, final RBUser user) {
 		ServiceContext ctx = new ServiceContext(config, domain, user);
 		ArastrejuResourceFactory factory = new ArastrejuResourceFactory(ctx);
-		factory.setDomainInitializer(domainInitializer);
 
 		RBServiceProvider rbServiceProvider = new RBServiceProvider(ctx, factory, authModule, securityConfiguration);
 		rbServiceProvider.setFileService(fileService);

@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.security.DomainInitializer;
+import de.lichtflut.rb.core.security.AuthDomainInitializer;
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
@@ -51,7 +51,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 
 	private final ModelingConversation conversation;
 
-	private final DomainInitializer initializer;
+	private final AuthDomainInitializer initializer;
 
 	// ----------------------------------------------------
 
@@ -68,7 +68,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	 * @param conversation The conversation..
 	 * @param initializer The initializer for new domains.
 	 */
-	public EmbeddedAuthDomainManager(final ModelingConversation conversation, final DomainInitializer initializer) {
+	public EmbeddedAuthDomainManager(final ModelingConversation conversation, final AuthDomainInitializer initializer) {
 		this.conversation = conversation;
 		this.initializer = initializer;
 	}
