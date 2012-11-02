@@ -67,12 +67,24 @@ import java.util.List;
  */
 public abstract class RBApplication extends WebApplication {
 
-	private final Logger logger = LoggerFactory.getLogger(RBApplication.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RBApplication.class);
+
+    private RBConfig config;
 
 	// ------------------------------------------------------
 	
     public static RBApplication get() {
         return (RBApplication) Application.get();
+    }
+
+    // -- Configuration -----------------------------------
+
+    public RBConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(RBConfig config) {
+        this.config = config;
     }
 
     // ----------------------------------------------------
@@ -213,7 +225,7 @@ public abstract class RBApplication extends WebApplication {
 	protected void onDestroy() {
 		super.onDestroy();
 		
-		logger.info("Application is beeing destroyed. Free all resources.");
+		LOGGER.info("Application is beeing destroyed. Free all resources.");
 		
 		final WebApplicationContext wac = 
 			WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());

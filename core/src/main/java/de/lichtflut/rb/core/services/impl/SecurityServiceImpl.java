@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import de.lichtflut.rb.core.config.RBConfig;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.slf4j.Logger;
@@ -20,7 +21,6 @@ import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.security.SecurityConfiguration;
 import de.lichtflut.rb.core.security.UserManager;
 import de.lichtflut.rb.core.services.MessagingService;
 import de.lichtflut.rb.core.services.SecurityService;
@@ -41,6 +41,8 @@ public class SecurityServiceImpl implements SecurityService {
 
 	private final Logger logger = LoggerFactory.getLogger(SecurityServiceImpl.class);
 
+    private final RBConfig config;
+
 	private AuthModule authModule;
 
 	private ModelingConversation conversation;
@@ -49,20 +51,20 @@ public class SecurityServiceImpl implements SecurityService {
 
 	private ServiceContext serviceContext;
 
-	private SecurityConfiguration securityConfiguration;
-
-	// ----------------------------------------------------
+    // ----------------------------------------------------
 
 	/**
-	 * Default constructor.
+	 * Constructor.
 	 */
-	public SecurityServiceImpl() {
-	}
+	public SecurityServiceImpl(RBConfig config) {
+        this.config = config;
+    }
 
 	/**
 	 * Constructor.
 	 */
 	public SecurityServiceImpl(final ServiceContext context, final ModelingConversation conversation, final AuthModule authModule) {
+        this.config = context.getConfig();
 		this.conversation = conversation;
 		this.serviceContext = context;
 		this.authModule = authModule;
@@ -221,10 +223,6 @@ public class SecurityServiceImpl implements SecurityService {
 		this.authModule = authServer;
 	}
 
-	public void setSecurityConfiguration(final SecurityConfiguration securityConfiguration) {
-		this.securityConfiguration = securityConfiguration;
-	}
-
 	// ----------------------------------------------------
 
 	/**
@@ -232,8 +230,8 @@ public class SecurityServiceImpl implements SecurityService {
 	 * @return The roles to be added to domain admin.
 	 */
 	protected String[] rolesOfDomainAdmin() {
-		if (securityConfiguration != null) {
-			return securityConfiguration.getRolesOfDomainAdmin();
+		if (config.getSecurityConfiguration() != null) {
+			return config.getSecurityConfiguration().getRolesOfDomainAdmin();
 		}
 		return new String[0];
 	}

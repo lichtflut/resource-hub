@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.security.authserver;
 
+import de.lichtflut.rb.core.security.AuthDomainInitializer;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
@@ -14,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.AuthenticationService;
-import de.lichtflut.rb.core.security.DomainInitializer;
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.UserManager;
 
@@ -79,7 +79,7 @@ public class EmbeddedAuthModule implements AuthModule {
 	 * Constructor.
 	 * @param gate The Arastreju Gate.
 	 */
-	public EmbeddedAuthModule(ArastrejuGate gate, DomainInitializer initializer) {
+	public EmbeddedAuthModule(ArastrejuGate gate, AuthDomainInitializer initializer) {
 		if (initializer != null) {
 			logger.info("Creating new Embedded Auth Module with initializer " + initializer.getClass().getSimpleName());
 		} else {

@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.core.messaging;
+package de.lichtflut.rb.core.config;
 
 import de.lichtflut.rb.core.services.EmailService;
 

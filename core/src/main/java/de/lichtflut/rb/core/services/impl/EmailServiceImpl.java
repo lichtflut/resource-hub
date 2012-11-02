@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.RBException;
-import de.lichtflut.rb.core.messaging.EmailConfiguration;
+import de.lichtflut.rb.core.config.EmailConfiguration;
 import de.lichtflut.rb.core.messaging.MessageDescription;
 import de.lichtflut.rb.core.messaging.MessageType;
 import de.lichtflut.rb.core.messaging.TextModules;

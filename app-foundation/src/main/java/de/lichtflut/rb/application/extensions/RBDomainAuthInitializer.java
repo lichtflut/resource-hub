@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.lichtflut.rb.application.common.RBRole;
-import de.lichtflut.rb.core.security.DomainInitializer;
+import de.lichtflut.rb.core.security.AuthDomainInitializer;
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.RBDomain;
 
@@ -25,7 +25,7 @@ import de.lichtflut.rb.core.security.RBDomain;
  * 
  * @author Oliver Tigges
  */
-public class RBDomainAuthInitializer implements DomainInitializer {
+public class RBDomainAuthInitializer implements AuthDomainInitializer {
 
 	@Override
 	public void initialize(RBDomain domain, DomainManager domainManager) {

@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.lichtflut.rb.core.security.AuthDomainInitializer;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -29,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.security.DomainInitializer;
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
@@ -51,7 +51,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	
 	private final ModelingConversation conversation;
 
-	private final DomainInitializer initializer;
+	private final AuthDomainInitializer initializer;
 	
 	// ----------------------------------------------------
 	
@@ -68,7 +68,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	 * @param conversation The conversation..
 	 * @param initializer The initializer for new domains.
 	 */
-	public EmbeddedAuthDomainManager(ModelingConversation conversation, DomainInitializer initializer) {
+	public EmbeddedAuthDomainManager(ModelingConversation conversation, AuthDomainInitializer initializer) {
 		this.conversation = conversation;
 		this.initializer = initializer;
 	}
