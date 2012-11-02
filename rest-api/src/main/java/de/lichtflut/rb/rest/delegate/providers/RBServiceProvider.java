@@ -82,7 +82,7 @@ public class RBServiceProvider implements ServiceProvider {
 
 	@Override
 	public SecurityService getSecurityService() {
-		return new SecurityServiceImpl(getContext(), getConversation(), authModule);
+		return new SecurityServiceImpl(getContext(), authModule);
 	}
 
 	@Override

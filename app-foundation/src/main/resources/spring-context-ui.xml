@@ -74,7 +74,6 @@
         <constructor-arg index="0" ref="rbConfig"/>
         <property name="authModule" ref="authModule"/>
         <property name="serviceContext" ref="context"/>
-        <property name="conversation" ref="conversation"/>
         <property name="messagingService" ref="messagingService"/>
     </bean>
 

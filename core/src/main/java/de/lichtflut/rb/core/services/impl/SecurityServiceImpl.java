@@ -3,18 +3,7 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.UUID;
-
 import de.lichtflut.rb.core.config.RBConfig;
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.model.SimpleResourceID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.security.AuthModule;
@@ -25,6 +14,15 @@ import de.lichtflut.rb.core.security.UserManager;
 import de.lichtflut.rb.core.services.MessagingService;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * <p>
@@ -45,8 +43,6 @@ public class SecurityServiceImpl implements SecurityService {
 
 	private AuthModule authModule;
 
-	private ModelingConversation conversation;
-
 	private MessagingService messagingService;
 
 	private ServiceContext serviceContext;
@@ -63,9 +59,8 @@ public class SecurityServiceImpl implements SecurityService {
 	/**
 	 * Constructor.
 	 */
-	public SecurityServiceImpl(final ServiceContext context, final ModelingConversation conversation, final AuthModule authModule) {
+	public SecurityServiceImpl(final ServiceContext context, final AuthModule authModule) {
         this.config = context.getConfig();
-		this.conversation = conversation;
 		this.serviceContext = context;
 		this.authModule = authModule;
 	}
@@ -77,7 +72,19 @@ public class SecurityServiceImpl implements SecurityService {
 		return authModule.getUserManagement().findUser(identifier);
 	}
 
-	@Override
+    @Override
+    public void updateUser(final RBUser updated) throws RBException {
+        authModule.getUserManagement().updateUser(updated);
+    }
+
+    @Override
+    public void deleteUser(final RBUser user) {
+        authModule.getUserManagement().deleteUser(user);
+    }
+
+    // ----------------------------------------------------
+
+    @Override
 	public RBUser createUser(final String email, final String username, final String password, final Locale locale) throws RBException {
 		final RBUser rbUser = new RBUser(new SimpleResourceID().getQualifiedName());
 		rbUser.setEmail(email);
@@ -110,18 +117,6 @@ public class SecurityServiceImpl implements SecurityService {
 		final List<String> roles = Arrays.asList(rolesOfDomainAdmin());
 		logger.info("Adding roles {} to user {}.", roles, user);
 		setUserRoles(user, domain.getName(), roles);
-	}
-
-	@Override
-	public void storeUser(final RBUser updated) throws RBException {
-		authModule.getUserManagement().updateUser(updated);
-	}
-
-	@Override
-	public void deleteUser(final RBUser user) {
-		conversation.remove(new SimpleResourceID(user.getQualifiedName()));
-		authModule.getUserManagement().deleteUser(user);
-		logger.info("Deleted user: " + user);
 	}
 
 	// -- AUTHORIZATON ------------------------------------
@@ -172,10 +167,6 @@ public class SecurityServiceImpl implements SecurityService {
 	 */
 	public void setMessagingService(final MessagingService messagingService) {
 		this.messagingService = messagingService;
-	}
-
-	public void setConversation(final ModelingConversation conversation) {
-		this.conversation = conversation;
 	}
 
 	public void setServiceContext(final ServiceContext serviceContext) {

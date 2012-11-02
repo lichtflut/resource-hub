@@ -66,7 +66,7 @@ public interface SecurityService {
 	 * @param user The existing user to update.
 	 * @throws RBException 
 	 */
-	void storeUser(RBUser user) throws RBException;
+	void updateUser(RBUser user) throws RBException;
 	
 	/**
 	 * Delete a user from this domain and unregister in master domain.
