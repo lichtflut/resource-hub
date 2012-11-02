@@ -25,6 +25,7 @@ import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.webck.behaviors.FocusFirstFormElementBehavior;
 import de.lichtflut.rb.webck.browsing.BrowsingState;
 import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.common.GoogleMapsPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
@@ -84,6 +85,7 @@ public class EntityPanel extends Panel {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
 		if (mce.isAbout(ModelChangeEvent.ENTITY)) {
 			getListView().removeAll();
+			RBAjaxTarget.add(this);
 		}
 	}
 

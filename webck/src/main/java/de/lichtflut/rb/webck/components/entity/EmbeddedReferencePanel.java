@@ -3,7 +3,6 @@ package de.lichtflut.rb.webck.components.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -17,6 +16,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldsListModel;
 
 /**
@@ -40,7 +40,7 @@ public class EmbeddedReferencePanel extends Panel {
 	public EmbeddedReferencePanel(final String id, final IModel<RBField> model) {
 		super(id);
 
-        add(new Label("label", new FieldLabelModel(model)));
+		add(new Label("label", new FieldLabelModel(model)));
 
 		IModel<List<RBEntity>> entityListModel = new ReferencedEntitiesModel(model);
 		add(createEntityRefs(entityListModel));
@@ -90,11 +90,11 @@ public class EmbeddedReferencePanel extends Panel {
 				}
 			}
 			if (result.isEmpty()) {
-                // no values for this field yet - create and link a new one
+				// no values for this field yet - create and link a new one
 				final ResourceID type = field.getConstraint().getTypeConstraint();
-                RBEntity entity = entityManager.create(type);
-                field.addValue(entity);
-                result.add(entity);
+				RBEntity entity = entityManager.create(type);
+				field.addValue(entity);
+				result.add(entity);
 			}
 			return result;
 		}
