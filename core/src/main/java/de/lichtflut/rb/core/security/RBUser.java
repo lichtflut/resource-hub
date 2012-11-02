@@ -98,9 +98,6 @@ public class RBUser implements Serializable {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return getName();
