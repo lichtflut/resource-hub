@@ -21,10 +21,10 @@ public interface DomainManager {
 	
 	/**
 	 * Find a domain by it's unique name.
-	 * @param name The name. 
+	 * @param name The name.
 	 * @return The domain object or null.
 	 */
-	RBDomain findDomain(String domain);
+	RBDomain findDomain(String name);
 
 	/**
 	 * Register a new domain.
