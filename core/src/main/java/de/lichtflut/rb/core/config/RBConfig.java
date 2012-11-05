@@ -107,6 +107,7 @@ public class RBConfig {
 
     public void setEmailConfiguration(EmailConfiguration emailConfiguration) {
         this.emailConfiguration = emailConfiguration;
+        LOGGER.info("Initialized email-settings: {}", emailConfiguration);
     }
 
     public void setSecurityConfiguration(SecurityConfiguration securityConfiguration) {
@@ -126,6 +127,10 @@ public class RBConfig {
         sb.append(" using work dir '").append(workDir).append("'");
         sb.append("\n");
         sb.append(dataStoreConfig.toString());
+        if (emailConfiguration != null) {
+            sb.append("\n");
+            sb.append(emailConfiguration.toString());
+        }
 		return sb.toString();
 	}
 
