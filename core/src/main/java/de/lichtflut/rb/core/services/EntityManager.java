@@ -2,6 +2,7 @@ package de.lichtflut.rb.core.services;
 
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.eh.ValidationException;
 import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
@@ -30,8 +31,9 @@ public interface EntityManager {
 	/**
 	 * Store an Entity.
 	 * @param entity The entity.
+	 * @throws ValidationException
 	 */
-	void store(RBEntity entity);
+	void store(RBEntity entity) throws ValidationException;
 
 	/**
 	 * Delete an {@link RBEntity}.

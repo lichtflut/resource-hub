@@ -57,7 +57,7 @@ public class RequestAccountPage extends AbstractBasePage {
 						error(getString("global.message.duplicate.ID"));
 					} else if (e.getErrorCode() == ErrorCodes.SECURITY_EMAIL_ALREADY_IN_USE){
 						error(getString("global.message.duplicate.username"));
-					} else if (e.getErrorCode() == ErrorCodes.EMAIL_SERVICE_EXCEPTIO){
+					} else if (e.getErrorCode() == ErrorCodes.EMAIL_SERVICE_EXCEPTION){
 						error(getString("error.send.email"));
 					}
 				}

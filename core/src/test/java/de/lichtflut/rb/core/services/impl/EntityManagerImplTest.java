@@ -3,17 +3,15 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
@@ -22,18 +20,17 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.Query;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import de.lichtflut.rb.RBCoreTest;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.mock.RBMock;
 
 /**
  * <p>
@@ -47,80 +44,91 @@ import de.lichtflut.rb.core.services.TypeManager;
  * @author Ravi Knox
  */
 @RunWith(MockitoJUnitRunner.class)
-public class EntityManagerImplTest {
+public class EntityManagerImplTest extends RBCoreTest{
 
-	private EntityManager em;
-	private SchemaManager sm;
-	private TypeManager tm;
-	private ModelingConversation mc;
 	private Query query;
+	private EntityManager entityManager;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
+	// ------------- SetUp & tearDown -----------------------
+
 	@Before
-	public void setUp() throws Exception {
-		sm = mock(SchemaManager.class);
-		mc = mock(ModelingConversation.class);
+	@Override
+	public void setUp() {
 		query = mock(Query.class);
-		tm = mock(TypeManager.class);
+		when(conversation.createQuery()).thenReturn(query);
 
-		when(mc.createQuery()).thenReturn(query);
-
-		em = new EntityManagerImpl(tm, sm, mc);
-
+		entityManager = new EntityManagerImpl(typeManager, schemaManager, conversation);
 	}
+
+	// ------------------------------------------------------
 
 	/**
 	 * Test method for {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#find(org.arastreju.sge.model.ResourceID)}.
 	 */
 	@Test
 	public void testFind() {
-		ResourceNode user = getUser();
+
+		// null returns null
+		when(conversation.findResource(null)).thenReturn(null);
+
+		RBEntity nullEntity = entityManager.find(null);
+
+		verify(conversation, times(0)).findResource(null);
+		assertThat(nullEntity, equalTo(null));
+
+		// find non-existing Entity
+		ResourceID randomID = new SimpleResourceID();
+		when(conversation.findResource(randomID.getQualifiedName())).thenReturn(null);
+
+		RBEntity nonExistingEntity = entityManager.find(randomID);
+
+		verify(conversation, times(1)).findResource(randomID.getQualifiedName());
+		assertThat(nonExistingEntity, equalTo(null));
+
 
 		// find Entity without type, schema
 		ResourceID id = new SimpleResourceID("http://test.de/", "t1");
-		when(mc.findResource(id.getQualifiedName())).thenReturn(new SNResource(id.getQualifiedName()));
+		when(conversation.findResource(id.getQualifiedName())).thenReturn(new SNResource(id.getQualifiedName()));
 
-		RBEntity entity = em.find(id);
+		RBEntity entity = entityManager.find(id);
 
-		verify(mc, times(1)).findResource(id.getQualifiedName());
-		assertTrue(id.getQualifiedName() == entity.getID().getQualifiedName());
-		assertFalse(entity.hasSchema());
-		assertNotNull(entity);
-		assertNull(entity.getType());
+		verify(conversation, times(1)).findResource(id.getQualifiedName());
+		assertThat(id.getQualifiedName(), equalTo(entity.getID().getQualifiedName()));
+		assertThat(entity.hasSchema(), is(false));
+		assertThat(entity.getType(), equalTo(null));
 
 
-		// find entity with type
-		when(tm.getTypeOfResource(user)).thenReturn(RB.PERSON.asResource().asClass());
-		when(mc.findResource(user.getQualifiedName())).thenReturn(user);
-		when(sm.findSchemaForType(RB.PERSON)).thenReturn(null);
+		// find entity with type, no schema
+		ResourceNode user = getUser();
+		when(conversation.findResource(user.getQualifiedName())).thenReturn(user);
+		when(typeManager.getTypeOfResource(user)).thenReturn(RBMock.PERSON.asResource().asClass());
+		when(schemaManager.findSchemaForType(RBMock.PERSON)).thenReturn(null);
 
-		RBEntity e = em.find(new SimpleResourceID(user.getQualifiedName()));
+		RBEntity e = entityManager.find(new SimpleResourceID(user.getQualifiedName()));
 
-		assertNotNull(e.getType());
-		assertFalse(e.hasSchema());
+		verify(conversation, times(1)).findResource(user.getQualifiedName());
+		verify(typeManager, times(1)).getTypeOfResource(user);
+		verify(schemaManager, times(1)).findSchemaForType(RBMock.PERSON);
+		assertThat(e.getType(), equalTo(RBMock.PERSON));
+		assertThat(e.hasSchema(), is(false));
 
+		reset(conversation);
+		reset(typeManager);
+		reset(schemaManager);
 
 		// find entity with type, schema
-		when(mc.findResource(user.getQualifiedName())).thenReturn(user);
-		when(sm.findSchemaForType(RB.PERSON)).thenReturn(new ResourceSchemaImpl(RB.PERSON));
+		when(conversation.findResource(user.getQualifiedName())).thenReturn(user);
+		when(typeManager.getTypeOfResource(user)).thenReturn(RBMock.PERSON.asResource().asClass());
+		when(schemaManager.findSchemaForType(RBMock.PERSON)).thenReturn(new ResourceSchemaImpl(RBMock.PERSON));
 
-		RBEntity e1 = em.find(new SimpleResourceID(user.getQualifiedName()));
+		RBEntity e1 = entityManager.find(new SimpleResourceID(user.getQualifiedName()));
 
-		assertNotNull(e1.getType());
-		assertTrue(e1.hasSchema());
-
-
-		// find non-existing Entity
-		ResourceID nullID = new SimpleResourceID();
-		when(mc.findResource(nullID.getQualifiedName())).thenReturn(null);
-
-		RBEntity nullEntity = em.find(nullID);
-
-		verify(mc, times(1)).findResource(nullID.getQualifiedName());
-		assertNull(nullEntity);
-
+		verify(conversation, times(1)).findResource(user.getQualifiedName());
+		verify(typeManager, times(1)).getTypeOfResource(user);
+		verify(schemaManager, times(1)).findSchemaForType(RBMock.PERSON);
+		assertThat(e.getType(), equalTo(RBMock.PERSON));
+		assertThat(e1.getType(), equalTo(RBMock.PERSON));
+		assertThat(e1.hasSchema(), is(true));
 	}
 
 	/**
@@ -128,22 +136,27 @@ public class EntityManagerImplTest {
 	 */
 	@Test
 	public void testCreate() {
-		ResourceID type = RB.PERSON;
+		ResourceID personType = RB.PERSON;
+
 		// with schema
-		when(sm.findSchemaForType(type)).thenReturn(new ResourceSchemaImpl(type));
+		when(schemaManager.findSchemaForType(personType)).thenReturn(new ResourceSchemaImpl(personType));
 
-		RBEntity e = em.create(type);
+		RBEntity entity = entityManager.create(personType);
 
-		assertTrue(e.hasSchema());
-		assertEquals(type, e.getType());
+		verify(schemaManager, times(1)).findSchemaForType(personType);
+		assertThat(entity.hasSchema(), is(true));
+		assertThat(entity.getType(), equalTo(personType));
+
+		reset(schemaManager);
 
 		// without schema
-		when(sm.findSchemaForType(type)).thenReturn(null);
+		when(schemaManager.findSchemaForType(personType)).thenReturn(null);
 
-		RBEntity e1 = em.create(type);
+		RBEntity entity1 = entityManager.create(personType);
 
-		assertFalse(e1.hasSchema());
-		assertEquals(type, e1.getType());
+		verify(schemaManager, times(1)).findSchemaForType(personType);
+		assertThat(entity1.hasSchema(), is(false));
+		assertThat(entity1.getType(), equalTo(personType));
 	}
 
 	/**
@@ -151,20 +164,20 @@ public class EntityManagerImplTest {
 	 * {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#changeType(de.lichtflut.rb.core.entity.RBEntity, org.arastreju.sge.model.ResourceID)}.
 	 */
 	@Test
-	@Ignore
 	public void testChangeType() {
-		RBEntity entity = new RBEntityImpl(getUser(), RB.PERSON);
-		when(mc.resolve(entity.getID())).thenReturn(entity.getNode());
+		RBEntity entity = new RBEntityImpl(getUser(), RBMock.PERSON);
 
-		em.changeType(entity, RB.ADDRESS);
+		when(conversation.resolve(entity.getID())).thenReturn(entity.getNode());
 
-		verify(mc, times(1)).resolve(entity.getID());
-		assertEquals(RB.ADDRESS, entity.getType());
+		entityManager.changeType(entity, RBMock.ADDRESS);
+
+		verify(conversation, times(1)).resolve(entity.getID());
+		assertThat(entity.getType(), equalTo(RBMock.ADDRESS));
 	}
 
 	private ResourceNode getUser() {
 		ResourceNode node = new SNResource(new QualifiedName("http://test/user"));
-		node.addAssociation(RDF.TYPE, RB.PERSON);
+		node.addAssociation(RDF.TYPE, RBMock.PERSON);
 		return node;
 	}
 

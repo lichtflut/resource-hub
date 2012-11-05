@@ -9,7 +9,6 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
@@ -18,13 +17,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
-import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.entity.BrowsingButtonBar;
 import de.lichtflut.rb.webck.components.entity.ClassifyEntityPanel;
 import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
@@ -71,7 +68,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		form.setOutputMarkupId(true);
 		form.setMultiPart(true);
 
-        form.add(new EntityInfoPanel("resourceInfo", model));
+		form.add(new EntityInfoPanel("resourceInfo", model));
 
 		form.add(new EntityPanel("entity", model));
 		form.add(new ClassifyEntityPanel("classifier", model));
@@ -97,11 +94,14 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	public void createReferencedEntity(final EntityHandle handle, final ResourceID predicate) {
 		// store current entity
 		// TODO: this should be stored transient in session / browsing history.
-		entityManager.store(model.getObject());
+
+		throw new NotYetImplementedException("Handle ValidationException first");
+		// TODO IMPLEMENT VALIDATION EXCEPTION
+		//		entityManager.store(model.getObject());
 
 		// navigate to sub entity
-		final ReferenceReceiveAction action = new EntityAttributeApplyAction(model.getObject(), predicate);
-		RBWebSession.get().getHistory().createReference(handle, action);
+		//		final ReferenceReceiveAction action = new EntityAttributeApplyAction(model.getObject(), predicate);
+		//		RBWebSession.get().getHistory().createReference(handle, action);
 	}
 
 	// ----------------------------------------------------
@@ -144,9 +144,11 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				final RBStandardButton save = new RBStandardButton("save") {
 					@Override
 					protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-						entityManager.store(model.getObject());
-						RBWebSession.get().getHistory().finishEditing();
-						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
+						throw new NotYetImplementedException("Handle ValidationException first");
+						// TODO IMPLEMENT VALIDATION EXCEPTION
+						//						entityManager.store(model.getObject());
+						//						RBWebSession.get().getHistory().finishEditing();
+						//						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 					}
 				};
 				save.add(visibleIf(not(viewMode)));

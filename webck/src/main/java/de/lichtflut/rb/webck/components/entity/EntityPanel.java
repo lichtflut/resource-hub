@@ -76,6 +76,8 @@ public class EntityPanel extends Panel {
 			}
 		}));
 		add(visibleIf((hasSchema(model))));
+
+		setOutputMarkupId(true);
 	}
 
 	// ----------------------------------------------------

@@ -17,6 +17,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
@@ -70,9 +71,11 @@ public class LocalButtonBar extends Panel {
 		final RBStandardButton save = new RBStandardButton("save") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				entityManager.store(model.getObject());
-				RBWebSession.get().getHistory().finishEditing();
-				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
+				throw new NotYetImplementedException("Handle ValidationException first");
+				// TODO IMPLEMENT VALIDATION EXCEPTION
+				//				entityManager.store(model.getObject());
+				//				RBWebSession.get().getHistory().finishEditing();
+				//				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 			}
 		};
 		save.add(visibleIf(not(viewMode)));

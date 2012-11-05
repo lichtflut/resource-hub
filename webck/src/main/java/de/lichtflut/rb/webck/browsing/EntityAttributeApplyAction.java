@@ -3,13 +3,15 @@
  */
 package de.lichtflut.rb.webck.browsing;
 
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.services.EntityManager;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
+
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.services.EntityManager;
 
 /**
  * <p>
@@ -23,16 +25,16 @@ import org.arastreju.sge.model.ResourceID;
  * @author Oliver Tigges
  */
 public class EntityAttributeApplyAction implements ReferenceReceiveAction<Object> {
-	
+
 	private final ResourceID predicate;
-	
+
 	private final RBEntity subject;
-	
+
 	@SpringBean
 	private EntityManager entityManager;
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * @param predicate
 	 */
@@ -44,9 +46,9 @@ public class EntityAttributeApplyAction implements ReferenceReceiveAction<Object
 
 	// ----------------------------------------------------
 
-	/** 
-	* {@inheritDoc}
-	*/
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void execute(final ModelingConversation sp, final RBEntity createdEntity) {
 		final RBField field = subject.getField(predicate);
@@ -55,12 +57,14 @@ public class EntityAttributeApplyAction implements ReferenceReceiveAction<Object
 		} else {
 			field.addValue(createdEntity.getID());
 		}
-		entityManager.store(subject);
+		throw new NotYetImplementedException("Handle ValidationException first");
+		// TODO IMPLEMENT VALIDATION EXCEPTION
+		//		entityManager.store(subject);
 	}
-	
-	/** 
-	* {@inheritDoc}
-	*/
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return "Action(" + subject + " --> " + predicate + ")";

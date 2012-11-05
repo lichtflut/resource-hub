@@ -118,10 +118,10 @@ public class EmailServiceImpl implements EmailService {
 			Transport.send(mail);
 		} catch (UnsupportedEncodingException e) {
 			logger.error("UnsupportedEncodingException");
-			throw new RBException(ErrorCodes.EMAIL_SERVICE_EXCEPTIO, "UnsupportedEncodingException", e);
+			throw new RBException(ErrorCodes.EMAIL_SERVICE_EXCEPTION, "UnsupportedEncodingException", e);
 		} catch (MessagingException e) {
 			logger.error("MessagingException");
-			throw new RBException(ErrorCodes.EMAIL_SERVICE_EXCEPTIO, "MessagingException", e);
+			throw new RBException(ErrorCodes.EMAIL_SERVICE_EXCEPTION, "MessagingException", e);
 		}
 		logger.info("Send email '" + desc.getSubject() + "' from " + desc.getSender() + " to " + desc.getRecipient());
 	}

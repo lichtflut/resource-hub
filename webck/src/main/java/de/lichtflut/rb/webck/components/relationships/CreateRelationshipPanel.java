@@ -12,7 +12,6 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -25,13 +24,13 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
@@ -137,8 +136,10 @@ public class CreateRelationshipPanel extends Panel {
 	protected void createRelationshipTo(final ResourceID object, final ResourceID predicate) {
 		final ResourceNode subject = subjectModel.getObject().getNode();
 		SNOPS.associate(subject, predicate, object);
-		entityManager.store(subjectModel.getObject());
-		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
+		throw new NotYetImplementedException("Handle ValidationException first");
+		// TODO IMPLEMENT VALIDATION EXCEPTION
+		//		entityManager.store(subjectModel.getObject());
+		//		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
 	}
 
 	// ----------------------------------------------------

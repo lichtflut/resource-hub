@@ -22,9 +22,12 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.common.DomainNamespacesHandler;
+import de.lichtflut.rb.core.eh.ErrorCodes;
+import de.lichtflut.rb.core.eh.ValidationException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
+import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.EntityManager;
@@ -33,13 +36,13 @@ import de.lichtflut.rb.core.services.TypeManager;
 
 /**
  * <p>
- *  Implementation of {@link EntityManager}.
+ * Implementation of {@link EntityManager}.
  * </p>
- *
+ * 
  * <p>
- * 	Created Oct 28, 2011
+ * Created Oct 28, 2011
  * </p>
- *
+ * 
  * @author Oliver Tigges
  */
 public class EntityManagerImpl implements EntityManager {
@@ -54,13 +57,21 @@ public class EntityManagerImpl implements EntityManager {
 
 	private DomainNamespacesHandler dnsHandler;
 
-	// -----------------------------------------------------
+	// ---------------- Constructor -------------------------
 
 	/**
 	 * Default constructor.
 	 */
-	public EntityManagerImpl() { }
+	@Deprecated
+	public EntityManagerImpl() {
+	}
 
+	/**
+	 * Constructor.
+.	 * @param typeManager
+	 * @param schemaManager
+	 * @param conversation
+	 */
 	public EntityManagerImpl(final TypeManager typeManager, final SchemaManager schemaManager, final ModelingConversation conversation) {
 		this.typeManager = typeManager;
 		this.schemaManager = schemaManager;
@@ -74,8 +85,6 @@ public class EntityManagerImpl implements EntityManager {
 		return find(resourceID, true);
 	}
 
-	// -----------------------------------------------------
-
 	@Override
 	public RBEntity create(final ResourceID type) {
 		final ResourceSchema schema = schemaManager.findSchemaForType(type);
@@ -87,11 +96,12 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	@Override
-	public void store(final RBEntity entity) {
+	public void store(final RBEntity entity) throws ValidationException {
+		validate(entity);
 		final ResourceNode node = entity.getNode();
 		SNOPS.associate(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
-		for (RBField field :entity.getAllFields()) {
+		for (RBField field : entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.assure(node, field.getPredicate(), nodes);
 			if (field.getVisualizationInfo().isEmbedded()) {
@@ -141,6 +151,9 @@ public class EntityManagerImpl implements EntityManager {
 	// ----------------------------------------------------
 
 	private RBEntityImpl find(final ResourceID resourceID, final boolean resolveEmbeddeds) {
+		if(null == resourceID){
+			return null;
+		}
 		final ResourceNode node = conversation.findResource(resourceID.getQualifiedName());
 		if (node == null) {
 			return null;
@@ -199,7 +212,7 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	private void resolveEntityReferences(final RBField field) {
-		for (int i=0; i < field.getSlots(); i++) {
+		for (int i = 0; i < field.getSlots(); i++) {
 			ResourceID id = (ResourceID) field.getValue(i);
 			if (id != null) {
 				field.setValue(i, conversation.resolve(id));
@@ -208,7 +221,7 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	private void resolveEmbeddedEntityReferences(final RBField field) {
-		for (int i=0; i < field.getSlots(); i++) {
+		for (int i = 0; i < field.getSlots(); i++) {
 			final Object value = field.getValue(i);
 			if (value instanceof RBEntity) {
 				// everything O.K.
@@ -219,8 +232,7 @@ public class EntityManagerImpl implements EntityManager {
 		}
 	}
 
-
-	private void storeEmbeddeds(final RBField field) {
+	private void storeEmbeddeds(final RBField field) throws ValidationException {
 		for (Object value : field.getValues()) {
 			if (value instanceof RBEntity) {
 				RBEntity entity = (RBEntity) value;
@@ -236,7 +248,33 @@ public class EntityManagerImpl implements EntityManager {
 		} else {
 			return new SNResource();
 		}
+	}
 
+	/**
+	 * Validates a {@link RBEntity} against {@link ResourceSchema} rules.
+	 * 
+	 * @param entity Entity to be validated
+	 */
+	private void validate(final RBEntity entity) throws ValidationException {
+		if (!entity.hasSchema()) {
+			return;
+		}
+		for (RBField field : entity.getAllFields()) {
+			validateRBField(field);
+		}
+	}
+
+	/**
+	 * Validates a single {@link RBField} for consistency.
+	 * @param field Field to be validated
+	 * @throws ValidationException
+	 */
+	private void validateRBField(final RBField field) throws ValidationException {
+		Cardinality cardinality = field.getCardinality();
+		if(cardinality.getMinOccurs() > field.getSlots() ||
+				cardinality.getMaxOccurs() < field.getSlots()){
+			throw new ValidationException(ErrorCodes.CARDINALITY_EXCEPTION, "Cardinality does not match given values");
+		}
 	}
 
 }
