@@ -99,7 +99,6 @@ public class EntityManagerImpl implements EntityManager {
 	public void store(final RBEntity entity) throws ValidationException {
 		validate(entity);
 		final ResourceNode node = entity.getNode();
-		SNOPS.associate(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
 		for (RBField field : entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);

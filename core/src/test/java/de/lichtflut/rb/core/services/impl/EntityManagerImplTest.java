@@ -6,19 +6,26 @@ package de.lichtflut.rb.core.services.impl;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
+import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.SNValue;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.query.Query;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,10 +33,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import de.lichtflut.rb.RBCoreTest;
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.eh.ValidationException;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
+import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.mock.RBEntityFactory;
 import de.lichtflut.rb.mock.RBMock;
 
 /**
@@ -46,7 +58,6 @@ import de.lichtflut.rb.mock.RBMock;
 @RunWith(MockitoJUnitRunner.class)
 public class EntityManagerImplTest extends RBCoreTest{
 
-	private Query query;
 	private EntityManager entityManager;
 
 	// ------------- SetUp & tearDown -----------------------
@@ -54,9 +65,6 @@ public class EntityManagerImplTest extends RBCoreTest{
 	@Before
 	@Override
 	public void setUp() {
-		query = mock(Query.class);
-		when(conversation.createQuery()).thenReturn(query);
-
 		entityManager = new EntityManagerImpl(typeManager, schemaManager, conversation);
 	}
 
@@ -67,6 +75,7 @@ public class EntityManagerImplTest extends RBCoreTest{
 	 */
 	@Test
 	public void testFind() {
+		ResourceNode user = getUser();
 
 		// null returns null
 		when(conversation.findResource(null)).thenReturn(null);
@@ -99,7 +108,6 @@ public class EntityManagerImplTest extends RBCoreTest{
 
 
 		// find entity with type, no schema
-		ResourceNode user = getUser();
 		when(conversation.findResource(user.getQualifiedName())).thenReturn(user);
 		when(typeManager.getTypeOfResource(user)).thenReturn(RBMock.PERSON.asResource().asClass());
 		when(schemaManager.findSchemaForType(RBMock.PERSON)).thenReturn(null);
@@ -161,6 +169,50 @@ public class EntityManagerImplTest extends RBCoreTest{
 
 	/**
 	 * Test method for
+	 * {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#store(de.lichtflut.rb.core.entity.RBEntity)}.
+	 * @throws ValidationException
+	 */
+	@Test
+	public void testStore() throws ValidationException {
+		RBEntity person = RBEntityFactory.createPersonEntity();
+
+		entityManager.store(person);
+
+		ResourceNode node = nodeRepresentationOf(person);
+		verify(conversation, times(1)).attach(node);
+	}
+
+	/**
+	 * Test method for
+	 * {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#store(de.lichtflut.rb.core.entity.RBEntity)}.
+	 * @throws ValidationException
+	 */
+	@Test (expected=ValidationException.class)
+	public void testStoreInvalidEntity() throws ValidationException {
+		RBEntity person = RBEntityFactory.createPersonEntity();
+		// Add a second field to 1..1 cardinality
+		person.getField(RBMock.HAS_FIRST_NAME).addValue("Peter");
+		entityManager.store(person);
+	}
+
+	/**
+	 * Test method for
+	 * {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#delete(org.arastreju.sge.model.ResourceID)}.
+	 */
+	@Test
+	public void testDelete() {
+		ResourceNode user = getUser();
+
+		when(conversation.resolve(user)).thenReturn(user);
+
+		entityManager.delete(user);
+
+		verify(conversation, times(1)).resolve(user);
+		verify(conversation, times(1)).remove(user);
+	}
+
+	/**
+	 * Test method for
 	 * {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#changeType(de.lichtflut.rb.core.entity.RBEntity, org.arastreju.sge.model.ResourceID)}.
 	 */
 	@Test
@@ -175,10 +227,47 @@ public class EntityManagerImplTest extends RBCoreTest{
 		assertThat(entity.getType(), equalTo(RBMock.ADDRESS));
 	}
 
+	// ------------------------------------------------------
+
 	private ResourceNode getUser() {
 		ResourceNode node = new SNResource(new QualifiedName("http://test/user"));
 		node.addAssociation(RDF.TYPE, RBMock.PERSON);
 		return node;
 	}
 
+	/**
+	 * Convert {@link RBEntity} to node as seen in implementation.
+	 * @param person
+	 * @return
+	 */
+	private ResourceNode nodeRepresentationOf(final RBEntity entity) {
+		final ResourceNode node = entity.getNode();
+		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
+		for (RBField field : entity.getAllFields()) {
+			final Collection<SemanticNode> nodes = toSemanticNodes(field);
+			SNOPS.assure(node, field.getPredicate(), nodes);
+		}
+		// Set label after all entity references have been resolved
+		SNOPS.assure(node, RDFS.LABEL, new SNText(entity.getLabel()));
+		return node;
+	}
+
+	private Collection<SemanticNode> toSemanticNodes(final RBField field) {
+		final Collection<SemanticNode> result = new ArrayList<SemanticNode>();
+		for (Object value : field.getValues()) {
+			if (value == null) {
+				// ignore
+			} else if (field.getVisualizationInfo().isEmbedded() && value instanceof RBEntity) {
+				final RBEntity ref = (RBEntity) value;
+				result.add(ref.getID());
+			} else if (field.isResourceReference()) {
+				final ResourceID ref = (ResourceID) value;
+				result.add(new SimpleResourceID(ref.getQualifiedName()));
+			} else {
+				final ElementaryDataType datatype = Datatype.getCorrespondingArastrejuType(field.getDataType());
+				result.add(new SNValue(datatype, value));
+			}
+		}
+		return result;
+	}
 }
