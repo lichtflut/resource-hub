@@ -13,6 +13,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -34,6 +36,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import de.lichtflut.rb.RBCoreTest;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.ValidationException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
@@ -184,15 +187,16 @@ public class EntityManagerImplTest extends RBCoreTest{
 
 	/**
 	 * Test method for
-	 * {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#store(de.lichtflut.rb.core.entity.RBEntity)}.
+	 * {@link de.lichtflut.rb.core.services.impl.EntityManagerImpl#validate(de.lichtflut.rb.core.entity.RBEntity)}.
 	 * @throws ValidationException
 	 */
-	@Test (expected=ValidationException.class)
-	public void testStoreInvalidEntity() throws ValidationException {
+	@Test
+	public void testValidate() throws ValidationException {
 		RBEntity person = RBEntityFactory.createPersonEntity();
 		// Add a second field to 1..1 cardinality
 		person.getField(RBMock.HAS_FIRST_NAME).addValue("Peter");
-		entityManager.store(person);
+		Map<Integer, List<RBField>> errors = entityManager.validate(person);
+		assertThat(errors.get(ErrorCodes.CARDINALITY_EXCEPTION).size(), is(1));
 	}
 
 	/**

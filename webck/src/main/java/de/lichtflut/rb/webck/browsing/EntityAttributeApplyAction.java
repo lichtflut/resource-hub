@@ -8,7 +8,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.services.EntityManager;
@@ -57,9 +56,7 @@ public class EntityAttributeApplyAction implements ReferenceReceiveAction<Object
 		} else {
 			field.addValue(createdEntity.getID());
 		}
-		throw new NotYetImplementedException("Handle ValidationException first");
-		// TODO IMPLEMENT VALIDATION EXCEPTION
-		//		entityManager.store(subject);
+		entityManager.store(subject);
 	}
 
 	/**

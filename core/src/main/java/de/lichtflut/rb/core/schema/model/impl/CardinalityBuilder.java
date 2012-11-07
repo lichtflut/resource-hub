@@ -47,7 +47,7 @@ public final class CardinalityBuilder implements Serializable {
 	 */
 	public static Cardinality hasAtLeastOneToMany(){
 		return between(1,-1);
-   }
+	}
 
 	// -----------------------------------------------------
 
@@ -57,7 +57,7 @@ public final class CardinalityBuilder implements Serializable {
 	 */
 	public static Cardinality hasAtLeast(final int least){
 		return between(Math.abs(least), -1);
-   }
+	}
 
 	// -----------------------------------------------------
 
@@ -65,7 +65,7 @@ public final class CardinalityBuilder implements Serializable {
 	 * @return a 0:N-Cardinality
 	 */
 	public static Cardinality hasOptionalOneToMany(){
-       return new SimpleCardinalityImpl();
+		return new SimpleCardinalityImpl();
 	}
 
 	// -----------------------------------------------------
@@ -75,8 +75,8 @@ public final class CardinalityBuilder implements Serializable {
 	 * @return a 1:max-Cardinality
 	 */
 	public static Cardinality hasAtLeastOneUpTo(final int max){
-	  return between(1,Math.abs(max));
-   }
+		return between(1,Math.abs(max));
+	}
 
 	// -----------------------------------------------------
 
@@ -85,7 +85,7 @@ public final class CardinalityBuilder implements Serializable {
 	 * @return a 0:max-Cardinality
 	 */
 	public static Cardinality hasOptionalOneUpTo(final int max){
-	  return between(0,Math.abs(max));
+		return between(0,Math.abs(max));
 	}
 
 	// -----------------------------------------------------
@@ -95,7 +95,7 @@ public final class CardinalityBuilder implements Serializable {
 	 * @return a value:value-Cardinality
 	 */
 	public static Cardinality hasExactly(final int value){
-	     return between(Math.abs(value),Math.abs(value));
+		return between(Math.abs(value),Math.abs(value));
 	}
 
 	// -----------------------------------------------------
@@ -106,12 +106,37 @@ public final class CardinalityBuilder implements Serializable {
 	 * @param max -
 	 * @return a min:max-Cardinality
 	 */
-    public static Cardinality between(final int min, final int max){
-    	return new SimpleCardinalityImpl(min, max);
-    }
+	public static Cardinality between(final int min, final int max){
+		return new SimpleCardinalityImpl(min, max);
+	}
 
-    // ------------------------------------------------------
-    
+	// ------------------------------------------------------
+
+	/**
+	 * Get the cardinality as a String like <code>[1..n]</code>
+	 */
+	public static String getCardinalityAsString(final Cardinality cardinality) {
+		int min = cardinality.getMinOccurs();
+		int max = cardinality.getMaxOccurs();
+		String s = "[";
+		if (min == 0) {
+			if(max == 1){
+				s+= "0..";
+			}else{
+				s += "n..";
+			}
+		} else {
+			s += String.valueOf(min) + "..";
+		}
+		if (max == Integer.MAX_VALUE) {
+			s += "n";
+		} else {
+			s += String.valueOf(max);
+		}
+		s += "]";
+		return s;
+	}
+
 	/**
 	 * Extracts the cardinality from a String like:
 	 * <code>
@@ -120,7 +145,7 @@ public final class CardinalityBuilder implements Serializable {
 	 * <br>As a fallback <code>hasOptionalOneToMany()</code> will be used.
 	 * @param string
 	 */
-	public static Cardinality extractFromString(String string){
+	public static Cardinality extractFromString(final String string){
 		// Check RegEx and null String
 		if(((string == null) || (!string.matches("\\[.*\\.\\..*\\]")))){
 			return hasOptionalOneToMany();
@@ -134,11 +159,11 @@ public final class CardinalityBuilder implements Serializable {
 	}
 
 	/**
-	 * Converts a String into int. 
+	 * Converts a String into int.
 	 * @param s - string
-	 * @param flag - if true and s is not an integer, the maximum value will be assigned, minimum if false. 
+	 * @param flag - if true and s is not an integer, the maximum value will be assigned, minimum if false.
 	 */
-	private static int convertToInt(String s, boolean flag) {
+	private static int convertToInt(final String s, final boolean flag) {
 		int num;
 		if(Character.isDigit(s.charAt(0))){
 			num = Integer.parseInt(s);
@@ -152,20 +177,20 @@ public final class CardinalityBuilder implements Serializable {
 		return num;
 	}
 
-    // -----------CONSTRUCTOR--------------------------------------
+	// -----------CONSTRUCTOR--------------------------------------
 
-    /**
-     * Try to hide the constructor, to make this instance not directly accessible.
-     */
-    private CardinalityBuilder(){}
+	/**
+	 * Try to hide the constructor, to make this instance not directly accessible.
+	 */
+	private CardinalityBuilder(){}
 
-    // ------------------------------------------------------
-    
-    /**
-     * Default implementation of Cardinality.
-     * if max == -1 it will be handled as unbounded.
-     */
-    private static final class SimpleCardinalityImpl implements Cardinality{
+	// ------------------------------------------------------
+
+	/**
+	 * Default implementation of Cardinality.
+	 * if max == -1 it will be handled as unbounded.
+	 */
+	private static final class SimpleCardinalityImpl implements Cardinality{
 
 		/**
 		 * Default Constructor.
@@ -262,7 +287,7 @@ public final class CardinalityBuilder implements Serializable {
 		// -----------------------------------------------------
 		@Override
 		public String toString(){
-			return "[" + getMinOccurs() 
+			return "[" + getMinOccurs()
 					+  " .. "
 					+ (isUnbound() ? "unbound" : getMaxOccurs())
 					+ "]";

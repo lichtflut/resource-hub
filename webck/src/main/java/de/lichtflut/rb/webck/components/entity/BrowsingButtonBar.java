@@ -16,11 +16,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.ModelingConversation;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.eh.ValidationException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
@@ -63,14 +63,9 @@ public class BrowsingButtonBar extends TypedPanel<RBEntity> {
 
 	// ----------------------------------------------------
 
-	public void onSaveAndBack() {
+	public void onSaveAndBack() throws ValidationException {
 		final RBEntity createdEntity = getModelObject();
-		try {
-			entityManager.store(createdEntity);
-		} catch (ValidationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		entityManager.store(createdEntity);
 		for(ReferenceReceiveAction action : RBWebSession.get().getHistory().getCurrentStep().getActions()) {
 			action.execute(conversation, createdEntity);
 		}
@@ -88,10 +83,15 @@ public class BrowsingButtonBar extends TypedPanel<RBEntity> {
 	protected AjaxButton createSaveButton(final IModel<RBEntity> model) {
 		final AjaxButton save = new RBDefaultButton("save") {
 			@Override
-			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				// TODO IMPLEMENT VALIDATION EXCEPTION
-				throw new NotYetImplementedException("Handle ValidationException first");
-				//				onSaveAndBack();
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form)  {
+				try {
+					onSaveAndBack();
+				} catch (ValidationException e) {
+					setDefaultFormProcessing(false);
+					error(getString("error.validation"));
+					RBAjaxTarget.add(getPage());
+				}
+
 			}
 		};
 		return save;

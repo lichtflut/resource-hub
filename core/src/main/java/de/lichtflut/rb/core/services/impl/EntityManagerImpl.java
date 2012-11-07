@@ -2,6 +2,9 @@ package de.lichtflut.rb.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.arastreju.sge.ModelingConversation;
@@ -62,7 +65,6 @@ public class EntityManagerImpl implements EntityManager {
 	/**
 	 * Default constructor.
 	 */
-	@Deprecated
 	public EntityManagerImpl() {
 	}
 
@@ -96,8 +98,7 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	@Override
-	public void store(final RBEntity entity) throws ValidationException {
-		validate(entity);
+	public void store(final RBEntity entity) {
 		final ResourceNode node = entity.getNode();
 		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
 		for (RBField field : entity.getAllFields()) {
@@ -112,6 +113,26 @@ public class EntityManagerImpl implements EntityManager {
 		// Set label after all entity references have been resolved
 		SNOPS.assure(node, RDFS.LABEL, new SNText(entity.getLabel()));
 		conversation.attach(node);
+	}
+
+	/**
+	 * Validates a {@link RBEntity} against {@link ResourceSchema} rules.
+	 * 
+	 * @param entity Entity to be validated
+	 */
+	public Map<Integer, List<RBField>> validate(final RBEntity entity) {
+		Map<Integer, List<RBField>> errors = new HashMap<Integer, List<RBField>>();
+		if (!entity.hasSchema()) {
+
+		}
+		for (RBField field : entity.getAllFields()) {
+			try {
+				validateRBField(field);
+			} catch (ValidationException e) {
+				append(errors, e, field);
+			}
+		}
+		return errors;
 	}
 
 	@Override
@@ -231,7 +252,7 @@ public class EntityManagerImpl implements EntityManager {
 		}
 	}
 
-	private void storeEmbeddeds(final RBField field) throws ValidationException {
+	private void storeEmbeddeds(final RBField field) {
 		for (Object value : field.getValues()) {
 			if (value instanceof RBEntity) {
 				RBEntity entity = (RBEntity) value;
@@ -250,29 +271,32 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	/**
-	 * Validates a {@link RBEntity} against {@link ResourceSchema} rules.
-	 * 
-	 * @param entity Entity to be validated
-	 */
-	private void validate(final RBEntity entity) throws ValidationException {
-		if (!entity.hasSchema()) {
-			return;
-		}
-		for (RBField field : entity.getAllFields()) {
-			validateRBField(field);
-		}
-	}
-
-	/**
 	 * Validates a single {@link RBField} for consistency.
 	 * @param field Field to be validated
 	 * @throws ValidationException
 	 */
 	private void validateRBField(final RBField field) throws ValidationException {
 		Cardinality cardinality = field.getCardinality();
-		if(cardinality.getMinOccurs() > field.getSlots() ||
-				cardinality.getMaxOccurs() < field.getSlots()){
+		if(cardinality.getMinOccurs() > field.getValues().size() ||
+				cardinality.getMaxOccurs() < field.getValues().size()){
 			throw new ValidationException(ErrorCodes.CARDINALITY_EXCEPTION, "Cardinality does not match given values");
+		}
+	}
+
+	/**
+	 * Appends a given Map by a given ValidationException and a given RBField.
+	 * @param errors Map
+	 * @param exception Exception to be added
+	 * @param field RBfield to be addd
+	 */
+	private void append(final Map<Integer, List<RBField>> errors, final ValidationException exception, final RBField field) {
+		int errorCode = exception.getErrorCode();
+		if(errors.containsKey(errorCode)){
+			errors.get(errorCode).add(field);
+		}else{
+			List<RBField> fields = new ArrayList<RBField>();
+			fields.add(field);
+			errors.put(exception.getErrorCode(), fields);
 		}
 	}
 

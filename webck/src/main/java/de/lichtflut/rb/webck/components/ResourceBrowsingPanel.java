@@ -7,21 +7,31 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonI
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
+import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.entity.BrowsingButtonBar;
 import de.lichtflut.rb.webck.components.entity.ClassifyEntityPanel;
 import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
@@ -64,6 +74,8 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	public ResourceBrowsingPanel(final String id) {
 		super(id);
 
+		add(new FeedbackPanel("feedback").setOutputMarkupId(true).setEscapeModelStrings(false));
+
 		final Form form = new Form("form");
 		form.setOutputMarkupId(true);
 		form.setMultiPart(true);
@@ -95,13 +107,11 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		// store current entity
 		// TODO: this should be stored transient in session / browsing history.
 
-		throw new NotYetImplementedException("Handle ValidationException first");
-		// TODO IMPLEMENT VALIDATION EXCEPTION
-		//		entityManager.store(model.getObject());
+		entityManager.store(model.getObject());
 
 		// navigate to sub entity
-		//		final ReferenceReceiveAction action = new EntityAttributeApplyAction(model.getObject(), predicate);
-		//		RBWebSession.get().getHistory().createReference(handle, action);
+		final ReferenceReceiveAction action = new EntityAttributeApplyAction(model.getObject(), predicate);
+		RBWebSession.get().getHistory().createReference(handle, action);
 	}
 
 	// ----------------------------------------------------
@@ -144,18 +154,48 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				final RBStandardButton save = new RBStandardButton("save") {
 					@Override
 					protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-						throw new NotYetImplementedException("Handle ValidationException first");
-						// TODO IMPLEMENT VALIDATION EXCEPTION
-						//						entityManager.store(model.getObject());
-						//						RBWebSession.get().getHistory().finishEditing();
-						//						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
+						Map<Integer, List<RBField>> errors = entityManager.validate(model.getObject());
+						if(errors.isEmpty()){
+							entityManager.store(model.getObject());
+							RBWebSession.get().getHistory().finishEditing();
+							send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
+						} else{
+							String errorMessage = buildFeedbackMessage(errors);
+							setDefaultFormProcessing(false);
+							error(errorMessage);
+							RBAjaxTarget.add(getFeedbackPanel());
+						}
 					}
+
 				};
 				save.add(visibleIf(not(viewMode)));
 				save.add(defaultButtonIf(not(viewMode)));
 				return save;
 			}
 		};
+	}
+
+	private Component getFeedbackPanel() {
+		return get("feedback");
+	}
+
+	private String buildFeedbackMessage(final Map<Integer, List<RBField>> errors) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getString("error.validation"));
+		sb.append("<ul>");
+		for (Integer errorCode : errors.keySet()) {
+			if(ErrorCodes.CARDINALITY_EXCEPTION == errorCode){
+				sb.append("Cardinality is not as defined: ");
+				List<RBField> fields = errors.get(ErrorCodes.CARDINALITY_EXCEPTION);
+				for (RBField field : fields) {
+					sb.append("<li>");
+					sb.append(field.getLabel(getLocale()) + " cardinality is definened as: " + CardinalityBuilder.getCardinalityAsString(field.getCardinality()));
+					sb.append("</li>");
+				}
+			}
+		}
+		sb.append("</ul>");
+		return sb.toString();
 	}
 
 }

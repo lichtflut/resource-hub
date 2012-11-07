@@ -47,7 +47,7 @@ public class ResourceSchemaFactory {
 
 		firstname.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		lastname.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		address.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
+		address.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 		dateOfBirth.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		email.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 

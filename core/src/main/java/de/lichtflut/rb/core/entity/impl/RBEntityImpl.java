@@ -258,6 +258,6 @@ public class RBEntityImpl implements RBEntity {
 	 * @param type
 	 */
 	private void setType(final ResourceID type) {
-		SNOPS.associate(node, RDF.TYPE, type);
+		SNOPS.assure(node, RDF.TYPE, type);
 	}
 }
