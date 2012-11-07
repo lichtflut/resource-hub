@@ -23,6 +23,7 @@ import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
@@ -44,6 +45,9 @@ import de.lichtflut.rb.webck.components.typesystem.constraints.ConstraintsEditor
  */
 public class EditPropertyDeclPanel extends Panel {
 
+	private final IModel<ResourceSchema> schema;
+	private final IModel<PropertyRow> declaration;
+
 	// ---------------- Constructor -------------------------
 
 	/**
@@ -51,15 +55,21 @@ public class EditPropertyDeclPanel extends Panel {
 	 * @param id - wicket:id
 	 * @param decl
 	 */
-	public EditPropertyDeclPanel(final String id, final IModel<PropertyRow> decl) {
-		super(id, decl);
-		@SuppressWarnings("rawtypes")
-		Form<?> form = new Form("form");
-		addFeedbackpanel("feedback", form);
-		addPropertiesInfo(form, decl);
-		addVisualizationInfo(form, decl);
+	public EditPropertyDeclPanel(final String id, final IModel<PropertyRow> declaration, final IModel<ResourceSchema> schema) {
+		super(id, declaration);
+		this.schema = schema;
+		this.declaration = declaration;
+
+		Form<?> form = new Form<Void>("form");
+
+		add(new FeedbackPanel("feedback"));
+
+		addPropertiyEditor(form);
+		form.add(new EditVisualizationInfoPanel("visualizationInfoPanel", declaration));
+
 		add(form);
 		addButtonBar(form);
+
 		setOutputMarkupId(true);
 	}
 
@@ -92,7 +102,14 @@ public class EditPropertyDeclPanel extends Panel {
 		Button save = new RBStandardButton("save") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				EditPropertyDeclPanel.this.onSubmit(target, form);
+				try{
+					schema.getObject().addPropertyDeclaration(declaration.getObject().asPropertyDeclaration());
+					updatePanel();
+					EditPropertyDeclPanel.this.onSubmit(target, form);
+				}catch (IllegalArgumentException e){
+					error(getString("error.add-property"));
+					updatePanel();
+				}
 			}
 		};
 		Button cancel = new RBCancelButton("cancel") {
@@ -101,56 +118,46 @@ public class EditPropertyDeclPanel extends Panel {
 				onCancel(target, form);
 			}
 		};
-		save.add(new Label("saveLabel", new ResourceModel("button.save", "Save")));
+		save.add(new Label("saveLabel", new ResourceModel("button.save", "O.K.")));
 		cancel.add(new Label("cancelLabel", new ResourceModel("button.cancel", "Cancel")));
 		form.add(save, cancel);
 	}
 
 	/**
-	 * Add {@link FeedbackPanel}
-	 * @param form
-	 */
-	private void addFeedbackpanel(final String id, final Form<?> form) {
-		form.add(new FeedbackPanel(id));
-	}
-
-	/**
 	 * Add all attributes directly relating to a {@link PropertyDeclaration}.
 	 */
-	private void addPropertiesInfo(final Form<?> form, final IModel<PropertyRow> decl) {
-		if(decl.getObject().getPropertyDescriptor() == null){
-			decl.getObject().setPropertyDescriptor(new SimpleResourceID(""));
+	private void addPropertiyEditor(final Form<?> form) {
+		if(declaration.getObject().getPropertyDescriptor() == null){
+			declaration.getObject().setPropertyDescriptor(new SimpleResourceID(""));
 		}
-		PropertyPickerField propertyDescriptorField = new PropertyPickerField("propertyDescriptor", new PropertyModel<ResourceID>(decl,
+		PropertyPickerField propertyDescriptorField = new PropertyPickerField("propertyDescriptor", new PropertyModel<ResourceID>(declaration,
 				"propertyDescriptor"));
 		propertyDescriptorField.getDisplayComponent().setRequired(true);
 
-		TextField<String> fieldLabelTField = new TextField<String>("fieldLabel", new PropertyModel<String>(decl, "defaultLabel"));
+		TextField<String> fieldLabelTField = new TextField<String>("fieldLabel", new PropertyModel<String>(declaration, "defaultLabel"));
 
-		TextField<String> cardinalityTField = new TextField<String>("cardinality", new PropertyModel<String>(decl, "cardinality"));
+		TextField<String> cardinalityTField = new TextField<String>("cardinality", new PropertyModel<String>(declaration, "cardinality"));
 
-		final PropertyModel<Datatype> datatypeModel = new PropertyModel<Datatype>(decl, "dataType");
+		final PropertyModel<Datatype> datatypeModel = new PropertyModel<Datatype>(declaration, "dataType");
 		DropDownChoice<Datatype> datatypeDDC = new DropDownChoice<Datatype>("datatype", datatypeModel, Arrays.asList(Datatype.values()),
 				new EnumChoiceRenderer<Datatype>(this));
 		datatypeDDC.add(new AjaxFormComponentUpdatingBehavior("onchange") {
 			@Override
 			protected void onUpdate(final AjaxRequestTarget target) {
-				decl.getObject().setDataType(datatypeModel.getObject());
-				get("form:constraints").replaceWith(new ConstraintsEditorPanel("constraints", decl));
+				declaration.getObject().setDataType(datatypeModel.getObject());
+				get("form:constraints").replaceWith(new ConstraintsEditorPanel("constraints", declaration));
 				RBAjaxTarget.add(EditPropertyDeclPanel.this);
 			}
 		});
 
-		ConstraintsEditorPanel constraintsDPicker = new ConstraintsEditorPanel("constraints", decl);
+		ConstraintsEditorPanel constraintsDPicker = new ConstraintsEditorPanel("constraints", declaration);
 		constraintsDPicker.setOutputMarkupId(true);
 
 		form.add(propertyDescriptorField, fieldLabelTField, cardinalityTField, datatypeDDC, constraintsDPicker);
 	}
 
-	/**
-	 * Add all attributes relating to display-behavior of the {@link PropertyDeclaration}
-	 */
-	private void addVisualizationInfo(final Form<?> form, final IModel<PropertyRow> decl) {
-		form.add(new EditVisualizationInfoPanel("visualizationInfoPanel", decl));
+	private void updatePanel() {
+		RBAjaxTarget.add(EditPropertyDeclPanel.this);
 	}
+
 }

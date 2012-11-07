@@ -74,8 +74,8 @@ public class SchemaDetailPanel extends Panel {
 	@SpringBean
 	private TypeManager typeManager;
 
-	private final IModel<ResourceSchema> schema;
 	private PropertyRowListModel listModel;
+	private final IModel<ResourceSchema> schema;
 
 	// ---------------- Constructor -------------------------
 
@@ -92,10 +92,9 @@ public class SchemaDetailPanel extends Panel {
 		add(createTitleLabel("title"));
 		add(new TypeHierarchyPanel("typeHierarchy", Model.of(schema.getObject().getDescribedType())));
 
-		@SuppressWarnings("rawtypes")
-		Form form = new Form("form");
+		Form<?> form = new Form<Void>("form");
 		form.add(createLabelExpressionBuilder());
-		form.add(createListView("listView", this.schema));
+		form.add(createSchemaListView("listView", this.schema));
 
 		form.add(new FeedbackPanel("feedback-top"));
 		form.add(new FeedbackPanel("feedback-bottom"));
@@ -152,7 +151,7 @@ public class SchemaDetailPanel extends Panel {
 	}
 
 	/**
-	 * Adds Delete, Add, Edit Buttons to the component
+	 * Adds Delete, Add, Save Buttons to the component
 	 */
 	private void addButtonBar(final Form<?> form) {
 		form.add(createSaveButton("saveButton"));
@@ -162,7 +161,7 @@ public class SchemaDetailPanel extends Panel {
 
 	// ------------------------------------------------------
 
-	private Component createListView(final String id, final IModel<ResourceSchema> schema) {
+	private Component createSchemaListView(final String id, final IModel<ResourceSchema> schema) {
 		listModel = new PropertyRowListModel(schema);
 		ListView<PropertyRow> view = new ListView<PropertyRow>(id, listModel) {
 			@Override
@@ -180,12 +179,11 @@ public class SchemaDetailPanel extends Panel {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				DialogHoster hoster = findParent(DialogHoster.class);
-				ConfirmationDialog dialog = new ConfirmationDialog(hoster.getDialogID(), Model.of(getString("confirmation.deleted-successfull"))) {
+				ConfirmationDialog dialog = new ConfirmationDialog(hoster.getDialogID(), Model.of(getString("confirmation.delete-schema"))) {
 					@Override
 					public void onConfirm() {
 						schemaManager.removeSchemaForType(schema.getObject().getDescribedType());
 						typeManager.removeType(schema.getObject().getDescribedType());
-						//						typemanager.remove // aufrufen
 						SchemaDetailPanel.this.setVisible(false);
 						updatePanel();
 						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
@@ -213,12 +211,11 @@ public class SchemaDetailPanel extends Panel {
 
 			protected void openPropertyDeclDialog(final IModel<PropertyRow> row) {
 				DialogHoster hoster = findParent(DialogHoster.class);
-				hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), row) {
+				hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), row, schema) {
+
 					@Override
 					protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-						schema.getObject().addPropertyDeclaration(row.getObject().asPropertyDeclaration());
 						updatePanel();
-						close(target);
 					}
 
 					@Override
@@ -431,18 +428,7 @@ public class SchemaDetailPanel extends Panel {
 
 			protected void openPropertyDeclDialog(final ListItem<PropertyRow> item) {
 				DialogHoster hoster = findParent(DialogHoster.class);
-				hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), item.getModel()) {
-					@Override
-					protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
-						saveAndUpdate();
-						close(target);
-					}
-
-					@Override
-					protected void onCancel(final AjaxRequestTarget target, final Form<?> form) {
-						close(target);
-					}
-				});
+				hoster.openDialog(new EditPropertyDeclDialog(hoster.getDialogID(), item.getModel(), schema));
 			}
 		});
 	}

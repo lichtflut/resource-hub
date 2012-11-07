@@ -9,8 +9,8 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
+	<div wicket:id="feedback"></div>
 	<form wicket:id="form">
-		<div wicket:id="feedback"></div>
 	
 		<h3><wicket:message key="propertyDeclInfo.header"></wicket:message></h3>
 		<div class="row">
@@ -36,8 +36,8 @@
 		<div wicket:id="visualizationInfoPanel"></div>
 		
 		<div class="button-bar">
-			<Button wicket:id="cancel"><wicket:container wicket:id="cancelLabel"></wicket:container></Button>
-			<Button wicket:id="save"><wicket:container wicket:id="saveLabel"></wicket:container></Button>
+			<Button wicket:id="cancel"><wicket:container wicket:id="cancelLabel">[CANCEL]</wicket:container></Button>
+			<Button wicket:id="save" class="default-button"><wicket:container wicket:id="saveLabel">[SAVE]</wicket:container></Button>
 		</div>
 		
 	</form>

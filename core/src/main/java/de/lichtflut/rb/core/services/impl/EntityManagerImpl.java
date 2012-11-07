@@ -123,7 +123,7 @@ public class EntityManagerImpl implements EntityManager {
 	public Map<Integer, List<RBField>> validate(final RBEntity entity) {
 		Map<Integer, List<RBField>> errors = new HashMap<Integer, List<RBField>>();
 		if (!entity.hasSchema()) {
-
+			return errors;
 		}
 		for (RBField field : entity.getAllFields()) {
 			try {

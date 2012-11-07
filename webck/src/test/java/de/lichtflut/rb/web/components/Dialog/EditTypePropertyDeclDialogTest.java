@@ -10,7 +10,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.mock.schema.PropertyDeclarationFactory;
+import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 
@@ -29,17 +31,18 @@ public class EditTypePropertyDeclDialogTest {
 
 	private IModel<PropertyRow> decl;
 	private WicketTester tester;
-	
+
 	@Before
 	public void setUp(){
 		tester = new WicketTester();
 	}
-	
+
 	@Test
 	@Ignore(value="Fix me")
 	public void testDialogWithSinglePropertyDecl(){
 		decl = Model.of(new PropertyRow(PropertyDeclarationFactory.buildPersonPropertyDecls().get(0)));
-		EditPropertyDeclDialog panel = new EditPropertyDeclDialog("test", decl);
+		ResourceSchema schema = ResourceSchemaFactory.buildPersonSchema();
+		EditPropertyDeclDialog panel = new EditPropertyDeclDialog("test", decl, Model.of(schema));
 		tester.startComponentInPage(panel);
 		tester.assertNoErrorMessage();
 		tester.assertNoInfoMessage();
@@ -54,5 +57,5 @@ public class EditTypePropertyDeclDialogTest {
 		tester.assertContains("Constraints");
 		tester.assertContains("Person");
 	}
-	
+
 }

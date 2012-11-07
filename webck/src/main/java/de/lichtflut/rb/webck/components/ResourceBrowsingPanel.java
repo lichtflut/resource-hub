@@ -189,7 +189,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				List<RBField> fields = errors.get(ErrorCodes.CARDINALITY_EXCEPTION);
 				for (RBField field : fields) {
 					sb.append("<li>");
-					sb.append(field.getLabel(getLocale()) + " cardinality is definened as: " + CardinalityBuilder.getCardinalityAsString(field.getCardinality()));
+					sb.append("Cardinality of \"" + field.getLabel(getLocale()) + "\" is definened as: " + CardinalityBuilder.getCardinalityAsString(field.getCardinality()));
 					sb.append("</li>");
 				}
 			}
