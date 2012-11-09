@@ -124,7 +124,7 @@ public class MenuManagementPanel extends Panel {
 			@Override
 			public void onClick(final AjaxRequestTarget target) {
 				final DialogHoster hoster = findParent(DialogHoster.class);
-				hoster.openDialog(new EditMenutItemDialog(hoster.getDialogID(), item));
+				hoster.openDialog(new EditMenuItemDialog(hoster.getDialogID(), item));
 			}
 		};
 		return link;

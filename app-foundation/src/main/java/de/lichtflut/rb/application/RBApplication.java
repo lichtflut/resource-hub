@@ -181,7 +181,7 @@ public abstract class RBApplication extends WebApplication {
     protected NavigationNode createPageNode(final MenuItem item) {
         final PageParameters params = new PageParameters();
         if (item.getPerspective() != null) {
-            params.add(PerspectivePage.VIEW_ID, item.getPerspective().getID().toURI());
+            params.add(PerspectivePage.VIEW_ID, item.getPerspective().getQualifiedName().toURI());
         }
 
         return new NavigationNodePanel(new ReferenceLink("link", RBApplication.get().getPerspectivePage(), params, Model.of(item.getName())));

@@ -47,7 +47,10 @@ public class PerspectiveEditPanel extends TypedPanel<Perspective> {
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id The component ID.
+     * @param model The model of the prespective.
+     * @param mode The display mode - edit or create.
 	 */
 	public PerspectiveEditPanel(final String id, final IModel<Perspective> model, final IModel<DisplayMode> mode) {
 		super(id, model);
@@ -81,10 +84,7 @@ public class PerspectiveEditPanel extends TypedPanel<Perspective> {
 		final AjaxButton save = new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				viewSpecificationService.store(model.getObject());
-				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
-				RBAjaxTarget.add(form);
-				onSuccess(target);
+                store(target, form, model.getObject());
 			}
 		};
 		save.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
@@ -95,12 +95,9 @@ public class PerspectiveEditPanel extends TypedPanel<Perspective> {
 		final Button edit = new RBDefaultButton("create") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				viewSpecificationService.store(model.getObject());
-				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
-				RBAjaxTarget.add(form);
-				onSuccess(target);
+                store(target, form, model.getObject());
 			}
-		};
+        };
 		edit.add(visibleIf(areEqual(mode, DisplayMode.CREATE)));
 		return edit;
 	}
@@ -115,5 +112,14 @@ public class PerspectiveEditPanel extends TypedPanel<Perspective> {
 		};
 		return cancel;
 	}
+
+    // ----------------------------------------------------
+
+    private void store(AjaxRequestTarget target, Form<?> form, Perspective perspective) {
+        viewSpecificationService.store(perspective);
+        send(getPage(), Broadcast.BREADTH, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
+        RBAjaxTarget.add(form);
+        onSuccess(target);
+    }
 	
 }

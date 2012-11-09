@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.lichtflut.rb.core.common.Accessibility;
 import de.lichtflut.rb.core.common.SerialNumberOrderedNodesContainer;
 import de.lichtflut.rb.core.viewspec.impl.SNViewPort;
 import org.arastreju.sge.ModelingConversation;
@@ -143,10 +144,11 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
             return new SNPerspective(existing);
         } else {
             SNPerspective perspective = new SNPerspective(id.getQualifiedName());
+            perspective.setOwner(currentUser());
+            perspective.setVisibility(Accessibility.PRIVATE);
             // add two default view ports.
             perspective.addViewPort();
             perspective.addViewPort();
-            store(perspective);
             return perspective;
         }
     }

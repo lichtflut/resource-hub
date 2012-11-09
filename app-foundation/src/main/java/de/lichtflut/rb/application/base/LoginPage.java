@@ -21,11 +21,14 @@ import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.security.LoginException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 /**
@@ -86,18 +89,12 @@ public class LoginPage extends AbstractBasePage {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onConfigure() {
 		super.onConfigure();
 		redirectIfAlreadyLoggedIn();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected boolean needsAuthentication() {
 		return false;
@@ -166,8 +163,11 @@ public class LoginPage extends AbstractBasePage {
 
 	private void initializeUserSession(RBUser user) {
         String token = authService.createSessionToken(user);
-        new ServiceContextInitializer().init(user, user.getDomesticDomain(), token);
-        CookieAccess.getInstance().setSessionToken(token);
+        new ServiceContextInitializer().init(user, user.getDomesticDomain());
+
+        WebRequest request = (WebRequest) RequestCycle.get().getRequest();
+        HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
+        httpRequest.getSession().setAttribute(AuthModule.COOKIE_SESSION_AUTH, token);
 	}
 
 }

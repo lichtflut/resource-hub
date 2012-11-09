@@ -10,7 +10,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import de.lichtflut.rb.webck.common.CookieAccess;
+import de.lichtflut.rb.webck.common.RBWebSession;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,23 +42,41 @@ public class RBServletFilter implements Filter {
 	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
 			throws IOException, ServletException {
 
-		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-		String token = getSessionToken(httpServletRequest);
+        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
-		if (token != null) {
-			LOGGER.debug("Incoming request with token {}.", token);
-		} else {
-			LOGGER.debug("Incoming request from unauthenticated user.");
-		}
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
 
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
+        checkSessionCookie(httpServletRequest, httpServletResponse);
+
 		chain.doFilter(request, response);
-	}
+    }
 
-	// ----------------------------------------------------
+    // ----------------------------------------------------
 
-	private String getSessionToken(final HttpServletRequest httpServletRequest) {
+    private void checkSessionCookie(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        String existingToken = getTokenFromRequest(httpServletRequest);
+        if (existingToken != null) {
+            LOGGER.trace("Incoming request with existingToken {}.", existingToken);
+            return;
+        }
+
+        LOGGER.trace("Incoming request from unauthenticated user.");
+        String newToken = getTokenInSession(httpServletRequest);
+        if (newToken != null) {
+            // a token has been deposited in session
+            final Cookie cookie = new Cookie(AuthModule.COOKIE_SESSION_AUTH, newToken);
+            cookie.setMaxAge(3600);
+            cookie.setPath("/");
+            cookie.setMaxAge(-1);
+            cookie.setSecure(false);
+            httpServletResponse.addCookie(cookie);
+            LOGGER.debug("Setting session cookie {}.", newToken);
+        }
+    }
+
+	private String getTokenFromRequest(final HttpServletRequest httpServletRequest) {
 		Cookie[] cookies = httpServletRequest.getCookies();
 		if (cookies == null || cookies.length == 0) {
 			return null;
@@ -65,6 +88,14 @@ public class RBServletFilter implements Filter {
 		}
 		return null;
 	}
+
+    private String getTokenInSession(final HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession(false);
+        if (session != null && session.getAttribute(AuthModule.COOKIE_SESSION_AUTH) != null) {
+            return session.getAttribute(AuthModule.COOKIE_SESSION_AUTH).toString();
+        }
+        return null;
+    }
 
 	// ----------------------------------------------------
 

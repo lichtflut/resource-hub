@@ -42,25 +42,20 @@ public interface RBSystem {
 	ResourceID ENTITY = new SimpleResourceID(SYS_NAMESPACE_URI, "Entity");
 
     /**
-     * A content item represents some content with meta-data (author, title, etc.).
+     * An information may be visible or writable only by owner.
      */
-    ResourceID CONTENT_ITEM = new SimpleResourceID(SYS_NAMESPACE_URI, "ContentItem");
+    ResourceID PRIVATE_ACCESS = new SimpleResourceID(SYS_NAMESPACE_URI, "PrivateAccess");
 
     /**
-     * A special type of content representing a comment to something.
+     * An information may be visible or writable only some users.
      */
-    ResourceID COMMENT = new SimpleResourceID(SYS_NAMESPACE_URI, "Comment");
+    ResourceID PROTECTED_ACCESS = new SimpleResourceID(SYS_NAMESPACE_URI, "ProtectedAccess");
 
     /**
-     * A special type of content representing a page (e.g. of a Wiki).
+     * An information may be visible or writable by all users.
      */
-    ResourceID PAGE = new SimpleResourceID(SYS_NAMESPACE_URI, "Page");
+    ResourceID PUBLIC_ACCESS = new SimpleResourceID(SYS_NAMESPACE_URI, "PublicAccess");
 
-    /**
-     * A special type of content representing a document.
-     */
-    ResourceID DOCUMENT = new SimpleResourceID(SYS_NAMESPACE_URI, "Document");
-	
 	// -- PROPERTIES --------------------------------------
 	
 	/**

@@ -32,8 +32,6 @@ public class RBWebSession extends WebSession {
 	@SpringBean
 	private ServiceContext context;
 
-	private String token;
-
 	// ----------------------------------------------------
 
 	public RBWebSession(final Request request) {
@@ -48,26 +46,12 @@ public class RBWebSession extends WebSession {
 
 	// ----------------------------------------------------
 
-	public void setToken(final String token) {
-		this.token = token;
-	}
-
-	// ----------------------------------------------------
-
 	public BrowsingHistory getHistory() {
 		return history;
 	}
 
 	public boolean isAuthenticated() {
-		boolean authenticated = context != null && context.getUser() != null;
-		if (authenticated) {
-			String currentToken = CookieAccess.getInstance().getSessionToken();
-			if (currentToken == null)  {
-				LOGGER.warn("User is authenticated but has lost session token! Will set it again. " + token);
-				CookieAccess.getInstance().setSessionToken(token);
-			}
-		}
-		return authenticated;
+		return context != null && context.getUser() != null;
 	}
 
 	public void onLogout() {
