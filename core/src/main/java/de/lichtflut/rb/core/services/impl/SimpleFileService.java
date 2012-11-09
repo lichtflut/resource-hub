@@ -1,5 +1,6 @@
 package de.lichtflut.rb.core.services.impl;
 
+import de.lichtflut.rb.core.config.FileServiceConfiguration;
 import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.repository.ContentDescriptor;
@@ -27,12 +28,15 @@ public class SimpleFileService implements FileService {
 
     private RBConfig rbConfig;
 
+    private FileServiceConfiguration fsConfiguration;
+
     private RepositoryDelegator delegate;
 
     // ----------------------------------------------------
 
-    public SimpleFileService(RBConfig rbConfig) {
+    public SimpleFileService(RBConfig rbConfig, FileServiceConfiguration fsConfiguration) {
         this.rbConfig = rbConfig;
+        this.fsConfiguration = fsConfiguration;
         this.delegate = new FileStoreRepository(getRepositoryDirectory(rbConfig));
     }
 

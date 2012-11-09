@@ -80,5 +80,13 @@
     <bean id="messagingService" class="de.lichtflut.rb.core.services.impl.MessagingServiceImpl">
         <constructor-arg ref="rbConfig"/>
     </bean>
+
+    <bean id="fileServiceFactory" class="de.lichtflut.rb.core.services.FileServiceFactory" >
+        <constructor-arg index="0" ref="rbConfig"/>
+    </bean>
+
+    <bean id="fileService" class="de.lichtflut.rb.core.services.impl.SimpleFileService"
+          factory-bean="fileServiceFactory" factory-method="create">
+    </bean>
     
 </beans>

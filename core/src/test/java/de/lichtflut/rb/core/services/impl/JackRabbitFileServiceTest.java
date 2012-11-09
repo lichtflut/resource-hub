@@ -17,8 +17,10 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 import java.util.UUID;
 
+import de.lichtflut.rb.core.config.FileServiceConfiguration;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -54,11 +56,11 @@ public class JackRabbitFileServiceTest {
 	private final String path = "lichtflut/test/person/mueller";
 
 	/**
-	 * Test method for {@link JackRabbitFileService#FileServiceImpl(java.lang.String)}.
+	 * Test method for {@link JackRabbitFileService}.
 	 */
 	@Test
 	public void testFileServiceImpl() {
-		fileService = new JackRabbitFileService("pathToRepo.xml", null){
+		fileService = new JackRabbitFileService(null, fsConfig()){
 			@Override
 			protected void initRepository(){
 			}
@@ -123,7 +125,7 @@ public class JackRabbitFileServiceTest {
 	private void startMockRepositoryDelegator() {
 		mock(RepositoryDelegator.class);
 
-		fileService = new JackRabbitFileService("pathToRepo.xml", null){
+		fileService = new JackRabbitFileService(null, fsConfig()){
 			@Override
 			protected void initRepository(){
 				this.delegator = mockDelegator;
@@ -135,7 +137,6 @@ public class JackRabbitFileServiceTest {
 	/**
 	 * @param file
 	 * @throws IOException
-	 * 
 	 */
 	private void filllFile(final File file) throws IOException {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
@@ -144,5 +145,13 @@ public class JackRabbitFileServiceTest {
 		}
 		bw.close();
 	}
+
+    private FileServiceConfiguration fsConfig() {
+        FileServiceConfiguration config = new FileServiceConfiguration();
+        Properties props = new Properties();
+        props.setProperty(JackRabbitFileService.FILE_SERVICE_JACK_RABBIT_CONFIG_XML, "pathToRepo.xml");
+        config.setProperties(props);
+        return config;
+    }
 
 }

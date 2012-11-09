@@ -46,6 +46,8 @@ public class RBConfig {
 
     private SecurityConfiguration securityConfiguration;
 
+    private FileServiceConfiguration fileServiceConfiguration;
+
     private DomainValidator domainValidator;
 
 	// -----------------------------------------------------
@@ -60,7 +62,6 @@ public class RBConfig {
 		this.appName = appName;
         this.workDir = checkWorkDir(appName);
         this.dataStoreConfig = new DataStoreConfiguration(workDir, appName);
-        LOGGER.info("Initialized {}", this);
     }
 
 	// -----------------------------------------------------
@@ -95,19 +96,18 @@ public class RBConfig {
         return dataStoreConfig;
     }
 
-    public void setDataStoreConfig(DataStoreConfiguration dataStoreConfig) {
-        this.dataStoreConfig = dataStoreConfig;
-    }
-
     public DomainValidator getDomainValidator() {
         return domainValidator;
+    }
+
+    public FileServiceConfiguration getFileServiceConfiguration() {
+        return fileServiceConfiguration;
     }
 
     // ----------------------------------------------------
 
     public void setEmailConfiguration(EmailConfiguration emailConfiguration) {
         this.emailConfiguration = emailConfiguration;
-        LOGGER.info("Initialized email-settings: {}", emailConfiguration);
     }
 
     public void setSecurityConfiguration(SecurityConfiguration securityConfiguration) {
@@ -116,6 +116,20 @@ public class RBConfig {
 
     public void setDomainValidator(DomainValidator domainValidator) {
         this.domainValidator = domainValidator;
+    }
+
+    public void setDataStoreConfig(DataStoreConfiguration dataStoreConfig) {
+        this.dataStoreConfig = dataStoreConfig;
+    }
+
+    public void setFileServiceConfiguration(FileServiceConfiguration fileServiceConfiguration) {
+        this.fileServiceConfiguration = fileServiceConfiguration;
+    }
+
+    // ----------------------------------------------------
+
+    public void ready() {
+        LOGGER.info("Initialized {}", this);
     }
 
     // ----------------------------------------------------
@@ -131,6 +145,11 @@ public class RBConfig {
             sb.append("\n");
             sb.append(emailConfiguration.toString());
         }
+        if (fileServiceConfiguration != null) {
+            sb.append("\n");
+            sb.append(fileServiceConfiguration.toString());
+        }
+
 		return sb.toString();
 	}
 
