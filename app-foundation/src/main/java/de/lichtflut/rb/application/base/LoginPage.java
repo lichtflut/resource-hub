@@ -42,26 +42,14 @@ import java.util.Set;
  * 
  * @author Oliver Tigges
  */
-public class LoginPage extends AbstractBasePage {
+public class LoginPage extends AbstractLoginPage {
 
-	private final Logger logger = LoggerFactory.getLogger(LoginPage.class);
-
-	@SpringBean
-	private AuthModule authModule;
-
-	@SpringBean
-	private AuthenticationService authService;
-
-	// ----------------------------------------------------
+    // ----------------------------------------------------
 
 	/**
 	 * Constructor.
 	 */
 	public LoginPage() {
-
-		checkCookies();
-
-		redirectIfAlreadyLoggedIn();
 
 		add(new LoginPanel("loginPanel") {
             @Override
@@ -84,90 +72,9 @@ public class LoginPage extends AbstractBasePage {
 			}
 		});
 
-		addVersionInfo();
-	}
-
-	// ----------------------------------------------------
-
-	@Override
-	protected void onConfigure() {
-		super.onConfigure();
-		redirectIfAlreadyLoggedIn();
-	}
-
-	@Override
-	protected boolean needsAuthentication() {
-		return false;
-	}
-	
-	// ----------------------------------------------------
-
-	/**
-	 * Try to log the user in.
-	 * 
-	 * @param loginData The login data.
-	 */
-	private void tryLogin(final LoginData loginData) {
-		try {
-			final RBUser user = authService.login(loginData);
-			final Set<String> permissions = authModule.getUserManagement().getUserPermissions(user, user.getDomesticDomain());
-			if (!permissions.contains(RBPermission.LOGIN.name())) {
-				logger.info("Login aborted - User {} is lack of permission: {}", user.getName(), RBPermission.LOGIN.name());
-				error(getString("error.login.activation"));
-			} else {
-				logger.info("User {} logged in.", user.getName());
-				RBWebSession.get().replaceSession();
-				initializeUserSession(user);
-			}
-			if (loginData.getStayLoggedIn()) {
-				final String token = authService.createRememberMeToken(user, loginData);
-                CookieAccess.getInstance().setRememberMeToken(token);
-				logger.info("Added 'remember-me' cookie for {}", user.getName());
-			}
-		} catch (LoginException e) {
-			error(getString("error.login.failed"));
-		}
-	}
-	
-	private void checkCookies() {
-        final String cookie = CookieAccess.getInstance().getRememberMeToken();
-		if (cookie != null) {
-			final RBUser user = authService.loginByToken(cookie);
-			if (user != null) {
-				final Set<String> permissions = authModule.getUserManagement().getUserPermissions(user, user.getDomesticDomain());
-				if (permissions.contains(RBPermission.LOGIN.name())) {
-					initializeUserSession(user);
-				} else {
-					logger.info("Login aborted - User {} is lack of permission: {}", user.getName(), RBPermission.LOGIN.name());
-					error(getString("error.login.activation"));
-				}
-			}
-		}
-	}
-	
-	// ----------------------------------------------------
-
-	private void addVersionInfo() {
-		final VersionInfoModel model = new VersionInfoModel();
-		add(new Label("version", new PropertyModel<String>(model, "version")));
-		add(new Label("build", new PropertyModel<String>(model, "buildTimestamp")));
-	}
-
-	private void redirectIfAlreadyLoggedIn() {
-		if (isAuthenticated()) {
-			if (!continueToOriginalDestination()) {
-				throw new RestartResponseException(RBApplication.get().getHomePage());
-			}
-		}
-	}
-
-	private void initializeUserSession(RBUser user) {
-        String token = authService.createSessionToken(user);
-        new ServiceContextInitializer().init(user, user.getDomesticDomain());
-
-        WebRequest request = (WebRequest) RequestCycle.get().getRequest();
-        HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
-        httpRequest.getSession().setAttribute(AuthModule.COOKIE_SESSION_AUTH, token);
+        final VersionInfoModel model = new VersionInfoModel();
+        add(new Label("version", new PropertyModel<String>(model, "version")));
+        add(new Label("build", new PropertyModel<String>(model, "buildTimestamp")));
 	}
 
 }
