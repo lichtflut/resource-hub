@@ -144,7 +144,9 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
             return new SNPerspective(existing);
         } else {
             SNPerspective perspective = new SNPerspective(id.getQualifiedName());
-            perspective.setOwner(currentUser());
+            if (context.isAuthenticated()) {
+                perspective.setOwner(currentUser());
+            }
             perspective.setVisibility(Accessibility.PRIVATE);
             // add two default view ports.
             perspective.addViewPort();
