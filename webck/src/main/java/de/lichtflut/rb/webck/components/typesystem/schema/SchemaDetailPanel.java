@@ -154,9 +154,9 @@ public class SchemaDetailPanel extends Panel {
 	 * Adds Delete, Add, Save Buttons to the component
 	 */
 	private void addButtonBar(final Form<?> form) {
-		form.add(createSaveButton("saveButton"));
 		form.add(createAddbutton("addButton"));
-		form.add(createDeleteButton("deleteButton"));
+		form.add(createSaveButton("saveButton"));
+		form.add(createDeleteTypeButton("deleteButton"));
 	}
 
 	// ------------------------------------------------------
@@ -174,7 +174,7 @@ public class SchemaDetailPanel extends Panel {
 		return view;
 	}
 
-	private Component createDeleteButton(final String id) {
+	private Component createDeleteTypeButton(final String id) {
 		Button button = new RBStandardButton(id) {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
@@ -437,7 +437,8 @@ public class SchemaDetailPanel extends Panel {
 		item.add(new AjaxLink<Void>("delete") {
 			@Override
 			public void onClick(final AjaxRequestTarget target) {
-				schema.getObject().getPropertyDeclarations().remove(item.getIndex());
+				listModel.getObject().remove(item.getIndex());
+				addTypeNotYetStoredInfo();
 				updatePanel();
 			}
 		});
