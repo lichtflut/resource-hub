@@ -116,9 +116,6 @@ public class EntityDetailPage extends RBBasePage {
 			super(id);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		protected Component createRelationshipView(final String id, final IModel<RBEntity> model) {
 			return new RelationshipOverviewPanel(id, model).add(visibleIf(BrowsingContextModel.isInViewMode()));

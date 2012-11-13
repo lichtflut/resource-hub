@@ -15,7 +15,7 @@ package de.lichtflut.rb.core.security;
  *
  * @author Oliver Tigges
  */
-public interface DomainInitializer {
+public interface AuthDomainInitializer {
 	
 	/**
 	 * Initialize a domain in the AuthModule.

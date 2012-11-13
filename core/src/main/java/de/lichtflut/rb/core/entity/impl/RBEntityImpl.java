@@ -39,7 +39,6 @@ public class RBEntityImpl implements RBEntity {
 
 	private final ResourceNode node;
 	private final ResourceSchema schema;
-	private final ResourceID type;
 
 	private List<RBField> fields;
 
@@ -62,7 +61,6 @@ public class RBEntityImpl implements RBEntity {
 		super();
 		this.node = node;
 		this.schema = null;
-		this.type = null;
 		initializeFields();
 	}
 
@@ -77,9 +75,7 @@ public class RBEntityImpl implements RBEntity {
 		this.node = node;
 		this.schema = schema;
 		if (schema != null) {
-			this.type = schema.getDescribedType();
-		} else {
-			this.type = null;
+			setType(schema.getDescribedType());
 		}
 		initializeFields();
 	}
@@ -93,8 +89,8 @@ public class RBEntityImpl implements RBEntity {
 	public RBEntityImpl(final ResourceNode node, final ResourceID type) {
 		super();
 		this.node = node;
-		this.type = type;
 		this.schema = null;
+		setType(type);
 		initializeFields();
 	}
 
@@ -118,7 +114,11 @@ public class RBEntityImpl implements RBEntity {
 
 	@Override
 	public ResourceID getType() {
-		return type;
+		Statement type = SNOPS.singleAssociation(node, RDF.TYPE);
+		if(null == type){
+			return null;
+		}
+		return type.getObject().asResource();
 	}
 
 	@Override
@@ -158,7 +158,6 @@ public class RBEntityImpl implements RBEntity {
 	public boolean addField(final RBField field) {
 		return fields.add(field);
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -254,4 +253,11 @@ public class RBEntityImpl implements RBEntity {
 		return filtered;
 	}
 
+	/**
+	 * Associate type with node.
+	 * @param type
+	 */
+	private void setType(final ResourceID type) {
+		SNOPS.assure(node, RDF.TYPE, type);
+	}
 }

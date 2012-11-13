@@ -211,15 +211,13 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 		private Bytes length;
 
 		/**
-		 * @param format
+         * Constructor.
+		 * @param format The format of export.
 		 */
 		public ContentStream(final IModel<String> format) {
 			this.format = format;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public InputStream getInputStream() throws ResourceStreamNotFoundException {
 			IOReport report = new IOReport();
@@ -257,18 +255,12 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 			return in;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void close() throws IOException {
 			in.close();
 			in = null;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Bytes length() {
 			return length;

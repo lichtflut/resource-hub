@@ -7,14 +7,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import de.lichtflut.infra.exceptions.NoLongerSupportedException;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
-
-import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.Datatype;
 import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.QualifiedName;
+
+import de.lichtflut.infra.exceptions.NoLongerSupportedException;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
 
 /**
  * <p>
@@ -45,35 +45,35 @@ import org.arastreju.sge.naming.QualifiedName;
  */
 public class ConstraintImpl implements Constraint {
 
-    private QualifiedName qn;
+	private QualifiedName qn;
 
-    private String name;
+	private String name;
 
-    private boolean isPublic;
+	private boolean isPublic;
 
-    private String literalConstraint;
+	private String literalConstraint;
 
-    private ResourceID resourceConstraint;
+	private ResourceID resourceConstraint;
 
-    private List<Datatype> applicableDatatypes;
+	private List<Datatype> applicableDatatypes;
 
 	// ---------------- Constructor -------------------------
 
-    @Deprecated
+	@Deprecated
 	public ConstraintImpl(final ResourceNode node) {
-        throw new NoLongerSupportedException();
+		throw new NoLongerSupportedException();
 	}
 
-    /**
-     * Constructor.
-     */
-    public ConstraintImpl(QualifiedName qn) {
-        this.qn = qn;
-    }
+	/**
+	 * Constructor.
+	 */
+	public ConstraintImpl(final QualifiedName qn) {
+		this.qn = qn;
+	}
 
-    /**
-     * Default constructor for new constraints.
-     */
+	/**
+	 * Default constructor for new constraints.
+	 */
 	public ConstraintImpl() {
 		this(new QualifiedName(Namespace.UUID, UUID.randomUUID().toString()));
 	}
@@ -93,39 +93,39 @@ public class ConstraintImpl implements Constraint {
 	// ------------------------------------------------------
 
 
-    @Override
-    public QualifiedName getQualifiedName() {
-        return qn;
-    }
+	@Override
+	public QualifiedName getQualifiedName() {
+		return qn;
+	}
 
 	@Override
 	public String getName() {
-        if (name != null) {
-            return name;
-        } else {
-            return "<unnamed>";
-        }
+		if (name != null) {
+			return name;
+		} else {
+			return "<unnamed>";
+		}
 	}
 
 	public void setName(final String name) {
 		this.name = name;
 	}
 
-    @Override
-    public boolean isPublic() {
-        return isPublic;
-    }
+	@Override
+	public boolean isPublic() {
+		return isPublic;
+	}
 
-    public void setPublic(final boolean isPublic) {
-        this.isPublic = isPublic;
-    }
+	public void setPublic(final boolean isPublic) {
+		this.isPublic = isPublic;
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    @Override
-    public boolean isLiteral() {
-        return literalConstraint != null;
-    }
+	@Override
+	public boolean isLiteral() {
+		return literalConstraint != null;
+	}
 
 	@Override
 	public String getLiteralConstraint() {
@@ -138,7 +138,7 @@ public class ConstraintImpl implements Constraint {
 
 	@Override
 	public ResourceID getTypeConstraint() {
-        return resourceConstraint;
+		return resourceConstraint;
 	}
 
 	public void setTypeConstraint(final ResourceID resourceConstraint) {
@@ -147,12 +147,12 @@ public class ConstraintImpl implements Constraint {
 
 	@Override
 	public List<Datatype> getApplicableDatatypes() {
-        if (applicableDatatypes != null) {
-            return applicableDatatypes;
-        } else {
-            return Collections.emptyList();
-        }
-    }
+		if (applicableDatatypes != null) {
+			return applicableDatatypes;
+		} else {
+			return Collections.emptyList();
+		}
+	}
 
 	public void setApplicableDatatypes(final List<Datatype> datatypes) {
 		this.applicableDatatypes = datatypes;
@@ -164,9 +164,88 @@ public class ConstraintImpl implements Constraint {
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("Constraint id: " + qn);
-		sb.append(" name: " + getName());
-		sb.append(" is public: " + isPublic());
-		sb.append(" is literal: " + isLiteral());
+		sb.append(", name: " + getName());
+		sb.append(", is public: " + isPublic());
+		sb.append(", is literal: " + isLiteral());
+		sb.append(", applicable datatypes: " + getApplicableDatatypes());
+		if(isLiteral()){
+			sb.append(", has pattern: " + getLiteralConstraint());
+		}else {
+			sb.append(", has type constraint: " + getTypeConstraint());
+		}
 		return sb.toString();
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((applicableDatatypes == null) ? 0 : applicableDatatypes.hashCode());
+		result = prime * result + (isPublic ? 1231 : 1237);
+		result = prime * result + ((literalConstraint == null) ? 0 : literalConstraint.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((qn == null) ? 0 : qn.hashCode());
+		result = prime * result + ((resourceConstraint == null) ? 0 : resourceConstraint.hashCode());
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof ConstraintImpl)) {
+			return false;
+		}
+		ConstraintImpl other = (ConstraintImpl) obj;
+		if (applicableDatatypes == null) {
+			if (other.applicableDatatypes != null) {
+				return false;
+			}
+		} else if (!applicableDatatypes.equals(other.applicableDatatypes)) {
+			return false;
+		}
+		if (isPublic != other.isPublic) {
+			return false;
+		}
+		if (literalConstraint == null) {
+			if (other.literalConstraint != null) {
+				return false;
+			}
+		} else if (!literalConstraint.equals(other.literalConstraint)) {
+			return false;
+		}
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
+		if (qn == null) {
+			if (other.qn != null) {
+				return false;
+			}
+		} else if (!qn.equals(other.qn)) {
+			return false;
+		}
+		if (resourceConstraint == null) {
+			if (other.resourceConstraint != null) {
+				return false;
+			}
+		} else if (!resourceConstraint.equals(other.resourceConstraint)) {
+			return false;
+		}
+		return true;
+	}
+
 }

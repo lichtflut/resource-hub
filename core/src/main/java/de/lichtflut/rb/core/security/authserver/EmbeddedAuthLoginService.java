@@ -5,10 +5,11 @@ package de.lichtflut.rb.core.security.authserver;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.security.AuthenticationService;
+import de.lichtflut.rb.core.security.AuthenticationTicket;
 import de.lichtflut.rb.core.security.LoginData;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBUser;
-import org.apache.commons.lang3.StringUtils;
+import de.lichtflut.rb.core.security.TicketValidationException;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.eh.ArastrejuRuntimeException;
@@ -22,11 +23,7 @@ import org.arastreju.sge.security.LoginException;
 import org.arastreju.sge.security.PasswordCredential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.actors.threadpool.Arrays;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -48,14 +45,8 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedAuthLoginService.class);
 
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ssZ");
-	
-	private static final String SESSION_TOKEN_PREFIX = "s:";
-	
-	private static final String REMEMBER_TOKEN_PREFIX = "r:";
-	
 	private static final String randomSecret = RBCrypt.random(20);
-	
+
 	private final ModelingConversation conversation;
 	
 	// ----------------------------------------------------
@@ -70,9 +61,6 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	
 	// -- LOGIN -------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBUser login(LoginData loginData) throws LoginException {
 		final String id = normalize(loginData.getLoginID());
@@ -94,40 +82,37 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 		return toRBUser(user);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBUser loginByToken(String token) {
 		if (token == null) {
 			return null;
 		}
-		final String[] fields = token.split(":");
-		if (!isValid(fields)) {
-			return null;
-		}
-		if (token.startsWith(SESSION_TOKEN_PREFIX)) {
-			return loginBySessionToken(fields);
-		} else {
-			return loginByRembemberMeToken(fields);
-		}
+        try {
+            AuthenticationTicket ticket = AuthenticationTicket.fromToken(token);
+            switch (ticket.getType()) {
+                case SESSION:
+                    return loginBySessionTicket(ticket);
+                case REMEMBER_ME:
+                    return loginByRememberMeTicket(ticket);
+                default:
+                    LOGGER.warn("Unknown authentication type: " + token);
+            }
+        } catch (TicketValidationException e) {
+            LOGGER.warn("Token {} is not valid: {}", token, e.getMessage());
+        }
+        return null;
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String createSessionToken(RBUser user) {
 		final String email = user.getEmail();
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, 12);
-		final String raw = SESSION_TOKEN_PREFIX + email + ":" + DATE_FORMAT.format(cal.getTime()); 
-		return raw + ":" + RBCrypt.md5Hex(raw + randomSecret);
+        AuthenticationTicket ticket = AuthenticationTicket.generate(
+                AuthenticationTicket.Type.SESSION, email, cal.getTime(), randomSecret);
+        return ticket.toToken();
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String createRememberMeToken(RBUser user, LoginData loginData) {
 		final String email = user.getEmail();
@@ -135,8 +120,10 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 		final Credential credential = toCredential(loginData.getPassword(), findUserNode(id));
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, 30);
-		final String raw = REMEMBER_TOKEN_PREFIX + email + ":" + DATE_FORMAT.format(cal.getTime()); 
-		return raw + ":" + RBCrypt.md5Hex(raw + credential.stringRepesentation());
+
+        AuthenticationTicket ticket = AuthenticationTicket.generate(
+                AuthenticationTicket.Type.REMEMBER_ME, email, cal.getTime(), credential.stringRepesentation());
+        return ticket.toToken();
 	}
 
 	// ----------------------------------------------------
@@ -152,39 +139,39 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 		return EmbeddedAuthFunctions.findUserNode(conversation, id);
 	}
 
-	protected RBUser loginByRembemberMeToken(String[] fields) {
+	protected RBUser loginByRememberMeTicket(AuthenticationTicket ticket) throws TicketValidationException {
 		try {
-			final String id = fields[1];
-			final ResourceNode arasUser = findUserNode(id);
-			if (arasUser == null ) {
-				LOGGER.info("User with id {} not found.", id);
-			} else if (!isValid(arasUser, id, fields[2], fields[3])){
-				LOGGER.info("RememberMe ticket for user {} is not valid.", arasUser);
-			} else {
-				final RBUser user = toRBUser(arasUser);
-				LOGGER.info("User {} logged in by remember me token.", user);
-				setLastLogin(arasUser);
+			final ResourceNode arasUser = findUserNode(ticket.getUser());
+			if (arasUser != null ) {
+                final SemanticNode credential = SNOPS.singleObject(arasUser, EmbeddedAuthModule.HAS_CREDENTIAL);
+                final String secret = credential.asValue().getStringValue();
+                ticket.validateSignature(secret);
+                final RBUser user = toRBUser(arasUser);
+                LOGGER.info("User {} logged in by remember me token.", user);
+                setLastLogin(arasUser);
 				return user;
-			}
+			} else {
+                LOGGER.warn("User {} from tocken {} does not exist.", ticket.getUser(), ticket.toToken());
+            }
 		} catch (ArastrejuRuntimeException e) {
-			LOGGER.error("Failed to login by token " + Arrays.toString(fields), e);
+			LOGGER.error("Failed to login by remember me ticket " + ticket, e);
 			return null;
 		}
 		return null;
 	}
 
-    protected RBUser loginBySessionToken(String[] fields) {
+    protected RBUser loginBySessionTicket(AuthenticationTicket ticket) throws TicketValidationException {
 		try {
-			final String id = fields[1];
-			if (isValid(id, fields[2], fields[3])) {
-				final ResourceNode arasUser = findUserNode(id);
-				LOGGER.info("User {} logged in by session token.", id);
-				return toRBUser(arasUser);
-			} else {
-				LOGGER.info("Session token signature is invalid: " + StringUtils.join(fields, ":"));
-			}
+            ticket.validateSignature(randomSecret);
+			final ResourceNode arasUser = findUserNode(ticket.getUser());
+            if (arasUser != null ) {
+                LOGGER.info("User {} logged in by session token.", ticket.getUser());
+			    return toRBUser(arasUser);
+            } else {
+                LOGGER.warn("User {} from token {} does not exist.", ticket.getUser(), ticket.toToken());
+            }
 		} catch (ArastrejuRuntimeException e) {
-			LOGGER.error("Failed to login by token " + Arrays.toString(fields), e);
+			LOGGER.error("Failed to login by session ticket " + ticket, e);
 		}
 		return null;
 	}
@@ -193,55 +180,6 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 
     private void setLastLogin(final ResourceNode user) {
 		SNOPS.assure(user, RBSystem.HAS_LAST_LOGIN, new SNTimeSpec(new Date(), TimeMask.TIMESTAMP));
-	}
-	
-	/**
-	 * Check if ticket structure is O.K. and date not expired.
-	 */
-	private boolean isValid(String[] fields) {
-		if (fields.length != 4) {
-			LOGGER.info("Login token has wrong structure: " + StringUtils.join(fields, ":"));
-			return false;
-		} else if (StringUtils.isBlank(fields[1])) {
-			LOGGER.info("Login token has no user ID: " + StringUtils.join(fields, ":"));
-			return false;
-		} else if (isExpired(fields[2])){
-			LOGGER.info("Login token has expired: " + StringUtils.join(fields, ":"));
-			return false;
-		} else {
-			return true;
-		}
-	}
-	
-	private boolean isValid(ResourceNode user, String id, String validUntil, String fingerprint) {
-		final SemanticNode credential = SNOPS.singleObject(user, EmbeddedAuthModule.HAS_CREDENTIAL);
-		if (credential != null) {
-			final String raw = REMEMBER_TOKEN_PREFIX + id + ":" + validUntil; 
-			final String crypted = RBCrypt.md5Hex(raw + credential.asValue().getStringValue());
-			return crypted.equals(fingerprint);
-		} else {
-			return false;	
-		}
-	}
-	
-	private boolean isValid(String id, String validUntil, String fingerprint) {
-		if (isExpired(validUntil)) {
-			LOGGER.info("Login token has been expired: " + fingerprint);
-			return false;
-		}
-		final String raw = SESSION_TOKEN_PREFIX + id + ":" + validUntil; 
-		final String crypted = RBCrypt.md5Hex(raw + randomSecret);
-		return crypted.equals(fingerprint);
-	}
-
-	protected boolean isExpired(String validUntil) {
-		try {
-			final Date date = DATE_FORMAT.parse(validUntil);
-			return date.before(new Date());
-		} catch (ParseException e) {
-			LOGGER.info("Login token date info could not be parsed: " + validUntil);
-			return false;
-		}
 	}
 	
 	private Credential toCredential(final String password, final ResourceNode user) {

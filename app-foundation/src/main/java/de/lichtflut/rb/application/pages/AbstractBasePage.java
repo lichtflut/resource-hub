@@ -3,9 +3,12 @@
  */
 package de.lichtflut.rb.application.pages;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+import static de.lichtflut.rb.webck.models.CurrentUserModel.isLoggedIn;
+
 import java.util.Locale;
 
-import de.lichtflut.rb.webck.models.ConditionalModel;
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -21,15 +24,10 @@ import org.odlabs.wiquery.ui.dialog.Dialog;
 
 import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.common.CookieAccess;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.models.CurrentUserModel;
-
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.not;
-import static de.lichtflut.rb.webck.models.CurrentUserModel.isLoggedIn;
 
 /**
  * <p>
@@ -83,14 +81,14 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 			}
 		}.add(visibleIf(isLoggedIn())));
 
-        add(new Link("login") {
-            @Override
-            public void onClick() {
-                WebSession.get().invalidate();
-                CookieAccess.getInstance().removeAuthCookies();
-                setResponsePage(RBApplication.get().getLoginPage());
-            }
-        }.add(visibleIf(not(isLoggedIn()))));
+		add(new Link("login") {
+			@Override
+			public void onClick() {
+				WebSession.get().invalidate();
+				CookieAccess.getInstance().removeAuthCookies();
+				setResponsePage(RBApplication.get().getLoginPage());
+			}
+		}.add(visibleIf(not(isLoggedIn()))));
 
 		addLanguageLinks();
 

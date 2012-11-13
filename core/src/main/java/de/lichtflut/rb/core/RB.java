@@ -29,25 +29,13 @@ public interface RB {
 
 	ResourceID COUNTRY = new SimpleResourceID(COMMON_NAMESPACE_URI, "Country");
 
-	ResourceID CONTINENT = new SimpleResourceID(COMMON_NAMESPACE_URI, "Continent");
-
 	ResourceID PERSON = new SimpleResourceID(COMMON_NAMESPACE_URI, "Person");
 
 	ResourceID ORGANIZATION = new SimpleResourceID(COMMON_NAMESPACE_URI, "Organization");
 
 	ResourceID ORGANIZATIONAL_UNIT = new SimpleResourceID(COMMON_NAMESPACE_URI, "OrganizationalUnit");
 
-	ResourceID PROJECT = new SimpleResourceID(COMMON_NAMESPACE_URI, "Project");
-
-	ResourceID ADDRESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "Address");
-
-	ResourceID NOTE = new SimpleResourceID(COMMON_NAMESPACE_URI, "Note");
-
-	ResourceID PROCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "Process");
-
 	ResourceID PROCESS_ELEMENT = new SimpleResourceID(COMMON_NAMESPACE_URI, "ProcessElement");
-
-	ResourceID SKILL = new SimpleResourceID(COMMON_NAMESPACE_URI, "Skill");
 
 	ResourceID EXPERTISE = new SimpleResourceID(COMMON_NAMESPACE_URI, "Expertise");
 
@@ -93,6 +81,16 @@ public interface RB {
 	 */
 	ResourceID HAS_VALUE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasValue");
 
+    /**
+     * The read access (private, protected, public).
+     */
+    ResourceID HAS_READ_ACCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasReadAccess");
+
+    /**
+     * The write access (private, protected, public).
+     */
+    ResourceID HAS_WRITE_ACCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasWriteAccess");
+
 	/**
 	 * General title of something (e.g. a project).
 	 */
@@ -101,7 +99,7 @@ public interface RB {
 	/**
 	 * A textual description.
 	 */
-	ResourceID HAS_DESCRIPTION = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasDescription");;
+	ResourceID HAS_DESCRIPTION = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasDescription");
 
 	/**
 	 * General name of something (e.g. an organization).

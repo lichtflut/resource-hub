@@ -18,6 +18,12 @@
 			<th class="entity-list-header">
 				<wicket:message key="header.title">[title]</wicket:message>
 			</th>
+            <th class="entity-list-header">
+                <wicket:message key="header.visibility">[visibility]</wicket:message>
+            </th>
+            <th>
+                <wicket:message key="header.owner">[owner]</wicket:message>
+            </th>
 			<th class="entity-list-header"></th>
 			<th class="entity-list-header"></th>
 		</tr>
@@ -26,6 +32,8 @@
 			<tr>
 				<td class="entity-list-cell" wicket:id="name"></td>
 				<td class="entity-list-cell" wicket:id="title"></td>
+                <td class="entity-list-cell" wicket:id="visibility"></td>
+                <td class="entity-list-cell" wicket:id="owner"></td>
 				<td class="entity-list-action"><a wicket:id="edit" class="action-edit">[edit]</a></td>
 				<td class="entity-list-action"><a wicket:id="delete" class="action-delete">[edit]</a></td>
 			</tr>

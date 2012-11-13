@@ -1,7 +1,5 @@
 package de.lichtflut.rb.application.common;
 
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.string.StringValue;
 
 /**
  * <p>
@@ -16,6 +14,6 @@ import org.apache.wicket.util.string.StringValue;
  */
 public interface CommonParams {
 
-    String PARAM_RESOURCE_ID = "rid";
-    String PARAM_RESOURCE_TYPE = "type";
+	String PARAM_RESOURCE_ID = "rid";
+	String PARAM_RESOURCE_TYPE = "type";
 }

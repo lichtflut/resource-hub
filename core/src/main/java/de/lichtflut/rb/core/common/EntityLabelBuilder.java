@@ -48,17 +48,11 @@ public interface EntityLabelBuilder extends Serializable{
 			return ResourceLabelBuilder.getInstance().getLabel(entity.getNode(), Locale.getDefault());
 		}
 		
-		/** 
-		 * {@inheritDoc}
-		 */
 		@Override
 		public String getExpression() {
 			return null;
 		}
 		
-		/** 
-		* {@inheritDoc}
-		*/
 		@Override
 		public String toString() {
 			return "";

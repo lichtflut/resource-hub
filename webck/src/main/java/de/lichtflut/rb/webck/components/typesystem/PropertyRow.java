@@ -176,21 +176,7 @@ public class PropertyRow implements Serializable {
 	 * Get the cardinality as a String like <code>[1..n]</code>
 	 */
 	public String getCardinality() {
-		int min = decl.getCardinality().getMinOccurs();
-		int max = decl.getCardinality().getMaxOccurs();
-		String s = "[";
-		if (min == 0) {
-			s += "n..";
-		} else {
-			s += String.valueOf(min) + "..";
-		}
-		if (max == Integer.MAX_VALUE) {
-			s += "n";
-		} else {
-			s += String.valueOf(max);
-		}
-		s += "]";
-		return s;
+		return CardinalityBuilder.getCardinalityAsString(decl.getCardinality());
 	}
 
 	/**

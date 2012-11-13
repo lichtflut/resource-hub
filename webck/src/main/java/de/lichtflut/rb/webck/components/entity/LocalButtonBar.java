@@ -9,6 +9,9 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.and;
 import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
@@ -19,7 +22,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -70,9 +75,17 @@ public class LocalButtonBar extends Panel {
 		final RBStandardButton save = new RBStandardButton("save") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				entityManager.store(model.getObject());
-				RBWebSession.get().getHistory().finishEditing();
-				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
+				Map<Integer, List<RBField>> errors = entityManager.validate(model.getObject());
+				if(errors.isEmpty()){
+					entityManager.store(model.getObject());
+					RBWebSession.get().getHistory().finishEditing();
+					send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
+
+				} else{
+					setDefaultFormProcessing(false);
+					error(getString("error.validation"));
+					RBAjaxTarget.add(getPage());
+				}
 			}
 		};
 		save.add(visibleIf(not(viewMode)));

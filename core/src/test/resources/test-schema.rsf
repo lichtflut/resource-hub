@@ -12,6 +12,7 @@ schema for "common:City" {
 	
 	quick-info {
 		common:hasName,
+		common:hasMayor,
 		common:hasCountry
 	}
 	

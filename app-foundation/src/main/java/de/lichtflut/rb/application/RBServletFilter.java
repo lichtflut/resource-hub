@@ -1,12 +1,25 @@
 package de.lichtflut.rb.application;
 
+import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import java.io.IOException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import de.lichtflut.rb.webck.common.CookieAccess;
+import de.lichtflut.rb.webck.common.RBWebSession;
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.lichtflut.rb.core.security.AuthModule;
 
 /**
  * <p>
@@ -21,29 +34,77 @@ import java.io.IOException;
  */
 public class RBServletFilter implements Filter {
 
-    /**
-    * {@inheritDoc}
-    */
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
+	private static final Logger LOGGER = LoggerFactory.getLogger(RBServletFilter.class);
 
-    /**
-    * {@inheritDoc}
-    */
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+	// ----------------------------------------------------
+
+	@Override
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
+			throws IOException, ServletException {
+
+        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        chain.doFilter(request, response);
+
+        checkSessionCookie(httpServletRequest, httpServletResponse);
+
+		chain.doFilter(request, response);
     }
 
-    /**
-    * {@inheritDoc}
-    */
-    @Override
-    public void destroy() {
+    // ----------------------------------------------------
+
+    private void checkSessionCookie(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        String existingToken = getTokenFromRequest(httpServletRequest);
+        if (existingToken != null) {
+            LOGGER.trace("Incoming request with existingToken {}.", existingToken);
+            return;
+        }
+
+        LOGGER.trace("Incoming request from unauthenticated user.");
+        String newToken = getTokenInSession(httpServletRequest);
+        if (newToken != null) {
+            // a token has been deposited in session
+            final Cookie cookie = new Cookie(AuthModule.COOKIE_SESSION_AUTH, newToken);
+            cookie.setMaxAge(3600);
+            cookie.setPath("/");
+            cookie.setMaxAge(-1);
+            cookie.setSecure(false);
+            httpServletResponse.addCookie(cookie);
+            LOGGER.debug("Setting session cookie {}.", newToken);
+        }
     }
+
+	private String getTokenFromRequest(final HttpServletRequest httpServletRequest) {
+		Cookie[] cookies = httpServletRequest.getCookies();
+		if (cookies == null || cookies.length == 0) {
+			return null;
+		}
+		for (Cookie cookie : cookies) {
+			if (AuthModule.COOKIE_SESSION_AUTH.equals(cookie.getName())) {
+				return cookie.getValue();
+			}
+		}
+		return null;
+	}
+
+    private String getTokenInSession(final HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession(false);
+        if (session != null && session.getAttribute(AuthModule.COOKIE_SESSION_AUTH) != null) {
+            return session.getAttribute(AuthModule.COOKIE_SESSION_AUTH).toString();
+        }
+        return null;
+    }
+
+	// ----------------------------------------------------
+
+	@Override
+	public void init(final FilterConfig filterConfig) throws ServletException {
+	}
+
+	@Override
+	public void destroy() {
+	}
 
 }

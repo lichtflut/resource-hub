@@ -5,7 +5,7 @@ package de.lichtflut.rb.application.common;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.DomainInitializer;
+import de.lichtflut.rb.core.services.DomainValidator;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.Organizer;
 import org.arastreju.sge.apriori.Aras;
@@ -22,18 +22,18 @@ import java.util.Set;
 
 /**
  * <p>
- *  Initializer for domains.
+ *  Default validator for domains. Assures namespaces and contexts set.
  * </p>
  * 
  * <p>
- * Created Jan 10, 2012
+ *  Created Jan 10, 2012
  * </p>
  * 
  * @author Oliver Tigges
  */
-public class RBDomainInitializer implements DomainInitializer {
+public class DefaultDomainValidator implements DomainValidator {
 
-	private final static Logger logger = LoggerFactory.getLogger(RBDomainInitializer.class);
+	private final static Logger logger = LoggerFactory.getLogger(DefaultDomainValidator.class);
 
     private final Set<String> initializedDomains = new HashSet<String>();
 

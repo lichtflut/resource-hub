@@ -15,7 +15,7 @@ import de.lichtflut.rb.core.entity.RBField;
 
 /**
  * <p>
- * This Panel display a {@link RBEntity}s' quick-info.
+ * This Panel displays a {@link RBEntity}s' quick-info.
  * </p>
  * Created: Sep 24, 2012
  *
@@ -43,12 +43,12 @@ public class QuickInfoPanel extends Panel {
 		add(new Label("label", model.getObject().getLabel()));
 	}
 
-
 	/**
 	 * Add quick-info.
 	 * @param model
 	 */
 	private void createListView(final IModel<RBEntity> model) {
+		// TODO: lazy-loading Images?
 		add(new ListView<RBField>("quickInfo", new ListModel<RBField>(model.getObject().getQuickInfo())) {
 
 			@Override

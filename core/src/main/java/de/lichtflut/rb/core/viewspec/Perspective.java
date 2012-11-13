@@ -3,8 +3,10 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
+import de.lichtflut.rb.core.common.Accessibility;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.naming.QualifiedName;
 
 import java.util.List;
 
@@ -21,7 +23,9 @@ import java.util.List;
  */
 public interface Perspective extends ResourceNode {
 
-	ResourceID getID();
+    QualifiedName getQualifiedName();
+
+    // ----------------------------------------------------
 	
 	String getName();
 	
@@ -34,6 +38,18 @@ public interface Perspective extends ResourceNode {
 	void setTitle(String title);
 	
 	void setDescription(String desc);
+
+    // ----------------------------------------------------
+
+    ResourceID getOwner();
+
+    void setOwner(ResourceID owner);
+
+    Accessibility getVisibility();
+
+    void setVisibility(Accessibility visibility);
+
+    // ----------------------------------------------------
 	
 	List<ViewPort> getViewPorts();
 	

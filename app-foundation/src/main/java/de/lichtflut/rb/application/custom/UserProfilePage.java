@@ -49,7 +49,14 @@ public class UserProfilePage extends RBBasePage {
 
 	// ----------------------------------------------------
 
-	/**
+    @Override
+    protected boolean needsAuthentication() {
+        return true;
+    }
+
+    // ----------------------------------------------------
+
+    /**
 	 * @return a {@link Label} holding the displayname for the current user.
 	 */
 	private Label createTitle() {

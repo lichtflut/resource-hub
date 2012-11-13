@@ -78,11 +78,14 @@ public class RsfWriter implements ResourceSchemaWriter {
 
         public void writeSchema(ResourceSchema schema) throws IOException {
             String type = toQName(schema.getDescribedType());
+            String labelExpression = schema.getLabelBuilder().getExpression();
 
             openScope("schema for \"" + type + "\"");
             newLine();
-            writeField("label-rule", schema.getLabelBuilder().getExpression());
-            newLine();
+            if (StringUtils.isNotBlank(labelExpression)) {
+                writeField("label-rule", labelExpression);
+                newLine();
+            }
             for (PropertyDeclaration propertyDeclaration : schema.getPropertyDeclarations()) {
                 writeProperty(propertyDeclaration);
             }

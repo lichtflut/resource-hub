@@ -4,11 +4,13 @@
 package de.lichtflut.rb.webck.components.widgets.management;
 
 import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.dialogs.AbstractRBDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 
 /**
  * <p>
@@ -24,7 +26,9 @@ import org.apache.wicket.model.Model;
 public class EditPerspectiveDialog extends AbstractRBDialog {
 
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id The component id.
+     * @param model The model.
 	 */
 	public EditPerspectiveDialog(String id, IModel<Perspective> model) {
 		super(id);
@@ -39,6 +43,8 @@ public class EditPerspectiveDialog extends AbstractRBDialog {
 				close(target);
 			}
 		});
+
+        add(TitleModifier.title(new ResourceModel("title.edit-perspective")));
 		
 		setWidth(600);
 	}

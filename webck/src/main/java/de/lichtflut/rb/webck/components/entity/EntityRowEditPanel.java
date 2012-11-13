@@ -7,12 +7,10 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.and;
 import static de.lichtflut.rb.webck.models.ConditionalModel.lessThan;
 
-import de.lichtflut.rb.webck.behaviors.CssModifier;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.models.fields.RBFieldLabelCssClassModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
@@ -31,12 +29,15 @@ import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.form.RBSubmitLink;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.fields.FieldCardinalityModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.FieldSizeModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldLabelCssClassModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
 
@@ -67,16 +68,16 @@ public class EntityRowEditPanel extends Panel {
 	public EntityRowEditPanel(final String id, final IModel<RBField> model) {
 		super(id, model);
 
-        final WebMarkupContainer labelContainer = new WebMarkupContainer("labelContainer");
-        labelContainer.add(CssModifier.appendClass(new RBFieldLabelCssClassModel(model)));
-        final Label label = new Label("label", new FieldLabelModel(model));
-        labelContainer.add(label);
-        add(labelContainer);
+		final WebMarkupContainer labelContainer = new WebMarkupContainer("labelContainer");
+		labelContainer.add(CssModifier.appendClass(new RBFieldLabelCssClassModel(model)));
+		final Label label = new Label("label", new FieldLabelModel(model));
+		labelContainer.add(label);
+		add(labelContainer);
 
-        final FieldEditorFactory factory = new FieldEditorFactory(this);
+		final FieldEditorFactory factory = new FieldEditorFactory(this);
 
-        final WebMarkupContainer container = new WebMarkupContainer("container");
-        container.setOutputMarkupId(true);
+		final WebMarkupContainer container = new WebMarkupContainer("container");
+		container.setOutputMarkupId(true);
 
 		final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
 		final ListView<RBFieldValueModel> view = new ListView<RBFieldValueModel>("values", listModel) {
@@ -92,9 +93,9 @@ public class EntityRowEditPanel extends Panel {
 			}
 		};
 		view.setReuseItems(true);
-        container.add(view);
+		container.add(view);
 
-        add(container);
+		add(container);
 	}
 
 	// ----------------------------------------------------
@@ -105,12 +106,12 @@ public class EntityRowEditPanel extends Panel {
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				getField().removeSlot(index);
 				rebuildListView();
-                updateView();
+				updateView();
 			}
 
 			@Override
 			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
-                updateView();
+				updateView();
 			}
 		};
 		link.add(new AttributeModifier("title", new ResourceModel("link.title.remove-field-value")));
@@ -130,7 +131,7 @@ public class EntityRowEditPanel extends Panel {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				getField().addValue(null);
-                updateView();
+				updateView();
 			}
 		};
 		link.add(new AttributeModifier("title", new ResourceModel("link.title.add-field-value")));
@@ -150,12 +151,14 @@ public class EntityRowEditPanel extends Panel {
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				final EntityHandle handle = EntityHandle.forType(getTypeConstraint());
 				findParent(IBrowsingHandler.class).createReferencedEntity(handle, getField().getPredicate());
-				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
+				Page page = getPage();
+				send(page, Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
+				send(page, Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
 			}
 
 			@Override
 			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
-                updateView();
+				updateView();
 			}
 		};
 		link.add(new AttributeModifier("title", new ResourceModel("link.title.create-field-value")));
@@ -190,9 +193,9 @@ public class EntityRowEditPanel extends Panel {
 		view.removeAll();
 	}
 
-    private void updateView() {
-        RBAjaxTarget.add(get("container"));
-    }
+	private void updateView() {
+		RBAjaxTarget.add(get("container"));
+	}
 
 	// -- INNER CLASSES -----------------------------------
 

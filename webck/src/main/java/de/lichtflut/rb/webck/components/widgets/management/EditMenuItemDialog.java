@@ -4,11 +4,13 @@
 package de.lichtflut.rb.webck.components.widgets.management;
 
 import de.lichtflut.rb.core.viewspec.MenuItem;
+import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.dialogs.AbstractRBDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 
 /**
  * <p>
@@ -21,12 +23,14 @@ import org.apache.wicket.model.Model;
  *
  * @author Oliver Tigges
  */
-public class EditMenutItemDialog extends AbstractRBDialog {
+public class EditMenuItemDialog extends AbstractRBDialog {
 
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id The id.
+     * @param model The menu item.
 	 */
-	public EditMenutItemDialog(String id, IModel<MenuItem> model) {
+	public EditMenuItemDialog(String id, IModel<MenuItem> model) {
 		super(id);
 		
 		add(new MenuItemEditPanel(CONTENT, model, Model.of(DisplayMode.EDIT)) {
@@ -39,6 +43,8 @@ public class EditMenutItemDialog extends AbstractRBDialog {
 				close(target);
 			}
 		});
+
+        add(TitleModifier.title(new ResourceModel("title.edit-menu-item")));
 		
 		setWidth(600);
 	}

@@ -3,9 +3,14 @@
  */
 package de.lichtflut.rb.core.config;
 
+import de.lichtflut.rb.core.eh.ConfigurationException;
+import de.lichtflut.rb.core.security.SecurityConfiguration;
+import de.lichtflut.rb.core.services.DomainValidator;
 import org.arastreju.sge.ArastrejuProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 /**
  * <p>
@@ -25,23 +30,25 @@ public class RBConfig {
 	 */
 	public static final String DOMAIN_WORK_DIRECTORY = "de.lichtflut.rb.workdir";
 
-	public static final String VIRTUAL_DOMAINS = "de.lichtflut.rb.virtual-domains";
-
     // ----------------------------------------------------
 
     private final static Logger LOGGER = LoggerFactory.getLogger(RBConfig.class);
 
 	// ----------------------------------------------------
 
-	/**
-	 * Name of the application.
-	 */
 	private final String appName;
 
-	/**
-	 * Profile.
-	 */
-	private ArastrejuProfile profile;
+    private final File workDir;
+
+    private DataStoreConfiguration dataStoreConfig;
+
+    private EmailConfiguration emailConfiguration;
+
+    private SecurityConfiguration securityConfiguration;
+
+    private FileServiceConfiguration fileServiceConfiguration;
+
+    private DomainValidator domainValidator;
 
 	// -----------------------------------------------------
 
@@ -51,77 +58,122 @@ public class RBConfig {
      * to be in the classpath.
 	 * @param appName The application name.
 	 */
-	public RBConfig(final String appName) {
+	public RBConfig(final String appName) throws ConfigurationException {
 		this.appName = appName;
-	}
+        this.workDir = checkWorkDir(appName);
+        this.dataStoreConfig = new DataStoreConfiguration(workDir, appName);
+    }
 
 	// -----------------------------------------------------
 
-	/**
+    /**
 	 * @return The Arastreju configuration properties.
 	 */
 	public ArastrejuProfile getArastrejuProfile(){
-		if (profile == null) {
-			initProfile();
-		}
-		return profile;
+		return dataStoreConfig.getArastrejuProfile();
 	}
 
 	/**
 	 * @return the work directory for this profile
 	 */
 	public String getWorkDirectory() {
-		// 1st: check profile specific work directory
-		if (appName != null) {
-			final String workDir = System.getProperty(DOMAIN_WORK_DIRECTORY + "." + appName);
-			if (workDir != null) {
-				return workDir;
-			}
-		}
-		// 2nd: check global work directory
-		return System.getProperty(DOMAIN_WORK_DIRECTORY);
+		return workDir.getAbsolutePath();
 	}
+
+    public DataStoreConfiguration getDataStoreConfiguration() {
+        return dataStoreConfig;
+    }
+
+    public EmailConfiguration getEmailConfiguration() {
+        return emailConfiguration;
+    }
+
+    public SecurityConfiguration getSecurityConfiguration() {
+        return securityConfiguration;
+    }
+
+    public DataStoreConfiguration getDataStoreConfig() {
+        return dataStoreConfig;
+    }
+
+    public DomainValidator getDomainValidator() {
+        return domainValidator;
+    }
+
+    public FileServiceConfiguration getFileServiceConfiguration() {
+        return fileServiceConfiguration;
+    }
+
+    // ----------------------------------------------------
+
+    public void setEmailConfiguration(EmailConfiguration emailConfiguration) {
+        this.emailConfiguration = emailConfiguration;
+    }
+
+    public void setSecurityConfiguration(SecurityConfiguration securityConfiguration) {
+        this.securityConfiguration = securityConfiguration;
+    }
+
+    public void setDomainValidator(DomainValidator domainValidator) {
+        this.domainValidator = domainValidator;
+    }
+
+    public void setDataStoreConfig(DataStoreConfiguration dataStoreConfig) {
+        this.dataStoreConfig = dataStoreConfig;
+    }
+
+    public void setFileServiceConfiguration(FileServiceConfiguration fileServiceConfiguration) {
+        this.fileServiceConfiguration = fileServiceConfiguration;
+    }
+
+    // ----------------------------------------------------
+
+    public void ready() {
+        LOGGER.info("Initialized {}", this);
+    }
 
     // ----------------------------------------------------
 
 	@Override
 	public String toString() {
-		return appName;
+        StringBuilder sb = new StringBuilder("RBConfig");
+        sb.append(" for application '").append(appName).append("'");
+        sb.append(" using work dir '").append(workDir).append("'");
+        sb.append("\n");
+        sb.append(dataStoreConfig.toString());
+        if (emailConfiguration != null) {
+            sb.append("\n");
+            sb.append(emailConfiguration.toString());
+        }
+        if (fileServiceConfiguration != null) {
+            sb.append("\n");
+            sb.append(fileServiceConfiguration.toString());
+        }
+
+		return sb.toString();
 	}
 
 	// -----------------------------------------------------
 
-	/**
-	 * Initializes a profile.
-	 */
-	private void initProfile(){
-		if (appName == null) {
-			LOGGER.info("Initialising Arastreju default profile");
-			profile = ArastrejuProfile.read();
-		} else {
-			LOGGER.info("Initialising Arastreju profile with name " + appName);
-			profile = ArastrejuProfile.read(appName);
-		}
-		checkWorkDir();
-		checkVirtualDomains();
-	}
+    private File checkWorkDir(String applicationName) throws ConfigurationException {
+        String workDirPath = determineWorkDir(applicationName);
+        File workDir = new File(workDirPath);
+        if (!workDir.isDirectory() &&  !workDir.mkdirs()) {
+            throw new ConfigurationException("Work dir does not exist and can not be created: " + workDirPath);
+        }
+        return  workDir;
+    }
 
-	private void checkWorkDir() {
-		final String workDir = getWorkDirectory();
-		if (workDir != null) {
-			LOGGER.info("Using work directory {} for profile {}.", workDir, appName);
-			profile.setProperty(ArastrejuProfile.ARAS_STORE_DIRECTORY, workDir);
-		} else {
-			LOGGER.info("Using default directory for profile {}.", appName);
-		}
-	}
-
-	private void checkVirtualDomains() {
-		String vd = System.getProperty(VIRTUAL_DOMAINS, "off");
-		if ("default".equals(vd)) {
-			LOGGER.info("Enabling virtual domains for profile {}. ", appName);
-			profile.setProperty(ArastrejuProfile.ENABLE_VIRTUAL_DOMAINS, "yes");
-		}
-	}
+    private String determineWorkDir(String applicationName) {
+        // 1st: check profile specific work directory
+        if (applicationName != null) {
+            final String workDir = System.getProperty(DOMAIN_WORK_DIRECTORY + "." + applicationName);
+            if (workDir != null) {
+                return workDir;
+            }
+        }
+        // 2nd: check global work directory
+        return System.getProperty(DOMAIN_WORK_DIRECTORY);
+    }
 
 }

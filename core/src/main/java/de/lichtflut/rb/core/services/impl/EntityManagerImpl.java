@@ -2,6 +2,9 @@ package de.lichtflut.rb.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.arastreju.sge.ModelingConversation;
@@ -22,9 +25,12 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.common.DomainNamespacesHandler;
+import de.lichtflut.rb.core.eh.ErrorCodes;
+import de.lichtflut.rb.core.eh.ValidationException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
+import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.EntityManager;
@@ -33,13 +39,13 @@ import de.lichtflut.rb.core.services.TypeManager;
 
 /**
  * <p>
- *  Implementation of {@link EntityManager}.
+ * Implementation of {@link EntityManager}.
  * </p>
- *
+ * 
  * <p>
- * 	Created Oct 28, 2011
+ * Created Oct 28, 2011
  * </p>
- *
+ * 
  * @author Oliver Tigges
  */
 public class EntityManagerImpl implements EntityManager {
@@ -54,13 +60,20 @@ public class EntityManagerImpl implements EntityManager {
 
 	private DomainNamespacesHandler dnsHandler;
 
-	// -----------------------------------------------------
+	// ---------------- Constructor -------------------------
 
 	/**
 	 * Default constructor.
 	 */
-	public EntityManagerImpl() { }
+	public EntityManagerImpl() {
+	}
 
+	/**
+	 * Constructor.
+.	 * @param typeManager
+	 * @param schemaManager
+	 * @param conversation
+	 */
 	public EntityManagerImpl(final TypeManager typeManager, final SchemaManager schemaManager, final ModelingConversation conversation) {
 		this.typeManager = typeManager;
 		this.schemaManager = schemaManager;
@@ -69,19 +82,11 @@ public class EntityManagerImpl implements EntityManager {
 
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBEntityImpl find(final ResourceID resourceID) {
 		return find(resourceID, true);
 	}
 
-	// -----------------------------------------------------
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBEntity create(final ResourceID type) {
 		final ResourceSchema schema = schemaManager.findSchemaForType(type);
@@ -90,18 +95,13 @@ public class EntityManagerImpl implements EntityManager {
 		} else {
 			return new RBEntityImpl(newEntityNode(), type);
 		}
-
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void store(final RBEntity entity) {
 		final ResourceNode node = entity.getNode();
-		SNOPS.associate(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
-		for (RBField field :entity.getAllFields()) {
+		for (RBField field : entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.assure(node, field.getPredicate(), nodes);
 			if (field.getVisualizationInfo().isEmbedded()) {
@@ -116,8 +116,25 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Validates a {@link RBEntity} against {@link ResourceSchema} rules.
+	 * 
+	 * @param entity Entity to be validated
 	 */
+	public Map<Integer, List<RBField>> validate(final RBEntity entity) {
+		Map<Integer, List<RBField>> errors = new HashMap<Integer, List<RBField>>();
+		if (!entity.hasSchema()) {
+			return errors;
+		}
+		for (RBField field : entity.getAllFields()) {
+			try {
+				validateRBField(field);
+			} catch (ValidationException e) {
+				append(errors, e, field);
+			}
+		}
+		return errors;
+	}
+
 	@Override
 	public void changeType(final RBEntity entity, final ResourceID type) {
 		final ModelingConversation mc = conversation;
@@ -126,9 +143,6 @@ public class EntityManagerImpl implements EntityManager {
 		SNOPS.associate(node, RDF.TYPE, type);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void delete(final ResourceID entityID) {
 		final ModelingConversation mc = conversation;
@@ -136,7 +150,7 @@ public class EntityManagerImpl implements EntityManager {
 		mc.remove(node);
 	}
 
-	// -- DEPENDENCIES ------------------------------------
+	// -- INJECTED DEPENDENCIES ---------------------------
 
 	public void setTypeManager(final TypeManager typeManager) {
 		this.typeManager = typeManager;
@@ -157,6 +171,9 @@ public class EntityManagerImpl implements EntityManager {
 	// ----------------------------------------------------
 
 	private RBEntityImpl find(final ResourceID resourceID, final boolean resolveEmbeddeds) {
+		if(null == resourceID){
+			return null;
+		}
 		final ResourceNode node = conversation.findResource(resourceID.getQualifiedName());
 		if (node == null) {
 			return null;
@@ -215,7 +232,7 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	private void resolveEntityReferences(final RBField field) {
-		for (int i=0; i < field.getSlots(); i++) {
+		for (int i = 0; i < field.getSlots(); i++) {
 			ResourceID id = (ResourceID) field.getValue(i);
 			if (id != null) {
 				field.setValue(i, conversation.resolve(id));
@@ -224,7 +241,7 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	private void resolveEmbeddedEntityReferences(final RBField field) {
-		for (int i=0; i < field.getSlots(); i++) {
+		for (int i = 0; i < field.getSlots(); i++) {
 			final Object value = field.getValue(i);
 			if (value instanceof RBEntity) {
 				// everything O.K.
@@ -234,7 +251,6 @@ public class EntityManagerImpl implements EntityManager {
 			}
 		}
 	}
-
 
 	private void storeEmbeddeds(final RBField field) {
 		for (Object value : field.getValues()) {
@@ -252,7 +268,36 @@ public class EntityManagerImpl implements EntityManager {
 		} else {
 			return new SNResource();
 		}
+	}
 
+	/**
+	 * Validates a single {@link RBField} for consistency.
+	 * @param field Field to be validated
+	 * @throws ValidationException
+	 */
+	private void validateRBField(final RBField field) throws ValidationException {
+		Cardinality cardinality = field.getCardinality();
+		if(cardinality.getMinOccurs() > field.getValues().size() ||
+				cardinality.getMaxOccurs() < field.getValues().size()){
+			throw new ValidationException(ErrorCodes.CARDINALITY_EXCEPTION, "Cardinality does not match given values");
+		}
+	}
+
+	/**
+	 * Appends a given Map by a given ValidationException and a given RBField.
+	 * @param errors Map
+	 * @param exception Exception to be added
+	 * @param field RBfield to be addd
+	 */
+	private void append(final Map<Integer, List<RBField>> errors, final ValidationException exception, final RBField field) {
+		int errorCode = exception.getErrorCode();
+		if(errors.containsKey(errorCode)){
+			errors.get(errorCode).add(field);
+		}else{
+			List<RBField> fields = new ArrayList<RBField>();
+			fields.add(field);
+			errors.put(exception.getErrorCode(), fields);
+		}
 	}
 
 }

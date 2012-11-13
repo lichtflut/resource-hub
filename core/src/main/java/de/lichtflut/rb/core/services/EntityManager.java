@@ -1,8 +1,13 @@
 package de.lichtflut.rb.core.services;
 
+import java.util.List;
+import java.util.Map;
+
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 
 /**
  * .
@@ -28,10 +33,20 @@ public interface EntityManager {
 	RBEntity create(ResourceID type);
 
 	/**
+	 * <p>
 	 * Store an Entity.
+	 * </p>
+	 * 
 	 * @param entity The entity.
 	 */
 	void store(RBEntity entity);
+
+	/**
+	 * Validates an Entity against its Schema.
+	 * @param entity {@link RBEntity} to validate
+	 * @return a Map containting the {@link ErrorCodes} and a list of fields, that produced an error, Map is empty if no error occured
+	 */
+	Map<Integer, List<RBField>> validate(RBEntity entity);
 
 	/**
 	 * Delete an {@link RBEntity}.

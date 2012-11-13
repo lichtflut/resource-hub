@@ -70,30 +70,19 @@ public class RBServiceProvider implements ServiceProvider {
 
 	// ----------------------------------------------------
 
-	/**
-	 *{@inheritDoc}
-	 */
 	@Override
 	public ServiceContext getContext() {
 		return ctx;
 	}
 
-	/**
-	 *{@inheritDoc}
-	 */
 	@Override
 	public SchemaManager getSchemaManager() {
 		return new SchemaManagerImpl(arastrejuResourceFactory);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public SecurityService getSecurityService() {
-		final SecurityServiceImpl service = new SecurityServiceImpl(getContext(), getConversation(), authModule);
-		service.setSecurityConfiguration(securityConfiguration);
-		return service;
+		return new SecurityServiceImpl(getContext(), authModule);
 	}
 
 	@Override
@@ -101,9 +90,6 @@ public class RBServiceProvider implements ServiceProvider {
 		return new TypeManagerImpl(arastrejuResourceFactory, getSchemaManager());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public FileService getFileService(){
 		return fileService;

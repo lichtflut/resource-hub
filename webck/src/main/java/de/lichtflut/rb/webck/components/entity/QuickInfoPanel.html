@@ -12,16 +12,13 @@
 
 	<div class="table quick-info">
 		<div class="row">
-			<div class="cell">
-				<wicket:message key="quick-info.title"></wicket:message>
-			</div>
-			<div class="cell">
-				<span wicket:id="label">[label]</span>
+			<div class="cell table-cell title-row">
+				<h4 wicket:id="label">[label]</h4>
 			</div>
 		</div>
-		<wicket:container class="row" wicket:id="quickInfo">
-			<div wicket:id="rbField"></div>
-		</wicket:container>
+		<div class="row" wicket:id="quickInfo">
+			<div wicket:id="rbField" class="cell table-cell"></div>
+		</div>
 	
 	</div>
 </wicket:panel>

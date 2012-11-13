@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.lichtflut.rb.core.common.Accessibility;
 import de.lichtflut.rb.core.common.SerialNumberOrderedNodesContainer;
 import de.lichtflut.rb.core.viewspec.impl.SNViewPort;
 import org.arastreju.sge.ModelingConversation;
@@ -89,12 +90,8 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	public List<MenuItem> getUsersMenuItems() {
 		final ResourceNode user = currentUser();
 		final List<MenuItem> result = new ArrayList<MenuItem>();
-		for(Statement stmt : user.getAssociations()) {
-			if (WDGT.HAS_MENU_ITEM.equals(stmt.getPredicate()) && stmt.getObject().isResourceNode()) {
-				result.add(new SNMenuItem(stmt.getObject().asResource()));
-			}
-		}
-		if (result.isEmpty()) {
+		addUsersMenuItem(user, result);
+		if (result.isEmpty() && user != null) {
 			result.addAll(initializeDashboards(user));
 		}
 		Collections.sort(result, new OrderBySerialNumber());
@@ -104,7 +101,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 		return result;
 	}
 
-	@Override
+    @Override
 	public void addUsersMenuItem(final MenuItem item) {
 		final ResourceNode user = currentUser();
 		store(item);
@@ -147,10 +144,13 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
             return new SNPerspective(existing);
         } else {
             SNPerspective perspective = new SNPerspective(id.getQualifiedName());
+            if (context.isAuthenticated()) {
+                perspective.setOwner(currentUser());
+            }
+            perspective.setVisibility(Accessibility.PRIVATE);
             // add two default view ports.
             perspective.addViewPort();
             perspective.addViewPort();
-            store(perspective);
             return perspective;
         }
     }
@@ -289,6 +289,17 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
             }
         }
         return result;
+    }
+
+    private void addUsersMenuItem(ResourceNode user, List<MenuItem> result) {
+        if (user == null) {
+            return;
+        }
+        for(Statement stmt : user.getAssociations()) {
+            if (WDGT.HAS_MENU_ITEM.equals(stmt.getPredicate()) && stmt.getObject().isResourceNode()) {
+                result.add(new SNMenuItem(stmt.getObject().asResource()));
+            }
+        }
     }
 
 	// ----------------------------------------------------

@@ -3,11 +3,12 @@
  */
 package de.lichtflut.rb.webck.models.fields;
 
-import de.lichtflut.rb.core.entity.RBField;
-import org.apache.wicket.model.IModel;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.wicket.model.IModel;
+
+import de.lichtflut.rb.core.entity.RBField;
 
 /**
  * 
@@ -25,7 +26,7 @@ import java.util.List;
 public class RBFieldValuesListModel implements IModel<List<RBFieldValueModel<?>>> {
 
 	private final IModel<RBField> model;
-	
+
 	// -----------------------------------------------------
 
 	/**
@@ -37,7 +38,7 @@ public class RBFieldValuesListModel implements IModel<List<RBFieldValueModel<?>>
 	public RBFieldValuesListModel(final IModel<RBField> model){
 		this.model = model;
 	}
-	
+
 	// -----------------------------------------------------
 
 	/**
@@ -47,7 +48,7 @@ public class RBFieldValuesListModel implements IModel<List<RBFieldValueModel<?>>
 	public List<RBFieldValueModel<?>> getObject() {
 		if (model == null || model.getObject() == null) {
 			return null;
-		} 
+		}
 		final RBField rbField = model.getObject();
 		final List<RBFieldValueModel<?>> result = new ArrayList<RBFieldValueModel<?>>(rbField.getSlots());
 		for (int i=0; i < rbField.getSlots(); i++) {
@@ -56,7 +57,7 @@ public class RBFieldValuesListModel implements IModel<List<RBFieldValueModel<?>>
 		return result;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -65,7 +66,7 @@ public class RBFieldValuesListModel implements IModel<List<RBFieldValueModel<?>>
 	}
 
 	// -----------------------------------------------------
-	
+
 	@Override
 	public void detach() {
 		// Do nothing

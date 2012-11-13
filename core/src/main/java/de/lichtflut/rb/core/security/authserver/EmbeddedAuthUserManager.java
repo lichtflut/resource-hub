@@ -25,7 +25,6 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +34,7 @@ import java.util.List;
 import java.util.Set;
 
 import static de.lichtflut.rb.core.security.authserver.EmbeddedAuthFunctions.toRBUser;
+import static org.arastreju.sge.SNOPS.id;
 
 /**
  * <p>
@@ -52,7 +52,8 @@ import static de.lichtflut.rb.core.security.authserver.EmbeddedAuthFunctions.toR
  */
 public class EmbeddedAuthUserManager implements UserManager {
 	
-	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthUserManager.class);
+	private static final Logger LOGGER
+            = LoggerFactory.getLogger(EmbeddedAuthUserManager.class);
 	
 	private final ModelingConversation conversation;
 	
@@ -105,9 +106,6 @@ public class EmbeddedAuthUserManager implements UserManager {
 		};
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void registerUser(RBUser user, String credential, String domainName) throws RBAuthException {
 		if (isIdentifierInUse(user.getEmail())) {
@@ -126,20 +124,16 @@ public class EmbeddedAuthUserManager implements UserManager {
 		userNode.addAssociation(EmbeddedAuthModule.HAS_CREDENTIAL, new SNText(credential));
 
 		SNOPS.assure(userNode, RBSystem.HAS_EMAIL, user.getEmail());
-		SNOPS.associate(userNode, EmbeddedAuthModule.IDENTIFIED_BY, new SNText(user.getEmail()));
-		SNOPS.associate(userNode, EmbeddedAuthModule.IDENTIFIED_BY, new SNText(user.getQualifiedName().toURI()));
 		if (user.getUsername() != null) {
 			SNOPS.assure(userNode, RBSystem.HAS_USERNAME, user.getUsername());
-			SNOPS.associate(userNode, EmbeddedAuthModule.IDENTIFIED_BY, new SNText(user.getUsername()));
 		}
 
+        SNOPS.assure(userNode, EmbeddedAuthModule.IDENTIFIED_BY, getIdentifiers(user));
+
 		conversation.attach(userNode);
-		logger.info("Registered user: " + user + " --> " + domain);
+		LOGGER.info("Registered user: " + user + " --> " + domain);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void updateUser(RBUser updated) throws RBAuthException {
 		final ResourceNode attachedUser = conversation.findResource(updated.getQualifiedName());
@@ -154,56 +148,36 @@ public class EmbeddedAuthUserManager implements UserManager {
 				throw new UsernameAlreadyInUseException("Username already in use.");
 			}
 		}
-		final List<SNText> identifiers = new ArrayList<SNText>();
 		SNOPS.assure(attachedUser, RBSystem.HAS_EMAIL, updated.getEmail());
-		identifiers.add(new SNText(updated.getEmail()));
 		if (updated.getUsername() != null) {
 			SNOPS.assure(attachedUser, RBSystem.HAS_USERNAME, updated.getUsername());
-			identifiers.add(new SNText(updated.getUsername()));
 		} else {
 			SNOPS.remove(attachedUser, RBSystem.HAS_USERNAME);
 		}
-		SNOPS.assure(attachedUser, EmbeddedAuthModule.IDENTIFIED_BY, identifiers);
+
+		SNOPS.assure(attachedUser, EmbeddedAuthModule.IDENTIFIED_BY, getIdentifiers(updated));
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void deleteUser(RBUser user) {
-		final Query query = conversation.createQuery()
-				.addField(EmbeddedAuthModule.IDENTIFIED_BY, user.getEmail())
-				.or()
-				.addField(EmbeddedAuthModule.IDENTIFIED_BY, user.getUsername());
-		final QueryResult result = query.getResult();
-		if (!result.isEmpty()) {
-			for (ResourceNode id : result) {
-				conversation.remove(id);
-				logger.info("User deleted user {} from master domain; ID: {} ", user, id);
-			}
-		} else {
-			logger.warn("User could not be deleted from master domain: " + user);
-		}
+        conversation.remove(id(user.getQualifiedName()));
+        LOGGER.info("Deleted user {}.");
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void grantAccessToDomain(RBUser user, RBDomain domain) throws RBAuthException {
 		final ResourceNode attachedUser = conversation.findResource(user.getQualifiedName());
 		final ResourceNode attachedDomain = domainManager.findDomainNode(domain.getName());
 		attachedUser.addAssociation(EmbeddedAuthModule.HAS_ALTERNATE_DOMAIN, attachedDomain);
+        LOGGER.info("Granted access to domain {} for user {}.", domain, user);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void revokeAccessToDomain(RBUser user, RBDomain domain) throws RBAuthException {
 		final ResourceNode attachedUser = conversation.findResource(user.getQualifiedName());
 		final ResourceNode attachedDomain = domainManager.findDomainNode(domain.getName());
 		SNOPS.remove(attachedUser, EmbeddedAuthModule.HAS_ALTERNATE_DOMAIN, attachedDomain);
+        LOGGER.info("Revoked access to domain {} for user {}.", domain, user);
 	}
 
 	// -- PASSWORD HANDLING -------------------------------
@@ -221,9 +195,6 @@ public class EmbeddedAuthUserManager implements UserManager {
 		SNOPS.assure(arasUser, EmbeddedAuthModule.HAS_CREDENTIAL, credential);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void verifyPassword(RBUser user, String currentPassword) throws RBAuthException {
 		ResourceNode arasUser = findUserNode(user.getEmail());
@@ -235,33 +206,21 @@ public class EmbeddedAuthUserManager implements UserManager {
 
 	// -- AUTHORIZATON ------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<String> getUserRoles(RBUser user, String domain) {
 		return authorization.getUserRoles(user, domain);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Set<String> getUserPermissions(RBUser user, String domain) {
 		return authorization.getUserPermissions(user.getQualifiedName(), domain);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setUserRoles(RBUser user, String domain, List<String> roles) throws RBAuthException {
 		authorization.setUserRoles(user, domain, roles);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeAllUserRoles(RBUser user, String domain) throws RBAuthException {
 		authorization.setUserRoles(user, user.getDomesticDomain(), Collections.<String>emptyList());
@@ -278,5 +237,15 @@ public class EmbeddedAuthUserManager implements UserManager {
 		query.addField(EmbeddedAuthModule.IDENTIFIED_BY, identifier);
         return !query.getResult().isEmpty();
 	}
+
+    private List<SNText> getIdentifiers(RBUser user) {
+        final List<SNText> identifiers = new ArrayList<SNText>();
+        identifiers.add(new SNText(user.getQualifiedName().toURI()));
+        identifiers.add(new SNText(user.getEmail()));
+        if (user.getUsername() != null) {
+            identifiers.add(new SNText(user.getUsername()));
+        }
+        return identifiers;
+    }
 	
 }
