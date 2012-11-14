@@ -94,7 +94,8 @@ public class SchemaDetailPanel extends Panel {
 
 		Form<?> form = new Form<Void>("form");
 		form.add(createLabelExpressionBuilder());
-		form.add(createSchemaListView("listView", this.schema));
+		// TODO refactor wicket id to "schemaPropertyListPanel" and html tag to wicket-container
+		form.add(createSchemaPropertyListView("listView", this.schema));
 
 		form.add(new FeedbackPanel("feedback-top"));
 		form.add(new FeedbackPanel("feedback-bottom"));
@@ -161,7 +162,8 @@ public class SchemaDetailPanel extends Panel {
 
 	// ------------------------------------------------------
 
-	private Component createSchemaListView(final String id, final IModel<ResourceSchema> schema) {
+	private Component createSchemaPropertyListView(final String id, final IModel<ResourceSchema> schema) {
+
 		listModel = new PropertyRowListModel(schema);
 		ListView<PropertyRow> view = new ListView<PropertyRow>(id, listModel) {
 			@Override
