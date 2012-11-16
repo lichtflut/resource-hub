@@ -26,7 +26,7 @@ import de.lichtflut.rb.application.pages.AbstractBasePage;
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.webck.behaviors.SubmitFormOnEnterBehavior;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.domains.DomainSwitcherPanel;
+import de.lichtflut.rb.webck.components.organizer.domains.DomainSwitcherPanel;
 import de.lichtflut.rb.webck.components.fields.SearchField;
 import de.lichtflut.rb.webck.components.identities.SessionInfoPanel;
 import de.lichtflut.rb.webck.components.listview.ReferenceLink;

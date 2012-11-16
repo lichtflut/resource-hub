@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.domains;
+package de.lichtflut.rb.webck.components.organizer.domains;
 
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.services.ServiceContext;
