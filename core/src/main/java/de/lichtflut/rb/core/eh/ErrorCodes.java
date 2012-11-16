@@ -35,4 +35,10 @@ public interface ErrorCodes {
 	// -------- RBEntity validation -------------------------
 
 	public static final int CARDINALITY_EXCEPTION = 4000;
+
+	// -------- Schema validation ---------------------------
+
+	public static final int SCHEMA_NULL_EXCEPTION = 5000;
+
+	public static final int SCHEMA_CONSTRAINT_EXCEPTION = 5001;
 }

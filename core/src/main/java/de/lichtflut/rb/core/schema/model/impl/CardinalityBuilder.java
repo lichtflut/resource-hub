@@ -293,6 +293,42 @@ public final class CardinalityBuilder implements Serializable {
 					+ "]";
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + max;
+			result = prime * result + min;
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean equals(final Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (!(obj instanceof SimpleCardinalityImpl)) {
+				return false;
+			}
+			SimpleCardinalityImpl other = (SimpleCardinalityImpl) obj;
+			if (max != other.max) {
+				return false;
+			}
+			if (min != other.min) {
+				return false;
+			}
+			return true;
+		}
+
 	}//End of inner class CardinalityImpl
 
 }

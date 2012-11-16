@@ -3,13 +3,10 @@
  */
 package de.lichtflut.rb.webck.components.typesystem.constraints;
 
-import de.lichtflut.rb.core.schema.RBSchema;
-import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.fields.ClassPickerField;
-import de.lichtflut.rb.webck.components.fields.ResourcePickerField;
-import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -23,9 +20,13 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.ResourceID;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
-import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.fields.ClassPickerField;
+import de.lichtflut.rb.webck.components.fields.ResourcePickerField;
+import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 
 /**
  * 
@@ -71,7 +72,7 @@ public class ConstraintsEditorPanel extends Panel {
 		}
 	}
 
-	private void addComponents(final IModel<PropertyRow> model, Form<?> form) {
+	private void addComponents(final IModel<PropertyRow> model, final Form<?> form) {
 		addClassPicker(model, form);
 
 		WebMarkupContainer container = new WebMarkupContainer("container");
@@ -83,10 +84,10 @@ public class ConstraintsEditorPanel extends Panel {
 		form.add(container);
 	}
 
-	private void addConstraintTypeSwitch(final IModel<PropertyRow> model, WebMarkupContainer container) {
+	private void addConstraintTypeSwitch(final IModel<PropertyRow> model, final WebMarkupContainer container) {
 		AjaxLink<String> switchToLiteralLink = new AjaxLink<String>("switchToLiteral") {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				isPublic.setObject(false);
 				updateConstraintType();
 				RBAjaxTarget.add(ConstraintsEditorPanel.this);
@@ -94,7 +95,7 @@ public class ConstraintsEditorPanel extends Panel {
 		};
 		AjaxLink<String> switchToResourceLink = new AjaxLink<String>("switchToResource") {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				isPublic.setObject(true);
 				updateConstraintType();
 				RBAjaxTarget.add(ConstraintsEditorPanel.this);
@@ -110,21 +111,21 @@ public class ConstraintsEditorPanel extends Panel {
 		container.add(switchToResourceLink);
 	}
 
-	private void addLiteralConstraintComponents(final IModel<PropertyRow> model, WebMarkupContainer container) {
+	private void addLiteralConstraintComponents(final IModel<PropertyRow> model, final WebMarkupContainer container) {
 		final TextField<String> literalConstraint = new TextField<String>("literalConstraint", new PropertyModel<String>(model,
 				"literalConstraint"));
 		literalConstraint.add(visibleIf(areEqual(isPublic, false)));
 		container.add(literalConstraint);
 	}
 
-	private void addConstraintPicker(IModel<PropertyRow> model, WebMarkupContainer container) {
+	private void addConstraintPicker(final IModel<PropertyRow> model, final WebMarkupContainer container) {
 		ResourcePickerField picker = new ResourcePickerField("constraintPicker",
 				new PropertyModel<ResourceID>(model, "resourceConstraint"), RBSchema.PUBLIC_CONSTRAINT);
 		picker.add(visibleIf(areEqual(isPublic, true)));
 		container.add(picker);
 	}
 
-	private void addClassPicker(final IModel<PropertyRow> model, Form<?> form) {
+	private void addClassPicker(final IModel<PropertyRow> model, final Form<?> form) {
 		final ClassPickerField resourceConstraint = new ClassPickerField("resourceConstraint", new PropertyModel<ResourceID>(model,
 				"resourceConstraint"));
 		resourceConstraint.add(visibleIf(areEqual(Model.of(Datatype.RESOURCE), model.getObject().getDataType())));

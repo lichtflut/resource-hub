@@ -1,8 +1,8 @@
 package de.lichtflut.rb.core.schema.model.impl;
 
-import de.lichtflut.rb.core.schema.model.VisualizationInfo;
-
 import java.io.Serializable;
+
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 
 /**
  * <p>
@@ -17,67 +17,112 @@ import java.io.Serializable;
  */
 public class PlainVisualizationInfo implements VisualizationInfo, Serializable {
 
-    private boolean embedded = false;
-    private boolean floating = false;
-    private String style = "";
+	private boolean embedded = false;
+	private boolean floating = false;
+	private String style = "";
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    /**
-     * Default constructor. Creates a non embedded, not floating info.
-     */
-    public PlainVisualizationInfo() {
-    }
+	/**
+	 * Default constructor. Creates a non embedded, not floating info.
+	 */
+	public PlainVisualizationInfo() {
+	}
 
-    /**
-     * Copy constructor.
-     */
-    public PlainVisualizationInfo(VisualizationInfo other) {
-        this.embedded = other.isEmbedded();
-        this.floating = other.isFloating();
-        this.style = other.getStyle();
-    }
+	/**
+	 * Copy constructor.
+	 */
+	public PlainVisualizationInfo(final VisualizationInfo other) {
+		this.embedded = other.isEmbedded();
+		this.floating = other.isFloating();
+		this.style = other.getStyle();
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    @Override
-    public boolean isEmbedded() {
-        return embedded;
-    }
+	@Override
+	public boolean isEmbedded() {
+		return embedded;
+	}
 
-    @Override
-    public boolean isFloating() {
-        return floating;
-    }
+	@Override
+	public boolean isFloating() {
+		return floating;
+	}
 
-    @Override
-    public String getStyle() {
-        return style;
-    }
+	@Override
+	public String getStyle() {
+		return style;
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
 
-    public void setEmbedded(boolean embedded) {
-        this.embedded = embedded;
-    }
+	public void setEmbedded(final boolean embedded) {
+		this.embedded = embedded;
+	}
 
-    public void setFloating(boolean floating) {
-        this.floating = floating;
-    }
+	public void setFloating(final boolean floating) {
+		this.floating = floating;
+	}
 
-    public void setStyle(String style) {
-        this.style = style;
-    }
+	public void setStyle(final String style) {
+		this.style = style;
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    @Override
-    public String toString() {
-        return "visualize {" +
-                "embedded=" + embedded +
-                ", floating=" + floating +
-                ", style='" + style + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "visualize {" +
+				"embedded=" + embedded +
+				", floating=" + floating +
+				", style='" + style + '\'' +
+				'}';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (embedded ? 1231 : 1237);
+		result = prime * result + (floating ? 1231 : 1237);
+		result = prime * result + ((style == null) ? 0 : style.hashCode());
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof PlainVisualizationInfo)) {
+			return false;
+		}
+		PlainVisualizationInfo other = (PlainVisualizationInfo) obj;
+		if (embedded != other.embedded) {
+			return false;
+		}
+		if (floating != other.floating) {
+			return false;
+		}
+		if (style == null) {
+			if (other.style != null) {
+				return false;
+			}
+		} else if (!style.equals(other.style)) {
+			return false;
+		}
+		return true;
+	}
+
 }
