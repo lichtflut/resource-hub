@@ -26,11 +26,11 @@ import java.util.Set;
 
 /**
  * <p>
- * DESCRITPION.
+ *  Abstract base for login pages.
  * </p>
- * <p/>
+ *
  * <p>
- * Created 09.11.12
+ *  Created Nov 9, 2012
  * </p>
  *
  * @author Oliver Tigges
