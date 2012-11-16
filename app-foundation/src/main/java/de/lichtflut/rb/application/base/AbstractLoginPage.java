@@ -10,10 +10,7 @@ import de.lichtflut.rb.core.security.LoginData;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.webck.common.CookieAccess;
 import de.lichtflut.rb.webck.common.RBWebSession;
-import de.lichtflut.rb.webck.models.infra.VersionInfoModel;
 import org.apache.wicket.RestartResponseException;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -37,7 +34,7 @@ import java.util.Set;
  */
 public class AbstractLoginPage extends AbstractBasePage {
 
-    private final Logger logger = LoggerFactory.getLogger(LoginPage.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(LoginPage.class);
 
     @SpringBean
     private AuthModule authModule;
@@ -78,17 +75,17 @@ public class AbstractLoginPage extends AbstractBasePage {
             final RBUser user = authService.login(loginData);
             final Set<String> permissions = authModule.getUserManagement().getUserPermissions(user, user.getDomesticDomain());
             if (!permissions.contains(RBPermission.LOGIN.name())) {
-                logger.info("Login aborted - User {} is lack of permission: {}", user.getName(), RBPermission.LOGIN.name());
+                LOGGER.info("Login aborted - User {} is lack of permission: {}", user.getName(), RBPermission.LOGIN.name());
                 error(getString("error.login.activation"));
             } else {
-                logger.info("User {} logged in.", user.getName());
+                LOGGER.info("User {} logged in.", user.getName());
                 RBWebSession.get().replaceSession();
                 initializeUserSession(user);
             }
             if (loginData.getStayLoggedIn()) {
                 final String token = authService.createRememberMeToken(user, loginData);
                 CookieAccess.getInstance().setRememberMeToken(token);
-                logger.info("Added 'remember-me' cookie for {}", user.getName());
+                LOGGER.info("Added 'remember-me' cookie for {}", user.getName());
             }
         } catch (LoginException e) {
             error(getString("error.login.failed"));
@@ -104,7 +101,7 @@ public class AbstractLoginPage extends AbstractBasePage {
                 if (permissions.contains(RBPermission.LOGIN.name())) {
                     initializeUserSession(user);
                 } else {
-                    logger.info("Login aborted - User {} is lack of permission: {}", user.getName(), RBPermission.LOGIN.name());
+                    LOGGER.info("Login aborted - User {} is lack of permission: {}", user.getName(), RBPermission.LOGIN.name());
                     error(getString("error.login.activation"));
                 }
             }

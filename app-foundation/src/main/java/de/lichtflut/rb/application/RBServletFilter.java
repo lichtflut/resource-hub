@@ -51,6 +51,7 @@ public class RBServletFilter implements Filter {
         checkSessionCookie(httpServletRequest, httpServletResponse);
 
 		chain.doFilter(request, response);
+
     }
 
     // ----------------------------------------------------

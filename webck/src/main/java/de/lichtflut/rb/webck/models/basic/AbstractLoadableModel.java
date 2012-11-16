@@ -21,17 +21,11 @@ public abstract class AbstractLoadableModel<T> implements LoadableModel<T> {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public final void reset() {
 		loaded = null;
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public final T getObject() {
 		if (loaded == null) {
@@ -44,17 +38,11 @@ public abstract class AbstractLoadableModel<T> implements LoadableModel<T> {
 		}
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setObject(final T loaded) {
 		this.loaded = loaded;
 	}
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void detach() {
 	}
