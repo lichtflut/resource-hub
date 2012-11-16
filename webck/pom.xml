@@ -15,7 +15,7 @@
 	<name>RB Web Construction Kit</name>
 
 	<properties>
-		<wicket.version>6.0.0</wicket.version>
+		<wicket.version>6.2.0</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
 		<wiquery.version>6.0.0</wiquery.version>
 		<wicket-extensions.version>6.0.0</wicket-extensions.version>
