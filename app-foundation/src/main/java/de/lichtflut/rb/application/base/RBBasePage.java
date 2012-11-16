@@ -40,11 +40,11 @@ import de.lichtflut.rb.webck.models.viewspecs.MenuItemListModel;
 
 /**
  * <p>
- * Base page for all pages in Glasnost Information Server.
+ *  This page is a common  base for RB applications and may be useful for most simple applications.
  * </p>
  * 
  * <p>
- * Created May 30, 2011
+ *  Created May 30, 2011
  * </p>
  * 
  * @author Oliver Tigges
@@ -98,7 +98,7 @@ public class RBBasePage extends AbstractBasePage {
 		.add(visibleIf(CurrentUserModel.hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
 
 		add(new Label("username", CurrentUserModel.displayNameModel())
-		.add(visibleIf(CurrentUserModel.isLoggedIn())));
+		    .add(visibleIf(CurrentUserModel.isLoggedIn())));
 
 		add(new DomainSwitcherPanel("domain", CurrentDomainModel.displayNameModel()));
 
