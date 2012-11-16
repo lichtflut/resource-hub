@@ -133,7 +133,7 @@ public class EditPropertyDeclPanel extends Panel {
 				onCancel(target, form);
 			}
 		};
-		save.add(new Label("saveLabel", new ResourceModel("button.save", "Save!")));
+		save.add(new Label("saveLabel", new ResourceModel("button.ok", "Okay!")));
 		cancel.add(new Label("cancelLabel", new ResourceModel("button.cancel", "Cancel")));
 		form.add(save, cancel);
 	}
