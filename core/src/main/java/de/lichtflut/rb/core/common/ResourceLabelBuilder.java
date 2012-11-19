@@ -71,7 +71,7 @@ public class ResourceLabelBuilder {
 		String first = null;
 		String noLanguage = null;
 		String matchingLanguage = null;
-		for (Statement statement : src.getAssociations(predicate)) {
+		for (Statement statement : SNOPS.associations(src, predicate)) {
 			if (statement.getObject().isValueNode()) {
 				final ValueNode value = statement.getObject().asValue();
 				if (Infra.equals(value.getLocale(), locale)) {
