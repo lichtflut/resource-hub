@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.common;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.views.SNEntity;
 
 import java.io.Serializable;
 
@@ -43,7 +44,7 @@ public interface RelationshipFilter extends Serializable {
 		
 		protected boolean isOfType(ResourceNode node, ResourceID... types) {
 			for (ResourceID current : types) {
-				if(node.asEntity().isInstanceOf(current)) {
+				if(SNEntity.from(node).isInstanceOf(current)) {
 					return true;	
 				}
 			}
