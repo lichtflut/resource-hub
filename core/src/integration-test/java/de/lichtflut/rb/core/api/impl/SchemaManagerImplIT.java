@@ -33,9 +33,6 @@ import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 /**
  * <p>
  *  Integration test for schema management.
- *
- *  TODO: Move to integration-test module
- *
  * </p>
  *
  * <p>

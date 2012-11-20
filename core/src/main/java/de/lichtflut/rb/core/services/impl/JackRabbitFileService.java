@@ -5,11 +5,10 @@ package de.lichtflut.rb.core.services.impl;
 
 import java.util.UUID;
 
-import de.lichtflut.rb.core.config.FileServiceConfiguration;
-import de.lichtflut.repository.filestore.FileStoreRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.lichtflut.rb.core.config.FileServiceConfiguration;
 import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.repository.ContentDescriptor;
@@ -27,28 +26,28 @@ import de.lichtflut.repository.impl.RepositoryDelegatorImpl;
  */
 public class JackRabbitFileService implements FileService {
 
-    public static final String FILE_SERVICE_JACK_RABBIT_CONFIG_XML = "file-service.jack-rabbit.config-xml";
+	public static final String FILE_SERVICE_JACK_RABBIT_CONFIG_XML = "file-service.jack-rabbit.config-xml";
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(JackRabbitFileService.class);
 
-    protected RepositoryDelegator delegator;
+	protected RepositoryDelegator delegator;
 
 	private final RBConfig rbConfig;
 
-    private FileServiceConfiguration fsConfiguration;
+	private final FileServiceConfiguration fsConfiguration;
 
-    // ---------------- Constructor -------------------------
+	// ---------------- Constructor -------------------------
 
-    /**
-     * Constructor for file service factory.
-     * @param rbConfig The RB configuration.
-     * @param fsConfiguration The file service configuration.
-     */
-    public JackRabbitFileService(RBConfig rbConfig, FileServiceConfiguration fsConfiguration) {
-        this.rbConfig = rbConfig;
-        this.fsConfiguration = fsConfiguration;
-        initRepository();
-    }
+	/**
+	 * Constructor for file service factory.
+	 * @param rbConfig The RB configuration.
+	 * @param fsConfiguration The file service configuration.
+	 */
+	public JackRabbitFileService(final RBConfig rbConfig, final FileServiceConfiguration fsConfiguration) {
+		this.rbConfig = rbConfig;
+		this.fsConfiguration = fsConfiguration;
+		initRepository();
+	}
 
 	// ------------------------------------------------------
 
@@ -96,8 +95,8 @@ public class JackRabbitFileService implements FileService {
 	// ------------------------------------------------------
 
 	protected void initRepository() {
-        final String jcrConfigFile = fsConfiguration.getProperty(FILE_SERVICE_JACK_RABBIT_CONFIG_XML);
-        delegator = new RepositoryDelegatorImpl("admin","adminId") {
+		final String jcrConfigFile = fsConfiguration.getProperty(FILE_SERVICE_JACK_RABBIT_CONFIG_XML);
+		delegator = new RepositoryDelegatorImpl("admin","adminId") {
 			@Override
 			protected RepositoryConfigWrapper getConfig() {
 				String home = getHomeDirectory();

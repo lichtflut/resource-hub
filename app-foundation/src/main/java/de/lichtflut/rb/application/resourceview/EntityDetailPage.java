@@ -5,9 +5,7 @@ package de.lichtflut.rb.application.resourceview;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 
-import de.lichtflut.rb.application.common.CommonParams;
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -16,6 +14,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.application.base.RBBasePage;
+import de.lichtflut.rb.application.common.CommonParams;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
@@ -58,7 +57,7 @@ public class EntityDetailPage extends RBBasePage {
 		} else {
 			add(new WebMarkupContainer("rb").setVisible(false));
 		}
-		
+
 		add(new NotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
 	}
 
@@ -76,13 +75,13 @@ public class EntityDetailPage extends RBBasePage {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Component createSecondLevelNav(String componentID) {
+	protected Component createSecondLevelNav(final String componentID) {
 		return new BreadCrumbsBar(componentID, 7);
 	}
 
 	// -----------------------------------------------------
 
-	private EntityHandle createHandle(PageParameters params) {
+	private EntityHandle createHandle(final PageParameters params) {
 		final StringValue idParam = params.get(CommonParams.PARAM_RESOURCE_ID);
 		final StringValue typeParam = params.get(CommonParams.PARAM_RESOURCE_TYPE);
 
@@ -97,7 +96,7 @@ public class EntityDetailPage extends RBBasePage {
 		}
 	}
 
-	private void initHistory(EntityHandle handle, boolean editmode) {
+	private void initHistory(final EntityHandle handle, final boolean editmode) {
 		final BrowsingHistory history = RBWebSession.get().getHistory();
 		if (editmode && handle.hasId()) {
 			history.edit(handle);
@@ -112,7 +111,7 @@ public class EntityDetailPage extends RBBasePage {
 
 	class Browser extends ResourceBrowsingPanel {
 
-		public Browser(String id) {
+		public Browser(final String id) {
 			super(id);
 		}
 

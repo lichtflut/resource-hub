@@ -40,6 +40,8 @@ public class SNPropertyEditorPanelTest extends AbstractRBWebTest {
 
 	private SNPropertyEditorPanel panel;
 
+	// ------------------------------------------------------
+
 	/**
 	 * Test method for
 	 * {@link de.lichtflut.rb.webck.components.typesystem.properties.SNPropertyEditorPanel#SNPropertyEditorPanel(java.lang.String, org.apache.wicket.model.IModel)}

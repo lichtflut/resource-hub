@@ -94,7 +94,6 @@ public class SchemaDetailPanel extends Panel {
 
 		Form<?> form = new Form<Void>("form");
 		form.add(createLabelExpressionBuilder());
-		// TODO refactor wicket id to "schemaPropertyListPanel" and html tag to wicket-container
 		form.add(createSchemaPropertyListView("listView", this.schema));
 
 		form.add(new FeedbackPanel("feedback-top"));

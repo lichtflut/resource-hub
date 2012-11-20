@@ -25,21 +25,21 @@ import de.lichtflut.rb.core.security.RBUser;
  * @author Oliver Tigges
  */
 public interface SecurityService {
-	
+
 	/**
 	 * Find a user by one of it's identifiers (username, email address, URI).
 	 * @param identifier The identifier.
 	 * @return The user or null if not found.
 	 */
 	RBUser findUser(String identifier);
-	
+
 	/**
 	 * Create a new user.
 	 * @param emailID The email as primary identifier.
 	 * @param username An optional username as secondary Identifier.
 	 * @param password The unencrypted password.
 	 * @return The created user.
-	 * @throws RBException 
+	 * @throws RBException
 	 */
 	RBUser createUser(String emailID, String username, String password, Locale locale) throws RBException;
 
@@ -50,30 +50,30 @@ public interface SecurityService {
 	 * @param username The user's unique name - may be null.
 	 * @param password The password.
 	 * @return The domain administration user.
-	 * @throws RBAuthException 
+	 * @throws RBAuthException
 	 */
 	RBUser createDomainAdmin(RBDomain domain, String email, String username, String password) throws RBAuthException;
-	
+
 	/**
 	 * Grant this user access to the domain and the domain admin permission.
 	 * @param domain The domain.
 	 * @param user The user.
-	 * @throws RBAuthException 
+	 * @throws RBAuthException
 	 */
 	void makeDomainAdmin(RBDomain domain, RBUser user) throws RBAuthException;
-	
+
 	/**
 	 * @param user The existing user to update.
-	 * @throws RBException 
+	 * @throws RBException
 	 */
 	void updateUser(RBUser user) throws RBException;
-	
+
 	/**
 	 * Delete a user from this domain and unregister in master domain.
 	 * @param user The user to be deleted.
 	 */
 	void deleteUser(RBUser user);
-	
+
 	// ----------------------------------------------------
 
 	/**
@@ -89,12 +89,12 @@ public interface SecurityService {
 	 * Resets the password with a generated one.
 	 * @param user
 	 * @return the new password
-	 * @throws RBException 
+	 * @throws RBException
 	 */
 	void resetPasswordForUser(RBUser user, Locale locale) throws RBException;
 
 	// ----------------------------------------------------
-	
+
 
 	/**
 	 * Get the user's roles.
@@ -103,7 +103,7 @@ public interface SecurityService {
 	 * @return The list of roles.
 	 */
 	List<String> getUserRoles(RBUser user, String domain);
-	
+
 	/**
 	 * Get the user's permissions.
 	 * @param user The user who's permissions are requested.
@@ -111,21 +111,21 @@ public interface SecurityService {
 	 * @return The list of permissions.
 	 */
 	Set<String> getUserPermissions(RBUser user, String domain);
-	
+
 	/**
 	 * Assure that the user has exactly the given roles.
-	 * @param user The user.
-	 * @param domain TODO
-	 * @param roles The roles.
-	 * @throws RBAuthException 
+	 * @param user The user to add roles
+	 * @param domain The Domain to be used
+	 * @param roles The roles to define
+	 * @throws RBAuthException
 	 */
 	void setUserRoles(RBUser user, String domain, List<String> roles) throws RBAuthException;
-	
+
 	/**
 	 * Removes all roles from a user.
 	 * @param user The user the roles should be removed from.
-	 * @throws RBAuthException 
+	 * @throws RBAuthException
 	 */
 	void removeAllUserRoles(RBUser user) throws RBAuthException;
-	
+
 }

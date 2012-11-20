@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.entity;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
@@ -25,7 +26,7 @@ import de.lichtflut.rb.core.schema.model.VisualizationInfo;
  *
  * @author Ravi Knox
  */
-public interface RBField {
+public interface RBField extends Serializable {
 
 	/**
 	 * Returns the (attribute / )name of this RBField.
