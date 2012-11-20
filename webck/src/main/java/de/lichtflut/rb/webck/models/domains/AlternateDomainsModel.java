@@ -55,9 +55,6 @@ public class AlternateDomainsModel extends DerivedDetachableModel<List<RBDomain>
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected List<RBDomain> derive(final RBUser user) {
 		final String currentDomain = context.getDomain();

@@ -27,8 +27,8 @@ public class LogoutPage extends AbstractBasePage {
 	 * Constructor.
 	 */
 	public LogoutPage() {
+        CookieAccess.getInstance().removeAuthCookies();
 		if (WebSession.exists()) {
-            CookieAccess.getInstance().removeAuthCookies();
 			RBWebSession.get().onLogout();
 			WebSession.get().invalidate();
 		}

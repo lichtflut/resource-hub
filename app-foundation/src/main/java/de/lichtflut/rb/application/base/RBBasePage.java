@@ -26,7 +26,7 @@ import de.lichtflut.rb.application.pages.AbstractBasePage;
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.webck.behaviors.SubmitFormOnEnterBehavior;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.domains.DomainSwitcherPanel;
+import de.lichtflut.rb.webck.components.organizer.domains.DomainSwitcherPanel;
 import de.lichtflut.rb.webck.components.fields.SearchField;
 import de.lichtflut.rb.webck.components.identities.SessionInfoPanel;
 import de.lichtflut.rb.webck.components.listview.ReferenceLink;
@@ -40,11 +40,11 @@ import de.lichtflut.rb.webck.models.viewspecs.MenuItemListModel;
 
 /**
  * <p>
- * Base page for all pages in Glasnost Information Server.
+ *  This page is a common  base for RB applications and may be useful for most simple applications.
  * </p>
  * 
  * <p>
- * Created May 30, 2011
+ *  Created May 30, 2011
  * </p>
  * 
  * @author Oliver Tigges
@@ -98,7 +98,7 @@ public class RBBasePage extends AbstractBasePage {
 		.add(visibleIf(CurrentUserModel.hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
 
 		add(new Label("username", CurrentUserModel.displayNameModel())
-		.add(visibleIf(CurrentUserModel.isLoggedIn())));
+		    .add(visibleIf(CurrentUserModel.isLoggedIn())));
 
 		add(new DomainSwitcherPanel("domain", CurrentDomainModel.displayNameModel()));
 

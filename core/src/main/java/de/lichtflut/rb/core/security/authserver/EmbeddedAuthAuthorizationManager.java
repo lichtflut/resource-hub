@@ -109,7 +109,7 @@ public class EmbeddedAuthAuthorizationManager {
 
 		final ResourceNode domainNode = domainManager.findDomainNode(domain);
 		// Remove old roles
-		Set<Statement> oldRoles = userNode.getAssociations(EmbeddedAuthModule.HAS_ROLE);
+		Set<Statement> oldRoles = SNOPS.associations(userNode, EmbeddedAuthModule.HAS_ROLE);
 		for (Statement stmt : oldRoles) {
 
 			SemanticNode role = stmt.getObject();

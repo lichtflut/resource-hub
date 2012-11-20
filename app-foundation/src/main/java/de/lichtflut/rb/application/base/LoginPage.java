@@ -19,7 +19,7 @@ import de.lichtflut.rb.webck.models.infra.VersionInfoModel;
  * </p>
  * 
  * <p>
- * Created Dec 8, 2011
+ *  Created Dec 8, 2011
  * </p>
  * 
  * @author Oliver Tigges

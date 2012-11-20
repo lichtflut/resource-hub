@@ -157,7 +157,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		if (userNode == null) {
 			throw new IllegalArgumentException("User not found");
 		}
-		for (Statement stmt : userNode.getAssociations(EmbeddedAuthModule.HAS_ALTERNATE_DOMAIN)) {
+		for (Statement stmt : SNOPS.associations(userNode, EmbeddedAuthModule.HAS_ALTERNATE_DOMAIN)) {
 			result.add(EmbeddedAuthFunctions.toRBDomain(stmt.getObject()));
 		}
 		result.add(findDomain(user.getDomesticDomain()));

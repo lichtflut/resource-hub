@@ -48,6 +48,7 @@ public class RBServletFilter implements Filter {
 		checkSessionCookie(httpServletRequest, httpServletResponse);
 
 		chain.doFilter(request, response);
+
 	}
 
 	// ----------------------------------------------------
@@ -56,12 +57,12 @@ public class RBServletFilter implements Filter {
 		String existingToken = getTokenFromRequest(httpServletRequest);
 		if (existingToken != null) {
 			LOGGER.trace("Incoming request with existingToken {}.", existingToken);
-			return;
+		} else {
+			LOGGER.trace("Incoming request from unauthenticated user.");
 		}
 
-		LOGGER.trace("Incoming request from unauthenticated user.");
 		String newToken = getTokenInSession(httpServletRequest);
-		if (newToken != null) {
+		if (newToken != null && !newToken.equals(existingToken)) {
 			// a token has been deposited in session
 			final Cookie cookie = new Cookie(AuthModule.COOKIE_SESSION_AUTH, newToken);
 			cookie.setMaxAge(3600);

@@ -77,7 +77,7 @@ public class AuthenticationTicket {
     private static Type detectTicketType(String field) throws TicketValidationException {
         if (Type.SESSION.getPrefix().equals(field)) {
             return Type.SESSION;
-        } else if (Type.REMEMBER_ME.equals(field)) {
+        } else if (Type.REMEMBER_ME.getPrefix().equals(field)) {
             return Type.REMEMBER_ME;
         } else {
             throw new TicketValidationException("Unknown type prefix '" + field + "' in token.");
