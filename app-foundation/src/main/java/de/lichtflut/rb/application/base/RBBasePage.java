@@ -26,12 +26,12 @@ import de.lichtflut.rb.application.pages.AbstractBasePage;
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.webck.behaviors.SubmitFormOnEnterBehavior;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.organizer.domains.DomainSwitcherPanel;
 import de.lichtflut.rb.webck.components.fields.SearchField;
 import de.lichtflut.rb.webck.components.identities.SessionInfoPanel;
 import de.lichtflut.rb.webck.components.listview.ReferenceLink;
 import de.lichtflut.rb.webck.components.navigation.NavigationBar;
 import de.lichtflut.rb.webck.components.navigation.NavigationNode;
+import de.lichtflut.rb.webck.components.organizer.domains.DomainSwitcherPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.CurrentUserModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
@@ -65,6 +65,7 @@ public class RBBasePage extends AbstractBasePage {
 	 */
 	public RBBasePage(final PageParameters parameters) {
 		super(parameters);
+		setTitle(new Model<String>("RB"));
 	}
 
 	// -----------------------------------------------------
@@ -98,12 +99,22 @@ public class RBBasePage extends AbstractBasePage {
 		.add(visibleIf(CurrentUserModel.hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
 
 		add(new Label("username", CurrentUserModel.displayNameModel())
-		    .add(visibleIf(CurrentUserModel.isLoggedIn())));
+		.add(visibleIf(CurrentUserModel.isLoggedIn())));
 
 		add(new DomainSwitcherPanel("domain", CurrentDomainModel.displayNameModel()));
 
 		add(new SessionInfoPanel("sessionInfo"));
 
+	}
+
+	// ------------------------------------------------------
+
+	/**
+	 * Set the page title.
+	 * @param title The page title
+	 */
+	protected void setTitle(final IModel<String> title) {
+		addOrReplace(new Label("headerTitle", title));
 	}
 
 	protected Component createSecondLevelNav(final String componentID) {
