@@ -120,6 +120,14 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		return new WebMarkupContainer(id);
 	}
 
+	/**
+	 * Additional save-action.
+	 * @param model Edited entity
+	 */
+	protected void additionalSaveAction(final IModel<RBEntity> model) {
+
+	}
+
 	// ----------------------------------------------------
 
 	/**
@@ -154,6 +162,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				final RBStandardButton save = new RBStandardButton("save") {
 					@Override
 					protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
+						additionalSaveAction(model);
 						Map<Integer, List<RBField>> errors = entityManager.validate(model.getObject());
 						if(errors.isEmpty()){
 							entityManager.store(model.getObject());

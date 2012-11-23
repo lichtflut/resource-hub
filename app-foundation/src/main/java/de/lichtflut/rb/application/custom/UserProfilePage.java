@@ -3,18 +3,19 @@
  */
 package de.lichtflut.rb.application.custom;
 
-import de.lichtflut.rb.application.RBApplication;
-import de.lichtflut.rb.application.common.CommonParams;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
+import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.application.base.RBBasePage;
+import de.lichtflut.rb.application.common.CommonParams;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.settings.ChangePasswordPanel;
 import de.lichtflut.rb.webck.components.settings.SetUserProfilePanel;
 import de.lichtflut.rb.webck.components.widgets.management.MenuManagementPanel;
@@ -49,14 +50,14 @@ public class UserProfilePage extends RBBasePage {
 
 	// ----------------------------------------------------
 
-    @Override
-    protected boolean needsAuthentication() {
-        return true;
-    }
+	@Override
+	protected boolean needsAuthentication() {
+		return true;
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    /**
+	/**
 	 * @return a {@link Label} holding the displayname for the current user.
 	 */
 	private Label createTitle() {
@@ -83,7 +84,10 @@ public class UserProfilePage extends RBBasePage {
 
 			@Override
 			protected void jumpToResourceEditorPage(final EntityHandle handle) {
-				setResponsePage(RBApplication.get().getEntityDetailPage());
+				PageParameters parameters = new PageParameters();
+				parameters.add(DisplayMode.PARAMETER, DisplayMode.CREATE);
+				parameters.add(CommonParams.PARAM_RESOURCE_TYPE, RB.PERSON);
+				setResponsePage(RBApplication.get().getEntityDetailPage(), parameters);
 			}
 
 		};

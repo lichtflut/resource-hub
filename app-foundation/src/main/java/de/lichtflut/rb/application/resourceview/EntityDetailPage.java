@@ -43,7 +43,10 @@ public class EntityDetailPage extends RBBasePage {
 	/**
 	 * Constructor.
 	 * 
-	 * @param params
+	 * @param params PageParameters might contain<ul>
+	 * <li>{@link DisplayMode}</li>
+	 * <li>{@link CommonParams#PARAM_RESOURCE_ID}.</li>
+	 * </ul>
 	 */
 	public EntityDetailPage(final PageParameters params) {
 		super(params);
