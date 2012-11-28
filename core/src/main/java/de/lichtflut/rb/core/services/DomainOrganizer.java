@@ -24,16 +24,16 @@ import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
  * @author Oliver Tigges
  */
 public interface DomainOrganizer {
-	
+
 	/**
 	 * @return
 	 */
 	List<Namespace> getNamespaces();
-	
+
 	void registerNamespace(NamespaceDeclaration namespace);
 
 	// ----------------------------------------------------
-	
+
 	/**
 	 * @return The contexts for the domain.
 	 */
@@ -43,33 +43,33 @@ public interface DomainOrganizer {
 	 * @param context The context to be registered.
 	 */
 	void registerContext(ContextDeclaration context);
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * Link the domain to it's organisation.
 	 * @param organization
 	 */
 	void setDomainOrganization(final ResourceID organization);
-	
+
 	/**
 	 * Get the organization linked to the domain.
 	 * @return The Organization.
 	 */
 	ResourceID getDomainOrganization();
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * Link the current user to the person representing him.
 	 * @param person
 	 */
 	void setUsersPerson(final ResourceID person);
-	
+
 	/**
 	 * Get the person representing the current user.
-	 * @return The person.
+	 * @return The resourceId of the assigned person entity, <code>null</code> if none found.
 	 */
 	ResourceID getUsersPerson();
-	
+
 }

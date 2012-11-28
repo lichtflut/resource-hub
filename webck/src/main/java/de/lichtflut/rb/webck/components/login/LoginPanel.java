@@ -37,7 +37,6 @@ public abstract class LoginPanel extends Panel {
 		super(id);
 
 		add(createLoginForm());
-
 	}
 
 	// ----------------------------------------------------

@@ -82,6 +82,11 @@ public class EntityManagerImpl implements EntityManager {
 
 	// -----------------------------------------------------
 
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @return An entity, or <code>null</code> if none found
+	 */
 	@Override
 	public RBEntityImpl find(final ResourceID resourceID) {
 		return find(resourceID, true);

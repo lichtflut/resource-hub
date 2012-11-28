@@ -5,8 +5,6 @@ package de.lichtflut.repository;
 
 import java.io.InputStream;
 
-
-
 /**
  * <p>
  * This interface defines how to communicate with a Repository.

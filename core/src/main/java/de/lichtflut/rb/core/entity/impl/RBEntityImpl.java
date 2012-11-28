@@ -18,6 +18,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -114,11 +115,14 @@ public class RBEntityImpl implements RBEntity {
 
 	@Override
 	public ResourceID getType() {
-		Statement type = SNOPS.singleAssociation(node, RDF.TYPE);
-		if(null == type){
-			return null;
+		Set<SemanticNode> types = SNOPS.objects(node, RDF.TYPE);
+		// We are not interested in RBSystem.ENTITY
+		for (SemanticNode node : types) {
+			if(!node.equals(RBSystem.ENTITY)){
+				return node.asResource();
+			}
 		}
-		return type.getObject().asResource();
+		return null;
 	}
 
 	@Override

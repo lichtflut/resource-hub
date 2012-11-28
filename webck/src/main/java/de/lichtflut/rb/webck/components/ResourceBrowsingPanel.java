@@ -56,7 +56,6 @@ import de.lichtflut.rb.webck.models.entity.RBEntityModel;
  * 
  * @author Oliver Tigges
  */
-@SuppressWarnings("rawtypes")
 public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 	private final RBEntityModel model = new RBEntityModel();
@@ -76,7 +75,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 		add(new FeedbackPanel("feedback").setOutputMarkupId(true).setEscapeModelStrings(false));
 
-		final Form form = new Form("form");
+		final Form<?> form = new Form<Void>("form");
 		form.setOutputMarkupId(true);
 		form.setMultiPart(true);
 
@@ -110,7 +109,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		entityManager.store(model.getObject());
 
 		// navigate to sub entity
-		final ReferenceReceiveAction action = new EntityAttributeApplyAction(model.getObject(), predicate);
+		final ReferenceReceiveAction<?> action = new EntityAttributeApplyAction(model.getObject(), predicate);
 		RBWebSession.get().getHistory().createReference(handle, action);
 	}
 
@@ -157,7 +156,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		return new LocalButtonBar("localButtonBar", model) {
 			@Override
 			protected Component createSaveButton(final IModel<RBEntity> model) {
-				ConditionalModel viewMode = BrowsingContextModel.isInViewMode();
+				ConditionalModel<Boolean> viewMode = BrowsingContextModel.isInViewMode();
 
 				final RBStandardButton save = new RBStandardButton("save") {
 					@Override
