@@ -41,9 +41,6 @@ public class RevertableModel<T> implements IModel<T> {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public T getObject() {
 		return clone.getObject();
