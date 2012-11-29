@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * <p>
- *  Model providing an Entitie's statments.
+ *  Model providing an Entity's statements.
  * </p>
  *
  * <p>
@@ -29,9 +29,6 @@ public class RBEntityStatementsModel extends DerivedDetachableModel<List<Stateme
 	
 	// ----------------------------------------------------
 
-	/**
-	 * @param source
-	 */
 	public RBEntityStatementsModel(IModel<RBEntity> source, RelationshipFilter filter) {
 		super(source);
 		this.filter = filter;
@@ -39,9 +36,6 @@ public class RBEntityStatementsModel extends DerivedDetachableModel<List<Stateme
 	
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected List<Statement> derive(RBEntity entity) {
 		return new RelationshipAccess(entity).getStatements(filter);

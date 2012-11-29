@@ -44,19 +44,12 @@ public class RBFieldValueModel<T> implements IModel<T> {
 	
 	// -----------------------------------------------------
 	
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public T getObject() {
 		return (T) field.getValue(index);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setObject(final T object) {
 		field.setValue(index, object);

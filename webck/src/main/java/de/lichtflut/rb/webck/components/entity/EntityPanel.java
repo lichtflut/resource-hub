@@ -67,6 +67,9 @@ public class EntityPanel extends Panel {
 		add(new GoogleMapsPanel("map", new DerivedDetachableModel<String, RBEntity>(model) {
 			@Override
 			protected String derive(final RBEntity original) {
+                if (original.getType() == null) {
+                    return null;
+                }
 				final ResourceID type = semanticNetwork.resolve(original.getType());
 				if (type.asResource().asClass().isSpecializationOf(RB.LOCATION)) {
 					return original.getLabel();
@@ -127,7 +130,6 @@ public class EntityPanel extends Panel {
 		final EntityBrowsingStep step = RBWebSession.get().getHistory().getCurrentStep();
 		return step == null || BrowsingState.VIEW.equals(step.getState());
 	}
-
 
 	private boolean isEmbedded(final IModel<RBField> model) {
 		return model.getObject().getVisualizationInfo().isEmbedded();

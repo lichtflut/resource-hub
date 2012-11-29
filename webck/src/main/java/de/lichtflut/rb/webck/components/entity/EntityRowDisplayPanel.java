@@ -9,6 +9,7 @@ import java.util.Date;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.models.fields.RBFieldLabelCssClassModel;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -79,8 +80,8 @@ public class EntityRowDisplayPanel extends Panel {
 		final ListView<RBFieldValueModel> valueList = new ListView<RBFieldValueModel>("values", listModel) {
 			@Override
 			protected void populateItem(final ListItem<RBFieldValueModel> item) {
-				addValueField(item, model.getObject().getDataType());
-			}
+                Component component = addValueField(item, model.getObject().getDataType());
+            }
 		};
 		valueList.setReuseItems(true);
 		add(valueList);
@@ -91,54 +92,46 @@ public class EntityRowDisplayPanel extends Panel {
 
 	/**
 	 * Add a value field to the list item.
-	 * @param item The list item.
-	 * @param dataType The datatype
-	 */
-	protected void addValueField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
+     * @param item The list item.
+     * @param dataType The datatype
+     */
+	protected Component addValueField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
 		switch(dataType) {
 		case BOOLEAN:
-			addBooleanField(item);
-			break;
+			return addBooleanField(item);
 		case RESOURCE:
-			addResourceField(item);
-			break;
+			return addResourceField(item);
 		case DATE:
-			addTextOutput(item, Date.class);
-			break;
+			return addTextOutput(item, Date.class);
 		case INTEGER:
-			addTextOutput(item, Integer.class);
-			break;
+			return addTextOutput(item, Integer.class);
 		case DECIMAL:
-			addTextOutput(item, BigDecimal.class);
-			break;
+			return addTextOutput(item, BigDecimal.class);
 		case STRING:
 		case TEXT:
-			addTextOutput(item, String.class);
-			break;
+			return addTextOutput(item, String.class);
 		case RICH_TEXT:
-			addHTMLOutput(item);
-			break;
+			return addHTMLOutput(item);
 		case URI:
-			addExternalLink(item);
-			break;
+			return addExternalLink(item);
 		case FILE:
-			addRepoLink(item);
-			break;
+			return addRepoLink(item);
 		default:
 			throw new NotYetImplementedException("No display-component specified for datatype: " + dataType);
 		}
-	}
+    }
 
-	private void addResourceField(final ListItem<RBFieldValueModel> item) {
+	private Component addResourceField(final ListItem<RBFieldValueModel> item) {
 		final ResourceID ref = getResourceID(item.getModelObject());
 		if (ref != null) {
 			final CrossLink link = new CrossLink("link", getUrlTo(ref).toString());
 			link.add(new Label("label", getLabelModel(item.getModelObject())));
 			item.add(new Fragment("valuefield", "referenceLink", this).add(link));
+            return link;
 		} else {
-			addTextOutput(item, ResourceID.class);
+			return addTextOutput(item, ResourceID.class);
 		}
-	}
+    }
 
 	protected CharSequence getUrlTo(final ResourceID ref) {
 		return resourceLinkProvider.getUrlToResource(ref, VisualizationMode.DETAILS, DisplayMode.VIEW);
@@ -150,34 +143,38 @@ public class EntityRowDisplayPanel extends Panel {
 		return field;
 	}
 
-	private void addHTMLOutput(final ListItem<RBFieldValueModel> item) {
+	private Label addHTMLOutput(final ListItem<RBFieldValueModel> item) {
 		@SuppressWarnings("unchecked")
 		final Label field = new Label("valuefield", new HTMLSafeModel(item.getModelObject()));
 		field.setEscapeModelStrings(false);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
+        return field;
 	}
 
-	private void addExternalLink(final ListItem<RBFieldValueModel> item) {
+	private ExternalLink addExternalLink(final ListItem<RBFieldValueModel> item) {
 		@SuppressWarnings("unchecked")
 		ExternalLink link = new ExternalLink("target", item.getModelObject(), item.getModelObject());
 		link.add(new AttributeModifier("target", "_blank"));
 		item.add(new Fragment("valuefield", "link", this).add(link));
+        return link;
 	}
 
-	private void addRepoLink(final ListItem<RBFieldValueModel> item) {
+	private FilePreviewLink addRepoLink(final ListItem<RBFieldValueModel> item) {
 		IModel<RBFieldValueModel> model = item.getModel();
 		@SuppressWarnings("unchecked")
 		FilePreviewLink filePreviewPanel = new FilePreviewLink("previewPanel", model.getObject());
 		item.add(new Fragment("valuefield", "filePreview", this).add(filePreviewPanel));
+        return filePreviewPanel;
 	}
 
-	private void addBooleanField(final ListItem<RBFieldValueModel> item) {
+	private Label addBooleanField(final ListItem<RBFieldValueModel> item) {
 		String label = "no";
 		if (Boolean.TRUE.equals(item.getModelObject().getObject())) {
 			label = "yes";
 		}
 		final Label field = new Label("valuefield", label);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
+        return field;
 	}
 
 	private ResourceID getResourceID(final RBFieldValueModel model) {
