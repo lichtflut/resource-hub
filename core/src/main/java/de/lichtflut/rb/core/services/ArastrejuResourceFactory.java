@@ -12,6 +12,7 @@ import org.arastreju.sge.context.Context;
 import org.arastreju.sge.context.DomainIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -143,17 +144,21 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     private ArastrejuGate openGate() {
         final String domain = context.getDomain();
         LOGGER.debug("Opening Arastreju Gate for domain {} ", domain);
-
+        ArastrejuGate gate = null;
         final Arastreju aras = Arastreju.getInstance(context.getConfig().getArastrejuProfile());
         if (domain == null || DomainIdentifier.MASTER_DOMAIN.equals(domain)) {
-            return aras.openMasterGate();
+            gate = aras.openMasterGate();
         } else {
-            final ArastrejuGate gate = aras.openGate(domain);
+            gate = aras.openGate(domain);
             if (context.getConfig().getDomainValidator() != null) {
                 context.getConfig().getDomainValidator().initializeDomain(gate, domain);
             }
-            return gate;
         }
+        Preinitializer initializer = context.getConfig().getPreinitializer();
+        if(initializer!=null){
+            initializer.init(gate);
+        }
+        return gate;
     }
 
     private void assureActive(ModelingConversation conversation) {

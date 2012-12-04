@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.config;
 import de.lichtflut.rb.core.eh.ConfigurationException;
 import de.lichtflut.rb.core.security.SecurityConfiguration;
 import de.lichtflut.rb.core.services.DomainValidator;
+import de.lichtflut.rb.core.services.Preinitializer;
 import org.arastreju.sge.ArastrejuProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,8 @@ public class RBConfig {
     private EmailConfiguration emailConfiguration;
 
     private SecurityConfiguration securityConfiguration;
+    
+    private Preinitializer preinitializer;
 
     private FileServiceConfiguration fileServiceConfiguration;
 
@@ -103,11 +106,19 @@ public class RBConfig {
     public FileServiceConfiguration getFileServiceConfiguration() {
         return fileServiceConfiguration;
     }
+    
+    public Preinitializer getPreinitializer() {
+        return preinitializer;
+    }
 
     // ----------------------------------------------------
 
     public void setEmailConfiguration(EmailConfiguration emailConfiguration) {
         this.emailConfiguration = emailConfiguration;
+    }
+    
+    public void setPreinitializer(Preinitializer initializer) {
+        this.preinitializer = initializer;
     }
 
     public void setSecurityConfiguration(SecurityConfiguration securityConfiguration) {
