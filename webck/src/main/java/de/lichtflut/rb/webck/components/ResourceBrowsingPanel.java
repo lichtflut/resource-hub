@@ -3,6 +3,25 @@
  */
 package de.lichtflut.rb.webck.components;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonIf;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.model.ResourceID;
+
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -25,24 +44,6 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityModel;
-import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.model.ResourceID;
-
-import java.util.List;
-import java.util.Map;
-
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonIf;
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 /**
  * <p>
@@ -85,7 +86,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 		form.add(new BrowsingButtonBar("browsingButtonBar", model));
 
-		form.add(new CreateRelationshipPanel("relationCreator", model).add(visibleIf(BrowsingContextModel.isInViewMode())));
+		form.add(createRelationshipPanel("relationCreator", model));
 
 		form.add(createRelationshipView("relationships", model));
 
@@ -114,52 +115,56 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		return new WebMarkupContainer(id);
 	}
 
-    protected Component createInfoPanel(final String id, final IModel<RBEntity> model) {
-        return new EntityInfoPanel(id, model);
-    }
+	protected Component createInfoPanel(final String id, final IModel<RBEntity> model) {
+		return new EntityInfoPanel(id, model);
+	}
 
-    protected Component createEntityPanel(final String id, final IModel<RBEntity> model) {
-        return new EntityPanel(id, model);
-    }
+	protected Component createEntityPanel(final String id, final IModel<RBEntity> model) {
+		return new EntityPanel(id, model);
+	}
 
-    protected Component createClassifyPanel(final String id, final IModel<RBEntity> model) {
-        return new ClassifyEntityPanel(id, model);
-    }
+	protected Component createClassifyPanel(final String id, final IModel<RBEntity> model) {
+		return new ClassifyEntityPanel(id, model);
+	}
 
-    protected LocalButtonBar createLocalButtonBar() {
-        // TODO: OT 2012-12-05 Why override instead of extending method in LocalButtonBar with onSave()-hook?
-        return new LocalButtonBar("localButtonBar", model) {
-            @Override
-            protected Component createSaveButton(final IModel<RBEntity> model) {
-                ConditionalModel<Boolean> viewMode = BrowsingContextModel.isInViewMode();
+	protected Component createRelationshipPanel(final String id, final RBEntityModel model) {
+		return new CreateRelationshipPanel(id, model).add(visibleIf(BrowsingContextModel.isInViewMode()));
+	}
 
-                final RBStandardButton save = new RBStandardButton("save") {
-                    @Override
-                    protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-                        additionalSaveAction(model);
-                        Map<Integer, List<RBField>> errors = entityManager.validate(model.getObject());
-                        if(errors.isEmpty()){
-                            entityManager.store(model.getObject());
-                            RBWebSession.get().getHistory().finishEditing();
-                            send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
-                        } else{
-                            String errorMessage = buildFeedbackMessage(errors);
-                            setDefaultFormProcessing(false);
-                            error(errorMessage);
-                            RBAjaxTarget.add(getFeedbackPanel());
-                        }
-                    }
+	protected LocalButtonBar createLocalButtonBar() {
+		// TODO: OT 2012-12-05 Why override instead of extending method in LocalButtonBar with onSave()-hook?
+		return new LocalButtonBar("localButtonBar", model) {
+			@Override
+			protected Component createSaveButton(final IModel<RBEntity> model) {
+				ConditionalModel<Boolean> viewMode = BrowsingContextModel.isInViewMode();
 
-                };
-                save.add(visibleIf(not(viewMode)));
-                save.add(defaultButtonIf(not(viewMode)));
-                return save;
-            }
-        };
-    }
+				final RBStandardButton save = new RBStandardButton("save") {
+					@Override
+					protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
+						additionalSaveAction(model);
+						Map<Integer, List<RBField>> errors = entityManager.validate(model.getObject());
+						if(errors.isEmpty()){
+							entityManager.store(model.getObject());
+							RBWebSession.get().getHistory().finishEditing();
+							send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
+						} else{
+							String errorMessage = buildFeedbackMessage(errors);
+							setDefaultFormProcessing(false);
+							error(errorMessage);
+							RBAjaxTarget.add(getFeedbackPanel());
+						}
+					}
+
+				};
+				save.add(visibleIf(not(viewMode)));
+				save.add(defaultButtonIf(not(viewMode)));
+				return save;
+			}
+		};
+	}
 
 	/**
-     * TODO: OT 2012-12-05 rename to onSave()
+	 * TODO: OT 2012-12-05 rename to onSave()
 	 * Additional save-action.
 	 * @param model Edited entity
 	 */
@@ -190,9 +195,9 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		return get("feedback");
 	}
 
-    /**
-     * TODO: OT 2012-12-05 Transfer markup into HTML-Template and text into properties (not internationalizable)
-     */
+	/**
+	 * TODO: OT 2012-12-05 Transfer markup into HTML-Template and text into properties (not internationalizable)
+	 */
 	private String buildFeedbackMessage(final Map<Integer, List<RBField>> errors) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getString("error.validation"));
