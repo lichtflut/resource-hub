@@ -117,6 +117,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	}
 
 	/**
+     * TODO: OT 2012-12-05 rename to onSave()
 	 * Additional save-action.
 	 * @param model Edited entity
 	 */
@@ -144,6 +145,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	// ------------------------------------------------------
 
 	private LocalButtonBar createLocalButtonBar() {
+        // TODO: OT 2012-12-05 Why override instead of extending method in LocalButtonBar with onSave()-hook?
 		return new LocalButtonBar("localButtonBar", model) {
 			@Override
 			protected Component createSaveButton(final IModel<RBEntity> model) {
@@ -178,6 +180,9 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		return get("feedback");
 	}
 
+    /**
+     * TODO: OT 2012-12-05 Transfer markup into HTML-Template and text into properties (not internationalizable)
+     */
 	private String buildFeedbackMessage(final Map<Integer, List<RBField>> errors) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getString("error.validation"));
