@@ -27,7 +27,7 @@ import de.lichtflut.rb.webck.models.BrowsingContextModel;
 
 /**
  * <p>
- * This {@link Page} displays a Resource in an Editor.
+ * This page displays a Resource in an Editor.
  * </p>
  * 
  * <p>
@@ -55,7 +55,7 @@ public class EntityDetailPage extends RBBasePage {
 		DisplayMode displayMode = DisplayMode.fromParams(params);
 		final boolean editmode = !DisplayMode.VIEW.equals(displayMode);
 		if (handle != null) {
-			add(new Browser("rb"));
+			add(createBrowser("rb"));
 			initHistory(handle, editmode);
 		} else {
 			add(new WebMarkupContainer("rb").setVisible(false));
@@ -68,19 +68,20 @@ public class EntityDetailPage extends RBBasePage {
 	 * Constructor. Displays current entity in browsing context.
 	 */
 	public EntityDetailPage() {
-		add(new Browser("rb"));
+		add(createBrowser("rb"));
 		add(new NotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
 	}
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected Component createSecondLevelNav(final String componentID) {
 		return new BreadCrumbsBar(componentID, 7);
 	}
+
+    protected Component createBrowser(final String componentID) {
+        return new Browser(componentID);
+    }
 
 	// -----------------------------------------------------
 

@@ -98,9 +98,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 	// -- IBrowsingHandler --------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void createReferencedEntity(final EntityHandle handle, final ResourceID predicate) {
 		// store current entity
@@ -129,9 +126,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onEvent(final IEvent<?> event) {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
@@ -140,9 +134,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onConfigure() {
 		super.onConfigure();

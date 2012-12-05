@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>
- *  Model for an {@link RBEntity}.
+ *  Model for an {@link RBEntity} loaded from entity stack in session.
  * </p>
  *
  * <p>
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 	
-	private final Logger logger = LoggerFactory.getLogger(RBEntityModel.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RBEntityModel.class);
 	
 	@SpringBean
 	private EntityManager entityManager;
@@ -42,18 +42,15 @@ public class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBEntity load() {
 		final EntityHandle handle = RBWebSession.get().getHistory().getCurrentStep().getHandle();
 		if (handle.hasId()) {
-			logger.debug("Loading RB Entity: " + handle.getId());
+			LOGGER.debug("Loading RB Entity: " + handle.getId());
 			final RBEntity loaded = entityManager.find(handle.getId());
 			return loaded;
 		} else if (handle.hasType()){
-			logger.debug("Creating new RB Entity");
+			LOGGER.debug("Creating new RB Entity");
 			final RBEntity loaded = entityManager.create(handle.getType());
 			handle.setId(loaded.getID());
 			return loaded;
