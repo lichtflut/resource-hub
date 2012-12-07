@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.lichtflut.rb</groupId>
 		<artifactId>lf.resource-browser</artifactId>
-		<version>0.5.0</version>
+		<version>0.5.1-SNAPSHOT</version>
 	</parent>
 
 	<groupId>de.lichtflut.rb</groupId>
@@ -150,7 +150,7 @@
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
 			<artifactId>lf.content-repository-jr</artifactId>
-			<version>0.1</version>
+			<version>0.2-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
