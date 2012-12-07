@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.entity.impl;
 
@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.Statement;
@@ -97,9 +98,6 @@ public class RBEntityImpl implements RBEntity {
 
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ResourceID getID() {
 		// create a copy of Resource ID
@@ -134,9 +132,6 @@ public class RBEntityImpl implements RBEntity {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBField getField(final ResourceID predicate) {
 		for (RBField field : fields) {
@@ -147,25 +142,16 @@ public class RBEntityImpl implements RBEntity {
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<RBField> getAllFields() {
 		return fields;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean addField(final RBField field) {
 		return fields.add(field);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<RBField> getQuickInfo() {
 		List<RBField> list = new ArrayList<RBField>();
@@ -179,9 +165,6 @@ public class RBEntityImpl implements RBEntity {
 		return list;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean hasSchema() {
 		return schema != null;
@@ -189,9 +172,6 @@ public class RBEntityImpl implements RBEntity {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString(){
 		String s = node.getQualifiedName() + ", ";
@@ -235,21 +215,22 @@ public class RBEntityImpl implements RBEntity {
 		}
 		// TODO: Remove from blacklist rdf(s):*
 		predicates.remove(RDF.TYPE);
+        predicates.remove(RDFS.LABEL);
 		for (ResourceID predicate : predicates) {
 			final Set<SemanticNode> nodes = filterValues(SNOPS.objects(node, predicate));
 			if (!nodes.isEmpty()) {
-				fields.add(new UndeclaredRBField(predicate, SNOPS.objects(node, predicate)));
+				fields.add(new UndeclaredRBField(predicate, nodes));
 			}
 		}
 	}
 
 	/**
-	 * @param objects
-	 * @return
+	 * @param objects All semantic nodes.
+	 * @return All value nodes.
 	 */
 	private Set<SemanticNode> filterValues(final Set<SemanticNode> objects) {
 		final Set<SemanticNode> filtered = new HashSet<SemanticNode>();
-		for (SemanticNode node : filtered) {
+		for (SemanticNode node : objects) {
 			if (node.isValueNode()) {
 				filtered.add(node);
 			}
@@ -259,7 +240,7 @@ public class RBEntityImpl implements RBEntity {
 
 	/**
 	 * Associate type with node.
-	 * @param type
+	 * @param type The type to set.
 	 */
 	private void setType(final ResourceID type) {
 		SNOPS.assure(node, RDF.TYPE, type);

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
@@ -56,7 +56,7 @@ public class EntityManagerImpl implements EntityManager {
 
 	private SchemaManager schemaManager;
 
-	private ModelingConversation conversation;
+	private Conversation conversation;
 
 	private DomainNamespacesHandler dnsHandler;
 
@@ -74,7 +74,7 @@ public class EntityManagerImpl implements EntityManager {
 	 * @param schemaManager
 	 * @param conversation
 	 */
-	public EntityManagerImpl(final TypeManager typeManager, final SchemaManager schemaManager, final ModelingConversation conversation) {
+	public EntityManagerImpl(final TypeManager typeManager, final SchemaManager schemaManager, final Conversation conversation) {
 		this.typeManager = typeManager;
 		this.schemaManager = schemaManager;
 		this.conversation = conversation;
@@ -83,8 +83,6 @@ public class EntityManagerImpl implements EntityManager {
 	// -----------------------------------------------------
 
 	/**
-	 * 
-	 * {@inheritDoc}
 	 * @return An entity, or <code>null</code> if none found
 	 */
 	@Override
@@ -106,6 +104,9 @@ public class EntityManagerImpl implements EntityManager {
 	public void store(final RBEntity entity) {
 		final ResourceNode node = entity.getNode();
 		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
+        if (entity.getType() == null) {
+            throw new IllegalStateException("Entity has no type, will not save it.");
+        }
 		for (RBField field : entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.assure(node, field.getPredicate(), nodes);
@@ -142,17 +143,15 @@ public class EntityManagerImpl implements EntityManager {
 
 	@Override
 	public void changeType(final RBEntity entity, final ResourceID type) {
-		final ModelingConversation mc = conversation;
-		final ResourceNode node = mc.resolve(entity.getID());
+		final ResourceNode node = conversation.resolve(entity.getID());
 		SNOPS.remove(node, RDF.TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, type);
 	}
 
 	@Override
 	public void delete(final ResourceID entityID) {
-		final ModelingConversation mc = conversation;
-		final ResourceNode node = mc.resolve(entityID);
-		mc.remove(node);
+		final ResourceNode node = conversation.resolve(entityID);
+        conversation.remove(node);
 	}
 
 	// -- INJECTED DEPENDENCIES ---------------------------
@@ -165,7 +164,7 @@ public class EntityManagerImpl implements EntityManager {
 		this.schemaManager = schemaManager;
 	}
 
-	public void setConversation(final ModelingConversation conversation) {
+	public void setConversation(final Conversation conversation) {
 		this.conversation = conversation;
 	}
 
@@ -186,6 +185,7 @@ public class EntityManagerImpl implements EntityManager {
 		final ResourceID type = typeManager.getTypeOfResource(node);
 		final RBEntityImpl entity;
 		if (type == null) {
+            LOGGER.warn("RBEntity has no type: " + node);
 			entity = new RBEntityImpl(node);
 		} else {
 			final ResourceSchema schema = schemaManager.findSchemaForType(type.asResource());

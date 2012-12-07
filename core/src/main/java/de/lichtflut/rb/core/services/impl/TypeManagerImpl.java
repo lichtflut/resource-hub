@@ -60,9 +60,6 @@ public class TypeManagerImpl implements TypeManager {
 
     // -----------------------------------------------------
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public SNClass findType(ResourceID type) {
 		if (type == null) { 
@@ -76,9 +73,6 @@ public class TypeManagerImpl implements TypeManager {
 		}
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public SNClass getTypeOfResource(final ResourceID resource) {
 		final ResourceNode node = conversation().resolve(resource);
@@ -92,9 +86,6 @@ public class TypeManagerImpl implements TypeManager {
 		return null;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<SNClass> findAllTypes() {
 		final List<SNClass> result = new ArrayList<SNClass>();
@@ -105,9 +96,6 @@ public class TypeManagerImpl implements TypeManager {
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public SNClass createType(final QualifiedName qn) {
 		final SNClass type = new SNResource(qn).asClass();
@@ -117,26 +105,17 @@ public class TypeManagerImpl implements TypeManager {
 		return type;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeType(final ResourceID type) {
 		schemaManager.removeSchemaForType(type);
         conversation().remove(type);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void addSuperClass(ResourceID type, ResourceID superClass) {
         conversation().resolve(type).addAssociation(RDFS.SUB_CLASS_OF, superClass);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeSuperClass(ResourceID type, ResourceID superClass) {
 		final ResourceNode typeNode = conversation().findResource(type.getQualifiedName());
@@ -163,9 +142,6 @@ public class TypeManagerImpl implements TypeManager {
 		}
 	}
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public SNProperty createProperty(QualifiedName qn) {
 		final SNProperty property = new SNProperty(qn).asProperty();
@@ -174,17 +150,11 @@ public class TypeManagerImpl implements TypeManager {
 		return property;
 	}
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void removeProperty(SNProperty property) {
         conversation().remove(property);
 	}
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public List<SNProperty> findAllProperties() {
 		final List<SNProperty> result = new ArrayList<SNProperty>();

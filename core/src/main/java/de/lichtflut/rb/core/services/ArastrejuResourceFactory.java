@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.core.services;
 
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ConversationContext;
@@ -14,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +70,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     public ModelingConversation getConversation() {
         if (conversation == null) {
             conversation = gate().startConversation();
+            conversation.getConversationContext().setReadContexts(context.getReadContexts());
         }
         assureActive(conversation);
         return conversation;
