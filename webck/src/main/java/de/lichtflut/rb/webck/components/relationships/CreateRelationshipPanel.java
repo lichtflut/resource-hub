@@ -10,6 +10,7 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isFalse;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
 
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -20,8 +21,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.model.DetachedStatement;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
@@ -49,10 +49,7 @@ import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 public class CreateRelationshipPanel extends Panel {
 
 	@SpringBean
-	private ModelingConversation conversation;
-
-	@SpringBean
-	private EntityManager entityManager;
+	private SemanticNetworkService service;
 
 	private final IModel<RBEntity> subjectModel;
 
@@ -135,9 +132,8 @@ public class CreateRelationshipPanel extends Panel {
 	// ----------------------------------------------------
 
 	protected void createRelationshipTo(final ResourceID object, final ResourceID predicate) {
-		final ResourceNode subject = subjectModel.getObject().getNode();
-		SNOPS.associate(subject, predicate, object);
-		entityManager.store(subjectModel.getObject());
+		final ResourceID subject = subjectModel.getObject().getID();
+        service.add(new DetachedStatement(subject, predicate, object));
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
 	}
 
@@ -150,7 +146,7 @@ public class CreateRelationshipPanel extends Panel {
 	}
 
 	private void resolve(final IModel<ResourceID> objectModel) {
-		final ResourceNode resolved = conversation.resolve(objectModel.getObject());
+		final ResourceNode resolved = service.resolve(objectModel.getObject());
 		objectModel.setObject(resolved);
 	}
 

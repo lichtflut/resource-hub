@@ -8,11 +8,11 @@ import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -37,7 +37,7 @@ public class CurrentOrganizationModel extends AbstractLoadableDetachableModel<RB
 	private ServiceContext context;
 	
 	@SpringBean
-	private ModelingConversation conversation;
+	private SemanticNetworkService service;
 	
 	// ----------------------------------------------------
 	
@@ -47,9 +47,6 @@ public class CurrentOrganizationModel extends AbstractLoadableDetachableModel<RB
 	
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBEntity load() {
 		RBUser user = context.getUser();
@@ -57,7 +54,7 @@ public class CurrentOrganizationModel extends AbstractLoadableDetachableModel<RB
 			return null;
 		}
 		
-		final ResourceNode userNode = conversation.resolve(SNOPS.id(user.getQualifiedName()));
+		final ResourceNode userNode = service.resolve(SNOPS.id(user.getQualifiedName()));
 		final SemanticNode person = SNOPS.fetchObject(userNode, RBSystem.IS_RESPRESENTED_BY);
 		if (person == null || !person.isResourceNode()) {
 			return null;

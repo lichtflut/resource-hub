@@ -3,21 +3,9 @@
  */
 package de.lichtflut.rb.application.resourceview;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-
-import de.lichtflut.rb.webck.components.relationships.RelationshipOverviewPanel;
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.string.StringValue;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
-
 import de.lichtflut.rb.application.base.RBBasePage;
 import de.lichtflut.rb.application.common.CommonParams;
 import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBWebSession;
@@ -25,6 +13,12 @@ import de.lichtflut.rb.webck.components.ResourceBrowsingPanel;
 import de.lichtflut.rb.webck.components.navigation.BreadCrumbsBar;
 import de.lichtflut.rb.webck.components.notes.NotePadPanel;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 
 /**
  * <p>
@@ -81,7 +75,7 @@ public class EntityDetailPage extends RBBasePage {
 	}
 
     protected Component createBrowser(final String componentID) {
-        return new Browser(componentID);
+        return new ResourceBrowsingPanel(componentID);
     }
 
 	// -----------------------------------------------------
@@ -109,20 +103,6 @@ public class EntityDetailPage extends RBBasePage {
 			history.create(handle);
 		} else {
 			history.view(handle);
-		}
-	}
-
-	// -----------------------------------------------------
-
-	class Browser extends ResourceBrowsingPanel {
-
-		public Browser(final String id) {
-			super(id);
-		}
-
-		@Override
-		protected Component createRelationshipView(final String id, final IModel<RBEntity> model) {
-			return new RelationshipOverviewPanel(id, model).add(visibleIf(BrowsingContextModel.isInViewMode()));
 		}
 	}
 

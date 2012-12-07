@@ -4,11 +4,15 @@
 package de.lichtflut.rb.webck.models.entity;
 
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.common.EntityType;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.model.IModel;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -24,23 +28,20 @@ import java.security.NoSuchAlgorithmException;
  * 
  * @author Oliver Tigges
  */
-public class RBEntityImageUrlModel extends DerivedDetachableModel<String, RBEntity> {
+public class RBEntityImageUrlModel extends DerivedDetachableModel<String, ResourceNode> {
 
 	/**
 	 * @param source
 	 */
-	public RBEntityImageUrlModel(IModel<RBEntity> source) {
+	public RBEntityImageUrlModel(IModel<ResourceNode> source) {
 		super(source);
 	}
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public String derive(RBEntity entity) {
-		final ResourceID type = entity.getType();
+	public String derive(ResourceNode entity) {
+		final ResourceID type = EntityType.typeOf(entity);
 		// TODO: check direct image URL rb:hasImage
 		if (RB.PERSON.equals(type)) {
 			return getEmailHash(entity);
@@ -51,27 +52,21 @@ public class RBEntityImageUrlModel extends DerivedDetachableModel<String, RBEnti
 	
 	// ----------------------------------------------------
 	
-	private String getEmailHash(RBEntity entity) {
-		final RBField field = entity.getField(RB.HAS_EMAIL);
-		if (field == null) {
+	private String getEmailHash(ResourceNode entity) {
+        SemanticNode emailNode = SNOPS.fetchObject(entity, RB.HAS_EMAIL);
+		if (emailNode == null || !emailNode.isValueNode()) {
 			return null;
 		}
-		Object value = field.getValue(0);
-		if (value instanceof String) {
-			final String email = ((String) value).trim().toLowerCase();
-			final String md5 = md5Hex(email);
-			return "http://www.gravatar.com/avatar/" + md5 + "?d=retro&s=48";
-		} else {
-			return null;
-		}
-		
+		String email = emailNode.toString().trim().toLowerCase();
+        final String md5 = md5Hex(email);
+        return "http://www.gravatar.com/avatar/" + md5 + "?d=retro&s=48";
 	}
 
 	private String hex(byte[] array) {
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < array.length; ++i) {
-			sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1, 3));
-		}
+		StringBuilder sb = new StringBuilder();
+        for (byte b : array) {
+            sb.append(Integer.toHexString((b & 0xFF) | 0x100).substring(1, 3));
+        }
 		return sb.toString();
 	}
 

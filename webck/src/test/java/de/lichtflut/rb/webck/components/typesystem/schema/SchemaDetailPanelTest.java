@@ -29,12 +29,8 @@ public class SchemaDetailPanelTest extends AbstractRBWebTest{
 
 	// ------------- SetUp & tearDown -----------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void setupTest() {
-
 	}
 
 	// ------------------------------------------------------
@@ -43,7 +39,7 @@ public class SchemaDetailPanelTest extends AbstractRBWebTest{
 	public void testSchemaDetailPanel(){
 		ResourceSchema schema = ResourceSchemaFactory.buildPersonSchema();
 		IModel<ResourceSchema> model = Model.of(schema);
-		when(conversation.resolve(schema.getDescribedType())).thenReturn(schema.getDescribedType().asResource());
+		when(networkService.resolve(schema.getDescribedType())).thenReturn(schema.getDescribedType().asResource());
 		when(serviceContext.getDomain()).thenReturn("test");
 		when(pathBuilder.queryClasses("test", null)).thenReturn("blablabla");
 

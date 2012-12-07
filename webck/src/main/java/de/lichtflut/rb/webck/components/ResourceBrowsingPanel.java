@@ -5,6 +5,8 @@ package de.lichtflut.rb.webck.components;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 
+import de.lichtflut.rb.webck.components.relationships.RelationshipOverviewPanel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
@@ -33,6 +35,7 @@ import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityModel;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>
@@ -100,9 +103,9 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 	// -- OVERRIDE HOOKS ----------------------------------
 
-	protected Component createRelationshipView(final String id, final IModel<RBEntity> model) {
-		return new WebMarkupContainer(id);
-	}
+    protected Component createRelationshipView(final String id, final IModel<RBEntity> model) {
+        return new RelationshipOverviewPanel(id, model).add(visibleIf(BrowsingContextModel.isInViewMode()));
+    }
 
 	protected Component createInfoPanel(final String id, final IModel<RBEntity> model) {
 		return new EntityInfoPanel(id, model);

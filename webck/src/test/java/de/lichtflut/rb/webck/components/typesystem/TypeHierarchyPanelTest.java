@@ -33,7 +33,7 @@ public class TypeHierarchyPanelTest extends AbstractRBWebTest {
 	 */
 	@Test
 	public void testTypeHierarchyPanel() {
-		when(conversation.resolve(id)).thenReturn(id.asResource());
+		when(networkService.resolve(id)).thenReturn(id.asResource());
 		when(serviceContext.getDomain()).thenReturn("test");
 		when(pathBuilder.queryClasses("test", null)).thenReturn("blablabla");
 		tester.startComponentInPage(panel);

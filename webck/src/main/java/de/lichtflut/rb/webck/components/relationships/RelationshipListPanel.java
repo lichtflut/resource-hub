@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.components.relationships;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
@@ -45,7 +46,7 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 public class RelationshipListPanel extends Panel {
 
     @SpringBean
-    private ModelingConversation conversation;
+    private SemanticNetworkService service;
 
     @SpringBean
     private ResourceLinkProvider resourceLinkProvider;
@@ -97,7 +98,7 @@ public class RelationshipListPanel extends Panel {
 	// ----------------------------------------------------
 
     protected void onRelationshipRemoved(Statement stmt) {
-        conversation.removeStatement(stmt);
+        service.remove(stmt);
         send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
     }
 	

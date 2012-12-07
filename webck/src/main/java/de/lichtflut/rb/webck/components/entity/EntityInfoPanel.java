@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.components.entity;
 
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.common.EntityType;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
@@ -18,6 +19,7 @@ import de.lichtflut.rb.webck.models.entity.RBEntityImageUrlModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -26,6 +28,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
 import java.util.ArrayList;
@@ -39,9 +42,9 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
  * This Panel represents an {@link RBEntity}.
  * The following Attributes will be displayed
  * <ul>
- * <li>Label</li>
- * <li>Image</li>
- * <li>Short description</li>
+ *  <li>Label</li>
+ *  <li>Image</li>
+ *  <li>Short description</li>
  * </ul>
  *
  * If none of these attributes can be attained through {@link RBEntity}s standard methods,
@@ -61,35 +64,53 @@ public class EntityInfoPanel extends Panel {
 	
 	// ----------------------------------------------------
 
+    /**
+     * @param id - wicket:id
+     * @param model - {@link RBEntity} which is to be displayed
+     */
+    public EntityInfoPanel(final String id, final IModel<RBEntity> model) {
+        this(id, new DerivedDetachableModel<ResourceNode, RBEntity>(model) {
+            @Override
+            protected ResourceNode derive(RBEntity entity) {
+                return entity.getNode();
+            }
+        }, true);
+    }
+
 	/**
 	 * @param id - wicket:id
 	 * @param model - {@link RBEntity} which is to be displayed
 	 */
-	public EntityInfoPanel(final String id, final IModel<RBEntity> model) {
+	public EntityInfoPanel(final String id, final IModel<ResourceNode> model, boolean dummy) {
 		super(id);
-		
-		final IModel<String> resourceLabelModel = new RBEntityLabelModel(model) {
-			@Override
-			public String getDefault() {
-				return getString("label.untitled");
-			}
-		};
-		
+
+        add(createLabel("label", model));
+
 		add(new ExtendedActionsPanel("extendedActionsPanel", model));
 		
 		add(createLinkList(createLinkModel(model)));
 		
 		final ResourceLabelModel typeLabelModel = new ResourceLabelModel(new EntityTypeModel(model));
 		final ResourceUriModel typeURIModel = new ResourceUriModel(new EntityTypeModel(model));
-		
-		add(new Label("label", resourceLabelModel));
+
 		add(new Label("type", typeLabelModel).add(title(typeURIModel)));
+
 		add(new ImageReference("image", new RBEntityImageUrlModel(model)));
 		
 		add(visibleIf(isNotNull(model)));
 	}
 	
 	// ----------------------------------------------------
+
+    protected Component createLabel(String id, IModel<ResourceNode> model) {
+        final IModel<String> resourceLabelModel = new ResourceLabelModel(model) {
+            @Override
+            public String getDefault() {
+                return getString("label.untitled");
+            }
+        };
+        return new Label("label", resourceLabelModel);
+    }
 
 	protected ListView<VisualizationLink> createLinkList(IModel<List<VisualizationLink>> model) {
 		return new ListView<VisualizationLink>("visLinks", model) {
@@ -103,19 +124,19 @@ public class EntityInfoPanel extends Panel {
 		};
 	}
 	
-	protected IModel<List<VisualizationLink>> createLinkModel(IModel<RBEntity> model) {
-		return new DerivedDetachableModel<List<VisualizationLink>, RBEntity>(model) {
+	protected IModel<List<VisualizationLink>> createLinkModel(IModel<ResourceNode> model) {
+		return new DerivedDetachableModel<List<VisualizationLink>, ResourceNode>(model) {
 			@Override
-			protected List<VisualizationLink> derive(final RBEntity entity) {
+			protected List<VisualizationLink> derive(final ResourceNode node) {
 				final List<VisualizationLink> result = new ArrayList<VisualizationLink>();
-				result.add(createLink(entity.getID(), VisualizationMode.DETAILS));
-				result.add(createLink(entity.getID(), VisualizationMode.PERIPHERY));
-                final SNClass type = typeManager.findType(entity.getType());
+				result.add(createLink(node, VisualizationMode.DETAILS));
+				result.add(createLink(node, VisualizationMode.PERIPHERY));
+                final SNClass type = typeManager.findType(EntityType.typeOf(node));
 				if (isSubClassOf(type, RB.ORGANIZATIONAL_UNIT)) {
-					result.add(createLink(entity.getID(), VisualizationMode.HIERARCHY));
+					result.add(createLink(node, VisualizationMode.HIERARCHY));
 				}
 				if (isSubClassOf(type, RB.PROCESS_ELEMENT)) {
-					result.add(createLink(entity.getID(), VisualizationMode.FLOW_CHART));
+					result.add(createLink(node, VisualizationMode.FLOW_CHART));
 				}
 				return result;
 			}
@@ -135,14 +156,14 @@ public class EntityInfoPanel extends Panel {
 	
 	// -- INNER CLASSES -----------------------------------
 	
-	private final class EntityTypeModel extends DerivedModel<ResourceID, RBEntity> {
-		private EntityTypeModel(IModel<RBEntity> original) {
+	private final class EntityTypeModel extends DerivedModel<ResourceID, ResourceNode> {
+		private EntityTypeModel(IModel<ResourceNode> original) {
 			super(original);
 		}
 
 		@Override
-		protected ResourceID derive(RBEntity original) {
-			return original.getType();
+		protected ResourceID derive(ResourceNode original) {
+			return EntityType.typeOf(original);
 		}
 	}
 

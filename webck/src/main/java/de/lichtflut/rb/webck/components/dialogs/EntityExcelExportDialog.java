@@ -4,7 +4,6 @@
 package de.lichtflut.rb.webck.components.dialogs;
 
 
-import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.ExcelExporter;
 import de.lichtflut.rb.core.services.impl.EntityExcelExporter;
 import org.apache.wicket.IResourceListener;
@@ -20,6 +19,7 @@ import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -41,7 +41,7 @@ public class EntityExcelExportDialog extends AbstractRBDialog implements IResour
 
 	private final ResourceStreamResource resource;
 
-	private IModel<RBEntity> entityModel;
+	private IModel<ResourceNode> entityModel;
 	
 	// ----------------------------------------------------
 
@@ -49,7 +49,7 @@ public class EntityExcelExportDialog extends AbstractRBDialog implements IResour
 	 * @param id
 	 */
 	@SuppressWarnings("rawtypes")
-	public EntityExcelExportDialog(final String id, final IModel<RBEntity> entityModel) {
+	public EntityExcelExportDialog(final String id, final IModel<ResourceNode> entityModel) {
 		super(id);
 
 		this.entityModel = entityModel;
@@ -117,14 +117,11 @@ public class EntityExcelExportDialog extends AbstractRBDialog implements IResour
 		private transient InputStream in;
 		private Bytes length;
 
-		/** 
-		* {@inheritDoc}
-		*/
 		@Override
 		public InputStream getInputStream() throws ResourceStreamNotFoundException {
 			final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			try {
-				ExcelExporter exporter = new EntityExcelExporter(entityModel.getObject().getNode(), getLocale());
+				ExcelExporter exporter = new EntityExcelExporter(entityModel.getObject(), getLocale());
 				exporter.export(buffer);
 				
 				length = Bytes.bytes(buffer.size());
@@ -136,9 +133,6 @@ public class EntityExcelExportDialog extends AbstractRBDialog implements IResour
 			return in;
 		}		
 
-		/** 
-		* {@inheritDoc}
-		*/
 		@Override
 		public void close() throws IOException {
 			in.close();

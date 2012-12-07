@@ -2,6 +2,7 @@ package de.lichtflut.rb.core.services;
 
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
 
@@ -36,5 +37,19 @@ public interface SemanticNetworkService {
 
     ResourceNode find(QualifiedName qn);
 
+    // ----------------------------------------------------
+
     void attach(ResourceNode node);
+
+    /**
+     * Add a statement.
+     * @param statement The statement to add.
+     */
+    void add(Statement statement);
+
+    /**
+     * Remove a statement.
+     * @param statement The statement to be removed.
+     */
+    void remove(Statement statement);
 }

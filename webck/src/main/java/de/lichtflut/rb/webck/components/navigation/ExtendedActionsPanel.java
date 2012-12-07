@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.components.navigation;
 
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.common.EntityType;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.common.RBWebSession;
@@ -21,7 +22,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -32,6 +32,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.QueryResult;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
@@ -58,13 +59,13 @@ public class ExtendedActionsPanel extends Panel {
 	
 	private ContextMenu ctxMenu;
 
-	private IModel<RBEntity> entityModel = null;
+	private IModel<ResourceNode> entityModel = null;
 	private IModel<QueryResult> dataModel = null;
 	private IModel<ColumnConfiguration> configModel = null;
 	
 	// ----------------------------------------------------
 	
-	public ExtendedActionsPanel(final String id, final IModel<RBEntity> entityModel) {
+	public ExtendedActionsPanel(final String id, final IModel<ResourceNode> entityModel) {
 		super(id);
 		this.entityModel = entityModel;
 		init();
@@ -78,17 +79,6 @@ public class ExtendedActionsPanel extends Panel {
 		init();
 	}
 
-	// ----------------------------------------------------
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void renderHead(final IHeaderResponse response) {
-		super.renderHead(response);
-		//response.renderJavaScriptReference(AutocompleteJavaScriptResourceReference.get());
-	}
-	
 	// ----------------------------------------------------
 
 	/**
@@ -107,30 +97,30 @@ public class ExtendedActionsPanel extends Panel {
 		openMenuLink.add(visibleIf(isTrue(new HasVisibleLinksModel(new Model<MarkupContainer>(ctxMenu)))));
 		
 		// adding the action links
-		addDeleteEntityLink();
-		addExportExcelEntityLink();
-		addExportVCardLink();
+		addDeleteEntityLink(entityModel);
+		addExportExcelEntityLink(entityModel);
+		addExportVCardLink(entityModel);
 		
 		addExportExcelListLink();
 	}
 
 	// -- LINK_CREATOR_METHODS ----------------------------
 	
-	private void addExportVCardLink() {
+	private void addExportVCardLink(final IModel<ResourceNode> model) {
 		@SuppressWarnings("rawtypes")
 		final Link exportVCardLink = new AjaxFallbackLink("exportVCardLink") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
-			    hoster.openDialog(new VCardExportDialog(hoster.getDialogID(), entityModel));
+			    hoster.openDialog(new VCardExportDialog(hoster.getDialogID(), model));
 			    ctxMenu.close(target);
 			}
 		};
-		exportVCardLink.add(visibleIf(areEqual(new EntityTypeModel(entityModel), Model.of(RB.PERSON))));
+		exportVCardLink.add(visibleIf(areEqual(new EntityTypeModel(model), Model.of(RB.PERSON))));
 		ctxMenu.add(exportVCardLink);
 	}
 	
-	private void addDeleteEntityLink() {
+	private void addDeleteEntityLink(final IModel<ResourceNode> model) {
 		@SuppressWarnings("rawtypes")
 		final Link deleteEntityLink = new AjaxFallbackLink("deleteEntityLink") {
 			@Override
@@ -140,7 +130,7 @@ public class ExtendedActionsPanel extends Panel {
 			    		new Model<String>(getString("global.message.delete-confirmation"))) {
 							@Override
 							public void onConfirm() {
-								entityManager.delete(entityModel.getObject().getID());
+								entityManager.delete(model.getObject());
 								RBWebSession.get().getHistory().back();
 								send(getPage(), Broadcast.BREADTH, new ModelChangeEvent(ModelChangeEvent.ENTITY));
 							}
@@ -149,21 +139,21 @@ public class ExtendedActionsPanel extends Panel {
 			    ctxMenu.close(target);
 			}
 		};
-		deleteEntityLink.add(visibleIf(isNotNull(entityModel)));
+		deleteEntityLink.add(visibleIf(isNotNull(model)));
 		ctxMenu.add(deleteEntityLink);
 	}
 	
-	private void addExportExcelEntityLink() {
+	private void addExportExcelEntityLink(final IModel<ResourceNode> model) {
 		@SuppressWarnings("rawtypes")
 		final Link exportExcelEntityLink = new AjaxFallbackLink("exportExcelEntityLink") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
-			    hoster.openDialog(new EntityExcelExportDialog(hoster.getDialogID(), entityModel));
+			    hoster.openDialog(new EntityExcelExportDialog(hoster.getDialogID(), model));
 			    ctxMenu.close(target);
 			}
 		};
-		exportExcelEntityLink.add(visibleIf(isNotNull(entityModel)));
+		exportExcelEntityLink.add(visibleIf(isNotNull(model)));
 		ctxMenu.add(exportExcelEntityLink);
 	}
 	
@@ -183,16 +173,16 @@ public class ExtendedActionsPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	private final class EntityTypeModel extends DerivedModel<ResourceID, RBEntity> {
-		private EntityTypeModel(IModel<RBEntity> original) {
+	private final class EntityTypeModel extends DerivedModel<ResourceID, ResourceNode> {
+		private EntityTypeModel(IModel<ResourceNode> original) {
 			super(original);
 		}
 		@Override
-		protected ResourceID derive(RBEntity original) {
-			return original.getType();
+		protected ResourceID derive(ResourceNode node) {
+			return EntityType.typeOf(node);
 		}
 	}
-	
+
 	private final class HasVisibleLinksModel extends AbstractLoadableDetachableModel<Boolean> {
 		IModel<MarkupContainer> containerModel;
 		private HasVisibleLinksModel(IModel<MarkupContainer> original) {
