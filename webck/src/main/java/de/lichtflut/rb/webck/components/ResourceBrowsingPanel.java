@@ -121,7 +121,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	}
 
 	protected LocalButtonBar createLocalButtonBar(final String id, final RBEntityModel model) {
-		return new LocalButtonBar("localButtonBar", model) {
+		return new LocalButtonBar(id, model) {
 			@Override
 			protected void onSave(final IModel<RBEntity> model, final AjaxRequestTarget target, final Form<?> form) {
 				ResourceBrowsingPanel.this.onSave(model);

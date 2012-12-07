@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.entity.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -243,6 +244,6 @@ public class RBEntityImpl implements RBEntity {
 	 * @param type The type to set.
 	 */
 	private void setType(final ResourceID type) {
-		SNOPS.assure(node, RDF.TYPE, type);
+		SNOPS.assure(node, RDF.TYPE, Arrays.asList(RBSystem.ENTITY, type));
 	}
 }

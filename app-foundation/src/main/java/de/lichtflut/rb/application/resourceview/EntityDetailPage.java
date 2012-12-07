@@ -5,6 +5,7 @@ package de.lichtflut.rb.application.resourceview;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 
+import de.lichtflut.rb.webck.components.relationships.RelationshipOverviewPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
