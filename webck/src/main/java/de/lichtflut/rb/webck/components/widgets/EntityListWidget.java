@@ -4,6 +4,7 @@
 package de.lichtflut.rb.webck.components.widgets;
 
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
@@ -34,6 +35,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.query.Query;
@@ -66,7 +68,10 @@ public class EntityListWidget extends ConfigurableWidget {
 	public static final int MAX_RESULTS = 15;
 	
 	@SpringBean
-	private ModelingConversation conversation;
+	private SemanticNetworkService semanticNetwork;
+
+    @SpringBean
+    private ModelingConversation conversation;
 	
 	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;
@@ -100,13 +105,13 @@ public class EntityListWidget extends ConfigurableWidget {
 				return new LabeledLink(componentId, link, new ResourceModel("action.view"))
 					.setLinkCssClass("action-view")
 					.setLinkTitle(new ResourceModel("action.view"));
-			};
+			}
 		});
 		
 		getDisplayPane().add(new ListPagerPanel("pager", content.getResultSize(), content.getOffset(), content.getPageSize()) {
 			public void onPage() {
 				RBAjaxTarget.add(EntityListWidget.this);
-			};
+			}
 		});
 		
 		getDisplayPane().add(new WidgetActionsPanel("actions", spec));
@@ -117,7 +122,7 @@ public class EntityListWidget extends ConfigurableWidget {
 	
 	protected WebMarkupContainer createConfigurationPane(String componentID, IModel<WidgetSpec> spec) {
 		return new EntityListWidgetConfigPanel(componentID, spec);
-	};
+	}
 	
 	// ----------------------------------------------------
 	
@@ -152,8 +157,8 @@ public class EntityListWidget extends ConfigurableWidget {
 				final ColumnConfiguration config = new ColumnConfiguration(ListAction.VIEW);
 				for (ResourceNode node : getColumnDefs(spec)) {
 					final SemanticNode predicate = SNOPS.fetchObject(node.asResource(), WDGT.CORRESPONDS_TO_PROPERTY);
-					if (predicate != null) {
-						config.addColumnByPredicate(resolve(predicate));
+					if (predicate != null && predicate.isResourceNode()) {
+						config.addColumnByPredicate(resolveProperty(predicate.asResource()));
 					}
 				}
 				return config;
@@ -161,8 +166,8 @@ public class EntityListWidget extends ConfigurableWidget {
 		};
 	}
 	
-	private ResourceNode resolve(SemanticNode node) {
-		return conversation.resolve(node.asResource());
+	private ResourceNode resolveProperty(ResourceID id) {
+		return semanticNetwork.resolve(id, RBSystem.TYPE_SYSTEM_CTX);
 	}
 	
 	private String[] getSortCriteria(WidgetSpec spec) {

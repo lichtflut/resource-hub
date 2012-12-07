@@ -3,7 +3,7 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import de.lichtflut.rb.core.messaging.EmailConfiguration;
+import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.services.EmailService;
 import de.lichtflut.rb.core.services.MessagingService;
 
@@ -17,23 +17,19 @@ import de.lichtflut.rb.core.services.MessagingService;
  */
 public class MessagingServiceImpl implements MessagingService {
 
-	private EmailService emailService;
-	
+	private final EmailService emailService;
+
 	// ---------------- Constructor -------------------------
-	
-	public MessagingServiceImpl(EmailConfiguration emailConf){
-		this.emailService = new EmailServiceImpl(emailConf);
+
+	public MessagingServiceImpl(final RBConfig config){
+		this.emailService = new EmailServiceImpl(config.getEmailConfiguration());
 	}
-	
+
 	// ------------------------------------------------------
-	
-	/** 
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public EmailService getEmailService() {
 		return emailService;
 	}
-
 
 }

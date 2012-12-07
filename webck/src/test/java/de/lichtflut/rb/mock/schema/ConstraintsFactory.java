@@ -3,19 +3,18 @@
  */
 package de.lichtflut.rb.mock.schema;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.naming.QualifiedName;
+
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
-import de.lichtflut.rb.core.schema.model.impl.LiteralConstraint;
 import de.lichtflut.rb.mock.RBMock;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.naming.QualifiedName;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>
@@ -27,45 +26,106 @@ import java.util.List;
  */
 public class ConstraintsFactory {
 
+	/**
+	 * Creates a constraint consisting of:
+	 * <ul>
+	 * <li>
+	 * QN: {@link RBMock}.COMMON_NAMESPACE_URI#EmailAddress
+	 * </li>
+	 * <li>
+	 * Applicable Datatypes:
+	 * <ul>
+	 * 	<li>
+	 * 		String
+	 *  </li><li>
+	 * 		Text
+	 *  </li><li>
+	 * 		Rich_Text
+	 *  </li>
+	 * </ul>
+	 * 	<li>
+	 * 	Name: Email-Address
+	 *  </li><li>
+	 *   LiteralConstraint: ".*@.*"
+	 *  </li>
+	 *  <li>
+	 *   Public: true
+	 *   </li>
+	 * </li>
+	 * </ul>
+	 * @return public constraint
+	 */
 	public static Constraint buildPublicEmailConstraint(){
 		QualifiedName qn = new QualifiedName(RBMock.COMMON_NAMESPACE_URI, "EmailAddress");
 		List<Datatype> datatypes = new ArrayList<Datatype>();
 		datatypes.add(Datatype.STRING);
 		datatypes.add(Datatype.TEXT);
 		datatypes.add(Datatype.RICH_TEXT);
-		ConstraintImpl constraint= new ConstraintImpl(new SNResource(qn));
+		ConstraintImpl constraint= new ConstraintImpl(qn);
 		constraint.setApplicableDatatypes(datatypes);
 		constraint.setName("Email-Address");
 		constraint.setLiteralConstraint(".*@.*");
-		constraint.isPublic(true);
+		constraint.setPublic(true);
 		return constraint;
 	}
-	
-	public static Constraint buildPrivateLiteralConstraint(){
-		LiteralConstraint constraint = new LiteralConstraint(new SNResource());
-		constraint.setLiteralPattern(".*@.*");
+
+	/**
+	 * Creates a constraint consisting of:
+	 * <ul>
+	 * <li>
+	 * QN: {@link RBMock}.COMMON_NAMESPACE_URI#URLConstraint
+	 * </li>
+	 * <li>
+	 * Applicable Datatypes:
+	 * <ul>
+	 * 	<li>
+	 * 		String
+	 *  </li><li>
+	 * 		Text
+	 *  </li><li>
+	 * 		Rich_Text
+	 *  </li>
+	 * </ul>
+	 * 	<li>
+	 * 	Name: URL-Constraint
+	 *  </li><li>
+	 *   LiteralConstraint: "^http\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(/\S*)?$"
+	 *  </li>
+	 *  <li>
+	 *   Public: true
+	 *   </li>
+	 * </li>
+	 * </ul>
+	 * @return public constraint
+	 */
+	public static Constraint buildPublicURLConstraint(){
+		QualifiedName qn = new QualifiedName(RBMock.COMMON_NAMESPACE_URI, "URLConstraint");
+		List<Datatype> datatypes = new ArrayList<Datatype>();
+		datatypes.add(Datatype.STRING);
+		datatypes.add(Datatype.TEXT);
+		datatypes.add(Datatype.RICH_TEXT);
+		ConstraintImpl constraint= new ConstraintImpl(qn);
+		constraint.setApplicableDatatypes(datatypes);
+		constraint.setName("URL-Constraint");
+		constraint.setLiteralConstraint("^http\\://[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,3}(/\\S*)?$");
+		constraint.setPublic(true);
 		return constraint;
 	}
-	
+
 	public static Constraint buildPublicPersonConstraint(){
 		ResourceID resource = new SimpleResourceID(RBMock.COMMON_NAMESPACE_URI + "PersonConstraint");
-		ConstraintImpl constraint = new ConstraintImpl((ResourceNode)new SNResource());
+		ConstraintImpl constraint = new ConstraintImpl();
 		constraint.setName("Person-Constraint");
-		constraint.setReference(resource);
+		constraint.setTypeConstraint(resource);
+		constraint.setApplicableDatatypes(Arrays.asList(Datatype.RESOURCE));
 		return constraint;
 	}
-	
-	
-	public static Constraint buildTypeConstraint(ResourceID type){
+
+
+	public static Constraint buildTypeConstraint(final ResourceID type){
 		ConstraintImpl constraint = new ConstraintImpl();
 		constraint.buildReferenceConstraint(type, false);
 		return constraint;
 	}
-	
-	public static Constraint buildPrivatePersonConstraint(){
-		ResourceID resource = new SimpleResourceID(RBMock.COMMON_NAMESPACE_URI + "PersonConstraint");
-		ConstraintImpl constraint = new ConstraintImpl((ResourceNode)new SNResource());
-		constraint.setReference(resource);
-		return constraint;
-	}
+
 }

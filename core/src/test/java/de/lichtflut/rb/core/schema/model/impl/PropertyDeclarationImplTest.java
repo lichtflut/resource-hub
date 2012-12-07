@@ -8,8 +8,6 @@ import static org.junit.Assert.assertNotNull;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.Datatype;
@@ -21,7 +19,6 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
  * Created: May 2, 2012
  *
  * @author Ravi Knox
- * TODO: create some tests...
  */
 public class PropertyDeclarationImplTest {
 
@@ -30,17 +27,17 @@ public class PropertyDeclarationImplTest {
 		PropertyDeclaration decl = new PropertyDeclarationImpl();
 		assertNotNull(decl);
 	}
-	
+
 	@Test
 	public void testPropertyDeclImplWithParams(){
 		String label = "field1";
 		String pattern = "htp://lf.de/person#123456-lki8";
 		ResourceID resID = new SimpleResourceID("http://lf.de/test#" + label);
-		LiteralConstraint constr = new LiteralConstraint((ResourceNode)new SNResource());
-		constr.setLiteralPattern(pattern);
-		
+		ConstraintImpl constr = new ConstraintImpl();
+		constr.setLiteralConstraint(pattern);
+
 		PropertyDeclaration pdec = new PropertyDeclarationImpl(resID, Datatype.STRING, constr);
-		
+
 		assertEquals("Label donot match", label, pdec.getFieldLabelDefinition().getDefaultLabel());
 		assertEquals("ResourceID does not match", resID, pdec.getPropertyDescriptor());
 		assertEquals("Constraint is not as expected", pattern, pdec.getConstraint().getLiteralConstraint().toString());

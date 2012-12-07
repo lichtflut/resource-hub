@@ -13,7 +13,6 @@ import java.util.Set;
 
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -37,24 +36,24 @@ import de.lichtflut.rb.core.security.RBUser;
  * @author Oliver Tigges
  */
 public class EmbeddedAuthAuthorizationManager {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(EmbeddedAuthAuthorizationManager.class);
-	
+
 	private final ModelingConversation conversation;
 
 	private final EmbeddedAuthDomainManager domainManager;
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * Constructor.
 	 * @param domainManager The domain manager.
 	 */
-	public EmbeddedAuthAuthorizationManager(ModelingConversation conversation, EmbeddedAuthDomainManager domainManager) {
+	public EmbeddedAuthAuthorizationManager(final ModelingConversation conversation, final EmbeddedAuthDomainManager domainManager) {
 		this.domainManager = domainManager;
 		this.conversation = conversation;
 	}
-	
+
 	// -- ROLE ASSIGNMENT ---------------------------------
 
 	/**
@@ -63,7 +62,7 @@ public class EmbeddedAuthAuthorizationManager {
 	 * @param domain The domain.
 	 * @return The list of roles.
 	 */
-	public List<String> getUserRoles(RBUser user, String domain) {
+	public List<String> getUserRoles(final RBUser user, final String domain) {
 		final List<String> result = new ArrayList<String>();
 		final ResourceNode userNode = mc().findResource(user.getQualifiedName());
 		for(SemanticNode roleNode : SNOPS.objects(userNode, EmbeddedAuthModule.HAS_ROLE)) {
@@ -81,7 +80,7 @@ public class EmbeddedAuthAuthorizationManager {
 	 * @param domain The domain.
 	 * @return The list of permissions.
 	 */
-	public Set<String> getUserPermissions(QualifiedName userQN, String domain) {
+	public Set<String> getUserPermissions(final QualifiedName userQN, final String domain) {
 		final Set<String> result = new HashSet<String>();
 		final ResourceNode userNode = mc().findResource(userQN);
 		for(SemanticNode roleNode : SNOPS.objects(userNode, EmbeddedAuthModule.HAS_ROLE)) {
@@ -102,27 +101,27 @@ public class EmbeddedAuthAuthorizationManager {
 	 * @param roles The roles.
 	 * @throws RBAuthException
 	 */
-	public void setUserRoles(RBUser user, String domain, List<String> roles) throws RBAuthException {
+	public void setUserRoles(final RBUser user, final String domain, final List<String> roles) throws RBAuthException {
 		ResourceNode userNode = mc().findResource(user.getQualifiedName());
 		if (userNode == null) {
 			throw new RBAuthException(0, "User not found: " + user.getEmail() + " in domain" + domain);
 		}
-		
+
 		final ResourceNode domainNode = domainManager.findDomainNode(domain);
 		// Remove old roles
-		Set<Statement> oldRoles = userNode.getAssociations(EmbeddedAuthModule.HAS_ROLE);
+		Set<Statement> oldRoles = SNOPS.associations(userNode, EmbeddedAuthModule.HAS_ROLE);
 		for (Statement stmt : oldRoles) {
 
-            SemanticNode role = stmt.getObject();
+			SemanticNode role = stmt.getObject();
 
-            SemanticNode currentDomainNode = SNOPS.singleObject(role.asResource(), EmbeddedAuthModule.BELONGS_TO_DOMAIN);
+			SemanticNode currentDomainNode = SNOPS.singleObject(role.asResource(), EmbeddedAuthModule.BELONGS_TO_DOMAIN);
 
-            if (domainNode.equals(currentDomainNode)) {
+			if (domainNode.equals(currentDomainNode)) {
 				userNode.removeAssociation(stmt);
-                logger.info("Removing role {} from user {}.", role, user + "#" + domain);
+				logger.info("Removing role {} from user {}.", role, user + "#" + domain);
 			} else {
-                logger.info("Keeping role {} to user {}.", role, user + "#" + domain);
-            }
+				logger.info("Keeping role {} to user {}.", role, user + "#" + domain);
+			}
 		}
 
 		// add new roles
@@ -136,10 +135,10 @@ public class EmbeddedAuthAuthorizationManager {
 		}
 		logger.info("Added roles {} to user {}.", roles, user + "#" + domain);
 	}
-	
+
 	// ----------------------------------------------------
-	
-	protected String getDomain(SemanticNode node) {
+
+	protected String getDomain(final SemanticNode node) {
 		if (node != null && node.isResourceNode()) {
 			final SemanticNode domain = singleObject(node.asResource(), EmbeddedAuthModule.BELONGS_TO_DOMAIN);
 			return uniqueName(domain);
@@ -147,19 +146,19 @@ public class EmbeddedAuthAuthorizationManager {
 			return null;
 		}
 	}
-	
+
 	// ----------------------------------------------------
-	
-	private String uniqueName(SemanticNode node) {
+
+	private String uniqueName(final SemanticNode node) {
 		if (node != null && node.isResourceNode()) {
 			return string(singleObject(node.asResource(), EmbeddedAuthModule.HAS_UNIQUE_NAME));
 		} else {
 			return null;
 		}
 	}
-	
+
 	private ModelingConversation mc() {
 		return conversation;
 	}
-	
+
 }

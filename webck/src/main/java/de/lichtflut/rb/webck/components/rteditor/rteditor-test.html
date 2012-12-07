@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>
+            RT-Editor Test
+        </title>
+        <link type="text/css" href="jquery.wysiwyg.css" rel="stylesheet" />
+        <script language="javascript" type="text/javascript" src="../../../../../../../../test/resources/js/jquery-1.8.1.min.js"></script>  
+        <script language="javascript" type="text/javascript" src="jquery.wysiwyg.js"></script>   
+        <script language="javascript" type="text/javascript" src="lfrb-richtext-1.0.js"></script>        
+        <script language="javascript" type="text/javascript">
+            $(document).ready(function() {
+                LFRB.RichText.simple('#rt-editor-1'); 
+                LFRB.RichText.standard('#rt-editor-2'); 
+                LFRB.RichText.fullFeatured('#rt-editor-3'); 
+            });
+        </script>
+    </head>
+    <body>
+        <h1>This is a test page - has nothing to do with wicket.</h1>
+        <div id="center-container">
+            <form>
+                <div style="float:left; width:200px; height:200px; border: 1px solid black; margin: 10px; padding:10px">
+                    <textarea id="rt-editor-1" style="width: 100%;"></textarea>
+                </div>
+                <div style="float:left; width:500px; height:200px; border: 1px solid black; margin: 10px; padding:10px">
+                    <textarea id="rt-editor-2" style="width: 100%"></textarea>
+                </div>
+                <div style="float:left; width:500px; height:200px; border: 1px solid black; margin: 10px; padding:10px">
+                    <textarea id="rt-editor-3" style="width: 100%"></textarea>
+                </div>
+        </div>
+        
+        <div id="log">
+        </div>
+    </body>
+</html>

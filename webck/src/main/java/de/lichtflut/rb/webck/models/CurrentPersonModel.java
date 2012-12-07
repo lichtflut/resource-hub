@@ -3,22 +3,23 @@
  */
 package de.lichtflut.rb.webck.models;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+
 /**
  * <p>
- *  Model for the currently logged in user. 
+ *  Model for the currently logged in user.
  * </p>
  *
  * <p>
@@ -28,25 +29,25 @@ import org.arastreju.sge.model.nodes.SemanticNode;
  * @author Oliver Tigges
  */
 public class CurrentPersonModel extends AbstractLoadableDetachableModel<RBEntity> {
-	
+
 	@SpringBean
 	private EntityManager entityManager;
-	
-	@SpringBean 
-	private ServiceContext context;
-	
+
 	@SpringBean
-	private ModelingConversation conversation;
-	
+	private ServiceContext context;
+
+	@SpringBean
+	private SemanticNetworkService semanticNetwork;
+
 	// ----------------------------------------------------
-	
+
 	public CurrentPersonModel() {
 		Injector.get().inject(this);
 	}
-	
+
 	// ----------------------------------------------------
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -55,8 +56,8 @@ public class CurrentPersonModel extends AbstractLoadableDetachableModel<RBEntity
 		if (user == null) {
 			return null;
 		}
-		
-		final ResourceNode userNode = conversation.resolve(SNOPS.id(user.getQualifiedName()));
+
+		final ResourceNode userNode = semanticNetwork.resolve(SNOPS.id(user.getQualifiedName()));
 		final SemanticNode person = SNOPS.fetchObject(userNode, RBSystem.IS_RESPRESENTED_BY);
 		if (person != null && person.isResourceNode()) {
 			return entityManager.find(person.asResource());
@@ -64,5 +65,5 @@ public class CurrentPersonModel extends AbstractLoadableDetachableModel<RBEntity
 			return null;
 		}
 	}
-	
+
 }

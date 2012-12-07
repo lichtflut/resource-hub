@@ -3,8 +3,11 @@
  */
 package de.lichtflut.rb.core;
 
+import org.arastreju.sge.context.Context;
+import org.arastreju.sge.context.SimpleContextID;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.naming.Namespace;
 
 /**
  * <p>
@@ -20,6 +23,10 @@ import org.arastreju.sge.model.SimpleResourceID;
 public interface RBSystem {
 
 	String SYS_NAMESPACE_URI = "http://rb.lichtflut.de/system#";
+
+    Context TYPE_SYSTEM_CTX = new SimpleContextID(Namespace.LOCAL_CONTEXTS, "TypeSystem");
+
+    Context VIEW_SPEC_CTX = new SimpleContextID(Namespace.LOCAL_CONTEXTS, "ViewSpecifications");
 	
 	// -- TYPES -------------------------------------------
 	
@@ -33,13 +40,23 @@ public interface RBSystem {
 	 * rb:Entities are instances of rb:Type.
 	 */
 	ResourceID ENTITY = new SimpleResourceID(SYS_NAMESPACE_URI, "Entity");
-	
+
+    /**
+     * An information may be visible or writable only by owner.
+     */
+    ResourceID PRIVATE_ACCESS = new SimpleResourceID(SYS_NAMESPACE_URI, "PrivateAccess");
+
+    /**
+     * An information may be visible or writable only some users.
+     */
+    ResourceID PROTECTED_ACCESS = new SimpleResourceID(SYS_NAMESPACE_URI, "ProtectedAccess");
+
+    /**
+     * An information may be visible or writable by all users.
+     */
+    ResourceID PUBLIC_ACCESS = new SimpleResourceID(SYS_NAMESPACE_URI, "PublicAccess");
+
 	// -- PROPERTIES --------------------------------------
-	
-	/**
-	 * The content. E.g. of an attachment.
-	 */
-	ResourceID HAS_CONTENT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasContent");
 	
 	/**
 	 * Users must provide an email address for identification.  
@@ -73,10 +90,18 @@ public interface RBSystem {
 	 * Boolean value indicating of an organization is the domain's owning one.
 	 */
 	ResourceID IS_DOMAIN_ORGANIZATION = new SimpleResourceID(SYS_NAMESPACE_URI, "isDomainOrganization");
-	
+
+    // -- CONTENT SPECIFICATION ------------------------------
+
 	/**
 	 * Each RBEntity may have a primary image URL/ID.
 	 */
 	ResourceID HAS_IMAGE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasImage");
+
+    /**
+     * The content. E.g. of an attachment.
+     */
+    ResourceID HAS_CONTENT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasContent");
+
 
 }

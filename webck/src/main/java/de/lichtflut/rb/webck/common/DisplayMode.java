@@ -18,22 +18,22 @@ import org.apache.wicket.util.string.StringValue;
  * @author Oliver Tigges
  */
 public enum DisplayMode {
-	
+
 	VIEW("view"), EDIT("edit"), CREATE("create");
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * The page parameter to be used when putting the mode into a URI.
 	 */
 	public static final String PARAMETER = "mode";
-	
+
 	/**
 	 * Get the display mode from paga parameters.
 	 * @param params The parameters.
 	 * @return The display mode.
 	 */
-	public static DisplayMode fromParams(PageParameters params) {
+	public static DisplayMode fromParams(final PageParameters params) {
 		final StringValue str = params.get(PARAMETER);
 		if (!str.isEmpty()) {
 			if (EDIT.token.equals(str.toString())) {
@@ -41,24 +41,21 @@ public enum DisplayMode {
 			} else if (CREATE.token.equals(str.toString())) {
 				return CREATE;
 			}
-		} 
+		}
 		return VIEW;
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	private String token;
-	
-	private DisplayMode(String token) {
+
+	private DisplayMode(final String token) {
 		this.token = token;
 	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public String toString() {
 		return token;
 	}
-	
+
 }

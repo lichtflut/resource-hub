@@ -24,9 +24,14 @@ import org.arastreju.sge.model.nodes.views.SNText;
 public class PredefinedCatalogItem extends CatalogItem {
 
 	private final Class<?> widgetClass;
+
+    // ----------------------------------------------------
 	
 	/**
-	 * @param widgetClass
+     * Constructor.
+	 * @param widgetClass The class of the widget.
+     * @param name The widget's name.
+     * @param description The widget's description.
 	 */
 	public PredefinedCatalogItem(final Class<?> widgetClass, final IModel<String> name, final IModel<String> description) {
 		super(name, description);
@@ -35,9 +40,6 @@ public class PredefinedCatalogItem extends CatalogItem {
 
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public WidgetSpec createWidget() {
 		final WidgetSpec widgetSpec = new SNWidgetSpec();

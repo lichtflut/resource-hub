@@ -6,6 +6,8 @@ package de.lichtflut.rb.core.entity.impl;
 import java.util.Locale;
 import java.util.Set;
 
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
+import de.lichtflut.rb.core.schema.model.impl.PlainVisualizationInfo;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
@@ -64,16 +66,16 @@ public class UndeclaredRBField extends AbstractRBField {
 	}
 
 	@Override
-	public boolean isKnownToSchema() {
-		return false;
-	}
-
-	@Override
 	public boolean isResourceReference() {
 		return false;
 	}
 
-	@Override
+    @Override
+    public VisualizationInfo getVisualizationInfo() {
+        return new PlainVisualizationInfo();
+    }
+
+    @Override
 	public Constraint getConstraint() {
 		return null;
 	}

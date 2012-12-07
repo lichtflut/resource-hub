@@ -7,21 +7,17 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
+import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.application.base.RBBasePage;
-import de.lichtflut.rb.application.resourceview.EntityDetailPage;
+import de.lichtflut.rb.application.common.CommonParams;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.components.organizer.ChangePasswordPanel;
-import de.lichtflut.rb.webck.components.organizer.SetUserProfilePanel;
+import de.lichtflut.rb.webck.components.settings.ChangePasswordPanel;
+import de.lichtflut.rb.webck.components.settings.SetUserProfilePanel;
 import de.lichtflut.rb.webck.components.widgets.management.MenuManagementPanel;
 import de.lichtflut.rb.webck.components.widgets.management.PerspectiveManagementPanel;
 import de.lichtflut.rb.webck.models.CurrentUserModel;
@@ -39,25 +35,26 @@ import de.lichtflut.rb.webck.models.CurrentUserModel;
  */
 public class UserProfilePage extends RBBasePage {
 
-	@SpringBean
-	private SchemaManager schemaManager;
-	
-	// ---------------- Constructor -------------------------
-
 	/**
 	 * Default constructor.
-	 * @param user
 	 */
 	public UserProfilePage(){
 		add(createTitle());
 		add(createChangeUserProfile());
 		add(createchangePasswordField());
-		
+
 		add(new PerspectiveManagementPanel("perspectives"));
-		
+
 		add(new MenuManagementPanel("menu"));
 	}
-	
+
+	// ----------------------------------------------------
+
+	@Override
+	protected boolean needsAuthentication() {
+		return true;
+	}
+
 	// ----------------------------------------------------
 
 	/**
@@ -78,21 +75,19 @@ public class UserProfilePage extends RBBasePage {
 		return new SetUserProfilePanel("profile", new CurrentUserModel()){
 
 			@Override
-			protected void onResourceLinkClicked(ResourceNode node) {
+			protected void onResourceLinkClicked(final ResourceNode node) {
 				final PageParameters params = new PageParameters();
-				ResourceSchema schema = schemaManager.findSchemaForType(RB.PERSON);
-				RBEntity user = new RBEntityImpl(node.asResource(), schema);
-				params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, user.getType());
-				params.add(EntityDetailPage.PARAM_RESOURCE_ID, user.getID());
-				setResponsePage(EntityDetailPage.class, params);
+				params.add(CommonParams.PARAM_RESOURCE_TYPE, RB.PERSON);
+				params.add(CommonParams.PARAM_RESOURCE_ID, node.getQualifiedName());
+				setResponsePage(RBApplication.get().getEntityDetailPage(), params);
 			}
 
 			@Override
-			protected void jumpToResourceEditorPage(EntityHandle handle) {
-				PageParameters params = new PageParameters();
-				params.set(DisplayMode.PARAMETER, DisplayMode.EDIT);
-				params.add(EntityDetailPage.PARAM_RESOURCE_TYPE, RB.PERSON);
-				setResponsePage(new EntityDetailPage(handle));
+			protected void jumpToResourceEditorPage(final EntityHandle handle) {
+				PageParameters parameters = new PageParameters();
+				parameters.add(DisplayMode.PARAMETER, DisplayMode.CREATE);
+				parameters.add(CommonParams.PARAM_RESOURCE_TYPE, RB.PERSON);
+				setResponsePage(RBApplication.get().getEntityDetailPage(), parameters);
 			}
 
 		};

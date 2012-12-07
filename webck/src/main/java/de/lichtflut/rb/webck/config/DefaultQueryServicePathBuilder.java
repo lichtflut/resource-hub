@@ -8,7 +8,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * <p>
- *  Default path builder to query services.
+ *  Default id builder to query services.
  * </p>
  *
  * <p>

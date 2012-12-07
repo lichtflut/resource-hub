@@ -9,6 +9,8 @@ import java.util.List;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+
 
 /**
  * <p>
@@ -61,12 +63,18 @@ public interface RBEntity extends Serializable {
 	List<RBField> getAllFields();
 
 	/**
+	 * Returns all quick-info fields as specified in the {@link ResourceSchema}.
+	 * @return a {@link List} od {@link RBField}s
+	 */
+	List<RBField> getQuickInfo();
+
+	/**
 	 * Add {@link RBField} to RBEntity.
 	 * @param field - {@link RBField}
 	 * @return true if added successfully, false if not
 	 */
 	boolean addField(RBField field);
-	
+
 	/**
 	 * Check if there is a schema defined for this entity.
 	 * @return True if there is a schema.

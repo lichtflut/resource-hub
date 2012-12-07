@@ -4,7 +4,7 @@
 package de.lichtflut.rb.webck.components.dialogs;
 
 import de.lichtflut.rb.core.services.DomainOrganizer;
-import de.lichtflut.rb.webck.components.organizer.CreateContextPanel;
+import de.lichtflut.rb.webck.components.organizer.contexts.CreateContextPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 

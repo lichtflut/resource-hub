@@ -6,7 +6,6 @@ package de.lichtflut.rb.application.resourceview;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -15,6 +14,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 
 import de.lichtflut.rb.application.base.RBBasePage;
+import de.lichtflut.rb.application.common.CommonParams;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
@@ -27,7 +27,7 @@ import de.lichtflut.rb.webck.models.BrowsingContextModel;
 
 /**
  * <p>
- * This {@link Page} displays a Resource in an Editor.
+ * This page displays a Resource in an Editor.
  * </p>
  * 
  * <p>
@@ -40,15 +40,13 @@ import de.lichtflut.rb.webck.models.BrowsingContextModel;
 @SuppressWarnings("serial")
 public class EntityDetailPage extends RBBasePage {
 
-	public static final String PARAM_RESOURCE_ID = "rid";
-	public static final String PARAM_RESOURCE_TYPE = "type";
-
-	// ----------------------------------------------------
-
 	/**
 	 * Constructor.
 	 * 
-	 * @param params
+	 * @param params PageParameters might contain<ul>
+	 * <li>{@link DisplayMode}</li>
+	 * <li>{@link CommonParams#PARAM_RESOURCE_ID}.</li>
+	 * </ul>
 	 */
 	public EntityDetailPage(final PageParameters params) {
 		super(params);
@@ -57,40 +55,39 @@ public class EntityDetailPage extends RBBasePage {
 		DisplayMode displayMode = DisplayMode.fromParams(params);
 		final boolean editmode = !DisplayMode.VIEW.equals(displayMode);
 		if (handle != null) {
-			add(new Browser("rb"));
+			add(createBrowser("rb"));
 			initHistory(handle, editmode);
 		} else {
 			add(new WebMarkupContainer("rb").setVisible(false));
 		}
-		
+
 		add(new NotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
 	}
 
 	/**
-	 * Constructor. Displays a resource in edit mode.
-	 * @param handle
+	 * Constructor. Displays current entity in browsing context.
 	 */
-	public EntityDetailPage(final EntityHandle handle) {
-		add(new Browser("rb"));
-		
+	public EntityDetailPage() {
+		add(createBrowser("rb"));
 		add(new NotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
 	}
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	protected Component createSecondLevelNav(String componentID) {
+	protected Component createSecondLevelNav(final String componentID) {
 		return new BreadCrumbsBar(componentID, 7);
 	}
 
+    protected Component createBrowser(final String componentID) {
+        return new Browser(componentID);
+    }
+
 	// -----------------------------------------------------
 
-	private EntityHandle createHandle(PageParameters params) {
-		final StringValue idParam = params.get(PARAM_RESOURCE_ID);
-		final StringValue typeParam = params.get(PARAM_RESOURCE_TYPE);
+	private EntityHandle createHandle(final PageParameters params) {
+		final StringValue idParam = params.get(CommonParams.PARAM_RESOURCE_ID);
+		final StringValue typeParam = params.get(CommonParams.PARAM_RESOURCE_TYPE);
 
 		if (!idParam.isEmpty()) {
 			final ResourceID id = new SimpleResourceID(idParam.toString());
@@ -103,7 +100,7 @@ public class EntityDetailPage extends RBBasePage {
 		}
 	}
 
-	private void initHistory(EntityHandle handle, boolean editmode) {
+	private void initHistory(final EntityHandle handle, final boolean editmode) {
 		final BrowsingHistory history = RBWebSession.get().getHistory();
 		if (editmode && handle.hasId()) {
 			history.edit(handle);
@@ -118,13 +115,10 @@ public class EntityDetailPage extends RBBasePage {
 
 	class Browser extends ResourceBrowsingPanel {
 
-		public Browser(String id) {
+		public Browser(final String id) {
 			super(id);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		protected Component createRelationshipView(final String id, final IModel<RBEntity> model) {
 			return new RelationshipOverviewPanel(id, model).add(visibleIf(BrowsingContextModel.isInViewMode()));

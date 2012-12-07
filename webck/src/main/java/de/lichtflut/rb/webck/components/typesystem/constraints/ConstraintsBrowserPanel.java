@@ -3,10 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.typesystem.constraints;
 
-import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.basic.LoadableModel;
+import java.util.List;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -17,13 +15,20 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import java.util.List;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.basic.LoadableModel;
 
 /**
  * <p>
- *  Panel for Browsing of {@link TypeDefinition}s.
+ *  Panel for Browsing of {@link Constraint}s.
  * </p>
  *
+ * <p>
+ *	This panel lists all Constraints privided by a {@link LoadableModel}.
+ * </p>
+ * 
  * <p>
  * 	Created Oct 20, 2011
  * </p>
@@ -33,7 +38,7 @@ import java.util.List;
 public abstract class ConstraintsBrowserPanel extends Panel {
 
 	private final LoadableModel<List<Constraint>> model;
-	
+
 	// ----------------------------------------------------
 
 	/**
@@ -44,38 +49,38 @@ public abstract class ConstraintsBrowserPanel extends Panel {
 	public ConstraintsBrowserPanel(final String id, final LoadableModel<List<Constraint>> model) {
 		super(id);
 		this.model = model;
-		
+
 		setOutputMarkupId(true);
-		
+
 		add(new ListView<Constraint>("listview", this.model) {
 			@Override
 			protected void populateItem(final ListItem<Constraint> item) {
 				final Constraint constraint = item.getModelObject();
 				final Link link = new AjaxFallbackLink("link") {
-						@Override
-						public void onClick(AjaxRequestTarget target) {
-							onConstraintSelected(constraint, target);
-						}	
+					@Override
+					public void onClick(final AjaxRequestTarget target) {
+						onConstraintSelected(constraint, target);
+					}
 				};
 				item.add(link);
 				link.add(new Label("constraint", constraint.getName()));
-				link.add(new AttributeAppender("title", constraint.asResourceNode().getQualifiedName()));
+				link.add(new AttributeAppender("title", constraint.getQualifiedName()));
 			}
 		});
-		
+
 		add(new AjaxFallbackLink("createConstraint") {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				onCreateConstraint(target);
 			}
 		});
 	}
-	
+
 	// ----------------------------------------------------
-	
-	/** 
-	* {@inheritDoc}
-	*/
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onEvent(final IEvent<?> event) {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
@@ -84,20 +89,20 @@ public abstract class ConstraintsBrowserPanel extends Panel {
 			RBAjaxTarget.add(this);
 		}
 	}
-	
-	/** 
-	* {@inheritDoc}
-	*/
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onDetach() {
 		super.onDetach();
 		model.detach();
 	}
-	
+
 	// -- CALLBACKS ---------------------------------------
-	
+
 	public abstract void onCreateConstraint(AjaxRequestTarget target);
-	
+
 	public abstract void onConstraintSelected(Constraint constraint, AjaxRequestTarget target);
-	
+
 }

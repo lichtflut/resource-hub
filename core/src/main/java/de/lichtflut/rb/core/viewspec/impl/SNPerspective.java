@@ -3,22 +3,26 @@
  */
 package de.lichtflut.rb.core.viewspec.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.common.Accessibility;
+import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.core.viewspec.ViewPort;
+import de.lichtflut.rb.core.viewspec.WDGT;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.viewspec.Perspective;
-import de.lichtflut.rb.core.viewspec.ViewPort;
-import de.lichtflut.rb.core.viewspec.WDGT;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.arastreju.sge.SNOPS.id;
 
 /**
  * <p>
@@ -34,14 +38,16 @@ import de.lichtflut.rb.core.viewspec.WDGT;
 public class SNPerspective extends ResourceView implements Perspective {
 
 	/**
-	 * @param resource
+     * Create a view based on given resource.
+	 * @param resource The resource.
 	 */
 	public SNPerspective(ResourceNode resource) {
 		super(resource);
 	}
 	
 	/**
-	 * @param resource
+     * Create an new perspective with given qualified name.
+	 * @param qn The qualified name.
 	 */
 	public SNPerspective(QualifiedName qn) {
 		super(qn);
@@ -49,7 +55,7 @@ public class SNPerspective extends ResourceView implements Perspective {
 	}
 
 	/**
-	 * Create a new perspeective.
+	 * Create a new perspective.
 	 */
 	public SNPerspective() {
 		setValue(RDF.TYPE, WDGT.PERSPECTIVE);
@@ -57,65 +63,69 @@ public class SNPerspective extends ResourceView implements Perspective {
 	
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResourceID getID() {
-		return this;
-	}
-
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getName() {
 		return stringValue(RB.HAS_NAME);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getTitle() {
 		return stringValue(RB.HAS_TITLE);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getDescription() {
 		return stringValue(RB.HAS_DESCRIPTION);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setName(String name) {
 		setValue(RB.HAS_NAME, name);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setTitle(String title) {
 		setValue(RB.HAS_TITLE, title);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setDescription(String desc) {
 		setValue(RB.HAS_DESCRIPTION, desc);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
+    // ----------------------------------------------------
+
+    @Override
+    public ResourceID getOwner() {
+        SemanticNode owner = SNOPS.fetchObject(this, RB.HAS_OWNER);
+        if (owner != null && owner.isResourceNode()) {
+            return owner.asResource();
+        }
+        return null;
+    }
+
+    @Override
+    public void setOwner(ResourceID owner) {
+        setValue(RB.HAS_OWNER, owner);
+    }
+
+    @Override
+    public Accessibility getVisibility() {
+        SemanticNode accessibility = SNOPS.fetchObject(this, RB.HAS_READ_ACCESS);
+        if (accessibility != null && accessibility.isResourceNode()) {
+            final QualifiedName qn = accessibility.asResource().getQualifiedName();
+            return Accessibility.getByQualifiedName(qn);
+        }
+        return Accessibility.PRIVATE;
+    }
+
+    @Override
+    public void setVisibility(Accessibility visibility) {
+        setValue(RB.HAS_READ_ACCESS, id(visibility.getQualifiedName()));
+    }
+
+    // ----------------------------------------------------
+
 	@Override
 	public List<ViewPort> getViewPorts() {
 		final List<ViewPort> result = new ArrayList<ViewPort>();
@@ -126,9 +136,6 @@ public class SNPerspective extends ResourceView implements Perspective {
 		return result;
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ViewPort addViewPort() {
 		final SNViewPort port = new SNViewPort();

@@ -42,19 +42,20 @@ public class EntityHandle implements Serializable {
 	}
 	
 	/**
-	 * @param id
-	 * @param type
+     * Constructor.
+	 * @param id The id.
+	 * @param type The type of the entity.
+     *
 	 */
 	public EntityHandle(ResourceID id, ResourceID type) {
 		this.id = id;
 		this.type = type;
 	}
-	
-	
+
 	// ----------------------------------------------------
 	
 	public ResourceID getType() {
-		return type;
+        return type;
 	}
 	
 	public ResourceID getId() {

@@ -59,12 +59,12 @@ public abstract class RelationshipListPanel extends Panel {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 						onRelationshipRemoved(item.getModelObject());
-						onStatmentModelChanged();
+						onStatementModelChanged();
 					}
 				}.setLinkCssClass("action-delete").setLinkTitle(new ResourceModel("action.remove")));
 			}
 			
-			private void onStatmentModelChanged() {
+			private void onStatementModelChanged() {
 				removeAll();
 			}
 			

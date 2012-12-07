@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.rest.api.query;
 
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.common.TermSearcher;
 import de.lichtflut.rb.core.common.TermSearcher.Mode;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
@@ -59,7 +60,7 @@ public class ClassQueryService extends AbstractQueryService {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		Query query = createQuery(domain, user);
+		Query query = createQuery(domain, user, RBSystem.TYPE_SYSTEM_CTX);
 		String superclassDecoded = decodeBase64(superclass);
 		
 		logger.info("Querying classes '{}'  with superclass {}.", term, superclassDecoded);

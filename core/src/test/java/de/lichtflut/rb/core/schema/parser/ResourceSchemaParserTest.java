@@ -3,18 +3,32 @@
  */
 package de.lichtflut.rb.core.schema.parser;
 
-import de.lichtflut.rb.core.RBConfig;
-import de.lichtflut.rb.core.services.SchemaImporter;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
-import junit.framework.Assert;
-import org.arastreju.sge.Arastreju;
-import org.arastreju.sge.ModelingConversation;
-import org.junit.Before;
-import org.junit.Test;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import de.lichtflut.rb.core.schema.parser.exception.SchemaParsingException;
+import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.persistence.TransactionControl;
+import org.arastreju.sge.query.Query;
+import org.arastreju.sge.query.SimpleQueryResult;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
+import de.lichtflut.rb.core.services.ConversationFactory;
+import de.lichtflut.rb.core.services.SchemaImporter;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 
 /**
  * <p>
@@ -30,44 +44,64 @@ import java.io.InputStream;
  */
 public class ResourceSchemaParserTest {
 
-    private ModelingConversation conversation;
+	@Mock
+	private Query query;
 
-    // -----------------------------------------------------
+	@Mock
+	private TransactionControl tx;
 
-    @Before
-    public void setUp() {
-        final Arastreju aras = Arastreju.getInstance(new RBConfig().getArastrejuConfiguration());
-        this.conversation = aras.openMasterGate().startConversation();
-    }
-	
-	// ----------------------------------------------------
-	
-	@Test
-	public void testJsonImport() throws IOException {
-		final InputStream in = 
-				getClass().getClassLoader().getResourceAsStream("test-schema.json");
+	@Mock
+	private ModelingConversation conversation;
 
-        final SchemaManager manager = new SchemaManagerImpl(conversation);
-        final SchemaImporter importer = manager.getImporter("json");
-		importer.read(in);
-		
-		Assert.assertEquals(5, manager.findAllResourceSchemas().size());
-		
-		Assert.assertEquals(1, manager.findPublicConstraints().size());
+	@Mock
+	private ConversationFactory conversationFactory;
+
+	// -----------------------------------------------------
+
+	@Before
+	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+		Mockito.reset(conversation);
+		when(conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX)).thenReturn(conversation);
+		when(conversation.beginTransaction()).thenReturn(tx);
+		when(conversation.createQuery()).thenReturn(query);
 	}
-	
+
+	// -----------------------------------------------------
+
 	@Test
 	public void testRsfImport() throws IOException {
-		final InputStream in = 
+
+		givenNoSchemasYet();
+		givenResolverReturnsNewResources();
+
+		final InputStream in =
 				getClass().getClassLoader().getResourceAsStream("test-schema.rsf");
 
-        final SchemaManager manager = new SchemaManagerImpl(conversation);
+		final SchemaManager manager = new SchemaManagerImpl(conversationFactory);
 		final SchemaImporter importer = manager.getImporter("rsf");
 		importer.read(in);
-		Assert.assertEquals(2, manager.findAllResourceSchemas().size());
-		
-		Assert.assertEquals(1, manager.findPublicConstraints().size());
 	}
-	
+
+	@Test
+	public void testRsfParsing() throws IOException, SchemaParsingException {
+		final InputStream in =
+				getClass().getClassLoader().getResourceAsStream("test-schema.rsf");
+
+		final RsfSchemaParser parser = new RsfSchemaParser();
+		ParsedElements parsedElements = parser.parse(in);
+	}
+
+	// -- GIVEN -------------------------------------------
+
+	public void givenNoSchemasYet() {
+		Query schemaQuery = mock(Query.class);
+		when(query.addField(any(ResourceID.class), any(ResourceID.class))).thenReturn(schemaQuery);
+		when(schemaQuery.getResult()).thenReturn(SimpleQueryResult.EMPTY);
+	}
+
+	public void givenResolverReturnsNewResources() {
+		when(conversation.resolve(any(ResourceID.class))).thenReturn(new SNResource());
+	}
 
 }

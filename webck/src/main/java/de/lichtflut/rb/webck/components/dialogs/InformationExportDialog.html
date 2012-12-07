@@ -11,8 +11,29 @@
 <wicket:panel>
 	
 	   <form wicket:id="form">
-	       <select wicket:id="format"></select>
-	       <button wicket:id="exportButton"><wicket:message key="button.export"></wicket:message></button>
+
+           <div class="input-panel">
+
+               <div wicket:id="feedback"/>
+
+               <div class="form-field">
+                   <label for="srcContext"><wicket:message key="label.source-context"/></label>
+                   <select wicket:id="srcContext"></select>
+               </div>
+
+               <div class="form-field">
+                   <label for="format"><wicket:message key="label.format"/></label>
+                   <select wicket:id="format"></select>
+               </div>
+
+               <div class="button-bar">
+                   <button wicket:id="exportButton" class="default-button">
+                       <wicket:message key="button.export"></wicket:message>
+                   </button>
+               </div>
+
+           </div>
+
 	   </form>
 	
 </wicket:panel>

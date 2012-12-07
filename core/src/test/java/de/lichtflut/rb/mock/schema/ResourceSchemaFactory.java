@@ -35,6 +35,11 @@ public class ResourceSchemaFactory {
 		PropertyDeclaration dateOfBirth = new PropertyDeclarationImpl(RBMock.HAS_DATE_OF_BIRTH, Datatype.DATE);
 		PropertyDeclaration	email = new PropertyDeclarationImpl(RBMock.HAS_EMAIL, Datatype.STRING);
 		PropertyDeclaration children = new PropertyDeclarationImpl(RBMock.HAS_CHILD_NODE, Datatype.RESOURCE);
+		PropertyDeclaration file = new PropertyDeclarationImpl(RBMock.HAS_FILE, Datatype.FILE);
+
+		schema.addQuickInfo(RBMock.HAS_FIRST_NAME);
+		schema.addQuickInfo(RBMock.HAS_LAST_NAME);
+		schema.addQuickInfo(RBMock.HAS_EMAIL);
 
 		address.setConstraint(ConstraintsFactory.buildTypeConstraint(RBMock.ADDRESS));
 		email.setConstraint(ConstraintsFactory.buildPublicEmailConstraint());
@@ -42,7 +47,7 @@ public class ResourceSchemaFactory {
 
 		firstname.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		lastname.setCardinality(CardinalityBuilder.hasExcactlyOne());
-		address.setCardinality(CardinalityBuilder.hasAtLeastOneUpTo(2));
+		address.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 		dateOfBirth.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		email.setCardinality(CardinalityBuilder.hasOptionalOneToMany());
 
@@ -58,13 +63,16 @@ public class ResourceSchemaFactory {
 		email.getFieldLabelDefinition().setLabel(Locale.GERMAN, "Email");
 		children.setFieldLabelDefinition(new FieldLabelDefinitionImpl("Children"));
 		children.getFieldLabelDefinition().setLabel(Locale.GERMAN, "Kinder");
-		
+		file.setFieldLabelDefinition(new FieldLabelDefinitionImpl("File"));
+
 		schema.addPropertyDeclaration(firstname);
 		schema.addPropertyDeclaration(lastname);
 		schema.addPropertyDeclaration(address);
 		schema.addPropertyDeclaration(dateOfBirth);
 		schema.addPropertyDeclaration(email);
 		schema.addPropertyDeclaration(children);
+		schema.addPropertyDeclaration(file);
+
 
 		try {
 			schema.setLabelBuilder(new ExpressionBasedLabelBuilder(RBMock.PERSON.toURI()));

@@ -39,14 +39,15 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 	// -----------------------------------------------------
 	
 	/**
-	 * @param expression
+     * @param expression The label expression.
 	 */
 	public ExpressionBasedLabelBuilder(final String expression) throws LabelExpressionParseException {
 		this(expression, Collections.<String, NamespaceHandle>emptyMap());
 	}
 	
 	/**
-	 * @param expression
+	 * @param expression The label expression.
+     * @param namespaces The map of namespaces to be used.
 	 */
 	public ExpressionBasedLabelBuilder(final String expression, final Map<String, NamespaceHandle> namespaces) 
 			throws LabelExpressionParseException {
@@ -61,9 +62,6 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 	
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String build(final RBEntity entity) {
 		final Locale locale = Locale.getDefault();
@@ -80,9 +78,6 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 		}
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getExpression() {
 		final StringBuilder sb = new StringBuilder();
@@ -93,9 +88,6 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 		return sb.toString().trim();
 	}
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public String toString() {
 		return getExpression();
@@ -117,8 +109,8 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 	}
 	
 	/**
-	 * @param current
-	 * @return
+	 * @param name The name of the element.
+	 * @return The element.
 	 */
 	private Element toFieldElement(final String name) throws LabelExpressionParseException {
 		if (QualifiedName.isUri(name)) {

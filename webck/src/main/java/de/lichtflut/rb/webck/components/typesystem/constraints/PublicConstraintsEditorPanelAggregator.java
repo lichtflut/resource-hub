@@ -3,6 +3,11 @@
  */
 package de.lichtflut.rb.webck.components.typesystem.constraints;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -10,10 +15,6 @@ import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.CreatePublicConstraintDialog;
 import de.lichtflut.rb.webck.components.typesystem.TypeSystemHelpPanel;
 import de.lichtflut.rb.webck.models.types.PublicConstraintsListModel;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
  * <p>
@@ -36,13 +37,13 @@ public class PublicConstraintsEditorPanelAggregator extends Panel {
 	 * 
 	 * @param id - wicket:id
 	 */
-	public PublicConstraintsEditorPanelAggregator(String id) {
+	public PublicConstraintsEditorPanelAggregator(final String id) {
 		super(id);
 		add(new TypeSystemHelpPanel("editor").setOutputMarkupId(true));
-//		add(new Label("searchbox", Model.of("Search...")));
+		//		add(new Label("searchbox", Model.of("Search...")));
 		add(new ConstraintsBrowserPanel("publicConstraintsBrowser", new PublicConstraintsListModel()) {
 			@Override
-			public void onCreateConstraint(AjaxRequestTarget target) {
+			public void onCreateConstraint(final AjaxRequestTarget target) {
 				DialogHoster hoster = findParent(DialogHoster.class);
 				hoster.openDialog(new CreatePublicConstraintDialog(hoster.getDialogID()));
 			}
@@ -57,7 +58,7 @@ public class PublicConstraintsEditorPanelAggregator extends Panel {
 	// ------------------------------------------------------
 
 	protected void displayConstraintEditor(final Constraint constraint) {
-		final Constraint reloaded = schemaManager.findConstraint(constraint.asResourceNode());
+		final Constraint reloaded = schemaManager.findConstraint(constraint.getQualifiedName());
 		final Panel editor = new PublicConstraintsDetailPanel("editor", Model.of(reloaded));
 		replace(editor);
 		RBAjaxTarget.add(editor);

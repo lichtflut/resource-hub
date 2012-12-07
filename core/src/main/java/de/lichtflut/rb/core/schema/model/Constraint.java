@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -39,10 +39,30 @@ import org.arastreju.sge.model.nodes.ResourceNode;
  */
 public interface Constraint extends Serializable {
 
+    /**
+     * Each constraint has a unique qualified name.
+     * @return The qualified name of this constraint.
+     */
+    QualifiedName getQualifiedName();
+
 	/**
-	 * Returns the name of a public constraint.
+	 * Returns the display name of a public constraint.
 	 */
 	String getName();
+
+    /**
+     * Returns wether this constraint can be re-used by other {@link PropertyDeclaration}s or not.
+     * @return true if Constraint is public, false if not
+     */
+    boolean isPublic();
+
+    // ----------------------------------------------------
+
+    /**
+     * @return true if constraint is literal OR references a literal Constraint,
+     * returns false if references a resource
+     */
+    boolean isLiteral();
 
 	/**
 	 * Get the literal constraint, a regular expression pattern. If this constraint is a resource type constraint
@@ -57,19 +77,9 @@ public interface Constraint extends Serializable {
 	 * (isResourceTypeConstraint() returns false) null will be returned;
 	 * @return The resource type or null.
 	 */
-	ResourceID getReference();
-	
-	/**
-	 * Returns wether this constraint can be re-used by other {@link PropertyDeclaration}s or not.
-	 * @return true if Constraint is public, false if not
-	 */
-	boolean isPublic();
-	
-	/**
-	 * Returns whether this constraint references a public constraint.
-	 * @return true if yes, false if it hold a literal pattern
-	 */
-	boolean holdsReference();
+	ResourceID getTypeConstraint();
+
+    // ----------------------------------------------------
 	
 	/**
 	 * This property can be empty. Do not decide on how to treat a {@link PropertyDeclaration} based on this.
@@ -78,15 +88,4 @@ public interface Constraint extends Serializable {
 	 */
 	List<Datatype> getApplicableDatatypes();
 	
-	/**
-	 * @return true if constraint is literal OR references a literal Constraint, 
-	 * returns false if references a resource
-	 */
-	boolean isLiteral();
-	
-	/**
-	 * Returns the constraint as a ResourceNode.
-	 * @return
-	 */
-	ResourceNode asResourceNode();
 }

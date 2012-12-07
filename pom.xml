@@ -5,21 +5,26 @@
 	<groupId>de.lichtflut.rb</groupId>
 	<artifactId>lf.resource-browser</artifactId>
 	<name>Resource Browser</name>
-	<version>0.4.7-SNAPSHOT</version>
+	<version>0.5.0</version>
 	<description>lichtflut Resource Browser Project</description>
 	<packaging>pom</packaging>
 	
 	<modules>
+		<module>content-repo-jr</module>
 		<module>core</module>
 		<module>tools</module>
 		<module>webck</module>
-		<module>rest-api</module>
+      	<module>rest-api</module>
 		<module>app-foundation</module>
-	</modules>
+  </modules>
 
 	<properties>
-		<arastreju.version>0.7.3</arastreju.version>
+		<arastreju.version>0.8.0-SNAPSHOT</arastreju.version>
+        <springframework.version>3.1.0.RELEASE</springframework.version>
+        <wicket.version>1.5.8</wicket.version>
 		<jersey.version>1.8</jersey.version>
+        <jackson.version>1.9.10</jackson.version>
+    	<skipIntegrationTests>true</skipIntegrationTests>
 	</properties>
 	<build>
 		<pluginManagement>
@@ -29,6 +34,23 @@
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.3.2</version>
 				</plugin-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.12.3</version>
+					<configuration>
+						<skipTests>${skipIntegrationTests}</skipTests>
+					</configuration>
+					<executions>
+						<execution>
+							<id>integration-test</id>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
@@ -88,6 +110,11 @@
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<version>2.6</version>
 				</plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.3.2</version>
+                </plugin>
 				<plugin>
 					<groupId>org.mortbay.jetty</groupId>
 					<artifactId>maven-jetty-plugin</artifactId>
@@ -135,21 +162,75 @@
 	</reporting>
 	<dependencyManagement>
 		<dependencies>
+
+            <!-- Arastreju -->
+
 			<dependency>
 				<groupId>org.arastreju</groupId>
 				<artifactId>arastreju-neo4j</artifactId>
-				<version>${arastreju.version}</version>
+				<version>0.8.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.arastreju</groupId>
 				<artifactId>arastreju.sge</artifactId>
-				<version>${arastreju.version}</version>
+				<version>0.8.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.arastreju</groupId>
 				<artifactId>arastreju.ogm</artifactId>
 				<version>${arastreju.version}</version>
 			</dependency>
+
+            <!-- Spring Framework -->
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-expression</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+
+            <!-- Jackson JSON -->
+
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-core-asl</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-jaxrs</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-xc</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
@@ -236,6 +317,6 @@
 	</distributionManagement>
 	<scm>
 		<developerConnection>scm:git:git@github.com:lichtflut/rb-prototype.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>lf.resource-browser-0.5.0</tag>
 	</scm>
 </project>

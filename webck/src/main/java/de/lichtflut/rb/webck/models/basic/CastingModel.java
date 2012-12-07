@@ -29,18 +29,12 @@ public class CastingModel<T> extends AbstractReadOnlyModel<T> {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public T getObject() {
 		return (T) model.getObject();
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void detach() {
 		super.detach();

@@ -1,10 +1,13 @@
 package de.lichtflut.rb.core.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.arastreju.sge.model.ResourceID;
 
+import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 
 /**
  * .
@@ -15,38 +18,41 @@ import de.lichtflut.rb.core.entity.RBEntity;
  */
 public interface EntityManager {
 
-    /**
-     * Find an Entity by its {@link ResourceID}.
-     * @param resourceID  of the Entity
-     * @return {@link RBEntity}
-     */
-    RBEntity find(ResourceID resourceID);
+	/**
+	 * Find an Entity by its {@link ResourceID}.
+	 * @param resourceID  of the Entity
+	 * @return {@link RBEntity}
+	 */
+	RBEntity find(ResourceID resourceID);
 
-    /**
-     * Finds all {@link RBEntity}s for a given type.
-     * @param type - id of the Resource Type
-     * @return a list of {@link RBEntity}
-     */
-    List<RBEntity> findByType(ResourceID type);
-    
-    // -----------------------------------------------------
-    
-    /**
-     * Create and initialize a new {@link RBEntity} with given type.
-     */
-    RBEntity create(ResourceID type);
-    
-    /**
-     * Store an Entity.
-     * @param entity The entity.
-     */
-    void store(RBEntity entity);
+	// -----------------------------------------------------
 
-    /**
-     * Delete an {@link RBEntity}.
-     * @param entityID - The ID of the entity to be deleted
-     */
-    void delete(ResourceID entityID);
+	/**
+	 * Create and initialize a new {@link RBEntity} with given type.
+	 */
+	RBEntity create(ResourceID type);
+
+	/**
+	 * <p>
+	 * Store an Entity.
+	 * </p>
+	 * 
+	 * @param entity The entity.
+	 */
+	void store(RBEntity entity);
+
+	/**
+	 * Validates an Entity against its Schema.
+	 * @param entity {@link RBEntity} to validate
+	 * @return a Map containting the {@link ErrorCodes} and a list of fields, that produced an error, Map is empty if no error occured
+	 */
+	Map<Integer, List<RBField>> validate(RBEntity entity);
+
+	/**
+	 * Delete an {@link RBEntity}.
+	 * @param entityID - The ID of the entity to be deleted
+	 */
+	void delete(ResourceID entityID);
 
 	/**
 	 * Change the type of an entity.

@@ -3,12 +3,11 @@
  */
 package de.lichtflut.rb.application.custom;
 
-import de.lichtflut.rb.application.RBApplication;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
-import de.lichtflut.rb.application.base.LoginPage;
+import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.application.pages.AbstractBasePage;
-import de.lichtflut.rb.webck.components.organizer.ResetPasswordPanel;
+import de.lichtflut.rb.webck.components.settings.ResetPasswordPanel;
 
 /**
  * <p>
@@ -27,12 +26,12 @@ public class ResetPasswordPage extends AbstractBasePage {
 		this.add(new ResetPasswordPanel("resetPassword"));
 		this.add(new BookmarkablePageLink("backLink", RBApplication.get().getLoginPage()));
 	}
-	
+
 	// ------------------------------------------------------
-	
-	/** 
-	* {@inheritDoc}
-	*/
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected boolean needsAuthentication() {
 		return false;

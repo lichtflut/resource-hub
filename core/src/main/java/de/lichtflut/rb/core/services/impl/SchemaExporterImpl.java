@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import de.lichtflut.rb.core.io.IOReport;
-import de.lichtflut.rb.core.schema.parser.OutputElements;
-import de.lichtflut.rb.core.schema.parser.ResourceSchemaWriter;
+import de.lichtflut.rb.core.schema.writer.OutputElements;
+import de.lichtflut.rb.core.schema.writer.ResourceSchemaWriter;
 import de.lichtflut.rb.core.services.SchemaExporter;
 import de.lichtflut.rb.core.services.SchemaManager;
 
@@ -40,9 +40,6 @@ public class SchemaExporterImpl implements SchemaExporter {
 	
 	// -----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public IOReport exportAll(final OutputStream out) {
 		IOReport report = new IOReport();

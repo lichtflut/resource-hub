@@ -3,11 +3,17 @@
  */
 package de.lichtflut.rb.application.extensions;
 
+import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import org.apache.wicket.injection.Injector;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -32,10 +38,9 @@ public class ServiceContextInitializer {
 		Injector.get().inject(RBWebSession.get());
 	}
 
-	public void init(RBUser user, String domain, String token) {
+	public void init(RBUser user, String domain) {
 		context.setUser(user);
 		context.setDomain(domain);
-        RBWebSession.get().setToken(token);
 	}
 
 }

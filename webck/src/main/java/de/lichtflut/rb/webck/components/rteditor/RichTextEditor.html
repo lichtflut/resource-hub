@@ -1,0 +1,29 @@
+<!--
+
+    Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+    <wicket:enclosure child="title">
+    <div class="input-panel">
+        <wicket:message key="label.richtext-editor.title">[title]</wicket:message>
+        <input wicket:id="title" size="80" maxlength="200"/>
+    </div>
+    </wicket:enclosure>
+    <div class="section">
+        <textarea wicket:id="editingArea" class="full-width">[content]</textarea>
+    </div>
+
+    <div class="button-bar">
+        <button type="button" wicket:id="cancel"><wicket:message key="button.cancel">[cancel]</wicket:message></button>
+        <button type="button" wicket:id="save" class="default-button"><wicket:message key="button.save">[save]</wicket:message></button>
+    </div>
+
+</wicket:panel>
+</html>

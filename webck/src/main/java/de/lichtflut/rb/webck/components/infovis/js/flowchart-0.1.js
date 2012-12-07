@@ -57,7 +57,7 @@ LFRB.FlowChart = {
 			lane.center = lane.offset + GraphVisConfig.laneHeight/2;
 			lane.height = GraphVisConfig.laneHeight;
 			drawLaneIcon(lane, paper);
-			/*paper.path('M0 ' + y + 'L5000 ' + y)
+			/*paper.id('M0 ' + y + 'L5000 ' + y)
 				.attr({'stroke':'#777'});
 			paper.text(5, lane.center, lane.title)
 				.attr({'text-anchor': 'start', 'font-size':'12pt', 'font-weight':'bold'});

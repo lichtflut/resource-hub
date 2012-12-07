@@ -3,16 +3,17 @@
  */
 package de.lichtflut.rb.webck.models.resources;
 
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
-import de.lichtflut.rb.webck.models.basic.PageableModel;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.QueryResult;
 
-import java.util.Collections;
-import java.util.List;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
+import de.lichtflut.rb.webck.models.basic.PageableModel;
 
 /**
  * <p>
@@ -28,37 +29,47 @@ import java.util.List;
 public class ResourceQueryResultModel extends DerivedDetachableModel<List<ResourceNode>, QueryResult> implements PageableModel<ResourceNode> {
 
 	private IModel<Integer> resultSize;
-	
+
 	private IModel<Integer> pagesize;
-	
+
 	private IModel<Integer> offset;
-	
-	// ----------------------------------------------------
-	
+
+	// ---------------- Constructor -------------------------
+
 	/**
+	 * Constructor.
+	 * Displays given QueryResult with a maximum of {@link Integer#MAX_VALUE} per page and start at its first entry.
 	 * @param queryResult
 	 */
-	public ResourceQueryResultModel(IModel<QueryResult> queryResult) {
+	public ResourceQueryResultModel(final IModel<QueryResult> queryResult) {
 		this(queryResult, new Model<Integer>(Integer.MAX_VALUE));
 	}
-	
+
 	/**
+	 * Constructor.
+	 * Displays given QueryResult with a given maximum per page and start at its first entry.
 	 * @param queryResult
+	 * @param pagesize Maximum results per page
 	 */
-	public ResourceQueryResultModel(IModel<QueryResult> queryResult, IModel<Integer> maxResults) {
-		this(queryResult, maxResults, Model.of(0));
+	public ResourceQueryResultModel(final IModel<QueryResult> queryResult, final IModel<Integer> pagesize) {
+		this(queryResult, pagesize, Model.of(0));
 	}
-	
+
+
 	/**
+	 * Constructor.
+	 * Displays given QueryResult with a given maximum per page and start at a given entry.
 	 * @param queryResult
+	 * @param maxResults Maximum results per page
+	 * @param offset
 	 */
-	public ResourceQueryResultModel(IModel<QueryResult> queryResult, IModel<Integer> pagesize, IModel<Integer> offset) {
+	public ResourceQueryResultModel(final IModel<QueryResult> queryResult, final IModel<Integer> pagesize, final IModel<Integer> offset) {
 		super(queryResult);
 		this.pagesize = pagesize;
 		this.offset = offset;
 		this.resultSize = new DerivedModel<Integer, QueryResult>(queryResult) {
 			@Override
-			protected Integer derive(QueryResult result) {
+			protected Integer derive(final QueryResult result) {
 				return result.size();
 			}
 			@Override
@@ -67,45 +78,45 @@ public class ResourceQueryResultModel extends DerivedDetachableModel<List<Resour
 			}
 		};
 	}
-	
+
 	// ----------------------------------------------------
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ResourceNode> derive(QueryResult result) {
+	public List<ResourceNode> derive(final QueryResult result) {
 		int max = Math.min(result.size(), pagesize.getObject());
 		return result.toList(offset.getObject(), max);
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public List<ResourceNode> getDefault() {
 		return Collections.emptyList();
 	}
-	
+
 	// -- PAGING ------------------------------------------
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public IModel<Integer> getResultSize() {
 		return resultSize;
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public IModel<Integer> getPageSize() {
 		return pagesize;
 	}
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -114,8 +125,8 @@ public class ResourceQueryResultModel extends DerivedDetachableModel<List<Resour
 	}
 
 	// ----------------------------------------------------
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -123,7 +134,7 @@ public class ResourceQueryResultModel extends DerivedDetachableModel<List<Resour
 		offset.setObject(0);
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -132,7 +143,7 @@ public class ResourceQueryResultModel extends DerivedDetachableModel<List<Resour
 		offset.setObject(newOffset);
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -142,5 +153,5 @@ public class ResourceQueryResultModel extends DerivedDetachableModel<List<Resour
 			offset.setObject(newOffset);
 		}
 	}
-	
+
 }

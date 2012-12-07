@@ -5,11 +5,17 @@ package de.lichtflut.rb.core.services;
 
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.ConversationContext;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
+import org.arastreju.sge.context.Context;
 import org.arastreju.sge.context.DomainIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -22,9 +28,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Oliver Tigges
  */
-public class ArastrejuResourceFactory {
+public class ArastrejuResourceFactory implements ConversationFactory {
 	
-	private final static Logger logger = LoggerFactory.getLogger(ArastrejuResourceFactory.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(ArastrejuResourceFactory.class);
 
 	private ServiceContext context;
 
@@ -32,11 +38,12 @@ public class ArastrejuResourceFactory {
 
     private ModelingConversation conversation;
 
-    private DomainInitializer initializer;
+    private Map<Context, ModelingConversation> conversationMap = new HashMap<Context, ModelingConversation>();
 
 	// ----------------------------------------------------
 	
 	/**
+     * Constructor.
 	 * @param context The service context.
 	 */
 	public ArastrejuResourceFactory(ServiceContext context) {
@@ -46,17 +53,54 @@ public class ArastrejuResourceFactory {
     /**
      * Constructor for spring.
      */
-    public ArastrejuResourceFactory() {
+    protected ArastrejuResourceFactory() {
     }
 	
-	// ----------------------------------------------------
-	
-	public ModelingConversation getConversation() {
+	// -- CONVERSATIONS -----------------------------------
+
+    /**
+     * Get the current conversation managed by this factory. This conversations is shared.
+     * The caller may not change this conversation's state or close this conversation.
+     * @return The current conversation.
+     */
+	@Override
+    public ModelingConversation getConversation() {
         if (conversation == null) {
             conversation = gate().startConversation();
         }
+        assureActive(conversation);
         return conversation;
     }
+
+    /**
+     * Get a conversation for the given context managed by this factory. This conversations may be shared.
+     * The caller may not change this conversation's state or close this conversation.
+     * @param primary The primary context of this conversation.
+     * @return The current conversation.
+     */
+    @Override
+    public ModelingConversation getConversation(Context primary) {
+        if (conversationMap.containsKey(primary)) {
+            ModelingConversation conversation = conversationMap.get(primary);
+            assureActive(conversation);
+            return conversation;
+        } else {
+            ModelingConversation conversation = gate().startConversation(primary, context.getReadContexts());
+            conversationMap.put(primary, conversation);
+            return conversation;
+        }
+    }
+
+    /**
+     * Start a new conversation. This conversations is not shared and has to be managed by the caller.
+     * @return The new conversation.
+     */
+    @Override
+    public ModelingConversation startConversation() {
+        return gate().startConversation();
+    }
+
+    // ----------------------------------------------------
 
     public Organizer getOrganizer() {
         return gate().getOrganizer();
@@ -64,25 +108,26 @@ public class ArastrejuResourceFactory {
 
     // ----------------------------------------------------
 
-    public void closeConversation() {
+    public void closeConversations() {
         if (conversation != null) {
             conversation.close();
+            LOGGER.debug("Closed conversation {}.", conversation.getConversationContext());
             conversation = null;
         }
+        for (Context ctx : conversationMap.keySet()) {
+            ModelingConversation conv = conversationMap.get(ctx);
+            conv.close();
+            LOGGER.debug("Closed conversation {}.", conv.getConversationContext());
+        }
+        conversationMap.clear();
     }
 
     public void closeGate() {
-        closeConversation();
+        closeConversations();
         if (openGate != null) {
             openGate.close();
             openGate = null;
         }
-    }
-
-    // ----------------------------------------------------
-
-    public void setDomainInitializer(DomainInitializer initializer) {
-        this.initializer = initializer;
     }
 
     // ----------------------------------------------------
@@ -98,17 +143,28 @@ public class ArastrejuResourceFactory {
 
     private ArastrejuGate openGate() {
         final String domain = context.getDomain();
-        logger.debug("Opening Arastreju Gate for domain {} ", domain);
-
-        final Arastreju aras = Arastreju.getInstance(context.getConfig().getArastrejuConfiguration());
+        LOGGER.debug("Opening Arastreju Gate for domain {} ", domain);
+        ArastrejuGate gate = null;
+        final Arastreju aras = Arastreju.getInstance(context.getConfig().getArastrejuProfile());
         if (domain == null || DomainIdentifier.MASTER_DOMAIN.equals(domain)) {
-            return aras.openMasterGate();
+            gate = aras.openMasterGate();
         } else {
-            final ArastrejuGate gate = aras.openGate(domain);
-            if (initializer != null) {
-                initializer.initializeDomain(gate, domain);
+            gate = aras.openGate(domain);
+            if (context.getConfig().getDomainValidator() != null) {
+                context.getConfig().getDomainValidator().initializeDomain(gate, domain);
             }
-            return gate;
+        }
+        Preinitializer initializer = context.getConfig().getPreinitializer();
+        if(initializer!=null){
+            initializer.init(gate);
+        }
+        return gate;
+    }
+
+    private void assureActive(ModelingConversation conversation) {
+        ConversationContext cc = conversation.getConversationContext();
+        if (!cc.isActive()) {
+            throw new IllegalStateException("Got inactive conversation from factory: " + cc);
         }
     }
 

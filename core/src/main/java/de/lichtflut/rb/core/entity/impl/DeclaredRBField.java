@@ -6,6 +6,7 @@ package de.lichtflut.rb.core.entity.impl;
 import java.util.Locale;
 import java.util.Set;
 
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -54,7 +55,7 @@ public class DeclaredRBField extends AbstractRBField {
 	public ResourceID getPredicate() {
 		return declaration.getPropertyDescriptor();
 	}
-	
+
 	@Override
 	public Datatype getDataType() {
 		return declaration.getDatatype();
@@ -66,22 +67,20 @@ public class DeclaredRBField extends AbstractRBField {
 	}
 
 	@Override
-	public boolean isKnownToSchema() {
-		return true;
-	}
-
-	@Override
 	public boolean isResourceReference() {
-//		if(declaration.hasConstraint() && declaration.getConstraint().holdsReference()){
-//			return declaration.getConstraint().isLiteral();
-//		}
-//		if(null == declaration.getConstraint()){
-//			
-//		}
 		return (declaration.getDatatype() == Datatype.RESOURCE);
 	}
 
-	@Override
+    @Override
+    public VisualizationInfo getVisualizationInfo() {
+        if (declaration.getVisualizationInfo() != null) {
+            return declaration.getVisualizationInfo();
+        } else {
+            return VisualizationInfo.DEFAULT;
+        }
+    }
+
+    @Override
 	public Constraint getConstraint() {
 		return declaration.getConstraint();
 	}

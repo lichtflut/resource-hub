@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.core.entity;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
@@ -11,6 +12,7 @@ import org.arastreju.sge.model.ResourceID;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 
 
 /**
@@ -24,7 +26,7 @@ import de.lichtflut.rb.core.schema.model.Datatype;
  *
  * @author Ravi Knox
  */
-public interface RBField {
+public interface RBField extends Serializable {
 
 	/**
 	 * Returns the (attribute / )name of this RBField.
@@ -34,10 +36,17 @@ public interface RBField {
 
 	/**
 	 * Returns the field's display label.
-	 * @param locale TODO
+	 * @param locale The locale to use.
 	 * @return The label of the field.
 	 */
 	String getLabel(Locale locale);
+
+	/**
+	 * Get additional information about the visualization of the field.
+	 * @return The visualization info.
+	 */
+	VisualizationInfo getVisualizationInfo();
+
 
 	// -----------------------------------------------------
 
@@ -54,13 +63,6 @@ public interface RBField {
 	Cardinality getCardinality();
 
 	/**
-	 * Returns whether this field is known to the RBSchema.
-	 * If it is not known, it is a 'custom-' attribute which is always of type String.
-	 * @return True if yes, false if not.
-	 */
-	boolean isKnownToSchema();
-
-	/**
 	 * Returns whether this field contains a resource reference.
 	 * @return True if this field is a resource reference, false if not
 	 */
@@ -73,52 +75,45 @@ public interface RBField {
 	 * @return {@link Constraint}
 	 */
 	Constraint getConstraint();
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-	 * Get's the amount of value slot's. 
+	 * Get's the amount of value slot's.
 	 */
 	int getSlots();
-	
+
 	/**
 	 * Set a value in this field.
 	 * @param index The index, starting with 0.
 	 * @param value The value to set.
 	 */
 	void setValue(int index, Object value);
-	
+
 	/**
 	 * Remove a slot with it's value.
 	 * @param index The index, starting with 0.
 	 */
 	void removeSlot(int index);
-	
+
 	/**
 	 * Add a value to the end of the value list.
-	 * @param value THe value to add;
+	 * @param value The value to add;
 	 */
 	void addValue(Object value);
-	
+
 	/**
 	 * Get the value for given index.
 	 * @param index The index.
 	 * @return The object at this index or null.
 	 */
 	Object getValue(int index);
-	
+
 	/**
 	 * Returns all non null values of this RBField as unmodifiable list.
 	 * They can be of any type from String to Date, depending on the RBSchema.
 	 * @return Value of this field as a list
 	 */
 	<T> List<T> getValues();
-	
-	/**
-	 * Sets the value for this RBField.
-	 * @param values - this fields value as a list
-	 */
-	@Deprecated
-	void setValues(List<Object> values);
-	
+
 }

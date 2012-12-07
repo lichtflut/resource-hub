@@ -9,7 +9,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.SNResource;
@@ -18,11 +17,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.schema.RBSchema;
-import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.mock.schema.ConstraintsFactory;
 
 /**
  * <p>
@@ -61,57 +57,6 @@ public class SNPropertyDeclarationTest {
 		assertThat(decl.getQualifiedName(), notNullValue());
 	}
 
-	/**
-	 * Test method for {@link de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration#getConstraint()}.
-	 */
-	@Test
-	public void testGetPublicResourceConstraint() {
-		Constraint constraint = ConstraintsFactory.buildPublicPersonConstraint();
-		
-		snDecl.setConstraint(constraint);
-		Constraint retrieved = snDecl.getConstraint();
-		
-		assertConstraints(retrieved, constraint);
-	}
-
-
-	/**
-	 * Test method for {@link de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration#getConstraint()}.
-	 */
-	@Test
-	public void testGetPrivateResourceConstraint() {
-		Constraint constraint = ConstraintsFactory.buildPrivatePersonConstraint();
-		
-		snDecl.setConstraint(constraint);
-		
-		assertConstraints(snDecl.getConstraint(), constraint);
-	}
-	
-	/**
-	 * Test method for {@link de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration#getConstraint()}.
-	 */
-	@Test
-	public void testGetPublicLiteralConstraint() {
-		Constraint constraint = ConstraintsFactory.buildPublicEmailConstraint();
-		
-		snDecl.setConstraint(constraint);
-		Constraint retrieved = snDecl.getConstraint();
-		
-		assertConstraints(retrieved, constraint);
-	}
-	
-	/**
-	 * Test method for {@link de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration#getConstraint()}.
-	 */
-	@Test
-	public void testGetPrivateLiteralConstraint() {
-		Constraint constraint = ConstraintsFactory.buildPrivateLiteralConstraint();
-		
-		snDecl.setConstraint(constraint);
-		
-		assertConstraints(snDecl.getConstraint(), constraint);
-	}
-	
 	/**
 	 * Test method for {@link de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration#getPropertyDescriptor()}.
 	 */
@@ -160,22 +105,4 @@ public class SNPropertyDeclarationTest {
 		fail("Not yet implemented");
 	}
 
-
-	/**
-	 * @param constraint
-	 * @param retrieved
-	 */
-	private void assertConstraints(Constraint retrieved, Constraint constraint) {
-		assertThat(retrieved.getApplicableDatatypes().size(), is(constraint.getApplicableDatatypes().size()));
-		if(constraint.isPublic()){
-			if(constraint.holdsReference()){
-				assertThat(retrieved.getReference(), equalTo(constraint.getReference()));
-			}
-		}
-		if(constraint.isLiteral() && !constraint.holdsReference()){
-			assertThat(retrieved.getLiteralConstraint(), equalTo(constraint.getLiteralConstraint()));
-		}
-		assertThat(retrieved.getName(), equalTo(constraint.getName()));
-		assertThat(retrieved.getReference(), equalTo(constraint.getReference()));
-	}
 }

@@ -1,31 +1,27 @@
-<!--
-
-    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
-
--->
-<html
-	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
-<wicket:head>
-	<style type="text/css"></style>
-</wicket:head>
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
 <wicket:panel>
 
-	<wicket:container wicket:id="resourceInfo"/>
+    <div class="entity-display-wrapper">
 
-	<form wicket:id="form">
-	
-		<div class="entity-display input-panel">
-			<wicket:container wicket:id="classifier"></wicket:container>
-			<div wicket:id="entity"></div>
-			<wicket:container wicket:id="localButtonBar"></wicket:container>
-			<wicket:container wicket:id="browsingButtonBar"></wicket:container>
-		</div>
+		<div wicket:id="feedback"></div>
 		
-		<div wicket:id="relationCreator" class="section"></div>
-	
-		<div wicket:id="relationships"></div>
-	
-	</form>
+        <form wicket:id="form">
+
+            <div class="entity-display input-panel">
+	            <wicket:container wicket:id="resourceInfo"/>
+                <wicket:container wicket:id="classifier"></wicket:container>
+                <wicket:container wicket:id="entity"></wicket:container>
+                <wicket:container wicket:id="localButtonBar"></wicket:container>
+                <wicket:container wicket:id="browsingButtonBar"></wicket:container>
+            </div>
+
+            <div wicket:id="relationCreator" class="section"></div>
+
+            <div wicket:id="relationships"></div>
+
+        </form>
+
+    </div>
 	
 </wicket:panel>
 </html>

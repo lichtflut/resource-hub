@@ -3,20 +3,16 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.model.nodes.views.SNBoolean;
-import org.arastreju.sge.model.nodes.views.SNText;
+import org.arastreju.sge.naming.Namespace;
+import org.arastreju.sge.naming.QualifiedName;
 
-import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.infra.exceptions.NoLongerSupportedException;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 
@@ -36,7 +32,7 @@ import de.lichtflut.rb.core.schema.model.Datatype;
  * <li>
  * literal constraint</li>
  * <li>
- * isPublic</li>
+ * setPublic</li>
  * <li>
  * applicable Datatypes</li>
  * </ul>
@@ -49,192 +45,207 @@ import de.lichtflut.rb.core.schema.model.Datatype;
  */
 public class ConstraintImpl implements Constraint {
 
-	private final ResourceNode node;
+	private QualifiedName qn;
+
+	private String name;
+
+	private boolean isPublic;
+
+	private String literalConstraint;
+
+	private ResourceID resourceConstraint;
+
+	private List<Datatype> applicableDatatypes;
 
 	// ---------------- Constructor -------------------------
+
+	@Deprecated
+	public ConstraintImpl(final ResourceNode node) {
+		throw new NoLongerSupportedException();
+	}
 
 	/**
 	 * Constructor.
 	 */
-	public ConstraintImpl(ResourceNode node) {
-		this.node = node;
+	public ConstraintImpl(final QualifiedName qn) {
+		this.qn = qn;
 	}
 
+	/**
+	 * Default constructor for new constraints.
+	 */
 	public ConstraintImpl() {
-		this(new SNResource());
+		this(new QualifiedName(Namespace.UUID, UUID.randomUUID().toString()));
 	}
 
 	// ------------------------------------------------------
 
-	public void buildReferenceConstraint(ResourceID reference, boolean isLiteralReference) {
-		this.isPublic(false);
-		this.setReference(reference);
+	public void buildReferenceConstraint(final ResourceID reference, final boolean isLiteralReference) {
+		this.setPublic(false);
+		this.setTypeConstraint(reference);
 	}
 
-	public void buildLiteralConstraint(String pattern) {
-		this.isPublic(false);
+	public void buildLiteralConstraint(final String pattern) {
+		this.setPublic(false);
 		this.setLiteralConstraint(pattern);
 	}
 
 	// ------------------------------------------------------
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
+
+	@Override
+	public QualifiedName getQualifiedName() {
+		return qn;
+	}
+
 	@Override
 	public String getName() {
-		if (!isLiteral()) {
-			return getReference().getQualifiedName().toURI();
-		}
-		SemanticNode nameNode = SNOPS.singleObject(node, RBSchema.HAS_NAME);
-		if (null == nameNode) {
-			return getLiteralConstraint();
-		}
-		return nameNode.asValue().getStringValue();
-	}
-
-	public void setName(String name) {
-		SNOPS.assure(node, RBSchema.HAS_NAME, new SNText(name));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getLiteralConstraint() {
-		boolean isFirstLvlLiteral = (node.getAssociations(RBSchema.HAS_CONSTRAINT_VALUE).size() > 0);
-		if (!isFirstLvlLiteral) {
-			if (holdsReference()) {
-				return new ConstraintImpl(getReference().asResource()).getLiteralConstraint();
-			}
-			if (!isLiteral()) {
-				return getReference().toURI();
-			}
-		}
-		if (isLiteral()) {
-			SemanticNode constraint = SNOPS.singleObject(node, RBSchema.HAS_CONSTRAINT_VALUE);
-			if (constraint == null) {
-				return "";
-			}
-			return SNOPS.singleObject(node, RBSchema.HAS_CONSTRAINT_VALUE).asValue().getStringValue();
+		if (name != null) {
+			return name;
 		} else {
-			return "";
-		}
-
-	}
-
-	public void setLiteralConstraint(String pattern) {
-		if ((pattern != null) && !pattern.isEmpty()) {
-			SNOPS.assure(node, RBSchema.HAS_CONSTRAINT_VALUE, new SNText(pattern));
+			return "<unnamed>";
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResourceID getReference() {
-		SemanticNode referenceNode = SNOPS.singleObject(node, RBSchema.HAS_RESOURCE_CONSTRAINT);
-		if (null == referenceNode) {
-			return null;
-		}
-		return referenceNode.asResource();
+	public void setName(final String name) {
+		this.name = name;
 	}
 
-	/**
-	 * @param reference the reference to set
-	 */
-	public void setReference(ResourceID reference) {
-		SNOPS.assure(node, RBSchema.HAS_RESOURCE_CONSTRAINT, reference);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isPublic() {
-		SemanticNode isPublicNode = SNOPS.singleObject(node, RBSchema.IS_PUBLIC_CONSTRAINT);
-		if (isPublicNode == null) {
-			return false;
-		}
-		return isPublicNode.asValue().getBooleanValue();
+		return isPublic;
 	}
 
-	public void isPublic(boolean isPublic) {
-		SNOPS.assure(node, RBSchema.IS_PUBLIC_CONSTRAINT, new SNBoolean(isPublic));
-		if (isPublic) {
-			SNOPS.assure(node, RDF.TYPE, RBSchema.PUBLIC_CONSTRAINT);
+	public void setPublic(final boolean isPublic) {
+		this.isPublic = isPublic;
+	}
+
+	// ----------------------------------------------------
+
+	@Override
+	public boolean isLiteral() {
+		return literalConstraint != null;
+	}
+
+	@Override
+	public String getLiteralConstraint() {
+		return literalConstraint;
+	}
+
+	public void setLiteralConstraint(final String pattern) {
+		this.literalConstraint = pattern;
+	}
+
+	@Override
+	public ResourceID getTypeConstraint() {
+		return resourceConstraint;
+	}
+
+	public void setTypeConstraint(final ResourceID resourceConstraint) {
+		this.resourceConstraint = resourceConstraint;
+	}
+
+	@Override
+	public List<Datatype> getApplicableDatatypes() {
+		if (applicableDatatypes != null) {
+			return applicableDatatypes;
 		} else {
-			SNOPS.remove(node, RDF.TYPE);
+			return Collections.emptyList();
 		}
+	}
+
+	public void setApplicableDatatypes(final List<Datatype> datatypes) {
+		this.applicableDatatypes = datatypes;
+	}
+
+	// ------------------------------------------------------
+
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("Constraint id: " + qn);
+		sb.append(", name: " + getName());
+		sb.append(", is public: " + isPublic());
+		sb.append(", is literal: " + isLiteral());
+		sb.append(", applicable datatypes: " + getApplicableDatatypes());
+		if(isLiteral()){
+			sb.append(", has pattern: " + getLiteralConstraint());
+		}else {
+			sb.append(", has type constraint: " + getTypeConstraint());
+		}
+		return sb.toString();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean holdsReference() {
-		SemanticNode isReferenceNode = SNOPS.singleObject(node, RBSchema.HAS_RESOURCE_CONSTRAINT);
-		if (isReferenceNode == null) {
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((applicableDatatypes == null) ? 0 : applicableDatatypes.hashCode());
+		result = prime * result + (isPublic ? 1231 : 1237);
+		result = prime * result + ((literalConstraint == null) ? 0 : literalConstraint.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((qn == null) ? 0 : qn.hashCode());
+		result = prime * result + ((resourceConstraint == null) ? 0 : resourceConstraint.hashCode());
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof ConstraintImpl)) {
+			return false;
+		}
+		ConstraintImpl other = (ConstraintImpl) obj;
+		if (applicableDatatypes == null) {
+			if (other.applicableDatatypes != null) {
+				return false;
+			}
+		} else if (!applicableDatatypes.equals(other.applicableDatatypes)) {
+			return false;
+		}
+		if (isPublic != other.isPublic) {
+			return false;
+		}
+		if (literalConstraint == null) {
+			if (other.literalConstraint != null) {
+				return false;
+			}
+		} else if (!literalConstraint.equals(other.literalConstraint)) {
+			return false;
+		}
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
+		if (qn == null) {
+			if (other.qn != null) {
+				return false;
+			}
+		} else if (!qn.equals(other.qn)) {
+			return false;
+		}
+		if (resourceConstraint == null) {
+			if (other.resourceConstraint != null) {
+				return false;
+			}
+		} else if (!resourceConstraint.equals(other.resourceConstraint)) {
 			return false;
 		}
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Datatype> getApplicableDatatypes() {
-		List<Datatype> datatypes = new ArrayList<Datatype>();
-		for (SemanticNode snType : SNOPS.objects(node, RBSchema.HAS_DATATYPE)) {
-			datatypes.add(Datatype.valueOf(snType.asValue().getStringValue()));
-		}
-		return datatypes;
-	}
-
-	public void setApplicableDatatypes(List<Datatype> datatypes) {
-		for (SemanticNode snType : SNOPS.objects(node, RBSchema.HAS_DATATYPE)) {
-			SNOPS.remove(this.asResourceNode(), RBSchema.HAS_DATATYPE, snType);
-		}
-		for (Datatype datatype : datatypes) {
-			SNOPS.associate(node, RBSchema.HAS_DATATYPE, new SNText(datatype.name()));
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isLiteral() {
-		boolean isFirstLvlLiteral = (node.getAssociations(RBSchema.HAS_CONSTRAINT_VALUE).size() > 0);
-		if (!isFirstLvlLiteral) {
-			if (!holdsReference() && getReference() != null) {
-				return new ConstraintImpl(getReference().asResource()).isLiteral();
-			}else{
-				return false;
-			}
-		}
-        return null == getReference();
-    }
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResourceNode asResourceNode() {
-		return node;
-	}
-
-	// ------------------------------------------------------
-	
-	@Override
-	public String toString(){
-		StringBuilder sb = new StringBuilder();
-		sb.append("Constraint id: " + node.getQualifiedName());
-		sb.append("name: " + getName());
-		sb.append("is public: " + isPublic());
-		sb.append("is Reference: " + holdsReference());
-		return sb.toString();
-	}
 }

@@ -3,16 +3,9 @@
  */
 package de.lichtflut.rb.webck.components.widgets.management;
 
-import de.lichtflut.rb.core.services.ViewSpecificationService;
-import de.lichtflut.rb.core.viewspec.MenuItem;
-import de.lichtflut.rb.core.viewspec.Perspective;
-import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.components.form.RBCancelButton;
-import de.lichtflut.rb.webck.components.form.RBDefaultButton;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.viewspecs.PerspectiveListModel;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -26,8 +19,16 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
+import de.lichtflut.rb.core.viewspec.MenuItem;
+import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.common.TypedPanel;
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
+import de.lichtflut.rb.webck.components.form.RBDefaultButton;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.viewspecs.PerspectiveListModel;
 
 /**
  * <p>
@@ -51,7 +52,8 @@ public class MenuItemEditPanel extends TypedPanel<MenuItem> {
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id The component ID.
 	 */
 	public MenuItemEditPanel(final String id, final IModel<MenuItem> model, final IModel<DisplayMode> mode) {
 		super(id, model);

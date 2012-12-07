@@ -53,7 +53,9 @@ public class PerspectivePanel extends TypedPanel<Perspective> {
 	// ----------------------------------------------------
 	
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id The component ID.
+     * @param spec The perspective specification.
 	 */
 	@SuppressWarnings("rawtypes")
 	public PerspectivePanel(String id, IModel<Perspective> spec) {
@@ -152,9 +154,6 @@ public class PerspectivePanel extends TypedPanel<Perspective> {
 			super(original);
 		}
 
-		/** 
-		 * {@inheritDoc}
-		 */
 		@Override
 		protected List<ViewPort> derive(Perspective original) {
 			return original.getViewPorts();

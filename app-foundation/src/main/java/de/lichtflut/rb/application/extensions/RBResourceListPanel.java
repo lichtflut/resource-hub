@@ -14,7 +14,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.application.RBApplication;
-import de.lichtflut.rb.application.resourceview.EntityDetailPage;
+import de.lichtflut.rb.application.common.CommonParams;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
@@ -23,7 +23,7 @@ import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
 
 /**
  * <p>
- *  Glasnost extension.
+ *  RB Application extension.
  * </p>
  *
  * <p>
@@ -32,40 +32,40 @@ import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
  *
  * @author Oliver Tigges
  */
-public final class RBResourceListPanel extends ResourceListPanel {
+public class RBResourceListPanel extends ResourceListPanel {
 
 	@SpringBean
 	private EntityManager entityManager;
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * Constructor.
 	 * @param id
 	 * @param model
 	 * @param config
 	 */
-	public RBResourceListPanel(String id, IModel<List<ResourceNode>> model, IModel<ColumnConfiguration> config) {
+	public RBResourceListPanel(final String id, final IModel<List<ResourceNode>> model, final IModel<ColumnConfiguration> config) {
 		super(id, model, config);
 	}
-	
+
 	// ----------------------------------------------------
 
 	@Override
 	protected Component createViewAction(final String componentId, final ResourceNode entity) {
 		return new ReferenceLink(componentId, RBApplication.get().getEntityDetailPage(), entity, new ResourceModel("action.view"))
-			.setLinkCssClass("action-view")
-			.setLinkTitle(new ResourceModel("action.view"));
+		.setLinkCssClass("action-view")
+		.setLinkTitle(new ResourceModel("action.view"));
 	}
 
 	@Override
 	protected Component createEditAction(final String componentId, final ResourceNode entity) {
 		final PageParameters params = new PageParameters();
-		params.set(EntityDetailPage.PARAM_RESOURCE_ID, entity.getQualifiedName().toURI());
+		params.set(CommonParams.PARAM_RESOURCE_ID, entity.getQualifiedName().toURI());
 		params.set(DisplayMode.PARAMETER, DisplayMode.EDIT);
 		return new ReferenceLink(componentId, RBApplication.get().getEntityDetailPage(), params, new ResourceModel("action.edit"))
-			.setLinkCssClass("action-edit")
-			.setLinkTitle(new ResourceModel("action.edit"));
+		.setLinkCssClass("action-edit")
+		.setLinkTitle(new ResourceModel("action.edit"));
 	}
 
 	@Override
@@ -73,5 +73,5 @@ public final class RBResourceListPanel extends ResourceListPanel {
 		entityManager.delete(entity);
 		target.add(this);
 	}
-	
+
 }

@@ -107,14 +107,14 @@ public class EntityInfoPanel extends Panel {
 		return new DerivedDetachableModel<List<VisualizationLink>, RBEntity>(model) {
 			@Override
 			protected List<VisualizationLink> derive(final RBEntity entity) {
-				final SNClass type = typeManager.findType(entity.getType());
 				final List<VisualizationLink> result = new ArrayList<VisualizationLink>();
 				result.add(createLink(entity.getID(), VisualizationMode.DETAILS));
 				result.add(createLink(entity.getID(), VisualizationMode.PERIPHERY));
-				if (type.isSpecializationOf(RB.ORGANIZATIONAL_UNIT)) {
+                final SNClass type = typeManager.findType(entity.getType());
+				if (isSubClassOf(type, RB.ORGANIZATIONAL_UNIT)) {
 					result.add(createLink(entity.getID(), VisualizationMode.HIERARCHY));
 				}
-				if (type.isSpecializationOf(RB.PROCESS_ELEMENT)) {
+				if (isSubClassOf(type, RB.PROCESS_ELEMENT)) {
 					result.add(createLink(entity.getID(), VisualizationMode.FLOW_CHART));
 				}
 				return result;
@@ -128,6 +128,10 @@ public class EntityInfoPanel extends Panel {
 		final String url = resourceLinkProvider.getUrlToResource(rid, mode, DisplayMode.VIEW).toString();
 		return new VisualizationLink(mode, url);
 	}
+
+    private boolean isSubClassOf(SNClass clazz, ResourceID superType) {
+        return clazz != null && clazz.isSpecializationOf(superType);
+    }
 	
 	// -- INNER CLASSES -----------------------------------
 	

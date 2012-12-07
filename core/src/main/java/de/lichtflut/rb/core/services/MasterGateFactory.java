@@ -8,7 +8,7 @@ import org.arastreju.sge.ArastrejuGate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.config.RBConfig;
 
 /**
  * <p>
@@ -45,7 +45,7 @@ public class MasterGateFactory {
 	 */
 	public ArastrejuGate createMasterGate() {
 		logger.info("Creating the master gate.");
-		final Arastreju aras = Arastreju.getInstance(config.getArastrejuConfiguration());
+		final Arastreju aras = Arastreju.getInstance(config.getArastrejuProfile());
 		return aras.openMasterGate();
 	}
 	

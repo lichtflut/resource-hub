@@ -4,9 +4,9 @@
 package de.lichtflut.rb.webck.browsing;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
-import scala.actors.threadpool.Arrays;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * <p>

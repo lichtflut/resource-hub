@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Abstract base configuration panel.
  * </p>
  *
  * <p>
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("rawtypes")
 public class AbstractWidgetConfigPanel extends TypedPanel<WidgetSpec> {
 	
-	private final Logger logger = LoggerFactory.getLogger(AbstractWidgetConfigPanel.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWidgetConfigPanel.class);
 	
 	@SpringBean
 	protected ModelingConversation conversation;
@@ -98,21 +98,15 @@ public class AbstractWidgetConfigPanel extends TypedPanel<WidgetSpec> {
 	// ----------------------------------------------------
 	
 	protected final void save(WidgetSpec spec) {
-		logger.info("Storing widget {}.", spec);
+		LOGGER.info("Storing widget {}.", spec);
 		onSave(spec);
 		conversation.attach(spec);
 	}
 	
-	/**
-	 * @param object
-	 */
 	protected void cancel(WidgetSpec spec) {
 		conversation.reset(spec);
 	}
 	
-	/**
-	 * @param object
-	 */
 	protected void onSave(WidgetSpec spec) {
 	}
 	

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.lichtflut.rb</groupId>
 		<artifactId>lf.resource-browser</artifactId>
-		<version>0.4.7-SNAPSHOT</version>
+		<version>0.5.0</version>
 	</parent>
 
 	<groupId>de.lichtflut.rb</groupId>
@@ -52,6 +52,11 @@
 		</testResources>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.12.3</version>
+			</plugin>
+			<plugin>
 				<groupId>org.antlr</groupId>
 				<artifactId>antlr3-maven-plugin</artifactId>
 				<version>3.1.3-1</version>
@@ -79,6 +84,43 @@
 					<verbose>true</verbose>
 				</configuration>
 			</plugin>
+			<plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <id>add-test-source</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/integration-test/java</source>
+              </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-resource</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>add-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>src/integration-test/resources</directory>
+                  <targetPath>target/integration-test/resources</targetPath>
+                  <excludes>
+                    <exclude>**/junk/**</exclude>
+                  </excludes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 		</plugins>
 	</build>
 	<reporting>
@@ -106,6 +148,21 @@
 			<artifactId>arastreju.sge</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>de.lichtflut.rb</groupId>
+			<artifactId>lf.content-repository-jr</artifactId>
+			<version>0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr</artifactId>
 			<version>3.1.3</version>
@@ -113,7 +170,6 @@
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
-			<version>1.9.0</version>
 		</dependency>
 
 		<!-- JAVA EXCEL PARSING -->

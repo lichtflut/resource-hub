@@ -4,11 +4,15 @@
 package de.lichtflut.rb.core.services;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 
+import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
@@ -30,13 +34,13 @@ public interface SchemaManager {
 	 * @return the Resource Schema for the given Type.
 	 */
 	ResourceSchema findSchemaForType(ResourceID type);
-	
+
 	/**
 	 * Finds a {@link Constraint} by it's ID.
-	 * @param id The IT
+	 * @param qn The qualified name of the constraint.
 	 * @return the TypeDefinition or null.
 	 */
-	Constraint findConstraint(ResourceID id);
+	Constraint findConstraint(QualifiedName qn);
 
 	// -----------------------------------------------------
 
@@ -55,28 +59,36 @@ public interface SchemaManager {
 	// -----------------------------------------------------
 
 	/**
+	 * Validates an Schema for consistency.
+	 * @param schema {@link ResourceSchema} to validate
+	 * @return a Map containting the {@link ErrorCodes} and a list of PropertyDeclarations, that produced an error, Map is empty if no error occured.
+	 */
+	Map<Integer, List<PropertyDeclaration>> validate(ResourceSchema schema);
+
+	/**
 	 * Stores the given Resource Schema.
 	 * @param schema - the {@link ResourceSchema}
 	 */
 	void store(ResourceSchema schema);
-	
+
 	/**
 	 * Remove the given Resource Schema.
 	 * @param schema - the {@link ResourceSchema}
 	 */
 	void removeSchemaForType(ResourceID type);
-	
+
 	/**
 	 * Stores the given Type Definition.
 	 * @param constraint The Type Definition.
 	 */
 	void store(Constraint constraint);
-	
+
 	/**
 	 * Remove the given {@link Constraint}.
 	 * @param constraint - the Constraint to be removed
 	 */
 	void remove(Constraint constraint);
+
 	/**
 	 * Prepare a transient Type Definition.
 	 * @param qn The qualified name.
@@ -92,7 +104,7 @@ public interface SchemaManager {
 	 * @return -
 	 */
 	SchemaImporter getImporter(String format);
-	
+
 	/**
 	 * Obtain the exporter for the given format.
 	 * @param format A format.

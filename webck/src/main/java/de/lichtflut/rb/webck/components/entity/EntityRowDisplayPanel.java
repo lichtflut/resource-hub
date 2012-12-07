@@ -3,18 +3,14 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
-import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
-import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.components.links.CrossLink;
-import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.HTMLSafeModel;
-import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
-import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
-import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
+import java.math.BigDecimal;
+import java.util.Date;
+
+import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.models.fields.RBFieldLabelCssClassModel;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -22,12 +18,25 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.components.fields.FilePreviewLink;
+import de.lichtflut.rb.webck.components.links.CrossLink;
+import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.HTMLSafeModel;
+import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
+import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
 /**
  * <p>
@@ -47,10 +56,10 @@ import java.util.Date;
  */
 @SuppressWarnings("rawtypes")
 public class EntityRowDisplayPanel extends Panel {
-	
+
 	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;
-	
+
 	// ----------------------------------------------------
 
 	/**
@@ -60,119 +69,160 @@ public class EntityRowDisplayPanel extends Panel {
 	 */
 	public EntityRowDisplayPanel(final String id, final IModel<RBField> model) {
 		super(id, model);
-		
-		setOutputMarkupId(true);
-		add(new Label("label", new FieldLabelModel(model)));
-		
+
+        final WebMarkupContainer labelContainer = new WebMarkupContainer("labelContainer");
+        labelContainer.add(CssModifier.appendClass(new RBFieldLabelCssClassModel(model)));
+        final Label label = new Label("label", new FieldLabelModel(model));
+        labelContainer.add(label);
+        add(labelContainer);
+
 		final RBFieldValuesListModel listModel = new RBFieldValuesListModel(model);
 		final ListView<RBFieldValueModel> valueList = new ListView<RBFieldValueModel>("values", listModel) {
 			@Override
 			protected void populateItem(final ListItem<RBFieldValueModel> item) {
-				addValueField(item, model.getObject().getDataType());
-			}
+                Component component = addValueField(item, model.getObject().getDataType());
+            }
 		};
 		valueList.setReuseItems(true);
 		add(valueList);
 		add(ConditionalBehavior.visibleIf(new NotEmptyCondition(model)));
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
-	 * @param item
-	 * @param dataType
-	 */
-	protected void addValueField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
+	 * Add a value field to the list item.
+     * @param item The list item.
+     * @param dataType The datatype
+     */
+	protected Component addValueField(final ListItem<RBFieldValueModel> item, final Datatype dataType) {
 		switch(dataType) {
 		case BOOLEAN:
-			addBooleanField(item);
-			break;
+			return addBooleanField(item);
 		case RESOURCE:
-			addResourceField(item);
-			break;
+			return addResourceField(item);
 		case DATE:
-			addTextOutput(item, Date.class);
-			break;
+			return addTextOutput(item, Date.class);
 		case INTEGER:
-			addTextOutput(item, Integer.class);
-			break;
+			return addTextOutput(item, Integer.class);
 		case DECIMAL:
-			addTextOutput(item, BigDecimal.class);
-			break;
+			return addTextOutput(item, BigDecimal.class);
 		case STRING:
 		case TEXT:
-			addTextOutput(item, String.class);
-			break;
+			return addTextOutput(item, String.class);
 		case RICH_TEXT:
-			addHTMLOutput(item);
-			break;
+			return addHTMLOutput(item);
 		case URI:
-			addLink(item);
+			return addExternalLink(item);
+		case FILE:
+			return addRepoLink(item);
+		default:
+			throw new NotYetImplementedException("No display-component specified for datatype: " + dataType);
 		}
-	}
+    }
 
-	private void addResourceField(final ListItem<RBFieldValueModel> item) {
-		final ResourceID ref = (ResourceID) item.getModelObject().getObject();
+	private Component addResourceField(final ListItem<RBFieldValueModel> item) {
+		final ResourceID ref = getResourceID(item.getModelObject());
 		if (ref != null) {
 			final CrossLink link = new CrossLink("link", getUrlTo(ref).toString());
-			link.add(new Label("label", Model.of(ResourceLabelBuilder.getInstance().getLabel(ref, getLocale()))));
+			link.add(new Label("label", getLabelModel(item.getModelObject())));
 			item.add(new Fragment("valuefield", "referenceLink", this).add(link));
+            return link;
 		} else {
-			addTextOutput(item, ResourceID.class);
+			return addTextOutput(item, ResourceID.class);
 		}
-	}
+    }
 
 	protected CharSequence getUrlTo(final ResourceID ref) {
 		return resourceLinkProvider.getUrlToResource(ref, VisualizationMode.DETAILS, DisplayMode.VIEW);
 	}
-	
-	private Label addTextOutput(final ListItem<RBFieldValueModel> item, Class<?> type) {
+
+	private Label addTextOutput(final ListItem<RBFieldValueModel> item, final Class<?> type) {
 		final Label field = new Label("valuefield", item.getModelObject());
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
 		return field;
 	}
-	
-	private void addHTMLOutput(ListItem<RBFieldValueModel> item) {
+
+	private Label addHTMLOutput(final ListItem<RBFieldValueModel> item) {
 		@SuppressWarnings("unchecked")
 		final Label field = new Label("valuefield", new HTMLSafeModel(item.getModelObject()));
 		field.setEscapeModelStrings(false);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
+        return field;
 	}
-	
-	private void addLink(ListItem<RBFieldValueModel> item) {
+
+	private ExternalLink addExternalLink(final ListItem<RBFieldValueModel> item) {
 		@SuppressWarnings("unchecked")
 		ExternalLink link = new ExternalLink("target", item.getModelObject(), item.getModelObject());
+		link.add(new AttributeModifier("target", "_blank"));
 		item.add(new Fragment("valuefield", "link", this).add(link));
+        return link;
 	}
-	
-	private void addBooleanField(ListItem<RBFieldValueModel> item) {
+
+	private FilePreviewLink addRepoLink(final ListItem<RBFieldValueModel> item) {
+		IModel<RBFieldValueModel> model = item.getModel();
+		@SuppressWarnings("unchecked")
+		FilePreviewLink filePreviewPanel = new FilePreviewLink("previewPanel", model.getObject());
+		item.add(new Fragment("valuefield", "filePreview", this).add(filePreviewPanel));
+        return filePreviewPanel;
+	}
+
+	private Label addBooleanField(final ListItem<RBFieldValueModel> item) {
 		String label = "no";
 		if (Boolean.TRUE.equals(item.getModelObject().getObject())) {
 			label = "yes";
 		}
 		final Label field = new Label("valuefield", label);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
+        return field;
 	}
-	
+
+	private ResourceID getResourceID(final RBFieldValueModel model) {
+		Object object = model.getObject();
+		if (object == null) {
+			return null;
+		} else if (object instanceof ResourceID) {
+			return (ResourceID) object;
+		} else if (object instanceof RBEntity) {
+			RBEntity entity = (RBEntity) object;
+			return entity.getID();
+		} else {
+			throw new IllegalArgumentException("Cannot retrieve resource ID from object of type " + object.getClass());
+		}
+	}
+
+	private IModel<String> getLabelModel(final RBFieldValueModel model) {
+		Object object = model.getObject();
+		if (object == null) {
+			return null;
+		} else if (object instanceof ResourceID) {
+			return new ResourceLabelModel((ResourceID) object);
+		} else if (object instanceof RBEntity) {
+			return new RBEntityLabelModel((RBEntity) object);
+		} else {
+			throw new IllegalArgumentException("Cannot retrieve resource ID from object of type " + object.getClass());
+		}
+	}
+
 	// ----------------------------------------------------
-	
+
 	private class NotEmptyCondition extends ConditionalModel<RBField> {
 
 		/**
-		 * @param model
+		 * @param model The model to check.
 		 */
-		public NotEmptyCondition(IModel<RBField> model) {
+		public NotEmptyCondition(final IModel<RBField> model) {
 			super(model);
 		}
 
-		/** 
-		* {@inheritDoc}
-		*/
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public boolean isFulfilled() {
 			return !getObject().getValues().isEmpty();
 		}
-		
+
 	}
-	
+
 }

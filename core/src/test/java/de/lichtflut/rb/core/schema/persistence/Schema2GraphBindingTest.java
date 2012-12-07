@@ -7,22 +7,16 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 
-import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNText;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import de.lichtflut.rb.core.schema.RBSchema;
-import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.mock.schema.ConstraintsFactory;
 import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 
 /**
@@ -37,19 +31,13 @@ import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 public class Schema2GraphBindingTest {
 
 	private Schema2GraphBinding binding;
-	private ConstraintResolver resolver;
-
-	@Before
-	public void setUp(){
-		resolver = mock(ConstraintResolver.class);
-	}
 
 	/**
-	 * Test method for {@link de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding#Schema2GraphBinding(de.lichtflut.rb.core.schema.persistence.ConstraintResolver)}.
+	 * Test method for {@link Schema2GraphBinding#Schema2GraphBinding()}.
 	 */
 	@Test
 	public void testSchema2GraphBinding() {
-		binding = new Schema2GraphBinding(resolver);
+		binding = new Schema2GraphBinding();
 		assertThat(binding, notNullValue());
 	}
 
@@ -64,7 +52,7 @@ public class Schema2GraphBindingTest {
 		SNResourceSchema snSchema = new SNResourceSchema(node);
 		snSchema.setDescribedType(schema.getDescribedType());
 		snSchema.setLabelExpression(new SNText(schema.getLabelBuilder().getExpression()));
-		
+
 		SNPropertyDeclaration predecessor = null;
 		for(PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 			final SNPropertyDeclaration snDecl = new SNPropertyDeclaration();
@@ -73,21 +61,28 @@ public class Schema2GraphBindingTest {
 			snDecl.setMaxOccurs(new SNScalar(decl.getCardinality().getMaxOccurs()));
 			snDecl.setDatatype(decl.getDatatype());
 			snDecl.setFieldLabelDefinition(decl.getFieldLabelDefinition());
-			if(decl.hasConstraint()){
-				snDecl.setConstraint(decl.getConstraint());
-			}
-			if (null != predecessor) {
+            if (null != predecessor) {
 				predecessor.setSuccessor(snDecl);
 			}
 			predecessor = snDecl;
 			snSchema.addPropertyDeclaration(snDecl);
 		}
+		SNQuickInfo predecessorQuickInfo = null;
+		for (PropertyDeclaration decl : schema.getQuickInfo()) {
+			SNQuickInfo current = new SNQuickInfo(decl.getPropertyDescriptor());
+			if(null != predecessorQuickInfo){
+				predecessorQuickInfo.addSuccessor(current);
+			}
+			predecessorQuickInfo = current;
+			snSchema.addQuickInfo(current);
+		}
 		ResourceSchema converted = getBinding().toModelObject(snSchema);
 		assertThat(converted.getDescribedType(), equalTo(schema.getDescribedType()));
 		assertThat(converted.getLabelBuilder().getExpression(), equalTo(schema.getLabelBuilder().getExpression()));
 		assertThat(converted.getPropertyDeclarations().size(), is(schema.getPropertyDeclarations().size()));
+		assertThat(converted.getQuickInfo().size(), is(schema.getQuickInfo().size()));
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding#toSemanticNode(de.lichtflut.rb.core.schema.model.ResourceSchema)}.
@@ -101,18 +96,24 @@ public class Schema2GraphBindingTest {
 		assertThat(snr.getDescribedType(), equalTo(schema.getDescribedType()));
 		assertThat(snr.getPropertyDeclarations().size(), is(schema.getPropertyDeclarations().size()));
 		assertThat(snr.getLabelExpression().getStringValue(), equalTo(schema.getLabelBuilder().getExpression()));
+		assertThat(snr.getQuickInfo().size(), is(schema.getQuickInfo().size()));
 		int counter = 0;
 		while (counter < schema.getPropertyDeclarations().size()){
 			assertDeclaration(snr.getPropertyDeclarations().get(counter), schema.getPropertyDeclarations().get(counter));
 			counter++;
 		}
+		counter = 0;
+		while(counter < schema.getQuickInfo().size()){
+			assertThat(snr.getQuickInfo().get(counter).toURI(), equalTo(schema.getQuickInfo().get(counter).getPropertyDescriptor().toURI()));
+			counter ++;
+		}
 	}
 
 	/**
-	 * @param converted
-	 * @param decl
+	 * @param converted The converted.
+	 * @param decl The original declaration.
 	 */
-	private void assertDeclaration(SNPropertyDeclaration converted, PropertyDeclaration decl) {
+	private void assertDeclaration(final SNPropertyDeclaration converted, final PropertyDeclaration decl) {
 		assertThat(converted.getPropertyDescriptor(), equalTo(decl.getPropertyDescriptor()));
 		assertThat(converted.getFieldLabelDefinition().getDefaultLabel(), equalTo(decl
 				.getFieldLabelDefinition().getDefaultLabel()));
@@ -123,8 +124,8 @@ public class Schema2GraphBindingTest {
 		}
 		assertThat(converted.getMinOccurs(), equalTo(new SNScalar(decl.getCardinality().getMinOccurs())));
 		assertThat(converted.getDatatype(), equalTo(decl.getDatatype()));
-		if(converted.hasConstraint()){
-			assertThat(converted.getConstraint().asResourceNode(), equalTo(decl.getConstraint().asResourceNode()));
+		if(converted.hasConstraint() && converted.getConstraint().isPublic()) {
+			assertThat(converted.getConstraint().getQualifiedName(), equalTo(decl.getConstraint().getQualifiedName()));
 		}
 		// Implement I18n in Fieldlabel-mapping
 		// assertThat(snDecl.getFieldLabelDefinition().getSupportedLocales().size(),
@@ -133,6 +134,6 @@ public class Schema2GraphBindingTest {
 	}
 
 	private Schema2GraphBinding getBinding() {
-		return new Schema2GraphBinding(resolver);
+		return new Schema2GraphBinding();
 	}
 }

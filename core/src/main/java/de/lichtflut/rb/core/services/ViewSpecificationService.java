@@ -11,6 +11,7 @@ import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -26,6 +27,13 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
 public interface ViewSpecificationService {
 	
 	// -- MENU ITEMS --------------------------------------
+
+    /**
+     * Get the menu items to be displayed for current user context.
+     * Supports unauthenticated users.
+     * @return The menu items list.
+     */
+    List<MenuItem> getMenuItemsForDisplay();
 	
 	/**
 	 * Get the menu items of the current user.
@@ -59,6 +67,19 @@ public interface ViewSpecificationService {
 	 * @return The perspective specification or null if not found.
 	 */
 	Perspective findPerspective(ResourceID id);
+
+    /**
+     * Initialize a perspective (e.g. add the view ports).
+     * @param id The ID.
+     * @return The initialized perspective.
+     */
+    Perspective initializePerspective(ResourceID id);
+
+    /**
+     * Find all perspectives accessible for the current user.
+     * @return Alle perspectives.
+     */
+    List<Perspective> findPerspectives();
 	
 	/**
 	 * Remove a perspective.
@@ -86,13 +107,42 @@ public interface ViewSpecificationService {
 	 * @param widgetSpec The specification to store.
 	 */
 	void store(WidgetSpec widgetSpec);
-	
+
 	// ----------------------------------------------------
+
+    /**
+     * Find a view port by it's ID.
+     * @param id The view port id
+     * @return The attached view port.
+     */
+    ViewPort findPort(ResourceID id);
 	
 	/**
 	 * Store a view port. Update or create.
 	 * @param viewPort The specification to store.
 	 */
 	void store(ViewPort viewPort);
+
+    /**
+     * Move this widget one position up in it's view port.
+     * @param port The port of the widget.
+     * @param widgetSpec The widget spec to move up.
+     */
+    void movePositionUp(ViewPort port, WidgetSpec widgetSpec);
+
+    /**
+     * Move this widget one position down in it's view port.
+     * @param port The port of the widget.
+     * @param widgetSpec The widget spec to move down.
+     */
+    void movePositionDown(ViewPort port, WidgetSpec widgetSpec);
+
+    /**
+     * Remove this widget from it's view port and delete it.
+     * @param port The port of the widget.
+     * @param widgetSpec The widget spec to move down.
+     */
+    void removeWidget(ViewPort port, WidgetSpec widgetSpec);
+
 
 }

@@ -89,7 +89,7 @@ public class SNSelection extends ResourceView implements Selection {
 	// ----------------------------------------------------
 	
 	protected void appendExpressions(ResourceNode node, Query query) {
-		final Set<Statement> expressions = node.getAssociations(WDGT.HAS_EXPRESSION);
+		final Set<Statement> expressions = SNOPS.associations(node, WDGT.HAS_EXPRESSION);
 		final SemanticNode operator = SNOPS.singleObject(node, WDGT.HAS_OPERATOR);
 		if (WDGT.NOT_OPERATOR.equals(operator)) {
 			query.not();

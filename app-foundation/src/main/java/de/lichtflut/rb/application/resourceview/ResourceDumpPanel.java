@@ -6,6 +6,7 @@ package de.lichtflut.rb.application.resourceview;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.lichtflut.rb.application.common.CommonParams;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -64,7 +65,7 @@ public class ResourceDumpPanel extends Panel {
 		final PageParameters params = new PageParameters();
 		final BookmarkablePageLink link = new BookmarkablePageLink("link", EntityDetailPage.class, params); 
 		if (node.isResourceNode()) {
-			params.add(EntityDetailPage.PARAM_RESOURCE_ID, node.asResource().getQualifiedName().toURI());
+			params.add(CommonParams.PARAM_RESOURCE_ID, node.asResource().getQualifiedName().toURI());
 		} else {
 			link.setEnabled(false);
 		}

@@ -81,13 +81,13 @@
 //	public void testGetWholeRBSystemTypeGraph() {
 //		final String PATH = "graph/test";
 //		//Lets get a webResource connector without a auth-token
-//		WebResource webResource = getWebResource().path(PATH);
+//		WebResource webResource = getWebResource().id(PATH);
 //		//Check if authentication and authorization mechanism does work as specified
 //		assertTrue("Current System user should be sucessfully authenticated and authorized at the " +
 //				"given service endpoint", doesTokenAuthWorksAsIntended(webResource, HttpMethod.GET));
 //		
 //		//Lets get a webResource connector with auth-token and retrieve a response via HTTP-GET
-//		webResource = getWebResource(true).path(PATH);
+//		webResource = getWebResource(true).id(PATH);
 //		String responseMsg = webResource.accept(javax.ws.rs.core.MediaType.APPLICATION_XML).get(String.class);
 //		assertNotNull(responseMsg);
 //		final SemanticGraphIO io = new RdfXmlBinding();
@@ -142,13 +142,13 @@
 //		
 //		final String PATH = "graph/test/node";
 //		//Lets get a webResource connector without a auth-token
-//		WebResource webResource = getWebResource().path(PATH).queryParam("ID", encNodeURL);
+//		WebResource webResource = getWebResource().id(PATH).queryParam("ID", encNodeURL);
 //		//Check if authentication and authorization mechanism does work as specified
 //		assertTrue("Current System user should be sucessfully authenticated and authorized at the " +
 //				"given service endpoint", doesTokenAuthWorksAsIntended(webResource, HttpMethod.GET));
 //		
 //		//Lets get a webResource connector with auth-token and retrieve a response via HTTP-GET
-//		webResource = getWebResource(true).path(PATH).queryParam("ID", encNodeURL);
+//		webResource = getWebResource(true).id(PATH).queryParam("ID", encNodeURL);
 //		String responseMsg = webResource.accept(javax.ws.rs.core.MediaType.APPLICATION_XML).get(String.class);
 //		assertNotNull(responseMsg);
 //		final SemanticGraphIO io = new RdfXmlBinding();
@@ -168,7 +168,7 @@
 //	public void testGetAndImportGraphNode(){
 //		final String PATH = "graph/test";
 //		//Lets get a webResource connector without a auth-token
-//		WebResource webResource = getWebResource().path(PATH);
+//		WebResource webResource = getWebResource().id(PATH);
 //		//Check if authentication and authorization mechanism does work as specified
 //		assertTrue("Current System user should be sucessfully authenticated and authorized at the " +
 //		"given service endpoint", doesTokenAuthWorksAsIntended(webResource, HttpMethod.PUT));
@@ -184,7 +184,7 @@
 //		ByteArrayOutputStream ouputStream = new ByteArrayOutputStream();
 //		
 //		try {
-//			io.write(graph, ouputStream);
+//			io.writeNamespaces(graph, ouputStream);
 //		} catch (Exception e) {
 //			throw new RuntimeException(e);
 //		}
@@ -195,7 +195,7 @@
 //		assertNull(rs1);
 //		
 //		String rdfXml = ouputStream.toString();
-//		getWebResource(true).path(PATH).type(MediaType.APPLICATION_XML).entity(rdfXml, MediaType.APPLICATION_XML).put(String.class);
+//		getWebResource(true).id(PATH).type(MediaType.APPLICATION_XML).entity(rdfXml, MediaType.APPLICATION_XML).put(String.class);
 //		
 //		//Check that the updated graph is persisted in store
 //		rs1 = mc.findResource(node1.getQualifiedName());

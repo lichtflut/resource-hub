@@ -3,23 +3,30 @@
  */
 package de.lichtflut.rb.application;
 
-import de.lichtflut.rb.application.layout.Layout;
-import de.lichtflut.rb.application.layout.frugal.FrugalLayout;
-import de.lichtflut.rb.application.styles.Style;
-import de.lichtflut.rb.application.styles.frugal.FrugalStyle;
+import de.lichtflut.rb.core.viewspec.MenuItem;
+import de.lichtflut.rb.webck.components.listview.ReferenceLink;
+import de.lichtflut.rb.webck.components.navigation.NavigationNode;
+import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
 import org.arastreju.sge.naming.QualifiedName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import de.lichtflut.rb.application.base.LoginPage;
 import de.lichtflut.rb.application.base.LogoutPage;
@@ -30,7 +37,12 @@ import de.lichtflut.rb.application.custom.WelcomePage;
 import de.lichtflut.rb.application.graphvis.FlowChartInfoVisPage;
 import de.lichtflut.rb.application.graphvis.HierarchyInfoVisPage;
 import de.lichtflut.rb.application.graphvis.PeripheryViewPage;
+import de.lichtflut.rb.application.layout.Layout;
+import de.lichtflut.rb.application.layout.frugal.FrugalLayout;
 import de.lichtflut.rb.application.resourceview.EntityDetailPage;
+import de.lichtflut.rb.application.styles.Style;
+import de.lichtflut.rb.application.styles.frugal.FrugalStyle;
+import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.conversion.LabelBuilderConverter;
@@ -38,6 +50,9 @@ import de.lichtflut.rb.webck.conversion.QualifiedNameConverter;
 import de.lichtflut.rb.webck.conversion.ResourceIDConverter;
 import de.lichtflut.rb.webck.conversion.SNTextConverter;
 import de.lichtflut.rb.webck.conversion.SNTimeSpecConverter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -52,8 +67,24 @@ import de.lichtflut.rb.webck.conversion.SNTimeSpecConverter;
  */
 public abstract class RBApplication extends WebApplication {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(RBApplication.class);
+
+    private RBConfig config;
+
+	// ------------------------------------------------------
+	
     public static RBApplication get() {
         return (RBApplication) Application.get();
+    }
+
+    // -- Configuration -----------------------------------
+
+    public RBConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(RBConfig config) {
+        this.config = config;
     }
 
     // ----------------------------------------------------
@@ -120,14 +151,48 @@ public abstract class RBApplication extends WebApplication {
     // ----------------------------------------------------
 
     /**
-     * {@inheritDoc}
+     * Configure if this application can be used without authentication.
+     * @return true if unauthenticated access is supported.
      */
+    public boolean supportsUnauthenticatedAccess() {
+        return false;
+    }
+
+    public String getDefaultDomain() {
+        return "public";
+    }
+
+    public List<NavigationNode> getFirstLevelNavigation(final List<MenuItem> menuItems) {
+        final List<NavigationNode> result = new ArrayList<NavigationNode>();
+        for (MenuItem item : menuItems) {
+            result.add(createPageNode(item));
+        }
+        result.add(createPageNode(getBrowseAndSearchPage(), "navigation.browse-and-search"));
+        if (RBWebSession.exists() && RBWebSession.get().isAuthenticated()) {
+            result.add(createPageNode(getUserProfilePage(), "navigation.user-profile-view"));
+        }
+        return result;
+    }
+
+    protected NavigationNode createPageNode(final Class<? extends Page> pageClass, final String key) {
+        return new NavigationNodePanel(new ReferenceLink("link", pageClass, new ResourceModel(key)));
+    }
+
+    protected NavigationNode createPageNode(final MenuItem item) {
+        final PageParameters params = new PageParameters();
+        if (item.getPerspective() != null) {
+            params.add(PerspectivePage.VIEW_ID, item.getPerspective().getQualifiedName().toURI());
+        }
+
+        return new NavigationNodePanel(new ReferenceLink("link", RBApplication.get().getPerspectivePage(), params, Model.of(item.getName())));
+    }
+
+    // ----------------------------------------------------
+
     @Override
     public Session newSession(Request request, Response response) {
         return new RBWebSession(request);
     }
-
-
 
     @Override
     protected void init() {
@@ -155,5 +220,19 @@ public abstract class RBApplication extends WebApplication {
 		locator.set(EntityLabelBuilder.class, new LabelBuilderConverter());
 		return locator;
 	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		LOGGER.info("Application is beeing destroyed. Free all resources.");
+		
+		final WebApplicationContext wac = 
+			WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+		
+		final RBConfig rbc = (RBConfig) wac.getBean("rbConfig");
+		rbc.getArastrejuProfile().close();
+	}
+
 
 }

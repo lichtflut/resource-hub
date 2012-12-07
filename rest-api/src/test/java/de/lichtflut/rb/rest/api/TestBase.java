@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
@@ -24,7 +23,6 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
-import org.arastreju.sge.context.DomainIdentifier;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -51,20 +49,17 @@ import de.lichtflut.rb.rest.api.models.generate.ObjectFactory;
 import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
 import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
 
-import static org.arastreju.sge.SNOPS.singleObject;
-import static org.arastreju.sge.SNOPS.string;
-
 /**
  * <p>
  *  This is the base class for all REST service-dependent test cases.
  *  Each class have to inherit from this one.
- *  
+ * 
  *  Please note the following conventions and behaviors:
  *  There is no need to add a tear-down oder setup method.
  *  The database will be destroyed after each test.
  *  There is a default behavior in loading fixtures before each test
  *  after calling the initTestCase Method.
- *  A fixture file, named "fixtures.rdf.xml" is expected under the following path:
+ *  A fixture file, named "fixtures.rdf.xml" is expected under the following id:
  *  src/test/resources/fixtures/TestClassName/fixtures.rdf.xml.
  *  If this file is not present, the default src/test/resources/fixtures/TestClassName/fixtures.rdf.xml is taken.
  * </p>
@@ -85,34 +80,34 @@ public abstract class TestBase extends junit.framework.TestCase {
 
 	@Autowired
 	private TestServiceProvider provider;
-	
+
 	@Autowired
 	private AuthModule authmodule;
-	
+
 	private final Stack<SystemIdentity> identityStack = new Stack<SystemIdentity>();
-	
+
 	private SystemIdentity currentIdentity;
 
 	private SystemDomain currentDomain;
 
 	private static final String FIXTURE_FILE = "fixtures.rdf.xml";
 	private static final String FIXTURE_DIRECTORY = "/fixtures";
-	
-	
+
+
 	/**
 	 * Override and implement this method
 	 * to do some initialization stuff like registering or activate
 	 * an an user or a system domain.
 	 */
 	public abstract void initTestCase();
-	
+
 	@Before
 	public void init(){
 		//Initializing gate
 		initTestCase();
 		loadFixtures();
 	}
-	
+
 
 	/**
 	 * 
@@ -135,7 +130,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 		}
 	}
 
-	public WebResource getWebResource(boolean addAuthToken) {
+	public WebResource getWebResource(final boolean addAuthToken) {
 		WebResource resource = connector.resource();
 		if (addAuthToken) {
 			// Get Token
@@ -147,8 +142,8 @@ public abstract class TestBase extends junit.framework.TestCase {
 		return resource;
 	}
 
-	
-	
+
+
 	/**
 	 * 
 	 */
@@ -179,13 +174,13 @@ public abstract class TestBase extends junit.framework.TestCase {
 		}
 		throw new RuntimeException("could not load fixtures " + (fixture==null ? "" : fixture.getAbsolutePath()));
 	}
-	
-	
+
+
 	public WebResource getWebResource() {
 		return getWebResource(false);
 	}
 
-	
+
 	/**
 	 * Checks if the required webservice resource is well protected.
 	 * Only if the AuthToken and the referenced user is well known, a success is expected
@@ -194,7 +189,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 	 * @return
 	 */
 	public boolean doesTokenAuthWorksAsIntended(WebResource resource,
-			HttpMethod method) {
+			final HttpMethod method) {
 		Response rsp = null;
 		//If no token is given, lets check if the token login does work as specified
 		if (resource.getURI().getQuery() == null || !resource.getURI().getQuery().contains("TOKEN")) {
@@ -215,7 +210,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 
 		}
 		/*Lets assume that given token is correct - The request should succeed when:
-		 * 	- The user does have the required privileges 
+		 * 	- The user does have the required privileges
 		 */
 		rsp = requestEndpoint(resource, method);
 		if (rsp.getStatus() == Status.UNAUTHORIZED.getStatusCode()) {
@@ -225,7 +220,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 		return true;
 	}
 
-	private Response requestEndpoint(WebResource resource, HttpMethod method) {
+	private Response requestEndpoint(final WebResource resource, final HttpMethod method) {
 		Response rsp = null;
 		try {
 			final StringBuffer s = new StringBuffer();
@@ -315,7 +310,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 			String rsp = webResource
 					.accept(MediaType.TEXT_PLAIN)
 					.entity(new ObjectFactory()
-							.createSystemIdentity(currentIdentity))
+					.createSystemIdentity(currentIdentity))
 					.type(MediaType.APPLICATION_JSON).post(String.class);
 			assertNotNull(rsp, "Authtoken has to be not null");
 			setAuthToken(URLEncoder.encode(rsp));
@@ -327,7 +322,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 	 * @param authToken
 	 *            the authToken to set
 	 */
-	private void setAuthToken(String authToken) {
+	private void setAuthToken(final String authToken) {
 		this.authToken = authToken;
 	}
 
@@ -344,36 +339,36 @@ public abstract class TestBase extends junit.framework.TestCase {
 	protected AuthModule getAuthModule(){
 		return authmodule;
 	}
-	
+
 	/**
 	 * 
 	 * @param identity
 	 */
-	public void setCurrentSystemUser(SystemIdentity identity) {
+	public void setCurrentSystemUser(final SystemIdentity identity) {
 		this.authToken = null;
 		this.currentIdentity = identity;
 	}
 
 	/**
-	 * The current domain which is used for operations like loading fixtures, registering a user 
+	 * The current domain which is used for operations like loading fixtures, registering a user
 	 * or generating an auth-token but
 	 * also to determine the current serviceProvider and its context.
 	 * If no current domain is set, the default root domain will be used
 	 * @param domain - the given domain
 	 */
-	public void setCurrentSystemDomain(SystemDomain domain) {
+	public void setCurrentSystemDomain(final SystemDomain domain) {
 		this.currentDomain = domain;
 	}
 
-	private void deleteSystemUser(SystemIdentity identity){
+	private void deleteSystemUser(final SystemIdentity identity){
 		final RBUser rbUser = new RBUser(
 				new SimpleResourceID().getQualifiedName());
 		rbUser.setEmail(identity.getId());
 		rbUser.setUsername(identity.getUsername());
 		authmodule.getUserManagement().deleteUser(rbUser);
 	}
-	
-	public void registerSystemUser(SystemIdentity identity) {
+
+	public void registerSystemUser(final SystemIdentity identity) {
 		final RBUser rbUser = new RBUser(
 				new SimpleResourceID().getQualifiedName());
 		rbUser.setEmail(identity.getId());
@@ -388,7 +383,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 		identityStack.push(identity);
 	}
 
-	public void registerDomain(SystemDomain domain) {
+	public void registerDomain(final SystemDomain domain) {
 		RBDomain rbDomain = new RBDomain();
 		rbDomain.setDescription(domain.getDescription());
 		rbDomain.setName(domain.getTitle());
@@ -398,7 +393,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 		}
 	}
 
-	private File getFileFromClasspath(String path){
+	private File getFileFromClasspath(final String path){
 		URL url = getClass().getResource(path);
 		if(url!=null){
 			return new File(url.getFile());
@@ -406,12 +401,12 @@ public abstract class TestBase extends junit.framework.TestCase {
 		return null;
 	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    protected List<ResourceNode> findResourcesByType(ModelingConversation conversation, ResourceID type) {
-        final Query query = conversation.createQuery();
-        query.addField(RDF.TYPE, type);
-        return query.getResult().toList(2000);
-    }
-	
+	protected List<ResourceNode> findResourcesByType(final ModelingConversation conversation, final ResourceID type) {
+		final Query query = conversation.createQuery();
+		query.addField(RDF.TYPE, type);
+		return query.getResult().toList(2000);
+	}
+
 }

@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+    Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
 
 -->
 <html
@@ -10,14 +10,17 @@
 </wicket:head>
 <wicket:panel>
 
-	<div wicket:id="feedbackPanel" class="feedback-panel"></div>
+    <div class="entity-fields-wrapper">
 
-	<div class="entity-display-fields">
-		<wicket:container wicket:id="rows">
-			<div wicket:id="row" class="entity-field"></div>
-		</wicket:container>
-	</div>
-	<div wicket:id="map" class="central column"></div>
+        <div wicket:id="feedbackPanel" class="feedback-panel"></div>
+
+        <wicket:container wicket:id="rows">
+            <wicket:container wicket:id="row"></wicket:container>
+        </wicket:container>
+
+        <div wicket:id="map" class="central column"></div>
+
+    </div>
 
 </wicket:panel>
 </html>

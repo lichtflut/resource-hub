@@ -9,7 +9,6 @@ options {
 /*
  * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-
 package de.lichtflut.rb.core.schema.parser.impl.rsf;
 
 import org.arastreju.sge.model.ResourceID;
@@ -31,6 +30,7 @@ import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.parser.RSErrorReporter;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.impl.RSParsingResultImpl;
+import de.lichtflut.rb.core.schema.parser.impl.VisualizationBuilder;
 
 import java.util.Locale;
 import java.util.HashMap;
@@ -47,7 +47,9 @@ import java.util.HashMap;
 	private static final String RESOURCE_CONSTRAINT_CONST = "resource-constraint";
 	private static final String FIELD_LABEL_CONST = "field-label";
 	private static final String FIELD_LABEL_INT_CONST = "field-label\\[..\\]";
-	
+
+
+	private VisualizationBuilder visBuilder = new VisualizationBuilder();
 	private List<ResourceSchema> schemaList = new ArrayList<ResourceSchema>();
 	private List<Constraint> publicConstraints = new ArrayList<Constraint>();
 	private HashMap<String, NamespaceHandle> nsMap = new HashMap<String, NamespaceHandle>();
@@ -68,7 +70,6 @@ import java.util.HashMap;
 	}
 	
 	private void buildDeclProperties(String key, String value){
-		String ns = $schema_decl::currentNS.getUri();
 		PropertyDeclarationImpl pDec = $property_decl::pDec;
 		if(DATATYPE_CONST.equals(key)){
 			pDec.setDatatype(Datatype.valueOf(value.toUpperCase()));
@@ -84,19 +85,24 @@ import java.util.HashMap;
 			pDec.setConstraint(constraint);
 		}
 		if(FIELD_LABEL_CONST.equals(key)){
-			if(pDec.getFieldLabelDefinition() == null){
+			if(pDec.getFieldLabelDefinition() == null) {
 				pDec.setFieldLabelDefinition(new FieldLabelDefinitionImpl(value));
-			}else{
+			} else {
 				pDec.getFieldLabelDefinition().setDefaultLabel(value);
 			}
 		}
-		if(key.matches(FIELD_LABEL_INT_CONST)){
+		if (key.matches(FIELD_LABEL_INT_CONST)) {
 			if(pDec.getFieldLabelDefinition() == null){
 				pDec.setFieldLabelDefinition(new FieldLabelDefinitionImpl(value));
 			}
 			String locale = key.substring(12, 14);
 			pDec.getFieldLabelDefinition().setLabel(new Locale(locale), value);
 		}
+	}
+
+	private void addVisualizationInfo(String key, String value) {
+        PropertyDeclarationImpl pDec = $property_decl::pDec;
+        visBuilder.add(pDec, key, value);
 	}
 	
 	public void buildPublicConstraint(String key, String value){
@@ -173,16 +179,16 @@ public_constraint scope{
 						String cleaned = removeAll($id.text, "\"");
 						NamespaceHandle currentNs = nsMap.get(extract(cleaned, ":", 0));
 						String described = extract(cleaned, ":", 1);
-						SNResource snResource = new SNResource(new QualifiedName(currentNs.getUri() + described));
-						$public_constraint::constraint = new ConstraintImpl(snResource);
-						$public_constraint::constraint.isPublic(true);
+						QualifiedName qn = new QualifiedName(currentNs.getUri() + described);
+						$public_constraint::constraint = new ConstraintImpl(qn);
+						$public_constraint::constraint.setPublic(true);
 						//publicConstraints.add($public_constraint::constraint);
 						$statements::elements.addConstraint($public_constraint::constraint);
 					})
 						constraint + );
 
-constraint: ^(ASSIGMENT ( key value {
-							buildPublicConstraint($key.text, removeAll($value.text, "\""));
+constraint: ^(PROPERTY_ASSIGNMENT ( property_key value {
+							buildPublicConstraint($property_key.text, removeAll($value.text, "\""));
 						}));
 						
 // Definition of a schema
@@ -202,12 +208,13 @@ schema_decl scope{
 	 		decl + )
 	 			 ;
 
-//Definition of a declaration within a schema
+// Definition of a declaration within a schema
 decl : 		label_decl
+		|	quick_info
 		|	property_decl
 		;
 
-//Definition of a label-declaration
+// Definition of a label-declaration
 label_decl:  ^(LABEL (rule=STRING{
 						String cleaned = removeAll($rule.text, "\"");
 						try{
@@ -217,6 +224,14 @@ label_decl:  ^(LABEL (rule=STRING{
 						}
 }));
 
+// Definition of quickInfo
+quick_info: ^(QUICK_INFO (s=qInfo_string +));
+
+qInfo_string : ^(PROPERTY s=PLAIN_STRING {
+	ResourceID id = toResourceID($s.text);
+				$schema_decl::schema.addQuickInfo(id);
+});
+
 // Definition of a property-declaration
 property_decl scope{
 PropertyDeclarationImpl pDec;
@@ -224,7 +239,7 @@ PropertyDeclarationImpl pDec;
 @init{
 	$property_decl::pDec = new PropertyDeclarationImpl();
 
-}: ^(PROPERTY (s=STRING cardinal_decl (assigment +) {
+}: ^(PROPERTY (s=STRING cardinal_decl assignment+ visualization? {
 					String cleaned = removeAll($s.text, "\"");
 					ResourceID sid = toResourceID(cleaned);
 					$property_decl::pDec.setPropertyDescriptor(sid);
@@ -239,15 +254,15 @@ cardinal_decl returns [String s]
 	$s = $cardinal_decl.text;
 } :  ^(CARDINALITY CARDINALITY_DECL) ;
 
-//Definition of an assigment within a property-declaration
-assigment : ^(ASSIGMENT ( key value {
-					buildDeclProperties($key.text, removeAll($value.text, "\""));
+//Definition of an assignment within a property-declaration
+assignment : ^(PROPERTY_ASSIGNMENT ( property_key value {
+					buildDeclProperties($property_key.text, removeAll($value.text, "\""));
 				}));
 
-// Definition of an assigments' key
-key returns [String s] 
+// Definition of an assignments' key
+property_key returns [String s]
 @init{
-	$s = $key.text;
+	$s = $property_key.text;
 }
 	: FIELD_LABEL 
 	| INT_LABEL 
@@ -257,8 +272,24 @@ key returns [String s]
 	| NAME
 	| APPLICABLE_DATATYPES
 	| LITERAL_CONSTRAINT
-	
 	;
+
+//Definition of a visualization within a property-declaration
+visualization :
+    ^(VISUALIZATION (vis_assignment+));
+
+//Definition of a visualization assignment within a property-declaration's visualization
+vis_assignment : ^(VIS_ASSIGNMENT ( visualization_key value {
+                    addVisualizationInfo($visualization_key.text, $value.text);
+				}));
+
+// Definition of an visualization assignment's key
+visualization_key returns [String s]
+@init { $s = $visualization_key.text; }
+:  EMBEDDED |
+   FLOATING |
+   STYLE
+;
 
 //Definition of a value within a property-declaration
 value returns [String s] : STRING {$s = $STRING.text;};

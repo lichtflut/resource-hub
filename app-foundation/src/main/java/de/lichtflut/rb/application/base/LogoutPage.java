@@ -3,11 +3,11 @@
  */
 package de.lichtflut.rb.application.base;
 
+import de.lichtflut.rb.webck.common.CookieAccess;
+import org.apache.wicket.protocol.http.WebSession;
+
 import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.application.pages.AbstractBasePage;
-import org.apache.wicket.protocol.http.WebSession;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-
 import de.lichtflut.rb.webck.common.RBWebSession;
 
 /**
@@ -22,17 +22,18 @@ import de.lichtflut.rb.webck.common.RBWebSession;
  * @author Oliver Tigges
  */
 public class LogoutPage extends AbstractBasePage {
-	
+
 	/**
-	 * Constructor. 
+	 * Constructor.
 	 */
 	public LogoutPage() {
+        CookieAccess.getInstance().removeAuthCookies();
 		if (WebSession.exists()) {
 			RBWebSession.get().onLogout();
 			WebSession.get().invalidate();
 		}
-		
+
 		setResponsePage(RBApplication.get().getLoginPage());
 	}
-	
+
 }

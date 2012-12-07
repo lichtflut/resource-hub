@@ -32,6 +32,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.Statement;
@@ -72,7 +73,7 @@ public class CurrentNodeInfoPanel extends Panel {
 	/**
 	 * Constructor.
 	 * @param id The component ID.
-	 * @param model Model containing the initially selected node.
+	 * @param initial Model containing the initially selected node.
 	 */
 	public CurrentNodeInfoPanel(String id, IModel<ResourceNode> initial, VisualizationMode mode) {
 		super(id, initial);
@@ -127,7 +128,7 @@ public class CurrentNodeInfoPanel extends Panel {
 		final IModel<List<CrossReferenceLink>> visLinkModel = new DerivedDetachableModel<List<CrossReferenceLink>, ResourceNode>(model) {
 			protected List<CrossReferenceLink> derive(ResourceNode node) {
 				final List<CrossReferenceLink> result = new ArrayList<CrossReferenceLink>();
-				for (Statement stmt : node.getAssociations(RB.HAS_PARENT_NODE)) {
+				for (Statement stmt : SNOPS.associations(node, RB.HAS_PARENT_NODE)) {
 					if (stmt.getObject().isResourceNode()) {
 						final ResourceNode target = stmt.getObject().asResource();
 						final String label = ResourceLabelBuilder.getInstance().getFieldLabel(stmt.getPredicate(), getLocale());

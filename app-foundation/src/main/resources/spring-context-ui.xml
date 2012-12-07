@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <import resource="spring-context-base.xml"/>
+
+    <!-- The service context -->
+
+    <bean id="serviceContextFactory" class="de.lichtflut.rb.core.services.ServiceContextFactory">
+        <constructor-arg index="0" ref="rbConfig"></constructor-arg>
+    </bean>
+
+    <bean id="context" class="de.lichtflut.rb.core.services.ServiceContext" scope="session">
+        <constructor-arg index="0" ref="rbConfig"></constructor-arg>
+    </bean>
+
+    <!-- Arastreju configuration for UI -->
+
+    <bean id="arasResourceFactory" class="de.lichtflut.rb.core.services.ArastrejuResourceFactory" scope="session">
+        <constructor-arg index="0" ref="context"></constructor-arg>
+    </bean>
+
+    <bean id="conversation" class="de.lichtflut.rb.core.services.ArastrejuConversationHolder" scope="request">
+        <constructor-arg index="0" ref="arasResourceFactory"></constructor-arg>
+    </bean>
+
+    <bean id="arasOrganizer" class="org.arastreju.sge.Organizer" scope="request"
+          factory-bean="arasResourceFactory" factory-method="getOrganizer">
+    </bean>
+
+    <!-- Services to be injected into wicket components -->
+
+    <bean id="semanticNetworkService" class="de.lichtflut.rb.core.services.impl.SemanticNetworkServiceImpl" scope="request">
+        <constructor-arg index="0" ref="arasResourceFactory"></constructor-arg>
+    </bean>
+
+    <bean id="schemaManager" class="de.lichtflut.rb.core.services.impl.SchemaManagerImpl" scope="request">
+        <constructor-arg index="0" ref="arasResourceFactory"></constructor-arg>
+    </bean>
+
+    <bean id="typeManager" class="de.lichtflut.rb.core.services.impl.TypeManagerImpl" scope="request">
+        <constructor-arg index="0" ref="arasResourceFactory"></constructor-arg>
+        <constructor-arg index="1" ref="schemaManager"></constructor-arg>
+    </bean>
+
+    <bean id="entityManager" class="de.lichtflut.rb.core.services.impl.EntityManagerImpl" scope="request">
+        <constructor-arg index="0" ref="typeManager"></constructor-arg>
+        <constructor-arg index="1" ref="schemaManager"></constructor-arg>
+        <constructor-arg index="2" ref="conversation"></constructor-arg>
+    </bean>
+
+    <bean id="domainOrganizer" class="de.lichtflut.rb.core.services.impl.DomainOrganizerImpl" scope="request">
+        <constructor-arg index="0" ref="context"></constructor-arg>
+        <constructor-arg index="1" ref="conversation"></constructor-arg>
+        <constructor-arg index="2" ref="arasOrganizer"></constructor-arg>
+    </bean>
+
+    <bean id="informationManager" class="de.lichtflut.rb.core.services.impl.InformationManagerImpl" scope="request">
+        <constructor-arg index="0" ref="arasResourceFactory"></constructor-arg>
+    </bean>
+
+    <bean id="contentService" class="de.lichtflut.rb.core.services.impl.ContentServiceImpl" scope="request">
+        <constructor-arg index="0" ref="context"/>
+        <constructor-arg index="1" ref="arasResourceFactory"/>
+    </bean>
+
+    <bean id="viewSpecificationService" class="de.lichtflut.rb.core.services.impl.ViewSpecificationServiceImpl" scope="request">
+        <constructor-arg index="0" ref="context"></constructor-arg>
+        <constructor-arg index="1" ref="arasResourceFactory"></constructor-arg>
+    </bean>
+
+    <bean id="securityService" class="de.lichtflut.rb.core.services.impl.SecurityServiceImpl" scope="request">
+        <constructor-arg index="0" ref="rbConfig"/>
+        <property name="authModule" ref="authModule"/>
+        <property name="serviceContext" ref="context"/>
+        <property name="messagingService" ref="messagingService"/>
+    </bean>
+
+    <bean id="messagingService" class="de.lichtflut.rb.core.services.impl.MessagingServiceImpl">
+        <constructor-arg ref="rbConfig"/>
+    </bean>
+
+    <bean id="fileServiceFactory" class="de.lichtflut.rb.core.services.FileServiceFactory" >
+        <constructor-arg index="0" ref="rbConfig"/>
+    </bean>
+
+    <bean id="fileService" class="de.lichtflut.rb.core.services.impl.SimpleFileService"
+          factory-bean="fileServiceFactory" factory-method="create">
+    </bean>
+    
+</beans>

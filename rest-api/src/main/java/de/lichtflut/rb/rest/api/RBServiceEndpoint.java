@@ -3,7 +3,7 @@
  */
 package de.lichtflut.rb.rest.api;
 
-import de.lichtflut.rb.core.RBConfig;
+import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.AuthenticationService;

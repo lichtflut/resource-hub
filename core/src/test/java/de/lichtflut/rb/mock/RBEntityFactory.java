@@ -18,7 +18,11 @@ import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
  * @author Ravi Knox
  */
 public class RBEntityFactory {
-	
+
+	/**
+	 * Mock Person Entity. Not all Fields are set.
+	 * @return
+	 */
 	public static RBEntity createPersonEntity(){
 		RBEntity entity = new RBEntityImpl(ResourceSchemaFactory.buildPersonSchema());
 		entity.getField(RBMock.HAS_FIRST_NAME).setValue(0, "Hans");

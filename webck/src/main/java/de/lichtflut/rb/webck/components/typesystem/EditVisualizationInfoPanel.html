@@ -1,0 +1,32 @@
+<!--
+
+    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+-->
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:head>
+	<style type="text/css"></style>
+</wicket:head>
+<wicket:panel>
+
+	<form wicket:id="form">
+		<h3><wicket:message key="visInfo.header"></wicket:message></h3>
+		<div class="table">
+			<div class="row">
+				<div class="cell"> <wicket:message key="visInfo.embedded"></wicket:message></div>
+				<div class="cell"><input type="checkbox" wicket:id="embedded" /></div>
+			</div>
+			<div class="row">
+				<div class="cell"> <wicket:message key="visInfo.floating"></wicket:message></div>
+				<div class="cell"><input type="checkbox" wicket:id="floating" /></div>
+			</div>
+			<div class="row">
+				<div class="cell"> <wicket:message key="visInfo.style"></wicket:message></div>
+				<div class="cell"><textarea wicket:id="style" rows="4" cols="30"></textarea></div>
+			</div>
+		</div>
+	</form>
+
+</wicket:panel>
+</html>

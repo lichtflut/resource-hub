@@ -33,8 +33,8 @@ public class SearchField extends Autocomplete<String> {
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
-	 * @param model
+	 * @param id The component ID.
+	 * @param model The model containing the search string.
 	 */
 	public SearchField(final String id, final IModel<String> model) {
 		super(id, model);

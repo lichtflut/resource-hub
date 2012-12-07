@@ -7,7 +7,7 @@ import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.DomainInitializer;
+import de.lichtflut.rb.core.services.DomainValidator;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.Organizer;
 import org.arastreju.sge.apriori.Aras;
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author Oliver Tigges
  */
-public class TestDomainInitializer implements DomainInitializer {
+public class TestDomainInitializer implements DomainValidator {
 
     @Autowired
     private AuthModule module;

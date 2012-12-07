@@ -4,12 +4,14 @@
 package de.lichtflut.rb.webck.components.dialogs;
 
 
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
-import de.lichtflut.rb.webck.components.typesystem.properties.EditPropertyDeclPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
+
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
+import de.lichtflut.rb.webck.components.typesystem.properties.EditPropertyDeclPanel;
 
 /**
  * <p>
@@ -29,24 +31,28 @@ public class EditPropertyDeclDialog extends AbstractRBDialog {
 	 * @param id - wicket:id
 	 * @param decl
 	 */
-	public EditPropertyDeclDialog(String id, IModel<PropertyRow> decl) {
+	public EditPropertyDeclDialog(final String id, final IModel<PropertyRow> decl, final IModel<ResourceSchema> schema) {
 		super(id);
-		add(new EditPropertyDeclPanel("panel", decl){
+		add(new EditPropertyDeclPanel("panel", decl, schema){
 			/**
 			 * Execute on onSubmit.
-			 * @param form 
-			 * @param target 
+			 * @param form
+			 * @param target
 			 */
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+				close(target);
 				EditPropertyDeclDialog.this.onSubmit(target, form);
 			}
 
 			/**
 			 * Execute on onCancel.
-			 * @param form 
-			 * @param target 
+			 * @param form
+			 * @param target
 			 */
-			protected void onCancel(AjaxRequestTarget target, Form<?> form) {
+			@Override
+			protected void onCancel(final AjaxRequestTarget target, final Form<?> form) {
+				close(target);
 				EditPropertyDeclDialog.this.onCancel(target, form);
 			}
 		});
@@ -56,17 +62,17 @@ public class EditPropertyDeclDialog extends AbstractRBDialog {
 
 	/**
 	 * Execute on onSubmit.
-	 * @param form 
-	 * @param target 
+	 * @param form
+	 * @param target
 	 */
-	protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+	protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 	}
 
 	/**
 	 * Execute on onCancel.
-	 * @param form 
-	 * @param target 
+	 * @param form
+	 * @param target
 	 */
-	protected void onCancel(AjaxRequestTarget target, Form<?> form) {
+	protected void onCancel(final AjaxRequestTarget target, final Form<?> form) {
 	}
 }

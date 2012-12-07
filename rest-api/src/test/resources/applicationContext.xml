@@ -6,7 +6,7 @@
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<bean id="rbConfig" class="de.lichtflut.rb.core.RBConfig">
+	<bean id="rbConfig" class="de.lichtflut.rb.core.config.RBConfig">
 		<constructor-arg value="test"></constructor-arg>
 	</bean>
 
@@ -16,7 +16,7 @@
 
     <bean id="securityConfiguration" class="de.lichtflut.rb.rest.api.TestSecurityConfig"/>
 
-	<bean id="provider" class="de.lichtflut.rb.rest.api.TestServiceProvider">
+	<bean id="container" class="de.lichtflut.rb.rest.api.TestServiceProvider">
 		<constructor-arg index="0" ref="rbConfig" />
 		<constructor-arg index="1" ref="authModule" />
         <constructor-arg index="2" ref="domainInitializer" />

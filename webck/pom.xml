@@ -1,27 +1,24 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>de.lichtflut.rb</groupId>
 		<artifactId>lf.resource-browser</artifactId>
-		<version>0.4.7-SNAPSHOT</version>
+		<version>0.5.0</version>
 	</parent>
-	
+
 	<groupId>de.lichtflut.rb</groupId>
 	<artifactId>lf.resource-browser.webck</artifactId>
 	<packaging>jar</packaging>
 	<name>RB Web Construction Kit</name>
-	
+
 	<properties>
-		<wicket.version>1.5.7</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
 		<wiquery.version>1.5.7</wiquery.version>
 		<wicket-extensions.version>1.5.7</wicket-extensions.version>
-		<wicketstuff-tinymce.version>1.5.7</wicketstuff-tinymce.version>
-		<springframework.version>3.1.0.RELEASE</springframework.version>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
@@ -44,33 +41,31 @@
 			<version>${wiquery.version}</version>
 		</dependency>
 		<dependency>
-	        <groupId>org.odlabs.wiquery</groupId>
-	        <artifactId>wiquery-jquery-ui</artifactId>
-	        <version>${wiquery.version}</version>
+			<groupId>org.odlabs.wiquery</groupId>
+			<artifactId>wiquery-jquery-ui</artifactId>
+			<version>${wiquery.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-spring</artifactId>
-            <version>${wicket.version}</version>
-        </dependency>
-        <dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-spring</artifactId>
+			<version>${wicket.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>${springframework.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${springframework.version}</version>
-        </dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
 
-        <!-- JERSEY NEEDED for correct Base64 -->
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-core</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-		
+		<!-- JERSEY NEEDED for correct Base64 -->
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-core</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+
 		<!-- JETTY DEPENDENCIES FOR TESTING -->
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
@@ -96,13 +91,30 @@
 			<scope>provided</scope>
 			<optional>false</optional>
 		</dependency>
-		
+
 		<!-- HTML-SANITIZER -->
 		<dependency>
 			<groupId>org.owasp.antisamy</groupId>
 			<artifactId>antisamy</artifactId>
 			<version>1.4.5</version>
 		</dependency>
+
+		<!-- MOCKITO -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- JUNIT -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<resources>
@@ -160,7 +172,7 @@
 			<layout>default</layout>
 		</repository>
 		<repository>
-			 <id>wicket-stuff</id>
+			<id>wicket-stuff</id>
 			<url>http://wicketstuff.org/maven/repository</url>
 		</repository>
 	</repositories>

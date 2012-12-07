@@ -47,7 +47,7 @@ public class RBRequestCycleListener extends AbstractRequestCycleListener {
         }
 
         public void detach() {
-            arastrejuResourceFactory.closeConversation();
+            arastrejuResourceFactory.closeGate();
         }
     }
 

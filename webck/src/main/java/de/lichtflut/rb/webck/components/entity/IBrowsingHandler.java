@@ -3,8 +3,9 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import de.lichtflut.rb.core.entity.EntityHandle;
 import org.arastreju.sge.model.ResourceID;
+
+import de.lichtflut.rb.core.entity.EntityHandle;
 
 /**
  * <p>
@@ -18,7 +19,7 @@ import org.arastreju.sge.model.ResourceID;
  * @author Oliver Tigges
  */
 public interface IBrowsingHandler {
-	
+
 	void createReferencedEntity(EntityHandle handle, ResourceID predicate);
 
 }

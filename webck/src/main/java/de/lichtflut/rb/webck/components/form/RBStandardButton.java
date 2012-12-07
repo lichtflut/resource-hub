@@ -3,13 +3,14 @@
  */
 package de.lichtflut.rb.webck.components.form;
 
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
+
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 
 /**
  * <p>
@@ -22,34 +23,34 @@ import org.apache.wicket.model.IModel;
  *
  * @author Oliver Tigges
  */
-public abstract class RBStandardButton extends AjaxButton {
+public class RBStandardButton extends AjaxButton {
 
 	private IModel<String> confirmationMessage;
-	
+
 	// ----------------------------------------------------
 
 	/**
 	 * @param id
 	 */
-	public RBStandardButton(String id) {
+	public RBStandardButton(final String id) {
 		super(id);
 	}
-	
+
 	// ----------------------------------------------------
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void onError(AjaxRequestTarget target, Form<?> form) {
+	protected void onError(final AjaxRequestTarget target, final Form<?> form) {
 		RBAjaxTarget.add(form);
 	}
-	
-	/** 
-	* {@inheritDoc}
-	*/
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	protected final void onSubmit(AjaxRequestTarget target, Form<?> form) {
+	protected final void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 		if (confirmationMessage != null) {
 			requestConfirmation(form);
 		} else {
@@ -62,19 +63,19 @@ public abstract class RBStandardButton extends AjaxButton {
 	 * @param target The ajax request target.
 	 * @param form The submitted form.
 	 */
-	protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+	protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 	}
-	
+
 	// ----------------------------------------------------
-	
-	public void needsConfirmation(IModel<String> message) {
+
+	public void needsConfirmation(final IModel<String> message) {
 		this.confirmationMessage = message;
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	private void requestConfirmation(final Form<?> form) {
-		final DialogHoster hoster = findParent(DialogHoster.class); 
+		final DialogHoster hoster = findParent(DialogHoster.class);
 		hoster.openDialog(new ConfirmationDialog(hoster.getDialogID(), confirmationMessage) {
 			@Override
 			public void onConfirm() {

@@ -1,8 +1,12 @@
 target
+derby.log
 .project
 .classpath
 .settings
 .idea
+.gitignore
+.externalToolBuilders
+maven-eclipse.xml
 *.iml
 *.ipr
 *.iws
@@ -12,4 +16,5 @@ core/bin
 webapp/bin
 webck/bin
 */.checkstyle
+*~
 

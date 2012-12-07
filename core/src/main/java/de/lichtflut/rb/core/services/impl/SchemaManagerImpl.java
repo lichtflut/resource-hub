@@ -3,24 +3,14 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import de.lichtflut.infra.exceptions.NotYetSupportedException;
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.schema.RBSchema;
-import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
-import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaParser;
-import de.lichtflut.rb.core.schema.parser.impl.json.JsonSchemaWriter;
-import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
-import de.lichtflut.rb.core.schema.persistence.ConstraintResolver;
-import de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration;
-import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
-import de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding;
-import de.lichtflut.rb.core.services.SchemaExporter;
-import de.lichtflut.rb.core.services.SchemaImporter;
-import de.lichtflut.rb.core.services.SchemaManager;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
@@ -28,22 +18,34 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.persistence.TransactionControl;
-import org.arastreju.sge.query.FieldParam;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import de.lichtflut.infra.exceptions.NotYetSupportedException;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.eh.ErrorCodes;
+import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
+import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
+import de.lichtflut.rb.core.schema.persistence.SNConstraint;
+import de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration;
+import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
+import de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding;
+import de.lichtflut.rb.core.schema.writer.rsf.RsfWriter;
+import de.lichtflut.rb.core.services.ConversationFactory;
+import de.lichtflut.rb.core.services.SchemaExporter;
+import de.lichtflut.rb.core.services.SchemaImporter;
+import de.lichtflut.rb.core.services.SchemaManager;
 
 /**
  * <p>
@@ -57,63 +59,50 @@ import java.util.Set;
  */
 public class SchemaManagerImpl implements SchemaManager {
 
-	private final Schema2GraphBinding binding;
-	
-	private final Logger logger = LoggerFactory.getLogger(SchemaManagerImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SchemaManagerImpl.class);
 
-    private ModelingConversation conversation;
+	private final Schema2GraphBinding binding;
+
+	private final ConversationFactory conversationFactory;
 
 	// ---------------- Constructor -------------------------
 
 	/**
 	 * Constructor.
-	 * @param conversation The current conversation.
+	 * @param arastrejuFactory The factory for conversations.
 	 */
-	public SchemaManagerImpl(final ModelingConversation conversation) {
-        this.conversation = conversation;
-		this.binding = new Schema2GraphBinding(new ConstraintResolverImpl());
+	public SchemaManagerImpl(final ConversationFactory arastrejuFactory) {
+		this.conversationFactory = arastrejuFactory;
+		this.binding = new Schema2GraphBinding();
 	}
-	
+
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ResourceSchema findSchemaForType(final ResourceID type) {
 		final SNResourceSchema schemaNode = findSchemaNodeByType(type);
 		if (schemaNode != null) {
-            return binding.toModelObject(schemaNode);
-		} else {
-			return null;
-		}
-	}
-	
-	/** 
-	* {@inheritDoc}
-	*/
-	@Override
-	public boolean isSchemaDefinedFor(ResourceID type) {
-		return findSchemaNodeByType(type) != null;
-	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Constraint findConstraint(final ResourceID id) {
-		final ModelingConversation mc = conversation;
-		final ResourceNode node = mc.findResource(id.getQualifiedName());
-		if (node != null) {
-			return new ConstraintImpl(node);
+			return binding.toModelObject(schemaNode);
 		} else {
 			return null;
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
+	public boolean isSchemaDefinedFor(final ResourceID type) {
+		return findSchemaNodeByType(type) != null;
+	}
+
+	@Override
+	public Constraint findConstraint(final QualifiedName qn) {
+		final ResourceNode node = conversation().findResource(qn);
+		if (node != null) {
+			return binding.toModelObject(new SNConstraint(node));
+		} else {
+			return null;
+		}
+	}
+
 	@Override
 	public Collection<ResourceSchema> findAllResourceSchemas() {
 		final List<ResourceSchema> result = new ArrayList<ResourceSchema>();
@@ -125,31 +114,25 @@ public class SchemaManagerImpl implements SchemaManager {
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Collection<Constraint> findPublicConstraints() {
 		final List<Constraint> result = new ArrayList<Constraint>();
 		final List<ResourceNode> nodes = findResourcesByType(RBSchema.PUBLIC_CONSTRAINT);
 		for (ResourceNode node : nodes) {
-			final Constraint constraint = new ConstraintImpl(node);
+			final Constraint constraint = binding.toModelObject(new SNConstraint(node));
 			if (constraint.isPublic()) {
 				result.add(constraint);
 			}
 		}
 		return result;
 	}
-	
+
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void store(final ResourceSchema schema) {
 		Validate.isTrue(schema.getDescribedType() != null, "The type described by this schema is not defined.");
-		final ModelingConversation mc = conversation;
+		final ModelingConversation mc = conversation();
 		final TransactionControl tx = mc.beginTransaction();
 		try {
 			final SNResourceSchema existing = findSchemaNodeByType(schema.getDescribedType());
@@ -159,90 +142,85 @@ public class SchemaManagerImpl implements SchemaManager {
 			ensureReferencedResourcesExist(mc, schema);
 			final SNResourceSchema node = binding.toSemanticNode(schema);
 			mc.attach(node);
-			logger.info("Stored schema for type {}.", schema.getDescribedType());
+			LOGGER.info("Stored schema for type {}.", schema.getDescribedType());
 			tx.success();
 		} finally {
 			tx.finish();
 		}
 	}
-	
-	/** 
-	* {@inheritDoc}
-	*/
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Map<Integer, List<PropertyDeclaration>> validate(final ResourceSchema schema){
+		Map<Integer, List<PropertyDeclaration>> errors = new HashMap<Integer, List<PropertyDeclaration>>();
+		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+			validateSingleProperty(decl, errors);
+		}
+		return errors;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void removeSchemaForType(final ResourceID type) {
-		final ModelingConversation mc = conversation;
 		final SNResourceSchema existing = findSchemaNodeByType(type);
 		if (existing != null) {
-			removeSchema(mc, existing);
-			logger.info("Removed schema for type {}.", type);
+			removeSchema(conversation(), existing);
+			LOGGER.info("Removed schema for type {}.", type);
 		}
 	}
-	
-	
 
-	/** 
+
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void store(final Constraint constraint) {
 		Validate.isTrue(constraint.isPublic(), "Only public type definition may be stored explicitly.");
-		final ModelingConversation mc = conversation;
 		remove(constraint);
-		mc.attach(constraint.asResourceNode());
-		logger.info("Stored public constraint for {}.", constraint.getName());
+		SNConstraint sn = binding.toSemanticNode(constraint);
+		conversation().attach(sn);
+		LOGGER.info("Stored public constraint for {}.", constraint.getName());
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
-	public void remove(Constraint constraint){
-		final ModelingConversation mc = conversation;
-		final ResourceNode existing = mc.findResource(constraint.asResourceNode().getQualifiedName());
+	public void remove(final Constraint constraint){
+		final ModelingConversation mc = conversation();
+		final ResourceNode existing = mc.findResource(constraint.getQualifiedName());
 		if(null != existing){
 			mc.remove(existing);
 		}
 	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public Constraint prepareConstraint(final QualifiedName qn, final String displayName) {
-		final ConstraintImpl constraint = new ConstraintImpl(new SNResource(qn));
+		final ConstraintImpl constraint = new ConstraintImpl(qn);
 		constraint.setApplicableDatatypes(Collections.singletonList(Datatype.STRING));
 		constraint.setName(displayName);
-		constraint.isPublic(true);
+		constraint.setPublic(true);
 		constraint.setLiteralConstraint("*");
 		store(constraint);
 		return constraint;
 	}
-	
+
 	// -----------------------------------------------------
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public SchemaImporter getImporter(final String format) {
-		if ("JSON".equalsIgnoreCase(format.trim())) {
-			return new SchemaImporterImpl(this, conversation, new JsonSchemaParser());
-		} 
 		if ("RSF".equalsIgnoreCase(format.trim())) {
-			return new SchemaImporterImpl(this, conversation, new RsfSchemaParser());
+			return new SchemaImporterImpl(this, conversation(), new RsfSchemaParser());
 		} else {
 			throw new NotYetSupportedException("Unsupported format: " + format);
 		}
 	}
-	
-	/** 
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public SchemaExporter getExporter(final String format) {
-		if ("JSON".equalsIgnoreCase(format.trim())) {
-			return new SchemaExporterImpl(this, new JsonSchemaWriter());
+		if ("RSF".equalsIgnoreCase(format.trim())) {
+			return new SchemaExporterImpl(this, new RsfWriter());
 		} else {
 			throw new NotYetSupportedException("Unsupported format: " + format);
 		}
@@ -250,17 +228,16 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	// -----------------------------------------------------
 
-    protected List<ResourceNode> findResourcesByType(ResourceID type) {
-        final Query query = conversation.createQuery();
-        query.addField(RDF.TYPE, type);
-        return query.getResult().toList(2000);
-    }
-	
+	protected List<ResourceNode> findResourcesByType(final ResourceID type) {
+		final Query query = query().addField(RDF.TYPE, type);
+		return query.getResult().toList(2000);
+	}
+
 	/**
 	 * Find the persistent node representing the schema of the given type.
 	 */
 	private SNResourceSchema findSchemaNodeByType(final ResourceID type) {
-		final Query query = conversation.createQuery().add(new FieldParam(RBSchema.DESCRIBES, type));
+		final Query query = query().addField(RBSchema.DESCRIBES, type);
 		final QueryResult result = query.getResult();
 		if (result.isEmpty()) {
 			return null;
@@ -270,7 +247,7 @@ public class SchemaManagerImpl implements SchemaManager {
 			throw new IllegalStateException("Found more than one Schema for type " + type + ": " + result);
 		}
 	}
-	
+
 	/**
 	 * Removes the schema graph.
 	 * @param mc The existing conversation.
@@ -279,13 +256,13 @@ public class SchemaManagerImpl implements SchemaManager {
 	protected void removeSchema(final ModelingConversation mc, final SNResourceSchema schemaNode) {
 		for(SNPropertyDeclaration decl : schemaNode.getPropertyDeclarations()) {
 			if (decl.hasConstraint() && !decl.getConstraint().isPublic()) {
-				mc.remove(decl.getConstraint().asResourceNode());
+				mc.remove(SNOPS.id(decl.getConstraint().getQualifiedName()));
 			}
 			mc.remove(decl);
 		}
 		mc.remove(schemaNode);
 	}
-	
+
 	/**
 	 * Checks if the resources referenced by this schema exist and have the correct settings:
 	 * <ul>
@@ -311,23 +288,42 @@ public class SchemaManagerImpl implements SchemaManager {
 			}
 		}
 	}
-	
-	// -----------------------------------------------------
-	
+
+	private ModelingConversation conversation() {
+		return conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX);
+	}
+
+	private Query query() {
+		return conversation().createQuery();
+	}
+
 	/**
-	 * Simple implementation of {@link ConstraintResolver}.
+	 * Validates a single PropertyDeclarations
+	 * @param decl
+	 * @param errors
 	 */
-	private class ConstraintResolverImpl implements ConstraintResolver {
-		@Override
-		public Constraint resolve(final Constraint constraint) {
-			final ModelingConversation mc = conversation;
-			final ResourceNode node = mc.findResource(constraint.asResourceNode().getQualifiedName());
-			if (node != null) {
-				return new ConstraintImpl(node);
-			} else {
-				return null;
+	private void validateSingleProperty(final PropertyDeclaration decl, final Map<Integer, List<PropertyDeclaration>> errors) {
+		if(null != decl.getConstraint()){
+			if((Datatype.RESOURCE.equals(decl.getDatatype()) && decl.getConstraint().isLiteral())
+					|| (!Datatype.RESOURCE.equals(decl.getDatatype()) && !decl.getConstraint().isLiteral())){
+				appendError(errors, ErrorCodes.SCHEMA_CONSTRAINT_EXCEPTION, decl);
 			}
 		}
 	}
-	
+
+	/**
+	 * @param errors
+	 * @param exception
+	 * @param declaration
+	 */
+	private void appendError(final Map<Integer, List<PropertyDeclaration>> errors, final int errorCode, final PropertyDeclaration declaration) {
+		if(errors.containsKey(errorCode)){
+			errors.get(errorCode).add(declaration);
+		}else{
+			List<PropertyDeclaration> fields = new ArrayList<PropertyDeclaration>();
+			fields.add(declaration);
+			errors.put(errorCode, fields);
+		}
+	}
+
 }
