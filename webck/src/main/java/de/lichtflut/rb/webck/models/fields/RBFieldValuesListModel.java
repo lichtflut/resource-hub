@@ -3,12 +3,11 @@
  */
 package de.lichtflut.rb.webck.models.fields;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.lichtflut.rb.core.entity.RBField;
 import org.apache.wicket.model.IModel;
 
-import de.lichtflut.rb.core.entity.RBField;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -23,7 +22,7 @@ import de.lichtflut.rb.core.entity.RBField;
  * @author Oliver Tigges
  */
 @SuppressWarnings("serial")
-public class RBFieldValuesListModel implements IModel<List<RBFieldValueModel<?>>> {
+public class RBFieldValuesListModel implements IModel<List<RBFieldValueModel>> {
 
 	private final IModel<RBField> model;
 
@@ -41,27 +40,21 @@ public class RBFieldValuesListModel implements IModel<List<RBFieldValueModel<?>>
 
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public List<RBFieldValueModel<?>> getObject() {
+	public List<RBFieldValueModel> getObject() {
 		if (model == null || model.getObject() == null) {
 			return null;
 		}
 		final RBField rbField = model.getObject();
-		final List<RBFieldValueModel<?>> result = new ArrayList<RBFieldValueModel<?>>(rbField.getSlots());
+		final List<RBFieldValueModel> result = new ArrayList<RBFieldValueModel>(rbField.getSlots());
 		for (int i=0; i < rbField.getSlots(); i++) {
-			result.add(new RBFieldValueModel<Object>(rbField, i));
+			result.add(new RBFieldValueModel(rbField, i));
 		}
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public void setObject(final List<RBFieldValueModel<?>> object) {
+	public void setObject(final List<RBFieldValueModel> object) {
 		throw new UnsupportedOperationException("Value may not be set.");
 	}
 

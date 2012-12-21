@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import de.lichtflut.rb.core.entity.RBFieldValue;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
@@ -241,8 +242,6 @@ public class EntityManagerImplTest extends RBCoreTest{
 
 	/**
 	 * Convert {@link RBEntity} to node as seen in implementation.
-	 * @param person
-	 * @return
 	 */
 	private ResourceNode nodeRepresentationOf(final RBEntity entity) {
 		final ResourceNode node = entity.getNode();
@@ -258,8 +257,9 @@ public class EntityManagerImplTest extends RBCoreTest{
 
 	private Collection<SemanticNode> toSemanticNodes(final RBField field) {
 		final Collection<SemanticNode> result = new ArrayList<SemanticNode>();
-		for (Object value : field.getValues()) {
-			if (value == null) {
+		for (RBFieldValue fieldvalue : field.getValues()) {
+            Object value = fieldvalue.getValue();
+            if (value == null) {
 				// ignore
 			} else if (field.getVisualizationInfo().isEmbedded() && value instanceof RBEntity) {
 				final RBEntity ref = (RBEntity) value;

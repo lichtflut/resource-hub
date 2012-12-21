@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import de.lichtflut.rb.core.entity.RBFieldValue;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -205,7 +206,8 @@ public class EntityManagerImpl implements EntityManager {
 	 */
 	private Collection<SemanticNode> toSemanticNodes(final RBField field) {
 		final Collection<SemanticNode> result = new ArrayList<SemanticNode>();
-		for (Object value : field.getValues()) {
+		for (RBFieldValue fieldValue : field.getValues()) {
+            Object value = fieldValue.getValue();
 			LOGGER.info(field.getPredicate() + " : " + value);
 			if (value == null) {
 				// ignore
@@ -237,28 +239,29 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	private void resolveEntityReferences(final RBField field) {
-		for (int i = 0; i < field.getSlots(); i++) {
-			ResourceID id = (ResourceID) field.getValue(i);
-			if (id != null) {
-				field.setValue(i, conversation.resolve(id));
-			}
-		}
+        for (RBFieldValue fieldValue : field.getValues()) {
+            ResourceID id = (ResourceID) fieldValue.getValue();
+            if (id != null) {
+                fieldValue.setValue(conversation.resolve(id));
+            }
+        }
 	}
 
 	private void resolveEmbeddedEntityReferences(final RBField field) {
-		for (int i = 0; i < field.getSlots(); i++) {
-			final Object value = field.getValue(i);
-			if (value instanceof RBEntity) {
-				// everything O.K.
-			} else if (value instanceof ResourceID) {
-				ResourceID id = (ResourceID) value;
-				field.setValue(i, find(id, false));
-			}
-		}
+        for (RBFieldValue fieldValue : field.getValues()) {
+            Object value = fieldValue.getValue();
+            if (value instanceof RBEntity) {
+                // everything O.K.
+            } else if (value instanceof ResourceID) {
+                ResourceID id = (ResourceID) value;
+                fieldValue.setValue(find(id, false));
+            }
+        }
 	}
 
 	private void storeEmbeddeds(final RBField field) {
-		for (Object value : field.getValues()) {
+		for (RBFieldValue fieldValue : field.getValues()) {
+            Object value = fieldValue.getValue();
 			if (value instanceof RBEntity) {
 				RBEntity entity = (RBEntity) value;
 				store(entity);

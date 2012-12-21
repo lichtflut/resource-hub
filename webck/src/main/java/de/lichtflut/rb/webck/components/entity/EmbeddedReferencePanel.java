@@ -3,6 +3,7 @@ package de.lichtflut.rb.webck.components.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.lichtflut.rb.core.entity.RBFieldValue;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -18,6 +19,7 @@ import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldsListModel;
+import org.arastreju.sge.model.nodes.SemanticNode;
 
 /**
  * <p>
@@ -82,11 +84,12 @@ public class EmbeddedReferencePanel extends Panel {
 		@Override
 		protected List<RBEntity> derive(final RBField field) {
 			List<RBEntity> result = new ArrayList<RBEntity>(field.getSlots());
-			for (Object obj: field.getValues()) {
-				if (obj instanceof RBEntity) {
-					result.add((RBEntity) obj);
+			for (RBFieldValue fieldValue: field.getValues()) {
+                Object value = fieldValue.getValue();
+                if (value instanceof RBEntity) {
+					result.add((RBEntity) value);
 				} else {
-					throw new IllegalArgumentException("Expected an RBEntity but got: " + obj.getClass());
+					throw new IllegalArgumentException("Expected an RBEntity but got: " + value.getClass());
 				}
 			}
 			if (result.isEmpty()) {

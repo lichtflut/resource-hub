@@ -94,7 +94,7 @@ public interface RBField extends Serializable {
 	 * @param index The index.
 	 * @return The object at this index or null.
 	 */
-	Object getValue(int index);
+    RBFieldValue getValue(int index);
 
     /**
      * Set a value in this field.
@@ -114,6 +114,6 @@ public interface RBField extends Serializable {
 	 * They can be of any type from String to Date, depending on the RBSchema.
 	 * @return Value of this field as a list
 	 */
-	<T> List<T> getValues();
+	List<RBFieldValue> getValues();
 
 }

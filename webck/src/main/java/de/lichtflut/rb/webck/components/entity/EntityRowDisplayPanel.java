@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.behaviors.TitleModifier;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldLabelCssClassModel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -18,6 +20,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
@@ -37,6 +40,9 @@ import de.lichtflut.rb.webck.models.fields.FieldLabelModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValuesListModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
+import org.arastreju.sge.model.StatementMetaInfo;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.StatementOrigin;
 
 /**
  * <p>
@@ -80,7 +86,12 @@ public class EntityRowDisplayPanel extends Panel {
 		final ListView<RBFieldValueModel> valueList = new ListView<RBFieldValueModel>("values", listModel) {
 			@Override
 			protected void populateItem(final ListItem<RBFieldValueModel> item) {
-                Component component = addValueField(item, model.getObject().getDataType());
+                RBFieldValueModel model = item.getModelObject();
+                Component component = addValueField(item, model.getField().getDataType());
+                if (model.getFieldValue().isInherited()) {
+                    component.add(CssModifier.appendClass("inherited"));
+                    component.add(TitleModifier.title(new ResourceModel("label.property-is-inherited")));
+                }
             }
 		};
 		valueList.setReuseItems(true);
@@ -144,25 +155,23 @@ public class EntityRowDisplayPanel extends Panel {
 	}
 
 	private Label addHTMLOutput(final ListItem<RBFieldValueModel> item) {
-		@SuppressWarnings("unchecked")
-		final Label field = new Label("valuefield", new HTMLSafeModel(item.getModelObject()));
+        final Label field = new Label("valuefield", new HTMLSafeModel(stringModel(item.getModelObject())));
 		field.setEscapeModelStrings(false);
 		item.add(new Fragment("valuefield", "textOutput", this).add(field));
         return field;
 	}
 
 	private ExternalLink addExternalLink(final ListItem<RBFieldValueModel> item) {
-		@SuppressWarnings("unchecked")
-		ExternalLink link = new ExternalLink("target", item.getModelObject(), item.getModelObject());
+        IModel<String> linkModel = stringModel(item.getModelObject());
+        ExternalLink link = new ExternalLink("target", linkModel, linkModel);
 		link.add(new AttributeModifier("target", "_blank"));
 		item.add(new Fragment("valuefield", "link", this).add(link));
         return link;
 	}
 
 	private FilePreviewLink addRepoLink(final ListItem<RBFieldValueModel> item) {
-		IModel<RBFieldValueModel> model = item.getModel();
 		@SuppressWarnings("unchecked")
-		FilePreviewLink filePreviewPanel = new FilePreviewLink("previewPanel", model.getObject());
+		FilePreviewLink filePreviewPanel = new FilePreviewLink("previewPanel", stringModel(item.getModelObject()));
 		item.add(new Fragment("valuefield", "filePreview", this).add(filePreviewPanel));
         return filePreviewPanel;
 	}
@@ -215,14 +224,20 @@ public class EntityRowDisplayPanel extends Panel {
 			super(model);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public boolean isFulfilled() {
 			return !getObject().getValues().isEmpty();
 		}
 
 	}
+
+    private IModel<String> stringModel(IModel<Object> model) {
+        return new DerivedModel<String, Object>(model) {
+            @Override
+            protected String derive(Object obj) {
+                return obj.toString();
+            }
+        };
+    }
 
 }

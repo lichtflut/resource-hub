@@ -1,17 +1,22 @@
 package de.lichtflut.rb.core.entity;
 
-import de.lichtflut.rb.core.schema.model.Datatype;
-import org.arastreju.sge.model.DetachedStatement;
-import org.arastreju.sge.model.ElementaryDataType;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
+import de.lichtflut.rb.core.entity.impl.AbstractRBField;
 import org.arastreju.sge.model.Statement;
-import org.arastreju.sge.model.nodes.SNValue;
+import org.arastreju.sge.model.StatementMetaInfo;
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.StatementOrigin;
+
+import java.io.Serializable;
 
 /**
  * <p>
- *  Represents one value of an RBField.
+ *  Represents one value of an RBField which can be one of:
+ *
+ *  <ul>
+ *      <li>Value node</li>
+ *      <li>Resource ID</li>
+ *      <li>referenced/embedded RBEntity</li>
+ *  </ul>
  * </p>
  *
  * <p>
@@ -20,37 +25,70 @@ import org.arastreju.sge.model.nodes.SemanticNode;
  *
  * @author Oliver Tigges
  */
-public class RBFieldValue {
-
-    private Statement stmt;
-
-    private SemanticNode value;
+public class RBFieldValue implements Serializable {
 
     private RBField field;
 
+    private Statement stmt;
+
+    private Object value;
+
     // ----------------------------------------------------
 
-    public SemanticNode getValue() {
+    public RBFieldValue(RBField field, Statement stmt) {
+        this.field = field;
+        this.stmt = stmt;
+        this.value = stmt.getObject();
+    }
+
+    public RBFieldValue(RBField field, Object value) {
+        this.field = field;
+        this.value = value;
+    }
+
+    public RBFieldValue(AbstractRBField field) {
+        this.field = field;
+    }
+
+    // ----------------------------------------------------
+
+    public Object getValue() {
         return value;
     }
 
     public void setValue(Object newValue) {
-        if (newValue == null) {
-            value = null;
-        } else if (field.getVisualizationInfo().isEmbedded() && newValue instanceof RBEntity) {
-            final RBEntity ref = (RBEntity) newValue;
-            value = ref.getID();
-        } else if (field.isResourceReference()) {
-            final ResourceID ref = (ResourceID) newValue;
-            value = new SimpleResourceID(ref.getQualifiedName());
+        this.value = newValue;
+    }
+
+    public void setValue(SemanticNode node) {
+        this.value = node;
+    }
+
+    public void setValue(RBEntity entity) {
+        this.value = entity;
+    }
+
+    public StatementMetaInfo getStatementMetaInfo() {
+        if (stmt != null) {
+            return stmt.getMetaInfo();
         } else {
-            final ElementaryDataType datatype = Datatype.getCorrespondingArastrejuType(field.getDataType());
-            value = new SNValue(datatype, newValue);
+            return null;
         }
     }
 
+    // ----------------------------------------------------
+
     public boolean isRemoved() {
         return value == null;
+    }
+
+    public boolean isAdded() {
+        return stmt == null;
+    }
+
+    public boolean isInherited() {
+        StatementMetaInfo metaInfo = getStatementMetaInfo();
+        return metaInfo != null && StatementOrigin.INHERITED.equals(metaInfo.getOrigin());
     }
 
 }
