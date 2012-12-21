@@ -203,7 +203,7 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 		if (ref instanceof ResourceID) {
 			return ResourceLabelBuilder.getInstance().getLabel((ResourceID) ref, locale);
 		} else {
-			throw new IllegalStateException("Unecpected class for resource reference: " + ref.getClass());
+			throw new IllegalStateException("Unexpected class for resource reference: " + ref.getClass());
 		}
 	}
 

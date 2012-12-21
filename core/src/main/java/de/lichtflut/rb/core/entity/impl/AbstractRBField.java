@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.entity.impl;
 
@@ -41,16 +41,10 @@ public abstract class AbstractRBField implements RBField, Serializable {
 
 	//------------------------------------------------------------
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getSlots() {
 		return slots;
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Object getValue(final int index) {
 		if (index >= slots) {
@@ -59,9 +53,6 @@ public abstract class AbstractRBField implements RBField, Serializable {
 		return values.get(index);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setValue(final int index, final Object value) {
 		if (index > slots) {
@@ -74,18 +65,12 @@ public abstract class AbstractRBField implements RBField, Serializable {
 		values.add(index, value);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void addValue(final Object value) {
 		values.add(value);
 		slots++;
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeSlot(int index) {
 		if (slots > 1) {
@@ -96,9 +81,6 @@ public abstract class AbstractRBField implements RBField, Serializable {
 		}
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<Object> getValues() {
 		final List<Object> copy = new ArrayList<Object>(slots);
