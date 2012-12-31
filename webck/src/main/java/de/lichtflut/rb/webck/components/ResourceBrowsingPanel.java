@@ -1,22 +1,7 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.components;
-
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-
-import de.lichtflut.rb.webck.components.relationships.RelationshipOverviewPanel;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
-import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -32,10 +17,22 @@ import de.lichtflut.rb.webck.components.entity.EntityPanel;
 import de.lichtflut.rb.webck.components.entity.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.entity.LocalButtonBar;
 import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
+import de.lichtflut.rb.webck.components.relationships.RelationshipOverviewPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
+import de.lichtflut.rb.webck.models.basic.LoadableModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityModel;
-import org.arastreju.sge.model.nodes.ResourceNode;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.model.ResourceID;
+
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 
 /**
  * <p>
@@ -50,7 +47,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
  */
 public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
-	private final RBEntityModel model = new RBEntityModel();
+	private final LoadableModel<RBEntity> model = new RBEntityModel();
 
 	@SpringBean
 	private EntityManager entityManager;
@@ -119,11 +116,11 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		return new ClassifyEntityPanel(id, model);
 	}
 
-	protected Component createRelationshipPanel(final String id, final RBEntityModel model) {
+	protected Component createRelationshipPanel(final String id, final IModel<RBEntity> model) {
 		return new CreateRelationshipPanel(id, model).add(visibleIf(BrowsingContextModel.isInViewMode()));
 	}
 
-	protected LocalButtonBar createLocalButtonBar(final String id, final RBEntityModel model) {
+	protected LocalButtonBar createLocalButtonBar(final String id, final IModel<RBEntity> model) {
 		return new LocalButtonBar(id, model) {
 			@Override
 			protected void onSave(final IModel<RBEntity> model, final AjaxRequestTarget target, final Form<?> form) {

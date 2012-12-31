@@ -95,9 +95,9 @@ public class EntityManagerImpl implements EntityManager {
 	public RBEntity create(final ResourceID type) {
 		final ResourceSchema schema = schemaManager.findSchemaForType(type);
 		if (schema != null) {
-			return new RBEntityImpl(newEntityNode(), schema);
+			return new RBEntityImpl(newEntityNode(), schema).markTransient();
 		} else {
-			return new RBEntityImpl(newEntityNode(), type);
+			return new RBEntityImpl(newEntityNode(), type).markTransient();
 		}
 	}
 

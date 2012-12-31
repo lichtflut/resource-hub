@@ -41,13 +41,17 @@ import org.arastreju.sge.model.nodes.views.InheritedDecorator;
 @SuppressWarnings("serial")
 public class RBEntityImpl implements RBEntity {
 
-    public static final boolean ADD_UNDECLARED_FIELDS = false;
+    private static final boolean ADD_UNDECLARED_FIELDS = false;
+
     private final ResourceNode node;
+
 	private final ResourceSchema schema;
 
 	private List<RBField> fields;
 
-	// -----------------------------------------------------
+    private boolean transientState;
+
+    // -----------------------------------------------------
 
 	/**
 	 * Creates a new entity with a given schema.
@@ -130,7 +134,7 @@ public class RBEntityImpl implements RBEntity {
 	public String getLabel() {
 		if(null != schema){
 			return schema.getLabelBuilder().build(this);
-		}else{
+		} else{
 			return "";
 		}
 	}
@@ -173,7 +177,22 @@ public class RBEntityImpl implements RBEntity {
 		return schema != null;
 	}
 
-	// ----------------------------------------------------
+    @Override
+    public boolean isTransient() {
+        return transientState;
+    }
+
+    public RBEntityImpl markTransient() {
+        this.transientState = true;
+        return this;
+    }
+
+    public RBEntityImpl markPersisted() {
+        this.transientState = false;
+        return this;
+    }
+
+    // ----------------------------------------------------
 
 	@Override
 	public String toString(){

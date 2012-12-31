@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.components.entity;
 
@@ -92,6 +92,7 @@ public class LocalButtonBar extends Panel {
 					String errorMessage = buildFeedbackMessage(errors);
 					setDefaultFormProcessing(false);
 					error(errorMessage);
+                    // TODO: What's this?!!? Never add a page to AjaxTarget
 					RBAjaxTarget.add(getPage());
 				}
 			}
@@ -127,6 +128,8 @@ public class LocalButtonBar extends Panel {
 
 	/**
 	 * TODO: OT 2012-12-05 Transfer markup into HTML-Template and text into properties (not internationalizable)
+     *
+     * Better: create own feedback panel: http://m3g4h4rd.blogspot.de/2011/01/how-to-customize-wicket-feedback-panel.html
 	 */
 	private String buildFeedbackMessage(final Map<Integer, List<RBField>> errors) {
 		StringBuilder sb = new StringBuilder();

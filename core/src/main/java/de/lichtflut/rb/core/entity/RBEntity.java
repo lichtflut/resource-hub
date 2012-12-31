@@ -29,13 +29,6 @@ public interface RBEntity extends Serializable {
 	 */
 	ResourceID getID();
 
-	/**
-	 * Returns a Label for this {@link RBEntity}.
-	 * It may consist of various {@link RBField}s.
-	 * It does not have to be unique.
-	 * @return {@link String} representation for this {@link RBEntity}
-	 */
-	String getLabel();
 
 	/**
 	 * Returns the RDF:TYPE of this RBEntity.
@@ -48,6 +41,16 @@ public interface RBEntity extends Serializable {
 	 * @return the IRBEntity as an ResourceNode
 	 */
 	ResourceNode getNode();
+
+    /**
+     * Returns a Label for this {@link RBEntity}.
+     * It may consist of various {@link RBField}s.
+     * It does not have to be unique.
+     * @return {@link String} representation for this {@link RBEntity}
+     */
+    String getLabel();
+
+    // ----------------------------------------------------
 
 	/**
 	 * Returns the {@link RBField} for the predicate.
@@ -63,22 +66,30 @@ public interface RBEntity extends Serializable {
 	List<RBField> getAllFields();
 
 	/**
-	 * Returns all quick-info fields as specified in the {@link ResourceSchema}.
-	 * @return a {@link List} od {@link RBField}s
-	 */
-	List<RBField> getQuickInfo();
-
-	/**
 	 * Add {@link RBField} to RBEntity.
 	 * @param field - {@link RBField}
 	 * @return true if added successfully, false if not
 	 */
 	boolean addField(RBField field);
 
+    // ----------------------------------------------------
+
+    /**
+     * Returns all quick-info fields as specified in the {@link ResourceSchema}.
+     * @return a {@link List} od {@link RBField}s
+     */
+    List<RBField> getQuickInfo();
+
 	/**
 	 * Check if there is a schema defined for this entity.
 	 * @return True if there is a schema.
 	 */
 	boolean hasSchema();
+
+    /**
+     * Check if this entity is transient. This is usually only the case being created, before first storage.
+     * @return true if this entity is not yet persisted.
+     */
+    boolean isTransient();
 
 }
