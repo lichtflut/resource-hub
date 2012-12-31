@@ -63,4 +63,8 @@ public class TestDomainInitializer implements DomainValidator {
         // module.getUserManagement().setUserRoles(root, null, roles);
 
     }
+
+    @Override
+    public void validateDomain(ArastrejuGate gate, String domainName) {
+    }
 }
