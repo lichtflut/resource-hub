@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -60,16 +61,16 @@ public class EntityPanel extends Panel {
 	public EntityPanel(final String id, final IModel<RBEntity> model) {
 		super(id, model);
 
-		add(new FeedbackPanel("feedbackPanel"));
+		add(new FeedbackPanel("feedbackPanel", new ComponentFeedbackMessageFilter(EntityPanel.this)));
 
 		add(createRows(new RBFieldsListModel(model)));
 
 		add(new GoogleMapsPanel("map", new DerivedDetachableModel<String, RBEntity>(model) {
 			@Override
 			protected String derive(final RBEntity original) {
-                if (original.getType() == null) {
-                    return null;
-                }
+				if (original.getType() == null) {
+					return null;
+				}
 				final ResourceID type = semanticNetwork.resolve(original.getType());
 				if (type.asResource().asClass().isSpecializationOf(RB.LOCATION)) {
 					return original.getLabel();

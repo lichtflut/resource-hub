@@ -3,8 +3,26 @@
  */
 package de.lichtflut.rb.webck.components;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.model.ResourceID;
+
+import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
@@ -22,17 +40,6 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
 import de.lichtflut.rb.webck.models.basic.LoadableModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityModel;
-import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.model.ResourceID;
-
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 
 /**
  * <p>
@@ -100,9 +107,9 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 	// -- OVERRIDE HOOKS ----------------------------------
 
-    protected Component createRelationshipView(final String id, final IModel<RBEntity> model) {
-        return new RelationshipOverviewPanel(id, model).add(visibleIf(BrowsingContextModel.isInViewMode()));
-    }
+	protected Component createRelationshipView(final String id, final IModel<RBEntity> model) {
+		return new RelationshipOverviewPanel(id, model).add(visibleIf(BrowsingContextModel.isInViewMode()));
+	}
 
 	protected Component createInfoPanel(final String id, final IModel<RBEntity> model) {
 		return new EntityInfoPanel(id, model);
@@ -126,6 +133,13 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 			protected void onSave(final IModel<RBEntity> model, final AjaxRequestTarget target, final Form<?> form) {
 				ResourceBrowsingPanel.this.onSave(model);
 				super.onSave(model, target, form);
+			}
+
+			@Override
+			protected void onError(final Map<Integer, List<RBField>> errors) {
+				String errorMessage = buildFeedbackMessage(errors);
+				error(errorMessage);
+				RBAjaxTarget.add(ResourceBrowsingPanel.this);
 			}
 		};
 	}
@@ -154,4 +168,29 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		model.reset();
 	}
 
+	// ------------------------------------------------------
+
+	/**
+	 * TODO: OT 2012-12-05 Transfer markup into HTML-Template and text into properties (not internationalizable)
+	 *
+	 * Better: create own feedback panel: http://m3g4h4rd.blogspot.de/2011/01/how-to-customize-wicket-feedback-panel.html
+	 */
+	private String buildFeedbackMessage(final Map<Integer, List<RBField>> errors) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getString("error.validation"));
+		sb.append("<ul>");
+		for (Integer errorCode : errors.keySet()) {
+			if(ErrorCodes.CARDINALITY_EXCEPTION == errorCode){
+				sb.append("Cardinality is not as defined: ");
+				List<RBField> fields = errors.get(ErrorCodes.CARDINALITY_EXCEPTION);
+				for (RBField field : fields) {
+					sb.append("<li>");
+					sb.append("Cardinality of \"" + field.getLabel(getLocale()) + "\" is definened as: " + CardinalityBuilder.getCardinalityAsString(field.getCardinality()));
+					sb.append("</li>");
+				}
+			}
+		}
+		sb.append("</ul>");
+		return sb.toString();
+	}
 }

@@ -21,13 +21,13 @@ import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 
 /**
  * <p>
- *  Panel for editing of a user.
+ * Panel for editing of a user.
  * </p>
- *
+ * 
  * <p>
- * 	Created Dec 8, 2011
+ * Created Dec 8, 2011
  * </p>
- *
+ * 
  * @author Oliver Tigges
  */
 public abstract class UserCreationPanel extends Panel {
@@ -87,9 +87,7 @@ public abstract class UserCreationPanel extends Panel {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				RBAjaxTarget.add(form);
-				onCreate(normalize(emailID.getObject()),
-						normalize(username.getObject()),
-						password.getObject());
+				onCreate(normalize(emailID.getObject()), normalize(username.getObject()), password.getObject());
 			}
 		};
 		return create;
