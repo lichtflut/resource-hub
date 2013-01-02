@@ -132,7 +132,7 @@ public class EntityInfoPanel extends Panel {
 				result.add(createLink(node, VisualizationMode.DETAILS));
 				result.add(createLink(node, VisualizationMode.PERIPHERY));
                 final SNClass type = typeManager.findType(EntityType.typeOf(node));
-				if (isSubClassOf(type, RB.ORGANIZATIONAL_UNIT)) {
+				if (isSubClassOf(type, RB.TREE_NODE)) {
 					result.add(createLink(node, VisualizationMode.HIERARCHY));
 				}
 				if (isSubClassOf(type, RB.PROCESS_ELEMENT)) {

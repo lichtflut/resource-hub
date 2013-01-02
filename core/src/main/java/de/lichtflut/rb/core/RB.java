@@ -39,10 +39,12 @@ public interface RB {
 
 	ResourceID EXPERTISE = new SimpleResourceID(COMMON_NAMESPACE_URI, "Expertise");
 
+    ResourceID TREE_NODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "TreeNode");
+
 	// -- COMMON PROPERTIES --------------------------------------
 
 	/**
-	 * Child node in tree structures.
+	 * A node may depend on another.
 	 */
 	ResourceID DEPENDS_ON = new SimpleResourceID(COMMON_NAMESPACE_URI, "dependsOn");
 
