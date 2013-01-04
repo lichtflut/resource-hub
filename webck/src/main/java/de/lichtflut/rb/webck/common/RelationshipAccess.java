@@ -41,6 +41,7 @@ public class RelationshipAccess implements Serializable {
 		add(RDFS.LABEL);
 		add(RBSystem.HAS_FIELD_LABEL);
 		add(RBSystem.HAS_IMAGE);
+        add(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
 	}};
 	
 	private final RBEntity source;

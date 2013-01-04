@@ -62,7 +62,7 @@ public interface RBSystem {
      * As each entity may have more than one rdf:type, the type specifying the schema can be marked with this
      * predicate.
      */
-    ResourceID HAS_SCHEMA_IDENTIFYING_TYPE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasShemaIdentifyingType");
+    ResourceID HAS_SCHEMA_IDENTIFYING_TYPE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasSchemaIdentifyingType");
 	
 	/**
 	 * Users must provide an email address for identification.  
