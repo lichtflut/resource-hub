@@ -18,6 +18,7 @@ import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.webck.components.infovis.flowchart.FlowChartPanel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLoadModel;
+import org.arastreju.sge.model.nodes.views.SNProperty;
 
 /**
  * <p>
@@ -72,7 +73,7 @@ public class FlowChartInfoVisPage extends AbstractInfoVisPage {
 		protected Set<ResourceNode> getChildNodes(final ResourceNode node) {
 			final Set<ResourceNode> chartNodes = new HashSet<ResourceNode>();
 			for (Statement stmt : node.getAssociations()) {
-				if (stmt.getPredicate().asResource().asProperty().isSubPropertyOf(RB.HAS_CHILD_NODE)) {
+				if (SNProperty.from(stmt.getPredicate()).isSubPropertyOf(RB.HAS_CHILD_NODE)) {
 					chartNodes.add(stmt.getObject().asResource());	
 				}
 			}

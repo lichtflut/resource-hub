@@ -282,7 +282,7 @@ public class SchemaManagerImpl implements SchemaManager {
 		}
 		// 2nd: check properties
 		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
-			final SNProperty property = mc.resolve(decl.getPropertyDescriptor()).asResource().asProperty();
+			final SNProperty property = SNProperty.from(mc.resolve(decl.getPropertyDescriptor()));
 			if (!property.isSubPropertyOf(RDF.PROPERTY)) {
 				SNOPS.associate(property, RDF.TYPE, RDF.PROPERTY);
 			}

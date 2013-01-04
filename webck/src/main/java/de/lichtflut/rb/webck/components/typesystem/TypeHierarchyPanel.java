@@ -141,7 +141,7 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 		protected List<SNClass> derive(final ResourceID base) {
 			final ResourceNode typeNode = service.resolve(base);
 			final List<SNClass> result = new ArrayList<SNClass>();
-			result.addAll(typeNode.asClass().getDirectSuperClasses());
+			result.addAll(SNClass.from(typeNode).getDirectSuperClasses());
 			return result;
 		}
 

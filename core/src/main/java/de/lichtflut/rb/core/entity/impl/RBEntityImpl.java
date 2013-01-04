@@ -241,6 +241,7 @@ public class RBEntityImpl implements RBEntity {
 	}
 
     private void addUndeclaredFields(Set<ResourceID> predicates) {
+        predicates.remove(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
         predicates.remove(RDF.TYPE);
         predicates.remove(RDFS.LABEL);
         for (ResourceID predicate : predicates) {
@@ -256,6 +257,7 @@ public class RBEntityImpl implements RBEntity {
 	 * @param type The type to set.
 	 */
 	private void setType(final ResourceID type) {
-		SNOPS.assure(node, RDF.TYPE, Arrays.asList(RBSystem.ENTITY, type));
+		SNOPS.assure(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, type);
+        SNOPS.assure(node, RDF.TYPE, Arrays.asList(RBSystem.ENTITY, type));
 	}
 }

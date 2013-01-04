@@ -57,6 +57,12 @@ public interface RBSystem {
     ResourceID PUBLIC_ACCESS = new SimpleResourceID(SYS_NAMESPACE_URI, "PublicAccess");
 
 	// -- PROPERTIES --------------------------------------
+
+    /**
+     * As each entity may have more than one rdf:type, the type specifying the schema can be marked with this
+     * predicate.
+     */
+    ResourceID HAS_SCHEMA_IDENTIFYING_TYPE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasShemaIdentifyingType");
 	
 	/**
 	 * Users must provide an email address for identification.  
