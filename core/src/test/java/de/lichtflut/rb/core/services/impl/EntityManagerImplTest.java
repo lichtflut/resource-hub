@@ -26,6 +26,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.naming.QualifiedName;
 import org.junit.Before;
@@ -113,7 +114,7 @@ public class EntityManagerImplTest extends RBCoreTest{
 
 		// find entity with type, no schema
 		when(conversation.findResource(user.getQualifiedName())).thenReturn(user);
-		when(typeManager.getTypeOfResource(user)).thenReturn(RB.PERSON.asResource().asClass());
+		when(typeManager.getTypeOfResource(user)).thenReturn(SNClass.from(RB.PERSON));
 		when(schemaManager.findSchemaForType(RB.PERSON)).thenReturn(null);
 
 		RBEntity e = entityManager.find(new SimpleResourceID(user.getQualifiedName()));
@@ -130,7 +131,7 @@ public class EntityManagerImplTest extends RBCoreTest{
 
 		// find entity with type, schema
 		when(conversation.findResource(user.getQualifiedName())).thenReturn(user);
-		when(typeManager.getTypeOfResource(user)).thenReturn(RB.PERSON.asResource().asClass());
+		when(typeManager.getTypeOfResource(user)).thenReturn(SNClass.from(RB.PERSON));
 		when(schemaManager.findSchemaForType(RB.PERSON)).thenReturn(new ResourceSchemaImpl(RB.PERSON));
 
 		RBEntity e1 = entityManager.find(new SimpleResourceID(user.getQualifiedName()));
