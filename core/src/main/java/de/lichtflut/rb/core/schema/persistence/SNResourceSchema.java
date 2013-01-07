@@ -66,12 +66,7 @@ public class SNResourceSchema extends ResourceView {
 	 * @return The class node.
 	 */
 	public SNClass getDescribedType() {
-		SemanticNode node = SNOPS.singleObject(this, RBSchema.DESCRIBES);
-		if (node != null){
-			return node.asResource().asClass();
-		} else {
-			return null;
-		}
+        return SNClass.from(SNOPS.singleObject(this, RBSchema.DESCRIBES));
 	}
 
 	/**
@@ -113,7 +108,7 @@ public class SNResourceSchema extends ResourceView {
 
 	/**
 	 * Set one or more {@link ResourceID}s of {@link PropertyDeclaration}s that act as quick-info view.
-	 * @param resourceID The ResourceId
+	 * @param quickInfo The ResourceId
 	 */
 	public void addQuickInfo(final SNQuickInfo quickInfo){
 		SNOPS.associate(this, RBSchema.HAS_QUICK_INFO, quickInfo);

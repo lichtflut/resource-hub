@@ -40,13 +40,10 @@ public class DefaultFlowChartModeler extends AbstractFlowChartModeler {
 		return true;
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ResourceNode getLane(ResourceNode node) {
 		for (Statement stmt : node.getAssociations()) {
-			final SNProperty predicate = stmt.getPredicate().asResource().asProperty();
+			final SNProperty predicate = SNProperty.from(stmt.getPredicate());
 			if (predicate.isSubPropertyOf(RB.HAS_OWNER) && stmt.getObject().isResourceNode()) {
 				return stmt.getObject().asResource(); 
 			}
@@ -54,14 +51,11 @@ public class DefaultFlowChartModeler extends AbstractFlowChartModeler {
 		return null;
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Collection<ResourceNode> getPredecessors(ResourceNode node) {
 		final Set<ResourceNode> predecessors = new HashSet<ResourceNode>();
 		for (Statement stmt : node.getAssociations()) {
-			final SNProperty predicate = stmt.getPredicate().asResource().asProperty();
+			final SNProperty predicate = SNProperty.from(stmt.getPredicate());
 			if (predicate.isSubPropertyOf(Aras.IS_SUCCESSOR_OF)) {
 				predecessors.add(stmt.getObject().asResource());
 			}

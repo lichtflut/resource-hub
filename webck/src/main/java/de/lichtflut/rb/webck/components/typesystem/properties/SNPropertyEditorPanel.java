@@ -136,7 +136,7 @@ public class SNPropertyEditorPanel extends Panel {
 	}
 
 	void assureLabel(final ResourceID properyID, final String label) {
-		final SNProperty property = conversation.resolve(properyID).asProperty();
+		final SNProperty property = SNProperty.from(conversation.resolve(properyID));
 		if (StringUtils.isBlank(label)) {
 			SNOPS.remove(property, RBSystem.HAS_FIELD_LABEL);
 			info("Label has been removed");

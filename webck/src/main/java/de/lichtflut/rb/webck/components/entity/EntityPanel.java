@@ -32,6 +32,7 @@ import de.lichtflut.rb.webck.components.common.GoogleMapsPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldsListModel;
+import org.arastreju.sge.model.nodes.views.SNClass;
 
 /**
  * <p>
@@ -72,7 +73,7 @@ public class EntityPanel extends Panel {
 					return null;
 				}
 				final ResourceID type = semanticNetwork.resolve(original.getType());
-				if (type.asResource().asClass().isSpecializationOf(RB.LOCATION)) {
+				if (SNClass.from(type).isSpecializationOf(RB.LOCATION)) {
 					return original.getLabel();
 				} else {
 					return null;
