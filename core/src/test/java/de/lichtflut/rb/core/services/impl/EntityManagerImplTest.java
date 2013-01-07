@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import de.lichtflut.rb.core.entity.RBFieldValue;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
@@ -41,12 +40,13 @@ import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.ValidationException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.RBFieldValue;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.mock.RBEntityFactory;
-import de.lichtflut.rb.mock.RBMock;
+import de.lichtflut.rb.mock.RBTestConstants;
 
 /**
  * <p>
@@ -113,15 +113,15 @@ public class EntityManagerImplTest extends RBCoreTest{
 
 		// find entity with type, no schema
 		when(conversation.findResource(user.getQualifiedName())).thenReturn(user);
-		when(typeManager.getTypeOfResource(user)).thenReturn(RBMock.PERSON.asResource().asClass());
-		when(schemaManager.findSchemaForType(RBMock.PERSON)).thenReturn(null);
+		when(typeManager.getTypeOfResource(user)).thenReturn(RB.PERSON.asResource().asClass());
+		when(schemaManager.findSchemaForType(RB.PERSON)).thenReturn(null);
 
 		RBEntity e = entityManager.find(new SimpleResourceID(user.getQualifiedName()));
 
 		verify(conversation, times(1)).findResource(user.getQualifiedName());
 		verify(typeManager, times(1)).getTypeOfResource(user);
-		verify(schemaManager, times(1)).findSchemaForType(RBMock.PERSON);
-		assertThat(e.getType(), equalTo(RBMock.PERSON));
+		verify(schemaManager, times(1)).findSchemaForType(RB.PERSON);
+		assertThat(e.getType(), equalTo(RB.PERSON));
 		assertThat(e.hasSchema(), is(false));
 
 		reset(conversation);
@@ -130,16 +130,16 @@ public class EntityManagerImplTest extends RBCoreTest{
 
 		// find entity with type, schema
 		when(conversation.findResource(user.getQualifiedName())).thenReturn(user);
-		when(typeManager.getTypeOfResource(user)).thenReturn(RBMock.PERSON.asResource().asClass());
-		when(schemaManager.findSchemaForType(RBMock.PERSON)).thenReturn(new ResourceSchemaImpl(RBMock.PERSON));
+		when(typeManager.getTypeOfResource(user)).thenReturn(RB.PERSON.asResource().asClass());
+		when(schemaManager.findSchemaForType(RB.PERSON)).thenReturn(new ResourceSchemaImpl(RB.PERSON));
 
 		RBEntity e1 = entityManager.find(new SimpleResourceID(user.getQualifiedName()));
 
 		verify(conversation, times(1)).findResource(user.getQualifiedName());
 		verify(typeManager, times(1)).getTypeOfResource(user);
-		verify(schemaManager, times(1)).findSchemaForType(RBMock.PERSON);
-		assertThat(e.getType(), equalTo(RBMock.PERSON));
-		assertThat(e1.getType(), equalTo(RBMock.PERSON));
+		verify(schemaManager, times(1)).findSchemaForType(RB.PERSON);
+		assertThat(e.getType(), equalTo(RB.PERSON));
+		assertThat(e1.getType(), equalTo(RB.PERSON));
 		assertThat(e1.hasSchema(), is(true));
 	}
 
@@ -195,7 +195,7 @@ public class EntityManagerImplTest extends RBCoreTest{
 	public void testValidate() throws ValidationException {
 		RBEntity person = RBEntityFactory.createPersonEntity();
 		// Add a second field to 1..1 cardinality
-		person.getField(RBMock.HAS_FIRST_NAME).addValue("Peter");
+		person.getField(RB.HAS_FIRST_NAME).addValue("Peter");
 		Map<Integer, List<RBField>> errors = entityManager.validate(person);
 		assertThat(errors.get(ErrorCodes.CARDINALITY_EXCEPTION).size(), is(1));
 	}
@@ -222,21 +222,21 @@ public class EntityManagerImplTest extends RBCoreTest{
 	 */
 	@Test
 	public void testChangeType() {
-		RBEntity entity = new RBEntityImpl(getUser(), RBMock.PERSON);
+		RBEntity entity = new RBEntityImpl(getUser(), RB.PERSON);
 
 		when(conversation.resolve(entity.getID())).thenReturn(entity.getNode());
 
-		entityManager.changeType(entity, RBMock.ADDRESS);
+		entityManager.changeType(entity, RBTestConstants.ADDRESS);
 
 		verify(conversation, times(1)).resolve(entity.getID());
-		assertThat(entity.getType(), equalTo(RBMock.ADDRESS));
+		assertThat(entity.getType(), equalTo(RBTestConstants.ADDRESS));
 	}
 
 	// ------------------------------------------------------
 
 	private ResourceNode getUser() {
 		ResourceNode node = new SNResource(new QualifiedName("http://test/user"));
-		node.addAssociation(RDF.TYPE, RBMock.PERSON);
+		node.addAssociation(RDF.TYPE, RB.PERSON);
 		return node;
 	}
 
@@ -258,8 +258,8 @@ public class EntityManagerImplTest extends RBCoreTest{
 	private Collection<SemanticNode> toSemanticNodes(final RBField field) {
 		final Collection<SemanticNode> result = new ArrayList<SemanticNode>();
 		for (RBFieldValue fieldvalue : field.getValues()) {
-            Object value = fieldvalue.getValue();
-            if (value == null) {
+			Object value = fieldvalue.getValue();
+			if (value == null) {
 				// ignore
 			} else if (field.getVisualizationInfo().isEmbedded() && value instanceof RBEntity) {
 				final RBEntity ref = (RBEntity) value;

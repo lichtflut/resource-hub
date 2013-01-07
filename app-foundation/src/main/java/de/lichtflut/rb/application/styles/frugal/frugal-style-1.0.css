@@ -844,6 +844,7 @@ div.row {
 
 div.cell{
     display: table-cell;
+    padding: 2px;
 }
 
 div.table-cell{
