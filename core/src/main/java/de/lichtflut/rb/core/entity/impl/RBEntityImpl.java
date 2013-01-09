@@ -25,6 +25,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import org.arastreju.sge.model.nodes.views.InheritedDecorator;
 
 /**
  * <p>
@@ -40,12 +41,17 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 @SuppressWarnings("serial")
 public class RBEntityImpl implements RBEntity {
 
-	private final ResourceNode node;
+    private static final boolean ADD_UNDECLARED_FIELDS = false;
+
+    private final ResourceNode node;
+
 	private final ResourceSchema schema;
 
 	private List<RBField> fields;
 
-	// -----------------------------------------------------
+    private boolean transientState;
+
+    // -----------------------------------------------------
 
 	/**
 	 * Creates a new entity with a given schema.
@@ -62,7 +68,7 @@ public class RBEntityImpl implements RBEntity {
 	 */
 	public RBEntityImpl(final ResourceNode node) {
 		super();
-		this.node = node;
+		this.node = InheritedDecorator.from(node);
 		this.schema = null;
 		initializeFields();
 	}
@@ -75,7 +81,7 @@ public class RBEntityImpl implements RBEntity {
 	 */
 	public RBEntityImpl(final ResourceNode node, final ResourceSchema schema) {
 		super();
-		this.node = node;
+        this.node = InheritedDecorator.from(node);
 		this.schema = schema;
 		if (schema != null) {
 			setType(schema.getDescribedType());
@@ -91,7 +97,7 @@ public class RBEntityImpl implements RBEntity {
 	 */
 	public RBEntityImpl(final ResourceNode node, final ResourceID type) {
 		super();
-		this.node = node;
+        this.node = InheritedDecorator.from(node);
 		this.schema = null;
 		setType(type);
 		initializeFields();
@@ -128,7 +134,7 @@ public class RBEntityImpl implements RBEntity {
 	public String getLabel() {
 		if(null != schema){
 			return schema.getLabelBuilder().build(this);
-		}else{
+		} else{
 			return "";
 		}
 	}
@@ -171,7 +177,22 @@ public class RBEntityImpl implements RBEntity {
 		return schema != null;
 	}
 
-	// ----------------------------------------------------
+    @Override
+    public boolean isTransient() {
+        return transientState;
+    }
+
+    public RBEntityImpl markTransient() {
+        this.transientState = true;
+        return this;
+    }
+
+    public RBEntityImpl markPersisted() {
+        this.transientState = false;
+        return this;
+    }
+
+    // ----------------------------------------------------
 
 	@Override
 	public String toString(){
@@ -210,40 +231,33 @@ public class RBEntityImpl implements RBEntity {
 		if (schema != null) {
 			for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 				final ResourceID predicate = decl.getPropertyDescriptor();
-				fields.add(new DeclaredRBField(decl, SNOPS.objects(node, predicate)));
+				fields.add(new DeclaredRBField(decl, SNOPS.associations(node, predicate)));
 				predicates.remove(predicate);
 			}
 		}
-		// TODO: Remove from blacklist rdf(s):*
-		predicates.remove(RDF.TYPE);
-        predicates.remove(RDFS.LABEL);
-		for (ResourceID predicate : predicates) {
-			final Set<SemanticNode> nodes = filterValues(SNOPS.objects(node, predicate));
-			if (!nodes.isEmpty()) {
-				fields.add(new UndeclaredRBField(predicate, nodes));
-			}
-		}
+        if (ADD_UNDECLARED_FIELDS) {
+            addUndeclaredFields(predicates);
+        }
 	}
 
-	/**
-	 * @param objects All semantic nodes.
-	 * @return All value nodes.
-	 */
-	private Set<SemanticNode> filterValues(final Set<SemanticNode> objects) {
-		final Set<SemanticNode> filtered = new HashSet<SemanticNode>();
-		for (SemanticNode node : objects) {
-			if (node.isValueNode()) {
-				filtered.add(node);
-			}
-		}
-		return filtered;
-	}
+    private void addUndeclaredFields(Set<ResourceID> predicates) {
+        predicates.remove(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
+        predicates.remove(RDF.TYPE);
+        predicates.remove(RDFS.LABEL);
+        for (ResourceID predicate : predicates) {
+            final Set<Statement> statements = SNOPS.associations(node, predicate);
+            if (!statements.isEmpty()) {
+                fields.add(new UndeclaredRBField(predicate, statements));
+            }
+        }
+    }
 
 	/**
 	 * Associate type with node.
 	 * @param type The type to set.
 	 */
 	private void setType(final ResourceID type) {
-		SNOPS.assure(node, RDF.TYPE, Arrays.asList(RBSystem.ENTITY, type));
+		SNOPS.assure(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, type);
+        SNOPS.assure(node, RDF.TYPE, Arrays.asList(RBSystem.ENTITY, type));
 	}
 }

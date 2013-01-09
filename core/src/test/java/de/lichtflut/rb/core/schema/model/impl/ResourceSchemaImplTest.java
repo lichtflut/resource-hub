@@ -16,13 +16,13 @@ import java.util.List;
 import org.arastreju.sge.model.ResourceID;
 import org.junit.Test;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.core.common.EntityLabelBuilder.DefaultBuilder;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.mock.RBEntityFactory;
-import de.lichtflut.rb.mock.RBMock;
 import de.lichtflut.rb.mock.schema.PropertyDeclarationFactory;
 
 /**
@@ -36,7 +36,7 @@ import de.lichtflut.rb.mock.schema.PropertyDeclarationFactory;
 public class ResourceSchemaImplTest {
 
 	private ResourceSchema schema;
-	private final ResourceID describedType = RBMock.PERSON;
+	private final ResourceID describedType = RB.PERSON;
 
 	/**
 	 * Test method for {@link de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl#ResourceSchemaImpl()}.

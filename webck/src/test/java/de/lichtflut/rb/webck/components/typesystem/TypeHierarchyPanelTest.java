@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import de.lichtflut.rb.AbstractRBWebTest;
-import de.lichtflut.rb.mock.RBMock;
+import de.lichtflut.rb.core.RB;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ import de.lichtflut.rb.mock.RBMock;
 public class TypeHierarchyPanelTest extends AbstractRBWebTest {
 
 	private TypeHierarchyPanel panel;
-	private final ResourceID id = RBMock.PERSON;
+	private final ResourceID id = RB.PERSON;
 
 	/**
 	 * Test method for {@link de.lichtflut.rb.webck.components.typesystem.TypeHierarchyPanel#TypeHierarchyPanel(java.lang.String, org.apache.wicket.model.IModel)}.

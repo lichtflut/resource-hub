@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
+import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.behaviors.TitleModifier;
+import de.lichtflut.rb.webck.models.basic.CastingModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -17,10 +20,12 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
@@ -66,8 +71,14 @@ public class FieldEditorFactory implements Serializable {
 	// ----------------------------------------------------
 
 	public Component createField(final RBFieldValueModel valueModel) {
-		return createField(valueModel, true);
-	}
+        Component field = createField(valueModel, true);
+        if (valueModel.getFieldValue().isInherited()) {
+            field.setEnabled(false);
+            field.add(CssModifier.appendClass("inherited"));
+            field.add(TitleModifier.title(new ResourceModel("label.property-is-inherited")));
+        }
+        return field;
+    }
 
 	public Component createField(final RBFieldValueModel valueModel, final boolean allowEmbedding) {
 		RBField field = valueModel.getField();
@@ -101,12 +112,12 @@ public class FieldEditorFactory implements Serializable {
 
 	public Component createResourceField(final RBFieldValueModel model, final boolean allowEmbedding) {
 		RBField fieldDefinition = model.getField();
-		Object object = model.getObject();
-		if (object instanceof RBEntity) {
-			throw new IllegalStateException("Unexpected class RBEntity for " + object);
+		Object sn = model.getObject();
+		if (sn instanceof RBEntity) {
+			throw new IllegalStateException("Unexpected class RBEntity for " + sn);
 		}
 		final ResourceID typeConstraint = getTypeConstraint(fieldDefinition);
-		return new EntityPickerField("valuefield", model, typeConstraint);
+		return new EntityPickerField("valuefield", (IModel) model, typeConstraint);
 	}
 
 	public Component createTextField(final RBField fieldDefinition, final IModel model, final Class<?> type) {

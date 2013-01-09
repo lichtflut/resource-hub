@@ -39,10 +39,12 @@ public interface RB {
 
 	ResourceID EXPERTISE = new SimpleResourceID(COMMON_NAMESPACE_URI, "Expertise");
 
+	ResourceID TREE_NODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "TreeNode");
+
 	// -- COMMON PROPERTIES --------------------------------------
 
 	/**
-	 * Child node in tree structures.
+	 * A node may depend on another.
 	 */
 	ResourceID DEPENDS_ON = new SimpleResourceID(COMMON_NAMESPACE_URI, "dependsOn");
 
@@ -81,15 +83,15 @@ public interface RB {
 	 */
 	ResourceID HAS_VALUE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasValue");
 
-    /**
-     * The read access (private, protected, public).
-     */
-    ResourceID HAS_READ_ACCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasReadAccess");
+	/**
+	 * The read access (private, protected, public).
+	 */
+	ResourceID HAS_READ_ACCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasReadAccess");
 
-    /**
-     * The write access (private, protected, public).
-     */
-    ResourceID HAS_WRITE_ACCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasWriteAccess");
+	/**
+	 * The write access (private, protected, public).
+	 */
+	ResourceID HAS_WRITE_ACCESS = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasWriteAccess");
 
 	/**
 	 * General title of something (e.g. a project).
@@ -215,6 +217,5 @@ public interface RB {
 	 * ISO alpha 3 code of a country.
 	 */
 	ResourceID HAS_ISO_ALPHA3_CODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasIsoAplpha3Code");
-
 
 }

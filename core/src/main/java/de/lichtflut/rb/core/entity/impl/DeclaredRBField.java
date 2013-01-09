@@ -9,6 +9,7 @@ import java.util.Set;
 import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.entity.RBField;
@@ -35,11 +36,11 @@ public class DeclaredRBField extends AbstractRBField {
 
 	/**
 	 * Constructor.
-	 * @param declaration - {@link PropertyDeclaration}. <code>null</code> if assertion is not known to Schema
-	 * @param values - values of this field
-	 */
-	public DeclaredRBField(final PropertyDeclaration declaration, final Set<SemanticNode> values) {
-		super(values, declaration.getDatatype().name().equals(Datatype.RESOURCE.name()));
+     * @param declaration - {@link de.lichtflut.rb.core.schema.model.PropertyDeclaration}. <code>null</code> if assertion is not known to Schema
+     * @param statements - statements of this field
+     */
+	public DeclaredRBField(final PropertyDeclaration declaration, final Set<Statement> statements) {
+		super(statements);
 		Validate.notNull(declaration, "The property declaration may never be null.");
 		this.declaration = declaration;
 	}

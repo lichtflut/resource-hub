@@ -29,7 +29,7 @@ import de.lichtflut.rb.core.entity.EntityHandle;
  */
 public class BrowsingHistory implements Serializable {
 
-	private final Logger logger = LoggerFactory.getLogger(BrowsingHistory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BrowsingHistory.class);
 
 	private final Deque<EntityBrowsingStep> stack = new LinkedBlockingDeque<EntityBrowsingStep>(200);
 
@@ -95,7 +95,7 @@ public class BrowsingHistory implements Serializable {
 		rollbackEditingSteps();
 		removeExisting(handle);
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.VIEW));
-		logger.debug("Browsing to " + handle + "  ----  " + this);
+		LOGGER.debug("Browsing to " + handle + "  ----  " + this);
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class BrowsingHistory implements Serializable {
 	public void edit(final EntityHandle handle) {
 		rollbackEditingSteps();
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.EDIT));
-		logger.debug("Creating " + handle + "  ----  " + this);
+		LOGGER.debug("Creating " + handle + "  ----  " + this);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class BrowsingHistory implements Serializable {
 	public void create(final EntityHandle handle) {
 		rollbackEditingSteps();
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.CREATE));
-		logger.debug("Creating " + handle + "  ----  " + this);
+		LOGGER.debug("Creating " + handle + "  ----  " + this);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class BrowsingHistory implements Serializable {
 	 */
 	public void createReference(final EntityHandle handle, final ReferenceReceiveAction<?>... actions) {
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.CREATE_REFERENCE, actions));
-		logger.debug("Creating sub reference " + this);
+		LOGGER.debug("Creating sub reference " + this);
 	}
 
 	// --- STEP BACK --------------------------------------

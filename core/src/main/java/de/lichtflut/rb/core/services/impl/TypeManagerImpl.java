@@ -3,16 +3,16 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.ConversationFactory;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.TypeManager;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -23,9 +23,8 @@ import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.TypeManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -67,7 +66,7 @@ public class TypeManagerImpl implements TypeManager {
 		}
 		final ResourceNode existing = conversation().findResource(type.getQualifiedName());
 		if (existing != null) {
-			return existing.asClass();
+			return SNClass.from(existing);
 		} else {
 			return null;
 		}
@@ -75,15 +74,20 @@ public class TypeManagerImpl implements TypeManager {
 
 	@Override
 	public SNClass getTypeOfResource(final ResourceID resource) {
-		final ResourceNode node = conversation().resolve(resource);
-		final Set<SemanticNode> objects = SNOPS.objects(node, RDF.TYPE);
-		for (SemanticNode sn : objects) {
-			if (RBSystem.ENTITY.equals(sn)) {
-				continue;
-			} 
-			return sn.asResource().asClass();
-		}
-		return null;
+		final ResourceNode attached = conversation().resolve(resource);
+
+        SemanticNode type = null;
+        for (Statement assoc : attached.getAssociations()) {
+            if (RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE.equals(assoc.getPredicate())) {
+                // return directly
+                return SNClass.from(assoc.getObject());
+            }
+            if (RDF.TYPE.equals(assoc.getPredicate()) && !RBSystem.ENTITY.equals(assoc.getObject())) {
+                // store until we find a better (system:hasSchemaIdenfifyingType)
+                type = assoc.getObject();
+            }
+        }
+        return SNClass.from(type);
 	}
 	
 	@Override
@@ -91,14 +95,14 @@ public class TypeManagerImpl implements TypeManager {
 		final List<SNClass> result = new ArrayList<SNClass>();
 		final List<ResourceNode> nodes = findResourcesByType(RBSystem.TYPE);
 		for (ResourceNode current : nodes) {
-			result.add(current.asClass());
+			result.add(SNClass.from(current));
 		}
 		return result;
 	}
 
 	@Override
 	public SNClass createType(final QualifiedName qn) {
-		final SNClass type = new SNResource(qn).asClass();
+		final SNClass type = SNClass.from(new SNResource(qn));
 		SNOPS.associate(type, RDF.TYPE, RDFS.CLASS);
 		SNOPS.associate(type, RDF.TYPE, RBSystem.TYPE);
         conversation().attach(type);
@@ -135,16 +139,12 @@ public class TypeManagerImpl implements TypeManager {
 			return null;
 		}
 		final ResourceNode existing = conversation().findResource(qn);
-		if (existing != null) {
-			return existing.asProperty();
-		} else {
-			return null;
-		}
+        return SNProperty.from(existing);
 	}
 	
 	@Override
 	public SNProperty createProperty(QualifiedName qn) {
-		final SNProperty property = new SNProperty(qn).asProperty();
+		final SNProperty property = new SNProperty(qn);
 		SNOPS.associate(property, RDF.TYPE, RDF.PROPERTY);
         conversation().attach(property);
 		return property;
@@ -160,7 +160,7 @@ public class TypeManagerImpl implements TypeManager {
 		final List<SNProperty> result = new ArrayList<SNProperty>();
 		final List<ResourceNode> nodes = findResourcesByType(RDF.PROPERTY);
 		for (ResourceNode current : nodes) {
-			result.add(current.asProperty());
+			result.add(SNProperty.from(current));
 		}
 		return result;
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.components.entity;
 
@@ -20,13 +20,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -79,6 +76,14 @@ public class LocalButtonBar extends Panel {
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 	}
 
+	/**
+	 * Is called when entity can not be validated.
+	 * @param errors A List containing errorcodes and their corresponding RBField
+	 */
+	protected void onError(final Map<Integer, List<RBField>> errors) {
+
+	}
+
 	// -- BUTTONS -----------------------------------------
 
 	protected Component createSaveButton(final IModel<RBEntity> model) {
@@ -89,10 +94,8 @@ public class LocalButtonBar extends Panel {
 				if(errors.isEmpty()){
 					onSave(model,target, form);
 				} else{
-					String errorMessage = buildFeedbackMessage(errors);
 					setDefaultFormProcessing(false);
-					error(errorMessage);
-					RBAjaxTarget.add(getPage());
+					LocalButtonBar.this.onError(errors);
 				}
 			}
 		};
@@ -123,28 +126,6 @@ public class LocalButtonBar extends Panel {
 		};
 		edit.add(visibleIf(not(not(viewMode))));
 		return edit;
-	}
-
-	/**
-	 * TODO: OT 2012-12-05 Transfer markup into HTML-Template and text into properties (not internationalizable)
-	 */
-	private String buildFeedbackMessage(final Map<Integer, List<RBField>> errors) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getString("error.validation"));
-		sb.append("<ul>");
-		for (Integer errorCode : errors.keySet()) {
-			if(ErrorCodes.CARDINALITY_EXCEPTION == errorCode){
-				sb.append("Cardinality is not as defined: ");
-				List<RBField> fields = errors.get(ErrorCodes.CARDINALITY_EXCEPTION);
-				for (RBField field : fields) {
-					sb.append("<li>");
-					sb.append("Cardinality of \"" + field.getLabel(getLocale()) + "\" is definened as: " + CardinalityBuilder.getCardinalityAsString(field.getCardinality()));
-					sb.append("</li>");
-				}
-			}
-		}
-		sb.append("</ul>");
-		return sb.toString();
 	}
 
 }

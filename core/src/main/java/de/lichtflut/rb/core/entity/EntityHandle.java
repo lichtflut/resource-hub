@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.entity;
 
@@ -25,7 +25,9 @@ public class EntityHandle implements Serializable {
 	private ResourceID type;
 	
 	private ResourceID id;
-	
+
+    private boolean onCreation;
+
 	// -- STATICS -----------------------------------------
 	
 	public static EntityHandle forID(ResourceID id) {
@@ -71,6 +73,11 @@ public class EntityHandle implements Serializable {
 		this.id = id;
 		return this;
 	}
+
+    public EntityHandle markOnCreation() {
+        this.onCreation = true;
+        return this;
+    }
 	
 	// ----------------------------------------------------
 	
@@ -81,8 +88,12 @@ public class EntityHandle implements Serializable {
 	public boolean hasType() {
 		return type != null;
 	}
-	
-	// ----------------------------------------------------
+
+    public boolean isOnCreation() {
+        return onCreation;
+    }
+
+    // ----------------------------------------------------
 	
 	@Override
 	public String toString() {
@@ -93,9 +104,6 @@ public class EntityHandle implements Serializable {
 		}
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -105,9 +113,6 @@ public class EntityHandle implements Serializable {
 		return result;
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof EntityHandle) {
@@ -119,7 +124,5 @@ public class EntityHandle implements Serializable {
 		}
 		return super.equals(obj);
 	}
-	
-	
 	
 }

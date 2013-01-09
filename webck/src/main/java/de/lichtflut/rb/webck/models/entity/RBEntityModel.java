@@ -51,9 +51,10 @@ public class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 			return loaded;
 		} else if (handle.hasType()){
 			LOGGER.debug("Creating new RB Entity");
-			final RBEntity loaded = entityManager.create(handle.getType());
-			handle.setId(loaded.getID());
-			return loaded;
+			final RBEntity created = entityManager.create(handle.getType());
+			handle.setId(created.getID());
+            handle.markOnCreation();
+			return created;
 		} else {
 			throw new IllegalStateException("Cannot initialize RB Entity Model.");
 		}

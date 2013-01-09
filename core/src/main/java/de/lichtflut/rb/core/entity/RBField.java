@@ -79,16 +79,9 @@ public interface RBField extends Serializable {
 	// -----------------------------------------------------
 
 	/**
-	 * Get's the amount of value slot's.
+	 * Get the amount of value slot's.
 	 */
 	int getSlots();
-
-	/**
-	 * Set a value in this field.
-	 * @param index The index, starting with 0.
-	 * @param value The value to set.
-	 */
-	void setValue(int index, Object value);
 
 	/**
 	 * Remove a slot with it's value.
@@ -97,23 +90,30 @@ public interface RBField extends Serializable {
 	void removeSlot(int index);
 
 	/**
-	 * Add a value to the end of the value list.
-	 * @param value The value to add;
-	 */
-	void addValue(Object value);
-
-	/**
 	 * Get the value for given index.
 	 * @param index The index.
 	 * @return The object at this index or null.
 	 */
-	Object getValue(int index);
+    RBFieldValue getValue(int index);
+
+    /**
+     * Set a value in this field.
+     * @param index The index, starting with 0.
+     * @param value The value to set.
+     */
+    void setValue(int index, Object value);
+
+    /**
+     * Add a value to the end of the value list.
+     * @param value The value to add;
+     */
+    void addValue(Object value);
 
 	/**
 	 * Returns all non null values of this RBField as unmodifiable list.
 	 * They can be of any type from String to Date, depending on the RBSchema.
 	 * @return Value of this field as a list
 	 */
-	<T> List<T> getValues();
+	List<RBFieldValue> getValues();
 
 }

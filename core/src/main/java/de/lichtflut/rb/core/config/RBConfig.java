@@ -3,10 +3,13 @@
  */
 package de.lichtflut.rb.core.config;
 
+import de.lichtflut.rb.core.config.domainstatus.DomainInfoContainer;
+import de.lichtflut.rb.core.config.domainstatus.DomainInfoException;
+import de.lichtflut.rb.core.config.domainstatus.LocalFileBasedDomainInfoContainer;
 import de.lichtflut.rb.core.eh.ConfigurationException;
+import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.security.SecurityConfiguration;
 import de.lichtflut.rb.core.services.DomainValidator;
-import de.lichtflut.rb.core.services.Preinitializer;
 import org.arastreju.sge.ArastrejuProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,11 +50,11 @@ public class RBConfig {
 
     private SecurityConfiguration securityConfiguration;
     
-    private Preinitializer preinitializer;
-
     private FileServiceConfiguration fileServiceConfiguration;
 
     private DomainValidator domainValidator;
+
+    private DomainInfoContainer domainInfoContainer;
 
 	// -----------------------------------------------------
 
@@ -65,6 +68,12 @@ public class RBConfig {
 		this.appName = appName;
         this.workDir = checkWorkDir(appName);
         this.dataStoreConfig = new DataStoreConfiguration(workDir, appName);
+        try {
+            this.domainInfoContainer = new LocalFileBasedDomainInfoContainer(workDir);
+        } catch (DomainInfoException e) {
+            throw new ConfigurationException(ErrorCodes.DOMAIN_INFO_COULD_NOT_BE_READ,
+                    "Domain info container failed.", e);
+        }
     }
 
 	// -----------------------------------------------------
@@ -106,9 +115,9 @@ public class RBConfig {
     public FileServiceConfiguration getFileServiceConfiguration() {
         return fileServiceConfiguration;
     }
-    
-    public Preinitializer getPreinitializer() {
-        return preinitializer;
+
+    public DomainInfoContainer getDomainInfoContainer() {
+        return domainInfoContainer;
     }
 
     // ----------------------------------------------------
@@ -117,10 +126,6 @@ public class RBConfig {
         this.emailConfiguration = emailConfiguration;
     }
     
-    public void setPreinitializer(Preinitializer initializer) {
-        this.preinitializer = initializer;
-    }
-
     public void setSecurityConfiguration(SecurityConfiguration securityConfiguration) {
         this.securityConfiguration = securityConfiguration;
     }

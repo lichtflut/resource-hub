@@ -83,9 +83,12 @@ public class EntityRowEditPanel extends Panel {
 		final ListView<RBFieldValueModel> view = new ListView<RBFieldValueModel>("values", listModel) {
 			@Override
 			protected void populateItem(final ListItem<RBFieldValueModel> item) {
-				final Component field = factory.createField(item.getModelObject());
+                final RBFieldValueModel fieldValueModel = item.getModelObject();
+
+                final Component field = factory.createField(fieldValueModel);
 				item.add(field);
-				final int idx = item.getModelObject().getIndex();
+
+				final int idx = fieldValueModel.getIndex();
 				item.add(createRemoveLink(idx));
 				item.add(createAddValueLink(model, idx));
 				item.add(createCreateLink(idx));

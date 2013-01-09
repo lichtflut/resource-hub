@@ -38,9 +38,6 @@ public class HierarchyVisualizationPanel extends InfoVisPanel {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
@@ -52,9 +49,6 @@ public class HierarchyVisualizationPanel extends InfoVisPanel {
 		);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected IResourceStream getJsonResource() {
 		return new JitJsonStream(getModelObject(), new PredicateFilter().addFollow(
