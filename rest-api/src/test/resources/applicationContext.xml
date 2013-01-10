@@ -7,7 +7,7 @@
 	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<bean id="rbConfig" class="de.lichtflut.rb.core.config.RBConfig">
-		<constructor-arg value="test"></constructor-arg>
+		<constructor-arg value="test.profile"></constructor-arg>
 	</bean>
 
 	<bean id="authorizationHandler" class="de.lichtflut.rb.rest.api.security.DefaultAuthorizationHandler" />
@@ -28,6 +28,14 @@
 	
 	<bean id="providerFactory" class="de.lichtflut.rb.rest.delegate.providers.RBServiceProviderFactory">
 	</bean>
+
+	<bean id="fileService" class="de.lichtflut.rb.core.services.impl.SimpleFileService">
+		<constructor-arg index="0" ref="rbConfig"></constructor-arg>
+		<constructor-arg index="1">
+			<bean class="de.lichtflut.rb.core.config.FileServiceConfiguration"></bean>
+		</constructor-arg>
+	</bean>
+
 
 	<bean id="masterGate" class="org.arastreju.sge.ArastrejuGate"
 		factory-bean="gateFactory" factory-method="createMasterGate">
