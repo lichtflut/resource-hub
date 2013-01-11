@@ -23,7 +23,7 @@ import java.util.Set;
  */
 public class EntityType {
 
-    public static ResourceID typeOf(ResourceID resource) {
+    public static ResourceID of(ResourceID resource) {
         Set<SemanticNode> types = SNOPS.objects(resource.asResource(), RDF.TYPE);
         // We are not interested in RBSystem.ENTITY
         for (SemanticNode node : types) {
@@ -34,7 +34,7 @@ public class EntityType {
         return null;
     }
 
-    public static ResourceID typeOf(RBEntity entity) {
+    public static ResourceID of(RBEntity entity) {
         return entity.getType();
     }
 

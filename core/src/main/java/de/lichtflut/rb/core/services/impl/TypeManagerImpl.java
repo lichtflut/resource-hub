@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.services.impl;
 
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.common.SchemaIdentifyingType;
 import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.TypeManager;
@@ -75,19 +76,7 @@ public class TypeManagerImpl implements TypeManager {
 	@Override
 	public SNClass getTypeOfResource(final ResourceID resource) {
 		final ResourceNode attached = conversation().resolve(resource);
-
-        SemanticNode type = null;
-        for (Statement assoc : attached.getAssociations()) {
-            if (RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE.equals(assoc.getPredicate())) {
-                // return directly
-                return SNClass.from(assoc.getObject());
-            }
-            if (RDF.TYPE.equals(assoc.getPredicate()) && !RBSystem.ENTITY.equals(assoc.getObject())) {
-                // store until we find a better (system:hasSchemaIdenfifyingType)
-                type = assoc.getObject();
-            }
-        }
-        return SNClass.from(type);
+        return SchemaIdentifyingType.of(attached);
 	}
 	
 	@Override

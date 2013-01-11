@@ -16,7 +16,6 @@ import de.lichtflut.rb.webck.components.navigation.ExtendedActionsPanel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityImageUrlModel;
-import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
 import org.apache.wicket.Component;
@@ -131,7 +130,7 @@ public class EntityInfoPanel extends Panel {
 				final List<VisualizationLink> result = new ArrayList<VisualizationLink>();
 				result.add(createLink(node, VisualizationMode.DETAILS));
 				result.add(createLink(node, VisualizationMode.PERIPHERY));
-                final SNClass type = typeManager.findType(EntityType.typeOf(node));
+                final SNClass type = typeManager.findType(EntityType.of(node));
 				if (isSubClassOf(type, RB.TREE_NODE)) {
 					result.add(createLink(node, VisualizationMode.HIERARCHY));
 				}
@@ -163,7 +162,7 @@ public class EntityInfoPanel extends Panel {
 
 		@Override
 		protected ResourceID derive(ResourceNode original) {
-			return EntityType.typeOf(original);
+			return EntityType.of(original);
 		}
 	}
 

@@ -6,7 +6,6 @@ package de.lichtflut.rb.webck.models.entity;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.common.EntityType;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.SNOPS;
@@ -41,7 +40,7 @@ public class RBEntityImageUrlModel extends DerivedDetachableModel<String, Resour
 
 	@Override
 	public String derive(ResourceNode entity) {
-		final ResourceID type = EntityType.typeOf(entity);
+		final ResourceID type = EntityType.of(entity);
 		// TODO: check direct image URL rb:hasImage
 		if (RB.PERSON.equals(type)) {
 			return getEmailHash(entity);
