@@ -29,7 +29,8 @@ import de.lichtflut.rb.webck.validator.FileSizeValidator;
  *
  * @author Ravi Knox
  */
-public class AjaxEditableUploadField extends AjaxEditableLabel<Object>{
+// TODO add wicket:for compatibility with ILabelProvider
+public class AjaxEditableUploadField extends AjaxEditableLabel<Object> {
 
 	private final long maximum;
 
