@@ -113,9 +113,6 @@ public class CurrentNodeInfoPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);

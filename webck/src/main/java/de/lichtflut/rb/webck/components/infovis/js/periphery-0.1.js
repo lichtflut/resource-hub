@@ -74,20 +74,24 @@ function initGraph() {
             style.top = (top - h / 2) + 'px';
         }
     });
-    //load JSON data
-    rgraph.loadJSON(root);
-    //trigger small animation
-    rgraph.graph.eachNode(function(n) {
-      var pos = n.getPos();
-      pos.setc(-200, -200);
+
+    //load JSON data and initialize graph
+    jQuery.getJSON(LFRB.InfoVis.serviceURI, function(json){
+        rgraph.loadJSON(json);
+        //trigger small animation
+        rgraph.graph.eachNode(function(n) {
+            var pos = n.getPos();
+            pos.setc(-200, -200);
+        });
+        rgraph.canvas.scale(1.45, 1.4);
+        rgraph.compute('end');
+        rgraph.fx.animate({
+            modes:['polar'],
+            duration: 1000
+        });
+        //end
+        //append information about the root relations in the right column
+        $jit.id('node-details').innerHTML = rgraph.graph.getNode(rgraph.root).name;
     });
-    rgraph.canvas.scale(1.45, 1.4);
-    rgraph.compute('end');
-    rgraph.fx.animate({
-      modes:['polar'],
-      duration: 1000
-    });
-    //end
-    //append information about the root relations in the right column
-    $jit.id('node-details').innerHTML = rgraph.graph.getNode(rgraph.root).name;  
+
 }

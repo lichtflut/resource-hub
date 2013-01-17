@@ -3,10 +3,13 @@
  */
 package de.lichtflut.rb.webck.components.infovis;
 
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.common.CurrentNodeInfoPanel;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
+import de.lichtflut.rb.webck.config.DefaultInfoVisServicePathBuilder;
+import de.lichtflut.rb.webck.config.DefaultQueryServicePathBuilder;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
@@ -14,6 +17,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceStreamResource;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
@@ -30,6 +34,11 @@ import org.arastreju.sge.model.nodes.ResourceNode;
  */
 public abstract class InfoVisPanel extends TypedPanel<ResourceNode> implements IResourceListener {
 
+    @SpringBean
+    private ServiceContext context;
+
+    // ----------------------------------------------------
+
 	/**
 	 * Constructor.
 	 * @param id The component ID.
@@ -44,20 +53,19 @@ public abstract class InfoVisPanel extends TypedPanel<ResourceNode> implements I
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
 		response.renderJavaScriptReference(InfoVisJavaScriptResources.INFOVIS_JS);
 		response.renderJavaScriptReference(getScriptUrl());
-		response.renderOnDomReadyJavaScript("LFRB.InfoVis.contextPath='" + RequestCycle.get().getRequest().getContextPath() + "';");
+
+		response.renderJavaScript("LFRB.InfoVis.contextPath='"
+                + RequestCycle.get().getRequest().getContextPath() + "';", "LFRB.InfoVis.contextPath");
+
+        String serviceURI = new DefaultInfoVisServicePathBuilder().getTree(context.getDomain(), getModelObject().toURI());
+        response.renderJavaScript("LFRB.InfoVis.serviceURI='" + serviceURI + "';", "LFRB.InfoVis.serviceURI");
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onResourceRequested() {
 		final RequestCycle cycle = RequestCycle.get();
@@ -71,9 +79,6 @@ public abstract class InfoVisPanel extends TypedPanel<ResourceNode> implements I
 	
 	// ----------------------------------------------------
 	
-	/**
-	 * @return
-	 */
 	protected String getScriptUrl() {
 		final PageParameters params = new PageParameters();
 		params.add("uid", System.nanoTime());
