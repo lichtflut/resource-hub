@@ -205,7 +205,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 			if (rsp.getStatus() != Status.UNAUTHORIZED.getStatusCode()) {
 				return false;
 			}
-			// Next step: Try ist with the right token, should work
+			// Next step: Try it with the right token, should work
 			resource = resource.queryParam("TOKEN", getAuthToken());
 
 		}

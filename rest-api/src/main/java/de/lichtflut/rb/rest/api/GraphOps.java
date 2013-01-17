@@ -75,7 +75,7 @@ public class GraphOps extends RBServiceEndpoint{
 	 * </ul>
 	 */
 	@GET
-	@Path("/node")
+	@Path("node")
 	@Produces({MediaType.APPLICATION_XML })
 	@RBOperation(type = TYPE.GRAPH_NODE_READ)
 	public Response getGraphNode(@QueryParam(NODE_ID_PARAM) String resourceID, @QueryParam(AUTH_TOKEN) String token, @PathParam(DOMAIN_ID_PARAM) String domainID) throws UnauthenticatedUserException {
