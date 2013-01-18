@@ -5,6 +5,7 @@ package de.lichtflut.rb.mock.schema;
 
 import java.util.Locale;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -14,7 +15,7 @@ import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.mock.RBMock;
+import de.lichtflut.rb.mock.RBTestConstants;
 
 /**
  * <p>
@@ -27,23 +28,23 @@ import de.lichtflut.rb.mock.RBMock;
 public class ResourceSchemaFactory {
 
 	public static ResourceSchema buildPersonSchema() {
-		ResourceSchemaImpl schema = new ResourceSchemaImpl(RBMock.PERSON);
+		ResourceSchemaImpl schema = new ResourceSchemaImpl(RB.PERSON);
 
-		PropertyDeclaration firstname = new PropertyDeclarationImpl(RBMock.HAS_FIRST_NAME, Datatype.STRING);
-		PropertyDeclaration lastname = new PropertyDeclarationImpl(RBMock.HAS_LAST_NAME, Datatype.STRING);
-		PropertyDeclaration address = new PropertyDeclarationImpl(RBMock.HAS_ADDRESS, Datatype.RESOURCE);
-		PropertyDeclaration dateOfBirth = new PropertyDeclarationImpl(RBMock.HAS_DATE_OF_BIRTH, Datatype.DATE);
-		PropertyDeclaration	email = new PropertyDeclarationImpl(RBMock.HAS_EMAIL, Datatype.STRING);
-		PropertyDeclaration children = new PropertyDeclarationImpl(RBMock.HAS_CHILD_NODE, Datatype.RESOURCE);
-		PropertyDeclaration file = new PropertyDeclarationImpl(RBMock.HAS_FILE, Datatype.FILE);
+		PropertyDeclaration firstname = new PropertyDeclarationImpl(RB.HAS_FIRST_NAME, Datatype.STRING);
+		PropertyDeclaration lastname = new PropertyDeclarationImpl(RB.HAS_LAST_NAME, Datatype.STRING);
+		PropertyDeclaration address = new PropertyDeclarationImpl(RB.HAS_ADDRESS, Datatype.RESOURCE);
+		PropertyDeclaration dateOfBirth = new PropertyDeclarationImpl(RB.HAS_DATE_OF_BIRTH, Datatype.DATE);
+		PropertyDeclaration	email = new PropertyDeclarationImpl(RB.HAS_EMAIL, Datatype.STRING);
+		PropertyDeclaration children = new PropertyDeclarationImpl(RB.HAS_CHILD_NODE, Datatype.RESOURCE);
+		PropertyDeclaration file = new PropertyDeclarationImpl(RBTestConstants.HAS_FILE, Datatype.FILE);
 
-		schema.addQuickInfo(RBMock.HAS_FIRST_NAME);
-		schema.addQuickInfo(RBMock.HAS_LAST_NAME);
-		schema.addQuickInfo(RBMock.HAS_EMAIL);
+		schema.addQuickInfo(RB.HAS_FIRST_NAME);
+		schema.addQuickInfo(RB.HAS_LAST_NAME);
+		schema.addQuickInfo(RB.HAS_EMAIL);
 
-		address.setConstraint(ConstraintsFactory.buildTypeConstraint(RBMock.ADDRESS));
+		address.setConstraint(ConstraintsFactory.buildTypeConstraint(RBTestConstants.ADDRESS));
 		email.setConstraint(ConstraintsFactory.buildPublicEmailConstraint());
-		children.setConstraint(ConstraintsFactory.buildTypeConstraint(RBMock.PERSON));
+		children.setConstraint(ConstraintsFactory.buildTypeConstraint(RB.PERSON));
 
 		firstname.setCardinality(CardinalityBuilder.hasExcactlyOne());
 		lastname.setCardinality(CardinalityBuilder.hasExcactlyOne());
@@ -75,7 +76,7 @@ public class ResourceSchemaFactory {
 
 
 		try {
-			schema.setLabelBuilder(new ExpressionBasedLabelBuilder(RBMock.PERSON.toURI()));
+			schema.setLabelBuilder(new ExpressionBasedLabelBuilder(RB.PERSON.toURI()));
 		} catch (LabelExpressionParseException e) {
 			e.printStackTrace();
 		}

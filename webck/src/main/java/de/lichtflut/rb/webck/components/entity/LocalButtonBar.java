@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.components.entity;
 
@@ -24,7 +24,6 @@ import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
@@ -69,6 +68,22 @@ public class LocalButtonBar extends Panel {
 
 	}
 
+	// ------------------------------------------------------
+
+	protected void onSave(final IModel<RBEntity> model, final AjaxRequestTarget target, final Form<?> form) {
+		entityManager.store(model.getObject());
+		RBWebSession.get().getHistory().finishEditing();
+		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
+	}
+
+	/**
+	 * Is called when entity can not be validated.
+	 * @param errors A List containing errorcodes and their corresponding RBField
+	 */
+	protected void onError(final Map<Integer, List<RBField>> errors) {
+
+	}
+
 	// -- BUTTONS -----------------------------------------
 
 	protected Component createSaveButton(final IModel<RBEntity> model) {
@@ -77,14 +92,10 @@ public class LocalButtonBar extends Panel {
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				Map<Integer, List<RBField>> errors = entityManager.validate(model.getObject());
 				if(errors.isEmpty()){
-					entityManager.store(model.getObject());
-					RBWebSession.get().getHistory().finishEditing();
-					send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
-
+					onSave(model,target, form);
 				} else{
 					setDefaultFormProcessing(false);
-					error(getString("error.validation"));
-					RBAjaxTarget.add(getPage());
+					LocalButtonBar.this.onError(errors);
 				}
 			}
 		};

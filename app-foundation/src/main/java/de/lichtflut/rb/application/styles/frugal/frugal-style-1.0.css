@@ -316,11 +316,10 @@ div.entity-info .title{
     font-size: 12pt;
 }
 
-div.entity-info .type {
+div.entity-info .meta-info {
     font-size: 7pt;
     font-style: italic;
     color: #555;
-    float:left;
 }
 
 div.entity-image {
@@ -845,6 +844,7 @@ div.row {
 
 div.cell{
     display: table-cell;
+    padding: 2px;
 }
 
 div.table-cell{

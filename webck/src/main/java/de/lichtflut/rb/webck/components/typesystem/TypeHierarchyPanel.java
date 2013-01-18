@@ -9,6 +9,7 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
@@ -22,7 +23,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
@@ -48,7 +48,7 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
  */
 public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 
-	private static final Logger logger = LoggerFactory.getLogger(TypeHierarchyPanel.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TypeHierarchyPanel.class);
 
 	@SpringBean
 	private TypeManager typeManager;
@@ -112,13 +112,13 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 
 	protected void addSuperClass(final ResourceID superClass) {
 		final ResourceID baseClass = getModelObject();
-		logger.info("adding super class to : " + baseClass);
+		LOGGER.info("adding super class to : " + baseClass);
 		typeManager.addSuperClass(baseClass, superClass);
 	}
 
 	protected void removeSuperClass(final ResourceID superClass) {
 		final ResourceID baseClass = getModelObject();
-		logger.info("removing super class to : " + baseClass);
+		LOGGER.info("removing super class to : " + baseClass);
 		typeManager.removeSuperClass(baseClass, superClass);
 	}
 
@@ -128,7 +128,7 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 	private static class SuperClassModel extends DerivedDetachableModel<List<SNClass>, ResourceID> {
 
 		@SpringBean
-		private ModelingConversation conversation;
+		private SemanticNetworkService service;
 
 		// ----------------------------------------------------
 
@@ -137,14 +137,11 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 			Injector.get().inject(this);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		protected List<SNClass> derive(final ResourceID base) {
-			final ResourceNode typeNode = conversation.resolve(base);
+			final ResourceNode typeNode = service.resolve(base);
 			final List<SNClass> result = new ArrayList<SNClass>();
-			result.addAll(typeNode.asClass().getDirectSuperClasses());
+			result.addAll(SNClass.from(typeNode).getDirectSuperClasses());
 			return result;
 		}
 

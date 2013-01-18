@@ -1,22 +1,19 @@
 /*
- * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.components.infovis;
 
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.common.CurrentNodeInfoPanel;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
-import org.apache.wicket.IResourceListener;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import de.lichtflut.rb.webck.config.DefaultInfoVisServicePathBuilder;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.IResource.Attributes;
-import org.apache.wicket.request.resource.ResourceStreamResource;
-import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
@@ -30,7 +27,12 @@ import org.arastreju.sge.model.nodes.ResourceNode;
  *
  * @author Oliver Tigges
  */
-public abstract class InfoVisPanel extends TypedPanel<ResourceNode> implements IResourceListener {
+public abstract class InfoVisPanel extends TypedPanel<ResourceNode> {
+
+    @SpringBean
+    private ServiceContext context;
+
+    // ----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -50,31 +52,14 @@ public abstract class InfoVisPanel extends TypedPanel<ResourceNode> implements I
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
         response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.INFOVIS_JS));
-        response.render(JavaScriptHeaderItem.forUrl(getScriptUrl()));
-        response.render(OnDomReadyHeaderItem.forScript("LFRB.InfoVis.contextPath='"
-                + RequestCycle.get().getRequest().getContextPath() + "';"));
-	}
+        response.render(JavaScriptHeaderItem.forScript(
+                "LFRB.InfoVis.contextPath='" + RequestCycle.get().getRequest().getContextPath()
+                        + "';", "LFRB.InfoVis.contextPath"));
 
-	@Override
-	public void onResourceRequested() {
-		final RequestCycle cycle = RequestCycle.get();
-		final Attributes a = new Attributes(cycle.getRequest(), cycle.getResponse(), null);
-		new ResourceStreamResource(getJsonResource()).respond(a);
-	}
-	
-	// ----------------------------------------------------
-	
-	protected abstract IResourceStream getJsonResource();
-	
-	// ----------------------------------------------------
-	
-	/**
-	 * @return The URL providing the script.
-	 */
-	protected String getScriptUrl() {
-		final PageParameters params = new PageParameters();
-		params.add("uid", System.nanoTime());
-		return urlFor(IResourceListener.INTERFACE, params).toString();
+        String serviceURI = new DefaultInfoVisServicePathBuilder()
+                .getTree(context.getDomain(), getModelObject().toURI());
+        response.render(JavaScriptHeaderItem.forScript(
+                "LFRB.InfoVis.serviceURI='" + serviceURI + "';", "LFRB.InfoVis.serviceURI"));
 	}
 
 }

@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.arastreju.sge.ModelingConversation;
+import de.lichtflut.rb.core.entity.RBFieldValue;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
@@ -56,7 +57,7 @@ public class EntityManagerImpl implements EntityManager {
 
 	private SchemaManager schemaManager;
 
-	private ModelingConversation conversation;
+	private Conversation conversation;
 
 	private DomainNamespacesHandler dnsHandler;
 
@@ -74,7 +75,7 @@ public class EntityManagerImpl implements EntityManager {
 	 * @param schemaManager
 	 * @param conversation
 	 */
-	public EntityManagerImpl(final TypeManager typeManager, final SchemaManager schemaManager, final ModelingConversation conversation) {
+	public EntityManagerImpl(final TypeManager typeManager, final SchemaManager schemaManager, final Conversation conversation) {
 		this.typeManager = typeManager;
 		this.schemaManager = schemaManager;
 		this.conversation = conversation;
@@ -82,6 +83,9 @@ public class EntityManagerImpl implements EntityManager {
 
 	// -----------------------------------------------------
 
+	/**
+	 * @return An entity, or <code>null</code> if none found
+	 */
 	@Override
 	public RBEntityImpl find(final ResourceID resourceID) {
 		return find(resourceID, true);
@@ -91,9 +95,9 @@ public class EntityManagerImpl implements EntityManager {
 	public RBEntity create(final ResourceID type) {
 		final ResourceSchema schema = schemaManager.findSchemaForType(type);
 		if (schema != null) {
-			return new RBEntityImpl(newEntityNode(), schema);
+			return new RBEntityImpl(newEntityNode(), schema).markTransient();
 		} else {
-			return new RBEntityImpl(newEntityNode(), type);
+			return new RBEntityImpl(newEntityNode(), type).markTransient();
 		}
 	}
 
@@ -101,6 +105,9 @@ public class EntityManagerImpl implements EntityManager {
 	public void store(final RBEntity entity) {
 		final ResourceNode node = entity.getNode();
 		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
+        if (entity.getType() == null) {
+            throw new IllegalStateException("Entity has no type, will not save it.");
+        }
 		for (RBField field : entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.assure(node, field.getPredicate(), nodes);
@@ -137,17 +144,17 @@ public class EntityManagerImpl implements EntityManager {
 
 	@Override
 	public void changeType(final RBEntity entity, final ResourceID type) {
-		final ModelingConversation mc = conversation;
-		final ResourceNode node = mc.resolve(entity.getID());
+		final ResourceNode node = conversation.resolve(entity.getID());
 		SNOPS.remove(node, RDF.TYPE, entity.getType());
+        SNOPS.remove(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, type);
+        SNOPS.associate(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, type);
 	}
 
 	@Override
 	public void delete(final ResourceID entityID) {
-		final ModelingConversation mc = conversation;
-		final ResourceNode node = mc.resolve(entityID);
-		mc.remove(node);
+		final ResourceNode node = conversation.resolve(entityID);
+        conversation.remove(node);
 	}
 
 	// -- INJECTED DEPENDENCIES ---------------------------
@@ -160,7 +167,7 @@ public class EntityManagerImpl implements EntityManager {
 		this.schemaManager = schemaManager;
 	}
 
-	public void setConversation(final ModelingConversation conversation) {
+	public void setConversation(final Conversation conversation) {
 		this.conversation = conversation;
 	}
 
@@ -181,6 +188,7 @@ public class EntityManagerImpl implements EntityManager {
 		final ResourceID type = typeManager.getTypeOfResource(node);
 		final RBEntityImpl entity;
 		if (type == null) {
+            LOGGER.warn("RBEntity has no type: " + node);
 			entity = new RBEntityImpl(node);
 		} else {
 			final ResourceSchema schema = schemaManager.findSchemaForType(type.asResource());
@@ -200,7 +208,8 @@ public class EntityManagerImpl implements EntityManager {
 	 */
 	private Collection<SemanticNode> toSemanticNodes(final RBField field) {
 		final Collection<SemanticNode> result = new ArrayList<SemanticNode>();
-		for (Object value : field.getValues()) {
+		for (RBFieldValue fieldValue : field.getValues()) {
+            Object value = fieldValue.getValue();
 			LOGGER.info(field.getPredicate() + " : " + value);
 			if (value == null) {
 				// ignore
@@ -232,28 +241,29 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	private void resolveEntityReferences(final RBField field) {
-		for (int i = 0; i < field.getSlots(); i++) {
-			ResourceID id = (ResourceID) field.getValue(i);
-			if (id != null) {
-				field.setValue(i, conversation.resolve(id));
-			}
-		}
+        for (RBFieldValue fieldValue : field.getValues()) {
+            ResourceID id = (ResourceID) fieldValue.getValue();
+            if (id != null) {
+                fieldValue.setValue(conversation.resolve(id));
+            }
+        }
 	}
 
 	private void resolveEmbeddedEntityReferences(final RBField field) {
-		for (int i = 0; i < field.getSlots(); i++) {
-			final Object value = field.getValue(i);
-			if (value instanceof RBEntity) {
-				// everything O.K.
-			} else if (value instanceof ResourceID) {
-				ResourceID id = (ResourceID) value;
-				field.setValue(i, find(id, false));
-			}
-		}
+        for (RBFieldValue fieldValue : field.getValues()) {
+            Object value = fieldValue.getValue();
+            if (value instanceof RBEntity) {
+                // everything O.K.
+            } else if (value instanceof ResourceID) {
+                ResourceID id = (ResourceID) value;
+                fieldValue.setValue(find(id, false));
+            }
+        }
 	}
 
 	private void storeEmbeddeds(final RBField field) {
-		for (Object value : field.getValues()) {
+		for (RBFieldValue fieldValue : field.getValues()) {
+            Object value = fieldValue.getValue();
 			if (value instanceof RBEntity) {
 				RBEntity entity = (RBEntity) value;
 				store(entity);

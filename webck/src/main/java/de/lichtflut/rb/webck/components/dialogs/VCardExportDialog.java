@@ -5,7 +5,6 @@ package de.lichtflut.rb.webck.components.dialogs;
 
 
 import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.entity.RBEntity;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -55,7 +54,7 @@ public class VCardExportDialog extends AbstractRBDialog implements IResourceList
 	
 	private final IModel<String> format;
 
-	private final IModel<RBEntity> entityModel;
+	private final IModel<ResourceNode> nodeModel;
 	
 	// ----------------------------------------------------
 
@@ -63,9 +62,9 @@ public class VCardExportDialog extends AbstractRBDialog implements IResourceList
 	 * @param id
 	 */
 	@SuppressWarnings("rawtypes")
-	public VCardExportDialog(final String id, final IModel<RBEntity> model) {
+	public VCardExportDialog(final String id, final IModel<ResourceNode> model) {
 		super(id);
-		this.entityModel = model;
+		this.nodeModel = model;
 		
 		format = new Model<String>("vCard 3.0");
 		resource = prepareResource(format);
@@ -94,14 +93,11 @@ public class VCardExportDialog extends AbstractRBDialog implements IResourceList
 	
 	// -- IResourceListener -------------------------------
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void onResourceRequested() {
 		final RequestCycle cycle = RequestCycle.get();
 		final Attributes a = new Attributes(cycle.getRequest(), cycle.getResponse(), null);
-		resource.setFileName(getFilename(entityModel.getObject().getNode()));
+		resource.setFileName(getFilename(nodeModel.getObject()));
 		resource.respond(a);
 	}
 	
@@ -163,20 +159,17 @@ public class VCardExportDialog extends AbstractRBDialog implements IResourceList
 			this.format = format;
 		}
 		
-		/** 
-		* {@inheritDoc}
-		*/
 		@Override
 		public InputStream getInputStream() throws ResourceStreamNotFoundException {
 			final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			try {
 				
-				final RBEntity entity = entityModel.getObject();
+				final ResourceNode node = nodeModel.getObject();
 				
 				if ("vCard 3.0".equalsIgnoreCase(format.getObject())){
-					write30(entity.getNode(), buffer);
+					write30(node, buffer);
 				} else if ("vCard 2.1".equalsIgnoreCase(format.getObject())){
-					write21(entity.getNode(), buffer);
+					write21(node, buffer);
 				} else {
 					throw new IllegalArgumentException("Format not yet supported: " + format.getObject());
 				}

@@ -1,13 +1,15 @@
 package de.lichtflut.rb.core.services.impl;
 
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.context.Context;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.naming.QualifiedName;
-
 import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
+import org.arastreju.sge.Conversation;
+import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.Statement;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.naming.QualifiedName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -21,6 +23,8 @@ import de.lichtflut.rb.core.services.SemanticNetworkService;
  * @author Oliver Tigges
  */
 public class SemanticNetworkServiceImpl implements SemanticNetworkService {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(SemanticNetworkServiceImpl.class);
 
 	private final ConversationFactory conversationFactory;
 
@@ -39,7 +43,7 @@ public class SemanticNetworkServiceImpl implements SemanticNetworkService {
 
 	@Override
 	public ResourceNode resolve(final ResourceID rid, final Context... contexts) {
-        ModelingConversation conversation = conversationFactory.startConversation();
+        Conversation conversation = conversationFactory.startConversation();
         conversation.getConversationContext().setReadContexts(contexts);
         try {
             return conversation.resolve(rid);
@@ -58,9 +62,21 @@ public class SemanticNetworkServiceImpl implements SemanticNetworkService {
 		conversation().attach(node);
 	}
 
-	// ----------------------------------------------------
+    @Override
+    public void add(Statement statement) {
+        LOGGER.info("Adding statement {}.", statement);
+        conversation().addStatement(statement);
+    }
 
-	private ModelingConversation conversation() {
+    @Override
+    public void remove(Statement statement) {
+        LOGGER.info("Removing statement {}.", statement);
+        conversation().removeStatement(statement);
+    }
+
+    // ----------------------------------------------------
+
+	private Conversation conversation() {
 		return conversationFactory.getConversation();
 	}
 

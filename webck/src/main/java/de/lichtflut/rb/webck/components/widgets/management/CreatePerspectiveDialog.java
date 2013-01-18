@@ -3,15 +3,14 @@
  */
 package de.lichtflut.rb.webck.components.widgets.management;
 
-import de.lichtflut.rb.core.common.Accessibility;
-import de.lichtflut.rb.core.viewspec.Perspective;
-import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
-import de.lichtflut.rb.webck.behaviors.TitleModifier;
-import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.components.dialogs.AbstractRBDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+
+import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.webck.behaviors.TitleModifier;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.components.dialogs.AbstractRBDialog;
 
 /**
  * <p>
@@ -26,30 +25,30 @@ import org.apache.wicket.model.ResourceModel;
  */
 public class CreatePerspectiveDialog extends AbstractRBDialog {
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
 	/**
-     * Constructor.
-     * @param id The component ID.
-     * @param perspective The newly initialized perspective.
-     */
-	public CreatePerspectiveDialog(String id, Perspective perspective) {
+	 * Constructor.
+	 * @param id The component ID.
+	 * @param perspective The newly initialized perspective.
+	 */
+	public CreatePerspectiveDialog(final String id, final Perspective perspective) {
 		super(id);
 
-        add(new PerspectiveEditPanel(CONTENT, new Model<Perspective>(perspective), Model.of(DisplayMode.CREATE)) {
-            @Override
-            protected void onCancel(AjaxRequestTarget target) {
-                close(target);
-            }
+		add(new PerspectiveEditPanel(CONTENT, new Model<Perspective>(perspective), Model.of(DisplayMode.CREATE)) {
+			@Override
+			protected void onCancel(final AjaxRequestTarget target) {
+				close(target);
+			}
 
-            @Override
-            protected void onSuccess(AjaxRequestTarget target) {
-                close(target);
-            }
-        });
+			@Override
+			protected void onSuccess(final AjaxRequestTarget target) {
+				close(target);
+			}
+		});
 
-        add(TitleModifier.title(new ResourceModel("title.create-perspective")));
-		
+		add(TitleModifier.title(new ResourceModel("title.create-perspective")));
+
 		setWidth(600);
 	}
 

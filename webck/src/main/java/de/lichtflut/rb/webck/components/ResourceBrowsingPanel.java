@@ -1,20 +1,16 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.components;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.defaultButtonIf;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -38,11 +34,11 @@ import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
 import de.lichtflut.rb.webck.components.entity.EntityPanel;
 import de.lichtflut.rb.webck.components.entity.IBrowsingHandler;
 import de.lichtflut.rb.webck.components.entity.LocalButtonBar;
-import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
+import de.lichtflut.rb.webck.components.relationships.RelationshipOverviewPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
-import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.basic.LoadableModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityModel;
 
 /**
@@ -56,10 +52,9 @@ import de.lichtflut.rb.webck.models.entity.RBEntityModel;
  * 
  * @author Oliver Tigges
  */
-@SuppressWarnings("rawtypes")
 public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
-	private final RBEntityModel model = new RBEntityModel();
+	private final LoadableModel<RBEntity> model = new RBEntityModel();
 
 	@SpringBean
 	private EntityManager entityManager;
@@ -76,19 +71,18 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 		add(new FeedbackPanel("feedback").setOutputMarkupId(true).setEscapeModelStrings(false));
 
-		final Form form = new Form("form");
+		final Form<?> form = new Form<Void>("form");
 		form.setOutputMarkupId(true);
 		form.setMultiPart(true);
 
-		form.add(new EntityInfoPanel("resourceInfo", model));
+		form.add(createInfoPanel("resourceInfo", model));
+		form.add(createEntityPanel("entity", model));
+		form.add(createClassifyPanel("classifier", model));
+		form.add(createLocalButtonBar("localButtonBar", model));
 
-		form.add(new EntityPanel("entity", model));
-		form.add(new ClassifyEntityPanel("classifier", model));
-
-		form.add(createLocalButtonBar());
 		form.add(new BrowsingButtonBar("browsingButtonBar", model));
 
-		form.add(new CreateRelationshipPanel("relationCreator", model).add(visibleIf(BrowsingContextModel.isInViewMode())));
+		form.add(createRelationshipPanel("relationCreator", model));
 
 		form.add(createRelationshipView("relationships", model));
 
@@ -99,9 +93,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 	// -- IBrowsingHandler --------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void createReferencedEntity(final EntityHandle handle, final ResourceID predicate) {
 		// store current entity
@@ -110,21 +101,58 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		entityManager.store(model.getObject());
 
 		// navigate to sub entity
-		final ReferenceReceiveAction action = new EntityAttributeApplyAction(model.getObject(), predicate);
+		final ReferenceReceiveAction<?> action = new EntityAttributeApplyAction(model.getObject(), predicate);
 		RBWebSession.get().getHistory().createReference(handle, action);
 	}
 
-	// ----------------------------------------------------
+	// -- OVERRIDE HOOKS ----------------------------------
 
 	protected Component createRelationshipView(final String id, final IModel<RBEntity> model) {
-		return new WebMarkupContainer(id);
+		return new RelationshipOverviewPanel(id, model).add(visibleIf(BrowsingContextModel.isInViewMode()));
+	}
+
+	protected Component createInfoPanel(final String id, final IModel<RBEntity> model) {
+		return new EntityInfoPanel(id, model);
+	}
+
+	protected Component createEntityPanel(final String id, final IModel<RBEntity> model) {
+		return new EntityPanel(id, model);
+	}
+
+	protected Component createClassifyPanel(final String id, final IModel<RBEntity> model) {
+		return new ClassifyEntityPanel(id, model);
+	}
+
+	protected Component createRelationshipPanel(final String id, final IModel<RBEntity> model) {
+		return new CreateRelationshipPanel(id, model).add(visibleIf(BrowsingContextModel.isInViewMode()));
+	}
+
+	protected LocalButtonBar createLocalButtonBar(final String id, final IModel<RBEntity> model) {
+		return new LocalButtonBar(id, model) {
+			@Override
+			protected void onSave(final IModel<RBEntity> model, final AjaxRequestTarget target, final Form<?> form) {
+				ResourceBrowsingPanel.this.onSave(model);
+				super.onSave(model, target, form);
+			}
+
+			@Override
+			protected void onError(final Map<Integer, List<RBField>> errors) {
+				String errorMessage = buildFeedbackMessage(errors);
+				error(errorMessage);
+				RBAjaxTarget.add(ResourceBrowsingPanel.this);
+			}
+		};
+	}
+
+	/**
+	 * Additional save-action.
+	 * @param model Edited entity
+	 */
+	protected void onSave(final IModel<RBEntity> model) {
 	}
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onEvent(final IEvent<?> event) {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
@@ -133,9 +161,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onConfigure() {
 		super.onConfigure();
@@ -145,40 +170,11 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 	// ------------------------------------------------------
 
-	private LocalButtonBar createLocalButtonBar() {
-		return new LocalButtonBar("localButtonBar", model) {
-			@Override
-			protected Component createSaveButton(final IModel<RBEntity> model) {
-				ConditionalModel viewMode = BrowsingContextModel.isInViewMode();
-
-				final RBStandardButton save = new RBStandardButton("save") {
-					@Override
-					protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-						Map<Integer, List<RBField>> errors = entityManager.validate(model.getObject());
-						if(errors.isEmpty()){
-							entityManager.store(model.getObject());
-							RBWebSession.get().getHistory().finishEditing();
-							send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
-						} else{
-							String errorMessage = buildFeedbackMessage(errors);
-							setDefaultFormProcessing(false);
-							error(errorMessage);
-							RBAjaxTarget.add(getFeedbackPanel());
-						}
-					}
-
-				};
-				save.add(visibleIf(not(viewMode)));
-				save.add(defaultButtonIf(not(viewMode)));
-				return save;
-			}
-		};
-	}
-
-	private Component getFeedbackPanel() {
-		return get("feedback");
-	}
-
+	/**
+	 * TODO: OT 2012-12-05 Transfer markup into HTML-Template and text into properties (not internationalizable)
+	 *
+	 * Better: create own feedback panel: http://m3g4h4rd.blogspot.de/2011/01/how-to-customize-wicket-feedback-panel.html
+	 */
 	private String buildFeedbackMessage(final Map<Integer, List<RBField>> errors) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getString("error.validation"));
@@ -197,5 +193,4 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		sb.append("</ul>");
 		return sb.toString();
 	}
-
 }

@@ -8,8 +8,10 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
+import de.lichtflut.rb.core.entity.RBFieldValue;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.NamespaceHandle;
 import org.arastreju.sge.naming.QualifiedName;
@@ -178,7 +180,8 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 				return false;
 			}
 			boolean first = true;
-			for (Object value : field.getValues()) {
+			for (RBFieldValue fieldValue : field.getValues()) {
+                Object value = fieldValue.getValue();
 				if (first) {
 					first = false;
 				} else {
@@ -203,7 +206,7 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 		if (ref instanceof ResourceID) {
 			return ResourceLabelBuilder.getInstance().getLabel((ResourceID) ref, locale);
 		} else {
-			throw new IllegalStateException("Unecpected class for resource reference: " + ref.getClass());
+			throw new IllegalStateException("Unexpected class for resource reference: " + ref.getClass());
 		}
 	}
 

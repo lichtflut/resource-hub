@@ -1,8 +1,12 @@
 /*
- * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.services;
 
+import de.lichtflut.rb.core.config.RBConfig;
+import de.lichtflut.rb.core.config.domainstatus.DomainInfo;
+import de.lichtflut.rb.core.config.domainstatus.DomainInfoContainer;
+import de.lichtflut.rb.core.config.domainstatus.DomainInfoException;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ConversationContext;
@@ -66,6 +70,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     public ModelingConversation getConversation() {
         if (conversation == null) {
             conversation = gate().startConversation();
+            conversation.getConversationContext().setReadContexts(context.getReadContexts());
         }
         assureActive(conversation);
         return conversation;
@@ -143,17 +148,46 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     private ArastrejuGate openGate() {
         final String domain = context.getDomain();
         LOGGER.debug("Opening Arastreju Gate for domain {} ", domain);
-
+        ArastrejuGate gate = null;
         final Arastreju aras = Arastreju.getInstance(context.getConfig().getArastrejuProfile());
         if (domain == null || DomainIdentifier.MASTER_DOMAIN.equals(domain)) {
-            return aras.openMasterGate();
+            gate = aras.openMasterGate();
         } else {
-            final ArastrejuGate gate = aras.openGate(domain);
-            if (context.getConfig().getDomainValidator() != null) {
-                context.getConfig().getDomainValidator().initializeDomain(gate, domain);
-            }
-            return gate;
+            gate = aras.openGate(domain);
+            ensureInitialized(gate, domain);
         }
+        return gate;
+    }
+
+    private void ensureInitialized(ArastrejuGate gate, String domain) {
+        RBConfig config = context.getConfig();
+        DomainValidator validator = config.getDomainValidator();
+        DomainInfo info = getDomainInfo(domain);
+        switch (info.getStatus()) {
+            case NEW:
+                validator.initializeDomain(gate, domain);
+                break;
+            case INITIALIZED:
+                validator.validateDomain(gate, domain);
+                break;
+            case DELETED:
+                throw new IllegalStateException("Domain " + domain + " has been deleted.");
+            default:
+                throw new IllegalStateException("Unexpected status: " + info.getStatus());
+        }
+    }
+
+    private DomainInfo getDomainInfo(String domain) {
+        DomainInfoContainer container = context.getConfig().getDomainInfoContainer();
+        DomainInfo info = container.getInfo(domain);
+        if (info == null) {
+            try {
+                info = container.registerDomain(domain);
+            } catch (DomainInfoException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return info;
     }
 
     private void assureActive(ModelingConversation conversation) {

@@ -9,6 +9,8 @@ import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.security.RBUser;
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.context.SimpleContextID;
+import org.arastreju.sge.naming.Namespace;
 
 /**
  * <p>
@@ -29,9 +31,7 @@ public class ServiceContext implements Serializable{
 	
 	private String domain = "public";
 
-    private Context[] readContexts = new Context[] {
-            RBSystem.TYPE_SYSTEM_CTX, RBSystem.VIEW_SPEC_CTX
-    };
+    private Context[] readContexts;
 
 	// ----------------------------------------------------
 	
@@ -49,6 +49,7 @@ public class ServiceContext implements Serializable{
 	public ServiceContext(RBConfig config, String domain) {
 		this(config);
 		this.domain = domain;
+        initReadContexts();
 	}
 
     /**
@@ -60,6 +61,7 @@ public class ServiceContext implements Serializable{
         this(config);
         this.domain = domain;
         this.user = user;
+        initReadContexts();
     }
 	
 	/**
@@ -103,6 +105,7 @@ public class ServiceContext implements Serializable{
 	 */
 	public void setDomain(String domain) {
 		this.domain = domain;
+        initReadContexts();
 	}
 
     public Context[] getReadContexts() {
@@ -120,13 +123,20 @@ public class ServiceContext implements Serializable{
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return user + " | " + domain;
 	}
+
+    // ----------------------------------------------------
+
+    private void initReadContexts() {
+        readContexts= new Context[] {
+                RBSystem.TYPE_SYSTEM_CTX,
+                RBSystem.VIEW_SPEC_CTX,
+                new SimpleContextID(Namespace.LOCAL_CONTEXTS, domain)
+        };
+    }
 
 
 }

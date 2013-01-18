@@ -1,18 +1,28 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.components.relationships;
 
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
+import de.lichtflut.rb.webck.components.links.CrossLink;
+import de.lichtflut.rb.webck.components.links.LabeledLink;
 import de.lichtflut.rb.webck.components.listview.ActionLink;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -33,9 +43,17 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.not;
  *
  * @author Oliver Tigges
  */
-public abstract class RelationshipListPanel extends Panel {
+public class RelationshipListPanel extends Panel {
 
-	/**
+    @SpringBean
+    private SemanticNetworkService service;
+
+    @SpringBean
+    private ResourceLinkProvider resourceLinkProvider;
+
+    // ----------------------------------------------------
+
+    /**
 	 * Constructor.
 	 * @param id The component ID.
 	 * @param model The model containing the statements.
@@ -49,22 +67,23 @@ public abstract class RelationshipListPanel extends Panel {
 				final Statement stmt = item.getModelObject();
 				item.add(new Label("role", getLabelForPredicate(stmt.getPredicate())));
 				item.add(new Label("entity", getLabelForEntity(stmt.getObject())));
-				item.add(new ActionLink("viewLink", new ResourceModel("action.view")){
-					@Override
-					public void onClick(AjaxRequestTarget target) {
-						onRelationshipSelected(item.getModelObject());
-					}
-				}.setLinkCssClass("action-view").setLinkTitle(new ResourceModel("action.view")));
+
+                CrossLink entityLink = new CrossLink(LabeledLink.LINK_ID, getLinkToEntity(stmt.getObject()));
+                LabeledLink viewLink = new LabeledLink("viewLink", entityLink, new ResourceModel("action.view"));
+                viewLink.setLinkCssClass("action-view");
+                viewLink.setLinkTitle(new ResourceModel("action.view"));
+                item.add(viewLink);
+
 				item.add(new ActionLink("removeLink", new ResourceModel("action.remove")){
 					@Override
 					public void onClick(AjaxRequestTarget target) {
 						onRelationshipRemoved(item.getModelObject());
-						onStatmentModelChanged();
+						onStatementModelChanged();
 					}
 				}.setLinkCssClass("action-delete").setLinkTitle(new ResourceModel("action.remove")));
 			}
 			
-			private void onStatmentModelChanged() {
+			private void onStatementModelChanged() {
 				removeAll();
 			}
 			
@@ -77,10 +96,11 @@ public abstract class RelationshipListPanel extends Panel {
 	}
 	
 	// ----------------------------------------------------
-	
-	public abstract void onRelationshipSelected(Statement stmt);
-	
-	public abstract void onRelationshipRemoved(Statement stmt); 
+
+    protected void onRelationshipRemoved(Statement stmt) {
+        service.remove(stmt);
+        send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
+    }
 	
 	// ----------------------------------------------------
 	
@@ -93,6 +113,14 @@ public abstract class RelationshipListPanel extends Panel {
 			return node.toString();	
 		}
 	}
+
+    protected String getLinkToEntity(final SemanticNode node) {
+        if (node != null && node.isResourceNode()) {
+            return resourceLinkProvider.getUrlToResource(node.asResource(), VisualizationMode.DETAILS, DisplayMode.VIEW);
+        } else {
+            return "";
+        }
+    }
 	
 	protected String getLabelForPredicate(final ResourceID predicate) {
 		return ResourceLabelBuilder.getInstance().getFieldLabel(predicate, getLocale());

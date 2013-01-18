@@ -5,10 +5,12 @@ package de.lichtflut.rb.webck.models;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
+import org.arastreju.sge.model.nodes.ResourceNode;
 
 import java.util.Collection;
 
@@ -116,6 +118,16 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			}
 		};
 	}
+
+    @SuppressWarnings({ "unchecked" })
+    public static ConditionalModel isNotBlank(final IModel<String> model) {
+        return new ConditionalModel(model) {
+            @Override
+            public boolean isFulfilled() {
+                return model.getObject() != null && model.getObject().trim().length() > 0;
+            }
+        };
+    }
 	
 	public static ConditionalModel<?> not(final ConditionalModel<?> model) {
 		return new ConditionalModel<Boolean>(model) {

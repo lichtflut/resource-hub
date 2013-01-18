@@ -25,11 +25,11 @@ import org.arastreju.sge.query.Query;
  */
 public class ArastrejuConversationHolder implements ModelingConversation {
 
-	private final ArastrejuResourceFactory factory;
+	private final ConversationFactory factory;
 
 	// ----------------------------------------------------
 
-	public ArastrejuConversationHolder(final ArastrejuResourceFactory factory) {
+	public ArastrejuConversationHolder(final ConversationFactory factory) {
 		this.factory = factory;
 	}
 

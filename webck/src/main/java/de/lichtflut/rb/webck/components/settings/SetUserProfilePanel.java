@@ -1,26 +1,13 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.organizer;
+package de.lichtflut.rb.webck.components.settings;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.entity.EntityHandle;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.DomainOrganizer;
-import de.lichtflut.rb.webck.common.RBWebSession;
-import de.lichtflut.rb.webck.browsing.BrowsingHistory;
-import de.lichtflut.rb.webck.browsing.JumpTarget;
-import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
-import de.lichtflut.rb.webck.browsing.ResourceAttributeApplyAction;
-import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.fields.EntityPickerField;
-import de.lichtflut.rb.webck.components.form.RBDefaultButton;
-import de.lichtflut.rb.webck.components.form.RBStandardButton;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
-import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.enableIf;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -33,16 +20,28 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.enableIf;
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.entity.EntityHandle;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.webck.browsing.BrowsingHistory;
+import de.lichtflut.rb.webck.browsing.JumpTarget;
+import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
+import de.lichtflut.rb.webck.browsing.ResourceAttributeApplyAction;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.components.form.RBDefaultButton;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
 /**
  * <p>
@@ -55,60 +54,60 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
 @SuppressWarnings("rawtypes")
 public abstract class SetUserProfilePanel extends Panel {
 
-	private final IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
-	private IModel<Boolean> hasProfile;
-	private IModel<ResourceNode> userModel;
-	private IModel<ResourceID> profileModel;
-	private IModel<ResourceID> entityPickerModel;
 
 	@SpringBean
 	private DomainOrganizer domainOrganizer;
-	
-	@SpringBean
-	private ModelingConversation conversation;
-	
+
+	private final SimpleResourceID defaultProfileModel = new SimpleResourceID("No Profile set");
+	private final IModel<DisplayMode> mode = new Model<DisplayMode>(DisplayMode.VIEW);
+	private IModel<Boolean> hasProfile;
+	private IModel<ResourceNode> userModel;
+	private AbstractLoadableModel<ResourceID> profileModel;
+	private IModel<ResourceID> entityPickerModel;
+
 	// ---------------- Constructor -------------------------
-	
+
 	/**
 	 * Constructor.
 	 * @param id - wicket:id
 	 * @param user The user.
 	 */
-	public SetUserProfilePanel(String id, final IModel<RBUser> user) {
+	public SetUserProfilePanel(final String id, final IModel<RBUser> user) {
 		super(id, user);
 		initUserModel(user);
 		initProfileModel();
 		initHasProfileModel();
-		
+
 		final Form form = new Form("form");
 		populateForm(form);
-		
+
 		add(form);
+		setOutputMarkupId(true);
 	}
 
 	// ------------------------------------------------------
-	
+
 	/**
 	 * Calls the {@link WebPage} to edit a resource.
 	 * @param handle
 	 */
 	protected abstract void jumpToResourceEditorPage(EntityHandle handle);
-	
+
 	/**
 	 * Action to perform when resourcelink is clicked.
 	 * @param node
 	 */
 	protected abstract void onResourceLinkClicked(ResourceNode node);
-	
+
 	// ------------------------------------------------------
-	
+
 	/**
 	 * @return the {@link WebPage} that displays a users' profile
 	 */
 	protected Class<? extends Page> getOffsetPage() {
 		return getPage().getPageClass();
 	}
-	
+
 	// ----------------------------------------------------
 
 	/**
@@ -122,7 +121,7 @@ public abstract class SetUserProfilePanel extends Panel {
 				if (person != null) {
 					return person;
 				} else {
-					return new SimpleResourceID("No Profile set");
+					return defaultProfileModel;
 				}
 			}
 		};
@@ -145,10 +144,14 @@ public abstract class SetUserProfilePanel extends Panel {
 	 * @param user
 	 */
 	private void initUserModel(final IModel<RBUser> user) {
-		this.userModel = new AbstractLoadableModel<ResourceNode>() {
+		userModel = new AbstractLoadableModel<ResourceNode>() {
 			@Override
 			public ResourceNode load() {
-				return conversation.findResource(user.getObject().getQualifiedName());
+				ResourceID usersPerson = domainOrganizer.getUsersPerson();
+				if(usersPerson == null){
+					return null;
+				}
+				return usersPerson.asResource();
 			}
 		};
 	}
@@ -218,39 +221,40 @@ public abstract class SetUserProfilePanel extends Panel {
 	private AjaxSubmitLink createCreateLink() {
 		final AjaxSubmitLink link = new AjaxSubmitLink("createLink") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				final EntityHandle handle = EntityHandle.forType(RB.PERSON);
 				final ReferenceReceiveAction action = new ResourceAttributeApplyAction(
-					userModel.getObject(), RBSystem.IS_RESPRESENTED_BY);
+						userModel.getObject(), RBSystem.IS_RESPRESENTED_BY);
 				getHistory().clear(new JumpTarget(getOffsetPage()));
 				getHistory().createReference(handle, action);
 				jumpToResourceEditorPage(handle);
 			}
-			
+
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
+			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
 				target.add(SetUserProfilePanel.this);
 			}
 		};
 		link.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
 		return link;
 	}
-	
+
 	/**
 	 * @return an {@link AjaxSubmitLink} that removes the current Profile association.
 	 */
 	private AjaxSubmitLink createDeleteLink() {
 		final AjaxSubmitLink link = new AjaxSubmitLink("deleteLink") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				if(profileModel.getObject() != null){
-					SNOPS.remove(userModel.getObject(), RBSystem.IS_RESPRESENTED_BY, profileModel.getObject());
+			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+				if(profileModel.getObject() != defaultProfileModel){
+					domainOrganizer.setUsersPerson(null);
 					mode.setObject(DisplayMode.VIEW);
+					profileModel.reset();
 					RBAjaxTarget.add(form);
 				}
 			}
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form) {
+			protected void onError(final AjaxRequestTarget target, final Form<?> form) {
 				RBAjaxTarget.add(SetUserProfilePanel.this);
 			}
 		};
@@ -261,10 +265,10 @@ public abstract class SetUserProfilePanel extends Panel {
 	/**
 	 * Create edit-button.
 	 */
-	private AjaxButton createEditButton(String id, Form form) {
+	private AjaxButton createEditButton(final String id, final Form form) {
 		AjaxButton edit = new RBStandardButton(id) {
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form){
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form){
 				mode.setObject(DisplayMode.EDIT);
 				RBAjaxTarget.add(form);
 			}
@@ -276,10 +280,10 @@ public abstract class SetUserProfilePanel extends Panel {
 	/**
 	 * Create save-button.
 	 */
-	protected AjaxButton createSaveButton(String id, final Form<?> form) {
+	protected AjaxButton createSaveButton(final String id, final Form<?> form) {
 		final AjaxButton save = new RBDefaultButton(id) {
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form){
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form){
 				domainOrganizer.setUsersPerson(entityPickerModel.getObject());
 				mode.setObject(DisplayMode.VIEW);
 				RBAjaxTarget.add(form);
@@ -288,14 +292,14 @@ public abstract class SetUserProfilePanel extends Panel {
 		save.add(visibleIf(areEqual(mode, DisplayMode.EDIT)));
 		return save;
 	}
-	
+
 	private BrowsingHistory getHistory(){
 		return RBWebSession.get().getHistory();
 	}
-	
+
 	// ------------------------------------------------------
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override

@@ -3,18 +3,19 @@
  */
 package de.lichtflut.rb.webck.models;
 
+import java.util.Set;
+
+import org.apache.wicket.Session;
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.user.UserPermissionModel;
-import org.apache.wicket.Session;
-import org.apache.wicket.injection.Injector;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-
-import java.util.Set;
 
 /**
  * <p>
@@ -32,7 +33,7 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 	public static IModel<String> displayNameModel() {
 		return new DerivedDetachableModel<String, RBUser>(new CurrentUserModel()) {
 			@Override
-			protected String derive(RBUser user) {
+			protected String derive(final RBUser user) {
 				return user.getName();
 			}
 
@@ -43,15 +44,19 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 		};
 	}
 
+	/**
+	 * Checks whether the current user is logged.
+	 * @return {@link ConditionalModel} true if user is logged in, false if not
+	 */
 	public static ConditionalModel<RBUser> isLoggedIn() {
 		return new ConditionalModel<RBUser>() {
 			@Override
 			public boolean isFulfilled() {
-				 return Session.exists() && RBWebSession.get().isAuthenticated();
+				return Session.exists() && RBWebSession.get().isAuthenticated();
 			}
 		};
 	}
-	
+
 	/**
 	 * Creates a new model for testing if a user has a specific permission.
 	 * @param name The permission's name.
@@ -68,7 +73,7 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 
 	// ----------------------------------------------------
 
-	@SpringBean 
+	@SpringBean
 	private ServiceContext context;
 
 	// ----------------------------------------------------
@@ -85,6 +90,7 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public RBUser load() {
 		return context.getUser();
 	}

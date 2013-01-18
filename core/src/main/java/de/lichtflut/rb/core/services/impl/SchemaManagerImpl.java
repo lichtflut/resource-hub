@@ -6,10 +6,11 @@ package de.lichtflut.rb.core.services.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import de.lichtflut.rb.core.schema.writer.rsf.RsfWriter;
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
@@ -39,6 +41,7 @@ import de.lichtflut.rb.core.schema.persistence.SNConstraint;
 import de.lichtflut.rb.core.schema.persistence.SNPropertyDeclaration;
 import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 import de.lichtflut.rb.core.schema.persistence.Schema2GraphBinding;
+import de.lichtflut.rb.core.schema.writer.rsf.RsfWriter;
 import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SchemaExporter;
 import de.lichtflut.rb.core.services.SchemaImporter;
@@ -149,6 +152,17 @@ public class SchemaManagerImpl implements SchemaManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	public Map<Integer, List<PropertyDeclaration>> validate(final ResourceSchema schema){
+		Map<Integer, List<PropertyDeclaration>> errors = new HashMap<Integer, List<PropertyDeclaration>>();
+		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+			validateSingleProperty(decl, errors);
+		}
+		return errors;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void removeSchemaForType(final ResourceID type) {
 		final SNResourceSchema existing = findSchemaNodeByType(type);
@@ -205,11 +219,11 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	@Override
 	public SchemaExporter getExporter(final String format) {
-        if ("RSF".equalsIgnoreCase(format.trim())) {
-            return new SchemaExporterImpl(this, new RsfWriter());
-        } else {
-            throw new NotYetSupportedException("Unsupported format: " + format);
-        }
+		if ("RSF".equalsIgnoreCase(format.trim())) {
+			return new SchemaExporterImpl(this, new RsfWriter());
+		} else {
+			throw new NotYetSupportedException("Unsupported format: " + format);
+		}
 	}
 
 	// -----------------------------------------------------
@@ -268,7 +282,7 @@ public class SchemaManagerImpl implements SchemaManager {
 		}
 		// 2nd: check properties
 		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
-			final SNProperty property = mc.resolve(decl.getPropertyDescriptor()).asResource().asProperty();
+			final SNProperty property = SNProperty.from(mc.resolve(decl.getPropertyDescriptor()));
 			if (!property.isSubPropertyOf(RDF.PROPERTY)) {
 				SNOPS.associate(property, RDF.TYPE, RDF.PROPERTY);
 			}
@@ -281,6 +295,35 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	private Query query() {
 		return conversation().createQuery();
+	}
+
+	/**
+	 * Validates a single PropertyDeclarations
+	 * @param decl
+	 * @param errors
+	 */
+	private void validateSingleProperty(final PropertyDeclaration decl, final Map<Integer, List<PropertyDeclaration>> errors) {
+		if(null != decl.getConstraint()){
+			if((Datatype.RESOURCE.equals(decl.getDatatype()) && decl.getConstraint().isLiteral())
+					|| (!Datatype.RESOURCE.equals(decl.getDatatype()) && !decl.getConstraint().isLiteral())){
+				appendError(errors, ErrorCodes.SCHEMA_CONSTRAINT_EXCEPTION, decl);
+			}
+		}
+	}
+
+	/**
+	 * @param errors
+	 * @param exception
+	 * @param declaration
+	 */
+	private void appendError(final Map<Integer, List<PropertyDeclaration>> errors, final int errorCode, final PropertyDeclaration declaration) {
+		if(errors.containsKey(errorCode)){
+			errors.get(errorCode).add(declaration);
+		}else{
+			List<PropertyDeclaration> fields = new ArrayList<PropertyDeclaration>();
+			fields.add(declaration);
+			errors.put(errorCode, fields);
+		}
 	}
 
 }

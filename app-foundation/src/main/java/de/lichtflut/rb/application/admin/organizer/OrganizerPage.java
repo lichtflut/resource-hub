@@ -20,7 +20,7 @@ import de.lichtflut.rb.core.services.DomainOrganizer;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.dialogs.CreateContextDialog;
 import de.lichtflut.rb.webck.components.dialogs.CreateNamespaceDialog;
-import de.lichtflut.rb.webck.components.organizer.ContextOverviewPanel;
+import de.lichtflut.rb.webck.components.organizer.contexts.ContextOverviewPanel;
 import de.lichtflut.rb.webck.components.organizer.NamespaceOverviewPanel;
 import de.lichtflut.rb.webck.components.organizer.SetDomainOrganizationPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;

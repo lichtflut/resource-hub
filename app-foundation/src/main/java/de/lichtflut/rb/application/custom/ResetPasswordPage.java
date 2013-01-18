@@ -7,7 +7,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
 import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.application.pages.AbstractBasePage;
-import de.lichtflut.rb.webck.components.organizer.ResetPasswordPanel;
+import de.lichtflut.rb.webck.components.settings.ResetPasswordPanel;
 
 /**
  * <p>

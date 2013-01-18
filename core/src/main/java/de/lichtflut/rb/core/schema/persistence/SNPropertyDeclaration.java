@@ -260,7 +260,10 @@ public class SNPropertyDeclaration extends ResourceView {
 			sb.append(getPropertyDescriptor().toURI());
 		}
 		sb.append(" ").append(getMinOccurs()).append("..").append(getMaxOccurs());
-		sb.append("\n\t\t").append(getConstraint());
+		SNConstraint constraint = getConstraint();
+		//if(constraint!=null){
+		    sb.append("\n\t\t").append(getConstraint());
+		//}
 		return sb.toString();
 	}
 

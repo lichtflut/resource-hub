@@ -3,7 +3,11 @@
  */
 package de.lichtflut.rb.core.config;
 
+import de.lichtflut.rb.core.config.domainstatus.DomainInfoContainer;
+import de.lichtflut.rb.core.config.domainstatus.DomainInfoException;
+import de.lichtflut.rb.core.config.domainstatus.LocalFileBasedDomainInfoContainer;
 import de.lichtflut.rb.core.eh.ConfigurationException;
+import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.security.SecurityConfiguration;
 import de.lichtflut.rb.core.services.DomainValidator;
 import org.arastreju.sge.ArastrejuProfile;
@@ -45,10 +49,12 @@ public class RBConfig {
     private EmailConfiguration emailConfiguration;
 
     private SecurityConfiguration securityConfiguration;
-
+    
     private FileServiceConfiguration fileServiceConfiguration;
 
     private DomainValidator domainValidator;
+
+    private DomainInfoContainer domainInfoContainer;
 
 	// -----------------------------------------------------
 
@@ -62,6 +68,12 @@ public class RBConfig {
 		this.appName = appName;
         this.workDir = checkWorkDir(appName);
         this.dataStoreConfig = new DataStoreConfiguration(workDir, appName);
+        try {
+            this.domainInfoContainer = new LocalFileBasedDomainInfoContainer(workDir);
+        } catch (DomainInfoException e) {
+            throw new ConfigurationException(ErrorCodes.DOMAIN_INFO_COULD_NOT_BE_READ,
+                    "Domain info container failed.", e);
+        }
     }
 
 	// -----------------------------------------------------
@@ -104,12 +116,16 @@ public class RBConfig {
         return fileServiceConfiguration;
     }
 
+    public DomainInfoContainer getDomainInfoContainer() {
+        return domainInfoContainer;
+    }
+
     // ----------------------------------------------------
 
     public void setEmailConfiguration(EmailConfiguration emailConfiguration) {
         this.emailConfiguration = emailConfiguration;
     }
-
+    
     public void setSecurityConfiguration(SecurityConfiguration securityConfiguration) {
         this.securityConfiguration = securityConfiguration;
     }

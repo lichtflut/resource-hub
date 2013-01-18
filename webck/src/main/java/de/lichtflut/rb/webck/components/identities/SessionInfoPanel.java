@@ -4,6 +4,7 @@ import de.lichtflut.rb.webck.common.CookieAccess;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.protocol.http.WebSession;
 
 /**
  * <p>
@@ -24,7 +25,20 @@ public class SessionInfoPanel extends Panel {
         String ticket = CookieAccess.getInstance().getSessionToken();
         add(new Label("ticket", ticket));
 
+        add(new Label("sessionSize", calcSessionSize()));
+
         setVisible(Application.get().usesDevelopmentConfig());
+    }
+
+    // ----------------------------------------------------
+
+    private String calcSessionSize() {
+        if (!WebSession.exists()) {
+            return "0";
+        }
+
+        WebSession webSession = WebSession.get();
+        return webSession.getSizeInBytes() + " bytes";
     }
 
 }

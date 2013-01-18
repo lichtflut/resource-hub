@@ -24,7 +24,7 @@ public class RBButtonBar extends Panel{
 	/**
 	 * Constructor
 	 */
-	public RBButtonBar(String id) {
+	public RBButtonBar(final String id) {
 		super(id);
 		add(createDeleteButton());
 		add(createCancelButton());
@@ -32,41 +32,44 @@ public class RBButtonBar extends Panel{
 	}
 
 	// ------------------------------------------------------
-	
-	protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-		
+
+	protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+
 	}
 
-	protected void onDelete(AjaxRequestTarget target, Form<?> form) {
-		
+	protected void onDelete(final AjaxRequestTarget target, final Form<?> form) {
+
 	}
 
-	protected void onCancel(AjaxRequestTarget target, Form<?> form) {
-		
+	protected void onCancel(final AjaxRequestTarget target, final Form<?> form) {
+
 	}
-	
-	private boolean setSubmitVisibility() {
-		return true;
+
+	public RBButtonBar setSubmitVisibility(final boolean visibility) {
+		get("save").setVisibilityAllowed(visibility);
+		return this;
 	}
-	
-	private boolean setCancelVisibility() {
-		return true;
+
+	public RBButtonBar setCancelVisibility(final boolean visibility) {
+		get("cancel").setVisibilityAllowed(visibility);
+		return this;
 	}
-	
-	private boolean setDeleteVisibility() {
-		return true;
+
+	public RBButtonBar setDeleteVisibility(final boolean visibility) {
+		get("delete").setVisibilityAllowed(visibility);
+		return this;
 	}
-	
+
 	// ------------------------------------------------------
-	
+
 	private Component createSubmitButton() {
 		RBStandardButton submit= new RBStandardButton("save") {
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				RBButtonBar.this.onSubmit(target, form);
 			}
 		};
-		submit.setVisible(setSubmitVisibility());
+		//		submit.setVisible(setSubmitVisibility(true));
 		return submit;
 	}
 
@@ -74,23 +77,23 @@ public class RBButtonBar extends Panel{
 	private Component createCancelButton() {
 		RBCancelButton cancel = new RBCancelButton("cancel"){
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				onCancel(target, form);
 			}
 		};
-		cancel.setVisible(setCancelVisibility());
+		//		cancel.setVisible(setCancelVisibility());
 		return cancel;
 	}
 
 	private Component createDeleteButton() {
 		RBDefaultButton delete = new RBDefaultButton("delete") {
 			@Override
-			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
+			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				onDelete(target, form);
 			}
 		};
-		delete.setVisible(setDeleteVisibility());
+		//		delete.setVisible(setDeleteVisibility());
 		return delete;
 	}
-	
+
 }

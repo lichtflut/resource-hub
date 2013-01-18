@@ -34,6 +34,10 @@ public class CssModifier {
 		return new AttributeAppender("class", cssClass, " ");
 	}
 
+    public static Behavior appendClass(final String cssClass) {
+        return new AttributeAppender("class", Model.of(cssClass), " ");
+    }
+
     public static Behavior appendStyle(String style) {
         return new AttributeAppender("style", Model.of(style), ";");
     }

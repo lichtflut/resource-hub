@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.components.infovis.flowchart;
 
@@ -47,9 +47,6 @@ public class FlowChartPanel extends InfoVisPanel {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
@@ -61,10 +58,6 @@ public class FlowChartPanel extends InfoVisPanel {
         ));
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
 	protected IResourceStream getJsonResource() {
 		final FlowChartModel model = new FlowChartModel(modeler).add(nodeSet.getObject());
 		return new FlowChartJsonStream(model, getLocale());
@@ -72,9 +65,6 @@ public class FlowChartPanel extends InfoVisPanel {
 
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onDetach() {
 		super.onDetach();

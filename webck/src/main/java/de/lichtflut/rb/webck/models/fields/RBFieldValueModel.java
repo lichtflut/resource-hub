@@ -4,7 +4,9 @@
 package de.lichtflut.rb.webck.models.fields;
 
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.RBFieldValue;
 import org.apache.wicket.model.IModel;
+import org.arastreju.sge.model.nodes.SemanticNode;
 
 /**
  * <p>
@@ -16,11 +18,9 @@ import org.apache.wicket.model.IModel;
  * </p>
  *
  * @author Ravi Knox
- *
- * @param <T> -
  */
 @SuppressWarnings("serial")
-public class RBFieldValueModel<T> implements IModel<T> {
+public class RBFieldValueModel implements IModel<Object> {
 
 	private final RBField field;
 	
@@ -44,22 +44,23 @@ public class RBFieldValueModel<T> implements IModel<T> {
 	
 	// -----------------------------------------------------
 	
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public T getObject() {
-		return (T) field.getValue(index);
-	}
+	public Object getObject() {
+        RBFieldValue fieldValue = getFieldValue();
+        if (fieldValue != null) {
+            return fieldValue.getValue();
+        } else {
+            return null;
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public void setObject(final T object) {
-		field.setValue(index, object);
+	public void setObject(final Object object) {
+        RBFieldValue fieldValue = getFieldValue();
+        if (fieldValue != null) {
+            getFieldValue().setValue(object);
+        }
 	}
 	
 	/**
@@ -69,9 +70,14 @@ public class RBFieldValueModel<T> implements IModel<T> {
 		return index;
 	}
 
-	public RBField getField(){
+	public RBField getField() {
 		return field;
 	}
+
+    public RBFieldValue getFieldValue() {
+        return field.getValue(index);
+    }
+
 	// -----------------------------------------------------
 	
 	@Override

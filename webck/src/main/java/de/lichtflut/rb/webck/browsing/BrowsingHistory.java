@@ -3,17 +3,18 @@
  */
 package de.lichtflut.rb.webck.browsing;
 
-import de.lichtflut.rb.core.entity.EntityHandle;
+import java.io.Serializable;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.concurrent.LinkedBlockingDeque;
+
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.concurrent.LinkedBlockingDeque;
+import de.lichtflut.rb.core.entity.EntityHandle;
 
 /**
  * <p>
@@ -27,24 +28,24 @@ import java.util.concurrent.LinkedBlockingDeque;
  * @author Oliver Tigges
  */
 public class BrowsingHistory implements Serializable {
-	
-	private final Logger logger = LoggerFactory.getLogger(BrowsingHistory.class);
-	
-	private Deque<EntityBrowsingStep> stack = new LinkedBlockingDeque<EntityBrowsingStep>(200);
-	
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(BrowsingHistory.class);
+
+	private final Deque<EntityBrowsingStep> stack = new LinkedBlockingDeque<EntityBrowsingStep>(200);
+
 	private JumpTarget offset;
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * Default constructor.
 	 */
 	public BrowsingHistory() {
 		clear(new JumpTarget(Application.get().getHomePage()));
 	}
-	
+
 	// -- ACCESS THE STACK --------------------------------
-	
+
 	/**
 	 * Get the top element on the stack.
 	 * @return The top element or null if the stack is empty.
@@ -56,7 +57,7 @@ public class BrowsingHistory implements Serializable {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Get an iterator over the steps on the stack beginning with top.
 	 * @return The iterator.
@@ -73,48 +74,48 @@ public class BrowsingHistory implements Serializable {
 	}
 
 	// -- CLEAR -------------------------------------------
-	
+
 	/**
 	 * Clear the stack and set the offset element, which will be activated if the stack is empty
 	 * and back() is called.
 	 * @param offset The element to return.
 	 */
-	public void clear(JumpTarget offset) {
+	public void clear(final JumpTarget offset) {
 		stack.clear();
 		this.offset = offset;
 	}
 
 	// -- PROCEED -----------------------------------------
-	
+
 	/**
 	 * Add a element on the stack to be viewed.
 	 * @param handle The handle representing the entity.
 	 */
-	public void view(EntityHandle handle) {
+	public void view(final EntityHandle handle) {
 		rollbackEditingSteps();
 		removeExisting(handle);
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.VIEW));
-		logger.debug("Browsing to " + handle + "  ----  " + this);
+		LOGGER.debug("Browsing to " + handle + "  ----  " + this);
 	}
-	
+
 	/**
 	 * Add a element on the stack to be edited.
 	 * @param handle The handle representing the entity.
 	 */
-	public void edit(EntityHandle handle) {
+	public void edit(final EntityHandle handle) {
 		rollbackEditingSteps();
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.EDIT));
-		logger.debug("Creating " + handle + "  ----  " + this);
+		LOGGER.debug("Creating " + handle + "  ----  " + this);
 	}
-	
+
 	/**
-	 * Add a element on the stack to be created.
+	 * Add a EntityBrowsingStep-element on the stack to be created.
 	 * @param handle The handle representing the entity.
 	 */
-	public void create(EntityHandle handle) {
+	public void create(final EntityHandle handle) {
 		rollbackEditingSteps();
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.CREATE));
-		logger.debug("Creating " + handle + "  ----  " + this);
+		LOGGER.debug("Creating " + handle + "  ----  " + this);
 	}
 
 	/**
@@ -122,13 +123,13 @@ public class BrowsingHistory implements Serializable {
 	 * @param handle The handle representing the entity.
 	 * @param actions The actions that will receive the created entity.
 	 */
-	public void createReference(EntityHandle handle, ReferenceReceiveAction<?>... actions) {
+	public void createReference(final EntityHandle handle, final ReferenceReceiveAction<?>... actions) {
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.CREATE_REFERENCE, actions));
-		logger.debug("Creating sub reference " + this);
+		LOGGER.debug("Creating sub reference " + this);
 	}
-	
+
 	// --- STEP BACK --------------------------------------
-	
+
 	/**
 	 * Step back. If the stack is empty, activate the offset.
 	 */
@@ -140,9 +141,9 @@ public class BrowsingHistory implements Serializable {
 		}
 		return BrowsingResponse.CONTINUE;
 	}
-	
+
 	/**
-	 * Step back, but don't go to offset. If the stack will be empty, show the last entity in VIEW mode. 
+	 * Step back, but don't go to offset. If the stack will be empty, show the last entity in VIEW mode.
 	 */
 	public BrowsingResponse finishEditing() {
 		final EntityBrowsingStep last = stack.pop();
@@ -152,18 +153,18 @@ public class BrowsingHistory implements Serializable {
 		}
 		return BrowsingResponse.CONTINUE;
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("Browsing History\n");
 		sb.append("  stack: ").append(stack).append("\n");
 		return sb.toString();
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * Rollback all create and edit steps, until only view steps are on the stack.
 	 */
@@ -172,13 +173,13 @@ public class BrowsingHistory implements Serializable {
 			stack.pop();
 		}
 	}
-	
-	private void removeExisting(EntityHandle handle) {
+
+	private void removeExisting(final EntityHandle handle) {
 		for (EntityBrowsingStep step : stack) {
 			if (step.getHandle().equals(handle)) {
 				stack.remove(step);
 			}
 		}
 	}
-	
+
 }

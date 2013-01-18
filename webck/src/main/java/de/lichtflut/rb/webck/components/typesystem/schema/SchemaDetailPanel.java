@@ -94,7 +94,7 @@ public class SchemaDetailPanel extends Panel {
 
 		Form<?> form = new Form<Void>("form");
 		form.add(createLabelExpressionBuilder());
-		form.add(createSchemaListView("listView", this.schema));
+		form.add(createSchemaPropertyListView("listView", this.schema));
 
 		form.add(new FeedbackPanel("feedback-top"));
 		form.add(new FeedbackPanel("feedback-bottom"));
@@ -154,14 +154,15 @@ public class SchemaDetailPanel extends Panel {
 	 * Adds Delete, Add, Save Buttons to the component
 	 */
 	private void addButtonBar(final Form<?> form) {
-		form.add(createSaveButton("saveButton"));
 		form.add(createAddbutton("addButton"));
-		form.add(createDeleteButton("deleteButton"));
+		form.add(createSaveButton("saveButton"));
+		form.add(createDeleteTypeButton("deleteButton"));
 	}
 
 	// ------------------------------------------------------
 
-	private Component createSchemaListView(final String id, final IModel<ResourceSchema> schema) {
+	private Component createSchemaPropertyListView(final String id, final IModel<ResourceSchema> schema) {
+
 		listModel = new PropertyRowListModel(schema);
 		ListView<PropertyRow> view = new ListView<PropertyRow>(id, listModel) {
 			@Override
@@ -174,7 +175,7 @@ public class SchemaDetailPanel extends Panel {
 		return view;
 	}
 
-	private Component createDeleteButton(final String id) {
+	private Component createDeleteTypeButton(final String id) {
 		Button button = new RBStandardButton(id) {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
@@ -437,7 +438,8 @@ public class SchemaDetailPanel extends Panel {
 		item.add(new AjaxLink<Void>("delete") {
 			@Override
 			public void onClick(final AjaxRequestTarget target) {
-				schema.getObject().getPropertyDeclarations().remove(item.getIndex());
+				listModel.getObject().remove(item.getIndex());
+				addTypeNotYetStoredInfo();
 				updatePanel();
 			}
 		});

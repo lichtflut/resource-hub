@@ -29,7 +29,9 @@ import de.lichtflut.rb.mock.schema.ConstraintsFactory;
  */
 public class PublicConstraintsDetailPanelTest extends AbstractRBWebTest {
 
-	IModel<Constraint> model;
+	private IModel<Constraint> model;
+
+	// ------------- SetUp & tearDown -----------------------
 
 	/**
 	 * {@inheritDoc}
@@ -38,6 +40,8 @@ public class PublicConstraintsDetailPanelTest extends AbstractRBWebTest {
 	protected void setupTest() {
 		model = new Model<Constraint>(ConstraintsFactory.buildPublicEmailConstraint());
 	}
+
+	// ------------------------------------------------------
 
 	/**
 	 * Test method for {@link de.lichtflut.rb.webck.components.typesystem.constraints.PublicConstraintsDetailPanel#PublicConstraintsDetailPanel(java.lang.String, org.apache.wicket.model.IModel)}.

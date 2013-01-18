@@ -23,18 +23,12 @@ import de.lichtflut.rb.webck.models.resources.ResourceLoadModel;
  */
 public class HierarchyInfoVisPage extends AbstractInfoVisPage {
 	
-	/**
-	 * @param parameters
-	 */
 	public HierarchyInfoVisPage(final PageParameters parameters) {
 		super(parameters);
 	}
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected Component createInfoVisPanel(String componentID, ResourceID resource) {
 		return new HierarchyVisualizationPanel(componentID, new ResourceLoadModel(resource));

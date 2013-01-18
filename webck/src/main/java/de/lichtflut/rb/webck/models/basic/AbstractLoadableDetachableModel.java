@@ -17,9 +17,6 @@ package de.lichtflut.rb.webck.models.basic;
  */
 public abstract class AbstractLoadableDetachableModel<T> extends AbstractLoadableModel<T> {
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void detach() {
 		reset();

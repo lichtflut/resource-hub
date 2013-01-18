@@ -297,4 +297,43 @@ public class PropertyRow implements Serializable {
 	public void setVisualizationInfo(final VisualizationInfo info){
 		decl.setVisualizationInfo(info);
 	}
+
+	// ------------------------------------------------------
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((decl == null) ? 0 : decl.hashCode());
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof PropertyRow)) {
+			return false;
+		}
+		PropertyRow other = (PropertyRow) obj;
+		if (decl == null) {
+			if (other.decl != null) {
+				return false;
+			}
+		} else if (!decl.equals(other.decl)) {
+			return false;
+		}
+		return true;
+	}
+
 }

@@ -6,7 +6,6 @@ package de.lichtflut.rb.webck.models.fields;
 import java.io.IOException;
 import java.util.List;
 
-import de.lichtflut.rb.core.services.impl.JackRabbitFileService;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.model.IModel;
@@ -14,10 +13,10 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
+import de.lichtflut.rb.core.services.impl.JackRabbitFileService;
 import de.lichtflut.rb.core.services.impl.LinkProvider;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
@@ -33,6 +32,7 @@ import de.lichtflut.repository.impl.ContentDescriptorBuilder;
  *
  * @author Ravi Knox
  */
+// TODO rethink link structure
 public class FileUploadModel implements IModel<Object>{
 
 	@SpringBean
@@ -46,9 +46,9 @@ public class FileUploadModel implements IModel<Object>{
 
 	// ---------------- Constructor -------------------------
 
-	public FileUploadModel(final IModel<Object> model, final RBField rbField){
+	public FileUploadModel(final IModel<Object> model, final ResourceID predicate){
 		this.original = model;
-		this.rbField = rbField.getPredicate();
+		this.rbField = predicate;
 		Injector.get().inject(this);
 	}
 

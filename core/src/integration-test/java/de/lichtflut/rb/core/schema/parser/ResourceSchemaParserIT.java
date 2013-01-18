@@ -29,9 +29,6 @@ import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 /**
  * <p>
  *  Integration test for resource schema parser.
- *
- *  TODO: Move to integration-test module
- *
  * </p>
  *
  *  <p>

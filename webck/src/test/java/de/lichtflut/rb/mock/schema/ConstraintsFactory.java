@@ -11,10 +11,10 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
-import de.lichtflut.rb.mock.RBMock;
 
 /**
  * <p>
@@ -30,7 +30,7 @@ public class ConstraintsFactory {
 	 * Creates a constraint consisting of:
 	 * <ul>
 	 * <li>
-	 * QN: {@link RBMock}.COMMON_NAMESPACE_URI#EmailAddress
+	 * QN: {@link RB}.COMMON_NAMESPACE_URI#EmailAddress
 	 * </li>
 	 * <li>
 	 * Applicable Datatypes:
@@ -56,7 +56,7 @@ public class ConstraintsFactory {
 	 * @return public constraint
 	 */
 	public static Constraint buildPublicEmailConstraint(){
-		QualifiedName qn = new QualifiedName(RBMock.COMMON_NAMESPACE_URI, "EmailAddress");
+		QualifiedName qn = new QualifiedName(RB.COMMON_NAMESPACE_URI, "EmailAddress");
 		List<Datatype> datatypes = new ArrayList<Datatype>();
 		datatypes.add(Datatype.STRING);
 		datatypes.add(Datatype.TEXT);
@@ -73,7 +73,7 @@ public class ConstraintsFactory {
 	 * Creates a constraint consisting of:
 	 * <ul>
 	 * <li>
-	 * QN: {@link RBMock}.COMMON_NAMESPACE_URI#URLConstraint
+	 * QN: {@link RB}.COMMON_NAMESPACE_URI#URLConstraint
 	 * </li>
 	 * <li>
 	 * Applicable Datatypes:
@@ -99,7 +99,7 @@ public class ConstraintsFactory {
 	 * @return public constraint
 	 */
 	public static Constraint buildPublicURLConstraint(){
-		QualifiedName qn = new QualifiedName(RBMock.COMMON_NAMESPACE_URI, "URLConstraint");
+		QualifiedName qn = new QualifiedName(RB.COMMON_NAMESPACE_URI, "URLConstraint");
 		List<Datatype> datatypes = new ArrayList<Datatype>();
 		datatypes.add(Datatype.STRING);
 		datatypes.add(Datatype.TEXT);
@@ -113,7 +113,7 @@ public class ConstraintsFactory {
 	}
 
 	public static Constraint buildPublicPersonConstraint(){
-		ResourceID resource = new SimpleResourceID(RBMock.COMMON_NAMESPACE_URI + "PersonConstraint");
+		ResourceID resource = new SimpleResourceID(RB.COMMON_NAMESPACE_URI + "PersonConstraint");
 		ConstraintImpl constraint = new ConstraintImpl();
 		constraint.setName("Person-Constraint");
 		constraint.setTypeConstraint(resource);

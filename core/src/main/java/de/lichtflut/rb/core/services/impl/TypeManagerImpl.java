@@ -3,16 +3,17 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.common.SchemaIdentifyingType;
 import de.lichtflut.rb.core.services.ConversationFactory;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.TypeManager;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -23,9 +24,8 @@ import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.TypeManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -60,9 +60,6 @@ public class TypeManagerImpl implements TypeManager {
 
     // -----------------------------------------------------
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public SNClass findType(ResourceID type) {
 		if (type == null) { 
@@ -70,73 +67,48 @@ public class TypeManagerImpl implements TypeManager {
 		}
 		final ResourceNode existing = conversation().findResource(type.getQualifiedName());
 		if (existing != null) {
-			return existing.asClass();
+			return SNClass.from(existing);
 		} else {
 			return null;
 		}
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public SNClass getTypeOfResource(final ResourceID resource) {
-		final ResourceNode node = conversation().resolve(resource);
-		final Set<SemanticNode> objects = SNOPS.objects(node, RDF.TYPE);
-		for (SemanticNode sn : objects) {
-			if (RBSystem.ENTITY.equals(sn)) {
-				continue;
-			} 
-			return sn.asResource().asClass();
-		}
-		return null;
+		final ResourceNode attached = conversation().resolve(resource);
+        return SchemaIdentifyingType.of(attached);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<SNClass> findAllTypes() {
 		final List<SNClass> result = new ArrayList<SNClass>();
 		final List<ResourceNode> nodes = findResourcesByType(RBSystem.TYPE);
 		for (ResourceNode current : nodes) {
-			result.add(current.asClass());
+			result.add(SNClass.from(current));
 		}
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public SNClass createType(final QualifiedName qn) {
-		final SNClass type = new SNResource(qn).asClass();
+		final SNClass type = SNClass.from(new SNResource(qn));
 		SNOPS.associate(type, RDF.TYPE, RDFS.CLASS);
 		SNOPS.associate(type, RDF.TYPE, RBSystem.TYPE);
         conversation().attach(type);
 		return type;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeType(final ResourceID type) {
 		schemaManager.removeSchemaForType(type);
         conversation().remove(type);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void addSuperClass(ResourceID type, ResourceID superClass) {
         conversation().resolve(type).addAssociation(RDFS.SUB_CLASS_OF, superClass);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeSuperClass(ResourceID type, ResourceID superClass) {
 		final ResourceNode typeNode = conversation().findResource(type.getQualifiedName());
@@ -156,41 +128,28 @@ public class TypeManagerImpl implements TypeManager {
 			return null;
 		}
 		final ResourceNode existing = conversation().findResource(qn);
-		if (existing != null) {
-			return existing.asProperty();
-		} else {
-			return null;
-		}
+        return SNProperty.from(existing);
 	}
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public SNProperty createProperty(QualifiedName qn) {
-		final SNProperty property = new SNProperty(qn).asProperty();
+		final SNProperty property = new SNProperty(qn);
 		SNOPS.associate(property, RDF.TYPE, RDF.PROPERTY);
         conversation().attach(property);
 		return property;
 	}
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void removeProperty(SNProperty property) {
         conversation().remove(property);
 	}
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public List<SNProperty> findAllProperties() {
 		final List<SNProperty> result = new ArrayList<SNProperty>();
 		final List<ResourceNode> nodes = findResourcesByType(RDF.PROPERTY);
 		for (ResourceNode current : nodes) {
-			result.add(current.asProperty());
+			result.add(SNProperty.from(current));
 		}
 		return result;
 	}

@@ -1,15 +1,15 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.entity.impl;
 
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.RBFieldValue;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -25,86 +25,64 @@ import java.util.Set;
 @SuppressWarnings("serial")
 public abstract class AbstractRBField implements RBField, Serializable {
 	
-	private final List<Object> values = new ArrayList<Object>();
+    private final List<RBFieldValue> fieldValues = new ArrayList<RBFieldValue>();
 
 	private int slots;
 
 	//------------------------------------------------------------
 
-	/**
-	 * Constructor.
-	 * @param values - values of this field
-	 */
-	public AbstractRBField(final Set<SemanticNode> values, boolean isResourceReference) {
-		initSlots(values, isResourceReference); 
-	}
+    public AbstractRBField(Set<Statement> statements) {
+        initValues(statements);
+    }
 
-	//------------------------------------------------------------
+    //------------------------------------------------------------
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getSlots() {
 		return slots;
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
-	public Object getValue(final int index) {
+	public RBFieldValue getValue(final int index) {
 		if (index >= slots) {
 			throw new IllegalArgumentException("Index out of bounds: " + index);
 		}
-		return values.get(index);
+		return fieldValues.get(index);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setValue(final int index, final Object value) {
 		if (index > slots) {
 			throw new IllegalArgumentException("Index out of bounds: " + index);
 		} else if (index < slots) {
-			values.remove(index);	
+            RBFieldValue fv = fieldValues.get(index);
+            fv.setValue(value);
 		} else {
-			slots++;
+			addValue(value);
 		}
-		values.add(index, value);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void addValue(final Object value) {
-		values.add(value);
+        fieldValues.add(new RBFieldValue(this, value));
 		slots++;
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeSlot(int index) {
 		if (slots > 1) {
-			values.remove(index);	
+            fieldValues.remove(index);
 			slots--;
 		} else {
 			setValue(index, null);
 		}
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
-	public List<Object> getValues() {
-		final List<Object> copy = new ArrayList<Object>(slots);
-		for (Object object : values) {
-			if (object != null) {
-				copy.add(object);
+	public List<RBFieldValue> getValues() {
+		final List<RBFieldValue> copy = new ArrayList<RBFieldValue>(slots);
+		for (RBFieldValue value : fieldValues) {
+			if (value != null && !value.isRemoved()) {
+				copy.add(value);
 			}
 		}
 		return copy;
@@ -118,47 +96,23 @@ public abstract class AbstractRBField implements RBField, Serializable {
 	 */
 	@Override
 	public String toString(){
-		return values.toString();
+		return fieldValues.toString();
 	}
 	
 	// -----------------------------------------------------
 	
 	/**
      * Initialize the slots of this field.
-	 * @param givenValues The existing values.
-	 * @param isResourceReference flag indicating if it's a resource reference.
+	 * @param statements The existing values.
 	 */
-	protected void initSlots(final Set<SemanticNode> givenValues, boolean isResourceReference) {
-		this.slots = givenValues.size();	
-		if (givenValues == null || givenValues.isEmpty()) {
-			this.values.add(null);
+	protected void initValues(final Set<Statement> statements) {
+		this.slots = statements.size();
+        for (Statement stmt : statements) {
+            this.fieldValues.add(new RBFieldValue(this, stmt));
+        }
+		if (fieldValues.isEmpty()) {
+			this.fieldValues.add(new RBFieldValue(this));
 			this.slots = 1;
-		} else if (isResourceReference) {
-			addReferences(givenValues);
-		} else {
-			addValues(givenValues);
-		}
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void addReferences(final Set<SemanticNode> givenValues) {
-		for (SemanticNode sn : givenValues) {
-			if (sn.isResourceNode()) {
-				this.values.add(sn.asResource());	
-			} else {
-				this.values.add(null);
-			}
-		}
-		Collections.sort((List) values, new OrderBySerialNumber());
-	}
-	
-	protected void addValues(final Set<SemanticNode> givenValues) {
-		for (SemanticNode sn : givenValues) {
-			if (sn.isValueNode()) {
-				this.values.add(sn.asValue().getValue());
-			} else {
-				this.values.add(sn.asResource().getQualifiedName().toURI());
-			}
 		}
 	}
 	
