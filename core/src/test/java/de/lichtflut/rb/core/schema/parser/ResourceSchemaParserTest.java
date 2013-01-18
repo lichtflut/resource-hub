@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.lichtflut.rb.core.schema.parser.exception.SchemaParsingException;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SNResource;
@@ -24,6 +23,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.schema.parser.exception.SchemaParsingException;
 import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
 import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SchemaImporter;
@@ -89,7 +89,7 @@ public class ResourceSchemaParserTest {
 				getClass().getClassLoader().getResourceAsStream("test-schema.rsf");
 
 		final RsfSchemaParser parser = new RsfSchemaParser();
-		ParsedElements parsedElements = parser.parse(in);
+		parser.parse(in);
 	}
 
 	// -- GIVEN -------------------------------------------

@@ -27,22 +27,21 @@ import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
 import de.lichtflut.repository.ContentDescriptor;
 import de.lichtflut.repository.impl.ContentDescriptorBuilder;
 
-
 /**
  * <p>
  * 
  * This Link creates a link that provides Thumbnails for:
  * <ul>
  * <li>
- * 	jpeg
- * </li><li>
- * 	png
- * </li>
+ * jpeg</li>
+ * <li>
+ * png</li>
  * </ul>
- * If the File Format is not supported, a simple {@link ExternalLink} pointing to the resources is provided.
+ * If the File Format is not supported, a simple {@link ExternalLink} pointing to the resources is
+ * provided.
  * </p>
  * Created: Sep 12, 2012
- *
+ * 
  * @author Ravi Knox
  */
 public class FilePreviewLink extends Panel {
@@ -53,8 +52,8 @@ public class FilePreviewLink extends Panel {
 	// ---------------- Constructor -------------------------
 
 	/**
-	 * Constructor.
-	 * The File will be fetched by through the {@link FileService}
+	 * Constructor. The File will be fetched by through the {@link FileService}
+	 * 
 	 * @param id - wicket:id
 	 * @param model - the id pointing the file.
 	 */
@@ -66,7 +65,7 @@ public class FilePreviewLink extends Panel {
 	// ------------------------------------------------------
 
 	private Component createPreview(final IModel<String> model) {
-		if(fileService.exists(model.getObject())){
+		if (fileService.exists(model.getObject())) {
 			IModel<ContentDescriptor> descriptor = new LoadableDetachableModel<ContentDescriptor>() {
 
 				@Override
@@ -75,10 +74,9 @@ public class FilePreviewLink extends Panel {
 				}
 			};
 			return createFragment(descriptor);
-		}else{
+		} else {
 			ContentDescriptor dummy = new ContentDescriptorBuilder().name(model.getObject()).build();
-			IModel<ContentDescriptor> pathModel = Model.of(dummy);
-			Component fragment = new Fragment("valuefield", "linkFragment", this).add(createLink(pathModel));
+			Component fragment = new Fragment("valuefield", "linkFragment", this).add(createLink(Model.of(dummy)));
 			return fragment;
 		}
 	}

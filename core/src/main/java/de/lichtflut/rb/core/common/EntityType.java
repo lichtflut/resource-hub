@@ -1,14 +1,14 @@
 package de.lichtflut.rb.core.common;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.entity.RBEntity;
+import java.util.Set;
+
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import java.util.Set;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
  * <p>
@@ -23,19 +23,19 @@ import java.util.Set;
  */
 public class EntityType {
 
-    public static ResourceID of(ResourceID resource) {
-        Set<SemanticNode> types = SNOPS.objects(resource.asResource(), RDF.TYPE);
-        // We are not interested in RBSystem.ENTITY
-        for (SemanticNode node : types) {
-            if(!node.equals(RBSystem.ENTITY)){
-                return node.asResource();
-            }
-        }
-        return null;
-    }
+	public static ResourceID of(final ResourceID resource) {
+		Set<SemanticNode> types = SNOPS.objects(resource.asResource(), RDF.TYPE);
+		// We are not interested in RBSystem.ENTITY
+		for (SemanticNode node : types) {
+			if(!node.equals(RBSystem.ENTITY)){
+				return node.asResource();
+			}
+		}
+		return null;
+	}
 
-    public static ResourceID of(RBEntity entity) {
-        return entity.getType();
-    }
+	public static ResourceID of(final RBEntity entity) {
+		return entity.getType();
+	}
 
 }
