@@ -5,7 +5,6 @@ package de.lichtflut.rb.webck.components.fields;
 
 import java.io.IOException;
 
-import de.lichtflut.rb.core.services.impl.JackRabbitFileService;
 import org.apache.commons.io.IOUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -22,8 +21,11 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.services.FileService;
+import de.lichtflut.rb.core.services.impl.JackRabbitFileService;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
 import de.lichtflut.repository.ContentDescriptor;
+import de.lichtflut.repository.Filetype;
 import de.lichtflut.repository.impl.ContentDescriptorBuilder;
 
 
@@ -66,6 +68,7 @@ public class FilePreviewLink extends Panel {
 
 	private Component createPreview(final IModel<String> model) {
 		final String location = model.getObject();
+
 		if(fileService.exists(location)){
 			IModel<ContentDescriptor> descriptor = new LoadableDetachableModel<ContentDescriptor>() {
 
@@ -75,22 +78,35 @@ public class FilePreviewLink extends Panel {
 				}
 			};
 
-			return createFragment(location, descriptor);
+			Component fragment = createFragment(location, descriptor);
+			return fragment;
 		}else{
 			ContentDescriptor dummy = new ContentDescriptorBuilder().name(location).build();
 			IModel<ContentDescriptor> pathModel = Model.of(dummy);
-			return new Fragment("valuefield", "linkFragment", this).add(createLink(pathModel));
+			Component fragment = new Fragment("valuefield", "linkFragment", this).add(createLink(pathModel));
+			return fragment;
 		}
 	}
 
 	private Component createFragment(final String location, final IModel<ContentDescriptor> descriptor) {
+		DerivedModel<Filetype, ContentDescriptor> derivedModel = new DerivedModel<Filetype, ContentDescriptor>(descriptor) {
+
+			@Override
+			protected Filetype derive(final ContentDescriptor original) {
+				if(null == original.getMimeType()){
+					return Filetype.OTHER;
+				}
+				return original.getMimeType();
+			}
+
+		};
 		switch (descriptor.getObject().getMimeType()) {
-		case JPEG:
-		case JPG:
-		case PNG:
-			return new Fragment("valuefield", "thumbnailFragment", this).add(createThumbnailLink(descriptor));
-		default:
-			return new Fragment("valuefield", "linkFragment", this).add(createLink(descriptor));
+			case JPEG:
+			case JPG:
+			case PNG:
+				return new Fragment("valuefield", "thumbnailFragment", this).add(createThumbnailLink(descriptor));
+			default:
+				return new Fragment("valuefield", "linkFragment", this).add(createLink(descriptor));
 		}
 	}
 
@@ -131,9 +147,21 @@ public class FilePreviewLink extends Panel {
 	}
 
 	private Component createLink(final IModel<ContentDescriptor> descriptor) {
-		String href = getLinkLocation(descriptor.getObject().getID());
+		IModel<String> href = new DerivedModel<String, ContentDescriptor>(descriptor) {
 
-		String simpleName = JackRabbitFileService.getSimpleName(descriptor.getObject().getID());
+			@Override
+			protected String derive(final ContentDescriptor original) {
+				return getLinkLocation(original.getID());
+			}
+		};
+
+		IModel<String> simpleName = new DerivedModel<String, ContentDescriptor>(descriptor) {
+
+			@Override
+			protected String derive(final ContentDescriptor original) {
+				return JackRabbitFileService.getSimpleName(descriptor.getObject().getID());
+			}
+		};
 
 		ExternalLink link = new ExternalLink("link", href, simpleName);
 		link.add(new AttributeModifier("target", "_blank"));

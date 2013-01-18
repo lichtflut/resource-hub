@@ -28,7 +28,7 @@ import de.lichtflut.repository.impl.ContentDescriptorBuilder;
  *
  * @author Ravi Knox
  */
-// TODO rethink link structure
+// TODO rethink data structure
 public class FileUploadModel implements IModel<Object>{
 
 	@SpringBean
@@ -38,11 +38,13 @@ public class FileUploadModel implements IModel<Object>{
 	private EntityManager entityManager;
 
 	private final IModel<Object> original;
+	private final IModel<String> prefix;
 
 	// ---------------- Constructor -------------------------
 
-	public FileUploadModel(final IModel<Object> model){
+	public FileUploadModel(final IModel<Object> model, final IModel<String> pathPrefix){
 		this.original = model;
+		this.prefix = pathPrefix;
 		Injector.get().inject(this);
 	}
 
@@ -90,7 +92,9 @@ public class FileUploadModel implements IModel<Object>{
 	}
 
 	private ContentDescriptor buildContentDescriptorFor(final FileUpload upload) {
-		String path = UUID.randomUUID().toString() + "/" + upload.getClientFileName();
+		// TODO added uuid to get unique path. Remove when data structure is clear.
+		String random = UUID.randomUUID().toString();
+		String path = random + prefix.getObject() + "/" + upload.getClientFileName();
 		ContentDescriptor descriptor;
 		try {
 			Filetype filetype = getFiletype(upload);

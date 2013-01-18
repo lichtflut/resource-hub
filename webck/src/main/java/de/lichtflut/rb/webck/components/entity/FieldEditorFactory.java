@@ -162,7 +162,8 @@ public class FieldEditorFactory implements Serializable {
 	}
 
 	public Component createFileUploadField(final RBField fieldDefinition, final IModel model){
-		final FileUploadModel uploadModel = new FileUploadModel(model);
+		IModel<String> prefix = Model.of(fieldDefinition.getPredicate().getQualifiedName().toURI());
+		final FileUploadModel uploadModel = new FileUploadModel(model, prefix);
 		// TODO get maximum from application
 		// Set maximum filesize 10MB
 		long maximum =  10485760;
