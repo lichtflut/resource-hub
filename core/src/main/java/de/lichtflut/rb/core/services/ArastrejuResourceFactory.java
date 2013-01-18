@@ -9,6 +9,7 @@ import de.lichtflut.rb.core.config.domainstatus.DomainInfoContainer;
 import de.lichtflut.rb.core.config.domainstatus.DomainInfoException;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.ConversationContext;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
@@ -201,7 +202,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
         return info;
     }
 
-    private void assureActive(ModelingConversation conversation) {
+    private void assureActive(Conversation conversation) {
         ConversationContext cc = conversation.getConversationContext();
         if (!cc.isActive()) {
             throw new IllegalStateException("Got inactive conversation from factory: " + cc);

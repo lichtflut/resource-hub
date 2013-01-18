@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.security.authserver;
 
@@ -7,7 +7,6 @@ import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.security.RBUser;
 import junit.framework.Assert;
 import org.arastreju.sge.Conversation;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;

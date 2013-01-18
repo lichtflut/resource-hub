@@ -5,7 +5,7 @@ import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
 import de.lichtflut.rb.core.services.impl.SchemaImporterImpl;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import org.arastreju.sge.ArastrejuGate;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.io.SemanticIOException;
@@ -109,7 +109,7 @@ public class DomainBulkLoader {
     protected void doImportRDF(File file) {
         try {
 
-            ModelingConversation conversation = gate.startConversation();
+            Conversation conversation = gate.startConversation();
             FileInputStream in = new FileInputStream(file);
             SemanticGraphIO io = new RdfXmlBinding();
             SemanticGraph graph = io.read(in);
@@ -128,7 +128,7 @@ public class DomainBulkLoader {
     protected void doImportRSF(File file) {
         try {
 
-            ModelingConversation conversation = gate.startConversation();
+            Conversation conversation = gate.startConversation();
             FileInputStream in = new FileInputStream(file);
             conversation.close();
 
