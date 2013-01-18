@@ -5,12 +5,9 @@ package de.lichtflut.rb.webck.components.infovis.periphery;
 
 import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
-import de.lichtflut.rb.webck.components.infovis.common.JitJsonStream;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
-import de.lichtflut.rb.webck.config.DefaultInfoVisServicePathBuilder;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.resource.IResourceStream;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
@@ -43,11 +40,6 @@ public class PeripheryVisualizationPanel extends InfoVisPanel {
 		response.renderJavaScriptReference(InfoVisJavaScriptResources.JIT_JS);
 		response.renderJavaScriptReference(InfoVisJavaScriptResources.PERIPHERY_JS);
 		response.renderOnLoadJavaScript("initGraph()");
-	}
-	
-	@Override
-	protected IResourceStream getJsonResource() {
-		return new JitJsonStream(getModelObject());
 	}
 
 }

@@ -56,7 +56,6 @@ public class FlowChartPanel extends InfoVisPanel {
 		);
 	}
 	
-	@Override
 	protected IResourceStream getJsonResource() {
 		final FlowChartModel model = new FlowChartModel(modeler).add(nodeSet.getObject());
 		return new FlowChartJsonStream(model, getLocale());

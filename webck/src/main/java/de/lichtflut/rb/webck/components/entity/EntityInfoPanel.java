@@ -33,7 +33,6 @@ import org.arastreju.sge.model.nodes.views.SNClass;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
