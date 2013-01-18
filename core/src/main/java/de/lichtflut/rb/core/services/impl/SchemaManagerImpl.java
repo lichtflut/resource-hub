@@ -149,9 +149,6 @@ public class SchemaManagerImpl implements SchemaManager {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public Map<Integer, List<PropertyDeclaration>> validate(final ResourceSchema schema){
 		Map<Integer, List<PropertyDeclaration>> errors = new HashMap<Integer, List<PropertyDeclaration>>();
 		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
@@ -160,9 +157,6 @@ public class SchemaManagerImpl implements SchemaManager {
 		return errors;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeSchemaForType(final ResourceID type) {
 		final SNResourceSchema existing = findSchemaNodeByType(type);
@@ -172,11 +166,6 @@ public class SchemaManagerImpl implements SchemaManager {
 		}
 	}
 
-
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void store(final Constraint constraint) {
 		Validate.isTrue(constraint.isPublic(), "Only public type definition may be stored explicitly.");
@@ -313,7 +302,7 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	/**
 	 * @param errors
-	 * @param exception
+	 * @param errorCode
 	 * @param declaration
 	 */
 	private void appendError(final Map<Integer, List<PropertyDeclaration>> errors, final int errorCode, final PropertyDeclaration declaration) {

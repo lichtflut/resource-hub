@@ -14,7 +14,7 @@ import de.lichtflut.rb.core.services.SchemaManager;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Exports schemas.
  * </p>
  *
  * <p>

@@ -12,7 +12,7 @@ import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
 import de.lichtflut.rb.core.schema.parser.exception.SchemaParsingException;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.model.Statement;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ import java.io.InputStream;
  */
 public class SchemaImporterImpl implements SchemaImporter {
 
-    private final ModelingConversation conversation;
+    private final Conversation conversation;
     private final ResourceSchemaParser parser;
 	private final SchemaManager manager;
 
@@ -40,7 +40,7 @@ public class SchemaImporterImpl implements SchemaImporter {
 	/**
 	 * Constructor.
 	 */
-	public SchemaImporterImpl(SchemaManager manager, ModelingConversation conversation, ResourceSchemaParser parser) {
+	public SchemaImporterImpl(SchemaManager manager, Conversation conversation, ResourceSchemaParser parser) {
 		this.manager = manager;
         this.conversation = conversation;
         this.parser = parser;

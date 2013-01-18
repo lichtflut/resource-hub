@@ -4,6 +4,7 @@ import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.io.ReportingStatementImporter;
 import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
 import de.lichtflut.rb.core.services.InformationManager;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.io.RdfXmlBinding;
@@ -48,7 +49,7 @@ public class InformationManagerImpl implements InformationManager {
     @Override
     public IOReport importInformation(InputStream in, Context targetContext, String reportContext) {
 
-        ModelingConversation conversation = factory.getConversation(targetContext);
+        Conversation conversation = factory.getConversation(targetContext);
 
         final IOReport report = new IOReport();
         final SemanticGraphIO io = new RdfXmlBinding();
