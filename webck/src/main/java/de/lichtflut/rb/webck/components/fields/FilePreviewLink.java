@@ -25,7 +25,6 @@ import de.lichtflut.rb.core.services.impl.JackRabbitFileService;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
 import de.lichtflut.repository.ContentDescriptor;
-import de.lichtflut.repository.Filetype;
 import de.lichtflut.repository.impl.ContentDescriptorBuilder;
 
 
@@ -67,39 +66,24 @@ public class FilePreviewLink extends Panel {
 	// ------------------------------------------------------
 
 	private Component createPreview(final IModel<String> model) {
-		final String location = model.getObject();
-
-		if(fileService.exists(location)){
+		if(fileService.exists(model.getObject())){
 			IModel<ContentDescriptor> descriptor = new LoadableDetachableModel<ContentDescriptor>() {
 
 				@Override
 				protected ContentDescriptor load() {
-					return fileService.getData(location);
+					return fileService.getData(model.getObject());
 				}
 			};
-
-			Component fragment = createFragment(location, descriptor);
-			return fragment;
+			return createFragment(descriptor);
 		}else{
-			ContentDescriptor dummy = new ContentDescriptorBuilder().name(location).build();
+			ContentDescriptor dummy = new ContentDescriptorBuilder().name(model.getObject()).build();
 			IModel<ContentDescriptor> pathModel = Model.of(dummy);
 			Component fragment = new Fragment("valuefield", "linkFragment", this).add(createLink(pathModel));
 			return fragment;
 		}
 	}
 
-	private Component createFragment(final String location, final IModel<ContentDescriptor> descriptor) {
-		DerivedModel<Filetype, ContentDescriptor> derivedModel = new DerivedModel<Filetype, ContentDescriptor>(descriptor) {
-
-			@Override
-			protected Filetype derive(final ContentDescriptor original) {
-				if(null == original.getMimeType()){
-					return Filetype.OTHER;
-				}
-				return original.getMimeType();
-			}
-
-		};
+	private Component createFragment(final IModel<ContentDescriptor> descriptor) {
 		switch (descriptor.getObject().getMimeType()) {
 			case JPEG:
 			case JPG:
@@ -159,7 +143,7 @@ public class FilePreviewLink extends Panel {
 
 			@Override
 			protected String derive(final ContentDescriptor original) {
-				return JackRabbitFileService.getSimpleName(descriptor.getObject().getID());
+				return JackRabbitFileService.getSimpleName(original.getID());
 			}
 		};
 
