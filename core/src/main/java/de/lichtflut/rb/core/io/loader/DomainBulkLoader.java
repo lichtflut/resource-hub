@@ -1,8 +1,9 @@
 package de.lichtflut.rb.core.io.loader;
 
-import de.lichtflut.rb.core.schema.parser.ParsedElements;
-import de.lichtflut.rb.core.schema.parser.exception.SchemaParsingException;
 import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
+import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
+import de.lichtflut.rb.core.services.impl.SchemaImporterImpl;
+import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.io.RdfXmlBinding;
@@ -127,18 +128,20 @@ public class DomainBulkLoader {
     protected void doImportRSF(File file) {
         try {
 
+            ModelingConversation conversation = gate.startConversation();
             FileInputStream in = new FileInputStream(file);
+            conversation.close();
 
-            RsfSchemaParser parser = new RsfSchemaParser();
+            SchemaManagerImpl schemaManager = new SchemaManagerImpl(new ArastrejuResourceFactory(gate));
+            SchemaImporterImpl importer = new SchemaImporterImpl(schemaManager, conversation, new RsfSchemaParser());
 
-            ParsedElements parsedElements = parser.parse(in);
+            importer.read(in);
+            conversation.close();
 
             LOGGER.info("Imported RSF file: {}", file.getAbsolutePath());
 
         } catch (IOException e) {
             LOGGER.error("File could not be imported: " + file.getAbsolutePath(), e);
-        } catch (SchemaParsingException e) {
-            LOGGER.error("RSF could not be parsed: " + file.getAbsolutePath(), e);
         }
     }
 

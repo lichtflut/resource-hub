@@ -3,6 +3,7 @@ package de.lichtflut.rb.core.services.impl;
 import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
 import org.arastreju.sge.Conversation;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
@@ -57,7 +58,17 @@ public class SemanticNetworkServiceImpl implements SemanticNetworkService {
 		return conversation().findResource(qn);
 	}
 
-	@Override
+    @Override
+    public void remove(QualifiedName qn) {
+        remove(SNOPS.id(qn));
+    }
+
+    @Override
+    public void remove(ResourceID resource) {
+        conversation().remove(resource);
+    }
+
+    @Override
 	public void attach(final ResourceNode node) {
 		conversation().attach(node);
 	}

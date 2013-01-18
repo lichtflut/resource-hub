@@ -3,19 +3,12 @@
  */
 package de.lichtflut.rb.core.security.authserver;
 
-import static de.lichtflut.rb.core.security.authserver.EmbeddedAuthFunctions.toRBDomain;
-import static de.lichtflut.rb.core.security.authserver.EmbeddedAuthFunctions.toRBUser;
-import static org.arastreju.sge.SNOPS.singleObject;
-import static org.arastreju.sge.SNOPS.string;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.arastreju.sge.ModelingConversation;
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
+import de.lichtflut.rb.core.security.AuthDomainInitializer;
+import de.lichtflut.rb.core.security.DomainManager;
+import de.lichtflut.rb.core.security.RBDomain;
+import de.lichtflut.rb.core.security.RBUser;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
@@ -28,11 +21,17 @@ import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
-import de.lichtflut.rb.core.security.AuthDomainInitializer;
-import de.lichtflut.rb.core.security.DomainManager;
-import de.lichtflut.rb.core.security.RBDomain;
-import de.lichtflut.rb.core.security.RBUser;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static de.lichtflut.rb.core.security.authserver.EmbeddedAuthFunctions.toRBDomain;
+import static de.lichtflut.rb.core.security.authserver.EmbeddedAuthFunctions.toRBUser;
+import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
 
 /**
  * <p>
@@ -47,9 +46,9 @@ import de.lichtflut.rb.core.security.RBUser;
  */
 public class EmbeddedAuthDomainManager implements DomainManager {
 
-	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthDomainManager.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedAuthDomainManager.class);
 
-	private final ModelingConversation conversation;
+	private final Conversation conversation;
 
 	private final AuthDomainInitializer initializer;
 
@@ -59,7 +58,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	 * Constructor.
 	 * @param conversation The conversation..
 	 */
-	public EmbeddedAuthDomainManager(final ModelingConversation conversation) {
+	public EmbeddedAuthDomainManager(final Conversation conversation) {
 		this(conversation, null);
 	}
 
@@ -68,16 +67,13 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 	 * @param conversation The conversation..
 	 * @param initializer The initializer for new domains.
 	 */
-	public EmbeddedAuthDomainManager(final ModelingConversation conversation, final AuthDomainInitializer initializer) {
+	public EmbeddedAuthDomainManager(final Conversation conversation, final AuthDomainInitializer initializer) {
 		this.conversation = conversation;
 		this.initializer = initializer;
 	}
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBDomain findDomain(final String domain) {
 		final ResourceNode domainNode = findDomainNode(domain);
@@ -87,9 +83,6 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		return EmbeddedAuthFunctions.toRBDomain(domainNode);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBDomain registerDomain(final RBDomain domain) {
 		final ResourceNode node = new SNResource();
@@ -103,12 +96,11 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		node.addAssociation(RDF.TYPE, EmbeddedAuthModule.DOMAIN);
 		final RBDomain created = toRBDomain(node);
 
-		final ModelingConversation mc = mc();
-		mc.attach(node);
+        mc().attach(node);
 		if (initializer != null) {
 			initializer.initialize(created, this);
 		}
-		logger.info("Created new domain: " + created);
+		LOGGER.info("Created new domain: " + created);
 		return created;
 	}
 
@@ -120,12 +112,9 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		throw new NotYetImplementedException();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void deleteDomain(final RBDomain domain) {
-		ModelingConversation mc = mc();
+		Conversation mc = mc();
 		ResourceID domainNode = findDomainNode(domain.getName());
 		if(domainNode!=null){
 			mc.remove(domainNode);
@@ -134,9 +123,6 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Collection<RBDomain> getAllDomains() {
 		final List<RBDomain> result = new ArrayList<RBDomain>();
@@ -147,9 +133,6 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Collection<RBDomain> getDomainsForUser(final RBUser user) {
 		final List<RBDomain> result = new ArrayList<RBDomain>();
@@ -164,9 +147,6 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Collection<RBUser> loadUsers(final String domainName, final int offset, final int max) {
 		RBDomain domain = findDomain(domainName);
@@ -215,7 +195,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		final ResourceNode domainNode = findDomainNode(domain);
 		final ResourceNode roleNode = getOrCreateRole(domainNode, role);
 		SNOPS.assure(roleNode, EmbeddedAuthModule.HAS_PERMISSION, toSemanticNodes(permissions));
-		logger.info("Registered permissions {} for role {}.", permissions, role + "@" + uniqueName(domainNode));
+		LOGGER.info("Registered permissions {} for role {}.", permissions, role + "@" + uniqueName(domainNode));
 	}
 
 	// ----------------------------------------------------
@@ -239,7 +219,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 			domainNode.addAssociation(EmbeddedAuthModule.DEFINES_ROLE, roleNode);
 			roleNode.addAssociation(EmbeddedAuthModule.BELONGS_TO_DOMAIN, domainNode);
 			roleNode.addAssociation(EmbeddedAuthModule.HAS_UNIQUE_NAME, new SNText(role));
-			logger.info("Registered role {} for domain {}.", role, uniqueName(domainNode));
+			LOGGER.info("Registered role {} for domain {}.", role, uniqueName(domainNode));
 		}
 		return roleNode;
 	}
@@ -272,7 +252,7 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		}
 	}
 
-	private ModelingConversation mc() {
+	private Conversation mc() {
 		return conversation;
 	}
 

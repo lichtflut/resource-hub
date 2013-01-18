@@ -54,6 +54,14 @@ public class ArastrejuResourceFactory implements ConversationFactory {
 	}
 
     /**
+     * Constructor.
+     * @param gate The already opened gate.
+     */
+    public ArastrejuResourceFactory(ArastrejuGate gate) {
+        this.openGate = gate;
+    }
+
+    /**
      * Constructor for spring.
      */
     protected ArastrejuResourceFactory() {
@@ -146,6 +154,9 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     // ----------------------------------------------------
 
     private ArastrejuGate openGate() {
+        if (context == null) {
+            throw new IllegalStateException("No service context present. Gate can not be (re-)opened.");
+        }
         final String domain = context.getDomain();
         LOGGER.debug("Opening Arastreju Gate for domain {} ", domain);
         ArastrejuGate gate = null;

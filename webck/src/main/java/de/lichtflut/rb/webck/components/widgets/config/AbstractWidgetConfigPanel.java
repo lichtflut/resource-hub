@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.model.SemanticGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,7 @@ public class AbstractWidgetConfigPanel extends TypedPanel<WidgetSpec> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWidgetConfigPanel.class);
 	
 	@SpringBean
-	protected ModelingConversation conversation;
+	protected Conversation conversation;
 
 	// ----------------------------------------------------
 

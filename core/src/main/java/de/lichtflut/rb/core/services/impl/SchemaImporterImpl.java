@@ -10,6 +10,7 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
 import de.lichtflut.rb.core.schema.parser.exception.SchemaParsingException;
+import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
 import org.arastreju.sge.Conversation;
@@ -45,7 +46,7 @@ public class SchemaImporterImpl implements SchemaImporter {
         this.conversation = conversation;
         this.parser = parser;
 	}
-	
+
 	// -----------------------------------------------------
 	
 	@Override
@@ -103,7 +104,6 @@ public class SchemaImporterImpl implements SchemaImporter {
 		if (existing == null){
 			throw new IllegalStateException("Could not resolve constraint " + constraint.getName());
 		}
-		
 	}
 
 }
