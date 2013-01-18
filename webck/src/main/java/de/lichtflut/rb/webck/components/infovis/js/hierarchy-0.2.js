@@ -6,9 +6,12 @@ var GraphVisConfig = GraphVisConfig || {
 	levelMargin : 160
 };
 
-function showTree(root, paper) {
-	var dim = calcDimensions(root, 100, 100);
-	addRecursive(root, paper);
+function showTree(paper) {
+    jQuery.getJSON(LFRB.InfoVis.serviceURI, function(graph) {
+        var dim = calcDimensions(graph, 100, 100);
+        addRecursive(graph, paper);
+    });
+
 }
 
 function addRecursive(node, paper) {

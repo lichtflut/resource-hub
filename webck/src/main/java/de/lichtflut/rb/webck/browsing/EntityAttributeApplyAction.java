@@ -5,7 +5,7 @@ package de.lichtflut.rb.webck.browsing;
 
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -49,7 +49,7 @@ public class EntityAttributeApplyAction implements ReferenceReceiveAction<Object
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void execute(final ModelingConversation sp, final RBEntity createdEntity) {
+	public void execute(final Conversation sp, final RBEntity createdEntity) {
 		final RBField field = subject.getField(predicate);
 		if (field.getValues().isEmpty()) {
 			field.setValue(0, createdEntity.getID());

@@ -9,6 +9,7 @@ import de.lichtflut.rb.core.config.domainstatus.DomainInfoContainer;
 import de.lichtflut.rb.core.config.domainstatus.DomainInfoException;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.ConversationContext;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
@@ -52,6 +53,14 @@ public class ArastrejuResourceFactory implements ConversationFactory {
 	public ArastrejuResourceFactory(ServiceContext context) {
         this.context = context;
 	}
+
+    /**
+     * Constructor.
+     * @param gate The already opened gate.
+     */
+    public ArastrejuResourceFactory(ArastrejuGate gate) {
+        this.openGate = gate;
+    }
 
     /**
      * Constructor for spring.
@@ -146,6 +155,9 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     // ----------------------------------------------------
 
     private ArastrejuGate openGate() {
+        if (context == null) {
+            throw new IllegalStateException("No service context present. Gate can not be (re-)opened.");
+        }
         final String domain = context.getDomain();
         LOGGER.debug("Opening Arastreju Gate for domain {} ", domain);
         ArastrejuGate gate = null;
@@ -190,7 +202,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
         return info;
     }
 
-    private void assureActive(ModelingConversation conversation) {
+    private void assureActive(Conversation conversation) {
         ConversationContext cc = conversation.getConversationContext();
         if (!cc.isActive()) {
             throw new IllegalStateException("Got inactive conversation from factory: " + cc);

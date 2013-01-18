@@ -67,8 +67,6 @@ public class DefaultDomainValidator implements DomainValidator {
         organizer.registerNamespace(DC.NAMESPACE_URI, "dc");
         organizer.registerNamespace(RBSystem.SYS_NAMESPACE_URI, "rb");
         organizer.registerNamespace(RB.COMMON_NAMESPACE_URI, "common");
-
-        initializedDomains.add(domainName);
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.components.infovis.common;
 
@@ -60,9 +60,6 @@ public class JitJsonStream extends AbstractJsonStream {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void write(OutputStreamWriter writer) throws IOException {
 		final Set<SemanticNode> written = new HashSet<SemanticNode>();

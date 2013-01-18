@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.entity;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.common.EntityType;
+import de.lichtflut.rb.core.common.SchemaIdentifyingType;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
@@ -130,8 +131,8 @@ public class EntityInfoPanel extends Panel {
 				final List<VisualizationLink> result = new ArrayList<VisualizationLink>();
 				result.add(createLink(node, VisualizationMode.DETAILS));
 				result.add(createLink(node, VisualizationMode.PERIPHERY));
-                final SNClass type = typeManager.findType(EntityType.of(node));
-				if (isSubClassOf(type, RB.TREE_NODE)) {
+                final SNClass type = SchemaIdentifyingType.of(node);
+                if (isSubClassOf(type, RB.TREE_NODE)) {
 					result.add(createLink(node, VisualizationMode.HIERARCHY));
 				}
 				if (isSubClassOf(type, RB.PROCESS_ELEMENT)) {
@@ -145,7 +146,7 @@ public class EntityInfoPanel extends Panel {
 	// ---------------------------------------------------- 
 	
 	private VisualizationLink createLink(ResourceID rid, VisualizationMode mode) {
-		final String url = resourceLinkProvider.getUrlToResource(rid, mode, DisplayMode.VIEW).toString();
+		final String url = resourceLinkProvider.getUrlToResource(rid, mode, DisplayMode.VIEW);
 		return new VisualizationLink(mode, url);
 	}
 

@@ -18,7 +18,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.query.Query;
@@ -45,7 +45,7 @@ public class EntityDetailsWidget extends ConfigurableWidget {
 	protected EntityManager entityManager;
 	
 	@SpringBean
-	protected ModelingConversation conversation;
+	protected Conversation conversation;
 
 	// ----------------------------------------------------
 	

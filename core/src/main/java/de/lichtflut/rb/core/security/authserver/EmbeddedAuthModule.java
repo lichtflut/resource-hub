@@ -4,19 +4,18 @@
 package de.lichtflut.rb.core.security.authserver;
 
 import de.lichtflut.rb.core.security.AuthDomainInitializer;
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.AuthenticationService;
+import de.lichtflut.rb.core.security.DomainManager;
+import de.lichtflut.rb.core.security.UserManager;
 import org.arastreju.sge.ArastrejuGate;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.context.SimpleContextID;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.lichtflut.rb.core.security.AuthModule;
-import de.lichtflut.rb.core.security.AuthenticationService;
-import de.lichtflut.rb.core.security.DomainManager;
-import de.lichtflut.rb.core.security.UserManager;
 
 /**
  * <p>
@@ -57,7 +56,7 @@ public class EmbeddedAuthModule implements AuthModule {
 	
 	// ----------------------------------------------------
 
-	private final Logger logger = LoggerFactory.getLogger(EmbeddedAuthModule.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedAuthModule.class);
 	
 	private final EmbeddedAuthDomainManager domainManager;
 	
@@ -81,12 +80,12 @@ public class EmbeddedAuthModule implements AuthModule {
 	 */
 	public EmbeddedAuthModule(ArastrejuGate gate, AuthDomainInitializer initializer) {
 		if (initializer != null) {
-			logger.info("Creating new Embedded Auth Module with initializer " + initializer.getClass().getSimpleName());
+			LOGGER.info("Creating new Embedded Auth Module with initializer " + initializer.getClass().getSimpleName());
 		} else {
-			logger.info("Creating new Embedded Auth Module without initializer.");
+			LOGGER.info("Creating new Embedded Auth Module without initializer.");
 		}
 		
-		final ModelingConversation conversation = gate.startConversation();
+		final Conversation conversation = gate.startConversation();
 		conversation.getConversationContext().setPrimaryContext(EmbeddedAuthModule.IDENT);
 		conversation.getConversationContext().setReadContexts(EmbeddedAuthModule.IDENT);
 		
