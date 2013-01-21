@@ -28,10 +28,11 @@ public class Entity extends RestBaseModel{
 		return associations;
 	}
 
-	public void addAssociation(String predicate, String object){
+	public void addAssociation(String predicate, String object, boolean isEntityAssoc){
 		Association assoc = new Association();
 		assoc.setObject(object);
 		assoc.setPredicate(predicate);
+		assoc.setEntityAssoc(isEntityAssoc);
 		associations.add(assoc);
 	}
 	
