@@ -13,109 +13,124 @@ import org.arastreju.sge.ArastrejuGate;
 
 /**
  * <p>
- *  Supervisor for status of domains.
- *  Responsible for initialization and validation of domains.
+ * Supervisor for status of domains. Responsible for initialization and
+ * validation of domains.
  * </p>
- *
+ * 
  * <p>
- *  Created 18.01.13
+ * Created 18.01.13
  * </p>
- *
+ * 
  * @author Oliver Tigges
  */
 public class DomainSupervisor {
 
-    private DomainValidator domainValidator;
+	private DomainValidator domainValidator;
 
-    private DomainInfoContainer domainInfoContainer;
-    private RBConfig config;
+	private DomainInfoContainer domainInfoContainer;
+	private RBConfig config;
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    public DomainSupervisor() {
-    }
+	public DomainSupervisor() {
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    public void onOpen(ArastrejuGate gate, String domain) {
-        DomainInfo info = getDomainInfo(domain);
-        switch (info.getStatus()) {
-            case NEW:
-                initializeDomain(gate, domain, info);
-                break;
-            case INITIALIZED:
-                domainValidator.validateDomain(gate, domain);
-                break;
-            case DELETED:
-                throw new IllegalStateException("Domain " + domain + " has been deleted.");
-            default:
-                throw new IllegalStateException("Unexpected status: " + info.getStatus());
-        }
-    }
+	public void onOpen(ArastrejuGate gate, String domain) {
+		DomainInfo info = getDomainInfo(domain);
+		switch (info.getStatus()) {
+		case NEW:
+			initializeDomain(gate, domain, info);
+			break;
+		case INITIALIZED:
+			domainValidator.validateDomain(gate, domain);
+			break;
+		case DELETED:
+			throw new IllegalStateException("Domain " + domain
+					+ " has been deleted.");
+		default:
+			throw new IllegalStateException("Unexpected status: "
+					+ info.getStatus());
+		}
+	}
 
-    public void init(RBConfig config) throws ConfigurationException {
-        this.config = config;
-        if (domainInfoContainer == null) {
-            domainInfoContainer = defaultInfoContainer();
-        }
-        if (domainValidator == null) {
-            domainValidator = defaultValidator();
-        }
-    }
+	// ----------------------------------------------------
 
-    // ----------------------------------------------------
+	public void init(RBConfig config) throws ConfigurationException {
+		this.config = config;
+		if (domainInfoContainer == null) {
+			domainInfoContainer = defaultInfoContainer();
+		}
+		if (domainValidator == null) {
+			domainValidator = defaultValidator();
+		}
+	}
 
-    public DomainValidator getDomainValidator() {
-        return domainValidator;
-    }
+	// ----------------------------------------------------
 
-    public void setDomainValidator(DomainValidator domainValidator) {
-        this.domainValidator = domainValidator;
-    }
+	public DomainValidator getDomainValidator() {
+		return domainValidator;
+	}
 
-    public DomainInfoContainer getDomainInfoContainer() {
-        return domainInfoContainer;
-    }
+	public void setDomainValidator(DomainValidator domainValidator) {
+		this.domainValidator = domainValidator;
+	}
 
-    public void setDomainInfoContainer(DomainInfoContainer domainInfoContainer) {
-        this.domainInfoContainer = domainInfoContainer;
-    }
+	public DomainInfoContainer getDomainInfoContainer() {
+		if(domainInfoContainer==null){
+			try {
+				domainInfoContainer = defaultInfoContainer();
+			} catch (ConfigurationException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return domainInfoContainer;
+	}
 
-    // ----------------------------------------------------
+	public void setDomainInfoContainer(DomainInfoContainer domainInfoContainer) {
+		this.domainInfoContainer = domainInfoContainer;
+	}
 
-    private void initializeDomain(ArastrejuGate gate, String domain, DomainInfo info) {
-        domainValidator.initializeDomain(gate, domain);
-        info.setStatus(DomainStatus.INITIALIZED);
-        try {
-            domainInfoContainer.updateDomain(info);
-        } catch (DomainInfoException e) {
-            throw new IllegalStateException(e);
-        }
-    }
+	// ----------------------------------------------------
 
-    private DomainInfo getDomainInfo(String domain) {
-        DomainInfo info = domainInfoContainer.getInfo(domain);
-        if (info == null) {
-            try {
-                info = domainInfoContainer.registerDomain(domain);
-            } catch (DomainInfoException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return info;
-    }
+	private void initializeDomain(ArastrejuGate gate, String domain,
+			DomainInfo info) {
+		domainValidator.initializeDomain(gate, domain);
+		info.setStatus(DomainStatus.INITIALIZED);
+		try {
+			getDomainInfoContainer().updateDomain(info);
+		} catch (DomainInfoException e) {
+			throw new IllegalStateException(e);
+		}
+	}
 
-    private DomainInfoContainer defaultInfoContainer() throws ConfigurationException {
-        try {
-            return new LocalFileBasedDomainInfoContainer(config.getWorkDirectory());
-        } catch (DomainInfoException e) {
-            throw new ConfigurationException(ErrorCodes.DOMAIN_INFO_COULD_NOT_BE_READ,
-                    "Domain info container failed.", e);
-        }
-    }
+	private DomainInfo getDomainInfo(String domain) {
+		DomainInfo info = getDomainInfoContainer().getInfo(domain);
+		if (info == null) {
+			try {
+				info = getDomainInfoContainer().registerDomain(domain);
+			} catch (DomainInfoException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return info;
+	}
 
-    private DomainValidator defaultValidator() {
-        return new DefaultDomainValidator();
-    }
+	private DomainInfoContainer defaultInfoContainer()
+			throws ConfigurationException {
+		try {
+			return new LocalFileBasedDomainInfoContainer(
+					config.getWorkDirectory());
+		} catch (DomainInfoException e) {
+			throw new ConfigurationException(
+					ErrorCodes.DOMAIN_INFO_COULD_NOT_BE_READ,
+					"Domain info container failed.", e);
+		}
+	}
+
+	private DomainValidator defaultValidator() {
+		return new DefaultDomainValidator();
+	}
 
 }

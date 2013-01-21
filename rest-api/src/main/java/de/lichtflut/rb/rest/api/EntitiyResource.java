@@ -28,8 +28,6 @@ import com.sun.jersey.core.util.Base64;
 import com.sun.jersey.spi.resource.Singleton;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.entity.RBFieldValue;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.rest.api.models.transfer.Association;
 import de.lichtflut.rb.rest.api.models.transfer.Entity;
@@ -87,23 +85,20 @@ public class EntitiyResource extends RBServiceEndpoint {
 		if (rbEntity == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		Entity entity = mapEntity(rbEntity, true);
+		Entity entity = mapEntity(rbEntity, entityManager);
 
 		return Response.ok().entity(entity).build();
 	}
 
 	/**
-	 * Tries to map a {@link RBEntity} to an {@link Entity} All RBField values
-	 * will be added as {@link Association} including the predicate.
 	 * 
 	 * @param rbEntity
-	 * @param resolveAllAssocs
-	 *            - set to true if additional to the schema definitions all of
-	 *            the node's associations should be handled
+	 * @param entityManager - to determine if the association's object is an entity or not
 	 * @return
 	 */
-	private Entity mapEntity(RBEntity rbEntity, boolean resolveAllAssocs) {
-		String base64EntityID = Base64.base64Decode(rbEntity.getID().toURI());
+	private Entity mapEntity(RBEntity rbEntity, EntityManager entityManager) {
+		String base64EntityID = new String(Base64.encode(rbEntity.getID()
+				.toURI()));
 
 		Entity entity = new Entity();
 		entity.setId(rbEntity.getNode().toURI());
@@ -112,52 +107,22 @@ public class EntitiyResource extends RBServiceEndpoint {
 				+ ENTITY_PATH.replace("{base64EntityID}", base64EntityID));
 		selfLink.setLinkRel(SELF_REL);
 		entity.getResourceMeta().addLink(selfLink);
-		for (RBField field : rbEntity.getAllFields()) {
-			List<RBFieldValue> values = field.getValues();
-			for (RBFieldValue rbFieldValue : values) {
-				entity.getAssociations().add(
-						mapAssociation(rbFieldValue, field));
-			}
-		}
-		// Resolve all the other associations
-		if (resolveAllAssocs) {
-			for (Statement stmt : rbEntity.getNode().getAssociations()) {
-				Association assoc = new Association();
-				assoc.setEntityAssoc(false);
-				assoc.setPredicate(stmt.getPredicate().toURI());
-				assoc.setObject(stmt.getObject().toString());
-				// Check if this associaton is allready contained
-				if (!entity.getAssociations().contains(assoc)) {
-					entity.getAssociations().add(assoc);
+
+		for (Statement stmt : rbEntity.getNode().getAssociations()) {
+			Association assoc = new Association();
+			assoc.setEntityAssoc(false);
+			SemanticNode object = stmt.getObject();
+			if (object.isResourceNode()) {
+				RBEntity e = entityManager.find(object.asResource());
+				if(e !=null && e.hasSchema()){
+					assoc.setEntityAssoc(true);
 				}
 			}
+			assoc.setPredicate(stmt.getPredicate().toURI());
+			assoc.setObject(stmt.getObject().toString());
+			entity.getAssociations().add(assoc);
 		}
 		return entity;
-	}
-
-	private Association mapAssociation(RBFieldValue fieldValue, RBField field) {
-		boolean isEntityAssoc = false;
-		String objectValue;
-		Object value = fieldValue.getValue();
-		if (value instanceof RBEntity) {
-			isEntityAssoc = true;
-			objectValue = ((RBEntity) value).getID().toURI();
-		} else if (value instanceof SemanticNode) {
-			if (((SemanticNode) value).isResourceNode()) {
-				objectValue = ((SemanticNode) value).asResource().toURI();
-			} else {
-				objectValue = ((SemanticNode) value).asValue().getStringValue();
-			}
-		} else {
-			objectValue = value.toString();
-		}
-
-		Association assoc = new Association();
-		assoc.setEntityAssoc(isEntityAssoc);
-		assoc.setPredicate(field.getPredicate().toURI());
-		assoc.setObject(objectValue);
-
-		return assoc;
 	}
 
 }
