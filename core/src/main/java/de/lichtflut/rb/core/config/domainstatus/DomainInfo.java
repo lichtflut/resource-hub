@@ -62,8 +62,8 @@ public class DomainInfo {
         return "DomainInfo{" +
                 "name='" + name + '\'' +
                 ", version='" + version + '\'' +
-                ", status=" + status +
-                '}';
+                ", status='" + status +
+                "'}";
     }
 
 }

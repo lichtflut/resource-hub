@@ -1,15 +1,14 @@
 /*
- * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright (C) 2013 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.entity.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.common.SchemaIdentifyingType;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
@@ -17,15 +16,13 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.model.nodes.SemanticNode;
-
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import org.arastreju.sge.model.nodes.views.InheritedDecorator;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * <p>
@@ -52,14 +49,6 @@ public class RBEntityImpl implements RBEntity {
     private boolean transientState;
 
     // -----------------------------------------------------
-
-	/**
-	 * Creates a new entity with a given schema.
-	 * @param schema - The schema.
-	 */
-	public RBEntityImpl(final ResourceSchema schema) {
-		this(new SNResource(), schema);
-	}
 
 	/**
 	 * Creates an entity based on node only.
@@ -120,14 +109,7 @@ public class RBEntityImpl implements RBEntity {
 
 	@Override
 	public ResourceID getType() {
-		Set<SemanticNode> types = SNOPS.objects(node, RDF.TYPE);
-		// We are not interested in RBSystem.ENTITY
-		for (SemanticNode node : types) {
-			if(!node.equals(RBSystem.ENTITY)){
-				return node.asResource();
-			}
-		}
-		return null;
+		return SchemaIdentifyingType.of(node);
 	}
 
 	@Override
@@ -258,6 +240,6 @@ public class RBEntityImpl implements RBEntity {
 	 */
 	private void setType(final ResourceID type) {
 		SNOPS.assure(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, type);
-        SNOPS.assure(node, RDF.TYPE, Arrays.asList(RBSystem.ENTITY, type));
+        SNOPS.associate(node, RDF.TYPE, type);
 	}
 }

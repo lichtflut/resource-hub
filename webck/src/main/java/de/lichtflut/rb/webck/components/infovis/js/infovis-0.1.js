@@ -2,7 +2,8 @@
 var LFRB = LFRB || {};
 
 LFRB.InfoVis = {
-	contextPath : '',	
+	contextPath : '',
+    serviceURI : '',
 	currentNode : undefined,	
 	callbackURL : '',
 	updateNodeInfo : function (node) {

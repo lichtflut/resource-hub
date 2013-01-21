@@ -146,7 +146,9 @@ public class EntityManagerImpl implements EntityManager {
 	public void changeType(final RBEntity entity, final ResourceID type) {
 		final ResourceNode node = conversation.resolve(entity.getID());
 		SNOPS.remove(node, RDF.TYPE, entity.getType());
+        SNOPS.remove(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, type);
+        SNOPS.associate(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, type);
 	}
 
 	@Override

@@ -4,11 +4,10 @@
 package de.lichtflut.rb.core.services;
 
 import de.lichtflut.rb.core.config.RBConfig;
-import de.lichtflut.rb.core.config.domainstatus.DomainInfo;
-import de.lichtflut.rb.core.config.domainstatus.DomainInfoContainer;
-import de.lichtflut.rb.core.config.domainstatus.DomainInfoException;
+import de.lichtflut.rb.core.system.DomainSupervisor;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.ConversationContext;
 import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
@@ -100,7 +99,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      * @return The new conversation.
      */
     @Override
-    public ModelingConversation startConversation() {
+    public Conversation startConversation() {
         return gate().startConversation();
     }
 
@@ -119,7 +118,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
             conversation = null;
         }
         for (Context ctx : conversationMap.keySet()) {
-            ModelingConversation conv = conversationMap.get(ctx);
+            Conversation conv = conversationMap.get(ctx);
             conv.close();
             LOGGER.debug("Closed conversation {}.", conv.getConversationContext());
         }
@@ -161,36 +160,12 @@ public class ArastrejuResourceFactory implements ConversationFactory {
 
     private void ensureInitialized(ArastrejuGate gate, String domain) {
         RBConfig config = context.getConfig();
-        DomainValidator validator = config.getDomainValidator();
-        DomainInfo info = getDomainInfo(domain);
-        switch (info.getStatus()) {
-            case NEW:
-                validator.initializeDomain(gate, domain);
-                break;
-            case INITIALIZED:
-                validator.validateDomain(gate, domain);
-                break;
-            case DELETED:
-                throw new IllegalStateException("Domain " + domain + " has been deleted.");
-            default:
-                throw new IllegalStateException("Unexpected status: " + info.getStatus());
-        }
+        DomainSupervisor supervisor = config.getDomainSupervisor();
+        supervisor.onOpen(gate, domain);
+
     }
 
-    private DomainInfo getDomainInfo(String domain) {
-        DomainInfoContainer container = context.getConfig().getDomainInfoContainer();
-        DomainInfo info = container.getInfo(domain);
-        if (info == null) {
-            try {
-                info = container.registerDomain(domain);
-            } catch (DomainInfoException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return info;
-    }
-
-    private void assureActive(ModelingConversation conversation) {
+    private void assureActive(Conversation conversation) {
         ConversationContext cc = conversation.getConversationContext();
         if (!cc.isActive()) {
             throw new IllegalStateException("Got inactive conversation from factory: " + cc);

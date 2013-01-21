@@ -3,10 +3,10 @@
  */
 package de.lichtflut.rb.webck.models.resources;
 
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
@@ -24,7 +24,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 public class ResourceLoadModel extends AbstractLoadableDetachableModel<ResourceNode> {
 
 	@SpringBean
-	private ModelingConversation conversation;
+	private SemanticNetworkService service;
 	
 	private final ResourceID id;
 	
@@ -38,12 +38,9 @@ public class ResourceLoadModel extends AbstractLoadableDetachableModel<ResourceN
 		Injector.get().inject(this);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ResourceNode load() {
-		return conversation.findResource(id.getQualifiedName());
+		return service.find(id.getQualifiedName());
 	}
 	
 }

@@ -1,9 +1,9 @@
 /*
- * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.io;
 
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.io.ReadStatementListener;
 import org.arastreju.sge.model.Statement;
 
@@ -20,7 +20,7 @@ import org.arastreju.sge.model.Statement;
  */
 public class ReportingStatementImporter implements ReadStatementListener {
 	
-	private final ModelingConversation mc;
+	private final Conversation mc;
 	
 	private int stmtCounter = 0;
 	
@@ -30,15 +30,12 @@ public class ReportingStatementImporter implements ReadStatementListener {
 	 * Constructor.
 	 * @param mc The modeling conversation.
 	 */
-	public ReportingStatementImporter(final ModelingConversation mc) {
+	public ReportingStatementImporter(final Conversation mc) {
 		this.mc = mc;
 	}
 
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onNewStatement(final Statement stmt) {
 		mc.addStatement(stmt);

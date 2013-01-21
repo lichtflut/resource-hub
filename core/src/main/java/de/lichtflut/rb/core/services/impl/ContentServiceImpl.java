@@ -7,7 +7,7 @@ import de.lichtflut.rb.core.content.SNContentItem;
 import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
 import de.lichtflut.rb.core.services.ContentService;
 import de.lichtflut.rb.core.services.ServiceContext;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -96,7 +96,7 @@ public class ContentServiceImpl implements ContentService {
 
     // ----------------------------------------------------
 
-    private ModelingConversation conversation() {
+    private Conversation conversation() {
         return arasFactory.getConversation();
     }
 

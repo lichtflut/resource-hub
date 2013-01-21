@@ -4,6 +4,8 @@
 package de.lichtflut.rb.webck.models.basic;
 
 import org.apache.wicket.model.IModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -18,31 +20,37 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class DerivedDetachableModel<T, M> extends AbstractLoadableDetachableModel<T> {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(DerivedDetachableModel.class);
+
 	private final IModel<M> originalModel;
-	
+
 	private final M original;
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * @param original
 	 */
-	public DerivedDetachableModel(IModel<M> original) {
+	public DerivedDetachableModel(final IModel<M> original) {
 		this.originalModel = original;
 		this.original = null;
 	}
-	
+
 	/**
+	 * Constructor.
 	 * @param original
 	 */
-	public DerivedDetachableModel(M original) {
+	public DerivedDetachableModel(final M original) {
 		if (original == null) {
 			throw new IllegalStateException("Original value may not be null");
+		}
+		if(original instanceof IModel<?>){
+			LOGGER.warn("Wrong class typisation. IModel should not be used with this constructor.");
 		}
 		this.original = original;
 		this.originalModel = null;
 	}
-	
+
 	// ----------------------------------------------------
 
 	@Override
@@ -55,7 +63,7 @@ public abstract class DerivedDetachableModel<T, M> extends AbstractLoadableDetac
 			return null;
 		}
 	}
-	
+
 	@Override
 	public void detach() {
 		super.detach();
@@ -63,18 +71,18 @@ public abstract class DerivedDetachableModel<T, M> extends AbstractLoadableDetac
 			originalModel.detach();
 		}
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * Derive the value from the original. The original will never be null.
 	 * @param original The original model value.
 	 * @return The derived value.
 	 */
 	protected abstract T derive(M original);
-	
+
 	// ----------------------------------------------------
-	
+
 	protected M getOriginal() {
 		if (original != null) {
 			return original;
@@ -84,12 +92,12 @@ public abstract class DerivedDetachableModel<T, M> extends AbstractLoadableDetac
 			return null;
 		}
 	}
-	
+
 	/**
 	 * @return The original model.
 	 */
 	protected IModel<M> getOriginalModel() {
 		return originalModel;
 	}
-	
+
 }

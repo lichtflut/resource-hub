@@ -3,19 +3,6 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.BrowsingContextModel.isInCreateReferenceMode;
-import static de.lichtflut.rb.webck.models.ConditionalModel.and;
-import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
-
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
-
 import de.lichtflut.rb.core.eh.ValidationException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
@@ -26,6 +13,18 @@ import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.Conversation;
+
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.BrowsingContextModel.isInCreateReferenceMode;
+import static de.lichtflut.rb.webck.models.ConditionalModel.and;
+import static de.lichtflut.rb.webck.models.ConditionalModel.hasSchema;
 
 /**
  * <p>
@@ -45,12 +44,12 @@ public class BrowsingButtonBar extends TypedPanel<RBEntity> {
 	private EntityManager entityManager;
 
 	@SpringBean
-	private ModelingConversation conversation;
+	private Conversation conversation;
 
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+	 * @param id The compoenent ID.
 	 */
 	public BrowsingButtonBar(final String id, final IModel<RBEntity> model) {
 		super(id, model);

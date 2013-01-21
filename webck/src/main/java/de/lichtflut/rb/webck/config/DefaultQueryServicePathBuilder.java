@@ -73,7 +73,7 @@ public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
     private StringBuilder preparePathBuilder(String domain) {
         final String ctx = RequestCycle.get().getRequest().getContextPath();
         final StringBuilder sb = new StringBuilder(ctx + "/service/query");
-        sb.append("/domains/" + domain);
+        sb.append("/domains/").append(domain);
         return sb;
     }
 

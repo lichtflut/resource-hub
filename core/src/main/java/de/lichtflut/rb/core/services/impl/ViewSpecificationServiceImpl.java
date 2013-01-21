@@ -3,14 +3,24 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.common.Accessibility;
 import de.lichtflut.rb.core.common.SerialNumberOrderedNodesContainer;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
+import de.lichtflut.rb.core.viewspec.MenuItem;
+import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.core.viewspec.ViewPort;
+import de.lichtflut.rb.core.viewspec.WDGT;
+import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
+import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 import de.lichtflut.rb.core.viewspec.impl.SNViewPort;
-import org.arastreju.sge.ModelingConversation;
+import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
+import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
@@ -24,20 +34,9 @@ import org.arastreju.sge.structure.OrderBySerialNumber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
-import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.core.services.ViewSpecificationService;
-import de.lichtflut.rb.core.viewspec.MenuItem;
-import de.lichtflut.rb.core.viewspec.Perspective;
-import de.lichtflut.rb.core.viewspec.ViewPort;
-import de.lichtflut.rb.core.viewspec.WDGT;
-import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
-import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
-import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
-import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>
@@ -175,7 +174,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	@Override
 	public void remove(final Perspective perspective) {
 		final SemanticGraph graph = new ViewSpecTraverser().toGraph(perspective);
-		final ModelingConversation mc = conversation();
+		final Conversation mc = conversation();
 		final TransactionControl tx = mc.beginTransaction();
 		try {
 			for (Statement stmt : graph.getStatements()) {
@@ -218,7 +217,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
     @Override
     public void movePositionDown(final ViewPort port, WidgetSpec widgetSpec) {
-        final ModelingConversation conversation = conversation();
+        final Conversation conversation = conversation();
         conversation().attach(port);
         conversation().attach(widgetSpec);
         new SerialNumberOrderedNodesContainer() {
@@ -231,7 +230,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
     @Override
     public void removeWidget(ViewPort port, WidgetSpec widgetSpec) {
-        final ModelingConversation conversation = conversation();
+        final Conversation conversation = conversation();
         conversation.attach(port);
         port.removeWidget(widgetSpec);
         conversation.remove(widgetSpec.getID());
@@ -304,7 +303,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	// ----------------------------------------------------
 
-	private ModelingConversation conversation() {
+	private Conversation conversation() {
 		return arasFactory.getConversation(RBSystem.VIEW_SPEC_CTX);
 	}
 

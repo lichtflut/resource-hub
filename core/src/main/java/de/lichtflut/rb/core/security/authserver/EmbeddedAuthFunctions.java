@@ -7,7 +7,7 @@ import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -45,7 +45,7 @@ public class EmbeddedAuthFunctions {
 		return RBCrypt.extractSalt(credential);
 	}
 	
-	public static ResourceNode findUserNode(ModelingConversation conversation, String id) {
+	public static ResourceNode findUserNode(Conversation conversation, String id) {
 		final Query query = conversation.createQuery();
 		query.addField(EmbeddedAuthModule.IDENTIFIED_BY, id);
 		final QueryResult result = query.getResult();

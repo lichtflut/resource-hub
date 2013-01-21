@@ -20,6 +20,6 @@ public interface DomainInfoContainer {
 
     void unregisterDomain(String domain) throws DomainInfoException;
 
-    void updateDomain(DomainInfo info);
+    void updateDomain(DomainInfo info) throws DomainInfoException;
 
 }

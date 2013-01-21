@@ -3,13 +3,9 @@
  */
 package de.lichtflut.rb.core.config;
 
-import de.lichtflut.rb.core.config.domainstatus.DomainInfoContainer;
-import de.lichtflut.rb.core.config.domainstatus.DomainInfoException;
-import de.lichtflut.rb.core.config.domainstatus.LocalFileBasedDomainInfoContainer;
 import de.lichtflut.rb.core.eh.ConfigurationException;
-import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.security.SecurityConfiguration;
-import de.lichtflut.rb.core.services.DomainValidator;
+import de.lichtflut.rb.core.system.DomainSupervisor;
 import org.arastreju.sge.ArastrejuProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +48,7 @@ public class RBConfig {
     
     private FileServiceConfiguration fileServiceConfiguration;
 
-    private DomainValidator domainValidator;
-
-    private DomainInfoContainer domainInfoContainer;
+    private DomainSupervisor domainSupervisor;
 
 	// -----------------------------------------------------
 
@@ -68,12 +62,6 @@ public class RBConfig {
 		this.appName = appName;
         this.workDir = checkWorkDir(appName);
         this.dataStoreConfig = new DataStoreConfiguration(workDir, appName);
-        try {
-            this.domainInfoContainer = new LocalFileBasedDomainInfoContainer(workDir);
-        } catch (DomainInfoException e) {
-            throw new ConfigurationException(ErrorCodes.DOMAIN_INFO_COULD_NOT_BE_READ,
-                    "Domain info container failed.", e);
-        }
     }
 
 	// -----------------------------------------------------
@@ -108,16 +96,12 @@ public class RBConfig {
         return dataStoreConfig;
     }
 
-    public DomainValidator getDomainValidator() {
-        return domainValidator;
-    }
-
     public FileServiceConfiguration getFileServiceConfiguration() {
         return fileServiceConfiguration;
     }
 
-    public DomainInfoContainer getDomainInfoContainer() {
-        return domainInfoContainer;
+    public DomainSupervisor getDomainSupervisor() {
+        return domainSupervisor;
     }
 
     // ----------------------------------------------------
@@ -130,12 +114,12 @@ public class RBConfig {
         this.securityConfiguration = securityConfiguration;
     }
 
-    public void setDomainValidator(DomainValidator domainValidator) {
-        this.domainValidator = domainValidator;
-    }
-
     public void setDataStoreConfig(DataStoreConfiguration dataStoreConfig) {
         this.dataStoreConfig = dataStoreConfig;
+    }
+
+    public void setDomainSupervisor(DomainSupervisor domainSupervisor) {
+        this.domainSupervisor = domainSupervisor;
     }
 
     public void setFileServiceConfiguration(FileServiceConfiguration fileServiceConfiguration) {
@@ -144,8 +128,12 @@ public class RBConfig {
 
     // ----------------------------------------------------
 
-    public void ready() {
+    public void ready() throws ConfigurationException {
         LOGGER.info("Initialized {}", this);
+        if (domainSupervisor == null) {
+            domainSupervisor = new DomainSupervisor();
+        }
+        domainSupervisor.init(this);
     }
 
     // ----------------------------------------------------

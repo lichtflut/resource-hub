@@ -8,10 +8,8 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
-import de.lichtflut.rb.core.entity.RBFieldValue;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.NamespaceHandle;
 import org.arastreju.sge.naming.QualifiedName;
@@ -20,6 +18,7 @@ import de.lichtflut.rb.core.common.EntityLabelBuilder;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.RBFieldValue;
 
 /**
  * <p>
@@ -37,21 +36,21 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 	private final Element[] elements;
 
 	private final Map<String, NamespaceHandle> namespaces;
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
-     * @param expression The label expression.
+	 * @param expression The label expression.
 	 */
 	public ExpressionBasedLabelBuilder(final String expression) throws LabelExpressionParseException {
 		this(expression, Collections.<String, NamespaceHandle>emptyMap());
 	}
-	
+
 	/**
 	 * @param expression The label expression.
-     * @param namespaces The map of namespaces to be used.
+	 * @param namespaces The map of namespaces to be used.
 	 */
-	public ExpressionBasedLabelBuilder(final String expression, final Map<String, NamespaceHandle> namespaces) 
+	public ExpressionBasedLabelBuilder(final String expression, final Map<String, NamespaceHandle> namespaces)
 			throws LabelExpressionParseException {
 		this.namespaces = namespaces;
 		final String[] tokens = expression.split("\\s+");
@@ -61,7 +60,7 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 			elements[i] = toElement(current);
 		}
 	}
-	
+
 	// ----------------------------------------------------
 
 	@Override
@@ -89,27 +88,27 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 		}
 		return sb.toString().trim();
 	}
-	
+
 	@Override
 	public String toString() {
 		return getExpression();
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	private Element toElement(final String current) throws LabelExpressionParseException {
 		if (current.startsWith("<")) {
 			if (!current.endsWith(">")) {
 				throw new LabelExpressionParseException("Invalid token: " + current);
 			} else {
-				return new LiteralElement(current.substring(1, current.length() -1)); 
+				return new LiteralElement(current.substring(1, current.length() -1));
 			}
 		} else {
 			return toFieldElement(current);
-			
+
 		}
 	}
-	
+
 	/**
 	 * @param name The name of the element.
 	 * @return The element.
@@ -130,58 +129,58 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 			throw new LabelExpressionParseException("Field is neither URI nor QName: '" + name + "'");
 		}
 	}
-	
+
 	// -- ELEMENT TYPES -----------------------------------
-	
+
 	interface Element extends Serializable {
 		boolean append(RBEntity entity, StringBuilder sb, Locale locale);
 	}
-	
+
 	class LiteralElement implements Element {
-		
+
 		final String value;
 
-		public LiteralElement(String value) {
+		public LiteralElement(final String value) {
 			this.value = value;
 		}
 
 		@Override
-		public boolean append(RBEntity entity, StringBuilder sb, Locale locale) {
+		public boolean append(final RBEntity entity, final StringBuilder sb, final Locale locale) {
 			sb.append(value);
 			return false;
 		}
-		
-		/** 
-		* {@inheritDoc}
-		*/
+
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public String toString() {
 			return "<" + value + ">";
 		}
-		
+
 	}
-	
+
 	class FieldElement implements Element {
 
 		final ResourceID predicate;
-		
+
 		public FieldElement(final ResourceID predicate) {
 			this.predicate = predicate;
 		}
-		
+
 		@Override
-		public boolean append(RBEntity entity, StringBuilder sb, Locale locale) {
+		public boolean append(final RBEntity entity, final StringBuilder sb, final Locale locale) {
 			final RBField field = entity.getField(predicate);
 			if (field == null) {
 				sb.append("%" + predicate + "% ");
 				return false;
-			} 
+			}
 			if (field.getValues().isEmpty()) {
 				return false;
 			}
 			boolean first = true;
 			for (RBFieldValue fieldValue : field.getValues()) {
-                Object value = fieldValue.getValue();
+				Object value = fieldValue.getValue();
 				if (first) {
 					first = false;
 				} else {
@@ -195,13 +194,14 @@ public class ExpressionBasedLabelBuilder implements EntityLabelBuilder, Serializ
 			}
 			return true;
 		}
-		
+
+		@Override
 		public String toString() {
 			return predicate.getQualifiedName().toURI();
 		}
-		
+
 	}
-	
+
 	private static String getResourceLabel(final Object ref, final Locale locale) {
 		if (ref instanceof ResourceID) {
 			return ResourceLabelBuilder.getInstance().getLabel((ResourceID) ref, locale);

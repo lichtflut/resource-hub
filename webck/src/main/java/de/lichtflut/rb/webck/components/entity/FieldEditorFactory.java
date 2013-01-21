@@ -8,9 +8,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
-import de.lichtflut.rb.webck.behaviors.CssModifier;
-import de.lichtflut.rb.webck.behaviors.TitleModifier;
-import de.lichtflut.rb.webck.models.basic.CastingModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -25,7 +22,6 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.SemanticNode;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
@@ -34,6 +30,8 @@ import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.VisualizationInfo;
+import de.lichtflut.rb.webck.behaviors.CssModifier;
+import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.rteditor.RichTextBehavior;
@@ -71,40 +69,40 @@ public class FieldEditorFactory implements Serializable {
 	// ----------------------------------------------------
 
 	public Component createField(final RBFieldValueModel valueModel) {
-        Component field = createField(valueModel, true);
-        if (valueModel.getFieldValue().isInherited()) {
-            field.setEnabled(false);
-            field.add(CssModifier.appendClass("inherited"));
-            field.add(TitleModifier.title(new ResourceModel("label.property-is-inherited")));
-        }
-        return field;
-    }
+		Component field = createField(valueModel, true);
+		if (valueModel.getFieldValue().isInherited()) {
+			field.setEnabled(false);
+			field.add(CssModifier.appendClass("inherited"));
+			field.add(TitleModifier.title(new ResourceModel("label.property-is-inherited")));
+		}
+		return field;
+	}
 
 	public Component createField(final RBFieldValueModel valueModel, final boolean allowEmbedding) {
 		RBField field = valueModel.getField();
 		switch(field.getDataType()) {
-		case RESOURCE:
-			return createResourceField(valueModel, allowEmbedding);
-		case BOOLEAN:
-			return createBooleanField(field, valueModel);
-		case DATE:
-			return createDateField(field, valueModel);
-		case INTEGER:
-			return createTextField(field, valueModel, BigInteger.class);
-		case DECIMAL:
-			return createTextField(field, valueModel, BigDecimal.class);
-		case STRING:
-			return createTextField(field, valueModel, String.class);
-		case TEXT:
-			return createTextArea(field, valueModel);
-		case RICH_TEXT:
-			return createRichTextArea(field, valueModel);
-		case URI:
-			return createURIField(field, valueModel);
-		case FILE:
-			return createFileUploadField(field, valueModel);
-		default:
-			throw new NotYetImplementedException("Datatype: " + field.getDataType());
+			case RESOURCE:
+				return createResourceField(valueModel, allowEmbedding);
+			case BOOLEAN:
+				return createBooleanField(field, valueModel);
+			case DATE:
+				return createDateField(field, valueModel);
+			case INTEGER:
+				return createTextField(field, valueModel, BigInteger.class);
+			case DECIMAL:
+				return createTextField(field, valueModel, BigDecimal.class);
+			case STRING:
+				return createTextField(field, valueModel, String.class);
+			case TEXT:
+				return createTextArea(field, valueModel);
+			case RICH_TEXT:
+				return createRichTextArea(field, valueModel);
+			case URI:
+				return createURIField(field, valueModel);
+			case FILE:
+				return createFileUploadField(field, valueModel);
+			default:
+				throw new NotYetImplementedException("Datatype: " + field.getDataType());
 		}
 	}
 
@@ -164,7 +162,8 @@ public class FieldEditorFactory implements Serializable {
 	}
 
 	public Component createFileUploadField(final RBField fieldDefinition, final IModel model){
-		final FileUploadModel uploadModel = new FileUploadModel(model, fieldDefinition);
+		IModel<String> prefix = Model.of(fieldDefinition.getPredicate().getQualifiedName().toURI());
+		final FileUploadModel uploadModel = new FileUploadModel(model, prefix);
 		// TODO get maximum from application
 		// Set maximum filesize 10MB
 		long maximum =  10485760;

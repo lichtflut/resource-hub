@@ -5,7 +5,6 @@ package de.lichtflut.rb.webck.components.navigation;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.common.EntityType;
-import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
@@ -179,7 +178,7 @@ public class ExtendedActionsPanel extends Panel {
 		}
 		@Override
 		protected ResourceID derive(ResourceNode node) {
-			return EntityType.typeOf(node);
+			return EntityType.of(node);
 		}
 	}
 

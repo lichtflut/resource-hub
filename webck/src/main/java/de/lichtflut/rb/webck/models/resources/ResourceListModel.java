@@ -6,7 +6,7 @@ package de.lichtflut.rb.webck.models.resources;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
@@ -30,7 +30,7 @@ import java.util.List;
 public class ResourceListModel extends AbstractLoadableDetachableModel<List<ResourceNode>> {
 
 	@SpringBean
-	private ModelingConversation conversation;
+	private Conversation conversation;
 	
 	private final ResourceID type;
 	
@@ -39,7 +39,7 @@ public class ResourceListModel extends AbstractLoadableDetachableModel<List<Reso
 	// -----------------------------------------------------
 	
 	/**
-	 * @param id The id of the entity to load.
+	 * @param type The type of the resources to load.
 	 */
 	public ResourceListModel(final ResourceID type, final String... sortColumns) {
 		this.type = type;
@@ -49,9 +49,6 @@ public class ResourceListModel extends AbstractLoadableDetachableModel<List<Reso
 
 	// -----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	public List<ResourceNode> load() {
 		final Query query = conversation.createQuery();
 		query.addField(RDF.TYPE, SNOPS.uri(type));

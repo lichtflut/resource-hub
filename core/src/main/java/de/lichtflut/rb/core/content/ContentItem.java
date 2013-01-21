@@ -1,11 +1,10 @@
 package de.lichtflut.rb.core.content;
 
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.naming.QualifiedName;
-
 import java.io.Serializable;
 import java.util.Date;
+
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.SemanticNode;
 
 /**
  * <p>
@@ -20,56 +19,56 @@ import java.util.Date;
  */
 public interface ContentItem extends Serializable {
 
-    String getID();
+	String getID();
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    String getTitle();
+	String getTitle();
 
-    void setTitle(String title);
+	void setTitle(String title);
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    String getContentAsString();
+	String getContentAsString();
 
-    void setContent(String content);
+	void setContent(String content);
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    /**
-     * Get the node representing the creator. This may either be the resource representing the creator, or
-     * a string value node.
-     * @return The node representing the creator of this content item.
-     */
-    SemanticNode getCreator();
+	/**
+	 * Get the node representing the creator. This may either be the resource representing the creator, or
+	 * a string value node.
+	 * @return The node representing the creator of this content item.
+	 */
+	SemanticNode getCreator();
 
-    /**
-     * Get the name of the creator.
-     * @return The creator's name.
-     */
-    String getCreatorName();
+	/**
+	 * Get the name of the creator.
+	 * @return The creator's name.
+	 */
+	String getCreatorName();
 
-    /**
-     * Set the node representing the creator.
-     * @param creator The creator.
-     */
-    void setCreator(ResourceID creator);
+	/**
+	 * Set the node representing the creator.
+	 * @param creator The creator.
+	 */
+	void setCreator(ResourceID creator);
 
-    /**
-     * Set the name of the creator.
-     * @param creator The creator.
-     */
-    void setCreator(String creator);
+	/**
+	 * Set the name of the creator.
+	 * @param creator The creator.
+	 */
+	void setCreator(String creator);
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    Date getCreateDate();
+	Date getCreateDate();
 
-    void setCreateDate(Date date);
+	void setCreateDate(Date date);
 
-    Date getModificationDate();
+	Date getModificationDate();
 
-    void setModificationDate(Date date);
+	void setModificationDate(Date date);
 
 
 }

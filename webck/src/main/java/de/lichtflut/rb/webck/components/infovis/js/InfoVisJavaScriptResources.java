@@ -20,7 +20,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 public class InfoVisJavaScriptResources {
 	
 	public static ResourceReference RAPHAEL_JS = 
-			new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "raphael-2.0.2-min.js");
+			new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "raphael-2.1.0.js");
 	
 	public static ResourceReference JIT_JS = 
 			new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "jit-2.0.1-min.js");

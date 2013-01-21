@@ -35,7 +35,24 @@ public interface SemanticNetworkService {
      */
     ResourceNode resolve(ResourceID rid, Context... contexts);
 
+    /**
+     * Fine a node by it's qualified name.
+     * @param qn The qualified name.
+     * @return The node or null if not found.
+     */
     ResourceNode find(QualifiedName qn);
+
+    /**
+     * Remove a node identified by it's qualified name.
+     * @param qn The qualified name.
+     */
+    void remove(QualifiedName qn);
+
+    /**
+     * Remove a node.
+     * @param resource The resource to be removed.
+     */
+    void remove(ResourceID resource);
 
     // ----------------------------------------------------
 

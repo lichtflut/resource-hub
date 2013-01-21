@@ -3,15 +3,10 @@
  */
 package de.lichtflut.rb.core.security.authserver;
 
-import static org.arastreju.sge.SNOPS.singleObject;
-import static org.arastreju.sge.SNOPS.string;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.arastreju.sge.ModelingConversation;
+import de.lichtflut.infra.Infra;
+import de.lichtflut.rb.core.eh.RBAuthException;
+import de.lichtflut.rb.core.security.RBUser;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -20,9 +15,13 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.infra.Infra;
-import de.lichtflut.rb.core.eh.RBAuthException;
-import de.lichtflut.rb.core.security.RBUser;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
 
 /**
  * <p>
@@ -39,7 +38,7 @@ public class EmbeddedAuthAuthorizationManager {
 
 	private final static Logger logger = LoggerFactory.getLogger(EmbeddedAuthAuthorizationManager.class);
 
-	private final ModelingConversation conversation;
+	private final Conversation conversation;
 
 	private final EmbeddedAuthDomainManager domainManager;
 
@@ -49,7 +48,7 @@ public class EmbeddedAuthAuthorizationManager {
 	 * Constructor.
 	 * @param domainManager The domain manager.
 	 */
-	public EmbeddedAuthAuthorizationManager(final ModelingConversation conversation, final EmbeddedAuthDomainManager domainManager) {
+	public EmbeddedAuthAuthorizationManager(final Conversation conversation, final EmbeddedAuthDomainManager domainManager) {
 		this.domainManager = domainManager;
 		this.conversation = conversation;
 	}
@@ -157,7 +156,7 @@ public class EmbeddedAuthAuthorizationManager {
 		}
 	}
 
-	private ModelingConversation mc() {
+	private Conversation mc() {
 		return conversation;
 	}
 

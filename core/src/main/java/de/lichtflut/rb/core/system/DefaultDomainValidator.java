@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.application.common;
+package de.lichtflut.rb.core.system;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
@@ -35,7 +35,7 @@ public class DefaultDomainValidator implements DomainValidator {
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(DefaultDomainValidator.class);
 
-    private final Set<String> initializedDomains = new HashSet<String>();
+    private final Set<String> validated = new HashSet<String>();
 
 	// ----------------------------------------------------
 
@@ -46,11 +46,12 @@ public class DefaultDomainValidator implements DomainValidator {
 
     @Override
     public void validateDomain(ArastrejuGate gate, String domainName) {
-        if (initializedDomains.contains(domainName)) {
+        if (validated.contains(domainName)) {
+            // already validated since start of application
             return;
         }
 
-        LOGGER.info("Running apriori initialization for domain " + domainName);
+        LOGGER.info("Running validation for domain " + domainName);
         final Organizer organizer = gate.getOrganizer();
 
         // The protected context of this domain
@@ -68,7 +69,7 @@ public class DefaultDomainValidator implements DomainValidator {
         organizer.registerNamespace(RBSystem.SYS_NAMESPACE_URI, "rb");
         organizer.registerNamespace(RB.COMMON_NAMESPACE_URI, "common");
 
-        initializedDomains.add(domainName);
+        validated.add(domainName);
     }
 
 }

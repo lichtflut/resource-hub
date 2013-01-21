@@ -1,11 +1,11 @@
 /*
- * Copyright 2011 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.browsing;
 
 import java.io.Serializable;
 
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 
@@ -22,6 +22,6 @@ import de.lichtflut.rb.core.entity.RBEntity;
  */
 public interface ReferenceReceiveAction<T> extends Serializable {
 
-	void execute(ModelingConversation conversation, RBEntity target);
+	void execute(Conversation conversation, RBEntity target);
 
 }

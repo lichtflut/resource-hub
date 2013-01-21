@@ -40,7 +40,7 @@ import java.util.List;
 @Path("query/domains/{domain}/classes")
 public class ClassQueryService extends AbstractQueryService {
 
-	private static final Logger logger = LoggerFactory.getLogger(ClassQueryService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClassQueryService.class);
 
 	public ClassQueryService(){}
 	
@@ -56,14 +56,14 @@ public class ClassQueryService extends AbstractQueryService {
     {
         RBUser user = authenticateUser(token);
 		if (term == null) {
-			logger.info("Invalid class query (term is null).");
+			LOGGER.info("Invalid class query (term is null).");
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
 		Query query = createQuery(domain, user, RBSystem.TYPE_SYSTEM_CTX);
 		String superclassDecoded = decodeBase64(superclass);
 		
-		logger.info("Querying classes '{}'  with superclass {}.", term, superclassDecoded);
+		LOGGER.info("Querying classes '{}'  with superclass {}.", term, superclassDecoded);
 		
 		List<ResultItemRVO> result = performQuery(query, term, superclassDecoded);
 		return Response.ok(result).build();

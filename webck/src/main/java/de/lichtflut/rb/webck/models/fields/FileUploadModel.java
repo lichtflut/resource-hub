@@ -5,21 +5,16 @@ package de.lichtflut.rb.webck.models.fields;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
-import de.lichtflut.rb.core.services.impl.JackRabbitFileService;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
-import de.lichtflut.rb.core.services.impl.LinkProvider;
-import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.core.services.impl.JackRabbitFileService;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
 import de.lichtflut.repository.ContentDescriptor;
 import de.lichtflut.repository.Filetype;
@@ -33,6 +28,7 @@ import de.lichtflut.repository.impl.ContentDescriptorBuilder;
  *
  * @author Ravi Knox
  */
+// TODO rethink data structure
 public class FileUploadModel implements IModel<Object>{
 
 	@SpringBean
@@ -41,14 +37,14 @@ public class FileUploadModel implements IModel<Object>{
 	@SpringBean
 	private EntityManager entityManager;
 
-	private final ResourceID rbField;
 	private final IModel<Object> original;
+	private final IModel<String> prefix;
 
 	// ---------------- Constructor -------------------------
 
-	public FileUploadModel(final IModel<Object> model, final RBField rbField){
+	public FileUploadModel(final IModel<Object> model, final IModel<String> pathPrefix){
 		this.original = model;
-		this.rbField = rbField.getPredicate();
+		this.prefix = pathPrefix;
 		Injector.get().inject(this);
 	}
 
@@ -96,12 +92,9 @@ public class FileUploadModel implements IModel<Object>{
 	}
 
 	private ContentDescriptor buildContentDescriptorFor(final FileUpload upload) {
-		ResourceID id = RBWebSession.get().getHistory().getCurrentStep().getHandle().getId();
-		RBEntity entity = entityManager.find(id);
-		if(null == entity){
-			entity = new RBEntityImpl(id.asResource(), id);
-		}
-		String path = LinkProvider.buildRepositoryStructureFor(entity, rbField.getQualifiedName(), upload.getClientFileName());
+		// TODO added uuid to get unique path. Remove when data structure is clear.
+		String random = UUID.randomUUID().toString();
+		String path = random + prefix.getObject() + "/" + upload.getClientFileName();
 		ContentDescriptor descriptor;
 		try {
 			Filetype filetype = getFiletype(upload);

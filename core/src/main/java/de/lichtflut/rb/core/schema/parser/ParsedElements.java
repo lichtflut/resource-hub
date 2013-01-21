@@ -91,9 +91,6 @@ public class ParsedElements {
 
     // -----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return schemas.size() + " schema(s) and " 
