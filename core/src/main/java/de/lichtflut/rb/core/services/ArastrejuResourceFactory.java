@@ -4,9 +4,7 @@
 package de.lichtflut.rb.core.services;
 
 import de.lichtflut.rb.core.config.RBConfig;
-import de.lichtflut.rb.core.config.domainstatus.DomainInfo;
-import de.lichtflut.rb.core.config.domainstatus.DomainInfoContainer;
-import de.lichtflut.rb.core.config.domainstatus.DomainInfoException;
+import de.lichtflut.rb.core.system.DomainSupervisor;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.Conversation;
@@ -55,14 +53,6 @@ public class ArastrejuResourceFactory implements ConversationFactory {
 	}
 
     /**
-     * Constructor.
-     * @param gate The already opened gate.
-     */
-    public ArastrejuResourceFactory(ArastrejuGate gate) {
-        this.openGate = gate;
-    }
-
-    /**
      * Constructor for spring.
      */
     protected ArastrejuResourceFactory() {
@@ -109,7 +99,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      * @return The new conversation.
      */
     @Override
-    public ModelingConversation startConversation() {
+    public Conversation startConversation() {
         return gate().startConversation();
     }
 
@@ -128,7 +118,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
             conversation = null;
         }
         for (Context ctx : conversationMap.keySet()) {
-            ModelingConversation conv = conversationMap.get(ctx);
+            Conversation conv = conversationMap.get(ctx);
             conv.close();
             LOGGER.debug("Closed conversation {}.", conv.getConversationContext());
         }
@@ -155,9 +145,6 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     // ----------------------------------------------------
 
     private ArastrejuGate openGate() {
-        if (context == null) {
-            throw new IllegalStateException("No service context present. Gate can not be (re-)opened.");
-        }
         final String domain = context.getDomain();
         LOGGER.debug("Opening Arastreju Gate for domain {} ", domain);
         ArastrejuGate gate = null;
@@ -173,33 +160,9 @@ public class ArastrejuResourceFactory implements ConversationFactory {
 
     private void ensureInitialized(ArastrejuGate gate, String domain) {
         RBConfig config = context.getConfig();
-        DomainValidator validator = config.getDomainValidator();
-        DomainInfo info = getDomainInfo(domain);
-        switch (info.getStatus()) {
-            case NEW:
-                validator.initializeDomain(gate, domain);
-                break;
-            case INITIALIZED:
-                validator.validateDomain(gate, domain);
-                break;
-            case DELETED:
-                throw new IllegalStateException("Domain " + domain + " has been deleted.");
-            default:
-                throw new IllegalStateException("Unexpected status: " + info.getStatus());
-        }
-    }
+        DomainSupervisor supervisor = config.getDomainSupervisor();
+        supervisor.onOpen(gate, domain);
 
-    private DomainInfo getDomainInfo(String domain) {
-        DomainInfoContainer container = context.getConfig().getDomainInfoContainer();
-        DomainInfo info = container.getInfo(domain);
-        if (info == null) {
-            try {
-                info = container.registerDomain(domain);
-            } catch (DomainInfoException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return info;
     }
 
     private void assureActive(Conversation conversation) {

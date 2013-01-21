@@ -3,10 +3,12 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.arastreju.sge.ModelingConversation;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.common.SchemaIdentifyingType;
+import de.lichtflut.rb.core.services.ConversationFactory;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.TypeManager;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
@@ -20,11 +22,8 @@ import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.common.SchemaIdentifyingType;
-import de.lichtflut.rb.core.services.ConversationFactory;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.TypeManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -163,8 +162,8 @@ public class TypeManagerImpl implements TypeManager {
 
 	// ----------------------------------------------------
 
-	private ModelingConversation conversation() {
-		return conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX);
-	}
+    private Conversation conversation() {
+        return conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX);
+    }
 
 }
