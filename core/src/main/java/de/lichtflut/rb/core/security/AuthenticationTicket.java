@@ -1,6 +1,8 @@
 package de.lichtflut.rb.core.security;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -20,6 +22,8 @@ import java.util.Date;
  */
 public class AuthenticationTicket {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationTicket.class);
+	
     public enum Type {
         SESSION("s"),
         REMEMBER_ME("r");
@@ -37,7 +41,7 @@ public class AuthenticationTicket {
 
     // ----------------------------------------------------
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ssZ");
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss Z");
 
     // ----------------------------------------------------
 
@@ -63,7 +67,8 @@ public class AuthenticationTicket {
             String signature = fields[3];
             return new AuthenticationTicket(user, expirationDate, signature, type);
         } catch (ParseException e) {
-            throw new TicketValidationException("Token expiration date hat wring format: " + token);
+        	LOGGER.info("Token seems to be in a wrong format: " + token, e);
+            throw new TicketValidationException("Token expiration date hat wrong format: " + token, e);
         }
     }
 

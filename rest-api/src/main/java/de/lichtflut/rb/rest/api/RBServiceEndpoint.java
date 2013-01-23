@@ -42,7 +42,7 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 
     // ----------------------------------------------------
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(RBServiceEndpoint.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // -- DEPENDENCIES ------------------------------------
 
@@ -77,7 +77,7 @@ public abstract class RBServiceEndpoint implements OperationTypes{
     protected RBUser authenticateUser(String token) throws UnauthenticatedUserException {
         RBUser user=null;
         if (token == null) {
-            LOGGER.warn("Request has no session token.");
+            logger.warn("Request has no session token.");
             throw new UnauthenticatedUserException("No session token.");
         }
         if (token != null) {
@@ -85,7 +85,7 @@ public abstract class RBServiceEndpoint implements OperationTypes{
             user = authService.loginByToken(token);
         }
         if (user == null) {
-            LOGGER.warn("Detected invalid token: {}", token);
+            logger.warn("Detected invalid token: {}", token);
             throw new UnauthenticatedUserException("Token is invalid.");
         }
         return user;
@@ -118,6 +118,10 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 		return handler;
 	}
 
+	protected Logger getLog(){
+		return logger;
+	}
+	
     // ----------------------------------------------------
 
     protected List<ResourceNode> findResourcesByType(ModelingConversation conversation, ResourceID type) {

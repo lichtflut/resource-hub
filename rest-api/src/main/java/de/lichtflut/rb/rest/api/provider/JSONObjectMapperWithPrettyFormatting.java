@@ -45,7 +45,8 @@ public class JSONObjectMapperWithPrettyFormatting implements ContextResolver<Obj
         objectMapper.configure(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
 
         objectMapper.configure(SerializationConfig.Feature.WRAP_ROOT_VALUE, false);
-	
+        objectMapper.configure(SerializationConfig.Feature.WRITE_NULL_PROPERTIES, false);
+        objectMapper.configure(SerializationConfig.Feature.WRITE_NULL_MAP_VALUES, false);
 	}
 
 	@Override

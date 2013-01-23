@@ -18,6 +18,8 @@ public class LinkRelations {
 	
 	public static final String GET_ENTITIES_REL = BASE_URI + "entities/list";
 	
-	public static final String GET_ENTITY = BASE_URI + "entitiy/show";
+	public static final String GET_ENTITY_REL = BASE_URI + "entitiy/show";
+	
+	public static final String CREATE_AUTH_TOKEN_REL = BASE_URI + "token/create";
 	
 }

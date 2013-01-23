@@ -21,13 +21,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ResourceMeta {
 		
-	private Collection<Link> links = new ArrayList<Link>();
+	private Collection<XRDLink> links = new ArrayList<XRDLink>();
 
-	public void addLink(Link link){
+	public void addLink(XRDLink link){
 		links.add(link);
 	}
 	
-	public Collection<Link> getLinks(){
+	public Collection<XRDLink> getLinks(){
 		return links;
 		//return new ArrayList<Link>(links);
 	}

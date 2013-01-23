@@ -4,7 +4,7 @@
 package de.lichtflut.rb.rest.api.models.transfer.builder;
 
 import de.lichtflut.rb.rest.api.models.transfer.HttpMethod;
-import de.lichtflut.rb.rest.api.models.transfer.Link;
+import de.lichtflut.rb.rest.api.models.transfer.XRDLink;
 
 /**
  * <p>
@@ -15,12 +15,11 @@ import de.lichtflut.rb.rest.api.models.transfer.Link;
  */
 public class LinkBuilder {
 
-	Link link = new Link();
+	XRDLink link = new XRDLink();
 	
 	public static LinkBuilder buildLink(){
 		return new LinkBuilder();
 	}
-	
 	
 	public LinkBuilder href(String href){
 		link.setHref(href);
@@ -29,6 +28,21 @@ public class LinkBuilder {
 	
 	public LinkBuilder rel(String linkRel){
 		link.setLinkRel(linkRel);
+		return this;
+	}
+	
+	public LinkBuilder body(Object body){
+		link.setBodyProperty(body);
+		return this;
+	}
+	
+	public LinkBuilder property(String key, String value){
+		link.getProperties().put(key, value);
+		return this;
+	}
+	
+	public LinkBuilder templateRef(String tempRef){
+		link.setTemplateRel(tempRef);
 		return this;
 	}
 	
@@ -42,7 +56,7 @@ public class LinkBuilder {
 		return this;
 	}
 	
-	public Link build(){
+	public XRDLink build(){
 		return link;
 	}
 	

@@ -9,6 +9,7 @@ import static de.lichtflut.rb.rest.api.config.PathConstants.ENTITY_PATH;
 
 import java.util.List;
 
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -27,12 +28,16 @@ import org.springframework.stereotype.Component;
 import com.sun.jersey.core.util.Base64;
 import com.sun.jersey.spi.resource.Singleton;
 
+import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.rest.api.config.ResourceTypes;
 import de.lichtflut.rb.rest.api.models.transfer.Association;
 import de.lichtflut.rb.rest.api.models.transfer.Entity;
 import de.lichtflut.rb.rest.api.models.transfer.EntityItems;
-import de.lichtflut.rb.rest.api.models.transfer.Link;
+import de.lichtflut.rb.rest.api.models.transfer.XRDLink;
 import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 
 /**
@@ -49,23 +54,34 @@ import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 @Produces({ MediaType.APPLICATION_JSON })
 public class EntitiyResource extends RBServiceEndpoint {
 
+	public static final String RESOURCE_TYPE = "http://rb.lichtflut.de/types/entities";
+	
 	@Path("")
 	@GET
-	public Response getEntities() {
-		ServiceProvider provider = getProvider("root", null);
+	public Response getEntities(@CookieParam(value=AuthModule.COOKIE_SESSION_AUTH) final String token) {
+		RBUser user;
+		try {
+			user = authenticateUser(token);
+		} catch (UnauthenticatedUserException e) {
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+		ServiceProvider provider = getProvider("root", user);
 		EntityItems entityItems = new EntityItems();
-		Link selfLink = new Link();
+		XRDLink selfLink = new XRDLink();
 		selfLink.setHref(getPath(this.getClass()));
 		selfLink.setLinkRel(SELF_REL);
+		selfLink.setResourceType(ResourceTypes.ENTITIES_TYPE);
 		entityItems.getResourceMeta().addLink(selfLink);
 		final List<SNClass> types = provider.getTypeManager().findAllTypes();
 		for (SNClass type : types) {
-			final List<ResourceNode> entities = findResourcesByType(
-					provider.getConversation(), type);
+			final List<ResourceNode> entities = findResourcesByType(provider.getConversation(), type);
 			for (ResourceNode entity : entities) {
 				String encodedID = new String(Base64.encode(entity
 						.getQualifiedName().toURI()));
-				Response entityRsp = getEntity(encodedID);
+				Response entityRsp = getEntity(encodedID, token);
+				if(entityRsp.getStatus() != Status.OK.getStatusCode()){
+					return Response.status(Status.UNAUTHORIZED).build();
+				}
 				if (entityRsp.getStatus() != 200) {
 					continue;
 				}
@@ -77,8 +93,15 @@ public class EntitiyResource extends RBServiceEndpoint {
 
 	@GET
 	@Path(ENTITY_PATH)
-	public Response getEntity(@PathParam("base64EntityID") String base64EntityID) {
-		ServiceProvider provider = getProvider("root", null);
+	public Response getEntity(@PathParam("base64EntityID") String base64EntityID,
+			@CookieParam(value=AuthModule.COOKIE_SESSION_AUTH) final String token) {
+		RBUser user;
+		try {
+			user = authenticateUser(token);
+		} catch (UnauthenticatedUserException e) {
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+		ServiceProvider provider = getProvider("root", user);
 		String entityID = Base64.base64Decode(base64EntityID);
 		EntityManager entityManager = provider.getEntityManager();
 		RBEntity rbEntity = entityManager.find(new SimpleResourceID(entityID));
@@ -102,10 +125,11 @@ public class EntitiyResource extends RBServiceEndpoint {
 
 		Entity entity = new Entity();
 		entity.setId(rbEntity.getNode().toURI());
-		Link selfLink = new Link();
+		XRDLink selfLink = new XRDLink();
 		selfLink.setHref(getPath(this.getClass())
 				+ ENTITY_PATH.replace("{base64EntityID}", base64EntityID));
 		selfLink.setLinkRel(SELF_REL);
+		selfLink.setResourceType(ResourceTypes.ENTITY_TYPE);
 		entity.getResourceMeta().addLink(selfLink);
 
 		for (Statement stmt : rbEntity.getNode().getAssociations()) {
