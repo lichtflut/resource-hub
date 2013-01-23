@@ -12,10 +12,16 @@
 
     <div id="wrapper" class="restricted">
 
-		<div id="site-header">
-			<div id="application-logo"></div>
+		<div id="site-header" class="login">
 			<div id="header-top-line">
-				<div id="langage-select">
+				<div id="user-info">
+					<wicket:enclosure> 
+						<a wicket:id="logout">
+							<wicket:message key="global.label.logout">[logout]</wicket:message>
+						</a>
+					</wicket:enclosure>
+				</div>
+				<div id="langage-select" class="login">
 					<a wicket:id="switchToEnglish">
 						<wicket:message key="global.link.switch-english">[english]</wicket:message>
 					</a>

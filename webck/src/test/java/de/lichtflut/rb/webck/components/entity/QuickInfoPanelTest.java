@@ -10,10 +10,10 @@ import org.apache.wicket.model.Model;
 import org.arastreju.sge.naming.QualifiedName;
 import org.junit.Test;
 
-import de.lichtflut.rb.AbstractRBWebTest;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.security.RBDomain;
-import de.lichtflut.rb.mock.RBEntityFactory;
+import de.lichtflut.rb.webck.RBWebTest;
+import de.lichtflut.rb.webck.data.RBEntityFactory;
 
 /**
  * <p>
@@ -23,7 +23,7 @@ import de.lichtflut.rb.mock.RBEntityFactory;
  *
  * @author Ravi Knox
  */
-public class QuickInfoPanelTest extends AbstractRBWebTest {
+public class QuickInfoPanelTest extends RBWebTest {
 
 	/**
 	 * Test method for {@link de.lichtflut.rb.webck.components.entity.QuickInfoPanel#QuickInfoPanel(java.lang.String, IModel)}.

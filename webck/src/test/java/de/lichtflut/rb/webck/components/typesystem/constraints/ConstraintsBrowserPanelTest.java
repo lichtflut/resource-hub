@@ -9,9 +9,9 @@ import java.util.List;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Test;
 
-import de.lichtflut.rb.AbstractRBWebTest;
 import de.lichtflut.rb.core.schema.model.Constraint;
-import de.lichtflut.rb.mock.schema.ConstraintsFactory;
+import de.lichtflut.rb.webck.RBWebTest;
+import de.lichtflut.rb.webck.data.schema.ConstraintsFactory;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 import de.lichtflut.rb.webck.models.basic.LoadableModel;
 
@@ -23,7 +23,7 @@ import de.lichtflut.rb.webck.models.basic.LoadableModel;
  *
  * @author Ravi Knox
  */
-public class ConstraintsBrowserPanelTest extends AbstractRBWebTest{
+public class ConstraintsBrowserPanelTest extends RBWebTest{
 
 	private LoadableModel<List<Constraint>> model;
 

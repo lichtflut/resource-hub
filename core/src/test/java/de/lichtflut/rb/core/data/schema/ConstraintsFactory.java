@@ -1,0 +1,69 @@
+/*
+ * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ */
+package de.lichtflut.rb.core.data.schema;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.naming.QualifiedName;
+
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.schema.model.Constraint;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
+
+/**
+ * <p>
+ * This class provides {@link Constraint}s for testing purposes.
+ * </p>
+ * Created: May 8, 2012
+ *
+ * @author Ravi Knox
+ */
+public class ConstraintsFactory {
+
+	public static Constraint buildPublicEmailConstraint(){
+		QualifiedName qn = new QualifiedName(RB.COMMON_NAMESPACE_URI, "EmailAddress");
+		List<Datatype> datatypes = new ArrayList<Datatype>();
+		datatypes.add(Datatype.STRING);
+		datatypes.add(Datatype.TEXT);
+		datatypes.add(Datatype.RICH_TEXT);
+		ConstraintImpl constraint= new ConstraintImpl(qn);
+		constraint.setApplicableDatatypes(datatypes);
+		constraint.setName("Email-Address");
+		constraint.setLiteralConstraint(".*@.*");
+		constraint.setPublic(true);
+		return constraint;
+	}
+
+	public static Constraint buildPrivateLiteralConstraint(){
+		ConstraintImpl constraint = new ConstraintImpl();
+		constraint.setLiteralConstraint(".*@.*");
+		return constraint;
+	}
+
+	public static Constraint buildPublicPersonConstraint(){
+		ResourceID resource = new SimpleResourceID(RB.COMMON_NAMESPACE_URI + "PersonConstraint");
+		ConstraintImpl constraint = new ConstraintImpl();
+		constraint.setName("Person-Constraint");
+		constraint.setTypeConstraint(resource);
+		return constraint;
+	}
+
+
+	public static Constraint buildTypeConstraint(final ResourceID type){
+		ConstraintImpl constraint = new ConstraintImpl();
+		constraint.buildReferenceConstraint(type, false);
+		return constraint;
+	}
+
+	public static Constraint buildPrivatePersonConstraint(){
+		ResourceID resource = new SimpleResourceID(RB.COMMON_NAMESPACE_URI + "PersonConstraint");
+		ConstraintImpl constraint = new ConstraintImpl();
+		constraint.setTypeConstraint(resource);
+		return constraint;
+	}
+}

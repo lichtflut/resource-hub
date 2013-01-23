@@ -13,11 +13,11 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
 import org.junit.Test;
 
-import de.lichtflut.rb.AbstractRBWebTest;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
-import de.lichtflut.rb.mock.schema.ConstraintsFactory;
+import de.lichtflut.rb.webck.RBWebTest;
+import de.lichtflut.rb.webck.data.schema.ConstraintsFactory;
 
 /**
  * <p>
@@ -27,7 +27,7 @@ import de.lichtflut.rb.mock.schema.ConstraintsFactory;
  *
  * @author Ravi Knox
  */
-public class PublicConstraintsDetailPanelTest extends AbstractRBWebTest {
+public class PublicConstraintsDetailPanelTest extends RBWebTest {
 
 	private IModel<Constraint> model;
 

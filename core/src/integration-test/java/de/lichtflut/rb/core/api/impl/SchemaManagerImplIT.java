@@ -21,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.data.schema.ResourceSchemaFactory;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
@@ -28,7 +29,6 @@ import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
-import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 
 /**
  * <p>
