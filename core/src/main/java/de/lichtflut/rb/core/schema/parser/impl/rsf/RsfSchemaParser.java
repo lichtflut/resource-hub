@@ -6,7 +6,6 @@ package de.lichtflut.rb.core.schema.parser.impl.rsf;
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.lichtflut.rb.core.schema.parser.exception.SchemaParsingException;
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -16,6 +15,7 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import de.lichtflut.rb.core.schema.parser.ParsedElements;
 import de.lichtflut.rb.core.schema.parser.RSParsingResult;
 import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
+import de.lichtflut.rb.core.schema.parser.exception.SchemaParsingException;
 
 /**
  * <p>
@@ -31,7 +31,7 @@ import de.lichtflut.rb.core.schema.parser.ResourceSchemaParser;
 public class RsfSchemaParser implements ResourceSchemaParser{
 
 	@Override
-	public ParsedElements parse(InputStream in) throws IOException, SchemaParsingException {
+	public ParsedElements parse(final InputStream in) throws IOException, SchemaParsingException {
 		final ParsedElements result = new ParsedElements();
 
 		CharStream input = null;
@@ -44,13 +44,13 @@ public class RsfSchemaParser implements ResourceSchemaParser{
 			CommonTreeNodeStream nodes = new CommonTreeNodeStream(statements.getTree());
 			nodes.setTokenStream(tokens);
 			RSFTree walker = new RSFTree(nodes);
-            walker.setErrorReporter(new RsfErrorReporterImpl(result));
+			walker.setErrorReporter(new RsfErrorReporterImpl(result));
 			RSParsingResult parsed = walker.statements();
 
-            if (!result.getErrorMessages().isEmpty()) {
-                throw new SchemaParsingException("Error(s) while parsing schema: "
-                        + result.getErrorMessages().toString());
-            }
+			if (!result.getErrorMessages().isEmpty() || parsed == null) {
+				throw new SchemaParsingException("Error(s) while parsing schema: "
+						+ result.getErrorMessages().toString());
+			}
 
 			result.getSchemas().addAll(parsed.getResourceSchemas());
 			result.getConstraints().addAll(parsed.getPublicConstraints());
