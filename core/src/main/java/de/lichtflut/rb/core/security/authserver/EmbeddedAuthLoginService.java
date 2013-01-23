@@ -98,7 +98,7 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
                     LOGGER.warn("Unknown authentication type: " + token);
             }
         } catch (TicketValidationException e) {
-            LOGGER.warn("Token {} is not valid: {}", token, e.getMessage());
+            LOGGER.warn("Token " + token + " is not valid: " + e.getMessage(), e.getCause());
         }
         return null;
 	}

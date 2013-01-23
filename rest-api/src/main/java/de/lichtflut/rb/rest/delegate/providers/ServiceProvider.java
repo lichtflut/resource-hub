@@ -6,13 +6,14 @@ package de.lichtflut.rb.rest.delegate.providers;
 import java.io.File;
 
 import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.context.Context;
 
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
-import org.arastreju.sge.context.Context;
 
 
 /**
@@ -30,6 +31,14 @@ public interface ServiceProvider {
 	 * @return The context of this service provider.
 	 */
 	ServiceContext getContext();
+	
+
+	/**
+	 * @return The {@link EntityManager}
+	 */
+	EntityManager getEntityManager();
+
+	
 
 	/**
 	 * @return An active Arastreju conversation.

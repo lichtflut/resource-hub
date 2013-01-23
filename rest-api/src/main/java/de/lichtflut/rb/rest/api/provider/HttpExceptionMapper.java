@@ -1,4 +1,4 @@
-package de.lichtflut.rb.rest.config;
+package de.lichtflut.rb.rest.api.provider;
 
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.RBException;

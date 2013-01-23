@@ -33,11 +33,11 @@
 //	// Testcase initializing
 //	static {
 //		// Init test-user identity
-//		TEST_USER.setLoginID("test@test.de");
+//		TEST_USER.setId("test@test.de");
 //		TEST_USER.setPassword("test");
 //		TEST_USER.setUsername("test");
 //
-//		ROOT_USER.setLoginID("root");
+//		ROOT_USER.setId("root");
 //		ROOT_USER.setPassword("root");
 //		ROOT_USER.setUsername("root");
 //
@@ -68,17 +68,17 @@
 //
 //		String id = "domain/" + TEST_DOMAIN.getDomainIdentifier();
 //
-//		getWebResource(true).id(id).delete();
+//		getWebResource(true).path(id).delete();
 //
 //		domain = manager.findDomain(TEST_DOMAIN.getDomainIdentifier());
 //		//Domain doesnt exist
 //		assertNull("Domain " + TEST_DOMAIN.getDomainIdentifier() + " has to be absent", domain);
 //
-//		assertNotNull(getAuthModule().getUserManagement().findUser(ROOT_USER.getLoginID()));
+//		assertNotNull(getAuthModule().getUserManagement().findUser(ROOT_USER.getId()));
 //
 //		setCurrentSystemUser(ROOT_USER);
 //
-//		getWebResource(true).id(id).entity(new ObjectFactory().createSystemDomain(TEST_DOMAIN),MediaType.APPLICATION_JSON).post();
+//		getWebResource(true).path(id).entity(new ObjectFactory().createSystemDomain(TEST_DOMAIN),MediaType.APPLICATION_JSON).post();
 //
 //		domain = manager.findDomain(TEST_DOMAIN.getDomainIdentifier());
 //		//Domain must be present

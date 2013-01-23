@@ -59,7 +59,7 @@ import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
  *  The database will be destroyed after each test.
  *  There is a default behavior in loading fixtures before each test
  *  after calling the initTestCase Method.
- *  A fixture file, named "fixtures.rdf.xml" is expected under the following id:
+ *  A fixture file, named "fixtures.rdf.xml" is expected under the following path:
  *  src/test/resources/fixtures/TestClassName/fixtures.rdf.xml.
  *  If this file is not present, the default src/test/resources/fixtures/TestClassName/fixtures.rdf.xml is taken.
  * </p>
@@ -67,11 +67,11 @@ import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
  * @author Nils Bleisch (nbleisch@lichtflut.de)
  * @created May 10, 2012
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(CustomizedSpringClassRunner.class)
 @ContextConfiguration(locations = { "classpath:applicationContext.xml" })
 @Component
 public abstract class TestBase extends junit.framework.TestCase {
-
+	
 	protected Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
 	private RestConnector connector;
@@ -205,7 +205,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 			if (rsp.getStatus() != Status.UNAUTHORIZED.getStatusCode()) {
 				return false;
 			}
-			// Next step: Try ist with the right token, should work
+			// Next step: Try it with the right token, should work
 			resource = resource.queryParam("TOKEN", getAuthToken());
 
 		}
