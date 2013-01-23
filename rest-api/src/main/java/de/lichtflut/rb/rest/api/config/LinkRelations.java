@@ -22,4 +22,6 @@ public class LinkRelations {
 	
 	public static final String CREATE_AUTH_TOKEN_REL = BASE_URI + "token/create";
 	
+	public static final String GET_DOMAINS_REL = BASE_URI + "domains/list";
+	
 }

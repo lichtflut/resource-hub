@@ -15,5 +15,5 @@
     
     <bean id="providerFactory" class="de.lichtflut.rb.rest.delegate.providers.RBServiceProviderFactory">
 	</bean>
-    
+	    
 </beans>

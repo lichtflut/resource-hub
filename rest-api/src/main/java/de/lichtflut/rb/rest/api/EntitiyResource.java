@@ -4,6 +4,7 @@
 package de.lichtflut.rb.rest.api;
 
 import static de.lichtflut.rb.rest.api.config.LinkRelations.SELF_REL;
+import static de.lichtflut.rb.rest.api.config.LinkRelations.GET_ENTITY_REL;
 import static de.lichtflut.rb.rest.api.config.PathConstants.ENTITIES_BASE_PATH;
 import static de.lichtflut.rb.rest.api.config.PathConstants.ENTITY_PATH;
 
@@ -55,37 +56,47 @@ import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 public class EntitiyResource extends RBServiceEndpoint {
 
 	public static final String RESOURCE_TYPE = "http://rb.lichtflut.de/types/entities";
-	
+
 	@Path("")
 	@GET
-	public Response getEntities(@CookieParam(value=AuthModule.COOKIE_SESSION_AUTH) final String token) {
+	public Response getEntities(
+			@PathParam(DOMAIN_ID_PARAM) final String domainID,
+			@CookieParam(value = AuthModule.COOKIE_SESSION_AUTH) final String token) {
 		RBUser user;
 		try {
 			user = authenticateUser(token);
 		} catch (UnauthenticatedUserException e) {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
-		ServiceProvider provider = getProvider("root", user);
+		ServiceProvider provider = getProvider(domainID, user);
 		EntityItems entityItems = new EntityItems();
 		XRDLink selfLink = new XRDLink();
-		selfLink.setHref(getPath(this.getClass()));
+		selfLink.setHref(getPath(this.getClass()).replace(
+				"{" + DOMAIN_ID_PARAM + "}", domainID));
 		selfLink.setLinkRel(SELF_REL);
 		selfLink.setResourceType(ResourceTypes.ENTITIES_TYPE);
 		entityItems.getResourceMeta().addLink(selfLink);
 		final List<SNClass> types = provider.getTypeManager().findAllTypes();
 		for (SNClass type : types) {
-			final List<ResourceNode> entities = findResourcesByType(provider.getConversation(), type);
-			for (ResourceNode entity : entities) {
-				String encodedID = new String(Base64.encode(entity
-						.getQualifiedName().toURI()));
-				Response entityRsp = getEntity(encodedID, token);
-				if(entityRsp.getStatus() != Status.OK.getStatusCode()){
-					return Response.status(Status.UNAUTHORIZED).build();
-				}
-				if (entityRsp.getStatus() != 200) {
+			final List<ResourceNode> entities = findResourcesByType(
+					provider.getConversation(), type);
+			for (ResourceNode node : entities) {
+				EntityManager entityManager = provider.getEntityManager();
+				RBEntity rbEntity = entityManager.find(new SimpleResourceID(
+						node.getQualifiedName().toURI()));
+				if (rbEntity == null) {
 					continue;
 				}
-				entityItems.addEntity((Entity) entityRsp.getEntity());
+				Entity entity = mapEntity(rbEntity, entityManager, true);
+				XRDLink entitySelfLink = new XRDLink();
+				entitySelfLink.setHref((getPath(this.getClass()).replace("{"
+						+ DOMAIN_ID_PARAM + "}", domainID))
+						+ ENTITY_PATH.replace("{base64EntityID}", new String(
+								Base64.encode(node.toURI()))));
+				entitySelfLink.setLinkRel(GET_ENTITY_REL);
+				entitySelfLink.setResourceType(ResourceTypes.ENTITY_TYPE);
+				entity.getResourceMeta().addLink(entitySelfLink);
+				entityItems.addEntity(entity);
 			}
 		}
 		return Response.ok().entity(entityItems).build();
@@ -93,22 +104,31 @@ public class EntitiyResource extends RBServiceEndpoint {
 
 	@GET
 	@Path(ENTITY_PATH)
-	public Response getEntity(@PathParam("base64EntityID") String base64EntityID,
-			@CookieParam(value=AuthModule.COOKIE_SESSION_AUTH) final String token) {
+	public Response getEntity(
+			@PathParam(DOMAIN_ID_PARAM) final String domainID,
+			@PathParam("base64EntityID") String base64EntityID,
+			@CookieParam(value = AuthModule.COOKIE_SESSION_AUTH) final String token) {
 		RBUser user;
 		try {
 			user = authenticateUser(token);
 		} catch (UnauthenticatedUserException e) {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
-		ServiceProvider provider = getProvider("root", user);
+		ServiceProvider provider = getProvider(domainID, user);
 		String entityID = Base64.base64Decode(base64EntityID);
 		EntityManager entityManager = provider.getEntityManager();
 		RBEntity rbEntity = entityManager.find(new SimpleResourceID(entityID));
 		if (rbEntity == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		Entity entity = mapEntity(rbEntity, entityManager);
+		Entity entity = mapEntity(rbEntity, entityManager, true);
+		XRDLink selfLink = new XRDLink();
+		selfLink.setHref((getPath(this.getClass()).replace("{"
+				+ DOMAIN_ID_PARAM + "}", domainID))
+				+ ENTITY_PATH.replace("{base64EntityID}", base64EntityID));
+		selfLink.setLinkRel(SELF_REL);
+		selfLink.setResourceType(ResourceTypes.ENTITY_TYPE);
+		entity.getResourceMeta().addLink(selfLink);
 
 		return Response.ok().entity(entity).build();
 	}
@@ -116,35 +136,29 @@ public class EntitiyResource extends RBServiceEndpoint {
 	/**
 	 * 
 	 * @param rbEntity
-	 * @param entityManager - to determine if the association's object is an entity or not
+	 * @param entityManager
+	 *            - to determine if the association's object is an entity or not
 	 * @return
 	 */
-	private Entity mapEntity(RBEntity rbEntity, EntityManager entityManager) {
-		String base64EntityID = new String(Base64.encode(rbEntity.getID()
-				.toURI()));
-
+	private Entity mapEntity(RBEntity rbEntity, EntityManager entityManager,
+			boolean expandAssociations) {
 		Entity entity = new Entity();
 		entity.setId(rbEntity.getNode().toURI());
-		XRDLink selfLink = new XRDLink();
-		selfLink.setHref(getPath(this.getClass())
-				+ ENTITY_PATH.replace("{base64EntityID}", base64EntityID));
-		selfLink.setLinkRel(SELF_REL);
-		selfLink.setResourceType(ResourceTypes.ENTITY_TYPE);
-		entity.getResourceMeta().addLink(selfLink);
-
-		for (Statement stmt : rbEntity.getNode().getAssociations()) {
-			Association assoc = new Association();
-			assoc.setEntityAssoc(false);
-			SemanticNode object = stmt.getObject();
-			if (object.isResourceNode()) {
-				RBEntity e = entityManager.find(object.asResource());
-				if(e !=null && e.hasSchema()){
-					assoc.setEntityAssoc(true);
+		if (expandAssociations) {
+			for (Statement stmt : rbEntity.getNode().getAssociations()) {
+				Association assoc = new Association();
+				assoc.setEntityAssoc(false);
+				SemanticNode object = stmt.getObject();
+				if (object.isResourceNode()) {
+					RBEntity e = entityManager.find(object.asResource());
+					if (e != null && e.hasSchema()) {
+						assoc.setEntityAssoc(true);
+					}
 				}
+				assoc.setPredicate(stmt.getPredicate().toURI());
+				assoc.setObject(stmt.getObject().toString());
+				entity.getAssociations().add(assoc);
 			}
-			assoc.setPredicate(stmt.getPredicate().toURI());
-			assoc.setObject(stmt.getObject().toString());
-			entity.getAssociations().add(assoc);
 		}
 		return entity;
 	}

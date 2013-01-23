@@ -68,8 +68,7 @@ public class DomainOps extends RBServiceEndpoint {
 			LOGGER.error(
 					"The domain "
 							+ domainID
-							+ " couldnt be deleted tue to the following exception",
-					any);
+							+ " couldnt be deleted tue to the following exception",any);
 			return Response.serverError().build();
 		}
 

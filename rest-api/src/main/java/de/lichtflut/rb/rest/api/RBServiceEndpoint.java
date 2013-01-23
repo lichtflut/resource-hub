@@ -3,6 +3,8 @@
  */
 package de.lichtflut.rb.rest.api;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 import javax.ws.rs.WebApplicationException;
@@ -105,9 +107,13 @@ public abstract class RBServiceEndpoint implements OperationTypes{
     }
     
     protected String getPath(Class clazz){
-        return uriInfo.getBaseUriBuilder()
-                .path(clazz)
-                .build().toString();
+    	String path = uriInfo.getBaseUriBuilder().path(clazz).build().toString();
+    	try {
+			path = URLDecoder.decode(path, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			getLog().error("Couldn't decode the path " + path + " with UTF-8 encoding", e);
+		}
+        return path;
     }
 
 	protected ServiceProvider getProvider(String domainID, RBUser user) {

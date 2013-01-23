@@ -19,5 +19,7 @@ public class ResourceTypes {
 	public static final String ENTITY_TYPE = BASE_URI + "entitiy";
 	
 	public static final String TOKEN_SERVICE = BASE_URI + "token-service";
+
+	public static final String DOMAINS_TYPE = BASE_URI + "domains";
 	
 }
