@@ -24,6 +24,7 @@
         <wicket.version>1.5.8</wicket.version>
 		<jersey.version>1.8</jersey.version>
         <jackson.version>1.9.10</jackson.version>
+        <reflections.version>0.9.8</reflections.version>
     	<skipIntegrationTests>true</skipIntegrationTests>
 	</properties>
 	<build>
@@ -231,6 +232,15 @@
                 <artifactId>jackson-mapper-asl</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
+
+            <!-- org.reflections -->
+
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
+            </dependency>
+
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
