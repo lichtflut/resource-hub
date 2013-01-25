@@ -13,7 +13,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
@@ -159,7 +159,7 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 	@Override
 	public void openDialog(final Dialog dialog) {
 		setDialog(dialog);
-		final AjaxRequestTarget target = AjaxRequestTarget.get();
+		AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
 		if (target != null) {
 			dialog.open(target);
 			target.add(dialog);
@@ -171,7 +171,7 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 	@Override
 	public void closeDialog(final Dialog dialog) {
 		setDialog(emptyDialog());
-		final AjaxRequestTarget target = AjaxRequestTarget.get();
+		AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
 		if (target != null) {
 			dialog.close(target);
 			target.add(dialog);
