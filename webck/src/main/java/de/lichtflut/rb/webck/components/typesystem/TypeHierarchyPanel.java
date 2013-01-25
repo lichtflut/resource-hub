@@ -128,27 +128,17 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 		typeManager.removeSuperClass(baseClass, superClass);
 	}
 
-
 	// ----------------------------------------------------
 
-	private static class SuperClassModel extends DerivedDetachableModel<List<SNClass>, ResourceID> {
-
-		@SpringBean
-		private SemanticNetworkService service;
-
-		// ----------------------------------------------------
+	private class SuperClassModel extends DerivedDetachableModel<List<SNClass>, ResourceID> {
 
 		public SuperClassModel(final IModel<ResourceID> base) {
 			super(base);
-			Injector.get().inject(this);
 		}
 
 		@Override
 		protected List<SNClass> derive(final ResourceID base) {
-			final ResourceNode typeNode = service.resolve(base);
-			final List<SNClass> result = new ArrayList<SNClass>();
-			result.addAll(SNClass.from(typeNode).getDirectSuperClasses());
-			return result;
+            return new ArrayList<SNClass>(typeManager.getSuperClasses(base));
 		}
 
 	}
