@@ -23,7 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -102,7 +104,16 @@ public class TypeManagerImpl implements TypeManager {
 		conversation().remove(type);
 	}
 
-	@Override
+    @Override
+    public Set<SNClass> getSuperClasses(ResourceID base) {
+        SNClass baseClass = findType(base);
+        if (baseClass != null) {
+            return baseClass.getSuperClasses();
+        }
+        return Collections.emptySet();
+    }
+
+    @Override
 	public void addSuperClass(final ResourceID type, final ResourceID superClass) {
 		conversation().resolve(type).addAssociation(RDFS.SUB_CLASS_OF, superClass);
 	}
