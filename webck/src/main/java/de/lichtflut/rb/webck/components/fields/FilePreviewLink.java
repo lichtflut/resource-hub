@@ -16,6 +16,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -93,7 +94,8 @@ public class FilePreviewLink extends Panel {
 	}
 
 	private Component createThumbnailLink(final IModel<ContentDescriptor> descriptor) {
-		String href = getLinkLocation(descriptor.getObject().getID());
+		String contextPath = RequestCycle.get().getRequest().getContextPath();
+		String href = contextPath + "/" + getLinkLocation(descriptor.getObject().getID());
 		IResource unscaledResource = getIResource(descriptor);
 
 		ThumbnailImageResource resource = new ThumbnailImageResource(unscaledResource, 100);
@@ -133,7 +135,8 @@ public class FilePreviewLink extends Panel {
 
 			@Override
 			protected String derive(final ContentDescriptor original) {
-				return getLinkLocation(original.getID());
+				String contextPath = RequestCycle.get().getRequest().getContextPath();
+				return contextPath + "/" + (original.getID());
 			}
 		};
 
