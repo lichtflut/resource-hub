@@ -12,7 +12,6 @@ import java.util.List;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
-import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -23,12 +22,10 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
@@ -67,7 +64,7 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 
 		setOutputMarkupId(true);
 
-		add(new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this)));
+		add(new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(TypeHierarchyPanel.this)));
 
 		final SuperClassModel superClassModel = new SuperClassModel(model);
 
@@ -80,12 +77,13 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 					public void onClick(final AjaxRequestTarget target) {
 						removeSuperClass(item.getModelObject());
 						superClassModel.reset();
-						info(getString("confirmation.deleted-successful"));
+						TypeHierarchyPanel.this.info(getString("confirmation.deleted-successful"));
 						target.add(TypeHierarchyPanel.this);
 					}
 				});
 			}
 		};
+		view.setReuseItems(true);
 		add(view);
 
 		final Label hint = new Label("noSuperClassesHint", new ResourceModel("label.no-super-classes"));
@@ -138,7 +136,7 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 
 		@Override
 		protected List<SNClass> derive(final ResourceID base) {
-            return new ArrayList<SNClass>(typeManager.getSuperClasses(base));
+			return new ArrayList<SNClass>(typeManager.getSuperClasses(base));
 		}
 
 	}
