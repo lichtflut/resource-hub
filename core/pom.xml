@@ -141,12 +141,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.arastreju</groupId>
-			<artifactId>arastreju-neo4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.arastreju</groupId>
 			<artifactId>arastreju.sge</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.arastreju</groupId>
+            <artifactId>arastreju-neo4j</artifactId>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
 			<artifactId>lf.content-repository-jr</artifactId>
