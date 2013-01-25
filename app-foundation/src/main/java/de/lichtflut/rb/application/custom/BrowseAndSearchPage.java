@@ -3,26 +3,13 @@
  */
 package de.lichtflut.rb.application.custom;
 
-import de.lichtflut.rb.application.RBApplication;
-import de.lichtflut.rb.application.base.RBBasePage;
-import de.lichtflut.rb.application.common.CommonParams;
-import de.lichtflut.rb.application.extensions.RBResourceListPanel;
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.common.TermSearcher;
-import de.lichtflut.rb.core.common.TermSearcher.Mode;
-import de.lichtflut.rb.webck.browsing.JumpTarget;
-import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.common.RBWebSession;
-import de.lichtflut.rb.webck.components.fields.SearchField;
-import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
-import de.lichtflut.rb.webck.components.listview.ListPagerPanel;
-import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
-import de.lichtflut.rb.webck.components.typesystem.TypeBrowserPanel;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
-import de.lichtflut.rb.webck.models.basic.PageableModel;
-import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
-import de.lichtflut.rb.webck.models.types.SNClassListModel;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.and;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -45,12 +32,26 @@ import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.query.SortCriteria;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.and;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
-import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+import de.lichtflut.rb.application.RBApplication;
+import de.lichtflut.rb.application.base.RBBasePage;
+import de.lichtflut.rb.application.common.CommonParams;
+import de.lichtflut.rb.application.extensions.RBResourceListPanel;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.common.TermSearcher;
+import de.lichtflut.rb.core.common.TermSearcher.Mode;
+import de.lichtflut.rb.webck.browsing.JumpTarget;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.components.fields.SearchField;
+import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
+import de.lichtflut.rb.webck.components.listview.ListPagerPanel;
+import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
+import de.lichtflut.rb.webck.components.typesystem.TypeBrowserPanel;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.PageableModel;
+import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
+import de.lichtflut.rb.webck.models.types.SNClassListModel;
 
 /**
  * <p>
@@ -156,7 +157,7 @@ public class BrowseAndSearchPage extends RBBasePage {
 				final PageParameters linkParams = new PageParameters();
 				linkParams.add(CommonParams.PARAM_RESOURCE_TYPE, typeModel.getObject().getQualifiedName().toURI());
 				linkParams.set(DisplayMode.PARAMETER, DisplayMode.EDIT);
-				setResponsePage(RBApplication.get().getEntityDetailPage(), linkParams);
+				setResponsePage(RBApplication.get().getEntityDetailPage(typeModel.getObject()), linkParams);
 			}
 		};
 		createLink.add(visibleIf(isNotNull(typeModel)));
