@@ -22,7 +22,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.services.FileService;
-import de.lichtflut.rb.core.services.impl.JackRabbitFileService;
+import de.lichtflut.rb.core.services.impl.LinkProvider;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
 import de.lichtflut.repository.ContentDescriptor;
@@ -144,7 +144,7 @@ public class FilePreviewLink extends Panel {
 
 			@Override
 			protected String derive(final ContentDescriptor original) {
-				return JackRabbitFileService.getSimpleName(original.getID());
+				return LinkProvider.getSimpleNameFor(original.getID());
 			}
 		};
 
