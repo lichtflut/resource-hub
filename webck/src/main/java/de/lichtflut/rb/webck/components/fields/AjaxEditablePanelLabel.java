@@ -31,26 +31,25 @@ public class AjaxEditablePanelLabel<T> extends AjaxEditableLabel<T> {
 	 * @param id
 	 * @param model
 	 */
-	public AjaxEditablePanelLabel(String id, IModel<T> model) {
+	public AjaxEditablePanelLabel(final String id, final IModel<T> model) {
 		super(id, model);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	protected FormComponent<T> newEditor(final MarkupContainer parent, final String componentId,
-		final IModel<T> model)
-	{
-		@SuppressWarnings({ "rawtypes" })
-		FormComponentPanel container = new FormComponentPanel("container", model){
-			
+			final IModel<T> model){
+		FormComponentPanel<T> container = new FormComponentPanel<T>("container", model){
+
 		};
-		container.add(super.newEditor(parent, componentId, model));
+		FormComponent<T> editor = super.newEditor(parent, componentId, model);
+		container.add(editor);
 		container.setOutputMarkupId(true);
 		container.setVisible(false);
-		container.add(new EditorAjaxBehavior());
+		container.add(new EditorAjaxBehavior(){
+		});
 		return container;
 	}
 
@@ -59,7 +58,7 @@ public class AjaxEditablePanelLabel<T> extends AjaxEditableLabel<T> {
 	 */
 	@Override
 	protected WebComponent newLabel(final MarkupContainer parent, final String componentId,
-		final IModel<T> model)
+			final IModel<T> model)
 	{
 		Label label = new Label(componentId, model)
 		{
@@ -68,7 +67,7 @@ public class AjaxEditablePanelLabel<T> extends AjaxEditableLabel<T> {
 			 */
 			@Override
 			public void onComponentTagBody(final MarkupStream markupStream,
-				final ComponentTag openTag)
+					final ComponentTag openTag)
 			{
 				String displayValue = getDefaultModelObjectAsString();
 
@@ -86,5 +85,4 @@ public class AjaxEditablePanelLabel<T> extends AjaxEditableLabel<T> {
 		label.add(new LabelAjaxBehavior(getLabelAjaxEvent()));
 		return label;
 	}
-
 }
