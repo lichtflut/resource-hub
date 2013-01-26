@@ -3,9 +3,10 @@
  */
 package de.lichtflut.rb.core.api.impl;
 
-import static org.mockito.Mockito.when;
-
-import org.arastreju.sge.ModelingConversation;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.services.ConversationFactory;
+import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.arastreju.sge.query.Query;
 import org.junit.Before;
@@ -13,9 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.ConversationFactory;
-import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
+import static org.mockito.Mockito.when;
 
 /**
  * <p>
@@ -37,7 +36,7 @@ public class SchemaManagerImplTest {
 	private TransactionControl tx;
 
 	@Mock
-	private ModelingConversation conversation;
+	private Conversation conversation;
 
 	@Mock
 	private ConversationFactory conversationFactory;
@@ -52,10 +51,5 @@ public class SchemaManagerImplTest {
 		when(conversation.beginTransaction()).thenReturn(tx);
 		when(conversation.createQuery()).thenReturn(query);
 	}
-
-	// -----------------------------------------------------
-
-
-
 
 }

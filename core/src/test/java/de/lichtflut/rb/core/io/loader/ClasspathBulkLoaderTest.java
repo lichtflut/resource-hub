@@ -1,9 +1,7 @@
 package de.lichtflut.rb.core.io.loader;
 
-import de.lichtflut.rb.core.system.BulkLoadingDomainInitializer;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.Conversation;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.junit.Before;
@@ -31,7 +29,7 @@ public class ClasspathBulkLoaderTest {
     private ArastrejuGate gate;
 
     @Mock
-    private ModelingConversation conversation;
+    private Conversation conversation;
 
     @Mock
     private TransactionControl tx;

@@ -3,12 +3,6 @@
  */
 package de.lichtflut.rb.core;
 
-import java.util.Locale;
-
-import org.arastreju.sge.ModelingConversation;
-import org.junit.Before;
-import org.mockito.Mock;
-
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.services.EntityManager;
@@ -17,6 +11,11 @@ import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
+import org.arastreju.sge.Conversation;
+import org.junit.Before;
+import org.mockito.Mock;
+
+import java.util.Locale;
 
 /**
  * <p>
@@ -38,7 +37,7 @@ public class RBCoreTest {
 	protected SemanticNetworkService networkService;
 
 	@Mock
-	protected ModelingConversation conversation;
+	protected Conversation conversation;
 
 	@Mock
 	protected EntityManager entityManager;

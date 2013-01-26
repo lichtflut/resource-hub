@@ -3,24 +3,8 @@
  */
 package de.lichtflut.rb.rest.api;
 
-import java.util.List;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.query.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.api.core.ResourceContext;
-
 import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import de.lichtflut.rb.core.security.AuthModule;
@@ -30,6 +14,19 @@ import de.lichtflut.rb.rest.api.security.AuthorizationHandler;
 import de.lichtflut.rb.rest.api.security.OperationTypes;
 import de.lichtflut.rb.rest.delegate.providers.RBServiceProviderFactory;
 import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
+import org.arastreju.sge.Conversation;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
 
 /**
  * @author nbleisch
@@ -124,7 +121,7 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	
     // ----------------------------------------------------
 
-    protected List<ResourceNode> findResourcesByType(ModelingConversation conversation, ResourceID type) {
+    protected List<ResourceNode> findResourcesByType(Conversation conversation, ResourceID type) {
         final Query query = conversation.createQuery();
         query.addField(RDF.TYPE, type);
         return query.getResult().toList(2000);

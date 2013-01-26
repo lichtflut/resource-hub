@@ -9,7 +9,6 @@ import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.ConversationContext;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.context.DomainIdentifier;
@@ -64,7 +63,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      * @return The current conversation.
      */
 	@Override
-    public ModelingConversation getConversation() {
+    public Conversation getConversation() {
         return getConversation(context.getConversationContext());
     }
 
@@ -75,15 +74,15 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      * @return The current conversation.
      */
     @Override
-    public ModelingConversation getConversation(Context primary) {
+    public Conversation getConversation(Context primary) {
         if (conversationMap.containsKey(primary)) {
             Conversation conversation = conversationMap.get(primary);
             assureActive(conversation);
-            return (ModelingConversation) conversation;
+            return conversation;
         } else {
             Conversation conversation = gate().startConversation(primary, context.getReadContexts());
             conversationMap.put(primary, conversation);
-            return (ModelingConversation) conversation;
+            return conversation;
         }
     }
 

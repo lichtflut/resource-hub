@@ -3,17 +3,16 @@
  */
 package de.lichtflut.rb.rest.delegate.providers;
 
-import java.io.File;
-
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.context.Context;
-
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
+import org.arastreju.sge.Conversation;
+import org.arastreju.sge.context.Context;
+
+import java.io.File;
 
 
 /**
@@ -43,12 +42,12 @@ public interface ServiceProvider {
 	/**
 	 * @return An active Arastreju conversation.
 	 */
-	ModelingConversation getConversation();
+	Conversation getConversation();
 
     /**
      * @return An active Arastreju conversation.
      */
-    ModelingConversation getConversation(Context context);
+    Conversation getConversation(Context context);
 
 	// -----------------------------------------------------
 

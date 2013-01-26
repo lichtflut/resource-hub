@@ -12,7 +12,7 @@
 //
 //import javax.ws.rs.core.MediaType;
 //
-//import org.arastreju.sge.ModelingConversation;
+//import org.arastreju.sge.Conversation;
 //import org.arastreju.sge.SNOPS;
 //import org.arastreju.sge.apriori.RDF;
 //import org.arastreju.sge.io.RdfXmlBinding;
@@ -190,7 +190,7 @@
 //		}
 //		
 //		//Check that this graph is not persisted in store
-//		ModelingConversation mc = getProvider().getConversation();
+//		Conversation mc = getProvider().getConversation();
 //		ResourceNode rs1 = mc.findResource(node1.getQualifiedName());
 //		assertNull(rs1);
 //		

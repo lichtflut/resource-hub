@@ -15,7 +15,7 @@ import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.rest.api.models.generate.ObjectFactory;
 import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
 import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
@@ -396,7 +396,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 
 	// ----------------------------------------------------
 
-	protected List<ResourceNode> findResourcesByType(final ModelingConversation conversation, final ResourceID type) {
+	protected List<ResourceNode> findResourcesByType(final Conversation conversation, final ResourceID type) {
 		final Query query = conversation.createQuery();
 		query.addField(RDF.TYPE, type);
 		return query.getResult().toList(2000);

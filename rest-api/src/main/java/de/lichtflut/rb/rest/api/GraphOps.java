@@ -3,24 +3,11 @@
  */
 package de.lichtflut.rb.rest.api;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
-import org.arastreju.sge.ModelingConversation;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.rest.api.security.RBOperation;
+import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.model.DefaultSemanticGraph;
@@ -35,9 +22,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
-import de.lichtflut.rb.rest.api.security.RBOperation;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -176,7 +174,7 @@ public class GraphOps extends RBServiceEndpoint{
 		}
 		final SemanticGraphIO io = new RdfXmlBinding();
 		ServiceProvider provider = getProvider(domainID, user);
-		ModelingConversation mc = provider.getConversation();
+		Conversation mc = provider.getConversation();
 		TransactionControl tx=null;
 		try {
 			tx = mc.beginTransaction();

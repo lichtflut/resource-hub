@@ -1,9 +1,7 @@
 package de.lichtflut.rb.core.services;
 
-import java.util.Set;
-
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.ConversationContext;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.model.Statement;
@@ -11,6 +9,8 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.arastreju.sge.query.Query;
+
+import java.util.Set;
 
 /**
  * <p>
@@ -23,7 +23,7 @@ import org.arastreju.sge.query.Query;
  *
  * @author Oliver Tigges
  */
-public class ArastrejuConversationHolder implements ModelingConversation {
+public class ArastrejuConversationHolder implements Conversation {
 
 	private final ConversationFactory factory;
 
@@ -112,7 +112,7 @@ public class ArastrejuConversationHolder implements ModelingConversation {
 
 	// ----------------------------------------------------
 
-	private ModelingConversation delegate() {
+	private Conversation delegate() {
 		return factory.getConversation();
 	}
 }

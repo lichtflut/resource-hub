@@ -3,9 +3,9 @@ package de.lichtflut.rb.rest.api.query;
 import com.sun.jersey.core.util.Base64;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 import de.lichtflut.rb.rest.api.RBServiceEndpoint;
-import org.arastreju.sge.ModelingConversation;
+import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.Query;
@@ -55,12 +55,12 @@ public class AbstractQueryService extends RBServiceEndpoint {
         return conversation(domain, user, context).createQuery();
     }
 
-    private ModelingConversation conversation(String domain, RBUser user) {
+    private Conversation conversation(String domain, RBUser user) {
         final ServiceProvider provider = getProvider(domain, user);
         return provider.getConversation();
     }
 
-    private ModelingConversation conversation(String domain, RBUser user, Context context) {
+    private Conversation conversation(String domain, RBUser user, Context context) {
         final ServiceProvider provider = getProvider(domain, user);
         return provider.getConversation(context);
     }
