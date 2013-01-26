@@ -11,6 +11,7 @@ import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import junit.framework.Assert;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.Conversation;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

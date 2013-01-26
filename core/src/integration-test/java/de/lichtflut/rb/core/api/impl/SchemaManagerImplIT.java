@@ -13,6 +13,7 @@ import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import org.arastreju.sge.Arastreju;
+import org.arastreju.sge.Conversation;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

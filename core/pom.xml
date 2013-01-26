@@ -49,6 +49,16 @@
 					<exclude>**/*.java</exclude>
 				</excludes>
 			</testResource>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/integration-test/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
 		</testResources>
 		<plugins>
 			<plugin>
