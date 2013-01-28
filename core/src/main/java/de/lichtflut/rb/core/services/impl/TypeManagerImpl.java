@@ -3,11 +3,12 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.common.SchemaIdentifyingType;
-import de.lichtflut.rb.core.services.ConversationFactory;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.TypeManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -22,10 +23,11 @@ import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.common.SchemaIdentifyingType;
+import de.lichtflut.rb.core.services.ConversationFactory;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.TypeManager;
 
 /**
  * <p>
@@ -104,16 +106,16 @@ public class TypeManagerImpl implements TypeManager {
 		conversation().remove(type);
 	}
 
-    @Override
-    public Set<SNClass> getSuperClasses(ResourceID base) {
-        SNClass baseClass = findType(base);
-        if (baseClass != null) {
-            return baseClass.getSuperClasses();
-        }
-        return Collections.emptySet();
-    }
+	@Override
+	public Set<SNClass> getSuperClasses(final ResourceID base) {
+		SNClass baseClass = findType(base);
+		if (baseClass != null) {
+			return baseClass.getSuperClasses();
+		}
+		return Collections.emptySet();
+	}
 
-    @Override
+	@Override
 	public void addSuperClass(final ResourceID type, final ResourceID superClass) {
 		conversation().resolve(type).addAssociation(RDFS.SUB_CLASS_OF, superClass);
 	}
@@ -127,6 +129,17 @@ public class TypeManagerImpl implements TypeManager {
 			LOGGER.warn("The type of which the subclass {} should have been removed does not exist: {}",
 					superClass, type);
 		}
+	}
+
+	@Override
+	public Set<SNClass> getSubClasses(final ResourceID base) {
+		Set<SNClass> subClasses = new HashSet<SNClass>();
+		Query query = conversation().createQuery();
+		query.addField(RDFS.SUB_CLASS_OF, base);
+		for (ResourceNode node : query.getResult()) {
+			subClasses.add(SNClass.from(node));
+		}
+		return subClasses;
 	}
 
 	// ----------------------------------------------------
@@ -173,8 +186,8 @@ public class TypeManagerImpl implements TypeManager {
 
 	// ----------------------------------------------------
 
-    private Conversation conversation() {
-        return conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX);
-    }
+	private Conversation conversation() {
+		return conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX);
+	}
 
 }
