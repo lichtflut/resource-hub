@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.web.components.Dialog;
+package de.lichtflut.rb.webck.components.Dialog;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -11,10 +11,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.mock.schema.PropertyDeclarationFactory;
-import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 import de.lichtflut.rb.webck.components.dialogs.EditPropertyDeclDialog;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
+import de.lichtflut.rb.webck.data.schema.PropertyDeclarationFactory;
+import de.lichtflut.rb.webck.data.schema.ResourceSchemaFactory;
 
 /**
  * <p>

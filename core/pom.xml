@@ -49,6 +49,16 @@
 					<exclude>**/*.java</exclude>
 				</excludes>
 			</testResource>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/integration-test/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
 		</testResources>
 		<plugins>
 			<plugin>
@@ -141,12 +151,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.arastreju</groupId>
-			<artifactId>arastreju-neo4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.arastreju</groupId>
 			<artifactId>arastreju.sge</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.arastreju</groupId>
+            <artifactId>arastreju-neo4j</artifactId>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
 			<artifactId>lf.content-repository-jr</artifactId>
@@ -189,6 +200,13 @@
 			<artifactId>mail</artifactId>
 			<version>1.4</version>
 		</dependency>
+
+        <!-- REFLECTIONS -->
+
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+        </dependency>
 
 		<!-- MAIL TESTING -->
 		<dependency>

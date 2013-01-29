@@ -3,7 +3,6 @@ package de.lichtflut.rb.core.services.impl;
 import de.lichtflut.rb.core.services.ConversationFactory;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.Conversation;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
 
 import java.util.HashMap;
@@ -24,9 +23,9 @@ public class SingleGateConversationFactory implements ConversationFactory {
 
     private final ArastrejuGate gate;
 
-    private ModelingConversation conversation;
+    private Conversation conversation;
 
-    private Map<Context, ModelingConversation> conversationMap = new HashMap<Context, ModelingConversation>();
+    private Map<Context, Conversation> conversationMap = new HashMap<Context, Conversation>();
 
     // ----------------------------------------------------
 
@@ -42,7 +41,7 @@ public class SingleGateConversationFactory implements ConversationFactory {
      * @return The current conversation.
      */
     @Override
-    public ModelingConversation getConversation() {
+    public Conversation getConversation() {
         if (conversation == null) {
             conversation = gate.startConversation();
         }
@@ -56,12 +55,12 @@ public class SingleGateConversationFactory implements ConversationFactory {
      * @return The current conversation.
      */
     @Override
-    public ModelingConversation getConversation(Context primary) {
+    public Conversation getConversation(Context primary) {
         if (conversationMap.containsKey(primary)) {
-            ModelingConversation conversation = conversationMap.get(primary);
+            Conversation conversation = conversationMap.get(primary);
             return conversation;
         } else {
-            ModelingConversation conversation = gate.startConversation(primary);
+            Conversation conversation = gate.startConversation(primary);
             conversationMap.put(primary, conversation);
             return conversation;
         }

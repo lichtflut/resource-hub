@@ -3,19 +3,19 @@
  */
 package de.lichtflut.rb.rest.api;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.List;
-import java.util.Stack;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
-import org.arastreju.sge.ModelingConversation;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.core.util.StringKeyObjectValueIgnoreCaseMultivaluedMap;
+import de.lichtflut.rb.core.eh.RBAuthException;
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.RBCrypt;
+import de.lichtflut.rb.core.security.RBDomain;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.rest.api.models.generate.ObjectFactory;
+import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
+import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
@@ -26,28 +26,23 @@ import org.arastreju.sge.query.Query;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.neo4j.kernel.impl.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.core.util.StringKeyObjectValueIgnoreCaseMultivaluedMap;
-
-import de.lichtflut.rb.core.eh.RBAuthException;
-import de.lichtflut.rb.core.security.AuthModule;
-import de.lichtflut.rb.core.security.RBCrypt;
-import de.lichtflut.rb.core.security.RBDomain;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.rest.api.models.generate.ObjectFactory;
-import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
-import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * <p>
@@ -123,8 +118,6 @@ public abstract class TestBase extends junit.framework.TestCase {
 			while(!identityStack.empty()){
 				deleteSystemUser(identityStack.pop());
 			}
-			//Is not necessary anymore, still creating problems with multiple test classes
-			FileUtils.deleteRecursively(new File("target/test/storage/"));
 		} catch (Exception any) {
 			throw new RuntimeException(any);
 		}
@@ -403,7 +396,7 @@ public abstract class TestBase extends junit.framework.TestCase {
 
 	// ----------------------------------------------------
 
-	protected List<ResourceNode> findResourcesByType(final ModelingConversation conversation, final ResourceID type) {
+	protected List<ResourceNode> findResourcesByType(final Conversation conversation, final ResourceID type) {
 		final Query query = conversation.createQuery();
 		query.addField(RDF.TYPE, type);
 		return query.getResult().toList(2000);

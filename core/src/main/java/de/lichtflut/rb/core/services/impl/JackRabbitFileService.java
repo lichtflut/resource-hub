@@ -76,22 +76,6 @@ public class JackRabbitFileService implements FileService {
 		return delegator.exists(id);
 	}
 
-	/**
-	 * Returns only the part after the last "/" of a id.
-	 * @param path
-	 * @return
-	 */
-	public static String getSimpleName(final String path){
-		if(null == path || path.isEmpty()){
-			return "";
-		}
-		String[] strings = path.split("/");
-		if(null == strings || strings.length == 0){
-			return path;
-		}
-		return strings[strings.length-1];
-	}
-
 	// ------------------------------------------------------
 
 	protected void initRepository() {

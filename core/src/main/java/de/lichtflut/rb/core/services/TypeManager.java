@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.services;
 
 import java.util.List;
+import java.util.Set;
 
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNClass;
@@ -55,6 +56,14 @@ public interface TypeManager {
 	 * @param id The type's ID.
 	 */
 	void removeType(ResourceID id);
+
+    /**
+     * Get all super classes of this base class.
+     *
+     * @param base The base.
+     * @return The superclasses.
+     */
+    Set<SNClass> getSuperClasses(ResourceID base);
 	
 	/**
 	 * Add a super class to an existing type.

@@ -1,7 +1,6 @@
 package de.lichtflut.rb.core.services;
 
 import org.arastreju.sge.Conversation;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.context.Context;
 
 /**
@@ -21,13 +20,13 @@ public interface ConversationFactory {
      * Get the current conversation for the current context.
      * @return The current conversation.
      */
-    ModelingConversation getConversation();
+    Conversation getConversation();
 
     /**
      * Get the current conversation for the given context.
      * @return The conversation.
      */
-    ModelingConversation getConversation(Context primary);
+    Conversation getConversation(Context primary);
 
     // ----------------------------------------------------
 

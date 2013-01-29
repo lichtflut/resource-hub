@@ -34,9 +34,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import de.lichtflut.rb.RBCoreTest;
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBCoreTest;
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.data.RBEntityFactory;
+import de.lichtflut.rb.core.data.RBTestConstants;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.ValidationException;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -46,8 +48,6 @@ import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.mock.RBEntityFactory;
-import de.lichtflut.rb.mock.RBTestConstants;
 
 /**
  * <p>

@@ -31,6 +31,8 @@ public class ServiceContext implements Serializable{
 	
 	private String domain = "public";
 
+    private Context conversationContext;
+
     private Context[] readContexts;
 
 	// ----------------------------------------------------
@@ -49,7 +51,7 @@ public class ServiceContext implements Serializable{
 	public ServiceContext(RBConfig config, String domain) {
 		this(config);
 		this.domain = domain;
-        initReadContexts();
+        initConversationContexts();
 	}
 
     /**
@@ -61,7 +63,7 @@ public class ServiceContext implements Serializable{
         this(config);
         this.domain = domain;
         this.user = user;
-        initReadContexts();
+        initConversationContexts();
     }
 	
 	/**
@@ -105,8 +107,12 @@ public class ServiceContext implements Serializable{
 	 */
 	public void setDomain(String domain) {
 		this.domain = domain;
-        initReadContexts();
+        initConversationContexts();
 	}
+
+    public Context getConversationContext() {
+        return conversationContext;
+    }
 
     public Context[] getReadContexts() {
         return readContexts;
@@ -130,7 +136,8 @@ public class ServiceContext implements Serializable{
 
     // ----------------------------------------------------
 
-    private void initReadContexts() {
+    private void initConversationContexts() {
+        conversationContext = new SimpleContextID(Namespace.LOCAL_CONTEXTS, domain);
         readContexts= new Context[] {
                 RBSystem.TYPE_SYSTEM_CTX,
                 RBSystem.VIEW_SPEC_CTX,

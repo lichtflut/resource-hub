@@ -9,11 +9,9 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.lichtflut.rb.core.services.SemanticNetworkService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
-import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -24,12 +22,12 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.fields.ClassPickerField;
 import de.lichtflut.rb.webck.components.form.RBDefaultButton;
@@ -66,7 +64,7 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 
 		setOutputMarkupId(true);
 
-		add(new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this)));
+		add(new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(TypeHierarchyPanel.this)));
 
 		final SuperClassModel superClassModel = new SuperClassModel(model);
 
@@ -79,12 +77,13 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 					public void onClick(final AjaxRequestTarget target) {
 						removeSuperClass(item.getModelObject());
 						superClassModel.reset();
-						info(getString("confirmation.deleted-successful"));
+						TypeHierarchyPanel.this.info(getString("confirmation.deleted-successful"));
 						target.add(TypeHierarchyPanel.this);
 					}
 				});
 			}
 		};
+		view.setReuseItems(true);
 		add(view);
 
 		final Label hint = new Label("noSuperClassesHint", new ResourceModel("label.no-super-classes"));
@@ -99,10 +98,15 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 		form.add(new RBDefaultButton("addClass") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				addSuperClass(newSuperClass.getObject());
-				newSuperClass.setObject(null);
-				info(getString("confirmation.saved-successful"));
-				target.add(TypeHierarchyPanel.this);
+				if(newSuperClass == null || newSuperClass.getObject() == null){
+					error(getString("error.no-data"));
+					RBAjaxTarget.add(TypeHierarchyPanel.this);
+				} else{
+					addSuperClass(newSuperClass.getObject());
+					newSuperClass.setObject(null);
+					info(getString("confirmation.saved-successful"));
+					target.add(TypeHierarchyPanel.this);
+				}
 			}
 		});
 		add(form);
@@ -122,27 +126,17 @@ public class TypeHierarchyPanel extends TypedPanel<ResourceID> {
 		typeManager.removeSuperClass(baseClass, superClass);
 	}
 
-
 	// ----------------------------------------------------
 
-	private static class SuperClassModel extends DerivedDetachableModel<List<SNClass>, ResourceID> {
-
-		@SpringBean
-		private SemanticNetworkService service;
-
-		// ----------------------------------------------------
+	private class SuperClassModel extends DerivedDetachableModel<List<SNClass>, ResourceID> {
 
 		public SuperClassModel(final IModel<ResourceID> base) {
 			super(base);
-			Injector.get().inject(this);
 		}
 
 		@Override
 		protected List<SNClass> derive(final ResourceID base) {
-			final ResourceNode typeNode = service.resolve(base);
-			final List<SNClass> result = new ArrayList<SNClass>();
-			result.addAll(SNClass.from(typeNode).getDirectSuperClasses());
-			return result;
+			return new ArrayList<SNClass>(typeManager.getSuperClasses(base));
 		}
 
 	}

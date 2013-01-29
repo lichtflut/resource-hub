@@ -14,7 +14,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
-import de.lichtflut.rb.core.services.impl.JackRabbitFileService;
+import de.lichtflut.rb.core.services.impl.LinkProvider;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
 import de.lichtflut.repository.ContentDescriptor;
 import de.lichtflut.repository.Filetype;
@@ -58,7 +58,7 @@ public class FileUploadModel implements IModel<Object>{
 		if(null == original.getObject()){
 			return "";
 		}
-		return JackRabbitFileService.getSimpleName(original.getObject().toString());
+		return LinkProvider.getSimpleNameFor(original.getObject().toString());
 	}
 
 	/**

@@ -3,10 +3,9 @@
  */
 package de.lichtflut.rb.application;
 
-import de.lichtflut.rb.core.viewspec.MenuItem;
-import de.lichtflut.rb.webck.components.listview.ReferenceLink;
-import de.lichtflut.rb.webck.components.navigation.NavigationNode;
-import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
@@ -42,17 +41,18 @@ import de.lichtflut.rb.application.layout.frugal.FrugalLayout;
 import de.lichtflut.rb.application.resourceview.EntityDetailPage;
 import de.lichtflut.rb.application.styles.Style;
 import de.lichtflut.rb.application.styles.frugal.FrugalStyle;
-import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.common.EntityLabelBuilder;
+import de.lichtflut.rb.core.config.RBConfig;
+import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.components.listview.ReferenceLink;
+import de.lichtflut.rb.webck.components.navigation.NavigationNode;
+import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.webck.conversion.LabelBuilderConverter;
 import de.lichtflut.rb.webck.conversion.QualifiedNameConverter;
 import de.lichtflut.rb.webck.conversion.ResourceIDConverter;
 import de.lichtflut.rb.webck.conversion.SNTextConverter;
 import de.lichtflut.rb.webck.conversion.SNTimeSpecConverter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>
@@ -69,143 +69,147 @@ public abstract class RBApplication extends WebApplication {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RBApplication.class);
 
-    private RBConfig config;
+	private RBConfig config;
 
 	// ------------------------------------------------------
-	
-    public static RBApplication get() {
-        return (RBApplication) Application.get();
-    }
 
-    // -- Configuration -----------------------------------
+	public static RBApplication get() {
+		return (RBApplication) Application.get();
+	}
 
-    public RBConfig getConfig() {
-        return config;
-    }
+	// -- Configuration -----------------------------------
 
-    public void setConfig(RBConfig config) {
-        this.config = config;
-    }
+	public RBConfig getConfig() {
+		return config;
+	}
 
-    // ----------------------------------------------------
+	public void setConfig(final RBConfig config) {
+		this.config = config;
+	}
 
-    @Override
-    public Class<? extends Page> getHomePage(){
-    	return WelcomePage.class;
-    }
-    
-    public Class<? extends Page> getLoginPage(){
-    	return LoginPage.class;
-    }
-    
-    public Class<? extends Page> getLogoutPage(){
-    	return LogoutPage.class;
-    }
-    
-    public Class<? extends Page> getEntityDetailPage(){
-    	return EntityDetailPage.class;
-    }
-    
-    public Class<? extends Page> getPerspectivePage(){
-    	return PerspectivePage.class;
-    }
-    
-    public Class<? extends Page> getPeripheryVizPage(){
-    	return PeripheryViewPage.class;
-    }
-    
-    public Class<? extends Page> getHierarchyVizPage(){
-    	return HierarchyInfoVisPage.class;
-    }
-    
-    public Class<? extends Page> getFlowChartVizPage(){
-    	return FlowChartInfoVisPage.class;
-    }
-    
-    public Class<? extends Page> getBrowseAndSearchPage(){
-    	return BrowseAndSearchPage.class;
-    }
-    
-    public Class<?extends Page> getUserProfilePage(){
-    	return UserProfilePage.class;
-    }
+	// ----------------------------------------------------
 
-    // ----------------------------------------------------
+	@Override
+	public Class<? extends Page> getHomePage(){
+		return WelcomePage.class;
+	}
 
-    /**
-     * The layout for this application.
-     * @return The layout.
-     */
-    public Layout getLayout() {
-        return new FrugalLayout();
-    }
+	public Class<? extends Page> getLoginPage(){
+		return LoginPage.class;
+	}
 
-    /**
-     * The style for this application.
-     * @return The style.
-     */
-    public Style getStyle() {
-        return new FrugalStyle();
-    }
+	public Class<? extends Page> getLogoutPage(){
+		return LogoutPage.class;
+	}
 
-    // ----------------------------------------------------
+	public Class<? extends Page> getEntityDetailPage(){
+		return EntityDetailPage.class;
+	}
 
-    /**
-     * Configure if this application can be used without authentication.
-     * @return true if unauthenticated access is supported.
-     */
-    public boolean supportsUnauthenticatedAccess() {
-        return false;
-    }
+	public Class<? extends Page> getEntityDetailPage(final ResourceID type){
+		return getEntityDetailPage();
+	}
 
-    public String getDefaultDomain() {
-        return "public";
-    }
+	public Class<? extends Page> getPerspectivePage(){
+		return PerspectivePage.class;
+	}
 
-    public List<NavigationNode> getFirstLevelNavigation(final List<MenuItem> menuItems) {
-        final List<NavigationNode> result = new ArrayList<NavigationNode>();
-        for (MenuItem item : menuItems) {
-            result.add(createPageNode(item));
-        }
-        result.add(createPageNode(getBrowseAndSearchPage(), "navigation.browse-and-search"));
-        if (RBWebSession.exists() && RBWebSession.get().isAuthenticated()) {
-            result.add(createPageNode(getUserProfilePage(), "navigation.user-profile-view"));
-        }
-        return result;
-    }
+	public Class<? extends Page> getPeripheryVizPage(){
+		return PeripheryViewPage.class;
+	}
 
-    protected NavigationNode createPageNode(final Class<? extends Page> pageClass, final String key) {
-        return new NavigationNodePanel(new ReferenceLink("link", pageClass, new ResourceModel(key)));
-    }
+	public Class<? extends Page> getHierarchyVizPage(){
+		return HierarchyInfoVisPage.class;
+	}
 
-    protected NavigationNode createPageNode(final MenuItem item) {
-        final PageParameters params = new PageParameters();
-        if (item.getPerspective() != null) {
-            params.add(PerspectivePage.VIEW_ID, item.getPerspective().getQualifiedName().toURI());
-        }
+	public Class<? extends Page> getFlowChartVizPage(){
+		return FlowChartInfoVisPage.class;
+	}
 
-        return new NavigationNodePanel(new ReferenceLink("link", RBApplication.get().getPerspectivePage(), params, Model.of(item.getName())));
-    }
+	public Class<? extends Page> getBrowseAndSearchPage(){
+		return BrowseAndSearchPage.class;
+	}
 
-    // ----------------------------------------------------
+	public Class<?extends Page> getUserProfilePage(){
+		return UserProfilePage.class;
+	}
 
-    @Override
-    public Session newSession(Request request, Response response) {
-        return new RBWebSession(request);
-    }
+	// ----------------------------------------------------
 
-    @Override
-    protected void init() {
-        super.init();
+	/**
+	 * The layout for this application.
+	 * @return The layout.
+	 */
+	public Layout getLayout() {
+		return new FrugalLayout();
+	}
 
-        getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+	/**
+	 * The style for this application.
+	 * @return The style.
+	 */
+	public Style getStyle() {
+		return new FrugalStyle();
+	}
 
-        getMarkupSettings().setStripWicketTags(true);
-        getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
+	// ----------------------------------------------------
 
-        getRequestCycleListeners().add(new RBRequestCycleListener());
-        getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
-    }
+	/**
+	 * Configure if this application can be used without authentication.
+	 * @return true if unauthenticated access is supported.
+	 */
+	public boolean supportsUnauthenticatedAccess() {
+		return false;
+	}
+
+	public String getDefaultDomain() {
+		return "public";
+	}
+
+	public List<NavigationNode> getFirstLevelNavigation(final List<MenuItem> menuItems) {
+		final List<NavigationNode> result = new ArrayList<NavigationNode>();
+		for (MenuItem item : menuItems) {
+			result.add(createPageNode(item));
+		}
+		result.add(createPageNode(getBrowseAndSearchPage(), "navigation.browse-and-search"));
+		if (RBWebSession.exists() && RBWebSession.get().isAuthenticated()) {
+			result.add(createPageNode(getUserProfilePage(), "navigation.user-profile-view"));
+		}
+		return result;
+	}
+
+	protected NavigationNode createPageNode(final Class<? extends Page> pageClass, final String key) {
+		return new NavigationNodePanel(new ReferenceLink("link", pageClass, new ResourceModel(key)));
+	}
+
+	protected NavigationNode createPageNode(final MenuItem item) {
+		final PageParameters params = new PageParameters();
+		if (item.getPerspective() != null) {
+			params.add(PerspectivePage.VIEW_ID, item.getPerspective().getQualifiedName().toURI());
+		}
+
+		return new NavigationNodePanel(new ReferenceLink("link", RBApplication.get().getPerspectivePage(), params, Model.of(item.getName())));
+	}
+
+	// ----------------------------------------------------
+
+	@Override
+	public Session newSession(final Request request, final Response response) {
+		return new RBWebSession(request);
+	}
+
+	@Override
+	protected void init() {
+		super.init();
+
+		getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+
+		getMarkupSettings().setStripWicketTags(true);
+		getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
+
+		getRequestCycleListeners().add(new RBRequestCycleListener());
+		getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -224,12 +228,12 @@ public abstract class RBApplication extends WebApplication {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+
 		LOGGER.info("Application is beeing destroyed. Free all resources.");
-		
-		final WebApplicationContext wac = 
-			WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-		
+
+		final WebApplicationContext wac =
+				WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+
 		final RBConfig rbc = (RBConfig) wac.getBean("rbConfig");
 		rbc.getArastrejuProfile().close();
 	}

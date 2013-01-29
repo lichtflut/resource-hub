@@ -9,7 +9,6 @@ import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.ConversationContext;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.context.DomainIdentifier;
@@ -38,9 +37,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
 
     private ArastrejuGate openGate;
 
-    private ModelingConversation conversation;
-
-    private Map<Context, ModelingConversation> conversationMap = new HashMap<Context, ModelingConversation>();
+    private Map<Context, Conversation> conversationMap = new HashMap<Context, Conversation>();
 
 	// ----------------------------------------------------
 	
@@ -66,13 +63,8 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      * @return The current conversation.
      */
 	@Override
-    public ModelingConversation getConversation() {
-        if (conversation == null) {
-            conversation = gate().startConversation();
-            conversation.getConversationContext().setReadContexts(context.getReadContexts());
-        }
-        assureActive(conversation);
-        return conversation;
+    public Conversation getConversation() {
+        return getConversation(context.getConversationContext());
     }
 
     /**
@@ -82,13 +74,13 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      * @return The current conversation.
      */
     @Override
-    public ModelingConversation getConversation(Context primary) {
+    public Conversation getConversation(Context primary) {
         if (conversationMap.containsKey(primary)) {
-            ModelingConversation conversation = conversationMap.get(primary);
+            Conversation conversation = conversationMap.get(primary);
             assureActive(conversation);
             return conversation;
         } else {
-            ModelingConversation conversation = gate().startConversation(primary, context.getReadContexts());
+            Conversation conversation = gate().startConversation(primary, context.getReadContexts());
             conversationMap.put(primary, conversation);
             return conversation;
         }
@@ -112,15 +104,10 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     // ----------------------------------------------------
 
     public void closeConversations() {
-        if (conversation != null) {
+        for (Context ctx : conversationMap.keySet()) {
+            Conversation conversation = conversationMap.get(ctx);
             conversation.close();
             LOGGER.debug("Closed conversation {}.", conversation.getConversationContext());
-            conversation = null;
-        }
-        for (Context ctx : conversationMap.keySet()) {
-            Conversation conv = conversationMap.get(ctx);
-            conv.close();
-            LOGGER.debug("Closed conversation {}.", conv.getConversationContext());
         }
         conversationMap.clear();
     }

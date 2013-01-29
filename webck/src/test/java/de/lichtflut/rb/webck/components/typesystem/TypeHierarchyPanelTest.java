@@ -11,8 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import de.lichtflut.rb.AbstractRBWebTest;
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.webck.RBWebTest;
 
 /**
  * <p>
@@ -23,7 +23,7 @@ import de.lichtflut.rb.core.RB;
  * @author Ravi Knox
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TypeHierarchyPanelTest extends AbstractRBWebTest {
+public class TypeHierarchyPanelTest extends RBWebTest {
 
 	private TypeHierarchyPanel panel;
 	private final ResourceID id = RB.PERSON;

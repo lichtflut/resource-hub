@@ -3,16 +3,15 @@
  */
 package de.lichtflut.rb.core.schema.parser;
 
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.io.InputStream;
-
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.services.ConversationFactory;
+import de.lichtflut.rb.core.services.SchemaImporter;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import junit.framework.Assert;
-
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,11 +19,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.services.ConversationFactory;
-import de.lichtflut.rb.core.services.SchemaImporter;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.mockito.Mockito.when;
 
 /**
  * <p>
@@ -40,7 +38,7 @@ import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
  */
 public class ResourceSchemaParserIT {
 
-	private ModelingConversation conversation;
+	private Conversation conversation;
 
 	@Mock
 	private ConversationFactory conversationFactory;

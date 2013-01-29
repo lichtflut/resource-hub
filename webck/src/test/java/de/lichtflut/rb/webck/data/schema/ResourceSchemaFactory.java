@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.mock.schema;
+package de.lichtflut.rb.webck.data.schema;
 
 import java.util.Locale;
 
@@ -15,7 +15,7 @@ import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.mock.RBTestConstants;
+import de.lichtflut.rb.webck.data.RBTestConstants;
 
 /**
  * <p>

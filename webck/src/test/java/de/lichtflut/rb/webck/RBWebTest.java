@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb;
+package de.lichtflut.rb.webck;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -13,7 +13,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.util.tester.WicketTester;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -24,6 +24,7 @@ import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
@@ -50,7 +51,7 @@ import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
  * @author Ravi Knox
  */
 @RunWith(MockitoJUnitRunner.class)
-public abstract class AbstractRBWebTest {
+public abstract class RBWebTest {
 
 	private ApplicationContextMock applicationContextMock;
 
@@ -62,7 +63,7 @@ public abstract class AbstractRBWebTest {
 	protected SemanticNetworkService networkService;
 
 	@Mock
-	protected ModelingConversation conversation;
+	protected Conversation conversation;
 
 	@Mock
 	protected ResourceLinkProvider resourceLinkProvider;
@@ -72,6 +73,9 @@ public abstract class AbstractRBWebTest {
 
 	@Mock
 	protected SchemaManager schemaManager;
+
+	@Mock
+	protected SecurityService securityService;
 
 	@Mock
 	protected TypeManager typeManager;
@@ -117,7 +121,8 @@ public abstract class AbstractRBWebTest {
 	/**
 	 * Override this method to add some custom configuration.
 	 */
-	protected abstract void setupTest();
+	protected void setupTest() {
+	}
 
 	/**
 	 * Add mock-objects as a replacement for {@link SpringBean}s.
@@ -150,6 +155,7 @@ public abstract class AbstractRBWebTest {
 		addMock("authModule", authModule);
 		addMock("domainManager", domainManager);
 		addMock("schemaManager", schemaManager);
+		addMock("securityService", securityService);
 	}
 
 	private Panel getLastRenderedPanel(final String path) {

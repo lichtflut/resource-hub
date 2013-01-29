@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.mock.schema;
+package de.lichtflut.rb.core.data.schema;
 
 import java.util.ArrayList;
 import java.util.List;

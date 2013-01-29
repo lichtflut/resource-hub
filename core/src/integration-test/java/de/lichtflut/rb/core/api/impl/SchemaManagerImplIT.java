@@ -3,6 +3,23 @@
  */
 package de.lichtflut.rb.core.api.impl;
 
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.data.schema.ResourceSchemaFactory;
+import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import de.lichtflut.rb.core.services.ConversationFactory;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
+import org.arastreju.sge.Arastreju;
+import org.arastreju.sge.Conversation;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -11,24 +28,6 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-
-import org.arastreju.sge.Arastreju;
-import org.arastreju.sge.ModelingConversation;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
-import de.lichtflut.rb.core.services.ConversationFactory;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
-import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 
 /**
  * <p>
@@ -43,7 +42,7 @@ import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
  */
 public class SchemaManagerImplIT {
 
-	private ModelingConversation conversation;
+	private Conversation conversation;
 
 	@Mock
 	private ConversationFactory conversationFactory;
@@ -106,9 +105,5 @@ public class SchemaManagerImplIT {
 		assertThat(found.getPropertyDeclarations().size(), is(original.getPropertyDeclarations().size()));
 
 	}
-
-	// ----------------------------------------------------
-
-
 
 }

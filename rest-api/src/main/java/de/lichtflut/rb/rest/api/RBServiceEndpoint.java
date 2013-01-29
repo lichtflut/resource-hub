@@ -11,7 +11,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -130,7 +130,7 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	
     // ----------------------------------------------------
 
-    protected List<ResourceNode> findResourcesByType(ModelingConversation conversation, ResourceID type) {
+    protected List<ResourceNode> findResourcesByType(Conversation conversation, ResourceID type) {
         final Query query = conversation.createQuery();
         query.addField(RDF.TYPE, type);
         return query.getResult().toList(2000);

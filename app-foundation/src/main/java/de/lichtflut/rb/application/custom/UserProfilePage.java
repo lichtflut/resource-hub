@@ -79,7 +79,7 @@ public class UserProfilePage extends RBBasePage {
 				final PageParameters params = new PageParameters();
 				params.add(CommonParams.PARAM_RESOURCE_TYPE, RB.PERSON);
 				params.add(CommonParams.PARAM_RESOURCE_ID, node.getQualifiedName());
-				setResponsePage(RBApplication.get().getEntityDetailPage(), params);
+				setResponsePage(RBApplication.get().getEntityDetailPage(RB.PERSON), params);
 			}
 
 			@Override
@@ -87,7 +87,7 @@ public class UserProfilePage extends RBBasePage {
 				PageParameters parameters = new PageParameters();
 				parameters.add(DisplayMode.PARAMETER, DisplayMode.CREATE);
 				parameters.add(CommonParams.PARAM_RESOURCE_TYPE, RB.PERSON);
-				setResponsePage(RBApplication.get().getEntityDetailPage(), parameters);
+				setResponsePage(RBApplication.get().getEntityDetailPage(RB.PERSON), parameters);
 			}
 
 		};

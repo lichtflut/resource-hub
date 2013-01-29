@@ -1,6 +1,9 @@
+/*
+ * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ */
+package de.lichtflut.rb.webck.components.login;
 
-
-package de.lichtflut.rb.web.components.login;
+import java.util.Locale;
 
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -16,8 +19,6 @@ import org.junit.Test;
 
 import de.lichtflut.rb.core.security.LoginData;
 import de.lichtflut.rb.webck.components.login.LoginPanel;
-
-import java.util.Locale;
 
 public class LoginPanelTest {
 
@@ -38,7 +39,7 @@ public class LoginPanelTest {
 	@Before
 	public void setUp() {
 		tester = new WicketTester();
-        tester.getSession().setLocale(Locale.GERMAN);
+		tester.getSession().setLocale(Locale.GERMAN);
 	}
 
 	private Panel createPanel(){
