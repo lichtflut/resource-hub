@@ -1,13 +1,13 @@
 package de.lichtflut.rb.core.common;
 
-import de.lichtflut.rb.core.RBSystem;
-import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
+
+import de.lichtflut.rb.core.RBSystem;
 
 /**
  * <p>
@@ -16,7 +16,6 @@ import org.arastreju.sge.model.nodes.views.SNClass;
  *  <ol>
  *      <li>Check if the resource has directly assigned the type via system:hasSchemaIdentifyingType</li>
  *      <li>Check if any of the super classes has assigned the type via system:hasSchemaIdentifyingType</li>
- *      <li>Grab one of the rfd:type statements of the resource</li>
  *  </ol>
  * </p>
  * <p>
@@ -27,47 +26,36 @@ import org.arastreju.sge.model.nodes.views.SNClass;
  */
 public class SchemaIdentifyingType {
 
-    public static SNClass of(ResourceID resource) {
-        return of(resource.asResource());
-    }
+	/**
+	 * @param node Base node to which the schema type is to be found
+	 * @return The first occurrence of {@link RBSystem#HAS_SCHEMA_IDENTIFYING_TYPE} in base or superclasses.
+	 */
+	public static SNClass of(final ResourceID resource) {
+		return of(resource.asResource());
+	}
 
-    public static SNClass of(ResourceNode node) {
-        SemanticNode fallback = null;
-        SemanticNode inherited = null;
-        for (Statement assoc : node.getAssociations()) {
-            if (RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE.equals(assoc.getPredicate())) {
-                // return directly
-                return SNClass.from(assoc.getObject());
-            }
-            if (RDFS.SUB_CLASS_OF.equals(assoc.getPredicate())) {
-                SNClass superClass = SNClass.from(assoc.getObject());
-                inherited = getSchemaIdentifyingType(superClass, inherited);
-            }
-            if (RDF.TYPE.equals(assoc.getPredicate()) && !RBSystem.ENTITY.equals(assoc.getObject())) {
-                fallback = assoc.getObject();
-            }
-        }
+	/**
+	 * @param node Base node to which the schema type is to be found
+	 * @return The first occurrence of {@link RBSystem#HAS_SCHEMA_IDENTIFYING_TYPE} in base or superclasses.
+	 */
+	public static SNClass of(final ResourceNode node){
+		SemanticNode schemaClass = null;
+		SNClass result = null;
 
-        if (inherited != null) {
-            return SNClass.from(inherited);
-        }
-        return SNClass.from(fallback);
-    }
+		for (Statement assoc : node.getAssociations()) {
+			ResourceID predicate = assoc.getPredicate();
+			if(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE.equals(predicate)){
+				schemaClass = assoc.getObject();
+			}
 
-    // ----------------------------------------------------
+			if (RDFS.SUB_CLASS_OF.equals(predicate) && null == schemaClass) {
+				schemaClass = SchemaIdentifyingType.of(assoc.getObject().asResource());
+			}
+		}
 
-    private static SemanticNode getSchemaIdentifyingType(SNClass superClass, SemanticNode defaultClass) {
-        if (superClass == null) {
-            return defaultClass;
-        }
-
-        for (Statement assoc : superClass.getAssociations()) {
-            if (RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE.equals(assoc.getPredicate())) {
-                // return directly
-                return SNClass.from(assoc.getObject());
-            }
-        }
-        return defaultClass;
-    }
-
+		if(null != schemaClass){
+			result = SNClass.from(schemaClass);
+		}
+		return result;
+	}
 }
