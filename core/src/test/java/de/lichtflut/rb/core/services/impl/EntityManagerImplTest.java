@@ -29,7 +29,6 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.naming.QualifiedName;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -67,7 +66,6 @@ public class EntityManagerImplTest extends RBCoreTest{
 
 	// ------------- SetUp & tearDown -----------------------
 
-	@Before
 	@Override
 	public void setUp() {
 		entityManager = new EntityManagerImpl(typeManager, schemaManager, conversation);

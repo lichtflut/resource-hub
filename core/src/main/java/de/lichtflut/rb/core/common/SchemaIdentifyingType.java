@@ -23,6 +23,7 @@ import de.lichtflut.rb.core.RBSystem;
  * </p>
  *
  * @author Oliver Tigges
+ * @author Ravi Knox
  */
 public class SchemaIdentifyingType {
 
@@ -42,19 +43,31 @@ public class SchemaIdentifyingType {
 		SemanticNode schemaClass = null;
 		SNClass result = null;
 
-		for (Statement assoc : node.getAssociations()) {
-			ResourceID predicate = assoc.getPredicate();
-			if(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE.equals(predicate)){
-				schemaClass = assoc.getObject();
-			}
+		if(null == node){
+			return null;
+		}
 
-			if (RDFS.SUB_CLASS_OF.equals(predicate) && null == schemaClass) {
-				schemaClass = SchemaIdentifyingType.of(assoc.getObject().asResource());
-			}
+		schemaClass = findAssociation(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
+
+		if(null == schemaClass && node != null){
+			schemaClass = SchemaIdentifyingType.of(findAssociation(node, RDFS.SUB_CLASS_OF));
 		}
 
 		if(null != schemaClass){
 			result = SNClass.from(schemaClass);
+		}
+		return result;
+	}
+
+	// ------------------------------------------------------
+
+	private static ResourceNode findAssociation(final ResourceNode node, final ResourceID predicate) {
+		ResourceNode result = null;
+		for (Statement assoc : node.getAssociations()) {
+			if(predicate.equals(assoc.getPredicate())){
+				result = assoc.getObject().asResource();
+				break;
+			}
 		}
 		return result;
 	}

@@ -4,6 +4,7 @@
 package de.lichtflut.rb.core.common;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import org.arastreju.sge.apriori.RDF;
@@ -25,6 +26,16 @@ import de.lichtflut.rb.core.RBSystem;
  * @author Ravi Knox
  */
 public class SchemaIdentifyingTypeTest {
+
+	/**
+	 * Test method for {@link de.lichtflut.rb.core.common.SchemaIdentifyingType#of(org.arastreju.sge.model.nodes.ResourceNode)}.
+	 */
+	@Test
+	public void testOfNullNode() {
+		SNClass schemaClass = SchemaIdentifyingType.of(null);
+
+		assertThat(schemaClass, nullValue());
+	}
 
 	/**
 	 * Test method for {@link de.lichtflut.rb.core.common.SchemaIdentifyingType#of(org.arastreju.sge.model.nodes.ResourceNode)}.
