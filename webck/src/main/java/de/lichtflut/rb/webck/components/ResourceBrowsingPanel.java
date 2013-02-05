@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -141,7 +142,17 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				error(errorMessage);
 				RBAjaxTarget.add(ResourceBrowsingPanel.this);
 			}
+
+			@Override
+			protected void onCancel() {
+				ResourceBrowsingPanel.this.onCancel();
+			}
 		};
+	}
+
+	protected void onCancel() {
+		RBWebSession.get().getHistory().back();
+		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 	}
 
 	/**

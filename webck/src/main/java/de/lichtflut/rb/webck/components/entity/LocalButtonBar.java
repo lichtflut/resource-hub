@@ -81,7 +81,9 @@ public class LocalButtonBar extends Panel {
 	 * @param errors A List containing errorcodes and their corresponding RBField
 	 */
 	protected void onError(final Map<Integer, List<RBField>> errors) {
+	}
 
+	protected void onCancel(){
 	}
 
 	// -- BUTTONS -----------------------------------------
@@ -108,8 +110,7 @@ public class LocalButtonBar extends Panel {
 		final RBCancelButton cancel = new RBCancelButton("cancel") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				RBWebSession.get().getHistory().back();
-				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
+				LocalButtonBar.this.onCancel();
 			}
 		};
 		cancel.add(visibleIf(not(viewMode)));
