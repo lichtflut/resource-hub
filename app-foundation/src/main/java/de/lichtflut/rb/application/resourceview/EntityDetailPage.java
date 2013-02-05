@@ -3,6 +3,14 @@
  */
 package de.lichtflut.rb.application.resourceview;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
+
 import de.lichtflut.rb.application.base.RBBasePage;
 import de.lichtflut.rb.application.common.CommonParams;
 import de.lichtflut.rb.core.entity.EntityHandle;
@@ -13,12 +21,6 @@ import de.lichtflut.rb.webck.components.ResourceBrowsingPanel;
 import de.lichtflut.rb.webck.components.navigation.BreadCrumbsBar;
 import de.lichtflut.rb.webck.components.notes.NotePadPanel;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.string.StringValue;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
 
 /**
  * <p>
@@ -56,7 +58,7 @@ public class EntityDetailPage extends RBBasePage {
 			add(new WebMarkupContainer("rb").setVisible(false));
 		}
 
-		add(new NotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
+		add(createNotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
 	}
 
 	/**
@@ -64,7 +66,7 @@ public class EntityDetailPage extends RBBasePage {
 	 */
 	public EntityDetailPage() {
 		add(createBrowser("rb"));
-		add(new NotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
+		add(createNotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
 	}
 
 	// ----------------------------------------------------
@@ -74,9 +76,13 @@ public class EntityDetailPage extends RBBasePage {
 		return new BreadCrumbsBar(componentID, 7);
 	}
 
-    protected Component createBrowser(final String componentID) {
-        return new ResourceBrowsingPanel(componentID);
-    }
+	protected Component createBrowser(final String componentID) {
+		return new ResourceBrowsingPanel(componentID);
+	}
+
+	protected Component createNotePadPanel(final String id, final IModel<ResourceID> model) {
+		return new NotePadPanel(id, model);
+	}
 
 	// -----------------------------------------------------
 
