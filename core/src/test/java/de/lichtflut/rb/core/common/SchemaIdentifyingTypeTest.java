@@ -44,10 +44,24 @@ public class SchemaIdentifyingTypeTest {
 	public void testOfResourceNodeSchemaViaDirectIdentifyingSchema() {
 		ResourceNode node = new SNResource();
 		node.addAssociation(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, RB.PERSON);
+		node.addAssociation(RDF.TYPE, RB.CITY);
 
 		SNClass schemaClass = SchemaIdentifyingType.of(node);
 
 		assertThat(schemaClass, equalTo(RB.PERSON));
+	}
+
+	/**
+	 * Test method for {@link de.lichtflut.rb.core.common.SchemaIdentifyingType#of(org.arastreju.sge.model.nodes.ResourceNode)}.
+	 */
+	@Test
+	public void testOfResourceNodeType() {
+		ResourceNode node = new SNResource();
+		node.addAssociation(RDF.TYPE, RB.CITY);
+
+		SNClass schemaClass = SchemaIdentifyingType.of(node);
+
+		assertThat(schemaClass, equalTo(RB.CITY));
 	}
 
 	/**
@@ -60,8 +74,10 @@ public class SchemaIdentifyingTypeTest {
 
 		node.addAssociation(RDFS.SUB_CLASS_OF, superClass);
 		node.addAssociation(RDF.TYPE, new SNResource());
+		node.addAssociation(RDF.TYPE, RB.CITY);
 		superClass.addAssociation(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, RB.PERSON);
 		superClass.addAssociation(RDF.TYPE, new SNResource());
+		superClass.addAssociation(RDF.TYPE, RB.CITY);
 
 		SNClass schemaClass = SchemaIdentifyingType.of(node);
 
@@ -113,6 +129,29 @@ public class SchemaIdentifyingTypeTest {
 		superClass2.addAssociation(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, RB.CITY);
 		superClass2.addAssociation(RDFS.SUB_CLASS_OF, superClass3);
 		superClass3.addAssociation(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, RB.PERSON);
+
+		SNClass schemaClass = SchemaIdentifyingType.of(node);
+
+		assertThat(schemaClass, equalTo(RB.CITY));
+	}
+
+	/**
+	 * Test method for {@link de.lichtflut.rb.core.common.SchemaIdentifyingType#of(org.arastreju.sge.model.nodes.ResourceNode)}.
+	 */
+	@Test
+	public void testOfResourceNodeSchemaNoSchemaButType() {
+		ResourceNode node = new SNResource();
+		ResourceNode superClass1 = new SNResource();
+		SNResource superClass2 = new SNResource();
+		SNResource superClass3 = new SNResource();
+
+		superClass1.addAssociation(RDF.TYPE, RB.CITY);
+		superClass2.addAssociation(RDF.TYPE, new SNResource());
+		superClass3.addAssociation(RDF.TYPE, RB.PERSON);
+
+		node.addAssociation(RDFS.SUB_CLASS_OF, superClass1);
+		superClass1.addAssociation(RDFS.SUB_CLASS_OF, superClass2);
+		superClass2.addAssociation(RDFS.SUB_CLASS_OF, superClass3);
 
 		SNClass schemaClass = SchemaIdentifyingType.of(node);
 

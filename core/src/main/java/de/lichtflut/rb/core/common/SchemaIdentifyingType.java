@@ -1,5 +1,6 @@
 package de.lichtflut.rb.core.common;
 
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
@@ -32,34 +33,55 @@ public class SchemaIdentifyingType {
 	 * @return The first occurrence of {@link RBSystem#HAS_SCHEMA_IDENTIFYING_TYPE} in base or superclasses.
 	 */
 	public static SNClass of(final ResourceID resource) {
+		if(null == resource){
+			return null;
+		}
 		return of(resource.asResource());
 	}
 
 	/**
 	 * @param node Base node to which the schema type is to be found
-	 * @return The first occurrence of {@link RBSystem#HAS_SCHEMA_IDENTIFYING_TYPE} in base or superclasses.
+	 * @return The first occurrence of {@link RBSystem#HAS_SCHEMA_IDENTIFYING_TYPE} in base or superclasses or {@link RDF#TYPE} if schema is ot found
 	 */
 	public static SNClass of(final ResourceNode node){
+		return of(node, true);
+	}
+
+	/**
+	 * @param node Base node to which the schema type is to be found
+	 * @param fallback If true and no schema is found, return the most specifying RDF:TYPE
+	 * @return The first occurrence of {@link RBSystem#HAS_SCHEMA_IDENTIFYING_TYPE} in base or superclasses or {@link RDF#TYPE} if schema is ot found and fallback is set
+	 */
+	public static SNClass of(final ResourceNode node, final boolean fallback){
 		SemanticNode schemaClass = null;
-		SNClass result = null;
 
 		if(null == node){
 			return null;
 		}
 
-		schemaClass = findAssociation(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
+		schemaClass = findAssociationRekursive(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
 
-		if(null == schemaClass && node != null){
-			schemaClass = SchemaIdentifyingType.of(findAssociation(node, RDFS.SUB_CLASS_OF));
+		if(null == schemaClass && fallback){
+			schemaClass = findAssociationRekursive(node, RDF.TYPE);
 		}
-
-		if(null != schemaClass){
-			result = SNClass.from(schemaClass);
-		}
-		return result;
+		return SNClass.from(schemaClass);
 	}
 
 	// ------------------------------------------------------
+
+	private static SemanticNode findAssociationRekursive(final ResourceNode node, final ResourceID predicate) {
+		SemanticNode schemaClass;
+		schemaClass = findAssociation(node, predicate);
+
+		if(null == schemaClass && isSubClass(node)){
+			schemaClass = SchemaIdentifyingType.findAssociationRekursive(findAssociation(node, RDFS.SUB_CLASS_OF), predicate);
+		}
+		return schemaClass;
+	}
+
+	private static boolean isSubClass(final ResourceNode node) {
+		return findAssociation(node, RDFS.SUB_CLASS_OF) != null;
+	}
 
 	private static ResourceNode findAssociation(final ResourceNode node, final ResourceID predicate) {
 		ResourceNode result = null;
