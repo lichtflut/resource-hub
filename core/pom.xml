@@ -149,14 +149,10 @@
 		</plugins>
 	</reporting>
 	<dependencies>
-		<dependency>
-			<groupId>org.arastreju</groupId>
-			<artifactId>arastreju.sge</artifactId>
-		</dependency>
         <dependency>
-            <groupId>org.arastreju</groupId>
-            <artifactId>arastreju-neo4j</artifactId>
-            <scope>test</scope>
+            <groupId>de.lichtflut.rb</groupId>
+            <artifactId>lf.resource-browser.api</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
@@ -215,6 +211,7 @@
 			<version>1.9</version>
 			<scope>test</scope>
 		</dependency>
+
 		<!-- MOCKITO -->
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -222,5 +219,13 @@
 			<version>1.9.0</version>
 			<scope>test</scope>
 		</dependency>
+
+        <!-- ARASTREJU-NEO -->
+        <dependency>
+            <groupId>org.arastreju</groupId>
+            <artifactId>arastreju-neo4j</artifactId>
+            <scope>test</scope>
+        </dependency>
+
 	</dependencies>
 </project>
