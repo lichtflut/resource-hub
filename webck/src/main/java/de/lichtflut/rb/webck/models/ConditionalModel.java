@@ -1,16 +1,14 @@
 /*
- * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright (C) 2013 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.models;
 
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
-import org.arastreju.sge.model.nodes.ResourceNode;
 
 import java.util.Collection;
 
@@ -213,9 +211,6 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 	
 	// -----------------------------------------------------
 	 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public T getObject() {
@@ -226,9 +221,6 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		}
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setObject(T object) {
@@ -239,16 +231,10 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		}
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void detach() {
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public IWrapModel<T> wrapOnAssignment(final Component component) {
 		return new IWrapModel<T>() {

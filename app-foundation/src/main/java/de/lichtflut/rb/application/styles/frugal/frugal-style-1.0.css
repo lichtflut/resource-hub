@@ -211,10 +211,16 @@ div#second-level-nav ul li a {
 }
 
 div#second-level-nav ul li a.current {
+    font-weight: bold;
+}
+
+div#second-level-nav ul span.under-construction {
+    color: #CCC;
+    font-size: 7pt;
 	font-weight: bold;
 }
 
-div#second-level-nav ul li a:before {
+div#second-level-nav ul li a:before, div#second-level-nav ul span.under-construction:before {
 	content: '\00BB ';
 }
 
