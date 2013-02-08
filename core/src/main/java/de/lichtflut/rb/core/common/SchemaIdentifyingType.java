@@ -12,11 +12,12 @@ import de.lichtflut.rb.core.RBSystem;
 
 /**
  * <p>
- *  Helper to get the 'schema identifying' type of a resource.
- *  The detection of a resource's type is a three step process.
+ *  Helper to get the 'schema identifying' type of a resource. By default if no Schema is found, the most specifying RDF.TYPE is returned.
+ *  The detection of a resource's Schema/type is a three step process.
  *  <ol>
  *      <li>Check if the resource has directly assigned the type via system:hasSchemaIdentifyingType</li>
  *      <li>Check if any of the super classes has assigned the type via system:hasSchemaIdentifyingType</li>
+ *      <li>Execute the same steps above for RDF.TYPE</li>
  *  </ol>
  * </p>
  * <p>
