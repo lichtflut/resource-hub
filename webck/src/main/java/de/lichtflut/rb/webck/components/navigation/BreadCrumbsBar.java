@@ -10,13 +10,15 @@ import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.BrowsingContextModel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.entity.EntityHistoryModel;
+import org.apache.wicket.Component;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -26,9 +28,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.enableIf;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 /**
  * <p>
@@ -42,8 +48,12 @@ import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
  * @author Oliver Tigges
  */
 public class BreadCrumbsBar extends Panel {
-	
-	@SpringBean
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BreadCrumbsBar.class);
+
+    private static final String LINK_LIST = "linkList";
+
+    @SpringBean
 	private SemanticNetworkService service;
 	
 	@SpringBean
@@ -62,7 +72,7 @@ public class BreadCrumbsBar extends Panel {
 		setOutputMarkupId(true);
 
 		// the links for the last entries - excluding the current
-		final ListView<EntityBrowsingStep> view = new ListView<EntityBrowsingStep>("linkList", new EntityHistoryModel(max -1, true)) {
+		final ListView<EntityBrowsingStep> view = new ListView<EntityBrowsingStep>(LINK_LIST, new EntityHistoryModel(max -1, true)) {
 			@Override
 			protected void populateItem(ListItem<EntityBrowsingStep> item) {
 				final EntityBrowsingStep step = item.getModelObject();
@@ -85,58 +95,64 @@ public class BreadCrumbsBar extends Panel {
 				item.add(link);
 			}
 		};
-		view.setReuseItems(true);
+		view.setReuseItems(false);
 		add(view);
-		
-		
+
 		// special link for the current entry
-		add(createCurrentEntityLink());
+        IModel<EntityHandle> currentHandle = new CurrentHandleModel();
+		add(createCurrentEntityLink(currentHandle));
+        add(createUnderConstructionHint(currentHandle));
 	}
+
+    // ----------------------------------------------------
 	
-	// ----------------------------------------------------
-	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void onEvent(final IEvent<?> event) {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
 		if (mce.isAbout(ModelChangeEvent.ENTITY)) {
-			RBAjaxTarget.add(this);
+            ListView view = (ListView) get(LINK_LIST);
+            view.removeAll();
+            RBAjaxTarget.add(this);
 		}
 	}
-	
-	// ----------------------------------------------------
 
-	protected CrossLink createCurrentEntityLink() {
-		final IModel<ResourceID> current = BrowsingContextModel.currentEntityModel();
-		
-		final IModel<String> currentURL = new DerivedModel<String, ResourceID>(current) {
-			@Override
-			protected String derive(ResourceID original) {
-				return getUrlTo(original).toString();
-			}
-		};
-		final IModel<String> currentLabel = new DerivedModel<String, ResourceID>(current) {
-			@Override
-			protected String derive(ResourceID original) {
-				return getCroppedLabel(original, 40);
-			}
-		};
-		final IModel<String> currentTitle = new DerivedModel<String, ResourceID>(current) {
-			@Override
-			protected String derive(ResourceID original) {
-				final ResourceID id = resolve(original);
-				return ResourceLabelBuilder.getInstance().getLabel(id, getLocale());
-			}
-		};
-		
-		final CrossLink link = new CrossLink("currentEntityLink", currentURL);
-		link.add(new Label("label", currentLabel));
-		link.add(title(currentTitle));
-		link.add(visibleIf(ConditionalModel.not(BrowsingContextModel.isInCreateMode())));
+    @Override
+    protected void onConfigure() {
+        super.onConfigure();
+        LOGGER.debug("Current browsing stack: {} ", RBWebSession.get().getHistory());
+    }
+
+    // ----------------------------------------------------
+
+	protected Component createCurrentEntityLink(IModel<EntityHandle> currentHandle) {
+        final CrossLink link = new CrossLink("currentEntityLink", new DerivedDetachableModel<String, EntityHandle>(currentHandle) {
+            @Override
+            protected String derive(EntityHandle handle) {
+                return getUrlTo(handle.getId()).toString();
+            }
+        });
+		link.add(new Label("label", new DerivedDetachableModel<String, EntityHandle>(currentHandle) {
+            @Override
+            protected String derive(EntityHandle handle) {
+                return getCroppedLabel(handle.getId(), 40);
+            }
+        }));
+		link.add(title(new DerivedDetachableModel<String, EntityHandle>(currentHandle) {
+            @Override
+            protected String derive(EntityHandle handle) {
+                ResourceID resolved = resolve(handle.getId());
+                return ResourceLabelBuilder.getInstance().getLabel(resolved, getLocale());
+            }
+        }));
+		link.add(visibleIf(not(new IsOnCreationConditional(currentHandle))));
 		return link;
 	}
+
+    protected Component createUnderConstructionHint(IModel<EntityHandle> currentHandle) {
+        Label label = new Label("underConstructionHint", new ResourceModel("label.node-in-creation"));
+        label.add(visibleIf(new IsOnCreationConditional(currentHandle)));
+        return label;
+    }
 	
 	// ----------------------------------------------------
 	
@@ -166,4 +182,25 @@ public class BreadCrumbsBar extends Panel {
 		return label;
 	}
 
+    // -- INNER CLASSES -----------------------------------
+
+    private static class IsOnCreationConditional extends ConditionalModel<EntityHandle> {
+
+        private IsOnCreationConditional(IModel<EntityHandle> model) {
+            super(model);
+        }
+
+        @Override
+        public boolean isFulfilled() {
+            return getObject().isOnCreation();
+        }
+    }
+
+    private static class CurrentHandleModel extends AbstractLoadableDetachableModel<EntityHandle> {
+        @Override
+        public EntityHandle load() {
+            EntityBrowsingStep step = RBWebSession.get().getHistory().getCurrentStep();
+            return step.getHandle();
+        }
+    }
 }

@@ -31,9 +31,6 @@ public abstract class ConditionalBehavior<T> extends Behavior {
 	
 	// -----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onConfigure(Component component) {
 		super.onConfigure(component);

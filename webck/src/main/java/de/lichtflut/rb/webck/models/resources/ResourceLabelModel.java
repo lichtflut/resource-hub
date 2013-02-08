@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright (C) 2013 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.models.resources;
 
@@ -23,7 +23,7 @@ import org.arastreju.sge.model.ResourceID;
 public class ResourceLabelModel extends DerivedModel<String, ResourceID> {
 
 	/**
-	 * Constuctor.
+	 * Constructor.
 	 * @param model The resource model.
 	 */
 	@SuppressWarnings("unchecked")
@@ -32,7 +32,7 @@ public class ResourceLabelModel extends DerivedModel<String, ResourceID> {
 	}
 	
 	/**
-	 * Constuctor.
+	 * Constructor.
 	 * @param resource The resource.
 	 */
 	public ResourceLabelModel(ResourceID resource) {
@@ -41,9 +41,6 @@ public class ResourceLabelModel extends DerivedModel<String, ResourceID> {
 
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String derive(ResourceID source) {
 		return ResourceLabelBuilder.getInstance().getLabel(source, RequestCycle.get().getRequest().getLocale());

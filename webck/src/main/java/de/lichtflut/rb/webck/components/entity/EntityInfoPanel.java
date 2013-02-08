@@ -7,7 +7,6 @@ import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.common.EntityType;
 import de.lichtflut.rb.core.common.SchemaIdentifyingType;
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.components.common.ImageReference;
@@ -17,6 +16,7 @@ import de.lichtflut.rb.webck.components.navigation.ExtendedActionsPanel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.entity.RBEntityImageUrlModel;
+import de.lichtflut.rb.webck.models.entity.RBEntityLabelModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 import de.lichtflut.rb.webck.models.resources.ResourceUriModel;
 import org.apache.wicket.Component;
@@ -57,9 +57,6 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
 public class EntityInfoPanel extends Panel {
 	
 	@SpringBean
-	private TypeManager typeManager;
-	
-	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;
 	
 	// ----------------------------------------------------
@@ -69,47 +66,42 @@ public class EntityInfoPanel extends Panel {
      * @param model - {@link RBEntity} which is to be displayed
      */
     public EntityInfoPanel(final String id, final IModel<RBEntity> model) {
-        this(id, new DerivedDetachableModel<ResourceNode, RBEntity>(model) {
+		super(id);
+
+        IModel<ResourceNode> nodeModel = new DerivedDetachableModel<ResourceNode, RBEntity>(model) {
             @Override
             protected ResourceNode derive(RBEntity entity) {
                 return entity.getNode();
             }
-        }, true);
-    }
-
-	/**
-	 * @param id - wicket:id
-	 * @param model - {@link RBEntity} which is to be displayed
-	 */
-	public EntityInfoPanel(final String id, final IModel<ResourceNode> model, boolean dummy) {
-		super(id);
+        };
 
         add(createLabel("label", model));
 
-		add(new ExtendedActionsPanel("extendedActionsPanel", model));
+		add(new ExtendedActionsPanel("extendedActionsPanel", nodeModel));
 		
-		add(createLinkList(createLinkModel(model)));
+		add(createLinkList(createLinkModel(nodeModel)));
 		
-		final ResourceLabelModel typeLabelModel = new ResourceLabelModel(new EntityTypeModel(model));
-		final ResourceUriModel typeURIModel = new ResourceUriModel(new EntityTypeModel(model));
+		final ResourceLabelModel typeLabelModel = new ResourceLabelModel(new EntityTypeModel(nodeModel));
+		final ResourceUriModel typeURIModel = new ResourceUriModel(new EntityTypeModel(nodeModel));
 
 		add(new Label("type", typeLabelModel).add(title(typeURIModel)));
 
-		add(new ImageReference("image", new RBEntityImageUrlModel(model)));
+		add(new ImageReference("image", new RBEntityImageUrlModel(nodeModel)));
 		
 		add(visibleIf(isNotNull(model)));
 	}
 	
 	// ----------------------------------------------------
 
-    protected Component createLabel(String id, IModel<ResourceNode> model) {
-        final IModel<String> resourceLabelModel = new ResourceLabelModel(model) {
+    protected Component createLabel(String id, IModel<RBEntity> model) {
+        final IModel<String> resourceLabelModel = new RBEntityLabelModel(model) {
+
             @Override
             public String getDefault() {
                 return getString("label.untitled");
             }
         };
-        return new Label("label", resourceLabelModel);
+        return new Label(id, resourceLabelModel);
     }
 
 	protected ListView<VisualizationLink> createLinkList(IModel<List<VisualizationLink>> model) {

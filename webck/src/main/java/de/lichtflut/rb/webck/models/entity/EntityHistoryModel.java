@@ -41,9 +41,6 @@ public class EntityHistoryModel extends AbstractLoadableDetachableModel<List<Ent
 	
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<EntityBrowsingStep> load() {
 		final List<EntityBrowsingStep> result = new ArrayList<EntityBrowsingStep>(max); 

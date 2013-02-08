@@ -22,7 +22,7 @@ import org.apache.wicket.model.IModel;
 public class RBEntityLabelModel extends DerivedModel<String, RBEntity> {
 
 	/**
-	 * Constuctor.
+	 * Constructor.
 	 * @param model The entity model.
 	 */
 	public RBEntityLabelModel(final IModel<RBEntity> model) {
@@ -39,13 +39,10 @@ public class RBEntityLabelModel extends DerivedModel<String, RBEntity> {
 
     // ----------------------------------------------------
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	protected String derive(RBEntity original) {
 		final String label = original.getLabel();
-		if (StringUtils.isBlank(label)) {
+		if (original.isTransient() || StringUtils.isBlank(label)) {
 			return getDefault();
 		} else {
 			return label;

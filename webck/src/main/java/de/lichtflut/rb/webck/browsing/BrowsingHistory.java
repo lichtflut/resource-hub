@@ -8,9 +8,12 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.webck.common.RBWebSession;
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.arastreju.sge.model.ResourceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +98,7 @@ public class BrowsingHistory implements Serializable {
 		rollbackEditingSteps();
 		removeExisting(handle);
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.VIEW));
-		LOGGER.debug("Browsing to " + handle + "  ----  " + this);
+		LOGGER.debug("Browsing to {}.", handle);
 	}
 
 	/**
@@ -104,8 +107,9 @@ public class BrowsingHistory implements Serializable {
 	 */
 	public void edit(final EntityHandle handle) {
 		rollbackEditingSteps();
+        removeExisting(handle);
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.EDIT));
-		LOGGER.debug("Creating " + handle + "  ----  " + this);
+		LOGGER.debug("Editing {}.", handle);
 	}
 
 	/**
@@ -115,7 +119,7 @@ public class BrowsingHistory implements Serializable {
 	public void create(final EntityHandle handle) {
 		rollbackEditingSteps();
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.CREATE));
-		LOGGER.debug("Creating " + handle + "  ----  " + this);
+		LOGGER.debug("Creating {}.", handle);
 	}
 
 	/**
@@ -125,7 +129,7 @@ public class BrowsingHistory implements Serializable {
 	 */
 	public void createReference(final EntityHandle handle, final ReferenceReceiveAction<?>... actions) {
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.CREATE_REFERENCE, actions));
-		LOGGER.debug("Creating sub reference " + this);
+		LOGGER.debug("Creating sub reference for {}.", handle);
 	}
 
 	// --- STEP BACK --------------------------------------
@@ -158,8 +162,22 @@ public class BrowsingHistory implements Serializable {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("Browsing History\n");
-		sb.append("  stack: ").append(stack).append("\n");
+		final StringBuilder sb = new StringBuilder("Browsing History Stack\n");
+        for (EntityBrowsingStep step : stack) {
+            EntityHandle handle = step.getHandle();
+            sb.append(" - ");
+            sb.append(step.getState().name());
+            sb.append(" ");
+            if (handle.hasType()) {
+                sb.append("T: ");
+                sb.append(handle.getType());
+                sb.append(" ");
+            }
+            if (handle.hasId()) {
+                sb.append(label(handle.getId()));
+            }
+            sb.append("\n");
+        }
 		return sb.toString();
 	}
 
@@ -181,5 +199,9 @@ public class BrowsingHistory implements Serializable {
 			}
 		}
 	}
+
+    private String label(ResourceID id) {
+        return new ResourceLabelBuilder().getLabel(id, RBWebSession.get().getLocale());
+    }
 
 }

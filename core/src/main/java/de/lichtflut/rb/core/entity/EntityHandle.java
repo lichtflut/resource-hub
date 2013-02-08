@@ -117,11 +117,8 @@ public class EntityHandle implements Serializable {
 	public boolean equals(Object obj) {
 		if (obj instanceof EntityHandle) {
 			final EntityHandle other = (EntityHandle) obj;
-			if (!Infra.equals(id, other.id)) {
-				return false;
-			} 
-			return Infra.equals(type, other.getType());
-		}
+            return Infra.equals(id, other.id) && Infra.equals(type, other.getType());
+        }
 		return super.equals(obj);
 	}
 	
