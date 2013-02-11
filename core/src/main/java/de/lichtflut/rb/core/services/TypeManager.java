@@ -29,7 +29,7 @@ public interface TypeManager {
 	 * @param type The type.
 	 * @return The corresponding class or null.
 	 */
-	SNClass findType(ResourceID type);
+	SNClass find(ResourceID type);
 
 	/**
 	 * Get the primary class of a resource.

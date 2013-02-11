@@ -63,7 +63,7 @@ public class TypeManagerImpl implements TypeManager {
 	// -----------------------------------------------------
 
 	@Override
-	public SNClass findType(final ResourceID type) {
+	public SNClass find(final ResourceID type) {
 		if (type == null) {
 			return null;
 		}
@@ -108,7 +108,7 @@ public class TypeManagerImpl implements TypeManager {
 
 	@Override
 	public Set<SNClass> getSuperClasses(final ResourceID base) {
-		SNClass baseClass = findType(base);
+		SNClass baseClass = find(base);
 		if (baseClass != null) {
 			return baseClass.getSuperClasses();
 		}

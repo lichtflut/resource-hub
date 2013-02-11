@@ -60,7 +60,7 @@ public class ConstraintsBrowserPanelTest extends RBWebTest{
 			@Override
 			public void onConstraintSelected(final Constraint constraint, final AjaxRequestTarget target) {
 
-			};
+			}
 		};
 
 		tester.startComponentInPage(panel);
