@@ -71,9 +71,6 @@ public class LocalButtonBar extends Panel {
 	// ------------------------------------------------------
 
 	protected void onSave(final IModel<RBEntity> model, final AjaxRequestTarget target, final Form<?> form) {
-		entityManager.store(model.getObject());
-		RBWebSession.get().getHistory().finishEditing();
-		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 	}
 
 	/**

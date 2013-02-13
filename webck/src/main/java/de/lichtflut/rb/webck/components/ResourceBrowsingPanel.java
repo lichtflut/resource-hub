@@ -133,7 +133,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 			@Override
 			protected void onSave(final IModel<RBEntity> model, final AjaxRequestTarget target, final Form<?> form) {
 				ResourceBrowsingPanel.this.onSave(model);
-				super.onSave(model, target, form);
 			}
 
 			@Override
@@ -160,6 +159,9 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	 * @param model Edited entity
 	 */
 	protected void onSave(final IModel<RBEntity> model) {
+		entityManager.store(model.getObject());
+		RBWebSession.get().getHistory().finishEditing();
+		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 	}
 
 	// ----------------------------------------------------
