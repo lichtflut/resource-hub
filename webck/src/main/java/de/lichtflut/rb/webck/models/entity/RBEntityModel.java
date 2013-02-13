@@ -3,15 +3,16 @@
  */
 package de.lichtflut.rb.webck.models.entity;
 
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
-import org.apache.wicket.injection.Injector;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -25,23 +26,23 @@ import org.slf4j.LoggerFactory;
  * @author Oliver Tigges
  */
 public class RBEntityModel extends AbstractLoadableModel<RBEntity> {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(RBEntityModel.class);
-	
+
 	@SpringBean
 	private EntityManager entityManager;
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * Default constructor.
 	 */
 	public RBEntityModel() {
 		Injector.get().inject(this);
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	@Override
 	public RBEntity load() {
 		final EntityHandle handle = RBWebSession.get().getHistory().getCurrentStep().getHandle();
@@ -53,11 +54,11 @@ public class RBEntityModel extends AbstractLoadableModel<RBEntity> {
 			LOGGER.debug("Creating new RB Entity");
 			final RBEntity created = entityManager.create(handle.getType());
 			handle.setId(created.getID());
-            handle.markOnCreation();
+			handle.markOnCreation();
 			return created;
 		} else {
 			throw new IllegalStateException("Cannot initialize RB Entity Model.");
 		}
 	}
-	
+
 }

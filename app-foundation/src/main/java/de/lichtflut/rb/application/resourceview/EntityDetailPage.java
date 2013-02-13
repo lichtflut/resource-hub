@@ -34,8 +34,14 @@ import de.lichtflut.rb.webck.models.BrowsingContextModel;
  * @author Ravi Knox
  * @author Oliver Tigges
  */
-@SuppressWarnings("serial")
 public class EntityDetailPage extends RBBasePage {
+
+	/**
+	 * ResourceBrowsingPanels component id. Useful for retrieving its current model.
+	 */
+	public static final String BROWSER_ID = "rb";
+
+	// ---------------- Constructor -------------------------
 
 	/**
 	 * Constructor.
@@ -52,10 +58,10 @@ public class EntityDetailPage extends RBBasePage {
 		DisplayMode displayMode = DisplayMode.fromParams(params);
 		final boolean editmode = !DisplayMode.VIEW.equals(displayMode);
 		if (handle != null) {
-			add(createBrowser("rb"));
+			add(createBrowser(BROWSER_ID));
 			initHistory(handle, editmode);
 		} else {
-			add(new WebMarkupContainer("rb").setVisible(false));
+			add(new WebMarkupContainer(BROWSER_ID).setVisible(false));
 		}
 
 		add(createRightSideBar("container", BrowsingContextModel.currentEntityModel()));

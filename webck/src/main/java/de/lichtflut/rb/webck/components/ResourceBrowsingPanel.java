@@ -69,7 +69,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	 */
 	public ResourceBrowsingPanel(final String id) {
 		super(id);
-
 		add(new FeedbackPanel("feedback").setOutputMarkupId(true).setEscapeModelStrings(false));
 
 		final Form<?> form = new Form<Void>("form");
@@ -89,6 +88,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 		add(form);
 
+		setDefaultModel(model);
 		setOutputMarkupId(true);
 	}
 
