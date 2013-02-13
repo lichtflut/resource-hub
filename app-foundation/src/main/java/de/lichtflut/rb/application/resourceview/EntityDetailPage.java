@@ -58,7 +58,7 @@ public class EntityDetailPage extends RBBasePage {
 			add(new WebMarkupContainer("rb").setVisible(false));
 		}
 
-		add(createNotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
+		add(createRightSideBar("container", BrowsingContextModel.currentEntityModel()));
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class EntityDetailPage extends RBBasePage {
 	 */
 	public EntityDetailPage() {
 		add(createBrowser("rb"));
-		add(createNotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
+		add(createRightSideBar("container", BrowsingContextModel.currentEntityModel()));
 	}
 
 	// ----------------------------------------------------
@@ -80,7 +80,7 @@ public class EntityDetailPage extends RBBasePage {
 		return new ResourceBrowsingPanel(componentID);
 	}
 
-	protected Component createNotePadPanel(final String id, final IModel<ResourceID> model) {
+	protected Component createRightSideBar(final String id, final IModel<ResourceID> model) {
 		return new NotePadPanel(id, model);
 	}
 
