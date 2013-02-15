@@ -138,8 +138,6 @@ public class SchemaDetailPanel extends Panel {
 		form.add(createDeleteTypeButton("deleteButton"));
 	}
 
-	// ------------------------------------------------------
-
 	private Component createSchemaPropertyListView(final String id, final IModel<ResourceSchema> schema) {
 
 		listModel = new PropertyRowListModel(schema);
@@ -153,6 +151,8 @@ public class SchemaDetailPanel extends Panel {
 		view.setOutputMarkupId(true);
 		return view;
 	}
+
+	// ------------------------------------------------------
 
 	private Component createDeleteTypeButton(final String id) {
 		Button button = new RBStandardButton(id) {
