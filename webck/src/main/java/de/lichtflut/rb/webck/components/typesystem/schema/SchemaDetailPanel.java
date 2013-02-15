@@ -11,6 +11,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableChoiceLabel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableMultiLineLabel;
@@ -52,6 +53,7 @@ import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 import de.lichtflut.rb.webck.components.typesystem.TypeHierarchyPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.types.PropertyRowListModel;
 
 /**
@@ -462,8 +464,14 @@ public class SchemaDetailPanel extends Panel {
 	}
 
 	private Label buildFieldLabelFromResourceID(final String componentId, final IModel<ResourceID> model) {
-		String s = ResourceLabelBuilder.getInstance().getFieldLabel(model.getObject(), getLocale());
-		return new Label(componentId, s);
+		IModel<String> labelModel = new DerivedModel<String, ResourceID>(model) {
+
+			@Override
+			protected String derive(final ResourceID original) {
+				return ResourceLabelBuilder.getInstance().getFieldLabel(model.getObject(), getLocale());
+			}
+		};
+		return new Label(componentId, labelModel);
 	}
 
 	private void addTitleAttribute(final IModel<?> model, final Component c) {
@@ -514,6 +522,16 @@ public class SchemaDetailPanel extends Panel {
 			copy.addPropertyDeclaration(row.asPropertyDeclaration());
 		}
 		schemaManager.store(copy);
+	}
+
+	// ------------------------------------------------------
+
+	@Override
+	public void onEvent(final IEvent<?> event) {
+		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
+		if (mce.isAbout(ModelChangeEvent.SCHEMA)) {
+			RBAjaxTarget.add(this);
+		}
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -37,6 +38,7 @@ import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.components.typesystem.EditVisualizationInfoPanel;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
 import de.lichtflut.rb.webck.components.typesystem.constraints.ConstraintsEditorPanel;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
 
 /**
  * <p>
@@ -73,7 +75,7 @@ public class EditPropertyDeclPanel extends Panel {
 
 		add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
 
-		addPropertiyEditor(form);
+		addPropertyEditor(form);
 		form.add(new EditVisualizationInfoPanel("visualizationInfoPanel", declaration));
 
 		add(form);
@@ -115,10 +117,11 @@ public class EditPropertyDeclPanel extends Panel {
 					schema.getObject().removePropertyDeclaration(declaration.getObject().asPropertyDeclaration());
 					schema.getObject().addPropertyDeclaration(declaration.getObject().asPropertyDeclaration());
 					List<Integer> errors = filterErrors(schemaManager.validate(schema.getObject()));
-					if(!errors.isEmpty()){
-						error(buildValidationErrorMessage(errors));
-					}else{
+					if(errors.isEmpty()){
 						EditPropertyDeclPanel.this.onSubmit(target, form);
+						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.SCHEMA));
+					}else{
+						error(buildValidationErrorMessage(errors));
 					}
 					updatePanel();
 				}catch (IllegalArgumentException e){
@@ -126,24 +129,16 @@ public class EditPropertyDeclPanel extends Panel {
 					updatePanel();
 				}
 			}
-
-			private void removeExisting(final IModel<ResourceSchema> schema, final IModel<PropertyRow> declaration) {
-				PropertyDeclaration updated = declaration.getObject().asPropertyDeclaration();
-				for (PropertyDeclaration decl : schema.getObject().getPropertyDeclarations()) {
-					if(decl.getPropertyDescriptor().equals(updated.getPropertyDescriptor())){
-						schema.getObject().getPropertyDeclarations().remove(decl);
-						break;
-					}
-				}
-			}
 		};
+
 		Button cancel = new RBCancelButton("cancel") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				onCancel(target, form);
 			}
 		};
-		save.add(new Label("saveLabel", new ResourceModel("button.ok", "Okay!")));
+
+		save.add(new Label("saveLabel", new ResourceModel("button.save", "Save!")));
 		cancel.add(new Label("cancelLabel", new ResourceModel("button.cancel", "Cancel")));
 		form.add(save, cancel);
 	}
@@ -151,7 +146,7 @@ public class EditPropertyDeclPanel extends Panel {
 	/**
 	 * Add all attributes directly relating to a {@link PropertyDeclaration}.
 	 */
-	private void addPropertiyEditor(final Form<?> form) {
+	private void addPropertyEditor(final Form<?> form) {
 		if(declaration.getObject().getPropertyDescriptor() == null){
 			declaration.getObject().setPropertyDescriptor(new SimpleResourceID(""));
 		}
@@ -183,6 +178,7 @@ public class EditPropertyDeclPanel extends Panel {
 		RBAjaxTarget.add(EditPropertyDeclPanel.this);
 	}
 
+	// TODO refactor tocustom feedbackpanel
 	private String buildValidationErrorMessage(final List<Integer> errors) {
 		StringBuilder sb = new StringBuilder("Error occured:<ul>");
 		if(errors.contains(ErrorCodes.SCHEMA_CONSTRAINT_EXCEPTION)){
