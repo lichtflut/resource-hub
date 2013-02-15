@@ -143,13 +143,13 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 			}
 
 			@Override
-			protected void onCancel() {
-				ResourceBrowsingPanel.this.onCancel();
+			protected void onCancel(final AjaxRequestTarget target, final Form<?> form){
+				ResourceBrowsingPanel.this.onCancel(target, form);
 			}
 		};
 	}
 
-	protected void onCancel() {
+	protected void onCancel(final AjaxRequestTarget target, final Form<?> form) {
 		RBWebSession.get().getHistory().back();
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 	}

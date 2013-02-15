@@ -80,7 +80,7 @@ public class LocalButtonBar extends Panel {
 	protected void onError(final Map<Integer, List<RBField>> errors) {
 	}
 
-	protected void onCancel(){
+	protected void onCancel(final AjaxRequestTarget target, final Form<?> form){
 	}
 
 	// -- BUTTONS -----------------------------------------
@@ -107,7 +107,7 @@ public class LocalButtonBar extends Panel {
 		final RBCancelButton cancel = new RBCancelButton("cancel") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				LocalButtonBar.this.onCancel();
+				LocalButtonBar.this.onCancel(target, form);
 			}
 		};
 		cancel.add(visibleIf(not(viewMode)));

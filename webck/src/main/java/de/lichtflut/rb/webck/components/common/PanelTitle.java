@@ -9,7 +9,7 @@ import org.apache.wicket.model.IModel;
 
 /**
  * <p>
- * This panel is the standard component for Glasost titles.
+ * This panel is the standard component for component titles.
  * </p>
  * Created: Jan 16, 2013
  *
