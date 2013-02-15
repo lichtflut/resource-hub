@@ -49,6 +49,13 @@ public interface ResourceSchema extends Serializable {
 	 */
 	void addPropertyDeclaration(PropertyDeclaration declaration);
 
+	/**
+	 * Removes a {@link PropertyDeclaration}. <br />
+	 * If no entry exists for the given declaration, no action will be taken.
+	 * @param declaration The declaration to be removed
+	 */
+	void removePropertyDeclaration(PropertyDeclaration declaration);
+
 	// -----------------------------------------------------
 
 	/**

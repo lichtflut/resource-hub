@@ -112,6 +112,7 @@ public class EditPropertyDeclPanel extends Panel {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				try{
+					schema.getObject().removePropertyDeclaration(declaration.getObject().asPropertyDeclaration());
 					schema.getObject().addPropertyDeclaration(declaration.getObject().asPropertyDeclaration());
 					List<Integer> errors = filterErrors(schemaManager.validate(schema.getObject()));
 					if(!errors.isEmpty()){
@@ -126,6 +127,15 @@ public class EditPropertyDeclPanel extends Panel {
 				}
 			}
 
+			private void removeExisting(final IModel<ResourceSchema> schema, final IModel<PropertyRow> declaration) {
+				PropertyDeclaration updated = declaration.getObject().asPropertyDeclaration();
+				for (PropertyDeclaration decl : schema.getObject().getPropertyDeclarations()) {
+					if(decl.getPropertyDescriptor().equals(updated.getPropertyDescriptor())){
+						schema.getObject().getPropertyDeclarations().remove(decl);
+						break;
+					}
+				}
+			}
 		};
 		Button cancel = new RBCancelButton("cancel") {
 			@Override

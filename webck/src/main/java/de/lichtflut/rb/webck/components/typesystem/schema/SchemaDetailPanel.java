@@ -286,7 +286,7 @@ public class SchemaDetailPanel extends Panel {
 					public void onSubmit(final AjaxRequestTarget target) {
 						addTypeNotYetStoredInfo();
 						updatePanel();
-					};
+					}
 				});
 				return picker;
 			}
@@ -394,7 +394,7 @@ public class SchemaDetailPanel extends Panel {
 					public void onSubmit(final AjaxRequestTarget target) {
 						addTypeNotYetStoredInfo();
 						updatePanel();
-					};
+					}
 				});
 				return picker;
 			}
@@ -477,24 +477,25 @@ public class SchemaDetailPanel extends Panel {
 	 */
 	private void addColorCode(final ListItem<PropertyRow> item) {
 		switch (item.getModelObject().getDataType()) {
-		case DATE:
-		case TIME_OF_DAY:
-		case TIMESTAMP:
-			item.add(CssModifier.appendClass(Model.of("key-time")));
-			break;
-		case RICH_TEXT:
-		case STRING:
-		case TEXT:
-		case BOOLEAN:
-		case INTEGER:
-		case DECIMAL:
-		case URI:
-			item.add(CssModifier.appendClass(Model.of("key-text")));
-			break;
-		case RESOURCE:
-			item.add(CssModifier.appendClass(Model.of("key-resource")));
-		default:
-			break;
+			case DATE:
+			case TIME_OF_DAY:
+			case TIMESTAMP:
+				item.add(CssModifier.appendClass(Model.of("key-time")));
+				break;
+			case RICH_TEXT:
+			case STRING:
+			case TEXT:
+			case BOOLEAN:
+			case INTEGER:
+			case DECIMAL:
+			case URI:
+				item.add(CssModifier.appendClass(Model.of("key-text")));
+				break;
+			case RESOURCE:
+				item.add(CssModifier.appendClass(Model.of("key-resource")));
+				break;
+			default:
+				break;
 		}
 	}
 
