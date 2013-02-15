@@ -41,6 +41,7 @@ public class EditPropertyDeclDialog extends AbstractRBDialog {
 			 */
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
+				super.onSubmit(target, form);
 				close(target);
 				EditPropertyDeclDialog.this.onSubmit(target, form);
 			}

@@ -73,7 +73,7 @@ public class EditPropertyDeclPanel extends Panel {
 
 		Form<?> form = new Form<Void>("form");
 
-		add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
+		form.add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
 
 		addPropertyEditor(form);
 		form.add(new EditVisualizationInfoPanel("visualizationInfoPanel", declaration));
