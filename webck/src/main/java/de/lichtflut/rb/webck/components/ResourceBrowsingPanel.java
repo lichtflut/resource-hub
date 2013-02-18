@@ -106,12 +106,8 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		RBWebSession.get().getHistory().createReference(handle, action);
 	}
 
-	/**
-	 * Submits the containes form by calling the default onSubmit() method.
-	 */
-	public void submitForm(){
-		Form<?> form = (Form<?>) get("form");
-		form.getDefaultButton().onSubmit();
+	public Form<?> getForm(){
+		return (Form<?>) get("form");
 	}
 
 	// -- OVERRIDE HOOKS ----------------------------------
