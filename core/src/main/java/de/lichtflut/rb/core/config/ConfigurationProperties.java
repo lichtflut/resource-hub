@@ -16,6 +16,7 @@ import java.util.Properties;
  */
 public class ConfigurationProperties extends Properties {
 
+	@SuppressWarnings("unused")
 	private final String prefix;
 
 	// ----------------------------------------------------

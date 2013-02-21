@@ -46,7 +46,7 @@ public class UserRolePanel extends Panel {
 			@Override
 			protected org.apache.wicket.request.resource.ResourceReference getCSS() {
 				return null;
-			};
+			}
 		};
 		add(roleSelection);
 

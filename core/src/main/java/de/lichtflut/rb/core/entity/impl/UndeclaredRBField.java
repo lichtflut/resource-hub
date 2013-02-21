@@ -3,6 +3,12 @@
  */
 package de.lichtflut.rb.core.entity.impl;
 
+import java.util.Locale;
+import java.util.Set;
+
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.Statement;
+
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -10,24 +16,18 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.PlainVisualizationInfo;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.Statement;
-
-import java.util.Locale;
-import java.util.Set;
 
 /**
  * <p>
  *  A field not declared by a schema's property delcaration.
- * </p> 
+ * </p>
  *
  * Created: Aug 8, 2011
  *
  * @author Ravi Knox
  */
-@SuppressWarnings("serial")
 public class UndeclaredRBField extends AbstractRBField {
-	
+
 	private final ResourceID predicate;
 
 	//------------------------------------------------------------
@@ -48,11 +48,11 @@ public class UndeclaredRBField extends AbstractRBField {
 	public ResourceID getPredicate() {
 		return predicate;
 	}
-	
+
 	@Override
-	public String getLabel(Locale locale) {
+	public String getLabel(final Locale locale) {
 		return ResourceLabelBuilder.getInstance().getFieldLabel(predicate, locale);
-	};
+	}
 
 	@Override
 	public Datatype getDataType() {
@@ -69,14 +69,14 @@ public class UndeclaredRBField extends AbstractRBField {
 		return false;
 	}
 
-    @Override
-    public VisualizationInfo getVisualizationInfo() {
-        return new PlainVisualizationInfo();
-    }
+	@Override
+	public VisualizationInfo getVisualizationInfo() {
+		return new PlainVisualizationInfo();
+	}
 
-    @Override
+	@Override
 	public Constraint getConstraint() {
 		return null;
 	}
-	
+
 }

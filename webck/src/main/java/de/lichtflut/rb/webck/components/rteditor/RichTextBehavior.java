@@ -75,17 +75,19 @@ public class RichTextBehavior extends Behavior {
 		response.renderJavaScriptReference(LFRB_RICH_TEXT_JS);
 		response.renderCSSReference(WYSIWYG_CSS);
 		switch (type) {
-		case SIMPLE:
-			// This is a fix for RTEs displayed in modal dialogs.
-			// The dialog has to be completely rendered, before the RTE starts.
-			response.renderOnLoadJavaScript("LFRB.RichText.simple('#" + c.getMarkupId() + "');");
-			break;
-		case STANDARD:
-			response.renderOnDomReadyJavaScript("LFRB.RichText.standard('#" + c.getMarkupId() + "');");
-			break;
-		case FULL_FEATURED:
-			response.renderOnDomReadyJavaScript("LFRB.RichText.fullFeatured('#" + c.getMarkupId() + "');");
-			break;
+			case SIMPLE:
+				// This is a fix for RTEs displayed in modal dialogs.
+				// The dialog has to be completely rendered, before the RTE starts.
+				response.renderOnLoadJavaScript("LFRB.RichText.simple('#" + c.getMarkupId() + "');");
+				break;
+			case STANDARD:
+				response.renderOnDomReadyJavaScript("LFRB.RichText.standard('#" + c.getMarkupId() + "');");
+				break;
+			case FULL_FEATURED:
+				response.renderOnDomReadyJavaScript("LFRB.RichText.fullFeatured('#" + c.getMarkupId() + "');");
+				break;
+			default:
+				break;
 		}
 	}
 }

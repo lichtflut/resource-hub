@@ -3,14 +3,15 @@
  */
 package de.lichtflut.rb.webck.components.widgets.config.selection;
 
-import de.lichtflut.rb.core.viewspec.impl.SNSelectionParameter;
+import java.io.Serializable;
+
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
-import java.io.Serializable;
+import de.lichtflut.rb.core.viewspec.impl.SNSelectionParameter;
 
 /**
  * <p>
@@ -26,16 +27,16 @@ import java.io.Serializable;
 class QueryParamUIModel implements Serializable, IDetachable {
 
 	private final IModel<SNSelectionParameter> model;
-	
+
 	private ParameterType type;
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * @param field
 	 * @param value
 	 */
-	public QueryParamUIModel(IModel<SNSelectionParameter> model) {
+	public QueryParamUIModel(final IModel<SNSelectionParameter> model) {
 		this.model = model;
 	}
 
@@ -69,16 +70,18 @@ class QueryParamUIModel implements Serializable, IDetachable {
 	/**
 	 * @param type Set the type explicitly.
 	 */
-	public void setType(ParameterType type) {
+	public void setType(final ParameterType type) {
 		this.type = type;
 		switch (type) {
-		case RESOURCE_TYPE:
-			setField(RDF.TYPE);
-			break;
-		case ANY_FIELD_RELATION:
-		case ANY_FIELD_VALUE:
-			model.getObject().unsetField();
-			break;
+			case RESOURCE_TYPE:
+				setField(RDF.TYPE);
+				break;
+			case ANY_FIELD_RELATION:
+			case ANY_FIELD_VALUE:
+				model.getObject().unsetField();
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -87,20 +90,20 @@ class QueryParamUIModel implements Serializable, IDetachable {
 	 */
 	public ResourceID getField() {
 		switch (getType()) {
-		case RESOURCE_TYPE:
-			return RDF.TYPE;
-		case ANY_FIELD_RELATION:
-		case ANY_FIELD_VALUE:
-			return null;
-		default:
-			return model.getObject().getField();
+			case RESOURCE_TYPE:
+				return RDF.TYPE;
+			case ANY_FIELD_RELATION:
+			case ANY_FIELD_VALUE:
+				return null;
+			default:
+				return model.getObject().getField();
 		}
 	}
 
 	/**
 	 * @param field the field to set
 	 */
-	public void setField(ResourceID field) {
+	public void setField(final ResourceID field) {
 		model.getObject().setField(field);
 	}
 
@@ -109,34 +112,34 @@ class QueryParamUIModel implements Serializable, IDetachable {
 	 */
 	public SemanticNode getValue() {
 		switch (getType()) {
-		case RESOURCE_TYPE:
-		case SPECIAL_FIELD_RELATION:
-		case ANY_FIELD_RELATION:
-			return getResourceValue();
-		default:
-			return model.getObject().getTerm();
+			case RESOURCE_TYPE:
+			case SPECIAL_FIELD_RELATION:
+			case ANY_FIELD_RELATION:
+				return getResourceValue();
+			default:
+				return model.getObject().getTerm();
 		}
 	}
 
 	/**
 	 * @param term the value to set
 	 */
-	public void setValue(SemanticNode term) {
+	public void setValue(final SemanticNode term) {
 		model.getObject().setTerm(term);
 	}
-	
+
 	// ----------------------------------------------------
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void detach() {
 		type = null;
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	private ResourceID getResourceValue() {
 		SemanticNode term = model.getObject().getTerm();
 		if (term != null && term.isResourceNode()) {
@@ -145,8 +148,8 @@ class QueryParamUIModel implements Serializable, IDetachable {
 			return null;
 		}
 	}
-	
-	private boolean isResourceReference(SemanticNode node) {
+
+	private boolean isResourceReference(final SemanticNode node) {
 		if (node == null) {
 			return false;
 		} else {

@@ -1,12 +1,13 @@
 package de.lichtflut.rb.core.entity;
 
-import de.lichtflut.rb.core.entity.impl.AbstractRBField;
+import java.io.Serializable;
+
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.StatementMetaInfo;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.StatementOrigin;
 
-import java.io.Serializable;
+import de.lichtflut.rb.core.entity.impl.AbstractRBField;
 
 /**
  * <p>
@@ -27,68 +28,69 @@ import java.io.Serializable;
  */
 public class RBFieldValue implements Serializable {
 
-    private RBField field;
+	@SuppressWarnings("unused")
+	private final RBField field;
 
-    private Statement stmt;
+	private Statement stmt;
 
-    private Object value;
+	private Object value;
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    public RBFieldValue(RBField field, Statement stmt) {
-        this.field = field;
-        this.stmt = stmt;
-        this.value = stmt.getObject();
-    }
+	public RBFieldValue(final RBField field, final Statement stmt) {
+		this.field = field;
+		this.stmt = stmt;
+		this.value = stmt.getObject();
+	}
 
-    public RBFieldValue(RBField field, Object value) {
-        this.field = field;
-        this.value = value;
-    }
+	public RBFieldValue(final RBField field, final Object value) {
+		this.field = field;
+		this.value = value;
+	}
 
-    public RBFieldValue(AbstractRBField field) {
-        this.field = field;
-    }
+	public RBFieldValue(final AbstractRBField field) {
+		this.field = field;
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    public Object getValue() {
-        return value;
-    }
+	public Object getValue() {
+		return value;
+	}
 
-    public void setValue(Object newValue) {
-        this.value = newValue;
-    }
+	public void setValue(final Object newValue) {
+		this.value = newValue;
+	}
 
-    public void setValue(SemanticNode node) {
-        this.value = node;
-    }
+	public void setValue(final SemanticNode node) {
+		this.value = node;
+	}
 
-    public void setValue(RBEntity entity) {
-        this.value = entity;
-    }
+	public void setValue(final RBEntity entity) {
+		this.value = entity;
+	}
 
-    public StatementMetaInfo getStatementMetaInfo() {
-        if (stmt != null) {
-            return stmt.getMetaInfo();
-        } else {
-            return null;
-        }
-    }
+	public StatementMetaInfo getStatementMetaInfo() {
+		if (stmt != null) {
+			return stmt.getMetaInfo();
+		} else {
+			return null;
+		}
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
-    public boolean isRemoved() {
-        return value == null;
-    }
+	public boolean isRemoved() {
+		return value == null;
+	}
 
-    public boolean isAdded() {
-        return stmt == null;
-    }
+	public boolean isAdded() {
+		return stmt == null;
+	}
 
-    public boolean isInherited() {
-        StatementMetaInfo metaInfo = getStatementMetaInfo();
-        return metaInfo != null && StatementOrigin.INHERITED.equals(metaInfo.getOrigin());
-    }
+	public boolean isInherited() {
+		StatementMetaInfo metaInfo = getStatementMetaInfo();
+		return metaInfo != null && StatementOrigin.INHERITED.equals(metaInfo.getOrigin());
+	}
 
 }
