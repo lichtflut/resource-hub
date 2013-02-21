@@ -10,15 +10,15 @@
 </wicket:head>
 <wicket:panel>
 <div class="input-panel">
-	<div style="margin-top: 10px; margin-bottom: 10px">
+	<div class="section">
 		<h2>
-			<span wicket:id="propertyUri">[URI]</span>
+			<wicket:container wicket:id="propertyUri">[URI]</wicket:container>
 			<wicket:enclosure>
 				(default label: <span wicket:id="propertyLabel">[Label]</span>)
 			</wicket:enclosure>
 		</h2>
 	</div>
-	<div class="table">
+	<div class="table section">
 		<wicket:enclosure child="inverseProps">
 			<div>
 				<wicket:message key="label.super-properties">[superProps]</wicket:message>
