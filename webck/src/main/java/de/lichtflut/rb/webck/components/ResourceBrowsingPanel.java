@@ -12,12 +12,15 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.entity.EntityHandle;
@@ -39,8 +42,8 @@ import de.lichtflut.rb.webck.components.relationships.CreateRelationshipPanel;
 import de.lichtflut.rb.webck.components.relationships.RelationshipOverviewPanel;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableModel;
 import de.lichtflut.rb.webck.models.basic.LoadableModel;
-import de.lichtflut.rb.webck.models.entity.RBEntityModel;
 
 /**
  * <p>
@@ -210,4 +213,55 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		sb.append("</ul>");
 		return sb.toString();
 	}
+
+	// ------------------------------------------------------
+
+	/**
+	 * <p>
+	 *  Model for an {@link RBEntity} loaded from entity stack in session.
+	 * </p>
+	 *
+	 * <p>
+	 * 	Created Nov 15, 2011
+	 * </p>
+	 *
+	 * @author Oliver Tigges
+	 */
+	class RBEntityModel extends AbstractLoadableModel<RBEntity> {
+
+		final Logger LOGGER = LoggerFactory.getLogger(RBEntityModel.class);
+
+		@SpringBean
+		private EntityManager entityManager;
+
+		// -----------------------------------------------------
+
+		/**
+		 * Default constructor.
+		 */
+		public RBEntityModel() {
+			Injector.get().inject(this);
+		}
+
+		// ----------------------------------------------------
+
+		@Override
+		public RBEntity load() {
+			final EntityHandle handle = RBWebSession.get().getHistory().getCurrentStep().getHandle();
+			if (handle.hasId()) {
+				LOGGER.debug("Loading RB Entity: " + handle.getId());
+				final RBEntity loaded = entityManager.find(handle.getId());
+				return loaded;
+			} else if (handle.hasType()){
+				LOGGER.debug("Creating new RB Entity");
+				final RBEntity created = entityManager.create(handle.getType());
+				handle.setId(created.getID());
+				handle.markOnCreation();
+				return created;
+			} else {
+				throw new IllegalStateException("Cannot initialize RB Entity Model.");
+			}
+		}
+	}
+
 }
