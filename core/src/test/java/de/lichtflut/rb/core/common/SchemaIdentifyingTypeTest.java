@@ -141,16 +141,18 @@ public class SchemaIdentifyingTypeTest {
 	@Test
 	public void testOfResourceNodeSchemaNoSchemaButType() {
 		ResourceNode node = new SNResource();
+
+
 		ResourceNode superClass1 = new SNResource();
-		SNResource superClass2 = new SNResource();
-		SNResource superClass3 = new SNResource();
-
 		superClass1.addAssociation(RDF.TYPE, RB.CITY);
-		superClass2.addAssociation(RDF.TYPE, new SNResource());
-		superClass3.addAssociation(RDF.TYPE, RB.PERSON);
-
 		node.addAssociation(RDFS.SUB_CLASS_OF, superClass1);
+
+		SNResource superClass2 = new SNResource();
+		superClass2.addAssociation(RDF.TYPE, new SNResource());
 		superClass1.addAssociation(RDFS.SUB_CLASS_OF, superClass2);
+
+		SNResource superClass3 = new SNResource();
+		superClass3.addAssociation(RDF.TYPE, RB.PERSON);
 		superClass2.addAssociation(RDFS.SUB_CLASS_OF, superClass3);
 
 		SNClass schemaClass = SchemaIdentifyingType.of(node);

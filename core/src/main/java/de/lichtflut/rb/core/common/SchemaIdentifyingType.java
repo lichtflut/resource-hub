@@ -1,5 +1,6 @@
 package de.lichtflut.rb.core.common;
 
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
@@ -60,28 +61,34 @@ public class SchemaIdentifyingType {
 			return null;
 		}
 
-		schemaClass = findAssociationRekursive(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
+		schemaClass = findRekursive(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
 
 		if(null == schemaClass && fallback){
-			schemaClass = findAssociationRekursive(node, RDF.TYPE);
+			schemaClass = findRekursive(node, RDF.TYPE);
 		}
 		return SNClass.from(schemaClass);
 	}
 
 	// ------------------------------------------------------
 
-	private static SemanticNode findAssociationRekursive(final ResourceNode node, final ResourceID predicate) {
-		SemanticNode schemaClass;
-		schemaClass = findAssociation(node, predicate);
-
-		if(null == schemaClass && isSubClass(node)){
-			schemaClass = SchemaIdentifyingType.findAssociationRekursive(findAssociation(node, RDFS.SUB_CLASS_OF), predicate);
+	private static SemanticNode findRekursive(final ResourceNode node, final ResourceID predicate){
+		if(null != findAssociation(node, predicate)){
+			return findAssociation(node, predicate);
 		}
-		return schemaClass;
+		SemanticNode schemaType = recursion(node, predicate);
+		return schemaType;
 	}
 
-	private static boolean isSubClass(final ResourceNode node) {
-		return findAssociation(node, RDFS.SUB_CLASS_OF) != null;
+	private static SemanticNode recursion(final ResourceNode node, final ResourceID predicate){
+		SemanticNode result = null;
+		for (ResourceNode subclass : SNOPS.objectsAsResources(node, RDFS.SUB_CLASS_OF)) {
+			if(null != findAssociation(subclass, predicate)){
+				result = findAssociation(subclass, predicate);
+			}else{
+				result = recursion(subclass, predicate);
+			}
+		}
+		return result;
 	}
 
 	private static ResourceNode findAssociation(final ResourceNode node, final ResourceID predicate) {
