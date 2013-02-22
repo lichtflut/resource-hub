@@ -83,4 +83,33 @@ public class ResourceSchemaFactory {
 		return schema;
 	}
 
+	/**
+	 * @return a schema for a Datacenter
+	 */
+	public static ResourceSchema buildDataCenter() {
+		ResourceSchemaImpl schema = new ResourceSchemaImpl(RBTestConstants.DATA_CENTER);
+
+		PropertyDeclaration id = new PropertyDeclarationImpl(RB.HAS_ID, Datatype.STRING);
+		schema.addPropertyDeclaration(id);
+
+		PropertyDeclaration name = new PropertyDeclarationImpl(RB.HAS_NAME, Datatype.STRING);
+		schema.addPropertyDeclaration(name);
+
+		PropertyDeclaration description = new PropertyDeclarationImpl(RB.HAS_DESCRIPTION, Datatype.STRING);
+		schema.addPropertyDeclaration(description);
+
+		PropertyDeclaration hostsMachine = new PropertyDeclarationImpl(RBTestConstants.HOSTS_MACHINE, Datatype.RESOURCE);
+		schema.addPropertyDeclaration(hostsMachine);
+
+		PropertyDeclaration inheritsFrom = new PropertyDeclarationImpl(RBTestConstants.INHERITS_FROM, Datatype.RESOURCE);
+		inheritsFrom.setConstraint(ConstraintsFactory.buildTypeConstraint(RBTestConstants.SOFTWARE_ITEM));
+		schema.addPropertyDeclaration(inheritsFrom);
+
+
+		schema.addQuickInfo(RB.HAS_ID);
+		schema.addQuickInfo(RB.HAS_NAME);
+		schema.addQuickInfo(RB.HAS_DESCRIPTION);
+		return schema;
+	}
+
 }

@@ -53,6 +53,8 @@ public class ModelChangeEvent<T> {
 
 	public static final String START_TIMER_BEHAVIOR = "start-timer-behavior";
 
+	public static final String PROPOSAL_UPDATE = "proposal-update";
+
 	private static final ModelChangeEvent EMPTY = new ModelChangeEvent(new String[0]);
 
 	// ----------------------------------------------------

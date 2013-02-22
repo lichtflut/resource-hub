@@ -22,6 +22,18 @@ public interface RBTestConstants {
 
 	ResourceID ADDRESS = new SimpleResourceID(RB.COMMON_NAMESPACE_URI, "Address");
 
+	ResourceID SOFTWARE_ITEM = new SimpleResourceID(RB.COMMON_NAMESPACE_URI, "SoftwareItem");
+
+	ResourceID DATA_CENTER = new SimpleResourceID(RB.COMMON_NAMESPACE_URI, "DataCenter");
+
+	ResourceID PHYSICAL_MACHINE = new SimpleResourceID(RB.COMMON_NAMESPACE_URI, "PhysicalMachine");
+
+	// ------------------------------------------------------
+
 	ResourceID HAS_AVATAR = new SimpleResourceID(RB.COMMON_NAMESPACE_URI, "hasAvatar");
+
+	ResourceID HOSTS_MACHINE = new SimpleResourceID(RB.COMMON_NAMESPACE_URI, "hostsMachine");
+
+	ResourceID INHERITS_FROM = new SimpleResourceID(RB.COMMON_NAMESPACE_URI, "inheritsFrom");
 
 }

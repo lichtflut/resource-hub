@@ -5,15 +5,21 @@ package de.lichtflut.rb.webck;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 import java.util.Locale;
 
+import org.apache.wicket.Localizer;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.util.tester.WicketTester;
 import org.arastreju.sge.Conversation;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -29,6 +35,7 @@ import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
+import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 
 /**
@@ -53,7 +60,21 @@ import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 @RunWith(MockitoJUnitRunner.class)
 public abstract class RBWebTest {
 
+	/**
+	 * The name for the test domain.
+	 */
+	protected static final String DOMAIN_NAME = "testDomain";
+
+	/**
+	 * The uri for the test domain.
+	 */
+	protected static final ResourceID DOMAIN_ID = new SimpleResourceID("http://glasnost.lichtflut.de/test#", DOMAIN_NAME);
+
+	// ------------------------------------------------------
+
 	private ApplicationContextMock applicationContextMock;
+
+	protected Localizer localizer;
 
 	protected WicketTester tester;
 
@@ -101,10 +122,22 @@ public abstract class RBWebTest {
 	@Before
 	public void setUp() throws Exception {
 		applicationContextMock = new ApplicationContextMock();
+		MockApplication application = new MockApplication(){
+			@Override
+			public org.apache.wicket.Session newSession(final org.apache.wicket.request.Request request, final org.apache.wicket.request.Response response) {
+				return new RBWebSession(request);
+			}
 
-		tester = new WicketTester();
-		tester.getApplication().getComponentInstantiationListeners()
-		.add(new SpringComponentInjector(tester.getApplication(), applicationContextMock));
+			@Override
+			public void init() {
+				// Overwrite so that SpringComponentInjector(this) will not be called from super!
+				// Instead it will be added a few lines below.
+				getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContextMock));
+			}
+		};
+		tester = new WicketTester(application);
+		//		tester.getApplication().getComponentInstantiationListeners()
+		//		.add(new SpringComponentInjector(tester.getApplication(), applicationContextMock));
 		tester.getSession().setLocale(Locale.ENGLISH);
 		registerMocks();
 		setupTest();
@@ -139,6 +172,14 @@ public abstract class RBWebTest {
 	 */
 	protected ApplicationContextMock getApplicationContextMock() {
 		return applicationContextMock;
+	}
+
+	protected void simulatePathbuilder() {
+		when(pathBuilder.queryEntities(anyString(), anyString())).thenReturn("some entities");
+		when(pathBuilder.queryClasses(anyString(), anyString())).thenReturn("some entities");
+		when(pathBuilder.queryProperties(anyString(), anyString())).thenReturn("some entities");
+		when(pathBuilder.queryResources(anyString(), anyString())).thenReturn("some entities");
+		when(pathBuilder.queryUsers(anyString())).thenReturn("some entities");
 	}
 
 	// ------------------------------------------------------
