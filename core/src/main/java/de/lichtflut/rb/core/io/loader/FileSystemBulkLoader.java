@@ -95,6 +95,7 @@ public class FileSystemBulkLoader extends AbstractBulkLoader {
         try {
             FileInputStream in = new FileInputStream(file);
             doImportRDF(in, file.getAbsolutePath());
+            in.close();
         } catch (IOException e) {
             LOGGER.error("File could not be imported: " + file.getAbsolutePath(), e);
         }
@@ -104,6 +105,7 @@ public class FileSystemBulkLoader extends AbstractBulkLoader {
         try {
             FileInputStream in = new FileInputStream(file);
             doImportRSF(in, file.getAbsolutePath());
+            in.close();
         } catch (IOException e) {
             LOGGER.error("File could not be imported: " + file.getAbsolutePath(), e);
         }
