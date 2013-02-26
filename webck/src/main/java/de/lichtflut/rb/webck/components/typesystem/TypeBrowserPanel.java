@@ -3,9 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.typesystem;
 
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.basic.LoadableModel;
+import java.util.List;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -19,7 +18,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.ResourceModel;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
-import java.util.List;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.basic.LoadableModel;
 
 /**
  * <p>
@@ -41,7 +42,6 @@ public abstract class TypeBrowserPanel extends Panel {
 	/**
 	 * Constructor.
 	 */
-	@SuppressWarnings("rawtypes")
 	public TypeBrowserPanel(final String id, final LoadableModel<List<SNClass>> model) {
 		super(id);
 		this.model = model;
@@ -52,9 +52,9 @@ public abstract class TypeBrowserPanel extends Panel {
 			@Override
 			protected void populateItem(final ListItem<SNClass> item) {
 				final SNClass type = item.getModelObject();
-				final Link link = new AjaxFallbackLink("link") {
+				final Link<?> link = new AjaxFallbackLink<Void>("link") {
 					@Override
-					public void onClick(AjaxRequestTarget target) {
+					public void onClick(final AjaxRequestTarget target) {
 						onTypeSelected(type, target);
 					}
 				};
@@ -73,9 +73,6 @@ public abstract class TypeBrowserPanel extends Panel {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onEvent(final IEvent<?> event) {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
@@ -94,10 +91,10 @@ public abstract class TypeBrowserPanel extends Panel {
 		model.detach();
 	}
 
-	protected void onCreate(AjaxRequestTarget target) {
+	protected void onCreate(final AjaxRequestTarget target) {
 
 	}
-	
+
 	/**
 	 * Sets whether the create {@link Link} is visible or not.
 	 * @return
@@ -109,11 +106,10 @@ public abstract class TypeBrowserPanel extends Panel {
 	// ------------------------------------------------------
 
 	private void addLink() {
-		@SuppressWarnings("rawtypes")
-		AjaxLink link = new AjaxLink("create") {
+		AjaxLink<?> link = new AjaxLink<Void>("create") {
 
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				onCreate(target);
 			}
 		};

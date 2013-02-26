@@ -164,8 +164,8 @@ public class SchemaDetailPanel extends Panel {
 					public void onConfirm() {
 						schemaManager.removeSchemaForType(schema.getObject().getDescribedType());
 						typeManager.removeType(schema.getObject().getDescribedType());
-						SchemaDetailPanel.this.setVisible(false);
-						saveAndUpdate();
+						SchemaDetailPanel.this.setVisible(false).setOutputMarkupPlaceholderTag(true);
+						updatePanel();
 						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.TYPE));
 					}
 
