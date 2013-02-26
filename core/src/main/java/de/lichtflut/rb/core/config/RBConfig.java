@@ -169,15 +169,26 @@ public class RBConfig {
     }
 
     private String determineWorkDir(String applicationName) {
-        // 1st: check profile specific work directory
-        if (applicationName != null) {
-            final String workDir = System.getProperty(DOMAIN_WORK_DIRECTORY + "." + applicationName);
+        String workDir = getSystemProperty(
+                DOMAIN_WORK_DIRECTORY + "." + applicationName,
+                DOMAIN_WORK_DIRECTORY
+        );
+        if (workDir == null) {
+            workDir = System.getProperty("java.io.tmpdir");
+            LOGGER.warn("No domain working directory set. Will use java.io.tmpdir '{}'.", workDir);
+
+        }
+        return workDir;
+    }
+
+    private String getSystemProperty(String... keys) {
+        for (String current : keys) {
+            final String workDir = System.getProperty(current);
             if (workDir != null) {
                 return workDir;
             }
         }
-        // 2nd: check global work directory
-        return System.getProperty(DOMAIN_WORK_DIRECTORY);
+        return null;
     }
 
 }
