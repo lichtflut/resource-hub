@@ -994,7 +994,7 @@ button.button.down div {
     width: 25px;
 }
 
-div .quick-info {
+div .quick-info-popup {
     border: 1px solid #D3DCC7;
     border-radius: 5px 5px 5px 5px;
     background-color: #F6F8F3;
@@ -1005,7 +1005,7 @@ div .quick-info {
     float: right;
 }
 
-.quick-info .title-row{
+.quick-info-popup .title-row{
 	background-color: #D3DCC7;	
 }
 

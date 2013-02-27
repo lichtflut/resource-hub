@@ -27,7 +27,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.ResourceField;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.webck.components.entity.QuickInfoPanel;
+import de.lichtflut.rb.webck.components.entity.quickinfo.QuickInfoPopUpPanel;
 import de.lichtflut.rb.webck.conversion.SemanticNodesRenderer;
 import de.lichtflut.rb.webck.models.fields.UndeclaredFieldsListModel;
 
@@ -164,7 +164,7 @@ public class ResourceListPanel extends Panel {
 	 * <ul>
 	 * <li>appears on: onMouseEnter</li>
 	 * <li>disappears on: onMouseLeave</li>
-	 * <li>show {@link QuickInfoPanel}</li>
+	 * <li>show {@link QuickInfoPopUpPanel}</li>
 	 * </ul>
 	 * 
 	 * @param parent parent component for the pop-up
@@ -244,7 +244,7 @@ public class ResourceListPanel extends Panel {
 
 				if(RDFS.LABEL.getQualifiedName().equals(item.getModelObject().getPredicate().getQualifiedName())){
 					IModel<RBEntity> model = new Model<RBEntity>(entityManager.find(entityNode));
-					placeholder = new QuickInfoPanel("quickInfo", model);
+					placeholder = new QuickInfoPopUpPanel("quickInfo", model);
 				}
 
 				container.add(label);
