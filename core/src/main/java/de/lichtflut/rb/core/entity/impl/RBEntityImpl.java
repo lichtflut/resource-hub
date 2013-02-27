@@ -3,12 +3,13 @@
  */
 package de.lichtflut.rb.core.entity.impl;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.common.SchemaIdentifyingType;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
-import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
@@ -18,11 +19,12 @@ import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.InheritedDecorator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.common.SchemaIdentifyingType;
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 /**
  * <p>
@@ -38,17 +40,17 @@ import java.util.Set;
 @SuppressWarnings("serial")
 public class RBEntityImpl implements RBEntity {
 
-    private static final boolean ADD_UNDECLARED_FIELDS = false;
+	private static final boolean ADD_UNDECLARED_FIELDS = false;
 
-    private final ResourceNode node;
+	private final ResourceNode node;
 
 	private final ResourceSchema schema;
 
 	private List<RBField> fields;
 
-    private boolean transientState;
+	private boolean transientState;
 
-    // -----------------------------------------------------
+	// -----------------------------------------------------
 
 	/**
 	 * Creates an entity based on node only.
@@ -70,7 +72,7 @@ public class RBEntityImpl implements RBEntity {
 	 */
 	public RBEntityImpl(final ResourceNode node, final ResourceSchema schema) {
 		super();
-        this.node = InheritedDecorator.from(node);
+		this.node = InheritedDecorator.from(node);
 		this.schema = schema;
 		if (schema != null) {
 			setType(schema.getDescribedType());
@@ -86,7 +88,7 @@ public class RBEntityImpl implements RBEntity {
 	 */
 	public RBEntityImpl(final ResourceNode node, final ResourceID type) {
 		super();
-        this.node = InheritedDecorator.from(node);
+		this.node = InheritedDecorator.from(node);
 		this.schema = null;
 		setType(type);
 		initializeFields();
@@ -151,7 +153,7 @@ public class RBEntityImpl implements RBEntity {
 		for (PropertyDeclaration pdec : schema.getQuickInfo()) {
 			list.add(getField(pdec.getPropertyDescriptor()));
 		}
-		return list;
+		return Collections.unmodifiableList(list);
 	}
 
 	@Override
@@ -159,22 +161,22 @@ public class RBEntityImpl implements RBEntity {
 		return schema != null;
 	}
 
-    @Override
-    public boolean isTransient() {
-        return transientState;
-    }
+	@Override
+	public boolean isTransient() {
+		return transientState;
+	}
 
-    public RBEntityImpl markTransient() {
-        this.transientState = true;
-        return this;
-    }
+	public RBEntityImpl markTransient() {
+		this.transientState = true;
+		return this;
+	}
 
-    public RBEntityImpl markPersisted() {
-        this.transientState = false;
-        return this;
-    }
+	public RBEntityImpl markPersisted() {
+		this.transientState = false;
+		return this;
+	}
 
-    // ----------------------------------------------------
+	// ----------------------------------------------------
 
 	@Override
 	public String toString(){
@@ -217,22 +219,22 @@ public class RBEntityImpl implements RBEntity {
 				predicates.remove(predicate);
 			}
 		}
-        if (ADD_UNDECLARED_FIELDS) {
-            addUndeclaredFields(predicates);
-        }
+		if (ADD_UNDECLARED_FIELDS) {
+			addUndeclaredFields(predicates);
+		}
 	}
 
-    private void addUndeclaredFields(Set<ResourceID> predicates) {
-        predicates.remove(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
-        predicates.remove(RDF.TYPE);
-        predicates.remove(RDFS.LABEL);
-        for (ResourceID predicate : predicates) {
-            final Set<Statement> statements = SNOPS.associations(node, predicate);
-            if (!statements.isEmpty()) {
-                fields.add(new UndeclaredRBField(predicate, statements));
-            }
-        }
-    }
+	private void addUndeclaredFields(final Set<ResourceID> predicates) {
+		predicates.remove(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
+		predicates.remove(RDF.TYPE);
+		predicates.remove(RDFS.LABEL);
+		for (ResourceID predicate : predicates) {
+			final Set<Statement> statements = SNOPS.associations(node, predicate);
+			if (!statements.isEmpty()) {
+				fields.add(new UndeclaredRBField(predicate, statements));
+			}
+		}
+	}
 
 	/**
 	 * Associate type with node.
@@ -240,6 +242,6 @@ public class RBEntityImpl implements RBEntity {
 	 */
 	private void setType(final ResourceID type) {
 		SNOPS.assure(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, type);
-        SNOPS.associate(node, RDF.TYPE, type);
+		SNOPS.associate(node, RDF.TYPE, type);
 	}
 }
