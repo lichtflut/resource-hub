@@ -34,6 +34,6 @@ public class ExcelParserTest {
 		assertThat(parser, is(notNullValue()));
 
 		SemanticGraph graph = parser.read();
-
+		System.out.println(graph);
 	}
 }

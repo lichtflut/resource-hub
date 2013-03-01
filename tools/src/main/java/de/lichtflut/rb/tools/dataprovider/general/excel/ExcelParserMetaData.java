@@ -9,7 +9,6 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -24,6 +23,9 @@ import org.arastreju.sge.naming.QualifiedName;
 public class ExcelParserMetaData {
 
 	public static final String NAMESPACE = "Namespace";
+	public static final String FOREIGN_KEY_START = "<ForeignKeys>";
+	public static final String FOREIGN_KEY_END = "</ForeignKeys>";
+	public static final String DELIMETER = ".";
 
 	private final Sheet sheet;
 
@@ -40,24 +42,35 @@ public class ExcelParserMetaData {
 
 	// ------------------------------------------------------
 
-	public QualifiedName getNameSpace(){
-		String namecspace = findValueFor(NAMESPACE, sheet);
-		return new QualifiedName(namecspace);
+	public String getNameSpace(){
+		return ExcelParserTools.findValueFor(NAMESPACE, sheet);
 	}
 
-	// ------------------------------------------------------
+	/**
+	 * Checks weather a column is marked as a foreignkey.
+	 * @param sheetName Name of the sheet
+	 * @param identifier The cell's value (columnheader)
+	 * @return <code>true</code> if it is a foreignkey column, <code>false</code> if not.
+	 */
+	public boolean isForeignKey(final String sheetName, final String identifier) {
+		String key = sheetName + DELIMETER + identifier;
+		int index = ExcelParserTools.getRowIndexFor(FOREIGN_KEY_START, sheet);
+		boolean flag = true;
+		boolean isForeignKey = false;
 
-	private String findValueFor(final String key, final Sheet sheet) {
-		for (Row row : sheet) {
-			for (Cell cell : row) {
-				String value = cell.getStringCellValue().trim();
-				if(key.equals(value) || key.equals(value + ":")){
-					Cell string = row.getCell(cell.getColumnIndex()+1);
-					return string.getStringCellValue();
-				}
+		do {
+			Row row = sheet.getRow(index+1);
+			Cell cell = row.getCell(row.getFirstCellNum());
+			if(FOREIGN_KEY_END.equals(cell.getStringCellValue())){
+				flag = false;
+			}else if (key.equals(cell.getStringCellValue())) {
+				isForeignKey = true;
+				flag = false;
 			}
-		}
-		return null;
+			index++;
+		} while (flag);
+		return isForeignKey;
 	}
+
 
 }
