@@ -16,5 +16,5 @@ core/bin
 webapp/bin
 webck/bin
 */.checkstyle
-*~
-
+*~*
+infinitest.args
