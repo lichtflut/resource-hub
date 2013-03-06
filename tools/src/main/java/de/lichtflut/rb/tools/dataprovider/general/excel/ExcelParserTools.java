@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Sheet;
  *
  * @author Ravi Knox
  */
+//TODO reduce memory footprint: http://poi.apache.org/spreadsheet/how-to.html#xssf_sax_api
 public class ExcelParserTools {
 
 

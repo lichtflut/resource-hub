@@ -42,7 +42,7 @@ import de.lichtflut.infra.logging.StopWatch;
  * 
  * @author Ravi Knox
  */
-//TODO reduce memory footprint: http://poi.apache.org/spreadsheet/how-to.html#xssf_sax_api
+//TODO refactor all sheet based operation to ExcelParserTools
 public class ExcelParser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExcelParser.class);
