@@ -53,8 +53,8 @@ public class ExcelParser {
 
 	private final Workbook workbook;
 	private final ExcelParserMetaData metaData;
-	private Map<String, ResourceID> foreignKeys;
-	private SemanticGraph graph;
+	private final Map<String, ResourceID> foreignKeys;
+	private final SemanticGraph graph;
 
 	// ---------------- Constructor -------------------------
 
@@ -68,6 +68,8 @@ public class ExcelParser {
 	public ExcelParser(final File file) throws InvalidFormatException, IOException {
 		workbook = WorkbookFactory.create(file);
 		metaData = new ExcelParserMetaData(workbook.getSheet(EXCEL_CONFIG));
+		graph = new DefaultSemanticGraph();
+		foreignKeys = new HashMap<String, ResourceID>();
 	}
 
 	// ------------------------------------------------------
@@ -78,8 +80,6 @@ public class ExcelParser {
 	 * @return a {@link SemanticGraph}
 	 */
 	public SemanticGraph read() {
-		graph = new DefaultSemanticGraph();
-		foreignKeys = new HashMap<String, ResourceID>();
 		// Excel version > 2002 specific cast. For lower versions use HSSFWorkbook
 		int numberOfSheets = ((XSSFWorkbook) workbook).getNumberOfSheets();
 		StopWatch watch = new StopWatch();
@@ -98,18 +98,34 @@ public class ExcelParser {
 
 	private void insertIntoGraph(final Sheet sheet) {
 		Map<String, ResourceID> predicates = getPredicates(sheet);
-		// Start with the second row, since the first one is used for predicate declaration.
 		Row row;
-		String schemaType = metaData.getSchemaType(sheet.getSheetName());
+		int emptyLines = 0;
+		// Start with the second row, since the first one is used for predicate declaration.
 		for (int i = 1; i < sheet.getLastRowNum(); i++) {
 			row = sheet.getRow(i);
-			insertRow(row, predicates, new SimpleResourceID(schemaType));
+			ResourceNode node = insertRow(row, predicates);
+			if(!node.getAssociations().isEmpty()){
+				addSchema(node, sheet.getSheetName());
+			}
+			emptyLines = checkForEmptyLine(emptyLines, node);
+			// For performance optimization we stopp parsing after 10 consecutive empty lines
+			if(emptyLines >= 10){
+				break;
+			}
 		}
 	}
 
-	private void insertRow(final Row row, final Map<String, ResourceID> predicates, final ResourceID schemaType) {
+	private int checkForEmptyLine(int emptyLines, final ResourceNode node) {
+		if(node.getAssociations().isEmpty()){
+			emptyLines++;
+		}else{
+			emptyLines = 0;
+		}
+		return emptyLines;
+	}
+
+	private ResourceNode insertRow(final Row row, final Map<String, ResourceID> predicates) {
 		ResourceNode node = createResourceNode();
-		addSchema(node, schemaType);
 		List<String> columns = new LinkedList<String>(predicates.keySet());
 		for (String column : columns) {
 			String value = ExcelParserTools.getStringValueFor(row, columns.indexOf(column));
@@ -117,6 +133,7 @@ public class ExcelParser {
 				Statement stmt = null;
 				if(metaData.isPrimaryKey(row.getSheet().getSheetName(), column)) {
 					addKeyToCache(value);
+					// Primary ID will always be the first element. So we still can change the ID without corrupting data
 					node = replaceWithExisting(node, value);
 					stmt = new DetachedStatement(node, predicates.get(column), new SNValue(ElementaryDataType.STRING,
 							value));
@@ -129,13 +146,16 @@ public class ExcelParser {
 							value));
 				}
 				graph.addStatement(stmt);
+				node.addAssociation(stmt.getPredicate(), stmt.getObject());
 			}
 		}
+		return node;
 	}
 
-	private void addSchema(final ResourceNode node, final ResourceID schemaType) {
-		if(null != schemaType && null != schemaType.getQualifiedName()){
-			node.addAssociation(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, schemaType);
+	private void addSchema(final ResourceID id, final String name) {
+		String schemaType = metaData.getSchemaType(name);
+		if(null != schemaType && !schemaType.isEmpty()){
+			graph.addStatement(new DetachedStatement(id, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, new SimpleResourceID(schemaType)));
 		}
 	}
 
