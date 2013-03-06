@@ -107,9 +107,9 @@ public class ExcelParser {
 		for (int i = 1; i < sheet.getLastRowNum(); i++) {
 			row = sheet.getRow(i);
 			ResourceNode node = insertRow(row, predicates);
-			if(!node.getAssociations().isEmpty()){
-				addSchema(node, sheet.getSheetName());
-			}
+			//			if(!node.getAssociations().isEmpty()){
+			//				addSchema(node, sheet.getSheetName());
+			//			}
 			nodes.add(node);
 			emptyLines = checkForEmptyLine(emptyLines, node);
 			// For performance optimization we stopp parsing after 10 consecutive empty lines
