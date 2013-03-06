@@ -5,6 +5,7 @@ package de.lichtflut.rb.tools.dataprovider.general.excel;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -28,6 +29,7 @@ import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
+import org.arastreju.sge.naming.QualifiedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,6 +99,7 @@ public class ExcelParser {
 	// ------------------------------------------------------
 
 	private void insertIntoGraph(final Sheet sheet) {
+		List<ResourceNode> nodes = new ArrayList<ResourceNode>();
 		Map<String, ResourceID> predicates = getPredicates(sheet);
 		Row row;
 		int emptyLines = 0;
@@ -107,11 +110,15 @@ public class ExcelParser {
 			if(!node.getAssociations().isEmpty()){
 				addSchema(node, sheet.getSheetName());
 			}
+			nodes.add(node);
 			emptyLines = checkForEmptyLine(emptyLines, node);
 			// For performance optimization we stopp parsing after 10 consecutive empty lines
 			if(emptyLines >= 10){
 				break;
 			}
+		}
+		for (ResourceNode node : nodes) {
+			graph.addStatements(node.getAssociations());
 		}
 	}
 
@@ -130,23 +137,18 @@ public class ExcelParser {
 		for (String column : columns) {
 			String value = ExcelParserTools.getStringValueFor(row, columns.indexOf(column));
 			if(null != value) {
-				Statement stmt = null;
 				if(metaData.isPrimaryKey(row.getSheet().getSheetName(), column)) {
 					addKeyToCache(value);
 					// Primary ID will always be the first element. So we still can change the ID without corrupting data
 					node = replaceWithExisting(node, value);
-					stmt = new DetachedStatement(node, predicates.get(column), new SNValue(ElementaryDataType.STRING,
-							value));
+					node.addAssociation(predicates.get(column), new SNValue(ElementaryDataType.STRING, value));
 				}
 				else if (metaData.isForeignKey(row.getSheet().getSheetName(), column)) {
 					addKeyToCache(value);
-					stmt = new DetachedStatement(node, predicates.get(column), getForeignKey(value));
+					node.addAssociation(predicates.get(column), getForeignKey(value));
 				} else {
-					stmt = new DetachedStatement(node, predicates.get(column), new SNValue(ElementaryDataType.STRING,
-							value));
+					node.addAssociation(predicates.get(column), new SNValue(ElementaryDataType.STRING, value));
 				}
-				graph.addStatement(stmt);
-				node.addAssociation(stmt.getPredicate(), stmt.getObject());
 			}
 		}
 		return node;
@@ -158,7 +160,6 @@ public class ExcelParser {
 			graph.addStatement(new DetachedStatement(id, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, new SimpleResourceID(schemaType)));
 		}
 	}
-
 
 	private ResourceNode replaceWithExisting(ResourceNode node, final String value) {
 		ResourceNode copy = node;
@@ -218,8 +219,14 @@ public class ExcelParser {
 		Map<String, ResourceID> predicates = new LinkedHashMap<String, ResourceID>();
 		String nameSpace = metaData.getNameSpace();
 		for (Cell cell : sheet.getRow(0)) {
-			String value = buildPredicate(nameSpace, PREFIX, cell.getStringCellValue());
-			predicates.put(cell.getStringCellValue(), new SimpleResourceID(value));
+			String value = null;
+			String suffix = cell.getStringCellValue();
+			if(QualifiedName.isUri(suffix)){
+				value = suffix;
+			}else{
+				value = buildPredicate(nameSpace, PREFIX, suffix);
+			}
+			predicates.put(suffix, new SimpleResourceID(value));
 		}
 		return predicates;
 	}
