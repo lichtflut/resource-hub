@@ -28,8 +28,6 @@ import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.naming.QualifiedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +43,6 @@ import de.lichtflut.infra.logging.StopWatch;
  * 
  * @author Ravi Knox
  */
-// TODO refactor all sheet based operation to ExcelParserTools
 public class ExcelParser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExcelParser.class);
@@ -87,7 +84,6 @@ public class ExcelParser {
 		StopWatch watch = new StopWatch();
 		for (int pos = 0; pos < numberOfSheets; pos++) {
 			// clear cache of foreign keys each time to reduce the chance of naming-conflicts
-			foreignKeys.clear();
 			Sheet sheet = workbook.getSheetAt(pos);
 			if (!ExcelParser.EXCEL_CONFIG.equals(sheet.getSheetName())) {
 				watch.reset();
@@ -115,9 +111,15 @@ public class ExcelParser {
 		List<String> columns = new LinkedList<String>(predicates.keySet());
 		for (String column : columns) {
 			String value = ExcelParserTools.getStringValueFor(row, columns.indexOf(column));
-			if (null != value) {
+			if(null != value) {
 				Statement stmt = null;
-				if (metaData.isForeignKey(row.getSheet().getSheetName(), column)) {
+				if(metaData.isPrimaryKey(row.getSheet().getSheetName(), column)) {
+					addKeyToCache(value);
+					node = checkForExistingNode(node, value);
+					stmt = new DetachedStatement(node, predicates.get(column), new SNValue(ElementaryDataType.STRING,
+							value));
+				}
+				else if (metaData.isForeignKey(row.getSheet().getSheetName(), column)) {
 					addKeyToCache(value);
 					stmt = new DetachedStatement(node, predicates.get(column), getForeignKey(value));
 				} else {
@@ -129,7 +131,18 @@ public class ExcelParser {
 		}
 	}
 
+
+	private ResourceNode checkForExistingNode(ResourceNode node, final String value) {
+		if(foreignKeys.containsKey(value)){
+			node = new SNResource(foreignKeys.get(value).getQualifiedName());
+		}
+		return node;
+	}
+
 	/**
+	 * Traverse the graph and check if
+	 * 
+	 * keep foreign keys - otherwise we have to traverse the whole graph and look for blbla->hasId
 	 * @return
 	 */
 	private ResourceNode createResourceNode() {
@@ -167,47 +180,6 @@ public class ExcelParser {
 	 */
 	private boolean isCached(final String value) {
 		return foreignKeys.containsKey(value);
-	}
-
-	private void addStatements(final SemanticGraph graph, final Map<String, ResourceID> predicates, final Sheet sheet) {
-		Map<String, ResourceID> foreignKeys = new HashMap<String, ResourceID>();
-		String namespace = metaData.getNameSpace();
-		int emptyRow = 0;
-		Row row;
-		for (int i = 1; i < sheet.getLastRowNum(); i++) {
-			row = sheet.getRow(i);
-			ResourceNode node = null;
-			int index = 0;
-			ResourceID subject = null;
-			SemanticNode object;
-			for (String cellHeader : predicates.keySet()) {
-				if (null != row.getCell(index) && null != row.getCell(index).getStringCellValue()) {
-					emptyRow = 0;
-					if (null == node) {
-						Cell cell = row.getCell(index);
-						node = new SNResource(new QualifiedName(cell.getStringCellValue()));
-						subject = node;
-					}
-					if (foreignKeys.containsKey(row.getCell(index).getStringCellValue())) {
-						object = foreignKeys.get(row.getCell(index).getStringCellValue());
-					} else if (metaData.isForeignKey(sheet.getSheetName(), cellHeader)) {
-						ResourceID id = new SimpleResourceID(namespace, row.getCell(index).getStringCellValue());
-						foreignKeys.put(row.getCell(index).getStringCellValue(), id);
-						object = id;
-					} else {
-						object = new SNValue(ElementaryDataType.STRING, row.getCell(index).getStringCellValue());
-					}
-					graph.addStatement(new DetachedStatement(subject, predicates.get(cellHeader), object));
-				} else {
-					emptyRow++;
-				}
-				index++;
-				if (emptyRow >= 30) {
-					break;
-				}
-			}
-		}
-
 	}
 
 	private Map<String, ResourceID> getPredicates(final Sheet sheet) {
