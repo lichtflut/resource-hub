@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Sheet;
  * @author Ravi Knox
  */
 // TODO reduce memory footprint: http://poi.apache.org/spreadsheet/how-to.html#xssf_sax_api
+// TODO ignore comments
 public class ExcelParserTools {
 
 	public static String findValueFor(final String key, final Sheet sheet) {

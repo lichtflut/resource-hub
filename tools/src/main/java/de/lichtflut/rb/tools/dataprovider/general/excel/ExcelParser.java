@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.logging.StopWatch;
+import de.lichtflut.rb.core.RBSystem;
 
 /**
  * <p>
@@ -83,7 +84,6 @@ public class ExcelParser {
 		int numberOfSheets = ((XSSFWorkbook) workbook).getNumberOfSheets();
 		StopWatch watch = new StopWatch();
 		for (int pos = 0; pos < numberOfSheets; pos++) {
-			// clear cache of foreign keys each time to reduce the chance of naming-conflicts
 			Sheet sheet = workbook.getSheetAt(pos);
 			if (!ExcelParser.EXCEL_CONFIG.equals(sheet.getSheetName())) {
 				watch.reset();
@@ -100,14 +100,16 @@ public class ExcelParser {
 		Map<String, ResourceID> predicates = getPredicates(sheet);
 		// Start with the second row, since the first one is used for predicate declaration.
 		Row row;
+		String schemaType = metaData.getSchemaType(sheet.getSheetName());
 		for (int i = 1; i < sheet.getLastRowNum(); i++) {
 			row = sheet.getRow(i);
-			insertRow(row, predicates);
+			insertRow(row, predicates, new SimpleResourceID(schemaType));
 		}
 	}
 
-	private void insertRow(final Row row, final Map<String, ResourceID> predicates) {
+	private void insertRow(final Row row, final Map<String, ResourceID> predicates, final ResourceID schemaType) {
 		ResourceNode node = createResourceNode();
+		addSchema(node, schemaType);
 		List<String> columns = new LinkedList<String>(predicates.keySet());
 		for (String column : columns) {
 			String value = ExcelParserTools.getStringValueFor(row, columns.indexOf(column));
@@ -115,7 +117,7 @@ public class ExcelParser {
 				Statement stmt = null;
 				if(metaData.isPrimaryKey(row.getSheet().getSheetName(), column)) {
 					addKeyToCache(value);
-					node = checkForExistingNode(node, value);
+					node = replaceWithExisting(node, value);
 					stmt = new DetachedStatement(node, predicates.get(column), new SNValue(ElementaryDataType.STRING,
 							value));
 				}
@@ -131,10 +133,20 @@ public class ExcelParser {
 		}
 	}
 
+	private void addSchema(final ResourceNode node, final ResourceID schemaType) {
+		if(null != schemaType && null != schemaType.getQualifiedName()){
+			node.addAssociation(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, schemaType);
+		}
+	}
 
-	private ResourceNode checkForExistingNode(ResourceNode node, final String value) {
+
+	private ResourceNode replaceWithExisting(ResourceNode node, final String value) {
+		ResourceNode copy = node;
 		if(foreignKeys.containsKey(value)){
 			node = new SNResource(foreignKeys.get(value).getQualifiedName());
+			for (Statement stmt : copy.getAssociations()) {
+				node.addAssociation(stmt.getPredicate(), stmt.getObject());
+			}
 		}
 		return node;
 	}

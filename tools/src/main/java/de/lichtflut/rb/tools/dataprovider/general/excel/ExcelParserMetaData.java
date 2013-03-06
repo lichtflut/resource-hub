@@ -22,12 +22,14 @@ import org.apache.poi.ss.usermodel.Sheet;
 // TODO reduce memory footprint: http://poi.apache.org/spreadsheet/how-to.html#xssf_sax_api
 public class ExcelParserMetaData {
 
+	public static final String DELIMETER = ".";
 	public static final String NAMESPACE = "Namespace";
 	public static final String FOREIGN_KEY_START = "<ForeignKeys>";
 	public static final String FOREIGN_KEY_END = "</ForeignKeys>";
 	public static final String PRIMARY_KEY_START = "<PrimaryKeys>";
 	public static final String PRIMARY_KEY_END = "</PrimaryKeys>";
-	public static final String DELIMETER = ".";
+	public static final String SCHEMA_TYPE_START = "<SchemaType>";
+	public static final String SCHEMA_TYPE_END = "</SchemaType>";
 
 	private final Sheet sheet;
 
@@ -56,21 +58,7 @@ public class ExcelParserMetaData {
 	 */
 	public boolean isForeignKey(final String sheetName, final String identifier) {
 		String key = sheetName + DELIMETER + identifier;
-		int index = ExcelParserTools.getRowIndexFor(FOREIGN_KEY_START, sheet);
-		boolean flag = true;
-		boolean isForeignKey = false;
-		do {
-			Row row = sheet.getRow(index+1);
-			Cell cell = row.getCell(row.getFirstCellNum());
-			if(FOREIGN_KEY_END.equals(cell.getStringCellValue())){
-				flag = false;
-			}else if (key.equals(cell.getStringCellValue())) {
-				isForeignKey = true;
-				flag = false;
-			}
-			index++;
-		} while (flag);
-		return isForeignKey;
+		return checkForKEy(key, FOREIGN_KEY_START, FOREIGN_KEY_END);
 	}
 
 	/**
@@ -81,21 +69,43 @@ public class ExcelParserMetaData {
 	 */
 	public boolean isPrimaryKey(final String sheetName, final String identifier) {
 		String key = sheetName + DELIMETER + identifier;
-		int index = ExcelParserTools.getRowIndexFor(PRIMARY_KEY_START, sheet);
+		return checkForKEy(key, PRIMARY_KEY_START, PRIMARY_KEY_END);
+	}
+
+	public String getSchemaType(final String sheetName){
+		int index = ExcelParserTools.getRowIndexFor(SCHEMA_TYPE_START, sheet);
+		while(index < ExcelParserTools.getRowIndexFor(SCHEMA_TYPE_END, sheet)) {
+			Row row = sheet.getRow(index++);
+			Cell cell = row.getCell(row.getFirstCellNum());
+			if(sheetName.equals(cell.getStringCellValue())){
+				Cell schemaCell = row.getCell(row.getFirstCellNum()+1);
+				String schemaType = schemaCell.getStringCellValue();
+				if(!schemaType.isEmpty()){
+					return getNameSpace() + schemaType;
+				}
+			}
+		}
+		return null;
+	}
+
+	// ------------------------------------------------------
+
+	private boolean checkForKEy(final String key, final String startMarker, final String endMarker) {
+		int index = ExcelParserTools.getRowIndexFor(startMarker, sheet);
 		boolean flag = true;
-		boolean isForeignKey = false;
+		boolean isPrimaryKey = false;
 		do {
 			Row row = sheet.getRow(index+1);
 			Cell cell = row.getCell(row.getFirstCellNum());
-			if(PRIMARY_KEY_END.equals(cell.getStringCellValue())){
+			if(endMarker.equals(cell.getStringCellValue())){
 				flag = false;
 			}else if (key.equals(cell.getStringCellValue())) {
-				isForeignKey = true;
+				isPrimaryKey = true;
 				flag = false;
 			}
 			index++;
 		} while (flag);
-		return isForeignKey;
+		return isPrimaryKey;
 	}
 
 
