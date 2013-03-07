@@ -272,9 +272,9 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 					handle.setId(copy);
 					load();
 				}else{
-					SNClass schema = SchemaIdentifyingType.of(handle.getType());
+					SNClass schemaType = SchemaIdentifyingType.of(handle.getType());
 					LOGGER.debug("Creating new RB Entity");
-					final RBEntity created = entityManager.create(handle.getType());
+					final RBEntity created = entityManager.create(schemaType);
 					handle.setId(created.getID());
 					handle.markOnCreation();
 					return created;
