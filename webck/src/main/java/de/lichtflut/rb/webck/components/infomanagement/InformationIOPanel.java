@@ -28,11 +28,10 @@ public class InformationIOPanel extends Panel {
 	/**
 	 * Constructor.
 	 */
-	@SuppressWarnings("rawtypes")
 	public InformationIOPanel(final String id) {
 		super(id);
 
-		final Link exportLink = new AjaxFallbackLink("exportLink") {
+		final Link<?> exportLink = new AjaxFallbackLink<Void>("exportLink") {
 			@Override
 			public void onClick(final AjaxRequestTarget target) {
 				DialogHoster hoster = findParent(DialogHoster.class);
@@ -41,7 +40,7 @@ public class InformationIOPanel extends Panel {
 		};
 		add(exportLink);
 
-		final Link importLink = new AjaxFallbackLink("importLink") {
+		final Link<?> importLink = new AjaxFallbackLink<Void>("importLink") {
 			@Override
 			public void onClick(final AjaxRequestTarget target) {
 				DialogHoster hoster = findParent(DialogHoster.class);

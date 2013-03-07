@@ -4,6 +4,7 @@
 package de.lichtflut.rb.tools.dataprovider.general.excel;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,8 +20,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.arastreju.sge.io.RdfXmlBinding;
+import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.model.DefaultSemanticGraph;
-import org.arastreju.sge.model.DetachedStatement;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SemanticGraph;
@@ -34,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.infra.logging.StopWatch;
-import de.lichtflut.rb.core.RBSystem;
 
 /**
  * <p>
@@ -144,21 +145,18 @@ public class ExcelParser {
 					node.addAssociation(predicates.get(column), new SNValue(ElementaryDataType.STRING, value));
 				}
 				else if (metaData.isForeignKey(row.getSheet().getSheetName(), column)) {
-					addKeyToCache(value);
-					node.addAssociation(predicates.get(column), getForeignKey(value));
+					if(QualifiedName.isUri(value)){
+						node.addAssociation(predicates.get(column), new SimpleResourceID(value));
+					}else{
+						addKeyToCache(value);
+						node.addAssociation(predicates.get(column), getForeignKey(value));
+					}
 				} else {
 					node.addAssociation(predicates.get(column), new SNValue(ElementaryDataType.STRING, value));
 				}
 			}
 		}
 		return node;
-	}
-
-	private void addSchema(final ResourceID id, final String name) {
-		String schemaType = metaData.getSchemaType(name);
-		if(null != schemaType && !schemaType.isEmpty()){
-			graph.addStatement(new DetachedStatement(id, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, new SimpleResourceID(schemaType)));
-		}
 	}
 
 	private ResourceNode replaceWithExisting(ResourceNode node, final String value) {
@@ -247,6 +245,19 @@ public class ExcelParser {
 			index = value.indexOf(" ");
 		}
 		return value;
+	}
+
+	// ------------------------------------------------------
+
+	public static void main(final String[] args) throws SemanticIOException, IOException, InvalidFormatException {
+		SemanticGraph graph = new ExcelParser(new File("src/main/resources/ITCatalog.xlsx")).read();
+
+		File targetDir = new File("target", "generated-rdf");
+		targetDir.mkdirs();
+
+		RdfXmlBinding binding = new RdfXmlBinding();
+		binding.write(graph, new FileOutputStream(new File(targetDir, "ITCatalog.rdf.xml")));
+
 	}
 
 }

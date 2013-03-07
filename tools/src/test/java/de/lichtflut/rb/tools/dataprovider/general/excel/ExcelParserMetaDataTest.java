@@ -50,7 +50,7 @@ public class ExcelParserMetaDataTest {
 	public void testGetNameSpace() throws InvalidFormatException, IOException {
 		String nameSpace = metaData.getNameSpace();
 
-		assertThat(nameSpace, equalTo("http://rb.lichtflut.de/definitions/"));
+		assertThat(nameSpace, equalTo("http://rb.lichtflut.de/devops#"));
 	}
 
 	/**

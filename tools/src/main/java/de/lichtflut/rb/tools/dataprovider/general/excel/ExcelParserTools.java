@@ -57,7 +57,9 @@ public class ExcelParserTools {
 		String value = null;
 		if (index < row.getLastCellNum()) {
 			Cell cell = row.getCell(index);
-			value = getStringValueFor(cell);
+			if(null != cell){
+				value = getStringValueFor(cell);
+			}
 		}
 
 		return value;
