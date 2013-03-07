@@ -265,24 +265,47 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				final RBEntity loaded = entityManager.find(handle.getId());
 				return loaded;
 			} else if (handle.hasType()){
-				SemanticNode prototype = getPrototype(handle.getType());
-				if(prototype != null){
-					ResourceNode copy = copy(prototype);
-					networkService.attach(copy);
-					handle.setId(copy);
-					load();
-				}else{
-					SNClass schemaType = SchemaIdentifyingType.of(handle.getType());
-					LOGGER.debug("Creating new RB Entity");
-					final RBEntity created = entityManager.create(schemaType);
-					handle.setId(created.getID());
-					handle.markOnCreation();
-					return created;
-				}
+				return prepareEntity(handle);
 			} else {
 				throw new IllegalStateException("Cannot initialize RB Entity Model.");
 			}
+		}
+
+		// ------------------------------------------------------
+
+		private RBEntity prepareEntity(final EntityHandle handle) {
+			if(preparePrototype(handle.getType())){
+				LOGGER.debug("Found Prototype for {}.", handle.getType());
+				load();
+			}else{
+				SNClass schemaType = SchemaIdentifyingType.of(handle.getType());
+				if(preparePrototype(schemaType)){
+					LOGGER.debug("Found Prototype for {}.", handle.getType());
+					load();
+				}
+				return createRBEntity(handle);
+			}
 			return null;
+		}
+
+		private boolean preparePrototype(final ResourceID type) {
+			SemanticNode prototype = getPrototype(type);
+			if(null != prototype){
+				ResourceNode copy = copy(prototype);
+				networkService.attach(copy);
+				final EntityHandle handle = RBWebSession.get().getHistory().getCurrentStep().getHandle();
+				handle.setId(copy);
+				return true;
+			}
+			return false;
+		}
+
+		private RBEntity createRBEntity(final EntityHandle handle) {
+			LOGGER.debug("Creating new RB Entity");
+			final RBEntity created = entityManager.create(handle.getType());
+			handle.setId(created.getID());
+			handle.markOnCreation();
+			return created;
 		}
 
 		private ResourceNode copy(final SemanticNode prototype) {
@@ -301,6 +324,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 			}
 			return null;
 		}
-	}
 
+	}
 }
+
