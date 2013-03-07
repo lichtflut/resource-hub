@@ -278,7 +278,8 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				LOGGER.debug("Found Prototype for {}.", handle.getType());
 				load();
 			}else{
-				SNClass schemaType = SchemaIdentifyingType.of(handle.getType());
+				ResourceNode node = networkService.resolve(handle.getType());
+				SNClass schemaType = SchemaIdentifyingType.of(node);
 				if(preparePrototype(schemaType)){
 					LOGGER.debug("Found Prototype for {}.", handle.getType());
 					load();
