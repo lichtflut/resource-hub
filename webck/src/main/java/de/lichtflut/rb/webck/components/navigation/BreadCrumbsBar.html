@@ -12,9 +12,11 @@
 		   	<a wicket:id="currentEntityLink" class="current">
 		  		<wicket:container wicket:id="label">[link]</wicket:container>
 		   	</a>
-            <span class="under-construction">
-                <wicket:container wicket:id="underConstructionHint">[under construction]</wicket:container>
-            </span>
+            <wicket:enclosure child="underConstructionHint">
+                <span class="under-construction">
+                    <wicket:container wicket:id="underConstructionHint">[under construction]</wicket:container>
+                </span>
+            </wicket:enclosure>
    		</li>
     </ul>
 </wicket:panel>

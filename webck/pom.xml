@@ -162,6 +162,19 @@
 					<consoleOutput>true</consoleOutput>
 				</configuration>
 			</plugin>
+            <!-- plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jslint-maven-plugin</artifactId>
+                <version>1.0.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jslint</goal>
+                            <goal>test-jslint</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin -->
 		</plugins>
 	</build>
 	<repositories>
