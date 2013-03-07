@@ -35,7 +35,7 @@ public class ExcelParserMetaDataTest {
 
 	@Before
 	public void setUp() throws InvalidFormatException, IOException {
-		File file = new File("src/test/resources/ITCatalog.xlsx");
+		File file = new File("src/test/resources/TestITCatalog.xlsx");
 		Workbook wb = WorkbookFactory.create(file);
 		sheet = wb.getSheet(CONFIG_SHEET);
 		metaData = new ExcelParserMetaData(sheet);

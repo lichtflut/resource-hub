@@ -108,5 +108,4 @@ public class ExcelParserMetaData {
 		return isPrimaryKey;
 	}
 
-
 }

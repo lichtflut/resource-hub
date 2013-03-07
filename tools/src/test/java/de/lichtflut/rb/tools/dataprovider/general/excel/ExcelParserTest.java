@@ -27,7 +27,7 @@ public class ExcelParserTest {
 
 	@Test
 	public void testExcelParser() throws InvalidFormatException, IOException{
-		File file = new File("src/test/resources/ITCatalog.xlsx");
+		File file = new File("src/test/resources/TestITCatalog.xlsx");
 
 		ExcelParser parser = new ExcelParser(file);
 

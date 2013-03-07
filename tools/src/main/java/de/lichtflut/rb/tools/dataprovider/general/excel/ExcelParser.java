@@ -31,6 +31,7 @@ import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.naming.QualifiedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,9 +109,6 @@ public class ExcelParser {
 		for (int i = 1; i < sheet.getLastRowNum(); i++) {
 			row = sheet.getRow(i);
 			ResourceNode node = insertRow(row, predicates);
-			//			if(!node.getAssociations().isEmpty()){
-			//				addSchema(node, sheet.getSheetName());
-			//			}
 			nodes.add(node);
 			emptyLines = checkForEmptyLine(emptyLines, node);
 			// For performance optimization we stopp parsing after 10 consecutive empty lines
@@ -135,6 +133,7 @@ public class ExcelParser {
 	private ResourceNode insertRow(final Row row, final Map<String, ResourceID> predicates) {
 		ResourceNode node = createResourceNode();
 		List<String> columns = new LinkedList<String>(predicates.keySet());
+		SemanticNode object = null;
 		for (String column : columns) {
 			String value = ExcelParserTools.getStringValueFor(row, columns.indexOf(column));
 			if(null != value) {
@@ -142,18 +141,23 @@ public class ExcelParser {
 					addKeyToCache(value);
 					// Primary ID will always be the first element. So we still can change the ID without corrupting data
 					node = replaceWithExisting(node, value);
-					node.addAssociation(predicates.get(column), new SNValue(ElementaryDataType.STRING, value));
+					object = new SNValue(ElementaryDataType.STRING, value);
 				}
 				else if (metaData.isForeignKey(row.getSheet().getSheetName(), column)) {
 					if(QualifiedName.isUri(value)){
-						node.addAssociation(predicates.get(column), new SimpleResourceID(value));
+						object = new SimpleResourceID(value);
 					}else{
 						addKeyToCache(value);
-						node.addAssociation(predicates.get(column), getForeignKey(value));
+						object = getForeignKey(value);
 					}
 				} else {
-					node.addAssociation(predicates.get(column), new SNValue(ElementaryDataType.STRING, value));
+					if(QualifiedName.isUri(value)){
+						object = new SimpleResourceID(QualifiedName.create(value));
+					}else{
+						object = new SNValue(ElementaryDataType.STRING, value);
+					}
 				}
+				node.addAssociation(predicates.get(column), object);
 			}
 		}
 		return node;
