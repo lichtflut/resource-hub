@@ -18,16 +18,25 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.Statement;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.common.SchemaIdentifyingType;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -234,6 +243,9 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		@SpringBean
 		private EntityManager entityManager;
 
+		@SpringBean
+		private SemanticNetworkService networkService;
+
 		// -----------------------------------------------------
 
 		/**
@@ -253,14 +265,41 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				final RBEntity loaded = entityManager.find(handle.getId());
 				return loaded;
 			} else if (handle.hasType()){
-				LOGGER.debug("Creating new RB Entity");
-				final RBEntity created = entityManager.create(handle.getType());
-				handle.setId(created.getID());
-				handle.markOnCreation();
-				return created;
+				SemanticNode prototype = getPrototype(handle.getType());
+				if(prototype != null){
+					ResourceNode copy = copy(prototype);
+					networkService.attach(copy);
+					handle.setId(copy);
+					load();
+				}else{
+					SNClass schema = SchemaIdentifyingType.of(handle.getType());
+					LOGGER.debug("Creating new RB Entity");
+					final RBEntity created = entityManager.create(handle.getType());
+					handle.setId(created.getID());
+					handle.markOnCreation();
+					return created;
+				}
 			} else {
 				throw new IllegalStateException("Cannot initialize RB Entity Model.");
 			}
+			return null;
+		}
+
+		private ResourceNode copy(final SemanticNode prototype) {
+			ResourceNode node = new SNResource();
+			for (Statement stmt: prototype.asResource().getAssociations()) {
+				node.addAssociation(stmt.getPredicate(), stmt.getObject());
+			}
+			return node;
+		}
+
+		private SemanticNode getPrototype(final ResourceID classId) {
+			ResourceNode classNode = networkService.find(classId.getQualifiedName());
+			SemanticNode node = SNOPS.fetchObject(classNode, RBSystem.HAS_PROTOTYPE);
+			if(null != node){
+				return node;
+			}
+			return null;
 		}
 	}
 
