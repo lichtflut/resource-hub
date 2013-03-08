@@ -68,7 +68,7 @@ public class ExcelParserMetaDataTest {
 		String rb = metaData.getNamespaceFor("rb-system");
 		assertThat(rb, equalTo("http://rb.lichtflut.de/system#"));
 
-		String rdf = metaData.getNamespaceFor("rdf");
+		String rdf = metaData.getNamespaceFor("rdfs");
 		assertThat(rdf, equalTo("http://www.w3.org/2000/01/rdf-schema#"));
 
 	}

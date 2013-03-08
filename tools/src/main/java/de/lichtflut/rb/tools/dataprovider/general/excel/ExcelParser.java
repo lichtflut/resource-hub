@@ -20,6 +20,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.model.DefaultSemanticGraph;
@@ -53,6 +55,7 @@ public class ExcelParser {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExcelParser.class);
 
 	private static final String EXCEL_CONFIG = "rb-parser-config";
+	private static final String VERSIONING = "rb-versions";
 	private static final String PREFIX = "has";
 
 	private final Workbook workbook;
@@ -104,15 +107,20 @@ public class ExcelParser {
 		List<ResourceNode> nodes = new ArrayList<ResourceNode>();
 		Map<String, ResourceID> predicates = getPredicates(sheet);
 		Row row;
+		String sheetName = sheet.getSheetName();
 		int emptyLines = 0;
 		// Start with the second row, since the first one is used for predicate declaration.
 		for (int i = 1; i < sheet.getLastRowNum(); i++) {
 			row = sheet.getRow(i);
-			ResourceNode node = insertRow(row, predicates);
-			nodes.add(node);
-			emptyLines = checkForEmptyLine(emptyLines, node);
+			if (VERSIONING.equals(sheetName)) {
+				addVersioning(row, predicates);
+			}else{
+				ResourceNode node = insertRow(row, predicates);
+				nodes.add(node);
+				emptyLines = checkForEmptyLine(emptyLines, node);
+			}
 			// For performance optimization we stopp parsing after 10 consecutive empty lines
-			if(emptyLines >= 10){
+			if (emptyLines >= 10) {
 				break;
 			}
 		}
@@ -121,10 +129,69 @@ public class ExcelParser {
 		}
 	}
 
+	private void addVersioning(final Row row, final Map<String, ResourceID> predicates) {
+		final String DELIMETER = ".";
+		ResourceNode node = null;
+		ResourceNode parent = null;
+		for (int index = 0; index < predicates.size(); index++) {
+			String value = ExcelParserTools.getStringValueFor(row, index);
+			if (null != value) {
+				// If version is a decimal number in excel
+				if(value.contains(".")) {
+					value = value.substring(0, value.indexOf("."));
+				}
+				if(0 == index){
+					parent = findObjectInGraph(replaceURIWithExisting(new SNResource(), value));
+				}else if (1 == index) {
+					node = new SNResource(createChildURI(parent, value));
+					clone(parent, node);
+					SNOPS.assure(node, RDFS.SUB_CLASS_OF, parent);
+					SNOPS.assure(node, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, SNOPS.fetchObject(parent, RDFS.LABEL).asValue().getStringValue() + " " +value));
+					graph.addStatements(node.getAssociations());
+					parent = node;
+				}else if (2 == index) {
+					node = new SNResource(createChildURI(parent, value));
+					clone(parent, node);
+					SNOPS.assure(node, RDFS.SUB_CLASS_OF, parent);
+					SNOPS.assure(node, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, SNOPS.fetchObject(parent, RDFS.LABEL).asValue().getStringValue() + DELIMETER + value));
+					graph.addStatements(node.getAssociations());
+					parent = node;
+				} else if (3 == index) {
+					for (String version : value.split(",")) {
+						node = new SNResource(createChildURI(parent, version));
+						clone(parent, node);
+						SNOPS.assure(node, RDFS.SUB_CLASS_OF, parent);
+						SNOPS.assure(node, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, SNOPS.fetchObject(parent, RDFS.LABEL).asValue().getStringValue() + DELIMETER + version.trim()));
+						graph.addStatements(node.getAssociations());
+					}
+				}
+			}
+		}
+	}
+
+	private QualifiedName createChildURI(final ResourceNode parent, final String value) {
+		return QualifiedName.create(parent.getQualifiedName() + "-" + value.trim());
+	}
+
+	private ResourceNode findObjectInGraph(final ResourceNode subject) {
+		for (ResourceNode node : graph.getSubjects()) {
+			if(node.getQualifiedName().toURI().equals(subject.getQualifiedName().toURI())){
+				return node;
+			}
+		}
+		return null;
+	}
+
+	private void clone(final ResourceNode original, final ResourceNode clone) {
+		for (Statement stmt : original.getAssociations()) {
+			clone.addAssociation(stmt.getPredicate(), stmt.getObject());
+		}
+	}
+
 	private int checkForEmptyLine(int emptyLines, final ResourceNode node) {
-		if(node.getAssociations().isEmpty()){
+		if (node.getAssociations().isEmpty()) {
 			emptyLines++;
-		}else{
+		} else {
 			emptyLines = 0;
 		}
 		return emptyLines;
@@ -136,29 +203,29 @@ public class ExcelParser {
 		SemanticNode object = null;
 		for (String column : columns) {
 			String value = ExcelParserTools.getStringValueFor(row, columns.indexOf(column));
-			if(null != value) {
-				if(metaData.isPrimaryKey(row.getSheet().getSheetName(), column)) {
+			if (null != value) {
+				if (metaData.isPrimaryKey(row.getSheet().getSheetName(), column)) {
 					addKeyToCache(value);
-					// Primary ID will always be the first element. So we still can change the ID without corrupting data
-					node = replaceWithExisting(node, value);
+					// TODO: alwas set the ID manually
+					// Primary ID will always be the first element. So we still can change the ID
+					// without corrupting data
+					node = replaceURIWithExisting(node, value);
 					object = new SNValue(ElementaryDataType.STRING, value);
-				}
-				else if (metaData.isForeignKey(row.getSheet().getSheetName(), column)) {
-					if(QualifiedName.isUri(value)){
+				} else if (metaData.isForeignKey(row.getSheet().getSheetName(), column)) {
+					if (QualifiedName.isUri(value)) {
 						object = new SimpleResourceID(value);
-					}else if(QualifiedName.isQname(value)){
+					} else if (QualifiedName.isQname(value)) {
 						object = new SimpleResourceID(convertQNameToURI(value));
-					}
-					else{
+					} else {
 						addKeyToCache(value);
 						object = getForeignKey(value);
 					}
 				} else {
-					if(QualifiedName.isUri(value)){
-						object = new SimpleResourceID(QualifiedName.create(value));
-					}else if(QualifiedName.isQname(value)){
+					if (QualifiedName.isUri(value)) {
+						object = new SimpleResourceID(value);
+					} else if (QualifiedName.isQname(value)) {
 						object = new SimpleResourceID(convertQNameToURI(value));
-					}else{
+					} else {
 						object = new SNValue(ElementaryDataType.STRING, value);
 					}
 				}
@@ -168,9 +235,9 @@ public class ExcelParser {
 		return node;
 	}
 
-	private ResourceNode replaceWithExisting(ResourceNode node, final String value) {
+	private ResourceNode replaceURIWithExisting(ResourceNode node, final String value) {
 		ResourceNode copy = node;
-		if(foreignKeys.containsKey(value)){
+		if (foreignKeys.containsKey(value)) {
 			node = new SNResource(foreignKeys.get(value).getQualifiedName());
 			for (Statement stmt : copy.getAssociations()) {
 				node.addAssociation(stmt.getPredicate(), stmt.getObject());
@@ -183,6 +250,7 @@ public class ExcelParser {
 	 * Traverse the graph and check if
 	 * 
 	 * keep foreign keys - otherwise we have to traverse the whole graph and look for blbla->hasId
+	 * 
 	 * @return
 	 */
 	private ResourceNode createResourceNode() {
@@ -228,12 +296,11 @@ public class ExcelParser {
 		for (Cell cell : sheet.getRow(0)) {
 			String value = null;
 			String suffix = cell.getStringCellValue();
-			if(QualifiedName.isUri(suffix)){
+			if (QualifiedName.isUri(suffix)) {
 				value = suffix;
-			}else if(QualifiedName.isQname(suffix)){
+			} else if (QualifiedName.isQname(suffix)) {
 				value = convertQNameToURI(suffix);
-			}
-			else{
+			} else {
 				value = buildPredicate(nameSpace, PREFIX, suffix);
 			}
 			predicates.put(suffix, new SimpleResourceID(value));
@@ -278,7 +345,6 @@ public class ExcelParser {
 
 		RdfXmlBinding binding = new RdfXmlBinding();
 		binding.write(graph, new FileOutputStream(new File(targetDir, "ITCatalog.rdf.xml")));
-
 	}
 
 }
