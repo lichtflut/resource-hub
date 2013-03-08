@@ -28,8 +28,8 @@ public class ExcelParserMetaData {
 	public static final String FOREIGN_KEY_END = "</ForeignKeys>";
 	public static final String PRIMARY_KEY_START = "<PrimaryKeys>";
 	public static final String PRIMARY_KEY_END = "</PrimaryKeys>";
-	public static final String SCHEMA_TYPE_START = "<SchemaType>";
-	public static final String SCHEMA_TYPE_END = "</SchemaType>";
+	public static final String NAMESPACE_KEY_START = "<Namespaces>";
+	public static final String NAMESPACE_KEY_END = "</Namespaces>";
 
 	private final Sheet sheet;
 
@@ -58,7 +58,7 @@ public class ExcelParserMetaData {
 	 */
 	public boolean isForeignKey(final String sheetName, final String identifier) {
 		String key = sheetName + DELIMETER + identifier;
-		return checkForKEy(key, FOREIGN_KEY_START, FOREIGN_KEY_END);
+		return checkForKey(key, FOREIGN_KEY_START, FOREIGN_KEY_END);
 	}
 
 	/**
@@ -69,28 +69,32 @@ public class ExcelParserMetaData {
 	 */
 	public boolean isPrimaryKey(final String sheetName, final String identifier) {
 		String key = sheetName + DELIMETER + identifier;
-		return checkForKEy(key, PRIMARY_KEY_START, PRIMARY_KEY_END);
+		return checkForKey(key, PRIMARY_KEY_START, PRIMARY_KEY_END);
 	}
 
-	public String getSchemaType(final String sheetName){
-		int index = ExcelParserTools.getRowIndexFor(SCHEMA_TYPE_START, sheet);
-		while(index < ExcelParserTools.getRowIndexFor(SCHEMA_TYPE_END, sheet)) {
+	/**
+	 * Looks for the namespace for a given string.
+	 * @param prefix The prefix for an existing namespace
+	 * @return the namespace
+	 */
+	public String getNamespaceFor(final String prefix){
+		String namespace = null;
+		int index = ExcelParserTools.getRowIndexFor(NAMESPACE_KEY_START, sheet);
+		while(index < ExcelParserTools.getRowIndexFor(NAMESPACE_KEY_END, sheet)) {
 			Row row = sheet.getRow(index++);
 			Cell cell = row.getCell(row.getFirstCellNum());
-			if(sheetName.equals(cell.getStringCellValue())){
-				Cell schemaCell = row.getCell(row.getFirstCellNum()+1);
-				String schemaType = schemaCell.getStringCellValue();
-				if(!schemaType.isEmpty()){
-					return getNameSpace() + schemaType;
-				}
+			if(prefix.equals(cell.getStringCellValue())){
+				Cell nsCell = row.getCell(row.getFirstCellNum()+1);
+				namespace = nsCell.getStringCellValue();
+				break;
 			}
 		}
-		return null;
+		return namespace;
 	}
 
 	// ------------------------------------------------------
 
-	private boolean checkForKEy(final String key, final String startMarker, final String endMarker) {
+	private boolean checkForKey(final String key, final String startMarker, final String endMarker) {
 		int index = ExcelParserTools.getRowIndexFor(startMarker, sheet);
 		boolean flag = true;
 		boolean isPrimaryKey = false;

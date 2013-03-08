@@ -146,13 +146,18 @@ public class ExcelParser {
 				else if (metaData.isForeignKey(row.getSheet().getSheetName(), column)) {
 					if(QualifiedName.isUri(value)){
 						object = new SimpleResourceID(value);
-					}else{
+					}else if(QualifiedName.isQname(value)){
+						object = new SimpleResourceID(convertQNameToURI(value));
+					}
+					else{
 						addKeyToCache(value);
 						object = getForeignKey(value);
 					}
 				} else {
 					if(QualifiedName.isUri(value)){
 						object = new SimpleResourceID(QualifiedName.create(value));
+					}else if(QualifiedName.isQname(value)){
+						object = new SimpleResourceID(convertQNameToURI(value));
 					}else{
 						object = new SNValue(ElementaryDataType.STRING, value);
 					}
@@ -225,12 +230,24 @@ public class ExcelParser {
 			String suffix = cell.getStringCellValue();
 			if(QualifiedName.isUri(suffix)){
 				value = suffix;
-			}else{
+			}else if(QualifiedName.isQname(suffix)){
+				value = convertQNameToURI(suffix);
+			}
+			else{
 				value = buildPredicate(nameSpace, PREFIX, suffix);
 			}
 			predicates.put(suffix, new SimpleResourceID(value));
 		}
 		return predicates;
+	}
+
+	private String convertQNameToURI(final String suffix) {
+		String value;
+		StringBuilder sb = new StringBuilder();
+		sb.append(metaData.getNamespaceFor(QualifiedName.getPrefix(suffix)));
+		sb.append(QualifiedName.getSimpleName(suffix));
+		value = sb.toString();
+		return value;
 	}
 
 	private String buildPredicate(final String nameSpace, final String prefix, final String value) {

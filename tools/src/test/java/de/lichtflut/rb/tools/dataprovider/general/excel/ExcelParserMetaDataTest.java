@@ -63,4 +63,14 @@ public class ExcelParserMetaDataTest {
 		assertThat(foreignKey, is(true));
 	}
 
+	@Test
+	public  void testGetNamespaceFor() throws Exception {
+		String rb = metaData.getNamespaceFor("rb-system");
+		assertThat(rb, equalTo("http://rb.lichtflut.de/system#"));
+
+		String rdf = metaData.getNamespaceFor("rdf");
+		assertThat(rdf, equalTo("http://www.w3.org/2000/01/rdf-schema#"));
+
+	}
+
 }
