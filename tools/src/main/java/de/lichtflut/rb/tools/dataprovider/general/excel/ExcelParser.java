@@ -136,7 +136,7 @@ public class ExcelParser {
 		for (int index = 0; index < predicates.size(); index++) {
 			String value = ExcelParserTools.getStringValueFor(row, index);
 			if (null != value) {
-				// If version is a decimal number in excel
+				// If version is a/interpreted as a double number in excel
 				if(value.contains(".")) {
 					value = value.substring(0, value.indexOf("."));
 				}
@@ -242,6 +242,11 @@ public class ExcelParser {
 			for (Statement stmt : copy.getAssociations()) {
 				node.addAssociation(stmt.getPredicate(), stmt.getObject());
 			}
+		}else{
+			node = new SNResource(QualifiedName.create(metaData.getNameSpace(), value));
+			for (Statement stmt : copy.getAssociations()) {
+				node.addAssociation(stmt.getPredicate(), stmt.getObject());
+			}
 		}
 		return node;
 	}
@@ -276,7 +281,7 @@ public class ExcelParser {
 	 */
 	private void addKeyToCache(final String key) {
 		if (!isCached(key)) {
-			foreignKeys.put(key, new SimpleResourceID());
+			foreignKeys.put(key, new SimpleResourceID(QualifiedName.create(metaData.getNameSpace(), key)));
 		}
 	}
 
