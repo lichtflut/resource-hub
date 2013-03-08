@@ -284,7 +284,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 					LOGGER.debug("Found Prototype for {}.", handle.getType());
 					load();
 				}
-				return createRBEntity(handle);
+				return createRBEntity(handle, schemaType);
 			}
 			return null;
 		}
@@ -301,9 +301,9 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 			return false;
 		}
 
-		private RBEntity createRBEntity(final EntityHandle handle) {
+		private RBEntity createRBEntity(final EntityHandle handle, final SNClass schemaType) {
 			LOGGER.debug("Creating new RB Entity");
-			final RBEntity created = entityManager.create(handle.getType());
+			final RBEntity created = entityManager.create(schemaType);
 			handle.setId(created.getID());
 			handle.markOnCreation();
 			return created;
