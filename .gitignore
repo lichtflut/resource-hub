@@ -1,5 +1,6 @@
 target
 derby.log
+infinitest.args
 .project
 .classpath
 .settings

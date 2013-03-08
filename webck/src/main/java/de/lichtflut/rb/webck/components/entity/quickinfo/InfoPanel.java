@@ -30,8 +30,6 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
  */
 public class InfoPanel extends TypedPanel<RBEntity> {
 
-	// ---------------- Constructor -------------------------
-
 	/**
 	 * Constructor.
 	 * 

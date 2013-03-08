@@ -32,7 +32,6 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteComponent;
 
-import de.lichtflut.rb.core.common.SchemaIdentifyingType;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.TypeManager;
@@ -122,7 +121,7 @@ public class CatalogPanel extends Panel {
 
 	/**
 	 * Specify behavior when 'create'-link is clicked.
-	 * @param model IModel containing the selected type
+	 * @param model IModel containing the selected class
 	 */
 	protected void applyAction(final IModel<ResourceID> model) {
 	}
@@ -159,8 +158,7 @@ public class CatalogPanel extends Panel {
 				item.add(new AjaxLink<Void>("createLink"){
 					@Override
 					public void onClick(final AjaxRequestTarget target) {
-						SNClass schemaType = SchemaIdentifyingType.of(item.getModelObject());
-						applyAction(new Model<ResourceID>(schemaType));
+						applyAction(item.getModel());
 					}
 				});
 				item.add(new CatalogItemInfoPanel("info", new Model<ResourceNode>(item.getModelObject().asResource())));
