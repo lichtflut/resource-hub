@@ -55,7 +55,7 @@ public class ExcelParser {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExcelParser.class);
 
 	private static final String EXCEL_CONFIG = "rb-parser-config";
-	private static final String VERSIONING = "rb-versions";
+	private static final String VERSIONING = "rb-versioning";
 	private static final String PREFIX = "has";
 
 	private final Workbook workbook;
