@@ -241,7 +241,9 @@ public class CatalogPanel extends Panel {
 			private void findSubclasses(final ResourceID type, final List<ResourceID> list){
 				for (SNClass snClass : typeManager.getSubClasses(type)) {
 					list.add(snClass);
-					findSubclasses(snClass, list);
+					if (0 < typeManager.getSubClasses(snClass).size()) {
+						findSubclasses(snClass, list);
+					}
 				}
 			}
 		};

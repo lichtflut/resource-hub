@@ -62,6 +62,7 @@ public class ExcelParser {
 	private final ExcelParserMetaData metaData;
 	private final Map<String, ResourceID> foreignKeys;
 	private final SemanticGraph graph;
+	boolean isFirstCellInRow;
 
 	// ---------------- Constructor -------------------------
 
@@ -77,6 +78,7 @@ public class ExcelParser {
 		metaData = new ExcelParserMetaData(workbook.getSheet(EXCEL_CONFIG));
 		graph = new DefaultSemanticGraph();
 		foreignKeys = new HashMap<String, ResourceID>();
+		isFirstCellInRow = true;
 	}
 
 	// ------------------------------------------------------
@@ -134,43 +136,60 @@ public class ExcelParser {
 	}
 
 	private void addVersioning(final Row row, final Map<String, ResourceID> predicates) {
-		final String DELIMETER = ".";
 		ResourceNode node = null;
 		ResourceNode parent = null;
+		isFirstCellInRow = true;
 		for (int index = 0; index < predicates.size(); index++) {
 			String value = ExcelParserTools.getStringValueFor(row, index);
-			if (null != value) {
+			if (null == value) {
+				if(0 == index){
+					break;
+				}
+			}else if (!value.isEmpty()) {
 				// If version is a/interpreted as a double number in excel
 				if(value.contains(".")) {
 					value = value.substring(0, value.indexOf("."));
 				}
 				if(0 == index){
 					parent = findObjectInGraph(replaceURIWithExisting(new SNResource(), value));
-				}else if (1 == index) {
-					node = new SNResource(createChildURI(parent, value));
-					clone(parent, node);
-					SNOPS.assure(node, RDFS.SUB_CLASS_OF, parent);
-					SNOPS.assure(node, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, SNOPS.fetchObject(parent, RDFS.LABEL).asValue().getStringValue() + " " +value));
-					graph.addStatements(node.getAssociations());
-					parent = node;
-				}else if (2 == index) {
-					node = new SNResource(createChildURI(parent, value));
-					clone(parent, node);
-					SNOPS.assure(node, RDFS.SUB_CLASS_OF, parent);
-					SNOPS.assure(node, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, SNOPS.fetchObject(parent, RDFS.LABEL).asValue().getStringValue() + DELIMETER + value));
-					graph.addStatements(node.getAssociations());
-					parent = node;
-				} else if (3 == index) {
-					for (String version : value.split(",")) {
-						node = new SNResource(createChildURI(parent, version));
+				} else {
+					if (1 == index) {
+						node = new SNResource(createChildURI(parent, value));
 						clone(parent, node);
 						SNOPS.assure(node, RDFS.SUB_CLASS_OF, parent);
-						SNOPS.assure(node, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, SNOPS.fetchObject(parent, RDFS.LABEL).asValue().getStringValue() + DELIMETER + version.trim()));
+						SNOPS.assure(node, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, createInheritedLabel(parent, value)));
 						graph.addStatements(node.getAssociations());
+						parent = node;
+					}else if (2 == index) {
+						node = new SNResource(createChildURI(parent, value));
+						clone(parent, node);
+						SNOPS.assure(node, RDFS.SUB_CLASS_OF, parent);
+						SNOPS.assure(node, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, createInheritedLabel(parent, value)));
+						graph.addStatements(node.getAssociations());
+						parent = node;
+					} else if (3 == index) {
+						for (String version : value.split(",")) {
+							node = new SNResource(createChildURI(parent, version));
+							clone(parent, node);
+							SNOPS.assure(node, RDFS.SUB_CLASS_OF, parent);
+							SNOPS.assure(node, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, createInheritedLabel(parent, version)));
+							graph.addStatements(node.getAssociations());
+						}
 					}
 				}
 			}
 		}
+	}
+
+	private String createInheritedLabel(final ResourceNode parent, final String value){
+		String label = "";
+		if(isFirstCellInRow){
+			label  =SNOPS.fetchObject(parent, RDFS.LABEL).asValue().getStringValue() + " " + value.trim();
+			isFirstCellInRow = false;
+		}else{
+			label = SNOPS.fetchObject(parent, RDFS.LABEL).asValue().getStringValue() + "." + value.trim();
+		}
+		return label;
 	}
 
 	private QualifiedName createChildURI(final ResourceNode parent, final String value) {
@@ -340,7 +359,8 @@ public class ExcelParser {
 	// ------------------------------------------------------
 
 	public static void main(final String[] args) throws SemanticIOException, IOException, InvalidFormatException {
-		SemanticGraph graph = new ExcelParser(new File("src/main/resources/ITCatalog.xlsx")).read();
+		File file = new File("src/main/resources/ITCatalog.xlsx");
+		SemanticGraph graph = new ExcelParser(file).read();
 
 		File targetDir = new File("target", "generated-rdf");
 		targetDir.mkdirs();
