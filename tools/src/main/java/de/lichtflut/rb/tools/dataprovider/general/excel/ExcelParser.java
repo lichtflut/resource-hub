@@ -104,18 +104,24 @@ public class ExcelParser {
 	// ------------------------------------------------------
 
 	private void insertIntoGraph(final Sheet sheet) {
+		List<ResourceNode> nodes = generateNodesFromSheet(sheet);
+		for (ResourceNode node : nodes) {
+			graph.addStatements(node.getAssociations());
+		}
+	}
+
+	private List<ResourceNode> generateNodesFromSheet(final Sheet sheet) {
 		List<ResourceNode> nodes = new ArrayList<ResourceNode>();
 		Map<String, ResourceID> predicates = getPredicates(sheet);
 		Row row;
-		String sheetName = sheet.getSheetName();
 		int emptyLines = 0;
 		// Start with the second row, since the first one is used for predicate declaration.
-		for (int i = 1; i < sheet.getLastRowNum(); i++) {
+		for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
 			row = sheet.getRow(i);
-			if (VERSIONING.equals(sheetName)) {
+			if (VERSIONING.equals(sheet.getSheetName())) {
 				addVersioning(row, predicates);
 			}else{
-				ResourceNode node = insertRow(row, predicates);
+				ResourceNode node = genereateRowBasedNode(row, predicates);
 				nodes.add(node);
 				emptyLines = checkForEmptyLine(emptyLines, node);
 			}
@@ -124,9 +130,7 @@ public class ExcelParser {
 				break;
 			}
 		}
-		for (ResourceNode node : nodes) {
-			graph.addStatements(node.getAssociations());
-		}
+		return nodes;
 	}
 
 	private void addVersioning(final Row row, final Map<String, ResourceID> predicates) {
@@ -197,21 +201,21 @@ public class ExcelParser {
 		return emptyLines;
 	}
 
-	private ResourceNode insertRow(final Row row, final Map<String, ResourceID> predicates) {
+	private ResourceNode genereateRowBasedNode(final Row row, final Map<String, ResourceID> predicates) {
 		ResourceNode node = createResourceNode();
 		List<String> columns = new LinkedList<String>(predicates.keySet());
 		SemanticNode object = null;
-		for (String column : columns) {
-			String value = ExcelParserTools.getStringValueFor(row, columns.indexOf(column));
+		for (String columnHeader : columns) {
+			String value = ExcelParserTools.getStringValueFor(row, columns.indexOf(columnHeader));
 			if (null != value) {
-				if (metaData.isPrimaryKey(row.getSheet().getSheetName(), column)) {
+				if (metaData.isPrimaryKey(row.getSheet().getSheetName(), columnHeader)) {
 					addKeyToCache(value);
 					// TODO: alwas set the ID manually
 					// Primary ID will always be the first element. So we still can change the ID
 					// without corrupting data
 					node = replaceURIWithExisting(node, value);
 					object = new SNValue(ElementaryDataType.STRING, value);
-				} else if (metaData.isForeignKey(row.getSheet().getSheetName(), column)) {
+				} else if (metaData.isForeignKey(row.getSheet().getSheetName(), columnHeader)) {
 					if (QualifiedName.isUri(value)) {
 						object = new SimpleResourceID(value);
 					} else if (QualifiedName.isQname(value)) {
@@ -229,7 +233,7 @@ public class ExcelParser {
 						object = new SNValue(ElementaryDataType.STRING, value);
 					}
 				}
-				node.addAssociation(predicates.get(column), object);
+				node.addAssociation(predicates.get(columnHeader), object);
 			}
 		}
 		return node;
@@ -251,13 +255,6 @@ public class ExcelParser {
 		return node;
 	}
 
-	/**
-	 * Traverse the graph and check if
-	 * 
-	 * keep foreign keys - otherwise we have to traverse the whole graph and look for blbla->hasId
-	 * 
-	 * @return
-	 */
 	private ResourceNode createResourceNode() {
 		ResourceNode node = new SNResource();
 		return node;
