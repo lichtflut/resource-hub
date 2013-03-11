@@ -198,6 +198,14 @@ public abstract class RBWebTest {
 		return new RBWebSession(request);
 	}
 
+	protected void simulatePathbuilder() {
+		when(pathBuilder.queryEntities(anyString(), anyString())).thenReturn("some entities");
+		when(pathBuilder.queryClasses(anyString(), anyString())).thenReturn("some entities");
+		when(pathBuilder.queryProperties(anyString(), anyString())).thenReturn("some entities");
+		when(pathBuilder.queryResources(anyString(), anyString())).thenReturn("some entities");
+		when(pathBuilder.queryUsers(anyString())).thenReturn("some entities");
+	}
+
 	// ------------------------------------------------------
 
 	private void registerMocks() {
