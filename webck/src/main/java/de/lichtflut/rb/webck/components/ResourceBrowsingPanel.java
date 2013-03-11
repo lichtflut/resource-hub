@@ -7,6 +7,7 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -19,6 +20,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -292,11 +294,16 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		private boolean preparePrototype(final ResourceID type) {
 			SemanticNode prototype = getPrototype(type);
 			if(null != prototype){
-				ResourceNode copy = copy(prototype);
-				networkService.attach(copy);
-				final EntityHandle handle = RBWebSession.get().getHistory().getCurrentStep().getHandle();
-				handle.setId(copy);
-				return true;
+				Set<SemanticNode> types = SNOPS.objects(prototype.asResource(), RDF.TYPE);
+
+				if(types.contains(RBSystem.ENTITY)){
+
+					ResourceNode copy = copy(prototype);
+					networkService.attach(copy);
+					final EntityHandle handle = RBWebSession.get().getHistory().getCurrentStep().getHandle();
+					handle.setId(copy);
+					return true;
+				}
 			}
 			return false;
 		}
