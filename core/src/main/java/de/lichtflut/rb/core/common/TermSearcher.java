@@ -30,8 +30,18 @@ public class TermSearcher {
 		PROPERTY,
 		SUB_CLASS
 	}
-	
-	// ----------------------------------------------------
+
+    // ----------------------------------------------------
+
+    private final Query query;
+
+    // ----------------------------------------------------
+
+    public TermSearcher(Query query) {
+        this.query = query;
+    }
+
+    // ----------------------------------------------------
 	
 	/**
 	 * Search nodes with given term.
@@ -39,12 +49,12 @@ public class TermSearcher {
 	 * @param type An optional rdf:type criteria. 
 	 * @return The query result.
 	 */
-	public Query prepareQuery(final Query query, final String term, final Mode mode, final String type) {
+	public Query prepareQuery(final String term, final Mode mode, final String type) {
 		switch (mode){
 		case ENTITY:
 		case VALUES:
 			query.beginAnd();
-			addValues(query, term);
+			addValues(term);
 			if (type != null) {
 				query.addField(RDF.TYPE, type);
 			}
@@ -53,7 +63,7 @@ public class TermSearcher {
 		case PROPERTY:
 			query.beginAnd();
 			query.beginOr();
-				addValues(query, term);
+				addValues(term);
 				query.addURI(prepareTerm(term, 0.5f));
 				query.end();
 			query.addField(RDF.TYPE, RDF.PROPERTY);
@@ -62,7 +72,7 @@ public class TermSearcher {
 		case SUB_CLASS:
 			query.beginAnd();
 			query.beginOr();
-				addValues(query, term);
+				addValues(term);
 				query.addURI(prepareTerm(term, 0.5f));
 				query.end();
 			query.addField(RDF.TYPE, RDFS.CLASS);
@@ -79,20 +89,22 @@ public class TermSearcher {
 	
 	// ----------------------------------------------------
 
-	protected void addValues(final Query query, final String term) {
+	public void addValues(final String term) {
 		if (term.startsWith(SearchTerm.VERBATIM_PREFIX)) {
 			query.addValue(term.substring(SearchTerm.VERBATIM_PREFIX.length()));
 		} else {
-			addValues(query, term.split("\\s+"));	
+			addValues(term.split("\\s+"));
 		}
 	}
 	
-	protected void addValues(final Query query, final String[] values) {
+	public void addValues(final String[] values) {
 		Validate.notEmpty(values);
 		for (String val : values) {
 			query.addValue(escape(val));
 		}
 	}
+
+    // ----------------------------------------------------
 	
 	protected String prepareTerm(final String orig) {
 		if (orig.startsWith(SearchTerm.VERBATIM_PREFIX)) {

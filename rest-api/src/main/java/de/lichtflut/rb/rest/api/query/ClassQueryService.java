@@ -72,7 +72,7 @@ public class ClassQueryService extends AbstractQueryService {
 	// ----------------------------------------------------
 	
 	private List<ResultItemRVO> performQuery(Query query, String term, String type) {
-		new TermSearcher().prepareQuery(query, term, Mode.SUB_CLASS, type);
+		new TermSearcher(query).prepareQuery(term, Mode.SUB_CLASS, type);
 
         return buildResult(query.getResult());
 	}
