@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
+import de.lichtflut.rb.webck.config.QueryPath;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.naming.QualifiedName;
@@ -46,7 +47,8 @@ public class UserPickerField extends DataPickerField<QualifiedName> {
 	// -----------------------------------------------------
 	
 	public AutocompleteSource findUser() {
-        return new AutocompleteSource(pathBuilder.queryUsers(serviceContext.getDomain()));
+        QueryPath path = pathBuilder.create(serviceContext.getDomain()).queryUsers();
+        return new AutocompleteSource(path.toURI());
 	}
 	
 }

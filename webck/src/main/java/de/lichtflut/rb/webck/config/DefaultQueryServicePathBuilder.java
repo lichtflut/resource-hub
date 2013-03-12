@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.webck.config;
 
-import com.sun.jersey.core.util.Base64;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -20,68 +19,49 @@ import org.apache.wicket.request.cycle.RequestCycle;
 public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
 
     @Override
+    public QueryPath create(String domain) {
+        return new QueryPath(context(), domain);
+    }
+
+    // ----------------------------------------------------
+
+    @Override
 	public String queryResources(String domain, String type) {
-		final StringBuilder sb = preparePathBuilder(domain);
-		sb.append("/resources");
-		if (type != null) {
-			sb.append("?type=");
-			sb.append(encode(type));
-		}
-		return sb.toString();
+        return create(domain).queryResources()
+                .ofType(type)
+                .toURI();
 	}
 
     @Override
     public String queryEntities(String domain, String type) {
-        return new QueryPath(context(), domain)
-                .queryEntities()
-                .append("type", type)
+        return create(domain).queryEntities()
+                .ofType(type)
                 .toURI();
 	}
 
     @Override
     public String queryClasses(String domain, String superClass) {
-        final StringBuilder sb = preparePathBuilder(domain);
-        sb.append("/classes");
-        if (superClass != null) {
-            sb.append("?superclass=");
-            sb.append(encode(superClass));
-        }
-        return sb.toString();
+        return create(domain).queryClasses()
+                .withSuperClass(superClass)
+                .toURI();
     }
 
     @Override
     public String queryProperties(String domain, String superProperty) {
-        final StringBuilder sb = preparePathBuilder(domain);
-        sb.append("/properties");
-        if (superProperty != null) {
-            sb.append("?superproperty=");
-            sb.append(encode(superProperty));
-        }
-        return sb.toString();
+        return create(domain).queryProperties()
+                .withSuperProperty(superProperty)
+                .toURI();
     }
 
     @Override
     public String queryUsers(String domain) {
-        final StringBuilder sb = preparePathBuilder(domain);
-        sb.append("/users");
-        return sb.toString();
+        return create(domain).queryUsers().toURI();
     }
 
     // ----------------------------------------------------
 
-    private StringBuilder preparePathBuilder(String domain) {
-        final StringBuilder sb = new StringBuilder(context());
-        sb.append("/domains/").append(domain);
-        return sb;
-    }
-
     private String context() {
         return RequestCycle.get().getRequest().getContextPath() + "/service/query";
     }
-
-    String encode(String orig) {
-        return new String(Base64.encode(orig));
-    }
-
 
 }

@@ -39,10 +39,32 @@ public class QueryPath {
 
     // ----------------------------------------------------
 
+    public QueryPath queryResources() {
+        this.service = "resources";
+        return this;
+    }
+
     public QueryPath queryEntities() {
         this.service = "entities";
         return this;
     }
+
+    public QueryPath queryClasses() {
+        this.service = "classes";
+        return this;
+    }
+
+    public QueryPath queryProperties() {
+        this.service = "properties";
+        return this;
+    }
+
+    public QueryPath queryUsers() {
+        this.service = "users";
+        return this;
+    }
+
+    // ----------------------------------------------------
 
     public QueryPath domain(String domain) {
         this.domain = domain;
@@ -51,6 +73,26 @@ public class QueryPath {
 
     public QueryPath append(String param, Object value) {
         this.params.put(param, value);
+        return this;
+    }
+
+    public QueryPath ofType(String type) {
+        this.params.put("type", type);
+        return this;
+    }
+
+    public QueryPath inScope(String scope) {
+        this.params.put("scope", scope);
+        return this;
+    }
+
+    public QueryPath withSuperClass(String clazz) {
+        this.params.put("superclass", clazz);
+        return this;
+    }
+
+    public QueryPath withSuperProperty(String clazz) {
+        this.params.put("superproperty", clazz);
         return this;
     }
 
