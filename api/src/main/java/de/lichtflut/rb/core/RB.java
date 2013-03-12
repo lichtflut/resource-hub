@@ -68,6 +68,11 @@ public interface RB {
 	 */
 	ResourceID HAS_SUBORDINATE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasSubordinate");
 
+    /**
+     * Entities may belong to a special scope.
+     */
+    ResourceID HAS_SCOPE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasScope");
+
 	/**
 	 * General ID of something (e.g. an application).
 	 */

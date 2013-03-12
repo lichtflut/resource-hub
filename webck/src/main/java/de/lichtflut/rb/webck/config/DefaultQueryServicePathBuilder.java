@@ -18,7 +18,8 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * @author Oliver Tigges
  */
 public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
-	
+
+    @Override
 	public String queryResources(String domain, String type) {
 		final StringBuilder sb = preparePathBuilder(domain);
 		sb.append("/resources");
@@ -29,14 +30,12 @@ public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
 		return sb.toString();
 	}
 
+    @Override
     public String queryEntities(String domain, String type) {
-		final StringBuilder sb = preparePathBuilder(domain);
-		sb.append("/entities");
-		if (type != null) {
-			sb.append("?type=");
-			sb.append(encode(type));
-		}
-		return sb.toString();
+        return new QueryPath(context(), domain)
+                .queryEntities()
+                .append("type", type)
+                .toURI();
 	}
 
     @Override
@@ -71,10 +70,13 @@ public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
     // ----------------------------------------------------
 
     private StringBuilder preparePathBuilder(String domain) {
-        final String ctx = RequestCycle.get().getRequest().getContextPath();
-        final StringBuilder sb = new StringBuilder(ctx + "/service/query");
+        final StringBuilder sb = new StringBuilder(context());
         sb.append("/domains/").append(domain);
         return sb;
+    }
+
+    private String context() {
+        return RequestCycle.get().getRequest().getContextPath() + "/service/query";
     }
 
     String encode(String orig) {
