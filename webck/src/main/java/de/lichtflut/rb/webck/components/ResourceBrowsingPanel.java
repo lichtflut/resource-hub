@@ -18,19 +18,10 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.Statement;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.model.nodes.views.SNClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.common.SchemaIdentifyingType;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -266,85 +257,17 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				final RBEntity loaded = entityManager.find(handle.getId());
 				return loaded;
 			} else if (handle.hasType()){
-				return prepareEntity(handle);
+				LOGGER.debug("Creating new RB Entity");
+				final RBEntity created = entityManager.create(handle.getType());
+				handle.setId(created.getID());
+				handle.markOnCreation();
+				return created;
 			} else {
 				throw new IllegalStateException("Cannot initialize RB Entity Model.");
 			}
 		}
 
 		// ------------------------------------------------------
-
-		private RBEntity prepareEntity(final EntityHandle handle) {
-			if(preparePrototype(handle.getType(), null)){
-				LOGGER.debug("Found Prototype for {}.", handle.getType());
-				load();
-			}else{
-				ResourceNode node = networkService.resolve(handle.getType());
-				SNClass schemaType = SchemaIdentifyingType.of(node);
-				if(preparePrototype(schemaType, handle.getType())){
-					LOGGER.debug("Found Prototype for {}.", handle.getType());
-					load();
-				}else{
-					return createRBEntity(handle, schemaType);
-				}
-			}
-			return null;
-		}
-
-		private boolean preparePrototype(final ResourceID type, final ResourceID originalType) {
-			SemanticNode prototype = getPrototype(type);
-			if(null != prototype){
-				if(isEntity(prototype.asResource())){
-					ResourceNode copy = copy(prototype);
-					if(null != originalType){
-						SNOPS.remove(copy, RDF.TYPE);
-						copy.addAssociation(RDF.TYPE, RBSystem.ENTITY);
-						copy.addAssociation(RDF.TYPE, originalType);
-					}
-					networkService.attach(copy);
-					final EntityHandle handle = RBWebSession.get().getHistory().getCurrentStep().getHandle();
-					handle.setId(copy);
-					return true;
-				}
-			}
-			return false;
-		}
-
-		private boolean isEntity(final ResourceNode prototype) {
-			boolean isEntity = false;
-			for (Statement stmt : prototype.getAssociations()) {
-				if(stmt.getObject().equals(RBSystem.ENTITY)){
-					isEntity = true;
-					break;
-				}
-			}
-			return isEntity;
-		}
-
-		private RBEntity createRBEntity(final EntityHandle handle, final SNClass schemaType) {
-			LOGGER.debug("Creating new RB Entity");
-			final RBEntity created = entityManager.create(schemaType);
-			handle.setId(created.getID());
-			handle.markOnCreation();
-			return created;
-		}
-
-		private ResourceNode copy(final SemanticNode prototype) {
-			ResourceNode node = new SNResource();
-			for (Statement stmt: prototype.asResource().getAssociations()) {
-				node.addAssociation(stmt.getPredicate(), stmt.getObject());
-			}
-			return node;
-		}
-
-		private SemanticNode getPrototype(final ResourceID classId) {
-			ResourceNode classNode = networkService.find(classId.getQualifiedName());
-			SemanticNode node = SNOPS.fetchObject(classNode, RBSystem.HAS_PROTOTYPE);
-			if(null != node){
-				return node;
-			}
-			return null;
-		}
 
 	}
 }

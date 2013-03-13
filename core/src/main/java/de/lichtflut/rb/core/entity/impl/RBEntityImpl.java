@@ -242,6 +242,8 @@ public class RBEntityImpl implements RBEntity {
 	 */
 	private void setType(final ResourceID type) {
 		SNOPS.assure(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, type);
+		// TODO: What if SChemaIdentifyingType differs from RDF.TYPE? (Entity Printer uses Schema periphery - dublicate and propably unwanted type info )
+		// Will entity be listed under both categories?
 		SNOPS.associate(node, RDF.TYPE, type);
 	}
 }

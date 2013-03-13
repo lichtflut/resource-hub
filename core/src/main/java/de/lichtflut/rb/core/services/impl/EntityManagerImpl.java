@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import de.lichtflut.rb.core.entity.RBFieldValue;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -15,10 +14,12 @@ import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.naming.QualifiedName;
 import org.slf4j.Logger;
@@ -26,10 +27,12 @@ import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.common.DomainNamespacesHandler;
+import de.lichtflut.rb.core.common.SchemaIdentifyingType;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.ValidationException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.entity.RBFieldValue;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Datatype;
@@ -91,23 +94,103 @@ public class EntityManagerImpl implements EntityManager {
 		return find(resourceID, true);
 	}
 
+	/**
+	 * The creation of an Entity involves the following Steps:
+	 * <ol>
+	 *	<li>Get {@link SchemaIdentifyingType}</li>
+	 *	<li>Prepare an Entity:
+	 *	<ol>
+	 *		<li>Check if a prototype is associated diretly</li>
+	 *		<li>If no prototype found check the SchemaIdentitying type for a prototype</li>
+	 *		<li>If prototype found copy its values and set the appropriate RDF.TYPEs. Otherwise do nothing</li>
+	 *	</ol>
+	 *	</li>
+	 *	<li>Create a {@link RBEntity}. If it has a schema associated, use it as parameter, otherwise use given type</li>
+	 * </ol>
+	 */
 	@Override
 	public RBEntity create(final ResourceID type) {
-		final ResourceSchema schema = schemaManager.findSchemaForType(type);
+		ResourceNode typeNode = conversation.findResource(type.getQualifiedName());
+		ResourceSchema schema = getSchemaFor(typeNode);
+
+		ResourceNode entityNode = prepareEntityNode(typeNode, schema);
+
 		if (schema != null) {
-			return new RBEntityImpl(newEntityNode(), schema).markTransient();
+			return new RBEntityImpl(entityNode, schema).markTransient();
 		} else {
-			return new RBEntityImpl(newEntityNode(), type).markTransient();
+			return new RBEntityImpl(entityNode, type).markTransient();
 		}
+	}
+
+	private ResourceSchema getSchemaFor(final ResourceNode type){
+		ResourceSchema schema = schemaManager.findSchemaForType(type);
+		if(null == schema){
+			SNClass schemaIdentifier = SchemaIdentifyingType.of(type);
+			schema = schemaManager.findSchemaForType(schemaIdentifier);
+		}
+		return schema;
+	}
+
+	private ResourceNode prepareEntityNode(final ResourceID type, final ResourceSchema schema) {
+		ResourceNode entityNode = newEntityNode();
+		ResourceNode prototype = getPrototype(type);
+		if(null == prototype && null != schema){
+			prototype = getPrototype(schema.getDescribedType());
+		}
+		if(null != prototype){
+			LOGGER.debug("Found Prototype for {}.", type);
+			if(isEntity(prototype)){
+				entityNode = copy(prototype);
+				if(null !=schema){
+					// Set original type
+					SNOPS.remove(entityNode, RDF.TYPE);
+					entityNode.addAssociation(RDF.TYPE, RBSystem.ENTITY);
+					entityNode.addAssociation(RDF.TYPE, type);
+				}
+				conversation.attach(entityNode);
+			}else{
+				LOGGER.debug("Prototype for {} is not of type RBSystem.ENTITY. Prototyping skipped.", type);
+			}
+		}
+		return entityNode;
+	}
+
+
+	private ResourceNode copy(final SemanticNode prototype) {
+		ResourceNode node = newEntityNode();
+		for (Statement stmt: prototype.asResource().getAssociations()) {
+			node.addAssociation(stmt.getPredicate(), stmt.getObject());
+		}
+		return node;
+	}
+
+	private boolean isEntity(final ResourceNode prototype) {
+		boolean isEntity = false;
+		for (Statement stmt : prototype.getAssociations()) {
+			if(stmt.getObject().equals(RBSystem.ENTITY)){
+				isEntity = true;
+				break;
+			}
+		}
+		return isEntity;
+	}
+
+	private ResourceNode getPrototype(final ResourceID classId) {
+		ResourceNode classNode = conversation.findResource(classId.getQualifiedName());
+		SemanticNode node = SNOPS.fetchObject(classNode, RBSystem.HAS_PROTOTYPE);
+		if(null != node){
+			return node.asResource();
+		}
+		return null;
 	}
 
 	@Override
 	public void store(final RBEntity entity) {
 		final ResourceNode node = entity.getNode();
 		SNOPS.associate(node, RDF.TYPE, RBSystem.ENTITY);
-        if (entity.getType() == null) {
-            throw new IllegalStateException("Entity has no type, will not save it.");
-        }
+		if (entity.getType() == null) {
+			throw new IllegalStateException("Entity has no type, will not save it.");
+		}
 		for (RBField field : entity.getAllFields()) {
 			final Collection<SemanticNode> nodes = toSemanticNodes(field);
 			SNOPS.assure(node, field.getPredicate(), nodes);
@@ -146,15 +229,15 @@ public class EntityManagerImpl implements EntityManager {
 	public void changeType(final RBEntity entity, final ResourceID type) {
 		final ResourceNode node = conversation.resolve(entity.getID());
 		SNOPS.remove(node, RDF.TYPE, entity.getType());
-        SNOPS.remove(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, entity.getType());
+		SNOPS.remove(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, entity.getType());
 		SNOPS.associate(node, RDF.TYPE, type);
-        SNOPS.associate(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, type);
+		SNOPS.associate(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, type);
 	}
 
 	@Override
 	public void delete(final ResourceID entityID) {
 		final ResourceNode node = conversation.resolve(entityID);
-        conversation.remove(node);
+		conversation.remove(node);
 	}
 
 	// -- INJECTED DEPENDENCIES ---------------------------
@@ -188,7 +271,7 @@ public class EntityManagerImpl implements EntityManager {
 		final ResourceID type = typeManager.getTypeOfResource(node);
 		final RBEntityImpl entity;
 		if (type == null) {
-            LOGGER.warn("RBEntity has no type: " + node);
+			LOGGER.warn("RBEntity has no type: " + node);
 			entity = new RBEntityImpl(node);
 		} else {
 			final ResourceSchema schema = schemaManager.findSchemaForType(type.asResource());
@@ -209,7 +292,7 @@ public class EntityManagerImpl implements EntityManager {
 	private Collection<SemanticNode> toSemanticNodes(final RBField field) {
 		final Collection<SemanticNode> result = new ArrayList<SemanticNode>();
 		for (RBFieldValue fieldValue : field.getValues()) {
-            Object value = fieldValue.getValue();
+			Object value = fieldValue.getValue();
 			LOGGER.info(field.getPredicate() + " : " + value);
 			if (value == null) {
 				// ignore
@@ -241,29 +324,29 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	private void resolveEntityReferences(final RBField field) {
-        for (RBFieldValue fieldValue : field.getValues()) {
-            ResourceID id = (ResourceID) fieldValue.getValue();
-            if (id != null) {
-                fieldValue.setValue(conversation.resolve(id));
-            }
-        }
+		for (RBFieldValue fieldValue : field.getValues()) {
+			ResourceID id = (ResourceID) fieldValue.getValue();
+			if (id != null) {
+				fieldValue.setValue(conversation.resolve(id));
+			}
+		}
 	}
 
 	private void resolveEmbeddedEntityReferences(final RBField field) {
-        for (RBFieldValue fieldValue : field.getValues()) {
-            Object value = fieldValue.getValue();
-            if (value instanceof RBEntity) {
-                // everything O.K.
-            } else if (value instanceof ResourceID) {
-                ResourceID id = (ResourceID) value;
-                fieldValue.setValue(find(id, false));
-            }
-        }
+		for (RBFieldValue fieldValue : field.getValues()) {
+			Object value = fieldValue.getValue();
+			if (value instanceof RBEntity) {
+				// everything O.K.
+			} else if (value instanceof ResourceID) {
+				ResourceID id = (ResourceID) value;
+				fieldValue.setValue(find(id, false));
+			}
+		}
 	}
 
 	private void storeEmbeddeds(final RBField field) {
 		for (RBFieldValue fieldValue : field.getValues()) {
-            Object value = fieldValue.getValue();
+			Object value = fieldValue.getValue();
 			if (value instanceof RBEntity) {
 				RBEntity entity = (RBEntity) value;
 				store(entity);

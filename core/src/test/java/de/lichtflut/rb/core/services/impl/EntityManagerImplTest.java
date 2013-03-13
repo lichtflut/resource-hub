@@ -148,24 +148,31 @@ public class EntityManagerImplTest extends RBCoreTest{
 	@Test
 	public void testCreate() {
 		ResourceID personType = RB.PERSON;
+		ResourceNode personSchema = new SNResource(personType.getQualifiedName());
+		personSchema.addAssociation(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, personType);
 
 		// with schema
 		when(schemaManager.findSchemaForType(personType)).thenReturn(new ResourceSchemaImpl(personType));
+		when(conversation.findResource(personType.getQualifiedName())).thenReturn(personSchema);
 
 		RBEntity entity = entityManager.create(personType);
 
 		verify(schemaManager, times(1)).findSchemaForType(personType);
+		verify(conversation, times(3)).findResource(personType.getQualifiedName());
 		assertThat(entity.hasSchema(), is(true));
 		assertThat(entity.getType(), equalTo(personType));
 
 		reset(schemaManager);
+		reset(conversation);
 
 		// without schema
 		when(schemaManager.findSchemaForType(personType)).thenReturn(null);
+		when(conversation.findResource(personType.getQualifiedName())).thenReturn(personType.asResource());
 
 		RBEntity entity1 = entityManager.create(personType);
 
-		verify(schemaManager, times(1)).findSchemaForType(personType);
+		verify(schemaManager, times(1)).findSchemaForType(null);
+		verify(conversation, times(2)).findResource(personType.getQualifiedName());
 		assertThat(entity1.hasSchema(), is(false));
 		assertThat(entity1.getType(), equalTo(personType));
 	}
