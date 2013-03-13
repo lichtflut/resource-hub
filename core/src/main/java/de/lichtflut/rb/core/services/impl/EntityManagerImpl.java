@@ -101,7 +101,7 @@ public class EntityManagerImpl implements EntityManager {
 	 *	<li>Prepare an Entity:
 	 *	<ol>
 	 *		<li>Check if a prototype is associated diretly</li>
-	 *		<li>If no prototype found check the SchemaIdentitying type for a prototype</li>
+	 *		<li>If no prototype found check the schema type for a prototype</li>
 	 *		<li>If prototype found copy its values and set the appropriate RDF.TYPEs. Otherwise do nothing</li>
 	 *	</ol>
 	 *	</li>
@@ -122,67 +122,6 @@ public class EntityManagerImpl implements EntityManager {
 		}
 	}
 
-	private ResourceSchema getSchemaFor(final ResourceNode type){
-		ResourceSchema schema = schemaManager.findSchemaForType(type);
-		if(null == schema){
-			SNClass schemaIdentifier = SchemaIdentifyingType.of(type);
-			schema = schemaManager.findSchemaForType(schemaIdentifier);
-		}
-		return schema;
-	}
-
-	private ResourceNode prepareEntityNode(final ResourceID type, final ResourceSchema schema) {
-		ResourceNode entityNode = newEntityNode();
-		ResourceNode prototype = getPrototype(type);
-		if(null == prototype && null != schema){
-			prototype = getPrototype(schema.getDescribedType());
-		}
-		if(null != prototype){
-			LOGGER.debug("Found Prototype for {}.", type);
-			if(isEntity(prototype)){
-				entityNode = copy(prototype);
-				if(null !=schema){
-					// Set original type
-					SNOPS.remove(entityNode, RDF.TYPE);
-					entityNode.addAssociation(RDF.TYPE, RBSystem.ENTITY);
-					entityNode.addAssociation(RDF.TYPE, type);
-				}
-				conversation.attach(entityNode);
-			}else{
-				LOGGER.debug("Prototype for {} is not of type RBSystem.ENTITY. Prototyping skipped.", type);
-			}
-		}
-		return entityNode;
-	}
-
-
-	private ResourceNode copy(final SemanticNode prototype) {
-		ResourceNode node = newEntityNode();
-		for (Statement stmt: prototype.asResource().getAssociations()) {
-			node.addAssociation(stmt.getPredicate(), stmt.getObject());
-		}
-		return node;
-	}
-
-	private boolean isEntity(final ResourceNode prototype) {
-		boolean isEntity = false;
-		for (Statement stmt : prototype.getAssociations()) {
-			if(stmt.getObject().equals(RBSystem.ENTITY)){
-				isEntity = true;
-				break;
-			}
-		}
-		return isEntity;
-	}
-
-	private ResourceNode getPrototype(final ResourceID classId) {
-		ResourceNode classNode = conversation.findResource(classId.getQualifiedName());
-		SemanticNode node = SNOPS.fetchObject(classNode, RBSystem.HAS_PROTOTYPE);
-		if(null != node){
-			return node.asResource();
-		}
-		return null;
-	}
 
 	@Override
 	public void store(final RBEntity entity) {
@@ -391,6 +330,68 @@ public class EntityManagerImpl implements EntityManager {
 			fields.add(field);
 			errors.put(exception.getErrorCode(), fields);
 		}
+	}
+
+	private ResourceSchema getSchemaFor(final ResourceNode type){
+		ResourceSchema schema = schemaManager.findSchemaForType(type);
+		if(null == schema){
+			SNClass schemaIdentifier = SchemaIdentifyingType.of(type);
+			schema = schemaManager.findSchemaForType(schemaIdentifier);
+		}
+		return schema;
+	}
+
+	private ResourceNode prepareEntityNode(final ResourceID type, final ResourceSchema schema) {
+		ResourceNode entityNode = newEntityNode();
+		ResourceNode prototype = getPrototype(type);
+		if(null == prototype && null != schema){
+			prototype = getPrototype(schema.getDescribedType());
+		}
+		if(null != prototype){
+			LOGGER.debug("Found Prototype for {}.", type);
+			if(isEntity(prototype)){
+				entityNode = copy(prototype);
+				if(null !=schema){
+					// Set original type
+					SNOPS.remove(entityNode, RDF.TYPE);
+					entityNode.addAssociation(RDF.TYPE, RBSystem.ENTITY);
+					entityNode.addAssociation(RDF.TYPE, type);
+				}
+				conversation.attach(entityNode);
+			}else{
+				LOGGER.debug("Prototype for {} is not of type RBSystem.ENTITY. Prototyping skipped.", type);
+			}
+		}
+		return entityNode;
+	}
+
+
+	private ResourceNode copy(final SemanticNode prototype) {
+		ResourceNode node = newEntityNode();
+		for (Statement stmt: prototype.asResource().getAssociations()) {
+			node.addAssociation(stmt.getPredicate(), stmt.getObject());
+		}
+		return node;
+	}
+
+	private boolean isEntity(final ResourceNode prototype) {
+		boolean isEntity = false;
+		for (Statement stmt : prototype.getAssociations()) {
+			if(stmt.getObject().equals(RBSystem.ENTITY)){
+				isEntity = true;
+				break;
+			}
+		}
+		return isEntity;
+	}
+
+	private ResourceNode getPrototype(final ResourceID classId) {
+		ResourceNode classNode = conversation.findResource(classId.getQualifiedName());
+		SemanticNode node = SNOPS.fetchObject(classNode, RBSystem.HAS_PROTOTYPE);
+		if(null != node){
+			return node.asResource();
+		}
+		return null;
 	}
 
 }
