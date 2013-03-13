@@ -4,7 +4,6 @@
 package de.lichtflut.rb.tools.dataprovider.general.excel;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,8 +21,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDFS;
-import org.arastreju.sge.io.RdfXmlBinding;
-import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.model.DefaultSemanticGraph;
 import org.arastreju.sge.model.ElementaryDataType;
 import org.arastreju.sge.model.ResourceID;
@@ -354,19 +351,6 @@ public class ExcelParser {
 			index = value.indexOf(" ");
 		}
 		return value;
-	}
-
-	// ------------------------------------------------------
-
-	public static void main(final String[] args) throws SemanticIOException, IOException, InvalidFormatException {
-		File file = new File("src/main/resources/ITCatalog.xlsx");
-		SemanticGraph graph = new ExcelParser(file).read();
-
-		File targetDir = new File("target", "generated-rdf");
-		targetDir.mkdirs();
-
-		RdfXmlBinding binding = new RdfXmlBinding();
-		binding.write(graph, new FileOutputStream(new File(targetDir, "ITCatalog.rdf.xml")));
 	}
 
 }

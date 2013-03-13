@@ -7,7 +7,6 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -276,29 +275,32 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		// ------------------------------------------------------
 
 		private RBEntity prepareEntity(final EntityHandle handle) {
-			if(preparePrototype(handle.getType())){
+			if(preparePrototype(handle.getType(), null)){
 				LOGGER.debug("Found Prototype for {}.", handle.getType());
 				load();
 			}else{
 				ResourceNode node = networkService.resolve(handle.getType());
 				SNClass schemaType = SchemaIdentifyingType.of(node);
-				if(preparePrototype(schemaType)){
+				if(preparePrototype(schemaType, handle.getType())){
 					LOGGER.debug("Found Prototype for {}.", handle.getType());
 					load();
+				}else{
+					return createRBEntity(handle, schemaType);
 				}
-				return createRBEntity(handle, schemaType);
 			}
 			return null;
 		}
 
-		private boolean preparePrototype(final ResourceID type) {
+		private boolean preparePrototype(final ResourceID type, final ResourceID originalType) {
 			SemanticNode prototype = getPrototype(type);
 			if(null != prototype){
-				Set<SemanticNode> types = SNOPS.objects(prototype.asResource(), RDF.TYPE);
-
-				if(types.contains(RBSystem.ENTITY)){
-
+				if(isEntity(prototype.asResource())){
 					ResourceNode copy = copy(prototype);
+					if(null != originalType){
+						SNOPS.remove(copy, RDF.TYPE);
+						copy.addAssociation(RDF.TYPE, RBSystem.ENTITY);
+						copy.addAssociation(RDF.TYPE, originalType);
+					}
 					networkService.attach(copy);
 					final EntityHandle handle = RBWebSession.get().getHistory().getCurrentStep().getHandle();
 					handle.setId(copy);
@@ -306,6 +308,17 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				}
 			}
 			return false;
+		}
+
+		private boolean isEntity(final ResourceNode prototype) {
+			boolean isEntity = false;
+			for (Statement stmt : prototype.getAssociations()) {
+				if(stmt.getObject().equals(RBSystem.ENTITY)){
+					isEntity = true;
+					break;
+				}
+			}
+			return isEntity;
 		}
 
 		private RBEntity createRBEntity(final EntityHandle handle, final SNClass schemaType) {
