@@ -91,13 +91,24 @@ public class ExcelParser {
 		StopWatch watch = new StopWatch();
 		for (int pos = 0; pos < numberOfSheets; pos++) {
 			Sheet sheet = workbook.getSheetAt(pos);
-			if (!ExcelParser.EXCEL_CONFIG.equals(sheet.getSheetName())) {
-				watch.reset();
-				insertIntoGraph(sheet);
-				LOGGER.info("Parsed Excel Sheet \"{}\" in {}ms", sheet.getSheetName(), watch.getTime());
-			}
+			readSheet(watch, sheet);
 		}
 		return graph;
+	}
+
+	// ------------------------------------------------------
+
+	/**
+	 * Overwrite for custom parsing rules.
+	 * @param watch
+	 * @param sheet
+	 */
+	protected void readSheet(final StopWatch watch, final Sheet sheet) {
+		if (!ExcelParser.EXCEL_CONFIG.equals(sheet.getSheetName())) {
+			watch.reset();
+			insertIntoGraph(sheet);
+			LOGGER.info("Parsed Excel Sheet \"{}\" in {}ms", sheet.getSheetName(), watch.getTime());
+		}
 	}
 
 	// ------------------------------------------------------
