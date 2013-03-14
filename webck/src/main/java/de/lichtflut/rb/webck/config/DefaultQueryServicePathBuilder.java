@@ -3,7 +3,6 @@
  */
 package de.lichtflut.rb.webck.config;
 
-import com.sun.jersey.core.util.Base64;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -18,68 +17,51 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * @author Oliver Tigges
  */
 public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
-	
-	public String queryResources(String domain, String type) {
-		final StringBuilder sb = preparePathBuilder(domain);
-		sb.append("/resources");
-		if (type != null) {
-			sb.append("?type=");
-			sb.append(encode(type));
-		}
-		return sb.toString();
-	}
-
-    public String queryEntities(String domain, String type) {
-		final StringBuilder sb = preparePathBuilder(domain);
-		sb.append("/entities");
-		if (type != null) {
-			sb.append("?type=");
-			sb.append(encode(type));
-		}
-		return sb.toString();
-	}
 
     @Override
-    public String queryClasses(String domain, String superClass) {
-        final StringBuilder sb = preparePathBuilder(domain);
-        sb.append("/classes");
-        if (superClass != null) {
-            sb.append("?superclass=");
-            sb.append(encode(superClass));
-        }
-        return sb.toString();
-    }
-
-    @Override
-    public String queryProperties(String domain, String superProperty) {
-        final StringBuilder sb = preparePathBuilder(domain);
-        sb.append("/properties");
-        if (superProperty != null) {
-            sb.append("?superproperty=");
-            sb.append(encode(superProperty));
-        }
-        return sb.toString();
-    }
-
-    @Override
-    public String queryUsers(String domain) {
-        final StringBuilder sb = preparePathBuilder(domain);
-        sb.append("/users");
-        return sb.toString();
+    public QueryPath create(String domain) {
+        return new QueryPath(context(), domain);
     }
 
     // ----------------------------------------------------
 
-    private StringBuilder preparePathBuilder(String domain) {
-        final String ctx = RequestCycle.get().getRequest().getContextPath();
-        final StringBuilder sb = new StringBuilder(ctx + "/service/query");
-        sb.append("/domains/").append(domain);
-        return sb;
+    @Override
+	public String queryResources(String domain, String type) {
+        return create(domain).queryResources()
+                .ofType(type)
+                .toURI();
+	}
+
+    @Override
+    public String queryEntities(String domain, String type) {
+        return create(domain).queryEntities()
+                .ofType(type)
+                .toURI();
+	}
+
+    @Override
+    public String queryClasses(String domain, String superClass) {
+        return create(domain).queryClasses()
+                .withSuperClass(superClass)
+                .toURI();
     }
 
-    String encode(String orig) {
-        return new String(Base64.encode(orig));
+    @Override
+    public String queryProperties(String domain, String superProperty) {
+        return create(domain).queryProperties()
+                .withSuperProperty(superProperty)
+                .toURI();
     }
 
+    @Override
+    public String queryUsers(String domain) {
+        return create(domain).queryUsers().toURI();
+    }
+
+    // ----------------------------------------------------
+
+    private String context() {
+        return RequestCycle.get().getRequest().getContextPath() + "/service/query";
+    }
 
 }

@@ -3,11 +3,12 @@
  */
 package de.lichtflut.rb.rest.api.query;
 
+import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.common.TermSearcher;
-import de.lichtflut.rb.core.common.TermSearcher.Mode;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ import java.util.List;
 @Path("query/domains/{domain}/entities")
 public class EntityQueryService extends AbstractQueryService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(EntityQueryService.class); 
+	private static final Logger LOGGER = LoggerFactory.getLogger(EntityQueryService.class);
 
 	public EntityQueryService(){}
 	
@@ -48,30 +49,41 @@ public class EntityQueryService extends AbstractQueryService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response search(
+            @PathParam(value = "domain") String domain,
 			@QueryParam(value="term") String term, 
 			@QueryParam(value="type") String type,
-			@PathParam(value = "domain") String domain,
+            @QueryParam(value="scope") String scope,
 			@CookieParam(value=AuthModule.COOKIE_SESSION_AUTH) String token) throws UnauthenticatedUserException
     {
 		RBUser user = authenticateUser(token);
 		if (term == null) {
-			logger.info("Invalid entity query (term is null).");
+			LOGGER.info("Invalid entity query (term is null).");
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
 		Query query = createQuery(domain, user);
 		String typeDecoded = decodeBase64(type);
+        String scopeDecoded = decodeBase64(scope);
 		
-		logger.info("Querying entity '{}' of type {}.", term, typeDecoded);
+		LOGGER.info("Querying entity '{}' of type {}.", term, typeDecoded);
 		
-		List<ResultItemRVO> result = performQuery(query, term, typeDecoded);
+		List<ResultItemRVO> result = performQuery(query, term, typeDecoded, scopeDecoded);
 		return Response.ok(result).build();
 	}
 	
 	// ----------------------------------------------------
 	
-	private List<ResultItemRVO> performQuery(Query query, String term, String type) {
-		new TermSearcher().prepareQuery(query, term, Mode.ENTITY, type);
+	private List<ResultItemRVO> performQuery(Query query, String term, String type, String scope) {
+
+        query.beginAnd();
+        new TermSearcher(query).addValues(term);
+        if (type != null) {
+            query.addField(RDF.TYPE, type);
+        }
+        if (scope != null) {
+            query.addField(RB.HAS_SCOPE, scope);
+        }
+        query.end();
 
         return buildResult(query.getResult());
 	}

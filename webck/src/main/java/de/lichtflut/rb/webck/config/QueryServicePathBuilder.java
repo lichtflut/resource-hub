@@ -16,14 +16,28 @@ package de.lichtflut.rb.webck.config;
  */
 public interface QueryServicePathBuilder {
 
+    /**
+     * Create a new path for given domain.
+     * @param domain The domain.
+     * @return The query path (builder object).
+     */
+    QueryPath create(String domain);
+
+    // ----------------------------------------------------
+
+    @Deprecated
     String queryResources(String domain, String type);
 
+    @Deprecated
 	String queryEntities(String domain, String type);
 
+    @Deprecated
     String queryClasses(String domain, String superClass);
 
+    @Deprecated
     String queryProperties(String domain, String superProperty);
 
+    @Deprecated
     String queryUsers(String domain);
 
 }

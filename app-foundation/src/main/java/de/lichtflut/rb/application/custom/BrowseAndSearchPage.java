@@ -238,8 +238,8 @@ public class BrowseAndSearchPage extends RBBasePage {
 				query = conversation.createQuery();
 				query.addField(RDF.TYPE, typeModel.getObject());
 			} else if (termModel.getObject() != null) {
-				query = new TermSearcher().prepareQuery(conversation.createQuery(),
-						termModel.getObject(), Mode.ENTITY, RBSystem.ENTITY.toURI());
+				query = new TermSearcher(conversation.createQuery())
+                        .prepareQuery(termModel.getObject(), Mode.ENTITY, RBSystem.ENTITY.toURI());
 			}
 
 			if (query != null) {

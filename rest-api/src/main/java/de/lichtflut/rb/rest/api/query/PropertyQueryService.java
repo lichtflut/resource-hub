@@ -76,7 +76,7 @@ public class PropertyQueryService extends AbstractQueryService {
 	// ----------------------------------------------------
 	
 	private List<ResultItemRVO> performQuery(Query query, String term, String type) {
-		new TermSearcher().prepareQuery(query, term, Mode.PROPERTY, type);
+        new TermSearcher(query).prepareQuery(term, Mode.PROPERTY, type);
 
         return buildResult(query.getResult());
 	}

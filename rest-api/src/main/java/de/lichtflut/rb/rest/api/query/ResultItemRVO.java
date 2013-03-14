@@ -40,5 +40,5 @@ public class ResultItemRVO {
 	public void setInfo(String info) {
 		this.info = info;
 	}
-	
+
 }

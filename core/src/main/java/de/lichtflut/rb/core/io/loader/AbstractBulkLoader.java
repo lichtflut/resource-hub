@@ -52,6 +52,7 @@ public class AbstractBulkLoader {
 
     protected void doImportRDF(InputStream in, String fileInfo) {
         try {
+            LOGGER.info("Starting import of RDF file {} in context {}", fileInfo, context);
             Conversation conversation = gate.startConversation(context);
             SemanticGraphIO io = new RdfXmlBinding();
             SemanticGraph graph = io.read(in);

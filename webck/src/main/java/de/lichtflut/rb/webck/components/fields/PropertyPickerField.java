@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
+import de.lichtflut.rb.webck.config.QueryPath;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
@@ -47,8 +48,8 @@ public class PropertyPickerField extends DataPickerField<ResourceID> {
 	// -----------------------------------------------------
 	
 	public AutocompleteSource findProperty() {
-        return new AutocompleteSource(
-                pathBuilder.queryProperties(serviceContext.getDomain(), null));
+        QueryPath path = pathBuilder.create(serviceContext.getDomain()).queryProperties();
+        return new AutocompleteSource(path.toURI());
 	}
 	
 }

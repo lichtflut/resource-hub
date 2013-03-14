@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.fields;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.webck.config.QueryPath;
 import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 import de.lichtflut.rb.webck.models.resources.ResourceDisplayModel;
 import org.apache.wicket.model.IModel;
@@ -49,15 +50,32 @@ public class EntityPickerField extends DataPickerField<ResourceID> {
 	 * @param type The type (should be a sub class of system:entity).
 	 */
 	public EntityPickerField(final String id, final IModel<ResourceID> model, final ResourceID type) {
-		super(id, model, new ResourceDisplayModel(model));
-		setType(ResourceID.class);
-		setSource(findEntity(type));
+		this(id, model, type, null);
 	}
+
+    /**
+     * Query any resource of given type.
+     * @param id The component ID.
+     * @param model The model.
+     * @param type The type (should be a sub class of system:entity).
+     */
+    public EntityPickerField(final String id, final IModel<ResourceID> model, ResourceID type, ResourceID scope) {
+        super(id, model, new ResourceDisplayModel(model));
+        setType(ResourceID.class);
+        setSource(findEntity(type, scope));
+    }
 
 	// -----------------------------------------------------
 	
-	public AutocompleteSource findEntity(final ResourceID type) {
-		return new AutocompleteSource(pathBuilder.queryEntities(serviceContext.getDomain(), type.toURI()));
+	public AutocompleteSource findEntity(ResourceID type, ResourceID scope) {
+        QueryPath path = pathBuilder.create(serviceContext.getDomain()).queryEntities();
+        if (type != null) {
+            path = path.ofType(type.toURI());
+        }
+        if (scope != null) {
+            path = path.inScope(scope.toURI());
+        }
+        return new AutocompleteSource(path.toURI());
 	}
 	
 }
