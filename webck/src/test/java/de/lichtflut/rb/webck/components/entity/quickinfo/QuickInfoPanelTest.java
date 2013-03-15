@@ -21,40 +21,40 @@ import de.lichtflut.rb.webck.RBWebTest;
 
 /**
  * <p>
- * Testclass for {@link InfoPanel}.
+ * Testclass for {@link QuickInfoPanel}.
  * </p>
  * Created: Feb 27, 2013
  *
  * @author Ravi Knox
  */
-public class InfoPanelTest extends RBWebTest {
+public class QuickInfoPanelTest extends RBWebTest {
 
 	/**
-	 * Test method for {@link de.lichtflut.rb.webck.components.entity.quickinfo.InfoPanel#InfoPanel(java.lang.String, org.apache.wicket.model.IModel)}.
+	 * Test method for {@link de.lichtflut.rb.webck.components.entity.quickinfo.QuickInfoPanel#InfoPanel(java.lang.String, org.apache.wicket.model.IModel)}.
 	 */
 	@Test
 	public void testInfoPanelNoQuickInfo() {
 		RBEntity entity = createCity(false);
-		Panel panel = new InfoPanel("panel", Model.of(entity));
+		Panel panel = new QuickInfoPanel("panel", Model.of(entity));
 
 		tester.startComponentInPage(panel);
 
-		assertRenderedPanel(InfoPanel.class, "panel");
+		assertRenderedPanel(QuickInfoPanel.class, "panel");
 		tester.assertComponent("panel:container:noInfo", Label.class);
 		tester.assertInvisible("panel:container:info");
 	}
 
 	/**
-	 * Test method for {@link de.lichtflut.rb.webck.components.entity.quickinfo.InfoPanel#InfoPanel(java.lang.String, org.apache.wicket.model.IModel)}.
+	 * Test method for {@link de.lichtflut.rb.webck.components.entity.quickinfo.QuickInfoPanel#InfoPanel(java.lang.String, org.apache.wicket.model.IModel)}.
 	 */
 	@Test
 	public void testInfoPanelWithQuickInfo() {
 		RBEntity entity = createCity(true);
-		Panel panel = new InfoPanel("panel", Model.of(entity));
+		Panel panel = new QuickInfoPanel("panel", Model.of(entity));
 
 		tester.startComponentInPage(panel);
 
-		assertRenderedPanel(InfoPanel.class, "panel");
+		assertRenderedPanel(QuickInfoPanel.class, "panel");
 		tester.assertListView("panel:container:info", entity.getQuickInfo());
 		tester.assertInvisible("panel:container:noInfo");
 	}

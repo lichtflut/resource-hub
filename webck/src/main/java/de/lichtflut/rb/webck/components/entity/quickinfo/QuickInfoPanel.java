@@ -28,7 +28,7 @@ import de.lichtflut.rb.webck.models.ConditionalModel;
  *
  * @author Ravi Knox
  */
-public class InfoPanel extends TypedPanel<RBEntity> {
+public class QuickInfoPanel extends TypedPanel<RBEntity> {
 
 	/**
 	 * Constructor.
@@ -36,7 +36,7 @@ public class InfoPanel extends TypedPanel<RBEntity> {
 	 * @param id The component id
 	 * @param model Contains the entity's resourceId
 	 */
-	public InfoPanel(final String id, final IModel<RBEntity> model) {
+	public QuickInfoPanel(final String id, final IModel<RBEntity> model) {
 		super(id, model);
 
 		WebMarkupContainer container = new WebMarkupContainer("container");
