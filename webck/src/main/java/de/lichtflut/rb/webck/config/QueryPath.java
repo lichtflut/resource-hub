@@ -76,23 +76,28 @@ public class QueryPath {
         return this;
     }
 
+    public QueryPath appendEncoded(String param, Object value) {
+        this.params.put(param, encode(value));
+        return this;
+    }
+
     public QueryPath ofType(String type) {
-        this.params.put("type", type);
+        this.params.put("type", encode(type));
         return this;
     }
 
     public QueryPath inScope(String scope) {
-        this.params.put("scope", scope);
+        this.params.put("scope", encode(scope));
         return this;
     }
 
     public QueryPath withSuperClass(String clazz) {
-        this.params.put("superclass", clazz);
+        this.params.put("superclass", encode(clazz));
         return this;
     }
 
     public QueryPath withSuperProperty(String clazz) {
-        this.params.put("superproperty", clazz);
+        this.params.put("superproperty", encode(clazz));
         return this;
     }
 
@@ -112,7 +117,7 @@ public class QueryPath {
             }
             sb.append(name);
             sb.append("=");
-            sb.append(encode(params.get(name)));
+            sb.append(params.get(name));
         }
         return sb.toString();
     }

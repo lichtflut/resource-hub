@@ -2,7 +2,7 @@
 var GraphVisConfig = GraphVisConfig || {
     nodeHeaderHeight: 46,
     nodeWidth : 180,
-    nodeHeight : 120,
+    nodeHeight : 80,
     nodeMargin : 10,
     rowBreakHint: 800
 };
@@ -55,6 +55,9 @@ function StyleManager() {
             }
             if(current === 'http://rb.lichtflut.de/devops#VirtualMachine') {
                 return "#eef";
+            }
+            if(current === 'http://rb.lichtflut.de/devops#Application') {
+                return "#fee";
             }
         }
         return "#fff";

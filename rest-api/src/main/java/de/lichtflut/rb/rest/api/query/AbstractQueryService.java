@@ -57,7 +57,7 @@ public class AbstractQueryService extends RBServiceEndpoint {
 
 
     protected String decodeBase64(String encoded) {
-        if (encoded == null) {
+        if (encoded == null || encoded.trim().length() == 0) {
             return null;
         }
         byte[] decoded = Base64.decode(encoded);

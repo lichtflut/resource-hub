@@ -9,12 +9,15 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.ValueNode;
+import org.arastreju.sge.model.nodes.views.SNClass;
+import org.arastreju.sge.model.nodes.views.SNEntity;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonUnwrapped;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
 
 /**
@@ -53,7 +56,7 @@ public class TreeNodeRVO implements Comparable<TreeNodeRVO> {
         ResourceLabelBuilder lb = ResourceLabelBuilder.getInstance();
         this.id = resource.toURI();
         this.name = lb.getLabel(resource, locale);
-        this.types = toStrings(SNOPS.objects(resource, RDF.TYPE));
+        this.types = toStrings(getTypes(resource));
         this.primaryType = lb.getLabel(SchemaIdentifyingType.of(resource), locale);
 
         SemanticNode serialNumber = SNOPS.fetchObject(resource, Aras.HAS_SERIAL_NUMBER);
@@ -132,7 +135,17 @@ public class TreeNodeRVO implements Comparable<TreeNodeRVO> {
 
     // ----------------------------------------------------
 
-    private String[] toStrings(Collection<SemanticNode> nodes) {
+    private Collection<SNClass> getTypes(ResourceNode node) {
+        final Collection<SNClass> result = new HashSet<SNClass>();
+        SNEntity entity = SNEntity.from(node);
+        for (SNClass clazz : entity.getDirectClasses()) {
+            result.add(clazz);
+            result.addAll(clazz.getSuperClasses());
+        }
+        return result;
+    }
+
+    private String[] toStrings(Collection<? extends SemanticNode> nodes) {
         String[] result = new String[nodes.size()];
         int idx = 0;
         for (SemanticNode node : nodes) {
