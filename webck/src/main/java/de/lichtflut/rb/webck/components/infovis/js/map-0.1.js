@@ -1,6 +1,6 @@
 
 var GraphVisConfig = GraphVisConfig || {
-    nodeHeaderHeight: 60,
+    nodeHeaderHeight: 40,
     nodeWidth : 180,
     nodeHeight : 120,
     nodeMargin : 10,
@@ -70,7 +70,7 @@ function drawItem(container, item, offset) {
     var rect = container.append("rect");
     var text = container.append("text")
         .attr("x", x + 10)
-        .attr("y", y + 20)
+        .attr("y", y + 14)
         .attr("dy", ".35em")
         .attr("text-anchor", "left")
         .style("font", item.title_font)
@@ -88,15 +88,15 @@ function drawItem(container, item, offset) {
     }
 
     container.append("text")
-        .attr("x", x +10)
-        .attr("y", y +30)
+        .attr("x", x +12)
+        .attr("y", y +24)
         .attr("dy", ".65em")
         .attr("text-anchor", "left")
         .style("font", "200 9px Calibri, Helvetica Neue")
         .style("fill", "#555")
         .text("type: " + item.primaryType);
 
-    var bbox = text.node().getBBox();
+    drawQuickInfo(container, item, {x: x + 12, y: y+36 })
 
     rect.attr("x", x)
         .attr("y", y )
@@ -108,7 +108,7 @@ function drawItem(container, item, offset) {
         .style("stroke-width", "1px");
 
     var innerOffset = {x : x, y : y};
-    innerOffset.y += GraphVisConfig.nodeHeaderHeight;
+    innerOffset.y += item.headerHeight || GraphVisConfig.nodeHeaderHeight;
 
     drawChildren(container, item, innerOffset);
 
@@ -126,6 +126,33 @@ function drawChildren(container, item, offset) {
             }
         );
     }
+}
+
+function quickInfo(item) {
+    if (item.quickInfo && item.quickInfo.fields) {
+        return item.quickInfo.fields.filter(function (info) {
+            return info.value && info.value !== '' && info.value !== item.name;
+        });
+    } else {
+        return [];
+    }
+}
+
+function drawQuickInfo(container, item, offset) {
+    var fields = quickInfo(item);
+    var y = offset.y;
+    fields.forEach(
+        function (info) {
+            var quickInfo = container.append("text")
+                .attr("x", offset.x)
+                .attr("y", y)
+                .attr("dy", ".65em")
+                .attr("text-anchor", "left")
+                .style("font", "200 9px Calibri, Helvetica Neue")
+                .text(info.label + ": " + info.value);
+            y += 10;
+        }
+    );
 }
 
 function sizeOf(text) {
@@ -147,7 +174,8 @@ function layout(item) {
             }
         );
     }
-    var fullHeight = lm.height() + GraphVisConfig.nodeHeaderHeight + GraphVisConfig.nodeMargin;
+    item.headerHeight = GraphVisConfig.nodeHeaderHeight + quickInfo(item).length * 10;
+    var fullHeight = lm.height() + item.headerHeight + GraphVisConfig.nodeMargin;
     item.width = item.width || Math.max(lm.width(),GraphVisConfig.nodeWidth);
     item.height = item.height || Math.max(fullHeight, GraphVisConfig.nodeHeight);
 }
