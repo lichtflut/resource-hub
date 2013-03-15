@@ -1,6 +1,6 @@
 
 var GraphVisConfig = GraphVisConfig || {
-    nodeHeaderHeight: 40,
+    nodeHeaderHeight: 46,
     nodeWidth : 180,
     nodeHeight : 120,
     nodeMargin : 10,
@@ -51,10 +51,10 @@ function StyleManager() {
                 return "#ffe";
             }
             if(current === 'http://rb.lichtflut.de/devops#PhysicalMachine') {
-                return "#eef";
+                return "#efe";
             }
             if(current === 'http://rb.lichtflut.de/devops#VirtualMachine') {
-                return "#fee";
+                return "#eef";
             }
         }
         return "#fff";
@@ -70,33 +70,22 @@ function drawItem(container, item, offset) {
     var rect = container.append("rect");
     var text = container.append("text")
         .attr("x", x + 10)
-        .attr("y", y + 14)
-        .attr("dy", ".35em")
+        .attr("y", y + 18)
         .attr("text-anchor", "left")
         .style("font", item.title_font)
         .text(item.name);
-    var textBox = sizeOf(text.node());
 
-    if (LFRB.InfoVis.debug) {
-        container.append("text")
-        .attr("x", x +12)
-        .attr("y", y +34)
-        .attr("dy", ".65em")
-        .attr("text-anchor", "left")
-        .style("font", "12px Courier")
-        .text("x:" + item.offset.x + ";y:" + item.offset.y + ";width:" + item.width + ";height:" + item.height + ";text:" +textBox.width);
-    }
+    var textBox = sizeOf(text.node());
 
     container.append("text")
         .attr("x", x +12)
-        .attr("y", y +24)
-        .attr("dy", ".65em")
+        .attr("y", y +28)
         .attr("text-anchor", "left")
-        .style("font", "200 9px Calibri, Helvetica Neue")
+        .style("font", "200 10px Calibri, Helvetica Neue")
         .style("fill", "#555")
         .text("type: " + item.primaryType);
 
-    drawQuickInfo(container, item, {x: x + 12, y: y+36 })
+    drawDetails(container, item, {x: x + 12, y: y + 40 } );
 
     rect.attr("x", x)
         .attr("y", y )
@@ -105,7 +94,7 @@ function drawItem(container, item, offset) {
         .attr("rx", 5)
         .style("fill", item.background)
         .style("stroke", "#555")
-        .style("stroke-width", "1px");
+        .style("stroke-width", "1.5px");
 
     var innerOffset = {x : x, y : y};
     innerOffset.y += item.headerHeight || GraphVisConfig.nodeHeaderHeight;
@@ -128,9 +117,9 @@ function drawChildren(container, item, offset) {
     }
 }
 
-function quickInfo(item) {
-    if (item.quickInfo && item.quickInfo.fields) {
-        return item.quickInfo.fields.filter(function (info) {
+function details(item) {
+    if (item.details) {
+        return item.details.filter(function (info) {
             return info.value && info.value !== '' && info.value !== item.name;
         });
     } else {
@@ -138,19 +127,18 @@ function quickInfo(item) {
     }
 }
 
-function drawQuickInfo(container, item, offset) {
-    var fields = quickInfo(item);
+function drawDetails(container, item, offset) {
+    var fields = details(item);
     var y = offset.y;
     fields.forEach(
         function (info) {
-            var quickInfo = container.append("text")
+            var details = container.append("text")
                 .attr("x", offset.x)
                 .attr("y", y)
-                .attr("dy", ".65em")
                 .attr("text-anchor", "left")
-                .style("font", "200 9px Calibri, Helvetica Neue")
+                .style("font", "200 10px Calibri, Helvetica Neue")
                 .text(info.label + ": " + info.value);
-            y += 10;
+            y += 11;
         }
     );
 }
@@ -164,7 +152,7 @@ function sizeOf(text) {
 }
 
 function layout(item) {
-    item.offset = item.offset || {x:0, y: 0}
+    item.offset = item.offset || {x:0, y: 0 };
     var lm = new LayoutManager;
     if (item.children) {
         item.children.forEach(
@@ -174,7 +162,7 @@ function layout(item) {
             }
         );
     }
-    item.headerHeight = GraphVisConfig.nodeHeaderHeight + quickInfo(item).length * 10;
+    item.headerHeight = GraphVisConfig.nodeHeaderHeight + details(item).length * 11;
     var fullHeight = lm.height() + item.headerHeight + GraphVisConfig.nodeMargin;
     item.width = item.width || Math.max(lm.width(),GraphVisConfig.nodeWidth);
     item.height = item.height || Math.max(fullHeight, GraphVisConfig.nodeHeight);

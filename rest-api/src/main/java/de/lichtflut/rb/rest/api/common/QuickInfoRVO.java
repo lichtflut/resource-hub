@@ -10,6 +10,8 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.ValueNode;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonUnwrapped;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,12 +32,13 @@ import java.util.Locale;
  */
 public class QuickInfoRVO  {
 
-    private final List<FieldRVO> fields = new ArrayList<FieldRVO>();
+    private final List<FieldRVO> details = new ArrayList<FieldRVO>();
 
     // ----------------------------------------------------
 
-    public List<FieldRVO> getFields() {
-        return fields;
+    @JsonProperty
+    public List<FieldRVO> getDetails() {
+        return details;
     }
 
     // ----------------------------------------------------
@@ -45,7 +48,7 @@ public class QuickInfoRVO  {
     }
 
     public void add(FieldRVO field) {
-        fields.add(field);
+        details.add(field);
     }
 
 }

@@ -91,7 +91,7 @@ class TreeBuilder {
         TreeNodeRVO rvo = new TreeNodeRVO(node, locale);
 
         QuickInfoRVO qi = qiBuilder.build(node, locale);
-        rvo.setQuickInfo(qi);
+        rvo.setDetails(qi);
 
         return rvo;
     }

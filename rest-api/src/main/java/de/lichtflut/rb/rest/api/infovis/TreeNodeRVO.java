@@ -10,6 +10,7 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.ValueNode;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonUnwrapped;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +35,8 @@ public class TreeNodeRVO implements Comparable<TreeNodeRVO> {
     private String[] types;
     private String primaryType;
 
-    private QuickInfoRVO quickInfo;
+    @JsonUnwrapped
+    private QuickInfoRVO details;
 
     @JsonIgnore
     private ValueNode orderNumber;
@@ -98,12 +100,12 @@ public class TreeNodeRVO implements Comparable<TreeNodeRVO> {
         Collections.addAll(this.children, children);
     }
 
-    public QuickInfoRVO getQuickInfo() {
-        return quickInfo;
+    public QuickInfoRVO getDetails() {
+        return details;
     }
 
-    public void setQuickInfo(QuickInfoRVO quickInfo) {
-        this.quickInfo = quickInfo;
+    public void setDetails(QuickInfoRVO details) {
+        this.details = details;
     }
 
     // ----------------------------------------------------
