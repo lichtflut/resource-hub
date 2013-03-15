@@ -6,6 +6,7 @@ package de.lichtflut.rb.webck.components.infovis.hierarchy;
 import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
+import de.lichtflut.rb.webck.config.InfoVisPath;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -44,12 +45,10 @@ public class HierarchyVisualizationPanel extends InfoVisPanel {
 				"showTree(paper);"
 		);
 	}
-	
-//	protected IResourceStream getJsonResource() {
-//		return new JitJsonStream(getModelObject(), new PredicateFilter().addFollow(
-//				RB.HAS_CHILD_NODE,
-//				RB.HAS_SUBORDINATE
-//		));
-//	}
+
+    @Override
+    protected InfoVisPath adapt(InfoVisPath path) {
+        return path.tree().withRoot(getModelObject()).ofType("hierarchy");
+    }
 
 }

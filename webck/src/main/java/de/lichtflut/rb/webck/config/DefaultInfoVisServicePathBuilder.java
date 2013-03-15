@@ -1,6 +1,5 @@
 package de.lichtflut.rb.webck.config;
 
-import com.sun.jersey.core.util.Base64;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -17,28 +16,14 @@ import org.apache.wicket.request.cycle.RequestCycle;
 public class DefaultInfoVisServicePathBuilder implements InfoVisServicePathBuilder {
 
     @Override
-    public String getTree(String domain, String entity) {
-        final StringBuilder sb = preparePathBuilder(domain);
-        sb.append("/tree");
-        if (entity != null) {
-            sb.append("?root=");
-            sb.append(encode(entity));
-        }
-        return sb.toString();
+    public InfoVisPath create(String domain) {
+        return new InfoVisPath(context(), domain);
     }
 
     // ----------------------------------------------------
 
-    private StringBuilder preparePathBuilder(String domain) {
-        final String ctx = RequestCycle.get().getRequest().getContextPath();
-        final StringBuilder sb = new StringBuilder(ctx);
-        sb.append("/service/infovis");
-        sb.append("/domains/").append(domain);
-        return sb;
-    }
-
-    String encode(String orig) {
-        return new String(Base64.encode(orig));
+    private String context() {
+        return RequestCycle.get().getRequest().getContextPath() + "/service/infovis";
     }
 
 }

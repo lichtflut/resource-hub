@@ -3,9 +3,11 @@
  */
 package de.lichtflut.rb.webck.components.infovis.flowchart;
 
+import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
+import de.lichtflut.rb.webck.config.InfoVisPath;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -60,6 +62,11 @@ public class FlowChartPanel extends InfoVisPanel {
 		final FlowChartModel model = new FlowChartModel(modeler).add(nodeSet.getObject());
 		return new FlowChartJsonStream(model, getLocale());
 	}
+
+    @Override
+    protected InfoVisPath adapt(InfoVisPath path) {
+        throw new NotYetSupportedException();
+    }
 
 	// ----------------------------------------------------
 	
