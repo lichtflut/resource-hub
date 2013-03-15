@@ -2,12 +2,9 @@ package de.lichtflut.rb.rest.api.infovis;
 
 import de.lichtflut.rb.rest.api.common.QuickInfoRVO;
 import de.lichtflut.rb.rest.api.util.QuickInfoBuilder;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.traverse.NotPredicateFilter;
 import org.arastreju.sge.traverse.TraversalFilter;
 
 import java.util.ArrayList;
@@ -39,10 +36,6 @@ class TreeBuilder {
     private final TraversalFilter filter;
 
     // ----------------------------------------------------
-
-    public TreeBuilder(QuickInfoBuilder qiBuilder, Locale locale) {
-        this(qiBuilder, locale, new NotPredicateFilter(RDF.TYPE, RDFS.SUB_CLASS_OF));
-    }
 
     public TreeBuilder(QuickInfoBuilder qiBuilder, Locale locale, TraversalFilter filter) {
         this.qiBuilder = qiBuilder;

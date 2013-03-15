@@ -225,6 +225,9 @@ public class SchemaManagerImpl implements SchemaManager {
 	 * Find the persistent node representing the schema of the given type.
 	 */
 	private SNResourceSchema findSchemaNodeByType(final ResourceID type) {
+        if (type == null) {
+            return null;
+        }
 		final Query query = query().addField(RBSchema.DESCRIBES, type);
 		final QueryResult result = query.getResult();
 		if (result.isEmpty()) {

@@ -38,11 +38,13 @@ public class QuickInfoBuilder {
     public QuickInfoRVO build(ResourceNode node, Locale locale) {
         QuickInfoRVO quickInfo = new QuickInfoRVO();
         ResourceSchema schema = schemaProvider.ofEntity(node);
-        List<PropertyDeclaration> declarations = schema.getQuickInfo();
-        for (PropertyDeclaration decl : declarations) {
-            String label = decl.getFieldLabelDefinition().getLabel(locale);
-            String values = values(node, decl.getPropertyDescriptor());
-            quickInfo.add(decl.getPropertyDescriptor(), label, values);
+        if (schema != null) {
+            List<PropertyDeclaration> declarations = schema.getQuickInfo();
+            for (PropertyDeclaration decl : declarations) {
+                String label = decl.getFieldLabelDefinition().getLabel(locale);
+                String values = values(node, decl.getPropertyDescriptor());
+                quickInfo.add(decl.getPropertyDescriptor(), label, values);
+            }
         }
         return quickInfo;
     }
