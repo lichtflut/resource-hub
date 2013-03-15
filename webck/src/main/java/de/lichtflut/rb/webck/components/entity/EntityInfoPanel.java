@@ -126,6 +126,7 @@ public class EntityInfoPanel extends Panel {
                 final SNClass type = SchemaIdentifyingType.of(node);
                 if (isSubClassOf(type, RB.TREE_NODE)) {
 					result.add(createLink(node, VisualizationMode.HIERARCHY));
+                    result.add(createLink(node, VisualizationMode.MAP));
 				}
 				if (isSubClassOf(type, RB.PROCESS_ELEMENT)) {
 					result.add(createLink(node, VisualizationMode.FLOW_CHART));

@@ -6,6 +6,7 @@ package de.lichtflut.rb.application;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.lichtflut.rb.application.graphvis.ContainmentMapInfoVisPage;
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
@@ -121,6 +122,10 @@ public abstract class RBApplication extends WebApplication {
 	public Class<? extends Page> getHierarchyVizPage(){
 		return HierarchyInfoVisPage.class;
 	}
+
+    public Class<? extends Page> getContainmentMapVizPage(){
+        return ContainmentMapInfoVisPage.class;
+    }
 
 	public Class<? extends Page> getFlowChartVizPage(){
 		return FlowChartInfoVisPage.class;

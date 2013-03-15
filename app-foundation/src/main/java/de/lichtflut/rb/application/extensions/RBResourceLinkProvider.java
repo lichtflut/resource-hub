@@ -40,6 +40,8 @@ public class RBResourceLinkProvider implements ResourceLinkProvider {
 				return RequestCycle.get().urlFor(RBApplication.get().getPeripheryVizPage(), params).toString();
 			case HIERARCHY:
 				return RequestCycle.get().urlFor(RBApplication.get().getHierarchyVizPage(), params).toString();
+            case MAP:
+                return RequestCycle.get().urlFor(RBApplication.get().getContainmentMapVizPage(), params).toString();
 			case FLOW_CHART:
 				return RequestCycle.get().urlFor(RBApplication.get().getFlowChartVizPage(), params).toString();
 			default:
