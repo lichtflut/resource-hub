@@ -2,8 +2,14 @@ package de.lichtflut.rb.rest.api.infovis;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
+import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.rest.api.util.CachingSchemaProvider;
+import de.lichtflut.rb.rest.api.util.QuickInfoBuilder;
+import de.lichtflut.rb.rest.api.util.SchemaProvider;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.traverse.PredicateFilter;
@@ -21,6 +27,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -79,14 +86,17 @@ public class TreeInfoVisService extends AbstractInfoVisService{
 
         LOGGER.info("Building tree of type '{}' for '{}' ", type, qn);
 
-        TreeBuilder treeBuilder = treeBuilder(type, request.getLocale());
+        SchemaProvider schemaProvider = new CachingSchemaProvider(schemaManager(domain, user));
+
+        TreeBuilder treeBuilder = treeBuilder(schemaProvider, type, request.getLocale());
         TreeNodeRVO rootNode = treeBuilder.build(resource);
         return Response.ok(rootNode).build();
     }
 
     // ----------------------------------------------------
 
-    private TreeBuilder treeBuilder(Type type, Locale locale) {
+    private TreeBuilder treeBuilder(SchemaProvider provider, Type type, Locale locale) {
+        QuickInfoBuilder quickInfoBuilder = new QuickInfoBuilder(provider);
         switch (type) {
             case HIERARCHY:
                 PredicateFilter filter = new PredicateFilter()
@@ -94,9 +104,9 @@ public class TreeInfoVisService extends AbstractInfoVisService{
                             RB.HAS_CHILD_NODE,
 			               	RB.HAS_SUBORDINATE
                         );
-                return new TreeBuilder(locale, filter);
+                return new TreeBuilder(quickInfoBuilder, locale, filter);
             default:
-                return new TreeBuilder(locale);
+                return new TreeBuilder(quickInfoBuilder, locale);
         }
     }
 

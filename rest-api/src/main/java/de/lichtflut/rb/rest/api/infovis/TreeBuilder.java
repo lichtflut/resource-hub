@@ -1,5 +1,7 @@
 package de.lichtflut.rb.rest.api.infovis;
 
+import de.lichtflut.rb.rest.api.common.QuickInfoRVO;
+import de.lichtflut.rb.rest.api.util.QuickInfoBuilder;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.Statement;
@@ -28,19 +30,22 @@ import java.util.Set;
 */
 class TreeBuilder {
 
-    private final Locale locale;
-
     private final Set<SemanticNode> visited = new HashSet<SemanticNode>();
+
+    private final QuickInfoBuilder qiBuilder;
+
+    private final Locale locale;
 
     private final TraversalFilter filter;
 
     // ----------------------------------------------------
 
-    public TreeBuilder(Locale locale) {
-        this(locale, new NotPredicateFilter(RDF.TYPE, RDFS.SUB_CLASS_OF));
+    public TreeBuilder(QuickInfoBuilder qiBuilder, Locale locale) {
+        this(qiBuilder, locale, new NotPredicateFilter(RDF.TYPE, RDFS.SUB_CLASS_OF));
     }
 
-    public TreeBuilder(Locale locale, TraversalFilter filter) {
+    public TreeBuilder(QuickInfoBuilder qiBuilder, Locale locale, TraversalFilter filter) {
+        this.qiBuilder = qiBuilder;
         this.locale = locale;
         this.filter = filter;
     }
@@ -48,7 +53,7 @@ class TreeBuilder {
     // ----------------------------------------------------
 
     public TreeNodeRVO build(ResourceNode resource) {
-        TreeNodeRVO rvo = new TreeNodeRVO(resource, locale);
+        TreeNodeRVO rvo = create(resource);
 
         appendChildren(resource, rvo);
 
@@ -71,7 +76,7 @@ class TreeBuilder {
                 case ACCEPPT_CONTINUE:
                 case ACCEPT:
                     ResourceNode child = object.asResource();
-                    TreeNodeRVO childRVO = new TreeNodeRVO(child, locale);
+                    TreeNodeRVO childRVO = create(child);
                     children.add(childRVO);
                     appendChildren(child, childRVO);
                 default:
@@ -80,5 +85,14 @@ class TreeBuilder {
         }
         Collections.sort(children);
         rvo.addChildren(children);
+    }
+
+    private TreeNodeRVO create(ResourceNode node) {
+        TreeNodeRVO rvo = new TreeNodeRVO(node, locale);
+
+        QuickInfoRVO qi = qiBuilder.build(node, locale);
+        rvo.setQuickInfo(qi);
+
+        return rvo;
     }
 }

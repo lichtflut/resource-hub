@@ -1,5 +1,6 @@
 package de.lichtflut.rb.rest.api.infovis;
 
+import de.lichtflut.rb.core.services.SchemaManager;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.context.Context;
 
@@ -32,7 +33,12 @@ public class AbstractInfoVisService extends RBServiceEndpoint {
 		return provider.getConversation(context);
 	}
 
-	protected String decodeBase64(final String encoded) {
+    protected SchemaManager schemaManager(final String domain, final RBUser user) {
+        final ServiceProvider provider = getProvider(domain, user);
+        return provider.getSchemaManager();
+    }
+
+    protected String decodeBase64(final String encoded) {
 		if (encoded == null) {
 			return null;
 		}

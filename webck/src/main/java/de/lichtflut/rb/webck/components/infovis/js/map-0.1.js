@@ -41,8 +41,23 @@ function LayoutManager() {
 function StyleManager() {
     var styles = {};
     styles.apply = function(item) {
-        item.title_font = item.title_font || "50 18px Courier, Calibri, Helvetica Neue";
-        item.background = item.background || "#ffe";
+        item.title_font = item.title_font || "normal 14px Calibri, Helvetica Neue";
+        item.background = item.background || styles.colorByType(item);
+    };
+    styles.colorByType = function(item) {
+        for(var i = 0; i < item.types.length; i++) {
+            var current = item.types[i];
+            if(current === 'http://rb.lichtflut.de/devops#DataCenter') {
+                return "#ffe";
+            }
+            if(current === 'http://rb.lichtflut.de/devops#PhysicalMachine') {
+                return "#eef";
+            }
+            if(current === 'http://rb.lichtflut.de/devops#VirtualMachine') {
+                return "#fee";
+            }
+        }
+        return "#fff";
     };
     return styles;
 }
@@ -62,13 +77,24 @@ function drawItem(container, item, offset) {
         .text(item.name);
     var textBox = sizeOf(text.node());
 
-    var info = container.append("text")
+    if (LFRB.InfoVis.debug) {
+        container.append("text")
+        .attr("x", x +12)
+        .attr("y", y +34)
+        .attr("dy", ".65em")
+        .attr("text-anchor", "left")
+        .style("font", "12px Courier")
+        .text("x:" + item.offset.x + ";y:" + item.offset.y + ";width:" + item.width + ";height:" + item.height + ";text:" +textBox.width);
+    }
+
+    container.append("text")
         .attr("x", x +10)
         .attr("y", y +30)
         .attr("dy", ".65em")
         .attr("text-anchor", "left")
-        .style("font", "100 10px Helvetica Neue")
-        .text("x:" + item.offset.x + ";y:" + item.offset.y + ";width:" + item.width + ";height:" + item.height + ";text:" +textBox.width);
+        .style("font", "200 9px Calibri, Helvetica Neue")
+        .style("fill", "#555")
+        .text("type: " + item.primaryType);
 
     var bbox = text.node().getBBox();
 
@@ -78,8 +104,8 @@ function drawItem(container, item, offset) {
         .attr("height", Math.max(textBox.height, item.height))
         .attr("rx", 5)
         .style("fill", item.background)
-        .style("stroke", "#666")
-        .style("stroke-width", "1.5px");
+        .style("stroke", "#555")
+        .style("stroke-width", "1px");
 
     var innerOffset = {x : x, y : y};
     innerOffset.y += GraphVisConfig.nodeHeaderHeight;
@@ -136,7 +162,7 @@ function showMap() {
             .attr("width", root.width + 100)
             .attr("height", root.height + 100);
 
-        drawItem(svg, root, {x: 100, y:100});
+        drawItem(svg, root, {x: 90, y:90});
     });
 
 }
