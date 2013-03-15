@@ -78,6 +78,11 @@ public class EntityHandle implements Serializable {
         this.onCreation = true;
         return this;
     }
+
+    public EntityHandle markPersisted() {
+        this.onCreation = false;
+        return this;
+    }
 	
 	// ----------------------------------------------------
 	
@@ -121,5 +126,5 @@ public class EntityHandle implements Serializable {
         }
 		return super.equals(obj);
 	}
-	
+
 }
