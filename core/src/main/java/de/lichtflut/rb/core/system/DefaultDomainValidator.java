@@ -7,7 +7,7 @@ import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.DomainValidator;
 import org.arastreju.sge.ArastrejuGate;
-import org.arastreju.sge.Organizer;
+import org.arastreju.sge.organize.Organizer;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.DC;
 import org.arastreju.sge.apriori.RDF;
@@ -52,7 +52,7 @@ public class DefaultDomainValidator implements DomainValidator {
         }
 
         LOGGER.info("Running validation for domain " + domainName);
-        final Organizer organizer = gate.getOrganizer();
+        final Organizer organizer = new Organizer(gate);
 
         // The protected context of this domain
         organizer.registerContext(new QualifiedName(Namespace.LOCAL_CONTEXTS, domainName));

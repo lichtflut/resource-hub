@@ -9,7 +9,7 @@ import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.ConversationContext;
-import org.arastreju.sge.Organizer;
+import org.arastreju.sge.organize.Organizer;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.context.DomainIdentifier;
 import org.slf4j.Logger;
@@ -98,7 +98,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     // ----------------------------------------------------
 
     public Organizer getOrganizer() {
-        return gate().getOrganizer();
+        return new Organizer(gate());
     }
 
     // ----------------------------------------------------

@@ -25,7 +25,7 @@
         <constructor-arg index="0" ref="arasResourceFactory"></constructor-arg>
     </bean>
 
-    <bean id="arasOrganizer" class="org.arastreju.sge.Organizer" scope="request"
+    <bean id="arasOrganizer" class="org.arastreju.sge.organize.Organizer" scope="request"
           factory-bean="arasResourceFactory" factory-method="getOrganizer">
     </bean>
 

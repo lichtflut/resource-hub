@@ -9,7 +9,7 @@ import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.DomainValidator;
 import org.arastreju.sge.ArastrejuGate;
-import org.arastreju.sge.Organizer;
+import org.arastreju.sge.organize.Organizer;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.DC;
 import org.arastreju.sge.apriori.RDF;
@@ -31,7 +31,7 @@ public class TestDomainInitializer implements DomainValidator {
     @Override
     public void initializeDomain(ArastrejuGate gate, String domainName) {
 
-        final Organizer organizer = gate.getOrganizer();
+        final Organizer organizer = new Organizer(gate);
 
         organizer.registerNamespace(RDF.NAMESPACE_URI, "rdf");
         organizer.registerNamespace(RDFS.NAMESPACE_URI, "rdfs");
