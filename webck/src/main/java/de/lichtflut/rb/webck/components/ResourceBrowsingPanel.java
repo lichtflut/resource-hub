@@ -266,9 +266,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				throw new IllegalStateException("Cannot initialize RB Entity Model.");
 			}
 		}
-
-		// ------------------------------------------------------
-
 	}
 }
 

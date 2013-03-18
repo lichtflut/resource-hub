@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.infovis.hierarchy;
+package de.lichtflut.rb.webck.components.infovis.map;
 
 import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
@@ -13,24 +13,24 @@ import org.arastreju.sge.model.nodes.ResourceNode;
 
 /**
  * <p>
- *  Panel for display of a flow chart.
+ *  Panel for display of a containment map.
  * </p>
  *
  * <p>
- * 	Created Mar 8, 2012
+ * 	Created Mar 15, 2013
  * </p>
  *
  * @author Oliver Tigges
  */
-public class HierarchyVisualizationPanel extends InfoVisPanel {
-	
+public class ContainmentMapVisualizationPanel extends InfoVisPanel {
+
 	/**
 	 * Constructor.
 	 * @param id The component ID.
 	 * @param model The model.
 	 */
-	public HierarchyVisualizationPanel(String id, IModel<ResourceNode> model) {
-		super(id, model, VisualizationMode.HIERARCHY);
+	public ContainmentMapVisualizationPanel(String id, IModel<ResourceNode> model) {
+		super(id, model, VisualizationMode.MAP);
 	}
 	
 	// ----------------------------------------------------
@@ -38,12 +38,9 @@ public class HierarchyVisualizationPanel extends InfoVisPanel {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.RAPHAEL_JS);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.HIERARCHY_JS);
-		response.renderOnLoadJavaScript(
-				"var paper = Raphael('infovis', 2000, 1000);" +
-				"showTree(paper);"
-		);
+		response.renderJavaScriptReference(InfoVisJavaScriptResources.D3_JS);
+		response.renderJavaScriptReference(InfoVisJavaScriptResources.MAP_JS);
+		response.renderOnLoadJavaScript("showMap();");
 	}
 
     @Override

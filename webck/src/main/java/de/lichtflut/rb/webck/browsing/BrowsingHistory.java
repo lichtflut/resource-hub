@@ -107,7 +107,6 @@ public class BrowsingHistory implements Serializable {
 	 */
 	public void edit(final EntityHandle handle) {
 		rollbackEditingSteps();
-        removeExisting(handle);
 		stack.push(new EntityBrowsingStep(handle, BrowsingState.EDIT));
 		LOGGER.debug("Editing {}.", handle);
 	}
@@ -153,7 +152,7 @@ public class BrowsingHistory implements Serializable {
 		final EntityBrowsingStep last = stack.pop();
 		Validate.isTrue(BrowsingState.EDIT == last.getState() || BrowsingState.CREATE == last.getState());
 		if (stack.isEmpty()) {
-			stack.push(new EntityBrowsingStep(last.getHandle(), BrowsingState.VIEW));
+			stack.push(new EntityBrowsingStep(last.getHandle().markPersisted(), BrowsingState.VIEW));
 		}
 		return BrowsingResponse.CONTINUE;
 	}

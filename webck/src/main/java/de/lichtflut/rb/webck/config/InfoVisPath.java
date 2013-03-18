@@ -1,22 +1,24 @@
 package de.lichtflut.rb.webck.config;
 
 import com.sun.jersey.core.util.Base64;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.naming.QualifiedName;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * <p>
- *  Builder object for the query path,
+ *  Builder object for the info vis path,
  * </p>
- * <p/>
+ *
  * <p>
- * Created 12.03.13
+ *  Created Mar. 12, 2013
  * </p>
  *
  * @author Oliver Tigges
  */
-public class QueryPath {
+public class InfoVisPath {
 
     private final String ctxPath;
 
@@ -28,76 +30,51 @@ public class QueryPath {
 
     // ----------------------------------------------------
 
-    public QueryPath(String ctxPath) {
+    public InfoVisPath(String ctxPath) {
         this.ctxPath = ctxPath;
     }
 
-    public QueryPath(String ctxPath, String domain) {
+    public InfoVisPath(String ctxPath, String domain) {
         this.ctxPath = ctxPath;
         this.domain = domain;
     }
 
     // ----------------------------------------------------
 
-    public QueryPath queryResources() {
-        this.service = "resources";
-        return this;
-    }
-
-    public QueryPath queryEntities() {
-        this.service = "entities";
-        return this;
-    }
-
-    public QueryPath queryClasses() {
-        this.service = "classes";
-        return this;
-    }
-
-    public QueryPath queryProperties() {
-        this.service = "properties";
-        return this;
-    }
-
-    public QueryPath queryUsers() {
-        this.service = "users";
+    public InfoVisPath tree() {
+        this.service = "tree";
         return this;
     }
 
     // ----------------------------------------------------
 
-    public QueryPath domain(String domain) {
+    public InfoVisPath domain(String domain) {
         this.domain = domain;
         return this;
     }
 
-    public QueryPath append(String param, Object value) {
+    public InfoVisPath append(String param, Object value) {
         this.params.put(param, value);
         return this;
     }
 
-    public QueryPath appendEncoded(String param, Object value) {
+    public InfoVisPath appendEncoded(String param, Object value) {
         this.params.put(param, encode(value));
         return this;
     }
 
-    public QueryPath ofType(String type) {
-        this.params.put("type", encode(type));
+    public InfoVisPath withRoot(String root) {
+        this.params.put("root", encode(root));
         return this;
     }
 
-    public QueryPath inScope(String scope) {
-        this.params.put("scope", encode(scope));
+    public InfoVisPath withRoot(ResourceID root) {
+        this.params.put("root", encode(root));
         return this;
     }
 
-    public QueryPath withSuperClass(String clazz) {
-        this.params.put("superclass", encode(clazz));
-        return this;
-    }
-
-    public QueryPath withSuperProperty(String clazz) {
-        this.params.put("superproperty", encode(clazz));
+    public InfoVisPath ofType(String type) {
+        this.params.put("type", type);
         return this;
     }
 
@@ -130,10 +107,17 @@ public class QueryPath {
     // ----------------------------------------------------
 
     private String encode(Object value) {
-        if (value != null) {
+        if (value instanceof String) {
             return new String(Base64.encode(value.toString()));
+        } else if (value instanceof ResourceID) {
+            return encode( ((ResourceID)value).toURI());
+        } else if (value instanceof QualifiedName) {
+            return encode( ((QualifiedName)value).toURI());
+        } else if (value != null) {
+            return encode(value.toString());
         } else {
             return "";
         }
     }
+
 }

@@ -40,6 +40,9 @@ public class VisualizationLink {
 		case HIERARCHY:
 			resourceKey = "global.link.hierarchical-visualization";
 			break;
+        case MAP:
+            resourceKey = "global.link.map-visualization";
+            break;
 		case FLOW_CHART:
 			resourceKey = "global.link.flow-chart-visualization";
 			break;

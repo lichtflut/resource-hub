@@ -1,10 +1,20 @@
 package de.lichtflut.rb.rest.api.infovis;
 
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.rest.api.util.CachingSchemaProvider;
+import de.lichtflut.rb.rest.api.util.QuickInfoBuilder;
+import de.lichtflut.rb.rest.api.util.SchemaProvider;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.traverse.NotPredicateFilter;
+import org.arastreju.sge.traverse.PredicateFilter;
+import org.arastreju.sge.traverse.TraversalFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,6 +29,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Locale;
 
 /**
  * <p>
@@ -37,6 +48,11 @@ public class TreeInfoVisService extends AbstractInfoVisService{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TreeInfoVisService.class);
 
+    public enum Type {
+        DEFAULT,
+        HIERARCHY
+    }
+
     // ----------------------------------------------------
 
     public TreeInfoVisService() {
@@ -48,6 +64,7 @@ public class TreeInfoVisService extends AbstractInfoVisService{
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(
             @QueryParam(value="root") String rootURI,
+            @QueryParam(value="type") String typeName,
             @PathParam(value = "domain") String domain,
             @CookieParam(value= AuthModule.COOKIE_SESSION_AUTH) String token,
             @Context HttpServletRequest request) throws UnauthenticatedUserException
@@ -66,12 +83,40 @@ public class TreeInfoVisService extends AbstractInfoVisService{
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        LOGGER.info("Building tree for '{}'", qn);
-        TreeNodeRVO rootNode = new TreeBuilder(request.getLocale()).build(resource);
+        Type type = getType(typeName);
+
+        LOGGER.info("Building tree of type '{}' for '{}' ", type, qn);
+
+        SchemaProvider schemaProvider = new CachingSchemaProvider(schemaManager(domain, user));
+
+        TreeBuilder treeBuilder = treeBuilder(schemaProvider, type, request.getLocale());
+        TreeNodeRVO rootNode = treeBuilder.build(resource);
         return Response.ok(rootNode).build();
     }
 
     // ----------------------------------------------------
+
+    private TreeBuilder treeBuilder(SchemaProvider provider, Type type, Locale locale) {
+        QuickInfoBuilder quickInfoBuilder = new QuickInfoBuilder(provider);
+        return new TreeBuilder(quickInfoBuilder, locale, filterForType(type));
+    }
+
+    private TraversalFilter filterForType(Type type) {
+        switch (type) {
+            case HIERARCHY:
+                return new PredicateFilter()
+                        .addFollow(
+                                RB.HAS_CHILD_NODE,
+                                RB.HAS_SUBORDINATE
+                        );
+            default:
+                return new NotPredicateFilter(
+                                RDF.TYPE,
+                                RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE,
+                                RDFS.SUB_CLASS_OF
+                        );
+        }
+    }
 
     private QualifiedName toQualifiedName(String uri) {
         if (uri.contains("/")) {
@@ -79,6 +124,14 @@ public class TreeInfoVisService extends AbstractInfoVisService{
         } else {
             return QualifiedName.create(decodeBase64(uri));
         }
+    }
+
+    private Type getType(String type) {
+        if (type == null) {
+            return Type.DEFAULT;
+        }
+
+        return Type.valueOf(type.toUpperCase());
     }
 
 }
