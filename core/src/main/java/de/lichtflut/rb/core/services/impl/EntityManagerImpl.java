@@ -114,7 +114,7 @@ public class EntityManagerImpl implements EntityManager {
 		ResourceSchema schema = getSchemaFor(typeNode);
 
 		ResourceNode entityNode = prepareEntityNode(typeNode, schema);
-
+		entityNode.addAssociation(RDF.TYPE, type);
 		if (schema != null) {
 			return new RBEntityImpl(entityNode, schema).markTransient();
 		} else {
