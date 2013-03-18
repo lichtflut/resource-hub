@@ -36,4 +36,6 @@ public interface RBTestConstants {
 
 	ResourceID INHERITS_FROM = new SimpleResourceID(RB.COMMON_NAMESPACE_URI, "inheritsFrom");
 
+	ResourceID HAS_CHILDREN = new SimpleResourceID(RB.COMMON_NAMESPACE_URI, "hasChildren");
+
 }

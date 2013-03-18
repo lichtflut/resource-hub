@@ -1,0 +1,26 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:panel>
+
+	<div class="common-background">
+
+		<wicket:container wicket:id="header"></wicket:container>
+		
+		<div class="common-placement">
+			<form wicket:id="form">
+				<wicket:message key="text.start"></wicket:message>
+				<wicket:container wicket:id="classPicker"></wicket:container>
+				<wicket:message key="text.end"></wicket:message>
+				<wicket:container wicket:id="entityPicker"></wicket:container>
+				<div>
+					<button wicket:id="search" class="default-button"><wicket:message key="button.search" /></button>
+				</div>
+			</form>
+		</div>
+		<div class="section">
+			<wicket:container wicket:id="result"></wicket:container>
+		</div>
+	</div>
+	
+</wicket:panel>
+</html>
