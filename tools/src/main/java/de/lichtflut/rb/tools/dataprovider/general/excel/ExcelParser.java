@@ -16,7 +16,6 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.arastreju.sge.SNOPS;
@@ -53,13 +52,11 @@ public class ExcelParser {
 
 	private static final String EXCEL_CONFIG = "rb-parser-config";
 	private static final String VERSIONING = "rb-versioning";
-	private static final String PREFIX = "has";
+	private String PREFIX = "has";
 
-	private final Workbook workbook;
-	private final ExcelParserMetaData metaData;
-	private final Map<String, ResourceID> foreignKeys;
-	private final SemanticGraph graph;
-	boolean isFirstCellInRow;
+	private final ExcelFieldWrapper data = new ExcelFieldWrapper();
+
+	private boolean isFirstCellInRow;
 
 	// ---------------- Constructor -------------------------
 
@@ -71,10 +68,10 @@ public class ExcelParser {
 	 * @throws InvalidFormatException
 	 */
 	public ExcelParser(final File file) throws InvalidFormatException, IOException {
-		workbook = WorkbookFactory.create(file);
-		metaData = new ExcelParserMetaData(workbook.getSheet(EXCEL_CONFIG));
-		graph = new DefaultSemanticGraph();
-		foreignKeys = new HashMap<String, ResourceID>();
+		data.setWorkbook(WorkbookFactory.create(file));
+		data.setMetaData(new ExcelParserMetaData(data.getWorkbook().getSheet(EXCEL_CONFIG)));
+		data.setGraph(new DefaultSemanticGraph());
+		data.setForeignKeys(new HashMap<String, ResourceID>());
 		isFirstCellInRow = true;
 	}
 
@@ -89,40 +86,25 @@ public class ExcelParser {
 	 */
 	public SemanticGraph read() {
 		// Excel version > 2002 specific cast. For lower versions use HSSFWorkbook
-		int numberOfSheets = ((XSSFWorkbook) workbook).getNumberOfSheets();
+		int numberOfSheets = ((XSSFWorkbook) data.getWorkbook()).getNumberOfSheets();
 		StopWatch watch = new StopWatch();
 		for (int pos = 0; pos < numberOfSheets; pos++) {
-			Sheet sheet = workbook.getSheetAt(pos);
+			Sheet sheet = data.getWorkbook().getSheetAt(pos);
 			readSheet(watch, sheet);
 		}
-		return graph;
+		return data.getGraph();
 	}
 
-	// ------------------------------------------------------
+	public ExcelFieldWrapper getMetadataFields(){
+		return data;
+	}
 
-	/**
-	 * @return the prefix
-	 */
-	public static String getPrefix() {
+	public String getPrefix() {
 		return PREFIX;
 	}
 
-	/**
-	 * @return the metaData
-	 */
-	public ExcelParserMetaData getMetaData() {
-		return metaData;
-	}
-
-	/**
-	 * @return the foreignKeys
-	 */
-	public Map<String, ResourceID> getForeignKeys() {
-		return foreignKeys;
-	}
-
-	public SemanticGraph getGraph(){
-		return graph;
+	public void setPrefix(final String prefix){
+		this.PREFIX = prefix;
 	}
 
 	// ------------------------------------------------------
@@ -142,7 +124,7 @@ public class ExcelParser {
 
 	protected Map<String, ResourceID> getPredicates(final Sheet sheet) {
 		Map<String, ResourceID> predicates = new LinkedHashMap<String, ResourceID>();
-		String nameSpace = metaData.getNameSpace();
+		String nameSpace = data.getMetaData().getNameSpace();
 		for (Cell cell : sheet.getRow(0)) {
 			String value = null;
 			String suffix = cell.getStringCellValue();
@@ -151,7 +133,7 @@ public class ExcelParser {
 			} else if (QualifiedName.isQname(suffix)) {
 				value = convertQNameToURI(suffix);
 			} else {
-				value = buildPredicate(nameSpace, PREFIX, suffix);
+				value = buildPredicate(nameSpace, getPrefix(), suffix);
 			}
 			predicates.put(suffix, new SimpleResourceID(value));
 		}
@@ -165,14 +147,14 @@ public class ExcelParser {
 		for (String columnHeader : columns) {
 			String value = ExcelParserTools.getStringValueFor(row, columns.indexOf(columnHeader));
 			if (null != value) {
-				if (metaData.isPrimaryKey(row.getSheet().getSheetName(), columnHeader)) {
+				if (data.getMetaData().isPrimaryKey(row.getSheet().getSheetName(), columnHeader)) {
 					addKeyToCache(value);
 					// TODO: alwas set the ID manually
 					// Primary ID will always be the first element. So we still can change the ID
 					// without corrupting data
 					node = replaceURIWithExisting(node, value);
 					object = new SNValue(ElementaryDataType.STRING, value);
-				} else if (metaData.isForeignKey(row.getSheet().getSheetName(), columnHeader)) {
+				} else if (data.getMetaData().isForeignKey(row.getSheet().getSheetName(), columnHeader)) {
 					if (QualifiedName.isUri(value)) {
 						object = new SimpleResourceID(value);
 					} else if (QualifiedName.isQname(value)) {
@@ -212,13 +194,13 @@ public class ExcelParser {
 
 	protected ResourceNode replaceURIWithExisting(ResourceNode node, final String value) {
 		ResourceNode copy = node;
-		if (foreignKeys.containsKey(value)) {
-			node = new SNResource(foreignKeys.get(value).getQualifiedName());
+		if (data.getForeignKeys().containsKey(value)) {
+			node = new SNResource(data.getForeignKeys().get(value).getQualifiedName());
 			for (Statement stmt : copy.getAssociations()) {
 				node.addAssociation(stmt.getPredicate(), stmt.getObject());
 			}
 		}else{
-			node = new SNResource(QualifiedName.create(metaData.getNameSpace(), value));
+			node = new SNResource(QualifiedName.create(data.getMetaData().getNameSpace(), value));
 			for (Statement stmt : copy.getAssociations()) {
 				node.addAssociation(stmt.getPredicate(), stmt.getObject());
 			}
@@ -233,7 +215,7 @@ public class ExcelParser {
 	 * @return The {@link ResourceID} for mathing to the given key
 	 */
 	protected ResourceID getForeignKey(final String key) {
-		ResourceID resourceID = foreignKeys.get(key);
+		ResourceID resourceID = data.getForeignKeys().get(key);
 		return resourceID;
 	}
 
@@ -244,7 +226,7 @@ public class ExcelParser {
 	 */
 	protected void addKeyToCache(final String key) {
 		if (!isCached(key)) {
-			foreignKeys.put(key, new SimpleResourceID(QualifiedName.create(metaData.getNameSpace(), key)));
+			data.getForeignKeys().put(key, new SimpleResourceID(QualifiedName.create(data.getMetaData().getNameSpace(), key)));
 		}
 	}
 
@@ -255,20 +237,20 @@ public class ExcelParser {
 	 * @return true if it is chached, false if not
 	 */
 	protected boolean isCached(final String value) {
-		return foreignKeys.containsKey(value);
+		return data.getForeignKeys().containsKey(value);
 	}
 
 	protected String convertQNameToURI(final String suffix) {
 		String value;
 		StringBuilder sb = new StringBuilder();
-		sb.append(metaData.getNamespaceFor(QualifiedName.getPrefix(suffix)));
+		sb.append(data.getMetaData().getNamespaceFor(QualifiedName.getPrefix(suffix)));
 		sb.append(QualifiedName.getSimpleName(suffix));
 		value = sb.toString();
 		return value;
 	}
 
 	protected ResourceNode findObjectInGraph(final ResourceNode subject) {
-		for (ResourceNode node : graph.getSubjects()) {
+		for (ResourceNode node : data.getGraph().getSubjects()) {
 			if(node.getQualifiedName().toURI().equals(subject.getQualifiedName().toURI())){
 				return node;
 			}
@@ -276,14 +258,14 @@ public class ExcelParser {
 		return null;
 	}
 
-	// ------------------------------------------------------
-
 	protected void insertIntoGraph(final Sheet sheet) {
 		List<ResourceNode> nodes = generateNodesFromSheet(sheet);
 		for (ResourceNode node : nodes) {
-			graph.addStatements(node.getAssociations());
+			data.getGraph().addStatements(node.getAssociations());
 		}
 	}
+
+	// ------------------------------------------------------
 
 	private List<ResourceNode> generateNodesFromSheet(final Sheet sheet) {
 		List<ResourceNode> nodes = new ArrayList<ResourceNode>();
@@ -331,14 +313,14 @@ public class ExcelParser {
 						clone(parent, node);
 						SNOPS.assure(node, RDFS.SUB_CLASS_OF, parent);
 						SNOPS.assure(node, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, createInheritedLabel(parent, value)));
-						graph.addStatements(node.getAssociations());
+						data.getGraph().addStatements(node.getAssociations());
 						parent = node;
 					}else if (2 == index) {
 						node = new SNResource(createChildURI(parent, value));
 						clone(parent, node);
 						SNOPS.assure(node, RDFS.SUB_CLASS_OF, parent);
 						SNOPS.assure(node, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, createInheritedLabel(parent, value)));
-						graph.addStatements(node.getAssociations());
+						data.getGraph().addStatements(node.getAssociations());
 						parent = node;
 					} else if (3 == index) {
 						for (String version : value.split(",")) {
@@ -346,7 +328,7 @@ public class ExcelParser {
 							clone(parent, node);
 							SNOPS.assure(node, RDFS.SUB_CLASS_OF, parent);
 							SNOPS.assure(node, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, createInheritedLabel(parent, version)));
-							graph.addStatements(node.getAssociations());
+							data.getGraph().addStatements(node.getAssociations());
 						}
 					}
 				}
