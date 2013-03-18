@@ -90,8 +90,8 @@ public class FindClassInEntityPanel extends Panel {
 		add(new PanelTitle("header", new ResourceModel("header.title")));
 
 		Form<?> form = new Form<Void>("form");
-		form.add(new ClassPickerField("classPicker", wanted));
-		form.add(new EntityPickerField("entityPicker", target));
+		form.add(new ClassPickerField("classPicker", wanted).setRequired(true));
+		form.add(new EntityPickerField("entityPicker", target).setRequired(true));
 		form.add(new AjaxButton("search"){
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
@@ -114,6 +114,7 @@ public class FindClassInEntityPanel extends Panel {
 	}
 
 	private void buildResult() {
+		result.getObject().clear();
 		ResourceNode node = networkService.find(target.getObject().getQualifiedName());
 		List<ResourceNode> instances = new ArrayList<ResourceNode>();
 
@@ -135,7 +136,6 @@ public class FindClassInEntityPanel extends Panel {
 						SNClass typeConstraintSchema = SchemaIdentifyingType.of(typeConstraint);
 						for (ResourceNode resourceNode : SNOPS.objectsAsResources(node, decl.getPropertyDescriptor())) {
 
-							SNOPS.objectsAsResources(resourceNode, RDFS.CLASS);
 							for (ResourceNode  rdfType : SNOPS.objectsAsResources(resourceNode, RDF.TYPE)) {
 								if(rdfType.equals(wanted.getObject())){
 									instances.add(resourceNode);

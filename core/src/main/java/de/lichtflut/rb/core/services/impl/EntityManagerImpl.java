@@ -113,8 +113,7 @@ public class EntityManagerImpl implements EntityManager {
 		ResourceNode typeNode = conversation.findResource(type.getQualifiedName());
 		ResourceSchema schema = getSchemaFor(typeNode);
 
-		ResourceNode entityNode = prepareEntityNode(typeNode, schema);
-		entityNode.addAssociation(RDF.TYPE, type);
+		ResourceNode entityNode = prepareEntityNode(typeNode, schema, type);
 		if (schema != null) {
 			return new RBEntityImpl(entityNode, schema).markTransient();
 		} else {
@@ -341,7 +340,7 @@ public class EntityManagerImpl implements EntityManager {
 		return schema;
 	}
 
-	private ResourceNode prepareEntityNode(final ResourceID type, final ResourceSchema schema) {
+	private ResourceNode prepareEntityNode(final ResourceID type, final ResourceSchema schema, final ResourceID originalType) {
 		ResourceNode entityNode = newEntityNode();
 		ResourceNode prototype = getPrototype(type);
 		if(null == prototype && null != schema){
@@ -355,7 +354,7 @@ public class EntityManagerImpl implements EntityManager {
 					// Set original type
 					SNOPS.remove(entityNode, RDF.TYPE);
 					entityNode.addAssociation(RDF.TYPE, RBSystem.ENTITY);
-					entityNode.addAssociation(RDF.TYPE, type);
+					entityNode.addAssociation(RDF.TYPE, originalType);
 				}
 				conversation.attach(entityNode);
 			}else{
