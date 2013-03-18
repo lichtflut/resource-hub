@@ -3,14 +3,19 @@
  */
 package de.lichtflut.rb.webck.components.entity.quickinfo;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -33,9 +38,11 @@ public class QuickInfoPanelTest extends RBWebTest {
 	 * Test method for {@link de.lichtflut.rb.webck.components.entity.quickinfo.QuickInfoPanel#InfoPanel(java.lang.String, org.apache.wicket.model.IModel)}.
 	 */
 	@Test
+
 	public void testInfoPanelNoQuickInfo() {
 		RBEntity entity = createCity(false);
-		Panel panel = new QuickInfoPanel("panel", Model.of(entity));
+		when(networkService.resolve(any(ResourceID.class))).thenReturn(entity.getNode());
+		Panel panel = new QuickInfoPanel("panel", new ListModel<RBField>(entity.getQuickInfo()));
 
 		tester.startComponentInPage(panel);
 
@@ -50,7 +57,7 @@ public class QuickInfoPanelTest extends RBWebTest {
 	@Test
 	public void testInfoPanelWithQuickInfo() {
 		RBEntity entity = createCity(true);
-		Panel panel = new QuickInfoPanel("panel", Model.of(entity));
+		Panel panel = new QuickInfoPanel("panel", new ListModel<RBField>(entity.getQuickInfo()));
 
 		tester.startComponentInPage(panel);
 

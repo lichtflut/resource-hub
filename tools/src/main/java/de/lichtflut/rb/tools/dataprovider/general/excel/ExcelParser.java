@@ -80,6 +80,8 @@ public class ExcelParser {
 
 	// ------------------------------------------------------
 
+
+
 	/**
 	 * Read the given sheet and convert it into a graph.
 	 * 
@@ -99,6 +101,33 @@ public class ExcelParser {
 	// ------------------------------------------------------
 
 	/**
+	 * @return the prefix
+	 */
+	public static String getPrefix() {
+		return PREFIX;
+	}
+
+	/**
+	 * @return the metaData
+	 */
+	public ExcelParserMetaData getMetaData() {
+		return metaData;
+	}
+
+	/**
+	 * @return the foreignKeys
+	 */
+	public Map<String, ResourceID> getForeignKeys() {
+		return foreignKeys;
+	}
+
+	public SemanticGraph getGraph(){
+		return graph;
+	}
+
+	// ------------------------------------------------------
+
+	/**
 	 * Overwrite for custom parsing rules.
 	 * @param watch
 	 * @param sheet
@@ -111,9 +140,145 @@ public class ExcelParser {
 		}
 	}
 
+	protected Map<String, ResourceID> getPredicates(final Sheet sheet) {
+		Map<String, ResourceID> predicates = new LinkedHashMap<String, ResourceID>();
+		String nameSpace = metaData.getNameSpace();
+		for (Cell cell : sheet.getRow(0)) {
+			String value = null;
+			String suffix = cell.getStringCellValue();
+			if (QualifiedName.isUri(suffix)) {
+				value = suffix;
+			} else if (QualifiedName.isQname(suffix)) {
+				value = convertQNameToURI(suffix);
+			} else {
+				value = buildPredicate(nameSpace, PREFIX, suffix);
+			}
+			predicates.put(suffix, new SimpleResourceID(value));
+		}
+		return predicates;
+	}
+
+	protected ResourceNode genereateRowBasedNode(final Row row, final Map<String, ResourceID> predicates) {
+		ResourceNode node = createResourceNode();
+		List<String> columns = new LinkedList<String>(predicates.keySet());
+		SemanticNode object = null;
+		for (String columnHeader : columns) {
+			String value = ExcelParserTools.getStringValueFor(row, columns.indexOf(columnHeader));
+			if (null != value) {
+				if (metaData.isPrimaryKey(row.getSheet().getSheetName(), columnHeader)) {
+					addKeyToCache(value);
+					// TODO: alwas set the ID manually
+					// Primary ID will always be the first element. So we still can change the ID
+					// without corrupting data
+					node = replaceURIWithExisting(node, value);
+					object = new SNValue(ElementaryDataType.STRING, value);
+				} else if (metaData.isForeignKey(row.getSheet().getSheetName(), columnHeader)) {
+					if (QualifiedName.isUri(value)) {
+						object = new SimpleResourceID(value);
+					} else if (QualifiedName.isQname(value)) {
+						object = new SimpleResourceID(convertQNameToURI(value));
+					} else {
+						addKeyToCache(value);
+						object = getForeignKey(value);
+					}
+				} else {
+					if (QualifiedName.isUri(value)) {
+						object = new SimpleResourceID(value);
+					} else if (QualifiedName.isQname(value)) {
+						object = new SimpleResourceID(convertQNameToURI(value));
+					} else {
+						object = new SNValue(ElementaryDataType.STRING, value);
+					}
+				}
+				node.addAssociation(predicates.get(columnHeader), object);
+			}
+		}
+		return node;
+	}
+
+	protected ResourceNode createResourceNode() {
+		ResourceNode node = new SNResource();
+		return node;
+	}
+
+	protected int checkForEmptyLine(int emptyLines, final ResourceNode node) {
+		if (node.getAssociations().isEmpty()) {
+			emptyLines++;
+		} else {
+			emptyLines = 0;
+		}
+		return emptyLines;
+	}
+
+	protected ResourceNode replaceURIWithExisting(ResourceNode node, final String value) {
+		ResourceNode copy = node;
+		if (foreignKeys.containsKey(value)) {
+			node = new SNResource(foreignKeys.get(value).getQualifiedName());
+			for (Statement stmt : copy.getAssociations()) {
+				node.addAssociation(stmt.getPredicate(), stmt.getObject());
+			}
+		}else{
+			node = new SNResource(QualifiedName.create(metaData.getNameSpace(), value));
+			for (Statement stmt : copy.getAssociations()) {
+				node.addAssociation(stmt.getPredicate(), stmt.getObject());
+			}
+		}
+		return node;
+	}
+
+	/**
+	 * Get the value for a given key
+	 * 
+	 * @param key
+	 * @return The {@link ResourceID} for mathing to the given key
+	 */
+	protected ResourceID getForeignKey(final String key) {
+		ResourceID resourceID = foreignKeys.get(key);
+		return resourceID;
+	}
+
+	/**
+	 * Add a key to the foreign key cache.
+	 * 
+	 * @param key The key
+	 */
+	protected void addKeyToCache(final String key) {
+		if (!isCached(key)) {
+			foreignKeys.put(key, new SimpleResourceID(QualifiedName.create(metaData.getNameSpace(), key)));
+		}
+	}
+
+	/**
+	 * Check wheather a foreign key is already cached.
+	 * 
+	 * @param value The keys' identifier
+	 * @return true if it is chached, false if not
+	 */
+	protected boolean isCached(final String value) {
+		return foreignKeys.containsKey(value);
+	}
+
+	protected String convertQNameToURI(final String suffix) {
+		String value;
+		StringBuilder sb = new StringBuilder();
+		sb.append(metaData.getNamespaceFor(QualifiedName.getPrefix(suffix)));
+		sb.append(QualifiedName.getSimpleName(suffix));
+		value = sb.toString();
+		return value;
+	}
+
+	protected ResourceNode findObjectInGraph(final ResourceNode subject) {
+		for (ResourceNode node : graph.getSubjects()) {
+			if(node.getQualifiedName().toURI().equals(subject.getQualifiedName().toURI())){
+				return node;
+			}
+		}
+		return null;
+	}
+
 	// ------------------------------------------------------
 
-	private void insertIntoGraph(final Sheet sheet) {
+	protected void insertIntoGraph(final Sheet sheet) {
 		List<ResourceNode> nodes = generateNodesFromSheet(sheet);
 		for (ResourceNode node : nodes) {
 			graph.addStatements(node.getAssociations());
@@ -204,146 +369,10 @@ public class ExcelParser {
 		return QualifiedName.create(parent.getQualifiedName() + "-" + value.trim());
 	}
 
-	private ResourceNode findObjectInGraph(final ResourceNode subject) {
-		for (ResourceNode node : graph.getSubjects()) {
-			if(node.getQualifiedName().toURI().equals(subject.getQualifiedName().toURI())){
-				return node;
-			}
-		}
-		return null;
-	}
-
 	private void clone(final ResourceNode original, final ResourceNode clone) {
 		for (Statement stmt : original.getAssociations()) {
 			clone.addAssociation(stmt.getPredicate(), stmt.getObject());
 		}
-	}
-
-	private int checkForEmptyLine(int emptyLines, final ResourceNode node) {
-		if (node.getAssociations().isEmpty()) {
-			emptyLines++;
-		} else {
-			emptyLines = 0;
-		}
-		return emptyLines;
-	}
-
-	private ResourceNode genereateRowBasedNode(final Row row, final Map<String, ResourceID> predicates) {
-		ResourceNode node = createResourceNode();
-		List<String> columns = new LinkedList<String>(predicates.keySet());
-		SemanticNode object = null;
-		for (String columnHeader : columns) {
-			String value = ExcelParserTools.getStringValueFor(row, columns.indexOf(columnHeader));
-			if (null != value) {
-				if (metaData.isPrimaryKey(row.getSheet().getSheetName(), columnHeader)) {
-					addKeyToCache(value);
-					// TODO: alwas set the ID manually
-					// Primary ID will always be the first element. So we still can change the ID
-					// without corrupting data
-					node = replaceURIWithExisting(node, value);
-					object = new SNValue(ElementaryDataType.STRING, value);
-				} else if (metaData.isForeignKey(row.getSheet().getSheetName(), columnHeader)) {
-					if (QualifiedName.isUri(value)) {
-						object = new SimpleResourceID(value);
-					} else if (QualifiedName.isQname(value)) {
-						object = new SimpleResourceID(convertQNameToURI(value));
-					} else {
-						addKeyToCache(value);
-						object = getForeignKey(value);
-					}
-				} else {
-					if (QualifiedName.isUri(value)) {
-						object = new SimpleResourceID(value);
-					} else if (QualifiedName.isQname(value)) {
-						object = new SimpleResourceID(convertQNameToURI(value));
-					} else {
-						object = new SNValue(ElementaryDataType.STRING, value);
-					}
-				}
-				node.addAssociation(predicates.get(columnHeader), object);
-			}
-		}
-		return node;
-	}
-
-	private ResourceNode replaceURIWithExisting(ResourceNode node, final String value) {
-		ResourceNode copy = node;
-		if (foreignKeys.containsKey(value)) {
-			node = new SNResource(foreignKeys.get(value).getQualifiedName());
-			for (Statement stmt : copy.getAssociations()) {
-				node.addAssociation(stmt.getPredicate(), stmt.getObject());
-			}
-		}else{
-			node = new SNResource(QualifiedName.create(metaData.getNameSpace(), value));
-			for (Statement stmt : copy.getAssociations()) {
-				node.addAssociation(stmt.getPredicate(), stmt.getObject());
-			}
-		}
-		return node;
-	}
-
-	private ResourceNode createResourceNode() {
-		ResourceNode node = new SNResource();
-		return node;
-	}
-
-	/**
-	 * Get the value for a given key
-	 * 
-	 * @param key
-	 * @return The {@link ResourceID} for mathing to the given key
-	 */
-	private ResourceID getForeignKey(final String key) {
-		ResourceID resourceID = foreignKeys.get(key);
-		return resourceID;
-	}
-
-	/**
-	 * Add a key to the foreign key cache.
-	 * 
-	 * @param key The key
-	 */
-	private void addKeyToCache(final String key) {
-		if (!isCached(key)) {
-			foreignKeys.put(key, new SimpleResourceID(QualifiedName.create(metaData.getNameSpace(), key)));
-		}
-	}
-
-	/**
-	 * Check wheather a foreign key is already cached.
-	 * 
-	 * @param value The keys' identifier
-	 * @return true if it is chached, false if not
-	 */
-	private boolean isCached(final String value) {
-		return foreignKeys.containsKey(value);
-	}
-
-	private Map<String, ResourceID> getPredicates(final Sheet sheet) {
-		Map<String, ResourceID> predicates = new LinkedHashMap<String, ResourceID>();
-		String nameSpace = metaData.getNameSpace();
-		for (Cell cell : sheet.getRow(0)) {
-			String value = null;
-			String suffix = cell.getStringCellValue();
-			if (QualifiedName.isUri(suffix)) {
-				value = suffix;
-			} else if (QualifiedName.isQname(suffix)) {
-				value = convertQNameToURI(suffix);
-			} else {
-				value = buildPredicate(nameSpace, PREFIX, suffix);
-			}
-			predicates.put(suffix, new SimpleResourceID(value));
-		}
-		return predicates;
-	}
-
-	private String convertQNameToURI(final String suffix) {
-		String value;
-		StringBuilder sb = new StringBuilder();
-		sb.append(metaData.getNamespaceFor(QualifiedName.getPrefix(suffix)));
-		sb.append(QualifiedName.getSimpleName(suffix));
-		value = sb.toString();
-		return value;
 	}
 
 	private String buildPredicate(final String nameSpace, final String prefix, final String value) {
