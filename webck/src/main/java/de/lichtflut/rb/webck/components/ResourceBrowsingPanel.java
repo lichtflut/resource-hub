@@ -29,6 +29,7 @@ import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
+import de.lichtflut.rb.webck.browsing.BrowsingState;
 import de.lichtflut.rb.webck.browsing.EntityAttributeApplyAction;
 import de.lichtflut.rb.webck.browsing.ReferenceReceiveAction;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
@@ -158,6 +159,10 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	}
 
 	protected void onCancel(final AjaxRequestTarget target, final Form<?> form) {
+		BrowsingState state = RBWebSession.get().getHistory().getCurrentStep().getState();
+		if(BrowsingState.CREATE.name().equals(state.name())){
+			entityManager.delete(model.getObject().getID());
+		}
 		RBWebSession.get().getHistory().back();
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 	}
