@@ -14,9 +14,9 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.util.MapModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 import org.slf4j.Logger;
@@ -61,6 +61,7 @@ import de.lichtflut.rb.webck.models.basic.LoadableModel;
 public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 	private final LoadableModel<RBEntity> model = new RBEntityModel();
+	private final IModel<Map<Integer, List<RBField>>> errorModel = new MapModel<Integer,List<RBField>>();
 
 	@SpringBean
 	private EntityManager entityManager;
@@ -74,7 +75,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	 */
 	public ResourceBrowsingPanel(final String id) {
 		super(id);
-		add(new FeedbackPanel("feedback").setOutputMarkupId(true).setEscapeModelStrings(false));
+		add(new RBEntityFeedbackPanel("feedback", errorModel).setOutputMarkupId(true).setEscapeModelStrings(false));
 
 		final Form<?> form = new Form<Void>("form");
 		form.setOutputMarkupId(true);
@@ -146,8 +147,11 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 
 			@Override
 			protected void onError(final Map<Integer, List<RBField>> errors) {
-				String errorMessage = buildFeedbackMessage(errors);
-				error(errorMessage);
+				// Wie still have to save the changes, so they won't get lost during ajax update
+				entityManager.store(model.getObject());
+				errorModel.setObject(errors);
+				//				String errorMessage = buildFeedbackMessage(errors);
+				//				error(errorMessage);
 				RBAjaxTarget.add(ResourceBrowsingPanel.this);
 			}
 
