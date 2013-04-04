@@ -22,11 +22,9 @@ import org.arastreju.sge.model.ResourceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.webck.browsing.BrowsingState;
@@ -75,9 +73,9 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 	 */
 	public ResourceBrowsingPanel(final String id) {
 		super(id);
-		add(new RBEntityFeedbackPanel("feedback", errorModel).setOutputMarkupId(true).setEscapeModelStrings(false));
 
 		final Form<?> form = new Form<Void>("form");
+		form.add(new RBEntityFeedbackPanel("feedback", errorModel));
 		form.setOutputMarkupId(true);
 		form.setMultiPart(true);
 
@@ -142,6 +140,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		return new LocalButtonBar(id, model) {
 			@Override
 			protected void onSave(final IModel<RBEntity> model, final AjaxRequestTarget target, final Form<?> form) {
+				errorModel.getObject().clear();
 				ResourceBrowsingPanel.this.onSave(model);
 			}
 
@@ -150,9 +149,7 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 				// Wie still have to save the changes, so they won't get lost during ajax update
 				entityManager.store(model.getObject());
 				errorModel.setObject(errors);
-				//				String errorMessage = buildFeedbackMessage(errors);
-				//				error(errorMessage);
-				RBAjaxTarget.add(ResourceBrowsingPanel.this);
+				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 			}
 
 			@Override
@@ -196,32 +193,6 @@ public class ResourceBrowsingPanel extends Panel implements IBrowsingHandler {
 		super.onConfigure();
 		// reset the model before render to fetch the latest from browsing history.
 		model.reset();
-	}
-
-	// ------------------------------------------------------
-
-	/**
-	 * TODO: OT 2012-12-05 Transfer markup into HTML-Template and text into properties (not internationalizable)
-	 *
-	 * Better: create own feedback panel: http://m3g4h4rd.blogspot.de/2011/01/how-to-customize-wicket-feedback-panel.html
-	 */
-	private String buildFeedbackMessage(final Map<Integer, List<RBField>> errors) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getString("error.validation"));
-		sb.append("<ul>");
-		for (Integer errorCode : errors.keySet()) {
-			if(ErrorCodes.CARDINALITY_EXCEPTION == errorCode){
-				sb.append("Cardinality is not as defined: ");
-				List<RBField> fields = errors.get(ErrorCodes.CARDINALITY_EXCEPTION);
-				for (RBField field : fields) {
-					sb.append("<li>");
-					sb.append("Cardinality of \"" + field.getLabel(getLocale()) + "\" is definened as: " + CardinalityBuilder.getCardinalityAsString(field.getCardinality()));
-					sb.append("</li>");
-				}
-			}
-		}
-		sb.append("</ul>");
-		return sb.toString();
 	}
 
 	// ------------------------------------------------------
