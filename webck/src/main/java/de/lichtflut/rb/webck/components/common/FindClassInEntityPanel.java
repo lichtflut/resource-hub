@@ -95,6 +95,21 @@ public class FindClassInEntityPanel extends Panel {
 
 	// ------------------------------------------------------
 
+	// TODO move to/create a service
+	protected void findInstancesRecursive(final ResourceNode node, final List<ResourceNode> instances) {
+		SNClass schemaType = SchemaIdentifyingType.of(node);
+		ResourceSchema schema = schemaManager.findSchemaForType(schemaType);
+		if (null != schema) {
+			for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
+				if(decl.getConstraint() != null){
+					findInConstraint(node, instances, decl);
+				}
+			}
+		}
+	}
+
+	// ------------------------------------------------------
+
 	protected void initPanel() {
 		add(new PanelTitle("header", new ResourceModel("header.title")));
 
@@ -141,19 +156,6 @@ public class FindClassInEntityPanel extends Panel {
 
 	}
 
-	// TODO move to/create a service
-	protected void findInstancesRecursive(final ResourceNode node, final List<ResourceNode> instances) {
-		SNClass schemaType = SchemaIdentifyingType.of(node);
-		ResourceSchema schema = schemaManager.findSchemaForType(schemaType);
-		if (null != schema) {
-			for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
-				if(decl.getConstraint() != null){
-					findInConstraint(node, instances, decl);
-				}
-			}
-		}
-	}
-
 	private void findInConstraint(final ResourceNode node, final List<ResourceNode> instances,
 			final PropertyDeclaration decl) {
 		if(decl.getConstraint().getTypeConstraint() != null){
@@ -164,7 +166,7 @@ public class FindClassInEntityPanel extends Panel {
 		}
 	}
 
-	protected void iterateOverValues(final List<ResourceNode> instances, final Set<ResourceNode> values) {
+	private void iterateOverValues(final List<ResourceNode> instances, final Set<ResourceNode> values) {
 		for (ResourceNode resourceNode : values) {
 			for (ResourceNode  rdfType : SNOPS.objectsAsResources(resourceNode, RDF.TYPE)) {
 				if(rdfType.equals(wanted.getObject())){

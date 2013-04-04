@@ -130,10 +130,9 @@ public class BrowseAndSearchPage extends RBBasePage {
 
 	// ----------------------------------------------------
 
-	@SuppressWarnings("rawtypes")
 	protected Form<?> createForm() {
 		final IModel<String> searchModel = new Model<String>();
-		final Form<?> form = new Form("form") {
+		final Form<?> form = new Form<Void>("form") {
 			@Override
 			protected void onSubmit() {
 				final PageParameters params = new PageParameters();
