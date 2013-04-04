@@ -11,6 +11,7 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -140,30 +141,37 @@ public class FindClassInEntityPanel extends Panel {
 
 	}
 
+	// TODO move to/create a service
 	protected void findInstancesRecursive(final ResourceNode node, final List<ResourceNode> instances) {
 		SNClass schemaType = SchemaIdentifyingType.of(node);
 		ResourceSchema schema = schemaManager.findSchemaForType(schemaType);
-
 		if (null != schema) {
-
 			for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
 				if(decl.getConstraint() != null){
-					if(decl.getConstraint().getTypeConstraint() != null){
-						if (!SNOPS.objects(node, decl.getPropertyDescriptor()).isEmpty()) {
-							for (ResourceNode resourceNode : SNOPS.objectsAsResources(node, decl.getPropertyDescriptor())) {
-
-								for (ResourceNode  rdfType : SNOPS.objectsAsResources(resourceNode, RDF.TYPE)) {
-									if(rdfType.equals(wanted.getObject())){
-										instances.add(resourceNode);
-
-									}
-								}
-								findInstancesRecursive(resourceNode, instances);
-							}
-						}
-					}
+					findInConstraint(node, instances, decl);
 				}
 			}
+		}
+	}
+
+	private void findInConstraint(final ResourceNode node, final List<ResourceNode> instances,
+			final PropertyDeclaration decl) {
+		if(decl.getConstraint().getTypeConstraint() != null){
+			if (!SNOPS.objects(node, decl.getPropertyDescriptor()).isEmpty()) {
+				Set<ResourceNode> values = SNOPS.objectsAsResources(node, decl.getPropertyDescriptor());
+				iterateOverValues(instances, values);
+			}
+		}
+	}
+
+	protected void iterateOverValues(final List<ResourceNode> instances, final Set<ResourceNode> values) {
+		for (ResourceNode resourceNode : values) {
+			for (ResourceNode  rdfType : SNOPS.objectsAsResources(resourceNode, RDF.TYPE)) {
+				if(rdfType.equals(wanted.getObject())){
+					instances.add(resourceNode);
+				}
+			}
+			findInstancesRecursive(resourceNode, instances);
 		}
 	}
 }
