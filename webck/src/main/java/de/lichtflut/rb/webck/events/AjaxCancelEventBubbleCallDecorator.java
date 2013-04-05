@@ -3,37 +3,28 @@
  */
 package de.lichtflut.rb.webck.events;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.ajax.IAjaxCallDecorator;
-import org.apache.wicket.ajax.calldecorator.AjaxPostprocessingCallDecorator;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
 
 /**
  * <p>
  * Stop component from propagating an event to its parents.
  * </p>
  * Created: Feb 21, 2013
- *
+ * 
  * @author Ravi Knox
  */
-public class AjaxCancelEventBubbleCallDecorator extends AjaxPostprocessingCallDecorator {
+public class AjaxCancelEventBubbleCallDecorator extends AjaxCallListener {
 
 	// ---------------- Constructor -------------------------
 
-	public AjaxCancelEventBubbleCallDecorator()
-	{
-		this(null);
-	}
-
-	public AjaxCancelEventBubbleCallDecorator(final IAjaxCallDecorator delegate)
-	{
-		super(delegate);
+	public AjaxCancelEventBubbleCallDecorator() {
+		super.onAfter(getSequence());
 	}
 
 	// ------------------------------------------------------
 
-	@Override
-	public CharSequence postDecorateScript(final Component component, final CharSequence script) {
-		return "e = event; if(e.stopPropagation) {e.stopPropagation();}else{e.cancelBubble = true;}" + script;
+	private CharSequence getSequence() {
+		return "e = event; if(e.stopPropagation) {e.stopPropagation();}else{e.cancelBubble = true;}";
 	}
 
 }
