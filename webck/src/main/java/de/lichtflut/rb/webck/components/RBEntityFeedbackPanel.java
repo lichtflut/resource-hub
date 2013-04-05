@@ -32,6 +32,7 @@ import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.webck.browsing.BrowsingHistory;
 import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
 import de.lichtflut.rb.webck.common.RBWebSession;
 
@@ -46,18 +47,17 @@ import de.lichtflut.rb.webck.common.RBWebSession;
 // This is basically a copy of {@link FeedbackPanel}, which cannot be extended due to final methods.
 public class RBEntityFeedbackPanel extends Panel implements IFeedback {
 
-	private final MessageListView messageListView;
-
 	@SpringBean
 	private EntityManager entityManager;
+
+	private final MessageListView messageListView;
 
 	// ---------------- Constructor -------------------------
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param id
-	 * @param model
+	 * @param id Component id
 	 */
 	public RBEntityFeedbackPanel(final String id) {
 		this(id, null);
@@ -66,8 +66,8 @@ public class RBEntityFeedbackPanel extends Panel implements IFeedback {
 	/**
 	 * Constructor.
 	 * 
-	 * @param id
-	 * @param model
+	 * @param id Component id
+	 * @param filter Filter for this FeedbackPanel
 	 */
 	public RBEntityFeedbackPanel(final String id, final IFeedbackMessageFilter filter) {
 		super(id);
@@ -104,8 +104,22 @@ public class RBEntityFeedbackPanel extends Panel implements IFeedback {
 		return getParent();
 	}
 
+	/**
+	 * Gets the currently collected messages for this panel.
+	 * 
+	 * @return the currently collected messages for this panel, possibly empty
+	 */
+	protected final List<FeedbackMessage> getCurrentMessages() {
+		return getFeedbackMessagesAsList();
+	}
+
 	// ------------------------------------------------------
 
+	/**
+	 * Retrieve Validation-Errors of the current Entity in the {@link BrowsingHistory}.
+	 * 
+	 * @return a list of Feedbackmessages
+	 */
 	private List<FeedbackMessage> getFeedbackMessagesAsList() {
 		List<FeedbackMessage> list = new ArrayList<FeedbackMessage>();
 		RBEntity entity = getCurrentEntity();
@@ -145,15 +159,19 @@ public class RBEntityFeedbackPanel extends Panel implements IFeedback {
 		if (ErrorCodes.CARDINALITY_EXCEPTION == errorCode) {
 			List<RBField> fields = errors.get(ErrorCodes.CARDINALITY_EXCEPTION);
 			for (RBField field : fields) {
-				String cardinalityAsString = CardinalityBuilder.getCardinalityAsString(field.getCardinality());
-				Object[] parameter = { field.getLabel(getLocale()), cardinalityAsString };
-				String resourceString = new StringResourceModel("error.cardinality", this, new Model<String>(),
-						parameter).getString();
-				FeedbackMessage message = new FeedbackMessage(getReporter(), resourceString, FeedbackMessage.ERROR);
+				FeedbackMessage message = createCardinalityErrorMessage(field);
 				list.add(message);
 			}
 		}
+	}
 
+	private FeedbackMessage createCardinalityErrorMessage(final RBField field) {
+		String cardinalityAsString = CardinalityBuilder.getCardinalityAsString(field.getCardinality());
+		Object[] parameter = { field.getLabel(getLocale()), cardinalityAsString };
+		String resourceString = new StringResourceModel("error.cardinality", this, new Model<String>(), parameter)
+		.getString();
+		FeedbackMessage message = new FeedbackMessage(getReporter(), resourceString, FeedbackMessage.ERROR);
+		return message;
 	}
 
 	// -------------- COPY OF {@link FeedbackPanel} ---------
@@ -307,15 +325,6 @@ public class RBEntityFeedbackPanel extends Panel implements IFeedback {
 	 */
 	protected String getCSSClass(final FeedbackMessage message) {
 		return "feedbackPanel" + message.getLevelAsString();
-	}
-
-	/**
-	 * Gets the currently collected messages for this panel.
-	 * 
-	 * @return the currently collected messages for this panel, possibly empty
-	 */
-	protected final List<FeedbackMessage> getCurrentMessages() {
-		return getFeedbackMessagesAsList();
 	}
 
 	/**
