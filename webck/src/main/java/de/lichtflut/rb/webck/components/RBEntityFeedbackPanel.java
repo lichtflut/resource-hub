@@ -19,30 +19,37 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.lichtflut.rb.core.eh.ErrorCodes;
+import de.lichtflut.rb.core.entity.EntityHandle;
+import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
+import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
+import de.lichtflut.rb.webck.common.RBWebSession;
 
 /**
  * <p>
- * Custom extension of {@link FeedbackPanel} for RBEntity validation.
+ * Customized Feedbackpanel for RBEntity validation.
  * </p>
  * Created: Apr 4, 2013
  * 
  * @author Ravi Knox
  */
+// This is basically a copy of {@link FeedbackPanel}, which cannot be extended due to final methods.
 public class RBEntityFeedbackPanel extends Panel implements IFeedback {
 
-	private final IModel<Map<Integer, List<RBField>>> model;
-
 	private final MessageListView messageListView;
+
+	@SpringBean
+	private EntityManager entityManager;
 
 	// ---------------- Constructor -------------------------
 
@@ -52,8 +59,8 @@ public class RBEntityFeedbackPanel extends Panel implements IFeedback {
 	 * @param id
 	 * @param model
 	 */
-	public RBEntityFeedbackPanel(final String id, final IModel<Map<Integer, List<RBField>>> model) {
-		this(id, model, null);
+	public RBEntityFeedbackPanel(final String id) {
+		this(id, null);
 	}
 
 	/**
@@ -62,14 +69,10 @@ public class RBEntityFeedbackPanel extends Panel implements IFeedback {
 	 * @param id
 	 * @param model
 	 */
-	public RBEntityFeedbackPanel(final String id, final IModel<Map<Integer, List<RBField>>> model,
-			final IFeedbackMessageFilter filter) {
+	public RBEntityFeedbackPanel(final String id, final IFeedbackMessageFilter filter) {
 		super(id);
-		this.model = model;
 
 		WebMarkupContainer messagesContainer = new WebMarkupContainer("feedbackul") {
-			private static final long serialVersionUID = 1L;
-
 			@Override
 			protected void onConfigure() {
 				super.onConfigure();
@@ -90,13 +93,11 @@ public class RBEntityFeedbackPanel extends Panel implements IFeedback {
 
 	protected IModel<List<FeedbackMessage>> newFeedbackMessagesModel() {
 		return new LoadableDetachableModel<List<FeedbackMessage>>() {
-
 			@Override
 			protected List<FeedbackMessage> load() {
 				return getFeedbackMessagesAsList();
 			}
 		};
-
 	}
 
 	protected Component getReporter() {
@@ -106,23 +107,48 @@ public class RBEntityFeedbackPanel extends Panel implements IFeedback {
 	// ------------------------------------------------------
 
 	private List<FeedbackMessage> getFeedbackMessagesAsList() {
-		if (model == null || model.getObject() == null) {
-			return new ArrayList<FeedbackMessage>();
-		}
 		List<FeedbackMessage> list = new ArrayList<FeedbackMessage>();
-		for (Integer errorCode : model.getObject().keySet()) {
-			addErrorFor(errorCode, list);
+		RBEntity entity = getCurrentEntity();
+		if (entity == null) {
+			return list;
+		}
+		Map<Integer, List<RBField>> errors = entityManager.validate(entity);
+		for (Integer errorCode : errors.keySet()) {
+			addErrorFor(errorCode, errors, list);
 		}
 		return list;
 	}
 
-	private void addErrorFor(final Integer errorCode, final List<FeedbackMessage> list) {
+	private RBEntity getCurrentEntity() {
+		EntityHandle handle = getHandle();
+		if (null == handle) {
+			return null;
+		}
+		RBEntity entity = entityManager.find(handle.getId());
+		return entity;
+	}
+
+	private EntityHandle getHandle() {
+		EntityBrowsingStep step = RBWebSession.get().getHistory().getCurrentStep();
+		if (step == null) {
+			return null;
+		}
+		EntityHandle handle = step.getHandle();
+		if (!handle.hasId()) {
+			return null;
+		}
+		return handle;
+	}
+
+	private void addErrorFor(final Integer errorCode, final Map<Integer, List<RBField>> errors,
+			final List<FeedbackMessage> list) {
 		if (ErrorCodes.CARDINALITY_EXCEPTION == errorCode) {
-			List<RBField> fields = model.getObject().get(ErrorCodes.CARDINALITY_EXCEPTION);
+			List<RBField> fields = errors.get(ErrorCodes.CARDINALITY_EXCEPTION);
 			for (RBField field : fields) {
 				String cardinalityAsString = CardinalityBuilder.getCardinalityAsString(field.getCardinality());
-				Object[] parameter = {field.getLabel(getLocale()), cardinalityAsString};
-				String resourceString = new StringResourceModel("error.cardinality", this, new Model<String>(), parameter).getString();
+				Object[] parameter = { field.getLabel(getLocale()), cardinalityAsString };
+				String resourceString = new StringResourceModel("error.cardinality", this, new Model<String>(),
+						parameter).getString();
 				FeedbackMessage message = new FeedbackMessage(getReporter(), resourceString, FeedbackMessage.ERROR);
 				list.add(message);
 			}
@@ -130,7 +156,7 @@ public class RBEntityFeedbackPanel extends Panel implements IFeedback {
 
 	}
 
-	// ------------------------------------------------------
+	// -------------- COPY OF {@link FeedbackPanel} ---------
 
 	/**
 	 * List for messages.
@@ -138,38 +164,10 @@ public class RBEntityFeedbackPanel extends Panel implements IFeedback {
 	private final class MessageListView extends ListView<FeedbackMessage> {
 		private static final long serialVersionUID = 1L;
 
-		/**
-		 * @see org.apache.wicket.Component#Component(String)
-		 */
 		public MessageListView(final String id) {
 			super(id, getFeedbackMessagesAsList());
 			setDefaultModel(newFeedbackMessagesModel());
 		}
-
-		//		@Override
-		//		protected IModel<FeedbackMessage> getListItemModel(final IModel<? extends List<FeedbackMessage>> listViewModel,
-		//				final int index) {
-		//			return new AbstractReadOnlyModel<FeedbackMessage>() {
-		//				private static final long serialVersionUID = 1L;
-		//
-		//				/**
-		//				 * WICKET-4258 Feedback messages might be cleared already.
-		//				 *
-		//				 * @see WebSession#cleanupFeedbackMessages()
-		//				 */
-		//				@Override
-		//				public FeedbackMessage getObject() {
-		//					//					if (model == null || model.getObject() == null) {
-		//					//						return null;
-		//					//					}
-		//					if (index >= listViewModel.getObject().size()) {
-		//						return null;
-		//					} else {
-		//						return getFeedbackMessagesAsList().get(index);
-		//					}
-		//				}
-		//			};
-		//		}
 
 		@Override
 		protected void populateItem(final ListItem<FeedbackMessage> listItem) {
