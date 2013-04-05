@@ -60,7 +60,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 
 	// -----------------------------------------------------
 
-	public static ConditionalModel<Boolean> isTrue(final IModel<Boolean> model) {
+	public static ConditionalModel<Boolean> isTrue(final IModel<?> model) {
 		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
@@ -69,7 +69,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 
-	public static ConditionalModel<Boolean> isFalse(final IModel<Boolean> model) {
+	public static ConditionalModel<Boolean> isFalse(final IModel<?> model) {
 		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
@@ -127,7 +127,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 
-	public static ConditionalModel<?> not(final ConditionalModel<?> model) {
+	public static ConditionalModel<Boolean> not(final ConditionalModel<?> model) {
 		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
@@ -136,7 +136,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 
-	public static ConditionalModel<?> and(final ConditionalModel<?>... model) {
+	public static ConditionalModel<Boolean> and(final ConditionalModel<?>... model) {
 		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
@@ -149,7 +149,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 
-	public static ConditionalModel<?> or(final ConditionalModel<?>... model) {
+	public static ConditionalModel<Boolean> or(final ConditionalModel<?>... model) {
 		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
@@ -163,8 +163,8 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 
-	public static <T> ConditionalModel<T> areEqual(final IModel<T> model, final IModel<T> other) {
-		return new ConditionalModel<T>(model) {
+	public static ConditionalModel<Boolean> areEqual(final IModel<?> model, final IModel<?> other) {
+		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
 				return Infra.equals(model.getObject(), other.getObject());
@@ -172,8 +172,8 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 
-	public static <T> ConditionalModel<T> areEqual(final IModel<T> model, final Object other) {
-		return new ConditionalModel<T>(model) {
+	public static ConditionalModel<Boolean> areEqual(final IModel<?> model, final Object other) {
+		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
 				return Infra.equals(model.getObject(), other);
@@ -181,8 +181,8 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 
-	public static <T> ConditionalModel<T> lessThan(final IModel<? extends Number> model, final IModel<?extends Number> other) {
-		return new ConditionalModel<T>(model) {
+	public static ConditionalModel<Boolean> lessThan(final IModel<? extends Number> model, final IModel<?extends Number> other) {
+		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
 				return model.getObject().doubleValue() < other.getObject().doubleValue();
@@ -190,8 +190,8 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 
-	public static <T> ConditionalModel<T> greaterThan(final IModel<? extends Number> model, final IModel<?extends Number> other) {
-		return new ConditionalModel<T>(model) {
+	public static ConditionalModel<Boolean> greaterThan(final IModel<? extends Number> model, final IModel<?extends Number> other) {
+		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
 				return model.getObject().doubleValue() > other.getObject().doubleValue();
@@ -199,8 +199,8 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		};
 	}
 
-	public static <T> ConditionalModel<T> hasSchema(final IModel<RBEntity> entityModel) {
-		return new ConditionalModel<T>(entityModel) {
+	public static ConditionalModel<Boolean> hasSchema(final IModel<RBEntity> entityModel) {
+		return new ConditionalModel<Boolean>(entityModel) {
 			@Override
 			public boolean isFulfilled() {
 				final RBEntity entity = entityModel.getObject();

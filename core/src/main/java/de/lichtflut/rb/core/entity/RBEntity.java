@@ -9,6 +9,7 @@ import java.util.List;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
+import de.lichtflut.rb.core.common.SchemaIdentifyingType;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 
 
@@ -31,22 +32,20 @@ public interface RBEntity extends Serializable {
 
 
 	/**
-	 * Returns the RDF:TYPE of this RBEntity.
+	 * Returns the {@link SchemaIdentifyingType} of this RBEntity.
 	 * @return the {@link ResourceID} of this RBEntity's type
 	 */
 	ResourceID getType();
 
 	/**
 	 * Returns the {@link RBEntity} as an {@link ResourceNode}.
-	 * @return the IRBEntity as an ResourceNode
+	 * @return the entity as a ResourceNode
 	 */
 	ResourceNode getNode();
 
 	/**
 	 * Returns a Label for this {@link RBEntity}.
-	 * It may consist of various {@link RBField}s.
-	 * It does not have to be unique.
-	 * @return {@link String} representation for this {@link RBEntity}
+	 * @return string representation for this {@link RBEntity}
 	 */
 	String getLabel();
 
@@ -54,14 +53,14 @@ public interface RBEntity extends Serializable {
 
 	/**
 	 * Returns the {@link RBField} for the predicate.
-	 * @param predicate The predicate of the field.
-	 * @return null if {@link RBField} is not found
+	 * @param predicate The predicate of the field
+	 * @return the field for the given predicate or null if prediate has no field associated
 	 */
 	RBField getField(ResourceID predicate);
 
 	/**
-	 * Returns all fields of the NewRBEntity.
-	 * @return - All RBFields of this entity
+	 * Returns all fields of the entity.
+	 * @return All RBFields of this entity
 	 */
 	List<RBField> getAllFields();
 
