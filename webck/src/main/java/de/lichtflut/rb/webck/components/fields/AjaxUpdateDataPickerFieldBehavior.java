@@ -23,9 +23,9 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * @author Oliver Tigges
  */
 public class AjaxUpdateDataPickerFieldBehavior extends Behavior {
-	
+
 	private DataPickerField<?> picker;
-	
+
 	// ----------------------------------------------------
 
 	/**
@@ -33,56 +33,57 @@ public class AjaxUpdateDataPickerFieldBehavior extends Behavior {
 	 */
 	public AjaxUpdateDataPickerFieldBehavior() {
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * @param target
 	 */
-	public void onError(AjaxRequestTarget target) {
+	public void onError(final AjaxRequestTarget target) {
 	}
 
 	/**
 	 * @param target
 	 */
-	public void onSubmit(AjaxRequestTarget target) {
+	public void onSubmit(final AjaxRequestTarget target) {
 	}
-	
+
 	// ----------------------------------------------------
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void onConfigure(Component component) {
+	public void onConfigure(final Component component) {
 		super.onConfigure(component);
 		picker = (DataPickerField<?>) component;
-		
+
 		ValueUpdateBehavior writeBackBehavior = new ValueUpdateBehavior();
-		
+
 		picker.getValueComponent().add(writeBackBehavior);
-		
+
 		String callbackUrl = writeBackBehavior.getCallbackUrl().toString();
 		char separator = (callbackUrl != null && callbackUrl.indexOf('?') > -1) ? '&' : '?';
-		
+
 		String markupId = picker.getValueComponent().getMarkupId();
 
+		// See http://osdir.com/ml/users-wicket.apache.org/2012-10/msg00715.html
 		final String saveCall = "{" +
 				writeBackBehavior.generateCallbackScript("wicketAjaxGet('" + callbackUrl + separator +
-				"save=true&'+document.getElementById('" + markupId +"').name+'='+" +
+						"save=true&'+document.getElementById('" + markupId +"').name+'='+" +
 						"wicketEncode(document.getElementById('" + markupId +"').value)") + "; return false;}";
 
 		final String cancelCall = "{" +
-			writeBackBehavior.generateCallbackScript("wicketAjaxGet('" + callbackUrl + separator + "save=false'") +
-			"; return false;}";
-		
+				writeBackBehavior.generateCallbackScript("wicketAjaxGet('" + callbackUrl + separator + "save=false'") +
+				"; return false;}";
+
 		picker.getDisplayComponent().add(new Behavior() {
 			@Override
 			public void onComponentTag(final Component comp, final ComponentTag tag) {
 				super.onComponentTag(comp, tag);
 
 				final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall +
-					" else if (kc!=13) { return true; } else " + saveCall;
+						" else if (kc!=13) { return true; } else " + saveCall;
 
 				tag.put("onblur", saveCall);
 				tag.put("onkeypress", "if (Wicket.Browser.isSafari()) { return; }; " + keypress);
@@ -90,25 +91,25 @@ public class AjaxUpdateDataPickerFieldBehavior extends Behavior {
 			}
 		});
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	private void beforeSubmit() {
 		picker.convertInput();
 		picker.updateModel();
 	}
-	
+
 	private final class ValueUpdateBehavior extends AbstractDefaultAjaxBehavior {
 		@Override
-		protected void respond(AjaxRequestTarget target) {
+		protected void respond(final AjaxRequestTarget target) {
 			@SuppressWarnings("rawtypes")
 			FormComponent formComp = (FormComponent) getComponent();
-			
+
 			RequestCycle requestCycle = RequestCycle.get();
 			boolean save = requestCycle.getRequest()
-				.getRequestParameters()
-				.getParameterValue("save")
-				.toBoolean(false);
+					.getRequestParameters()
+					.getParameterValue("save")
+					.toBoolean(false);
 
 			if (save) {
 				formComp.processInput();
