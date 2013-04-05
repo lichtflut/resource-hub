@@ -6,7 +6,9 @@ package de.lichtflut.rb.webck.components.colorpicker;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.markup.head.CssContentHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -113,8 +115,8 @@ public class ColorPickerPanel extends Panel implements ILabelProvider<String> {
 
 	@Override
 	public void renderHead(final IHeaderResponse response) {
-		response.renderCSSReference(cssResourceReference);
-		response.renderJavaScriptReference(reference);
+		response.render(CssContentHeaderItem.forReference(cssResourceReference));
+		response.render(JavaScriptHeaderItem.forReference(reference));
 		response.render(OnLoadHeaderItem.forScript("$(document).ready(function() {" +
 				"$('#" + get("colors").getMarkupId() + "').colorpicker({" +
 				"size: 23, label: '', count: 5, hide: true" +
