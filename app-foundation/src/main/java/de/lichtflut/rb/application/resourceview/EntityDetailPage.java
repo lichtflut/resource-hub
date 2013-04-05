@@ -3,6 +3,14 @@
  */
 package de.lichtflut.rb.application.resourceview;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
+
 import de.lichtflut.rb.application.base.RBBasePage;
 import de.lichtflut.rb.application.common.CommonParams;
 import de.lichtflut.rb.core.entity.EntityHandle;
@@ -13,12 +21,6 @@ import de.lichtflut.rb.webck.components.ResourceBrowsingPanel;
 import de.lichtflut.rb.webck.components.navigation.BreadCrumbsBar;
 import de.lichtflut.rb.webck.components.notes.NotePadPanel;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.string.StringValue;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
 
 /**
  * <p>
@@ -32,8 +34,14 @@ import org.arastreju.sge.model.SimpleResourceID;
  * @author Ravi Knox
  * @author Oliver Tigges
  */
-@SuppressWarnings("serial")
 public class EntityDetailPage extends RBBasePage {
+
+	/**
+	 * ResourceBrowsingPanels component id. Useful for retrieving its current model.
+	 */
+	public static final String BROWSER_ID = "rb";
+
+	// ---------------- Constructor -------------------------
 
 	/**
 	 * Constructor.
@@ -50,13 +58,13 @@ public class EntityDetailPage extends RBBasePage {
 		DisplayMode displayMode = DisplayMode.fromParams(params);
 		final boolean editmode = !DisplayMode.VIEW.equals(displayMode);
 		if (handle != null) {
-			add(createBrowser("rb"));
+			add(createBrowser(BROWSER_ID));
 			initHistory(handle, editmode);
 		} else {
-			add(new WebMarkupContainer("rb").setVisible(false));
+			add(new WebMarkupContainer(BROWSER_ID).setVisible(false));
 		}
 
-		add(new NotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
+		add(createRightSideBar("container", BrowsingContextModel.currentEntityModel()));
 	}
 
 	/**
@@ -64,7 +72,7 @@ public class EntityDetailPage extends RBBasePage {
 	 */
 	public EntityDetailPage() {
 		add(createBrowser("rb"));
-		add(new NotePadPanel("notes", BrowsingContextModel.currentEntityModel()));
+		add(createRightSideBar("container", BrowsingContextModel.currentEntityModel()));
 	}
 
 	// ----------------------------------------------------
@@ -74,9 +82,13 @@ public class EntityDetailPage extends RBBasePage {
 		return new BreadCrumbsBar(componentID, 7);
 	}
 
-    protected Component createBrowser(final String componentID) {
-        return new ResourceBrowsingPanel(componentID);
-    }
+	protected Component createBrowser(final String componentID) {
+		return new ResourceBrowsingPanel(componentID);
+	}
+
+	protected Component createRightSideBar(final String id, final IModel<ResourceID> model) {
+		return new NotePadPanel(id, model);
+	}
 
 	// -----------------------------------------------------
 

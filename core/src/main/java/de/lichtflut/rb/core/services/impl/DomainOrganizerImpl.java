@@ -3,13 +3,14 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import static org.arastreju.sge.SNOPS.assure;
-import static org.arastreju.sge.SNOPS.singleAssociation;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.arastreju.sge.ModelingConversation;
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.organizer.ContextDeclaration;
+import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.core.services.ServiceContext;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.Organizer;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -26,13 +27,11 @@ import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.organizer.ContextDeclaration;
-import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.DomainOrganizer;
-import de.lichtflut.rb.core.services.ServiceContext;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.arastreju.sge.SNOPS.assure;
+import static org.arastreju.sge.SNOPS.singleAssociation;
 
 /**
  * <p>
@@ -47,20 +46,20 @@ import de.lichtflut.rb.core.services.ServiceContext;
  */
 public class DomainOrganizerImpl implements DomainOrganizer {
 
-	private final Logger logger = LoggerFactory.getLogger(EntityManagerImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DomainOrganizerImpl.class);
 
 	private final ServiceContext context;
 
 	private final Organizer organizer;
 
-	private final ModelingConversation conversation;
+	private final Conversation conversation;
 
 	// -----------------------------------------------------
 
 	/**
 	 * Constructor.
 	 */
-	public DomainOrganizerImpl(final ServiceContext context, final ModelingConversation conversation, final Organizer organizer) {
+	public DomainOrganizerImpl(final ServiceContext context, final Conversation conversation, final Organizer organizer) {
 		this.context = context;
 		this.conversation = conversation;
 		this.organizer = organizer;
@@ -94,8 +93,8 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 
 	@Override
 	public void setDomainOrganization(final ResourceID organization) {
-		logger.info("Setting domain organization to: " + organization);
-		final ModelingConversation mc = conversation;
+		LOGGER.info("Setting domain organization to: " + organization);
+		final Conversation mc = conversation;
 		final ResourceNode previous = getDomainOrganization();
 		if (previous != null) {
 			ResourceNode attached = mc.resolve(previous);
@@ -107,9 +106,6 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 		assure(attached, RBSystem.IS_DOMAIN_ORGANIZATION, new SNValue(ElementaryDataType.BOOLEAN, Boolean.TRUE));
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ResourceNode getDomainOrganization() {
 		final Query query = conversation.createQuery();
@@ -136,7 +132,6 @@ public class DomainOrganizerImpl implements DomainOrganizer {
 	}
 
 	/**
-	 * {@inheritDoc}
 	 * <p>
 	 * If <code>null</null> is passed and getUserPerson() is not null, it will remove the associated Person.
 	 * </p><p>

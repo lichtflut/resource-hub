@@ -123,6 +123,7 @@ div#sidebar-left {
 div#column-center {
 	float:left;
 	width:100%;
+	min-height: 1px;
 }
 	
 div#main-content {
@@ -182,10 +183,6 @@ div#sidebar-right {
 
 .layout-0-3-2 div#sidebar-right {
 	width: 40%;
-}
-
-.margin-bottom-10 {
-	margin-bottom: 10px;
 }
 
 .bold {

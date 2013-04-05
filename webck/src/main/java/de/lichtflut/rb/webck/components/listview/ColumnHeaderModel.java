@@ -3,10 +3,11 @@
  */
 package de.lichtflut.rb.webck.components.listview;
 
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import java.util.List;
+
 import org.apache.wicket.model.IModel;
 
-import java.util.List;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 
 /**
  * <p>
@@ -24,17 +25,18 @@ public class ColumnHeaderModel extends DerivedDetachableModel<List<ColumnHeader>
 	/**
 	 * @param configModel
 	 */
-	public ColumnHeaderModel(IModel<ColumnConfiguration> configModel) {
+	public ColumnHeaderModel(final IModel<ColumnConfiguration> configModel) {
 		super(configModel);
 	}
-	
+
 	// ----------------------------------------------------
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected List<ColumnHeader> derive(ColumnConfiguration original) {
+	@Override
+	protected List<ColumnHeader> derive(final ColumnConfiguration original) {
 		return original.getHeaders();
-	};
-	
+	}
+
 }

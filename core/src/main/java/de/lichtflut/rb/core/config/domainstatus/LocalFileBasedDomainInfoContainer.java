@@ -32,6 +32,10 @@ public class LocalFileBasedDomainInfoContainer implements DomainInfoContainer {
 
     // ----------------------------------------------------
 
+    public LocalFileBasedDomainInfoContainer(String workDir) throws DomainInfoException {
+        this(new File(workDir));
+    }
+
     public LocalFileBasedDomainInfoContainer(File workDir) throws DomainInfoException {
         infoFile = new File(workDir, "domain-info.json");
 
@@ -45,7 +49,7 @@ public class LocalFileBasedDomainInfoContainer implements DomainInfoContainer {
             Map<String, DomainInfo> read = mapper.readValue(infoFile,
                     MapType.construct(Map.class, SimpleType.construct(String.class),
                                      SimpleType.construct(DomainInfo.class)));
-            LOGGER.info("Read domain info: " + domainMap);
+            LOGGER.info("Read domain info: " + read);
             domainMap.putAll(read);
         } catch (IOException e) {
             throw new DomainInfoException(e);
@@ -84,8 +88,9 @@ public class LocalFileBasedDomainInfoContainer implements DomainInfoContainer {
     }
 
     @Override
-    public void updateDomain(DomainInfo info) {
+    public void updateDomain(DomainInfo info) throws DomainInfoException {
         domainMap.put(info.getName(), info);
+        onChange();
     }
 
     // ----------------------------------------------------

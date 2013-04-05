@@ -4,7 +4,7 @@
 package de.lichtflut.rb.webck.browsing;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -42,7 +42,7 @@ public class ResourceAttributeApplyAction implements ReferenceReceiveAction<Reso
 	* {@inheritDoc}
 	*/
 	@Override
-	public void execute(final ModelingConversation conversation, final RBEntity createdEntity) {
+	public void execute(final Conversation conversation, final RBEntity createdEntity) {
 		conversation.attach(subject);
 		SNOPS.assure(subject, predicate, createdEntity.getID());
 	}

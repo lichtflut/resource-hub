@@ -1,6 +1,6 @@
 package de.lichtflut.rb.core.services;
 
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.context.Context;
 
 /**
@@ -16,12 +16,32 @@ import org.arastreju.sge.context.Context;
  */
 public interface ConversationFactory {
 
-    ModelingConversation getConversation();
+    /**
+     * Get the current conversation for the current context.
+     * @return The current conversation.
+     */
+    Conversation getConversation();
 
-    ModelingConversation getConversation(Context primary);
+    /**
+     * Get the current conversation for the given context.
+     * @return The conversation.
+     */
+    Conversation getConversation(Context primary);
 
     // ----------------------------------------------------
 
-    ModelingConversation startConversation();
+    /**
+     * Start a new conversation, which will not be managed by this factory.
+     * The caller of this method is responsible for closing this conversation.
+     * @return a new conversation.
+     */
+    Conversation startConversation();
+
+    // ----------------------------------------------------
+
+    /**
+     * Close all conversations managed by this factory.
+     */
+    void closeConversations();
 
 }

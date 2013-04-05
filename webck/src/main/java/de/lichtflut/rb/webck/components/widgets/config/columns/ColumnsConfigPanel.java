@@ -3,6 +3,7 @@
  */
 package de.lichtflut.rb.webck.components.widgets.config.columns;
 
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.viewspec.ColumnDef;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
@@ -23,7 +24,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -51,7 +51,7 @@ import java.util.Set;
 public class ColumnsConfigPanel extends TypedPanel<WidgetSpec> {
 	
 	@SpringBean
-	protected ModelingConversation conversation;
+	protected SemanticNetworkService service;
 	
 	private ColumnDefsModel columnsModel;
 	
@@ -92,9 +92,6 @@ public class ColumnsConfigPanel extends TypedPanel<WidgetSpec> {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onEvent(IEvent<?> event) {
 		if (ModelChangeEvent.from(event).isAbout(ModelChangeEvent.ANY)) {
@@ -126,7 +123,7 @@ public class ColumnsConfigPanel extends TypedPanel<WidgetSpec> {
 	private void removeColumn(final ColumnDef columnDef) {
 		final WidgetSpec widgetSpec = getModelObject();
 		SNOPS.remove(widgetSpec, WDGT.DEFINES_COLUMN, columnDef);
-		conversation.remove(columnDef);
+		service.remove(columnDef);
 		update();
 	}
 	
@@ -155,9 +152,6 @@ public class ColumnsConfigPanel extends TypedPanel<WidgetSpec> {
 			SNOPS.associate(widgetSpec, WDGT.DEFINES_COLUMN, columnDef);
 		}
 
-		/** 
-		 * {@inheritDoc}
-		 */
 		@Override
 		protected List<SNColumnDef> derive(WidgetSpec original) {
 			final List<SNColumnDef> result = new ArrayList<SNColumnDef>();

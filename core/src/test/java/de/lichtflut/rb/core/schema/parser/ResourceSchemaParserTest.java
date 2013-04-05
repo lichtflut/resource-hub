@@ -3,15 +3,14 @@
  */
 package de.lichtflut.rb.core.schema.parser;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.io.InputStream;
-
+import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.parser.exception.SchemaParsingException;
-import org.arastreju.sge.ModelingConversation;
+import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
+import de.lichtflut.rb.core.services.ConversationFactory;
+import de.lichtflut.rb.core.services.SchemaImporter;
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.persistence.TransactionControl;
@@ -23,12 +22,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
-import de.lichtflut.rb.core.services.ConversationFactory;
-import de.lichtflut.rb.core.services.SchemaImporter;
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * <p>
@@ -51,7 +50,7 @@ public class ResourceSchemaParserTest {
 	private TransactionControl tx;
 
 	@Mock
-	private ModelingConversation conversation;
+	private Conversation conversation;
 
 	@Mock
 	private ConversationFactory conversationFactory;
@@ -89,7 +88,7 @@ public class ResourceSchemaParserTest {
 				getClass().getClassLoader().getResourceAsStream("test-schema.rsf");
 
 		final RsfSchemaParser parser = new RsfSchemaParser();
-		ParsedElements parsedElements = parser.parse(in);
+		parser.parse(in);
 	}
 
 	// -- GIVEN -------------------------------------------

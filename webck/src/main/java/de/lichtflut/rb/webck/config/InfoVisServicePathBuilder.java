@@ -13,6 +13,6 @@ package de.lichtflut.rb.webck.config;
  */
 public interface InfoVisServicePathBuilder {
 
-    String getTree(String domain, String entity);
+    InfoVisPath create(String domain);
 
 }

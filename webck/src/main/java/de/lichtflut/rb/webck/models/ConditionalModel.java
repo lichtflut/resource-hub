@@ -1,18 +1,17 @@
 /*
- * Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright (C) 2013 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.models;
 
-import de.lichtflut.infra.Infra;
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import java.util.Collection;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
-import org.arastreju.sge.model.nodes.ResourceNode;
 
-import java.util.Collection;
+import de.lichtflut.infra.Infra;
+import de.lichtflut.rb.core.entity.RBEntity;
 
 /**
  * <p>
@@ -28,39 +27,39 @@ import java.util.Collection;
 public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> {
 
 	private Object target;
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * Constructor.
 	 */
 	public ConditionalModel(final IModel<T> model) {
 		this.target = model;
 	}
-	
+
 	/**
 	 * Constructor.
 	 */
 	public ConditionalModel(final Object value) {
 		this.target = value;
 	}
-	
+
 	/**
 	 * Constructor.
 	 */
 	public ConditionalModel() {
 		this.target = null;
 	}
-	
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * Check if the condition is fulfilled.
 	 */
 	public abstract boolean isFulfilled();
-	 
+
 	// -----------------------------------------------------
-	
+
 	public static ConditionalModel<Boolean> isTrue(final IModel<Boolean> model) {
 		return new ConditionalModel<Boolean>(model) {
 			@Override
@@ -69,7 +68,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			}
 		};
 	}
-	
+
 	public static ConditionalModel<Boolean> isFalse(final IModel<Boolean> model) {
 		return new ConditionalModel<Boolean>(model) {
 			@Override
@@ -78,57 +77,56 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			}
 		};
 	}
-	
-	public static ConditionalModel<?> isNull(final IModel<?> model) {
-		return new ConditionalModel<Object>(model) {
+
+	public static ConditionalModel<Boolean> isNull(final IModel<?> model) {
+		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
 				return getObject() == null;
 			}
 		};
 	}
-	
-	public static ConditionalModel<?> isNotNull(final IModel<?> model) {
-		return new ConditionalModel<Object>(model) {
+
+	public static ConditionalModel<Boolean> isNotNull(final IModel<?> model) {
+		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
 				return getObject() != null;
 			}
 		};
 	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static ConditionalModel<?> isEmpty(final IModel<? extends Collection<?>> model) {
-		return new ConditionalModel(model) {
+
+	public static ConditionalModel<Boolean> isEmpty(final IModel<? extends Collection<?>> model) {
+		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
-				Collection collection = (Collection) getObject();
+				@SuppressWarnings("unchecked")
+				Collection<Object> collection = (Collection<Object>) model.getObject();
 				return collection == null || collection.isEmpty();
 			}
 		};
 	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static ConditionalModel<?> isNotEmpty(final IModel<? extends Collection<?>> model) {
-		return new ConditionalModel(model) {
+
+	public static ConditionalModel<Boolean> isNotEmpty(final IModel<? extends Collection<?>> model) {
+		return new ConditionalModel<Boolean>(model) {
 			@Override
 			public boolean isFulfilled() {
-				Collection collection = (Collection) getObject();
+				@SuppressWarnings("unchecked")
+				Collection<Object> collection = (Collection<Object>) model.getObject();
 				return collection != null && !collection.isEmpty();
 			}
 		};
 	}
 
-    @SuppressWarnings({ "unchecked" })
-    public static ConditionalModel isNotBlank(final IModel<String> model) {
-        return new ConditionalModel(model) {
-            @Override
-            public boolean isFulfilled() {
-                return model.getObject() != null && model.getObject().trim().length() > 0;
-            }
-        };
-    }
-	
+	public static ConditionalModel<Boolean> isNotBlank(final IModel<String> model) {
+		return new ConditionalModel<Boolean>(model) {
+			@Override
+			public boolean isFulfilled() {
+				return model.getObject() != null && model.getObject().trim().length() > 0;
+			}
+		};
+	}
+
 	public static ConditionalModel<?> not(final ConditionalModel<?> model) {
 		return new ConditionalModel<Boolean>(model) {
 			@Override
@@ -137,7 +135,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			}
 		};
 	}
-	
+
 	public static ConditionalModel<?> and(final ConditionalModel<?>... model) {
 		return new ConditionalModel<Boolean>(model) {
 			@Override
@@ -150,7 +148,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			}
 		};
 	}
-	
+
 	public static ConditionalModel<?> or(final ConditionalModel<?>... model) {
 		return new ConditionalModel<Boolean>(model) {
 			@Override
@@ -164,7 +162,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			}
 		};
 	}
-	
+
 	public static <T> ConditionalModel<T> areEqual(final IModel<T> model, final IModel<T> other) {
 		return new ConditionalModel<T>(model) {
 			@Override
@@ -173,7 +171,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			}
 		};
 	}
-	
+
 	public static <T> ConditionalModel<T> areEqual(final IModel<T> model, final Object other) {
 		return new ConditionalModel<T>(model) {
 			@Override
@@ -182,7 +180,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			}
 		};
 	}
-	
+
 	public static <T> ConditionalModel<T> lessThan(final IModel<? extends Number> model, final IModel<?extends Number> other) {
 		return new ConditionalModel<T>(model) {
 			@Override
@@ -191,7 +189,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			}
 		};
 	}
-	
+
 	public static <T> ConditionalModel<T> greaterThan(final IModel<? extends Number> model, final IModel<?extends Number> other) {
 		return new ConditionalModel<T>(model) {
 			@Override
@@ -210,12 +208,9 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			}
 		};
 	}
-	
+
 	// -----------------------------------------------------
-	 
-	/** 
-	 * {@inheritDoc}
-	 */
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public T getObject() {
@@ -226,12 +221,9 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		}
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setObject(T object) {
+	public void setObject(final T object) {
 		if (target instanceof IModel) {
 			((IModel<T>) target).setObject(object);
 		} else {
@@ -239,16 +231,10 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 		}
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void detach() {
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public IWrapModel<T> wrapOnAssignment(final Component component) {
 		return new IWrapModel<T>() {
@@ -259,7 +245,7 @@ public abstract class ConditionalModel<T> implements IComponentAssignedModel<T> 
 			}
 
 			@Override
-			public void setObject(T object) {
+			public void setObject(final T object) {
 				ConditionalModel.this.setObject(object);
 			}
 

@@ -10,10 +10,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.junit.Test;
 
-import de.lichtflut.rb.AbstractRBWebTest;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
+import de.lichtflut.rb.webck.RBWebTest;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
+import de.lichtflut.rb.webck.data.schema.ResourceSchemaFactory;
 /**
  * <p>
  *  Testcase for {@link SchemaDetailPanel}.
@@ -25,7 +25,7 @@ import de.lichtflut.rb.webck.components.form.RBStandardButton;
  *
  * @author Ravi Knox
  */
-public class SchemaDetailPanelTest extends AbstractRBWebTest{
+public class SchemaDetailPanelTest extends RBWebTest{
 
 	// ------------- SetUp & tearDown -----------------------
 

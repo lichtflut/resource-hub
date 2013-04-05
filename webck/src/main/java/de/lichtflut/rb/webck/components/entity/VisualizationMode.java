@@ -18,6 +18,7 @@ public enum VisualizationMode {
 	
 	DETAILS,
 	HIERARCHY,
+    MAP,
 	PERIPHERY,
 	FLOW_CHART
 

@@ -127,6 +127,16 @@ public final class ResourceSchemaImpl implements ResourceSchema {
 		return this.declarations;
 	}
 
+	@Override
+	public void removePropertyDeclaration(final PropertyDeclaration declaration){
+		if(propertyDescriptors.contains(declaration.getPropertyDescriptor())){
+			propertyDescriptors.remove(declaration.getPropertyDescriptor());
+		}
+		if(declarations.contains(declaration)){
+			declarations.remove(declaration);
+		}
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

@@ -25,9 +25,6 @@ import de.lichtflut.rb.core.organizer.NamespaceDeclaration;
  */
 public interface DomainOrganizer {
 
-	/**
-	 * @return
-	 */
 	List<Namespace> getNamespaces();
 
 	void registerNamespace(NamespaceDeclaration namespace);

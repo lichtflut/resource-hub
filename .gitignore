@@ -1,5 +1,6 @@
 target
 derby.log
+infinitest.args
 .project
 .classpath
 .settings
@@ -16,5 +17,5 @@ core/bin
 webapp/bin
 webck/bin
 */.checkstyle
-*~
-
+*~*
+infinitest.args

@@ -4,8 +4,6 @@ import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
@@ -22,10 +20,6 @@ import de.lichtflut.rb.webck.browsing.BrowsingHistory;
  * @author Oliver Tigges
  */
 public class RBWebSession extends WebSession {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(RBWebSession.class);
-
-    // ----------------------------------------------------
 
 	private final BrowsingHistory history = new BrowsingHistory();
 

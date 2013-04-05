@@ -3,30 +3,6 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.lang3.Validate;
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.apriori.RDFS;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.model.nodes.views.SNProperty;
-import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.persistence.TransactionControl;
-import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.eh.ErrorCodes;
@@ -46,6 +22,29 @@ import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.SchemaExporter;
 import de.lichtflut.rb.core.services.SchemaImporter;
 import de.lichtflut.rb.core.services.SchemaManager;
+import org.apache.commons.lang3.Validate;
+import org.arastreju.sge.Conversation;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.SNProperty;
+import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.persistence.TransactionControl;
+import org.arastreju.sge.query.Query;
+import org.arastreju.sge.query.QueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -132,7 +131,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	@Override
 	public void store(final ResourceSchema schema) {
 		Validate.isTrue(schema.getDescribedType() != null, "The type described by this schema is not defined.");
-		final ModelingConversation mc = conversation();
+		final Conversation mc = conversation();
 		final TransactionControl tx = mc.beginTransaction();
 		try {
 			final SNResourceSchema existing = findSchemaNodeByType(schema.getDescribedType());
@@ -149,9 +148,6 @@ public class SchemaManagerImpl implements SchemaManager {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public Map<Integer, List<PropertyDeclaration>> validate(final ResourceSchema schema){
 		Map<Integer, List<PropertyDeclaration>> errors = new HashMap<Integer, List<PropertyDeclaration>>();
 		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
@@ -160,9 +156,6 @@ public class SchemaManagerImpl implements SchemaManager {
 		return errors;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeSchemaForType(final ResourceID type) {
 		final SNResourceSchema existing = findSchemaNodeByType(type);
@@ -172,11 +165,6 @@ public class SchemaManagerImpl implements SchemaManager {
 		}
 	}
 
-
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void store(final Constraint constraint) {
 		Validate.isTrue(constraint.isPublic(), "Only public type definition may be stored explicitly.");
@@ -188,7 +176,7 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	@Override
 	public void remove(final Constraint constraint){
-		final ModelingConversation mc = conversation();
+		final Conversation mc = conversation();
 		final ResourceNode existing = mc.findResource(constraint.getQualifiedName());
 		if(null != existing){
 			mc.remove(existing);
@@ -237,6 +225,9 @@ public class SchemaManagerImpl implements SchemaManager {
 	 * Find the persistent node representing the schema of the given type.
 	 */
 	private SNResourceSchema findSchemaNodeByType(final ResourceID type) {
+        if (type == null) {
+            return null;
+        }
 		final Query query = query().addField(RBSchema.DESCRIBES, type);
 		final QueryResult result = query.getResult();
 		if (result.isEmpty()) {
@@ -253,7 +244,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	 * @param mc The existing conversation.
 	 * @param schemaNode The schema node.
 	 */
-	protected void removeSchema(final ModelingConversation mc, final SNResourceSchema schemaNode) {
+	protected void removeSchema(final Conversation mc, final SNResourceSchema schemaNode) {
 		for(SNPropertyDeclaration decl : schemaNode.getPropertyDeclarations()) {
 			if (decl.hasConstraint() && !decl.getConstraint().isPublic()) {
 				mc.remove(SNOPS.id(decl.getConstraint().getQualifiedName()));
@@ -270,7 +261,7 @@ public class SchemaManagerImpl implements SchemaManager {
 	 * 	<li>Properties of Property Declarations</li>
 	 * </ul>
 	 */
-	private void ensureReferencedResourcesExist(final ModelingConversation mc, final ResourceSchema schema) {
+	private void ensureReferencedResourcesExist(final Conversation mc, final ResourceSchema schema) {
 		// 1st: check described type
 		final ResourceNode attached = mc.resolve(schema.getDescribedType());
 		final Set<SemanticNode> clazzes = SNOPS.objects(attached, RDF.TYPE);
@@ -289,7 +280,7 @@ public class SchemaManagerImpl implements SchemaManager {
 		}
 	}
 
-	private ModelingConversation conversation() {
+	private Conversation conversation() {
 		return conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX);
 	}
 
@@ -313,7 +304,7 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	/**
 	 * @param errors
-	 * @param exception
+	 * @param errorCode
 	 * @param declaration
 	 */
 	private void appendError(final Map<Integer, List<PropertyDeclaration>> errors, final int errorCode, final PropertyDeclaration declaration) {

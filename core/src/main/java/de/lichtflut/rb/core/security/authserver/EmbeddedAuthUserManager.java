@@ -16,7 +16,7 @@ import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.security.SearchResult;
 import de.lichtflut.rb.core.security.UserManager;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ElementaryDataType;
@@ -55,7 +55,7 @@ public class EmbeddedAuthUserManager implements UserManager {
 	private static final Logger LOGGER
             = LoggerFactory.getLogger(EmbeddedAuthUserManager.class);
 	
-	private final ModelingConversation conversation;
+	private final Conversation conversation;
 	
 	private final EmbeddedAuthAuthorizationManager authorization;
 
@@ -68,7 +68,7 @@ public class EmbeddedAuthUserManager implements UserManager {
 	 * @param conversation The conversation.
 	 * @param domainManager The domain manager.
 	 */
-	public EmbeddedAuthUserManager(ModelingConversation conversation, EmbeddedAuthDomainManager domainManager) {
+	public EmbeddedAuthUserManager(Conversation conversation, EmbeddedAuthDomainManager domainManager) {
 		this.domainManager = domainManager;
 		this.conversation = conversation;
 		this.authorization = new EmbeddedAuthAuthorizationManager(conversation, domainManager);

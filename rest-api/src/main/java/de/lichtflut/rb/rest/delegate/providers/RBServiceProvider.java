@@ -3,20 +3,21 @@
  */
 package de.lichtflut.rb.rest.delegate.providers;
 
-import org.arastreju.sge.ModelingConversation;
-import org.arastreju.sge.context.Context;
-
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.SecurityConfiguration;
 import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
+import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.core.services.impl.EntityManagerImpl;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import de.lichtflut.rb.core.services.impl.SecurityServiceImpl;
 import de.lichtflut.rb.core.services.impl.TypeManagerImpl;
+import org.arastreju.sge.Conversation;
+import org.arastreju.sge.context.Context;
 
 /**
  * <p>
@@ -59,12 +60,12 @@ public class RBServiceProvider implements ServiceProvider {
 	// ----------------------------------------------------
 
 	@Override
-	public ModelingConversation getConversation() {
+	public Conversation getConversation() {
 		return arastrejuResourceFactory.getConversation();
 	}
 
 	@Override
-	public ModelingConversation getConversation(final Context context) {
+	public Conversation getConversation(final Context context) {
 		return arastrejuResourceFactory.getConversation(context);
 	}
 
@@ -88,6 +89,11 @@ public class RBServiceProvider implements ServiceProvider {
 	@Override
 	public TypeManager getTypeManager() {
 		return new TypeManagerImpl(arastrejuResourceFactory, getSchemaManager());
+	}
+	
+	@Override
+	public EntityManager getEntityManager() {
+		return new EntityManagerImpl(getTypeManager(), getSchemaManager(), getConversation());
 	}
 
 	@Override
@@ -116,4 +122,6 @@ public class RBServiceProvider implements ServiceProvider {
 	public void setFileService(final FileService fileService){
 		this.fileService = fileService;
 	}
+
+
 }

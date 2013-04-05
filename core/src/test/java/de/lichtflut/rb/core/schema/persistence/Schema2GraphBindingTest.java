@@ -15,9 +15,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import de.lichtflut.rb.core.data.schema.ResourceSchemaFactory;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
-import de.lichtflut.rb.mock.schema.ResourceSchemaFactory;
 
 /**
  * <p>

@@ -32,7 +32,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
@@ -71,7 +71,7 @@ public class EntityListWidget extends ConfigurableWidget {
 	private SemanticNetworkService semanticNetwork;
 
     @SpringBean
-    private ModelingConversation conversation;
+    private Conversation conversation;
 	
 	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;

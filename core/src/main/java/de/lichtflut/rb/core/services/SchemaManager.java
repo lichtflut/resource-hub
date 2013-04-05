@@ -73,7 +73,7 @@ public interface SchemaManager {
 
 	/**
 	 * Remove the given Resource Schema.
-	 * @param schema - the {@link ResourceSchema}
+	 * @param type - the schema's type.
 	 */
 	void removeSchemaForType(ResourceID type);
 

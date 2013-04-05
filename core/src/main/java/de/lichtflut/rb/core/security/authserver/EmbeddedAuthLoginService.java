@@ -10,7 +10,7 @@ import de.lichtflut.rb.core.security.LoginData;
 import de.lichtflut.rb.core.security.RBCrypt;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.security.TicketValidationException;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.eh.ArastrejuRuntimeException;
 import org.arastreju.sge.eh.ErrorCodes;
@@ -47,7 +47,7 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 
 	private static final String randomSecret = RBCrypt.random(20);
 
-	private final ModelingConversation conversation;
+	private final Conversation conversation;
 	
 	// ----------------------------------------------------
 	
@@ -55,7 +55,7 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	 * Constructor.
 	 * @param conversation The Arastreju conversation.
 	 */
-	public EmbeddedAuthLoginService(ModelingConversation conversation) {
+	public EmbeddedAuthLoginService(Conversation conversation) {
 		this.conversation = conversation;
 	}
 	
@@ -98,7 +98,7 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
                     LOGGER.warn("Unknown authentication type: " + token);
             }
         } catch (TicketValidationException e) {
-            LOGGER.warn("Token {} is not valid: {}", token, e.getMessage());
+            LOGGER.warn("Token " + token + " is not valid: " + e.getMessage(), e.getCause());
         }
         return null;
 	}

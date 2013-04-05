@@ -11,7 +11,7 @@ import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
@@ -51,21 +51,21 @@ public class TypeSystemPanelAggregator extends Panel {
 	 */
 	protected List<ITab> getTabs() {
 		List<ITab> tabs = new ArrayList<ITab>();
-		tabs.add(new AbstractTab(Model.of("Types")) {
+		tabs.add(new AbstractTab(new ResourceModel("tab.title.type")) {
 
 			@Override
 			public WebMarkupContainer getPanel(final String panelId) {
 				return new SchemaEditorAggregator(panelId);
 			}
 		});
-		tabs.add(new AbstractTab(Model.of("Property Declaration")) {
+		tabs.add(new AbstractTab(new ResourceModel("tab.title.property")) {
 
 			@Override
 			public WebMarkupContainer getPanel(final String panelId) {
 				return new PropertyDeclEditorPanelAggregator(panelId);
 			}
 		});
-		tabs.add(new AbstractTab(Model.of("Public Constraints")) {
+		tabs.add(new AbstractTab(new ResourceModel("tab.title.constraint")) {
 
 			@Override
 			public WebMarkupContainer getPanel(final String panelId) {

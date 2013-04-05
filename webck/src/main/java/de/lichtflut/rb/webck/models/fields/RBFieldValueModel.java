@@ -3,10 +3,10 @@
  */
 package de.lichtflut.rb.webck.models.fields;
 
+import org.apache.wicket.model.IModel;
+
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.RBFieldValue;
-import org.apache.wicket.model.IModel;
-import org.arastreju.sge.model.nodes.SemanticNode;
 
 /**
  * <p>
@@ -23,9 +23,9 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 public class RBFieldValueModel implements IModel<Object> {
 
 	private final RBField field;
-	
+
 	private final int index;
-	
+
 	// -----------------------------------------------------
 
 	/**
@@ -41,28 +41,27 @@ public class RBFieldValueModel implements IModel<Object> {
 		this.field = field;
 		this.index = index;
 	}
-	
+
 	// -----------------------------------------------------
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
 	public Object getObject() {
-        RBFieldValue fieldValue = getFieldValue();
-        if (fieldValue != null) {
-            return fieldValue.getValue();
-        } else {
-            return null;
-        }
-    }
+		RBFieldValue fieldValue = getFieldValue();
+		if (fieldValue != null) {
+			return fieldValue.getValue();
+		} else {
+			return null;
+		}
+	}
 
 	@Override
 	public void setObject(final Object object) {
-        RBFieldValue fieldValue = getFieldValue();
-        if (fieldValue != null) {
-            getFieldValue().setValue(object);
-        }
+		RBFieldValue fieldValue = getFieldValue();
+		if (fieldValue != null) {
+			getFieldValue().setValue(object);
+		}
 	}
-	
+
 	/**
 	 * @return the index
 	 */
@@ -74,15 +73,15 @@ public class RBFieldValueModel implements IModel<Object> {
 		return field;
 	}
 
-    public RBFieldValue getFieldValue() {
-        return field.getValue(index);
-    }
+	public RBFieldValue getFieldValue() {
+		return field.getValue(index);
+	}
 
 	// -----------------------------------------------------
-	
+
 	@Override
 	public void detach() {
 		// Do nothing
 	}
-	
+
 }

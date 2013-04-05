@@ -4,13 +4,11 @@
 package de.lichtflut.rb.core.services;
 
 import de.lichtflut.rb.core.config.RBConfig;
-import de.lichtflut.rb.core.config.domainstatus.DomainInfo;
-import de.lichtflut.rb.core.config.domainstatus.DomainInfoContainer;
-import de.lichtflut.rb.core.config.domainstatus.DomainInfoException;
+import de.lichtflut.rb.core.system.DomainSupervisor;
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.ConversationContext;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.Organizer;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.context.DomainIdentifier;
@@ -39,9 +37,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
 
     private ArastrejuGate openGate;
 
-    private ModelingConversation conversation;
-
-    private Map<Context, ModelingConversation> conversationMap = new HashMap<Context, ModelingConversation>();
+    private Map<Context, Conversation> conversationMap = new HashMap<Context, Conversation>();
 
 	// ----------------------------------------------------
 	
@@ -67,13 +63,8 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      * @return The current conversation.
      */
 	@Override
-    public ModelingConversation getConversation() {
-        if (conversation == null) {
-            conversation = gate().startConversation();
-            conversation.getConversationContext().setReadContexts(context.getReadContexts());
-        }
-        assureActive(conversation);
-        return conversation;
+    public Conversation getConversation() {
+        return getConversation(context.getConversationContext());
     }
 
     /**
@@ -83,13 +74,13 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      * @return The current conversation.
      */
     @Override
-    public ModelingConversation getConversation(Context primary) {
+    public Conversation getConversation(Context primary) {
         if (conversationMap.containsKey(primary)) {
-            ModelingConversation conversation = conversationMap.get(primary);
+            Conversation conversation = conversationMap.get(primary);
             assureActive(conversation);
             return conversation;
         } else {
-            ModelingConversation conversation = gate().startConversation(primary, context.getReadContexts());
+            Conversation conversation = gate().startConversation(primary, context.getReadContexts());
             conversationMap.put(primary, conversation);
             return conversation;
         }
@@ -100,7 +91,7 @@ public class ArastrejuResourceFactory implements ConversationFactory {
      * @return The new conversation.
      */
     @Override
-    public ModelingConversation startConversation() {
+    public Conversation startConversation() {
         return gate().startConversation();
     }
 
@@ -113,15 +104,10 @@ public class ArastrejuResourceFactory implements ConversationFactory {
     // ----------------------------------------------------
 
     public void closeConversations() {
-        if (conversation != null) {
+        for (Context ctx : conversationMap.keySet()) {
+            Conversation conversation = conversationMap.get(ctx);
             conversation.close();
             LOGGER.debug("Closed conversation {}.", conversation.getConversationContext());
-            conversation = null;
-        }
-        for (Context ctx : conversationMap.keySet()) {
-            ModelingConversation conv = conversationMap.get(ctx);
-            conv.close();
-            LOGGER.debug("Closed conversation {}.", conv.getConversationContext());
         }
         conversationMap.clear();
     }
@@ -161,36 +147,12 @@ public class ArastrejuResourceFactory implements ConversationFactory {
 
     private void ensureInitialized(ArastrejuGate gate, String domain) {
         RBConfig config = context.getConfig();
-        DomainValidator validator = config.getDomainValidator();
-        DomainInfo info = getDomainInfo(domain);
-        switch (info.getStatus()) {
-            case NEW:
-                validator.initializeDomain(gate, domain);
-                break;
-            case INITIALIZED:
-                validator.validateDomain(gate, domain);
-                break;
-            case DELETED:
-                throw new IllegalStateException("Domain " + domain + " has been deleted.");
-            default:
-                throw new IllegalStateException("Unexpected status: " + info.getStatus());
-        }
+        DomainSupervisor supervisor = config.getDomainSupervisor();
+        supervisor.onOpen(gate, domain);
+
     }
 
-    private DomainInfo getDomainInfo(String domain) {
-        DomainInfoContainer container = context.getConfig().getDomainInfoContainer();
-        DomainInfo info = container.getInfo(domain);
-        if (info == null) {
-            try {
-                info = container.registerDomain(domain);
-            } catch (DomainInfoException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return info;
-    }
-
-    private void assureActive(ModelingConversation conversation) {
+    private void assureActive(Conversation conversation) {
         ConversationContext cc = conversation.getConversationContext();
         if (!cc.isActive()) {
             throw new IllegalStateException("Got inactive conversation from factory: " + cc);

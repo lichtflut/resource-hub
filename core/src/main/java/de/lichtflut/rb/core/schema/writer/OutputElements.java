@@ -10,7 +10,6 @@ import java.util.List;
 import org.arastreju.sge.io.NamespaceMap;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
-import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.SimpleNamespace;
 
@@ -32,13 +31,13 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 public class OutputElements {
 
 	private final List<ResourceSchema> schemas = new ArrayList<ResourceSchema>();
-	
+
 	private final List<Constraint> constraints = new ArrayList<Constraint>();
-	
+
 	private final List<Statement> statements = new ArrayList<Statement>();
-	
+
 	private final NamespaceMap namespaceMap = new NamespaceMap();
-	
+
 	// -----------------------------------------------------
 
 	/**
@@ -60,7 +59,7 @@ public class OutputElements {
 			register(constr);
 		}
 	}
-	
+
 	/**
 	 * @param statement
 	 */
@@ -69,74 +68,74 @@ public class OutputElements {
 	}
 
 
-    /**
-     * @param schemas
-     */
-    public void addSchemas(final ResourceSchema... schemas) {
-        for (ResourceSchema schema : schemas) {
-            this.schemas.add(schema);
-            register(schema);
-        }
-    }
+	/**
+	 * @param schemas
+	 */
+	public void addSchemas(final ResourceSchema... schemas) {
+		for (ResourceSchema schema : schemas) {
+			this.schemas.add(schema);
+			register(schema);
+		}
+	}
 
-    /**
-     * @param constraints
-     */
-    public void addConstraints(Constraint... constraints) {
-        for (Constraint constr : constraints) {
-            this.constraints.add(constr);
-            register(constr);
-        }
-    }
+	/**
+	 * @param constraints
+	 */
+	public void addConstraints(final Constraint... constraints) {
+		for (Constraint constr : constraints) {
+			this.constraints.add(constr);
+			register(constr);
+		}
+	}
 
-    public void registerNamespace(String namespace, String prefix) {
-        namespaceMap.addNamespace(new SimpleNamespace(namespace, prefix));
-    }
-	
+	public void registerNamespace(final String namespace, final String prefix) {
+		namespaceMap.addNamespace(new SimpleNamespace(namespace, prefix));
+	}
+
 	// -----------------------------------------------------
-	
+
 	/**
 	 * @return the namespaceMap
 	 */
 	public NamespaceMap getNamespaceMap() {
 		return namespaceMap;
 	}
-	
+
 	/**
 	 * @return the schemas
 	 */
 	public List<ResourceSchema> getSchemas() {
 		return schemas;
 	}
-	
+
 	/**
 	 * @return the typeDefs
 	 */
 	public List<Constraint> getConstraints() {
 		return constraints;
 	}
-	
+
 	/**
 	 * @return additional statements.
 	 */
 	public List<Statement> getStatements() {
 		return statements;
 	}
-	
+
 	// -----------------------------------------------------
-	
-	/** 
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
-		return schemas.size() + " schema(s) and " 
+		return schemas.size() + " schema(s) and "
 				+ constraints.size() + " constraint(s) with "
-				+ statements.size() + " additional statement(s)"; 
+				+ statements.size() + " additional statement(s)";
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	private void register(final ResourceSchema schema) {
 		register(schema.getDescribedType());
 		for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
@@ -144,19 +143,19 @@ public class OutputElements {
 			register(decl.getConstraint());
 		}
 	}
-	
+
 	private void register(final Constraint constr) {
 		if (constr != null && constr.isPublic() && !constr.isLiteral()) {
-		    register(constr.getQualifiedName());
+			register(constr.getQualifiedName());
 		}
 	}
-	
+
 	private void register(final ResourceID id) {
 		register(id.getQualifiedName());
 	}
-	
+
 	private void register(final QualifiedName qn) {
 		namespaceMap.addNamespace(new SimpleNamespace(qn.getNamespace()));
 	}
-	
+
 }

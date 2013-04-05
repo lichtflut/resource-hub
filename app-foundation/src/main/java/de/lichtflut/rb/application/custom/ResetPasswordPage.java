@@ -11,7 +11,7 @@ import de.lichtflut.rb.webck.components.settings.ResetPasswordPanel;
 
 /**
  * <p>
- *  [DESCRIPTION]
+ *  Allows a user to reset his/her password.
  * </p>
  *
  * <p>
@@ -21,17 +21,13 @@ import de.lichtflut.rb.webck.components.settings.ResetPasswordPanel;
  */
 public class ResetPasswordPage extends AbstractBasePage {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ResetPasswordPage(){
 		this.add(new ResetPasswordPanel("resetPassword"));
-		this.add(new BookmarkablePageLink("backLink", RBApplication.get().getLoginPage()));
+		this.add(new BookmarkablePageLink<Void>("backLink", RBApplication.get().getLoginPage()));
 	}
 
 	// ------------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected boolean needsAuthentication() {
 		return false;

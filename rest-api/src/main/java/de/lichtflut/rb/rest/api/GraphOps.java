@@ -3,24 +3,11 @@
  */
 package de.lichtflut.rb.rest.api;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
-import org.arastreju.sge.ModelingConversation;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.rest.api.security.RBOperation;
+import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
+import org.arastreju.sge.Conversation;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.model.DefaultSemanticGraph;
@@ -35,9 +22,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
-import de.lichtflut.rb.rest.api.security.RBOperation;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -75,7 +73,7 @@ public class GraphOps extends RBServiceEndpoint{
 	 * </ul>
 	 */
 	@GET
-	@Path("/node")
+	@Path("node")
 	@Produces({MediaType.APPLICATION_XML })
 	@RBOperation(type = TYPE.GRAPH_NODE_READ)
 	public Response getGraphNode(@QueryParam(NODE_ID_PARAM) String resourceID, @QueryParam(AUTH_TOKEN) String token, @PathParam(DOMAIN_ID_PARAM) String domainID) throws UnauthenticatedUserException {
@@ -133,11 +131,12 @@ public class GraphOps extends RBServiceEndpoint{
 	@Produces({MediaType.APPLICATION_XML })
 	@RBOperation(type = TYPE.GRAPH_READ)
 	public Response getGraph(@PathParam(DOMAIN_ID_PARAM) String domainID, @QueryParam(AUTH_TOKEN) String token) throws UnauthenticatedUserException {
-		RBUser user = authenticateUser(token);
-		if(!getAuthHandler().isAuthorized(user, domainID)){
-			return Response.status(Status.UNAUTHORIZED).build();
-		}
-		ServiceProvider provider = getProvider(domainID, user);
+		//RBUser user = authenticateUser(token);
+//		if(!getAuthHandler().isAuthorized(user, domainID)){
+//			return Response.status(Status.UNAUTHORIZED).build();
+//		}
+		//ServiceProvider provider = getProvider(domainID, user);
+		ServiceProvider provider = getProvider(domainID, null);
 		Response rsp = null;
 
 		final List<SNClass> types = provider.getTypeManager().findAllTypes();
@@ -175,7 +174,7 @@ public class GraphOps extends RBServiceEndpoint{
 		}
 		final SemanticGraphIO io = new RdfXmlBinding();
 		ServiceProvider provider = getProvider(domainID, user);
-		ModelingConversation mc = provider.getConversation();
+		Conversation mc = provider.getConversation();
 		TransactionControl tx=null;
 		try {
 			tx = mc.beginTransaction();

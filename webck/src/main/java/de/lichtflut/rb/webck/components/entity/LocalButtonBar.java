@@ -71,9 +71,6 @@ public class LocalButtonBar extends Panel {
 	// ------------------------------------------------------
 
 	protected void onSave(final IModel<RBEntity> model, final AjaxRequestTarget target, final Form<?> form) {
-		entityManager.store(model.getObject());
-		RBWebSession.get().getHistory().finishEditing();
-		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 	}
 
 	/**
@@ -81,7 +78,9 @@ public class LocalButtonBar extends Panel {
 	 * @param errors A List containing errorcodes and their corresponding RBField
 	 */
 	protected void onError(final Map<Integer, List<RBField>> errors) {
+	}
 
+	protected void onCancel(final AjaxRequestTarget target, final Form<?> form){
 	}
 
 	// -- BUTTONS -----------------------------------------
@@ -92,9 +91,8 @@ public class LocalButtonBar extends Panel {
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				Map<Integer, List<RBField>> errors = entityManager.validate(model.getObject());
 				if(errors.isEmpty()){
-					onSave(model,target, form);
+					LocalButtonBar.this.onSave(model,target, form);
 				} else{
-					setDefaultFormProcessing(false);
 					LocalButtonBar.this.onError(errors);
 				}
 			}
@@ -108,8 +106,7 @@ public class LocalButtonBar extends Panel {
 		final RBCancelButton cancel = new RBCancelButton("cancel") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				RBWebSession.get().getHistory().back();
-				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
+				LocalButtonBar.this.onCancel(target, form);
 			}
 		};
 		cancel.add(visibleIf(not(viewMode)));

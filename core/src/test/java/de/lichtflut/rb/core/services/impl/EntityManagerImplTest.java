@@ -29,14 +29,15 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.naming.QualifiedName;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import de.lichtflut.rb.RBCoreTest;
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBCoreTest;
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.data.RBEntityFactory;
+import de.lichtflut.rb.core.data.RBTestConstants;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.ValidationException;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -46,8 +47,6 @@ import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.mock.RBEntityFactory;
-import de.lichtflut.rb.mock.RBTestConstants;
 
 /**
  * <p>
@@ -67,7 +66,6 @@ public class EntityManagerImplTest extends RBCoreTest{
 
 	// ------------- SetUp & tearDown -----------------------
 
-	@Before
 	@Override
 	public void setUp() {
 		entityManager = new EntityManagerImpl(typeManager, schemaManager, conversation);
@@ -150,24 +148,31 @@ public class EntityManagerImplTest extends RBCoreTest{
 	@Test
 	public void testCreate() {
 		ResourceID personType = RB.PERSON;
+		ResourceNode personSchema = new SNResource(personType.getQualifiedName());
+		personSchema.addAssociation(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, personType);
 
 		// with schema
 		when(schemaManager.findSchemaForType(personType)).thenReturn(new ResourceSchemaImpl(personType));
+		when(conversation.findResource(personType.getQualifiedName())).thenReturn(personSchema);
 
 		RBEntity entity = entityManager.create(personType);
 
 		verify(schemaManager, times(1)).findSchemaForType(personType);
+		verify(conversation, times(3)).findResource(personType.getQualifiedName());
 		assertThat(entity.hasSchema(), is(true));
 		assertThat(entity.getType(), equalTo(personType));
 
 		reset(schemaManager);
+		reset(conversation);
 
 		// without schema
 		when(schemaManager.findSchemaForType(personType)).thenReturn(null);
+		when(conversation.findResource(personType.getQualifiedName())).thenReturn(personType.asResource());
 
 		RBEntity entity1 = entityManager.create(personType);
 
-		verify(schemaManager, times(1)).findSchemaForType(personType);
+		verify(schemaManager, times(1)).findSchemaForType(null);
+		verify(conversation, times(2)).findResource(personType.getQualifiedName());
 		assertThat(entity1.hasSchema(), is(false));
 		assertThat(entity1.getType(), equalTo(personType));
 	}

@@ -1,11 +1,6 @@
-<!--
-
-    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
-
--->
 <html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd" >
 <wicket:panel>
-    <ul>
+    <ul class="bread-crumbs-bar">
    		<wicket:container wicket:id="linkList">
    			<li>
    		     	<a wicket:id="link">
@@ -17,6 +12,11 @@
 		   	<a wicket:id="currentEntityLink" class="current">
 		  		<wicket:container wicket:id="label">[link]</wicket:container>
 		   	</a>
+            <wicket:enclosure child="underConstructionHint">
+                <span class="under-construction">
+                    <wicket:container wicket:id="underConstructionHint">[under construction]</wicket:container>
+                </span>
+            </wicket:enclosure>
    		</li>
     </ul>
 </wicket:panel>

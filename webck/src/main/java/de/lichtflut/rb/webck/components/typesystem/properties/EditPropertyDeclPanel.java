@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -30,13 +31,16 @@ import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.fields.ClassPickerField;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.components.typesystem.EditVisualizationInfoPanel;
 import de.lichtflut.rb.webck.components.typesystem.PropertyRow;
-import de.lichtflut.rb.webck.components.typesystem.constraints.ConstraintsEditorPanel;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.ConditionalModel;
 
 /**
  * <p>
@@ -61,19 +65,21 @@ public class EditPropertyDeclPanel extends Panel {
 
 	/**
 	 * Constructor
+	 * 
 	 * @param id - wicket:id
 	 * @param decl
 	 */
-	public EditPropertyDeclPanel(final String id, final IModel<PropertyRow> declaration, final IModel<ResourceSchema> schema) {
+	public EditPropertyDeclPanel(final String id, final IModel<PropertyRow> declaration,
+			final IModel<ResourceSchema> schema) {
 		super(id, declaration);
 		this.schema = schema;
 		this.declaration = declaration;
 
 		Form<?> form = new Form<Void>("form");
 
-		add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
+		form.add(new FeedbackPanel("feedback").setEscapeModelStrings(false));
 
-		addPropertiyEditor(form);
+		addPropertyEditor(form);
 		form.add(new EditVisualizationInfoPanel("visualizationInfoPanel", declaration));
 
 		add(form);
@@ -111,29 +117,32 @@ public class EditPropertyDeclPanel extends Panel {
 		Button save = new RBStandardButton("save") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				try{
+				try {
+					schema.getObject().removePropertyDeclaration(declaration.getObject().asPropertyDeclaration());
 					schema.getObject().addPropertyDeclaration(declaration.getObject().asPropertyDeclaration());
 					List<Integer> errors = filterErrors(schemaManager.validate(schema.getObject()));
-					if(!errors.isEmpty()){
-						error(buildValidationErrorMessage(errors));
-					}else{
+					if (errors.isEmpty()) {
 						EditPropertyDeclPanel.this.onSubmit(target, form);
+						send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.SCHEMA));
+					} else {
+						error(buildValidationErrorMessage(errors));
 					}
 					updatePanel();
-				}catch (IllegalArgumentException e){
+				} catch (IllegalArgumentException e) {
 					error(getString("error.add-property"));
 					updatePanel();
 				}
 			}
-
 		};
+
 		Button cancel = new RBCancelButton("cancel") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				onCancel(target, form);
 			}
 		};
-		save.add(new Label("saveLabel", new ResourceModel("button.ok", "Okay!")));
+
+		save.add(new Label("saveLabel", new ResourceModel("button.save", "Save!")));
 		cancel.add(new Label("cancelLabel", new ResourceModel("button.cancel", "Cancel")));
 		form.add(save, cancel);
 	}
@@ -141,42 +150,50 @@ public class EditPropertyDeclPanel extends Panel {
 	/**
 	 * Add all attributes directly relating to a {@link PropertyDeclaration}.
 	 */
-	private void addPropertiyEditor(final Form<?> form) {
-		if(declaration.getObject().getPropertyDescriptor() == null){
+	private void addPropertyEditor(final Form<?> form) {
+		if (declaration.getObject().getPropertyDescriptor() == null) {
 			declaration.getObject().setPropertyDescriptor(new SimpleResourceID(""));
 		}
-		PropertyPickerField propertyDescriptorField = new PropertyPickerField("propertyDescriptor", new PropertyModel<ResourceID>(declaration,
-				"propertyDescriptor"));
+		PropertyPickerField propertyDescriptorField = new PropertyPickerField("propertyDescriptor",
+				new PropertyModel<ResourceID>(declaration, "propertyDescriptor"));
 		propertyDescriptorField.getDisplayComponent().setRequired(true);
 
-		TextField<String> fieldLabelTField = new TextField<String>("fieldLabel", new PropertyModel<String>(declaration, "defaultLabel"));
+		TextField<String> fieldLabelTField = new TextField<String>("fieldLabel", new PropertyModel<String>(declaration,
+				"defaultLabel"));
 
-		TextField<String> cardinalityTField = new TextField<String>("cardinality", new PropertyModel<String>(declaration, "cardinality"));
+		TextField<String> cardinalityTField = new TextField<String>("cardinality", new PropertyModel<String>(
+				declaration, "cardinality"));
 
-		final ConstraintsEditorPanel constraintsPicker = new ConstraintsEditorPanel("constraints", declaration);
-		constraintsPicker.setOutputMarkupId(true);
+		// TODO reactivated when constraintspicker is working
+		//		final ConstraintsEditorPanel constraintsPicker = new ConstraintsEditorPanel("constraints", declaration);
+		//		constraintsPicker.setOutputMarkupId(true);
+		final ClassPickerField classPicker = new ClassPickerField("constraints", new PropertyModel<ResourceID>(declaration, "resourceConstraint"));
+		classPicker.add(ConditionalBehavior.visibleIf(isResourceConstraint()));
+		classPicker.setOutputMarkupPlaceholderTag(true);
 
 		final PropertyModel<Datatype> datatypeModel = new PropertyModel<Datatype>(declaration, "dataType");
-		final DropDownChoice<Datatype> datatypeDDC = new DropDownChoice<Datatype>("datatype", datatypeModel, Arrays.asList(Datatype.values()),
-				new EnumChoiceRenderer<Datatype>(this));
+		final DropDownChoice<Datatype> datatypeDDC = new DropDownChoice<Datatype>("datatype", datatypeModel,
+				Arrays.asList(Datatype.values()), new EnumChoiceRenderer<Datatype>(this));
 		datatypeDDC.add(new AjaxFormComponentUpdatingBehavior("onchange") {
 			@Override
 			protected void onUpdate(final AjaxRequestTarget target) {
 				declaration.getObject().setDataType(datatypeModel.getObject());
+				RBAjaxTarget.add(classPicker);
 			}
 		});
 
-		form.add(propertyDescriptorField, fieldLabelTField, cardinalityTField, datatypeDDC, constraintsPicker);
+		form.add(propertyDescriptorField, fieldLabelTField, cardinalityTField, datatypeDDC, classPicker);
 	}
 
 	private void updatePanel() {
 		RBAjaxTarget.add(EditPropertyDeclPanel.this);
 	}
 
+	// TODO refactor tocustom feedbackpanel
 	private String buildValidationErrorMessage(final List<Integer> errors) {
 		StringBuilder sb = new StringBuilder("Error occured:<ul>");
-		if(errors.contains(ErrorCodes.SCHEMA_CONSTRAINT_EXCEPTION)){
-			sb.append("<li>Constraint is not allowed for " +  declaration.getObject().getDataType() + "</li>");
+		if (errors.contains(ErrorCodes.SCHEMA_CONSTRAINT_EXCEPTION)) {
+			sb.append("<li>Constraint is not allowed for " + declaration.getObject().getDataType() + "</li>");
 		}
 		sb.append("</ul>");
 		return sb.toString();
@@ -184,16 +201,28 @@ public class EditPropertyDeclPanel extends Panel {
 
 	private List<Integer> filterErrors(final Map<Integer, List<PropertyDeclaration>> errors) {
 		List<Integer> filtered = new ArrayList<Integer>();
-		String currentDeclURI = declaration.getObject().asPropertyDeclaration().getPropertyDescriptor().getQualifiedName().toURI();
+		String currentDeclURI = declaration.getObject().asPropertyDeclaration().getPropertyDescriptor()
+				.getQualifiedName().toURI();
 		for (Integer errorCode : errors.keySet()) {
-			// Get errors.get(errorCode).contains(declaration) working instead of manually checking..
+			// Get errors.get(errorCode).contains(declaration) working instead of manually
+			// checking..
 			for (PropertyDeclaration decl : errors.get(errorCode)) {
-				if(currentDeclURI.equals(decl.getPropertyDescriptor().getQualifiedName().toURI())) {
+				if (currentDeclURI.equals(decl.getPropertyDescriptor().getQualifiedName().toURI())) {
 					filtered.add(errorCode);
 				}
 			}
 		}
 		return filtered;
+	}
+
+	public ConditionalModel<Boolean> isResourceConstraint(){
+		return new ConditionalModel<Boolean>() {
+			@Override
+			public boolean isFulfilled() {
+				boolean equals = Datatype.RESOURCE.name().equals(declaration.getObject().getDataType().name());
+				return equals;
+			}
+		};
 	}
 
 }

@@ -22,16 +22,16 @@ public class TextModules {
 	private static final String RECIPIENT = "recipient";
 	private static final String PASSWORD = "password";
 	private static final String SENDER = "sender";
-	
+
 	private static TextModules INSTANCE;
-	
+
 	// ---------------- Constructor -------------------------
-	
+
 	/**
 	 * Default Constructor.
 	 */
 	public TextModules(){}
-	
+
 	// ------------------------------------------------------
 
 	public static TextModules getInstance(){
@@ -40,13 +40,13 @@ public class TextModules {
 		}
 		return INSTANCE;
 	}
-	
+
 	/**
 	 * The subject and content is set according to the {@link MessageType} provided by the {@link MessageDescription}.
 	 * @param desc
 	 * @param locale
 	 */
-	public void insertMailFor(MessageDescription desc){
+	public void insertMailFor(final MessageDescription desc){
 		String content = "";
 		ResourceBundle bundle = getResourceBundle(desc.getLocale());
 		switch (desc.getType()){
@@ -65,6 +65,8 @@ public class TextModules {
 				content = replaceVariables(desc, content);
 				desc.setSubject(bundle.getString("account-activated-information-subject"));
 				break;
+			default:
+				break;
 		}
 		desc.setContent(content);
 	}
@@ -73,16 +75,16 @@ public class TextModules {
 	 * @param locale
 	 * @return a {@link ResourceBundle} containing email related content
 	 */
-	protected ResourceBundle getResourceBundle(Locale locale){
+	protected ResourceBundle getResourceBundle(final Locale locale){
 		return ResourceBundle.getBundle("de/lichtflut/rb/core/messaging/EmailTextModules", locale);
 	}
-	
+
 	/**
 	 * Replaces
 	 * @param desc - {@link MessageDescription}
 	 * @param content
 	 */
-	private String replaceVariables(MessageDescription desc, String content) {
+	private String replaceVariables(final MessageDescription desc, String content) {
 		content = replace(RECIPIENT, desc.getRecipientName(), content);
 		content = replace(PASSWORD, desc.getPassword(), content);
 		content = replace(SENDER, desc.getSenderName(), content);
@@ -94,12 +96,12 @@ public class TextModules {
 	 * @param content
 	 * @return
 	 */
-	private static String replace(String old, String replacement, String content) {
+	private static String replace(final String old, String replacement, String content) {
 		if(replacement == null){
 			replacement = "";
 		}
 		content = content.replaceAll("\\$\\{" + old + "\\}", replacement);
 		return content;
 	}
-	
+
 }

@@ -21,8 +21,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import de.lichtflut.rb.AbstractRBWebTest;
 import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.webck.RBWebTest;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 
@@ -35,7 +35,7 @@ import de.lichtflut.rb.webck.components.form.RBStandardButton;
  * @author Ravi Knox
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SNPropertyEditorPanelTest extends AbstractRBWebTest {
+public class SNPropertyEditorPanelTest extends RBWebTest {
 
 	private QualifiedName property;
 

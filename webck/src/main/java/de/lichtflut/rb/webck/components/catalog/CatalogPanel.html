@@ -1,0 +1,39 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:panel>
+
+	<div class="layout-1-3-1">
+		<div wicket:id="categories" id="sidebar-left">
+		</div>
+		
+		<div id="column-center" class="minimal-height">
+			<div wicket:id="specifyingList" class="common-background common-margin">
+				<div class="title-container">
+					<span wicket:id="itemListTitle" class="title">Web Server</span>
+					<div class="entity-menu-extended"><a wicket:id="createLink" href="#"><wicket:message key="label.create" /></a></div>
+				</div>
+				<div  wicket:id="info" class="common-placement"></div>
+				<div class="common-placement">
+					<span wicket:id="subList" class="floating-table">
+					<a href="#" wicket:id="subLink"><wicket:container wicket:id="subLabel"></wicket:container></a>
+					</span>
+				</div>
+			</div>
+		</div>
+		
+		<div id="sidebar-right" >
+			<div class="common-background common-margin catalog">
+				<wicket:container wicket:id="searchbox-title" />
+				<div class="common-placement">
+				<form wicket:id="form">
+					<wicket:container wicket:id="searchbox" />
+					<div class="button-bar">
+						<button wicket:id="create" class="default-button"><wicket:message key="button.create" /></button>
+					</div>
+				</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</wicket:panel>
+</html>

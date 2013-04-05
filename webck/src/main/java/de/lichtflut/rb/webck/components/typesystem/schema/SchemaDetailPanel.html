@@ -9,10 +9,10 @@
 	<style type="text/css"></style>
 </wicket:head>
 <wicket:panel>
-	<div class="margin-bottom-10">
+	<div>
 		<div wicket:id="typeHierarchy"></div>
 	</div>
-	<div class="input-panel">
+	<div class="input-panel section">
 	
 	<div style="margin-top: 10px; margin-bottom: 10px">
 		<h2>Type: <wicket:container wicket:id="title" ></wicket:container></h2>
@@ -20,12 +20,12 @@
 
 	<form wicket:id="form">
 	<div wicket:id="feedback-top"></div>
-	<div class="input-panel margin-bottom-10">
+	<div class="input-panel">
 		<span class="bold"><wicket:message key="field-label-expression" />:</span>
 		<div wicket:id="labelExpression"></div>
 	</div>
 	
-	<div class="table schema-details">
+	<div class="table schema-details section">
 		<div class="row header">
 			<div class="cell table-header"><wicket:message key="property.label" /></div>
 			<div class="cell table-header"><wicket:message key="field-label.label" /></div>
@@ -40,8 +40,7 @@
 			<div class="cell"><span wicket:id="cardinality" >[CARDINALITY]</span></div>
 			<div class="cell"><span  wicket:id="datatype" >[DATATYPE]</span></div>
 			<div class="cell">
-				<span wicket:id="pattern">[RESOURCE CONSTRAINTS]</span>
-				<div wicket:id="resource">[PATTERN CONSTRAINTS]</div>
+				<span wicket:id="constraint">[CONSTRAINTS]</span>
 			</div>
 			<div class="cell">
 				<a wicket:id="edit" class="action-edit">[edit]</a>
@@ -55,9 +54,7 @@
 	<div class="button-bar">
 		<Button wicket:id="deleteButton" ><wicket:message key="button.delete" /></Button>
 		<Button wicket:id="addButton"><wicket:message key="button.add" /></Button>
-		<Button wicket:id="saveButton" class="default-button"><wicket:message key="button.save" /></Button>
 	</div>
-	<div wicket:id="feedback-bottom"></div>
 	</form>
 </div>
 </wicket:panel>

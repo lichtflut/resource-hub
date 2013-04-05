@@ -83,9 +83,9 @@ public class EntityRowEditPanel extends Panel {
 		final ListView<RBFieldValueModel> view = new ListView<RBFieldValueModel>("values", listModel) {
 			@Override
 			protected void populateItem(final ListItem<RBFieldValueModel> item) {
-                final RBFieldValueModel fieldValueModel = item.getModelObject();
+				final RBFieldValueModel fieldValueModel = item.getModelObject();
 
-                final Component field = factory.createField(fieldValueModel);
+				final Component field = factory.createField(fieldValueModel);
 				item.add(field);
 
 				final int idx = fieldValueModel.getIndex();
@@ -156,7 +156,7 @@ public class EntityRowEditPanel extends Panel {
 				findParent(IBrowsingHandler.class).createReferencedEntity(handle, getField().getPredicate());
 				Page page = getPage();
 				send(page, Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
-				send(page, Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
+				send(page, Broadcast.BREADTH, new ModelChangeEvent<ResourceID>(getTypeConstraint(),ModelChangeEvent.RELATIONSHIP));
 			}
 
 			@Override

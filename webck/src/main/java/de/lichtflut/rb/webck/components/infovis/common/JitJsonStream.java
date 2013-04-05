@@ -3,8 +3,14 @@
  */
 package de.lichtflut.rb.webck.components.infovis.common;
 
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
-import de.lichtflut.rb.webck.components.infovis.AbstractJsonStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.Statement;
@@ -14,13 +20,8 @@ import org.arastreju.sge.structure.OrderBySerialNumber;
 import org.arastreju.sge.traverse.NotPredicateFilter;
 import org.arastreju.sge.traverse.TraversalFilter;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.webck.components.infovis.AbstractJsonStream;
 
 /**
  * <p>
@@ -37,7 +38,7 @@ public class JitJsonStream extends AbstractJsonStream {
 
 	private final ResourceNode root;
 	private final TraversalFilter filter;
-	
+
 	// ----------------------------------------------------
 
 	/**
@@ -47,83 +48,84 @@ public class JitJsonStream extends AbstractJsonStream {
 	public JitJsonStream(final ResourceNode root) {
 		this(root, new NotPredicateFilter(RDF.TYPE, RDFS.SUB_CLASS_OF));
 	}
-	
+
 	/**
 	 * Constructor.
 	 * @param root The root of the periphery view.
 	 * @param filter The filter to use.
 	 */
-	public JitJsonStream(final ResourceNode root, TraversalFilter filter) {
+	public JitJsonStream(final ResourceNode root, final TraversalFilter filter) {
 		this.root = root;
 		this.filter = filter;
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	@Override
-	public void write(OutputStreamWriter writer) throws IOException {
+	public void write(final OutputStreamWriter writer) throws IOException {
 		final Set<SemanticNode> written = new HashSet<SemanticNode>();
 		writer.write("var root = ");
 		appendNode(root, writer, written);
 		writer.flush();
 	}
-	
+
 	// ----------------------------------------------------
 
-	private void appendNode(final ResourceNode node, OutputStreamWriter writer, Set<SemanticNode> written) throws IOException {
+	private void appendNode(final ResourceNode node, final OutputStreamWriter writer, final Set<SemanticNode> written) throws IOException {
 		written.add(node);
 		writer.append("{");
 		writer.append("id: \"" +  node.getQualifiedName() + "\",\n");
 		writer.append("name: \"" +  label(node) + "\",\n");
 		writer.append("data: {},\n");
 		writer.append("children: [");
-		appendChildren(node, writer, written); 
+		appendChildren(node, writer, written);
 		writer.append("]\n");
 		writer.append("}");
 	}
-	
+
 	/**
 	 * @param node
 	 * @param writer
 	 * @return
 	 */
-	private void appendChildren(ResourceNode node, OutputStreamWriter writer, Set<SemanticNode> written) throws IOException {
+	private void appendChildren(final ResourceNode node, final OutputStreamWriter writer, final Set<SemanticNode> written) throws IOException {
 		final List<ResourceNode> list = new ArrayList<ResourceNode>();
 		for(Statement stmt : node.getAssociations()) {
 			if (!stmt.getObject().isResourceNode() || written.contains(stmt.getObject())) {
 				continue;
 			}
 			switch (filter.accept(stmt)) {
-			case STOP:
-				break;
-			case ACCEPPT_CONTINUE:
-			case ACCEPT:
-				list.add(stmt.getObject().asResource());
-				written.add(stmt.getObject());
-			default:
-				break;
+				case STOP:
+					break;
+				case ACCEPPT_CONTINUE:
+				case ACCEPT:
+					list.add(stmt.getObject().asResource());
+					written.add(stmt.getObject());
+					break;
+				default:
+					break;
 			}
 		}
-		
+
 		Collections.sort(list, new OrderBySerialNumber());
 		boolean first = true;
 		for (ResourceNode current : list) {
 			if (first) {
-				first = false;	
+				first = false;
 			} else {
 				writer.append(", ");
 			}
 			appendNode(current, writer, written);
 		}
-		
+
 	}
 
 	/**
 	 * @param node
 	 * @return
 	 */
-	private String label(ResourceNode node) {
+	private String label(final ResourceNode node) {
 		return ResourceLabelBuilder.getInstance().getLabel(node, getLocale());
 	}
-	
+
 }

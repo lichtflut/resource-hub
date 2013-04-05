@@ -14,7 +14,7 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.ModelingConversation;
+import org.arastreju.sge.Conversation;
 
 import de.lichtflut.rb.core.eh.ValidationException;
 import de.lichtflut.rb.core.entity.RBEntity;
@@ -38,19 +38,18 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
  *
  * @author Oliver Tigges
  */
-@SuppressWarnings("rawtypes")
 public class BrowsingButtonBar extends TypedPanel<RBEntity> {
 
 	@SpringBean
 	private EntityManager entityManager;
 
 	@SpringBean
-	private ModelingConversation conversation;
+	private Conversation conversation;
 
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+	 * @param id The compoenent ID.
 	 */
 	public BrowsingButtonBar(final String id, final IModel<RBEntity> model) {
 		super(id, model);
@@ -66,7 +65,7 @@ public class BrowsingButtonBar extends TypedPanel<RBEntity> {
 	public void onSaveAndBack() throws ValidationException {
 		final RBEntity createdEntity = getModelObject();
 		entityManager.store(createdEntity);
-		for(ReferenceReceiveAction action : RBWebSession.get().getHistory().getCurrentStep().getActions()) {
+		for(ReferenceReceiveAction<?> action : RBWebSession.get().getHistory().getCurrentStep().getActions()) {
 			action.execute(conversation, createdEntity);
 		}
 		RBWebSession.get().getHistory().back();
@@ -74,6 +73,7 @@ public class BrowsingButtonBar extends TypedPanel<RBEntity> {
 	}
 
 	public void onCancelAndBack() {
+		entityManager.delete(getModelObject().getID());
 		RBWebSession.get().getHistory().back();
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 	}

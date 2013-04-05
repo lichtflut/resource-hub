@@ -5,7 +5,6 @@ package de.lichtflut.rb.core.viewspec;
 
 import java.util.List;
 
-import de.lichtflut.rb.core.content.ContentItem;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
@@ -38,20 +37,20 @@ public interface WidgetSpec extends ResourceNode {
 
 	void setPosition(Integer position);
 
-    // -- selected content ----
+	// -- selected content ----
 
-    Selection getSelection();
+	Selection getSelection();
 
-    void setSelection(Selection selection);
+	void setSelection(Selection selection);
 
-    // -- referenced content -
+	// -- referenced content -
 
-    String getContentID();
+	String getContentID();
 
-    void setContentID(String contentID);
-	
+	void setContentID(String contentID);
+
 	// ----------------------------------------------------
-	
+
 	List<WidgetAction> getActions();
 
 }

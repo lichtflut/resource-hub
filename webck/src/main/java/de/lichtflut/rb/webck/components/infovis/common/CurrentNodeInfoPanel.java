@@ -1,10 +1,11 @@
 /*
- * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright 2013 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.webck.components.infovis.common;
 
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
@@ -32,7 +33,6 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
-import org.arastreju.sge.ModelingConversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
@@ -189,7 +189,7 @@ public class CurrentNodeInfoPanel extends Panel {
 	private static class ContextModel extends AbstractLoadableDetachableModel<ResourceNode> {
 		
 		@SpringBean
-		private ModelingConversation conversation;
+		private SemanticNetworkService service;
 		
 		private IModel<? extends ResourceID> id;
 		
@@ -205,14 +205,11 @@ public class CurrentNodeInfoPanel extends Panel {
 		
 		// ----------------------------------------------------
 		
-		/** 
-		 * {@inheritDoc}
-		 */
 		@Override
 		public ResourceNode load() {
 			if (id.getObject() != null) {
 				final QualifiedName qn = id.getObject().getQualifiedName();
-				return conversation.findResource(qn);
+				return service.find(qn);
 			} else {
 				return null;
 			}

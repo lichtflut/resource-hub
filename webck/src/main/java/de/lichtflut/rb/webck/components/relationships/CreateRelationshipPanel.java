@@ -10,7 +10,6 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isFalse;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
 
-import de.lichtflut.rb.core.services.SemanticNetworkService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -26,7 +25,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.fields.PropertyPickerField;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
@@ -133,7 +132,7 @@ public class CreateRelationshipPanel extends Panel {
 
 	protected void createRelationshipTo(final ResourceID object, final ResourceID predicate) {
 		final ResourceID subject = subjectModel.getObject().getID();
-        service.add(new DetachedStatement(subject, predicate, object));
+		service.add(new DetachedStatement(subject, predicate, object));
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.RELATIONSHIP));
 	}
 

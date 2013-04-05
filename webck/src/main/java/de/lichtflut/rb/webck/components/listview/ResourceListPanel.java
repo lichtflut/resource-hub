@@ -19,17 +19,20 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.entity.ResourceField;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.webck.components.entity.QuickInfoPanel;
+import de.lichtflut.rb.webck.components.entity.quickinfo.QuickInfoPopUpPanel;
 import de.lichtflut.rb.webck.conversion.SemanticNodesRenderer;
 import de.lichtflut.rb.webck.models.fields.UndeclaredFieldsListModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 
 /**
  * <p>
@@ -164,7 +167,7 @@ public class ResourceListPanel extends Panel {
 	 * <ul>
 	 * <li>appears on: onMouseEnter</li>
 	 * <li>disappears on: onMouseLeave</li>
-	 * <li>show {@link QuickInfoPanel}</li>
+	 * <li>show {@link QuickInfoPopUpPanel}</li>
 	 * </ul>
 	 * 
 	 * @param parent parent component for the pop-up
@@ -244,7 +247,8 @@ public class ResourceListPanel extends Panel {
 
 				if(RDFS.LABEL.getQualifiedName().equals(item.getModelObject().getPredicate().getQualifiedName())){
 					IModel<RBEntity> model = new Model<RBEntity>(entityManager.find(entityNode));
-					placeholder = new QuickInfoPanel("quickInfo", model);
+					ListModel<RBField> listModel = new ListModel<RBField>(model.getObject().getQuickInfo());
+					placeholder = new QuickInfoPopUpPanel("quickInfo", listModel, new Model<String>(new ResourceLabelModel(entityNode).getObject()));
 				}
 
 				container.add(label);
@@ -263,18 +267,18 @@ public class ResourceListPanel extends Panel {
 			protected void populateItem(final ListItem<String> item) {
 				final ListAction action = ListAction.forName(item.getModelObject());
 				switch (action) {
-				case VIEW:
-					item.add(createViewAction(ACTION, entity));
-					break;
-				case EDIT:
-					item.add(createEditAction(ACTION, entity));
-					break;
-				case DELETE:
-					item.add(createDeleteAction(ACTION, entity));
-					break;
-				default:
-					item.add(createCustomAction(ACTION, entity, item.getModelObject()));
-					break;
+					case VIEW:
+						item.add(createViewAction(ACTION, entity));
+						break;
+					case EDIT:
+						item.add(createEditAction(ACTION, entity));
+						break;
+					case DELETE:
+						item.add(createDeleteAction(ACTION, entity));
+						break;
+					default:
+						item.add(createCustomAction(ACTION, entity, item.getModelObject()));
+						break;
 				}
 			}
 		};

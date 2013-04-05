@@ -21,6 +21,9 @@ public class InfoVisJavaScriptResources {
 	
 	public static ResourceReference RAPHAEL_JS = 
 			new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "raphael-2.1.0.js");
+
+    public static ResourceReference D3_JS =
+            new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "d3.v3.min.js");
 	
 	public static ResourceReference JIT_JS = 
 			new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "jit-2.0.1-min.js");
@@ -36,5 +39,8 @@ public class InfoVisJavaScriptResources {
 	
 	public static ResourceReference HIERARCHY_JS = 
 			new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "hierarchy-0.2.js");
+
+    public static ResourceReference MAP_JS =
+            new JavaScriptResourceReference(InfoVisJavaScriptResources.class, "map-0.1.js");
 
 }

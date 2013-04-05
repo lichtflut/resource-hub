@@ -3,14 +3,14 @@
  */
 package de.lichtflut.rb.webck.components.infovis.periphery;
 
+import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.model.IModel;
+import org.arastreju.sge.model.nodes.ResourceNode;
+
 import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.OnLoadHeaderItem;
-import org.apache.wicket.model.IModel;
-import org.arastreju.sge.model.nodes.ResourceNode;
+import de.lichtflut.rb.webck.config.InfoVisPath;
 
 /**
  * <p>
@@ -30,18 +30,25 @@ public class PeripheryVisualizationPanel extends InfoVisPanel {
 	 * @param id The component ID.
 	 * @param model The model.
 	 */
-	public PeripheryVisualizationPanel(String id, IModel<ResourceNode> model) {
+	public PeripheryVisualizationPanel(final String id, final IModel<ResourceNode> model) {
 		super(id, model, VisualizationMode.PERIPHERY);
 	}
-	
+
 	// ----------------------------------------------------
-	
+
 	@Override
-	public void renderHead(IHeaderResponse response) {
+	public void renderHead(final IHeaderResponse response) {
 		super.renderHead(response);
 		response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.JIT_JS));
 		response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.PERIPHERY_JS));
 		response.render(OnLoadHeaderItem.forScript("initGraph()"));
+	}
+
+	// ----------------------------------------------------
+
+	@Override
+	protected InfoVisPath adapt(final InfoVisPath path) {
+		return path.tree().withRoot(getModelObject());
 	}
 
 }
