@@ -91,9 +91,8 @@ public class LocalButtonBar extends Panel {
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
 				Map<Integer, List<RBField>> errors = entityManager.validate(model.getObject());
 				if(errors.isEmpty()){
-					onSave(model,target, form);
+					LocalButtonBar.this.onSave(model,target, form);
 				} else{
-					setDefaultFormProcessing(false);
 					LocalButtonBar.this.onError(errors);
 				}
 			}
