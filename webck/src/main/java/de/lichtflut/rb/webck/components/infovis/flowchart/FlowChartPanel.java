@@ -5,7 +5,9 @@ package de.lichtflut.rb.webck.components.infovis.flowchart;
 
 import java.util.Collection;
 
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.arastreju.sge.model.nodes.ResourceNode;

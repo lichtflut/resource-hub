@@ -6,7 +6,7 @@ package de.lichtflut.rb.webck.components.colorpicker;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;

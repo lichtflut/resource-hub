@@ -6,7 +6,11 @@ package de.lichtflut.rb.webck.components.rteditor;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
@@ -85,6 +89,8 @@ public class RichTextBehavior extends Behavior {
 				break;
 			case FULL_FEATURED:
 				response.render(OnDomReadyHeaderItem.forScript("LFRB.RichText.fullFeatured('#" + c.getMarkupId() + "');"));
+				break;
+			default:
 				break;
 		}
 	}

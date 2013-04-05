@@ -3,7 +3,9 @@
  */
 package de.lichtflut.rb.webck.components.infovis.periphery;
 
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.nodes.ResourceNode;
 

@@ -3,7 +3,8 @@
  */
 package de.lichtflut.rb.webck.components.infovis;
 
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -58,7 +59,7 @@ public abstract class InfoVisPanel extends TypedPanel<ResourceNode> {
 				+ "';", "LFRB.InfoVis.contextPath"));
 
 		final InfoVisPath path = adapt(new DefaultInfoVisServicePathBuilder().create(context.getDomain()));
-		response.renderJavaScript("LFRB.InfoVis.serviceURI='" + path.toURI() + "';", "LFRB.InfoVis.serviceURI");
+		response.render(JavaScriptHeaderItem.forScript("LFRB.InfoVis.serviceURI='" + path.toURI() + "';", "LFRB.InfoVis.serviceURI"));
 	}
 
 	// ----------------------------------------------------
