@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -114,11 +115,11 @@ public class ColorPickerPanel extends Panel implements ILabelProvider<String> {
 	public void renderHead(final IHeaderResponse response) {
 		response.renderCSSReference(cssResourceReference);
 		response.renderJavaScriptReference(reference);
-		response.renderOnLoadJavaScript("$(document).ready(function() {" +
+		response.render(OnLoadHeaderItem.forScript("$(document).ready(function() {" +
 				"$('#" + get("colors").getMarkupId() + "').colorpicker({" +
 				"size: 23, label: '', count: 5, hide: true" +
 				"});" +
-				"});");
+				"});"));
 	}
 
 	@Override

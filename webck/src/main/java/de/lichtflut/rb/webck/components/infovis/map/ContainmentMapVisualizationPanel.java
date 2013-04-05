@@ -5,6 +5,7 @@ package de.lichtflut.rb.webck.components.infovis.map;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
@@ -42,7 +43,7 @@ public class ContainmentMapVisualizationPanel extends InfoVisPanel {
 		super.renderHead(response);
 		response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.D3_JS));
 		response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.MAP_JS));
-		response.renderOnLoadJavaScript("showMap();");
+		response.render(OnLoadHeaderItem.forScript("showMap();"));
 	}
 
 	@Override
