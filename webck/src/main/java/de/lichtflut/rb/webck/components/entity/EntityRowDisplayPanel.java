@@ -109,7 +109,7 @@ public class EntityRowDisplayPanel extends Panel {
 			case RESOURCE:
 				return addResourceField(item);
 			case DATE:
-				return addTextOutput(item, Date.class);
+				return addDateOutput(item, Date.class);
 			case INTEGER:
 				return addTextOutput(item, Integer.class);
 			case DECIMAL:
@@ -126,6 +126,12 @@ public class EntityRowDisplayPanel extends Panel {
 			default:
 				throw new NotYetImplementedException("No display-component specified for datatype: " + dataType);
 		}
+	}
+
+	private Component addDateOutput(final ListItem<RBFieldValueModel> item, final Class<Date> class1) {
+		final Label field = new Label("valuefield", new DateModel(item.getModelObject()));
+		item.add(new Fragment("valuefield", "textOutput", this).add(field));
+		return field;
 	}
 
 	private Component addResourceField(final ListItem<RBFieldValueModel> item) {

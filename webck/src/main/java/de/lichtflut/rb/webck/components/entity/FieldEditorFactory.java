@@ -135,7 +135,7 @@ public class FieldEditorFactory implements Serializable {
 	}
 
 	public Component createDateField(final RBField fieldDefinition, final IModel model) {
-		final DatePicker<Date> field = new DatePicker<Date>("valuefield", model, Date.class);
+		final DatePicker<Date> field = new DatePicker<Date>("valuefield", new DateModel((RBFieldValueModel) model), Date.class);
 		addValidator(field, fieldDefinition);
 		addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textInput", container).add(field);
