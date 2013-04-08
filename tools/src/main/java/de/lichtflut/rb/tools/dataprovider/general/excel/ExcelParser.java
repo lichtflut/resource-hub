@@ -50,11 +50,14 @@ public class ExcelParser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExcelParser.class);
 
+	private static final String URI = "^(http?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+	private static final String QNAME = "^[A-z]*:[A-z0-9-]*";
 	private static final String EXCEL_CONFIG = "rb-parser-config";
 	private static final String VERSIONING = "rb-versioning";
 	private String PREFIX = "has";
 
 	private final ExcelFieldWrapper data = new ExcelFieldWrapper();
+
 
 	private boolean isFirstCellInRow;
 
@@ -128,9 +131,9 @@ public class ExcelParser {
 		for (Cell cell : sheet.getRow(0)) {
 			String value = null;
 			String suffix = cell.getStringCellValue();
-			if (QualifiedName.isUri(suffix)) {
+			if (isURI(suffix)) {
 				value = suffix;
-			} else if (QualifiedName.isQname(suffix)) {
+			} else if (isQname(suffix)) {
 				value = convertQNameToURI(suffix);
 			} else {
 				value = buildPredicate(nameSpace, getPrefix(), suffix);
@@ -140,13 +143,17 @@ public class ExcelParser {
 		return predicates;
 	}
 
+	protected boolean isQname(final String suffix) {
+		return suffix.matches(QNAME);
+	}
+
 	protected ResourceNode genereateRowBasedNode(final Row row, final Map<String, ResourceID> predicates) {
 		ResourceNode node = createResourceNode();
 		List<String> columns = new LinkedList<String>(predicates.keySet());
 		SemanticNode object = null;
 		for (String columnHeader : columns) {
 			String value = ExcelParserTools.getStringValueFor(row, columns.indexOf(columnHeader));
-			if (null != value) {
+			if (null != value && !value.isEmpty()) {
 				if (data.getMetaData().isPrimaryKey(row.getSheet().getSheetName(), columnHeader)) {
 					addKeyToCache(value);
 					// TODO: alwas set the ID manually
@@ -155,27 +162,47 @@ public class ExcelParser {
 					node = replaceURIWithExisting(node, value);
 					object = new SNValue(ElementaryDataType.STRING, value);
 				} else if (data.getMetaData().isForeignKey(row.getSheet().getSheetName(), columnHeader)) {
-					if (QualifiedName.isUri(value)) {
-						object = new SimpleResourceID(value);
-					} else if (QualifiedName.isQname(value)) {
-						object = new SimpleResourceID(convertQNameToURI(value));
-					} else {
-						addKeyToCache(value);
-						object = getForeignKey(value);
+					for (String string : value.split(",")) {
+						value = string.trim();
+						if (isURI(value)) {
+							object = new SimpleResourceID(value);
+						} else if (isQname(value)) {
+							object = new SimpleResourceID(convertQNameToURI(value));
+						} else {
+							addKeyToCache(value);
+							object = getForeignKey(value);
+						}
+						node.addAssociation(predicates.get(columnHeader), object);
+						data.getGraph().addStatements(node.getAssociations());
 					}
 				} else {
-					if (QualifiedName.isUri(value)) {
-						object = new SimpleResourceID(value);
-					} else if (QualifiedName.isQname(value)) {
-						object = new SimpleResourceID(convertQNameToURI(value));
-					} else {
-						object = new SNValue(ElementaryDataType.STRING, value);
+					for (String string : value.split(",")) {
+						value = string.trim();
+						object = createValueNodeFor(columnHeader, value);
+						node.addAssociation(predicates.get(columnHeader), object);
+						data.getGraph().addStatements(node.getAssociations());
 					}
 				}
 				node.addAssociation(predicates.get(columnHeader), object);
 			}
 		}
 		return node;
+	}
+
+	protected boolean isURI(final String value) {
+		return value.matches(URI);
+	}
+
+	protected SemanticNode createValueNodeFor(final String column, final String value) {
+		SemanticNode object;
+		if (isURI(value)) {
+			object = new SimpleResourceID(value);
+		} else if (isQname(value)) {
+			object = new SimpleResourceID(convertQNameToURI(value));
+		} else {
+			object = new SNValue(ElementaryDataType.STRING, value);
+		}
+		return object;
 	}
 
 	protected ResourceNode createResourceNode() {

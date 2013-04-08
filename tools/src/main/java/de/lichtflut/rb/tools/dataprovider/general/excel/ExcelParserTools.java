@@ -83,12 +83,16 @@ public class ExcelParserTools {
 			Date date = cell.getDateCellValue();
 			String string = "";
 			if(null != date){
-				string = new SimpleDateFormat("MM/dd/yyyy").format(date);
+				string = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(date);
 			}
 			return string;
 		}
 		if(Cell.CELL_TYPE_NUMERIC == cell.getCellType()){
-			return String.valueOf(cell.getNumericCellValue());
+			double cellValue = cell.getNumericCellValue();
+			if((int)cellValue == cellValue){
+				return String.valueOf((int)cellValue);
+			}
+			return String.valueOf(cellValue);
 		}
 		return "";
 	}
