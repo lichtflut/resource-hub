@@ -81,7 +81,10 @@ public class ExcelParserTools {
 		}
 		if(HSSFDateUtil.isCellDateFormatted(cell)){
 			Date date = cell.getDateCellValue();
-			String string = new SimpleDateFormat("dd/MM/yyyy").format(date);
+			String string = "";
+			if(null != date){
+				string = new SimpleDateFormat("MM/dd/yyyy").format(date);
+			}
 			return string;
 		}
 		if(Cell.CELL_TYPE_NUMERIC == cell.getCellType()){
