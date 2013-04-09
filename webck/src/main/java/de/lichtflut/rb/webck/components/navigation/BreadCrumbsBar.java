@@ -10,6 +10,7 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 import org.apache.wicket.Component;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -25,11 +26,8 @@ import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.webck.browsing.EntityBrowsingStep;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
-import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.common.RBWebSession;
-import de.lichtflut.rb.webck.components.entity.VisualizationMode;
-import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
@@ -78,7 +76,7 @@ public class BreadCrumbsBar extends Panel {
 				final EntityBrowsingStep step = item.getModelObject();
 				final EntityHandle handle = item.getModelObject().getHandle();
 				final ResourceID id = resolve(handle.getId());
-				final CrossLink link = new CrossLink("link", getUrlTo(id).toString());
+				final Link<?> link = getBreadCrumbsBarLink(id);
 				switch (step.getState()) {
 					case VIEW:
 					case EDIT:
@@ -94,6 +92,7 @@ public class BreadCrumbsBar extends Panel {
 				}
 				item.add(link);
 			}
+
 		};
 		view.setReuseItems(false);
 		add(view);
@@ -116,6 +115,15 @@ public class BreadCrumbsBar extends Panel {
 		}
 	}
 
+	protected Link<?> getBreadCrumbsBarLink(final ResourceID id) {
+		return null;
+
+	}
+
+	protected Link<?> getCurrentEntityLink(final IModel<EntityHandle> currentHandle) {
+		return null;
+	}
+
 	@Override
 	protected void onConfigure() {
 		super.onConfigure();
@@ -125,12 +133,7 @@ public class BreadCrumbsBar extends Panel {
 	// ----------------------------------------------------
 
 	protected Component createCurrentEntityLink(final IModel<EntityHandle> currentHandle) {
-		final CrossLink link = new CrossLink("currentEntityLink", new DerivedDetachableModel<String, EntityHandle>(currentHandle) {
-			@Override
-			protected String derive(final EntityHandle handle) {
-				return getUrlTo(handle.getId()).toString();
-			}
-		});
+		final Link<?> link = getCurrentEntityLink(currentHandle);
 		link.add(new Label("label", new DerivedDetachableModel<String, EntityHandle>(currentHandle) {
 			@Override
 			protected String derive(final EntityHandle handle) {
@@ -148,6 +151,7 @@ public class BreadCrumbsBar extends Panel {
 		return link;
 	}
 
+
 	protected Component createUnderConstructionHint(final IModel<EntityHandle> currentHandle) {
 		Label label = new Label("underConstructionHint", new ResourceModel("label.node-in-creation"));
 		label.add(visibleIf(new IsOnCreationConditional(currentHandle)));
@@ -155,10 +159,6 @@ public class BreadCrumbsBar extends Panel {
 	}
 
 	// ----------------------------------------------------
-
-	protected CharSequence getUrlTo(final ResourceID ref) {
-		return resourceLinkProvider.getUrlToResource(ref, VisualizationMode.DETAILS, DisplayMode.VIEW);
-	}
 
 	private ResourceID resolve(final ResourceID rid) {
 		if (rid.asResource().isAttached()) {
