@@ -91,20 +91,20 @@ public class EntityDetailPage extends RBBasePage {
 		return new BreadCrumbsBar(componentID, 7){
 
 			@Override
-			protected Link<?> getBreadCrumbsBarLink(final ResourceID id) {
-				return EntityDetailPage.this.getBreadCrumbsBarLink(id);
+			protected Link<?> getBreadCrumbsBarLink(final String componentID, final ResourceID id) {
+				return EntityDetailPage.this.getBreadCrumbsBarLink(componentID, id);
 			}
 
 			@Override
-			protected Link<?> getCurrentEntityLink(final IModel<EntityHandle> currentHandle) {
-				return EntityDetailPage.this.getCurrentEntityLink(currentHandle);
+			protected Link<?> getCurrentEntityLink(final String componentID, final IModel<EntityHandle> currentHandle) {
+				return EntityDetailPage.this.getCurrentEntityLink(componentID, currentHandle);
 			}
 
 		};
 	}
 
-	protected Link<?> getCurrentEntityLink(final IModel<EntityHandle> currentHandle) {
-		final Link<?> link = new CrossLink("currentEntityLink", new DerivedDetachableModel<String, EntityHandle>(currentHandle) {
+	protected Link<?> getCurrentEntityLink(final String componentID, final IModel<EntityHandle> currentHandle) {
+		final Link<?> link = new CrossLink(componentID, new DerivedDetachableModel<String, EntityHandle>(currentHandle) {
 			@Override
 			protected String derive(final EntityHandle handle) {
 				return getUrlTo(handle.getId()).toString();
@@ -121,8 +121,8 @@ public class EntityDetailPage extends RBBasePage {
 		return new NotePadPanel(id, model);
 	}
 
-	protected Link<?> getBreadCrumbsBarLink(final ResourceID id) {
-		final Link<?> link = new CrossLink("link", getUrlTo(id).toString());
+	protected Link<?> getBreadCrumbsBarLink(final String componentID, final ResourceID id) {
+		final Link<?> link = new CrossLink(componentID, getUrlTo(id).toString());
 		return link;
 	}
 

@@ -76,7 +76,7 @@ public class BreadCrumbsBar extends Panel {
 				final EntityBrowsingStep step = item.getModelObject();
 				final EntityHandle handle = item.getModelObject().getHandle();
 				final ResourceID id = resolve(handle.getId());
-				final Link<?> link = getBreadCrumbsBarLink(id);
+				final Link<?> link = getBreadCrumbsBarLink("link", id);
 				switch (step.getState()) {
 					case VIEW:
 					case EDIT:
@@ -115,12 +115,12 @@ public class BreadCrumbsBar extends Panel {
 		}
 	}
 
-	protected Link<?> getBreadCrumbsBarLink(final ResourceID id) {
+	protected Link<?> getBreadCrumbsBarLink(final String componentID, final ResourceID id) {
 		return null;
 
 	}
 
-	protected Link<?> getCurrentEntityLink(final IModel<EntityHandle> currentHandle) {
+	protected Link<?> getCurrentEntityLink(final String comonentID, final IModel<EntityHandle> currentHandle) {
 		return null;
 	}
 
@@ -133,7 +133,7 @@ public class BreadCrumbsBar extends Panel {
 	// ----------------------------------------------------
 
 	protected Component createCurrentEntityLink(final IModel<EntityHandle> currentHandle) {
-		final Link<?> link = getCurrentEntityLink(currentHandle);
+		final Link<?> link = getCurrentEntityLink("currentEntityLink", currentHandle);
 		link.add(new Label("label", new DerivedDetachableModel<String, EntityHandle>(currentHandle) {
 			@Override
 			protected String derive(final EntityHandle handle) {
