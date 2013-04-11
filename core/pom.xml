@@ -156,7 +156,7 @@
         </dependency>
 		<dependency>
 			<groupId>de.lichtflut.rb</groupId>
-			<artifactId>lf.content-repository-jr</artifactId>
+			<artifactId>lf.resource-browser.content-repository</artifactId>
 			<version>0.2-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
