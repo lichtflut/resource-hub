@@ -47,7 +47,10 @@ public class Schema2GraphBindingTest {
 	@Test
 	public void testToModelObjectSchema() {
 		ResourceSchema schema = ResourceSchemaFactory.buildPersonSchema();
-
+		int supportedLocales = schema.getPropertyDeclarations().get(0).getFieldLabelDefinition().getSupportedLocales().size();
+		if(0 == supportedLocales){
+			throw new IllegalArgumentException("Set at least one Locale to get Propper Test results!");
+		}
 		SNResource node = new SNResource();
 		SNResourceSchema snSchema = new SNResourceSchema(node);
 		snSchema.setDescribedType(schema.getDescribedType());
@@ -61,7 +64,7 @@ public class Schema2GraphBindingTest {
 			snDecl.setMaxOccurs(new SNScalar(decl.getCardinality().getMaxOccurs()));
 			snDecl.setDatatype(decl.getDatatype());
 			snDecl.setFieldLabelDefinition(decl.getFieldLabelDefinition());
-            if (null != predecessor) {
+			if (null != predecessor) {
 				predecessor.setSuccessor(snDecl);
 			}
 			predecessor = snDecl;
@@ -81,6 +84,7 @@ public class Schema2GraphBindingTest {
 		assertThat(converted.getLabelBuilder().getExpression(), equalTo(schema.getLabelBuilder().getExpression()));
 		assertThat(converted.getPropertyDeclarations().size(), is(schema.getPropertyDeclarations().size()));
 		assertThat(converted.getQuickInfo().size(), is(schema.getQuickInfo().size()));
+		assertThat(converted.getPropertyDeclarations().get(0).getFieldLabelDefinition().getSupportedLocales().size(), is(supportedLocales));
 	}
 
 	/**

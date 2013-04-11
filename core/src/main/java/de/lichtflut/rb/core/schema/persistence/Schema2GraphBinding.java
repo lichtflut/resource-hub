@@ -3,8 +3,12 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
+import java.util.Locale;
+
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNScalar;
 import org.arastreju.sge.model.nodes.views.SNText;
@@ -203,10 +207,16 @@ public class Schema2GraphBinding {
 	}
 
 	protected void setFieldLabels(final SNPropertyDeclaration snDecl, final FieldLabelDefinition def) {
-		if (def != null && def.getDefaultLabel() != null) {
-			SNOPS.associate(snDecl, RBSystem.HAS_FIELD_LABEL, new SNText(def.getDefaultLabel()));
+		if(def != null){
+			ResourceNode labelNode = new SNResource();
+			SNOPS.associate(snDecl, RBSystem.HAS_FIELD_LABEL, labelNode);
+			if (def != null && def.getDefaultLabel() != null) {
+				SNOPS.associate(labelNode, RBSystem.DEFAULT, new SNText(def.getDefaultLabel()));
+			}
+			for (Locale locale : def.getSupportedLocales()) {
+				SNOPS.associate(labelNode, new SimpleResourceID(locale.getLanguage()), new SNText(def.getLabel(locale)));
+			}
 		}
-		// TODO: set i18n labels.
 	}
 
 	protected void setVisualizationInfo(final SNPropertyDeclaration snDecl, final VisualizationInfo visualizationInfo) {
