@@ -305,9 +305,11 @@ public class ExcelParser {
 			if (VERSIONING.equals(sheet.getSheetName())) {
 				addVersioning(row, predicates);
 			}else{
-				ResourceNode node = genereateRowBasedNode(row, predicates);
-				nodes.add(node);
-				emptyLines = checkForEmptyLine(emptyLines, node);
+				if(null != row){
+					ResourceNode node = genereateRowBasedNode(row, predicates);
+					nodes.add(node);
+					emptyLines = checkForEmptyLine(emptyLines, node);
+				}
 			}
 			// For performance optimization we stopp parsing after 10 consecutive empty lines
 			if (emptyLines >= 10) {
