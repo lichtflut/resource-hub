@@ -3,10 +3,11 @@
  */
 package de.lichtflut.rb.webck.models.fields;
 
-import de.lichtflut.rb.core.entity.RBField;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.cycle.RequestCycle;
+
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.webck.common.RBWebSession;
 
 /**
  * <p>
@@ -22,9 +23,9 @@ import org.apache.wicket.request.cycle.RequestCycle;
 public class FieldLabelModel extends AbstractReadOnlyModel<String> {
 
 	private final IModel<RBField> fieldModel;
-	
+
 	// ----------------------------------------------------
-	
+
 	/**
 	 * Constuctor.
 	 * @param fieldModel The field model.
@@ -34,11 +35,11 @@ public class FieldLabelModel extends AbstractReadOnlyModel<String> {
 	}
 
 	// ----------------------------------------------------
-	
+
 	@Override
 	public String getObject() {
-		return fieldModel.getObject().getLabel(RequestCycle.get().getRequest().getLocale());
+		return fieldModel.getObject().getLabel(RBWebSession.get().getLocale());
 	}
 
-	
+
 }
