@@ -19,3 +19,4 @@ webck/bin
 */.checkstyle
 *~*
 infinitest.args
+MANIFEST.MF
