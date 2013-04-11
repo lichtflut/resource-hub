@@ -3,10 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.lichtflut.rb</groupId>
-	<artifactId>lf.content-repository-jr</artifactId>
+	<artifactId>lf.content-repository</artifactId>
 	<packaging>jar</packaging>
 	<version>0.2-SNAPSHOT</version>
-	<name>Content Repository based on Filesystem</name>
+	<name>Content Repository</name>
 
 	<dependencies>
 		<dependency>

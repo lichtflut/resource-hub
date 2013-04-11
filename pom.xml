@@ -11,7 +11,7 @@
 	
 	<modules>
         <module>api</module>
-		<module>content-repo-jr</module>
+		<module>content-repo</module>
 		<module>core</module>
 		<module>tools</module>
 		<module>webck</module>
