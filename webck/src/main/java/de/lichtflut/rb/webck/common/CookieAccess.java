@@ -1,11 +1,14 @@
 package de.lichtflut.rb.webck.common;
 
-import de.lichtflut.rb.core.security.AuthModule;
+import java.util.Locale;
+
+import javax.servlet.http.Cookie;
+
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 
-import javax.servlet.http.Cookie;
+import de.lichtflut.rb.core.security.AuthModule;
 
 /**
  * <p>
@@ -20,68 +23,82 @@ import javax.servlet.http.Cookie;
  */
 public class CookieAccess {
 
-    private static final CookieAccess instance = new CookieAccess();
+	private static final CookieAccess instance = new CookieAccess();
 
-    // ----------------------------------------------------
+	private static final String LOCALE_COOKIE = "locale";
 
-    public static CookieAccess getInstance() {
-        return instance;
-    }
+	// ----------------------------------------------------
 
-    // -- COMMON ------------------------------------------
+	public static CookieAccess getInstance() {
+		return instance;
+	}
 
-    public String load(String key) {
-        Cookie cookie = request().getCookie(key);
-        if (cookie == null) {
-            return null;
-        } else {
-            return cookie.getValue();
-        }
-    }
+	// -- COMMON ------------------------------------------
 
-    public void add(String key, String value) {
-        response().addCookie(new Cookie(key, value));
-    }
+	public String load(final String key) {
+		Cookie cookie = request().getCookie(key);
+		if (cookie == null) {
+			return null;
+		} else {
+			return cookie.getValue();
+		}
+	}
 
-    public void remove(String key) {
-        response().clearCookie(new Cookie(key, ""));
-    }
+	public void add(final String key, final String value) {
+		response().addCookie(new Cookie(key, value));
+	}
 
-    // -- AUTH SPECIFIC -----------------------------------
+	public void remove(final String key) {
+		response().clearCookie(new Cookie(key, ""));
+	}
 
-    public String getSessionToken() {
-        return load(AuthModule.COOKIE_SESSION_AUTH);
-    }
+	// -- AUTH SPECIFIC -----------------------------------
 
-    public String getRememberMeToken() {
-        return load(AuthModule.COOKIE_REMEMBER_ME);
-    }
+	public String getSessionToken() {
+		return load(AuthModule.COOKIE_SESSION_AUTH);
+	}
 
-    public void setSessionToken(String token) {
-        final Cookie cookie = new Cookie(AuthModule.COOKIE_SESSION_AUTH, token);
-        cookie.setMaxAge(3600);
-        response().addCookie(cookie);
-    }
+	public String getRememberMeToken() {
+		return load(AuthModule.COOKIE_REMEMBER_ME);
+	}
 
-    public void setRememberMeToken(String token) {
-        final Cookie cookie = new Cookie(AuthModule.COOKIE_REMEMBER_ME, token);
-        cookie.setMaxAge(3600 * 24 * 30);
-        response().addCookie(cookie);
-    }
+	public void setSessionToken(final String token) {
+		final Cookie cookie = new Cookie(AuthModule.COOKIE_SESSION_AUTH, token);
+		cookie.setMaxAge(3600);
+		response().addCookie(cookie);
+	}
 
-    public void removeAuthCookies() {
-        remove(AuthModule.COOKIE_REMEMBER_ME);
-        remove(AuthModule.COOKIE_SESSION_AUTH);
-    }
+	public void setRememberMeToken(final String token) {
+		final Cookie cookie = new Cookie(AuthModule.COOKIE_REMEMBER_ME, token);
+		cookie.setMaxAge(3600 * 24 * 30);
+		response().addCookie(cookie);
+	}
 
-    // ----------------------------------------------------
+	public void removeAuthCookies() {
+		remove(AuthModule.COOKIE_REMEMBER_ME);
+		remove(AuthModule.COOKIE_SESSION_AUTH);
+	}
 
-    private WebResponse response() {
-        return (WebResponse) RequestCycle.get().getResponse();
-    }
+	// --------- LANGUAGE SPECIFIC --------------------------
 
-    private WebRequest request() {
-        return (WebRequest) RequestCycle.get().getRequest();
-    }
+	public String getLocaleCookie(){
+		return load(LOCALE_COOKIE);
+	}
+
+	public void setLocale(final Locale locale) {
+		Cookie cookie = new Cookie(LOCALE_COOKIE, locale.getLanguage());
+		cookie.setMaxAge(3600 * 24 * 30 * 365);
+		response().addCookie(cookie);
+	}
+
+	// ----------------------------------------------------
+
+	private WebResponse response() {
+		return (WebResponse) RequestCycle.get().getResponse();
+	}
+
+	private WebRequest request() {
+		return (WebRequest) RequestCycle.get().getRequest();
+	}
 
 }
