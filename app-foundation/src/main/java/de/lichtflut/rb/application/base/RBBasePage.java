@@ -49,7 +49,6 @@ import de.lichtflut.rb.webck.models.viewspecs.MenuItemListModel;
  * 
  * @author Oliver Tigges
  */
-@SuppressWarnings("serial")
 public class RBBasePage extends AbstractBasePage {
 
 	/**
@@ -121,10 +120,9 @@ public class RBBasePage extends AbstractBasePage {
 		return new WebMarkupContainer(componentID);
 	}
 
-	@SuppressWarnings("rawtypes")
 	protected Form<?> createSearchForm(final String componentID) {
 		final IModel<String> searchModel = new Model<String>();
-		final Form<?> form = new Form(componentID) {
+		final Form<?> form = new Form<Void>(componentID) {
 			@Override
 			protected void onSubmit() {
 				final PageParameters params = new PageParameters();
