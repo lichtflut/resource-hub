@@ -13,7 +13,7 @@ import de.lichtflut.rb.webck.common.RBWebSession;
 
 /**
  * <p>
- * [TODO Insert description here.]
+ * Converter for Date values.
  * </p>
  * Created: Apr 8, 2013
  *

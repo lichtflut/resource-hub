@@ -1,7 +1,7 @@
 /*
  * Copyright 2012 by lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
-package de.lichtflut.rb.webck.components.entity;
+package de.lichtflut.rb.webck.models;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -35,6 +35,7 @@ import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.rteditor.RichTextBehavior;
+import de.lichtflut.rb.webck.models.DateModel;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.fields.FileUploadModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
