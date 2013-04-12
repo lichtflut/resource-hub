@@ -110,6 +110,7 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 			@Override
 			public void onClick() {
 				WebSession.get().setLocale(Locale.ENGLISH);
+				new CookieAccess().setLocale(Locale.ENGLISH);
 			}
 		});
 
@@ -117,6 +118,7 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 			@Override
 			public void onClick() {
 				WebSession.get().setLocale(Locale.GERMAN);
+				new CookieAccess().setLocale(Locale.GERMAN);
 			}
 		});
 	}
