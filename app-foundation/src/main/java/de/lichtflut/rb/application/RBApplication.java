@@ -4,9 +4,9 @@
 package de.lichtflut.rb.application;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import de.lichtflut.rb.application.graphvis.ContainmentMapInfoVisPage;
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
@@ -34,6 +34,7 @@ import de.lichtflut.rb.application.custom.BrowseAndSearchPage;
 import de.lichtflut.rb.application.custom.PerspectivePage;
 import de.lichtflut.rb.application.custom.UserProfilePage;
 import de.lichtflut.rb.application.custom.WelcomePage;
+import de.lichtflut.rb.application.graphvis.ContainmentMapInfoVisPage;
 import de.lichtflut.rb.application.graphvis.FlowChartInfoVisPage;
 import de.lichtflut.rb.application.graphvis.HierarchyInfoVisPage;
 import de.lichtflut.rb.application.graphvis.PeripheryViewPage;
@@ -51,6 +52,7 @@ import de.lichtflut.rb.webck.components.navigation.NavigationNode;
 import de.lichtflut.rb.webck.components.navigation.NavigationNodePanel;
 import de.lichtflut.rb.webck.conversion.LabelBuilderConverter;
 import de.lichtflut.rb.webck.conversion.QualifiedNameConverter;
+import de.lichtflut.rb.webck.conversion.RBDateConverter;
 import de.lichtflut.rb.webck.conversion.ResourceIDConverter;
 import de.lichtflut.rb.webck.conversion.SNTextConverter;
 import de.lichtflut.rb.webck.conversion.SNTimeSpecConverter;
@@ -123,9 +125,9 @@ public abstract class RBApplication extends WebApplication {
 		return HierarchyInfoVisPage.class;
 	}
 
-    public Class<? extends Page> getContainmentMapVizPage(){
-        return ContainmentMapInfoVisPage.class;
-    }
+	public Class<? extends Page> getContainmentMapVizPage(){
+		return ContainmentMapInfoVisPage.class;
+	}
 
 	public Class<? extends Page> getFlowChartVizPage(){
 		return FlowChartInfoVisPage.class;
@@ -227,6 +229,7 @@ public abstract class RBApplication extends WebApplication {
 		locator.set(ResourceID.class, new ResourceIDConverter());
 		locator.set(QualifiedName.class, new QualifiedNameConverter());
 		locator.set(EntityLabelBuilder.class, new LabelBuilderConverter());
+		locator.set(Date.class, new RBDateConverter());
 		return locator;
 	}
 

@@ -29,30 +29,29 @@ public interface EntityLabelBuilder extends Serializable{
 	 * @return The entitie's label.
 	 */
 	String build(RBEntity entity);
-	
+
 	/**
 	 * Get the expression for building the label.
 	 * @return
 	 */
 	String getExpression();
-	
+
 	// ----------------------------------------------------
 
 	/**
 	 * A default implementation of this interface.
 	 */
-	@SuppressWarnings("serial")
 	public static class DefaultBuilder implements EntityLabelBuilder, Serializable {
 		@Override
 		public String build(final RBEntity entity) {
 			return ResourceLabelBuilder.getInstance().getLabel(entity.getNode(), Locale.getDefault());
 		}
-		
+
 		@Override
 		public String getExpression() {
 			return null;
 		}
-		
+
 		@Override
 		public String toString() {
 			return "";

@@ -19,7 +19,6 @@ import de.lichtflut.rb.core.entity.RBFieldValue;
  *
  * @author Ravi Knox
  */
-@SuppressWarnings("serial")
 public class RBFieldValueModel implements IModel<Object> {
 
 	private final RBField field;

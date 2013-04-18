@@ -67,12 +67,11 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 		securityCheck();
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
 
-		add(new Link("logout") {
+		add(new Link<Void>("logout") {
 			@Override
 			public void onClick() {
 				WebSession.get().invalidate();
@@ -81,7 +80,7 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 			}
 		}.add(visibleIf(isLoggedIn())));
 
-		add(new Link("login") {
+		add(new Link<Void>("login") {
 			@Override
 			public void onClick() {
 				WebSession.get().invalidate();
@@ -104,19 +103,20 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 
 	// ----------------------------------------------------
 
-	@SuppressWarnings("rawtypes")
 	protected void addLanguageLinks() {
-		add(new Link("switchToEnglish") {
+		add(new Link<Void>("switchToEnglish") {
 			@Override
 			public void onClick() {
 				WebSession.get().setLocale(Locale.ENGLISH);
+				new CookieAccess().setLocale(Locale.ENGLISH);
 			}
 		});
 
-		add(new Link("switchToGerman") {
+		add(new Link<Void>("switchToGerman") {
 			@Override
 			public void onClick() {
 				WebSession.get().setLocale(Locale.GERMAN);
+				new CookieAccess().setLocale(Locale.GERMAN);
 			}
 		});
 	}

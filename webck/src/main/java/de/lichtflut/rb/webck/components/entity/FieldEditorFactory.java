@@ -35,6 +35,7 @@ import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.rteditor.RichTextBehavior;
+import de.lichtflut.rb.webck.models.DateModel;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.fields.FileUploadModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
@@ -135,7 +136,7 @@ public class FieldEditorFactory implements Serializable {
 	}
 
 	public Component createDateField(final RBField fieldDefinition, final IModel model) {
-		final DatePicker<Date> field = new DatePicker<Date>("valuefield", model, Date.class);
+		final DatePicker<Date> field = new DatePicker<Date>("valuefield", new DateModel((RBFieldValueModel) model), Date.class);
 		addValidator(field, fieldDefinition);
 		addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textInput", container).add(field);

@@ -35,7 +35,7 @@ public class ResourceSchemaFactory {
 		PropertyDeclaration address = new PropertyDeclarationImpl(RB.HAS_ADDRESS, Datatype.RESOURCE);
 		PropertyDeclaration dateOfBirth = new PropertyDeclarationImpl(RB.HAS_DATE_OF_BIRTH, Datatype.DATE);
 		PropertyDeclaration	email = new PropertyDeclarationImpl(RB.HAS_EMAIL, Datatype.STRING);
-		PropertyDeclaration children = new PropertyDeclarationImpl(RB.HAS_CHILD_NODE, Datatype.RESOURCE);
+		PropertyDeclaration children = new PropertyDeclarationImpl(RBTestConstants.HAS_CHILDREN, Datatype.RESOURCE);
 		PropertyDeclaration avatar = new PropertyDeclarationImpl(RBTestConstants.HAS_AVATAR, Datatype.FILE);
 
 		address.setConstraint(ConstraintsFactory.buildTypeConstraint(RBTestConstants.ADDRESS));

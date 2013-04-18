@@ -73,12 +73,13 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	/**
-	 * Constructor.
-.	 * @param typeManager
+	 * Constructor. . * @param typeManager
+	 * 
 	 * @param schemaManager
 	 * @param conversation
 	 */
-	public EntityManagerImpl(final TypeManager typeManager, final SchemaManager schemaManager, final Conversation conversation) {
+	public EntityManagerImpl(final TypeManager typeManager, final SchemaManager schemaManager,
+			final Conversation conversation) {
 		this.typeManager = typeManager;
 		this.schemaManager = schemaManager;
 		this.conversation = conversation;
@@ -97,15 +98,17 @@ public class EntityManagerImpl implements EntityManager {
 	/**
 	 * The creation of an Entity involves the following Steps:
 	 * <ol>
-	 *	<li>Get {@link SchemaIdentifyingType}</li>
-	 *	<li>Prepare an Entity:
-	 *	<ol>
-	 *		<li>Check if a prototype is associated diretly</li>
-	 *		<li>If no prototype found check the schema type for a prototype</li>
-	 *		<li>If prototype found copy its values and set the appropriate RDF.TYPEs. Otherwise do nothing</li>
-	 *	</ol>
-	 *	</li>
-	 *	<li>Create a {@link RBEntity}. If it has a schema associated, use it as parameter, otherwise use given type</li>
+	 * <li>Get {@link SchemaIdentifyingType}</li>
+	 * <li>Prepare an Entity:
+	 * <ol>
+	 * <li>Check if a prototype is associated diretly</li>
+	 * <li>If no prototype found check the schema type for a prototype</li>
+	 * <li>If prototype found copy its values and set the appropriate RDF.TYPEs. Otherwise do
+	 * nothing</li>
+	 * </ol>
+	 * </li>
+	 * <li>Create a {@link RBEntity}. If it has a schema associated, use it as parameter, otherwise
+	 * use given type</li>
 	 * </ol>
 	 */
 	@Override
@@ -113,15 +116,13 @@ public class EntityManagerImpl implements EntityManager {
 		ResourceNode typeNode = conversation.findResource(type.getQualifiedName());
 		ResourceSchema schema = getSchemaFor(typeNode);
 
-		ResourceNode entityNode = prepareEntityNode(typeNode, schema);
-
+		ResourceNode entityNode = prepareEntityNode(typeNode, schema, type);
 		if (schema != null) {
 			return new RBEntityImpl(entityNode, schema).markTransient();
 		} else {
 			return new RBEntityImpl(entityNode, type).markTransient();
 		}
 	}
-
 
 	@Override
 	public void store(final RBEntity entity) {
@@ -200,7 +201,7 @@ public class EntityManagerImpl implements EntityManager {
 	// ----------------------------------------------------
 
 	private RBEntityImpl find(final ResourceID resourceID, final boolean resolveEmbeddeds) {
-		if(null == resourceID){
+		if (null == resourceID) {
 			return null;
 		}
 		final ResourceNode node = conversation.findResource(resourceID.getQualifiedName());
@@ -243,7 +244,12 @@ public class EntityManagerImpl implements EntityManager {
 				result.add(new SimpleResourceID(ref.getQualifiedName()));
 			} else {
 				final ElementaryDataType datatype = Datatype.getCorrespondingArastrejuType(field.getDataType());
-				result.add(new SNValue(datatype, value));
+				if (Datatype.DATE.name().equals(field.getDataType().name()) && value instanceof SNValue) {
+					// Sometimes the value is already of type SNValue. Avoid ClassCastException.
+					result.add((SemanticNode) value);
+				} else {
+					result.add(new SNValue(datatype, value));
+				}
 			}
 		}
 		return result;
@@ -304,71 +310,74 @@ public class EntityManagerImpl implements EntityManager {
 
 	/**
 	 * Validates a single {@link RBField} for consistency.
+	 * 
 	 * @param field Field to be validated
 	 * @throws ValidationException
 	 */
 	private void validateRBField(final RBField field) throws ValidationException {
 		Cardinality cardinality = field.getCardinality();
-		if(cardinality.getMinOccurs() > field.getValues().size() ||
-				cardinality.getMaxOccurs() < field.getValues().size()){
+		if (cardinality.getMinOccurs() > field.getValues().size()
+				|| cardinality.getMaxOccurs() < field.getValues().size()) {
 			throw new ValidationException(ErrorCodes.CARDINALITY_EXCEPTION, "Cardinality does not match given values");
 		}
 	}
 
 	/**
 	 * Appends a given Map by a given ValidationException and a given RBField.
+	 * 
 	 * @param errors Map
 	 * @param exception Exception to be added
 	 * @param field RBfield to be addd
 	 */
-	private void append(final Map<Integer, List<RBField>> errors, final ValidationException exception, final RBField field) {
+	private void append(final Map<Integer, List<RBField>> errors, final ValidationException exception,
+			final RBField field) {
 		int errorCode = exception.getErrorCode();
-		if(errors.containsKey(errorCode)){
+		if (errors.containsKey(errorCode)) {
 			errors.get(errorCode).add(field);
-		}else{
+		} else {
 			List<RBField> fields = new ArrayList<RBField>();
 			fields.add(field);
 			errors.put(exception.getErrorCode(), fields);
 		}
 	}
 
-	private ResourceSchema getSchemaFor(final ResourceNode type){
+	private ResourceSchema getSchemaFor(final ResourceNode type) {
 		ResourceSchema schema = schemaManager.findSchemaForType(type);
-		if(null == schema){
+		if (null == schema) {
 			SNClass schemaIdentifier = SchemaIdentifyingType.of(type);
 			schema = schemaManager.findSchemaForType(schemaIdentifier);
 		}
 		return schema;
 	}
 
-	private ResourceNode prepareEntityNode(final ResourceID type, final ResourceSchema schema) {
+	private ResourceNode prepareEntityNode(final ResourceID type, final ResourceSchema schema,
+			final ResourceID originalType) {
 		ResourceNode entityNode = newEntityNode();
 		ResourceNode prototype = getPrototype(type);
-		if(null == prototype && null != schema){
+		if (null == prototype && null != schema) {
 			prototype = getPrototype(schema.getDescribedType());
 		}
-		if(null != prototype){
+		if (null != prototype) {
 			LOGGER.debug("Found Prototype for {}.", type);
-			if(isEntity(prototype)){
+			if (isEntity(prototype)) {
 				entityNode = copy(prototype);
-				if(null !=schema){
+				if (null != schema) {
 					// Set original type
 					SNOPS.remove(entityNode, RDF.TYPE);
 					entityNode.addAssociation(RDF.TYPE, RBSystem.ENTITY);
-					entityNode.addAssociation(RDF.TYPE, type);
+					entityNode.addAssociation(RDF.TYPE, originalType);
 				}
 				conversation.attach(entityNode);
-			}else{
+			} else {
 				LOGGER.debug("Prototype for {} is not of type RBSystem.ENTITY. Prototyping skipped.", type);
 			}
 		}
 		return entityNode;
 	}
 
-
 	private ResourceNode copy(final SemanticNode prototype) {
 		ResourceNode node = newEntityNode();
-		for (Statement stmt: prototype.asResource().getAssociations()) {
+		for (Statement stmt : prototype.asResource().getAssociations()) {
 			node.addAssociation(stmt.getPredicate(), stmt.getObject());
 		}
 		return node;
@@ -377,7 +386,7 @@ public class EntityManagerImpl implements EntityManager {
 	private boolean isEntity(final ResourceNode prototype) {
 		boolean isEntity = false;
 		for (Statement stmt : prototype.getAssociations()) {
-			if(stmt.getObject().equals(RBSystem.ENTITY)){
+			if (stmt.getObject().equals(RBSystem.ENTITY)) {
 				isEntity = true;
 				break;
 			}
@@ -388,7 +397,7 @@ public class EntityManagerImpl implements EntityManager {
 	private ResourceNode getPrototype(final ResourceID classId) {
 		ResourceNode classNode = conversation.findResource(classId.getQualifiedName());
 		SemanticNode node = SNOPS.fetchObject(classNode, RBSystem.HAS_PROTOTYPE);
-		if(null != node){
+		if (null != node) {
 			return node.asResource();
 		}
 		return null;

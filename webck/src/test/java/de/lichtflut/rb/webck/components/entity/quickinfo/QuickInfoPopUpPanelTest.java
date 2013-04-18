@@ -5,15 +5,17 @@ package de.lichtflut.rb.webck.components.entity.quickinfo;
 
 import static org.mockito.Mockito.when;
 
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.arastreju.sge.naming.QualifiedName;
 import org.junit.Test;
 
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.webck.RBWebTest;
-import de.lichtflut.rb.webck.components.entity.quickinfo.QuickInfoPopUpPanel;
 import de.lichtflut.rb.webck.data.RBEntityFactory;
 
 /**
@@ -32,9 +34,11 @@ public class QuickInfoPopUpPanelTest extends RBWebTest {
 	@Test
 	public void testQuickInfoPanel() {
 		RBEntity entity = RBEntityFactory.createPersonEntity();
-		QuickInfoPopUpPanel panel = new QuickInfoPopUpPanel("panel", new Model<RBEntity>(entity));
+		Panel panel = new QuickInfoPopUpPanel("panel", new ListModel<RBField>(entity.getQuickInfo()), new Model<String>(entity.getLabel()));
 
 		tester.startComponentInPage(panel);
+
+		assertRenderedPanel(QuickInfoPopUpPanel.class, "panel");
 		tester.assertNoErrorMessage();
 		tester.assertContains(entity.getLabel());
 		tester.assertListView("panel:quickInfo", entity.getQuickInfo());

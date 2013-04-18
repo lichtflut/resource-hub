@@ -100,7 +100,6 @@ public class FieldLabelDefinitionImpl implements FieldLabelDefinition {
 
 	// ------------------------------------------------------
 
-
 	/**
 	 * {@inheritDoc}
 	 */

@@ -36,6 +36,7 @@ import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.config.QueryPath;
 import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 
 /**
@@ -175,6 +176,9 @@ public abstract class RBWebTest {
 	}
 
 	protected void simulatePathbuilder() {
+		QueryPath path = new QueryPath("http://example.org/");
+		when(pathBuilder.create(anyString())).thenReturn(path);
+
 		when(pathBuilder.queryEntities(anyString(), anyString())).thenReturn("some entities");
 		when(pathBuilder.queryClasses(anyString(), anyString())).thenReturn("some entities");
 		when(pathBuilder.queryProperties(anyString(), anyString())).thenReturn("some entities");

@@ -15,14 +15,16 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import java.util.Set;
+import java.util.Locale;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.model.nodes.views.SNScalar;
@@ -205,7 +207,16 @@ public class SNPropertyDeclaration extends ResourceView {
 	 * @param def The field label definition
 	 */
 	public void setFieldLabelDefinition(final FieldLabelDefinition def){
-		SNOPS.associate(this, RBSystem.HAS_FIELD_LABEL, new SNText(def.getDefaultLabel()));
+		if(def != null){
+			ResourceNode labelNode = new SNResource();
+			SNOPS.associate(this, RBSystem.HAS_FIELD_LABEL, labelNode);
+			if (def != null && def.getDefaultLabel() != null) {
+				SNOPS.associate(labelNode, RBSystem.DEFAULT, new SNText(def.getDefaultLabel()));
+			}
+			for (Locale locale : def.getSupportedLocales()) {
+				SNOPS.associate(labelNode, new SimpleResourceID(locale.getLanguage()), new SNText(def.getLabel(locale)));
+			}
+		}
 	}
 
 	/**
@@ -214,11 +225,22 @@ public class SNPropertyDeclaration extends ResourceView {
 	public FieldLabelDefinition getFieldLabelDefinition(){
 		final String defaultName = getPropertyDescriptor().getQualifiedName().getSimpleName();
 		final FieldLabelDefinition def = new FieldLabelDefinitionImpl(defaultName);
-		final Set<? extends Statement> assocs = getAssociations(RBSystem.HAS_FIELD_LABEL);
-		for (Statement current : assocs) {
-			// TODO: Evaluate context to locale
-			def.setDefaultLabel(current.getObject().asValue().getStringValue());
+		SemanticNode semanticNode = SNOPS.fetchObject(this, RBSystem.HAS_FIELD_LABEL);
+		// Ensure backward compatibility (not i18n)
+		if(semanticNode.isValueNode()){
+			return new FieldLabelDefinitionImpl(semanticNode.asValue().getStringValue());
 		}
+		ResourceNode labelNode = semanticNode.asResource();
+
+		for (Statement current : labelNode.getAssociations()) {
+			if(RBSystem.DEFAULT.equals(current.getPredicate())){
+				def.setDefaultLabel(current.getObject().asValue().getStringValue());
+			}else{
+				Locale locale = new Locale(current.getPredicate().asResource().getQualifiedName().toURI());
+				def.setLabel(locale, current.getObject().asValue().getStringValue());
+			}
+		}
+
 		return def;
 	}
 

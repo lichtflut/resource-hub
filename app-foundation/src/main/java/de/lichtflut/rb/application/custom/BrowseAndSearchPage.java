@@ -55,13 +55,13 @@ import de.lichtflut.rb.webck.models.types.SNClassListModel;
 
 /**
  * <p>
- *  Page for Browsing and Searching.
+ * Page for Browsing and Searching.
  * </p>
- *
+ * 
  * <p>
- * 	Created Dec 16, 2011
+ * Created Dec 16, 2011
  * </p>
- *
+ * 
  * @author Oliver Tigges
  */
 public class BrowseAndSearchPage extends RBBasePage {
@@ -88,6 +88,8 @@ public class BrowseAndSearchPage extends RBBasePage {
 	// ----------------------------------------------------
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param parameters
 	 */
 	public BrowseAndSearchPage(final PageParameters parameters) {
@@ -106,11 +108,8 @@ public class BrowseAndSearchPage extends RBBasePage {
 		container.setOutputMarkupId(true);
 
 		container.add(createForm());
-
 		container.add(createResultList());
-
 		container.add(createPager());
-
 		container.add(createCreateLink());
 
 		add(container);
@@ -122,7 +121,7 @@ public class BrowseAndSearchPage extends RBBasePage {
 			}
 
 			@Override
-			protected boolean isCreateLinkVisible(){
+			protected boolean isCreateLinkVisible() {
 				return false;
 			}
 		});
@@ -131,10 +130,9 @@ public class BrowseAndSearchPage extends RBBasePage {
 
 	// ----------------------------------------------------
 
-	@SuppressWarnings("rawtypes")
 	protected Form<?> createForm() {
 		final IModel<String> searchModel = new Model<String>();
-		final Form<?> form = new Form("form") {
+		final Form<?> form = new Form<Void>("form") {
 			@Override
 			protected void onSubmit() {
 				final PageParameters params = new PageParameters();
@@ -149,14 +147,13 @@ public class BrowseAndSearchPage extends RBBasePage {
 		return form;
 	}
 
-	@SuppressWarnings("rawtypes")
 	protected AjaxLink<?> createCreateLink() {
-		final AjaxLink createLink = new AjaxLink("createLink") {
+		final AjaxLink<?> createLink = new AjaxLink<Void>("createLink") {
 			@Override
 			public void onClick(final AjaxRequestTarget target) {
 				final PageParameters linkParams = new PageParameters();
 				linkParams.add(CommonParams.PARAM_RESOURCE_TYPE, typeModel.getObject().getQualifiedName().toURI());
-				linkParams.set(DisplayMode.PARAMETER, DisplayMode.EDIT);
+				linkParams.set(DisplayMode.PARAMETER, DisplayMode.CREATE);
 				setResponsePage(RBApplication.get().getEntityDetailPage(typeModel.getObject()), linkParams);
 			}
 		};
@@ -238,8 +235,8 @@ public class BrowseAndSearchPage extends RBBasePage {
 				query = conversation.createQuery();
 				query.addField(RDF.TYPE, typeModel.getObject());
 			} else if (termModel.getObject() != null) {
-				query = new TermSearcher(conversation.createQuery())
-                        .prepareQuery(termModel.getObject(), Mode.ENTITY, RBSystem.ENTITY.toURI());
+				query = new TermSearcher(conversation.createQuery()).prepareQuery(termModel.getObject(), Mode.ENTITY,
+						RBSystem.ENTITY.toURI());
 			}
 
 			if (query != null) {

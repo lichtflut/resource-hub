@@ -3,6 +3,10 @@
  */
 package de.lichtflut.rb.tools.dataprovider.general.excel;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -72,19 +76,24 @@ public class ExcelParserTools {
 	 * @return a String representation of the cell's value
 	 */
 	public static String getStringValueFor(final Cell cell) {
-		String value = "";
-		switch (cell.getCellType()) {
-			case Cell.CELL_TYPE_NUMERIC:
-				double numeric = cell.getNumericCellValue();
-				value = String.valueOf(numeric);
-				break;
-			case Cell.CELL_TYPE_STRING:
-			case Cell.CELL_TYPE_BLANK:
-				value = cell.getStringCellValue();
-				break;
-			default:
-				break;
+		if(Cell.CELL_TYPE_STRING == cell.getCellType()){
+			return cell.getStringCellValue();
 		}
-		return value;
+		if(HSSFDateUtil.isCellDateFormatted(cell)){
+			Date date = cell.getDateCellValue();
+			String string = "";
+			if(null != date){
+				string = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(date);
+			}
+			return string;
+		}
+		if(Cell.CELL_TYPE_NUMERIC == cell.getCellType()){
+			double cellValue = cell.getNumericCellValue();
+			if((int)cellValue == cellValue){
+				return String.valueOf((int)cellValue);
+			}
+			return String.valueOf(cellValue);
+		}
+		return "";
 	}
 }

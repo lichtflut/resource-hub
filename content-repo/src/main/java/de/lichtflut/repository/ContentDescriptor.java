@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * This class contains some meta-information about an {@link Object}.
+ * This class contains some meta-information about an content-Object.
  * The provided information will be used for storing data.
  * </p>
  * Created: Jul 20, 2012

@@ -73,6 +73,7 @@ public class BrowsingButtonBar extends TypedPanel<RBEntity> {
 	}
 
 	public void onCancelAndBack() {
+		entityManager.delete(getModelObject().getID());
 		RBWebSession.get().getHistory().back();
 		send(getPage(), Broadcast.BREADTH, new ModelChangeEvent<Void>(ModelChangeEvent.ENTITY));
 	}

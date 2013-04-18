@@ -5,12 +5,12 @@ package de.lichtflut.rb.webck.data;
 
 import java.util.Date;
 
+import org.arastreju.sge.model.nodes.SNResource;
+
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.impl.RBEntityImpl;
 import de.lichtflut.rb.webck.data.schema.ResourceSchemaFactory;
-
-import org.arastreju.sge.model.nodes.SNResource;
 
 /**
  * <p>

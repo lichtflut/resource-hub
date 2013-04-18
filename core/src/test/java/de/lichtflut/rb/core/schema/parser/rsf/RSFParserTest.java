@@ -171,7 +171,7 @@ public class RSFParserTest {
 				"common:hasName" +
 				"}" +
 				"property \"common:assignedTo\" [1..n] {" +
-				"field-label[klingonian] : \"Kaaargh\"" +
+				"field-label[de] : \"Zugeordnet\"" +
 				"datatype : \"date\"" +
 				"literal-constraint : \".*@.*\"" +
 				"}" +
