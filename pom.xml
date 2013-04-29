@@ -11,6 +11,7 @@
 	
 	<modules>
         <module>api</module>
+		<module>content-repo</module>
 		<module>core</module>
 		<module>tools</module>
 		<module>webck</module>
@@ -19,7 +20,7 @@
   </modules>
 
 	<properties>
-		<arastreju.version>0.9.0-SNAPSHOT</arastreju.version>
+		<arastreju.version>0.9.0</arastreju.version>
         <springframework.version>3.1.0.RELEASE</springframework.version>
         <wicket.version>1.5.8</wicket.version>
 		<jersey.version>1.8</jersey.version>
@@ -134,9 +135,7 @@
 						<headerDefinition>header.xml</headerDefinition>
 					</headerDefinitions>
 					<excludes>
-						<exclude>**/*.xml</exclude>
-						<exclude>**/*.html</exclude>
-						<exclude>doc/**</exclude>
+						<exclude>header.xml</exclude>
 						<exclude>.git/**</exclude>
 					</excludes>
 				</configuration>

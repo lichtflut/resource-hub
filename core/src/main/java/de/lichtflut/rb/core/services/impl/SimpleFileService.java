@@ -17,15 +17,15 @@ package de.lichtflut.rb.core.services.impl;
 
 import java.util.UUID;
 
+import de.lichtflut.rb.core.content.ContentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.lichtflut.rb.core.config.FileServiceConfiguration;
 import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.services.FileService;
-import de.lichtflut.repository.ContentDescriptor;
-import de.lichtflut.repository.RepositoryDelegator;
-import de.lichtflut.repository.filestore.FileStoreRepository;
+import de.lichtflut.rb.core.content.ContentDescriptor;
+import de.lichtflut.rb.core.content.filestore.FileStoreRepository;
 
 /**
  * <p>
@@ -48,7 +48,7 @@ public class SimpleFileService implements FileService {
 	@SuppressWarnings("unused")
 	private final FileServiceConfiguration fsConfiguration;
 
-	private final RepositoryDelegator delegate;
+	private final ContentRepository delegate;
 
 	// ----------------------------------------------------
 

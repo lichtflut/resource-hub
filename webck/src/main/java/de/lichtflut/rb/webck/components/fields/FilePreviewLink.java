@@ -37,8 +37,8 @@ import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.impl.LinkProvider;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
-import de.lichtflut.repository.ContentDescriptor;
-import de.lichtflut.repository.impl.ContentDescriptorBuilder;
+import de.lichtflut.rb.core.content.ContentDescriptor;
+import de.lichtflut.rb.core.content.ContentDescriptorBuilder;
 
 /**
  * <p>

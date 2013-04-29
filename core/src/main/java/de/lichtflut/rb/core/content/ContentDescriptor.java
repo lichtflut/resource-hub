@@ -13,37 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.repository;
+package de.lichtflut.rb.core.content;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  * <p>
- * This interface defines how to communicate with a Repository.
+ * This class contains some meta-information about an content-Object.
+ * The provided information will be used for storing data.
  * </p>
- * Created: Jul 12, 2012
+ * Created: Jul 20, 2012
  *
  * @author Ravi Knox
  */
-public interface RepositoryDelegator {
+public interface ContentDescriptor extends Serializable {
 
 	/**
-	 * This method returns an {@link ContentDescriptor} for a given id.
-	 * @param id - where the file is located
-	 * @return an ContentDescriptor
+	 * @return the id under which an object shall be referenced.
 	 */
-	ContentDescriptor getData(String id);
+	public String getID();
 
 	/**
-	 * Stores a {@link InputStream} under a given id.
-	 * If id already exists, data will be overwritten.
-	 * @param descriptor
+	 * @return the name for an Object.
 	 */
-	void storeFile(ContentDescriptor descriptor);
+	public String getName();
 
 	/**
-	 * @param id - where to look for a file
-	 * @return true if file exists, false if not.
+	 * @return the Mimetype foran Object.
 	 */
-	boolean exists(String id);
+	public Filetype getMimeType();
+
+	/**
+	 * Returns the contained data as an {@link InputStream}
+	 */
+	public InputStream getData();
+
 }

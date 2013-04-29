@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.repository.impl;
+package de.lichtflut.rb.core.content;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -25,10 +25,6 @@ import java.io.InputStream;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import de.lichtflut.repository.ContentDescriptor;
-import de.lichtflut.repository.Filetype;
-
 
 /**
  * <p>

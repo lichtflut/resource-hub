@@ -28,9 +28,9 @@ import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.impl.LinkProvider;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
-import de.lichtflut.repository.ContentDescriptor;
-import de.lichtflut.repository.Filetype;
-import de.lichtflut.repository.impl.ContentDescriptorBuilder;
+import de.lichtflut.rb.core.content.ContentDescriptor;
+import de.lichtflut.rb.core.content.Filetype;
+import de.lichtflut.rb.core.content.ContentDescriptorBuilder;
 
 /**
  * <p>

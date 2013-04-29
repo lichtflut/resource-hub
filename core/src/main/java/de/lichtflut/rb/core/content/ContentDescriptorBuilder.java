@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.repository.impl;
+package de.lichtflut.rb.core.content;
 
 import java.io.InputStream;
 import java.io.Serializable;
-
-import de.lichtflut.repository.ContentDescriptor;
-import de.lichtflut.repository.Filetype;
 
 /**
  * <p>
@@ -101,9 +98,9 @@ public class ContentDescriptorBuilder implements Serializable {
 			@Override
 			public String toString(){
 				StringBuilder sb = new StringBuilder();
-				sb.append("MimeType: " + getMimeType() + "\n");
+				sb.append("MimeType: ").append(getMimeType()).append("\n");
 				if(null != getData()){
-					sb.append("Data: " + getData().toString());
+					sb.append("Data: ").append(getData().toString());
 				} else{
 					sb.append("Data: NO-DATA!");
 				}

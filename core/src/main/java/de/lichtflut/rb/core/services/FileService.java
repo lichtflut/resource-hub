@@ -17,7 +17,7 @@ package de.lichtflut.rb.core.services;
 
 import java.io.File;
 
-import de.lichtflut.repository.ContentDescriptor;
+import de.lichtflut.rb.core.content.ContentDescriptor;
 
 /**
  * <p>

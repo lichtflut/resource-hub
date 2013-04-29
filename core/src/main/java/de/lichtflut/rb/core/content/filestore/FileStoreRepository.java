@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.repository.filestore;
+package de.lichtflut.rb.core.content.filestore;
 
 import de.lichtflut.infra.io.Streamer;
 import de.lichtflut.infra.security.Crypt;
-import de.lichtflut.repository.ContentDescriptor;
-import de.lichtflut.repository.Filetype;
-import de.lichtflut.repository.RepositoryDelegator;
-import de.lichtflut.repository.impl.ContentDescriptorBuilder;
+import de.lichtflut.rb.core.content.ContentDescriptor;
+import de.lichtflut.rb.core.content.ContentDescriptorBuilder;
+import de.lichtflut.rb.core.content.ContentRepository;
+import de.lichtflut.rb.core.content.Filetype;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,7 +42,7 @@ import java.util.Properties;
  *
  * @author Oliver Tigges
  */
-public class FileStoreRepository implements RepositoryDelegator {
+public class FileStoreRepository implements ContentRepository {
 
 	private static final String DATA = "data.bin";
 
@@ -108,7 +108,7 @@ public class FileStoreRepository implements RepositoryDelegator {
 
 	@Override
 	public boolean exists(final String id) {
-		if(null == id){
+		if (null == id){
 			return false;
 		}
 		return getContentDirectory(id).exists();
