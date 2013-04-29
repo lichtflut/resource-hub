@@ -5,7 +5,7 @@
 	<groupId>de.lichtflut.rb</groupId>
 	<artifactId>lf.resource-browser</artifactId>
 	<name>Resource Browser</name>
-	<version>0.5.3</version>
+	<version>0.6.0-SNAPSHOT</version>
 	<description>lichtflut Resource Browser Project</description>
 	<packaging>pom</packaging>
 	
