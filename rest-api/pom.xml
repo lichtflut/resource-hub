@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.lichtflut.rb</groupId>
         <artifactId>lf.resource-browser</artifactId>
-        <version>0.5.2-SNAPSHOT</version>
+        <version>0.5.3</version>
     </parent>
 
     <groupId>de.lichtflut.rb</groupId>
