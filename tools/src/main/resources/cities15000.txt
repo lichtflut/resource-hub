@@ -1,3 +1,18 @@
+====
+    Copyright (C) 2013 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+====
 3040051	les Escaldes	les Escaldes	Ehskal'des-Ehndzhordani,Escaldes,Escaldes-Engordany,Les Escaldes,Эскальдес-Энджордани,エスカルデス＝エンゴルダニ教区,萊塞斯卡爾德-恩戈爾達,萊塞斯卡爾德－恩戈爾達	42.5072869554153	1.53413772583008	P	PPLA	AD		08				15853		1350	Europe/Andorra	2008-10-15
 3041563	Andorra la Vella	Andorra la Vella	Ando-la-Vyey,Andora,Andora la Velja,Andora lja Vehl'ja,Andoro Malnova,Andorra,Andorra Tuan,Andorra a Vella,Andorra la Biella,Andorra la Vella,Andorra la Vielha,Andorra-a-Velha,Andorra-la-Vel'ja,Andorra-la-Vielye,Andorre-la-Vieille,Andò-la-Vyèy,Andòrra la Vièlha,Ανδόρρα,Андора ла Веля,Андора ла Веља,Андора ля Вэлья,Андорра-ла-Велья,אנדורה לה וולה,أندورا لا فيلا,አንዶራ ላ ቬላ,アンドラ・ラ・ヴェリャ,安道爾城,안도라라베야	42.5051514333831	1.51506185531616	P	PPLC	AD		07				20430		1011	Europe/Andorra	2009-04-13
 290594	Umm al Qaywayn	Umm al Qaywayn	Um al Quweim,Umm al Qaiwain,Umm al Qawain,Yumul al Quwain	25.5652778	55.5533333	P	PPLA	AE		07				44411		8	Asia/Dubai	2008-10-01
