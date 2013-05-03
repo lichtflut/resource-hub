@@ -47,7 +47,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.query.Query;
@@ -170,16 +169,13 @@ public class EntityListWidget extends ConfigurableWidget {
 				for (ResourceNode node : getColumnDefs(spec)) {
 					final SemanticNode predicate = SNOPS.fetchObject(node.asResource(), WDGT.CORRESPONDS_TO_PROPERTY);
 					if (predicate != null && predicate.isResourceNode()) {
-						config.addColumnByPredicate(resolveProperty(predicate.asResource()));
+                        ResourceNode property = semanticNetwork.resolve(predicate.asResource());
+                        config.addColumnByPredicate(property);
 					}
 				}
 				return config;
 			}
 		};
-	}
-	
-	private ResourceNode resolveProperty(ResourceID id) {
-		return semanticNetwork.resolve(id, RBSystem.TYPE_SYSTEM_CTX);
 	}
 	
 	private String[] getSortCriteria(WidgetSpec spec) {
