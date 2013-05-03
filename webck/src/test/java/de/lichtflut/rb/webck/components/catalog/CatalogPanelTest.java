@@ -138,7 +138,7 @@ public class CatalogPanelTest extends RBWebTest {
 	}
 
 	private SNClass getSNClassFor(final String label) {
-		SNResource snResource = new SNResource(QualifiedName.create(resourcePrefix + label));
+		SNResource snResource = new SNResource(QualifiedName.fromURI(resourcePrefix + label));
 		SNClass appServer = new SNClass(snResource);
 		SNOPS.assure(appServer, RDFS.LABEL, new SNValue(ElementaryDataType.STRING, label));
 		return appServer;

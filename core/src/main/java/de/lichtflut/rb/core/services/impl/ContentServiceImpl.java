@@ -65,7 +65,7 @@ public class ContentServiceImpl implements ContentService {
 		if (id == null) {
 			return null;
 		}
-		ResourceNode resource = conversation().findResource(new QualifiedName(id));
+		ResourceNode resource = conversation().findResource(QualifiedName.fromURI(id));
 		return new SNContentItem(resource);
 	}
 
@@ -99,7 +99,7 @@ public class ContentServiceImpl implements ContentService {
 
 	@Override
 	public void attachToResource(final ContentItem contentItem, final ResourceID target) {
-		ResourceNode resource = conversation().findResource(new QualifiedName(contentItem.getID()));
+		ResourceNode resource = conversation().findResource(QualifiedName.fromURI(contentItem.getID()));
 		if (resource != null) {
 			resource.addAssociation(RBSystem.IS_ATTACHED_TO, target);
 		} else {

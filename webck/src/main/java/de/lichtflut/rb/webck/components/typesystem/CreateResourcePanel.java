@@ -54,8 +54,7 @@ public abstract class CreateResourcePanel extends Panel {
 
 	/**
 	 * Constructor.
-	 * @param id
-	 * @param model
+	 * @param id The component ID.
 	 */
 	@SuppressWarnings("rawtypes")
 	public CreateResourcePanel(final String id) {
@@ -76,7 +75,7 @@ public abstract class CreateResourcePanel extends Panel {
 		form.add(new AjaxFallbackButton("save", form) {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				onCreate(new QualifiedName(nsModel.getObject().getUri(), nameModel.getObject()), target);
+				onCreate(QualifiedName.from(nsModel.getObject().getUri(), nameModel.getObject()), target);
 				resetModel();
 			}
 			@Override

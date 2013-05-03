@@ -88,10 +88,11 @@ public class EntityManagerImpl implements EntityManager {
 	}
 
 	/**
-	 * Constructor. . * @param typeManager
+	 * Constructor.
 	 * 
-	 * @param schemaManager
-	 * @param conversation
+	 * @param typeManager The type manager.
+     * @param schemaManager The schema manager.
+	 * @param conversation The current conversation
 	 */
 	public EntityManagerImpl(final TypeManager typeManager, final SchemaManager schemaManager,
 			final Conversation conversation) {
@@ -316,7 +317,7 @@ public class EntityManagerImpl implements EntityManager {
 
 	private SNResource newEntityNode() {
 		if (dnsHandler != null) {
-			final QualifiedName qn = new QualifiedName(dnsHandler.getEntitiesNamespace(), UUID.randomUUID().toString());
+			final QualifiedName qn = QualifiedName.from(dnsHandler.getEntitiesNamespace(), UUID.randomUUID().toString());
 			return new SNResource(qn);
 		} else {
 			return new SNResource();

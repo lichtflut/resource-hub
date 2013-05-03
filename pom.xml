@@ -19,7 +19,7 @@
   </modules>
 
 	<properties>
-		<arastreju.version>0.9.0</arastreju.version>
+		<arastreju.version>0.9.1-SNAPSHOT</arastreju.version>
         <springframework.version>3.1.0.RELEASE</springframework.version>
         <wicket.version>1.5.8</wicket.version>
 		<jersey.version>1.8</jersey.version>

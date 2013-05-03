@@ -68,7 +68,7 @@ public class ConstraintsFactory {
 	 * @return public constraint
 	 */
 	public static Constraint buildPublicEmailConstraint(){
-		QualifiedName qn = new QualifiedName(RB.COMMON_NAMESPACE_URI, "EmailAddress");
+		QualifiedName qn = QualifiedName.from(RB.COMMON_NAMESPACE_URI, "EmailAddress");
 		List<Datatype> datatypes = new ArrayList<Datatype>();
 		datatypes.add(Datatype.STRING);
 		datatypes.add(Datatype.TEXT);
@@ -111,7 +111,7 @@ public class ConstraintsFactory {
 	 * @return public constraint
 	 */
 	public static Constraint buildPublicURLConstraint(){
-		QualifiedName qn = new QualifiedName(RB.COMMON_NAMESPACE_URI, "URLConstraint");
+		QualifiedName qn = QualifiedName.from(RB.COMMON_NAMESPACE_URI, "URLConstraint");
 		List<Datatype> datatypes = new ArrayList<Datatype>();
 		datatypes.add(Datatype.STRING);
 		datatypes.add(Datatype.TEXT);

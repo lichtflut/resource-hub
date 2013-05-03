@@ -67,7 +67,7 @@ public class DefaultDomainValidator implements DomainValidator {
         final Organizer organizer = new Organizer(gate);
 
         // The protected context of this domain
-        organizer.registerContext(new QualifiedName(Namespace.LOCAL_CONTEXTS, domainName));
+        organizer.registerContext(QualifiedName.from(Namespace.LOCAL_CONTEXTS, domainName));
 
         organizer.registerContext(RBSystem.VIEW_SPEC_CTX.getQualifiedName());
 

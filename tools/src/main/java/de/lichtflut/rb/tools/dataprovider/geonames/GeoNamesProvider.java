@@ -92,7 +92,7 @@ public class GeoNamesProvider {
 			CountryInfoRecord record = reader.next();
 			ResourceNode country = findCountryByIsoCode(record.getIso2());
 			if (country == null){
-				QualifiedName qn = new QualifiedName(Geonames.GEO_NAMESPACE_URI,
+				QualifiedName qn = QualifiedName.from(Geonames.GEO_NAMESPACE_URI,
 						Infra.toCamelCaseName(record.getName() + "_" + record.getGeonameid()));
 				country = new SNResource(qn);
 			}
@@ -121,7 +121,7 @@ public class GeoNamesProvider {
 			boolean isGerman = "DE".equals(record.getCountryCode());
 			if (population > MIN_POPULATION || (isGerman && population > MIN_POPULATION_GERMANY)){
 				final String name = Infra.toCamelCaseName(record.getNormalized() + "_" + record.getGeonameid());
-				QualifiedName qn = new QualifiedName(Geonames.GEO_NAMESPACE_URI, name);
+				QualifiedName qn = QualifiedName.from(Geonames.GEO_NAMESPACE_URI, name);
 				ResourceNode city = new SNResource(qn);
 				addLabel(city, record.getName());
 				SNOPS.assure(city, RB.HAS_NAME, record.getName());

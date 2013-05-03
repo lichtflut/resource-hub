@@ -54,13 +54,13 @@ public class ResourceListExcelExporterTest {
 		List<ResourceNode> data = new ArrayList<ResourceNode>();
 		List<ResourceID> predicates = new ArrayList<ResourceID>();
 		
-		ResourceNode node1 = new SNResource(new QualifiedName("qn#resourceNode_1"));
-		ResourceNode node2 = new SNResource(new QualifiedName("qn#resourceNode_2"));
+		ResourceNode node1 = new SNResource(QualifiedName.fromURI("qn#resourceNode_1"));
+		ResourceNode node2 = new SNResource(QualifiedName.fromURI("qn#resourceNode_2"));
 		
-		ResourceID pred1 = new SimpleResourceID(new QualifiedName("qn#hasPredicate_1"));
-		ResourceID pred2 = new SimpleResourceID(new QualifiedName("qn#hasPredicate_2"));
-		ResourceID pred3 = new SimpleResourceID(new QualifiedName("qn#hasPredicate_3"));
-		ResourceID pred4 = new SimpleResourceID(new QualifiedName("qn#hasPredicate_4"));
+		ResourceID pred1 = new SimpleResourceID(QualifiedName.fromURI("qn#hasPredicate_1"));
+		ResourceID pred2 = new SimpleResourceID(QualifiedName.fromURI("qn#hasPredicate_2"));
+		ResourceID pred3 = new SimpleResourceID(QualifiedName.fromURI("qn#hasPredicate_3"));
+		ResourceID pred4 = new SimpleResourceID(QualifiedName.fromURI("qn#hasPredicate_4"));
 		
 		// ----- node1 -----
 		SNOPS.associate(node1, pred1, new SNValue(ElementaryDataType.STRING, "A String-Value"));

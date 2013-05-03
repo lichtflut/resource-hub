@@ -135,9 +135,9 @@ public class TreeInfoVisService extends AbstractInfoVisService{
 
     private QualifiedName toQualifiedName(String uri) {
         if (uri.contains("/")) {
-            return QualifiedName.create(uri);
+            return QualifiedName.fromURI(uri);
         } else {
-            return QualifiedName.create(decodeBase64(uri));
+            return QualifiedName.fromURI(decodeBase64(uri));
         }
     }
 

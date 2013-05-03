@@ -253,7 +253,7 @@ public class EntityManagerImplTest extends RBCoreTest{
 	// ------------------------------------------------------
 
 	private ResourceNode getUser() {
-		ResourceNode node = new SNResource(new QualifiedName("http://test/user"));
+		ResourceNode node = new SNResource(QualifiedName.fromURI("http://test/user"));
 		node.addAssociation(RDF.TYPE, RB.PERSON);
 		return node;
 	}

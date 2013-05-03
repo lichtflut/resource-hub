@@ -239,7 +239,7 @@ public class ExcelParser {
 				node.addAssociation(stmt.getPredicate(), stmt.getObject());
 			}
 		}else{
-			node = new SNResource(QualifiedName.create(data.getMetaData().getNameSpace(), value));
+			node = new SNResource(QualifiedName.from(data.getMetaData().getNameSpace(), value));
 			for (Statement stmt : copy.getAssociations()) {
 				node.addAssociation(stmt.getPredicate(), stmt.getObject());
 			}
@@ -265,7 +265,7 @@ public class ExcelParser {
 	 */
 	protected void addKeyToCache(final String key) {
 		if (!isCached(key)) {
-			data.getForeignKeys().put(key, new SimpleResourceID(QualifiedName.create(data.getMetaData().getNameSpace(), key)));
+			data.getForeignKeys().put(key, new SimpleResourceID(QualifiedName.from(data.getMetaData().getNameSpace(), key)));
 		}
 	}
 
@@ -389,7 +389,7 @@ public class ExcelParser {
 	}
 
 	private QualifiedName createChildURI(final ResourceNode parent, final String value) {
-		return QualifiedName.create(parent.getQualifiedName() + "-" + value.trim());
+		return QualifiedName.fromURI(parent.getQualifiedName() + "-" + value.trim());
 	}
 
 	private void clone(final ResourceNode original, final ResourceNode clone) {

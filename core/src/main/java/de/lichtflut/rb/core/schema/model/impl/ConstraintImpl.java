@@ -87,7 +87,7 @@ public class ConstraintImpl implements Constraint {
 	 * Default constructor for new constraints.
 	 */
 	public ConstraintImpl() {
-		this(new QualifiedName(Namespace.UUID, UUID.randomUUID().toString()));
+		this(QualifiedName.from(Namespace.UUID, UUID.randomUUID().toString()));
 	}
 
 	// ------------------------------------------------------

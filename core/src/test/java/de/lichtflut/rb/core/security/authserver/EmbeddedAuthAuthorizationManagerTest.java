@@ -51,7 +51,7 @@ public class EmbeddedAuthAuthorizationManagerTest {
 
     private static final String ROLE_C = "role-c";
 
-    private static final QualifiedName USER_X1 = new QualifiedName("http://lichtflut.de/users/x1");
+    private static final QualifiedName USER_X1 = QualifiedName.fromURI("http://lichtflut.de/users/x1");
 	
 	@Mock
 	private EmbeddedAuthDomainManager domainManager;

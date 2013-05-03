@@ -56,12 +56,9 @@ public class QuickInfoPopUpPanelTest extends RBWebTest {
 		tester.assertListView("panel:quickInfo", entity.getQuickInfo());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void setupTest() {
-		QualifiedName qname = new QualifiedName("quickInfoPanelTest");
+		QualifiedName qname = QualifiedName.fromURI("quickInfoPanelTest");
 		RBDomain domain = new RBDomain(qname);
 		when(serviceContext.getDomain()).thenReturn(qname.toURI());
 		when(authModule.getDomainManager()).thenReturn(domainManager);

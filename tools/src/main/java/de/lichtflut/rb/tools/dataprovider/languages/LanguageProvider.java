@@ -70,7 +70,7 @@ public class LanguageProvider {
 
 	protected SNResource createResource(final Locale locale) {
 		final String name = locale.getDisplayLanguage();
-		final QualifiedName qn = new QualifiedName(Languages.LANGUAGE_NAMESPACE_URI, name);
+		final QualifiedName qn = QualifiedName.from(Languages.LANGUAGE_NAMESPACE_URI, name);
 		final SNResource language = new SNResource(qn);
 		language.addAssociation(RDF.TYPE, RB.LANGUAGE);
 		

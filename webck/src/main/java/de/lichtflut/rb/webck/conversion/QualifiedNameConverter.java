@@ -34,20 +34,14 @@ import java.util.Locale;
  */
 public class QualifiedNameConverter implements IConverter<QualifiedName> {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public QualifiedName convertToObject(final String value, final Locale locale) {
 		if (StringUtils.isBlank(value)) {
 			return null;
 		}
-		return new QualifiedName(value);
+		return QualifiedName.fromURI(value);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String convertToString(final QualifiedName qn, final Locale locale) {
 		return qn.toURI();

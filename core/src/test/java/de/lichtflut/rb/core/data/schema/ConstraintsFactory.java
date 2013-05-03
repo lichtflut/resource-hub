@@ -38,7 +38,7 @@ import de.lichtflut.rb.core.schema.model.impl.ConstraintImpl;
 public class ConstraintsFactory {
 
 	public static Constraint buildPublicEmailConstraint(){
-		QualifiedName qn = new QualifiedName(RB.COMMON_NAMESPACE_URI, "EmailAddress");
+		QualifiedName qn = QualifiedName.from(RB.COMMON_NAMESPACE_URI, "EmailAddress");
 		List<Datatype> datatypes = new ArrayList<Datatype>();
 		datatypes.add(Datatype.STRING);
 		datatypes.add(Datatype.TEXT);
