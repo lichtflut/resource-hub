@@ -69,7 +69,7 @@ public class ListPagerPanel extends Panel {
 	/**
 	 * Constructor.
 	 * @param id The component ID.
-	 * @param model The model containing the query result.
+	 * @param found The model containing the query result.
 	 * @param offset The offset.
 	 * @param pagesize The size of one page.
 	 */

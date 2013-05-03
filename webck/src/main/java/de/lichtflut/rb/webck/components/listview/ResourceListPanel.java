@@ -169,8 +169,7 @@ public class ResourceListPanel extends Panel {
 	}
 
 	protected String getDisplayValue(final IModel<ResourceField> model) {
-		final String rep = toString(model.getObject().getValues(), getLocale());
-		return rep;
+        return toString(model.getObject().getValues(), getLocale());
 	}
 
 	/**
@@ -192,7 +191,7 @@ public class ResourceListPanel extends Panel {
 		parent.add(new AjaxEventBehavior("onMouseEnter") {
 			@Override
 			protected void onEvent(final AjaxRequestTarget target) {
-				if(false == popup.isVisible()){
+				if(!popup.isVisible()){
 					popup.setVisible(true);
 					target.add(parent);
 				}
@@ -202,7 +201,7 @@ public class ResourceListPanel extends Panel {
 		parent.add(new AjaxEventBehavior("onMouseLeave") {
 			@Override
 			protected void onEvent(final AjaxRequestTarget target) {
-				if(true == popup.isVisible()){
+				if(popup.isVisible()){
 					popup.setVisible(false);
 					target.add(parent);
 				}
@@ -257,7 +256,7 @@ public class ResourceListPanel extends Panel {
 				Component placeholder = new WebMarkupContainer("quickInfo");
 				Label label = new Label("content",  getDisplayValue(item.getModel()));
 
-				if(RDFS.LABEL.getQualifiedName().equals(item.getModelObject().getPredicate().getQualifiedName())){
+				if(RDFS.LABEL.equals(item.getModelObject().getPredicate())){
 					IModel<RBEntity> model = new Model<RBEntity>(entityManager.find(entityNode));
 					ListModel<RBField> listModel = new ListModel<RBField>(model.getObject().getQuickInfo());
 					placeholder = new QuickInfoPopUpPanel("quickInfo", listModel, new Model<String>(new ResourceLabelModel(entityNode).getObject()));
