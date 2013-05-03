@@ -15,18 +15,15 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.naming.Namespace;
-import org.arastreju.sge.naming.QualifiedName;
-
 import de.lichtflut.infra.exceptions.NoLongerSupportedException;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.naming.QualifiedName;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>
@@ -87,7 +84,7 @@ public class ConstraintImpl implements Constraint {
 	 * Default constructor for new constraints.
 	 */
 	public ConstraintImpl() {
-		this(QualifiedName.from(Namespace.UUID, UUID.randomUUID().toString()));
+		this(QualifiedName.generate());
 	}
 
 	// ------------------------------------------------------

@@ -105,8 +105,8 @@ public class RsfWriter implements ResourceSchemaWriter {
 			for (PropertyDeclaration propertyDeclaration : schema.getPropertyDeclarations()) {
 				writeProperty(propertyDeclaration);
 			}
-
 			closeScope();
+            newLine();
 		}
 
 		public void writeProperty(final PropertyDeclaration property) throws IOException {
@@ -206,8 +206,9 @@ public class RsfWriter implements ResourceSchemaWriter {
 		}
 
 		private void closeScope() {
+            scope--;
+            indent(scope);
 			writer.append("}\n");
-			scope--;
 		}
 
 		private void indent(final int lvl) {

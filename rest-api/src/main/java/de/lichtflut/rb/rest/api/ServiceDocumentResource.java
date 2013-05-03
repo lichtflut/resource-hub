@@ -37,7 +37,7 @@ import de.lichtflut.rb.rest.api.models.transfer.UserCredentials;
 
 /**
  * <p>
- *  TODO: To document
+ *  Resource providing the service document for the REST API
  * </p>
  * @author Nils Bleisch (nbleisch@lichtflut.de)
  * @created Jan 16, 2013
@@ -81,7 +81,5 @@ public class ServiceDocumentResource extends RBServiceEndpoint{
 
 		return Response.ok(outputEntity).build();
 	}
-	
-	
 	
 }

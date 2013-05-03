@@ -42,14 +42,11 @@ public interface ServiceProvider {
 	 * @return The context of this service provider.
 	 */
 	ServiceContext getContext();
-	
 
 	/**
 	 * @return The {@link EntityManager}
 	 */
 	EntityManager getEntityManager();
-
-	
 
 	/**
 	 * @return An active Arastreju conversation.

@@ -39,9 +39,6 @@ public class RBServiceProviderFactory {
 	private RBConfig config;
 
 	@Autowired
-	private DomainValidator domainInitializer;
-
-	@Autowired
 	private AuthModule authModule;
 
 	@Autowired

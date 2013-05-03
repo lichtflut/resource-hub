@@ -81,23 +81,25 @@ public class OutputElements {
 
 
 	/**
-	 * @param schemas
-	 */
-	public void addSchemas(final ResourceSchema... schemas) {
+     * @param schemas
+     */
+	public OutputElements addSchemas(final ResourceSchema... schemas) {
 		for (ResourceSchema schema : schemas) {
 			this.schemas.add(schema);
 			register(schema);
 		}
+        return this;
 	}
 
 	/**
-	 * @param constraints
-	 */
-	public void addConstraints(final Constraint... constraints) {
+     * @param constraints
+     */
+	public OutputElements addConstraints(final Constraint... constraints) {
 		for (Constraint constr : constraints) {
 			this.constraints.add(constr);
 			register(constr);
 		}
+        return this;
 	}
 
 	public void registerNamespace(final String namespace, final String prefix) {
@@ -136,9 +138,6 @@ public class OutputElements {
 
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return schemas.size() + " schema(s) and "
