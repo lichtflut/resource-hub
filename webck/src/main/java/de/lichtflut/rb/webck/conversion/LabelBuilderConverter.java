@@ -36,9 +36,6 @@ import java.util.Locale;
  */
 public class LabelBuilderConverter extends AbstractConverter<EntityLabelBuilder> implements IConverter<EntityLabelBuilder> {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public EntityLabelBuilder convertToObject(final String value, final Locale locale) {
 		if (StringUtils.isBlank(value)) {
@@ -51,17 +48,11 @@ public class LabelBuilderConverter extends AbstractConverter<EntityLabelBuilder>
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String convertToString(final EntityLabelBuilder builder, final Locale locale) {
 		return builder.getExpression();
 	}
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	protected Class<EntityLabelBuilder> getTargetType() {
 		return EntityLabelBuilder.class;

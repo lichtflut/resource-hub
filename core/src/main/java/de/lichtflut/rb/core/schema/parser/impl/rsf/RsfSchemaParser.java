@@ -47,7 +47,7 @@ public class RsfSchemaParser implements ResourceSchemaParser{
 		final ParsedElements result = new ParsedElements();
 
 		CharStream input = null;
-		input = new ANTLRInputStream(in);
+		input = new ANTLRInputStream(in, "UTF-8");
 		RSFLexer lexer = new RSFLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		RSFParser parser = new RSFParser(tokens);

@@ -153,6 +153,8 @@ public class SchemaManagerImpl implements SchemaManager {
 			ensureReferencedResourcesExist(mc, schema);
 			final SNResourceSchema node = binding.toSemanticNode(schema);
 			mc.attach(node);
+            ResourceNode type = mc.resolve(schema.getDescribedType());
+            SNOPS.assure(type, RBSchema.HAS_SCHEMA, node);
 			LOGGER.info("Stored schema for type {}.", schema.getDescribedType());
 			tx.success();
 		} finally {

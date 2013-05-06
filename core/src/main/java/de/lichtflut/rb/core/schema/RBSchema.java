@@ -61,6 +61,11 @@ public interface RBSchema {
 	 */
 	ResourceID DESCRIBES = new SimpleResourceID(NAMESPACE_URI, "describes");
 
+    /**
+     * A ResourceType can have a ResourceSchema.
+     */
+    ResourceID HAS_SCHEMA = new SimpleResourceID(NAMESPACE_URI, "hasSchema");
+
 	/**
 	 * A Schema has one or more PropertyDeclarations.
 	 */

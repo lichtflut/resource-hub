@@ -15,16 +15,16 @@
  */
 package de.lichtflut.rb.core.common;
 
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.schema.RBSchema;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
 
-import de.lichtflut.rb.core.RBSystem;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>
@@ -46,7 +46,7 @@ import de.lichtflut.rb.core.RBSystem;
 public class SchemaIdentifyingType {
 
 	/**
-	 * @param node Base node to which the schema type is to be found
+	 * @param resource Base resource to which the schema type is to be found
 	 * @return The first occurrence of {@link RBSystem#HAS_SCHEMA_IDENTIFYING_TYPE} in base or superclasses.
 	 */
 	public static SNClass of(final ResourceID resource) {
@@ -57,63 +57,61 @@ public class SchemaIdentifyingType {
 	}
 
 	/**
-	 * @param node Base node to which the schema type is to be found
+	 * @param resource Base resource to which the schema type is to be found
 	 * @return The first occurrence of {@link RBSystem#HAS_SCHEMA_IDENTIFYING_TYPE} in base or superclasses or {@link RDF#TYPE} if schema is ot found
 	 */
-	public static SNClass of(final ResourceNode node){
-		return of(node, true);
-	}
+	public static SNClass of(final ResourceNode resource){
+        if(null == resource){
+            return null;
+        }
 
-	/**
-	 * @param node Base node to which the schema type is to be found
-	 * @param fallback If true and no schema is found, return the most specifying RDF:TYPE
-	 * @return The first occurrence of {@link RBSystem#HAS_SCHEMA_IDENTIFYING_TYPE} in base or superclasses or {@link RDF#TYPE} if schema is ot found and fallback is set
-	 */
-	public static SNClass of(final ResourceNode node, final boolean fallback){
-		SemanticNode schemaClass = null;
+        // 1st: check direct identification of schema type
+        SNClass siType = getSchemaIdentifiyingType(resource);
+        if (siType != null) {
+            return siType;
+        }
 
-		if(null == node){
-			return null;
-		}
+        // 2nd: find type with schema in type hierarchy
+        SNClass typeWithSchema = findTypeWithSchema(resource);
+        if (typeWithSchema != null) {
+            return typeWithSchema;
+        }
 
-		schemaClass = findRekursive(node, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
+        // 3rd: standard way
+        return EntityType.of(resource);
+    }
 
-		if(null == schemaClass && fallback){
-			schemaClass = findRekursive(node, RDF.TYPE);
-		}
-		return SNClass.from(schemaClass);
-	}
+    // ----------------------------------------------------
 
-	// ------------------------------------------------------
+    private static SNClass getSchemaIdentifiyingType(ResourceNode resource) {
+        ResourceNode type = SNOPS.fetchObjectAsResource(resource, RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
+        if (type != null) {
+            return SNClass.from(type);
+        } else {
+            return null;
+        }
+    }
 
-	private static SemanticNode findRekursive(final ResourceNode node, final ResourceID predicate){
-		if(null != findAssociation(node, predicate)){
-			return findAssociation(node, predicate);
-		}
-		SemanticNode schemaType = recursion(node, predicate);
-		return schemaType;
-	}
+    private static SNClass findTypeWithSchema(ResourceNode resource) {
+        Set<ResourceNode> types = SNOPS.objectsAsResources(resource, RDF.TYPE);
+        return findTypeWithSchema(types, new HashSet<ResourceNode>());
+    }
 
-	private static SemanticNode recursion(final ResourceNode node, final ResourceID predicate){
-		SemanticNode result = null;
-		for (ResourceNode subclass : SNOPS.objectsAsResources(node, RDFS.SUB_CLASS_OF)) {
-			if(null != findAssociation(subclass, predicate)){
-				result = findAssociation(subclass, predicate);
-			}else{
-				result = recursion(subclass, predicate);
-			}
-		}
-		return result;
-	}
+    private static SNClass findTypeWithSchema(Set<ResourceNode> types, Set<ResourceNode> checked) {
+        if (types.isEmpty()) {
+            return null;
+        }
 
-	private static ResourceNode findAssociation(final ResourceNode node, final ResourceID predicate) {
-		ResourceNode result = null;
-		for (Statement assoc : node.getAssociations()) {
-			if(predicate.equals(assoc.getPredicate())){
-				result = assoc.getObject().asResource();
-				break;
-			}
-		}
-		return result;
-	}
+        Set<ResourceNode> nextLevelTypes = new HashSet<ResourceNode>();
+        for (ResourceNode type : types) {
+            checked.add(type);
+            if (!SNOPS.objects(type, RBSchema.HAS_SCHEMA).isEmpty()) {
+                return SNClass.from(type);
+            }
+            nextLevelTypes.addAll(SNClass.from(type).getDirectSuperClasses());
+        }
+        nextLevelTypes.removeAll(checked);
+        return findTypeWithSchema(nextLevelTypes, checked);
+    }
+
 }

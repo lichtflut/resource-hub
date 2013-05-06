@@ -24,6 +24,7 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
+import org.arastreju.sge.model.nodes.views.SNClass;
 
 /**
  * <p>
@@ -38,19 +39,19 @@ import de.lichtflut.rb.core.entity.RBEntity;
  */
 public class EntityType {
 
-	public static ResourceID of(final ResourceID resource) {
+	public static SNClass of(final ResourceID resource) {
 		Set<SemanticNode> types = SNOPS.objects(resource.asResource(), RDF.TYPE);
 		// We are not interested in RBSystem.ENTITY
 		for (SemanticNode node : types) {
 			if(!node.equals(RBSystem.ENTITY)){
-				return node.asResource();
+				return SNClass.from(node);
 			}
 		}
 		return null;
 	}
 
-	public static ResourceID of(final RBEntity entity) {
-		return entity.getType();
+	public static SNClass of(final RBEntity entity) {
+		return SNClass.from(entity.getType());
 	}
 
 }

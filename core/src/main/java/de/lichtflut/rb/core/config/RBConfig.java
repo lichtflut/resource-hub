@@ -154,6 +154,7 @@ public class RBConfig {
 	public String toString() {
         StringBuilder sb = new StringBuilder("RBConfig");
         sb.append(" for application '").append(appName).append("'");
+        sb.append(" in current dir '").append(System.getProperty("user.dir")).append("'");
         sb.append(" using work dir '").append(workDir).append("'");
         sb.append("\n");
         sb.append(dataStoreConfig.toString());

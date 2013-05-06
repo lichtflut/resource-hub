@@ -15,10 +15,10 @@
  */
 package de.lichtflut.rb.core.common;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.persistence.SNResourceSchema;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -26,14 +26,18 @@ import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.junit.Test;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.RBSystem;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * <p>
- * Testclass for {@link SchemaIdentifyingType},
+ *  Testclass for {@link SchemaIdentifyingType},
  * </p>
- * Created: Feb 4, 2013
+ *
+ * <p>
+ *  Created: Feb 4, 2013
+ * </p>
  *
  * @author Ravi Knox
  */
@@ -82,18 +86,18 @@ public class SchemaIdentifyingTypeTest {
 	@Test
 	public void testOfResourceNodeSchemaViaDirectSuperClass() {
 		ResourceNode node = new SNResource();
-		ResourceNode superClass = new SNResource();
+        SNClass clazz = new SNClass();
+		SNClass superClass = new SNClass();
 
-		node.addAssociation(RDFS.SUB_CLASS_OF, superClass);
-		node.addAssociation(RDF.TYPE, new SNResource());
-		node.addAssociation(RDF.TYPE, RB.CITY);
-		superClass.addAssociation(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, RB.PERSON);
+		node.addAssociation(RDF.TYPE, clazz);
+        clazz.addAssociation(RDFS.SUB_CLASS_OF, superClass);
+		superClass.addAssociation(RBSchema.HAS_SCHEMA, new SNResourceSchema());
 		superClass.addAssociation(RDF.TYPE, new SNResource());
 		superClass.addAssociation(RDF.TYPE, RB.CITY);
 
 		SNClass schemaClass = SchemaIdentifyingType.of(node);
 
-		assertThat(schemaClass, equalTo(RB.PERSON));
+		assertThat(schemaClass, equalTo(superClass));
 	}
 
 	/**
@@ -102,23 +106,23 @@ public class SchemaIdentifyingTypeTest {
 	@Test
 	public void testOfResourceNodeSchemaViaCascadeOfSuperClasses() {
 		ResourceNode node = new SNResource();
-		ResourceNode superClass1 = new SNResource();
-		SNResource superClass2 = new SNResource();
-		SNResource superClass3 = new SNResource();
+        SNClass superClass1 = new SNClass();
+        SNClass superClass2 = new SNClass();
+		SNClass superClass3 = new SNClass();
 
 		node.addAssociation(RDF.TYPE, new SNResource());
 		superClass1.addAssociation(RDF.TYPE, new SNResource());
 		superClass2.addAssociation(RDF.TYPE, new SNResource());
 		superClass3.addAssociation(RDF.TYPE, new SNResource());
 
-		node.addAssociation(RDFS.SUB_CLASS_OF, superClass1);
+		node.addAssociation(RDF.TYPE, superClass1);
 		superClass1.addAssociation(RDFS.SUB_CLASS_OF, superClass2);
 		superClass2.addAssociation(RDFS.SUB_CLASS_OF, superClass3);
-		superClass3.addAssociation(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, RB.PERSON);
+		superClass3.addAssociation(RBSchema.HAS_SCHEMA, new SNResourceSchema());
 
 		SNClass schemaClass = SchemaIdentifyingType.of(node);
 
-		assertThat(schemaClass, equalTo(RB.PERSON));
+		assertThat(schemaClass, equalTo(superClass3));
 	}
 
 	/**
@@ -127,48 +131,24 @@ public class SchemaIdentifyingTypeTest {
 	@Test
 	public void testOfResourceNodeSchemaGetFirstSchemaInCascadeNotLast() {
 		ResourceNode node = new SNResource();
-		ResourceNode superClass1 = new SNResource();
-		SNResource superClass2 = new SNResource();
-		SNResource superClass3 = new SNResource();
+		SNClass superClass1 = new SNClass();
+        SNClass superClass2 = new SNClass();
+        SNClass superClass3 = new SNClass();
 
 		node.addAssociation(RDF.TYPE, new SNResource());
 		superClass1.addAssociation(RDF.TYPE, new SNResource());
 		superClass2.addAssociation(RDF.TYPE, new SNResource());
 		superClass3.addAssociation(RDF.TYPE, new SNResource());
 
-		node.addAssociation(RDFS.SUB_CLASS_OF, superClass1);
+		node.addAssociation(RDF.TYPE, superClass1);
 		superClass1.addAssociation(RDFS.SUB_CLASS_OF, superClass2);
-		superClass2.addAssociation(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, RB.CITY);
-		superClass2.addAssociation(RDFS.SUB_CLASS_OF, superClass3);
-		superClass3.addAssociation(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE, RB.PERSON);
+        superClass2.addAssociation(RDFS.SUB_CLASS_OF, superClass3);
+		superClass2.addAssociation(RBSchema.HAS_SCHEMA, new SNResourceSchema());
+		superClass3.addAssociation(RBSchema.HAS_SCHEMA, new SNResourceSchema());
 
 		SNClass schemaClass = SchemaIdentifyingType.of(node);
 
-		assertThat(schemaClass, equalTo(RB.CITY));
+		assertThat(schemaClass, equalTo(superClass2));
 	}
 
-	/**
-	 * Test method for {@link de.lichtflut.rb.core.common.SchemaIdentifyingType#of(org.arastreju.sge.model.nodes.ResourceNode)}.
-	 */
-	@Test
-	public void testOfResourceNodeSchemaNoSchemaButType() {
-		ResourceNode node = new SNResource();
-
-
-		ResourceNode superClass1 = new SNResource();
-		superClass1.addAssociation(RDF.TYPE, RB.CITY);
-		node.addAssociation(RDFS.SUB_CLASS_OF, superClass1);
-
-		SNResource superClass2 = new SNResource();
-		superClass2.addAssociation(RDF.TYPE, new SNResource());
-		superClass1.addAssociation(RDFS.SUB_CLASS_OF, superClass2);
-
-		SNResource superClass3 = new SNResource();
-		superClass3.addAssociation(RDF.TYPE, RB.PERSON);
-		superClass2.addAssociation(RDFS.SUB_CLASS_OF, superClass3);
-
-		SNClass schemaClass = SchemaIdentifyingType.of(node);
-
-		assertThat(schemaClass, equalTo(RB.CITY));
-	}
 }
