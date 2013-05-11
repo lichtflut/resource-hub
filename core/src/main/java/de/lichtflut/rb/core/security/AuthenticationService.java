@@ -15,7 +15,7 @@
  */
 package de.lichtflut.rb.core.security;
 
-import org.arastreju.sge.security.LoginException;
+import de.lichtflut.rb.core.eh.LoginException;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ public interface AuthenticationService {
 
 	/**
 	 * Try to login the given user.
-	 * @param loginData
+	 * @param loginData The provided login data.
 	 * @return The logged in user.
 	 * @throws LoginException when login wasn't successful.
 	 */

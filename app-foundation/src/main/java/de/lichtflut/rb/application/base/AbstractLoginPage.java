@@ -19,6 +19,7 @@ import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.application.common.RBPermission;
 import de.lichtflut.rb.application.extensions.ServiceContextInitializer;
 import de.lichtflut.rb.application.pages.AbstractBasePage;
+import de.lichtflut.rb.core.eh.LoginException;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.AuthenticationService;
 import de.lichtflut.rb.core.security.LoginData;
@@ -29,7 +30,6 @@ import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.security.LoginException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

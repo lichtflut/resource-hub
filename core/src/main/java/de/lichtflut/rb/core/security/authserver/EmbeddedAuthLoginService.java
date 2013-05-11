@@ -16,6 +16,8 @@
 package de.lichtflut.rb.core.security.authserver;
 
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.eh.ErrorCodes;
+import de.lichtflut.rb.core.eh.LoginException;
 import de.lichtflut.rb.core.security.AuthenticationService;
 import de.lichtflut.rb.core.security.AuthenticationTicket;
 import de.lichtflut.rb.core.security.LoginData;
@@ -25,14 +27,12 @@ import de.lichtflut.rb.core.security.TicketValidationException;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.eh.ArastrejuRuntimeException;
-import org.arastreju.sge.eh.ErrorCodes;
 import org.arastreju.sge.model.TimeMask;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNTimeSpec;
-import org.arastreju.sge.security.Credential;
-import org.arastreju.sge.security.LoginException;
-import org.arastreju.sge.security.PasswordCredential;
+import de.lichtflut.rb.core.security.Credential;
+import de.lichtflut.rb.core.security.PasswordCredential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +77,7 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 	public RBUser login(LoginData loginData) throws LoginException {
 		final String id = normalize(loginData.getLoginID());
 		if (id == null) {
-			throw new LoginException(ErrorCodes.LOGIN_INVALID_DATA, "No username given");	
+			throw new LoginException(ErrorCodes.LOGIN_INVALID_DATA, "No username given");
 		}
 		
 		LOGGER.info("Trying to login user '" + id + "'.");

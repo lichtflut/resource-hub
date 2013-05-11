@@ -36,8 +36,11 @@ public interface ErrorCodes {
 	public static final int SECURITY_EXCEPTION = 1000;
 
 	public static final int SECURITY_UNAUTHENTICATED_USER = 1100;
+    public static final int LOGIN_USER_NOT_FOUND = 1101;
+    public static final int LOGIN_USER_CREDENTIAL_NOT_MATCH = 1102;
+    public static final int LOGIN_INVALID_DATA = 1103;
 
-	public static final int SECURITY_EMAIL_ALREADY_IN_USE = 1201;
+    public static final int SECURITY_EMAIL_ALREADY_IN_USE = 1201;
 	public static final int SECURITY_USERNAME_ALREADY_IN_USE = 1202;
 
 	public static final int SECURITY_DOMAIN_NOT_FOUND = 1301;

@@ -26,7 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
-import org.arastreju.sge.security.LoginException;
+import de.lichtflut.rb.core.eh.LoginException;
 import org.springframework.stereotype.Component;
 
 import de.lichtflut.rb.core.security.AuthModule;
