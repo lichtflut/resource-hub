@@ -21,7 +21,7 @@ import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.security.RBUser;
 import org.arastreju.sge.context.Context;
-import org.arastreju.sge.context.SimpleContextID;
+import org.arastreju.sge.context.ContextID;
 import org.arastreju.sge.naming.Namespace;
 
 /**
@@ -149,11 +149,11 @@ public class ServiceContext implements Serializable{
     // ----------------------------------------------------
 
     private void initConversationContexts() {
-        conversationContext = new SimpleContextID(Namespace.LOCAL_CONTEXTS, domain);
+        conversationContext = ContextID.forContext(Namespace.LOCAL_CONTEXTS, domain);
         readContexts= new Context[] {
                 RBSystem.TYPE_SYSTEM_CTX,
                 RBSystem.VIEW_SPEC_CTX,
-                new SimpleContextID(Namespace.LOCAL_CONTEXTS, domain)
+                ContextID.forContext(Namespace.LOCAL_CONTEXTS, domain)
         };
     }
 

@@ -23,7 +23,7 @@ import de.lichtflut.rb.core.security.UserManager;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.context.Context;
-import org.arastreju.sge.context.SimpleContextID;
+import org.arastreju.sge.context.ContextID;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ public class EmbeddedAuthModule implements AuthModule {
 
 	private static final String CTX_NAMESPACE_URI = "http://rb.lichtflut.de/embedded-auth/contexts/";
 	
-	private static final Context IDENT = new SimpleContextID(CTX_NAMESPACE_URI, "IdentityManagement");
+	private static final Context IDENT = ContextID.forContext(CTX_NAMESPACE_URI, "IdentityManagement");
 
     // ----------------------------------------------------
 

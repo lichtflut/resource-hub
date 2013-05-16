@@ -16,7 +16,7 @@
 package de.lichtflut.rb.core;
 
 import org.arastreju.sge.context.Context;
-import org.arastreju.sge.context.SimpleContextID;
+import org.arastreju.sge.context.ContextID;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.Namespace;
@@ -36,9 +36,9 @@ public interface RBSystem {
 
 	String SYS_NAMESPACE_URI = "http://rb.lichtflut.de/system#";
 
-	Context TYPE_SYSTEM_CTX = new SimpleContextID(Namespace.LOCAL_CONTEXTS, "TypeSystem");
+	Context TYPE_SYSTEM_CTX = ContextID.forContext(Namespace.LOCAL_CONTEXTS, "TypeSystem");
 
-	Context VIEW_SPEC_CTX = new SimpleContextID(Namespace.LOCAL_CONTEXTS, "ViewSpecifications");
+	Context VIEW_SPEC_CTX = ContextID.forContext(Namespace.LOCAL_CONTEXTS, "ViewSpecifications");
 
 	// -- TYPES -------------------------------------------
 

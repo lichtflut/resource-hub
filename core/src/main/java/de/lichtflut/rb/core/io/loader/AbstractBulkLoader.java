@@ -23,7 +23,7 @@ import de.lichtflut.rb.core.services.impl.SingleGateConversationFactory;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.context.Context;
-import org.arastreju.sge.context.SimpleContextID;
+import org.arastreju.sge.context.ContextID;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.io.SemanticIOException;
@@ -59,7 +59,7 @@ public class AbstractBulkLoader {
 
     public AbstractBulkLoader(ArastrejuGate gate, String domain) {
         this.gate = gate;
-        this.domainCtx = new SimpleContextID(Namespace.LOCAL_CONTEXTS, domain);
+        this.domainCtx = ContextID.forContext(Namespace.LOCAL_CONTEXTS, domain);
         this.context = domainCtx;
     }
 
