@@ -47,11 +47,7 @@ public interface RelationshipFilter extends Serializable {
 	abstract class Undeclared implements RelationshipFilter {
 		@Override
 		public boolean accept(Statement stmt, boolean declaredInSchema) {
-			if (!declaredInSchema) {
-				return accept(stmt);
-			} else {
-				return false;
-			}
+            return !declaredInSchema && accept(stmt);
 		}
 		
 		protected boolean isOfType(ResourceNode node, ResourceID... types) {

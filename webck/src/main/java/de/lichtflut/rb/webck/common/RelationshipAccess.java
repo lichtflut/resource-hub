@@ -47,7 +47,7 @@ import java.util.Set;
  */
 public class RelationshipAccess implements Serializable {
 	
-	public final static Set<ResourceID> BLACKLIST = new HashSet<ResourceID>() {{
+	private final static Set<ResourceID> DEFAULT_BLACKLIST = new HashSet<ResourceID>() {{
 		add(RDF.TYPE);
 		add(RDFS.SUB_CLASS_OF);
 		add(RDFS.LABEL);
@@ -61,7 +61,8 @@ public class RelationshipAccess implements Serializable {
 	// ----------------------------------------------------
 	
 	/**
-	 * @param source
+     * Constructor.
+	 * @param source The source entity for the relationships.
 	 */
 	public RelationshipAccess(RBEntity source) {
 		this.source = source;
@@ -103,7 +104,7 @@ public class RelationshipAccess implements Serializable {
 
 		for(Statement stmt: node.getAssociations()) {
 			if (stmt.getObject().isResourceNode() &&
-				!BLACKLIST.contains(stmt.getPredicate()) &&
+				!DEFAULT_BLACKLIST.contains(stmt.getPredicate()) &&
 				filter.accept(stmt, declared.contains(stmt.getPredicate()))) 
 			{
 				result.add(stmt);
