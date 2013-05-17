@@ -210,6 +210,16 @@ public interface RB {
 	 */
 	ResourceID HAS_OWNER = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasOwner");
 
+    /**
+     * Someone is responsible for something.
+     */
+    ResourceID IS_RESPONSIBLE = new SimpleResourceID(COMMON_NAMESPACE_URI, "isResponsibleFor");
+
+    /**
+     * The one in charge.
+     */
+    ResourceID HAS_RESPONSIBLE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasResponsible");
+
 	/**
 	 * The lead.
 	 */

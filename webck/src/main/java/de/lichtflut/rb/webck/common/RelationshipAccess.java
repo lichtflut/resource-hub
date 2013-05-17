@@ -54,6 +54,7 @@ public class RelationshipAccess implements Serializable {
 		add(RBSystem.HAS_FIELD_LABEL);
 		add(RBSystem.HAS_IMAGE);
         add(RBSystem.HAS_SCHEMA_IDENTIFYING_TYPE);
+        add(RBSystem.BELONGS_TO_PERCEPTION);
 	}};
 	
 	private final RBEntity source;

@@ -67,6 +67,8 @@ public class ModelChangeEvent<T> {
 
 	public static final String PROPOSAL_UPDATE = "proposal-update";
 
+    public static final String PERCEPTION = "perception-event";
+
 	private static final ModelChangeEvent EMPTY = new ModelChangeEvent(new String[0]);
 
 	// ----------------------------------------------------

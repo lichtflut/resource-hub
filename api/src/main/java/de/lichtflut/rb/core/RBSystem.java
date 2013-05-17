@@ -53,6 +53,21 @@ public interface RBSystem {
 	 */
 	ResourceID ENTITY = new SimpleResourceID(SYS_NAMESPACE_URI, "Entity");
 
+    /**
+     * A perception represents a contexts.
+     */
+    ResourceID PERCEPTION = new SimpleResourceID(SYS_NAMESPACE_URI, "Perception");
+
+    /**
+     * A category describing a perception.
+     */
+    ResourceID PERCEPTION_CATEGORY = new SimpleResourceID(SYS_NAMESPACE_URI, "PerceptionCategory");
+
+    /**
+     * A item of a perception.
+     */
+    ResourceID PERCEPTION_ITEM = new SimpleResourceID(SYS_NAMESPACE_URI, "PerceptionItem");
+
 	/**
 	 * An information may be visible or writable only by owner.
 	 */
@@ -80,6 +95,11 @@ public interface RBSystem {
 	 * For each type there may be defined a prototype resource with the default properties.
 	 */
 	ResourceID HAS_PROTOTYPE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasPrototype");
+
+    /**
+     * A perception can be based on another perception, or an item on another item.
+     */
+    ResourceID BASED_ON = new SimpleResourceID(SYS_NAMESPACE_URI, "basedOn");
 
 	/**
 	 * Users must provide an email address for identification.
@@ -131,5 +151,26 @@ public interface RBSystem {
 	 */
 	ResourceID HAS_CONTENT = new SimpleResourceID(SYS_NAMESPACE_URI, "hasContent");
 
+    // -- PERCEPTIONS -------------------------------------
+
+    /**
+     * Each perception item belongs to a perception.
+     */
+    ResourceID BELONGS_TO_PERCEPTION = new SimpleResourceID(SYS_NAMESPACE_URI, "belongsToPerception");
+
+    /**
+     * A perception contains one or more 'root' items.
+     */
+    ResourceID CONTAINS_TREE_ROOT_ITEM = new SimpleResourceID(SYS_NAMESPACE_URI, "containsTreeRootItem");
+
+    /**
+     * A perception contains items.
+     */
+    ResourceID CONTAINS_PERCEPTION_ITEM = new SimpleResourceID(SYS_NAMESPACE_URI, "containsPerceptionItem");
+
+    /**
+     * Describes the color of an object.
+     */
+    ResourceID HAS_COLOR = new SimpleResourceID(SYS_NAMESPACE_URI, "hasColor");
 
 }
