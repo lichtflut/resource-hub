@@ -1,32 +1,32 @@
-<!--
-
-    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
-
--->
-<html
-	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
-<wicket:head>
-	<style type="text/css"></style>
-</wicket:head>
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
 <wicket:panel>
 
-	<div class="resource-info-panel">
-		<div><wicket:message key="title.classify"></wicket:message></div>
-	</div>
+    <div class="entity-fields-wrapper">
 
-	<div class="entity-display-fields">
-		<div class="entity-field">
-			<div class="field-label"><wicket:message key="label.type-picker"></wicket:message></div>
-		    <div class="field-values">
-		    	<wicket:container wicket:id="typePicker"></wicket:container>
-		    </div>
-		</div>
-	</div>
-	
-	<div class="button-bar">
-		<button type="button" wicket:id="cancel"><wicket:message key="button.cancel">[cancel]</wicket:message></button>
-		<button type="button" wicket:id="save" class="default-button"><wicket:message key="button.save">[save]</wicket:message></button>
-	</div>
+        <div class="resource-info-panel">
+            <div><wicket:message key="title.classify"></wicket:message></div>
+        </div>
+
+        <div class="entity-display-fields section">
+            <div class="entity-field">
+                <div class="field-label"><wicket:message key="label.type-picker"></wicket:message></div>
+
+                <div class="field-values">
+                    <div class="form-field">
+                        <div class="field-value-input">
+                            <wicket:container wicket:id="typePicker"></wicket:container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-bar">
+            <button type="button" wicket:id="cancel"><wicket:message key="button.cancel">[cancel]</wicket:message></button>
+            <button type="button" wicket:id="save" class="default-button"><wicket:message key="button.save">[save]</wicket:message></button>
+        </div>
+
+    </div>
 
 </wicket:panel>
 </html>
