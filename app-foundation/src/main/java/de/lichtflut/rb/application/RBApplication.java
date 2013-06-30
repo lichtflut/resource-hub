@@ -230,9 +230,6 @@ public abstract class RBApplication extends WebApplication {
 		getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected IConverterLocator newConverterLocator() {
 		final ConverterLocator locator = new ConverterLocator();

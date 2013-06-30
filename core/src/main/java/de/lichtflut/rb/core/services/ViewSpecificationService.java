@@ -23,6 +23,7 @@ import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -73,11 +74,11 @@ public interface ViewSpecificationService {
 	// -- PERSPECTIVES ------------------------------------
 
 	/**
-	 * Find a perspective specification by it's unique ID.
-	 * @param id The ID.
+	 * Find a perspective specification by it's qualified name.
+	 * @param qn The qualified name.
 	 * @return The perspective specification or null if not found.
 	 */
-	Perspective findPerspective(ResourceID id);
+	Perspective findPerspective(QualifiedName qn);
 
 	/**
 	 * Initialize a perspective (e.g. add the view ports).
@@ -119,7 +120,7 @@ public interface ViewSpecificationService {
 	 */
 	void store(WidgetSpec widgetSpec);
 
-	// ----------------------------------------------------
+	// -- VIEW PORTS --------------------------------------
 
 	/**
 	 * Find a view port by it's ID.

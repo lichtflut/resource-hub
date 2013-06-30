@@ -20,6 +20,7 @@ import org.arastreju.sge.context.ContextID;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.Namespace;
+import org.arastreju.sge.naming.QualifiedName;
 
 /**
  * <p>
@@ -35,6 +36,10 @@ import org.arastreju.sge.naming.Namespace;
 public interface RBSystem {
 
 	String SYS_NAMESPACE_URI = "http://rb.lichtflut.de/system#";
+
+    String PERSPECTIVES_NAMESPACE_URI = QualifiedName.LOCAL + ":perspectives:";
+
+    String WIDGETS_NAMESPACE_URI = QualifiedName.LOCAL + ":widgets:";
 
 	Context TYPE_SYSTEM_CTX = ContextID.forContext(Namespace.LOCAL_CONTEXTS, "TypeSystem");
 

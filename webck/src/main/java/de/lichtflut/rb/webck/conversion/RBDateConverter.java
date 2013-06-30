@@ -35,9 +35,9 @@ public class RBDateConverter extends DateConverter {
 
 	@Override
 	public DateFormat getDateFormat(final Locale locale) {
-		if(Locale.ENGLISH.getLanguage() == locale.getLanguage()){
+		if(Locale.ENGLISH.getLanguage().equals(locale.getLanguage())){
 			return new SimpleDateFormat("MM/dd/yyyy", RBWebSession.get().getLocale());
-		}else if(Locale.GERMANY.getLanguage() == locale.getLanguage()){
+		}else if(Locale.GERMANY.getLanguage().equals(locale.getLanguage())){
 			return new SimpleDateFormat("dd.MM.yyyy", RBWebSession.get().getLocale());
 		}
 		else{

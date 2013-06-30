@@ -15,18 +15,7 @@
  */
 package de.lichtflut.rb.core.schema.writer.rsf;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.Locale;
-
-import org.apache.commons.lang3.StringUtils;
-import org.arastreju.sge.io.NamespaceMap;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.naming.Namespace;
-import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.naming.SimpleNamespace;
-
+import de.lichtflut.rb.core.io.writers.AbstractWriteTask;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
@@ -35,6 +24,13 @@ import de.lichtflut.rb.core.schema.model.ResourceSchema;
 import de.lichtflut.rb.core.schema.model.VisualizationInfo;
 import de.lichtflut.rb.core.schema.writer.OutputElements;
 import de.lichtflut.rb.core.schema.writer.ResourceSchemaWriter;
+import org.apache.commons.lang3.StringUtils;
+import org.arastreju.sge.io.NamespaceMap;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Locale;
 
 /**
  * <p>
@@ -64,35 +60,17 @@ public class RsfWriter implements ResourceSchemaWriter {
 
 	// ----------------------------------------------------
 
-	private static class WriteTask {
+	private static class WriteTask extends AbstractWriteTask {
 
-		public static final String LVL3 = "\t\t\t";
-		public static final String LVL2 = "\t\t";
-
-		private final PrintWriter writer;
-
-		private final NamespaceMap nsMap;
-
-		private int scope = 0;
-
-		// ----------------------------------------------------
+        // ----------------------------------------------------
 
 		private WriteTask(final PrintWriter writer, final NamespaceMap nameSpaceMap) {
-			this.writer = writer;
-			this.nsMap = nameSpaceMap;
-		}
+            super(nameSpaceMap, writer);
+        }
 
 		// ----------------------------------------------------
 
-		public void writeNamespaces() throws IOException {
-			for(String prefix : nsMap.getPrefixes()) {
-				Namespace namespace = nsMap.getNamespace(prefix);
-				writer.write("namespace \"" + namespace.getUri() + "\" prefix \"" + prefix + "\"\n");
-			}
-			newLine();
-		}
-
-		public void writeSchema(final ResourceSchema schema) throws IOException {
+        public void writeSchema(final ResourceSchema schema) throws IOException {
 			String type = toQName(schema.getDescribedType());
 			String labelExpression = schema.getLabelBuilder().getExpression();
 
@@ -166,16 +144,7 @@ public class RsfWriter implements ResourceSchemaWriter {
 			writer.write("\"" + value + "\"\n");
 		}
 
-		private String toQName(final ResourceID id) {
-			String uri = id.toURI();
-			String namespace = QualifiedName.getNamespace(uri);
-			String simpleName = QualifiedName.getSimpleName(uri);
-			String prefix = nsMap.getPrefix(new SimpleNamespace(namespace));
-
-			return prefix + ":" + simpleName;
-		}
-
-		private String cardinalityExpression(final Cardinality cardinality) {
+        private String cardinalityExpression(final Cardinality cardinality) {
 			StringBuilder sb = new StringBuilder("[");
 			sb.append(cardinality.getMinOccurs());
 			sb.append("..");
@@ -193,45 +162,7 @@ public class RsfWriter implements ResourceSchemaWriter {
 					(visInfo.isEmbedded() || visInfo.isFloating() || !StringUtils.isBlank(visInfo.getStyle()));
 		}
 
-		private void newLine() {
-			writer.append("\n");
-		}
-
-		private void openScope(final String expression) {
-			indent(scope);
-			writer.write(expression);
-			writer.write(" {\n");
-			scope++;
-
-		}
-
-		private void closeScope() {
-            scope--;
-            indent(scope);
-			writer.append("}\n");
-		}
-
-		private void indent(final int lvl) {
-			switch (lvl) {
-				case 0:
-					break;
-				case 1:
-					writer.append("\t");
-					break;
-				case 2:
-					writer.append(LVL2);
-					break;
-				case 3:
-					writer.append(LVL3);
-					break;
-				default:
-					for(int i = 0; i < lvl; i++) {
-						writer.write("\t");
-					}
-			}
-		}
-
-	}
+    }
 
 }
 

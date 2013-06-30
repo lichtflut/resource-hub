@@ -26,6 +26,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
@@ -140,8 +141,8 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	// -- PERSPECTIVES ------------------------------------
 
 	@Override
-	public Perspective findPerspective(final ResourceID id) {
-		final ResourceNode existing = conversation().findResource(id.getQualifiedName());
+	public Perspective findPerspective(QualifiedName qn) {
+		final ResourceNode existing = conversation().findResource(qn);
 		if (existing != null) {
 			return new SNPerspective(existing);
 		} else {

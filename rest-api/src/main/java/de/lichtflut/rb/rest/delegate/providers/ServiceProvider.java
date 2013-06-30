@@ -21,6 +21,7 @@ import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.context.Context;
 
@@ -44,11 +45,6 @@ public interface ServiceProvider {
 	ServiceContext getContext();
 
 	/**
-	 * @return The {@link EntityManager}
-	 */
-	EntityManager getEntityManager();
-
-	/**
 	 * @return An active Arastreju conversation.
 	 */
 	Conversation getConversation();
@@ -60,6 +56,11 @@ public interface ServiceProvider {
 
 	// -----------------------------------------------------
 
+    /**
+     * @return The {@link EntityManager}
+     */
+    EntityManager getEntityManager();
+
 	/**
 	 * {@link de.lichtflut.rb.core.services.SchemaManager} provides the ability to generate, manipulate, maintain,
 	 * persist and store an ResourceSchema through several I/O sources.
@@ -67,6 +68,12 @@ public interface ServiceProvider {
 	 * @return {@link de.lichtflut.rb.core.services.SchemaManager}
 	 */
 	SchemaManager getSchemaManager();
+
+    /**
+     * Obtain service for view specifications.
+     * @return The view specification service.
+     */
+    ViewSpecificationService getViewSpecificationService();
 
 	/**
 	 * The {@link de.lichtflut.rb.core.services.TypeManager} is used for resolving of types.

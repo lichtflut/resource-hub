@@ -24,10 +24,12 @@ import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.services.impl.EntityManagerImpl;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import de.lichtflut.rb.core.services.impl.SecurityServiceImpl;
 import de.lichtflut.rb.core.services.impl.TypeManagerImpl;
+import de.lichtflut.rb.core.services.impl.ViewSpecificationServiceImpl;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.context.Context;
 
@@ -108,7 +110,12 @@ public class RBServiceProvider implements ServiceProvider {
 		return new EntityManagerImpl(getTypeManager(), getSchemaManager(), getConversation());
 	}
 
-	@Override
+    @Override
+    public ViewSpecificationService getViewSpecificationService() {
+        return new ViewSpecificationServiceImpl(ctx, arastrejuResourceFactory);
+    }
+
+    @Override
 	public FileService getFileService(){
 		return fileService;
 	}

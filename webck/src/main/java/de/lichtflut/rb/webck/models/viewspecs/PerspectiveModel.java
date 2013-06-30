@@ -54,7 +54,7 @@ public class PerspectiveModel extends AbstractLoadableDetachableModel<Perspectiv
 
 	@Override
 	public Perspective load() {
-        Perspective perspective = viewSpecificationService.findPerspective(perspectiveID);
+        Perspective perspective = viewSpecificationService.findPerspective(perspectiveID.getQualifiedName());
         if (perspective == null) {
             perspective = viewSpecificationService.initializePerspective(perspectiveID);
             viewSpecificationService.store(perspective);
