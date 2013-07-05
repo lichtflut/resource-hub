@@ -7,6 +7,7 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.SimpleNamespace;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 
 /**
@@ -20,7 +21,7 @@ import java.io.PrintWriter;
  *
  * @author Oliver Tigges
  */
-public class AbstractWriteTask {
+public class CommonFormatWriter {
 
     private static final String LVL3 = "\t\t\t";
     private static final String LVL2 = "\t\t";
@@ -31,22 +32,18 @@ public class AbstractWriteTask {
 
     // ----------------------------------------------------
 
-    public AbstractWriteTask(NamespaceMap nameSpaceMap, PrintWriter writer) {
+    public CommonFormatWriter(NamespaceMap nameSpaceMap, PrintWriter writer) {
         this.nsMap = nameSpaceMap;
         this.writer = writer;
     }
 
-    // ----------------------------------------------------
-
-    public void writeNamespaces() throws IOException {
-        for(String prefix : nsMap.getPrefixes()) {
-            Namespace namespace = nsMap.getNamespace(prefix);
-            writer.write("namespace \"" + namespace.getUri() + "\" prefix \"" + prefix + "\"\n");
-        }
-        newLine();
+    public CommonFormatWriter(NamespaceMap nameSpaceMap, OutputStream out) {
+        this(nameSpaceMap, new PrintWriter(out));
     }
 
-    protected String toQName(final ResourceID id) {
+    // ----------------------------------------------------
+
+    public String toQName(final ResourceID id) {
         String uri = id.toURI();
         String namespace = QualifiedName.getNamespace(uri);
         String simpleName = QualifiedName.getSimpleName(uri);
@@ -55,25 +52,39 @@ public class AbstractWriteTask {
         return prefix + ":" + simpleName;
     }
 
-    protected void newLine() {
-        writer.append("\n");
+    // ----------------------------------------------------
+
+    public CommonFormatWriter writeNamespaces() throws IOException {
+        for(String prefix : nsMap.getPrefixes()) {
+            Namespace namespace = nsMap.getNamespace(prefix);
+            writer.write("namespace \"" + namespace.getUri() + "\" prefix \"" + prefix + "\"\n");
+        }
+        newLine();
+        return this;
     }
 
-    protected void openScope(final String expression) {
+    public CommonFormatWriter newLine() {
+        writer.append("\n");
+        return this;
+    }
+
+    public CommonFormatWriter openScope(final String expression) {
         indent(scope);
         writer.write(expression);
         writer.write(" {\n");
         scope++;
+        return this;
 
     }
 
-    protected void closeScope() {
+    public CommonFormatWriter closeScope() {
         scope--;
         indent(scope);
         writer.append("}\n");
+        return this;
     }
 
-    protected void indent(final int lvl) {
+    public CommonFormatWriter indent(final int lvl) {
         switch (lvl) {
             case 0:
                 break;
@@ -91,5 +102,32 @@ public class AbstractWriteTask {
                     writer.write("\t");
                 }
         }
+        return this;
+    }
+
+    public CommonFormatWriter writeField(final String field, final String value) {
+        indent(scope);
+        writer.write(field);
+        writer.write(" : ");
+        writer.write("\"");
+        if (value != null) {
+            writer.write(value);
+        }
+        writer.write("\"\n");
+        return this;
+    }
+
+    public CommonFormatWriter writeFieldIfNotNull(final String field, final String value) {
+        if (value != null) {
+            writeField(field, value);
+        }
+        return this;
+    }
+
+    // ----------------------------------------------------
+
+    public CommonFormatWriter flush() {
+        writer.flush();
+        return this;
     }
 }

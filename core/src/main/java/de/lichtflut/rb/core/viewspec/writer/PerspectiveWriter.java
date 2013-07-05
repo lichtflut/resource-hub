@@ -1,9 +1,8 @@
 package de.lichtflut.rb.core.viewspec.writer;
 
+import de.lichtflut.rb.core.io.writers.CommonFormatWriter;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import org.arastreju.sge.io.NamespaceMap;
-
-import java.io.OutputStream;
 
 /**
  * <p>
@@ -18,6 +17,6 @@ import java.io.OutputStream;
  */
 public interface PerspectiveWriter {
 
-    void write(Perspective perspective, NamespaceMap nsMap, OutputStream out);
+    void write(Perspective perspective, NamespaceMap nsMap, CommonFormatWriter out);
 
 }

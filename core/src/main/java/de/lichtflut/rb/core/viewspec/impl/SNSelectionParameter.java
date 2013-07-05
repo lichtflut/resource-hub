@@ -84,15 +84,12 @@ public class SNSelectionParameter extends ResourceView {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("Param(");
 		final ResourceID field = getField();
 		if (field != null) {
-			sb.append(field.getQualifiedName() + "=");
+			sb.append(field.getQualifiedName()).append("=");
 		}
 		sb.append(getTerm());
 		sb.append(")");

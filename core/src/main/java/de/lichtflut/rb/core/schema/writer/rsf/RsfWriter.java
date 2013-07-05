@@ -15,7 +15,7 @@
  */
 package de.lichtflut.rb.core.schema.writer.rsf;
 
-import de.lichtflut.rb.core.io.writers.AbstractWriteTask;
+import de.lichtflut.rb.core.io.writers.CommonFormatWriter;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
@@ -49,7 +49,7 @@ public class RsfWriter implements ResourceSchemaWriter {
 	public void write(final OutputStream out, final OutputElements elements) throws IOException {
 		PrintWriter writer = new PrintWriter(out);
 
-		WriteTask task = new WriteTask(writer, elements.getNamespaceMap());
+		RSFWriteTask task = new RSFWriteTask(writer, elements.getNamespaceMap());
 		task.writeNamespaces();
 		for (ResourceSchema schema : elements.getSchemas()) {
 			task.writeSchema(schema);
@@ -60,11 +60,11 @@ public class RsfWriter implements ResourceSchemaWriter {
 
 	// ----------------------------------------------------
 
-	private static class WriteTask extends AbstractWriteTask {
+	private static class RSFWriteTask extends CommonFormatWriter {
 
         // ----------------------------------------------------
 
-		private WriteTask(final PrintWriter writer, final NamespaceMap nameSpaceMap) {
+		private RSFWriteTask(final PrintWriter writer, final NamespaceMap nameSpaceMap) {
             super(nameSpaceMap, writer);
         }
 
@@ -136,13 +136,6 @@ public class RsfWriter implements ResourceSchemaWriter {
 		}
 
 		// ----------------------------------------------------
-
-		private void writeField(final String field, final String value) {
-			indent(scope);
-			writer.write(field);
-			writer.write(" : ");
-			writer.write("\"" + value + "\"\n");
-		}
 
         private String cardinalityExpression(final Cardinality cardinality) {
 			StringBuilder sb = new StringBuilder("[");

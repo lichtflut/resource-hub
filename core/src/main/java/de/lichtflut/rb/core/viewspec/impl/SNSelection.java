@@ -30,7 +30,7 @@ import de.lichtflut.rb.core.viewspec.WDGT;
 
 /**
  * <p>
- *  Implementation of a selection. Each selection constists of 
+ *  Implementation of a selection. Each selection consists of
  *  <ul>
  *  	<li>Expressions and/or</li>
  *  	<li>Parameters</li>
@@ -54,7 +54,7 @@ public class SNSelection extends ResourceView implements Selection {
 
 	/**
 	 * Constructor.
-	 * @param resource
+	 * @param resource The resource to be wrapped.
 	 */
 	public SNSelection(ResourceNode resource) {
 		super(resource);
@@ -62,17 +62,11 @@ public class SNSelection extends ResourceView implements Selection {
 	
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void adapt(Query query) {
 		appendExpressions(this, query);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isDefined() {
 		return !getAssociations(WDGT.HAS_EXPRESSION).isEmpty()
@@ -81,9 +75,6 @@ public class SNSelection extends ResourceView implements Selection {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("Selection[" + getQualifiedName().getSimpleName() + "]");

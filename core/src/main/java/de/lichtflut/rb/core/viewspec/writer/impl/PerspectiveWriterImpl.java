@@ -1,13 +1,12 @@
 package de.lichtflut.rb.core.viewspec.writer.impl;
 
-import de.lichtflut.rb.core.io.writers.AbstractWriteTask;
+import de.lichtflut.rb.core.io.writers.CommonFormatWriter;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.ViewPort;
+import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.core.viewspec.writer.PerspectiveWriter;
+import de.lichtflut.rb.core.viewspec.writer.WidgetWriter;
 import org.arastreju.sge.io.NamespaceMap;
-
-import java.io.OutputStream;
-import java.io.PrintWriter;
 
 /**
  * <p>
@@ -22,36 +21,34 @@ import java.io.PrintWriter;
  */
 public class PerspectiveWriterImpl implements PerspectiveWriter {
 
+    private WidgetWriter widgetWriter = new WidgetWriterImpl();
+
+    // ----------------------------------------------------
+
     @Override
-    public void write(Perspective perspective, NamespaceMap nsMap, OutputStream out) {
-        PrintWriter writer = new PrintWriter(out);
-        WriteTask task = new WriteTask(nsMap, writer);
-        task.writePerspective(perspective);
-        writer.flush();
-        writer.close();
+    public void write(Perspective perspective, NamespaceMap nsMap, CommonFormatWriter out) {
+        writePerspective(out, nsMap, perspective);
     }
 
     // ----------------------------------------------------
 
-    private static class WriteTask extends AbstractWriteTask {
-
-        public WriteTask(NamespaceMap nameSpaceMap, PrintWriter writer) {
-            super(nameSpaceMap, writer);
-        }
-
-        // ----------------------------------------------------
-
-        private void writePerspective(Perspective perspective) {
-            openScope("perspective " + perspective.getName());
-
-            for (ViewPort port : perspective.getViewPorts()) {
-                openScope("port");
-                closeScope();
+    private void writePerspective(CommonFormatWriter out, NamespaceMap nsMap, Perspective perspective) {
+        out.openScope("perspective " + perspective.getName());
+        out.newLine();
+        out.writeFieldIfNotNull("title", perspective.getTitle());
+        out.newLine();
+        for (ViewPort port : perspective.getViewPorts()) {
+            out.openScope("port");
+            out.newLine();
+            for (WidgetSpec widget : port.getWidgets()) {
+                widgetWriter.write(widget, nsMap, out);
+                out.newLine();
             }
-
-            closeScope();
+            out.closeScope();
+            out.newLine();
         }
-
+        out.closeScope();
+        out.flush();
     }
 
 }

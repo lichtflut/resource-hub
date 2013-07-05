@@ -17,6 +17,7 @@ package de.lichtflut.rb.rest.api.viewspecs;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
+import de.lichtflut.rb.core.io.writers.CommonFormatWriter;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
@@ -26,6 +27,7 @@ import de.lichtflut.rb.rest.api.RBServiceEndpoint;
 import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.io.NamespaceMap;
 import org.arastreju.sge.naming.QualifiedName;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +40,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>
@@ -66,28 +70,36 @@ public class PerspectiveResource extends RBServiceEndpoint {
             throws UnauthenticatedUserException, IOException {
         RBUser user = authenticateUser(token);
 
-        ServiceProvider provider = getProvider(domain, user);
+        final ViewSpecificationService service = getProvider(domain, user).getViewSpecificationService();
+        final List<Perspective> perspectives = find(service, qn, id);
+        if (perspectives == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        ViewSpecificationService service = provider.getViewSpecificationService();
-
-        if (qn != null) {
-            write(buffer, findByQN(service, QualifiedName.fromURI(qn)));
-        } else if (id != null) {
-            write(buffer, findByID(service, id));
-        } else {
-            //get all
-        }
+        final CommonFormatWriter writer = new CommonFormatWriter(new NamespaceMap(), buffer);
+        write(writer, perspectives);
         return Response.ok(buffer.toString()).build();
     }
 
     // ----------------------------------------------------
 
-    protected void write(OutputStream out, Perspective... perspectives) {
+    protected void write(CommonFormatWriter out, List<Perspective> perspectives) {
         PerspectiveWriterImpl writer = new PerspectiveWriterImpl();
         for (Perspective perspective : perspectives) {
             System.err.println("Writing perspective:" + perspective);
             writer.write(perspective, null, out);
+        }
+    }
+
+    protected List<Perspective> find(ViewSpecificationService service, String qn, String id) {
+        if (qn != null) {
+            return listIfNotNull(findByQN(service, QualifiedName.fromURI(qn)));
+        } else if (id != null) {
+            return listIfNotNull(findByID(service, id));
+        } else {
+            //get all
+            return new ArrayList<Perspective>();
         }
     }
 
@@ -110,6 +122,14 @@ public class PerspectiveResource extends RBServiceEndpoint {
     private Conversation conversation(String domain, RBUser user, Context context) {
         final ServiceProvider provider = getProvider(domain, user);
         return provider.getConversation(context);
+    }
+
+    private List<Perspective> listIfNotNull(Perspective perspective) {
+        if (perspective != null) {
+            return Collections.singletonList(perspective);
+        } else {
+            return null;
+        }
     }
 
 }
