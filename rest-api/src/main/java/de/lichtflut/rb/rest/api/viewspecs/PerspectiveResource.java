@@ -87,7 +87,6 @@ public class PerspectiveResource extends RBServiceEndpoint {
     protected void write(CommonFormatWriter out, List<Perspective> perspectives) {
         PerspectiveWriterImpl writer = new PerspectiveWriterImpl();
         for (Perspective perspective : perspectives) {
-            System.err.println("Writing perspective:" + perspective);
             writer.write(perspective, null, out);
         }
     }

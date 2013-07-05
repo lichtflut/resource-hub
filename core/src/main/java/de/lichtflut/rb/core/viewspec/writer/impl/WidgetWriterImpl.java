@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2013 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.lichtflut.rb.core.viewspec.writer.impl;
 
 import de.lichtflut.rb.core.io.writers.CommonFormatWriter;
@@ -37,13 +52,13 @@ public class WidgetWriterImpl implements WidgetWriter {
     // ----------------------------------------------------
 
     private void writeWidget(CommonFormatWriter out, WidgetSpec widget) {
-        out.openScope("widget '" + widget.getID().getQualifiedName() + "'");
+        out.openScope("widget");
 
         out.writeFieldIfNotNull("title", widget.getTitle());
         out.writeFieldIfNotNull("description", widget.getDescription());
         out.writeFieldIfNotNull("display", display(widget));
         out.writeFieldIfNotNull("content-id", widget.getContentID());
-        out.writeFieldIfNotNull("predefined-class", predefinedClass(widget));
+        out.writeFieldIfNotNull("implementing-class", implementingClass(widget));
 
         for (WidgetAction action : widget.getActions()) {
             out.openScope("action " + action.getActionType());
@@ -65,7 +80,7 @@ public class WidgetWriterImpl implements WidgetWriter {
         QueryCollector queryCollector = new QueryCollector();
         selection.adapt(queryCollector);
 
-        out.writeField("query", queryCollector.toQueryString());
+        out.writeField("query", queryCollector.toString());
 
         out.closeScope();
     }
@@ -87,7 +102,7 @@ public class WidgetWriterImpl implements WidgetWriter {
         }
     }
 
-    private String predefinedClass(WidgetSpec widget) {
+    private String implementingClass(WidgetSpec widget) {
         final SemanticNode javaClass = SNOPS.fetchObject(widget, WDGT.IS_IMPLEMENTED_BY_CLASS);
         if (javaClass != null && javaClass.isValueNode()) {
             return javaClass.asValue().toString();
@@ -103,34 +118,6 @@ public class WidgetWriterImpl implements WidgetWriter {
         @Override
         public QueryResult getResult() {
             throw new UnsupportedOperationException();
-        }
-
-        public String toQueryString() {
-            final StringBuilder sb = new StringBuilder();
-            append(getRoot(), sb);
-            return sb.toString();
-        }
-
-        private void append(final QueryExpression exp, final StringBuilder sb) {
-            if (exp.isLeaf()) {
-                QueryParam param = exp.getQueryParam();
-                sb.append(param.getName()).append(" = ").append(param.getValue());
-            } else {
-                if (QueryOperator.NOT.equals(exp.getOperator())) {
-                    sb.append(" ").append(exp.getOperator().name()).append(" ");
-                }
-                sb.append("(");
-                boolean first = true;
-                for (QueryExpression child : exp.getChildren()) {
-                    if (first) {
-                        first = false;
-                    } else if (!QueryOperator.NOT.equals(exp.getOperator())) {
-                        sb.append(" ").append(exp.getOperator().name()).append(" ");
-                    }
-                    append(child, sb);
-                }
-                sb.append(")");
-            }
         }
 
     }

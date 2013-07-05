@@ -18,6 +18,7 @@ package de.lichtflut.rb.core.viewspec.impl;
 import java.util.Set;
 
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -44,6 +45,24 @@ import de.lichtflut.rb.core.viewspec.WDGT;
  * @author Oliver Tigges
  */
 public class SNSelection extends ResourceView implements Selection {
+
+    public static SNSelection from(SemanticNode node) {
+        if (node instanceof SNSelection) {
+            return (SNSelection) node;
+        } else if (node instanceof ResourceNode) {
+            return new SNSelection((ResourceNode) node);
+        } else if (node instanceof ResourceID) {
+            return new SNSelection(node.asResource());
+        } else {
+            return null;
+        }
+    }
+
+    public static SNSelection forType(ResourceID type) {
+        return new SNSelection().addParameter(RDF.TYPE, type);
+    }
+
+    // ----------------------------------------------------
 
 	/**
 	 * Default constructor.
@@ -72,6 +91,21 @@ public class SNSelection extends ResourceView implements Selection {
 		return !getAssociations(WDGT.HAS_EXPRESSION).isEmpty()
 			|| !getAssociations(WDGT.HAS_PARAMETER).isEmpty();
 	}
+
+    // ----------------------------------------------------
+
+    public SNSelection addParameter(SNSelectionParameter param) {
+        addAssociation(WDGT.HAS_PARAMETER, param);
+        return this;
+    }
+
+    public SNSelection addParameter(ResourceID field, SemanticNode value) {
+        SNSelectionParameter param = new SNSelectionParameter();
+        param.setField(field);
+        param.setTerm(value);
+        addAssociation(WDGT.HAS_PARAMETER, param);
+        return this;
+    }
 	
 	// ----------------------------------------------------
 	

@@ -137,7 +137,7 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("WidgetSpec[" + getQualifiedName().getSimpleName() + "]\n");
         if (getSelection() != null) {
-		    sb.append("  Selection: " + getSelection() + "\n");
+		    sb.append("  Selection: ").append(getSelection()).append("\n");
         }
 		return sb.toString();
 	}

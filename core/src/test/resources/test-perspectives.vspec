@@ -1,0 +1,47 @@
+perspective "Organization" {
+
+	title : "Organizational overview"
+
+	port {
+
+		widget {
+			implementing-class : "a.test.Class"
+		}
+
+		widget {
+			title : "All organizations"
+			display : "list"
+			action "x" {
+			}
+			selection {
+				by-type : "http://rb.lichtflut.de/common#Organization"
+			}
+		}
+
+	}
+
+	port {
+
+		widget {
+			title : "All processes"
+			display : "list"
+			action "x" {
+			}
+			selection {
+				by-type : "http://rb.lichtflut.de/bpm#BusinessProcess"
+			}
+		}
+
+		widget {
+			title : "My current project"
+			display : "details"
+			action "x" {
+			}
+			selection {
+				query : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type = http://rb.lichtflut.de/common#Project"
+			}
+		}
+
+	}
+
+}
