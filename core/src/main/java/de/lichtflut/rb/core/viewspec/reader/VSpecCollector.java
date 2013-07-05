@@ -1,5 +1,7 @@
-package de.lichtflut.rb.core.viewspec.parser;
+package de.lichtflut.rb.core.viewspec.reader;
 
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WDGT;
@@ -12,6 +14,7 @@ import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.io.NamespaceMap;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNText;
+import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.SimpleNamespace;
 
 import java.util.List;
@@ -49,13 +52,14 @@ public class VSpecCollector {
     // ----------------------------------------------------
 
     public VSpecCollector() {
-        this.currentPerspective = new SNPerspective();
-        this.currentWidget = new SNWidgetSpec();
     }
 
     // ----------------------------------------------------
 
     public WidgetSpec currentWidget() {
+        if (currentWidget == null) {
+            currentWidget = new SNWidgetSpec();
+        }
         return currentWidget;
     }
 
@@ -74,6 +78,11 @@ public class VSpecCollector {
 
     public void addNamespace(String uri, String prefix) {
         nsMap.addNamespace(new SimpleNamespace(uri, prefix));
+    }
+
+    public void newPerspective(String name) {
+        QualifiedName qn = QualifiedName.from(RBSystem.PERSPECTIVES_NAMESPACE_URI, name);
+        this.currentPerspective = new SNPerspective(qn);
     }
 
     public void currentWidgetProperty(String key, String value) {

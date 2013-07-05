@@ -39,7 +39,7 @@ import org.junit.Test;
  */
 public class ExcelParserMetaDataTest {
 
-	private static final String CONFIG_SHEET = "rb-parser-config";
+	private static final String CONFIG_SHEET = "rb-reader-config";
 	private ExcelParserMetaData metaData;
 	private Sheet sheet;
 

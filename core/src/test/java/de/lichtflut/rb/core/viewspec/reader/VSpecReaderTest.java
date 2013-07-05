@@ -1,4 +1,4 @@
-package de.lichtflut.rb.core.viewspec.parser;
+package de.lichtflut.rb.core.viewspec.reader;
 
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.Selection;
@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import static org.arastreju.sge.SNOPS.qualify;
 import static org.arastreju.sge.SNOPS.singleObject;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -43,6 +44,7 @@ public class VSpecReaderTest {
 
         assertEquals(1, perspectives.size());
         Perspective perspective1 = perspectives.get(0);
+        Assert.assertEquals(qualify("local:perspectives:Organization"), perspective1.getQualifiedName());
 
         List<ViewPort> ports = perspective1.getViewPorts();
         assertEquals(2, ports.size());

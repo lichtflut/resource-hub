@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.rb.core.viewspec.parser;
+package de.lichtflut.rb.core.viewspec.reader;
 
 import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.core.viewspec.parser.VSpecLexer;
+import de.lichtflut.rb.core.viewspec.parser.VSpecParser;
+import de.lichtflut.rb.core.viewspec.parser.VSpecTree;
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;

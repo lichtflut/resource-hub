@@ -64,7 +64,7 @@ public class ExcelParser {
 
 	private static final String URI = "^(http?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 	private static final String QNAME = "^[A-z]*:[A-z0-9-]*";
-	private static final String EXCEL_CONFIG = "rb-parser-config";
+	private static final String EXCEL_CONFIG = "rb-reader-config";
 	private static final String VERSIONING = "rb-versioning";
 	private String PREFIX = "has";
 

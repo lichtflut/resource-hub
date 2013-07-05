@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * <p>
- *  Integration test for resource schema parser.
+ *  Integration test for resource schema reader.
  * </p>
  *
  *  <p>

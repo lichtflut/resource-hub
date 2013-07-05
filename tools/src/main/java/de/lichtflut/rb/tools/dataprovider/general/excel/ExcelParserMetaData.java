@@ -25,7 +25,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 /**
  * <p>
  * This class exctracts meta-data for {@link ExcelParser}.
- * The data will be extracted from a sheet named: "rb-parser-config"
+ * The data will be extracted from a sheet named: "rb-reader-config"
  * </p>
  * Created: Mar 1, 2013
  *

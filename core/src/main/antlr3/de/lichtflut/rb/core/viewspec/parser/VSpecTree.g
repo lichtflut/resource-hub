@@ -12,6 +12,8 @@ options {
  * Generated with AntLR.
  */
 package de.lichtflut.rb.core.viewspec.parser;
+
+import de.lichtflut.rb.core.viewspec.reader.VSpecCollector;
 }
 
 @members{
@@ -38,7 +40,9 @@ namespace_decl: ^(NAMESPACE (ns=STRING pr=STRING {
 }));
 
 // Definition of a perspective
-perspective_decl : ^(PERSPECTIVE (name=STRING perspective_title_decl? port_decl*  {
+perspective_decl : ^(PERSPECTIVE (name=STRING {
+    ctx.newPerspective(unquote($name.text));
+} perspective_title_decl? port_decl*  {
     ctx.currentPerspective().setName($name.text);
     ctx.perspectiveFinished();
 }));

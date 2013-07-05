@@ -164,7 +164,7 @@ public class RSFParserTest {
 		RSFLexer lexer = new RSFLexer(input);
 		// Create a stream of tokens fed by the lexer
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		// Create a parser that feeds off the token stream
+		// Create a reader that feeds off the token stream
 		RSFParser parser = new RSFParser(tokens);
 		return parser;
 

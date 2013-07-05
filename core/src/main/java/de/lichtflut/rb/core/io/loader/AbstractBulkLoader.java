@@ -102,6 +102,23 @@ public class AbstractBulkLoader {
         }
     }
 
+    protected void doImportVSpec(InputStream in, String fileInfo) {
+        try {
+            SingleGateConversationFactory conversationFactory = new SingleGateConversationFactory(gate);
+            Conversation conversation = conversationFactory.startConversation();
+
+
+
+            conversation.close();
+            conversationFactory.closeConversations();
+
+            LOGGER.info("Imported VSpec file: {}", fileInfo);
+
+        } catch (Exception e) {
+            LOGGER.error("File could not be imported: " + fileInfo, e);
+        }
+    }
+
     protected void setContext(String fileName) {
         if (AbstractBulkLoader.METAMODEL.equals(fileName) || AbstractBulkLoader.SCHEMAS.equals(fileName)) {
             context = RBSystem.TYPE_SYSTEM_CTX;
