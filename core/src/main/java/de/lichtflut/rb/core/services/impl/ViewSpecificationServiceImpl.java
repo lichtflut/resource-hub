@@ -186,18 +186,21 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	}
 
 	@Override
-	public void remove(final Perspective perspective) {
-		final SemanticGraph graph = new ViewSpecTraverser().toGraph(perspective);
-		final Conversation mc = conversation();
-		final TransactionControl tx = mc.beginTransaction();
-		try {
-			for (Statement stmt : graph.getStatements()) {
-				mc.removeStatement(stmt);
-			}
-			tx.success();
-		} finally {
-			tx.finish();
-		}
+	public void remove(QualifiedName qn) {
+        final Perspective perspective = findPerspective(qn);
+        if (perspective != null) {
+            final SemanticGraph graph = new ViewSpecTraverser().toGraph(perspective);
+            final Conversation mc = conversation();
+            final TransactionControl tx = mc.beginTransaction();
+            try {
+                for (Statement stmt : graph.getStatements()) {
+                    mc.removeStatement(stmt);
+                }
+                tx.success();
+            } finally {
+                tx.finish();
+            }
+        }
 	}
 
 	// -- WIDGETS -----------------------------------------

@@ -90,9 +90,11 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
 		verifyPassword(user, loginData.getPassword());
 		setLastLogin(user);
 		
-		LOGGER.info("User {} logged in. ", user);
-		return toRBUser(user);
-	}
+
+        RBUser rbUser = toRBUser(user);
+        LOGGER.info("User {} logged in. ", rbUser.getName());
+        return rbUser;
+    }
 
 	@Override
 	public RBUser loginByToken(String token) {

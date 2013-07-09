@@ -22,6 +22,7 @@ import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.core.viewspec.reader.VSpecImporter;
 import de.lichtflut.rb.core.viewspec.writer.impl.PerspectiveWriterImpl;
 import de.lichtflut.rb.rest.api.RBServiceEndpoint;
 import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -40,6 +42,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -80,6 +83,25 @@ public class PerspectiveResource extends RBServiceEndpoint {
         final CommonFormatWriter writer = new CommonFormatWriter(new NamespaceMap(), buffer);
         write(writer, perspectives);
         return Response.ok(buffer.toString()).build();
+    }
+
+    @POST
+    @Produces("text/plain")
+    public Response upload(
+            @PathParam(value = "domain") String domain,
+            @CookieParam(value= AuthModule.COOKIE_SESSION_AUTH) String token,
+            InputStream in)
+            throws UnauthenticatedUserException, IOException {
+
+        final RBUser user = authenticateUser(token);
+
+        final ViewSpecificationService service = getProvider(domain, user).getViewSpecificationService();
+
+        VSpecImporter importer = new VSpecImporter(service);
+        importer.doImport(in);
+
+        in.close();
+        return Response.ok().build();
     }
 
     // ----------------------------------------------------

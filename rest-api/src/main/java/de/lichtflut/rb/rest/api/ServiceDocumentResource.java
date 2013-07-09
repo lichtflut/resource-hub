@@ -32,7 +32,7 @@ import de.lichtflut.rb.rest.api.models.transfer.HttpMethod;
 import de.lichtflut.rb.rest.api.models.transfer.ResourceMeta;
 import de.lichtflut.rb.rest.api.models.transfer.RestBaseModel;
 import de.lichtflut.rb.rest.api.models.transfer.UserCredentials;
-
+import de.lichtflut.rb.rest.api.security.AuthenticationResource;
 
 
 /**
@@ -60,7 +60,7 @@ public class ServiceDocumentResource extends RBServiceEndpoint{
 		dummyTemplateCredentials.setId("");
 		dummyTemplateCredentials.setPassword("");
 		rMeta.addLink(buildLink().
-				href(getPath(AuthOps.class)).
+				href(getPath(AuthenticationResource.class)).
 				rel(CREATE_AUTH_TOKEN_REL).
 				method(HttpMethod.POST).
 				resourceType(TOKEN_SERVICE).

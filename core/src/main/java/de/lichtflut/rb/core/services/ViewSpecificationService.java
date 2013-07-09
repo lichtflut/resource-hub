@@ -95,9 +95,9 @@ public interface ViewSpecificationService {
 
 	/**
 	 * Remove a perspective.
-	 * @param perspective The perspective to be removed.
+	 * @param qn The perspective to be removed.
 	 */
-	void remove(Perspective perspective);
+	void remove(QualifiedName qn);
 
 	/**
 	 * Store a perspective.

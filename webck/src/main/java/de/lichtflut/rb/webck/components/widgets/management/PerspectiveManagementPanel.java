@@ -125,7 +125,7 @@ public class PerspectiveManagementPanel extends Panel {
 	// ----------------------------------------------------
 
 	private void delete(final Perspective perspective) {
-		viewSpecificationService.remove(perspective);
+		viewSpecificationService.remove(perspective.getQualifiedName());
 		RBAjaxTarget.add(this);
 	}
 

@@ -17,12 +17,16 @@ package de.lichtflut.rb.tools.dataprovider.general.excel;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.arastreju.sge.model.SemanticGraph;
 import org.junit.Test;
 
@@ -39,9 +43,10 @@ public class ExcelParserTest {
 
 	@Test
 	public void testExcelParser() throws InvalidFormatException, IOException{
-		File file = new File("src/test/resources/TestITCatalog.xlsx");
+        URL url = Thread.currentThread().getContextClassLoader().getResource("TestITCatalog.xlsx");
+        assertNotNull("Didn't find test Excel file.", url);
 
-		ExcelParser parser = new ExcelParser(file);
+		ExcelParser parser = new ExcelParser(new File(url.getFile()));
 
 		assertThat(parser, is(notNullValue()));
 
