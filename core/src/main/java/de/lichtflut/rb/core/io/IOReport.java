@@ -151,6 +151,19 @@ public class IOReport implements Serializable{
 	}
 
 	// -----------------------------------------------------
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Status: ").append(getStatus()).append("; ");
+        sb.append("Duration: ").append(getDuration()).append(" ms; ");
+        for (Entry<String, Integer> entry : getQuantityMap().entrySet()) {
+            sb.append(entry.getKey()).append(" : ").append(entry.getValue()).append("; ");
+        }
+        if(!getAdditionalInfo().isEmpty()) {
+            sb.append("AdditionalInfo: ").append(getAdditionalInfo().replace(INFO_SEPERATOR, "; ")).append("; ");
+        }
+        return sb.toString();
+    }
 	
 	public String toHTML() {
 		StringBuilder sb = new StringBuilder();
@@ -175,7 +188,7 @@ public class IOReport implements Serializable{
 		}
 		
 		if(!getAdditionalInfo().isEmpty()) {
-			sb.append("<span>AdditionalInfo:<br/>" +getAdditionalInfo().replace(INFO_SEPERATOR, "<br/>") +"</span>");
+			sb.append("<span>AdditionalInfo:<br/>").append(getAdditionalInfo().replace(INFO_SEPERATOR, "<br/>")).append("</span>");
 		}
 		
 		sb.append("</div>");

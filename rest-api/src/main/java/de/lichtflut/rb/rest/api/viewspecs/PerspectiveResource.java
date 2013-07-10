@@ -40,9 +40,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -99,9 +101,10 @@ public class PerspectiveResource extends RBServiceEndpoint {
 
         VSpecImporter importer = new VSpecImporter(service);
         importer.doImport(in);
-
         in.close();
-        return Response.ok().build();
+
+        URI newURI = UriBuilder.fromResource(PerspectiveResource.class).build();
+        return Response.created(newURI).build();
     }
 
     // ----------------------------------------------------

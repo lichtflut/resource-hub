@@ -41,7 +41,7 @@ public class VSpecImporter {
             LOGGER.info("Parsed {} perspectives.", perspectives.size());
 
             for (Perspective perspective : perspectives) {
-                LOGGER.info("Importing perspective: \n{}", perspective);
+                LOGGER.info("Importing perspective '{}'.", perspective);
 
                 service.remove(perspective.getQualifiedName());
 

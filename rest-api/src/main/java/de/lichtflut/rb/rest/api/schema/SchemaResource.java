@@ -15,12 +15,10 @@
  */
 package de.lichtflut.rb.rest.api.schema;
 
-import com.sun.jersey.core.util.Base64;
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
+import de.lichtflut.rb.core.io.IOReport;
 import de.lichtflut.rb.core.schema.model.ResourceSchema;
+import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
 import de.lichtflut.rb.core.schema.writer.OutputElements;
 import de.lichtflut.rb.core.schema.writer.rsf.RsfWriter;
 import de.lichtflut.rb.core.security.AuthModule;
@@ -28,33 +26,30 @@ import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.SchemaExporter;
 import de.lichtflut.rb.core.services.SchemaManager;
 import de.lichtflut.rb.core.services.impl.SchemaExporterImpl;
+import de.lichtflut.rb.core.services.impl.SchemaImporterImpl;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import de.lichtflut.rb.rest.api.RBServiceEndpoint;
-import de.lichtflut.rb.rest.api.query.ResultItemRVO;
 import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 import org.arastreju.sge.Conversation;
-import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.io.InputStream;
+import java.net.URI;
 
 /**
  * <p>
@@ -70,6 +65,10 @@ import java.util.Locale;
 @Component
 @Path("domains/{domain}/schemas")
 public class SchemaResource extends RBServiceEndpoint {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SchemaResource.class);
+
+    // ----------------------------------------------------
 
     @GET
     @Produces("text/plain")
@@ -93,6 +92,27 @@ public class SchemaResource extends RBServiceEndpoint {
         }
 
         return Response.ok(buffer.toString()).build();
+    }
+
+    @POST
+    @Produces("text/plain")
+    public Response upload(
+            @PathParam(value = "domain") String domain,
+            @CookieParam(value= AuthModule.COOKIE_SESSION_AUTH) String token,
+            InputStream in)
+            throws UnauthenticatedUserException, IOException {
+
+        final RBUser user = authenticateUser(token);
+
+        final SchemaManager schemaManager = new SchemaManagerImpl(getConversationFactory(domain, user));
+        SchemaImporterImpl importer = new SchemaImporterImpl(schemaManager,
+                conversation(domain, user), new RsfSchemaParser());
+
+        IOReport read = importer.read(in);
+        LOGGER.info("Imported schemas: \n{}", read);
+
+        URI newURI = UriBuilder.fromResource(SchemaResource.class).build();
+        return Response.created(newURI).build();
     }
 
     // ----------------------------------------------------
