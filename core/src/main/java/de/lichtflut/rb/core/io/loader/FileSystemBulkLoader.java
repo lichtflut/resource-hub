@@ -65,7 +65,7 @@ public class FileSystemBulkLoader extends AbstractBulkLoader {
     // ----------------------------------------------------
 
     public void load() {
-        LOGGER.info("Starting buld load in directory {}", baseDirectory.getAbsolutePath());
+        LOGGER.info("Starting bulk load in directory {}", baseDirectory.getAbsolutePath());
         File[] files = list(baseDirectory);
         Arrays.sort(files, new DirectorySorter());
         for (File file : files) {
@@ -99,6 +99,8 @@ public class FileSystemBulkLoader extends AbstractBulkLoader {
             doImportRDF(file);
         }  else if (file.getName().endsWith(AbstractBulkLoader.RSF)) {
             doImportRSF(file);
+        }  else if (file.getName().endsWith(AbstractBulkLoader.VSPEC)) {
+            doImportVSpec(file);
         } else {
             LOGGER.info("Ignoring file: {}", file.getAbsolutePath());
         }
@@ -120,6 +122,16 @@ public class FileSystemBulkLoader extends AbstractBulkLoader {
         try {
             FileInputStream in = new FileInputStream(file);
             doImportRSF(in, file.getAbsolutePath());
+            in.close();
+        } catch (IOException e) {
+            LOGGER.error("File could not be imported: " + file.getAbsolutePath(), e);
+        }
+    }
+
+    protected void doImportVSpec(File file) {
+        try {
+            FileInputStream in = new FileInputStream(file);
+            doImportVSpec(in, file.getAbsolutePath());
             in.close();
         } catch (IOException e) {
             LOGGER.error("File could not be imported: " + file.getAbsolutePath(), e);

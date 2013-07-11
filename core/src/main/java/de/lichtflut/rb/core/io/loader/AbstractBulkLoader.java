@@ -17,9 +17,13 @@ package de.lichtflut.rb.core.io.loader;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.services.impl.SchemaImporterImpl;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import de.lichtflut.rb.core.services.impl.SingleGateConversationFactory;
+import de.lichtflut.rb.core.services.impl.ViewSpecificationServiceImpl;
+import de.lichtflut.rb.core.viewspec.reader.VSpecImporter;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.context.Context;
@@ -46,6 +50,7 @@ public class AbstractBulkLoader {
 
     static final String RDF_XML = ".rdf.xml";
     static final String RSF = ".rsf";
+    static final String VSPEC = ".vspec";
 
     // ----------------------------------------------------
 
@@ -105,9 +110,12 @@ public class AbstractBulkLoader {
     protected void doImportVSpec(InputStream in, String fileInfo) {
         try {
             SingleGateConversationFactory conversationFactory = new SingleGateConversationFactory(gate);
+
             Conversation conversation = conversationFactory.startConversation();
+            ViewSpecificationService service = new ViewSpecificationServiceImpl(conversationFactory);
+            VSpecImporter importer = new VSpecImporter(service);
 
-
+            importer.doImport(in);
 
             conversation.close();
             conversationFactory.closeConversations();

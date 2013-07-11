@@ -93,6 +93,9 @@ public class ClasspathBulkLoader extends AbstractBulkLoader {
         }  else if (resource.endsWith(AbstractBulkLoader.RSF)) {
             LOGGER.info("Loading RSF: {}", resource);
             doImportRSF(resource);
+        }  else if (resource.endsWith(AbstractBulkLoader.VSPEC)) {
+            LOGGER.info("Loading VSpec: {}", resource);
+            doImportVSpec(resource);
         } else {
             LOGGER.info("Ignoring file: {}", resource);
         }
@@ -113,6 +116,15 @@ public class ClasspathBulkLoader extends AbstractBulkLoader {
         InputStream in = open(resource);
         if (in != null) {
             doImportRSF(in, resource);
+        } else {
+            LOGGER.error("File could not be imported: {} ", resource);
+        }
+    }
+
+    protected void doImportVSpec(String resource) {
+        InputStream in = open(resource);
+        if (in != null) {
+            doImportVSpec(in, resource);
         } else {
             LOGGER.error("File could not be imported: {} ", resource);
         }

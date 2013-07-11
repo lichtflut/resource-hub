@@ -15,10 +15,22 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.common.Accessibility;
+import de.lichtflut.rb.core.common.SerialNumberOrderedNodesContainer;
+import de.lichtflut.rb.core.services.ConversationFactory;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
+import de.lichtflut.rb.core.viewspec.MenuItem;
+import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.core.viewspec.ViewPort;
+import de.lichtflut.rb.core.viewspec.WDGT;
+import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
+import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
+import de.lichtflut.rb.core.viewspec.impl.SNViewPort;
+import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
+import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
@@ -34,23 +46,9 @@ import org.arastreju.sge.structure.OrderBySerialNumber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.common.Accessibility;
-import de.lichtflut.rb.core.common.SerialNumberOrderedNodesContainer;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
-import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.core.services.ViewSpecificationService;
-import de.lichtflut.rb.core.viewspec.MenuItem;
-import de.lichtflut.rb.core.viewspec.Perspective;
-import de.lichtflut.rb.core.viewspec.ViewPort;
-import de.lichtflut.rb.core.viewspec.WDGT;
-import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
-import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
-import de.lichtflut.rb.core.viewspec.impl.SNViewPort;
-import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
-import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>
@@ -69,7 +67,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	private ServiceContext context;
 
-	private ArastrejuResourceFactory arasFactory;
+	private ConversationFactory conversationFactory;
 
 	// ----------------------------------------------------
 
@@ -78,21 +76,30 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	 */
 	public ViewSpecificationServiceImpl() { }
 
+    /**
+     * Constructor.
+     * @param arasFactory The Arastreju resource factory providing conversations.
+     */
+    public ViewSpecificationServiceImpl(final ConversationFactory arasFactory) {
+        this.context = null;
+        this.conversationFactory = arasFactory;
+    }
+
 	/**
-	 * Constructor.
-	 * @param context The service context.
-	 * @param arasFactory The Arastreju resource factory providing conversations.
-	 */
-	public ViewSpecificationServiceImpl(final ServiceContext context, final ArastrejuResourceFactory arasFactory) {
-		this.context = context;
-		this.arasFactory = arasFactory;
-	}
+     * Constructor.
+     * @param context The service context.
+     * @param arasFactory The Arastreju resource factory providing conversations.
+     */
+    public ViewSpecificationServiceImpl(final ServiceContext context, final ConversationFactory arasFactory) {
+        this.context = context;
+        this.conversationFactory = arasFactory;
+    }
 
 	// -- MENU ITEMS --------------------------------------
 
 	@Override
 	public List<MenuItem> getMenuItemsForDisplay() {
-		if (context.isAuthenticated()) {
+		if (context != null && context.isAuthenticated()) {
 			return getUsersMenuItems();
 		} else {
 			return getDefaultMenu();
@@ -272,11 +279,10 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	// ----------------------------------------------------
 
 	protected ResourceNode currentUser() {
-		final RBUser user = context.getUser();
-		if (user == null) {
-			throw new IllegalStateException("No user context set.");
+        if (context == null || context.getUser() == null) {
+            throw new IllegalStateException("No user context set.");
 		} else {
-			return conversation().findResource(user.getQualifiedName());
+			return conversation().findResource(context.getUser().getQualifiedName());
 		}
 	}
 
@@ -320,7 +326,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	// ----------------------------------------------------
 
 	private Conversation conversation() {
-		return arasFactory.getConversation(RBSystem.VIEW_SPEC_CTX);
+		return conversationFactory.getConversation(RBSystem.VIEW_SPEC_CTX);
 	}
 
 }
