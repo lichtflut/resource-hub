@@ -34,7 +34,7 @@
 
     <!-- Arastreju configuration for UI -->
 
-    <bean id="arasResourceFactory" class="de.lichtflut.rb.core.services.ArastrejuResourceFactory" scope="session">
+    <bean id="arasResourceFactory" class="de.lichtflut.rb.core.services.ArastrejuResourceFactory" scope="request">
         <constructor-arg index="0" ref="context"></constructor-arg>
     </bean>
 

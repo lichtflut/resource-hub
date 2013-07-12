@@ -33,6 +33,7 @@ import org.arastreju.sge.Conversation;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.organize.Organizer;
 import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,11 +48,6 @@ import java.util.List;
  * @author nbleisch
  */
 public abstract class RBServiceEndpoint implements OperationTypes{
-
-	static final String DOMAIN_ID_PARAM = "domainID";
-	static final String AUTH_TOKEN = "TOKEN";
-
-    // ----------------------------------------------------
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RBServiceEndpoint.class);
 
@@ -82,7 +78,7 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 
     @Autowired
     protected RBConfig config;
-	
+
 	// ----------------------------------------------------
 
     protected RBUser authenticateUser(String token) throws UnauthenticatedUserException {
@@ -119,6 +115,11 @@ public abstract class RBServiceEndpoint implements OperationTypes{
         return new ArastrejuResourceFactory(ctx);
     }
 
+    protected Organizer getOrganizer(String domainID, RBUser user) {
+        ServiceContext ctx = new ServiceContext(config, domainID, user);
+        return new ArastrejuResourceFactory(ctx).getOrganizer();
+    }
+
 	protected AuthorizationHandler getAuthHandler() {
 		return handler;
 	}
@@ -130,4 +131,5 @@ public abstract class RBServiceEndpoint implements OperationTypes{
         query.addField(RDF.TYPE, type);
         return query.getResult().toList(2000);
     }
+
 }

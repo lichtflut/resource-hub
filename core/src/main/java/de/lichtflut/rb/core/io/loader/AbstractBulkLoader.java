@@ -17,7 +17,6 @@ package de.lichtflut.rb.core.io.loader;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.parser.impl.rsf.RsfSchemaParser;
-import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.services.impl.SchemaImporterImpl;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
@@ -32,7 +31,6 @@ import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.model.SemanticGraph;
-import org.arastreju.sge.naming.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,16 +54,13 @@ public class AbstractBulkLoader {
 
     private final ArastrejuGate gate;
 
-    private final Context domainCtx;
-
     private Context context;
 
     // ----------------------------------------------------
 
     public AbstractBulkLoader(ArastrejuGate gate, String domain) {
         this.gate = gate;
-        this.domainCtx = ContextID.forContext(Namespace.LOCAL_CONTEXTS, domain);
-        this.context = domainCtx;
+        this.context = RBSystem.DOMAIN_CTX;
     }
 
     // ----------------------------------------------------
@@ -133,12 +128,12 @@ public class AbstractBulkLoader {
         } else if (AbstractBulkLoader.VIEWSPECS.equals(fileName)) {
             context = RBSystem.VIEW_SPEC_CTX;
         } else {
-            context = domainCtx;
+            context = RBSystem.DOMAIN_CTX;
         }
     }
 
     protected void unsetContext() {
-        context = domainCtx;
+        context = RBSystem.DOMAIN_CTX;
     }
 
 }

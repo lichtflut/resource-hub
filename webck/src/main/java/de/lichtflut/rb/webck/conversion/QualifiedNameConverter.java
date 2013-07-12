@@ -39,7 +39,7 @@ public class QualifiedNameConverter implements IConverter<QualifiedName> {
 		if (StringUtils.isBlank(value)) {
 			return null;
 		}
-		return QualifiedName.fromURI(value);
+		return QualifiedName.from(value);
 	}
 
 	@Override

@@ -54,8 +54,11 @@ import java.util.Arrays;
  * 
  */
 @Component
-@Path("domain/{" + RBServiceEndpoint.DOMAIN_ID_PARAM + "}/")
+@Path("domain/{" + DomainOps.DOMAIN_ID_PARAM + "}/")
 public class DomainOps extends RBServiceEndpoint {
+
+    static final String DOMAIN_ID_PARAM = "domainID";
+    static final String AUTH_TOKEN = "TOKEN";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DomainOps.class);
 

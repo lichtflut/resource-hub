@@ -19,12 +19,12 @@ import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.DomainValidator;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.context.Context;
 import org.arastreju.sge.organize.Organizer;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.DC;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
-import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.QualifiedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +67,7 @@ public class DefaultDomainValidator implements DomainValidator {
         final Organizer organizer = new Organizer(gate);
 
         // The protected context of this domain
-        organizer.registerContext(QualifiedName.from(Namespace.LOCAL_CONTEXTS, domainName));
+        organizer.registerContext(QualifiedName.from(Context.LOCAL_CONTEXTS_NAMESPACE, domainName));
 
         organizer.registerContext(RBSystem.VIEW_SPEC_CTX.getQualifiedName());
 

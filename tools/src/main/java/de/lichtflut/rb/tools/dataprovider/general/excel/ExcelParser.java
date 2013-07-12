@@ -389,7 +389,7 @@ public class ExcelParser {
 	}
 
 	private QualifiedName createChildURI(final ResourceNode parent, final String value) {
-		return QualifiedName.fromURI(parent.getQualifiedName() + "-" + value.trim());
+		return QualifiedName.from(parent.getQualifiedName() + "-" + value.trim());
 	}
 
 	private void clone(final ResourceNode original, final ResourceNode clone) {

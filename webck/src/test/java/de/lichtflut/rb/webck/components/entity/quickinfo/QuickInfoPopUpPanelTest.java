@@ -58,7 +58,7 @@ public class QuickInfoPopUpPanelTest extends RBWebTest {
 
 	@Override
 	protected void setupTest() {
-		QualifiedName qname = QualifiedName.fromURI("quickInfoPanelTest");
+		QualifiedName qname = QualifiedName.from("quickInfoPanelTest");
 		RBDomain domain = new RBDomain(qname);
 		when(serviceContext.getDomain()).thenReturn(qname.toURI());
 		when(authModule.getDomainManager()).thenReturn(domainManager);

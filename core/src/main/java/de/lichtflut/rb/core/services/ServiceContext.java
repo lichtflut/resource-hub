@@ -15,14 +15,12 @@
  */
 package de.lichtflut.rb.core.services;
 
-import java.io.Serializable;
-
-import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.security.RBUser;
 import org.arastreju.sge.context.Context;
-import org.arastreju.sge.context.ContextID;
-import org.arastreju.sge.naming.Namespace;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -41,7 +39,7 @@ public class ServiceContext implements Serializable{
 	
 	private RBUser user;
 	
-	private String domain = "public";
+	private String domain;
 
     private Context conversationContext;
 
@@ -149,11 +147,11 @@ public class ServiceContext implements Serializable{
     // ----------------------------------------------------
 
     private void initConversationContexts() {
-        conversationContext = ContextID.forContext(Namespace.LOCAL_CONTEXTS, domain);
+        conversationContext = RBSystem.DOMAIN_CTX;
         readContexts= new Context[] {
                 RBSystem.TYPE_SYSTEM_CTX,
                 RBSystem.VIEW_SPEC_CTX,
-                ContextID.forContext(Namespace.LOCAL_CONTEXTS, domain)
+                RBSystem.DOMAIN_CTX
         };
     }
 

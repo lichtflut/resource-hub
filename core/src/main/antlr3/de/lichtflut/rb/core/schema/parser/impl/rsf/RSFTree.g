@@ -179,7 +179,7 @@ public_constraint scope{
 						String cleaned = removeAll($id.text, "\"");
 						NamespaceHandle currentNs = nsMap.get(extract(cleaned, ":", 0));
 						String described = extract(cleaned, ":", 1);
-						QualifiedName qn = QualifiedName.fromURI(currentNs.getUri() + described);
+						QualifiedName qn = QualifiedName.from(currentNs.getUri() + described);
 						$public_constraint::constraint = new ConstraintImpl(qn);
 						$public_constraint::constraint.setPublic(true);
 						//publicConstraints.add($public_constraint::constraint);

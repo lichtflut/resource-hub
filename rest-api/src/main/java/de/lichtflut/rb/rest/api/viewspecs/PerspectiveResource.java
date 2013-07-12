@@ -118,7 +118,7 @@ public class PerspectiveResource extends RBServiceEndpoint {
 
     protected List<Perspective> find(ViewSpecificationService service, String qn, String id) {
         if (qn != null) {
-            return listIfNotNull(findByQN(service, QualifiedName.fromURI(qn)));
+            return listIfNotNull(findByQN(service, QualifiedName.from(qn)));
         } else if (id != null) {
             return listIfNotNull(findByID(service, id));
         } else {

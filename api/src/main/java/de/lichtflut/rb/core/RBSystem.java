@@ -19,7 +19,6 @@ import org.arastreju.sge.context.Context;
 import org.arastreju.sge.context.ContextID;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.QualifiedName;
 
 /**
@@ -41,9 +40,11 @@ public interface RBSystem {
 
     String WIDGETS_NAMESPACE_URI = QualifiedName.LOCAL + ":widgets:";
 
-	Context TYPE_SYSTEM_CTX = ContextID.forContext(Namespace.LOCAL_CONTEXTS, "TypeSystem");
+	Context TYPE_SYSTEM_CTX = ContextID.localContext("typesystem");
 
-	Context VIEW_SPEC_CTX = ContextID.forContext(Namespace.LOCAL_CONTEXTS, "ViewSpecifications");
+	Context VIEW_SPEC_CTX = ContextID.localContext("viewspec");
+
+    Context DOMAIN_CTX = ContextID.forContext(Context.DOMAIN_CONTEXT);
 
 	// -- TYPES -------------------------------------------
 
