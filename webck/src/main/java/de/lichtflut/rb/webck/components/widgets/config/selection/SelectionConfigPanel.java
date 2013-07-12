@@ -18,7 +18,6 @@ package de.lichtflut.rb.webck.components.widgets.config.selection;
 import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WDGT;
-import de.lichtflut.rb.core.viewspec.impl.SNSelectionParameter;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
@@ -48,79 +47,17 @@ import java.util.Set;
  */
 public class SelectionConfigPanel extends TypedPanel<Selection> {
 	
-	private static final Logger logger = LoggerFactory.getLogger(SelectionConfigPanel.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SelectionConfigPanel.class);
 	
 	// ----------------------------------------------------
 	
 	/**
-	 * @param id
-	 * @param model
+     * Constructor.
+	 * @param id The wicket ID.
+	 * @param model The model providing the selection.
 	 */
 	public SelectionConfigPanel(String id, IModel<Selection> model) {
 		super(id, model);
-		
-		add(new ListView<QueryParamUIModel>("paramList", new ParamUiListModel(model)) {
-			@Override
-			protected void populateItem(ListItem<QueryParamUIModel> item) {
-				item.add(new QueryParamRow("param", item.getModel()));
-			}
-		});
-	}
-
-	// ----------------------------------------------------
-	
-	class ParamUiListModel extends DerivedDetachableModel<List<QueryParamUIModel>, Selection> {
-		
-		/**
-		 * Constructor.
-		 */
-		public ParamUiListModel(IModel<Selection> model) {
-			super(model);
-		}
-		
-		/** 
-		 * {@inheritDoc}
-		 */
-		@Override
-		protected List<QueryParamUIModel> derive(Selection selection) {
-			final Set<SemanticNode> params = SNOPS.objects(selection, WDGT.HAS_PARAMETER);
-			if (params.size() > 1) {
-				throw new NotYetSupportedException("Selections with more tha one parameter not yet supported.");
-			} 
-			final List<QueryParamUIModel> result = new ArrayList<QueryParamUIModel>(1);
-			result.add(new QueryParamUIModel(new ParamModel(getOriginalModel())));
-			return result;
-		}
-		
-	}
-	
-	class ParamModel extends DerivedModel<SNSelectionParameter, Selection> {
-
-		/**
-		 * @param original
-		 */
-		public ParamModel(IModel<Selection> original) {
-			super(original);
-		}
-
-		/** 
-		 * {@inheritDoc}
-		 */
-		@Override
-		protected SNSelectionParameter derive(Selection selection) {
-			final Set<SemanticNode> params = SNOPS.objects(selection, WDGT.HAS_PARAMETER);
-			if (params.size() > 1) {
-				throw new NotYetSupportedException("Selections with more tha one parameter not yet supported.");
-			} else if (params.isEmpty()) {
-				logger.info("Selection had no parameters yet. Will create one.");
-				SNSelectionParameter param = new SNSelectionParameter();
-				selection.addAssociation(WDGT.HAS_PARAMETER, param);
-				param.setField(RDF.TYPE);
-				return param;
-			} else {
-				return new SNSelectionParameter(params.iterator().next().asResource());
-			}
-		}
 		
 	}
 	

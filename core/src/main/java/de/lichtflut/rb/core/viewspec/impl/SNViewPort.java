@@ -62,33 +62,21 @@ public class SNViewPort extends ResourceView implements ViewPort {
 	
 	// ----------------------------------------------------d
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ResourceID getID() {
 		return this;
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Integer getPosition() {
 		return intValue(Aras.HAS_SERIAL_NUMBER);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setPosition(Integer position) {
 		setValue(Aras.HAS_SERIAL_NUMBER, position);
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<WidgetSpec> getWidgets() {
 		final List<WidgetSpec> result = new ArrayList<WidgetSpec>();
@@ -99,18 +87,12 @@ public class SNViewPort extends ResourceView implements ViewPort {
 		return result;
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void addWidget(WidgetSpec widget) {
 		widget.setPosition(getWidgets().size() + 1);
 		addAssociation(WDGT.CONTAINS_WIDGET, widget);
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeWidget(WidgetSpec widget) {
 		SNOPS.remove(this, WDGT.CONTAINS_WIDGET, widget);

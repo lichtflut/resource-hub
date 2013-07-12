@@ -8,14 +8,12 @@ import de.lichtflut.rb.core.viewspec.WidgetAction;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 import de.lichtflut.rb.core.viewspec.impl.SNSelection;
-import de.lichtflut.rb.core.viewspec.impl.SNSelectionParameter;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetAction;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.io.NamespaceMap;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.SimpleNamespace;
 import org.slf4j.Logger;
@@ -157,25 +155,27 @@ public class VSpecCollector {
     }
 
     public void setSelectionQuery(String queryString) {
-        SNSelection selection = new SNSelection();
+        SNSelection selection = SNSelection.byQuery(queryString);
         currentWidget().setSelection(selection);
     }
 
     public void setSelectionQueryByType(String type) {
-        SNSelection selection = SNSelection.forType(id(qualify(type)));
+        SNSelection selection = SNSelection.byType(id(qualify(type)));
         currentWidget().setSelection(selection);
     }
 
     public void setSelectionQueryByValue(String value) {
-        SNSelection selection = new SNSelection();
-        selection.addParameter(new SNSelectionParameter().setTerm(new SNText(value)));
+        SNSelection selection = SNSelection.byValue(value);
         currentWidget().setSelection(selection);
     }
 
     public void setSelectionQueryByRef(String ref) {
-        SNSelection selection = new SNSelection();
-        selection.addParameter(new SNSelectionParameter().setTerm(id(qualify(ref))));
+        SNSelection selection = SNSelection.byRelation(id(qualify(ref)));
         currentWidget().setSelection(selection);
+    }
+
+    public void newQueryParam(String field, String value) {
+        LOGGER.debug("Query param {} = {}", field, value);
     }
 
     public void currentActionProperty(String key, String value) {

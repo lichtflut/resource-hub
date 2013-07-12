@@ -15,10 +15,11 @@ tokens {
 	WIDGET_PROPERTY;
 	ACTION_DECL;
 	ACTION_PROPERTY;
-	QUERY_DECL;
 	QUERY_BY_TYPE_DECL;
 	QUERY_BY_VALUE_DECL;
 	QUERY_BY_REF_DECL;
+	QUERY_DECL;
+	QUERY_PARAM;
 }
 
 @header{
@@ -94,15 +95,27 @@ action_property_key :
       LABEL
     | INT_LABEL
 	| CREATE
-	;
+;
 
 
 // Definition of a widget's selection declaration
-selection_decl :    SELECTION '{' QUERY COLON s=STRING '}' -> ^(QUERY_DECL $s) |
+selection_decl :    SELECTION '{' QUERY COLON query_param '}' -> ^(QUERY_DECL query_param) |
                     SELECTION '{' QUERY_BY_TYPE COLON type=STRING '}' -> ^(QUERY_BY_TYPE $type) |
                     SELECTION '{' QUERY_BY_VALUE COLON val=STRING '}' -> ^(QUERY_BY_VALUE $val) |
                     SELECTION '{' QUERY_BY_REF COLON ref=STRING '}' -> ^(QUERY_BY_REF $ref)
 ;
+
+query_param : param_qualifier '=' val=SQ_STRING
+    -> ^(QUERY_PARAM param_qualifier $val);
+
+param_qualifier :
+  | QN
+  | VAL
+  | REL
+  | SQ_STRING
+  ;
+
+// TOKENS
 
 value : STRING ;
 
@@ -140,17 +153,40 @@ QUERY_BY_REF : 'by-reference';
 
 IMPLEMENTING_CLASS : 'implementing-class';
 
+SQUOTE : '\'';
+
+AND : 'AND';
+
+OR : 'OR';
+
+NOT : 'NOT';
+
+QN : 'QN';
+
+VAL : 'VAL';
+
+REL : 'REL';
+
 CREATE : 'create';
 
 COLON : ':';
 
 COMMA : ',';
 
-CARDINALITY_DECL  : '['('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+'..'('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+']';
-
 STRING 	: '"' .* '"';
 
-// TODO: refactor - remove quotations from STRING
-PLAIN_STRING : ('a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '/' | ':' )+;
+SQ_STRING 	: '\'' .* '\'';
 
 WS: (' '|'\n'|'\r'|'\t')+ {$channel=HIDDEN;} ;
+
+fragment ALPHANUMERIC
+    :    (DIGIT | LETTER)
+    ;
+
+fragment DIGIT
+    :    '0'..'9'
+    ;
+
+fragment LETTER
+    :    ('a'..'z' | 'A'..'Z')
+    ;

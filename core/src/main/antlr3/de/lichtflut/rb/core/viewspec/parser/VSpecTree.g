@@ -80,8 +80,11 @@ action_property : ^(ACTION_PROPERTY(key=. value=STRING{
 selection_decl : query_decl | query_by_type_decl | query_by_value_decl | query_by_ref_decl ;
 
 // Definition of a query
-query_decl : ^(QUERY_DECL(query=STRING {
-    ctx.setSelectionQuery(unquote($query.text));
+query_decl : ^(QUERY_DECL(query_param {
+}));
+
+query_param : ^(QUERY_PARAM(q=. val=. {
+    ctx.newQueryParam($q.getText(), $val.getText());
 }));
 
 // Definition of a query

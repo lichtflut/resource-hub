@@ -106,46 +106,26 @@ public interface WDGT {
 	 * A widget has a selection of content.
 	 */
 	ResourceID HAS_SELECTION = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "hasSelection");
-	
-	/**
-	 * A widget has a selection of content.
-	 */
-	ResourceID HAS_EXPRESSION = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "hasExpression");
-	
-	/**
-	 * A widget has a selection of content.
-	 */
-	ResourceID HAS_PARAMETER = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "hasParameter");
-	
-	/**
-	 * An expression may have a operator
-	 */
-	ResourceID HAS_OPERATOR = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "hasOperator");
-	
-	/**
-	 * A parameter may concern a single field.
-	 */
-	ResourceID CONCERNS_FIELD = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "concernsField");
-	
-	/**
-	 * The term of a parameter.
-	 */
-	ResourceID HAS_TERM = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "hasTerm");
-	
-	/**
-	 * Operator NOT.
-	 */ 
-	ResourceID NOT_OPERATOR = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "NotOperator");
-	
-	/**
-	 * Operator AND.
-	 */
-	ResourceID AND_OPERATOR = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "AndOperator");
-	
-	/**
-	 * Operator OR.
-	 */
-	ResourceID OR_OPERATOR = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "OrOperator");
+
+    /**
+     * A selection by rdf:type.
+     */
+    ResourceID SELECT_BY_TYPE = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "selectByType");
+
+    /**
+     * A selection by a value.
+     */
+    ResourceID SELECT_BY_VALUE = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "selectByValue");
+
+    /**
+     * A selection by a relation.
+     */
+    ResourceID SELECT_BY_RELATION = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "selectByRelation");
+
+    /**
+     * A selection by a relation.
+     */
+    ResourceID SELECT_BY_QUERY = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "selectByQuery");
 
 	// -- COLUMNS -----------------------------------------
 	

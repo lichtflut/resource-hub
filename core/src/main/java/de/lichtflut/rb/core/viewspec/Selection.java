@@ -30,7 +30,18 @@ import org.arastreju.sge.query.Query;
  * @author Oliver Tigges
  */
 public interface Selection extends ResourceNode {
-	
+
+    enum SelectionType {
+        BY_QUERY,
+        BY_TYPE,
+        BY_VALUE,
+        BY_RELATION
+    }
+
+    // ----------------------------------------------------
+
+    SelectionType getType();
+
 	boolean isDefined();
 	
 	void adapt(Query query);

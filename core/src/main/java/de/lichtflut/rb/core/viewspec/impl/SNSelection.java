@@ -15,19 +15,16 @@
  */
 package de.lichtflut.rb.core.viewspec.impl;
 
-import java.util.Set;
-
-import org.arastreju.sge.SNOPS;
+import de.lichtflut.rb.core.viewspec.Selection;
+import de.lichtflut.rb.core.viewspec.WDGT;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
+import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.query.Query;
-
-import de.lichtflut.rb.core.viewspec.Selection;
-import de.lichtflut.rb.core.viewspec.WDGT;
 
 /**
  * <p>
@@ -58,8 +55,28 @@ public class SNSelection extends ResourceView implements Selection {
         }
     }
 
-    public static SNSelection forType(ResourceID type) {
-        return new SNSelection().addParameter(RDF.TYPE, type);
+    public static SNSelection byType(ResourceID type) {
+        SNSelection selection = new SNSelection();
+        selection.addAssociation(WDGT.SELECT_BY_TYPE, type);
+        return selection;
+    }
+
+    public static SNSelection byRelation(ResourceID type) {
+        SNSelection selection = new SNSelection();
+        selection.addAssociation(WDGT.SELECT_BY_RELATION, type);
+        return selection;
+    }
+
+    public static SNSelection byValue(String value) {
+        SNSelection selection = new SNSelection();
+        selection.addAssociation(WDGT.SELECT_BY_VALUE, new SNText(value));
+        return selection;
+    }
+
+    public static SNSelection byQuery(String query) {
+        SNSelection selection = new SNSelection();
+        selection.addAssociation(WDGT.SELECT_BY_QUERY, new SNText(query));
+        return selection;
     }
 
     // ----------------------------------------------------
@@ -81,97 +98,63 @@ public class SNSelection extends ResourceView implements Selection {
 	
 	// ----------------------------------------------------
 
-	@Override
+    @Override
+    public SelectionType getType() {
+        for (Statement statement : getAssociations()) {
+            ResourceID predicate = statement.getPredicate();
+            if (WDGT.SELECT_BY_QUERY.equals(predicate)) {
+                return SelectionType.BY_QUERY;
+            } else if (WDGT.SELECT_BY_TYPE.equals(predicate)) {
+                return SelectionType.BY_TYPE;
+            } else if (WDGT.SELECT_BY_RELATION.equals(predicate)) {
+                return SelectionType.BY_RELATION;
+            } else if (WDGT.SELECT_BY_VALUE.equals(predicate)) {
+                return SelectionType.BY_VALUE;
+            }
+        }
+        return null;
+    }
+
+    @Override
 	public void adapt(Query query) {
-		appendExpressions(this, query);
+        for (Statement statement : getAssociations()) {
+            ResourceID predicate = statement.getPredicate();
+            if (WDGT.SELECT_BY_QUERY.equals(predicate)) {
+                adaptByQuery(query);
+                return;
+            } else if (WDGT.SELECT_BY_TYPE.equals(predicate)) {
+                adaptByType(query);
+                return;
+            } else if (WDGT.SELECT_BY_RELATION.equals(predicate)) {
+                return;
+            } else if (WDGT.SELECT_BY_VALUE.equals(predicate)) {
+                return;
+            }
+        }
 	}
-	
-	@Override
+
+    @Override
 	public boolean isDefined() {
-		return !getAssociations(WDGT.HAS_EXPRESSION).isEmpty()
-			|| !getAssociations(WDGT.HAS_PARAMETER).isEmpty();
+		return getType() != null;
 	}
 
-    // ----------------------------------------------------
-
-    public SNSelection addParameter(SNSelectionParameter param) {
-        addAssociation(WDGT.HAS_PARAMETER, param);
-        return this;
-    }
-
-    public SNSelection addParameter(ResourceID field, SemanticNode value) {
-        SNSelectionParameter param = new SNSelectionParameter();
-        param.setField(field);
-        param.setTerm(value);
-        addAssociation(WDGT.HAS_PARAMETER, param);
-        return this;
-    }
-	
 	// ----------------------------------------------------
 	
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("Selection[" + getQualifiedName().getSimpleName() + "]");
-		sb.append("\n    Expressions: ");
-		for (SemanticNode parameter : SNOPS.objects(this, WDGT.HAS_EXPRESSION)) {
-			sb.append(parameter);
-		}
-		sb.append("\n    Parameters: ");
-		for (SemanticNode parameter : SNOPS.objects(this, WDGT.HAS_PARAMETER)) {
-			sb.append(new SNSelectionParameter(parameter.asResource()));
-		}
 		return sb.toString();
 	}
-	
-	// ----------------------------------------------------
-	
-	protected void appendExpressions(ResourceNode node, Query query) {
-		final Set<Statement> expressions = SNOPS.associations(node, WDGT.HAS_EXPRESSION);
-		final SemanticNode operator = SNOPS.singleObject(node, WDGT.HAS_OPERATOR);
-		if (WDGT.NOT_OPERATOR.equals(operator)) {
-			query.not();
-		}
-		if (expressions.size() > 1) {
-			if (WDGT.AND_OPERATOR.equals(operator)) {
-				query.beginAnd();
-			} else if (WDGT.OR_OPERATOR.equals(operator)) {
-				query.beginOr();
-			} else {
-				throw new IllegalStateException("Wrong operator for mulitple expresssions: " + operator);
-			}
-		}
-		
-		for (Statement statement : expressions) {
-			appendExpressions(statement.getObject().asResource(), query);
-		}
-		
-		for (SemanticNode parameter : SNOPS.objects(node, WDGT.HAS_PARAMETER)) {
-			appendParameter(new SNSelectionParameter(parameter.asResource()), query);
-		}
-		
-		if (expressions.size() > 1) {
-			query.end();
-		}
-	}
 
-	/**
-	 * @param param The parameter node.
-	 * @param query The query to append to.
-	 */
-	private void appendParameter(SNSelectionParameter param, Query query) {
-		final ResourceID field = param.getField();
-		final SemanticNode termNode = param.getTerm();
-		final boolean isResourceReference = termNode != null && termNode.isResourceNode();
-		final String term = SNOPS.string(termNode);
-		
-		if (field != null) {
-			query.addField(field, term);
-		} else if (isResourceReference){
-			query.addRelation(term);
-		} else {
-			query.addValue(term);
-		}
-		
-	}
+    // ----------------------------------------------------
+
+    private void adaptByQuery(Query query) {
+    }
+
+    private void adaptByType(Query query) {
+        ResourceID type = resourceValue(WDGT.SELECT_BY_TYPE);
+        query.addField(RDF.TYPE, type);
+    }
+
 
 }
