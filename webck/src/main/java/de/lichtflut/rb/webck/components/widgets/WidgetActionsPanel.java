@@ -56,8 +56,9 @@ public class WidgetActionsPanel extends TypedPanel<WidgetSpec> {
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
-	 * @param model
+     * Constructor.
+	 * @param id The wicket ID.
+	 * @param model The model.
 	 */
 	public WidgetActionsPanel(String id, IModel<WidgetSpec> model) {
 		super(id, model);
@@ -85,9 +86,14 @@ public class WidgetActionsPanel extends TypedPanel<WidgetSpec> {
 		if (type == null) {
 			return new Label(componentID, "undefined");
 		}
-		String url = resourceLinkProvider.getUrlToResource(type.asResource(), VisualizationMode.DETAILS, DisplayMode.CREATE);
+		String url = resourceLinkProvider.getUrlToResource(
+                type.asResource(), VisualizationMode.DETAILS, DisplayMode.CREATE);
 		final CrossLink link = new CrossLink(LabeledLink.LINK_ID, url);
-		return new LabeledLink(componentID, link, new ResourceModel("widget.actions.create-instance"));
+        if (action.getLabel() != null) {
+            return new LabeledLink(componentID, link, action.getLabel());
+        } else {
+		    return new LabeledLink(componentID, link, new ResourceModel("widget.actions.create-instance"));
+        }
 	}
 
 }

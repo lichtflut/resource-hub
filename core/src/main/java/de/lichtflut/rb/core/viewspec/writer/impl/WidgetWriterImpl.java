@@ -23,7 +23,6 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.core.viewspec.writer.WidgetWriter;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.io.NamespaceMap;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -67,7 +66,7 @@ public class WidgetWriterImpl implements WidgetWriter {
         for (WidgetAction action : widget.getActions()) {
             out.openScope("action");
             out.writeFieldIfNotNull("create", typeToCreate(action));
-            out.writeFieldIfNotNull("label", rdfsLabel(action));
+            out.writeFieldIfNotNull("label", action.getLabel());
             out.closeScope();
         }
 
@@ -114,10 +113,6 @@ public class WidgetWriterImpl implements WidgetWriter {
 
     private String typeToCreate(WidgetAction action) {
         return SNOPS.uri(fetchObjectAsResource(action, WDGT.CREATE_INSTANCE_OF));
-    }
-
-    private String rdfsLabel(ResourceNode node) {
-        return stringValue(node, RDFS.LABEL);
     }
 
     private String stringValue(ResourceNode subject, ResourceID predicate) {

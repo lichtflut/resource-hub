@@ -18,6 +18,8 @@ package de.lichtflut.rb.core.viewspec;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
+import java.util.Locale;
+
 /**
  * <p>
  *  Action supported by a widget.
@@ -30,6 +32,12 @@ import org.arastreju.sge.model.nodes.ResourceNode;
  * @author Oliver Tigges
  */
 public interface WidgetAction extends ResourceNode {
+
+    String getLabel();
+
+    void setLabel(String label);
+
+    // ----------------------------------------------------
 	
 	ResourceID getActionType();
 

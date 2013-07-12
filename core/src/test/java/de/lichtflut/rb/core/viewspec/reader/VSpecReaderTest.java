@@ -72,6 +72,7 @@ public class VSpecReaderTest {
         assertNotNull(selection2);
         assertEquals(1, widget2.getActions().size());
         WidgetAction action2 = widget2.getActions().get(0);
+        assertEquals(action2.getLabel(), "Add a new organization");
         assertEquals(WDGT.ACTION_INSTANTIATE, action2.getActionType());
         ResourceNode typeToCreate2 = SNOPS.singleObject(action2, WDGT.CREATE_INSTANCE_OF).asResource();
         assertEquals(typeToCreate2.getQualifiedName().toURI(), "http://rb.lichtflut.de/common#Organization");

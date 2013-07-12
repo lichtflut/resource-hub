@@ -180,8 +180,7 @@ public class VSpecCollector {
 
     public void currentActionProperty(String key, String value) {
         if ("label".equals(key)) {
-            // TODO: set label
-            currentAction();
+            currentAction().setLabel(value);
         } else if ("create".equals(key)){
             LOGGER.debug("Making a create action for {}", value);
             currentAction().setActionType(WDGT.ACTION_INSTANTIATE);

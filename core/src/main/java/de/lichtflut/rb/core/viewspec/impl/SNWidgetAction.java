@@ -17,12 +17,15 @@ package de.lichtflut.rb.core.viewspec.impl;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 
 import de.lichtflut.rb.core.viewspec.WidgetAction;
+
+import java.util.Locale;
 
 /**
  * <p>
@@ -66,7 +69,19 @@ public class SNWidgetAction extends ResourceView implements WidgetAction {
 		super(resource);
 	}
 
-	// ----------------------------------------------------
+    // ----------------------------------------------------
+
+    @Override
+    public String getLabel() {
+        return stringValue(RDFS.LABEL);
+    }
+
+    @Override
+    public void setLabel(String label) {
+        setValue(RDFS.LABEL, label);
+    }
+
+    // ----------------------------------------------------
 	
 	@Override
 	public ResourceID getActionType() {

@@ -66,17 +66,11 @@ public class FieldLabelDefinitionImpl implements FieldLabelDefinition {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getDefaultLabel() {
 		return defaultLabel;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getLabel(final Locale locale) {
 		if (map.containsKey(locale)) {
@@ -86,25 +80,16 @@ public class FieldLabelDefinitionImpl implements FieldLabelDefinition {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Set<Locale> getSupportedLocales() {
 		return map.keySet();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setDefaultLabel(final String label) {
 		this.defaultLabel = label;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setLabel(final Locale locale, final String label) {
 		map.put(locale, label);
@@ -112,9 +97,6 @@ public class FieldLabelDefinitionImpl implements FieldLabelDefinition {
 
 	// ------------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -124,17 +106,11 @@ public class FieldLabelDefinitionImpl implements FieldLabelDefinition {
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return "FieldLabelDefinitionImpl [defaultLabel=" + defaultLabel + ", map=" + map + "]";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
