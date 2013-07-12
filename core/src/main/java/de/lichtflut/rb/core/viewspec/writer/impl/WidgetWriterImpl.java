@@ -23,13 +23,17 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.core.viewspec.writer.WidgetWriter;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.io.NamespaceMap;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.query.QueryBuilder;
-import org.arastreju.sge.query.QueryExpression;
-import org.arastreju.sge.query.QueryOperator;
-import org.arastreju.sge.query.QueryParam;
 import org.arastreju.sge.query.QueryResult;
+
+import static org.arastreju.sge.SNOPS.fetchObject;
+import static org.arastreju.sge.SNOPS.fetchObjectAsResource;
+import static org.arastreju.sge.SNOPS.string;
 
 /**
  * <p>
@@ -61,7 +65,9 @@ public class WidgetWriterImpl implements WidgetWriter {
         out.writeFieldIfNotNull("implementing-class", implementingClass(widget));
 
         for (WidgetAction action : widget.getActions()) {
-            out.openScope("action " + action.getActionType());
+            out.openScope("action");
+            out.writeFieldIfNotNull("create", typeToCreate(action));
+            out.writeFieldIfNotNull("label", rdfsLabel(action));
             out.closeScope();
         }
 
@@ -88,7 +94,7 @@ public class WidgetWriterImpl implements WidgetWriter {
     // ----------------------------------------------------
 
     private String display(WidgetSpec widget) {
-        final SemanticNode type = SNOPS.fetchObject(widget, RDF.TYPE);
+        final SemanticNode type = fetchObject(widget, RDF.TYPE);
         if (WDGT.ENTITY_LIST.equals(type)) {
             return "list";
         } else if (WDGT.ENTITY_DETAILS.equals(type)) {
@@ -103,12 +109,19 @@ public class WidgetWriterImpl implements WidgetWriter {
     }
 
     private String implementingClass(WidgetSpec widget) {
-        final SemanticNode javaClass = SNOPS.fetchObject(widget, WDGT.IS_IMPLEMENTED_BY_CLASS);
-        if (javaClass != null && javaClass.isValueNode()) {
-            return javaClass.asValue().toString();
-        } else {
-            return null;
-        }
+        return stringValue(widget, WDGT.IS_IMPLEMENTED_BY_CLASS);
+    }
+
+    private String typeToCreate(WidgetAction action) {
+        return SNOPS.uri(fetchObjectAsResource(action, WDGT.CREATE_INSTANCE_OF));
+    }
+
+    private String rdfsLabel(ResourceNode node) {
+        return stringValue(node, RDFS.LABEL);
+    }
+
+    private String stringValue(ResourceNode subject, ResourceID predicate) {
+        return string(fetchObject(subject, predicate));
     }
 
     // ----------------------------------------------------
