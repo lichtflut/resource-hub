@@ -11,7 +11,9 @@ perspective "Organization" {
 		widget {
 			title : "All organizations"
 			display : "list"
-			action "x" {
+			action {
+			    label : "Add a new organization"
+			    create : "http://rb.lichtflut.de/common#Organization"
 			}
 			selection {
 				by-type : "http://rb.lichtflut.de/common#Organization"
@@ -25,8 +27,6 @@ perspective "Organization" {
 		widget {
 			title : "All processes"
 			display : "list"
-			action "x" {
-			}
 			selection {
 				by-type : "http://rb.lichtflut.de/bpm#BusinessProcess"
 			}
@@ -35,8 +35,6 @@ perspective "Organization" {
 		widget {
 			title : "My current project"
 			display : "details"
-			action "x" {
-			}
 			selection {
 				query : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type = http://rb.lichtflut.de/common#Project"
 			}

@@ -33,4 +33,6 @@ public interface WidgetAction extends ResourceNode {
 	
 	ResourceID getActionType();
 
+    void setActionType(ResourceID type);
+
 }

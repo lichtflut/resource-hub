@@ -68,7 +68,14 @@ widget_property : ^(WIDGET_PROPERTY(key=. value=STRING{
 }));
 
 // Definition of a widget's action declaration
-action_decl : ^(ACTION_DECL(name=STRING));
+action_decl : ^(ACTION_DECL(action_property+ )) {
+    ctx.actionFinished();
+};
+
+// Definition of a widget's action declaration
+action_property : ^(ACTION_PROPERTY(key=. value=STRING{
+    ctx.currentActionProperty($key.getText(), unquote($value.text));
+}));
 
 selection_decl : query_decl | query_by_type_decl | query_by_value_decl | query_by_ref_decl ;
 

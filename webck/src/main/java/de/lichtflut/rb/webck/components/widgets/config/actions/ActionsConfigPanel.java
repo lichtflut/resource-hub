@@ -62,7 +62,7 @@ public class ActionsConfigPanel extends TypedPanel<WidgetSpec> {
 	/**
 	 * Constructor.
 	 * @param id The component ID.
-	 * @param widgetModel The widget specification model.
+	 * @param specModel The widget specification model.
 	 */
 	public ActionsConfigPanel(final String id, final IModel<WidgetSpec> specModel) {
 		super(id, specModel);
@@ -116,17 +116,14 @@ public class ActionsConfigPanel extends TypedPanel<WidgetSpec> {
 
 		// ----------------------------------------------------
 
-		/** Constructor
-		 * @param actionModel
+		/**
+         * Constructor.
 		 */
 		public ActionTypeModel(final IModel<WidgetSpec> specModel, final IModel<WidgetAction> actionModel) {
 			this.specModel = specModel;
 			this.actionModel = actionModel;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public ActionType getObject() {
 			if (actionModel.getObject().getAssociations().isEmpty()) {
@@ -136,16 +133,13 @@ public class ActionsConfigPanel extends TypedPanel<WidgetSpec> {
 			}
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void setObject(final ActionType type) {
 			final WidgetAction action = actionModel.getObject();
 			switch (type) {
 				case INSTANTIATE:
-					SNOPS.assure(action, RDF.TYPE, WDGT.ACTION_INSTANTIATE);
-					specModel.getObject().addAssociation(WDGT.SUPPORTS_ACTION, action);
+					action.setActionType(WDGT.ACTION_INSTANTIATE);
+                    specModel.getObject().addAction(action);
 					break;
 				case NONE:
 					SNOPS.remove(specModel.getObject(), WDGT.SUPPORTS_ACTION, action);
@@ -155,9 +149,6 @@ public class ActionsConfigPanel extends TypedPanel<WidgetSpec> {
 			}
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void detach() {
 		}

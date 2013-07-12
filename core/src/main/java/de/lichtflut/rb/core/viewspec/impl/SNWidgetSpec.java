@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
+import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -45,6 +46,20 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
  */
 public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 
+    public static SNWidgetSpec from(SemanticNode node) {
+        if (node instanceof SNWidgetSpec) {
+            return (SNWidgetSpec) node;
+        } else if (node instanceof ResourceNode) {
+            return new SNWidgetSpec((ResourceNode) node);
+        } else if (node instanceof ResourceID) {
+            return new SNWidgetSpec(node.asResource());
+        } else {
+            return null;
+        }
+    }
+
+    // ----------------------------------------------------
+
 	/**
 	 * Default constructor for new widget specifications.
 	 */
@@ -52,7 +67,8 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	}
 	
 	/**
-	 * @param resource
+     * Constructor.
+	 * @param resource The widget resource to be wrapped.
 	 */
 	public SNWidgetSpec(ResourceNode resource) {
 		super(resource);
@@ -70,12 +86,34 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 		return stringValue(RB.HAS_TITLE);
 	}
 
+    @Override
+    public void setTitle(String title) {
+        setValue(RB.HAS_TITLE, title);
+    }
+
 	@Override
 	public String getDescription() {
 		return stringValue(RB.HAS_DESCRIPTION);
 	}
 
-	@Override
+    @Override
+    public void setDescription(String desc) {
+        setValue(RB.HAS_DESCRIPTION, desc);
+    }
+
+    @Override
+    public Integer getPosition() {
+        return intValue(Aras.HAS_SERIAL_NUMBER);
+    }
+
+    @Override
+    public void setPosition(Integer position) {
+        setValue(Aras.HAS_SERIAL_NUMBER, position);
+    }
+
+    // ----------------------------------------------------
+
+    @Override
 	public Selection getSelection() {
 		SemanticNode node = SNOPS.singleObject(this, WDGT.HAS_SELECTION);
 		if (node != null && node.isResourceNode()) {
@@ -86,19 +124,11 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
 	}
 
 	@Override
-	public void setTitle(String title) {
-		setValue(RB.HAS_TITLE, title);
-	}
-
-	@Override
-	public void setDescription(String desc) {
-		setValue(RB.HAS_DESCRIPTION, desc);
-	}
-
-	@Override
 	public void setSelection(Selection selection) {
 		setValue(WDGT.HAS_SELECTION, selection);
 	}
+
+    // ----------------------------------------------------
 
     @Override
     public String getContentID() {
@@ -110,36 +140,39 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
         setValue(WDGT.DISPLAYS_CONTENT_ITEM, contentID);
     }
 
-    @Override
-	public Integer getPosition() {
-		return intValue(Aras.HAS_SERIAL_NUMBER);
-	}
-	
-	@Override
-	public void setPosition(Integer position) {
-		setValue(Aras.HAS_SERIAL_NUMBER, position);
-	}
-	
 	// ----------------------------------------------------
 	
 	@Override
 	public List<WidgetAction> getActions() {
 		final List<WidgetAction> result = new ArrayList<WidgetAction>();
 		for(Statement stmt : getAssociations(WDGT.SUPPORTS_ACTION)) {
-			result.add(new SNWidgetAction(stmt.getObject().asResource()));
+			result.add(SNWidgetAction.from(stmt.getObject()));
 		}
 		return result;
 	}
+
+    @Override
+    public void addAction(WidgetAction action) {
+        addAssociation(WDGT.SUPPORTS_ACTION, action);
+    }
 	
 	// ----------------------------------------------------
 	
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("WidgetSpec[" + getQualifiedName().getSimpleName() + "]\n");
+		final StringBuilder sb = new StringBuilder();
+        sb.append("WidgetSpec[").append(getQualifiedName().getSimpleName()).append("]");
+        ResourceID type = resourceValue(RDF.TYPE);
+        if (type != null) {
+            sb.append(";type=").append(type).append("\n");
+        }
         if (getSelection() != null) {
 		    sb.append("  Selection: ").append(getSelection()).append("\n");
         }
-		return sb.toString();
+        for (WidgetAction action : getActions()) {
+            sb.append("  Action: ").append(action).append("\n");
+        }
+        return sb.toString();
 	}
 	
 }

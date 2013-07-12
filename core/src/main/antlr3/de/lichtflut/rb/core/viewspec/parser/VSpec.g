@@ -14,6 +14,7 @@ tokens {
 	WIDGET_DECL;
 	WIDGET_PROPERTY;
 	ACTION_DECL;
+	ACTION_PROPERTY;
 	QUERY_DECL;
 	QUERY_BY_TYPE_DECL;
 	QUERY_BY_VALUE_DECL;
@@ -59,7 +60,7 @@ perspective_title_decl: TITLE COLON t=STRING -> ^(PERSPECTIVE_TITLE_DECL $t);
 
 // Definition of a port declaration
 port_decl : PORT '{'
-					widget_decl*
+					widget_decl *
 				'}'
 				-> ^(PORT_DECL widget_decl*)	;
 
@@ -80,9 +81,21 @@ widget_property_key :
 	;
 
 // Definition of a widget's action declaration
-action_decl : ACTION s=STRING '{'
+action_decl : ACTION '{'
+                    action_property +
                 '}'
-                -> ^(ACTION_DECL $s);
+                -> ^(ACTION_DECL action_property+ );
+
+// Definition of action properties
+action_property : k=action_property_key COLON v=value -> ^(ACTION_PROPERTY $k $v);
+
+// Definition of an action's properties' keys
+action_property_key :
+      LABEL
+    | INT_LABEL
+	| CREATE
+	;
+
 
 // Definition of a widget's selection declaration
 selection_decl :    SELECTION '{' QUERY COLON s=STRING '}' -> ^(QUERY_DECL $s) |
@@ -111,6 +124,10 @@ ACTION : 'action';
 
 TITLE : 'title';
 
+LABEL : 'label';
+
+INT_LABEL : 'label[' (('a' .. 'z' | 'A' .. 'Z')+ )']'*;
+
 DISPLAY : 'display';
 
 QUERY : 'query';
@@ -123,11 +140,11 @@ QUERY_BY_REF : 'by-reference';
 
 IMPLEMENTING_CLASS : 'implementing-class';
 
+CREATE : 'create';
+
 COLON : ':';
 
 COMMA : ',';
-
-INT_LABEL : 'field-label[' (('a' .. 'z' | 'A' .. 'Z')+ )']'*;
 
 CARDINALITY_DECL  : '['('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+'..'('a' .. 'z' | 'A' .. 'Z' | '0' .. '9')+']';
 

@@ -1,24 +1,30 @@
 package de.lichtflut.rb.core.viewspec.reader;
 
 import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WDGT;
+import de.lichtflut.rb.core.viewspec.WidgetAction;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 import de.lichtflut.rb.core.viewspec.impl.SNSelection;
 import de.lichtflut.rb.core.viewspec.impl.SNSelectionParameter;
+import de.lichtflut.rb.core.viewspec.impl.SNWidgetAction;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.io.NamespaceMap;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.SimpleNamespace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.arastreju.sge.SNOPS.assure;
 import static org.arastreju.sge.SNOPS.id;
@@ -37,9 +43,13 @@ import static org.arastreju.sge.SNOPS.qualify;
  */
 public class VSpecCollector {
 
-    private final NamespaceMap nsMap = new NamespaceMap();
+    private static final Logger LOGGER = LoggerFactory.getLogger(VSpecCollector.class);
 
-    private final Stack<WidgetSpec> widgetStack = new Stack<WidgetSpec>();
+    private static final Pattern INT_LABEL = Pattern.compile("label\\[([a-zA-Z]+)\\]");
+
+    // ----------------------------------------------------
+
+    private final NamespaceMap nsMap = new NamespaceMap();
 
     private final Stack<Perspective> perspectiveStack = new Stack<Perspective>();
 
@@ -49,6 +59,8 @@ public class VSpecCollector {
 
     private Perspective currentPerspective;
 
+    private WidgetAction currentAction;
+
     // ----------------------------------------------------
 
     public VSpecCollector() {
@@ -56,12 +68,30 @@ public class VSpecCollector {
 
     // ----------------------------------------------------
 
+    public List<Perspective> getPerspectives() {
+        return perspectiveStack;
+    }
+
+    // ----------------------------------------------------
+
     public WidgetSpec currentWidget() {
         if (currentWidget == null) {
             currentWidget = new SNWidgetSpec();
+            LOGGER.debug("new widget created: {}", currentWidget().getID());
+            currentPort().addWidget(currentWidget);
         }
         return currentWidget;
     }
+
+    public WidgetAction currentAction() {
+        if (currentAction == null) {
+            currentAction = new SNWidgetAction();
+            LOGGER.debug("new action created: {}", currentWidget().getID());
+            currentWidget().addAction(currentAction);
+        }
+        return currentAction;
+    }
+
 
     public ViewPort currentPort() {
         if (currentPort == null) {
@@ -71,6 +101,9 @@ public class VSpecCollector {
     }
 
     public Perspective currentPerspective() {
+        if (currentPerspective == null) {
+            currentPerspective = new SNPerspective();
+        }
         return currentPerspective;
     }
 
@@ -118,6 +151,7 @@ public class VSpecCollector {
     }
 
     public void setImplementingClass(String value) {
+        LOGGER.debug("Setting implementing class: {}", value);
         assure(currentWidget(), WDGT.IS_IMPLEMENTED_BY_CLASS, value);
         setWidgetType(WDGT.PREDEFINED);
     }
@@ -144,27 +178,42 @@ public class VSpecCollector {
         currentWidget().setSelection(selection);
     }
 
+    public void currentActionProperty(String key, String value) {
+        if ("label".equals(key)) {
+            // TODO: set label
+            currentAction();
+        } else if ("create".equals(key)){
+            LOGGER.debug("Making a create action for {}", value);
+            currentAction().setActionType(WDGT.ACTION_INSTANTIATE);
+            SNOPS.assure(currentAction(), WDGT.CREATE_INSTANCE_OF, id(qualify(value)));
+        } else {
+            Matcher matcher = INT_LABEL.matcher(value);
+            if (!matcher.matches()) {
+                throw new IllegalStateException("Unsupported property for widgets: " + key);
+            }
+            String locale = matcher.group(1);
+            throw new IllegalStateException("Found label for locale " + locale + "; But not yet supported.");
+        }
+    }
+
     // ----------------------------------------------------
 
     public void perspectiveFinished() {
         perspectiveStack.push(currentPerspective);
-        currentPerspective = new SNPerspective();
+        currentPerspective = null;
     }
 
     public void portFinished() {
-        for (WidgetSpec widget : widgetStack) {
-            currentPort().addWidget(widget);
-        }
-        widgetStack.clear();
         currentPort = null;
     }
 
     public void widgetFinished() {
-        widgetStack.push(currentWidget);
-        currentWidget = new SNWidgetSpec();
+        currentWidget = null;
     }
 
-    public List<Perspective> getPerspectives() {
-        return perspectiveStack;
+    public void actionFinished() {
+        currentAction = null;
     }
+
+
 }

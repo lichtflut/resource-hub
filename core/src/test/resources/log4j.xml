@@ -31,7 +31,11 @@
 	</logger>
 	
 	<logger name="de.lichtflut.rb.core">
-        <level value="info" />
+        <level value="warn" />
+    </logger>
+
+    <logger name="de.lichtflut.rb.core.viewspec">
+        <level value="warn" />
     </logger>
 	
     <logger name="org.apache.wicket">
@@ -43,7 +47,7 @@
     </logger>
 
 	<root>
-		<priority value="debug" />
+		<priority value="warn" />
 		<appender-ref ref="console" />
 	</root>
 

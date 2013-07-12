@@ -37,6 +37,20 @@ import de.lichtflut.rb.core.viewspec.WidgetAction;
  */
 public class SNWidgetAction extends ResourceView implements WidgetAction {
 
+    public static SNWidgetAction from(SemanticNode node) {
+        if (node instanceof SNWidgetAction) {
+            return (SNWidgetAction) node;
+        } else if (node instanceof ResourceNode) {
+            return new SNWidgetAction((ResourceNode) node);
+        } else if (node instanceof ResourceID) {
+            return new SNWidgetAction(node.asResource());
+        } else {
+            return null;
+        }
+    }
+
+    // ----------------------------------------------------
+
 	/**
 	 * Constructor for new actions.
 	 */
@@ -45,7 +59,8 @@ public class SNWidgetAction extends ResourceView implements WidgetAction {
 	}
 
 	/**
-	 * @param resource
+	 * Constructor.
+     * @param resource The action resource to be wrapped.
 	 */
 	public SNWidgetAction(ResourceNode resource) {
 		super(resource);
@@ -53,16 +68,21 @@ public class SNWidgetAction extends ResourceView implements WidgetAction {
 
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ResourceID getActionType() {
-		final SemanticNode type = SNOPS.fetchObject(this, RDF.TYPE);
-		if (type != null && type.isResourceNode()) {
-			return type.asResource();
-		} else {
-			return null;
-		}
+        return SNOPS.fetchObjectAsResource(this, RDF.TYPE);
 	}
+
+    @Override
+    public void setActionType(ResourceID type) {
+        setValue(RDF.TYPE, type);
+    }
+
+    // ----------------------------------------------------
+
+    @Override
+    public String toString() {
+        return "SNWidgetAction[" + getQualifiedName() + "];type=" + getActionType();
+    }
+
 }

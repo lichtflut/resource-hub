@@ -4,9 +4,12 @@ import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WDGT;
+import de.lichtflut.rb.core.viewspec.WidgetAction;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import org.antlr.runtime.RecognitionException;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -67,6 +70,11 @@ public class VSpecReaderTest {
         assertEquals("All organizations", widget2.getTitle());
         Selection selection2 = widget2.getSelection();
         assertNotNull(selection2);
+        assertEquals(1, widget2.getActions().size());
+        WidgetAction action2 = widget2.getActions().get(0);
+        assertEquals(WDGT.ACTION_INSTANTIATE, action2.getActionType());
+        ResourceNode typeToCreate2 = SNOPS.singleObject(action2, WDGT.CREATE_INSTANCE_OF).asResource();
+        assertEquals(typeToCreate2.getQualifiedName().toURI(), "http://rb.lichtflut.de/common#Organization");
 
         WidgetSpec widget3 = port2.getWidgets().get(0);
         assertEquals(WDGT.ENTITY_LIST,

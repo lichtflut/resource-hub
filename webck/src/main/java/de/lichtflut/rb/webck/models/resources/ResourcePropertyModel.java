@@ -56,26 +56,17 @@ public class ResourcePropertyModel<T extends SemanticNode> implements IModel<T> 
 	
 	// ----------------------------------------------------
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@SuppressWarnings("unchecked")
 	@Override
 	public T getObject() {
 		return (T) SNOPS.fetchObject(subject.getObject(), predicate);
 	}
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void setObject(SemanticNode object) {
 		SNOPS.assure(subject.getObject(), predicate, object, ctx);
 	}
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void detach() {
 		subject.detach();
