@@ -25,6 +25,7 @@
 		<jersey.version>1.8</jersey.version>
         <jackson.version>1.9.10</jackson.version>
         <reflections.version>0.9.8</reflections.version>
+        <antlr.version>4.1</antlr.version>
     	<skipIntegrationTests>true</skipIntegrationTests>
 	</properties>
 	<build>
@@ -227,6 +228,14 @@
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-mapper-asl</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+
+            <!-- AntLR -->
+
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4</artifactId>
+                <version>${antlr.version}</version>
             </dependency>
 
             <!-- org.reflections -->
