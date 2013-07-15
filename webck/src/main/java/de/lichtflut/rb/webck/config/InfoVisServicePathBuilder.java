@@ -28,6 +28,6 @@ package de.lichtflut.rb.webck.config;
  */
 public interface InfoVisServicePathBuilder {
 
-    InfoVisPath create(String domain);
+    InfoVisPath createInfoVisPath(String domain);
 
 }

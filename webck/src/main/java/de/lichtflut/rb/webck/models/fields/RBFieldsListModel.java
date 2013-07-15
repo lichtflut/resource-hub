@@ -69,9 +69,6 @@ public class RBFieldsListModel implements IModel<List<RBField>> {
 	
 	// -----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<RBField> getObject() {
 		if (model.getObject() == null) {
@@ -84,9 +81,6 @@ public class RBFieldsListModel implements IModel<List<RBField>> {
 		}
 	}
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setObject(final List<RBField> object) {
 		throw new UnsupportedOperationException("Value may not be set.");

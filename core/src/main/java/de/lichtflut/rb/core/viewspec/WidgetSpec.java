@@ -68,4 +68,10 @@ public interface WidgetSpec extends ResourceNode {
 
     void addAction(WidgetAction action);
 
+    // ----------------------------------------------------
+
+    List<ColumnDef> getColumns();
+
+    void addColumn(ColumnDef column);
+
 }

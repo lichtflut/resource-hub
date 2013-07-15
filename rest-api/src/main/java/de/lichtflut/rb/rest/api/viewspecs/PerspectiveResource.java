@@ -15,6 +15,7 @@
  */
 package de.lichtflut.rb.rest.api.viewspecs;
 
+import com.sun.jersey.core.util.Base64;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import de.lichtflut.rb.core.io.writers.CommonFormatWriter;
@@ -118,7 +119,7 @@ public class PerspectiveResource extends RBServiceEndpoint {
 
     protected List<Perspective> find(ViewSpecificationService service, String qn, String id) {
         if (qn != null) {
-            return listIfNotNull(findByQN(service, QualifiedName.from(qn)));
+            return listIfNotNull(findByQN(service, restore(qn)));
         } else if (id != null) {
             return listIfNotNull(findByID(service, id));
         } else {
@@ -153,6 +154,15 @@ public class PerspectiveResource extends RBServiceEndpoint {
             return Collections.singletonList(perspective);
         } else {
             return null;
+        }
+    }
+
+    private QualifiedName restore(String qn) {
+        if (qn.contains(":")) {
+            return QualifiedName.from(qn);
+        } else {
+            // Seems to be Base64 encoded
+            return QualifiedName.from(Base64.base64Decode(qn));
         }
     }
 

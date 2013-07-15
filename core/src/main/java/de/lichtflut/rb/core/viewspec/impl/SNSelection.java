@@ -25,6 +25,11 @@ import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.query.Query;
+import org.arastreju.sge.query.QueryParser;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>
@@ -42,6 +47,12 @@ import org.arastreju.sge.query.Query;
  * @author Oliver Tigges
  */
 public class SNSelection extends ResourceView implements Selection {
+
+    static ResourceID[] PREDICATES = new ResourceID[] {
+        WDGT.SELECT_BY_QUERY, WDGT.SELECT_BY_TYPE, WDGT.SELECT_BY_RELATION, WDGT.SELECT_BY_VALUE
+    };
+
+    // ----------------------------------------------------
 
     public static SNSelection from(SemanticNode node) {
         if (node instanceof SNSelection) {
@@ -116,6 +127,19 @@ public class SNSelection extends ResourceView implements Selection {
     }
 
     @Override
+    public SemanticNode getQueryExpression() {
+        final Set<ResourceID> predicates = new HashSet<ResourceID>(Arrays.asList(PREDICATES));
+        for (Statement statement : getAssociations()) {
+            if (predicates.contains(statement.getPredicate())) {
+                return statement.getObject();
+            }
+        }
+        return null;
+    }
+
+    // ----------------------------------------------------
+
+    @Override
 	public void adapt(Query query) {
         for (Statement statement : getAssociations()) {
             ResourceID predicate = statement.getPredicate();
@@ -126,8 +150,10 @@ public class SNSelection extends ResourceView implements Selection {
                 adaptByType(query);
                 return;
             } else if (WDGT.SELECT_BY_RELATION.equals(predicate)) {
+                adaptByRelation(query);
                 return;
             } else if (WDGT.SELECT_BY_VALUE.equals(predicate)) {
+                adaptByValue(query);
                 return;
             }
         }
@@ -142,18 +168,32 @@ public class SNSelection extends ResourceView implements Selection {
 	
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("Selection[" + getQualifiedName().getSimpleName() + "]");
+		final StringBuilder sb = new StringBuilder("Selection[")
+                .append(getQualifiedName().getSimpleName())
+                .append("]");
 		return sb.toString();
 	}
 
     // ----------------------------------------------------
 
     private void adaptByQuery(Query query) {
+        String qs = stringValue(WDGT.SELECT_BY_QUERY);
+        new QueryParser().adapt(query, qs);
     }
 
     private void adaptByType(Query query) {
         ResourceID type = resourceValue(WDGT.SELECT_BY_TYPE);
         query.addField(RDF.TYPE, type);
+    }
+
+    private void adaptByValue(Query query) {
+        String value = stringValue(WDGT.SELECT_BY_VALUE);
+        query.addValue(value);
+    }
+
+    private void adaptByRelation(Query query) {
+        ResourceID rel = resourceValue(WDGT.SELECT_BY_RELATION);
+        query.addRelation(rel.toURI());
     }
 
 

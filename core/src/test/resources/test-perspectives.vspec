@@ -18,6 +18,14 @@ perspective "Organization" {
 			selection {
 				by-type : "http://rb.lichtflut.de/common#Organization"
 			}
+			column {
+                label : "Name"
+                property : "common:hasName"
+            }
+            column {
+                label : "General Manager"
+                property : "http://rb.lichtflut.de/common#hasGeneralManager"
+            }
 		}
 
 	}
@@ -36,7 +44,7 @@ perspective "Organization" {
 			title : "My current project"
 			display : "details"
 			selection {
-				query : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' = 'http://rb.lichtflut.de/common#Project'
+				query : "'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' = 'http://rb.lichtflut.de/common#Project'"
 			}
 		}
 

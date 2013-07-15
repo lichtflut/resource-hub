@@ -16,6 +16,7 @@
 package de.lichtflut.rb.core.viewspec;
 
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.query.Query;
 
 /**
@@ -41,6 +42,8 @@ public interface Selection extends ResourceNode {
     // ----------------------------------------------------
 
     SelectionType getType();
+
+    SemanticNode getQueryExpression();
 
 	boolean isDefined();
 	

@@ -51,7 +51,7 @@ public class ColumnConfiguration implements Serializable {
 	
 	private final List<ResourceID> predicates = new ArrayList<ResourceID>();
 	
-	private final Map<ResourceID, PropertyDeclaration> declMap = new HashMap<ResourceID, PropertyDeclaration>();
+	private final Map<ResourceID, String> labelMap = new HashMap<ResourceID, String>();
 	
 	// ----------------------------------------------------
 	
@@ -76,6 +76,30 @@ public class ColumnConfiguration implements Serializable {
 	}
 	
 	// ----------------------------------------------------
+
+    /**
+     * Add a column for a predicate.
+     * @param predicate The predicate.
+     * @return This.
+     */
+    public ColumnConfiguration addColumn(ResourceID predicate) {
+        predicates.add(predicate);
+        return this;
+    }
+
+    /**
+     * Add a column for a predicate with a fixed label.
+     * @param predicate The predicate.
+     * @param label The label.
+     * @return This.
+     */
+    public ColumnConfiguration addColumn(ResourceID predicate, String label) {
+        predicates.add(predicate);
+        labelMap.put(predicate, label);
+        return this;
+    }
+
+    // ----------------------------------------------------
 	
 	public String[] getActions() {
 		return actions.toArray(new String[actions.size()]);
@@ -89,15 +113,6 @@ public class ColumnConfiguration implements Serializable {
 	}
 	
 	// ----------------------------------------------------
-	
-	public IModel<List<ColumnHeader>> getHeaderModel() {
-		return new AbstractLoadableDetachableModel<List<ColumnHeader>>() {
-			@Override
-			public List<ColumnHeader> load() {
-				return getHeaders();
-			}
-		};
-	}
 	
 	public List<ColumnHeader> getHeaders() {
 		final Locale locale = RequestCycle.get().getRequest().getLocale();
@@ -113,63 +128,11 @@ public class ColumnConfiguration implements Serializable {
 	}
 	
 	public String getLabel(ResourceID predicate, Locale locale) {
-		if (declMap.containsKey(predicate)) {
-			return declMap.get(predicate).getFieldLabelDefinition().getLabel(locale);
+		if (labelMap.containsKey(predicate)) {
+			return labelMap.get(predicate);
 		} else {
 			return ResourceLabelBuilder.getInstance().getFieldLabel(predicate, locale);
 		}
 	}
 
-	// ----------------------------------------------------
-	
-	/**
-	 * Add a custom actin.
-	 * @param action The action name.
-	 * @return This.
-	 */
-	public ColumnConfiguration addCustomAction(final String action) {
-		this.actions.add(action);
-		return this;
-	}
-	
-	/**
-	 * Add all PropertyDeclarationsn from schema to column config.
-	 * @param schema The Schema.
-	 * @return This.
-	 */
-	public ColumnConfiguration addColumnsFromSchema(final ResourceSchema schema) {
-		if (schema != null) {
-			for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
-				predicates.add(decl.getPropertyDescriptor());
-				declMap.put(decl.getPropertyDescriptor(), decl);
-			}
-		}
-		return this;
-	}
-	
-	/**
-	 * Just fetch the label definition from the schema, but don't add all
-	 * PropertyDeclarations.
-	 * @param schema The Schema.
-	 * @return This.
-	 */
-	public ColumnConfiguration fetchFieldLabels(final ResourceSchema schema) {
-		if (schema != null) {
-			for (PropertyDeclaration decl : schema.getPropertyDeclarations()) {
-				declMap.put(decl.getPropertyDescriptor(), decl);
-			}
-		}
-		return this;
-	}
-	
-	/**
-	 * Add a column for a predicate.
-	 * @param predicate The predicate.
-	 * @return This.
-	 */
-	public ColumnConfiguration addColumnByPredicate(final ResourceID predicate) {
-		predicates.add(predicate);
-		return this;
-	}
-	
 }

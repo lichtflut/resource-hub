@@ -16,6 +16,7 @@
 package de.lichtflut.rb.core.viewspec.writer.impl;
 
 import de.lichtflut.rb.core.io.writers.CommonFormatWriter;
+import de.lichtflut.rb.core.viewspec.ColumnDef;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetAction;
@@ -27,8 +28,6 @@ import org.arastreju.sge.io.NamespaceMap;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.query.QueryBuilder;
-import org.arastreju.sge.query.QueryResult;
 
 import static org.arastreju.sge.SNOPS.fetchObject;
 import static org.arastreju.sge.SNOPS.fetchObjectAsResource;
@@ -64,10 +63,11 @@ public class WidgetWriterImpl implements WidgetWriter {
         out.writeFieldIfNotNull("implementing-class", implementingClass(widget));
 
         for (WidgetAction action : widget.getActions()) {
-            out.openScope("action");
-            out.writeFieldIfNotNull("create", typeToCreate(action));
-            out.writeFieldIfNotNull("label", action.getLabel());
-            out.closeScope();
+           writeAction(out, action);
+        }
+
+        for (ColumnDef column : widget.getColumns()) {
+            writeColumn(out, column);
         }
 
         Selection selection = widget.getSelection();
@@ -82,11 +82,37 @@ public class WidgetWriterImpl implements WidgetWriter {
     private void writeSelection(CommonFormatWriter out, Selection selection) {
         out.openScope("selection");
 
-        QueryCollector queryCollector = new QueryCollector();
-        selection.adapt(queryCollector);
+        String expr = string(selection.getQueryExpression());
+        switch (selection.getType()) {
+            case BY_QUERY:
+                out.writeField("query", expr);
+                break;
+            case BY_RELATION:
+                out.writeField("by-reference", expr);
+                break;
+            case BY_VALUE:
+                out.writeField("by-value", expr);
+                break;
+            case BY_TYPE:
+                out.writeField("by-type", expr);
+                break;
+        }
 
-        out.writeField("query", queryCollector.toString());
+        out.closeScope();
+    }
 
+    private void writeAction(CommonFormatWriter out, WidgetAction action) {
+        out.openScope("action");
+        out.writeFieldIfNotNull("create", typeToCreate(action));
+        out.writeFieldIfNotNull("label", action.getLabel());
+        out.closeScope();
+
+    }
+
+    private void writeColumn(CommonFormatWriter out, ColumnDef columnDef) {
+        out.openScope("column");
+        out.writeFieldIfNotNull("label", columnDef.getHeader());
+        out.writeFieldIfNotNull("property", string(columnDef.getProperty()));
         out.closeScope();
     }
 
@@ -117,17 +143,6 @@ public class WidgetWriterImpl implements WidgetWriter {
 
     private String stringValue(ResourceNode subject, ResourceID predicate) {
         return string(fetchObject(subject, predicate));
-    }
-
-    // ----------------------------------------------------
-
-    private static class QueryCollector extends QueryBuilder {
-
-        @Override
-        public QueryResult getResult() {
-            throw new UnsupportedOperationException();
-        }
-
     }
 
 }

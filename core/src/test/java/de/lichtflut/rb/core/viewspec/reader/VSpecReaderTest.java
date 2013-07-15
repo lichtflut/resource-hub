@@ -1,5 +1,6 @@
 package de.lichtflut.rb.core.viewspec.reader;
 
+import de.lichtflut.rb.core.viewspec.ColumnDef;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.ViewPort;
@@ -71,11 +72,18 @@ public class VSpecReaderTest {
         Selection selection2 = widget2.getSelection();
         assertNotNull(selection2);
         assertEquals(1, widget2.getActions().size());
+
         WidgetAction action2 = widget2.getActions().get(0);
         assertEquals(action2.getLabel(), "Add a new organization");
         assertEquals(WDGT.ACTION_INSTANTIATE, action2.getActionType());
         ResourceNode typeToCreate2 = SNOPS.singleObject(action2, WDGT.CREATE_INSTANCE_OF).asResource();
         assertEquals(typeToCreate2.getQualifiedName().toURI(), "http://rb.lichtflut.de/common#Organization");
+        List<ColumnDef> columns2 = widget2.getColumns();
+        Assert.assertEquals(2, columns2.size());
+        ColumnDef column2_1 = columns2.get(0);
+        Assert.assertEquals("Name", column2_1.getHeader());
+        Assert.assertEquals("common:hasName", column2_1.getProperty().toURI());
+
 
         WidgetSpec widget3 = port2.getWidgets().get(0);
         assertEquals(WDGT.ENTITY_LIST,

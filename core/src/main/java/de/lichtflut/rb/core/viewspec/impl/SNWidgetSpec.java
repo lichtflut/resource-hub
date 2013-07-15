@@ -15,9 +15,12 @@
  */
 package de.lichtflut.rb.core.viewspec.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.lichtflut.rb.core.RB;
+import de.lichtflut.rb.core.viewspec.ColumnDef;
+import de.lichtflut.rb.core.viewspec.Selection;
+import de.lichtflut.rb.core.viewspec.WDGT;
+import de.lichtflut.rb.core.viewspec.WidgetAction;
+import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
@@ -26,12 +29,11 @@ import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.ResourceView;
+import org.arastreju.sge.structure.OrderBySerialNumber;
 
-import de.lichtflut.rb.core.RB;
-import de.lichtflut.rb.core.viewspec.Selection;
-import de.lichtflut.rb.core.viewspec.WDGT;
-import de.lichtflut.rb.core.viewspec.WidgetAction;
-import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>
@@ -155,8 +157,30 @@ public class SNWidgetSpec extends ResourceView implements WidgetSpec {
     public void addAction(WidgetAction action) {
         addAssociation(WDGT.SUPPORTS_ACTION, action);
     }
-	
-	// ----------------------------------------------------
+
+    // ----------------------------------------------------
+
+    @Override
+    public List<ColumnDef> getColumns() {
+        final List<ColumnDef> result = new ArrayList<ColumnDef>();
+        for(Statement stmt : getAssociations(WDGT.DEFINES_COLUMN)) {
+            result.add(SNColumnDef.from(stmt.getObject()));
+        }
+        Collections.sort(result, new OrderBySerialNumber());
+        return result;
+    }
+
+    @Override
+    public void addColumn(ColumnDef column) {
+        int maxSerialNumber = 0;
+        for (ColumnDef existing : getColumns()) {
+            maxSerialNumber = Math.max(maxSerialNumber, existing.getPosition());
+        }
+        column.setPosition(maxSerialNumber +1);
+        addAssociation(WDGT.DEFINES_COLUMN, column);
+    }
+
+    // ----------------------------------------------------
 	
 	@Override
 	public String toString() {

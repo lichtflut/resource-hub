@@ -25,8 +25,6 @@ import org.arastreju.sge.model.nodes.views.ResourceView;
 
 import de.lichtflut.rb.core.viewspec.WidgetAction;
 
-import java.util.Locale;
-
 /**
  * <p>
  *  Action supported by a widget.

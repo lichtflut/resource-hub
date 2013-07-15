@@ -17,8 +17,8 @@ package de.lichtflut.rb.webck.components.widgets;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
+import de.lichtflut.rb.core.viewspec.ColumnDef;
 import de.lichtflut.rb.core.viewspec.Selection;
-import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
@@ -45,21 +45,17 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.Conversation;
-import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryException;
 import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.query.SimpleQueryResult;
 import org.arastreju.sge.query.SortCriteria;
-import org.arastreju.sge.structure.OrderBySerialNumber;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
@@ -166,11 +162,16 @@ public class EntityListWidget extends ConfigurableWidget {
 			@Override
 			protected ColumnConfiguration derive(WidgetSpec spec) {
 				final ColumnConfiguration config = new ColumnConfiguration(ListAction.VIEW);
-				for (ResourceNode node : getColumnDefs(spec)) {
-					final SemanticNode predicate = SNOPS.fetchObject(node.asResource(), WDGT.CORRESPONDS_TO_PROPERTY);
-					if (predicate != null && predicate.isResourceNode()) {
+				for (ColumnDef columnDef : spec.getColumns()) {
+					final ResourceID predicate = columnDef.getProperty();
+                    final String label = columnDef.getHeader();
+					if (predicate != null) {
                         ResourceNode property = semanticNetwork.resolve(predicate.asResource());
-                        config.addColumnByPredicate(property);
+                        if (label != null) {
+                            config.addColumn(property, label);
+                        } else {
+                            config.addColumn(property);
+                        }
 					}
 				}
 				return config;
@@ -179,25 +180,14 @@ public class EntityListWidget extends ConfigurableWidget {
 	}
 	
 	private String[] getSortCriteria(WidgetSpec spec) {
-		List<ResourceNode> defs = getColumnDefs(spec);
 		List<String> columns = new ArrayList<String>();
-		for (ResourceNode def : defs) {
-			final SemanticNode predicate = SNOPS.fetchObject(def.asResource(), WDGT.CORRESPONDS_TO_PROPERTY);
-			if (predicate != null && predicate.isResourceNode()) {
-				columns.add(predicate.asResource().toURI());
+		for (ColumnDef def : spec.getColumns()) {
+			final ResourceID predicate = def.getProperty();
+			if (predicate != null) {
+				columns.add(predicate.toURI());
 			}
 		}
 		return columns.toArray(new String[columns.size()]);
 	}
 	
-	private List<ResourceNode> getColumnDefs(WidgetSpec spec) {
-		final Set<SemanticNode> columnDefs = SNOPS.objects(spec, WDGT.DEFINES_COLUMN);
-		final List<ResourceNode> result = new ArrayList<ResourceNode>(columnDefs.size());
-		for (SemanticNode node : columnDefs) {
-			result.add(node.asResource());
-		}
-		Collections.sort(result, new OrderBySerialNumber());
-		return result;
-	}
-
 }

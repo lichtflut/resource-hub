@@ -212,7 +212,7 @@ public class BrowseAndSearchPage extends RBBasePage {
 	}
 
 	protected void addResolved(final ColumnConfiguration config, final ResourceID predicate) {
-		config.addColumnByPredicate(conversation.resolve(predicate));
+		config.addColumn(conversation.resolve(predicate));
 	}
 
 	// ----------------------------------------------------

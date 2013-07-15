@@ -15,29 +15,30 @@
  */
 package de.lichtflut.rb.webck.components.widgets;
 
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WDGT;
-import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.components.dialogs.InformationExportDialog;
+import de.lichtflut.rb.webck.components.links.CrossLink;
+import de.lichtflut.rb.webck.config.DefaultPathBuilder;
+import de.lichtflut.rb.webck.config.DownloadPath;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import java.util.List;
@@ -60,7 +61,11 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 public class PerspectivePanel extends TypedPanel<Perspective> {
 
 	private IModel<Boolean> isConfigMode = new Model<Boolean>(false);
+
 	private ConditionalModel<Boolean> isConfigConditional = isTrue(isConfigMode);
+
+    @SpringBean
+    private ServiceContext serviceContext;
 
 	// ----------------------------------------------------
 	
@@ -91,7 +96,7 @@ public class PerspectivePanel extends TypedPanel<Perspective> {
 			}
 		}.add(visibleIf(isConfigConditional)));
 		
-		add(createExportLink());
+		add(createExportLink(spec));
 
 		final WebMarkupContainer container = new WebMarkupContainer("viewPortsContainer");
 		container.add(CssModifier.appendClass(new LayoutModel(spec)));
@@ -108,9 +113,6 @@ public class PerspectivePanel extends TypedPanel<Perspective> {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onEvent(IEvent<?> event) {
 		if (ModelChangeEvent.from(event).isAbout(ModelChangeEvent.VIEW_SPEC)) {
@@ -119,22 +121,14 @@ public class PerspectivePanel extends TypedPanel<Perspective> {
 		}
 	}
 	
-	@SuppressWarnings("rawtypes")
-	protected AjaxLink createExportLink() {
-		final IModel<SemanticGraph> exportModel = new DerivedModel<SemanticGraph, Perspective>(getModelObject()) {
-			@Override
-			protected SemanticGraph derive(Perspective spec) {
-				return new ViewSpecTraverser().toGraph(spec);
-			}
-		};
-		AjaxLink link = new AjaxLink("exportLink") {
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				DialogHoster hoster = findParent(DialogHoster.class);
-				hoster.openDialog(new InformationExportDialog(hoster.getDialogID(), exportModel));
-			}
-		};
-		link.add(visibleIf(isConfigConditional));
+	protected AbstractLink createExportLink(IModel<Perspective> model) {
+        CrossLink link = new CrossLink("exportLink", new DerivedDetachableModel<String, Perspective>(model) {
+            @Override
+            protected String derive(Perspective perspective) {
+                DownloadPath path = new DefaultPathBuilder().createDownloadPath(serviceContext.getDomain());
+                return path.perspective().withQN(perspective.getQualifiedName()).toString();
+            }
+        });
 		return link;
 	}
 	
