@@ -41,7 +41,7 @@ public class InfoVisPath extends AbstractPath<InfoVisPath> {
     // ----------------------------------------------------
 
     public InfoVisPath tree() {
-        return service("tree");
+        return service("infovis/tree");
     }
 
     public InfoVisPath withRoot(String root) {

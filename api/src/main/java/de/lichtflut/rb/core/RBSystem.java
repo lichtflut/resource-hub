@@ -40,6 +40,8 @@ public interface RBSystem {
 
     String WIDGETS_NAMESPACE_URI = QualifiedName.LOCAL + ":widgets:";
 
+    String PERCEPTIONS_NAMESPACE_URI = QualifiedName.LOCAL + ":perceptions:";
+
 	Context TYPE_SYSTEM_CTX = ContextID.localContext("typesystem");
 
 	Context VIEW_SPEC_CTX = ContextID.localContext("viewspec");

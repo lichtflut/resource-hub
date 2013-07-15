@@ -48,7 +48,7 @@ perspective_decl : ^(PERSPECTIVE (name=STRING {
 }));
 
 perspective_title_decl : ^(PERSPECTIVE_TITLE_DECL (title=STRING{
-    ctx.currentPerspective().setTitle($title.text);
+    ctx.currentPerspective().setTitle(unquote($title.text));
 }));
 
 // PORT

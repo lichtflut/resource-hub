@@ -58,7 +58,7 @@ import java.util.Locale;
  * @author Oliver Tigges
  */
 @Component
-@Path("infovis/domains/{domain}/tree")
+@Path("domains/{domain}/infovis/tree")
 public class TreeInfoVisService extends AbstractInfoVisService{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TreeInfoVisService.class);

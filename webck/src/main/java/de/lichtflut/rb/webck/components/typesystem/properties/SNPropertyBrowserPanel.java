@@ -46,9 +46,6 @@ public abstract class SNPropertyBrowserPanel extends Panel {
 
 	private final LoadableModel<List<SNProperty>> model;
 	
-	/**
-	 * @param id
-	 */
 	@SuppressWarnings("rawtypes")
 	public SNPropertyBrowserPanel(final String id, final LoadableModel<List<SNProperty>> model) {
 		super(id);
@@ -83,9 +80,6 @@ public abstract class SNPropertyBrowserPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void onEvent(final IEvent<?> event) {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
@@ -95,9 +89,6 @@ public abstract class SNPropertyBrowserPanel extends Panel {
 		} 
 	}
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	protected void onDetach() {
 		super.onDetach();

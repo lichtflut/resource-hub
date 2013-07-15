@@ -42,6 +42,8 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.views.SNProperty;
 import org.arastreju.sge.model.nodes.views.SNText;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,8 @@ import static org.arastreju.sge.SNOPS.string;
  * @author Oliver Tigges
  */
 public class SNPropertyEditorPanel extends Panel {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SNPropertyEditorPanel.class);
 
 	@SpringBean
 	private TypeManager typeManager;
@@ -163,6 +167,9 @@ public class SNPropertyEditorPanel extends Panel {
 		return new DerivedDetachableModel<List<SNProperty>, SNProperty>(src) {
 			@Override
 			public List<SNProperty> derive(final SNProperty source) {
+                if (!source.isAttached()) {
+                    LOGGER.warn("The property {} is not attached, cannot retrieve sub properties.", source);
+                }
 				final Set<SNProperty> all = source.getSuperProperties();
 				all.remove(source);
 				return new ArrayList<SNProperty>(all);
