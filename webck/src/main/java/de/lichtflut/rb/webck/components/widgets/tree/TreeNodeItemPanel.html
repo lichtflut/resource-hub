@@ -1,0 +1,32 @@
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:panel>
+
+    <div class="tree-row">
+        <div wicket:id="indention" class="tree-indent-cell"></div>
+        <div class="tree-cell">
+            <wicket:container wicket:id="label"/>
+        </div>
+        <div class="tree-action-wrapper">
+            <div class="tree-action-cell">
+                <a wicket:id="expand" class="action-move-down">
+                    [expand]
+                </a>
+                <a wicket:id="collapse" class="action-move-up">
+                    [collapse]
+                </a>
+                &nbsp;
+            </div>
+            <div class="tree-action-cell">
+                <a wicket:id="select" class="action-view">
+                    [select]
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <wicket:container wicket:id="children">
+        <wicket:container wicket:id="item"/>
+    </wicket:container>
+
+</wicket:panel>
+</html>

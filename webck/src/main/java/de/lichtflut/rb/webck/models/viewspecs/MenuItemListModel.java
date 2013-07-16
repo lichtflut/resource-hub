@@ -17,11 +17,11 @@ package de.lichtflut.rb.webck.models.viewspecs;
 
 import java.util.List;
 
+import de.lichtflut.rb.core.services.MenuService;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.MenuItem;
 
 /**
@@ -39,7 +39,7 @@ import de.lichtflut.rb.core.viewspec.MenuItem;
 public class MenuItemListModel extends LoadableDetachableModel<List<MenuItem>> {
 
 	@SpringBean
-	private ViewSpecificationService viewSpecificationService;
+	private MenuService menuService;
 
 	// ----------------------------------------------------
 
@@ -54,7 +54,7 @@ public class MenuItemListModel extends LoadableDetachableModel<List<MenuItem>> {
 
 	@Override
 	public List<MenuItem> load() {
-		return viewSpecificationService.getMenuItemsForDisplay();
+		return menuService.getMenuItemsForDisplay();
 	}
 
 }

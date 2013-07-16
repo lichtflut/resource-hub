@@ -18,6 +18,7 @@ package de.lichtflut.rb.webck.components.widgets.management;
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.areEqual;
 
+import de.lichtflut.rb.core.services.MenuService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -56,9 +57,9 @@ import de.lichtflut.rb.webck.models.viewspecs.PerspectiveListModel;
 @SuppressWarnings("rawtypes")
 public class MenuItemEditPanel extends TypedPanel<MenuItem> {
 	
-	@SpringBean
-	private ViewSpecificationService viewSpecificationService;
-	
+    @SpringBean
+	private MenuService menuService;
+
 	private final IModel<DisplayMode> mode;
 
 	// ----------------------------------------------------
@@ -101,7 +102,7 @@ public class MenuItemEditPanel extends TypedPanel<MenuItem> {
 		final AjaxButton save = new RBDefaultButton("save") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				viewSpecificationService.store(model.getObject());
+                menuService.store(model.getObject());
 				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC, ModelChangeEvent.MENU));
 				RBAjaxTarget.add(form);
 				onSuccess(target);
@@ -115,7 +116,7 @@ public class MenuItemEditPanel extends TypedPanel<MenuItem> {
 		final Button edit = new RBDefaultButton("create") {
 			@Override
 			protected void applyActions(AjaxRequestTarget target, Form<?> form) {
-				viewSpecificationService.addUsersMenuItem(model.getObject());
+				menuService.addUsersMenuItem(model.getObject());
 				send(getPage(), Broadcast.BREADTH, new ModelChangeEvent(ModelChangeEvent.VIEW_SPEC));
 				RBAjaxTarget.add(form);
 				onSuccess(target);

@@ -218,5 +218,21 @@ public class ExtendedActionsPanel extends Panel {
 			return retValModel.getObject();
 		}
 	}
-	
+
+    // ----------------------------------------------------
+
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        if (entityModel != null) {
+            entityModel.detach();
+        }
+        if (dataModel != null) {
+            dataModel.detach();
+        }
+        if (configModel != null) {
+            configModel.detach();
+        }
+    }
 }

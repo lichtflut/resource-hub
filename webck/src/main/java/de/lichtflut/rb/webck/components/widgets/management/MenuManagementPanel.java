@@ -15,7 +15,7 @@
  */
 package de.lichtflut.rb.webck.components.widgets.management;
 
-import de.lichtflut.rb.core.services.ViewSpecificationService;
+import de.lichtflut.rb.core.services.MenuService;
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.webck.common.OrderedNodesContainer;
@@ -57,7 +57,7 @@ public class MenuManagementPanel extends Panel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MenuManagementPanel.class);
 
 	@SpringBean
-	private ViewSpecificationService viewSpecificationService;
+	private MenuService menuService;
 
 	private final UsersMenuItemListModel listModel = new UsersMenuItemListModel();
 
@@ -179,7 +179,7 @@ public class MenuManagementPanel extends Panel {
 	// ----------------------------------------------------
 
 	private void removeMenuItem(final MenuItem item) {
-		viewSpecificationService.removeUsersItem(item);
+		menuService.removeUsersItem(item);
 		updatePanel();
 	}
 

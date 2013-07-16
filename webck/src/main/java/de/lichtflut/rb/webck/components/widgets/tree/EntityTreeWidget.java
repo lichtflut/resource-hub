@@ -17,6 +17,7 @@ package de.lichtflut.rb.webck.components.widgets.tree;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.ColumnDef;
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
@@ -40,7 +41,10 @@ import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.basic.PageableModel;
 import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
 import org.apache.wicket.Component;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -79,6 +83,9 @@ public class EntityTreeWidget extends ConfigurableWidget {
 	private SemanticNetworkService semanticNetwork;
 
     @SpringBean
+	private ViewSpecificationService viewSpecificationService;
+
+    @SpringBean
     private Conversation conversation;
 	
 	@SpringBean
@@ -97,14 +104,19 @@ public class EntityTreeWidget extends ConfigurableWidget {
 		
 		setOutputMarkupId(true);
 		
-		final IModel<QueryResult> queryModel = modelFor(spec);
+		final IModel<QueryResult> rootModel = modelFor(spec);
+        final ListView<ResourceNode> list = new ListView<ResourceNode>("tree", listModel(rootModel)) {
+            @Override
+            protected void populateItem(ListItem<ResourceNode> listItem) {
+                listItem.add(new TreeNodeItemPanel("root", listItem.getModel()));
+            }
+        };
+        list.setReuseItems(true);
 
+        getDisplayPane().add(list);
 
-
-
-
-		getDisplayPane().add(new ExtendedActionsPanel("extendedActionsPanel", queryModel, null)
-				.add(ConditionalBehavior.visibleIf(not(isConfigMode))));
+        getDisplayPane().add(new ExtendedActionsPanel("extendedActionsPanel", rootModel, null)
+                .add(ConditionalBehavior.visibleIf(not(isConfigMode))));
 		getDisplayPane().add(new WidgetActionsPanel("actions", spec));
 	}
 	
@@ -115,30 +127,32 @@ public class EntityTreeWidget extends ConfigurableWidget {
 	}
 	
 	// ----------------------------------------------------
-	
-	protected IModel<QueryResult> modelFor(final IModel<WidgetSpec> spec) {
-		return new AbstractLoadableDetachableModel<QueryResult>() {
-			@Override
-			public QueryResult load() {
-				final Selection selection = spec.getObject().getSelection();
-				if (selection != null && selection.isDefined()) {
-					final Query query = conversation.createQuery();
-					query.beginAnd().addField(RDF.TYPE, RBSystem.ENTITY);
-					selection.adapt(query);
-					query.end();
-					try {
-						query.setSortCriteria(new SortCriteria(getSortCriteria(spec.getObject())));
-						return query.getResult();
-					} catch(QueryException e) {
-						error("Error while executing query: " + e);
-						return SimpleQueryResult.EMPTY;
-					}
-				} else {
-					return SimpleQueryResult.EMPTY;
-				}
-			}
-		};
+
+    @Override
+    public void onEvent(IEvent<?> event) {
+        Object payload = event.getPayload();
+        if (TreeNodeItemPanel.EVENT_TREE_UPDATE.equals(payload)) {
+            RBAjaxTarget.add(this);
+        }
+    }
+
+    protected IModel<QueryResult> modelFor(IModel<WidgetSpec> spec) {
+		return new DerivedDetachableModel<QueryResult, WidgetSpec>(spec) {
+            @Override
+            protected QueryResult derive(WidgetSpec widget) {
+                return viewSpecificationService.load(widget);
+            }
+        };
 	}
+
+    protected IModel<List<ResourceNode>> listModel(IModel<QueryResult> queryResult) {
+        return new DerivedDetachableModel<List<ResourceNode>, QueryResult>(queryResult) {
+            @Override
+            protected List<ResourceNode> derive(QueryResult qr) {
+                return qr.toList(MAX_RESULTS);
+            }
+        };
+    }
 
 	private String[] getSortCriteria(WidgetSpec spec) {
 		List<String> columns = new ArrayList<String>();

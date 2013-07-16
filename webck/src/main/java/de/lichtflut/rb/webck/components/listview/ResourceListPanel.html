@@ -1,13 +1,4 @@
-<!--
-
-    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
-
--->
-<html
-	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
-<wicket:head>
-	<style type="text/css"></style>
-</wicket:head>
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
 <wicket:panel>
 
 	<div class="table entity-list long">
@@ -17,14 +8,13 @@
 			</div>
 		</div>
 		<div wicket:id="rows" class="row entity-list-row">
-			<div wicket:id="cells" class="cell table-cell entity-list-cell">
+			<div wicket:id="cells" class="table-cell">
 				<span wicket:id="container" class="qi-optimized">
-
 					<wicket:container wicket:id="content">[content]</wicket:container>
 					<wicket:container wicket:id="quickInfo"></wicket:container>
 				</span>
 			</div>
-			<div wicket:id="actions" class="cell table-cell entity-list-action">
+			<div wicket:id="actions" class="table-cell entity-list-action">
 				<wicket:container wicket:id="action">[action]</wicket:container>
 			</div>
 		</div>

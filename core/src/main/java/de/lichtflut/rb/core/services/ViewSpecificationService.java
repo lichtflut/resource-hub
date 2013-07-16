@@ -17,13 +17,16 @@ package de.lichtflut.rb.core.services;
 
 import java.util.List;
 
+import de.lichtflut.rb.core.viewspec.Selection;
 import org.arastreju.sge.model.ResourceID;
 
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
+import org.arastreju.sge.query.QueryResult;
 
 /**
  * <p>
@@ -38,40 +41,7 @@ import org.arastreju.sge.naming.QualifiedName;
  */
 public interface ViewSpecificationService {
 
-	// -- MENU ITEMS --------------------------------------
-
-	/**
-	 * Get the menu items to be displayed for current user context.
-	 * Supports unauthenticated users.
-	 * @return The menu items list.
-	 */
-	List<MenuItem> getMenuItemsForDisplay();
-
-	/**
-	 * Get the menu items of the current user.
-	 * @return The menu items list.
-	 */
-	List<MenuItem> getUsersMenuItems();
-
-	/**
-	 * Add a menu item for the current user.
-	 * @param item The item.
-	 */
-	void addUsersMenuItem(MenuItem item);
-
-	/**
-	 * Remove a menu item of the current user.
-	 * @param item The item to be removed.
-	 */
-	void removeUsersItem(MenuItem item);
-
-	/**
-	 * Store a menu item.
-	 * @param item The item.
-	 */
-	void store(MenuItem item);
-
-	// -- PERSPECTIVES ------------------------------------
+    // -- PERSPECTIVES ------------------------------------
 
 	/**
 	 * Find a perspective specification by it's qualified name.
@@ -155,6 +125,14 @@ public interface ViewSpecificationService {
 	 * @param widgetSpec The widget spec to move down.
 	 */
 	void removeWidget(ViewPort port, WidgetSpec widgetSpec);
+
+    // ----------------------------------------------------
+
+    /**
+     * Load data defined in a widget's selection.
+     * @return The query result.
+     */
+    QueryResult load(WidgetSpec widget);
 
 
 }

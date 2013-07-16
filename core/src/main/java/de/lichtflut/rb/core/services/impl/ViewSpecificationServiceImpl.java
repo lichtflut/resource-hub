@@ -21,18 +21,17 @@ import de.lichtflut.rb.core.common.SerialNumberOrderedNodesContainer;
 import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
-import de.lichtflut.rb.core.viewspec.MenuItem;
+import de.lichtflut.rb.core.viewspec.ColumnDef;
 import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
 import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
 import de.lichtflut.rb.core.viewspec.impl.SNViewPort;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
 import org.arastreju.sge.Conversation;
-import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SemanticGraph;
@@ -42,12 +41,12 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
-import org.arastreju.sge.structure.OrderBySerialNumber;
+import org.arastreju.sge.query.SimpleQueryResult;
+import org.arastreju.sge.query.SortCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -95,61 +94,11 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
         this.conversationFactory = arasFactory;
     }
 
-	// -- MENU ITEMS --------------------------------------
-
-	@Override
-	public List<MenuItem> getMenuItemsForDisplay() {
-		if (context != null && context.isAuthenticated()) {
-			return getUsersMenuItems();
-		} else {
-			return getDefaultMenu();
-		}
-	}
-
-	@Override
-	public List<MenuItem> getUsersMenuItems() {
-		final ResourceNode user = currentUser();
-		final List<MenuItem> result = new ArrayList<MenuItem>();
-		addUsersMenuItem(user, result);
-		if (result.isEmpty() && user != null) {
-			result.addAll(initializeDashboards(user));
-		}
-		Collections.sort(result, new OrderBySerialNumber());
-		LOGGER.debug("Context: {}.", conversation().getConversationContext());
-		LOGGER.debug("{} has menu items: {}.", user, result);
-
-		return result;
-	}
-
-	@Override
-	public void addUsersMenuItem(final MenuItem item) {
-		final ResourceNode user = currentUser();
-		store(item);
-		user.addAssociation(WDGT.HAS_MENU_ITEM, item);
-		LOGGER.debug("Added item {} to user {}.", item, user);
-	}
-
-	@Override
-	public void store(final MenuItem item) {
-		conversation().attach(item);
-	}
-
-	@Override
-	public void removeUsersItem(final MenuItem item) {
-		final ResourceNode user = currentUser();
-		SNOPS.remove(user, WDGT.HAS_MENU_ITEM, item);
-		LOGGER.debug("Context: {}.", conversation().getConversationContext());
-		LOGGER.debug("Removed item {} from user {}.", item, user);
-		LOGGER.debug("Left items of user {}: ", getUsersMenuItems());
-		//TODO: Remove item if private one.
-		//conversation.remove(item);
-	}
-
 	// -- PERSPECTIVES ------------------------------------
 
 	@Override
 	public Perspective findPerspective(QualifiedName qn) {
-		final ResourceNode existing = conversation().findResource(qn);
+		final ResourceNode existing = vSpecConversation().findResource(qn);
 		if (existing != null) {
 			return new SNPerspective(existing);
 		} else {
@@ -159,7 +108,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	@Override
 	public Perspective initializePerspective(final ResourceID id) {
-		final ResourceNode existing = conversation().findResource(id.getQualifiedName());
+		final ResourceNode existing = vSpecConversation().findResource(id.getQualifiedName());
 		if (existing != null) {
 			return new SNPerspective(existing);
 		} else {
@@ -177,7 +126,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	@Override
 	public List<Perspective> findPerspectives() {
-		final Query query = conversation().createQuery();
+		final Query query = vSpecConversation().createQuery();
 		query.addField(RDF.TYPE, WDGT.PERSPECTIVE);
 		final QueryResult result = query.getResult();
 		final List<Perspective> perspectives = new ArrayList<Perspective>(result.size());
@@ -189,7 +138,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	@Override
 	public void store(final Perspective perspective) {
-		conversation().attach(perspective);
+		vSpecConversation().attach(perspective);
 	}
 
 	@Override
@@ -197,7 +146,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
         final Perspective perspective = findPerspective(qn);
         if (perspective != null) {
             final SemanticGraph graph = new ViewSpecTraverser().toGraph(perspective);
-            final Conversation mc = conversation();
+            final Conversation mc = vSpecConversation();
             final TransactionControl tx = mc.beginTransaction();
             try {
                 for (Statement stmt : graph.getStatements()) {
@@ -214,7 +163,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	@Override
 	public WidgetSpec findWidgetSpec(final ResourceID id) {
-		final ResourceNode existing = conversation().findResource(id.getQualifiedName());
+		final ResourceNode existing = vSpecConversation().findResource(id.getQualifiedName());
 		if (existing != null) {
 			return new SNWidgetSpec(existing);
 		} else {
@@ -224,13 +173,13 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	@Override
 	public void store(final WidgetSpec widgetSpec) {
-		conversation().attach(widgetSpec);
+		vSpecConversation().attach(widgetSpec);
 	}
 
 	@Override
 	public void movePositionUp(final ViewPort port, final WidgetSpec widgetSpec) {
 		final ResourceID portID = port.getID();
-		conversation().attach(widgetSpec);
+		vSpecConversation().attach(widgetSpec);
 		new SerialNumberOrderedNodesContainer() {
 			@Override
 			protected List<? extends ResourceNode> getList() {
@@ -241,8 +190,8 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	@Override
 	public void movePositionDown(final ViewPort port, final WidgetSpec widgetSpec) {
-		conversation().attach(port);
-		conversation().attach(widgetSpec);
+		vSpecConversation().attach(port);
+		vSpecConversation().attach(widgetSpec);
 		new SerialNumberOrderedNodesContainer() {
 			@Override
 			protected List<? extends ResourceNode> getList() {
@@ -253,7 +202,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	@Override
 	public void removeWidget(final ViewPort port, final WidgetSpec widgetSpec) {
-		final Conversation conversation = conversation();
+		final Conversation conversation = vSpecConversation();
 		conversation.attach(port);
 		port.removeWidget(widgetSpec);
 		conversation.remove(widgetSpec.getID());
@@ -263,7 +212,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	@Override
 	public ViewPort findPort(final ResourceID id) {
-		final ResourceNode existing = conversation().findResource(id.getQualifiedName());
+		final ResourceNode existing = vSpecConversation().findResource(id.getQualifiedName());
 		if (existing != null) {
 			return new SNViewPort(existing);
 		} else {
@@ -272,61 +221,54 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	}
 
 	@Override
-	public void store(final ViewPort viewPort) {
-		conversation().attach(viewPort);
+	public void store(ViewPort viewPort) {
+		vSpecConversation().attach(viewPort);
 	}
 
-	// ----------------------------------------------------
+    // ----------------------------------------------------
+
+    @Override
+    public QueryResult load(WidgetSpec widget) {
+        Selection selection = widget.getSelection();
+        if (selection != null && selection.isDefined()) {
+            Query query = conversation().createQuery();
+            selection.adapt(query);
+            query.setSortCriteria(new SortCriteria(getSortColumns(widget)));
+            return query.getResult();
+        } else {
+            return SimpleQueryResult.EMPTY;
+        }
+    }
+
+    // ----------------------------------------------------
 
 	protected ResourceNode currentUser() {
         if (context == null || context.getUser() == null) {
             throw new IllegalStateException("No user context set.");
 		} else {
-			return conversation().findResource(context.getUser().getQualifiedName());
+			return vSpecConversation().findResource(context.getUser().getQualifiedName());
 		}
 	}
 
-	/**
-	 * Initialize the (probably new) user's menu items and dashboards.
-	 */
-	protected List<MenuItem> initializeDashboards(final ResourceNode user) {
-		final List<MenuItem> menuItems = getDefaultMenu();
-		for (MenuItem item : menuItems) {
-			user.addAssociation(WDGT.HAS_MENU_ITEM, item);
-		}
-		return menuItems;
-	}
-
-	/**
-	 * Get the default menu items.
-	 */
-	protected List<MenuItem> getDefaultMenu() {
-		final List<MenuItem> result = new ArrayList<MenuItem>();
-		final ResourceNode defaultMenu = conversation().resolve(WDGT.DEFAULT_MENU);
-		for(Statement stmt : defaultMenu.getAssociations()) {
-			if (WDGT.HAS_MENU_ITEM.equals(stmt.getPredicate()) && stmt.getObject().isResourceNode()) {
-				final ResourceNode item = stmt.getObject().asResource();
-				result.add(new SNMenuItem(item));
-			}
-		}
-		return result;
-	}
-
-	private void addUsersMenuItem(final ResourceNode user, final List<MenuItem> result) {
-		if (user == null) {
-			return;
-		}
-		for(Statement stmt : user.getAssociations()) {
-			if (WDGT.HAS_MENU_ITEM.equals(stmt.getPredicate()) && stmt.getObject().isResourceNode()) {
-				result.add(new SNMenuItem(stmt.getObject().asResource()));
-			}
-		}
-	}
+    protected String[] getSortColumns(WidgetSpec spec) {
+        List<String> columns = new ArrayList<String>();
+        for (ColumnDef def : spec.getColumns()) {
+            final ResourceID predicate = def.getProperty();
+            if (predicate != null) {
+                columns.add(predicate.toURI());
+            }
+        }
+        return columns.toArray(new String[columns.size()]);
+    }
 
 	// ----------------------------------------------------
 
-	private Conversation conversation() {
+	private Conversation vSpecConversation() {
 		return conversationFactory.getConversation(RBSystem.VIEW_SPEC_CTX);
 	}
+
+    private Conversation conversation() {
+        return conversationFactory.getConversation();
+    }
 
 }
