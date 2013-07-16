@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.rb.webck.components.widgets.config;
+package de.lichtflut.rb.webck.components.widgets.list;
 
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
+import de.lichtflut.rb.webck.components.widgets.config.AbstractWidgetConfigPanel;
 import de.lichtflut.rb.webck.components.widgets.list.EntityListWidget;
+import de.lichtflut.rb.webck.components.widgets.config.actions.ActionsConfigPanel;
+import de.lichtflut.rb.webck.components.widgets.config.columns.ColumnsConfigPanel;
 import de.lichtflut.rb.webck.components.widgets.config.selection.SelectionConfigPanel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import org.apache.wicket.model.IModel;
@@ -33,21 +36,26 @@ import org.apache.wicket.model.IModel;
  *
  * @author Oliver Tigges
  */
-public class EntityDetailsWidgetConfigPanel extends AbstractWidgetConfigPanel {
+public class EntityListWidgetConfigPanel extends AbstractWidgetConfigPanel {
 	
 	/**
+	 * Constructor.
 	 * @param id
 	 * @param model
 	 */
-	public EntityDetailsWidgetConfigPanel(String id, IModel<WidgetSpec> model) {
+	public EntityListWidgetConfigPanel(String id, IModel<WidgetSpec> model) {
 		super(id, model);
 		
 		getForm().add(new SelectionConfigPanel("selection", new DerivedModel<Selection, WidgetSpec>(model) {
 			@Override
-			protected Selection derive(WidgetSpec original) {
-				return original.getSelection();
-			}
+			protected Selection derive(WidgetSpec widgetSpec) {
+				return widgetSpec.getSelection();
+			}	
 		}));
+		
+		getForm().add(new ColumnsConfigPanel("columns", model));
+		
+		getForm().add(new ActionsConfigPanel("actions", model));
 	}
 	
 }

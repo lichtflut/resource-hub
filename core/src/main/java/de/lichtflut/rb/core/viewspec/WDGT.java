@@ -65,6 +65,8 @@ public interface WDGT {
 	ResourceID ENTITY_DETAILS = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "EntityDetailsWidget");
 	
 	ResourceID ENTITY_LIST = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "EnitityListWidget");
+
+    ResourceID ENTITY_TREE = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "EnitityTreeWidget");
 	
 	ResourceID INFOVIS = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "InfoVisWidget");
 	

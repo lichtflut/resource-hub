@@ -144,6 +144,8 @@ public class VSpecCollector {
             setWidgetType(WDGT.ENTITY_LIST);
         } else if ("details".equals(value)) {
             setWidgetType(WDGT.ENTITY_DETAILS);
+        } else if ("tree".equals(value)) {
+            setWidgetType(WDGT.ENTITY_TREE);
         } else if ("infovis".equals(value)) {
             setWidgetType(WDGT.INFOVIS);
         } else if ("predefined".equals(value)) {

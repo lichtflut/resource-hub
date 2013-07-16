@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.rb.webck.components.widgets;
+package de.lichtflut.rb.webck.components.widgets.list;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
@@ -32,7 +32,8 @@ import de.lichtflut.rb.webck.components.listview.ListAction;
 import de.lichtflut.rb.webck.components.listview.ListPagerPanel;
 import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
 import de.lichtflut.rb.webck.components.navigation.ExtendedActionsPanel;
-import de.lichtflut.rb.webck.components.widgets.config.EntityListWidgetConfigPanel;
+import de.lichtflut.rb.webck.components.widgets.ConfigurableWidget;
+import de.lichtflut.rb.webck.components.widgets.WidgetActionsPanel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;

@@ -64,11 +64,8 @@ import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
 @Singleton
 @Path(ENTITIES_BASE_PATH)
 @Produces({ MediaType.APPLICATION_JSON })
-public class EntitiyResource extends RBServiceEndpoint {
+public class EntityResource extends RBServiceEndpoint {
 
-	public static final String RESOURCE_TYPE = "http://rb.lichtflut.de/types/entities";
-	
-	@Path("")
 	@GET
 	public Response getEntities(@CookieParam(value=AuthModule.COOKIE_SESSION_AUTH) final String token) {
 		RBUser user;
@@ -125,12 +122,6 @@ public class EntitiyResource extends RBServiceEndpoint {
 		return Response.ok().entity(entity).build();
 	}
 
-	/**
-	 * 
-	 * @param rbEntity
-	 * @param entityManager - to determine if the association's object is an entity or not
-	 * @return
-	 */
 	private Entity mapEntity(RBEntity rbEntity, EntityManager entityManager) {
 		String base64EntityID = new String(Base64.encode(rbEntity.getID()
 				.toURI()));

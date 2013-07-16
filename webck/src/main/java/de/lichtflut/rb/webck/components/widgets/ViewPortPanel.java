@@ -24,6 +24,8 @@ import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
 import de.lichtflut.rb.webck.components.dialogs.SelectWidgetDialog;
+import de.lichtflut.rb.webck.components.widgets.list.EntityListWidget;
+import de.lichtflut.rb.webck.components.widgets.tree.EntityTreeWidget;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
@@ -61,7 +63,10 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 	// ----------------------------------------------------
 	
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id The wicket ID.
+     * @param portModel Model providing the port to display.
+     * @param isConfigMode Model stating if on configuration mode.
 	 */
 	@SuppressWarnings("rawtypes")
 	public ViewPortPanel(String id, IModel<ViewPort> portModel, final ConditionalModel<Boolean> isConfigMode) {
@@ -154,6 +159,8 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 			return new EntityListWidget("widget", model, isConfigMode);
 		} else if (WDGT.ENTITY_DETAILS.equals(type)) {
 			return new EntityDetailsWidget("widget", model, isConfigMode);
+		} else if (WDGT.ENTITY_TREE.equals(type)) {
+			return new EntityTreeWidget("widget", model, isConfigMode);
 		} else if (WDGT.PREDEFINED.equals(type)) {
 			return PredefinedWidget.create(spec, "widget", isConfigMode);
 		} else {
@@ -165,9 +172,6 @@ public class ViewPortPanel extends TypedPanel<ViewPort> implements WidgetControl
 
 	class WidgetListModel extends DerivedDetachableModel<List<WidgetSpec>, ViewPort> {
 
-		/**
-		 * @param original The original model.
-		 */
 		public WidgetListModel(IModel<ViewPort> original) {
 			super(original);
 		}

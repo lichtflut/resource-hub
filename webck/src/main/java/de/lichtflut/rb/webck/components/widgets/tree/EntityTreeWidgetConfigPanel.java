@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.rb.webck.components.widgets.config;
+package de.lichtflut.rb.webck.components.widgets.tree;
 
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
-import de.lichtflut.rb.webck.components.widgets.EntityListWidget;
+import de.lichtflut.rb.webck.components.widgets.config.AbstractWidgetConfigPanel;
 import de.lichtflut.rb.webck.components.widgets.config.actions.ActionsConfigPanel;
 import de.lichtflut.rb.webck.components.widgets.config.columns.ColumnsConfigPanel;
 import de.lichtflut.rb.webck.components.widgets.config.selection.SelectionConfigPanel;
@@ -26,7 +26,7 @@ import org.apache.wicket.model.IModel;
 
 /**
  * <p>
- *  Configuration panel of a {@link EntityListWidget}.
+ *  Configuration panel of a {@link EntityTreeWidget}.
  * </p>
  *
  * <p>
@@ -35,14 +35,14 @@ import org.apache.wicket.model.IModel;
  *
  * @author Oliver Tigges
  */
-public class EntityListWidgetConfigPanel extends AbstractWidgetConfigPanel {
+public class EntityTreeWidgetConfigPanel extends AbstractWidgetConfigPanel {
 	
 	/**
 	 * Constructor.
-	 * @param id
-	 * @param model
+	 * @param id The wicket ID.
+	 * @param model The model providing the spec.
 	 */
-	public EntityListWidgetConfigPanel(String id, IModel<WidgetSpec> model) {
+	public EntityTreeWidgetConfigPanel(String id, IModel<WidgetSpec> model) {
 		super(id, model);
 		
 		getForm().add(new SelectionConfigPanel("selection", new DerivedModel<Selection, WidgetSpec>(model) {
@@ -51,8 +51,6 @@ public class EntityListWidgetConfigPanel extends AbstractWidgetConfigPanel {
 				return widgetSpec.getSelection();
 			}	
 		}));
-		
-		getForm().add(new ColumnsConfigPanel("columns", model));
 		
 		getForm().add(new ActionsConfigPanel("actions", model));
 	}

@@ -27,7 +27,7 @@ import javax.ws.rs.core.MediaType;
 import static de.lichtflut.rb.rest.api.config.LinkRelations.*;
 import static de.lichtflut.rb.rest.api.config.ResourceTypes.*;
 import static de.lichtflut.rb.rest.api.config.PathConstants.*;
-import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
+
 import de.lichtflut.rb.rest.api.models.transfer.HttpMethod;
 import de.lichtflut.rb.rest.api.models.transfer.ResourceMeta;
 import de.lichtflut.rb.rest.api.models.transfer.RestBaseModel;
@@ -68,13 +68,13 @@ public class ServiceDocumentResource extends RBServiceEndpoint{
 				build());
 		
 		rMeta.addLink(buildLink().
-				href(getPath(EntitiyResource.class)).
+				href(getPath(EntityResource.class)).
 				rel(GET_ENTITIES_REL).
 				resourceType(ENTITIES_TYPE).
 				build());
 
 		rMeta.addLink(buildLink().
-				templateRef(getPath(EntitiyResource.class) + ENTITY_PATH).
+				templateRef(getPath(EntityResource.class) + ENTITY_PATH).
 				rel(GET_ENTITY_REL).
 				resourceType(ENTITY_TYPE).
 				build());
