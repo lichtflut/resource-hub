@@ -25,6 +25,7 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
+import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.io.RdfXmlBinding;
@@ -122,8 +123,8 @@ public class ExcelExpertiseParser {
 						parentResources[col] = resource;
 						
 						if(col != startColumn && parentResources[col - 1] != null) {
-							graph.addStatement(resource.addAssociation(RB.HAS_PARENT_NODE, parentResources[col - 1]));
-							graph.addStatement(parentResources[col - 1].addAssociation(RB.HAS_CHILD_NODE, resource));
+							graph.addStatement(resource.addAssociation(Aras.HAS_PARENT_NODE, parentResources[col - 1]));
+							graph.addStatement(parentResources[col - 1].addAssociation(Aras.HAS_CHILD_NODE, resource));
 						}
 						
 					}

@@ -15,7 +15,6 @@
  */
 package de.lichtflut.rb.rest.api.infovis;
 
-import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import de.lichtflut.rb.core.security.AuthModule;
@@ -23,6 +22,7 @@ import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.rest.api.util.CachingSchemaProvider;
 import de.lichtflut.rb.rest.api.util.QuickInfoBuilder;
 import de.lichtflut.rb.rest.api.util.SchemaProvider;
+import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -121,8 +121,7 @@ public class TreeInfoVisService extends AbstractInfoVisService{
             case HIERARCHY:
                 return new PredicateFilter()
                         .addFollow(
-                                RB.HAS_CHILD_NODE,
-                                RB.HAS_SUBORDINATE
+                                Aras.HAS_CHILD_NODE
                         );
             default:
                 return new NotPredicateFilter(

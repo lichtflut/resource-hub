@@ -18,6 +18,7 @@ package de.lichtflut.rb.core.perceptions;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
@@ -97,14 +98,14 @@ public class PerceptionItem extends InheritedDecorator {
 	// ----------------------------------------------------
 
     public void addSubItem(PerceptionItem item) {
-        addAssociation(RB.HAS_CHILD_NODE, item);
+        addAssociation(Aras.HAS_CHILD_NODE, item);
     }
 
 	public List<PerceptionItem> getSubItems() {
 		final List<PerceptionItem> result = new ArrayList<PerceptionItem>();
 		for (Statement assoc : directAssociations()) {
 			SNProperty predicate = SNProperty.from(assoc.getPredicate());
-			if (predicate.isSubPropertyOf(RB.HAS_CHILD_NODE) && assoc.getObject().isResourceNode()) {
+			if (predicate.isSubPropertyOf(Aras.HAS_CHILD_NODE) && assoc.getObject().isResourceNode()) {
 				result.add(from(assoc.getObject()));
 			}
 		}

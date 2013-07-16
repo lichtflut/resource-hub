@@ -60,17 +60,7 @@ public interface RB {
 	 */
 	ResourceID DEPENDS_ON = new SimpleResourceID(COMMON_NAMESPACE_URI, "dependsOn");
 
-	/**
-	 * Child node in tree structures.
-	 */
-	ResourceID HAS_CHILD_NODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasChildNode");
-
-	/**
-	 * Parent node in tree structures.
-	 */
-	ResourceID HAS_PARENT_NODE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasParentNode");
-
-	/**
+    /**
 	 * Superordinate units.
 	 */
 	ResourceID HAS_SUPERORDINATE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasSuperordinate");

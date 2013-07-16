@@ -17,20 +17,22 @@ package de.lichtflut.rb.application.graphvis;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
-import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.webck.components.infovis.flowchart.FlowChartPanel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLoadModel;
 import org.arastreju.sge.model.nodes.views.SNProperty;
+import org.arastreju.sge.structure.TreeStructure;
 
 /**
  * <p>
@@ -47,7 +49,7 @@ public class FlowChartInfoVisPage extends AbstractInfoVisPage {
 	
 	/**
 	 * Constructor.
-	 * @param parameters
+	 * @param parameters The page paramters.
 	 */
 	public FlowChartInfoVisPage(PageParameters parameters) {
 		super(parameters);
@@ -55,14 +57,11 @@ public class FlowChartInfoVisPage extends AbstractInfoVisPage {
 	
 	// ----------------------------------------------------
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected Component createInfoVisPanel(String componentID, ResourceID resource) {
 		final ResourceLoadModel baseModel = new ResourceLoadModel(resource);
 		return new FlowChartPanel(componentID, baseModel, new ChartModel(baseModel));
-	};
+	}
 	
 	// ----------------------------------------------------
 	
@@ -74,7 +73,7 @@ public class FlowChartInfoVisPage extends AbstractInfoVisPage {
 
 		@Override
 		protected Collection<ResourceNode> derive(ResourceNode base) {
-			final Set<ResourceNode> chartNodes = getChildNodes(base);
+			final List<ResourceNode> chartNodes = TreeStructure.children(base);
 			if (chartNodes.isEmpty()) {
 				// add the node itself instead of it's children
 				chartNodes.add(base);
@@ -82,15 +81,6 @@ public class FlowChartInfoVisPage extends AbstractInfoVisPage {
 			return chartNodes;
 		}
 
-		protected Set<ResourceNode> getChildNodes(final ResourceNode node) {
-			final Set<ResourceNode> chartNodes = new HashSet<ResourceNode>();
-			for (Statement stmt : node.getAssociations()) {
-				if (SNProperty.from(stmt.getPredicate()).isSubPropertyOf(RB.HAS_CHILD_NODE)) {
-					chartNodes.add(stmt.getObject().asResource());	
-				}
-			}
-			return chartNodes;
-		}
 	}
 	
 	

@@ -28,6 +28,7 @@ import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.LabelExpressionParseException;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
 import de.lichtflut.rb.core.schema.model.impl.ResourceSchemaImpl;
+import org.arastreju.sge.apriori.Aras;
 
 /**
  * <p>
@@ -47,7 +48,7 @@ public class ResourceSchemaFactory {
 		PropertyDeclaration address = new PropertyDeclarationImpl(RB.HAS_ADDRESS, Datatype.RESOURCE);
 		PropertyDeclaration dateOfBirth = new PropertyDeclarationImpl(RB.HAS_DATE_OF_BIRTH, Datatype.DATE);
 		PropertyDeclaration	email = new PropertyDeclarationImpl(RB.HAS_EMAIL, Datatype.STRING);
-		PropertyDeclaration children = new PropertyDeclarationImpl(RB.HAS_CHILD_NODE, Datatype.RESOURCE);
+		PropertyDeclaration children = new PropertyDeclarationImpl(Aras.HAS_CHILD_NODE, Datatype.RESOURCE);
 		PropertyDeclaration file = new PropertyDeclarationImpl(RBTestConstants.HAS_FILE, Datatype.FILE);
 
 		schema.addQuickInfo(RB.HAS_FIRST_NAME);

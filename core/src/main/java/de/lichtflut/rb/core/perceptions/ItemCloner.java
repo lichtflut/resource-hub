@@ -15,7 +15,6 @@
  */
 package de.lichtflut.rb.core.perceptions;
 
-import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
@@ -51,7 +50,7 @@ public class ItemCloner {
 	public ItemCloner() {
 		// statements with these predicates are not to be cloned
 		predicateBlackList.add(RBSystem.BELONGS_TO_PERCEPTION);
-		predicateBlackList.add(RB.HAS_CHILD_NODE);
+		predicateBlackList.add(Aras.HAS_CHILD_NODE);
 	}
 
 	// ----------------------------------------------------

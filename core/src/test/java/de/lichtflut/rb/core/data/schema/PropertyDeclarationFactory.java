@@ -24,6 +24,7 @@ import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import de.lichtflut.rb.core.schema.model.impl.CardinalityBuilder;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import de.lichtflut.rb.core.schema.model.impl.PropertyDeclarationImpl;
+import org.arastreju.sge.apriori.Aras;
 
 /**
  * <p>
@@ -51,7 +52,7 @@ public class PropertyDeclarationFactory {
 	}
 
 	public static PropertyDeclaration buildHasChildrenPropertyDecl(){
-		PropertyDeclaration decl = new PropertyDeclarationImpl(RB.HAS_CHILD_NODE, Datatype.RESOURCE, ConstraintsFactory.buildPublicPersonConstraint());
+		PropertyDeclaration decl = new PropertyDeclarationImpl(Aras.HAS_CHILD_NODE, Datatype.RESOURCE, ConstraintsFactory.buildPublicPersonConstraint());
 		decl.setCardinality(CardinalityBuilder.extractFromString("[n..n]"));
 		decl.setFieldLabelDefinition(new FieldLabelDefinitionImpl("Children"));
 		return decl;

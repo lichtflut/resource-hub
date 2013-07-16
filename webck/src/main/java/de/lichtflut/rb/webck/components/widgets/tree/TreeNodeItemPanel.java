@@ -15,7 +15,6 @@
  */
 package de.lichtflut.rb.webck.components.widgets.tree;
 
-import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.services.EntityManager;
@@ -42,9 +41,11 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNProperty;
+import org.arastreju.sge.structure.TreeStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +53,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.and;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
 import static de.lichtflut.rb.webck.models.ConditionalModel.isTrue;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
@@ -198,17 +198,7 @@ public class TreeNodeItemPanel extends TypedPanel<ResourceNode> {
 		return new DerivedDetachableModel<List<ResourceNode>, ResourceNode>(parent) {
 			@Override
 			protected List<ResourceNode> derive(final ResourceNode parent) {
-                ArrayList<ResourceNode> children = new ArrayList<ResourceNode>();
-                for (Statement stmt : parent.getAssociations()) {
-                    SNProperty predicate = SNProperty.from(stmt.getPredicate());
-                    if (!predicate.isAttached()) {
-                        LOGGER.warn("Property {} is not attached. Con not derive super properties.", predicate);
-                    }
-                    if (stmt.getObject().isResourceNode() && predicate.getSuperProperties().contains(RB.HAS_CHILD_NODE)) {
-                        children.add(stmt.getObject().asResource());
-                    }
-                }
-                return children;
+                return TreeStructure.children(parent);
 			}
 		};
 	}
