@@ -19,8 +19,14 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.behaviors.TitleModifier.title;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
+import de.lichtflut.rb.webck.browsing.JumpTarget;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.components.entity.VisualizationMode;
+import de.lichtflut.rb.webck.components.links.CrossLink;
+import de.lichtflut.rb.webck.components.links.LabeledLink;
 import org.apache.wicket.Component;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -88,7 +94,7 @@ public class BreadCrumbsBar extends Panel {
 				final EntityBrowsingStep step = item.getModelObject();
 				final EntityHandle handle = item.getModelObject().getHandle();
 				final ResourceID id = resolve(handle.getId());
-				final Link<?> link = getBreadCrumbsBarLink("link", id);
+				final Link<?> link = createLink("link", id);
 				switch (step.getState()) {
 					case VIEW:
 					case EDIT:
@@ -109,13 +115,25 @@ public class BreadCrumbsBar extends Panel {
 		view.setReuseItems(false);
 		add(view);
 
+        add(createOffsetLink("offset"));
+
 		// special link for the current entry
 		IModel<EntityHandle> currentHandle = new CurrentHandleModel();
 		add(createCurrentEntityLink(currentHandle));
 		add(createUnderConstructionHint(currentHandle));
 	}
 
-	// ----------------------------------------------------
+    private Component createOffsetLink(String componentID) {
+        JumpTarget offset = RBWebSession.get().getHistory().getOffset();
+        if (offset != null && offset.showInBreadCrumbs()) {
+            CrossLink link = new CrossLink(LabeledLink.LINK_ID, offset.getURL());
+            return new LabeledLink(componentID, link , offset.getLabel());
+        } else {
+            return new WebComponent(componentID).setVisible(false);
+        }
+    }
+
+    // ----------------------------------------------------
 
 	@Override
 	public void onEvent(final IEvent<?> event) {
@@ -127,13 +145,18 @@ public class BreadCrumbsBar extends Panel {
 		}
 	}
 
-	protected Link<?> getBreadCrumbsBarLink(final String componentID, final ResourceID id) {
-		return null;
-
+	protected Link<?> createLink(final String componentID, final ResourceID id) {
+        return new CrossLink(componentID, getUrlTo(id).toString());
 	}
 
-	protected Link<?> getCurrentEntityLink(final String comonentID, final IModel<EntityHandle> currentHandle) {
-		return null;
+
+	protected Link<?> getCurrentEntityLink(final String componentID, final IModel<EntityHandle> currentHandle) {
+        return new CrossLink(componentID, new DerivedDetachableModel<String, EntityHandle>(currentHandle) {
+            @Override
+            protected String derive(final EntityHandle handle) {
+                return getUrlTo(handle.getId()).toString();
+            }
+        });
 	}
 
 	@Override
@@ -169,6 +192,10 @@ public class BreadCrumbsBar extends Panel {
 		label.add(visibleIf(new IsOnCreationConditional(currentHandle)));
 		return label;
 	}
+
+    protected CharSequence getUrlTo(final ResourceID ref) {
+        return resourceLinkProvider.getUrlToResource(ref, VisualizationMode.DETAILS, DisplayMode.VIEW);
+    }
 
 	// ----------------------------------------------------
 

@@ -59,9 +59,6 @@ public class UserPermissionModel extends DerivedDetachableModel<Set<String>, RBU
 	
 	// ----------------------------------------------------
 
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected Set<String> derive(RBUser user) {
 		if (user != null) {
@@ -72,9 +69,6 @@ public class UserPermissionModel extends DerivedDetachableModel<Set<String>, RBU
 		}
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Set<String> getDefault() {
 		return Collections.emptySet();

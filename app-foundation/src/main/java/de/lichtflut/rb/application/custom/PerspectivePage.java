@@ -15,6 +15,9 @@
  */
 package de.lichtflut.rb.application.custom;
 
+import de.lichtflut.rb.core.viewspec.Perspective;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.arastreju.sge.model.ResourceID;
@@ -50,11 +53,13 @@ public class PerspectivePage extends RBBasePage {
 	public PerspectivePage(PageParameters parameters) {
 		super(parameters);
 
-		RBWebSession.get().getHistory().clear(createJumpTarget(parameters));
-		
 		final StringValue viewParam = parameters.get(VIEW_ID);
+        final PerspectiveModel model = modelFor(viewParam);
+        final IModel<String> titleMode = titleModel(model);
+
+        RBWebSession.get().getHistory().clear(createJumpTarget(parameters, titleMode));
 		
-		add(new PerspectivePanel("perspective", modelFor(viewParam)));
+		add(new PerspectivePanel("perspective",model));
 	}
 
     /**
@@ -63,20 +68,21 @@ public class PerspectivePage extends RBBasePage {
      */
     public PerspectivePage(final ResourceID perspectiveID) {
         super();
-        RBWebSession.get().getHistory().clear(createJumpTarget());
-        add(new PerspectivePanel("perspective", new PerspectiveModel(perspectiveID)));
+
+        final PerspectiveModel model = new PerspectiveModel(perspectiveID);
+        final IModel<String> titleMode = titleModel(model);
+        RBWebSession.get().getHistory().clear(createJumpTarget(new PageParameters(), titleMode));
+        add(new PerspectivePanel("perspective", model));
     }
 	
 	// ----------------------------------------------------
 
-    protected JumpTarget createJumpTarget() {
-        return new JumpTarget(getClass(), new PageParameters());
+    protected JumpTarget createJumpTarget(PageParameters parameters, IModel<String> title) {
+        return new JumpTarget(getClass(), parameters).showInBreadCrumbs(title);
     }
 
-    protected JumpTarget createJumpTarget(PageParameters parameters) {
-        return new JumpTarget(getClass(), parameters);
-    }
-	
+    // ----------------------------------------------------
+
 	private PerspectiveModel modelFor(final StringValue viewParam) {
 		if (viewParam.isEmpty()) {
 			// dummy perspective
@@ -85,5 +91,14 @@ public class PerspectivePage extends RBBasePage {
 			return new PerspectiveModel(new SimpleResourceID(viewParam.toString()));	
 		}
 	}
+
+    private IModel<String> titleModel(IModel<Perspective> perspectiveIModel) {
+        return new DerivedDetachableModel<String, Perspective>(perspectiveIModel) {
+            @Override
+            protected String derive(Perspective perspective) {
+                return perspective.getTitle();
+            }
+        };
+    }
 	
 }

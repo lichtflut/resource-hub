@@ -117,6 +117,7 @@ public class GraphResource extends RBServiceEndpoint {
         TransactionControl tx = conversation.beginTransaction();
         try {
             new RdfXmlBinding().read(in, new StatementStorer(conversation));
+            tx.success();
         } finally {
             tx.finish();
             conversation.close();

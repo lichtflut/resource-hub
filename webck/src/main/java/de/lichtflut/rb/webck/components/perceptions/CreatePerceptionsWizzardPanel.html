@@ -1,0 +1,40 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:panel>
+
+	<div>
+		<form wicket:id="form">
+			<div wicket:id="list">
+					<span wicket:id="label"></span> 
+					<a wicket:id="createPerception"
+						href="#"><span class="create-value-link"></span></a>
+				<div wicket:id="container">
+					<div wicket:id="list">
+						<div class="cell">
+							<input wicket:id="ID" />
+						</div>
+						<div class="cell">
+							<input wicket:id="name" />
+						</div>
+						<div class="cell">
+							<div wicket:id="color"></div>
+						</div>
+						<div class="cell">
+							<a wicket:id="deletePerception" href="#"><span
+								class="remove-value-link"></span></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="button-bar">
+				<button wicket:id="cancel">
+					<wicket:container wicket:id="cancelLabel"></wicket:container>
+				</button>
+				<button wicket:id="save" class="default-button">
+					<wicket:container wicket:id="saveLabel"></wicket:container>
+				</button>
+			</div>
+		</form>
+	</div>
+</wicket:panel>
+</html>

@@ -16,6 +16,7 @@
 package de.lichtflut.rb.rest.api.organization;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -27,6 +28,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
+import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.rest.api.RBServiceEndpoint;
 import org.arastreju.sge.persistence.TransactionControl;
 import org.slf4j.Logger;
@@ -54,10 +56,10 @@ import java.util.Arrays;
  * 
  */
 @Component
-@Path("domain/{" + DomainOps.DOMAIN_ID_PARAM + "}/")
+@Path("domains/{domain}")
 public class DomainOps extends RBServiceEndpoint {
 
-    static final String DOMAIN_ID_PARAM = "domainID";
+    static final String DOMAIN_ID_PARAM = "domain";
     static final String AUTH_TOKEN = "TOKEN";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DomainOps.class);
@@ -92,90 +94,29 @@ public class DomainOps extends RBServiceEndpoint {
 	}
 
 	/**
-	 * Create a new domain under the following conditions.
-	 * 
-	 * <ul>
-	 * <li>Create
-	 * <ul>
-	 * <li>Is processed when the given domainID does not exists</li>
-	 * <li>The user must be root</li>
-	 * <li>A {@link SystemDomain} is not necessary to process the create
-	 * operation. The domainAdmin will be the authenticated user, text and
-	 * description will be empty</li>
-	 * <li>If a {@link SystemDomain} is given the domainID must be equal to
-	 * given domainID delivered as PathParam</li>
-	 * <li>If the given domain administrator does not exists, a new system user
-	 * will be created so long the password and email address is given</li>
-	 * </ul>
-	 * </li>
-	 * </ul>
-	 * </p>
-	 * 
-	 * @param domainID
-	 * @param token
-	 * @param domain
-	 * @return
+	 * Create a new domain.
 	 */
 	@POST
 	@RBOperation(type = TYPE.DOMAIN_CREATE)
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response createDomain(
-            @PathParam(DOMAIN_ID_PARAM) String domainID,
-			@QueryParam(AUTH_TOKEN) String token,
-            SystemDomain domain)
+            @PathParam(value = "domain") final String domain,
+            @CookieParam(value = AuthModule.COOKIE_SESSION_AUTH) String token)
         throws UnauthenticatedUserException
     {
 
-		// Check the equality of domainID's
-		if (domain != null && domain.getDomainIdentifier() != null
-				&& (!domain.getDomainIdentifier().equals(domainID))) {
-			return Response.status(Status.BAD_REQUEST).build();
-		}
-
 		// Authenticate the user
 		RBUser user = authenticateUser(token);
-		if (!getAuthHandler().isAuthorized(user, domainID)) {
-			return Response.status(Status.UNAUTHORIZED).build();
-		}
-		// Check that the domain does not exists
-		ServiceProvider provider = getProvider(domainID, user);
+        // TODO: Authorization check
 
 		DomainManager domainManager = this.authModule.getDomainManager();
-
-		RBDomain rbDomain = domainManager.findDomain(domainID);
+		RBDomain rbDomain = domainManager.findDomain(domain);
 		if (rbDomain != null) {
 			return Response.status(Status.CONFLICT).build();
 		}
-		rbDomain = new RBDomain();
-		rbDomain.setDescription(domain.getDescription());
-		rbDomain.setTitle(domain.getTitle());
-		rbDomain.setName(domain.getDomainIdentifier());
-
-		SystemIdentity admin = domain.getDomainAdministrator();
-		if (admin != null
-				&& (admin.getId() == null || admin.getPassword() == null)) {
-			return Response.status(Status.BAD_REQUEST).build();
-		}
-		TransactionControl tx = provider.getConversation().beginTransaction();
-		// Lets process the create
-		try {
-			rbDomain = domainManager.registerDomain(rbDomain);
-			if (admin != null) {
-				try {
-					addDomainAdmin(rbDomain, admin, provider);
-				} catch (RBAuthException e) {
-					LOGGER.error("Domain admin could not be created due to the following exception", e);
-					tx.fail();
-				}
-			}
-		} catch (Exception any) {
-			LOGGER.error("Domain admin couldnt be created due to the following exception",any);
-			tx.fail();
-            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-		} finally {
-            tx.finish();
-        }
-
+        rbDomain = new RBDomain();
+        rbDomain.setName(domain);
+		domainManager.registerDomain(rbDomain);
 		return Response.status(Status.CREATED).build();
 	}
 

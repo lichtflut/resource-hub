@@ -15,6 +15,7 @@
  */
 package de.lichtflut.rb.webck.components.widgets.tree;
 
+import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.services.EntityManager;
@@ -112,7 +113,7 @@ public class TreeNodeItemPanel extends TypedPanel<ResourceNode> {
 
         setOutputMarkupPlaceholderTag(true);
 
-        IModel<List<ResourceNode>> childrenModel = getChildren(model);
+        final IModel<List<ResourceNode>> childrenModel = getChildren(model);
 
         add(createIndention("indention"));
         add(new Label("label", new ResourceLabelModel(model)));
@@ -121,6 +122,17 @@ public class TreeNodeItemPanel extends TypedPanel<ResourceNode> {
         add(createSelectLink("select", model));
 
         add(createChildrenList("children", childrenModel));
+    }
+
+    // ----------------------------------------------------
+
+    /**
+     * Expand levels, until maximum nodes are displayed.
+     * @param maxNodes Max nodes to be displayed.
+     * @return How many nodes are displayed.
+     */
+    public int expand(int maxNodes) {
+        throw new NotYetImplementedException();
     }
 
     // ----------------------------------------------------
@@ -137,7 +149,6 @@ public class TreeNodeItemPanel extends TypedPanel<ResourceNode> {
 			}
 		}.add(visibleIf(not(or(isTrue(expanded),isEmpty(childrenModel)))));
 	}
-
 
     private Component createCollapseLink(final String id) {
         return new AjaxLink<String>(id){
@@ -174,7 +185,7 @@ public class TreeNodeItemPanel extends TypedPanel<ResourceNode> {
 	// ------------------------------------------------------
 
     private void toggle() {
-        if(Boolean.TRUE.equals(expanded.getObject())){
+        if(isExpanded()){
             expanded.setObject(Boolean.FALSE);
         } else{
             expanded.setObject(Boolean.TRUE);
@@ -202,5 +213,9 @@ public class TreeNodeItemPanel extends TypedPanel<ResourceNode> {
 			}
 		};
 	}
+
+    private boolean isExpanded() {
+        return Boolean.TRUE.equals(expanded.getObject());
+    }
 
 }

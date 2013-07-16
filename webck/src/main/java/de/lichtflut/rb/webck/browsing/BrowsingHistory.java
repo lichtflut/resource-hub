@@ -88,7 +88,15 @@ public class BrowsingHistory implements Serializable {
 		return stack.size();
 	}
 
-	// -- CLEAR -------------------------------------------
+    /**
+     * Get the offset.
+     * @return The jump target to the offset.
+     */
+    public JumpTarget getOffset() {
+        return offset;
+    }
+
+    // -- CLEAR -------------------------------------------
 
 	/**
 	 * Clear the stack and set the offset element, which will be activated if the stack is empty

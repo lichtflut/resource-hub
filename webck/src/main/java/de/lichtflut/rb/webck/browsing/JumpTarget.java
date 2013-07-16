@@ -15,7 +15,9 @@
  */
 package de.lichtflut.rb.webck.browsing;
 
+import de.lichtflut.rb.webck.components.links.CrossLink;
 import org.apache.wicket.Page;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -37,8 +39,10 @@ public class JumpTarget implements Serializable {
 	private final Class<? extends Page> pageClass;
 	
 	private final PageParameters params;
-	
-	// ----------------------------------------------------
+
+    private IModel<String> label;
+
+    // ----------------------------------------------------
 
 	/**
 	 * @param pageClass
@@ -61,6 +65,22 @@ public class JumpTarget implements Serializable {
 	public void activate(RequestCycle cycle) {
 		cycle.setResponsePage(pageClass, params);
 	}
-	
+
+    public String getURL() {
+        return "" + RequestCycle.get().urlFor(pageClass, params);
+    }
+
+    public JumpTarget showInBreadCrumbs(IModel<String> label) {
+        this.label = label;
+        return this;
+    }
+
+    public boolean showInBreadCrumbs() {
+        return label != null;
+    }
+
+    public IModel<String> getLabel() {
+        return label;
+    }
 
 }

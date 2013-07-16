@@ -25,9 +25,9 @@ import java.util.List;
  * <p>
  *  Service for the definitions of perceptions.
  * </p>
- * <p/>
+ *
  * <p>
- * Created 16.11.12
+ *  Created 16.11.12
  * </p>
  *
  * @author Oliver Tigges

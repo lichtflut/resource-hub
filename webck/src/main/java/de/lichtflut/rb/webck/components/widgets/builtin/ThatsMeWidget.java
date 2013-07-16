@@ -63,9 +63,6 @@ public class ThatsMeWidget extends PredefinedWidget {
 	
 	// ----------------------------------------------------
 	
-	@Override
-	protected IModel<String> getTitleModel() {
-		return new ResourceModel("title");
-	}
+
 	
 }

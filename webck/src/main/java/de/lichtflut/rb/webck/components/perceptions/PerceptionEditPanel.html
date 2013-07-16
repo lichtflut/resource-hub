@@ -1,0 +1,90 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
+<wicket:panel>
+
+	<form wicket:id="form">
+		<div class="input-panel">
+			<wicket:container wicket:id="title"></wicket:container>
+			<div wicket:id="feedback"></div>
+
+			<div class="row">
+				<div class="cell">
+					<label wicket:for="id"><wicket:message key="perception.id" /></label>
+				</div>
+				<div class="cell">
+					<input wicket:id="id" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="cell">
+					<label wicket:for="name"><wicket:message
+							key="perception.name" /></label>
+				</div>
+				<div class="cell">
+					<input wicket:id="name" />
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="cell">
+					<label wicket:for="type"><wicket:message
+							key="perception.type" /></label>
+				</div>
+				<div class="cell">
+					<div wicket:id="type"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="cell">
+					<label wicket:for="color"><wicket:message
+							key="perception.color" /></label>
+				</div>
+				<div class="cell">
+					<div wicket:id="color"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="cell">
+					<label><wicket:message
+							key="perception.image" /></label>
+				</div>
+				<div class="cell">
+					<div wicket:id="image" class="inline-block"></div> <a wicket:id="deleteFile" class="remove-value-link"></a>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="cell">
+					<label wicket:for="owner"><wicket:message
+							key="perception.owner" /></label>
+				</div>
+				<div class="cell">
+					<div wicket:id="owner"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="cell">
+					<label wicket:for="personResponsible"><wicket:message
+							key="perception.personResponsible" /></label>
+				</div>
+				<div class="cell">
+					<div wicket:id="personResponsible"></div>
+				</div>
+			</div>
+
+			<div class="button-bar">
+				<button type="button" wicket:id="cancel">
+					<wicket:message key="button.cancel">[cancel]</wicket:message>
+				</button>
+				<button type="button" wicket:id="save" class="default-button">
+					<wicket:message key="button.save">[save]</wicket:message>
+				</button>
+			</div>
+
+		</div>
+	</form>
+</wicket:panel>
+</html>

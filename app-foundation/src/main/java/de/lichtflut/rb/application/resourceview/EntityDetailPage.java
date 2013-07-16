@@ -15,38 +15,31 @@
  */
 package de.lichtflut.rb.application.resourceview;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.StringValue;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
-
 import de.lichtflut.rb.application.base.RBBasePage;
 import de.lichtflut.rb.application.common.CommonParams;
 import de.lichtflut.rb.core.entity.EntityHandle;
 import de.lichtflut.rb.webck.browsing.BrowsingHistory;
-import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
 import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.ResourceBrowsingPanel;
-import de.lichtflut.rb.webck.components.entity.VisualizationMode;
-import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.components.navigation.BreadCrumbsBar;
 import de.lichtflut.rb.webck.components.notes.NotePadPanel;
 import de.lichtflut.rb.webck.models.BrowsingContextModel;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 
 /**
  * <p>
- * This page displays a Resource in an Editor.
+ *  This page displays a Resource in an Editor.
  * </p>
  * 
  * <p>
- * Created: Aug 16, 2011
+ *  Created: Aug 16, 2011
  * </p>
  * 
  * @author Ravi Knox
@@ -58,9 +51,6 @@ public class EntityDetailPage extends RBBasePage {
 	 * ResourceBrowsingPanels component id. Useful for retrieving its current model.
 	 */
 	public static final String BROWSER_ID = "rb";
-
-	@SpringBean
-	private ResourceLinkProvider resourceLinkProvider;
 
 	// ---------------- Constructor -------------------------
 
@@ -100,29 +90,7 @@ public class EntityDetailPage extends RBBasePage {
 
 	@Override
 	protected Component createSecondLevelNav(final String componentID) {
-		return new BreadCrumbsBar(componentID, 7){
-
-			@Override
-			protected Link<?> getBreadCrumbsBarLink(final String componentID, final ResourceID id) {
-				return EntityDetailPage.this.getBreadCrumbsBarLink(componentID, id);
-			}
-
-			@Override
-			protected Link<?> getCurrentEntityLink(final String componentID, final IModel<EntityHandle> currentHandle) {
-				return EntityDetailPage.this.getCurrentEntityLink(componentID, currentHandle);
-			}
-
-		};
-	}
-
-	protected Link<?> getCurrentEntityLink(final String componentID, final IModel<EntityHandle> currentHandle) {
-		final Link<?> link = new CrossLink(componentID, new DerivedDetachableModel<String, EntityHandle>(currentHandle) {
-			@Override
-			protected String derive(final EntityHandle handle) {
-				return getUrlTo(handle.getId()).toString();
-			}
-		});
-		return link;
+		return new BreadCrumbsBar(componentID, 7);
 	}
 
 	protected Component createBrowser(final String componentID) {
@@ -131,15 +99,6 @@ public class EntityDetailPage extends RBBasePage {
 
 	protected Component createRightSideBar(final String id, final IModel<ResourceID> model) {
 		return new NotePadPanel(id, model);
-	}
-
-	protected Link<?> getBreadCrumbsBarLink(final String componentID, final ResourceID id) {
-		final Link<?> link = new CrossLink(componentID, getUrlTo(id).toString());
-		return link;
-	}
-
-	protected CharSequence getUrlTo(final ResourceID ref) {
-		return resourceLinkProvider.getUrlToResource(ref, VisualizationMode.DETAILS, DisplayMode.VIEW);
 	}
 
 	// -----------------------------------------------------
