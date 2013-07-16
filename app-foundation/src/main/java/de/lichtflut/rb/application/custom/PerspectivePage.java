@@ -56,6 +56,7 @@ public class PerspectivePage extends RBBasePage {
 		final StringValue viewParam = parameters.get(VIEW_ID);
         final PerspectiveModel model = modelFor(viewParam);
         final IModel<String> titleMode = titleModel(model);
+        setTitle(titleMode);
 
         RBWebSession.get().getHistory().clear(createJumpTarget(parameters, titleMode));
 		
@@ -71,6 +72,8 @@ public class PerspectivePage extends RBBasePage {
 
         final PerspectiveModel model = new PerspectiveModel(perspectiveID);
         final IModel<String> titleMode = titleModel(model);
+        setTitle(titleMode);
+
         RBWebSession.get().getHistory().clear(createJumpTarget(new PageParameters(), titleMode));
         add(new PerspectivePanel("perspective", model));
     }
