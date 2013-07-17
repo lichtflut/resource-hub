@@ -30,7 +30,7 @@ import de.lichtflut.rb.application.admin.identitymanagment.IdentityManagementPag
 import de.lichtflut.rb.application.admin.infomgmt.InformationManagementPage;
 import de.lichtflut.rb.application.admin.organizer.OrganizerPage;
 import de.lichtflut.rb.application.admin.typesystem.TypeSystemPage;
-import de.lichtflut.rb.application.common.RBPermission;
+import de.lichtflut.rb.RBPermission;
 import de.lichtflut.rb.application.pages.AbstractBasePage;
 import de.lichtflut.rb.webck.components.listview.ReferenceLink;
 import de.lichtflut.rb.webck.components.navigation.NavigationBar;

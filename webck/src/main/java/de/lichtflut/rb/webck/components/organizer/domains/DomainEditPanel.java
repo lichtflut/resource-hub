@@ -193,9 +193,6 @@ public class DomainEditPanel extends TypedPanel<RBDomain> {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void detachModels() {
 		super.detachModels();
@@ -204,9 +201,6 @@ public class DomainEditPanel extends TypedPanel<RBDomain> {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onEvent(IEvent<?> event) {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);

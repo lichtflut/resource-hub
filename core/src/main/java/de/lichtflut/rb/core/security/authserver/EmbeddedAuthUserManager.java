@@ -88,9 +88,6 @@ public class EmbeddedAuthUserManager implements UserManager {
 	
 	// -- USER MANAGEMENT ---------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBUser findUser(String identifier) {
 		final ResourceNode node = findUserNode(identifier);
@@ -101,9 +98,6 @@ public class EmbeddedAuthUserManager implements UserManager {
 		}
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public SearchResult<RBUser> searchUsers(String term) {
 		final SearchTerm searchTerm = new SearchTerm(term);
@@ -121,10 +115,10 @@ public class EmbeddedAuthUserManager implements UserManager {
 	@Override
 	public void registerUser(RBUser user, String credential, String domainName) throws RBAuthException {
 		if (isIdentifierInUse(user.getEmail())) {
-				throw new EmailAlreadyInUseException("Email already in use.");
+			throw new EmailAlreadyInUseException("Email already in use.");
 		}
 		if (user.getUsername() != null && isIdentifierInUse(user.getUsername())) {
-				throw new UsernameAlreadyInUseException("Username already in use.");
+			throw new UsernameAlreadyInUseException("Username already in use.");
 		}
 		final ResourceNode domain = domainManager.findDomainNode(domainName);
 		if (domain == null) {

@@ -18,6 +18,7 @@ package de.lichtflut.rb.application.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.lichtflut.rb.RBRole;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,9 +62,6 @@ public class RBAuthModuleInitializer implements ApplicationListener<ContextRefre
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		logger.info("Application context started.");

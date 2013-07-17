@@ -19,7 +19,9 @@ import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.DomainValidator;
 import org.arastreju.sge.ArastrejuGate;
+import org.arastreju.sge.context.Accessibility;
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.nodes.views.SNContext;
 import org.arastreju.sge.organize.Organizer;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.DC;
@@ -67,7 +69,8 @@ public class DefaultDomainValidator implements DomainValidator {
         final Organizer organizer = new Organizer(gate);
 
         // The protected context of this domain
-        organizer.registerContext(QualifiedName.from(Context.LOCAL_CONTEXTS_NAMESPACE, domainName));
+        Context context = organizer.registerContext(RBSystem.DOMAIN_CTX.getQualifiedName());
+        SNContext.from(context).setVisibility(Accessibility.PUBLIC);
 
         organizer.registerContext(RBSystem.VIEW_SPEC_CTX.getQualifiedName());
 

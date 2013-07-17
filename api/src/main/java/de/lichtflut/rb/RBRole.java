@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.rb.application.common;
+package de.lichtflut.rb;
 
 /**
  * <p>
- *  The well known roles in Glasnost. This are not the roles themself, but only the names
+ *  The well known roles in Glasnost. This are not the roles themselves, but only the names
  *  of the roles supported in Glasnost.
  * </p>
  *
@@ -37,13 +37,17 @@ public enum RBRole {
 			RBPermission.MANAGE_DOMAINS, 
 			RBPermission.ENTER_ADMIN_AREA),
 	
-	// enter the admin area
+	// manage a domain
 	DOMAIN_ADMIN(RBPermission.LOGIN,
-			RBPermission.ENTER_ADMIN_AREA),
+			RBPermission.ENTER_ADMIN_AREA,
+            RBPermission.GRANT_ADMIN_ACCESS,
+            RBPermission.GRANT_USER_ACCESS),
 	
 	// Manager of users and their roles
 	IDENTITY_MANAGER(
 			RBPermission.ENTER_ADMIN_AREA,
+            RBPermission.GRANT_ADMIN_ACCESS,
+            RBPermission.GRANT_USER_ACCESS,
 			RBPermission.LOGIN,
 			RBPermission.SEE_USERS, 
 			RBPermission.CREATE_USERS, 

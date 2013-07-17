@@ -16,7 +16,6 @@
 package de.lichtflut.rb.core.config;
 
 import de.lichtflut.rb.core.eh.ConfigurationException;
-import de.lichtflut.rb.core.security.SecurityConfiguration;
 import de.lichtflut.rb.core.system.DomainSupervisor;
 import org.arastreju.sge.ArastrejuProfile;
 import org.slf4j.Logger;
@@ -56,8 +55,6 @@ public class RBConfig {
 
     private EmailConfiguration emailConfiguration;
 
-    private SecurityConfiguration securityConfiguration;
-    
     private FileServiceConfiguration fileServiceConfiguration;
 
     private DomainSupervisor domainSupervisor;
@@ -100,10 +97,6 @@ public class RBConfig {
         return emailConfiguration;
     }
 
-    public SecurityConfiguration getSecurityConfiguration() {
-        return securityConfiguration;
-    }
-
     public DataStoreConfiguration getDataStoreConfig() {
         return dataStoreConfig;
     }
@@ -122,10 +115,6 @@ public class RBConfig {
         this.emailConfiguration = emailConfiguration;
     }
     
-    public void setSecurityConfiguration(SecurityConfiguration securityConfiguration) {
-        this.securityConfiguration = securityConfiguration;
-    }
-
     public void setDataStoreConfig(DataStoreConfiguration dataStoreConfig) {
         this.dataStoreConfig = dataStoreConfig;
     }

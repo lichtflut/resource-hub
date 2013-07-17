@@ -52,7 +52,6 @@ public class TestServiceProvider extends RBServiceProvider {
 		setServiceContext(ctx);
 		setArastrejuResourceFactory(factory);
 		setAuthModule(module);
-		setSecurityConfiguration(new TestSecurityConfig());
 	}
 
 	// ----------------------------------------------------

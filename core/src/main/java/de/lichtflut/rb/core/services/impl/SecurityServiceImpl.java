@@ -15,6 +15,7 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
+import de.lichtflut.rb.RBRole;
 import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.eh.RBException;
@@ -39,7 +40,7 @@ import java.util.UUID;
 /**
  * <p>
  *  Implementation of {@link SecurityService}.
- *  This service wrapps the {@link UserManager}.
+ *  This service wraps the {@link UserManager}.
  *
  * <p>
  * 	Created Jan 2, 2012
@@ -49,9 +50,12 @@ import java.util.UUID;
  */
 public class SecurityServiceImpl implements SecurityService {
 
-	private final Logger logger = LoggerFactory.getLogger(SecurityServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SecurityServiceImpl.class);
 
-    private final RBConfig config;
+    private static List<String> DOMAIN_ADMIN_ROLES = Arrays.asList(
+            RBRole.ACTIVE_USER.name(),
+            RBRole.IDENTITY_MANAGER.name(),
+            RBRole.DOMAIN_ADMIN.name());
 
 	private AuthModule authModule;
 
@@ -65,14 +69,12 @@ public class SecurityServiceImpl implements SecurityService {
 	 * Constructor.
 	 */
 	public SecurityServiceImpl(RBConfig config) {
-        this.config = config;
     }
 
 	/**
 	 * Constructor.
 	 */
 	public SecurityServiceImpl(final ServiceContext context, final AuthModule authModule) {
-        this.config = context.getConfig();
 		this.serviceContext = context;
 		this.authModule = authModule;
 	}
@@ -111,7 +113,7 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	public RBUser createDomainAdmin(final RBDomain domain, final String email, final String username, final String password) throws RBAuthException {
-		logger.info("Creating domain admin {} for domain {}.", email, domain.getName());
+		LOGGER.info("Creating domain admin {} for domain {}.", email, domain.getName());
 		final RBUser rbUser = new RBUser(new SimpleResourceID().getQualifiedName());
 		rbUser.setEmail(email);
 		rbUser.setUsername(username);
@@ -126,9 +128,8 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	public void makeDomainAdmin(final RBDomain domain, final RBUser user) throws RBAuthException {
-		final List<String> roles = Arrays.asList(rolesOfDomainAdmin());
-		logger.info("Adding roles {} to user {}.", roles, user);
-		setUserRoles(user, domain.getName(), roles);
+		LOGGER.info("Adding roles {} to user {}.", DOMAIN_ADMIN_ROLES, user);
+		setUserRoles(user, domain.getName(), DOMAIN_ADMIN_ROLES);
 	}
 
 	// -- AUTHORIZATON ------------------------------------
@@ -190,17 +191,6 @@ public class SecurityServiceImpl implements SecurityService {
 	}
 
 	// ----------------------------------------------------
-
-	/**
-	 * Can be implemented by sub classes.
-	 * @return The roles to be added to domain admin.
-	 */
-	protected String[] rolesOfDomainAdmin() {
-		if (config.getSecurityConfiguration() != null) {
-			return config.getSecurityConfiguration().getRolesOfDomainAdmin();
-		}
-		return new String[0];
-	}
 
 	/**
 	 * Can be implemented by sub classes to log the generated password.

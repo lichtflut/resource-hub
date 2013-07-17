@@ -17,7 +17,10 @@ package de.lichtflut.rb.rest.api;
 
 import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.api.core.ResourceContext;
+import de.lichtflut.rb.RBPermission;
 import de.lichtflut.rb.core.config.RBConfig;
+import de.lichtflut.rb.core.eh.ErrorCodes;
+import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.AuthenticationService;
@@ -41,8 +44,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author nbleisch
@@ -95,6 +100,17 @@ public abstract class RBServiceEndpoint implements OperationTypes{
         }
         return user;
     }
+
+    protected void authorizeUser(RBUser callingUser, String domain, RBPermission... needed) {
+        Set<String> given = authModule.getUserManagement().getUserPermissions(callingUser, domain);
+        for (RBPermission permission : needed) {
+            if (!given.contains(permission.name())) {
+                throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+            }
+        }
+    }
+
+    // ----------------------------------------------------
     
     protected String getSelfReference(){
     	return getPath(this.getClass());

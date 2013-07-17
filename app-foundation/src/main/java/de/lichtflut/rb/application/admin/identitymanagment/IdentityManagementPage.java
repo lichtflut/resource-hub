@@ -16,8 +16,8 @@
 package de.lichtflut.rb.application.admin.identitymanagment;
 
 import de.lichtflut.rb.application.admin.AdminBasePage;
-import de.lichtflut.rb.application.common.RBPermission;
-import de.lichtflut.rb.application.common.RBRole;
+import de.lichtflut.rb.RBPermission;
+import de.lichtflut.rb.RBRole;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.eh.RBException;
 import de.lichtflut.rb.core.security.AuthModule;

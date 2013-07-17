@@ -116,9 +116,6 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 		return created;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void updateDomain(final RBDomain domain) {
 		throw new NotYetImplementedException();

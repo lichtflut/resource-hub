@@ -15,37 +15,37 @@
  */
 package de.lichtflut.rb.rest.api.organization;
 
+import de.lichtflut.rb.RBPermission;
+import de.lichtflut.rb.RBRole;
+import de.lichtflut.rb.core.eh.RBAuthException;
+import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
+import de.lichtflut.rb.core.security.AuthModule;
+import de.lichtflut.rb.core.security.DomainManager;
+import de.lichtflut.rb.core.security.RBCrypt;
+import de.lichtflut.rb.core.security.RBDomain;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.core.security.UserManager;
+import de.lichtflut.rb.rest.api.RBServiceEndpoint;
+import de.lichtflut.rb.rest.api.common.UserRVO;
+import de.lichtflut.rb.rest.api.security.RBOperation;
+import org.arastreju.sge.model.Infra;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
-import de.lichtflut.rb.core.security.AuthModule;
-import de.lichtflut.rb.rest.api.RBServiceEndpoint;
-import org.arastreju.sge.persistence.TransactionControl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
-import de.lichtflut.rb.core.eh.RBAuthException;
-import de.lichtflut.rb.core.security.DomainManager;
-import de.lichtflut.rb.core.security.RBDomain;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.core.security.UserManager;
-import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
-import de.lichtflut.rb.rest.api.models.generate.SystemDomain;
-import de.lichtflut.rb.rest.api.models.generate.SystemIdentity;
-import de.lichtflut.rb.rest.api.security.RBOperation;
-
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -64,29 +64,34 @@ public class DomainOps extends RBServiceEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DomainOps.class);
 
+    private static List<String> DOMAIN_ADMIN_ROLES = Arrays.asList(
+            RBRole.ACTIVE_USER.name(),
+            RBRole.IDENTITY_MANAGER.name(),
+            RBRole.DOMAIN_ADMIN.name());
+
+    private static List<String> USER_ROLES = Arrays.asList(
+            RBRole.ACTIVE_USER.name());
+
     // ----------------------------------------------------
 
 	@DELETE
 	@RBOperation(type = TYPE.DOMAIN_DELETE)
 	public Response deleteDomain(
-            @PathParam(DOMAIN_ID_PARAM) String domainID,
+            @PathParam(DOMAIN_ID_PARAM) String domain,
 			@QueryParam(AUTH_TOKEN) String token)
             throws UnauthenticatedUserException {
 		RBUser user = authenticateUser(token);
-
-		if (!getAuthHandler().isAuthorized(user, domainID)) {
-			return Response.status(Status.UNAUTHORIZED).build();
-		}
+        authorizeUser(user, domain, RBPermission.MANAGE_DOMAINS);
 
 		try {
 			DomainManager domainManager = this.authModule.getDomainManager();
-			RBDomain rbDomain = domainManager.findDomain(domainID);
+			RBDomain rbDomain = domainManager.findDomain(domain);
 			if (rbDomain != null) {
 				domainManager.deleteDomain(rbDomain);
 			}
 			return Response.status(Status.NO_CONTENT).build();
 		} catch (Exception any) {
-			LOGGER.error("The domain {} couldnt be deleted tue to the following exception", domainID);
+			LOGGER.error("The domain {} couldnt be deleted tue to the following exception", domain);
             LOGGER.error("Error while deleting domain.",any);
 			return Response.serverError().build();
 		}
@@ -102,14 +107,14 @@ public class DomainOps extends RBServiceEndpoint {
 	public Response createDomain(
             @PathParam(value = "domain") final String domain,
             @CookieParam(value = AuthModule.COOKIE_SESSION_AUTH) String token)
-        throws UnauthenticatedUserException
+            throws UnauthenticatedUserException
     {
 
 		// Authenticate the user
 		RBUser user = authenticateUser(token);
-        // TODO: Authorization check
+        authorizeUser(user, AuthModule.MASTER_DOMAIN, RBPermission.MANAGE_DOMAINS);
 
-		DomainManager domainManager = this.authModule.getDomainManager();
+        DomainManager domainManager = this.authModule.getDomainManager();
 		RBDomain rbDomain = domainManager.findDomain(domain);
 		if (rbDomain != null) {
 			return Response.status(Status.CONFLICT).build();
@@ -121,99 +126,91 @@ public class DomainOps extends RBServiceEndpoint {
 	}
 
     /**
-     * <p>
-     * Updates an existing domain under the following conditions.
-     *
-     * <li>Update
-     * <ul>
-     * <li>Is processed when the given domainID does already exists</li>
-     * <li>The user has to be domain-admin or root</li>
-     * <li>A {@link SystemDomain} must be given to process the update</li>
-     * <li>if {@link de.lichtflut.rb.rest.api.models.generate.SystemDomain#getDomainIdentifier()} is not null, it must be equal
-     * to the given domainID delivered as PathParam</li>
-     * <li>If the given domain administrator does not exists, a new system user
-     * will be created so long the password and email address is given</li>
-     * </ul>
-     * </li>
-     * </p>
-     *
-     * @param domainID
-     * @param token
-     * @param domain
-     * @return
+     * Add a new admin to this domain.
      */
-    @PUT
-    @RBOperation(type = TYPE.DOMAIN_UPDATE)
+    @Path("/admins")
+    @POST
+    @RBOperation(type = TYPE.DOMAIN_CREATE)
     @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    public Response updateDomain(@PathParam(DOMAIN_ID_PARAM) String domainID,
-                                 @QueryParam(AUTH_TOKEN) String token, SystemDomain domain) throws UnauthenticatedUserException {
-        // Check if domain is not null
-        if (domain == null) {
-            return Response.status(Status.BAD_REQUEST).build();
-        }
-        // Check the equality of domainID's
-        if (domain.getDomainIdentifier() != null
-                && (!domain.getDomainIdentifier().equals(domainID))) {
-            return Response.status(Status.BAD_REQUEST).build();
+    public Response addDomainAdmin(
+            @PathParam(value = "domain") final String domain,
+            @CookieParam(value = AuthModule.COOKIE_SESSION_AUTH) String token,
+            UserRVO user)
+            throws UnauthenticatedUserException
+    {
+
+        RBUser callingUser = authenticateUser(token);
+        if (!isInstanceAdmin(callingUser)) {
+            authorizeUser(callingUser,domain, RBPermission.GRANT_ADMIN_ACCESS);
         }
 
-        // Authenticate the user
-        RBUser user = authenticateUser(token);
-        if (!getAuthHandler().isAuthorized(user, domainID)) {
-            return Response.status(Status.UNAUTHORIZED).build();
-        }
-        DomainManager domainManager = this.authModule.getDomainManager();
-        ServiceProvider provider = getProvider(domainID, user);
-        RBDomain rbDomain = domainManager.findDomain(domainID);
-        if (rbDomain == null) {
-            return Response.status(Status.CONFLICT).build();
-        }
-        rbDomain.setDescription(domain.getDescription());
-        rbDomain.setTitle(domain.getTitle());
-        rbDomain.setName(domain.getDomainIdentifier());
-        SystemIdentity admin = domain.getDomainAdministrator();
-        if (admin != null
-                && (admin.getId() == null || admin.getPassword() == null)) {
-            return Response.status(Status.BAD_REQUEST).build();
-        }
+        UserManager um = authModule.getUserManagement();
+        DomainManager dm = authModule.getDomainManager();
 
-        domainManager.updateDomain(rbDomain);
+        String id = Infra.coalesce(user.getEmail(), user.getName());
+        RBUser existingUser = um.findUser(id);
+        RBDomain existingDomain = dm.findDomain(domain);
 
-        // Lets process the
-        if (admin != null) {
-            try {
-                provider.getSecurityService()
-                        .createDomainAdmin(rbDomain, admin.getId(),
-                                admin.getUsername(), admin.getPassword());
-            } catch (RBAuthException e) {
-                LOGGER.error(
-                        "Domain admin couldnt be created due to the following exception",
-                        e);
-            }
+        try {
+            um.setUserRoles(existingUser, existingDomain.getName(), DOMAIN_ADMIN_ROLES);
+        } catch (RBAuthException e) {
+            Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage());
         }
-
         return Response.status(Status.CREATED).build();
+    }
 
+    /**
+     * Grant a user access to this domain.
+     */
+    @Path("/users")
+    @POST
+    @RBOperation(type = TYPE.DOMAIN_CREATE)
+    @Consumes(MediaType.APPLICATION_JSON )
+    public Response grantAccess(
+            @PathParam(value = "domain") final String domain,
+            @CookieParam(value = AuthModule.COOKIE_SESSION_AUTH) String token,
+            UserRVO userRVO)
+            throws UnauthenticatedUserException
+    {
+        RBUser callingUser = authenticateUser(token);
+        if (!isInstanceAdmin(callingUser)) {
+            authorizeUser(callingUser, domain, RBPermission.GRANT_USER_ACCESS);
+        }
+
+        RBDomain existingDomain = authModule.getDomainManager().findDomain(domain);
+        if (existingDomain == null) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
+
+        UserManager um = authModule.getUserManagement();
+        String id = Infra.coalesce(userRVO.getEmail(), userRVO.getName());
+
+        try {
+
+            RBUser user = um.findUser(id);
+            if (user == null) {
+                user = new RBUser();
+                user.setDomesticDomain(userRVO.getHomeDomain());
+                user.setEmail(userRVO.getEmail());
+                user.setUsername(userRVO.getName());
+                String encryptedPW = RBCrypt.encryptWithRandomSalt(userRVO.getPassword());
+                um.registerUser(user, encryptedPW, userRVO.getHomeDomain());
+                LOGGER.info("Registered user '{}' for domain {}", id, domain);
+            }
+            um.grantAccessToDomain(user, existingDomain);
+            um.setUserRoles(user, existingDomain.getName(), USER_ROLES);
+        } catch (RBAuthException e) {
+            LOGGER.info("Granting access to domain failed for user '{}' due to: {}", id, e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.status(Status.CREATED).build();
     }
 
     // ----------------------------------------------------
 
-	/**
-	 * @param rbDomain
-	 * @param admin
-	 * @throws RBAuthException
-	 */
-	private void addDomainAdmin(RBDomain rbDomain, SystemIdentity admin, ServiceProvider provider)
-			throws RBAuthException {
-		UserManager uManager = authModule.getUserManagement();
-		RBUser user = uManager.findUser(admin.getId());
-		if (user == null) {
-			provider.getSecurityService().createDomainAdmin(rbDomain,
-					admin.getId(), admin.getUsername(), admin.getPassword());
-		} else {
-			uManager.setUserRoles(user, rbDomain.getName(),
-					Arrays.asList(new String[0]));
-		}
-	}
+    private boolean isInstanceAdmin(RBUser user) {
+        Set<String> permissions = authModule.getUserManagement().getUserPermissions(user, AuthModule.MASTER_DOMAIN);
+        return permissions.contains(RBPermission.MANAGE_DOMAINS.name());
+    }
 
 }

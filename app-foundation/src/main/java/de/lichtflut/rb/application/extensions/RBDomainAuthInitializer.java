@@ -15,12 +15,11 @@
  */
 package de.lichtflut.rb.application.extensions;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import de.lichtflut.rb.application.common.RBRole;
+import de.lichtflut.rb.RBPermission;
+import de.lichtflut.rb.RBRole;
 import de.lichtflut.rb.core.security.AuthDomainInitializer;
 import de.lichtflut.rb.core.security.DomainManager;
 import de.lichtflut.rb.core.security.RBDomain;
@@ -41,9 +40,9 @@ public class RBDomainAuthInitializer implements AuthDomainInitializer {
 
 	@Override
 	public void initialize(RBDomain domain, DomainManager domainManager) {
-		for (de.lichtflut.rb.application.common.RBRole role : RBRole.values()) {
+		for (RBRole role : RBRole.values()) {
 			final Set<String> permissions = new HashSet<String>();
-			for (de.lichtflut.rb.application.common.RBPermission permission : role.getPermissions()) {
+			for (RBPermission permission : role.getPermissions()) {
 				permissions.add(permission.name());
 			}
 			domainManager.registerRole(domain.getName(), role.name(), permissions);

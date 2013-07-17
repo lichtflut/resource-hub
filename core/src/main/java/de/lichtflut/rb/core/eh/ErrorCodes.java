@@ -45,6 +45,8 @@ public interface ErrorCodes {
 
 	public static final int SECURITY_DOMAIN_NOT_FOUND = 1301;
 
+    public static final int NOT_AUTHORIZED = 1401;
+
     // -------- Configuration -----------------------------
 
     public static final int DOMAIN_INFO_COULD_NOT_BE_READ = 2001;

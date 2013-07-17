@@ -16,7 +16,6 @@
 package de.lichtflut.rb.rest.delegate.providers;
 
 import de.lichtflut.rb.core.security.AuthModule;
-import de.lichtflut.rb.core.security.SecurityConfiguration;
 import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
@@ -52,8 +51,6 @@ public class RBServiceProvider implements ServiceProvider {
 
 	private AuthModule authModule;
 
-	private SecurityConfiguration securityConfiguration;
-
 	private FileService fileService;
 
 	// ----------------------------------------------------
@@ -62,11 +59,10 @@ public class RBServiceProvider implements ServiceProvider {
 	 * Constructor.
 	 */
 	public RBServiceProvider(final ServiceContext ctx, final ArastrejuResourceFactory factory,
-			final AuthModule authModule, final SecurityConfiguration securityConfiguration) {
+			final AuthModule authModule) {
 		this.ctx = ctx;
 		this.arastrejuResourceFactory = factory;
 		this.authModule = authModule;
-		this.securityConfiguration = securityConfiguration;
 	}
 
 	protected RBServiceProvider() { }
@@ -132,10 +128,6 @@ public class RBServiceProvider implements ServiceProvider {
 
 	public void setAuthModule(final AuthModule authModule) {
 		this.authModule = authModule;
-	}
-
-	public void setSecurityConfiguration(final SecurityConfiguration securityConfiguration) {
-		this.securityConfiguration = securityConfiguration;
 	}
 
 	public void setFileService(final FileService fileService){

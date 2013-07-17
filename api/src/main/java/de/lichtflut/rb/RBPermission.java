@@ -13,21 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.rb.rest.api;
-
-import de.lichtflut.rb.core.security.SecurityConfiguration;
+package de.lichtflut.rb;
 
 /**
  * <p>
- *     Security configuration for JUnit tests.
+ *  Enumeration of all permissions in Glasnost.
  * </p>
-* @author Oliver Tigges
-*/
-class TestSecurityConfig implements SecurityConfiguration {
-
-    @Override
-    public String[] getRolesOfDomainAdmin() {
-        return new String[] {"TEST_ROLE"};
-    }
+ *
+ * <p>
+ * 	Created Dec 23, 2011
+ * </p>
+ *
+ * @author Oliver Tigges
+ */
+public enum RBPermission {
+	
+	LOGIN,
+	
+	ENTER_ADMIN_AREA,
+	
+	SEE_USERS,
+	CREATE_USERS,
+	DELETE_USERS,
+    GRANT_ADMIN_ACCESS,
+    GRANT_USER_ACCESS,
+	
+	SEE_NOTES,
+	CREATE_NOTE,
+	EDIT_NOTE,
+	DELETE_NOTE,
+	
+	MANAGE_DOMAINS
 
 }

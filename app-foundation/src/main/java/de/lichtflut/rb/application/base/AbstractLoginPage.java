@@ -16,7 +16,7 @@
 package de.lichtflut.rb.application.base;
 
 import de.lichtflut.rb.application.RBApplication;
-import de.lichtflut.rb.application.common.RBPermission;
+import de.lichtflut.rb.RBPermission;
 import de.lichtflut.rb.application.extensions.ServiceContextInitializer;
 import de.lichtflut.rb.application.pages.AbstractBasePage;
 import de.lichtflut.rb.core.eh.LoginException;
@@ -119,6 +119,8 @@ public class AbstractLoginPage extends AbstractBasePage {
                     LOGGER.info("Login aborted - User {} is lack of permission: {}", user.getName(), RBPermission.LOGIN.name());
                     error(getString("error.login.activation"));
                 }
+            } else {
+                CookieAccess.getInstance().removeAuthCookies();
             }
         }
     }
