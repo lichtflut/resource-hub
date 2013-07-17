@@ -90,6 +90,11 @@ public interface RB {
 	 */
 	ResourceID HAS_VALUE = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasValue");
 
+    /**
+     * A category.
+     */
+    ResourceID HAS_CATEGORY = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasCategory");
+
 	/**
 	 * The read access (private, protected, public).
 	 */

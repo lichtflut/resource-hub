@@ -15,11 +15,10 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
+import de.lichtflut.rb.webck.components.perceptions.CreatePerceptionsWizardPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.ResourceModel;
-
-import de.lichtflut.rb.webck.components.perceptions.CreatePerceptionsWizzardPanel;
 
 
 /**
@@ -31,25 +30,25 @@ import de.lichtflut.rb.webck.components.perceptions.CreatePerceptionsWizzardPane
  *
  * @author Ravi Knox
  */
-public class CreatePerceptionsWizzardDialog extends AbstractRBDialog {
+public class CreatePerceptionsWizardDialog extends AbstractRBDialog {
 
 	/**
 	 * Constructor.
 	 * @param id Component id
 	 */
-	public CreatePerceptionsWizzardDialog(final String id) {
+	public CreatePerceptionsWizardDialog(final String id) {
 		super(id);
-		add(new CreatePerceptionsWizzardPanel("wizzard"){
+		add(new CreatePerceptionsWizardPanel("wizard"){
 			@Override
 			protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 				super.onSubmit(target, form);
-				CreatePerceptionsWizzardDialog.this.onUpdate(target, form);
+				CreatePerceptionsWizardDialog.this.onUpdate(target, form);
 			}
 
 			@Override
 			protected void onCancel(final AjaxRequestTarget target, final Form<?> form) {
 				super.onCancel(target, form);
-				CreatePerceptionsWizzardDialog.this.onUpdate(target, form);
+				CreatePerceptionsWizardDialog.this.onUpdate(target, form);
 			}
 		});
 

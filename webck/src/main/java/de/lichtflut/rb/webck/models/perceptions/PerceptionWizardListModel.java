@@ -22,22 +22,28 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDFS;
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 import de.lichtflut.rb.core.perceptions.Perception;
 
+import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
+
 /**
  * <p>
- * Listmodel for Perceptions wizzard
+ *  List model for Perceptions wizard.
  * </p>
+ *
  * Created: Jan 11, 2013
  *
  * @author Ravi Knox
  */
-public class PerceptionWizzardListModel extends LoadableDetachableModel<List<List<Perception>>> {
+public class PerceptionWizardListModel extends LoadableDetachableModel<List<List<Perception>>> {
 
 	private final IModel<List<ResourceNode>> categories;
+
 	private List<List<Perception>> perceptionsList;
 
 	// ---------------- Constructor -------------------------
@@ -46,7 +52,7 @@ public class PerceptionWizzardListModel extends LoadableDetachableModel<List<Lis
 	 * Constructor.
 	 * @param categories Specifies the types of perceptions
 	 */
-	public PerceptionWizzardListModel(final IModel<List<ResourceNode>> categories){
+	public PerceptionWizardListModel(final IModel<List<ResourceNode>> categories){
 		this.categories = categories;
 	}
 
@@ -64,9 +70,9 @@ public class PerceptionWizzardListModel extends LoadableDetachableModel<List<Lis
 		return perceptionsList;
 	}
 
-	public Perception createPerceptionFor(final ResourceNode category) {
+	public Perception createPerceptionFor(ResourceNode category) {
 		Perception perception = new Perception();
-		perception.setType(category);
+		perception.setCategory(category);
 		perception.setColor("ffffff");
 		perception.setID(getSubstring(category, 3));
 		perception.setName(getLabel(category));
@@ -80,19 +86,15 @@ public class PerceptionWizzardListModel extends LoadableDetachableModel<List<Lis
 
 	// ------------------------------------------------------
 
-	private String getLabel(final ResourceNode category) {
-		SemanticNode node = SNOPS.singleObject(category, RDFS.LABEL);
-		if(null == node){
-			return "";
-		}
-		return node.asValue().getStringValue();
-	}
-
 	private String getSubstring(final ResourceNode category, final int length) {
 		if(null == category){
 			return "";
 		}
 		return getLabel(category).substring(0,4).toUpperCase();
 	}
+
+    private String getLabel(final ResourceNode category) {
+        return string(singleObject(category, RDFS.LABEL));
+    }
 
 }

@@ -26,7 +26,7 @@ import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
-import de.lichtflut.rb.webck.components.dialogs.CreatePerceptionsWizzardDialog;
+import de.lichtflut.rb.webck.components.dialogs.CreatePerceptionsWizardDialog;
 import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
@@ -149,7 +149,7 @@ public class PerceptionManagementPanel extends Panel {
 			@Override
 			public void onClick(final AjaxRequestTarget target) {
 				final DialogHoster dialogHoster = findParent(DialogHoster.class);
-				dialogHoster.openDialog(new CreatePerceptionsWizzardDialog(dialogHoster.getDialogID()) {
+				dialogHoster.openDialog(new CreatePerceptionsWizardDialog(dialogHoster.getDialogID()) {
 					@Override
 					protected void onUpdate(final AjaxRequestTarget target, final Form<?> form) {
 						dialogHoster.closeDialog(this);

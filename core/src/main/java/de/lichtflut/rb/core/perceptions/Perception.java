@@ -148,11 +148,11 @@ public class Perception extends ResourceView {
 		setValue(RBSystem.BASED_ON, base);
 	}
 
-	public void setType(final ResourceID type){
-		setValue(RDF.TYPE, type);
+	public void setCategory(final ResourceID type){
+		setValue(RB.HAS_CATEGORY, type);
 	}
 
-	public ResourceID getType(){
+	public ResourceID getCategory(){
 		return resourceValue(RDF.TYPE);
 	}
 

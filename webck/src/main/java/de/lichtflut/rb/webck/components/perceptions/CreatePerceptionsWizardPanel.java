@@ -22,7 +22,7 @@ import de.lichtflut.rb.webck.components.colorpicker.ColorPickerPanel;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.perceptions.PerceptionWizzardListModel;
+import de.lichtflut.rb.webck.models.perceptions.PerceptionWizardListModel;
 import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -52,12 +52,13 @@ import java.util.List;
  * 
  * @author Ravi Knox
  */
-public class CreatePerceptionsWizzardPanel extends Panel {
+public class CreatePerceptionsWizardPanel extends Panel {
 
 	@SpringBean
 	private PerceptionDefinitionService perceptionDefinitionService;
 
-	private PerceptionWizzardListModel model;
+	private PerceptionWizardListModel model;
+
 	private IModel<List<ResourceNode>> categories;
 
 	// ---------------- Constructor -------------------------
@@ -65,9 +66,9 @@ public class CreatePerceptionsWizzardPanel extends Panel {
 	/**
 	 * Constructor.
 	 * 
-	 * @param id Comonent id
+	 * @param id Component id
 	 */
-	public CreatePerceptionsWizzardPanel(final String id) {
+	public CreatePerceptionsWizardPanel(final String id) {
 		super(id);
 		initializeModel();
 
@@ -138,7 +139,7 @@ public class CreatePerceptionsWizzardPanel extends Panel {
 					@Override
 					protected void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 						perceptionList.getModelObject().remove(item.getModelObject());
-						RBAjaxTarget.add(CreatePerceptionsWizzardPanel.this);
+						RBAjaxTarget.add(CreatePerceptionsWizardPanel.this);
 					}
 				};
 				item.add(deleteLink);
@@ -151,7 +152,7 @@ public class CreatePerceptionsWizzardPanel extends Panel {
 		RBCancelButton button = new RBCancelButton("cancel"){
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				CreatePerceptionsWizzardPanel.this.onCancel(target, form);
+				CreatePerceptionsWizardPanel.this.onCancel(target, form);
 			}
 		};
 		button.add(new Label("cancelLabel", new ResourceModel("button.cancel")));
@@ -164,7 +165,7 @@ public class CreatePerceptionsWizzardPanel extends Panel {
 		RBStandardButton button = new RBStandardButton(id){
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				CreatePerceptionsWizzardPanel.this.onSubmit(target, form);
+				CreatePerceptionsWizardPanel.this.onSubmit(target, form);
 			}
 		};
 		button.add(new Label("saveLabel", new ResourceModel("button.save")));
@@ -178,7 +179,7 @@ public class CreatePerceptionsWizzardPanel extends Panel {
 				return perceptionDefinitionService.findAllPerceptionCategories();
 			}
 		};
-		model = new PerceptionWizzardListModel(categories);
+		model = new PerceptionWizardListModel(categories);
 	}
 
 }
