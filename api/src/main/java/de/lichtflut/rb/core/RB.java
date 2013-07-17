@@ -133,7 +133,7 @@ public interface RB {
 	/**
 	 * Has email.
 	 */
-	ResourceID HAS_EMAIL = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasEmail");
+	ResourceID HAS_EMAIL = new SimpleResourceID(COMMON_NAMESPACE_URI, "hasEmailAddress");
 
 	/**
 	 * Has contact data.

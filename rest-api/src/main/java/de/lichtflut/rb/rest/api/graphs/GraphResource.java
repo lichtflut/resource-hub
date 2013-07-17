@@ -71,7 +71,7 @@ import static org.arastreju.sge.context.ContextID.localContext;
 @Path("domains/{domain}/graphs")
 public class GraphResource extends RBServiceEndpoint {
 
-    private static final Pattern NAME_CONSTRAINT = Pattern.compile("[a-zA-Z-_0-9]");
+    private static final Pattern NAME_CONSTRAINT = Pattern.compile("[a-zA-Z-_0-9]+");
 
     private static final String RDF_XML = "application/rdf+xml";
 

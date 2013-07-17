@@ -245,9 +245,11 @@ div#first-level-nav ul li {
 	background: url("nav_lvl1_up.png") repeat-x;
 	float: left;
 	height: 18px;
-	min-width: 80px;
-	padding: 2px 10px 2px 15px;
+	min-width: 72px;
+	padding: 2px 6px;
 	margin: 0 2px 0 0;
+    border-radius: 3px;
+    text-align: center;
 }
 
 div#first-level-nav ul li a {
@@ -682,6 +684,7 @@ input.searchbar-short {
 	height: 12px;
 	padding: 0 2px;
 	background-color: #f6f8f3;
+    border-radius: 2px;
 }
 
 input.searchbar-long {
