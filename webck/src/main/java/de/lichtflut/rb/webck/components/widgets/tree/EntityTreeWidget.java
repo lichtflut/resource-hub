@@ -15,51 +15,26 @@
  */
 package de.lichtflut.rb.webck.components.widgets.tree;
 
-import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
-import de.lichtflut.rb.core.viewspec.ColumnDef;
-import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
 import de.lichtflut.rb.webck.browsing.ResourceLinkProvider;
-import de.lichtflut.rb.webck.common.DisplayMode;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.entity.VisualizationMode;
-import de.lichtflut.rb.webck.components.links.CrossLink;
-import de.lichtflut.rb.webck.components.links.LabeledLink;
-import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
-import de.lichtflut.rb.webck.components.listview.ListAction;
-import de.lichtflut.rb.webck.components.listview.ListPagerPanel;
-import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
 import de.lichtflut.rb.webck.components.navigation.ExtendedActionsPanel;
 import de.lichtflut.rb.webck.components.widgets.ConfigurableWidget;
 import de.lichtflut.rb.webck.components.widgets.WidgetActionsPanel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
-import de.lichtflut.rb.webck.models.basic.PageableModel;
-import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
-import org.apache.wicket.Component;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.Conversation;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryException;
 import org.arastreju.sge.query.QueryResult;
-import org.arastreju.sge.query.SimpleQueryResult;
-import org.arastreju.sge.query.SortCriteria;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
@@ -85,9 +60,6 @@ public class EntityTreeWidget extends ConfigurableWidget {
     @SpringBean
 	private ViewSpecificationService viewSpecificationService;
 
-    @SpringBean
-    private Conversation conversation;
-	
 	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;
 	
@@ -153,16 +125,5 @@ public class EntityTreeWidget extends ConfigurableWidget {
             }
         };
     }
-
-	private String[] getSortCriteria(WidgetSpec spec) {
-		List<String> columns = new ArrayList<String>();
-		for (ColumnDef def : spec.getColumns()) {
-			final ResourceID predicate = def.getProperty();
-			if (predicate != null) {
-				columns.add(predicate.toURI());
-			}
-		}
-		return columns.toArray(new String[columns.size()]);
-	}
 
 }

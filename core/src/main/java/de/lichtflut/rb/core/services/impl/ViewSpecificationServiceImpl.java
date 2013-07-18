@@ -43,11 +43,16 @@ import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.query.SimpleQueryResult;
 import org.arastreju.sge.query.SortCriteria;
+import org.arastreju.sge.query.script.QueryScriptEngine;
+import org.arastreju.sge.query.script.QueryScriptException;
+import org.arastreju.sge.query.script.ScriptEngineContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.arastreju.sge.SNOPS.string;
 
 /**
  * <p>
@@ -230,25 +235,24 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
     @Override
     public QueryResult load(WidgetSpec widget) {
         Selection selection = widget.getSelection();
-        if (selection != null && selection.isDefined()) {
-            Query query = conversation().createQuery();
-            selection.adapt(query);
-            query.setSortCriteria(new SortCriteria(getSortColumns(widget)));
-            return query.getResult();
-        } else {
+        if (selection == null || !selection.isDefined()) {
             return SimpleQueryResult.EMPTY;
+        } else if (Selection.SelectionType.BY_SCRIPT.equals(selection.getType())) {
+            return selectByScript(selection);
+        } else {
+            return selectByQuery(selection, widget);
         }
     }
 
     // ----------------------------------------------------
 
-	protected ResourceNode currentUser() {
+    protected ResourceNode currentUser() {
         if (context == null || context.getUser() == null) {
             throw new IllegalStateException("No user context set.");
-		} else {
-			return vSpecConversation().findResource(context.getUser().getQualifiedName());
-		}
-	}
+        } else {
+            return vSpecConversation().findResource(context.getUser().getQualifiedName());
+        }
+    }
 
     protected String[] getSortColumns(WidgetSpec spec) {
         List<String> columns = new ArrayList<String>();
@@ -259,6 +263,24 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
             }
         }
         return columns.toArray(new String[columns.size()]);
+    }
+
+    private QueryResult selectByQuery(Selection selection, WidgetSpec widget) {
+        Query query = conversation().createQuery();
+        selection.adapt(query);
+        query.setSortCriteria(new SortCriteria(getSortColumns(widget)));
+        return query.getResult();
+    }
+
+    private QueryResult selectByScript(Selection selection) {
+        ScriptEngineContext ctx = new ScriptEngineContext(conversation());
+        try {
+            QueryScriptEngine engine = new QueryScriptEngine(ctx);
+            engine.execute(string(selection.getQueryExpression()));
+            return ctx.getQueryResult();
+        } catch (QueryScriptException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 	// ----------------------------------------------------

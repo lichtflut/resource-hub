@@ -15,26 +15,22 @@
  */
 package de.lichtflut.rb.webck.components.widgets;
 
-import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.services.EntityManager;
-import de.lichtflut.rb.core.viewspec.Selection;
+import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
 import de.lichtflut.rb.webck.components.entity.EntityPanel;
 import de.lichtflut.rb.webck.components.widgets.config.EntityDetailsWidgetConfigPanel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.Conversation;
-import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryException;
 import org.arastreju.sge.query.QueryResult;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
@@ -52,13 +48,13 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
  * @author Oliver Tigges
  */
 public class EntityDetailsWidget extends ConfigurableWidget {
+
+    @SpringBean
+    private ViewSpecificationService viewSpecificationService;
 	
 	@SpringBean
 	protected EntityManager entityManager;
 	
-	@SpringBean
-	protected Conversation conversation;
-
 	// ----------------------------------------------------
 	
 	/**
@@ -88,25 +84,15 @@ public class EntityDetailsWidget extends ConfigurableWidget {
 	}
 	
 	// ----------------------------------------------------
-	
+
 	protected IModel<RBEntity> modelFor(final IModel<WidgetSpec> spec) {
-		return new AbstractLoadableDetachableModel<RBEntity>() {
+		return new DerivedDetachableModel<RBEntity, WidgetSpec>(spec) {
+
 			@Override
-			public RBEntity load() {
-				final Selection selection = spec.getObject().getSelection();
-				if (selection != null && selection.isDefined()) {
-					final Query query = conversation.createQuery();
-					query.beginAnd().addField(RDF.TYPE, RBSystem.ENTITY);
-					selection.adapt(query);
-					query.end();
-					try {
-						final QueryResult result = query.getResult();
-						if (!result.isEmpty()) {
-							return loadFirst(result);
-						}
-					} catch(QueryException e) {
-						error("Error while executing query: " + e);
-					}
+			public RBEntity derive(WidgetSpec widget) {
+                QueryResult result = viewSpecificationService.load(widget);
+                if (!result.isEmpty()) {
+				    return loadFirst(result);
 				}
 				return null;
 			}
