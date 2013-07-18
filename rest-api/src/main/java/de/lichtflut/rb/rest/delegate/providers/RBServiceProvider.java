@@ -47,8 +47,6 @@ public class RBServiceProvider implements ServiceProvider {
 
 	private ArastrejuResourceFactory arastrejuResourceFactory;
 
-	private ServiceContext ctx;
-
 	private AuthModule authModule;
 
 	private FileService fileService;
@@ -58,9 +56,7 @@ public class RBServiceProvider implements ServiceProvider {
 	/**
 	 * Constructor.
 	 */
-	public RBServiceProvider(final ServiceContext ctx, final ArastrejuResourceFactory factory,
-			final AuthModule authModule) {
-		this.ctx = ctx;
+	public RBServiceProvider(ArastrejuResourceFactory factory, AuthModule authModule) {
 		this.arastrejuResourceFactory = factory;
 		this.authModule = authModule;
 	}
@@ -82,18 +78,8 @@ public class RBServiceProvider implements ServiceProvider {
 	// ----------------------------------------------------
 
 	@Override
-	public ServiceContext getContext() {
-		return ctx;
-	}
-
-	@Override
 	public SchemaManager getSchemaManager() {
 		return new SchemaManagerImpl(arastrejuResourceFactory);
-	}
-
-	@Override
-	public SecurityService getSecurityService() {
-		return new SecurityServiceImpl(getContext(), authModule);
 	}
 
 	@Override
@@ -108,7 +94,7 @@ public class RBServiceProvider implements ServiceProvider {
 
     @Override
     public ViewSpecificationService getViewSpecificationService() {
-        return new ViewSpecificationServiceImpl(ctx, arastrejuResourceFactory);
+        return new ViewSpecificationServiceImpl(arastrejuResourceFactory);
     }
 
     @Override
@@ -120,10 +106,6 @@ public class RBServiceProvider implements ServiceProvider {
 
 	public void setArastrejuResourceFactory(final ArastrejuResourceFactory arastrejuResourceFactory) {
 		this.arastrejuResourceFactory = arastrejuResourceFactory;
-	}
-
-	public void setServiceContext(final ServiceContext ctx) {
-		this.ctx = ctx;
 	}
 
 	public void setAuthModule(final AuthModule authModule) {

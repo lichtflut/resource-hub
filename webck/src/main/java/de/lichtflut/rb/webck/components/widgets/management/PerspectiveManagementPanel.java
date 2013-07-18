@@ -15,6 +15,7 @@
  */
 package de.lichtflut.rb.webck.components.widgets.management;
 
+import de.lichtflut.rb.core.services.ServiceContext;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
@@ -52,6 +53,9 @@ import de.lichtflut.rb.webck.models.viewspecs.PerspectiveListModel;
  */
 public class PerspectiveManagementPanel extends Panel {
 
+    @SpringBean
+    private ServiceContext serviceContext;
+
 	@SpringBean
 	private ViewSpecificationService viewSpecificationService;
 
@@ -77,7 +81,8 @@ public class PerspectiveManagementPanel extends Panel {
 		final AjaxLink link = new AjaxLink("create") {
 			@Override
 			public void onClick(final AjaxRequestTarget target) {
-				final Perspective perspective = viewSpecificationService.initializePerspective(new SimpleResourceID());
+				final Perspective perspective = viewSpecificationService.
+                        initializePerspective(new SimpleResourceID(), serviceContext.getUser());
 				final DialogHoster hoster = findParent(DialogHoster.class);
 				hoster.openDialog(new CreatePerspectiveDialog(hoster.getDialogID(), perspective));
 			}

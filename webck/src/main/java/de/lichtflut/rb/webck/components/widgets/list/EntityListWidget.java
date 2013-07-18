@@ -15,7 +15,9 @@
  */
 package de.lichtflut.rb.webck.components.widgets.list;
 
+import de.lichtflut.rb.core.query.QueryContext;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.ColumnDef;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
@@ -72,8 +74,11 @@ public class EntityListWidget extends ConfigurableWidget {
 
 	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;
-	
-	// ----------------------------------------------------
+
+    @SpringBean
+    private ServiceContext serviceContext;
+
+    // ----------------------------------------------------
 	
 	/**
 	 * The constructor.
@@ -127,7 +132,8 @@ public class EntityListWidget extends ConfigurableWidget {
         return new DerivedDetachableModel<QueryResult, WidgetSpec>(spec) {
             @Override
             protected QueryResult derive(WidgetSpec widget) {
-                return viewSpecificationService.load(widget);
+                QueryContext qc = QueryContext.from(serviceContext.getUser());
+                return viewSpecificationService.load(widget, qc);
             }
         };
 	}

@@ -96,6 +96,10 @@ public class WidgetWriterImpl implements WidgetWriter {
             case BY_TYPE:
                 out.writeField("by-type", expr);
                 break;
+            case BY_SCRIPT:
+                out.indent().writeRaw("<script>" + expr + "\n");
+                out.indent().writeRaw("<script>\n");
+                break;
         }
 
         out.closeScope();

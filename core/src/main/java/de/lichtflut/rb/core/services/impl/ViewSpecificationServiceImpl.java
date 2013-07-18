@@ -18,8 +18,10 @@ package de.lichtflut.rb.core.services.impl;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.common.Accessibility;
 import de.lichtflut.rb.core.common.SerialNumberOrderedNodesContainer;
+import de.lichtflut.rb.core.query.QueryContext;
+import de.lichtflut.rb.core.query.QueryExecutor;
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ConversationFactory;
-import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.ColumnDef;
 import de.lichtflut.rb.core.viewspec.Perspective;
@@ -32,6 +34,7 @@ import de.lichtflut.rb.core.viewspec.impl.SNViewPort;
 import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
 import org.arastreju.sge.Conversation;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SemanticGraph;
@@ -43,9 +46,6 @@ import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.query.SimpleQueryResult;
 import org.arastreju.sge.query.SortCriteria;
-import org.arastreju.sge.query.script.QueryScriptEngine;
-import org.arastreju.sge.query.script.QueryScriptException;
-import org.arastreju.sge.query.script.ScriptEngineContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,33 +69,15 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ViewSpecificationServiceImpl.class);
 
-	private ServiceContext context;
-
 	private ConversationFactory conversationFactory;
 
 	// ----------------------------------------------------
-
-	/**
-	 * Default constructor.
-	 */
-	public ViewSpecificationServiceImpl() { }
 
     /**
      * Constructor.
      * @param arasFactory The Arastreju resource factory providing conversations.
      */
     public ViewSpecificationServiceImpl(final ConversationFactory arasFactory) {
-        this.context = null;
-        this.conversationFactory = arasFactory;
-    }
-
-	/**
-     * Constructor.
-     * @param context The service context.
-     * @param arasFactory The Arastreju resource factory providing conversations.
-     */
-    public ViewSpecificationServiceImpl(final ServiceContext context, final ConversationFactory arasFactory) {
-        this.context = context;
         this.conversationFactory = arasFactory;
     }
 
@@ -112,14 +94,14 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
 	}
 
 	@Override
-	public Perspective initializePerspective(final ResourceID id) {
+	public Perspective initializePerspective(ResourceID id, RBUser owner) {
 		final ResourceNode existing = vSpecConversation().findResource(id.getQualifiedName());
 		if (existing != null) {
 			return new SNPerspective(existing);
 		} else {
 			SNPerspective perspective = new SNPerspective(id.getQualifiedName());
-			if (context.isAuthenticated()) {
-				perspective.setOwner(currentUser());
+			if (owner != null) {
+				perspective.setOwner(SNOPS.id(owner.getQualifiedName()));
 			}
 			perspective.setVisibility(Accessibility.PRIVATE);
 			// add two default view ports.
@@ -233,26 +215,18 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
     // ----------------------------------------------------
 
     @Override
-    public QueryResult load(WidgetSpec widget) {
+    public QueryResult load(WidgetSpec widget, QueryContext queryContext) {
         Selection selection = widget.getSelection();
         if (selection == null || !selection.isDefined()) {
             return SimpleQueryResult.EMPTY;
         } else if (Selection.SelectionType.BY_SCRIPT.equals(selection.getType())) {
-            return selectByScript(selection);
+            return selectByScript(selection, queryContext);
         } else {
             return selectByQuery(selection, widget);
         }
     }
 
     // ----------------------------------------------------
-
-    protected ResourceNode currentUser() {
-        if (context == null || context.getUser() == null) {
-            throw new IllegalStateException("No user context set.");
-        } else {
-            return vSpecConversation().findResource(context.getUser().getQualifiedName());
-        }
-    }
 
     protected String[] getSortColumns(WidgetSpec spec) {
         List<String> columns = new ArrayList<String>();
@@ -272,15 +246,10 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
         return query.getResult();
     }
 
-    private QueryResult selectByScript(Selection selection) {
-        ScriptEngineContext ctx = new ScriptEngineContext(conversation());
-        try {
-            QueryScriptEngine engine = new QueryScriptEngine(ctx);
-            engine.execute(string(selection.getQueryExpression()));
-            return ctx.getQueryResult();
-        } catch (QueryScriptException e) {
-            throw new RuntimeException(e);
-        }
+    private QueryResult selectByScript(Selection selection, QueryContext qc) {
+        String script = string(selection.getQueryExpression());
+        QueryExecutor executor = new QueryExecutor(conversation(), qc);
+        return executor.execute(script);
     }
 
 	// ----------------------------------------------------

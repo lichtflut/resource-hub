@@ -1,3 +1,6 @@
+namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#" prefix "rdf"
+namespace "http://rb.lichtflut.de/common#" prefix "common"
+
 perspective "Organization" {
 
 	title : "Organizational overview"
@@ -13,10 +16,10 @@ perspective "Organization" {
 			display : "list"
 			action {
 			    label : "Add a new organization"
-			    create : "http://rb.lichtflut.de/common#Organization"
+			    create : "common:Organization"
 			}
 			selection {
-				by-type : "http://rb.lichtflut.de/common#Organization"
+				by-type : "common:Organization"
 			}
 			column {
                 label : "Name"
@@ -24,7 +27,7 @@ perspective "Organization" {
             }
             column {
                 label : "General Manager"
-                property : "http://rb.lichtflut.de/common#hasGeneralManager"
+                property : "common:hasGeneralManager"
             }
 		}
 
@@ -45,7 +48,7 @@ perspective "Organization" {
 			display : "details"
 			selection {
 				<script>
-				    finish(query("x='something'").filter(function (e) { e < 1 }));
+				    finish(query("rdf:type='common:Person'").filter(function (e) { e < 1 }));
 				</script>
 			}
 		}

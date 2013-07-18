@@ -83,7 +83,7 @@ public class VSpecReaderTest {
         Assert.assertEquals(2, columns2.size());
         ColumnDef column2_1 = columns2.get(0);
         Assert.assertEquals("Name", column2_1.getHeader());
-        Assert.assertEquals("common:hasName", column2_1.getProperty().toURI());
+        Assert.assertEquals("http://rb.lichtflut.de/common#hasName", column2_1.getProperty().toURI());
 
 
         WidgetSpec widget3 = port2.getWidgets().get(0);
@@ -97,7 +97,8 @@ public class VSpecReaderTest {
         assertEquals("My current project", widget4.getTitle());
         Selection selection4 = widget4.getSelection();
         assertEquals(Selection.SelectionType.BY_SCRIPT, selection4.getType() );
-        assertEquals("finish(query(\"x='something'\").filter(function (e) { e < 1 }));",
+        assertEquals("finish(query(\"http://www.w3.org/1999/02/22-rdf-syntax-ns#type" +
+                "='http://rb.lichtflut.de/common#Person'\").filter(function (e) { e < 1 }));",
                 string(selection4.getQueryExpression()));
     }
 

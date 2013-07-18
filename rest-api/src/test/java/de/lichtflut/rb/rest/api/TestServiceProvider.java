@@ -49,7 +49,6 @@ public class TestServiceProvider extends RBServiceProvider {
 		ServiceContext ctx = new ServiceContext(config, DomainIdentifier.MASTER_DOMAIN);
 		factory = new ArastrejuResourceFactory(ctx);
 
-		setServiceContext(ctx);
 		setArastrejuResourceFactory(factory);
 		setAuthModule(module);
 	}

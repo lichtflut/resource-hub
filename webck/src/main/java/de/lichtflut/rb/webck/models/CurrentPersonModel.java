@@ -59,9 +59,6 @@ public class CurrentPersonModel extends AbstractLoadableDetachableModel<RBEntity
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBEntity load() {
 		RBUser user = context.getUser();

@@ -53,7 +53,7 @@ public class RBServiceProviderFactory {
 		ServiceContext ctx = new ServiceContext(config, domain, user);
 		ArastrejuResourceFactory factory = new ArastrejuResourceFactory(ctx);
 
-		RBServiceProvider rbServiceProvider = new RBServiceProvider(ctx, factory, authModule);
+		RBServiceProvider rbServiceProvider = new RBServiceProvider(factory, authModule);
 		rbServiceProvider.setFileService(fileService);
 
 		return rbServiceProvider;

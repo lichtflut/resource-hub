@@ -335,9 +335,6 @@ public abstract class TestBase extends junit.framework.TestCase {
 	 * @return the provider
 	 */
 	protected TestServiceProvider getProvider() {
-		if(currentDomain!=null){
-			provider.getContext().setDomain(currentDomain.getDomainIdentifier());
-		}
 		return provider;
 	}
 

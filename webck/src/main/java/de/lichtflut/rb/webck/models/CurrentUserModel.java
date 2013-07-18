@@ -99,9 +99,6 @@ public class CurrentUserModel extends AbstractLoadableDetachableModel<RBUser> {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public RBUser load() {
 		return context.getUser();

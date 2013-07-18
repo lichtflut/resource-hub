@@ -16,6 +16,7 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.io.NamespaceMap;
 import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.SimpleNamespace;
 import org.arastreju.sge.query.QueryParser;
@@ -168,13 +169,12 @@ public class VSpecCollector {
 
     public void setSelectionQuery(String queryString) {
         new QueryParser().validate(queryString);
-        SNSelection selection = SNSelection.byQuery(queryString);
-
+        SNSelection selection = SNSelection.byQuery(substituteQNames(queryString));
         currentWidget().setSelection(selection);
     }
 
     public void setSelectionQueryByType(String type) {
-        SNSelection selection = SNSelection.byType(id(qualify(type)));
+        SNSelection selection = SNSelection.byType(toRID(type));
         currentWidget().setSelection(selection);
     }
 
@@ -184,13 +184,13 @@ public class VSpecCollector {
     }
 
     public void setSelectionQueryByRef(String ref) {
-        SNSelection selection = SNSelection.byRelation(id(qualify(ref)));
+        SNSelection selection = SNSelection.byRelation(toRID(ref));
         currentWidget().setSelection(selection);
     }
 
     public void setSelectionScript(String script) {
         script = removeScriptTags(script);
-        SNSelection selection = SNSelection.byScript(script);
+        SNSelection selection = SNSelection.byScript(substituteQNames(script));
         currentWidget().setSelection(selection);
     }
 
@@ -199,7 +199,7 @@ public class VSpecCollector {
             currentAction().setLabel(value);
         } else if ("create".equals(key)){
             currentAction().setActionType(WDGT.ACTION_INSTANTIATE);
-            SNOPS.assure(currentAction(), WDGT.CREATE_INSTANCE_OF, id(qualify(value)));
+            SNOPS.assure(currentAction(), WDGT.CREATE_INSTANCE_OF, toRID(value));
         } else {
             Matcher matcher = INT_LABEL.matcher(value);
             if (!matcher.matches()) {
@@ -214,7 +214,7 @@ public class VSpecCollector {
         if ("label".equals(key)) {
             currentColumn().setHeader(value);
         } else if ("property".equals(key)){
-            currentColumn().setProperty( id(qualify(value)));
+            currentColumn().setProperty( toRID(value));
         } else {
             Matcher matcher = INT_LABEL.matcher(value);
             if (!matcher.matches()) {
@@ -249,6 +249,18 @@ public class VSpecCollector {
     }
 
     // ----------------------------------------------------
+
+    private ResourceID toRID(String in) {
+        return new SimpleResourceID(toQN(in));
+    }
+
+    private QualifiedName toQN(String in) {
+        return qualify(nsMap.qualify(in));
+    }
+
+    private String substituteQNames(String in) {
+        return nsMap.replaceAll(in);
+    }
 
     private String removeScriptTags(String raw) {
         String result = raw.trim();

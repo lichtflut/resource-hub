@@ -18,7 +18,6 @@ package de.lichtflut.rb.rest.delegate.providers;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.FileService;
 import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.SecurityService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.TypeManager;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
@@ -38,11 +37,6 @@ import java.io.File;
  * @author Ravi Knox
  */
 public interface ServiceProvider {
-
-	/**
-	 * @return The context of this service provider.
-	 */
-	ServiceContext getContext();
 
 	/**
 	 * @return An active Arastreju conversation.
@@ -80,11 +74,6 @@ public interface ServiceProvider {
 	 * @return The type manager.
 	 */
 	TypeManager getTypeManager();
-
-	/**
-	 * @return The security service.
-	 */
-	SecurityService getSecurityService();
 
 	/**
 	 * @return the file service to store and retrieve {@link File}s

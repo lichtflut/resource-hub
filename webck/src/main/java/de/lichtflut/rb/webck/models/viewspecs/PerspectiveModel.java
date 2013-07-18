@@ -15,6 +15,7 @@
  */
 package de.lichtflut.rb.webck.models.viewspecs;
 
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
@@ -39,7 +40,10 @@ public class PerspectiveModel extends AbstractLoadableDetachableModel<Perspectiv
 	
 	@SpringBean
 	private ViewSpecificationService viewSpecificationService;
-	
+
+    @SpringBean
+    private ServiceContext context;
+
 	// ----------------------------------------------------
 	
 	/**
@@ -56,7 +60,7 @@ public class PerspectiveModel extends AbstractLoadableDetachableModel<Perspectiv
 	public Perspective load() {
         Perspective perspective = viewSpecificationService.findPerspective(perspectiveID.getQualifiedName());
         if (perspective == null) {
-            perspective = viewSpecificationService.initializePerspective(perspectiveID);
+            perspective = viewSpecificationService.initializePerspective(perspectiveID, context.getUser());
             viewSpecificationService.store(perspective);
         }
         return perspective;

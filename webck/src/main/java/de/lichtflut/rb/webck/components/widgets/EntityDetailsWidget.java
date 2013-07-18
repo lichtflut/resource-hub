@@ -16,7 +16,9 @@
 package de.lichtflut.rb.webck.components.widgets;
 
 import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.query.QueryContext;
 import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.components.entity.EntityInfoPanel;
@@ -53,7 +55,10 @@ public class EntityDetailsWidget extends ConfigurableWidget {
     private ViewSpecificationService viewSpecificationService;
 	
 	@SpringBean
-	protected EntityManager entityManager;
+	private EntityManager entityManager;
+
+    @SpringBean
+    private ServiceContext serviceContext;
 	
 	// ----------------------------------------------------
 	
@@ -90,7 +95,8 @@ public class EntityDetailsWidget extends ConfigurableWidget {
 
 			@Override
 			public RBEntity derive(WidgetSpec widget) {
-                QueryResult result = viewSpecificationService.load(widget);
+                QueryContext qc = QueryContext.from(serviceContext.getUser());
+                QueryResult result = viewSpecificationService.load(widget, qc);
                 if (!result.isEmpty()) {
 				    return loadFirst(result);
 				}

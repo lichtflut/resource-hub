@@ -16,6 +16,8 @@
 package de.lichtflut.rb.webck.components.entity;
 
 
+import java.io.Serializable;
+
 /**
  * <p>
  *  Link to a URL representing a special visualization.
@@ -28,7 +30,7 @@ package de.lichtflut.rb.webck.components.entity;
  * @author Oliver Tigges
  * @see VisualizationMode
  */
-public class VisualizationLink {
+public class VisualizationLink implements Serializable {
 	
 	private String url;
 	private String resourceKey;

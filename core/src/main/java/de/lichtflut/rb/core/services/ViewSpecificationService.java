@@ -17,6 +17,8 @@ package de.lichtflut.rb.core.services;
 
 import java.util.List;
 
+import de.lichtflut.rb.core.query.QueryContext;
+import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.viewspec.Selection;
 import org.arastreju.sge.model.ResourceID;
 
@@ -53,9 +55,10 @@ public interface ViewSpecificationService {
 	/**
 	 * Initialize a perspective (e.g. add the view ports).
 	 * @param id The ID.
+     * @param owner The owner.
 	 * @return The initialized perspective.
 	 */
-	Perspective initializePerspective(ResourceID id);
+    Perspective initializePerspective(ResourceID id, RBUser owner);
 
 	/**
 	 * Find all perspectives accessible for the current user.
@@ -130,9 +133,10 @@ public interface ViewSpecificationService {
 
     /**
      * Load data defined in a widget's selection.
+     * @param widget The widget.
+     * @param queryContext The context of this query containing information about current user, etc.
      * @return The query result.
      */
-    QueryResult load(WidgetSpec widget);
-
+    QueryResult load(WidgetSpec widget, QueryContext queryContext);
 
 }

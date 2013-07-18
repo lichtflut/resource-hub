@@ -120,6 +120,11 @@ public class CommonFormatWriter {
         return this;
     }
 
+    public CommonFormatWriter indent() {
+        indent(scope);
+        return this;
+    }
+
     public CommonFormatWriter writeField(final String field, final String value) {
         indent(scope);
         writer.write(field);
@@ -129,6 +134,11 @@ public class CommonFormatWriter {
             writer.write(value);
         }
         writer.write("\"\n");
+        return this;
+    }
+
+    public CommonFormatWriter writeRaw(final String raw) {
+        writer.write(raw);
         return this;
     }
 
