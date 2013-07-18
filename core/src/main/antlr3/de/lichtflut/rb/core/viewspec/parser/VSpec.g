@@ -20,6 +20,7 @@ tokens {
 	QUERY_BY_TYPE_DECL;
 	QUERY_BY_VALUE_DECL;
 	QUERY_BY_REF_DECL;
+	QUERY_BY_SCRIPT;
 	QUERY_DECL;
 }
 
@@ -113,13 +114,12 @@ column_property_key :
     | PROPERTY
 ;
 
-
-
 // Definition of a widget's selection declaration
-selection_decl :    SELECTION '{' QUERY COLON query_string=STRING '}' -> ^(QUERY_DECL $query_string) |
-                    SELECTION '{' QUERY_BY_TYPE COLON type=STRING '}' -> ^(QUERY_BY_TYPE $type) |
-                    SELECTION '{' QUERY_BY_VALUE COLON val=STRING '}' -> ^(QUERY_BY_VALUE $val) |
-                    SELECTION '{' QUERY_BY_REF COLON ref=STRING '}' -> ^(QUERY_BY_REF $ref)
+selection_decl :    SELECTION '{' QUERY COLON query_string=STRING '}'  -> ^(QUERY_DECL $query_string) |
+                    SELECTION '{' QUERY_BY_TYPE COLON type=STRING '}'  -> ^(QUERY_BY_TYPE $type)      |
+                    SELECTION '{' QUERY_BY_VALUE COLON val=STRING '}'  -> ^(QUERY_BY_VALUE $val)      |
+                    SELECTION '{' QUERY_BY_REF COLON ref=STRING '}'    -> ^(QUERY_BY_REF $ref)        |
+                    SELECTION '{' ref=SCRIPT '}' -> ^(QUERY_BY_SCRIPT $ref)
 ;
 
 // TOKENS
@@ -162,6 +162,8 @@ QUERY_BY_VALUE : 'by-value';
 
 QUERY_BY_REF : 'by-reference';
 
+QUERY_BY_SCRIPT : 'script';
+
 IMPLEMENTING_CLASS : 'implementing-class';
 
 CREATE : 'create';
@@ -173,6 +175,8 @@ COMMA : ',';
 STRING 	: '"' .* '"';
 
 SQ_STRING 	: '\'' .* '\'';
+
+SCRIPT 	: '<script>' .* '</script>';
 
 WS: (' '|'\n'|'\r'|'\t')+ {$channel=HIDDEN;} ;
 

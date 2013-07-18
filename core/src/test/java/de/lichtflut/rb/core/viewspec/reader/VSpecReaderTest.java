@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.arastreju.sge.SNOPS.qualify;
 import static org.arastreju.sge.SNOPS.singleObject;
+import static org.arastreju.sge.SNOPS.string;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -94,6 +95,10 @@ public class VSpecReaderTest {
         assertEquals(WDGT.ENTITY_DETAILS,
                 singleObject(widget4, RDF.TYPE).asResource());
         assertEquals("My current project", widget4.getTitle());
+        Selection selection4 = widget4.getSelection();
+        assertEquals(Selection.SelectionType.BY_SCRIPT, selection4.getType() );
+        assertEquals("finish(query(\"x='something'\").filter(function (e) { e < 1 }));",
+                string(selection4.getQueryExpression()));
     }
 
 }

@@ -129,6 +129,11 @@ public interface WDGT {
      */
     ResourceID SELECT_BY_QUERY = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "selectByQuery");
 
+    /**
+     * A selection by a relation.
+     */
+    ResourceID SELECT_BY_SCRIPT = new SimpleResourceID(RBSystem.SYS_NAMESPACE_URI, "selectByScript");
+
 	// -- COLUMNS -----------------------------------------
 	
 	/**

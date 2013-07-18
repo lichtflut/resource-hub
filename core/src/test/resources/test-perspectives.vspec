@@ -44,7 +44,9 @@ perspective "Organization" {
 			title : "My current project"
 			display : "details"
 			selection {
-				query : "'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' = 'http://rb.lichtflut.de/common#Project'"
+				<script>
+				    finish(query("x='something'").filter(function (e) { e < 1 }));
+				</script>
 			}
 		}
 

@@ -188,6 +188,12 @@ public class VSpecCollector {
         currentWidget().setSelection(selection);
     }
 
+    public void setSelectionScript(String script) {
+        script = removeScriptTags(script);
+        SNSelection selection = SNSelection.byScript(script);
+        currentWidget().setSelection(selection);
+    }
+
     public void currentActionProperty(String key, String value) {
         if ("label".equals(key)) {
             currentAction().setLabel(value);
@@ -240,6 +246,18 @@ public class VSpecCollector {
 
     public void columnFinished() {
         currentColumn = null;
+    }
+
+    // ----------------------------------------------------
+
+    private String removeScriptTags(String raw) {
+        String result = raw.trim();
+        if (result.startsWith("<script>") && result.endsWith("</script>")) {
+            result = result.substring("<script>".length(), result.length() - "<script/>".length()).trim();
+        } else {
+            LOGGER.warn("Script not placed in <script> tags.");
+        }
+        return result;
     }
 
 }

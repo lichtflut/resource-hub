@@ -34,6 +34,7 @@ public interface Selection extends ResourceNode {
 
     enum SelectionType {
         BY_QUERY,
+        BY_SCRIPT,
         BY_TYPE,
         BY_VALUE,
         BY_RELATION

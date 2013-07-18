@@ -49,7 +49,7 @@ import java.util.Set;
 public class SNSelection extends ResourceView implements Selection {
 
     static ResourceID[] PREDICATES = new ResourceID[] {
-        WDGT.SELECT_BY_QUERY, WDGT.SELECT_BY_TYPE, WDGT.SELECT_BY_RELATION, WDGT.SELECT_BY_VALUE
+        WDGT.SELECT_BY_QUERY, WDGT.SELECT_BY_TYPE, WDGT.SELECT_BY_RELATION, WDGT.SELECT_BY_VALUE, WDGT.SELECT_BY_SCRIPT
     };
 
     // ----------------------------------------------------
@@ -90,6 +90,12 @@ public class SNSelection extends ResourceView implements Selection {
         return selection;
     }
 
+    public static SNSelection byScript(String script) {
+        SNSelection selection = new SNSelection();
+        selection.addAssociation(WDGT.SELECT_BY_SCRIPT, new SNText(script));
+        return selection;
+    }
+
     // ----------------------------------------------------
 
 	/**
@@ -121,6 +127,8 @@ public class SNSelection extends ResourceView implements Selection {
                 return SelectionType.BY_RELATION;
             } else if (WDGT.SELECT_BY_VALUE.equals(predicate)) {
                 return SelectionType.BY_VALUE;
+            } else if (WDGT.SELECT_BY_SCRIPT.equals(predicate)) {
+                return SelectionType.BY_SCRIPT;
             }
         }
         return null;
@@ -155,6 +163,9 @@ public class SNSelection extends ResourceView implements Selection {
             } else if (WDGT.SELECT_BY_VALUE.equals(predicate)) {
                 adaptByValue(query);
                 return;
+            } else if (WDGT.SELECT_BY_SCRIPT.equals(predicate)) {
+                // Scripts can not be adapted to queries.
+                return;
             }
         }
 	}
@@ -168,9 +179,8 @@ public class SNSelection extends ResourceView implements Selection {
 	
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("Selection[")
-                .append(getQualifiedName().getSimpleName())
-                .append("]");
+		final StringBuilder sb = new StringBuilder("Selection[" + getType() + "]");
+        sb.append(";").append("expr=\"").append(getQueryExpression()).append("\"");
 		return sb.toString();
 	}
 
@@ -195,6 +205,5 @@ public class SNSelection extends ResourceView implements Selection {
         ResourceID rel = resourceValue(WDGT.SELECT_BY_RELATION);
         query.addRelation(rel.toURI());
     }
-
 
 }

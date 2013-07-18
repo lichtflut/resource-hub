@@ -19,8 +19,12 @@ import de.lichtflut.rb.core.viewspec.reader.VSpecCollector;
 @members{
     private final VSpecCollector ctx = new VSpecCollector();
 
-    private String unquote(String s) {
-        return s.replaceAll("\"", "");
+    private String unquote(String raw) {
+        if (raw != null && raw.startsWith("\"") && raw.endsWith("\"")) {
+            return raw.substring(1, raw.length() -1);
+        } else {
+            return raw;
+        }
     }
 
     public VSpecCollector getCollector() {
@@ -89,7 +93,7 @@ column_property : ^(COLUMN_PROPERTY(key=. value=STRING{
 
 // SELECTION
 
-selection_decl : query_decl | query_by_type_decl | query_by_value_decl | query_by_ref_decl ;
+selection_decl : query_decl | query_by_type_decl | query_by_value_decl | query_by_ref_decl | query_by_script;
 
 query_decl : ^(QUERY_DECL(query_string=STRING {
     ctx.setSelectionQuery(unquote($query_string.text));
@@ -105,6 +109,10 @@ query_by_value_decl : ^(QUERY_BY_VALUE(val=STRING {
 
 query_by_ref_decl : ^(QUERY_BY_REF(ref=STRING {
     ctx.setSelectionQueryByRef(unquote($ref.text));
+}));
+
+query_by_script : ^(QUERY_BY_SCRIPT(ref=SCRIPT {
+    ctx.setSelectionScript(unquote($ref.text));
 }));
 
 
