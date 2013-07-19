@@ -17,6 +17,7 @@ package de.lichtflut.rb.core.viewspec.impl;
 
 import de.lichtflut.rb.core.viewspec.Selection;
 import de.lichtflut.rb.core.viewspec.WDGT;
+import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
@@ -135,14 +136,28 @@ public class SNSelection extends ResourceView implements Selection {
     }
 
     @Override
-    public SemanticNode getQueryExpression() {
+    public String getQueryExpression() {
         final Set<ResourceID> predicates = new HashSet<ResourceID>(Arrays.asList(PREDICATES));
         for (Statement statement : getAssociations()) {
             if (predicates.contains(statement.getPredicate())) {
-                return statement.getObject();
+                return SNOPS.string(statement.getObject());
             }
         }
         return null;
+    }
+
+    @Override
+    public void setType(SelectionType type) {
+        if (type != null && !getType().equals(type)) {
+            setSelection(type, getQueryExpression());
+        }
+    }
+
+    @Override
+    public void setQueryExpression(String expr) {
+        if (expr != null && !getQueryExpression().equals(expr)) {
+            setSelection(getType(), expr);
+        }
     }
 
     // ----------------------------------------------------
@@ -186,24 +201,27 @@ public class SNSelection extends ResourceView implements Selection {
 
     // ----------------------------------------------------
 
+    private void setSelection(SelectionType type, String expr) {
+        for (ResourceID current : PREDICATES) {
+            removeValues(current);
+        }
+        setValue(type.getPredicate(), expr);
+    }
+
     private void adaptByQuery(Query query) {
-        String qs = stringValue(WDGT.SELECT_BY_QUERY);
-        new QueryParser().adapt(query, qs);
+        new QueryParser().adapt(query, stringValue(WDGT.SELECT_BY_QUERY));
     }
 
     private void adaptByType(Query query) {
-        ResourceID type = resourceValue(WDGT.SELECT_BY_TYPE);
-        query.addField(RDF.TYPE, type);
+        query.addField(RDF.TYPE, stringValue(WDGT.SELECT_BY_TYPE));
     }
 
     private void adaptByValue(Query query) {
-        String value = stringValue(WDGT.SELECT_BY_VALUE);
-        query.addValue(value);
+        query.addValue(stringValue(WDGT.SELECT_BY_VALUE));
     }
 
     private void adaptByRelation(Query query) {
-        ResourceID rel = resourceValue(WDGT.SELECT_BY_RELATION);
-        query.addRelation(rel.toURI());
+        query.addRelation(stringValue(WDGT.SELECT_BY_RELATION));
     }
 
 }

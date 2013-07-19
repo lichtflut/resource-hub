@@ -99,7 +99,7 @@ public class VSpecReaderTest {
         assertEquals(Selection.SelectionType.BY_SCRIPT, selection4.getType() );
         assertEquals("finish(query(\"http://www.w3.org/1999/02/22-rdf-syntax-ns#type" +
                 "='http://rb.lichtflut.de/common#Person'\").filter(function (e) { e < 1 }));",
-                string(selection4.getQueryExpression()));
+                selection4.getQueryExpression());
     }
 
 }

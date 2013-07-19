@@ -46,6 +46,7 @@ import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.query.SimpleQueryResult;
 import org.arastreju.sge.query.SortCriteria;
+import org.arastreju.sge.query.script.QueryScriptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -215,7 +216,7 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
     // ----------------------------------------------------
 
     @Override
-    public QueryResult load(WidgetSpec widget, QueryContext queryContext) {
+    public QueryResult load(WidgetSpec widget, QueryContext queryContext) throws QueryScriptException {
         Selection selection = widget.getSelection();
         if (selection == null || !selection.isDefined()) {
             return SimpleQueryResult.EMPTY;
@@ -246,8 +247,8 @@ public class ViewSpecificationServiceImpl implements ViewSpecificationService {
         return query.getResult();
     }
 
-    private QueryResult selectByScript(Selection selection, QueryContext qc) {
-        String script = string(selection.getQueryExpression());
+    private QueryResult selectByScript(Selection selection, QueryContext qc) throws QueryScriptException {
+        String script = selection.getQueryExpression();
         QueryExecutor executor = new QueryExecutor(conversation(), qc);
         return executor.execute(script);
     }

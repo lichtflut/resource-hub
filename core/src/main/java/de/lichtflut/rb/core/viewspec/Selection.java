@@ -15,6 +15,7 @@
  */
 package de.lichtflut.rb.core.viewspec;
 
+import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.query.Query;
@@ -33,18 +34,37 @@ import org.arastreju.sge.query.Query;
 public interface Selection extends ResourceNode {
 
     enum SelectionType {
-        BY_QUERY,
-        BY_SCRIPT,
-        BY_TYPE,
-        BY_VALUE,
-        BY_RELATION
+
+        BY_QUERY(WDGT.SELECT_BY_QUERY),
+        BY_SCRIPT(WDGT.SELECT_BY_SCRIPT),
+        BY_TYPE(WDGT.SELECT_BY_TYPE) ,
+        BY_VALUE(WDGT.SELECT_BY_VALUE),
+        BY_RELATION(WDGT.SELECT_BY_RELATION);
+
+        private ResourceID predicate;
+
+        public ResourceID getPredicate() {
+            return predicate;
+        }
+
+        SelectionType(ResourceID predicate) {
+            this.predicate = predicate;
+        }
     }
 
     // ----------------------------------------------------
 
     SelectionType getType();
 
-    SemanticNode getQueryExpression();
+    void setType(SelectionType type);
+
+    // ----------------------------------------------------
+
+    String getQueryExpression();
+
+    void setQueryExpression(String expr);
+
+    // ----------------------------------------------------
 
 	boolean isDefined();
 	

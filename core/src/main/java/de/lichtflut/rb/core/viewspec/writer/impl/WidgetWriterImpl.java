@@ -82,7 +82,7 @@ public class WidgetWriterImpl implements WidgetWriter {
     private void writeSelection(CommonFormatWriter out, Selection selection) {
         out.openScope("selection");
 
-        String expr = string(selection.getQueryExpression());
+        String expr = selection.getQueryExpression();
         switch (selection.getType()) {
             case BY_QUERY:
                 out.writeField("query", expr);

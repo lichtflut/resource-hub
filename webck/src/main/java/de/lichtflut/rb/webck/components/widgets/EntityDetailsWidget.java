@@ -16,7 +16,6 @@
 package de.lichtflut.rb.webck.components.widgets;
 
 import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.query.QueryContext;
 import de.lichtflut.rb.core.services.EntityManager;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
@@ -26,12 +25,12 @@ import de.lichtflut.rb.webck.components.entity.EntityPanel;
 import de.lichtflut.rb.webck.components.widgets.config.EntityDetailsWidgetConfigPanel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.perceptions.WidgetSelectionModel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.arastreju.sge.Conversation;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.query.QueryResult;
 
@@ -51,15 +50,9 @@ import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
  */
 public class EntityDetailsWidget extends ConfigurableWidget {
 
-    @SpringBean
-    private ViewSpecificationService viewSpecificationService;
-	
 	@SpringBean
 	private EntityManager entityManager;
 
-    @SpringBean
-    private ServiceContext serviceContext;
-	
 	// ----------------------------------------------------
 	
 	/**
@@ -91,16 +84,14 @@ public class EntityDetailsWidget extends ConfigurableWidget {
 	// ----------------------------------------------------
 
 	protected IModel<RBEntity> modelFor(final IModel<WidgetSpec> spec) {
-		return new DerivedDetachableModel<RBEntity, WidgetSpec>(spec) {
+		return new DerivedDetachableModel<RBEntity, QueryResult>(new WidgetSelectionModel(spec)) {
 
 			@Override
-			public RBEntity derive(WidgetSpec widget) {
-                QueryContext qc = QueryContext.from(serviceContext.getUser());
-                QueryResult result = viewSpecificationService.load(widget, qc);
+			public RBEntity derive(QueryResult result) {
                 if (!result.isEmpty()) {
 				    return loadFirst(result);
 				}
-				return null;
+                return null;
 			}
 
 			protected RBEntity loadFirst(final QueryResult result) {

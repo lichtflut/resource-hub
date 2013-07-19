@@ -90,9 +90,14 @@ public class QueryContext {
             ResourceNode userNode = conversation.findResource(user.getQualifiedName());
             if (userNode != null) {
                 final ResourceNode person = SNOPS.fetchObjectAsResource(userNode, RBSystem.IS_RESPRESENTED_BY);
-                put("user.person", person.toURI());
+                if (person != null) {
+                    put("user.person", person.toURI());
+                    return;
+                }
             }
         }
+        // default
+        put("user.person", "nil");
     }
 
 }

@@ -29,6 +29,7 @@ import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.QueryResult;
+import org.arastreju.sge.query.script.QueryScriptException;
 
 /**
  * <p>
@@ -137,6 +138,6 @@ public interface ViewSpecificationService {
      * @param queryContext The context of this query containing information about current user, etc.
      * @return The query result.
      */
-    QueryResult load(WidgetSpec widget, QueryContext queryContext);
+    QueryResult load(WidgetSpec widget, QueryContext queryContext) throws QueryScriptException;
 
 }

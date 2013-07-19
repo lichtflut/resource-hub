@@ -124,9 +124,6 @@ public class InformationExportDialog extends AbstractRBDialog implements IResour
 
 	// -- IResourceListener -------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onResourceRequested() {
 		final RequestCycle cycle = RequestCycle.get();

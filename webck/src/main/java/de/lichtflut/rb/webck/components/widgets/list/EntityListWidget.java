@@ -15,7 +15,6 @@
  */
 package de.lichtflut.rb.webck.components.widgets.list;
 
-import de.lichtflut.rb.core.query.QueryContext;
 import de.lichtflut.rb.core.services.SemanticNetworkService;
 import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.core.services.ViewSpecificationService;
@@ -36,6 +35,7 @@ import de.lichtflut.rb.webck.components.navigation.ExtendedActionsPanel;
 import de.lichtflut.rb.webck.components.widgets.ConfigurableWidget;
 import de.lichtflut.rb.webck.components.widgets.WidgetActionsPanel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.perceptions.WidgetSelectionModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.basic.PageableModel;
 import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
@@ -67,16 +67,10 @@ public class EntityListWidget extends ConfigurableWidget {
 	public static final int MAX_RESULTS = 15;
 
     @SpringBean
-    private ViewSpecificationService viewSpecificationService;
-
-    @SpringBean
 	private SemanticNetworkService semanticNetwork;
 
 	@SpringBean
 	private ResourceLinkProvider resourceLinkProvider;
-
-    @SpringBean
-    private ServiceContext serviceContext;
 
     // ----------------------------------------------------
 	
@@ -129,13 +123,7 @@ public class EntityListWidget extends ConfigurableWidget {
 	// ----------------------------------------------------
 	
 	protected IModel<QueryResult> modelFor(final IModel<WidgetSpec> spec) {
-        return new DerivedDetachableModel<QueryResult, WidgetSpec>(spec) {
-            @Override
-            protected QueryResult derive(WidgetSpec widget) {
-                QueryContext qc = QueryContext.from(serviceContext.getUser());
-                return viewSpecificationService.load(widget, qc);
-            }
-        };
+        return new WidgetSelectionModel(spec);
 	}
 	
 	protected IModel<ColumnConfiguration> configModel(final IModel<WidgetSpec> specModel) {
@@ -159,5 +147,5 @@ public class EntityListWidget extends ConfigurableWidget {
 			}
 		};
 	}
-	
+
 }

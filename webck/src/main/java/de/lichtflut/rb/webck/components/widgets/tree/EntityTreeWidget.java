@@ -28,6 +28,7 @@ import de.lichtflut.rb.webck.components.widgets.ConfigurableWidget;
 import de.lichtflut.rb.webck.components.widgets.WidgetActionsPanel;
 import de.lichtflut.rb.webck.models.ConditionalModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
+import de.lichtflut.rb.webck.models.perceptions.WidgetSelectionModel;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -56,18 +57,6 @@ public class EntityTreeWidget extends ConfigurableWidget {
 
 	public static final int MAX_RESULTS = 15;
 	
-	@SpringBean
-	private SemanticNetworkService semanticNetwork;
-
-    @SpringBean
-	private ViewSpecificationService viewSpecificationService;
-
-	@SpringBean
-	private ResourceLinkProvider resourceLinkProvider;
-
-    @SpringBean
-    private ServiceContext serviceContext;
-
     // ----------------------------------------------------
 	
 	/**
@@ -81,7 +70,7 @@ public class EntityTreeWidget extends ConfigurableWidget {
 		
 		setOutputMarkupId(true);
 		
-		final IModel<QueryResult> rootModel = modelFor(spec);
+		final IModel<QueryResult> rootModel = new WidgetSelectionModel(spec);
         final ListView<ResourceNode> list = new ListView<ResourceNode>("tree", listModel(rootModel)) {
             @Override
             protected void populateItem(ListItem<ResourceNode> listItem) {
@@ -112,16 +101,6 @@ public class EntityTreeWidget extends ConfigurableWidget {
             RBAjaxTarget.add(this);
         }
     }
-
-    protected IModel<QueryResult> modelFor(IModel<WidgetSpec> spec) {
-		return new DerivedDetachableModel<QueryResult, WidgetSpec>(spec) {
-            @Override
-            protected QueryResult derive(WidgetSpec widget) {
-                QueryContext qc = QueryContext.from(serviceContext.getUser());
-                return viewSpecificationService.load(widget, qc);
-            }
-        };
-	}
 
     protected IModel<List<ResourceNode>> listModel(IModel<QueryResult> queryResult) {
         return new DerivedDetachableModel<List<ResourceNode>, QueryResult>(queryResult) {

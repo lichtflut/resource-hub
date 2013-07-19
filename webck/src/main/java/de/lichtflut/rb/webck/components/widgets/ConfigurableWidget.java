@@ -108,9 +108,6 @@ public abstract class ConfigurableWidget extends AbstractWidget {
 		return display;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected Component createConfigureLink(final String componentID, final ConditionalModel<Boolean> perspectiveInConfigMode) {

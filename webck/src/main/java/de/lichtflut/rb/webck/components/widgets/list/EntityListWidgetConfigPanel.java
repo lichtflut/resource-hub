@@ -40,8 +40,8 @@ public class EntityListWidgetConfigPanel extends AbstractWidgetConfigPanel {
 	
 	/**
 	 * Constructor.
-	 * @param id
-	 * @param model
+	 * @param id The wicket ID.
+	 * @param model The model.
 	 */
 	public EntityListWidgetConfigPanel(String id, IModel<WidgetSpec> model) {
 		super(id, model);

@@ -15,24 +15,18 @@
  */
 package de.lichtflut.rb.webck.components.widgets.config.selection;
 
-import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.viewspec.Selection;
-import de.lichtflut.rb.core.viewspec.WDGT;
 import de.lichtflut.rb.webck.components.common.TypedPanel;
-import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
-import de.lichtflut.rb.webck.models.basic.DerivedModel;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.nodes.SemanticNode;
+import org.apache.wicket.model.PropertyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.Arrays;
+
+import static de.lichtflut.rb.core.viewspec.Selection.SelectionType;
 
 /**
  * <p>
@@ -47,17 +41,21 @@ import java.util.Set;
  */
 public class SelectionConfigPanel extends TypedPanel<Selection> {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(SelectionConfigPanel.class);
-	
-	// ----------------------------------------------------
-	
 	/**
      * Constructor.
 	 * @param id The wicket ID.
 	 * @param model The model providing the selection.
 	 */
-	public SelectionConfigPanel(String id, IModel<Selection> model) {
+	public SelectionConfigPanel(String id, final IModel<Selection> model) {
 		super(id, model);
+
+        IModel<SelectionType> typeModel = new PropertyModel<SelectionType>(model, "type");
+
+        final DropDownChoice<SelectionType> typeChooser =
+                new DropDownChoice<SelectionType>("type", typeModel, Arrays.asList(SelectionType.values()));
+        add(typeChooser);
+
+        add(new TextArea<String>("expression", new PropertyModel<String>(model, "queryExpression")));
 		
 	}
 	

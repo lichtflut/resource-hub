@@ -58,23 +58,19 @@ public class QueryExecutor {
 
     // ----------------------------------------------------
 
-    public QueryResult execute(String script) {
+    public QueryResult execute(String script) throws QueryScriptException {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         ScriptEngineContext ctx = new ScriptEngineContext(conversation);
-        try {
 
-            QueryScriptEngine engine = new QueryScriptEngine(ctx);
-            String finalScript = qc.substitute(script, conversation);
-            LOGGER.info("Executing query script {}", finalScript);
-            engine.execute(finalScript);
+        QueryScriptEngine engine = new QueryScriptEngine(ctx);
+        String finalScript = qc.substitute(script, conversation);
+        LOGGER.info("Executing query script {}", finalScript);
+        engine.execute(finalScript);
 
-            stopWatch.stop();
-            LOGGER.info("Execution needed {}", NumberFormat.getIntegerInstance().format(stopWatch.getNanoTime()));
+        stopWatch.stop();
+        LOGGER.info("Execution needed {}", NumberFormat.getIntegerInstance().format(stopWatch.getNanoTime()));
 
-            return ctx.getQueryResult();
-        } catch (QueryScriptException e) {
-            throw new RuntimeException(e);
-        }
+        return ctx.getQueryResult();
     }
 }
