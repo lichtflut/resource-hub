@@ -82,7 +82,7 @@ public class GraphResource extends RBServiceEndpoint {
     // ----------------------------------------------------
 
     @GET
-    @Path("context/{ctx}")
+    @Path("contexts/{ctx}")
     @Produces({MediaType.APPLICATION_XML})
     public StreamingOutput getContext(
             @PathParam(value = "domain") final String domain,
@@ -92,12 +92,18 @@ public class GraphResource extends RBServiceEndpoint {
 
         final RBUser user = authenticateUser(token);
 
+        final Organizer organizer = getOrganizer(domain, user);
+        final Context context = organizer.findContext(localContext(ctxName).getQualifiedName());
+        if (context == null) {
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).build());
+        }
+
         LOGGER.info("Writing context {} from domain {}.", ctxName, domain);
 
         return new StreamingOutput() {
             @Override
             public void write(OutputStream out) throws IOException, WebApplicationException {
-                StatementContainer container = getOrganizer(domain, user).getStatements(localContext(ctxName));
+                StatementContainer container = getOrganizer(domain, user).getStatements(context);
                 try {
                     new RdfXmlBinding().write(container, out);
                 } catch (SemanticIOException e) {
@@ -108,7 +114,7 @@ public class GraphResource extends RBServiceEndpoint {
     }
 
     @POST
-    @Path("context/{ctx}")
+    @Path("contexts/{ctx}")
     @Consumes(RDF_XML)
     public void uploadRdfXml(
             @PathParam(value = "domain") String domain,
@@ -121,7 +127,7 @@ public class GraphResource extends RBServiceEndpoint {
     }
 
     @POST
-    @Path("context/{ctx}")
+    @Path("contexts/{ctx}")
     @Consumes(RDF_N3)
     public void uploadN3(
             @PathParam(value = "domain") String domain,
