@@ -59,7 +59,7 @@ public abstract class NamespaceOverviewPanel extends Panel {
 		};
 		add(namespacesView);
 		
-		add(new AjaxLink("createNamespace") {
+		add(new AjaxLink("toNamespace") {
 			@Override
 			public void onClick(final AjaxRequestTarget target) {
 				createNamespace(target);

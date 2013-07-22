@@ -29,9 +29,6 @@ import de.lichtflut.rb.core.services.impl.SchemaExporterImpl;
 import de.lichtflut.rb.core.services.impl.SchemaImporterImpl;
 import de.lichtflut.rb.core.services.impl.SchemaManagerImpl;
 import de.lichtflut.rb.rest.api.RBServiceEndpoint;
-import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
-import org.arastreju.sge.Conversation;
-import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,16 +112,5 @@ public class SchemaResource extends RBServiceEndpoint {
         return Response.created(newURI).build();
     }
 
-    // ----------------------------------------------------
-
-    private Conversation conversation(String domain, RBUser user) {
-        final ServiceProvider provider = getProvider(domain, user);
-        return provider.getConversation();
-    }
-
-    private Conversation conversation(String domain, RBUser user, Context context) {
-        final ServiceProvider provider = getProvider(domain, user);
-        return provider.getConversation(context);
-    }
 
 }

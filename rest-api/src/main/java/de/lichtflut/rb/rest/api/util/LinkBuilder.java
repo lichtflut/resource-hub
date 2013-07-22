@@ -13,20 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.rb.rest.api.security;
+package de.lichtflut.rb.rest.api.util;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * <p>
- *  TODO: To document
+ *  Builder for links to resources.
  * </p>
- * @author Nils Bleisch (nbleisch@lichtflut.de)
- * @created May 9, 2012
+ *
+ * <p>
+ *  Created July 22, 2013
+ * </p>
+ *
+ * @author Oliver Tigges
  */
-@Retention( RetentionPolicy.RUNTIME )
-public @interface RBOperation{
+public class LinkBuilder {
 
-	OperationTypes.TYPE type();
+    private final UriBuilder uriBuilder;
+
+    // ----------------------------------------------------
+
+    public LinkBuilder(UriBuilder uriBuilder) {
+        this.uriBuilder = uriBuilder;
+    }
+
+    // ----------------------------------------------------
+
+
+
+
 }

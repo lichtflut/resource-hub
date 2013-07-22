@@ -73,8 +73,10 @@ public class DefaultDomainValidator implements DomainValidator {
         SNContext.from(context).setVisibility(Accessibility.PUBLIC);
 
         organizer.registerContext(RBSystem.VIEW_SPEC_CTX.getQualifiedName());
-
         organizer.registerContext(RBSystem.TYPE_SYSTEM_CTX.getQualifiedName());
+        organizer.registerContext(RBSystem.META_CTX.getQualifiedName());
+
+        // Namespaces
 
         organizer.registerNamespace(RDF.NAMESPACE_URI, "rdf");
         organizer.registerNamespace(RDFS.NAMESPACE_URI, "rdfs");

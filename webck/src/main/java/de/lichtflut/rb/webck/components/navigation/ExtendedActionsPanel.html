@@ -1,13 +1,4 @@
-<!--
-
-    Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
-
--->
-<html
-	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
-<wicket:head>
-	<style type="text/css"></style>
-</wicket:head>
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
 <wicket:panel>
 
 	<a wicket:id="showExtendedActionsLink" class="extended-actions-link" wicket:message="title:link.extended-actions">
@@ -16,6 +7,7 @@
 	
 	<div wicket:id="extendedActionsContainer" class="context-menu extended-actions" style="display:none">
 		<a wicket:id="deleteEntityLink"><wicket:message key="link.delete-entity">[delete]</wicket:message></a>
+        <a wicket:id="exportEntityLink"><wicket:message key="link.export-entity">[export Entity]</wicket:message></a>
 		<a wicket:id="exportExcelEntityLink"><wicket:message key="link.export-excelEntity">[exportExcelEntity]</wicket:message></a>
 		<a wicket:id="exportVCardLink"><wicket:message key="link.vcard-export">[exportVCard]</wicket:message></a>
 		<a wicket:id="exportExcelListLink"><wicket:message key="link.export-excelList">[exportExcelList]</wicket:message></a>

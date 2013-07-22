@@ -36,7 +36,8 @@ import de.lichtflut.rb.webck.models.resources.ResourceLoadModel;
 public class PeripheryViewPage extends AbstractInfoVisPage {
 	
 	/**
-	 * @param parameters
+     * Constructor.
+	 * @param parameters The page parameters.
 	 */
 	public PeripheryViewPage(final PageParameters parameters) {
 		super(parameters);
@@ -44,9 +45,6 @@ public class PeripheryViewPage extends AbstractInfoVisPage {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected Component createInfoVisPanel(String componentID, ResourceID resource) {
 		return new PeripheryVisualizationPanel(componentID, new ResourceLoadModel(resource));

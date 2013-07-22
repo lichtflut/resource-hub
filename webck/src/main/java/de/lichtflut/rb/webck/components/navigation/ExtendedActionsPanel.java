@@ -18,15 +18,20 @@ package de.lichtflut.rb.webck.components.navigation;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.common.EntityType;
 import de.lichtflut.rb.core.services.EntityManager;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 import de.lichtflut.rb.webck.components.dialogs.EntityExcelExportDialog;
 import de.lichtflut.rb.webck.components.dialogs.ResourceListExportDialog;
 import de.lichtflut.rb.webck.components.dialogs.VCardExportDialog;
+import de.lichtflut.rb.webck.components.links.CrossLink;
 import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
+import de.lichtflut.rb.webck.config.DefaultPathBuilder;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;
 import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.basic.DerivedModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -67,27 +72,21 @@ public class ExtendedActionsPanel extends Panel {
 	
 	@SpringBean
 	private EntityManager entityManager;
-	
-	private ContextMenu ctxMenu;
 
-	private IModel<ResourceNode> entityModel = null;
-	private IModel<QueryResult> dataModel = null;
-	private IModel<ColumnConfiguration> configModel = null;
-	
-	// ----------------------------------------------------
-	
-	public ExtendedActionsPanel(final String id, final IModel<ResourceNode> entityModel) {
+    @SpringBean
+    private ServiceContext serviceContext;
+
+    // ----------------------------------------------------
+
+	public ExtendedActionsPanel(String id, IModel<ResourceNode> entityModel) {
 		super(id);
-		this.entityModel = entityModel;
-		init();
+		init(entityModel, null, null);
 	}
 	
 	public ExtendedActionsPanel(final String id, final IModel<QueryResult> dataModel,
 			final IModel<ColumnConfiguration> configModel) {
 		super(id);
-		this.dataModel = dataModel;
-		this.configModel = configModel;
-		init();
+		init(null, dataModel, configModel);
 	}
 
 	// ----------------------------------------------------
@@ -95,43 +94,41 @@ public class ExtendedActionsPanel extends Panel {
 	/**
 	 * General ExtendedActionsPanel initialization.
 	 */
-	private void init() {
-		ctxMenu = new ContextMenu("extendedActionsContainer");
+	private void init(IModel<ResourceNode> entityModel, IModel<QueryResult> dataModel, IModel<ColumnConfiguration> configModel) {
+		ContextMenu ctxMenu = new ContextMenu("extendedActionsContainer");
 		add(ctxMenu);
 		
 		final Label openMenuLink = new Label("showExtendedActionsLink", new ResourceModel("link.extended-actions"));
 		openMenuLink.add(ctxMenu.createToggleBehavior("onclick"));
 		add(openMenuLink);
 
-		/*TODO: RB-7 - Sichtbarkeitssteuerung des Links funktioniert nicht! Der Link ist IMMER sichtbar, auch wenn sich im
-		 * 		Container keine	sichtbaren Links befinden!! */		
 		openMenuLink.add(visibleIf(isTrue(new HasVisibleLinksModel(new Model<MarkupContainer>(ctxMenu)))));
 		
 		// adding the action links
-		addDeleteEntityLink(entityModel);
-		addExportExcelEntityLink(entityModel);
-		addExportVCardLink(entityModel);
-		
-		addExportExcelListLink();
+        ctxMenu.add(createDeleteEntityLink(entityModel));
+        ctxMenu.add(createExportEntityLink(entityModel));
+        ctxMenu.add(createExportVCardLink(entityModel));
+        ctxMenu.add(createExportExcelEntityLink(entityModel));
+        ctxMenu.add(createExportExcelListLink(dataModel, configModel));
 	}
 
-	// -- LINK_CREATOR_METHODS ----------------------------
+    // -- LINK_CREATOR_METHODS ----------------------------
 	
-	private void addExportVCardLink(final IModel<ResourceNode> model) {
+	private Component createExportVCardLink(final IModel<ResourceNode> model) {
 		@SuppressWarnings("rawtypes")
-		final Link exportVCardLink = new AjaxFallbackLink("exportVCardLink") {
+		final Link link = new AjaxFallbackLink("exportVCardLink") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
 			    hoster.openDialog(new VCardExportDialog(hoster.getDialogID(), model));
-			    ctxMenu.close(target);
+                closeContextMenu();
 			}
 		};
-		exportVCardLink.add(visibleIf(areEqual(new EntityTypeModel(model), Model.of(RB.PERSON))));
-		ctxMenu.add(exportVCardLink);
+		link.add(visibleIf(areEqual(new EntityTypeModel(model), Model.of(RB.PERSON))));
+		return link;
 	}
 	
-	private void addDeleteEntityLink(final IModel<ResourceNode> model) {
+	private Component createDeleteEntityLink(final IModel<ResourceNode> model) {
 		@SuppressWarnings("rawtypes")
 		final Link deleteEntityLink = new AjaxFallbackLink("deleteEntityLink") {
 			@Override
@@ -147,40 +144,52 @@ public class ExtendedActionsPanel extends Panel {
 							}
 			    };
 			    hoster.openDialog(confirmDialog);
-			    ctxMenu.close(target);
+                closeContextMenu();
 			}
 		};
 		deleteEntityLink.add(visibleIf(isNotNull(model)));
-		ctxMenu.add(deleteEntityLink);
+		return deleteEntityLink;
 	}
 	
-	private void addExportExcelEntityLink(final IModel<ResourceNode> model) {
+	private Component createExportExcelEntityLink(final IModel<ResourceNode> model) {
 		@SuppressWarnings("rawtypes")
 		final Link exportExcelEntityLink = new AjaxFallbackLink("exportExcelEntityLink") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
 			    hoster.openDialog(new EntityExcelExportDialog(hoster.getDialogID(), model));
-			    ctxMenu.close(target);
+                closeContextMenu();
 			}
 		};
 		exportExcelEntityLink.add(visibleIf(isNotNull(model)));
-		ctxMenu.add(exportExcelEntityLink);
+		return exportExcelEntityLink;
 	}
 	
-	private void addExportExcelListLink() {
+	private Component createExportExcelListLink(final IModel<QueryResult> dataModel, final IModel<ColumnConfiguration> configModel) {
 		@SuppressWarnings("rawtypes")
-		final Link exportExcelListLink = new AjaxFallbackLink("exportExcelListLink") {
+		final Link link = new AjaxFallbackLink("exportExcelListLink") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 			    DialogHoster hoster = findParent(DialogHoster.class);
 			    hoster.openDialog(new ResourceListExportDialog(hoster.getDialogID(), dataModel, configModel));
-			    ctxMenu.close(target);
+                closeContextMenu();
 			}
 		};
-		exportExcelListLink.add(visibleIf(and(isNotNull(dataModel), isNotNull(configModel))));
-		ctxMenu.add(exportExcelListLink);
+		link.add(visibleIf(and(isNotNull(dataModel), isNotNull(configModel))));
+		return link;
 	}
+
+    private Component createExportEntityLink(IModel<ResourceNode> model) {
+        CrossLink link = new CrossLink("exportEntityLink", new DerivedDetachableModel<String, ResourceNode>(model) {
+            @Override
+            protected String derive(ResourceNode node) {
+                return new DefaultPathBuilder().createDownloadPath(serviceContext.getDomain())
+                        .entity().withQN(node.getQualifiedName()).toURI();
+            }
+        });
+        link.add(visibleIf(isNotNull(model)));
+        return link;
+    }
 	
 	// ----------------------------------------------------
 	
@@ -221,18 +230,8 @@ public class ExtendedActionsPanel extends Panel {
 
     // ----------------------------------------------------
 
-
-    @Override
-    protected void onDetach() {
-        super.onDetach();
-        if (entityModel != null) {
-            entityModel.detach();
-        }
-        if (dataModel != null) {
-            dataModel.detach();
-        }
-        if (configModel != null) {
-            configModel.detach();
-        }
+    private void closeContextMenu() {
+        RBAjaxTarget.add(get("extendedActionsContainer"));
     }
+
 }

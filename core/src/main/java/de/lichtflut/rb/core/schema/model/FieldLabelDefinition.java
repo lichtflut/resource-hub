@@ -38,7 +38,7 @@ public interface FieldLabelDefinition extends Serializable {
 	String getDefaultLabel();
 	
 	/**
-	 * @param locale
+	 * @param locale The locale.
 	 * @return the Label for a given {@link Locale}. If no label is set for the given Locale, the Default label will be returned.
 	 */
 	String getLabel(Locale locale);
@@ -56,7 +56,7 @@ public interface FieldLabelDefinition extends Serializable {
 	
 	/**
 	 * Sets the label for a given {@link Locale}.
-	 * @param locale
+	 * @param locale The locale.
 	 * @param label
 	 */
 	void setLabel(Locale locale, String label);

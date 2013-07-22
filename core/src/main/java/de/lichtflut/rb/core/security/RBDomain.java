@@ -41,8 +41,6 @@ public class RBDomain implements Serializable {
 
 	private String description;
 
-	private String domainNamespace;
-
 	// ----------------------------------------------------
 
 	/**
@@ -111,35 +109,18 @@ public class RBDomain implements Serializable {
 		this.description = description;
 	}
 
-	public String getDomainNamespace() {
-		return domainNamespace;
-	}
-
-	public void setDomainNamespace(final String domainNamespace) {
-		this.domainNamespace = domainNamespace;
-	}
-
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return "RBDomain [qn=" + qn + ", name=" + name + "]";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int hashCode() {
 		return qn.hashCode();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj instanceof RBDomain) {

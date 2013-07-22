@@ -13,20 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.rb.rest.api.security;
+package de.lichtflut.rb.rest.api.organization;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import de.lichtflut.rb.rest.api.common.BaseRVO;
 
 /**
  * <p>
- *  TODO: To document
+ *  RVO for contexts.
  * </p>
- * @author Nils Bleisch (nbleisch@lichtflut.de)
- * @created May 9, 2012
+ *
+ * <p>
+ *  Created July 22, 2013
+ * </p>
+ *
+ * @author Oliver Tigges
  */
-@Retention( RetentionPolicy.RUNTIME )
-public @interface RBOperation{
+public class ContextRVO extends BaseRVO {
 
-	OperationTypes.TYPE type();
+    private String qualifiedName;
+
+    // ----------------------------------------------------
+
+    public String getQualifiedName() {
+        return qualifiedName;
+    }
+
+    public void setQualifiedName(String qualifiedName) {
+        this.qualifiedName = qualifiedName;
+    }
 }

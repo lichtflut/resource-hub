@@ -104,7 +104,7 @@ public class PerspectiveResource extends RBServiceEndpoint {
         importer.doImport(in);
         in.close();
 
-        URI newURI = UriBuilder.fromResource(PerspectiveResource.class).build();
+        URI newURI = UriBuilder.fromResource(PerspectiveResource.class).build(domain);
         return Response.created(newURI).build();
     }
 
@@ -139,30 +139,11 @@ public class PerspectiveResource extends RBServiceEndpoint {
 
     // ----------------------------------------------------
 
-    private Conversation conversation(String domain, RBUser user) {
-        final ServiceProvider provider = getProvider(domain, user);
-        return provider.getConversation();
-    }
-
-    private Conversation conversation(String domain, RBUser user, Context context) {
-        final ServiceProvider provider = getProvider(domain, user);
-        return provider.getConversation(context);
-    }
-
     private List<Perspective> listIfNotNull(Perspective perspective) {
         if (perspective != null) {
             return Collections.singletonList(perspective);
         } else {
             return null;
-        }
-    }
-
-    private QualifiedName restore(String qn) {
-        if (qn.contains(":")) {
-            return QualifiedName.from(qn);
-        } else {
-            // Seems to be Base64 encoded
-            return QualifiedName.from(Base64.base64Decode(qn));
         }
     }
 

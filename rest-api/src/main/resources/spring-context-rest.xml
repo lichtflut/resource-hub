@@ -28,8 +28,6 @@
     
     <context:annotation-config />
 
-    <bean id="authorizationHandler" class="de.lichtflut.rb.rest.api.security.DefaultAuthorizationHandler" />
-    
     <bean id="providerFactory" class="de.lichtflut.rb.rest.delegate.providers.RBServiceProviderFactory">
 	</bean>
     

@@ -7,7 +7,7 @@ options {
 
 @header{
 /*
- * Copyright (C) 2012 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
+ * Copyright (C) 2013 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
  */
 package de.lichtflut.rb.core.schema.parser.impl.rsf;
 

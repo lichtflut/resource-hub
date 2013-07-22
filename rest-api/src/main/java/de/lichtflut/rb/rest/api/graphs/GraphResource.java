@@ -30,6 +30,8 @@ import org.arastreju.sge.io.SemanticGraphIO;
 import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.io.StatementContainer;
 import org.arastreju.sge.io.StatementStorer;
+import org.arastreju.sge.model.DefaultSemanticGraph;
+import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.views.SNContext;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.organize.Organizer;
@@ -45,6 +47,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -82,6 +85,32 @@ public class GraphResource extends RBServiceEndpoint {
     // ----------------------------------------------------
 
     @GET
+    @Produces({MediaType.APPLICATION_XML})
+    public StreamingOutput getGraph(
+            @QueryParam("qn") final String startNode,
+            @PathParam(value = "domain") final String domain,
+            @CookieParam(value = AuthModule.COOKIE_SESSION_AUTH) String token)
+            throws UnauthenticatedUserException {
+
+        final RBUser user = authenticateUser(token);
+
+        QualifiedName qn = restore(startNode);
+        if (qn == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).build());
+        }
+        ResourceNode start = conversation(domain, user).findResource(qn);
+        if (start == null) {
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).build());
+        }
+
+        DefaultSemanticGraph graph = new DefaultSemanticGraph();
+        graph.addStatements(start.getAssociations());
+        return result(graph);
+    }
+
+    // ----------------------------------------------------
+
+    @GET
     @Path("contexts/{ctx}")
     @Produces({MediaType.APPLICATION_XML})
     public StreamingOutput getContext(
@@ -99,18 +128,7 @@ public class GraphResource extends RBServiceEndpoint {
         }
 
         LOGGER.info("Writing context {} from domain {}.", ctxName, domain);
-
-        return new StreamingOutput() {
-            @Override
-            public void write(OutputStream out) throws IOException, WebApplicationException {
-                StatementContainer container = getOrganizer(domain, user).getStatements(context);
-                try {
-                    new RdfXmlBinding().write(container, out);
-                } catch (SemanticIOException e) {
-                    throw new WebApplicationException(e);
-                }
-            }
-        };
+        return result(getOrganizer(domain, user).getStatements(context));
     }
 
     @POST
@@ -191,6 +209,19 @@ public class GraphResource extends RBServiceEndpoint {
     private Conversation conversation(String domain, RBUser user, Context context) {
         final ServiceProvider provider = getProvider(domain, user);
         return provider.getConversation(context);
+    }
+
+    private StreamingOutput result(final StatementContainer statements) {
+        return new StreamingOutput() {
+            @Override
+            public void write(OutputStream out) throws IOException, WebApplicationException {
+                try {
+                    new RdfXmlBinding().write(statements, out);
+                } catch (SemanticIOException e) {
+                    throw new WebApplicationException(e);
+                }
+            }
+        };
     }
 
 }

@@ -81,11 +81,6 @@ public class AbstractQueryService extends RBServiceEndpoint {
 
     // ----------------------------------------------------
 
-    private Conversation conversation(String domain, RBUser user) {
-        final ServiceProvider provider = getProvider(domain, user);
-        return provider.getConversation();
-    }
-
     private Conversation conversation(String domain, RBUser user, Context context) {
         final ServiceProvider provider = getProvider(domain, user);
         return provider.getConversation(context);

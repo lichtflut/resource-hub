@@ -25,6 +25,10 @@ public class DownloadPath extends AbstractPath<DownloadPath> {
         return service("viewspecs/perspectives");
     }
 
+    public DownloadPath entity() {
+        return service("graphs");
+    }
+
     public DownloadPath withID(String id) {
         return param("id", id);
     }

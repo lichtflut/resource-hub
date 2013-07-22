@@ -26,8 +26,10 @@ import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.security.UserManager;
 import de.lichtflut.rb.rest.api.RBServiceEndpoint;
+import de.lichtflut.rb.rest.api.common.LinkRVO;
 import de.lichtflut.rb.rest.api.common.UserRVO;
-import de.lichtflut.rb.rest.api.security.RBOperation;
+import de.lichtflut.rb.rest.api.graphs.GraphResource;
+import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.Infra;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,14 +38,20 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -57,12 +65,9 @@ import java.util.Set;
  */
 @Component
 @Path("domains/{domain}")
-public class DomainOps extends RBServiceEndpoint {
+public class DomainResource extends RBServiceEndpoint {
 
-    static final String DOMAIN_ID_PARAM = "domain";
-    static final String AUTH_TOKEN = "TOKEN";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DomainOps.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DomainResource.class);
 
     private static List<String> DOMAIN_ADMIN_ROLES = Arrays.asList(
             RBRole.ACTIVE_USER.name(),
@@ -74,11 +79,24 @@ public class DomainOps extends RBServiceEndpoint {
 
     // ----------------------------------------------------
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listContexts (
+            @PathParam(value = "domain") String domain,
+            @CookieParam(value= AuthModule.COOKIE_SESSION_AUTH) String token)
+            throws UnauthenticatedUserException, IOException {
+
+        RBUser user = authenticateUser(token);
+
+        Collection<Context> contexts = getOrganizer(domain, user).getContexts();
+        return Response.ok(createRVOs(domain, contexts)).build();
+
+    }
+
 	@DELETE
-	@RBOperation(type = TYPE.DOMAIN_DELETE)
 	public Response deleteDomain(
-            @PathParam(DOMAIN_ID_PARAM) String domain,
-			@QueryParam(AUTH_TOKEN) String token)
+            @PathParam("domain") String domain,
+            @CookieParam(AuthModule.COOKIE_SESSION_AUTH) String token)
             throws UnauthenticatedUserException {
 		RBUser user = authenticateUser(token);
         authorizeUser(user, domain, RBPermission.MANAGE_DOMAINS);
@@ -102,11 +120,10 @@ public class DomainOps extends RBServiceEndpoint {
 	 * Create a new domain.
 	 */
 	@POST
-	@RBOperation(type = TYPE.DOMAIN_CREATE)
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response createDomain(
-            @PathParam(value = "domain") final String domain,
-            @CookieParam(value = AuthModule.COOKIE_SESSION_AUTH) String token)
+            @PathParam("domain") final String domain,
+            @CookieParam(AuthModule.COOKIE_SESSION_AUTH) String token)
             throws UnauthenticatedUserException
     {
 
@@ -130,11 +147,10 @@ public class DomainOps extends RBServiceEndpoint {
      */
     @Path("/admins")
     @POST
-    @RBOperation(type = TYPE.DOMAIN_CREATE)
     @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     public Response addDomainAdmin(
-            @PathParam(value = "domain") final String domain,
-            @CookieParam(value = AuthModule.COOKIE_SESSION_AUTH) String token,
+            @PathParam("domain") final String domain,
+            @CookieParam(AuthModule.COOKIE_SESSION_AUTH) String token,
             UserRVO user)
             throws UnauthenticatedUserException
     {
@@ -164,11 +180,10 @@ public class DomainOps extends RBServiceEndpoint {
      */
     @Path("/users")
     @POST
-    @RBOperation(type = TYPE.DOMAIN_CREATE)
     @Consumes(MediaType.APPLICATION_JSON )
     public Response grantAccess(
-            @PathParam(value = "domain") final String domain,
-            @CookieParam(value = AuthModule.COOKIE_SESSION_AUTH) String token,
+            @PathParam("domain") final String domain,
+            @CookieParam(AuthModule.COOKIE_SESSION_AUTH) String token,
             UserRVO userRVO)
             throws UnauthenticatedUserException
     {
@@ -212,5 +227,27 @@ public class DomainOps extends RBServiceEndpoint {
         Set<String> permissions = authModule.getUserManagement().getUserPermissions(user, AuthModule.MASTER_DOMAIN);
         return permissions.contains(RBPermission.MANAGE_DOMAINS.name());
     }
+
+    // ----------------------------------------------------
+
+    private List<ContextRVO> createRVOs(String domain, Collection<Context> contexts) {
+        List<ContextRVO> result = new ArrayList<ContextRVO>(contexts.size());
+        for (Context context : contexts) {
+            ContextRVO rvo = new ContextRVO();
+            rvo.setQualifiedName(context.getQualifiedName().toURI());
+            rvo.getLinks().add(linkTo(domain, context));
+            result.add(rvo);
+        }
+        return result;
+    }
+
+    private LinkRVO linkTo(String domain, Context ctx) {
+        UriBuilder builder = getUriBuilder()
+                .path(GraphResource.class)
+                .segment("contexts", ctx.getQualifiedName().getSimpleName());
+        URI uri = builder.build(domain);
+        return new LinkRVO("content", uri.toString());
+    }
+
 
 }

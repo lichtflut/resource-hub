@@ -15,12 +15,10 @@
  */
 package de.lichtflut.rb.rest.api;
 
-import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.api.core.ResourceContext;
+import com.sun.jersey.core.util.Base64;
 import de.lichtflut.rb.RBPermission;
 import de.lichtflut.rb.core.config.RBConfig;
-import de.lichtflut.rb.core.eh.ErrorCodes;
-import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.AuthenticationService;
@@ -28,7 +26,6 @@ import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.ArastrejuResourceFactory;
 import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.rest.api.security.AuthorizationHandler;
 import de.lichtflut.rb.rest.api.security.OperationTypes;
 import de.lichtflut.rb.rest.delegate.providers.RBServiceProviderFactory;
 import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
@@ -36,6 +33,7 @@ import org.arastreju.sge.Conversation;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.organize.Organizer;
 import org.arastreju.sge.query.Query;
 import org.slf4j.Logger;
@@ -45,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.Set;
@@ -71,13 +70,6 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	@Autowired
 	private RBServiceProviderFactory factory;
 
-    /**
-     * An instance of {@link AuthorizationHandler} which is required to
-     * handle all the authorization-stuff
-     */
-    @Autowired
-    private AuthorizationHandler handler;
-	
 	@Autowired
 	protected AuthModule authModule;
 
@@ -87,13 +79,12 @@ public abstract class RBServiceEndpoint implements OperationTypes{
 	// ----------------------------------------------------
 
     protected RBUser authenticateUser(String token) throws UnauthenticatedUserException {
-        RBUser user=null;
         if (token == null) {
             LOGGER.warn("Request has no session token.");
             throw new UnauthenticatedUserException("No session token.");
         }
         AuthenticationService authService = authModule.getAuthenticationService();
-        user = authService.loginByToken(token);
+        RBUser user = authService.loginByToken(token);
         if (user == null) {
             LOGGER.warn("Detected invalid token: {}", token);
             throw new UnauthenticatedUserException("Token is invalid.");
@@ -122,6 +113,19 @@ public abstract class RBServiceEndpoint implements OperationTypes{
                 .build().toString();
     }
 
+    protected UriBuilder getUriBuilder() {
+        return uriInfo.getBaseUriBuilder();
+    }
+
+    protected QualifiedName restore(String qn) {
+        if (qn.contains(":")) {
+            return QualifiedName.from(qn);
+        } else {
+            // Seems to be Base64 encoded
+            return QualifiedName.from(Base64.base64Decode(qn));
+        }
+    }
+
 	protected ServiceProvider getProvider(String domainID, RBUser user) {
 		return factory.createServiceProvider(domainID, user);
 	}
@@ -136,9 +140,10 @@ public abstract class RBServiceEndpoint implements OperationTypes{
         return new ArastrejuResourceFactory(ctx).getOrganizer();
     }
 
-	protected AuthorizationHandler getAuthHandler() {
-		return handler;
-	}
+    protected Conversation conversation(String domain, RBUser user) {
+        final ServiceProvider provider = getProvider(domain, user);
+        return provider.getConversation();
+    }
 
     // ----------------------------------------------------
 

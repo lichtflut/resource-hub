@@ -58,6 +58,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.arastreju.sge.SNOPS.objectsAsResources;
+
 /**
  * <p>
  * 	Implementation of {@link SchemaManager}.
@@ -255,17 +257,20 @@ public class SchemaManagerImpl implements SchemaManager {
 
 	/**
 	 * Removes the schema graph.
-	 * @param mc The existing conversation.
+	 * @param conversation The existing conversation.
 	 * @param schemaNode The schema node.
 	 */
-	protected void removeSchema(final Conversation mc, final SNResourceSchema schemaNode) {
+	protected void removeSchema(final Conversation conversation, final SNResourceSchema schemaNode) {
 		for(SNPropertyDeclaration decl : schemaNode.getPropertyDeclarations()) {
 			if (decl.hasConstraint() && !decl.getConstraint().isPublic()) {
-				mc.remove(SNOPS.id(decl.getConstraint().getQualifiedName()));
+				conversation.remove(SNOPS.id(decl.getConstraint().getQualifiedName()));
 			}
-			mc.remove(decl);
+            for (ResourceNode fieldLabel : objectsAsResources(decl, RBSystem.HAS_FIELD_LABEL)) {
+                conversation.remove(fieldLabel);
+            }
+            conversation.remove(decl);
 		}
-		mc.remove(schemaNode);
+		conversation.remove(schemaNode);
 	}
 
 	/**
@@ -294,6 +299,8 @@ public class SchemaManagerImpl implements SchemaManager {
 		}
 	}
 
+    // ----------------------------------------------------
+
 	private Conversation conversation() {
 		return conversationFactory.getConversation(RBSystem.TYPE_SYSTEM_CTX);
 	}
@@ -302,10 +309,12 @@ public class SchemaManagerImpl implements SchemaManager {
 		return conversation().createQuery();
 	}
 
+    // ----------------------------------------------------
+
 	/**
-	 * Validates a single PropertyDeclarations
-	 * @param decl
-	 * @param errors
+	 * Validates a single property declaration.
+	 * @param decl The declaration to validate.
+	 * @param errors The target map for errors.
 	 */
 	private void validateSingleProperty(final PropertyDeclaration decl, final Map<Integer, List<PropertyDeclaration>> errors) {
 		if(null != decl.getConstraint()){
@@ -317,9 +326,9 @@ public class SchemaManagerImpl implements SchemaManager {
 	}
 
 	/**
-	 * @param errors
-	 * @param errorCode
-	 * @param declaration
+	 * @param errors map of errors to append
+	 * @param errorCode The overall error code.
+	 * @param declaration The corresponding declaration.
 	 */
 	private void appendError(final Map<Integer, List<PropertyDeclaration>> errors, final int errorCode, final PropertyDeclaration declaration) {
 		if(errors.containsKey(errorCode)){

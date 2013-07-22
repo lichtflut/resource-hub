@@ -19,9 +19,6 @@ import de.lichtflut.rb.core.eh.UnauthenticatedUserException;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.rest.api.RBServiceEndpoint;
-import de.lichtflut.rb.rest.delegate.providers.ServiceProvider;
-import org.arastreju.sge.Conversation;
-import org.arastreju.sge.context.Context;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.CookieParam;
@@ -59,18 +56,6 @@ public class ViewSpecResource extends RBServiceEndpoint {
             throws UnauthenticatedUserException, IOException {
         RBUser user = authenticateUser(token);
         return Response.ok().build();
-    }
-
-    // ----------------------------------------------------
-
-    private Conversation conversation(String domain, RBUser user) {
-        final ServiceProvider provider = getProvider(domain, user);
-        return provider.getConversation();
-    }
-
-    private Conversation conversation(String domain, RBUser user, Context context) {
-        final ServiceProvider provider = getProvider(domain, user);
-        return provider.getConversation(context);
     }
 
 }

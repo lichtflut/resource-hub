@@ -67,13 +67,14 @@ import java.util.Set;
  */
 public class ResourceListExportDialog extends AbstractRBDialog implements IResourceListener {
 
-	private final Logger logger = LoggerFactory.getLogger(ResourceListExportDialog.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceListExportDialog.class);
 	
 	private final ResourceStreamResource resource;
 
 	private final IModel<String> selection;
 	
 	private IModel<QueryResult> dataModel;
+
 	private IModel<ColumnConfiguration> configModel;
 	
 	// ----------------------------------------------------
@@ -116,9 +117,6 @@ public class ResourceListExportDialog extends AbstractRBDialog implements IResou
 
 	// -- IResourceListener -------------------------------
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public void onResourceRequested() {
 		final RequestCycle cycle = RequestCycle.get();
@@ -142,7 +140,7 @@ public class ResourceListExportDialog extends AbstractRBDialog implements IResou
 					return string;
 				} catch (MissingResourceException e) {
 					// return the object if resource is missing!
-					logger.warn("Missing Resource String for selection: " +object);
+					LOGGER.warn("Missing Resource String for selection: " + object);
 					return object;
 				}
 			}
@@ -214,9 +212,6 @@ public class ResourceListExportDialog extends AbstractRBDialog implements IResou
 			return in;
 		}		
 
-		/** 
-		* {@inheritDoc}
-		*/
 		@Override
 		public void close() throws IOException {
 			in.close();

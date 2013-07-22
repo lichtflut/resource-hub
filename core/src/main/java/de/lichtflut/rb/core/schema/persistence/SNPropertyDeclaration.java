@@ -15,21 +15,6 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import java.util.Locale;
-
-import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.Aras;
-import org.arastreju.sge.context.Context;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.Statement;
-import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.model.nodes.SNResource;
-import org.arastreju.sge.model.nodes.SemanticNode;
-import org.arastreju.sge.model.nodes.views.ResourceView;
-import org.arastreju.sge.model.nodes.views.SNScalar;
-import org.arastreju.sge.model.nodes.views.SNText;
-
 import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.RBSchema;
@@ -37,6 +22,24 @@ import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import de.lichtflut.rb.core.schema.model.FieldLabelDefinition;
 import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
+import org.arastreju.sge.SNOPS;
+import org.arastreju.sge.apriori.Aras;
+import org.arastreju.sge.apriori.RDFS;
+import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.ResourceNode;
+import org.arastreju.sge.model.nodes.SNResource;
+import org.arastreju.sge.model.nodes.SemanticNode;
+import org.arastreju.sge.model.nodes.views.ResourceView;
+import org.arastreju.sge.model.nodes.views.SNScalar;
+import org.arastreju.sge.model.nodes.views.SNText;
+
+import java.util.Locale;
+
+import static org.arastreju.sge.SNOPS.associate;
+import static org.arastreju.sge.SNOPS.fetchObject;
+import static org.arastreju.sge.SNOPS.objectsAsResources;
+import static org.arastreju.sge.SNOPS.string;
 
 
 /**
@@ -203,18 +206,21 @@ public class SNPropertyDeclaration extends ResourceView {
 	}
 
 	/**
-	 * Set the FieldLabel.
+	 * Set the FieldLabel definition.
 	 * @param def The field label definition
 	 */
 	public void setFieldLabelDefinition(final FieldLabelDefinition def){
 		if(def != null){
-			ResourceNode labelNode = new SNResource();
-			SNOPS.associate(this, RBSystem.HAS_FIELD_LABEL, labelNode);
-			if (def != null && def.getDefaultLabel() != null) {
-				SNOPS.associate(labelNode, RBSystem.DEFAULT, new SNText(def.getDefaultLabel()));
+			if (def.getDefaultLabel() != null) {
+                ResourceNode defaultLabel = new SNResource();
+                associate(this, RBSystem.HAS_FIELD_LABEL, defaultLabel);
+                associate(defaultLabel, RDFS.LABEL, new SNText(def.getDefaultLabel()));
 			}
 			for (Locale locale : def.getSupportedLocales()) {
-				SNOPS.associate(labelNode, new SimpleResourceID(locale.getLanguage()), new SNText(def.getLabel(locale)));
+                ResourceNode label = new SNResource();
+                associate(this, RBSystem.HAS_FIELD_LABEL, label);
+                associate(label, RDFS.LABEL, new SNText(def.getLabel(locale)));
+                associate(label, RBSystem.HAS_LOCALE, new SNText(locale.toString()));
 			}
 		}
 	}
@@ -225,20 +231,17 @@ public class SNPropertyDeclaration extends ResourceView {
 	public FieldLabelDefinition getFieldLabelDefinition(){
 		final String defaultName = getPropertyDescriptor().getQualifiedName().getSimpleName();
 		final FieldLabelDefinition def = new FieldLabelDefinitionImpl(defaultName);
-		SemanticNode semanticNode = SNOPS.fetchObject(this, RBSystem.HAS_FIELD_LABEL);
-		// Ensure backward compatibility (not i18n)
-		if(semanticNode.isValueNode()){
-			return new FieldLabelDefinitionImpl(semanticNode.asValue().getStringValue());
-		}
-		ResourceNode labelNode = semanticNode.asResource();
 
-		for (Statement current : labelNode.getAssociations()) {
-			if(RBSystem.DEFAULT.equals(current.getPredicate())){
-				def.setDefaultLabel(current.getObject().asValue().getStringValue());
-			}else{
-				Locale locale = new Locale(current.getPredicate().asResource().getQualifiedName().toURI());
-				def.setLabel(locale, current.getObject().asValue().getStringValue());
-			}
+		for (ResourceNode labelNode : objectsAsResources(this, RBSystem.HAS_FIELD_LABEL)) {
+            SemanticNode label = fetchObject(labelNode, RDFS.LABEL);
+            SemanticNode localeNode = fetchObject(labelNode, RBSystem.HAS_LOCALE);
+
+            if (localeNode != null) {
+                Locale locale = new Locale(string(localeNode));
+                def.setLabel(locale, string(label));
+            } else {
+                def.setDefaultLabel(string(label));
+            }
 		}
 
 		return def;

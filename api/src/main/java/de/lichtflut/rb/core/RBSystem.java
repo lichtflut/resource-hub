@@ -36,15 +36,17 @@ public interface RBSystem {
 
 	String SYS_NAMESPACE_URI = "http://rb.lichtflut.de/system#";
 
-    String PERSPECTIVES_NAMESPACE_URI = QualifiedName.LOCAL + ":perspectives:";
+    String PERSPECTIVES_NAMESPACE_URI = QualifiedName.LOCAL + "perspectives:";
 
-    String WIDGETS_NAMESPACE_URI = QualifiedName.LOCAL + ":widgets:";
+    String WIDGETS_NAMESPACE_URI = QualifiedName.LOCAL + "widgets:";
 
-    String PERCEPTIONS_NAMESPACE_URI = QualifiedName.LOCAL + ":perceptions:";
+    String PERCEPTIONS_NAMESPACE_URI = QualifiedName.LOCAL + "perceptions:";
 
 	Context TYPE_SYSTEM_CTX = ContextID.localContext("typesystem");
 
 	Context VIEW_SPEC_CTX = ContextID.localContext("viewspec");
+
+    Context META_CTX = ContextID.localContext("meta");
 
     Context DOMAIN_CTX = ContextID.forContext(Context.DOMAIN_CONTEXT);
 
@@ -98,6 +100,11 @@ public interface RBSystem {
 	 * predicate.
 	 */
 	ResourceID HAS_SCHEMA_IDENTIFYING_TYPE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasSchemaIdentifyingType");
+
+    /**
+     * Labels and field labels can have a locale (or system:default).
+     */
+    ResourceID HAS_LOCALE = new SimpleResourceID(SYS_NAMESPACE_URI, "hasLocale");
 
 	/**
 	 * For each type there may be defined a prototype resource with the default properties.

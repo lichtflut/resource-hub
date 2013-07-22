@@ -27,8 +27,6 @@
 		<constructor-arg value="test"></constructor-arg>
 	</bean>
 
-	<bean id="authorizationHandler" class="de.lichtflut.rb.rest.api.security.DefaultAuthorizationHandler" />
-
 	<bean id="provider" class="de.lichtflut.rb.rest.api.TestServiceProvider">
 		<constructor-arg index="0" ref="rbConfig" />
 		<constructor-arg index="1" ref="authModule" />

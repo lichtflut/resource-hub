@@ -13,20 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.rb.rest.api.security;
+package de.lichtflut.rb.rest.api.common;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
- *  TODO: To document
+ *  Base for REST value objects.
  * </p>
- * @author Nils Bleisch (nbleisch@lichtflut.de)
- * @created May 9, 2012
+ *
+ * <p>
+ *  Created July 22, 2013
+ * </p>
+ *
+ * @author Oliver Tigges
  */
-@Retention( RetentionPolicy.RUNTIME )
-public @interface RBOperation{
+public class BaseRVO {
 
-	OperationTypes.TYPE type();
+    private final List<LinkRVO> links = new ArrayList<LinkRVO>();
+
+    // ----------------------------------------------------
+
+    public List<LinkRVO> getLinks() {
+        return links;
+    }
+
 }
