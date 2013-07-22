@@ -130,9 +130,6 @@ public class ListPagerPanel extends Panel {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onDetach() {
 		super.onDetach();

@@ -49,6 +49,7 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.query.QueryResult;
 
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 /**
@@ -89,7 +90,7 @@ public class EntityListWidget extends ConfigurableWidget {
 		final IModel<ColumnConfiguration> config = configModel(spec);
 		
 		getDisplayPane().add(new ExtendedActionsPanel("extendedActionsPanel", queryModel, config)
-				.add(ConditionalBehavior.visibleIf(not(isConfigMode))));
+				.add(visibleIf(not(isConfigMode))));
 		
 		final PageableModel<ResourceNode> content = 
 				new ResourceQueryResultModel(queryModel, new Model<Integer>(MAX_RESULTS), new Model<Integer>(0));

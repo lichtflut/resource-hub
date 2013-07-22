@@ -16,9 +16,12 @@
 package de.lichtflut.rb.application.base;
 
 import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.CurrentUserModel.hasPermission;
+import static de.lichtflut.rb.webck.models.CurrentUserModel.isLoggedIn;
 
 import java.util.List;
 
+import de.lichtflut.rb.application.custom.UserProfilePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -107,10 +110,14 @@ public class RBBasePage extends AbstractBasePage {
 		add(createSecondLevelNav("secondLevelNav"));
 
 		add(new ReferenceLink("adminAreaLink", AdminBasePage.class, new ResourceModel("global.link.admin-area"))
-		.add(visibleIf(CurrentUserModel.hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
+		    .add(visibleIf(hasPermission(RBPermission.ENTER_ADMIN_AREA.name()))));
+
+        add(new ReferenceLink("settingsLink", RBApplication.get().getUserProfilePage(),
+                new ResourceModel("global.link.settings"))
+            .add(visibleIf(isLoggedIn())));
 
 		add(new Label("username", CurrentUserModel.displayNameModel())
-		.add(visibleIf(CurrentUserModel.isLoggedIn())));
+		    .add(visibleIf(isLoggedIn())));
 
 		add(new DomainSwitcherPanel("domain", CurrentDomainModel.displayNameModel()));
 

@@ -190,10 +190,7 @@ public abstract class RBApplication extends WebApplication {
 		for (MenuItem item : menuItems) {
 			result.add(createPageNode(item));
 		}
-		result.add(createPageNode(getBrowseAndSearchPage(), "navigation.browse-and-search"));
-		if (RBWebSession.exists() && RBWebSession.get().isAuthenticated()) {
-			result.add(createPageNode(getUserProfilePage(), "navigation.user-profile-view"));
-		}
+		result.add(createPageNode(getBrowseAndSearchPage(), "global.link.browse-and-search"));
 		return result;
 	}
 

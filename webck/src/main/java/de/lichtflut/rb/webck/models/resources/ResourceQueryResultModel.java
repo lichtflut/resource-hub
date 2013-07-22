@@ -37,7 +37,9 @@ import java.util.List;
  *
  * @author Oliver Tigges
  */
-public class ResourceQueryResultModel extends DerivedDetachableModel<List<ResourceNode>, QueryResult> implements PageableModel<ResourceNode> {
+public class ResourceQueryResultModel
+        extends DerivedDetachableModel<List<ResourceNode>, QueryResult>
+        implements PageableModel<ResourceNode> {
 
 	private IModel<Integer> resultSize;
 
@@ -50,7 +52,7 @@ public class ResourceQueryResultModel extends DerivedDetachableModel<List<Resour
 	/**
 	 * Constructor.
 	 * Displays given QueryResult with a maximum of {@link Integer#MAX_VALUE} per page and start at its first entry.
-	 * @param queryResult
+	 * @param queryResult The query result to display.
 	 */
 	public ResourceQueryResultModel(final IModel<QueryResult> queryResult) {
 		this(queryResult, new Model<Integer>(Integer.MAX_VALUE));
@@ -59,7 +61,7 @@ public class ResourceQueryResultModel extends DerivedDetachableModel<List<Resour
 	/**
 	 * Constructor.
 	 * Displays given QueryResult with a given maximum per page and start at its first entry.
-	 * @param queryResult
+	 * @param queryResult The query result to display.
 	 * @param pagesize Maximum results per page
 	 */
 	public ResourceQueryResultModel(final IModel<QueryResult> queryResult, final IModel<Integer> pagesize) {
@@ -70,9 +72,9 @@ public class ResourceQueryResultModel extends DerivedDetachableModel<List<Resour
 	/**
 	 * Constructor.
 	 * Displays given QueryResult with a given maximum per page and start at a given entry.
-	 * @param queryResult
+	 * @param queryResult The query result to display.
 	 * @param pagesize Maximum results per page
-	 * @param offset
+	 * @param offset The offset.
 	 */
 	public ResourceQueryResultModel(final IModel<QueryResult> queryResult, final IModel<Integer> pagesize, final IModel<Integer> offset) {
 		super(queryResult);
