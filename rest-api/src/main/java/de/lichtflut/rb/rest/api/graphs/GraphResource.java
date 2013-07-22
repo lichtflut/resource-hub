@@ -52,9 +52,11 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.regex.Pattern;
 
 import static org.arastreju.sge.context.ContextID.localContext;
@@ -134,32 +136,32 @@ public class GraphResource extends RBServiceEndpoint {
     @POST
     @Path("contexts/{ctx}")
     @Consumes(RDF_XML)
-    public void uploadRdfXml(
+    public Response uploadRdfXml(
             @PathParam(value = "domain") String domain,
             @PathParam(value = "ctx") String ctxName,
             @CookieParam(value= AuthModule.COOKIE_SESSION_AUTH) String token,
             InputStream in)
             throws UnauthenticatedUserException, SemanticIOException, IOException {
 
-        uploadRDF(authenticateUser(token), domain, ctxName, in, new RdfXmlBinding());
+        return uploadRDF(authenticateUser(token), domain, ctxName, in, new RdfXmlBinding());
     }
 
     @POST
     @Path("contexts/{ctx}")
     @Consumes(RDF_N3)
-    public void uploadN3(
+    public Response uploadN3(
             @PathParam(value = "domain") String domain,
             @PathParam(value = "ctx") String ctxName,
             @CookieParam(value= AuthModule.COOKIE_SESSION_AUTH) String token,
             InputStream in)
             throws UnauthenticatedUserException, SemanticIOException, IOException {
 
-        uploadRDF(authenticateUser(token), domain, ctxName, in, new N3Binding());
+        return uploadRDF(authenticateUser(token), domain, ctxName, in, new N3Binding());
     }
 
     // ----------------------------------------------------
 
-    private void uploadRDF(RBUser user, String domain, String ctxName, InputStream in, SemanticGraphIO io) {
+    private Response uploadRDF(RBUser user, String domain, String ctxName, InputStream in, SemanticGraphIO io) {
 
         Context ctx = detectContext(user, domain, ctxName);
 
@@ -173,13 +175,17 @@ public class GraphResource extends RBServiceEndpoint {
         } catch (SemanticIOException e) {
             tx.fail();
             LOGGER.error("RDF upload failed.", e);
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         } catch (IOException e) {
             tx.fail();
             LOGGER.error("RDF upload failed.", e);
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         } finally {
             tx.finish();
             conversation.close();
         }
+        URI newURI = UriBuilder.fromResource(GraphResource.class).segment("contexts").segment(ctxName).build(domain);
+        return Response.created(newURI).build();
     }
 
     // ----------------------------------------------------
