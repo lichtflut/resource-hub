@@ -48,6 +48,7 @@ public class PerspectiveWriterImpl implements PerspectiveWriter {
     // ----------------------------------------------------
 
     private void writePerspective(CommonFormatWriter out, NamespaceMap nsMap, Perspective perspective) {
+        out.writeNamespaces();
         out.openScope("perspective " + perspective.getName());
         out.newLine();
         out.writeFieldIfNotNull("title", perspective.getTitle());

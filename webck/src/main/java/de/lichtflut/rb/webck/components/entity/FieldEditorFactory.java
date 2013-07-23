@@ -15,27 +15,6 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Date;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.validation.validator.PatternValidator;
-import org.apache.wicket.validation.validator.UrlValidator;
-import org.arastreju.sge.model.ResourceID;
-import org.odlabs.wiquery.ui.datepicker.DatePicker;
-
 import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
@@ -51,6 +30,27 @@ import de.lichtflut.rb.webck.models.DateModel;
 import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.fields.FileUploadModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
+import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.validation.validator.PatternValidator;
+import org.apache.wicket.validation.validator.UrlValidator;
+import org.arastreju.sge.model.ResourceID;
+import org.arastreju.sge.model.nodes.views.SNText;
+import org.odlabs.wiquery.ui.datepicker.DatePicker;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * <p>
@@ -161,7 +161,7 @@ public class FieldEditorFactory implements Serializable {
 	}
 
 	public Component createRichTextArea(final RBField fieldDefinition, final IModel model) {
-		TextArea<String> field = new TextArea("valuefield", new HTMLSafeModel(model));
+		TextArea<String> field = new TextArea("valuefield", model);
 		field.add(new RichTextBehavior(RichTextBehavior.Type.STANDARD));
 		addValidator(field, fieldDefinition);
 		addStyle(field, fieldDefinition.getVisualizationInfo());

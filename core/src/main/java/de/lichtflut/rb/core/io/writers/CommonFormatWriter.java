@@ -21,7 +21,6 @@ import org.arastreju.sge.naming.Namespace;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.naming.SimpleNamespace;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
@@ -38,8 +37,9 @@ import java.io.PrintWriter;
  */
 public class CommonFormatWriter {
 
-    private static final String LVL3 = "\t\t\t";
-    private static final String LVL2 = "\t\t";
+    private static final String LVL3 = "      ";
+    private static final String LVL2 = "    ";
+    private static final String LVL1 = "  ";
 
     protected final PrintWriter writer;
     protected final NamespaceMap nsMap;
@@ -69,7 +69,7 @@ public class CommonFormatWriter {
 
     // ----------------------------------------------------
 
-    public CommonFormatWriter writeNamespaces() throws IOException {
+    public CommonFormatWriter writeNamespaces() {
         for(String prefix : nsMap.getPrefixes()) {
             Namespace namespace = nsMap.getNamespace(prefix);
             writer.write("namespace \"" + namespace.getUri() + "\" prefix \"" + prefix + "\"\n");
@@ -104,7 +104,7 @@ public class CommonFormatWriter {
             case 0:
                 break;
             case 1:
-                writer.append("\t");
+                writer.append(LVL1);
                 break;
             case 2:
                 writer.append(LVL2);
@@ -114,7 +114,7 @@ public class CommonFormatWriter {
                 break;
             default:
                 for(int i = 0; i < lvl; i++) {
-                    writer.write("\t");
+                    writer.write(LVL1);
                 }
         }
         return this;

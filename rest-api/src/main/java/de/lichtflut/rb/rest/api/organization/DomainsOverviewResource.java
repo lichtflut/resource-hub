@@ -62,7 +62,7 @@ public class DomainsOverviewResource extends RBServiceEndpoint {
 
         RBUser user = authenticateUser(token);
 
-        Collection<RBDomain> domains = authModule.getDomainManager().getAllDomains();
+        Collection<RBDomain> domains = authModule.getDomainManager().getDomainsForUser(user);
 
         return Response.ok(createRVOs(domains)).build();
     }

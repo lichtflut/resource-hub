@@ -38,7 +38,8 @@ public abstract class DerivedModel<T, M> extends AbstractReadOnlyModel<T> {
 	// ----------------------------------------------------
 	
 	/**
-	 * @param original
+     * Constructor.
+	 * @param original The original model.
 	 */
 	public DerivedModel(IModel<M> original) {
 		this.originalModel = original;
@@ -46,7 +47,8 @@ public abstract class DerivedModel<T, M> extends AbstractReadOnlyModel<T> {
 	}
 	
 	/**
-	 * @param original
+	 * Constructor.
+     * @param original The original model value.
 	 */
 	public DerivedModel(M original) {
 		this.original = original;
