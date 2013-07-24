@@ -15,14 +15,13 @@
  */
 package de.lichtflut.rb.webck.components.form;
 
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.components.dialogs.ConfirmationDialog;
 
 /**
  * <p>
@@ -42,7 +41,8 @@ public class RBStandardButton extends AjaxButton {
 	// ----------------------------------------------------
 
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id The wicket ID.
 	 */
 	public RBStandardButton(final String id) {
 		super(id);
@@ -50,17 +50,11 @@ public class RBStandardButton extends AjaxButton {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onError(final AjaxRequestTarget target, final Form<?> form) {
 		RBAjaxTarget.add(form);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected final void onSubmit(final AjaxRequestTarget target, final Form<?> form) {
 		if (confirmationMessage != null) {
@@ -91,7 +85,7 @@ public class RBStandardButton extends AjaxButton {
 		hoster.openDialog(new ConfirmationDialog(hoster.getDialogID(), confirmationMessage) {
 			@Override
 			public void onConfirm() {
-				applyActions(AjaxRequestTarget.get(), form);
+				applyActions(RBAjaxTarget.getAjaxTarget(), form);
 			}
 		});
 	}

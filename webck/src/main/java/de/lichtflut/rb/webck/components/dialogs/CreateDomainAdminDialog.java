@@ -20,6 +20,7 @@ import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBDomain;
 import de.lichtflut.rb.core.security.RBUser;
 import de.lichtflut.rb.core.services.SecurityService;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.identities.UserCreationPanel;
 import de.lichtflut.rb.webck.components.identities.UserSearchPanel;
@@ -74,7 +75,7 @@ public class CreateDomainAdminDialog extends AbstractRBDialog {
 			public void onCreate(String email, String username, String password) {
 				try {
 					securityService.createDomainAdmin(model.getObject(), email, username, password);
-					close(AjaxRequestTarget.get());
+					close(RBAjaxTarget.getAjaxTarget());
 				} catch (RBAuthException e) {
 					error(e.getMessage());
 				}
@@ -82,7 +83,7 @@ public class CreateDomainAdminDialog extends AbstractRBDialog {
 			
 			@Override
 			public void onCancel() {
-				close(AjaxRequestTarget.get());
+				close(RBAjaxTarget.getAjaxTarget());
 			}
 		});
 		
@@ -94,7 +95,7 @@ public class CreateDomainAdminDialog extends AbstractRBDialog {
 	private void userSelectedAsDomainAdmin(final RBUser user, final RBDomain domain) {
 		IModel<String> msgModel = new Model<String>(getString("label.confirm.add-user-as-admin"));
 		DialogHoster hoster = findParent(DialogHoster.class);
-		close(AjaxRequestTarget.get());
+		close(RBAjaxTarget.getAjaxTarget());
 		hoster.openDialog(new ConfirmationDialog(hoster.getDialogID(), msgModel) {
 			@Override
 			public void onConfirm() {

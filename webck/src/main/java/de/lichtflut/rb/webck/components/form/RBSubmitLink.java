@@ -42,7 +42,7 @@ public class RBSubmitLink extends AjaxSubmitLink {
 
     /**
      * Constructor.
-     * @param id The componentn ID.
+     * @param id The wicket ID.
      */
     public RBSubmitLink(String id) {
         super(id);
@@ -50,17 +50,11 @@ public class RBSubmitLink extends AjaxSubmitLink {
 
     // ----------------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void onError(AjaxRequestTarget target, Form<?> form) {
         RBAjaxTarget.add(form);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected final void onSubmit(AjaxRequestTarget target, Form<?> form) {
         if (confirmationMessage != null) {
@@ -91,7 +85,7 @@ public class RBSubmitLink extends AjaxSubmitLink {
         hoster.openDialog(new ConfirmationDialog(hoster.getDialogID(), confirmationMessage) {
             @Override
             public void onConfirm() {
-                applyActions(AjaxRequestTarget.get(), form);
+                applyActions(RBAjaxTarget.getAjaxTarget(), form);
             }
         });
     }

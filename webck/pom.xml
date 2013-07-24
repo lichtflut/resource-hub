@@ -15,8 +15,6 @@
 
 	<properties>
 		<jetty.version>6.1.25</jetty.version>
-		<wiquery.version>1.5.7</wiquery.version>
-		<wicket-extensions.version>1.5.7</wicket-extensions.version>
 	</properties>
 
 	<dependencies>
@@ -33,7 +31,7 @@
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
-			<version>${wicket-extensions.version}</version>
+			<version>${wicket.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.odlabs.wiquery</groupId>

@@ -21,6 +21,7 @@ import static de.lichtflut.rb.webck.models.CurrentUserModel.isLoggedIn;
 
 import java.util.Locale;
 
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -171,7 +172,7 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 	@Override
 	public void openDialog(final Dialog dialog) {
 		setDialog(dialog);
-		final AjaxRequestTarget target = AjaxRequestTarget.get();
+		final AjaxRequestTarget target = RBAjaxTarget.getAjaxTarget();
 		if (target != null) {
 			dialog.open(target);
 			target.add(dialog);
@@ -183,7 +184,7 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 	@Override
 	public void closeDialog(final Dialog dialog) {
 		setDialog(emptyDialog());
-		final AjaxRequestTarget target = AjaxRequestTarget.get();
+		final AjaxRequestTarget target = RBAjaxTarget.getAjaxTarget();
 		if (target != null) {
 			dialog.close(target);
 			target.add(dialog);

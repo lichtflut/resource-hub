@@ -36,17 +36,11 @@ public class FocusFirstFormElementBehavior extends WiQueryAbstractBehavior {
 	
 	// ----------------------------------------------------
 
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public JsStatement statement() {
 		return new JsStatement().$(getComponent()).append(".find(':tabbable:first').focus();");
 	}
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	public boolean isTemporary(Component component) {
 		return temporary;

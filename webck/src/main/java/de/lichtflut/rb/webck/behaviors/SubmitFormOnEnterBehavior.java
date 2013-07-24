@@ -51,7 +51,7 @@ public class SubmitFormOnEnterBehavior extends WiQueryAbstractBehavior {
 
 	/**
 	 * Constructor.
-	 * @param submittingComponent
+	 * @param submittingComponent The button or link submitting the form.
 	 */
 	public SubmitFormOnEnterBehavior(Component submittingComponent) {
 		setSubmittingComponent(submittingComponent);
@@ -82,18 +82,12 @@ public class SubmitFormOnEnterBehavior extends WiQueryAbstractBehavior {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void renderHead(Component component, IHeaderResponse response) {
 		super.renderHead(component, response);
 		response.renderJavaScriptReference(REF);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onBind() {
 		super.onBind();
