@@ -79,7 +79,7 @@ public class EntityPickerField extends DataPickerField<ResourceID> {
 
 	// -----------------------------------------------------
 	
-	public AutocompleteSource findEntity(ResourceID type, ResourceID scope) {
+	public String findEntity(ResourceID type, ResourceID scope) {
         QueryPath path = pathBuilder.create(serviceContext.getDomain()).queryEntities();
         if (type != null) {
             path = path.ofType(type.toURI());
@@ -87,7 +87,7 @@ public class EntityPickerField extends DataPickerField<ResourceID> {
         if (scope != null) {
             path = path.inScope(scope.toURI());
         }
-        return new AutocompleteSource(path.toURI());
+        return path.toURI();
 	}
 	
 }

@@ -1,76 +1,76 @@
-/*
- * Copyright (C) 2013 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 var LFRB = LFRB || {};
 
 LFRB.Datapicker = {
-	accept : function(hiddenId, displayId, item) {
-		var hiddenField = jQuery(hiddenId);
-		var displayField = jQuery(displayId);
+    initAllDatapickers : function() {
+        jQuery('.data-picker').each( function (idx, picker) {
+            var picker = jQuery(picker);
+            var hidden = picker.children('.data-picker-store');
+            var display = picker.children('.data-picker-field');
+            LFRB.Datapicker.init(hidden, display);
+        });
+    },
+    init : function(hidden, display) {
+        display.autocomplete (
+            {
+                source : display.attr('lfrb-source'),
+                search : function (even, ui) { LFRB.Datapicker.onSearch(display);} ,
+                select : function (even, ui) { LFRB.Datapicker.accept(hidden, display, ui.item);} ,
+                change : function (even, ui) { LFRB.Datapicker.onChange(display);} ,
+                open   : function (even, ui) { LFRB.Datapicker.onOpen(display);},
+                close  : function (even, ui) { LFRB.Datapicker.onClose(display);}
+            }
+        );
+    },
+	accept : function(hidden, display, item) {
 		if (item) {
-			hiddenField.attr('value', item.id);
-			displayField.attr('value', item.label);
-			displayField.removeClass('status-error').removeClass('status-warning');
+			hidden.attr('value', item.id);
+			display.attr('value', item.label);
+			display.removeClass('status-error').removeClass('status-warning');
 		} else { 
 			alert ('internal error nothing selected')
-		};
+		}
 		return false;
 	},
-	onChange : function(displayId) {
-		var displayField = jQuery(displayId);
-		if (displayField.hasClass('status-warning')) { 
-			displayField.addClass('status-error');
+	onChange : function(display) {
+		if (display.hasClass('status-warning')) {
+			display.addClass('status-error');
 		} 
 	},
-	onSearch : function(displayId) {
-		var displayField = jQuery(displayId);
-		displayField.removeClass('status-error').addClass('status-warning');
+	onSearch : function(display) {
+		display.removeClass('status-error').addClass('status-warning');
 	},
-	onOpen : function(displayId) {
-		var displayField = jQuery(displayId);
-		displayField.attr('lfrb-state', 'open');
+	onOpen : function(display) {
+		display.attr('lfrb-state', 'open');
 		var clickHandler = function(e) { 
 	        var clickedAt = jQuery(e.target);
 	        if (clickedAt.parents(displayId).length == 0) { 
-	            displayField.autocomplete("close");
+	            display.autocomplete("close");
 	        } 
 	        jQuery(document).unbind('click', clickHandler);
-	    }
+	    };
 		jQuery(document).bind('click', clickHandler);
 		var keyHandler = function(evt) { 
 		    if (evt.keyCode == 27) {
-	            displayField.autocomplete("close");
+	            display.autocomplete("close");
 		    }
 	        jQuery(document).unbind('keypress', keyHandler);
-	    }
+	    };
 		jQuery(document).bind('keypress', keyHandler);
 	},
-	onClose : function(displayId) {
-		jQuery(displayId).attr('lfrb-state', 'closed');
+	onClose : function(displayField) {
+        displayField.attr('lfrb-state', 'closed');
 	},
-	toggle : function(displayId) {
-		var displayField = jQuery(displayId);
-		var status = displayField.attr("lfrb-state");
+	toggle : function(displayID) {
+        var display = jQuery(displayID);
+		var status = display.attr("lfrb-state");
 		if (status == 'open') {
-			displayField.autocomplete('close');
+			display.autocomplete('close');
 		} else {
-			var term = displayField.val();
+			var term = display.val();
 			if (term == undefined || term.length == 0) {
 				term = "#!*";
 			}
-			displayField.autocomplete('search', term);			
+			display.autocomplete('search', term);
 		}
 	}
-}
+};

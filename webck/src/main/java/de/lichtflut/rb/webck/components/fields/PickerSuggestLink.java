@@ -16,8 +16,8 @@
 package de.lichtflut.rb.webck.components.fields;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
-import org.odlabs.wiquery.ui.autocomplete.Autocomplete;
 
 /**
  * <p>
@@ -34,9 +34,11 @@ import org.odlabs.wiquery.ui.autocomplete.Autocomplete;
 public class PickerSuggestLink extends Label {
 
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id The wicket ID.
+     * @param field The field to toggle.
 	 */
-	protected PickerSuggestLink(String id, Autocomplete field) {
+	protected PickerSuggestLink(String id, Component field) {
 		super(id);
 		add(new AttributeModifier("onclick", "LFRB.Datapicker.toggle('#"+ field.getMarkupId() + "')"));
 	}

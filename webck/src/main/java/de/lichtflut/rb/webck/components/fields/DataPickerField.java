@@ -23,14 +23,11 @@ import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.arastreju.sge.model.ResourceID;
-import org.odlabs.wiquery.core.javascript.JsScopeContext;
-import org.odlabs.wiquery.ui.autocomplete.Autocomplete;
 import org.odlabs.wiquery.ui.autocomplete.AutocompleteJavaScriptResourceReference;
-import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
-import org.odlabs.wiquery.ui.core.JsScopeUiEvent;
 
 import java.io.Serializable;
 
@@ -50,8 +47,10 @@ import java.io.Serializable;
 public class DataPickerField<T extends Serializable> extends FormComponentPanel<T> {
 	
 	public static final ResourceReference REF = new JavaScriptResourceReference(DataPickerField.class, "lfrb-datapicker.js");
-	
-	// ----------------------------------------------------
+
+    private final IModel<String> source = new Model<String>();
+
+    // ----------------------------------------------------
 
 	/**
 	 * Constructor.
@@ -74,42 +73,15 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		final IModel<T> hiddenModel = toHiddenModel(model);
 		final HiddenField<T> hidden = new HiddenField<T>("acValue", hiddenModel);
 		hidden.setOutputMarkupId(true);
-		final String hiddenMarkupId = hidden.getMarkupId();
 		add(hidden);
 		
-		final Autocomplete<String> display = new Autocomplete<String>("display", displayModel);
+		final TextField<String> display = new TextField<String>("display", displayModel);
 		display.setType(String.class);
 		display.setOutputMarkupId(true);
-		final String displayMarkupID = display.getMarkupId();
-		display.setSearchEvent(new JsScopeUiEvent() {
-			protected void execute(final JsScopeContext ctx) {
-				ctx.append("LFRB.Datapicker.onSearch('#" +  displayMarkupID + "');");
-			}
-		});
-		display.setSelectEvent(new JsScopeUiEvent() {
-			protected void execute(final JsScopeContext ctx) {
-				ctx.append("LFRB.Datapicker.accept('#" +  hiddenMarkupId + "', '#" +  displayMarkupID + "', ui.item);"); 
-			}
-		});
-		display.setChangeEvent(new JsScopeUiEvent() {
-			protected void execute(final JsScopeContext ctx) {
-				ctx.append("LFRB.Datapicker.onChange('#" +  displayMarkupID + "');");
-			}
-		});
-		display.setOpenEvent(new JsScopeUiEvent() {
-			protected void execute(final JsScopeContext ctx) {
-				ctx.append("LFRB.Datapicker.onOpen('#" +  displayMarkupID + "');");
-			}
-		});
-		display.setCloseEvent(new JsScopeUiEvent() {
-			protected void execute(final JsScopeContext ctx) {
-				ctx.append("LFRB.Datapicker.onClose('#" +  displayMarkupID + "');");
-			}
-		});
+        display.add(new AttributeModifier("lfrb-source", source));
 		add(display);
 		
 		add(new AttributeModifier("title", hiddenModel));
-		
 		add(new PickerSuggestLink("suggest", display));
 	}
 	
@@ -119,12 +91,10 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		return getDisplayComponent().getDefaultModelObjectAsString();
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public Autocomplete getDisplayComponent() {
-		return (Autocomplete) get("display");
+	public TextField getDisplayComponent() {
+		return (TextField) get("display");
 	}
 	
-	@SuppressWarnings("unchecked")
 	public TextField<ResourceID> getValueComponent() {
 		return (TextField<ResourceID>) get("acValue");
 	}
@@ -133,17 +103,13 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		return (PickerSuggestLink) get("suggest");
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public DataPickerField setSource(AutocompleteSource source) {
-		getDisplayComponent().setSource(source);
-		return this;
-	}
+    public DataPickerField setSource(String source) {
+        this.source.setObject(source);
+        return this;
+    }
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public FormComponent<T> setType(Class<?> type) {
 		final FormComponent<T> comp = getValueField();
@@ -153,21 +119,16 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		return super.setType(type);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void renderHead(final IHeaderResponse response) {
 		super.renderHead(response);
 		response.renderJavaScriptReference(AutocompleteJavaScriptResourceReference.get());
 		response.renderJavaScriptReference(REF);
+        response.renderOnDomReadyJavaScript("LFRB.Datapicker.initAllDatapickers()");
 	}
 
 	// -----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void convertInput() {
 		final FormComponent<T> comp = getValueField();
@@ -186,10 +147,6 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 
 	// -----------------------------------------------------
 	
-	/**
-	 * @param model
-	 * @return
-	 */
 	private static IModel<String> toDisplayModel(final IModel<?> model) {
 		return new IModel<String>() {
 
@@ -209,10 +166,6 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 		};
 	}
 	
-	/**
-	 * @param originalModel
-	 * @return
-	 */
 	private static <T> IModel<T> toHiddenModel(final IModel<T> originalModel) {
 		return new IModel<T>() {
 			

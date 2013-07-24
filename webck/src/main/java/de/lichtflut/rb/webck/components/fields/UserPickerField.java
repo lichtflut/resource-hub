@@ -15,14 +15,11 @@
  */
 package de.lichtflut.rb.webck.components.fields;
 
-import de.lichtflut.rb.webck.config.QueryPath;
+import de.lichtflut.rb.core.services.ServiceContext;
+import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.naming.QualifiedName;
-import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
-
-import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 
 /**
  * <p>
@@ -58,9 +55,8 @@ public class UserPickerField extends DataPickerField<QualifiedName> {
 	
 	// -----------------------------------------------------
 	
-	public AutocompleteSource findUser() {
-        QueryPath path = pathBuilder.create(serviceContext.getDomain()).queryUsers();
-        return new AutocompleteSource(path.toURI());
+	public String findUser() {
+        return pathBuilder.create(serviceContext.getDomain()).queryUsers().toURI();
 	}
 	
 }

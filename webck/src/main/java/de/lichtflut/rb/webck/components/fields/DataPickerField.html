@@ -1,17 +1,8 @@
-<!--
-
-    Copyright (C) 2011 lichtflut Forschungs- und Entwicklungsgesellschaft mbH
-
--->
-<html
-	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
-<wicket:head>
-	<style type="text/css"></style>
-</wicket:head>
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.5-strict.dtd">
 <wicket:panel>
 
 	<div class="data-picker">
-		<input type="hidden" wicket:id="acValue" />
+		<input type="hidden" wicket:id="acValue" class="data-picker-store"/>
 		<input type="text" wicket:id="display" class="data-picker-field"/>
 		<a wicket:id="suggest" href="#" class="suggest-link">suggest</a>
 	</div>

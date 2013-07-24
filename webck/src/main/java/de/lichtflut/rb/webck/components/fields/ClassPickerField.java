@@ -22,7 +22,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
-import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 
 /**
  * <p>
@@ -69,9 +68,6 @@ public class ClassPickerField extends DataPickerField<ResourceID> {
 	
 	// -----------------------------------------------------
 	
-	/** 
-	* {@inheritDoc}
-	*/
 	@Override
 	protected void onConfigure() {
 		super.onConfigure();
@@ -80,10 +76,9 @@ public class ClassPickerField extends DataPickerField<ResourceID> {
 	
 	// ----------------------------------------------------
 	
-	public AutocompleteSource findSubClasses(ResourceID superClass) {
+	public String findSubClasses(ResourceID superClass) {
         String uri = superClass != null ? superClass.toURI() : null;
-        return new AutocompleteSource(
-                pathBuilder.queryClasses(serviceContext.getDomain(), uri));
+        return pathBuilder.queryClasses(serviceContext.getDomain(), uri);
 	}
 	
 }

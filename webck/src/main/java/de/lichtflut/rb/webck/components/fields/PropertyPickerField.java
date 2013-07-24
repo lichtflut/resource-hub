@@ -59,9 +59,8 @@ public class PropertyPickerField extends DataPickerField<ResourceID> {
 	
 	// -----------------------------------------------------
 	
-	public AutocompleteSource findProperty() {
-        QueryPath path = pathBuilder.create(serviceContext.getDomain()).queryProperties();
-        return new AutocompleteSource(path.toURI());
+	public String findProperty() {
+        return pathBuilder.create(serviceContext.getDomain()).queryProperties().toString();
 	}
 	
 }
