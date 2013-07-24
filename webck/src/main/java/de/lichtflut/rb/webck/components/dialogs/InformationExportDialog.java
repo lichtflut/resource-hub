@@ -65,7 +65,7 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
  *
  * @author Oliver Tigges
  */
-public class InformationExportDialog extends AbstractRBDialog implements IResourceListener {
+public class InformationExportDialog extends RBDialog implements IResourceListener {
 
 	private final IModel<Context> srcContext = new Model<Context>();
 

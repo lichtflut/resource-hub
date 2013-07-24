@@ -18,7 +18,6 @@ package de.lichtflut.rb.webck.components.dialogs;
 import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.widgets.catalog.WidgetCatalogPanel;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.ResourceModel;
 
 /**
@@ -32,7 +31,7 @@ import org.apache.wicket.model.ResourceModel;
  *
  * @author Oliver Tigges
  */
-public abstract class SelectWidgetDialog extends AbstractRBDialog {
+public abstract class SelectWidgetDialog extends RBDialog {
 
 	/**
      * Constructor.

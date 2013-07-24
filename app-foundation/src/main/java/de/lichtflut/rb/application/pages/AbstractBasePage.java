@@ -15,17 +15,16 @@
  */
 package de.lichtflut.rb.application.pages;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.not;
-import static de.lichtflut.rb.webck.models.CurrentUserModel.isLoggedIn;
-
-import java.util.Locale;
-
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.application.RBApplication;
+import de.lichtflut.rb.core.security.RBUser;
+import de.lichtflut.rb.webck.common.CookieAccess;
+import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.components.common.DialogHoster;
+import de.lichtflut.rb.webck.components.dialogs.RBDialog;
+import de.lichtflut.rb.webck.models.CurrentUserModel;
 import org.apache.commons.lang3.Validate;
 import org.apache.wicket.Component;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -33,14 +32,12 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.odlabs.wiquery.ui.dialog.Dialog;
 
-import de.lichtflut.rb.application.RBApplication;
-import de.lichtflut.rb.core.security.RBUser;
-import de.lichtflut.rb.webck.common.CookieAccess;
-import de.lichtflut.rb.webck.common.RBWebSession;
-import de.lichtflut.rb.webck.components.common.DialogHoster;
-import de.lichtflut.rb.webck.models.CurrentUserModel;
+import java.util.Locale;
+
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
+import static de.lichtflut.rb.webck.models.CurrentUserModel.isLoggedIn;
 
 /**
  * <p>
@@ -170,27 +167,15 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 	}
 
 	@Override
-	public void openDialog(final Dialog dialog) {
+	public void openDialog(final RBDialog dialog) {
 		setDialog(dialog);
-		final AjaxRequestTarget target = RBAjaxTarget.getAjaxTarget();
-		if (target != null) {
-			dialog.open(target);
-			target.add(dialog);
-		} else {
-			dialog.open();
-		}
+        dialog.open();
 	}
 
 	@Override
-	public void closeDialog(final Dialog dialog) {
+	public void closeDialog(final RBDialog dialog) {
 		setDialog(emptyDialog());
-		final AjaxRequestTarget target = RBAjaxTarget.getAjaxTarget();
-		if (target != null) {
-			dialog.close(target);
-			target.add(dialog);
-		} else {
-			dialog.close();
-		}
+		dialog.close();
 	}
 
 	protected void setDialog(final Component dialog) {

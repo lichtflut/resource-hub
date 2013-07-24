@@ -60,7 +60,7 @@ import java.util.Calendar;
  *
  * @author Erik Aderhold
  */
-public class VCardExportDialog extends AbstractRBDialog implements IResourceListener {
+public class VCardExportDialog extends RBDialog implements IResourceListener {
 
 	private final ResourceStreamResource resource;
 	

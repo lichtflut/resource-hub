@@ -15,14 +15,13 @@
  */
 package de.lichtflut.rb.webck.components.dialogs;
 
+import de.lichtflut.rb.webck.components.form.RBCancelButton;
+import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
-
-import de.lichtflut.rb.webck.components.form.RBCancelButton;
-import de.lichtflut.rb.webck.components.form.RBStandardButton;
 
 /**
  * <p>
@@ -35,10 +34,12 @@ import de.lichtflut.rb.webck.components.form.RBStandardButton;
  *
  * @author Oliver Tigges
  */
-public class ConfirmationDialog extends AbstractRBDialog {
+public class ConfirmationDialog extends RBDialog {
 
 	/**
-	 * @param id
+     * Constructor.
+	 * @param id Whe wicket ID.
+     * @param messageModel The model providing the display message.
 	 */
 	public ConfirmationDialog(final String id, final IModel<String> messageModel) {
 		super(id);
@@ -50,14 +51,14 @@ public class ConfirmationDialog extends AbstractRBDialog {
 		form.add(new RBCancelButton("cancel"){
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				close(target);
+				close();
 				onCancel();
 			}
 		});
 		form.add(new RBStandardButton("ok") {
 			@Override
 			protected void applyActions(final AjaxRequestTarget target, final Form<?> form) {
-				close(target);
+				close();
 				onConfirm();
 			}
 		});

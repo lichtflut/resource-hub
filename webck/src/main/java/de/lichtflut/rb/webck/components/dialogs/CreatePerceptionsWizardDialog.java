@@ -30,7 +30,7 @@ import org.apache.wicket.model.ResourceModel;
  *
  * @author Ravi Knox
  */
-public class CreatePerceptionsWizardDialog extends AbstractRBDialog {
+public class CreatePerceptionsWizardDialog extends RBDialog {
 
 	/**
 	 * Constructor.

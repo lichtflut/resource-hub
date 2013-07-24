@@ -39,7 +39,7 @@ import java.util.Date;
  *
  * @author Oliver Tigges
  */
-public class EditNoteDialog extends AbstractRBDialog {
+public class EditNoteDialog extends RBDialog {
 
 	@SpringBean
 	private ServiceContext context;
@@ -70,13 +70,13 @@ public class EditNoteDialog extends AbstractRBDialog {
                 item.setCreator(getCurrentUserName());
                 contentService.store(item);
                 EditNoteDialog.this.onSave(item);
-                EditNoteDialog.this.closeDialog();
+                EditNoteDialog.this.close();
             }
 
             @Override
             public void onCancel() {
                 EditNoteDialog.this.onCancel();
-                EditNoteDialog.this.closeDialog();
+                EditNoteDialog.this.close();
             }
 
             @Override

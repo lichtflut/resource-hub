@@ -30,7 +30,7 @@ package de.lichtflut.rb.webck.components.form;
 public class RBCancelButton extends RBStandardButton {
 
 	/**
-	 * @param id
+	 * @param id The wicket ID.
 	 */
 	public RBCancelButton(String id) {
 		super(id);

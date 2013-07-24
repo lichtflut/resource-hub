@@ -331,7 +331,7 @@ public class SchemaDetailPanel extends Panel {
 
 					@Override
 					public void onCancel() {
-						closeDialog();
+						close();
 					}
 				};
 				hoster.openDialog(dialog);

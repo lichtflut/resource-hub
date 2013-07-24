@@ -24,7 +24,6 @@ import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.common.DialogHoster;
 import de.lichtflut.rb.webck.components.identities.UserCreationPanel;
 import de.lichtflut.rb.webck.components.identities.UserSearchPanel;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -43,7 +42,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Oliver Tigges
  */
-public class CreateDomainAdminDialog extends AbstractRBDialog {
+public class CreateDomainAdminDialog extends RBDialog {
 	
 	private final Logger logger = LoggerFactory.getLogger(CreateDomainAdminDialog.class);
 	

@@ -49,7 +49,7 @@ import java.io.InputStream;
  *
  * @author Erik Aderhold
  */
-public class EntityExcelExportDialog extends AbstractRBDialog implements IResourceListener {
+public class EntityExcelExportDialog extends RBDialog implements IResourceListener {
 
 	private final ResourceStreamResource resource;
 

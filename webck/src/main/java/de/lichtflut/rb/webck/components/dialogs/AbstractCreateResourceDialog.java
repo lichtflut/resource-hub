@@ -31,7 +31,7 @@ import de.lichtflut.rb.webck.components.typesystem.CreateResourcePanel;
  *
  * @author Oliver Tigges
  */
-public abstract class AbstractCreateResourceDialog extends AbstractRBDialog {
+public abstract class AbstractCreateResourceDialog extends RBDialog {
 
 	/**
 	 * @param id

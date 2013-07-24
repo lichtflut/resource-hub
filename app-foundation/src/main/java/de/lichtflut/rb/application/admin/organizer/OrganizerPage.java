@@ -15,8 +15,17 @@
  */
 package de.lichtflut.rb.application.admin.organizer;
 
-import java.util.List;
-
+import de.lichtflut.rb.application.admin.AdminBasePage;
+import de.lichtflut.rb.core.services.DomainOrganizer;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.dialogs.RBDialog;
+import de.lichtflut.rb.webck.components.dialogs.CreateContextDialog;
+import de.lichtflut.rb.webck.components.dialogs.CreateNamespaceDialog;
+import de.lichtflut.rb.webck.components.organizer.NamespaceOverviewPanel;
+import de.lichtflut.rb.webck.components.organizer.SetDomainOrganizationPanel;
+import de.lichtflut.rb.webck.components.organizer.contexts.ContextOverviewPanel;
+import de.lichtflut.rb.webck.events.ModelChangeEvent;
+import de.lichtflut.rb.webck.models.DomainOrganizationModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -25,18 +34,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.context.Context;
 import org.arastreju.sge.naming.Namespace;
-import org.odlabs.wiquery.ui.dialog.Dialog;
 
-import de.lichtflut.rb.application.admin.AdminBasePage;
-import de.lichtflut.rb.core.services.DomainOrganizer;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.dialogs.CreateContextDialog;
-import de.lichtflut.rb.webck.components.dialogs.CreateNamespaceDialog;
-import de.lichtflut.rb.webck.components.organizer.contexts.ContextOverviewPanel;
-import de.lichtflut.rb.webck.components.organizer.NamespaceOverviewPanel;
-import de.lichtflut.rb.webck.components.organizer.SetDomainOrganizationPanel;
-import de.lichtflut.rb.webck.events.ModelChangeEvent;
-import de.lichtflut.rb.webck.models.DomainOrganizationModel;
+import java.util.List;
 
 /**
  * <p>
@@ -66,7 +65,7 @@ public class OrganizerPage extends AdminBasePage {
 		add(new SetDomainOrganizationPanel("domainOrg", new DomainOrganizationModel()));
 		
 		// Contexts
-		final Dialog ctxDialog = new CreateContextDialog("contextDialog");
+		final RBDialog ctxDialog = new CreateContextDialog("contextDialog");
 		add(ctxDialog);
 		add(new ContextOverviewPanel("contextsView", contextsModel()) {
 			@Override
@@ -76,7 +75,7 @@ public class OrganizerPage extends AdminBasePage {
 		});
 		
 		// Namespaces
-		final Dialog nsDialog = new CreateNamespaceDialog("namespaceDialog");
+		final RBDialog nsDialog = new CreateNamespaceDialog("namespaceDialog");
 		add(nsDialog);
 		add(new NamespaceOverviewPanel("namespacesView", namespacesModel()) {
 			@Override

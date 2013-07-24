@@ -49,7 +49,7 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
  *
  * @author Oliver Tigges
  */
-public class SchemaImportDialog extends AbstractRBDialog {
+public class SchemaImportDialog extends RBDialog {
 
 	@SpringBean
 	private SchemaManager schemaManager;

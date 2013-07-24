@@ -36,7 +36,7 @@ import de.lichtflut.rb.webck.components.typesystem.properties.EditPropertyDeclPa
  *
  * @author Ravi Knox
  */
-public class EditPropertyDeclDialog extends AbstractRBDialog {
+public class EditPropertyDeclDialog extends RBDialog {
 
 	/**
 	 * Constructor.

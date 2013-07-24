@@ -15,7 +15,7 @@
  */
 package de.lichtflut.rb.webck.components.common;
 
-import org.odlabs.wiquery.ui.dialog.Dialog;
+import de.lichtflut.rb.webck.components.dialogs.RBDialog;
 
 /**
  * <p>
@@ -30,9 +30,9 @@ import org.odlabs.wiquery.ui.dialog.Dialog;
  */
 public interface DialogHoster {
 
-	void closeDialog(Dialog dialog);
+	void closeDialog(RBDialog dialog);
 
-	void openDialog(Dialog dialog);
+	void openDialog(RBDialog dialog);
 
 	String getDialogID();
 

@@ -19,7 +19,7 @@ import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
 import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.components.dialogs.AbstractRBDialog;
+import de.lichtflut.rb.webck.components.dialogs.RBDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -35,7 +35,7 @@ import org.apache.wicket.model.ResourceModel;
  *
  * @author Oliver Tigges
  */
-public class CreateMenuItemDialog extends AbstractRBDialog {
+public class CreateMenuItemDialog extends RBDialog {
 
 	/**
 	 * @param id The wicket id.

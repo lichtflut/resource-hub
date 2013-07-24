@@ -31,7 +31,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  *
  * @author Oliver Tigges
  */
-public class CreateContextDialog extends AbstractRBDialog {
+public class CreateContextDialog extends RBDialog {
 	
 	@SpringBean
 	protected DomainOrganizer domainOrganizer;

@@ -32,7 +32,7 @@ import org.apache.wicket.request.resource.ResourceStreamResource;
  *
  * @author Oliver Tigges
  */
-public abstract class AbstractExportDialog extends AbstractRBDialog implements IResourceListener {
+public abstract class AbstractExportDialog extends RBDialog implements IResourceListener {
 
 	/**
 	 * @param id

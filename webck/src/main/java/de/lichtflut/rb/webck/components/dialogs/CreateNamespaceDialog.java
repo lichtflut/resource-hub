@@ -30,7 +30,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  *
  * @author Oliver Tigges
  */
-public class CreateNamespaceDialog extends AbstractRBDialog {
+public class CreateNamespaceDialog extends RBDialog {
 	
 	/**
 	 * @param id

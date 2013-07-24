@@ -18,7 +18,7 @@ package de.lichtflut.rb.webck.components.widgets.management;
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.components.dialogs.AbstractRBDialog;
+import de.lichtflut.rb.webck.components.dialogs.RBDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -35,7 +35,7 @@ import org.apache.wicket.model.ResourceModel;
  *
  * @author Oliver Tigges
  */
-public class EditMenuItemDialog extends AbstractRBDialog {
+public class EditMenuItemDialog extends RBDialog {
 
 	/**
      * Constructor.

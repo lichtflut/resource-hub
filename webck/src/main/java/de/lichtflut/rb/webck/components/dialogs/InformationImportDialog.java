@@ -49,7 +49,7 @@ import de.lichtflut.rb.webck.events.ModelChangeEvent;
  *
  * @author Oliver Tigges
  */
-public class InformationImportDialog extends AbstractRBDialog {
+public class InformationImportDialog extends RBDialog {
 
 	@SpringBean
 	private DomainOrganizer organizer;

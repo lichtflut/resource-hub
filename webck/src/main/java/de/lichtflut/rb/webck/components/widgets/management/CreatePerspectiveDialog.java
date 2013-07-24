@@ -15,6 +15,7 @@
  */
 package de.lichtflut.rb.webck.components.widgets.management;
 
+import de.lichtflut.rb.webck.components.dialogs.RBDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -22,7 +23,6 @@ import org.apache.wicket.model.ResourceModel;
 import de.lichtflut.rb.core.viewspec.Perspective;
 import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.components.dialogs.AbstractRBDialog;
 
 /**
  * <p>
@@ -35,7 +35,7 @@ import de.lichtflut.rb.webck.components.dialogs.AbstractRBDialog;
  *
  * @author Oliver Tigges
  */
-public class CreatePerspectiveDialog extends AbstractRBDialog {
+public class CreatePerspectiveDialog extends RBDialog {
 
 	// ----------------------------------------------------
 

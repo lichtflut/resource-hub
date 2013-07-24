@@ -65,7 +65,7 @@ import java.util.Set;
  *
  * @author Erik Aderhold
  */
-public class ResourceListExportDialog extends AbstractRBDialog implements IResourceListener {
+public class ResourceListExportDialog extends RBDialog implements IResourceListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceListExportDialog.class);
 	
