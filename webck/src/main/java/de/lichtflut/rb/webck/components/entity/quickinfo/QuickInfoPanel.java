@@ -58,7 +58,7 @@ public class QuickInfoPanel extends Panel{
 	 * Constructor.
 	 * 
 	 * @param id The component id
-	 * @param model Contains the entity's resourceId
+	 * @param fields Contains the entity's resourceId
 	 */
 	public QuickInfoPanel(final String id, final IModel<List<RBField>> fields) {
 		super(id, fields);

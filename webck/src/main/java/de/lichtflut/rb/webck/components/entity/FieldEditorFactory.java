@@ -27,7 +27,6 @@ import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
 import de.lichtflut.rb.webck.components.rteditor.RichTextBehavior;
 import de.lichtflut.rb.webck.models.DateModel;
-import de.lichtflut.rb.webck.models.HTMLSafeModel;
 import de.lichtflut.rb.webck.models.fields.FileUploadModel;
 import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import org.apache.wicket.Component;
@@ -44,7 +43,6 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.views.SNText;
 import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
 import java.io.Serializable;
