@@ -31,4 +31,6 @@ public interface CommonParams {
 
 	String PARAM_RESOURCE_ID = "rid";
 	String PARAM_RESOURCE_TYPE = "type";
+    String PARAM_TERM = "term";
+
 }

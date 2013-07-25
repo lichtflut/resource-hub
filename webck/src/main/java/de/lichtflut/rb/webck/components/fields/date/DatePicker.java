@@ -13,34 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.rb.webck.behaviors;
+package de.lichtflut.rb.webck.components.fields.date;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import de.lichtflut.rb.webck.behaviors.DatePickerBehavior;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
+
+import java.util.Date;
 
 /**
  * <p>
- *  Behavior making a input field a date picker.
+ *  Field for picking a date value from a calender widget.
  * </p>
  *
  * <p>
- * 	Created May 25, 2011
+ *  Created July 25, 2013
  * </p>
  *
  * @author Oliver Tigges
  */
-public class DatePickerBehavior extends Behavior {
+public class DatePicker extends TextField<Date> {
 
-
-	@Override
-	public void bind(final Component component) {
-		component.setOutputMarkupId(true);
-	}
-
-	@Override
-	public void renderHead(final Component c, final IHeaderResponse response) {
-		response.renderOnLoadJavaScript("jQuery('#" + c.getMarkupId()+ "').datepicker()");
-	}
+    /**
+     * Constructor.
+     * @param id The wicket ID.
+     * @param model The model containing the date value.
+     */
+    public DatePicker(String id, IModel<Date> model) {
+        super(id, model, Date.class);
+        add(new DatePickerBehavior());
+    }
 
 }

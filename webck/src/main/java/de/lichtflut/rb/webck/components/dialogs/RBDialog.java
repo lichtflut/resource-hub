@@ -24,12 +24,6 @@ import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
-import org.odlabs.wiquery.ui.dialog.DialogJavaScriptResourceReference;
-import org.odlabs.wiquery.ui.draggable.DraggableJavaScriptResourceReference;
-import org.odlabs.wiquery.ui.mouse.MouseJavaScriptResourceReference;
-import org.odlabs.wiquery.ui.position.PositionJavaScriptResourceReference;
-import org.odlabs.wiquery.ui.resizable.ResizableJavaScriptResourceReference;
-import org.odlabs.wiquery.ui.widget.WidgetJavaScriptResourceReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -99,14 +93,6 @@ public class RBDialog extends WebMarkupContainer {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-
-        response.renderJavaScriptReference(WidgetJavaScriptResourceReference.get());
-        response.renderJavaScriptReference(MouseJavaScriptResourceReference.get());
-        response.renderJavaScriptReference(PositionJavaScriptResourceReference.get());
-        response.renderJavaScriptReference(DialogJavaScriptResourceReference.get());
-        response.renderJavaScriptReference(DraggableJavaScriptResourceReference.get());
-        response.renderJavaScriptReference(ResizableJavaScriptResourceReference.get());
-
         response.renderOnLoadJavaScript("jQuery('#" + getMarkupId() + "').css('visibility', 'visible');");
         response.renderOnLoadJavaScript("jQuery('#" + getMarkupId() + "').dialog(" + optionsAsJson() + ");");
     }

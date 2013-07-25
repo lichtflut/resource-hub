@@ -25,6 +25,7 @@ import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.behaviors.TitleModifier;
 import de.lichtflut.rb.webck.components.fields.AjaxEditableUploadField;
 import de.lichtflut.rb.webck.components.fields.EntityPickerField;
+import de.lichtflut.rb.webck.components.fields.date.DatePicker;
 import de.lichtflut.rb.webck.components.rteditor.RichTextBehavior;
 import de.lichtflut.rb.webck.models.DateModel;
 import de.lichtflut.rb.webck.models.fields.FileUploadModel;
@@ -43,12 +44,10 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
 import org.arastreju.sge.model.ResourceID;
-import org.odlabs.wiquery.ui.datepicker.DatePicker;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
 
 /**
  * <p>
@@ -146,7 +145,7 @@ public class FieldEditorFactory implements Serializable {
 	}
 
 	public Component createDateField(final RBField fieldDefinition, final IModel model) {
-		final DatePicker<Date> field = new DatePicker<Date>("valuefield", new DateModel((RBFieldValueModel) model), Date.class);
+		final DatePicker field = new DatePicker("valuefield", new DateModel((RBFieldValueModel) model));
 		addValidator(field, fieldDefinition);
 		addStyle(field, fieldDefinition.getVisualizationInfo());
 		return new Fragment("valuefield", "textInput", container).add(field);

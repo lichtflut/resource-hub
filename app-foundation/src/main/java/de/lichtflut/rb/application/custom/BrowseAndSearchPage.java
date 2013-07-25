@@ -15,13 +15,26 @@
  */
 package de.lichtflut.rb.application.custom;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-import static de.lichtflut.rb.webck.models.ConditionalModel.and;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
-import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
-import static de.lichtflut.rb.webck.models.ConditionalModel.not;
-
+import de.lichtflut.rb.application.RBApplication;
+import de.lichtflut.rb.application.base.RBBasePage;
+import de.lichtflut.rb.application.common.CommonParams;
+import de.lichtflut.rb.application.extensions.RBResourceListPanel;
+import de.lichtflut.rb.core.RBSystem;
+import de.lichtflut.rb.core.common.TermSearcher;
+import de.lichtflut.rb.core.common.TermSearcher.Mode;
+import de.lichtflut.rb.webck.browsing.JumpTarget;
+import de.lichtflut.rb.webck.common.DisplayMode;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.common.RBWebSession;
+import de.lichtflut.rb.webck.components.fields.SearchField;
+import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
+import de.lichtflut.rb.webck.components.listview.ListPagerPanel;
+import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
+import de.lichtflut.rb.webck.components.typesystem.TypeBrowserPanel;
+import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
+import de.lichtflut.rb.webck.models.basic.PageableModel;
+import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
+import de.lichtflut.rb.webck.models.types.SNClassListModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -44,26 +57,12 @@ import org.arastreju.sge.query.Query;
 import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.query.SortCriteria;
 
-import de.lichtflut.rb.application.RBApplication;
-import de.lichtflut.rb.application.base.RBBasePage;
-import de.lichtflut.rb.application.common.CommonParams;
-import de.lichtflut.rb.application.extensions.RBResourceListPanel;
-import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.common.TermSearcher;
-import de.lichtflut.rb.core.common.TermSearcher.Mode;
-import de.lichtflut.rb.webck.browsing.JumpTarget;
-import de.lichtflut.rb.webck.common.DisplayMode;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.common.RBWebSession;
-import de.lichtflut.rb.webck.components.fields.SearchField;
-import de.lichtflut.rb.webck.components.listview.ColumnConfiguration;
-import de.lichtflut.rb.webck.components.listview.ListPagerPanel;
-import de.lichtflut.rb.webck.components.listview.ResourceListPanel;
-import de.lichtflut.rb.webck.components.typesystem.TypeBrowserPanel;
-import de.lichtflut.rb.webck.models.basic.AbstractLoadableDetachableModel;
-import de.lichtflut.rb.webck.models.basic.PageableModel;
-import de.lichtflut.rb.webck.models.resources.ResourceQueryResultModel;
-import de.lichtflut.rb.webck.models.types.SNClassListModel;
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
+import static de.lichtflut.rb.webck.models.ConditionalModel.and;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isEmpty;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isNotNull;
+import static de.lichtflut.rb.webck.models.ConditionalModel.isNull;
+import static de.lichtflut.rb.webck.models.ConditionalModel.not;
 
 /**
  * <p>
@@ -77,8 +76,6 @@ import de.lichtflut.rb.webck.models.types.SNClassListModel;
  * @author Oliver Tigges
  */
 public class BrowseAndSearchPage extends RBBasePage {
-
-	public static final String PARAM_TERM = "term";
 
 	public static final int MAX_RESULTS = 20;
 
@@ -101,8 +98,7 @@ public class BrowseAndSearchPage extends RBBasePage {
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param parameters
+	 * @param parameters The page parameters.
 	 */
 	public BrowseAndSearchPage(final PageParameters parameters) {
 		super(parameters);
@@ -111,7 +107,7 @@ public class BrowseAndSearchPage extends RBBasePage {
 
 		resultModel = new ResourceQueryResultModel(queryModel, new Model<Integer>(MAX_RESULTS));
 
-		final StringValue termParam = parameters.get(PARAM_TERM);
+		final StringValue termParam = parameters.get(CommonParams.PARAM_TERM);
 		if (!termParam.isEmpty()) {
 			search(termParam.toString());
 		}
@@ -143,18 +139,19 @@ public class BrowseAndSearchPage extends RBBasePage {
 	// ----------------------------------------------------
 
 	protected Form<?> createForm() {
+        final IModel<ResourceID> entityModel = new Model<ResourceID>();
 		final IModel<String> searchModel = new Model<String>();
 		final Form<?> form = new Form<Void>("form") {
 			@Override
 			protected void onSubmit() {
 				final PageParameters params = new PageParameters();
-				params.add(PARAM_TERM, searchModel.getObject());
+				params.add(CommonParams.PARAM_TERM, searchModel.getObject());
 				setResponsePage(BrowseAndSearchPage.class, params);
 			}
 		};
 		form.setOutputMarkupId(true);
 		form.add(new FeedbackPanel("feedback"));
-		form.add(new SearchField("search", searchModel).setRequired(true));
+		form.add(new SearchField("search", entityModel, searchModel).setRequired(true));
 		form.add(new Button("submit"));
 		return form;
 	}
@@ -217,9 +214,6 @@ public class BrowseAndSearchPage extends RBBasePage {
 
 	// ----------------------------------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onDetach() {
 		super.onDetach();
@@ -236,9 +230,6 @@ public class BrowseAndSearchPage extends RBBasePage {
 
 	private class QueryModel extends AbstractLoadableDetachableModel<QueryResult> {
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public QueryResult load() {
 			Query query = null;

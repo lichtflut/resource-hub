@@ -18,7 +18,7 @@ package de.lichtflut.rb.webck.components.perceptions;
 import de.lichtflut.rb.core.perceptions.Perception;
 import de.lichtflut.rb.core.services.PerceptionDefinitionService;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.colorpicker.ColorPickerPanel;
+import de.lichtflut.rb.webck.components.fields.color.ColorPickerPanel;
 import de.lichtflut.rb.webck.components.form.RBCancelButton;
 import de.lichtflut.rb.webck.components.form.RBStandardButton;
 import de.lichtflut.rb.webck.events.ModelChangeEvent;

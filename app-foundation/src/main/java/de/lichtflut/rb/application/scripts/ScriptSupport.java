@@ -13,34 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.rb.webck.behaviors;
+package de.lichtflut.rb.application.scripts;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
  * <p>
- *  Behavior making a input field a date picker.
+ *  References to Java Script resources.
  * </p>
  *
  * <p>
- * 	Created May 25, 2011
+ *  Created 25.07.13
  * </p>
  *
  * @author Oliver Tigges
  */
-public class DatePickerBehavior extends Behavior {
+public interface ScriptSupport {
 
-
-	@Override
-	public void bind(final Component component) {
-		component.setOutputMarkupId(true);
-	}
-
-	@Override
-	public void renderHead(final Component c, final IHeaderResponse response) {
-		response.renderOnLoadJavaScript("jQuery('#" + c.getMarkupId()+ "').datepicker()");
-	}
+    void addScripts(IHeaderResponse response);
 
 }

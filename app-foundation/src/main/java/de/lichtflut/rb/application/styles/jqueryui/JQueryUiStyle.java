@@ -13,34 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.lichtflut.rb.webck.behaviors;
+package de.lichtflut.rb.application.styles.jqueryui;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.behavior.Behavior;
+import de.lichtflut.rb.application.styles.Style;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * <p>
- *  Behavior making a input field a date picker.
+ *  The frugal default style of RB applications.
  * </p>
  *
  * <p>
- * 	Created May 25, 2011
+ * Created 13.07.12
  * </p>
  *
  * @author Oliver Tigges
  */
-public class DatePickerBehavior extends Behavior {
+public class JQueryUiStyle implements Style {
 
+    public static ResourceReference JQUERY_UI_CSS =
+            new JavaScriptResourceReference(JQueryUiStyle.class, "jquery-ui-1.10.3.css");
 
-	@Override
-	public void bind(final Component component) {
-		component.setOutputMarkupId(true);
-	}
+    // ----------------------------------------------------
 
-	@Override
-	public void renderHead(final Component c, final IHeaderResponse response) {
-		response.renderOnLoadJavaScript("jQuery('#" + c.getMarkupId()+ "').datepicker()");
-	}
-
+    @Override
+    public void addStyle(IHeaderResponse response) {
+        response.renderCSSReference(JQUERY_UI_CSS);
+    }
 }

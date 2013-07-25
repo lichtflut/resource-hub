@@ -15,13 +15,14 @@
  */
 package de.lichtflut.rb.webck.components.catalog;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
+import de.lichtflut.rb.core.services.SchemaManager;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
+import de.lichtflut.rb.core.services.TypeManager;
+import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
+import de.lichtflut.rb.webck.common.RBAjaxTarget;
+import de.lichtflut.rb.webck.components.common.PanelTitle;
+import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -29,6 +30,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -42,16 +44,13 @@ import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.views.SNClass;
-import org.odlabs.wiquery.ui.autocomplete.AutocompleteComponent;
 
-import de.lichtflut.rb.core.services.SchemaManager;
-import de.lichtflut.rb.core.services.SemanticNetworkService;
-import de.lichtflut.rb.core.services.TypeManager;
-import de.lichtflut.rb.webck.behaviors.ConditionalBehavior;
-import de.lichtflut.rb.webck.common.RBAjaxTarget;
-import de.lichtflut.rb.webck.components.common.PanelTitle;
-import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.resources.ResourceLabelModel;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -232,12 +231,8 @@ public class CatalogPanel extends Panel {
 				return String.valueOf(index);
 			}
 		};
-		AutocompleteComponent<ResourceID> picker = new AutocompleteComponent<ResourceID>("searchbox", model, findSubclassesFor(type), renderer) {
-			@Override
-			public ResourceID getValueOnSearchFail(final String input) {
-				return null;
-			}
-		};
+        // findSubclassesFor(type), renderer
+		TextField<ResourceID> picker = new TextField<ResourceID>("searchbox", model);
 		return picker;
 	}
 

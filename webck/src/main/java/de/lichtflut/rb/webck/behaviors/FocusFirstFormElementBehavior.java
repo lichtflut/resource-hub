@@ -16,8 +16,8 @@
 package de.lichtflut.rb.webck.behaviors;
 
 import org.apache.wicket.Component;
-import org.odlabs.wiquery.core.behavior.WiQueryAbstractBehavior;
-import org.odlabs.wiquery.core.javascript.JsStatement;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
  * <p>
@@ -30,20 +30,25 @@ import org.odlabs.wiquery.core.javascript.JsStatement;
  *
  * @author Oliver Tigges
  */
-public class FocusFirstFormElementBehavior extends WiQueryAbstractBehavior {
-	
-	private boolean temporary = true;
-	
-	// ----------------------------------------------------
+public class FocusFirstFormElementBehavior extends Behavior {
 
-	@Override
-	public JsStatement statement() {
-		return new JsStatement().$(getComponent()).append(".find(':tabbable:first').focus();");
-	}
-	
-	@Override
-	public boolean isTemporary(Component component) {
-		return temporary;
-	}
+    @Override
+    public void bind(Component component) {
+        super.bind(component);
+        component.setOutputMarkupPlaceholderTag(true);
+    }
+
+    @Override
+    public void renderHead(Component component, IHeaderResponse response) {
+        super.renderHead(component, response);
+        response.renderOnDomReadyJavaScript(
+                "jQuery('#" + component.getMarkupId() + "')"
+                + ".find(':tabbable:first').focus();");
+    }
+
+    @Override
+    public boolean isTemporary(Component component) {
+        return true;
+    }
 	
 }

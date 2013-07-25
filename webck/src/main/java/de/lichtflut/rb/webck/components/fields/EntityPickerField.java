@@ -23,7 +23,6 @@ import de.lichtflut.rb.webck.models.resources.ResourceDisplayModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
-import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
 
 /**
  * <p>

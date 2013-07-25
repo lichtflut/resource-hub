@@ -109,6 +109,7 @@ public class AbstractBasePage extends WebPage implements DialogHoster {
 		super.renderHead(response);
 		RBApplication.get().getLayout().addLayout(response);
 		RBApplication.get().getStyle().addStyle(response);
+        RBApplication.get().getScriptSupport().addScripts(response);
 	}
 
 	// ----------------------------------------------------

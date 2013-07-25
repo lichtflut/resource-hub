@@ -27,7 +27,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.arastreju.sge.model.ResourceID;
-import org.odlabs.wiquery.ui.autocomplete.AutocompleteJavaScriptResourceReference;
 
 import java.io.Serializable;
 
@@ -107,7 +106,7 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
         this.source.setObject(source);
         return this;
     }
-	
+
 	// ----------------------------------------------------
 	
 	@Override
@@ -122,7 +121,6 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	@Override
 	public void renderHead(final IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(AutocompleteJavaScriptResourceReference.get());
 		response.renderJavaScriptReference(REF);
         response.renderOnDomReadyJavaScript("LFRB.Datapicker.initAllDatapickers()");
 	}

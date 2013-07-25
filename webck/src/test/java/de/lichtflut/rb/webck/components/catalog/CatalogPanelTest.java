@@ -25,6 +25,7 @@ import java.util.Set;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDFS;
@@ -36,7 +37,6 @@ import org.arastreju.sge.model.nodes.SNValue;
 import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.naming.QualifiedName;
 import org.junit.Test;
-import org.odlabs.wiquery.ui.autocomplete.AutocompleteComponent;
 
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.webck.RBWebTest;
@@ -68,9 +68,6 @@ public class CatalogPanelTest extends RBWebTest {
 
 	// ------------------------------------------------------
 
-	/**
-	 * Test method for {@link de.lichtflut.rb.webck.components.catalog.CatalogPanel#SoftwareCatalogPanel(java.lang.String)}.
-	 */
 	@Test
 	public void testSoftwareCatalogPanel() {
 		simulatePathbuilder();
@@ -81,7 +78,7 @@ public class CatalogPanelTest extends RBWebTest {
 		assertRenderedPanel(CatalogPanel.class, "panel");
 
 		tester.assertComponent("panel:categories", CategoriesPanel.class);
-		tester.assertComponent("panel:form:searchbox", AutocompleteComponent.class);
+		tester.assertComponent("panel:form:searchbox", TextField.class);
 		tester.assertComponent("panel:form:create", AjaxButton.class);
 		tester.assertInvisible("panel:specifyingList");
 	}

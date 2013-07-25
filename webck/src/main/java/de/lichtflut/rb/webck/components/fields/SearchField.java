@@ -20,8 +20,7 @@ import de.lichtflut.rb.core.services.ServiceContext;
 import de.lichtflut.rb.webck.config.QueryServicePathBuilder;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.odlabs.wiquery.ui.autocomplete.Autocomplete;
-import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
+import org.arastreju.sge.model.ResourceID;
 
 /**
  * <p>
@@ -34,7 +33,7 @@ import org.odlabs.wiquery.ui.autocomplete.AutocompleteSource;
  *
  * @author Oliver Tigges
  */
-public class SearchField extends Autocomplete<String> {
+public class SearchField extends DataPickerField<ResourceID> {
 
 	@SpringBean
 	private QueryServicePathBuilder pathBuilder;
@@ -44,14 +43,21 @@ public class SearchField extends Autocomplete<String> {
 	
 	// ----------------------------------------------------
 
-	/**
-	 * @param id The component ID.
-	 * @param model The model containing the search string.
-	 */
-	public SearchField(final String id, final IModel<String> model) {
-		super(id, model);
-		setSource(new AutocompleteSource(
-				pathBuilder.queryEntities(serviceContext.getDomain(), RBSystem.ENTITY.toURI())));
-	}
-	
+    /**
+     * Constructor.
+     * @param id The wicket ID.
+     * @param entity The model containing a selected entity.
+     * @param searchText The model containing the search text.
+     */
+    public SearchField(final String id, final IModel<ResourceID> entity, final IModel<String> searchText) {
+        super(id, entity, searchText);
+        setType(ResourceID.class);
+        setSource(pathBuilder
+                .create(serviceContext.getDomain())
+                .queryEntities()
+                .ofType(RBSystem.ENTITY.toURI())
+                .toURI()
+        );
+        getSuggestLink().setVisible(false);
+    }
 }

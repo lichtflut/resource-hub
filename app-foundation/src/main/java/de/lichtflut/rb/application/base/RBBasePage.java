@@ -21,7 +21,7 @@ import static de.lichtflut.rb.webck.models.CurrentUserModel.isLoggedIn;
 
 import java.util.List;
 
-import de.lichtflut.rb.application.custom.UserProfilePage;
+import de.lichtflut.rb.application.common.CommonParams;
 import org.apache.wicket.Component;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -39,7 +39,6 @@ import de.lichtflut.rb.RBPermission;
 import de.lichtflut.rb.application.custom.BrowseAndSearchPage;
 import de.lichtflut.rb.application.pages.AbstractBasePage;
 import de.lichtflut.rb.core.viewspec.MenuItem;
-import de.lichtflut.rb.webck.behaviors.SubmitFormOnEnterBehavior;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import de.lichtflut.rb.webck.components.fields.SearchField;
 import de.lichtflut.rb.webck.components.identities.SessionInfoPanel;
@@ -52,6 +51,7 @@ import de.lichtflut.rb.webck.models.CurrentUserModel;
 import de.lichtflut.rb.webck.models.basic.DerivedDetachableModel;
 import de.lichtflut.rb.webck.models.domains.CurrentDomainModel;
 import de.lichtflut.rb.webck.models.viewspecs.MenuItemListModel;
+import org.arastreju.sge.model.ResourceID;
 
 /**
  * <p>
@@ -140,25 +140,26 @@ public class RBBasePage extends AbstractBasePage {
 	}
 
 	protected Form<?> createSearchForm(final String componentID) {
+        final IModel<ResourceID> entityModel = new Model<ResourceID>();
 		final IModel<String> searchModel = new Model<String>();
 		final Form<?> form = new Form<Void>(componentID) {
 			@Override
 			protected void onSubmit() {
 				final PageParameters params = new PageParameters();
-				if (searchModel.getObject() != null) {
-					params.add(BrowseAndSearchPage.PARAM_TERM, searchModel.getObject());
-				}
-				setResponsePage(BrowseAndSearchPage.class, params);
+                if (entityModel.getObject() != null) {
+                    params.add(CommonParams.PARAM_RESOURCE_ID, entityModel.getObject().toURI());
+                    setResponsePage(RBApplication.get().getEntityDetailPage(), params);
+                } else if (searchModel.getObject() != null) {
+					params.add(CommonParams.PARAM_TERM, searchModel.getObject());
+                    setResponsePage(RBApplication.get().getBrowseAndSearchPage(), params);
+				} else {
+                    setResponsePage(RBApplication.get().getBrowseAndSearchPage(), params);
+                }
 			}
 		};
 		form.setOutputMarkupId(true);
-
-		final SearchField searchField = new SearchField("search", searchModel);
-		final SubmitLink submitLink = new SubmitLink("submit");
-
-		form.add(searchField);
-		form.add(submitLink);
-		form.add(new SubmitFormOnEnterBehavior(submitLink));
+		form.add(new SearchField("search", entityModel, searchModel));
+		form.add(new SubmitLink("submit"));
 		return form;
 	}
 

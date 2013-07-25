@@ -23,6 +23,8 @@ import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
+import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -99,7 +101,7 @@ public class EntityPanel extends Panel {
 
 	// ----------------------------------------------------
 
-	@Override
+    @Override
 	public void onEvent(final IEvent<?> event) {
 		final ModelChangeEvent<?> mce = ModelChangeEvent.from(event);
 		if (mce.isAbout(ModelChangeEvent.ENTITY)) {

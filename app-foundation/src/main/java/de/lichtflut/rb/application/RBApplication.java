@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.lichtflut.rb.application.scripts.JQueryUiSupport;
+import de.lichtflut.rb.application.scripts.ScriptSupport;
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
@@ -171,6 +173,14 @@ public abstract class RBApplication extends WebApplication {
 		return new FrugalStyle();
 	}
 
+    /**
+     * The scripts available on all pages.
+     * @return The script support.
+     */
+    public ScriptSupport getScriptSupport() {
+        return new JQueryUiSupport();
+    }
+
 	// ----------------------------------------------------
 
 	/**
@@ -251,6 +261,5 @@ public abstract class RBApplication extends WebApplication {
 		final RBConfig rbc = (RBConfig) wac.getBean("rbConfig");
 		rbc.getArastrejuProfile().close();
 	}
-
 
 }

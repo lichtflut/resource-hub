@@ -679,15 +679,19 @@ div.pager-info {
 }
 
 /* SEARCH & RESOURCE PICKER */
-input.searchbar-short {
+div.searchbar-short {
+    float: left;
+}
+
+div.searchbar-short input.data-picker-field {
 	width: 200px;
 	height: 12px;
 	padding: 0 2px;
-	background-color: #f6f8f3;
+	background: #f6f8f3;
     border-radius: 2px;
 }
 
-input.searchbar-long {
+div.searchbar-long input {
 	width: 400px;
 }
 
