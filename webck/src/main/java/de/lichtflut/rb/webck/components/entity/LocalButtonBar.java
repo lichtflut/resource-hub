@@ -86,7 +86,7 @@ public class LocalButtonBar extends Panel {
 
 	/**
 	 * Is called when entity can not be validated.
-	 * @param errors A List containing errorcodes and their corresponding RBField
+	 * @param errors A List containing error codes and their corresponding RBField
 	 */
 	protected void onError(final Map<Integer, List<RBField>> errors) {
 	}

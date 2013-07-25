@@ -19,7 +19,7 @@ import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.OnLoadHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
@@ -94,8 +94,8 @@ public class RBDialog extends WebMarkupContainer {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.render(OnLoadHeaderItem.forScript("jQuery('#" + getMarkupId() + "').css('visibility', 'visible');"));
-        response.render(OnLoadHeaderItem.forScript("jQuery('#" + getMarkupId() + "').dialog(" + optionsAsJson() + ");"));
+        response.render(OnDomReadyHeaderItem.forScript(jQuery("css('visibility', 'visible')")));
+        response.render(OnDomReadyHeaderItem.forScript(jQuery("dialog(" + optionsAsJson() + ")")));
     }
 
     // ----------------------------------------------------
@@ -118,7 +118,7 @@ public class RBDialog extends WebMarkupContainer {
     }
 
     public void open(AjaxRequestTarget target) {
-        target.appendJavaScript("jQuery('#" + getMarkupId() + "').dialog('open');");
+        target.appendJavaScript(jQuery("dialog('open')"));
         target.add(this);
         setVisible(true);
     }
@@ -134,7 +134,7 @@ public class RBDialog extends WebMarkupContainer {
     }
 
     public void close(AjaxRequestTarget target) {
-        target.prependJavaScript("jQuery('#" + getMarkupId() + "').dialog('close');");
+        target.prependJavaScript(jQuery("dialog('close')"));
         target.add(this);
         setVisible(false);
         setAutoOpen(false);
@@ -177,6 +177,12 @@ public class RBDialog extends WebMarkupContainer {
             return caModel.wrapOnAssignment(this);
         }
         return model;
+    }
+
+    // ----------------------------------------------------
+
+    private String jQuery(String script) {
+        return "jQuery('#" + getMarkupId() + "')." + script + ";";
     }
 
 }

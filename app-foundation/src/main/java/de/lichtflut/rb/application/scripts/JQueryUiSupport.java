@@ -15,10 +15,14 @@
  */
 package de.lichtflut.rb.application.scripts;
 
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.JQueryResourceReference;
+
+import java.util.Collections;
 
 /**
  * <p>
@@ -33,11 +37,14 @@ import org.apache.wicket.request.resource.ResourceReference;
  */
 public class JQueryUiSupport implements ScriptSupport {
 
-    public static final ResourceReference JQUERY_CORE =
-            new JavaScriptResourceReference(JQueryUiSupport.class, "jquery-1.9.1.js");
-
     public static final ResourceReference JQUERY_UI =
-            new JavaScriptResourceReference(JQueryUiSupport.class, "jquery-ui-1.10.3.js");
+            new JavaScriptResourceReference(JQueryUiSupport.class, "jquery-ui-1.10.3.js") {
+                @Override
+                public Iterable<? extends HeaderItem> getDependencies() {
+                    return Collections.<HeaderItem>singleton(
+                            JavaScriptHeaderItem.forReference(JQueryResourceReference.get()));
+                }
+            };
 
     // ----------------------------------------------------
 
