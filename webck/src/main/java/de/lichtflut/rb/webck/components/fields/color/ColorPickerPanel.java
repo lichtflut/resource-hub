@@ -15,10 +15,10 @@
  */
 package de.lichtflut.rb.webck.components.fields.color;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -28,6 +28,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -124,13 +127,12 @@ public class ColorPickerPanel extends Panel implements ILabelProvider<String> {
 
 	@Override
 	public void renderHead(final IHeaderResponse response) {
-		response.renderCSSReference(cssResourceReference);
-		response.renderJavaScriptReference(reference);
-		response.renderOnLoadJavaScript("$(document).ready(function() {" +
-				"$('#" + get("colors").getMarkupId() + "').colorpicker({" +
-				"size: 23, label: '', count: 5, hide: true" +
-				"});" +
-				"});");
+		response.render(CssHeaderItem.forReference(cssResourceReference));
+		response.render(JavaScriptHeaderItem.forReference(reference));
+		response.render(OnDomReadyHeaderItem.forScript(
+                        "jQuery('#" + get("colors").getMarkupId() + "').colorpicker({" +
+                        "   size: 23, label: '', count: 5, hide: true" +
+                        "});"));
 	}
 
 	@Override

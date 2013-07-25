@@ -16,7 +16,8 @@
 package de.lichtflut.rb.application.styles.frugal;
 
 import de.lichtflut.rb.application.styles.Style;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
@@ -47,8 +48,8 @@ public class FrugalStyle implements Style {
 
     @Override
     public void addStyle(IHeaderResponse response) {
-        response.renderCSSReference(STYLE);
-        response.renderCSSReference(WIDGETS);
-        response.renderCSSReference(INFOVIS);
+        response.render(CssHeaderItem.forReference(STYLE));
+        response.render(CssHeaderItem.forReference(WIDGETS));
+        response.render(CssHeaderItem.forReference(INFOVIS));
     }
 }

@@ -15,10 +15,13 @@
  */
 package de.lichtflut.rb.webck.components.entity.quickinfo;
 
-import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
-
-import java.util.List;
-
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
+import de.lichtflut.rb.webck.components.entity.EntityRowDisplayPanel;
+import de.lichtflut.rb.webck.models.ConditionalModel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -31,13 +34,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.services.SemanticNetworkService;
-import de.lichtflut.rb.webck.components.entity.EntityRowDisplayPanel;
-import de.lichtflut.rb.webck.models.ConditionalModel;
-import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
+import java.util.List;
+
+import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 
 /**
  * <p>

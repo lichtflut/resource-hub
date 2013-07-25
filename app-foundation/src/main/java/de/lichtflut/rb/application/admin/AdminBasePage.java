@@ -19,7 +19,8 @@ import static de.lichtflut.rb.webck.behaviors.ConditionalBehavior.visibleIf;
 import static de.lichtflut.rb.webck.models.ConditionalModel.and;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -82,12 +83,9 @@ public class AdminBasePage extends AbstractBasePage {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.renderCSSReference(ADMIN_CSS);
+        response.render(CssHeaderItem.forReference(ADMIN_CSS));
     }
 
-    /**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();

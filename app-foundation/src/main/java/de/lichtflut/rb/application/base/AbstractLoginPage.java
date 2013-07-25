@@ -127,9 +127,9 @@ public class AbstractLoginPage extends AbstractBasePage {
 
     protected void redirectIfAlreadyLoggedIn() {
         if (isAuthenticated()) {
-            if (!continueToOriginalDestination()) {
-                throw new RestartResponseException(RBApplication.get().getHomePage());
-            }
+            continueToOriginalDestination();
+            // this line is only reached when there is no original destination
+            throw new RestartResponseException(RBApplication.get().getHomePage());
         }
     }
 

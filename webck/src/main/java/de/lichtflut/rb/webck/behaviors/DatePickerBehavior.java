@@ -17,7 +17,8 @@ package de.lichtflut.rb.webck.behaviors;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 
 /**
  * <p>
@@ -40,7 +41,7 @@ public class DatePickerBehavior extends Behavior {
 
 	@Override
 	public void renderHead(final Component c, final IHeaderResponse response) {
-		response.renderOnLoadJavaScript("jQuery('#" + c.getMarkupId()+ "').datepicker()");
+		response.render(OnLoadHeaderItem.forScript("jQuery('#" + c.getMarkupId() + "').datepicker()"));
 	}
 
 }

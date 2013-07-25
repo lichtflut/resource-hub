@@ -19,7 +19,9 @@ import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
 import de.lichtflut.rb.webck.config.InfoVisPath;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
@@ -50,9 +52,9 @@ public class ContainmentMapVisualizationPanel extends InfoVisPanel {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.D3_JS);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.MAP_JS);
-		response.renderOnLoadJavaScript("showMap();");
+		response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.D3_JS));
+		response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.MAP_JS));
+		response.render(OnLoadHeaderItem.forScript("showMap();"));
 	}
 
     @Override

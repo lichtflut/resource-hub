@@ -17,7 +17,10 @@ package de.lichtflut.rb.webck.components.fields;
 
 import de.lichtflut.rb.core.entity.RBEntity;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.HiddenField;
@@ -26,9 +29,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.JQueryResourceReference;
 import org.arastreju.sge.model.ResourceID;
 
 import java.io.Serializable;
+import java.util.Collections;
 
 /**
  * <p>
@@ -45,7 +50,14 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class DataPickerField<T extends Serializable> extends FormComponentPanel<T> {
 	
-	public static final ResourceReference REF = new JavaScriptResourceReference(DataPickerField.class, "lfrb-datapicker.js");
+	public static final ResourceReference REF =
+            new JavaScriptResourceReference(DataPickerField.class, "lfrb-datapicker.js") {
+                @Override
+                public Iterable<? extends HeaderItem> getDependencies() {
+                    return Collections.<HeaderItem>singleton(
+                            JavaScriptHeaderItem.forReference(JQueryResourceReference.get()));
+                }
+            };
 
     private final IModel<String> source = new Model<String>();
 
@@ -121,8 +133,8 @@ public class DataPickerField<T extends Serializable> extends FormComponentPanel<
 	@Override
 	public void renderHead(final IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(REF);
-        response.renderOnDomReadyJavaScript("LFRB.Datapicker.initAllDatapickers()");
+		response.render(JavaScriptHeaderItem.forReference(REF));
+        response.render(OnDomReadyHeaderItem.forScript("LFRB.Datapicker.initAllDatapickers()"));
 	}
 
 	// -----------------------------------------------------

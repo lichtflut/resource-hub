@@ -19,14 +19,14 @@ import de.lichtflut.rb.application.base.errorpages.DefaultErrorPage;
 import de.lichtflut.rb.application.base.errorpages.InternalErrorPage;
 import de.lichtflut.rb.webck.common.RBWebSession;
 import org.apache.wicket.Page;
+import org.apache.wicket.core.request.handler.IPageProvider;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.IPageProvider;
-import org.apache.wicket.request.handler.PageProvider;
-import org.apache.wicket.request.handler.RenderPageRequestHandler;
 
 /**
  * <p>
@@ -41,9 +41,7 @@ import org.apache.wicket.request.handler.RenderPageRequestHandler;
  */
 public class RBRequestCycleListener extends AbstractRequestCycleListener {
 
-    /**
-	 * {@inheritDoc}
-	 */
+    @Override
 	public IRequestHandler onException(final RequestCycle cycle, Exception ex) {
 		if (ex instanceof PageExpiredException) {
 			return getTargetTo(new InternalErrorPage(ex));

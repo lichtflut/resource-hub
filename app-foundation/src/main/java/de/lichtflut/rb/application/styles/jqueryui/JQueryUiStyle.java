@@ -16,13 +16,14 @@
 package de.lichtflut.rb.application.styles.jqueryui;
 
 import de.lichtflut.rb.application.styles.Style;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * <p>
- *  The frugal default style of RB applications.
+ *  The CSS needed for JQuery UI.
  * </p>
  *
  * <p>
@@ -40,6 +41,6 @@ public class JQueryUiStyle implements Style {
 
     @Override
     public void addStyle(IHeaderResponse response) {
-        response.renderCSSReference(JQUERY_UI_CSS);
+        response.render(CssHeaderItem.forReference(JQUERY_UI_CSS));
     }
 }

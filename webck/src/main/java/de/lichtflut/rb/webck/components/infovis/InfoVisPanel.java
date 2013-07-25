@@ -22,7 +22,8 @@ import de.lichtflut.rb.webck.components.infovis.common.CurrentNodeInfoPanel;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
 import de.lichtflut.rb.webck.config.DefaultPathBuilder;
 import de.lichtflut.rb.webck.config.InfoVisPath;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -63,14 +64,14 @@ public abstract class InfoVisPanel extends TypedPanel<ResourceNode> {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.INFOVIS_JS);
+		response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.INFOVIS_JS));
 
-		response.renderJavaScript("LFRB.InfoVis.contextPath='"
-                + RequestCycle.get().getRequest().getContextPath() + "';", "LFRB.InfoVis.contextPath");
-
+		response.render(JavaScriptHeaderItem.forScript("LFRB.InfoVis.contextPath='"
+                + RequestCycle.get().getRequest().getContextPath() + "';", "LFRB.InfoVis.contextPath"));
 
         final InfoVisPath path = adapt(new DefaultPathBuilder().createInfoVisPath(context.getDomain()));
-        response.renderJavaScript("LFRB.InfoVis.serviceURI='" + path.toURI() + "';", "LFRB.InfoVis.serviceURI");
+        response.render(JavaScriptHeaderItem.forScript("LFRB.InfoVis.serviceURI='" + path.toURI() + "';"
+                , "LFRB.InfoVis.serviceURI"));
 	}
 
     // ----------------------------------------------------

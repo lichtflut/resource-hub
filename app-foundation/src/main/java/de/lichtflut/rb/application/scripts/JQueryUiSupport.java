@@ -15,7 +15,8 @@
  */
 package de.lichtflut.rb.application.scripts;
 
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
@@ -42,7 +43,6 @@ public class JQueryUiSupport implements ScriptSupport {
 
     @Override
     public void addScripts(IHeaderResponse response) {
-        response.renderJavaScriptReference(JQUERY_CORE);
-        response.renderJavaScriptReference(JQUERY_UI);
+        response.render(JavaScriptHeaderItem.forReference(JQUERY_UI));
     }
 }

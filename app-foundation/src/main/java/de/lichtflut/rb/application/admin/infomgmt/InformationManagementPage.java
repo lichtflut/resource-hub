@@ -88,7 +88,7 @@ public class InformationManagementPage extends AdminBasePage {
 			model.setObject(((IOReport)mce.getPayload()).toHTML());
 			// updating behavior can be stopped when report has arrived
 			if(timerBehavior != null) {
-				timerBehavior.stop();
+				timerBehavior.stop(RBAjaxTarget.getAjaxTarget());
 			}
 			RBAjaxTarget.add(messageContainer);
 		}

@@ -15,9 +15,8 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import org.arastreju.sge.model.ResourceID;
-
 import de.lichtflut.rb.core.entity.EntityHandle;
+import org.arastreju.sge.model.ResourceID;
 
 /**
  * <p>

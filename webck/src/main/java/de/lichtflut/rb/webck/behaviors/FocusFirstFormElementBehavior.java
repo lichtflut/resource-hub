@@ -17,7 +17,8 @@ package de.lichtflut.rb.webck.behaviors;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 
 /**
  * <p>
@@ -41,9 +42,9 @@ public class FocusFirstFormElementBehavior extends Behavior {
     @Override
     public void renderHead(Component component, IHeaderResponse response) {
         super.renderHead(component, response);
-        response.renderOnDomReadyJavaScript(
+        response.render(OnDomReadyHeaderItem.forScript(
                 "jQuery('#" + component.getMarkupId() + "')"
-                + ".find(':tabbable:first').focus();");
+                        + ".find(':tabbable:first').focus();"));
     }
 
     @Override

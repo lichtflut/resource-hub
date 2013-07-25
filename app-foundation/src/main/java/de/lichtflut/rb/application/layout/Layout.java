@@ -15,7 +15,7 @@
  */
 package de.lichtflut.rb.application.layout;
 
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
 
 /**
  * <p>

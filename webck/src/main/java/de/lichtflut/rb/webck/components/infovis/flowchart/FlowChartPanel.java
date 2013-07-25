@@ -20,7 +20,9 @@ import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
 import de.lichtflut.rb.webck.config.InfoVisPath;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -62,12 +64,12 @@ public class FlowChartPanel extends InfoVisPanel {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.RAPHAEL_JS);
-		response.renderJavaScriptReference(InfoVisJavaScriptResources.FLOWCHART_JS);
-		response.renderOnLoadJavaScript(
-				"var paper = Raphael('infovis', 2000, 1000);" +
-				"LFRB.FlowChart.drawChart(DataSet.nodeset, DataSet.lanes, paper);"
-		);
+		response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.RAPHAEL_JS));
+		response.render(JavaScriptHeaderItem.forReference(InfoVisJavaScriptResources.FLOWCHART_JS));
+		response.render(OnLoadHeaderItem.forScript(
+                "var paper = Raphael('infovis', 2000, 1000);" +
+                        "LFRB.FlowChart.drawChart(DataSet.nodeset, DataSet.lanes, paper);"
+        ));
 	}
 	
 	protected IResourceStream getJsonResource() {

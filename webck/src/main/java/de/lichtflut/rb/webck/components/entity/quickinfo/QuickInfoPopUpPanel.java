@@ -15,8 +15,12 @@
  */
 package de.lichtflut.rb.webck.components.entity.quickinfo;
 
-import java.util.List;
-
+import de.lichtflut.rb.core.entity.RBEntity;
+import de.lichtflut.rb.core.entity.RBField;
+import de.lichtflut.rb.core.schema.model.Datatype;
+import de.lichtflut.rb.core.services.SemanticNetworkService;
+import de.lichtflut.rb.webck.components.entity.EntityRowDisplayPanel;
+import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -27,12 +31,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
-import de.lichtflut.rb.core.entity.RBEntity;
-import de.lichtflut.rb.core.entity.RBField;
-import de.lichtflut.rb.core.schema.model.Datatype;
-import de.lichtflut.rb.core.services.SemanticNetworkService;
-import de.lichtflut.rb.webck.components.entity.EntityRowDisplayPanel;
-import de.lichtflut.rb.webck.models.fields.RBFieldValueModel;
+import java.util.List;
 
 /**
  * <p>

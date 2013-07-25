@@ -16,7 +16,8 @@
 package de.lichtflut.rb.application.layout.frugal;
 
 import de.lichtflut.rb.application.layout.Layout;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
@@ -40,7 +41,7 @@ public class FrugalLayout implements Layout {
 
     @Override
     public void addLayout(IHeaderResponse response) {
-        response.renderCSSReference(SITE_STRUCTURE);
+        response.render(CssHeaderItem.forReference(SITE_STRUCTURE));
     }
 }
 

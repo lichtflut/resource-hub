@@ -18,7 +18,8 @@ package de.lichtflut.rb.webck.components.dialogs;
 import de.lichtflut.rb.webck.behaviors.CssModifier;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
@@ -93,8 +94,8 @@ public class RBDialog extends WebMarkupContainer {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.renderOnLoadJavaScript("jQuery('#" + getMarkupId() + "').css('visibility', 'visible');");
-        response.renderOnLoadJavaScript("jQuery('#" + getMarkupId() + "').dialog(" + optionsAsJson() + ");");
+        response.render(OnLoadHeaderItem.forScript("jQuery('#" + getMarkupId() + "').css('visibility', 'visible');"));
+        response.render(OnLoadHeaderItem.forScript("jQuery('#" + getMarkupId() + "').dialog(" + optionsAsJson() + ");"));
     }
 
     // ----------------------------------------------------

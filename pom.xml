@@ -21,8 +21,7 @@
 	<properties>
 		<arastreju.version>0.9.1-SNAPSHOT</arastreju.version>
         <springframework.version>3.1.0.RELEASE</springframework.version>
-        <wicket.version>1.5.10</wicket.version>
-        <wiquery.version>1.5.8</wiquery.version>
+        <wicket.version>6.9.1</wicket.version>
 		<jersey.version>1.8</jersey.version>
         <jackson.version>1.9.10</jackson.version>
         <reflections.version>0.9.8</reflections.version>

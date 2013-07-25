@@ -34,6 +34,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -185,7 +186,7 @@ public class FieldEditorFactory implements Serializable {
 
 	// ----------------------------------------------------
 
-	private void addValidator(final Component component, final RBField fieldDefinition) {
+	private void addValidator(final FormComponent component, final RBField fieldDefinition) {
 		Constraint constraint = fieldDefinition.getConstraint();
 		if((null != constraint) && (null != constraint.getLiteralConstraint())){
 			component.add(new PatternValidator(fieldDefinition.getConstraint().getLiteralConstraint()));
