@@ -16,6 +16,8 @@
 package de.lichtflut.rb.application;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -48,7 +50,7 @@ public class RBServletFilter implements Filter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RBServletFilter.class);
 
-	// ----------------------------------------------------
+    // ----------------------------------------------------
 
 	@Override
 	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
@@ -68,6 +70,9 @@ public class RBServletFilter implements Filter {
 
 	// ----------------------------------------------------
 
+    /**
+     * Check if a new Auth Token has been deposited in the HTTP Session and if so, rewrite this to the HTTP response.
+     */
 	private void checkSessionCookie(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse) {
 		String existingToken = getTokenFromRequest(httpServletRequest);
 		if (existingToken != null) {
@@ -114,7 +119,7 @@ public class RBServletFilter implements Filter {
 
 	@Override
 	public void init(final FilterConfig filterConfig) throws ServletException {
-	}
+    }
 
 	@Override
 	public void destroy() {

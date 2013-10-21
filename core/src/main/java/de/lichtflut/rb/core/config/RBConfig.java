@@ -41,11 +41,16 @@ public class RBConfig {
 	 */
 	public static final String DOMAIN_WORK_DIRECTORY = "de.lichtflut.rb.workdir";
 
+    /**
+     * Name of HTTP-Header field containing authenticated user name for single sign on.
+     */
+    public static final String TRUSTED_AUTH_HEADER = "de.lichtflut.rb.trusted-auth-header";
+
     // ----------------------------------------------------
 
     private final static Logger LOGGER = LoggerFactory.getLogger(RBConfig.class);
 
-	// ----------------------------------------------------
+    // ----------------------------------------------------
 
 	private final String appName;
 

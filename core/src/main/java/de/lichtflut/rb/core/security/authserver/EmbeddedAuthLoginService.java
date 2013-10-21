@@ -96,7 +96,28 @@ public class EmbeddedAuthLoginService implements AuthenticationService {
         return rbUser;
     }
 
-	@Override
+    @Override
+    public RBUser login(String username) throws LoginException {
+        final String id = normalize(username);
+        if (id == null) {
+            throw new LoginException(ErrorCodes.LOGIN_INVALID_DATA, "No username given");
+        }
+
+        LOGGER.info("Trying to login user '" + id + "'.");
+
+        final ResourceNode user = findUserNode(id);
+        if (user == null){
+            throw new LoginException(ErrorCodes.LOGIN_USER_NOT_FOUND, "User does not exist: " + id);
+        }
+
+        setLastLogin(user);
+
+        RBUser rbUser = toRBUser(user);
+        LOGGER.info("User {} logged in with prior authentication. ", rbUser.getName());
+        return rbUser;
+    }
+
+    @Override
 	public RBUser loginByToken(String token) {
 		if (token == null) {
 			return null;

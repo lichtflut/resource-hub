@@ -38,6 +38,14 @@ public interface AuthenticationService {
 	 */
 	RBUser login(LoginData loginData) throws LoginException;
 
+    /**
+     * Log an (already authenticated) user in just by it's name.
+     * @param username The username.
+     * @return The logged in user.
+     * @throws LoginException when user not exist or login forbidden.
+     */
+    RBUser login(String username) throws LoginException;
+
 	/**
 	 * Log a user in by it's 'remember me' token.
 	 * @param token The token from the cookie.

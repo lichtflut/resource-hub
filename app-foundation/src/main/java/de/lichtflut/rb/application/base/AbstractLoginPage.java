@@ -19,6 +19,7 @@ import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.RBPermission;
 import de.lichtflut.rb.application.extensions.ServiceContextInitializer;
 import de.lichtflut.rb.application.pages.AbstractBasePage;
+import de.lichtflut.rb.core.config.RBConfig;
 import de.lichtflut.rb.core.eh.LoginException;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.AuthenticationService;
@@ -34,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -57,9 +59,12 @@ public class AbstractLoginPage extends AbstractBasePage {
     @SpringBean
     private AuthenticationService authService;
 
+    private String trustedAuthHeader;
+
     // ----------------------------------------------------
 
     public AbstractLoginPage() {
+        trustedAuthHeader = System.getProperty(RBConfig.TRUSTED_AUTH_HEADER);
         checkCookies();
         redirectIfAlreadyLoggedIn();
     }
@@ -69,7 +74,9 @@ public class AbstractLoginPage extends AbstractBasePage {
     @Override
     protected void onConfigure() {
         super.onConfigure();
-        checkCookies();
+        if (!checkCookies()) {
+            checkTrustedHeader();
+        }
         redirectIfAlreadyLoggedIn();
     }
 
@@ -88,15 +95,7 @@ public class AbstractLoginPage extends AbstractBasePage {
     protected void tryLogin(final LoginData loginData) {
         try {
             final RBUser user = authService.login(loginData);
-            final Set<String> permissions = authModule.getUserManagement().getUserPermissions(user, user.getDomesticDomain());
-            if (!permissions.contains(RBPermission.LOGIN.name())) {
-                LOGGER.info("Login aborted - User {} is lack of permission: {}", user.getName(), RBPermission.LOGIN.name());
-                error(getString("error.login.activation"));
-            } else {
-                LOGGER.info("User {} logged in.", user.getName());
-                RBWebSession.get().replaceSession();
-                initializeUserSession(user);
-            }
+            checkAndInitialize(user);
             if (loginData.getStayLoggedIn()) {
                 final String token = authService.createRememberMeToken(user, loginData);
                 CookieAccess.getInstance().setRememberMeToken(token);
@@ -107,21 +106,34 @@ public class AbstractLoginPage extends AbstractBasePage {
         }
     }
 
-    protected void checkCookies() {
+    protected boolean checkCookies() {
         final String cookie = CookieAccess.getInstance().getRememberMeToken();
         if (cookie != null) {
             final RBUser user = authService.loginByToken(cookie);
             if (user != null) {
-                final Set<String> permissions = authModule.getUserManagement().getUserPermissions(user, user.getDomesticDomain());
-                if (permissions.contains(RBPermission.LOGIN.name())) {
-                    initializeUserSession(user);
-                } else {
-                    LOGGER.info("Login aborted - User {} is lack of permission: {}", user.getName(), RBPermission.LOGIN.name());
-                    error(getString("error.login.activation"));
-                }
+                return checkAndInitialize(user);
             } else {
                 CookieAccess.getInstance().removeAuthCookies();
             }
+        }
+        return false;
+    }
+
+    protected void checkTrustedHeader() {
+        if (trustedAuthHeader == null) {
+            return;
+        }
+        WebRequest request = (WebRequest) RequestCycle.get().getRequest();
+        HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
+        LOGGER.debug("Headers: " + Collections.list(httpRequest.getHeaderNames()));
+        try {
+            if (httpRequest.getHeader(trustedAuthHeader) != null) {
+                String username = httpRequest.getHeader(trustedAuthHeader);
+                RBUser user = authService.login(username);
+                checkAndInitialize(user);
+            }
+        } catch (LoginException e) {
+            error(getString("error.login.failed"));
         }
     }
 
@@ -135,6 +147,23 @@ public class AbstractLoginPage extends AbstractBasePage {
 
     // ----------------------------------------------------
 
+    private boolean checkAndInitialize(RBUser user) {
+        final Set<String> permissions = authModule.getUserManagement().getUserPermissions(user, user.getDomesticDomain());
+        if (permissions.contains(RBPermission.LOGIN.name())) {
+            LOGGER.info("User {} logged in.", user.getName());
+            RBWebSession.get().replaceSession();
+            initializeUserSession(user);
+            return true;
+        } else {
+            LOGGER.info("Login aborted - User {} is lack of permission: {}", user.getName(), RBPermission.LOGIN.name());
+            error(getString("error.login.activation"));
+            return false;
+        }
+    }
+
+    /**
+     * Write the Token in the session. So it can be rewritten as cookie from servlet filter.
+     */
     private void initializeUserSession(RBUser user) {
         String token = authService.createSessionToken(user);
         new ServiceContextInitializer().init(user, user.getDomesticDomain());
