@@ -28,8 +28,8 @@ import de.lichtflut.rb.core.security.UserManager;
 import de.lichtflut.rb.rest.api.RBServiceEndpoint;
 import de.lichtflut.rb.rest.api.common.LinkRVO;
 import de.lichtflut.rb.rest.api.common.UserRVO;
-import de.lichtflut.rb.rest.api.graphs.GraphResource;
-import org.arastreju.sge.context.Context;
+import de.lichtflut.rb.rest.api.infovis.TreeInfoVisService;
+import de.lichtflut.rb.rest.api.query.QueryServiceResource;
 import org.arastreju.sge.model.Infra;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +49,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -82,14 +80,15 @@ public class DomainResource extends RBServiceEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listContexts (
-            @PathParam(value = "domain") String domain,
+            @PathParam(value = "domain") String domainID,
             @CookieParam(value= AuthModule.COOKIE_SESSION_AUTH) String token)
             throws UnauthenticatedUserException, IOException {
 
-        RBUser user = authenticateUser(token);
+        authenticateUser(token);
 
-        Collection<Context> contexts = getOrganizer(domain, user).getContexts();
-        return Response.ok(createRVOs(domain, contexts)).build();
+        DomainManager domainManager = this.authModule.getDomainManager();
+        RBDomain rbDomain = domainManager.findDomain(domainID);
+        return Response.ok(createRVO(rbDomain)).build();
 
     }
 
@@ -230,23 +229,36 @@ public class DomainResource extends RBServiceEndpoint {
 
     // ----------------------------------------------------
 
-    private List<ContextRVO> createRVOs(String domain, Collection<Context> contexts) {
-        List<ContextRVO> result = new ArrayList<ContextRVO>(contexts.size());
-        for (Context context : contexts) {
-            ContextRVO rvo = new ContextRVO();
-            rvo.setQualifiedName(context.getQualifiedName().toURI());
-            rvo.getLinks().add(linkTo(domain, context));
-            result.add(rvo);
-        }
-        return result;
+    private DomainRVO createRVO(RBDomain domain) {
+        DomainRVO rvo = new DomainRVO();
+        rvo.setName(domain.getName());
+        rvo.setDescription(domain.getDescription());
+        rvo.setTitle(domain.getTitle());
+        rvo.getLinks().add(linkToContexts(domain.getName()));
+        rvo.getLinks().add(linkToInfoVis(domain.getName()));
+        rvo.getLinks().add(linkToQueries(domain.getName()));
+        return rvo;
     }
 
-    private LinkRVO linkTo(String domain, Context ctx) {
+    private LinkRVO linkToContexts(String domain) {
         UriBuilder builder = getUriBuilder()
-                .path(GraphResource.class)
-                .segment("contexts", ctx.getQualifiedName().getSimpleName());
+                .path(ContextsResource.class);
         URI uri = builder.build(domain);
-        return new LinkRVO("content", uri.toString());
+        return new LinkRVO("contexts", uri.toString());
+    }
+
+    private LinkRVO linkToQueries(String domain) {
+        UriBuilder builder = getUriBuilder()
+                .path(QueryServiceResource.class);
+        URI uri = builder.build(domain);
+        return new LinkRVO("query", uri.toString());
+    }
+
+    private LinkRVO linkToInfoVis(String domain) {
+        UriBuilder builder = getUriBuilder()
+                .path(TreeInfoVisService.class);
+        URI uri = builder.build(domain);
+        return new LinkRVO("infovis", uri.toString() + "?root={root}&type={type}");
     }
 
 

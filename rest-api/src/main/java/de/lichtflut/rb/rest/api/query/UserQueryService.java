@@ -45,7 +45,7 @@ import java.util.List;
  * @author Oliver Tigges
  */
 @Component
-@Path("query/domains/{domain}/users")
+@Path("domains/{domain}/query/users")
 public class UserQueryService extends RBServiceEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserQueryService.class);

@@ -73,7 +73,7 @@ public class DefaultQueryServicePathBuilder implements QueryServicePathBuilder {
     // ----------------------------------------------------
 
     private String context() {
-        return RequestCycle.get().getRequest().getContextPath() + "/service/query";
+        return RequestCycle.get().getRequest().getContextPath() + "/service";
     }
 
 }

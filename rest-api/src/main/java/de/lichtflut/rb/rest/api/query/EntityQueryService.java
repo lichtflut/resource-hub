@@ -49,7 +49,7 @@ import java.util.List;
  * @author Oliver Tigges
  */
 @Component
-@Path("query/domains/{domain}/entities")
+@Path("domains/{domain}/query/entities")
 public class EntityQueryService extends AbstractQueryService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EntityQueryService.class);

@@ -121,7 +121,7 @@ public class QueryPath {
     public String toURI() {
         StringBuilder sb = new StringBuilder(ctxPath);
         sb.append("/domains/").append(domain);
-        sb.append("/").append(service);
+        sb.append("/query/").append(service);
         boolean first = !ctxPath.contains("?");
         for (String name : params.keySet()) {
             if (first) {

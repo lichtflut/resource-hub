@@ -144,15 +144,20 @@ public class EmbeddedAuthDomainManager implements DomainManager {
 
 	@Override
 	public Collection<RBDomain> getDomainsForUser(final RBUser user) {
-		final List<RBDomain> result = new ArrayList<RBDomain>();
 		ResourceNode userNode = conversation.findResource(user.getQualifiedName());
-		if (userNode == null) {
-			throw new IllegalArgumentException("User not found");
-		}
+        if (userNode == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        final RBDomain domesticDomain = findDomain(user.getDomesticDomain());
+        final List<RBDomain> result = new ArrayList<RBDomain>();
+        result.add(domesticDomain);
 		for (Statement stmt : SNOPS.associations(userNode, EmbeddedAuthModule.HAS_ALTERNATE_DOMAIN)) {
-			result.add(EmbeddedAuthFunctions.toRBDomain(stmt.getObject()));
+            final RBDomain domain = EmbeddedAuthFunctions.toRBDomain(stmt.getObject());
+            if (!domain.equals(domesticDomain)) {
+                result.add(domain);
+            }
 		}
-		result.add(findDomain(user.getDomesticDomain()));
 		return result;
 	}
 

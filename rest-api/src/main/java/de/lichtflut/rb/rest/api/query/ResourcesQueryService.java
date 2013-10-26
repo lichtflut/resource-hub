@@ -48,7 +48,7 @@ import java.util.List;
  * @author Oliver Tigges
  */
 @Component
-@Path("query/domains/{domain}/resources")
+@Path("domains/{domain}/query/resources")
 public class ResourcesQueryService extends AbstractQueryService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ResourcesQueryService.class);

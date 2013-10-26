@@ -49,7 +49,7 @@ import java.util.List;
  * @author Oliver Tigges
  */
 @Component
-@Path("query/domains/{domain}/classes")
+@Path("domains/{domain}/query/classes")
 public class ClassQueryService extends AbstractQueryService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClassQueryService.class);
