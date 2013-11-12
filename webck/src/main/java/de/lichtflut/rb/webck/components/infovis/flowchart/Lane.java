@@ -15,8 +15,8 @@
  */
 package de.lichtflut.rb.webck.components.infovis.flowchart;
 
-import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
+import org.arastreju.sge.model.Infra;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import java.util.Locale;
@@ -41,7 +41,6 @@ public class Lane {
 	// ----------------------------------------------------
 
 	/**
-	 * @param title
 	 * @param id
 	 */
 	public Lane(String id) {
@@ -49,7 +48,7 @@ public class Lane {
 	}
 	
 	/**
-	 * @param title
+	 * @param node
 	 * @param id
 	 */
 	public Lane(ResourceNode node, String id) {
@@ -90,17 +89,11 @@ public class Lane {
 	
 	// ----------------------------------------------------
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int hashCode() {
 		return id.hashCode();
 	}
 	
-	/** 
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Lane) {

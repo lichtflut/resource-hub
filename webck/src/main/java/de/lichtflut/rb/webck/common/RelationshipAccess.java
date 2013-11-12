@@ -15,7 +15,6 @@
  */
 package de.lichtflut.rb.webck.common;
 
-import de.lichtflut.infra.data.MultiMap;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
@@ -70,16 +69,7 @@ public class RelationshipAccess implements Serializable {
 	}
 	
 	// ----------------------------------------------------
-	
-	public MultiMap<ResourceNode, Statement> getEntityMap(RelationshipFilter filter) {
-		final MultiMap<ResourceNode, Statement> map = new MultiMap<ResourceNode, Statement>();
-		final List<Statement> statements = filter(filter);
-		for (Statement stmt : statements) {
-			map.add(stmt.getObject().asResource(), stmt);
-		}
-		return map;
-	}
-	
+
 	public List<Statement> getStatements(RelationshipFilter filter) {
 		final List<Statement> statements = filter(filter);
 		Collections.sort(statements, new Comparator<Statement>() {

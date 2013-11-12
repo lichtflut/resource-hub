@@ -15,7 +15,6 @@
  */
 package de.lichtflut.rb.webck.components.identities;
 
-import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.eh.RBAuthException;
 import de.lichtflut.rb.core.security.AuthModule;
 import de.lichtflut.rb.core.security.RBDomain;
@@ -35,6 +34,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.arastreju.sge.model.Infra;
 
 import java.text.DateFormat;
 import java.util.List;

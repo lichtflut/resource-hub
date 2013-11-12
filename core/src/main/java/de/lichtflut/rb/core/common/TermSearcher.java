@@ -18,9 +18,8 @@ package de.lichtflut.rb.core.common;
 import org.apache.commons.lang3.Validate;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
+import org.arastreju.sge.eh.meta.NotYetSupportedException;
 import org.arastreju.sge.query.Query;
-
-import de.lichtflut.infra.exceptions.NotYetSupportedException;
 
 /**
  * <p>

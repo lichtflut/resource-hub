@@ -19,10 +19,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.arastreju.sge.eh.meta.NotYetImplementedException;
+import org.arastreju.sge.model.Infra;
 import org.arastreju.sge.model.ResourceID;
 
-import de.lichtflut.infra.Infra;
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.schema.model.Cardinality;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;

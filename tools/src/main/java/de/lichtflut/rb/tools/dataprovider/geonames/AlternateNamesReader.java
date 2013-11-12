@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.lichtflut.infra.io.LineReader;
-
 /**
  * 
  * Reader for {@link AlternateNameRecord}s.

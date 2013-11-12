@@ -15,7 +15,6 @@
  */
 package de.lichtflut.rb.webck.components.entity;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.entity.RBEntity;
 import de.lichtflut.rb.core.entity.RBField;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -44,6 +43,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
+import org.arastreju.sge.eh.meta.NotYetImplementedException;
 import org.arastreju.sge.model.ResourceID;
 
 import java.io.Serializable;

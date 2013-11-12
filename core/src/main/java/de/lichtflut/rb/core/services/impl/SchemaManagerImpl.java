@@ -15,7 +15,6 @@
  */
 package de.lichtflut.rb.core.services.impl;
 
-import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.eh.ErrorCodes;
 import de.lichtflut.rb.core.schema.RBSchema;
@@ -39,6 +38,7 @@ import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
 import org.arastreju.sge.apriori.RDFS;
+import org.arastreju.sge.eh.meta.NotYetSupportedException;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;

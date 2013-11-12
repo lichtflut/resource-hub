@@ -15,7 +15,6 @@
  */
 package de.lichtflut.rb.webck.components.infovis.flowchart;
 
-import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.webck.components.entity.VisualizationMode;
 import de.lichtflut.rb.webck.components.infovis.InfoVisPanel;
 import de.lichtflut.rb.webck.components.infovis.js.InfoVisJavaScriptResources;
@@ -25,6 +24,7 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.arastreju.sge.eh.meta.NotYetSupportedException;
 import org.arastreju.sge.model.nodes.ResourceNode;
 
 import java.util.Collection;

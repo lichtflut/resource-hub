@@ -15,7 +15,6 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.schema.RBSchema;
 import de.lichtflut.rb.core.schema.model.Constraint;
@@ -26,6 +25,7 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.context.Context;
+import org.arastreju.sge.model.Infra;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;

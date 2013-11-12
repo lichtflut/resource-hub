@@ -18,10 +18,9 @@ package de.lichtflut.rb.core.security;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.arastreju.sge.model.Infra;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.naming.QualifiedName;
-
-import de.lichtflut.infra.Infra;
 
 /**
  * <p>

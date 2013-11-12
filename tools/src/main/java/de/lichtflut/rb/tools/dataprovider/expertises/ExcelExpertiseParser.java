@@ -39,12 +39,11 @@ import org.arastreju.sge.model.nodes.SNValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.infra.logging.StopWatch;
 import de.lichtflut.rb.core.RB;
 
 /**
  * <p>
- *  Imports Expertises from an EXCEL file.
+ *  Imports expertise from an Excel file.
  * </p>
  *
  * <p>
@@ -90,11 +89,7 @@ public class ExcelExpertiseParser {
 		} else {
 			closed = true;
 		}
-		final StopWatch sw = new StopWatch();
-		
 		read(in);
-		
-		logger.debug("parsed {} in {} micros", new Object[] {graph, sw.getTime()});
 		return graph;
 	}
 	

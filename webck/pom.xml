@@ -8,9 +8,9 @@
 		<version>0.6.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>de.lichtflut.rb</groupId>
 	<artifactId>lf.resource-browser.webck</artifactId>
 	<packaging>jar</packaging>
+
 	<name>RB Web Construction Kit</name>
 
 	<properties>
@@ -172,16 +172,4 @@
             </plugin -->
 		</plugins>
 	</build>
-	<repositories>
-		<repository>
-			<id>wiquery repository</id>
-			<name>wiQuery repository</name>
-			<url>http://wiquery.googlecode.com/svn/repo/</url>
-			<layout>default</layout>
-		</repository>
-		<repository>
-			<id>wicket-stuff</id>
-			<url>http://wicketstuff.org/maven/repository</url>
-		</repository>
-	</repositories>
 </project>

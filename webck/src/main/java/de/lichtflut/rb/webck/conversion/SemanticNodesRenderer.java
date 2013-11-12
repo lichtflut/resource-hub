@@ -18,10 +18,10 @@
  */
 package de.lichtflut.rb.webck.conversion;
 
-import de.lichtflut.infra.exceptions.NotYetImplementedException;
 import de.lichtflut.rb.core.common.ResourceLabelBuilder;
 import org.apache.wicket.Application;
 import org.apache.wicket.IConverterLocator;
+import org.arastreju.sge.eh.meta.NotYetImplementedException;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.ValueNode;

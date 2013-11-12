@@ -19,13 +19,13 @@ import java.util.Locale;
 
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDFS;
+import org.arastreju.sge.model.Infra;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.ValueNode;
 
-import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.RBSystem;
 
 /**

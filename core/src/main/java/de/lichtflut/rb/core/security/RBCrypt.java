@@ -15,10 +15,9 @@
  */
 package de.lichtflut.rb.core.security;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
-
-import de.lichtflut.infra.security.Crypt;
-
 
 /**
  * <p>
@@ -36,6 +35,8 @@ public abstract class RBCrypt {
 	protected static final String DELIMITER = "#";
 	
 	private static final String DEFAULT_SALT = "d3F4uLt-5alT";
+
+    private static final String MD5 = "MD5";
 	
 	// ----------------------------------------------------
 
@@ -139,6 +140,21 @@ public abstract class RBCrypt {
 	}
 
     public static String md5Hex(String plain) {
-        return Crypt.md5Hex(plain);
+        StringBuilder sb = new StringBuilder();
+        byte[] hash = md5(plain);
+        for (byte aHash : hash) {
+            sb.append(Integer.toHexString((aHash & 0xFF) | 0x100).substring(1, 3));
+        }
+        return sb.toString();
     }
+
+    public static byte[] md5(Object obj){
+        try {
+            MessageDigest md5 = MessageDigest.getInstance(MD5);
+            return md5.digest(obj.toString().getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

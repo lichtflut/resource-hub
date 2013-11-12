@@ -15,15 +15,6 @@
  */
 package de.lichtflut.rb.tools.dataprovider.general.excel;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -32,12 +23,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDFS;
-import org.arastreju.sge.model.DefaultSemanticGraph;
-import org.arastreju.sge.model.ElementaryDataType;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SemanticGraph;
-import org.arastreju.sge.model.SimpleResourceID;
-import org.arastreju.sge.model.Statement;
+import org.arastreju.sge.model.*;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.arastreju.sge.model.nodes.SNValue;
@@ -46,7 +32,9 @@ import org.arastreju.sge.naming.QualifiedName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.lichtflut.infra.logging.StopWatch;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * <p>
@@ -102,10 +90,9 @@ public class ExcelParser {
 	public SemanticGraph read() {
 		// Excel version > 2002 specific cast. For lower versions use HSSFWorkbook
 		int numberOfSheets = ((XSSFWorkbook) data.getWorkbook()).getNumberOfSheets();
-		StopWatch watch = new StopWatch();
 		for (int pos = 0; pos < numberOfSheets; pos++) {
 			Sheet sheet = data.getWorkbook().getSheetAt(pos);
-			readSheet(watch, sheet);
+			readSheet(sheet);
 		}
 		return data.getGraph();
 	}
@@ -126,14 +113,11 @@ public class ExcelParser {
 
 	/**
 	 * Overwrite for custom parsing rules.
-	 * @param watch
-	 * @param sheet
+	 * @param sheet The sheet.
 	 */
-	protected void readSheet(final StopWatch watch, final Sheet sheet) {
+	protected void readSheet(final Sheet sheet) {
 		if (!ExcelParser.EXCEL_CONFIG.equals(sheet.getSheetName())) {
-			watch.reset();
 			insertIntoGraph(sheet);
-			LOGGER.info("Parsed Excel Sheet \"{}\" in {}ms", sheet.getSheetName(), watch.getTime());
 		}
 	}
 

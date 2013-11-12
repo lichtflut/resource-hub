@@ -15,19 +15,13 @@
  */
 package de.lichtflut.rb.core.content.filestore;
 
-import de.lichtflut.infra.io.Streamer;
-import de.lichtflut.infra.security.Crypt;
 import de.lichtflut.rb.core.content.ContentDescriptor;
 import de.lichtflut.rb.core.content.ContentDescriptorBuilder;
 import de.lichtflut.rb.core.content.ContentRepository;
 import de.lichtflut.rb.core.content.Filetype;
+import de.lichtflut.rb.core.security.RBCrypt;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Date;
 import java.util.Properties;
 
@@ -133,7 +127,13 @@ public class FileStoreRepository implements ContentRepository {
 
 	protected void writeData(final File contentDir, final ContentDescriptor desc) throws IOException {
 		FileOutputStream out = new FileOutputStream(new File(contentDir, DATA));
-		new Streamer().stream(desc.getData(), out);
+        byte buffer[] = new byte[2000];
+        InputStream in = desc.getData();
+        int read = in.read(buffer);
+        while (read > -1){
+            out.write(buffer, 0, read);
+            read = in.read(buffer);
+        }
 	}
 
 	protected File getContentDirectory(final ContentDescriptor cd) {
@@ -141,7 +141,7 @@ public class FileStoreRepository implements ContentRepository {
 	}
 
 	protected File getContentDirectory(final String contentId) {
-		String id = Crypt.md5Hex(contentId);
+		String id = RBCrypt.md5Hex(contentId);
 		return new File(getBaseDirectory(id), id);
 	}
 

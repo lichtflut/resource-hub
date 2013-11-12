@@ -15,13 +15,12 @@
  */
 package de.lichtflut.rb.core.schema.model;
 
+import org.arastreju.sge.eh.meta.NotYetSupportedException;
 import org.arastreju.sge.model.ElementaryDataType;
-
-import de.lichtflut.infra.exceptions.NotYetSupportedException;
 
 /**
  * <p>
- *  The datatypes of a {@link TypeDefinition}.
+ *  Enumeration of data types.
  * </p>
  *
  * <p>

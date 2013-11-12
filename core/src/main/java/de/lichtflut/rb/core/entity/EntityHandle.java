@@ -17,9 +17,8 @@ package de.lichtflut.rb.core.entity;
 
 import java.io.Serializable;
 
+import org.arastreju.sge.model.Infra;
 import org.arastreju.sge.model.ResourceID;
-
-import de.lichtflut.infra.Infra;
 
 /**
  * <p>

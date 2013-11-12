@@ -30,6 +30,7 @@ import org.arastreju.sge.apriori.RDFS;
 import org.arastreju.sge.io.RdfXmlBinding;
 import org.arastreju.sge.io.SemanticIOException;
 import org.arastreju.sge.model.DefaultSemanticGraph;
+import org.arastreju.sge.model.Infra;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -39,8 +40,6 @@ import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.naming.QualifiedName;
 import org.slf4j.Logger;
 
-import de.lichtflut.infra.Infra;
-import de.lichtflut.infra.logging.StopWatch;
 import de.lichtflut.rb.core.RB;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.apriori.Geonames;
@@ -213,19 +212,16 @@ public class GeoNamesProvider {
 		GeoNamesProvider importer = new GeoNamesProvider();
 		try {
 			ClassLoader cl = Thread.currentThread().getContextClassLoader();
-			StopWatch sw = new StopWatch();
 			importer.readAlternateNames("/Users/otigges/temp/alternateNames/alternateNames-filtered.txt");
 			SemanticGraph countries = importer.readCountries(cl.getResourceAsStream("countries.txt"));
 			SemanticGraph cities = importer.readCities(cl.getResourceAsStream("cities1000.txt"));
-			sw.displayNanoTime("Reading finished.");
-			
+
 			File targetDir = new File("target", "generated-rdf");
 			targetDir.mkdirs();
 			
 			RdfXmlBinding binding = new RdfXmlBinding();
 			binding.write(countries, new FileOutputStream(new File(targetDir, "Countries.rdf.xml")));
 			binding.write(cities, new FileOutputStream(new File(targetDir, "Cities.rdf.xml")));
-			sw.displayNanoTime("Writing finished.");
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);

@@ -22,8 +22,8 @@ import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 
-import de.lichtflut.infra.Infra;
 import de.lichtflut.rb.core.entity.RBEntity;
+import org.arastreju.sge.model.Infra;
 
 /**
  * <p>

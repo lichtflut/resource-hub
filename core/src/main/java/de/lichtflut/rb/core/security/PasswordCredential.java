@@ -15,7 +15,7 @@
  */
 package de.lichtflut.rb.core.security;
 
-import de.lichtflut.infra.Infra;
+import org.arastreju.sge.model.Infra;
 import org.arastreju.sge.model.nodes.SemanticNode;
 
 /**

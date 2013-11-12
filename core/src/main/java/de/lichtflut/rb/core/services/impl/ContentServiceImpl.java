@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.arastreju.sge.Conversation;
+import org.arastreju.sge.eh.meta.NotYetSupportedException;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.SimpleResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
 import org.arastreju.sge.query.Query;
 
-import de.lichtflut.infra.exceptions.NotYetSupportedException;
 import de.lichtflut.rb.core.RBSystem;
 import de.lichtflut.rb.core.content.ContentItem;
 import de.lichtflut.rb.core.content.SNContentItem;

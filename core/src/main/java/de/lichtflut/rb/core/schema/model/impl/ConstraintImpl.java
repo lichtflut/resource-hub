@@ -15,11 +15,9 @@
  */
 package de.lichtflut.rb.core.schema.model.impl;
 
-import de.lichtflut.infra.exceptions.NoLongerSupportedException;
 import de.lichtflut.rb.core.schema.model.Constraint;
 import de.lichtflut.rb.core.schema.model.Datatype;
 import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.nodes.ResourceNode;
 import org.arastreju.sge.naming.QualifiedName;
 
 import java.util.Collections;
@@ -67,11 +65,6 @@ public class ConstraintImpl implements Constraint {
 	private List<Datatype> applicableDatatypes;
 
 	// ---------------- Constructor -------------------------
-
-	@Deprecated
-	public ConstraintImpl(final ResourceNode node) {
-		throw new NoLongerSupportedException();
-	}
 
 	/**
 	 * Constructor.
