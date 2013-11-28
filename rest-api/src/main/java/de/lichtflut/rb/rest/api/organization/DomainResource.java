@@ -88,7 +88,11 @@ public class DomainResource extends RBServiceEndpoint {
 
         DomainManager domainManager = this.authModule.getDomainManager();
         RBDomain rbDomain = domainManager.findDomain(domainID);
-        return Response.ok(createRVO(rbDomain)).build();
+        if (rbDomain != null) {
+            return Response.ok(createRVO(rbDomain)).build();
+        } else {
+            return Response.status(Status.NOT_FOUND).build();
+        }
 
     }
 
@@ -99,6 +103,8 @@ public class DomainResource extends RBServiceEndpoint {
             throws UnauthenticatedUserException {
 		RBUser user = authenticateUser(token);
         authorizeUser(user, domain, RBPermission.MANAGE_DOMAINS);
+
+        LOGGER.info("Going to delete domain {}.", domain);
 
 		try {
 			DomainManager domainManager = this.authModule.getDomainManager();
@@ -125,6 +131,8 @@ public class DomainResource extends RBServiceEndpoint {
             @CookieParam(AuthModule.COOKIE_SESSION_AUTH) String token)
             throws UnauthenticatedUserException
     {
+
+        LOGGER.info("Going to create domain {}.", domain);
 
 		// Authenticate the user
 		RBUser user = authenticateUser(token);

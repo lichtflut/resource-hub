@@ -16,33 +16,16 @@
 package de.lichtflut.rb.core.services.impl;
 
 import de.lichtflut.rb.core.RBSystem;
-import de.lichtflut.rb.core.common.Accessibility;
-import de.lichtflut.rb.core.common.SerialNumberOrderedNodesContainer;
 import de.lichtflut.rb.core.services.ConversationFactory;
 import de.lichtflut.rb.core.services.MenuService;
 import de.lichtflut.rb.core.services.ServiceContext;
-import de.lichtflut.rb.core.services.ViewSpecificationService;
 import de.lichtflut.rb.core.viewspec.MenuItem;
-import de.lichtflut.rb.core.viewspec.Perspective;
-import de.lichtflut.rb.core.viewspec.ViewPort;
 import de.lichtflut.rb.core.viewspec.WDGT;
-import de.lichtflut.rb.core.viewspec.WidgetSpec;
 import de.lichtflut.rb.core.viewspec.impl.SNMenuItem;
-import de.lichtflut.rb.core.viewspec.impl.SNPerspective;
-import de.lichtflut.rb.core.viewspec.impl.SNViewPort;
-import de.lichtflut.rb.core.viewspec.impl.SNWidgetSpec;
-import de.lichtflut.rb.core.viewspec.impl.ViewSpecTraverser;
 import org.arastreju.sge.Conversation;
 import org.arastreju.sge.SNOPS;
-import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.model.ResourceID;
-import org.arastreju.sge.model.SemanticGraph;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
-import org.arastreju.sge.naming.QualifiedName;
-import org.arastreju.sge.persistence.TransactionControl;
-import org.arastreju.sge.query.Query;
-import org.arastreju.sge.query.QueryResult;
 import org.arastreju.sge.structure.OrderBySerialNumber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +33,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.arastreju.sge.SNOPS.id;
 
 /**
  * <p>
@@ -109,7 +94,7 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	public List<MenuItem> getUsersMenuItems() {
-		final ResourceNode user = currentUser();
+		final ResourceNode user = currentUserNode();
 		final List<MenuItem> result = new ArrayList<MenuItem>();
 		addUsersMenuItem(user, result);
 		if (result.isEmpty() && user != null) {
@@ -124,7 +109,7 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	public void addUsersMenuItem(final MenuItem item) {
-		final ResourceNode user = currentUser();
+		final ResourceNode user = currentUserNode();
 		store(item);
 		user.addAssociation(WDGT.HAS_MENU_ITEM, item);
 		LOGGER.debug("Added item {} to user {}.", item, user);
@@ -137,7 +122,7 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	public void removeUsersItem(final MenuItem item) {
-		final ResourceNode user = currentUser();
+		final ResourceNode user = currentUserNode();
 		SNOPS.remove(user, WDGT.HAS_MENU_ITEM, item);
 		LOGGER.debug("Context: {}.", conversation().getConversationContext());
 		LOGGER.debug("Removed item {} from user {}.", item, user);
@@ -148,11 +133,11 @@ public class MenuServiceImpl implements MenuService {
 
 	// ----------------------------------------------------
 
-	protected ResourceNode currentUser() {
+	protected ResourceNode currentUserNode() {
         if (context == null || context.getUser() == null) {
             throw new IllegalStateException("No user context set.");
 		} else {
-			return conversation().findResource(context.getUser().getQualifiedName());
+            return conversation().resolve(id(context.getUser().getQualifiedName()));
 		}
 	}
 

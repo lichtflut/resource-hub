@@ -36,7 +36,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import de.lichtflut.rb.application.RBApplication;
 import de.lichtflut.rb.application.admin.AdminBasePage;
 import de.lichtflut.rb.RBPermission;
-import de.lichtflut.rb.application.custom.BrowseAndSearchPage;
 import de.lichtflut.rb.application.pages.AbstractBasePage;
 import de.lichtflut.rb.core.viewspec.MenuItem;
 import de.lichtflut.rb.webck.common.RBAjaxTarget;
