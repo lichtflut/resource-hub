@@ -18,7 +18,7 @@ package de.lichtflut.rb.core.entity;
 import java.io.Serializable;
 
 import org.arastreju.sge.model.Statement;
-import org.arastreju.sge.model.StatementMetaInfo;
+import org.arastreju.sge.model.associations.StatementMetaInfo;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.StatementOrigin;
 

@@ -20,7 +20,7 @@ import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
-import org.arastreju.sge.model.StatementMetaInfo;
+import org.arastreju.sge.model.associations.StatementMetaInfo;
 import org.arastreju.sge.model.associations.HalfStatement;
 import org.arastreju.sge.model.nodes.SemanticNode;
 import org.arastreju.sge.model.nodes.StatementOrigin;
