@@ -24,7 +24,6 @@ import de.lichtflut.rb.core.schema.model.impl.FieldLabelDefinitionImpl;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.Aras;
 import org.arastreju.sge.apriori.RDFS;
-import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.Infra;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -36,10 +35,7 @@ import org.arastreju.sge.model.nodes.views.SNText;
 
 import java.util.Locale;
 
-import static org.arastreju.sge.SNOPS.associate;
-import static org.arastreju.sge.SNOPS.fetchObject;
-import static org.arastreju.sge.SNOPS.objectsAsResources;
-import static org.arastreju.sge.SNOPS.string;
+import static org.arastreju.sge.SNOPS.*;
 
 
 /**
@@ -151,7 +147,7 @@ public class SNPropertyDeclaration extends ResourceView {
 
 	/**
 	 * Sets the {@link Datatype}
-	 * @param datatype
+	 * @param datatype The data type.
 	 */
 	public void setDatatype(final Datatype datatype){
 		if(datatype != null){
@@ -269,11 +265,9 @@ public class SNPropertyDeclaration extends ResourceView {
 	/**
 	 * Set the successor of this PropertyDeclaration in the ordered list.
 	 * @param successor The successor node.
-	 * @param contexts The contexts.
-	 * @return The successor or null.
 	 */
-	public void setSuccessor(final SNPropertyDeclaration successor, final Context... contexts) {
-		SNOPS.assure(this, Aras.IS_PREDECESSOR_OF, successor, contexts);
+	public void setSuccessor(final SNPropertyDeclaration successor) {
+		SNOPS.assure(this, Aras.IS_PREDECESSOR_OF, successor);
 	}
 
 	// ------------------------------------------------------

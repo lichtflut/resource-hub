@@ -39,19 +39,15 @@ public class ResourcePropertyModel<T extends SemanticNode> implements IModel<T> 
 	
 	private final ResourceID predicate;
 
-	private final Context[] ctx;
-
 	// ----------------------------------------------------
 
 	/**
 	 * @param subject The subject.
 	 * @param predicate The predicate.
-	 * @param ctx Optional context.
 	 */
-	public ResourcePropertyModel(IModel<? extends ResourceNode> subject, ResourceID predicate, Context... ctx) {
+	public ResourcePropertyModel(IModel<? extends ResourceNode> subject, ResourceID predicate) {
 		this.subject = subject;
 		this.predicate = predicate;
-		this.ctx = ctx;
 	}
 	
 	// ----------------------------------------------------
@@ -64,7 +60,7 @@ public class ResourcePropertyModel<T extends SemanticNode> implements IModel<T> 
 
 	@Override
 	public void setObject(SemanticNode object) {
-		SNOPS.assure(subject.getObject(), predicate, object, ctx);
+		SNOPS.assure(subject.getObject(), predicate, object);
 	}
 
 	@Override

@@ -15,13 +15,10 @@
  */
 package de.lichtflut.rb.core.schema.persistence;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import de.lichtflut.rb.core.schema.RBSchema;
+import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
 import org.arastreju.sge.SNOPS;
 import org.arastreju.sge.apriori.RDF;
-import org.arastreju.sge.context.Context;
 import org.arastreju.sge.model.ResourceID;
 import org.arastreju.sge.model.Statement;
 import org.arastreju.sge.model.nodes.ResourceNode;
@@ -32,8 +29,9 @@ import org.arastreju.sge.model.nodes.views.SNClass;
 import org.arastreju.sge.model.nodes.views.SNText;
 import org.arastreju.sge.structure.LinkedOrderedNodes;
 
-import de.lichtflut.rb.core.schema.RBSchema;
-import de.lichtflut.rb.core.schema.model.PropertyDeclaration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -84,10 +82,9 @@ public class SNResourceSchema extends ResourceView {
 	/**
 	 * Set the Class described by this schema.
 	 * @param type The type node.
-	 * @param ctx The context.
 	 */
-	public void setDescribedType(final ResourceID type, final Context... ctx) {
-		SNOPS.assure(this, RBSchema.DESCRIBES, type, ctx);
+	public void setDescribedType(final ResourceID type) {
+		SNOPS.assure(this, RBSchema.DESCRIBES, type);
 	}
 
 	/**

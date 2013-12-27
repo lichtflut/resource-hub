@@ -15,12 +15,11 @@
  */
 package de.lichtflut.rb.core.security.authserver;
 
-import junit.framework.Assert;
-
 import org.arastreju.sge.Arastreju;
 import org.arastreju.sge.ArastrejuGate;
 import org.arastreju.sge.model.nodes.SNResource;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
